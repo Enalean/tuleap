@@ -1,0 +1,48 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginCommenter,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginCommenter;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! Description
+
+PluginCommenter vous permet de cacher une partie d'une page Wiki sans
+avoir à effacer le texte. Ce genre de commentaire sera seulement visible
+dans l'édition de la source de la page.
+
+!!! Usage
+
+Placez simplement le texte à commenter entre =<?plugin Comment=
+et =?>= :
+
+<verbatim>
+<?plugin Comment
+
+!!! Une section cachée :
+
+Ce texte ne sera pas visible dans la page HTML générée mais il sera encore 
+visible en éditant la source.
+
+?>
+</verbatim>
+
+!!! Auteur
+
+Martin Geisler mailto:gimpster@gimpster.com.
+
+<?plugin Comment
+
+!!! Logique "floue"
+Theorème : un chat a neuf queues.
+Preuve :
+    Aucun chat n'a huit queues. Un chat a une queue de plus qu'aucun chat.
+    Par conséquent, un chat à neuf queue.
+
+?>
+----
+PluginWiki

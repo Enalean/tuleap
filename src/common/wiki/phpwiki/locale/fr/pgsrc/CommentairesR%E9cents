@@ -1,0 +1,12 @@
+Date: Sat, 5 Jun 2004 16:49:58 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: CommentairesR%E9cents,v 1.1 2004/06/22 12:43:59 pmeignen Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CommentairesR%E9cents;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RecentComments days||=7 daylist=1,3,7,30,90,0 ?>

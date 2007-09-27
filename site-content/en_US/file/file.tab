@@ -1,0 +1,308 @@
+#/**
+#  *
+#  * file scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editpackagepermissions.php
+#
+file_admin_editpackagepermissions	p_not_exist	Package does not exist
+file_admin_editpackagepermissions	edit_p_perm	Edit Package Permissions
+file_admin_editpackagepermissions	p	Package
+file_admin_editpackagepermissions	perm_explain	You can set specific permissions to a package. These permissions apply to all releases and files that belong to this package. But you may also set different permissions to specific releases. \n<p>By default, packages are accessible to all registered users.
+file_admin_editpackagepermissions	select_u_group	Select user groups who are granted access to this package
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editpackages.php
+#
+file_admin_editpackages	p_name_exists	This package name already exists. Please choose another name.
+file_admin_editpackages	cannot_hide	Sorry - you cannot hide a package that still contains active releases. Hide attached releases first
+file_admin_editpackages	p_updated	Updated Package
+file_admin_editpackages	perm_update_err	ERROR: could not update permissions
+file_admin_editpackages	perm_reset_err	Error: cannot reset permissions to default
+file_admin_editpackages	perm_reset	Permissions reset to default
+file_admin_editpackages	p_added	Added Package
+file_admin_editpackages	release_edit_f_rel	Release/Edit File Releases
+file_admin_editpackages	packages	Packages
+file_admin_editpackages	p_explain	You can use packages to group different file releases together. A package is a consistent set of source files that can be put together and deliver a working part of your bigger project.\n
+file_admin_editpackages	no_p_defined	You Have No Packages Defined
+file_admin_editpackages	p_name	Package Name
+file_admin_editpackages	rank_on_screen	Rank On Screen
+file_admin_editpackages	update	Update
+file_admin_editpackages	releases	Releases
+file_admin_editpackages	perms	Permissions
+file_admin_editpackages	license	License Approval
+file_admin_editpackages	edit_releases	Edit Releases
+file_admin_editpackages	add_releases	Add Release
+file_admin_editpackages	edit	Edit
+file_admin_editpackages	define	Define
+file_admin_editpackages	create_new_p	Create a New Package
+file_admin_editpackages	create_this_p	Create This Package
+file_admin_editpackages	status_active	Active
+file_admin_editpackages	status_hidden	Hidden
+file_admin_editpackages	create_canceled	Package creation canceled
+file_admin_editpackages	edit_package	Edit a Package
+file_admin_editpackages	update_canceled	Package update canceled
+file_admin_editpackages	p_not_exists	Package does not exist
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editreleasepermissions.php
+#
+file_admin_editreleasepermissions	rel_not_exist	Release does not exist in this package.
+file_admin_editreleasepermissions	edit_rel_perm	Edit Release Permissions
+file_admin_editreleasepermissions	release	Release
+file_admin_editreleasepermissions	from_p	from package
+file_admin_editreleasepermissions	perm_explain	&nbsp;
+file_admin_editreleasepermissions	select_u_group	Select user groups who are granted access to this release: \n<br><b>Note</b>: when no permission is defined for a release, then it has the same permissions as the parent package. \n<br>When a permission is defined for a release, then it overrides the permissions defined for the <a href="$1">package it belongs to</a>.
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editreleases.php
+#
+file_admin_editreleases	create_p_before_rel	Must create a package before you create a release.
+file_admin_editreleases	p_not_exists	Package Doesn't Exist Or Isn't Yours
+file_admin_editreleases	add_rel_fail	Adding Release Failed
+file_admin_editreleases	rel_added	Added Release
+file_admin_editreleases	rel_name_exists	Release Name Already Exists
+file_admin_editreleases	rel_name_empty	Invalid Release Name : empty names are not allowed
+file_admin_editreleases	updating_rel	Updating Release
+file_admin_editreleases	data_uploaded	Data Uploaded
+file_admin_editreleases	length_err	ERROR - uploaded data must be non null and < $1 in length
+file_admin_editreleases	invalid_flag_err	ERROR invalid upload flag
+file_admin_editreleases	create_p_before_rel_status	Must create a package before you create a release. You must also include a release name and status.
+file_admin_editreleases	p_not_yours	Trying to change a package that isn't yours
+file_admin_editreleases	cannot_del_rel	Sorry - you cannot delete a release that still contains files
+file_admin_editreleases	rel_updated	Updated Release
+file_admin_editreleases	rel_update_failed	Updating Release Failed
+file_admin_editreleases	f_not_yours	Not Your File $1 Or File Doesn't Exist
+file_admin_editreleases	rel_not_yours	Not Your Release Or Release Doesn't Exist (for the file : $1)
+file_admin_editreleases	data_not_parsed	Sorry - File Date entry could not be parsed. It must be in YYYY-MM-DD format.
+file_admin_editreleases	data_not_parsed_file	Sorry - File $1 : Date entry could not be parsed. It must be in YYYY-MM-DD format.
+file_admin_editreleases	file_updated	File Updated : $1
+file_admin_editreleases	add_files	Adding File(s)
+file_admin_editreleases	illegal_file_name	Illegal FileName
+file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Yours
+file_admin_editreleases	not_add_file	Couldn't Add FileName
+file_admin_editreleases	filename_invalid	FileName Invalid Or Does Not Exist
+file_admin_editreleases	filename_exists	FileName Already Exists For This Project
+file_admin_editreleases	no_files_selected	No Files Selected
+file_admin_editreleases	file_deleted	File Deleted : $1
+file_admin_editreleases	file_rel_notice	File Release Notice
+file_admin_editreleases	file_rel_notice_project	Project $1
+file_admin_editreleases	download_explain_modified_file	A new version of $2 (package $1) has been released.
+file_admin_editreleases	download_explain_modified_package	A new version of package $1 has been released.
+file_admin_editreleases	download_explain	 \nYou can download it at: \n\n$1\n\nYou requested to be notified when new versions of this file \nwere released. If you don't wish to be notified in the \nfuture, please login to $2 and click this link
+file_admin_editreleases	email_sent	email sent - $1 users tracking
+file_admin_editreleases	rel_id_not_found	That release ID was not found in the database
+file_admin_editreleases	release_new_file_version	Release New File Version
+file_admin_editreleases	step_x	Step $1
+file_admin_editreleases	edit_change_notes	Edit the change notes for this release of this package. These notes will apply to all files attached to this release.
+file_admin_editreleases	edit_release	Update Release
+file_admin_editreleases	of_p	of Package
+file_admin_editreleases	release_date	Release Date
+file_admin_editreleases	of_P	Of Package
+file_admin_editreleases	upload_or_paste	You can either upload the release notes and change log individually, or paste them in together below.
+file_admin_editreleases	paste	Paste The Notes In
+file_admin_editreleases	upload_change	Upload Change Log
+file_admin_editreleases	upload_notes	Upload Release Notes
+file_admin_editreleases	max_file_size	(The maximum upload file size is $1 Mb)
+file_admin_editreleases	release_notes	Release Notes
+file_admin_editreleases	change_log	Change Log
+file_admin_editreleases	preserve_preformatted	Preserve my pre-formatted text.
+file_admin_editreleases	submit_refresh	Submit/Refresh
+file_admin_editreleases	attach_files	Attach Files To This Release
+file_admin_editreleases	no_available_files	No available files
+file_admin_editreleases	upload_files	Please upload files as explained above, then hit <B>Refresh File List</B>.
+file_admin_editreleases	refresh_file_list	Refresh File List
+file_admin_editreleases	attach_marked_files	Attach Marked Files
+file_admin_editreleases	edit_files	Edit Files in this Release
+file_admin_editreleases	update_each	You <B>must</B> update each of these files with the correct information or they will not appear on your download summary page.
+file_admin_editreleases	no_files_attached	No Files attached to this Release
+file_admin_editreleases	attach_files_in_step2	You can attach files using Step 2 above
+file_admin_editreleases	filename	Filename
+file_admin_editreleases	processor	Processor
+file_admin_editreleases	file_type	File Type
+file_admin_editreleases	update_refresh	Update/Refresh
+file_admin_editreleases	delete_file	Delete File
+file_admin_editreleases	im_sure	I'm Sure
+file_admin_editreleases	mail_file_rel_notice	Email File Release Notice
+file_admin_editreleases	send_notice	Send Notice
+file_admin_editreleases	users_monitor	$1 user(s) are monitoring your package. You should send a notice of your file release.
+file_admin_editreleases	create_auto_news	Create Automatic News
+file_admin_editreleases	rel_news	You can automatically create a piece of news to inform people about the new release.
+file_admin_editreleases	create_news	Create News
+file_admin_editreleases	define_new_release	Define a New Release of a Package
+file_admin_editreleases	contain_multiple_files	A release of a package can contain multiple files. Release names can be either version numbers (3.22.1, 3.23-beta1&hellip;) or names.
+file_admin_editreleases	your_release	Releases of package : $1 
+file_admin_editreleases	no_releases_defined	You Have No Releases $1 Defined
+file_admin_editreleases	release_name	Release Name
+file_admin_editreleases	delete	Delete?
+file_admin_editreleases	edit_this_release	Edit This Release
+file_admin_editreleases	edit_this_p	Edit This Package
+file_admin_editreleases	warn	** WARNING!! ** Delete this release, all its files and corresponding access logs (no possible restore operation)?
+file_admin_editreleases	new_release_name	New Release Name
+file_admin_editreleases	belongs_to_p	belongs to Package
+file_admin_editreleases	create_this_release	Create This Release
+file_admin_editreleases	rel_del	Release Deleted
+file_admin_editreleases	of_this_package	Of This Package
+file_admin_editreleases	subject	Subject
+file_admin_editreleases	file_news_subject	New Release : $1
+file_admin_editreleases	details	Details
+file_admin_editreleases	file_news_details	A new release $1 is now available at this URL : $2
+file_admin_editreleases	submit_news	Submit News
+file_admin_editreleases	relname	<release-name>
+file_admin_editreleases	fieldset_properties	Properties
+file_admin_editreleases	fieldset_uploaded_files	Uploaded Files
+file_admin_editreleases	fieldset_notes	Notes
+file_admin_editreleases	fieldset_permissions	Permissions
+file_admin_editreleases	fieldset_news	News
+file_admin_editreleases	fieldset_notification	Notification
+file_admin_editreleases	browse	browse...
+file_admin_editreleases	local_file	local file
+file_admin_editreleases	scp_ftp_files	scp/ftp files
+file_admin_editreleases	add_file	Add file
+file_admin_editreleases	upload	Upload
+file_admin_editreleases	add_change_log	Add change log
+file_admin_editreleases	view_change	[view/change]
+file_admin_editreleases	default_permissions	Will be created with the same permissions than its parent package.
+file_admin_editreleases	delete_col	Delete
+file_admin_editreleases	release_perm	The release permissions are :  
+file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, you will be able to upload it again in less than two hours.
+file_admin_editreleases	create_new_release	Create a new release
+file_admin_editreleases	create_canceled	Release creation canceled
+file_admin_editreleases	update_canceled	Release update canceled
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/index.php
+#
+file_admin_index	file_manager_admin	File Manager Administration
+file_admin_index	edit_release_files	Edit/Release Files
+file_admin_index	manage_explain	Create or modify packages and releases, set status and access permissions.
+file_admin_index	quick_add	Quick Add File Release
+file_admin_index	quick_add_explain	One step process where you can specify all the necessary information at the same time. The counterpart is that you can only attach one single file to a given release and not several as in the full File Release process.
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/qrs.php
+#
+file_admin_qrs	define_rel_name	Must define a release name.
+file_admin_qrs	choose_processor_type	Please choose Processor Type
+file_admin_qrs	choose_file_type	Please choose File Type
+file_admin_qrs	added_success	$1 added successfully
+file_admin_qrs	no_email_sent	no email sent: release is hidden
+file_admin_qrs	email_sent	email sent to $1 users monitoring this package
+file_admin_qrs	no_p_available	No Package Available
+file_admin_qrs	create_new_p	create a new package
+file_admin_qrs	file_name	File Name
+file_admin_qrs	select_file	Select a file
+file_admin_qrs	upload_file	Or, upload a new file
+file_admin_qrs	processor_type	Processor Type
+file_admin_qrs	release_file	Release File
+file_admin_qrs	adding_file	Adding File
+#
+#-----------------------------------------------
+# Script: src/www/file/admin/manageprocessors.php
+#
+file_admin_manageprocessors	manage_proclist	Manage Processors
+file_admin_manageprocessors	edit_proc	Click on the Processor Name to edit a processor
+file_admin_manageprocessors	add_proc	Add a new processor
+file_admin_manageprocessors	update_proc	Update a processor
+file_admin_manageprocessors	rank_error	Error. Processor rank should be an integer.
+file_admin_manageprocessors	proc_fill	Error. Processor $1 should not be empty.
+file_admin_manageprocessors	invalid_procid	Error. Invalid Processor ID.
+file_admin_manageprocessors	predef_procid	Warning. Pre-defined processors can not be edited.
+#
+#-----------------------------------------------
+# Script: SF/www/file/confirm_download.php
+#
+file_confirm_download	download_agreement	CodeX download agreement
+file_confirm_download	download_explain	<h2>*** CodeX Download Agreement ***</h2></center> \n</div> \n<p>You are about to download software from the CodeX Site. Software re-use and sharing <b>inside</b> $1 is subject to the <a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><b>Code eXchange Corporate Policy</b></a>.</p> \n\n<p>By downloading this software you implicitely recognize that you have <a href="/docman/display_doc.php?docid=16&group_id=1" target="_blank"><b>read the CodeX Policy</b></a> and agree with the terms and conditions. \n\n<p>To proceed with the file download, click on '<b>I AGREE</b>'. If you do not want to download the file click on '<b>I DECLINE</b>' and <a href="mailto:$2"><b>contact us</b></a> if you need clarification or want to explain why you declined the agreement.
+file_confirm_download	agree	I AGREE
+file_confirm_download	decline	I DECLINE
+file_confirm_download	back	Back to previous page
+#
+#-----------------------------------------------
+# Script: SF/www/file/download.php
+#
+file_download	incorrect_release_id	Incorrect File Release ID or Group ID
+file_download	report_error	Please report the error to the $1 Administrator using the <i>Contact Us</i> link in the main menu
+file_download	access_denied	Access Denied
+file_download	access_not_authorized	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
+file_download	file_not_available	Internal Error: File not available. Please contact the system administrator
+#
+#-----------------------------------------------
+# Script: SF/www/file/filemodule_monitor.php
+#
+file_filemodule_monitor	monitor_a_package	Monitor A Package
+file_filemodule_monitor	monitor_package	Monitor a Package
+file_filemodule_monitor	insert_err	Error inserting into filemodule_monitor
+file_filemodule_monitor	p_monitored	Package is now being monitored
+file_filemodule_monitor	now_emails	You will now be emailed when new files are released.
+file_filemodule_monitor	turn_monitor_off	To turn off monitoring, simply click the <B>Stop Monitoring</B> icon.
+file_filemodule_monitor	monitor_turned_off	Monitoring has been turned off
+file_filemodule_monitor	no_emails	You will not receive any more emails from this package.
+file_filemodule_monitor	choose_p	Error - Choose a package First
+#
+#-----------------------------------------------
+# Script: SF/www/file/file_utils.php
+#
+file_file_utils	admin	Admin
+file_file_utils	must_choose_one	Choose...
+file_file_utils	g_id_err	Erreur - Project identifier (group_id) required
+file_file_utils	manage_proc	Processors
+file_file_utils	proc_id	Processor ID
+file_file_utils	proc_name	Name
+file_file_utils	proc_rank	Rank
+file_file_utils	del	Delete?
+file_file_utils	add_proc	Add
+file_file_utils	update_proc	Update
+file_file_utils	required_fields	fields required
+file_file_utils	add_proc_success	Processor Added.
+file_file_utils	add_proc_fail	Submit Failed.
+file_file_utils	update_proc_success	Processor Updated.
+file_file_utils	update_proc_fail	Update Failed.
+file_file_utils	delete_proc_success	Processor Deleted.
+file_file_utils	delete_proc_fail	Delete Failed.
+file_file_utils	del_proc	Delete this processor ?
+#
+#-----------------------------------------------
+# Script: SF/www/file/showfiles.php
+#
+file_showfiles	file_p_for	File packages for project '$1'
+file_showfiles	no_file_p	No File Packages
+file_showfiles	no_p_available	There are no file packages available
+file_showfiles	p_releases	Package Releases
+file_showfiles	select_release	Select the text icon (next to release name) to see Release Notes and Change Log.&nbsp;Select File to request file download.
+file_showfiles	release_notes	Release &amp; Notes
+file_showfiles	size	Size (Kb)
+file_showfiles	d_l	D/L
+file_showfiles	arch	Arch.
+file_showfiles	type	Type
+file_showfiles	date	Date
+file_showfiles	no_releases	No Releases
+file_showfiles	proj_total	Project Totals
+file_showfiles	no_files	No Files
+file_showfiles	read_notes	Read release notes and changelog
+file_showfiles	start_monitoring	Monitor this package
+file_showfiles	stop_monitoring	Stop monitoring this package
+file_showfiles	stat_total_nb_releases	releases
+file_showfiles	stat_total_nb_files	files
+file_showfiles	stat_total_size	Kb
+file_showfiles	stat_total_nb_downloads	downloads
+file_showfiles	hidden_package	This package is hidden.
+file_showfiles	hidden_release	This release is hidden.
+#
+#-----------------------------------------------
+# Script: SF/www/file/shownotes.php
+#
+file_shownotes	not_found_err	Error - Not Found
+file_shownotes	release_not_found	That Release Was Not Found
+file_shownotes	release_notes	File Release Notes and Changelog
+file_shownotes	release_name	Release Name
+file_shownotes	changes	Changes
+file_shownotes	notes	Notes

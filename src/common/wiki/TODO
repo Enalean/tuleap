@@ -1,0 +1,24 @@
+!!! Upgrade
+* allow_call_time_pass_reference no longer mandatory
+* ALTER TABLE wiki_page ADD cached_html MEDIUMBLOB
+
+!!! TODO
+
+!! Before release
+
+!! Xerox todo
+* verify diffs of /locale subdir
+
+!! Later
+* verfify the need of 'upload' required rights
+* notifications display
+
+!!! Done
+* move wiki search (find page) in codex search box
+* change way to attach a file.
+* check config
+* make CodeX-lite theme
+* move wiki admin link in Admin section of the wiki.
+* check rights
+* verify diffs and clean pgsrc 
+

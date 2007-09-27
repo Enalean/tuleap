@@ -1,0 +1,243 @@
+Date: Tue, 8 Jun 2004 22:20:05 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
+X-Rcs-Id: $Id: TextFormattingRules,v 1.32 2004/06/19 12:13:57 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=TextFormattingRules;
+  pgsrc_version="2 $Revision: 1.32 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin CreateToc jshide||=1 with_toclink||=1 ?>
+----
+! Synopsis
+TextFormattingRules%%%
+*Emphasis:* <tt>~_</tt> for _italics_, <tt>~*</tt> for *bold*,
+<tt>~_~*</tt> for _*both*_, <tt>~=</tt> for =fixed width=.%%%
+*Lists:* <tt>~*</tt> for bullet lists, <tt>#</tt> for numbered lists,
+_Term<b>:</b>~<new-line> definition_ for definition lists.%%%
+*Preformatted text:* Enclose text in <tt>~<pre>~</pre></tt> or
+<tt>~<verbatim>~</verbatim></tt>.%%%
+*Indented text:* Indent the paragraph with whitespaces.%%%
+*References:* ~JoinCapitalizedWords or use square brackets for a
+<tt>~[page link]</tt> or URL <tt>~[~http://cool.wiki.int/]</tt>.%%%
+*Preventing linking:* Prefix with "<tt>~~</tt>":
+<tt>~~~DoNotHyperlink</tt>, name links like <tt>~[text | URL]</tt>.%%%
+*Misc:* "<tt>!</tt>", "<tt>!!</tt>", "<tt>!!!</tt>" make headings,
+"<tt>~%%%</tt>" or "<tt>~<br></tt>" makes a linebreak,
+"<tt>~----</tt>" makes a horizontal rule.%%%
+*Allowed HTML tags:* <b>b</b> <big>big</big> <i>i</i>
+<small>small</small> <tt>tt</tt> <em>em</em> <strong>strong</strong>
+<abbr>abbr</abbr> <acronym>acronym</acronym> <cite>cite</cite>
+<code>code</code> <dfn>dfn</dfn> <kbd>kbd</kbd> <samp>samp</samp>
+<var>var</var> <sup>sup</sup> <sub>sub</sub>
+
+----
+
+!!! Character Formatting
+
+* All special non-whitespace HTML characters are displayed as-is. Exceptions below.
+* See [Emphasis|TextFormattingRules#Emphasis].
+* There's no syntax for font tags or color attributes.
+* The tilde '~~' is the _Escape Character_:
+** A single tilde '~~' followed by nothing gets rendered as a single tilde. => ~
+** Two tilde '~~~~' get rendered as a single tilde. => ~~
+** A single tilde before a link ('~~http~:~/~/foo.bar') prevents linking.
+   => ~http://foo.bar
+** Two tildes before a link ('~~~~http~:~/~/foo.bar') produce a tilde
+   followed by the hyperlinked URL.
+   => ~~http://foo.bar
+** A tilde inside an URL gets removed, unless it's formatted inside
+   ~[ ~] brackets.
+   Two tildes inside an URL (without brackets) become a single tilde.
+   => [http://foo.bar/~user] or http://foo.bar/~~user
+* Special non-ascii or non-latin characters are printed as-is only if supported
+  by the native wiki CHARSET. Add such characters on a non-supported CHARSET with the RawHtmlPlugin if it is enabled by the Admin and e.g. the &#num; syntax. %%%
+  E.g. These japanese euc-jp chars '&#12363;&#12425; &#26032;&#35215;&#12506;&#12540;&#12472;' on this =<?plugin SystemInfo CHARSET?>= wiki.
+  And with the plugin: <?plugin RawHtml &#12363;&#12425; &#26032;&#35215;&#12506;&#12540;&#12472; ?> %%%
+  And this is how it should like: [http://phpwiki.sourceforge.net/demo/images/chars-releasenotes-japanese.png]
+
+!!! Paragraphs
+
+* Don't indent paragraphs
+* Words wrap and fill as needed
+* Use blank lines as separators
+* Four or more minus signs make a horizontal rule
+* =~%%%= or =~<br>= makes a linebreak (in headings and lists too)
+
+
+!!! Lists
+
+* asterisk for first level
+  * indented asterisk (indent at least two spaces) for second level, etc.
+* Use <tt>~*</tt>, <tt>-</tt>, <tt>+</tt> or <tt>o</tt> for bullet
+  lists, <tt>#</tt> for numbered lists (mix at will)
+* Definition lists:
+  <pre>
+  Term:
+    definition
+  </pre>
+  gives
+  Term:
+    definition
+  as in the =<DL><DT><DD>= list
+* Items may contain multiple paragraphs and other multi-lined content,
+  just indent the items
+
+
+!!! Headings
+
+* '=!=' at the start of a line makes a small heading
+* '=!!=' at the start of a line makes a medium heading
+* '=!!!=' at the start of a line makes a large heading
+
+
+!!! Preformatted text
+
+* Place preformatted lines inside =~<pre>=:
+  <verbatim>
+  <pre>
+  Preformatted text. WikiLinks still work.
+  </pre>
+  </verbatim>
+  gives
+  <pre>
+  Preformatted text. WikiLinks still work.
+  </pre>
+* If you want text with no Wiki interaction, use the =~<verbatim>= tag:
+  <pre>
+  <verbatim>
+  Preformatted text. ~WikiLinks do not work.
+  </verbatim>
+  </pre>
+  gives
+  <verbatim>
+  Preformatted text. WikiLinks do not work.
+  </verbatim>
+
+
+!!!Indented Paragraphs
+
+* Two or more whitespaces signal indented text. Indents may be nested.
+
+    This is an indented block of text.
+
+      This block is even more indented.
+
+* E-mail style block-quoting is supported as well:
+  <pre>
+  > This is block-quoted text.
+  </pre>
+  renders as
+
+  > This is block-quoted text.
+
+
+!!! Emphasis
+
+* Use an underscore (<tt>~_</tt>) for emphasis (usually _italics_)
+* Use an asterisk (<tt>~*</tt>) for strong emphasis (usually *bold*)
+* Mix them at will: *_bold italics_*
+* _Emphasis_ can be used _multiple_ times within a paragraph, but
+  _cannot_ cross paragraph boundaries:
+
+  _this
+
+  will not work_
+
+!!! References
+
+* Hyperlinks to other pages within the Wiki are made by placing the
+  page name in square brackets: [this is a page link] or
+  UsingWikiWords (preferred)
+* Hyperlinks to external pages are done like this:
+  [http://www.wcsb.org/]
+* You can name the links by providing a name, a bar (|) and then the
+  hyperlink or pagename:
+  [PhpWiki home page | http://phpwiki.sourceforge.net/] ---
+  [the front page | HomePage]
+* You can suppress linking to old-style references and URIs by
+  preceding the word with a '<tt>~~</tt>', e.g. ~NotLinkedAsWikiName,
+  ~http://not.linked.to/
+* Also, the old way of linking URL's is still supported: precede URLs
+  with "<tt>http:</tt>", "<tt>ftp:</tt>" or "<tt>mailto:</tt>" to
+  create links automatically as in: http://c2.com/
+* URLs ending with =.png=, =.gif=, or =.jpg= are inlined if in square
+  brackets, by themselves:
+  [http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+* In-page #[hyperlinks] are made by placing a named anchor and
+  referring to the anchor in a hyperlink:
+  * Named anchors:
+    * <tt>~#~[foo]</tt>: An anchor around the text "foo" with id
+      "foo".
+    * <tt>~#~[|foo]</tt>: An empty anchor with id "foo".
+    * <tt>~#~[howdy|foo]</tt>: An anchor around the text "howdy" with
+      id "foo".
+  * References to name anchors are made thusly:%%%
+    <tt>~[~#[#hyperlinks]]</tt>, <tt>~[~OtherPage#foo]</tt>,
+    <tt>~[named|~OtherPage#foo]</tt>.
+
+
+!!! Tables
+
+* Definition list style tables are written just like definition lists,
+  except that you replace the trailing colon on the term with a "pipe"
+  (<tt>|</tt>).
+
+  <pre>
+  Term 1 |
+     Definition 1 begins here.
+     Term 1.1 |
+        Definition 1.1
+     Term 1.2 |
+        Definition 1.2
+     This is part of definition 1.
+  Term 2 |
+     Here's definition 2.
+  </pre>
+
+  Term 1 |
+     Definition 1 begins here.
+     Term 1.1 |
+        Definition 1.1
+     Term 1.2 |
+        Definition 1.2
+     This is part of definition 1.
+  Term 2 |
+     Here's definition 2.
+
+* Old-style tables are supported through the OldStyleTablePlugin:
+
+!!! HTML Mark-Up Language
+
+* Some in-line markup is allowed through the use of HTML tags:
+  <b>b</b>, <big>big</big>, <i>i</i>, <small>small</small>,
+  <tt>tt</tt>, <em>em</em>, <strong>strong</strong>,
+  <abbr>abbr</abbr>, <acronym>acronym</acronym>, <cite>cite</cite>,
+  <code>code</code>, <dfn>dfn</dfn>, <kbd>kbd</kbd>,
+  <samp>samp</samp>, <var>var</var>, <sup>sup</sup> and <sub>sub</sub>
+* < and > are themselves
+* The & characters will not work
+
+!!! Creating various kinds of special links
+
+* See [MagicPhpWikiURLs] for gory details on how to write various kind
+  of wiki maintenance and other special links.
+
+!!! Inserting plugins
+
+* Several plugins permit embedding additional functionality to Wiki
+  pages. For example,
+  <verbatim>
+  <?plugin BackLinks page=HomePage info=hits ?>
+  </verbatim>
+  gives
+  <?plugin BackLinks page=HomePage info=hits ?>
+
+* For more information on plugins see WikiPlugin, and PluginManager for a list of all 
+  plugins.
+
+----
+
+PhpWikiDocumentation

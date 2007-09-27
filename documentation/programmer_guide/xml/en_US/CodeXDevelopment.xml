@@ -1,0 +1,182 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+  <chapter id="CodeXDevelopment">
+    <title>CodeX Development</title>
+    <para></para>
+    
+    <section id="DevConventions">
+      <title>Code Conventions</title>
+      <para>There are a few conventions to follow when developing for CodeX. Don't forget that an homogeneous code is easier to maintain!
+      </para>
+
+      
+      <section><title>HTML</title>
+        <para>All scripts that render HTML should be located in the <literal>SF/www</literal> directory tree. The <literal>SF/common</literal> directory contains PHP-only class definitions.</para>
+      </section>
+      
+      <section><title>Naming Conventions</title>
+        <para>Variable and function names are written 'like_this', while class names are written 'LikeThat'.</para>
+      </section>
+      
+      <section><title>I/O</title>
+        <para>PHP scripts should not directly modify the file system (e.g. for creating, moving or deleting files). For security purposes, it is recommended to use cron jobs: the PHP script can write a temporary file that will be interpreted by the cron script. </para>
+      </section>
+      
+      <section><title>Feedback</title>
+        <para>It is generally a good idea to give some feedback to the user when she performed some action, e.g. 'member added', '3 artifacts updated', etc. The usual way to display this message is to use the <literal>&dollar;feedback</literal> global variable. This is a special variable that, when set, is systematically displayed in bold case (and usually in red) on the top and bottom of the page. Since the variable may have been modified before, you should append your text (e.g. with the '.=' operator), instead of simply setting it (with '=').</para>
+      </section>
+      
+      <section><title>Error handling</title>
+        <para>When a PHP script encounters an error, it usually simply displays an error message and exits. There are a few utilities that will help. The <literal>exit_error()</literal> function (and other functions from the <literal>exit.php</literal> file) can display an HTML page with your error message. However, if the page is already being generated, or if the error is not critical, you may also use the <literal>&dollar;feedback</literal> global variable described above.</para>
+      </section>
+
+      <section><title>'service_util' and 'service_data'</title>
+        <para>When creating a new directory in the <literal>SF/www</literal> directory, e.g. for a new service, it is advised to create two special files in this new directory: one ending with '_data' and the other one with '_util'. the first one should contain all DB functions needed by the new service, and the second should contain utility functions needed in several scripts.</para>
+      </section>
+      
+      <section><title>Special Groups</title>
+        <para>There are at least three special groups (i.e. projects) used in CodeX:</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Group 1</emphasis> is the 'admin' group; and as such, is quite different from all the others. Members of this project are considered as super-users on the entire site. Documents stored in this project are available as the site documentation. Its forums are site forums, etc.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Group 100</emphasis> is the 'template' group. It is used to store templates for various services. Trackers of this group are the tracker templates, available when creating new trackers. It also defines the service templates that are created when initializing a new project.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Group 46</emphasis> (or the group defined by the <literal>&dollar;sys_news_group</literal> variable in <literal>local.inc</literal>) is the 'Site News' group. This group is used to store all project news submitted by project admins. Every news is stored as a forum in this project: this allows users to comment news.</para>
+          </listitem>
+        </itemizedlist> 
+      </section>
+
+      <section><title>Special values for select boxes and database tables</title>
+        <para>There are two reserved values when building select boxes or creating new tables.</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Value 100 for 'None'</emphasis>. From the source code:
+              "The infamous '100 row' has to do with the SQL Table joins done throughout all the code. There must be a related row in users, categories, etc, and by default that row is 100, so almost every pop-up box has 100 as the default. Most tables in the database should therefore have a row with an id of 100 in it so that joins are successful"</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Value 0 for 'Any'</emphasis>. From the source code: "There is now another infamous row called the Any row. It is not in any table as opposed to 100. it's just here as a convenience mostly when using select boxes in queries (bug, task,...). The 0 value is reserved for Any and must not be used in any table.</para>
+          </listitem>
+        </itemizedlist> 
+      </section>
+
+      <section><title>User Interface: Keep it simple</title>
+        <para>In general, it is simpler, easier and cheaper to use simple user interface mechanisms. So you should avoid HTML frames or Javascript wherever possible, and stick to standards when it comes to building the HTML page. It does not mean for example that there is no Javascript in CodeX. In fact, there is some, but it is used only when necessary. Also remember that the CodeX user population might use different web browsers, so it is also advised to test your pages on several browsers (and at least on those that are officially supported).</para>
+      </section>
+
+
+    </section>
+    
+    <section id="ProgrammingTips">
+      <title>Programming Tips</title>
+      <para>Here are a few programming tips that will help the CodeX-developer-to-be.
+      </para>
+      <section><title>'group' = project</title>
+        <para>In the source code, a 'group' almost always refers to a project. This comes for historical reasons when SourceForge implemented 'projects' and 'foundries' that were both sub-classes of 'group'. Foundries are currently not used in CodeX, so a 'group' is really a project. Hence, the 'group_id' is in fact the project ID.</para>
+      </section>
+
+      <section><title>PHP Info</title>
+        <para>The '<literal>/info.php</literal>' URL executes the <literal>phpinfo()</literal> function, and displays a lot of information that may be useful to the CodeX developer: PHP configuration, environment variables, version, HTTP header, Apache information, etc.</para>
+      </section>
+
+      <section><title><literal>pre.php</literal></title>
+        <para>The <literal>pre.php</literal> script, located in <literal>SF/www/include</literal> is a very special one, since it is included by all other PHP scripts. The goal of this script is to perform all initializations needed before executing a CodeX script:</para>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para>It reads CodeX configuration in <literal>local.inc</literal></para>
+          </listitem>
+          
+          <listitem>
+            <para>It initiates a database connection</para>
+          </listitem>
+          
+          <listitem>
+            <para>It retrieves user settings (timezone, access rights) and session from the DB</para>
+          </listitem>
+          
+          <listitem>
+            <para>It prepares the HTML layout (theme, left menu, etc.)</para>
+          </listitem>
+          
+          <listitem>
+            <para>etc.</para>
+          </listitem>
+        </itemizedlist>          
+      </section>
+
+      <section><title>Database Interaction</title>
+        <para>When building SQL queries for CodeX scripts, one needs to have in mind the database structure: what table contains the information, what columns, etc. This information can be quickly found with the phpMyAdmin utility, available at the '<literal>/phpMyAdmin/index.php</literal>' URL. It allows you to browse the database structure and values, execute SQL 'SELECT' commands, etc. It also allows you to modify the database, but you should use this feature with caution. In particular, if you need to change the database structure for your current developments, we advise you to directly write an SQL update script instead, as described below. </para>
+      </section>
+
+    </section>
+
+    <section>
+      <title>Updates provided on support branch</title>
+        <section>
+           <title>Committing on the support branch</title>
+           <para>Commits on the support branch are a little bit different than those 
+           on the dev branch because of the plugin ServerUpdate that let the 
+           customers updating their server through the web-interface.</para>
+           <para>When committing on support branch, write your commit message 
+           as always, and then, after your commit message, add some meta-data information:
+           <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+             <para>level=minor|normal|critical  (required)</para>
+            </listitem>
+            <listitem>
+             <para>update=(auto|manual), db (all optionnals, auto by default)</para>
+            </listitem>
+           </itemizedlist>
+           </para>
+           <para>The meta-data syntax will be checked by a pre-commit hook. The error message
+           contains a reminder of the syntax.</para>
+        </section>
+        
+        <section>
+          <title>Database Upgrade</title>
+          <para>Sometimes, when developing on CodeX, you might need to modify the database, e.g. to add, delete or alter a column or a table.
+          </para>
+          <para>In this case, you must create a migration script that will 
+          transform an existing CodeX DB into one that fits your needs.
+          <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+             <para>updates scripts must take place in <literal>/src/updates/scripts/</literal> directory</para>
+            </listitem>
+            <listitem>
+             <para>updates scripts are written in PHP, and extend the CodeXUpgrade class</para>
+            </listitem>
+            <listitem>
+             <para>the file name must be <literal>XXX_patch_description.class.php</literal>, with XXX a number between 001 and 999 (please keep the numerical order -- 002 must be executed before 003)</para>
+            </listitem>
+            <listitem>
+             <para>the core script is the function <literal>_process</literal>, that you need to implement. It will be executed by the mother class when executing the script.</para>
+            </listitem>
+           </itemizedlist>
+          </para>
+          <para>In most cases, you will also need to modify <literal>database_structure.sql</literal> and <literal>database_initvalues.sql</literal> located in <literal>SF/db/mysql</literal>. Don't forget!
+          </para>
+        </section>
+    </section>
+
+  </chapter>
+
+  <!--
+  Local Variables:
+  sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+  End:
+  -->

@@ -1,0 +1,250 @@
+#/**
+#  *
+#  * Account scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/account/index.php
+#
+account_options	title		Account Maintenance
+account_options	welcome		Welcome
+account_options	welcome_intro	You can view or change all of your account features from here. You may also wish to view your profile.
+account_options	member_since	Member since
+account_options	view_developer_profile	View My Developer Profile
+account_options	edit_skills_profile	Edit My Skills Profile
+account_options	user_id	User Id
+account_options	login_name	CodeX Name
+account_options	ldap_name	LDAP Login
+account_options	change_password	Change Password
+account_options	real_name	Real Name
+account_options	change_real_name	Change Real Name
+account_options	language	Language
+account_options	timezone	Timezone
+account_options	change_timezone	Change Timezone
+account_options	email_address		Email Addr
+account_options	change_email_address	Change Email Addr
+account_options	preferences	Preferences
+account_options	font_size	Font Size
+account_options	font_size_browser	Browser Default
+account_options	font_size_small	Small
+account_options	font_size_normal	Normal
+account_options	font_size_large	Large
+account_options	theme	Theme/Color Scheme
+account_options	shell_account_title	Shell Account Information
+account_options	shell_box	Shell Box
+account_options	shell_shared_keys	SSH Shared Keys
+account_options	shell_edit_keys	Edit Keys
+account_options	remember_me	"Remember me" <u><i>($1 remembers your login/password. If you change this preference make sure to logout and login again)</i></u>
+account_options	csv_separator	CSV separator
+account_options	comma	comma
+account_options	semicolon	semicolon
+account_options	tab	tab
+
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email.php
+#
+account_change_email	title	Change Email Address
+account_change_email	message	<P>Changing your email address will require confirmation from your new email address, so that we can ensure we have a good email address on file. <P>Submitting the form below will mail a confirmation URL to the new email address. Visiting this link will complete the email change.
+account_change_email	label_new	New Email Address
+account_change_email	send_new	Send Confirmation to New Address
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email-confirm.php
+#
+account_change_email-confirm	message	You have requested a change of email address on $1.\nPlease visit the following URL to complete the email change:\n\n$2\n\n-- The $1 Team
+account_change_email-confirm	title	Email Change Confirmation
+account_change_email-confirm	mailsent	An email has been sent to the new address. Follow the instructions in the email to complete the email change.
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_email-complete.php
+#
+account_change_email-complete	invalid_hash	Invalid confirmation hash.
+account_change_email-complete	duplicate_hash	This hash key exists more than once.
+account_change_email-complete	title	Email Change Complete
+account_change_email-complete	message	Welcome, $1.<P>Your email change is complete. Your new email address on file is <B>$2</B>. Mail sent to $3 user $1 (login $4) will now be forwarded to this new email address.
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_pw.php
+#
+account_change_pw	title_success	Successfully Changed Password
+account_change_pw	message	Congratulations. You have changed your $1 password. This change is immediate on the web site, but will not take\neffect on your shell/cvs account until the backend update, \nwhich will happen in <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span> from now.
+account_change_pw	title	Password Change
+account_change_pw	old_password	Old Password
+account_change_pw	new_password	New Password
+account_change_pw	new_password2	New Password (repeat)
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_realname.php
+#
+account_change_realname	error	You must supply a new real name.
+account_change_realname	title	Real Name Change
+account_change_realname	new_name	New Real Name
+#
+#-----------------------------------------------
+# Script: SF/www/account/change_timezone.php
+#
+account_change_timezone	title	Change Timezone
+account_change_timezone	title2	Timezone Change
+account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
+account_change_timezone	no_update	Nothing Updated
+account_change_timezone	choose_tz	Please choose a timezone other than none
+#
+#-----------------------------------------------
+# Script: SF/www/scripts/check_pw.js.php
+#
+account_check_pw	password_robustness	Password robustness:
+account_check_pw	good	Good
+account_check_pw	bad	Bad
+#
+#-----------------------------------------------
+# Script: SF/www/account/deleted.php
+#
+account_deleted	title	Deleted Account
+account_deleted	message	Your account has been deleted. If you have questions regarding your deletion, please email <A HREF="mailto:$1">$2</A>.
+#
+#-----------------------------------------------
+# Script: SF/www/account/editsshkeys.php
+#
+account_editsshkeys	title	Change Authorized SSH Keys
+account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your '~/.ssh/authorized_keys' file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
+account_editsshkeys	important	<P><b>IMPORTANT:</b>SSH Shared Keys Updates will be reflected in the next cron update in approximately <B>$1</B> hours, <B>$2</B> minutes from now	
+account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
+#
+#-----------------------------------------------
+# Script: SF/www/account/first.php
+#
+account_first	title	Welcome to $1!
+account_first	message	You are now a registered user on $1. As a registered user, you can now fully participate in the activities of the $1 Web Site. You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.<P><center><b><span class="highlight">** IMPORTANT REMARKS **</span></b></center><BR>While your Web account is available right now, it takes some time for $1 to create your <u>Shell account</u>. Some features like CVS access depend on it. Your Shell account will be activated in about <b>$2</b> hour <B>$3</B> minutes from now. <P>In the meantime we highly recommend that you browse through the site, read the <A href="/docs/site/">Site Documentation</A> and finalize the setup of your <a href="/account/">User Profile</a> (Define your skills profile, your preferences, etc.)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Enjoy the site, provide us with feedback on ways that we can improve $1 and speak of $1 around you. <P>-- The $1 Team
+#
+#-----------------------------------------------
+# Script: SF/www/account/login.php
+#
+account_login	title	Site Login
+account_login	secure	Secure
+account_login	error_can_t_update_passwd	Internal error: Could not update passwords.
+account_login	pending_title	Pending Account
+account_login	pending_msg	Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	validation_msg	Your account has been validated by an administrator, is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account.<P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_login	need_approval	Your account is currently pending an approval from an administrator. You will be notified by email when your account is validated.
+account_login	resend_btn	Resend Confirmation Email
+account_login	cookies	Cookies must be enabled past this point
+account_login	name	Login Name
+account_login	password	Password
+account_login	stay_ssl	Stay in secure connection mode after login<br><em>&nbsp;&nbsp;&nbsp;(You will be connected with a secure Web server and all your web pages will travel encrypted over the network).</em>
+account_login	msie_pb	<B>Internet Explorer </B> users (prior to 5.1) will have intermittent SSL problems, so they should leave SSL after login. Visit <A HREF="http://www.microsoft.com/">Microsoft</A> for more information about this known problem.
+account_login	login_btn	Login
+account_login	lost_pw	<b><A href="lostpw.php">[Lost your password?]</A></b><BR> If you have lost your password please do not create another account but follow us and we'll help you <a href="lostpw.php">remember your lost password</a>. If it fails then contact the <a href="mailto:$1"><b>$2 site administrators</b></a>.
+account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></b><BR> If it's your first time on the <b>$1</b> site you can become a member right now ! The creation of a <a href="register.php">new account</a> takes a few seconds and you can take advantage of the services offered by the $1 site.
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostlogin.php
+#
+account_lostlogin	title	Lost Password
+account_lostlogin	message	Welcome, $1. You may now change your lost password.
+account_lostlogin	duplicate_hash	This hash key exists more than once.
+account_lostlogin	invalid_hash	Invalid confirmation hash.
+account_lostlogin	newpasswd	New Password
+account_lostlogin	newpasswd2	New Password (repeat)
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostpw-confirm.php
+#
+account_lostpw-confirm	title	Lost Password Confirmation
+account_lostpw-confirm	mail_subject	$1 Password Verification
+account_lostpw-confirm	mail_body	Someone (presumably you) on the $1 site requested a\npassword change through email verification. If this was\nnot you,ignore this message and nothing will happen.\n\nIf you requested this verification, visit the following URL\nto change your password:\n\n$2\n\n -- The $1 Team\n
+account_lostpw-confirm	msg_confirm	<B>Confirmation mailed</B><P>An email has been sent to the address you have on file. Follow the instructions in the email to change your account password.
+#
+#-----------------------------------------------
+# Script: SF/www/account/lostpw.php
+#
+account_lostpw	title	Lost Account Password
+account_lostpw	message	<B>Lost your password?</B><P>Hey... losing your password is serious business. It compromises the security of your account, your projects, and this site.<P>Clicking on the button below will email a URL to the email address we have on file for you. In this URL is a 128-bit confirmation hash key for your account. Visiting the URL will allow you to change your password online and login.
+account_lostpw	send_hash	Send Lost Password Hash
+#
+#-----------------------------------------------
+# Script: SF/www/account/myprojectlist.php
+#
+account_myprojectlist	title	My Project Listing
+account_myprojectlist	grp_list	Group List for <B>$1</B>
+#
+#-----------------------------------------------
+# Script: SF/www/account/pending-resend.php
+#
+account_pending-resend	title	Account Pending Verification
+account_pending-resend	message	<B>Pending Account</B>\n\n<P>Your email confirmation has been resent. Visit the link \nin this email to complete the registration process.
+account_pending-resend	notpending	This account is not pending verification.
+account_pending-resend	needapproval	This account needs to be approved by an administrator.
+#
+#-----------------------------------------------
+# Script: SF/www/account/pending.php
+#
+account_pending	title	Pending Account
+account_pending	message	<B>Pending Account</B><P>Your account is currently pending your email confirmation. Visiting the link sent to you in this email will activate your account. <P>If you need this email resent, please click below and a confirmation email will be sent to the email address you provided in registration.
+account_pending	btn_resend	Resend Confirmation Email
+#
+#-----------------------------------------------
+# Script: SF/www/account/register.php
+#
+account_register	err_exist	That username already exists.
+account_register	err_nouser	You must supply a username.
+account_register	err_nopasswd	You must supply a password.
+account_register	err_passwd	Passwords do not match.
+account_register	err_notz	You must supply a timezone.
+account_register	err_nopurpose	You must explain the purpose of your registration.
+account_register	err_email	Invalid Email Address
+account_register	err_name	The login name is invalid
+account_register	err_invpasswd	The password is invalid
+account_register	err_no_ldap	The LDAP login is missing
+account_register	title_confirm	Registration Confirmation
+account_register	title	New Account Registration
+account_register	login	Login Name
+account_register	ldap_login	LDAP Login Name
+account_register	ldap_unix_login	CodeX Name <strong>(Lower case only, no spaces)</strong>
+account_register	ldap_email_help	<em><strong>Remark:</strong> This email address was retrieved from the directory. Please do not change it.</em>
+account_register	codex_login_help	This login was generated from your email address. You may change it if needed.
+account_register	login_directions	<strong>(Lower case only!)</strong>
+account_register	passwd	Password
+account_register	passwd_directions	(minimum 6 chars)	
+account_register	passwd2	Password (repeat)
+account_register	passwd2_directions	&nbsp;
+account_register	realname	Full/Real Name
+account_register	realname_directions	&nbsp;
+account_register	email	Email Address 
+account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>	 
+account_register	tz	Timezone
+account_register	mandatory	Fields marked with $1 are mandatory.
+account_register	siteupdate	Receive Email about Site Updates <I>(Very low traffic and includes security notices. Highly Recommended.)</I>
+account_register	communitymail	Receive additional community mailings. <I>(Low traffic.)</I>
+account_register	purpose	Purpose 
+account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
+account_register	btn_register	Register
+account_register	btn_next	Next Step
+account_register	msg_confirm	Congratulations. You have registered on $1. Your new user name is: $2</b><p>You are now being sent a confirmation email to verify your email  address. Visiting the link sent to you in this email will activate your account.</p>
+account_register	title_approval	New Account Registration - Ready For Approval
+account_register	msg_approval	Congratulations. Your registration request on $1 for user <b>$2</b> has been taken into account. <p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.
+account_register	mail_approval_subject	New User Registered: $1
+account_register	mail_approval_body	A new user has just registered on $1.\n\nUser Name: $2\n\nPlease click on the following URL to approve the registration:\n\n$3\n
+#
+#-----------------------------------------------
+# Script: SF/www/account/suspended.php
+#
+account_suspended	title	Suspended Account
+account_suspended	message	Your account has been suspended. If you have questions regarding your suspension, please email <a href="mailto:$1">the site administrators</A>. Inquiries through other channels will be directed to this address.
+#
+#-----------------------------------------------
+# Script: SF/www/account/verify.php
+#
+account_verify	title	Account Verification
+account_verify	message	In order to complete your registration, login now. Your account will then be activated for normal logins.
+account_verify	err_user	Invalid username.
+account_verify	err_hash	Invalid confirmation hash.
+account_verify	err_status	Invalid status. Site Administrators didn't validate your account.

@@ -1,0 +1,320 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<chapter id="BecomingACodeXCitizen">
+  <title>Becoming a CodeX Citizen</title>
+
+  <section id="ClassesOfCitizens">
+    <title>Classes of Citizens</title>
+
+    <para>Before we go further into the user registration process it
+    is worth reviewing the various types of CodeX citizens. There are
+    basically 4 of them:</para>
+
+    <itemizedlist mark="bullet">
+      <listitem>
+	<para><emphasis role="bold">Anonymous Users</emphasis>: when
+	you first visit the CodeX site you are typically an anonymous
+	user. Anonymous users can browse the CodeX site but
+	many of the CodeX services or CodeX resources cannot be used
+	or accessed by an anonymous user (e.g. source code access is
+	not possible, all the monitoring facilities aren&#39;t either,
+	etc.). So we strongly advise you to become a registered
+	user to take full advantage of the CodeX site.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Registered Users</emphasis>: once
+	you have created your own account (see below) you can use your
+	login/password to authenticate yourself with CodeX. Registered
+	users have access to all CodeX projects including source code
+	unless the project administrators decided otherwise. And since
+	the system knows about you, it enables you to customize your
+	view of the system through your Personal Page, monitor Forums,
+	software release, receive support request follow-ups, site
+	updates and many other useful things.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Project Members</emphasis>: users
+	who are actively working on a CodeX hosted project. To become
+	a project member, you must first become a registered user and
+	then ask a project administrator to include you in the project
+	members. Most of the time project members are part of the
+	project team but are not limited to software developers. They
+	can be in charge of the support activity, the project
+	documentation or the project management.  Project members can
+	be granted different rights by the Project Administrator
+	according to their role in the team (see <xref
+	linkend="ProjectAdministration" /> for more details).</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Project Administrators</emphasis>:
+	registered users who create a new CodeX project are elected as
+	the first Project Administrators. Project Administrators have
+	full rights over their projects except project deletion - a
+	very unusual operation - that can only be done by a CodeX Team
+	member. In the course of the project life, the initial project
+	administrator can grant (or revoke) the status of project
+	administrator to any project member.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Restricted Users</emphasis>: users
+	who are project members, or even project administrators, but
+        with restricted access rights: they cannot access pages from 
+        projects they are not member of.
+        This special role is only enabled on CodeX servers in heterogeneous 
+        environments where corporate users and external consultants 
+        share the same server.</para>
+      </listitem>
+    </itemizedlist>
+
+  </section>
+
+  <section id="UserRegistration">
+    <title>User Registration</title>
+
+    <para>As suggested above, the first thing to do for a newcomer is to
+      create her own account on CodeX. Becoming a registered CodeX user
+      doesn&#39;t imply any commitment on your part to host any of your
+      software projects on CodeX. It simply gives you more freedom when you
+      browse the site and allows CodeX to serve you with personalized
+      information.</para>
+
+    <para>Registering on CodeX is quick and easy:</para>
+
+    <procedure>
+      <step>
+	<para>Select the &#34;New User&#34; link</para>
+      </step>
+
+      <step>
+	<para>Give the following information (all items marked with an
+          asterisk are mandatory):</para>
+
+	<substeps>
+	  <step>
+	    <para><emphasis role="bold">Login Name</emphasis>: your
+	    user name. On some CodeX systems that are connected to an
+	    enterprise directory you may have to use a pre-defined
+	    user name.</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">Password</emphasis>: 6 characters
+              minimum and repeat it twice to make sure you didn&#39;t make any
+              typo in the first occurrence</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">Full Real Name</emphasis>: what&#39;s
+              your name again?</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">E-mail Address</emphasis>:
+	    depending on the site configuration valid email addresses
+	    may be limited to those in the &SYS_ORG_NAME; domain (or
+	    &SYS_ORG_NAME; affiliated domains). Make sure your email
+	    address is corrent or you won't receive the registration
+	    confirmation message in your mailbox and won't be able to
+	    complete the registration process.</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">Time Zone</emphasis>: choose the time
+              zone you live in. Choosing the correct time zone is really
+              important. Behind the scene CodeX stores all time stamps in GMT
+              time. Choosing the right time zone allow s CodeX to translate
+              all time stamps to your local time on the Web pages.</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">Site Updates</emphasis>: check this
+              box if you want to receive site updates from the CodeX Team.
+              This is a low traffic distribution list and we strongly advise
+              you to check this box (default). You&#39;ll receive e-mail from
+              us about the site maintenance, the important event in the life
+              of the site, CodeX presentation/training announcement and the
+              CodeX newsletter.</para>
+	  </step>
+
+	  <step>
+	    <para><emphasis role="bold">Additional Community Mailings</emphasis>: check
+              this box if you want to receive notification about less
+              important events. You can safely check this box as well if you
+              want because we seldom use it. So we assure you that you
+              won&#39;t be overwhelmed with tons of e-mail.</para>
+	  </step>
+	</substeps>
+      </step>
+
+      <step>
+	<para>Shortly after you validate the registration form you will
+          receive a message in your mailbox which includes a URL. Clicking on
+          this URL will bring you to a CodeX form asking for your
+          login/password again. If they match then your account is validated
+          and you are now logged into the CodeX site.</para>
+      </step>
+    </procedure>
+
+    <tip>
+      <title>Tip: CodeX servers with LDAP authentication</title>
+
+      <para>Your CodeX server might be set up to use an external LDAP directory for 
+      authentication. In this case, the registration phase is even simpler: simply 
+      type your LDAP login and password, and the system will automatically extract
+      most of the required information from the LDAP directory: email 
+      address, real name, etc.</para>
+    </tip>
+
+    <para>This 2-step registration process has been put in place for
+      security reasons. Assuming people create their account with an alien
+      e-mail address while they have access to the Intranet, they
+      won&#39;t be able to validate their account from the outside because the
+      CodeX machine is behind the firewall. Therefore, an account cannot
+      be validated from outside.</para>
+
+    <tip>
+      <title>Tip: What if I loose my password or my login name?</title>
+
+      <para>Don&#39;t Panic and, above all, do not create a new account! Go
+        to the CodeX Login Page and click on the [Lost your password?] link.
+        You&#39;ll be asked your login name and from that CodeX will send you
+        an e-mail message with an embedded URL. Click on this URL and give
+        your new password.</para>
+
+      <para>And what if I loose both my login and password? Gee! In this
+        case use the search box and, assuming that you gave your full real
+        name when you first registered, search for your last name and see if
+        you can find your login again in the list of selected users. If so,
+        apply the previous procedure. If not then contact us!</para>
+    </tip>
+  </section>
+
+  <section id="LoginAndPersonalPage">
+    <title>Login and Personal Page</title>
+
+    <para>To log into the CodeX site, go to the CodeX Site at <ulink
+								     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink> and click
+      on the &#34;Login&#34; link. If
+      you typed your login and password OK, CodeX presents you with your
+      Personal Page (<xref linkend="FigureThePersonalPageOfACodeXUser" />). At
+      any point in time you can return to your CodeX Personal Page by
+      selecting the &#34;My Personal Page&#34; in the upper part of the CodeX
+      Main Menu.</para>
+
+    <para>Your Personal Page is a crossroad from which you can quickly
+    go to CodeX workplaces and information spaces. You'll see bugs and
+    tasks assigned to you in the various projects you belong to. In
+    addition the bug section also shows those bugs that you have
+    submitted including to foreign projects. By doing so, CodeX allows
+    you to follow the evolution of bugs that you have reported and you
+    might be impatient to see fixed.</para>
+
+    <figure id="FigureThePersonalPageOfACodeXUser">
+      <title>The Personal Page of a CodeX user</title>
+      
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_mypersonalpage.png" width="13.2cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>Another section is dedicated to the Discussion Forums and
+    the Software packages that you are currently monitoring. To cancel
+    any of the monitored items just click on the trash icon
+    (<inlinemediaobject><imageobject><imagedata format="PNG"
+    fileref="../../icons/trash.png"
+    /></imageobject></inlinemediaobject>) next to the item
+    label.</para>
+
+    <para>There is also a bookmark section. These are bookmarks to
+    your favorite pages in CodeX. Note that in many cases CodeX uses
+    URL with enough embedded information to bookmark sophisticated
+    items like Software Map browsing, typical search in your project
+    Bug or Task database, etc ... Bookmarked items can be edited which
+    means that both the title of the bookmark and its destination URL
+    can be modified. Finally, the list of projects you belong to is
+    listed in the lower right corner. Selecting any if these projects
+    brings you to the corresponding Project Summary page.</para>
+  </section>
+
+  <section id="AccountMaintenance">
+    <title>Account Maintenance</title>
+
+    <para>You provided a certain amount of demographic information to CodeX
+      when you first registered on the CodeX site. This and other information
+      can be modified at any time by selecting the &#34;Account
+      Maintenance&#34; item in the Codex Main Menu.</para>
+
+    <para>Most of the items on the &#34;Account Maintenance&#34; page will
+      look obvious to you. However, we would like to draw your attention on
+      some of them:</para>
+
+    <itemizedlist mark="bullet">
+      <listitem>
+	<para><emphasis role="bold">Edit My Skills Profile</emphasis>: a
+          user can make his resume available on CodeX. The intent here is to
+          let people know about you, your technical background and your domain
+          of expertise. Very useful to get to know each other.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Remember my Login/Password</emphasis>:
+          by default your current login session on CodeX is terminated
+          whenever you stop your Web browser. When you restart your browser
+          and visit CodeX you will be asked for your login/password again. By
+          checking this box you ask CodeX to remember about your
+          login/password forever or at least until you explicitly select the
+          &#34;Logout&#34; item in the CodeX Main Menu. For security reasons
+          we do not recommend using this feature unless you are equipped with 
+          a strictly personal desktop machine</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">CSV separator</emphasis>:
+          CodeX provides you export and import functionalities
+          (See <xref linkend="ProjectDataExport" /> for details).
+          The import/export format is CSV format. Like CSV norm is
+          not implemented by the same way in each software, we allow you
+          to change the CSV separator, in order to fit with your
+          prefered software!
+          The available separators are:
+          <itemizedlist mark="bullet">
+            <listitem><para>comma (,) : the default separator.</para></listitem>
+            <listitem><para>semicolon (;) : used by default by the french version of Excel.</para></listitem>
+            <listitem><para>tab (tab).</para></listitem>
+          </itemizedlist></para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">SSH shared keys</emphasis>: this one has
+          to do with the Shell Account service. When you are a registered
+          user, the CodeX server gives you a personal shell account with the
+          same login/password as for the Web interface. To automate the shell
+          login you can share a public encryption key with CodeX and use the
+          secure shell SSH to access CodeX instantly without having to type a
+          password. More on that in <xref linkend="ShellAccount" /></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

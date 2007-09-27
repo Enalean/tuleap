@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2003-2004. All Rights Reserved
+# This file is licensed under the CodeX Component Software License
+# http://codex.xerox.com
+#
+# $Id$
+#
+# Apache must be started from the root user
+if [ `whoami` != "root" ]; then
+   echo "Must be root to start/stop the Apache test server"
+   exit;
+fi
+
+prefix=$(dirname $0)
+pidFile=$prefix/../var/run/httpd.pid
+
+if [ ! -e $pidFile ]; then
+   echo "Apache test server not running."
+   exit;
+fi
+
+pid=`cat $pidFile`
+echo -n "Stopping Apache test server..."
+kill -TERM $pid
+echo "done (pid $pid)."
+

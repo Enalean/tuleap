@@ -1,0 +1,38 @@
+plugin_ldap	descriptor_description	CodeX LDAP Plugin. Provides LDAP information as well as LDAP authentication.
+plugin_ldap	people_ldap	Enterprise Directory
+plugin_ldap	err_sync	Unable to fetch user data from Enterprise Directory.
+plugin_ldap	dir_user_notfound	User not found in Enterprise Directory.
+plugin_ldap	ldap_login_help	Please enter your Enterprise Directory username and password.<br /><br /><em> If you encounter any problem to login, please send a email to <a href="mailto:$1?Subject=Unable to login under $2">$2 administrators</a></em>.
+plugin_ldap	err_account_creation	Unable to create a user account. Please contact an administrators.
+plugin_ldap	more_from_directory	More from the $1 Directory
+plugin_ldap	directory	Directory
+plugin_ldap	total_entries	Total number of entries
+plugin_ldap	entry_#	Entry #
+plugin_ldap	entry_dn	Entry dn
+plugin_ldap	attributes	attributes
+plugin_ldap	ldap_login	Enterprise Directory Login:
+plugin_ldap	not_found	Error - Not Found
+plugin_ldap	no_ldap_login_found	No Enterprise Directory login found
+plugin_ldap	login_pls_use_ldap	Please use your Enterprise Directory login (not the $1 one).
+#
+#-----------------------------------------------
+# Script: plugins/ldap/www/welcome.php
+#
+#
+plugin_ldap	welcome_title	Welcome $1
+plugin_ldap	welcome_first_login	First login to $1
+plugin_ldap	welcome_fill_form	Thank you to fill the following before accessing your data:
+plugin_ldap	welcome_btn_update	Update my account
+plugin_ldap	welcome_preferences	Account preferences
+plugin_ldap	welcome_your_data	Account details
+plugin_ldap	welcome_ldap_login	User name:
+plugin_ldap	welcome_email	Email Address: 
+plugin_ldap	welcome_codex_login	$1 internal login:
+plugin_ldap	welcome_codex_login_j	<em>Required for CVS, FTP and Subversion accesses</em>.
+plugin_ldap	welcome_error_up	User settings update error
+plugin_ldap	welcome_error_up_expl	An error occured during account update: $1.
+plugin_ldap	welcome_err_notz	You must supply a timezone.<br /><br />Click on 'Back' to return to the previous screen and select a timezone.
+plugin_ldap	welcome_tz	Timezone
+plugin_ldap	welcome_communitymail	Receive additional community mailings. <em>(Low traffic.)</em>
+plugin_ldap	welcome_siteupdate	Receive Email about Site Updates <em>(Very low traffic and includes security notices. Highly Recommended.)</em>
+plugin_ldap	welcome_mandatory	Fields marked with $1 are mandatory.

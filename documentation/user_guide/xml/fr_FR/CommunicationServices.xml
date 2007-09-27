@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: CommunicationServices.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="CommunicationServices">
+    <title>Services de communication</title>
+
+    <para>L'un des objectifs de CodeX est de fournir aux développeurs
+    des outils de développement et de gestion de projets
+    efficaces. D'autre part, le site CodeX devrait aussi devenir très
+    rapidement le canal de communication favori de tous les
+    utilisateurs puisqu'une communication efficace est capitale pour
+    les équipes de projets et leurs communautés.</para>
+
+    <para>A cette fin, CodeX propose un ensemble de services de
+    communication que l'équipe de projet peut personnaliser. Cela
+    inclut les listes de diffusion, le service d'annonces (news) et
+    les forums Web.</para>
+
+    <section id="MailingLists">
+      <title>Listes de distribution</title>
+
+      <section id="MailingListsCreation">
+        <title>Création</title>
+        
+      <para>Chaque projet peut créer autant de listes de diffusion que
+      nécessaire. Pour ce faire cliquez sur le lien &#34;Listes&#34;
+      dans la barre de menu principale du projet puis sur le lien
+      &#34;Administration&#34; de la barre de menu du service.</para>
+
+      <para>Pour créer une nouvelle liste de diffusion il suffit de
+      lui donner un nom, une description et de préciser s'il s'agit
+      d'une liste publique ou privée. Une liste privée n'est pas
+      visible sur la page d'accueil du service sauf pour les membres
+      du projet. Ainsi les autres utilisateurs ne peuvent pas s'y
+      inscrire ni poster de messages.</para>
+
+      <para>Dans le but de minimiser les conflits de nom entre listes
+      de diffusion des différents projets, leur nom suit le patron
+      suivant :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+nomprojet-nomliste@&SYS_LISTS_HOST;
+</programlisting>
+
+      <para>Où :</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><literal>nomprojet</literal> est le nom court du
+          projet tel qu'il a été défini durant la phase
+          d'enregistrement du projet.</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>nomliste</literal> est le nom que vous avez
+          choisi pour votre liste de diffusion.</para>
+        </listitem>
+      </itemizedlist>
+
+      <note><para>Lorsque vous créez une liste de diffusion vous en
+      devenez l'administrateur. En tant qu'administrateur, vous
+      recevrez des instructions complémentaires par e-mail peu après
+      la création de la liste de diffusion. Il s'agit d'un message
+      important contenant des URLs vers les pages d'information et
+      d'administration de la liste de diffusion ainsi que le mot de passe par défaut
+      généré par CodeX permettant d'accéder aux fonctions
+      d'administration. Gardez-le dans un endroit sûr !</para></note>
+
+      <para><tip><title>Coup de pouce : créez au moins une
+      liste de diffusion</title><para>Un projet hébergé sur CodeX devrait toujours
+      créer au moins une liste de diffusion (ou un forum Web) où les utilisateurs
+      peuvent poster leurs questions et leurs commentaires. Cette
+      liste est typiquement appelée
+      <literal>nomprojet-interest@&SYS_LISTS_HOST;</literal>. Nous
+      vous encourageons vivement à suivre cette pratique bien
+      établie.</para></tip></para>
+      </section>
+
+      <section id="MailingListsAdministration">
+        <title>Administration</title>
+
+        <para>L'administration d'une liste de diffusion se fait intégralement via
+        l'interface Web. Vous pouvez accéder à la page d'administration
+        de la liste de diffusion en utilisant l'URL que vous avez reçu lors de la
+        création de la liste de diffusion. Si vous avez égaré cette URL la voici à
+        nouveau :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://&SYS_LISTS_HOST;/mailman/admin/nomliste
+</programlisting>
+
+        <para>La page d'administration vous permet de régler de
+        nombreux paramètres de la liste de diffusion, de gérer les membres, les
+        administrateurs, la confidentialité, le message de bienvenue
+        aux nouveaux inscrits, etc. GNU/Mailman, le
+        gestionnaire de liste de diffusion utilisé par CodeX, est un logiciel très
+        riche et nous vous invitons à visiter la page d'administration
+        au moins une fois pour avoir une idée de l'éventail des
+        fonctionnalités.</para>
+
+        <note><para>Veuillez noter que les administrateurs d'un projet
+        ne sont pas automatiquement administrateurs des listes de
+        diffusion et le mot de passe d'administration d'une liste de diffusion est
+        différent de tout autre mot de passe d'utilisateurs
+        CodeX.</para></note>
+      </section>
+
+      <section id="UnSubscriptionArchiveandPreferences">
+        <title>(Dés)Inscription, archive et préférences</title>
+
+        <para>A moins qu'une liste de diffusion ne soit privée, tout utilisateur CodeX
+        peut s'y inscrire. Pour ce faire il suffit de cliquer sur le
+        lien &#34;Listes&#34; dans la barre de services du projet,
+        puis sur le lien &#34;(Dés)Abonnement/Préférences&#34; de la
+        liste de diffusion concernée. Ensuite suivez les instructions affichées à
+        l'écran.</para>
+
+        <para>Le gestionnaire de liste de diffusion de CodeX (GNU/Mailman) archive
+        aussi l'ensemble des messages échangés sur la liste de diffusion. En suivant
+        le lien &#34;Archive&#34; sur la même page que précédemment
+        vous pourrez consulter les messages archivés regroupés par
+        mois. Veuillez noter que la version actuelle de l'archiveur ne
+        garde pas trace des attachements au format MIME.</para>
+      </section>
+    </section>
+
+    <section id="NewsService">
+      <title>Service d'annonces</title>
+
+      <para>Le service d'annonces vient en complément du service de
+      listes de diffusion. Il vous permet de publier des annonces
+      relatives au projet. Tous les évènements survenant dans la vie
+      de votre projet peuvent faire l'objet d'une annonce : une
+      nouvelle personne dans l'équipe, une nouvelle version du
+      logiciel, des informations sur les technologies liées au projet
+      et pourquoi pas l'annonce de votre mariage où l'arrivée de votre
+      petit sixième :-). Ne gardez pas votre projet dans
+      l'ombre. Rendre la vie de votre projet publique sera bénéfique à
+      l'ensemble de votre communauté d'utilisateurs.</para>
+
+      <para>La publication d'une annonce est chose facile. Il suffit
+      de cliquer sur le lien &#34;Annonces&#34; dans la barre de
+      service du projet puis sur le lien &#34;Soumettre une
+      annonce&#34; dans la barre de menu du service au sommet de la
+      page. Ensuite tapez le titre et le contenu de l'annonce. Les
+      URLs présents dans le message seront automatiquement transformés
+      en hyperlien dans la version publiée. Vous pouvez aussi choisir
+      de rendre votre annonce publique c'est à dire visible sur votre page
+      de sommaire du projet par tous les utilisateurs CodeX ou privée 
+      c'est à dire visible seulement par vos membres de projet.</para>
+
+      <para>N'importe quel
+      utilisateur CodeX peut attacher un commentaire aux annonces visibles
+      pour lui sur votre page de sommaire de projet,
+      ce qui signifie que chaque annonce est un forum de discussion en
+      puissance<footnote><para>En arrière plan, chaque annonce est en
+      fait gérée exactement comme un forum Web
+      CodeX.</para></footnote>. De plus, l'équipe d'administration du
+      site CodeX a une vue sur l'ensemble des annonces publiques publiées par
+      les différents projets et peut décider de faire apparaître
+      certaines d'entre elles sur la page d'accueil principale du site
+      CodeX si elles présentent un intérêt pour l'ensemble des
+      utilisateurs. Une belle publicité en vérité !!
+      Lors de la soumission d'une annonce, vous pouvez d'ailleurs demander 
+      aux administrateurs que votre annonce soit mise en avant sur la page 
+      d'accueil principale du site.
+      </para>
+    </section>
+
+    <section id="WebForums">
+      <title>Forums Web</title>
+
+      <para>Il s'agit là de la troisième forme de communication offert
+      par CodeX. Les forums Web sont plus ou moins équivalents aux
+      listes de diffusion si ce n'est que l'envoi d'un message se fait
+      via l'interface Web plutôt que par e-mail. Vous devez donc être
+      connecté au site pour participer à la discussion car vous ne
+      pouvez pas préparer vos messages en étant déconnecté comme vous
+      le feriez avec une liste de diffusion.</para>
+
+      <para>Pour accéder aux forums Web d'un projet CodeX, cliquez sur
+      le lien &#34;Forums&#34; dans la barre de service du
+      projet. Lorsqu'un projet CodeX est créé il est pourvu de trois
+      forums : Open Discussions, Help and Developers. Ces forums et
+      tous les autres sont accessibles en lecture et en écriture à
+      tous les utilisateurs CodeX à moins que vous ne décidiez de les
+      rendre privés (voir ci-dessous). Un utilisateur peut aussi
+      surveiller un forum. Dans ce cas CodeX lui fera suivre
+      automatiquement par e-mail tous les messages postés sur le
+      forum, ce qui lui évitera des visites répétées à la page Web du
+      forum.</para>
+
+      <para>Les administrateurs de projet peuvent créer d'autres forums
+      à la demande en utilisant le module d'administration des forums
+      accessible via le lien &#34;Administration&#34; situé dans la
+      barre de menu du service Annonces. Les administrateurs peuvent
+      ensuite suivre les liens présents sur cette page pour ajouter un
+      forum, détruire un message ou mettre à jour les infos et le
+      statut du forum. Cette dernière fonctionnalité permet aux
+      administrateurs de rendre un forum public ou privé, de modifier
+      son nom ou sa description ou même de le détruire.</para>
+    </section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

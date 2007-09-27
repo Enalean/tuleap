@@ -1,0 +1,137 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <bibliography id="References">
+    <title>References</title>
+
+    <biblioentry id="bib.cug.caba">
+      <abbrev id="bib.cug.caba.abbrev">CABA</abbrev>
+
+      <title>The Cathedral and the Bazaar</title>
+
+      <author>
+        <firstname>Eric</firstname>
+
+        <surname>Raymond</surname>
+      </author>
+
+      <releaseinfo>Available at <ulink
+      url="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">http://www.tuxedo.org/~esr/writings/cathedral-bazaar/</ulink></releaseinfo>
+    </biblioentry>
+
+    <biblioentry id="bib.cug.ciat">
+      <abbrev id="bib.cug.ciat.abbrev">CIAT</abbrev>
+
+      <title>CodeX Introduction and Tutorial</title>
+
+      <authorgroup>
+        <author>
+          <firstname>Laurent</firstname>
+
+          <surname>Julliard</surname>
+        </author>
+
+        <author>
+          <firstname>John</firstname>
+
+          <surname>Stidd</surname>
+        </author>
+      </authorgroup>
+
+      <releaseinfo>Slideware available at <ulink
+      url="http://&SYS_DEFAULT_DOMAIN;/docs/site">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
+    </biblioentry>
+
+    <biblioentry id="bib.cug.cbbk">
+      <abbrev id="bib.cug.cbbk.abbrev">CBBK</abbrev>
+
+      <title>Open Source Development with CVS</title>
+
+      <subtitle>The &#34;CVS Black Book&#34;</subtitle>
+
+      <author>
+        <firstname>Karl</firstname>
+
+        <surname>Fogel</surname>
+      </author>
+
+      <isbn>ISBN: 1-57610-490-7</isbn>
+
+      <pubdate>Published by Coriolis Press 1999</pubdate>
+
+      <releaseinfo>Also partially available on-line at <ulink
+      url="http://cvsbook.red-bean.com/cvsbook.html">http://cvsbook.red-bean.com/cvsbook.html</ulink>.</releaseinfo>
+    </biblioentry>
+
+    <biblioentry id="bib.cug.cvom">
+      <abbrev id="bib.cug.cvom.abbrev">CVOM</abbrev>
+
+      <title>Official CVS Manual</title>
+
+      <author>
+        <firstname>Per</firstname>
+
+        <surname>Cederquist</surname>
+      </author>
+
+      <releaseinfo>Available at <ulink
+      url="http://www.cvshome.org/docs/manual/">http://www.cvshome.org/docs/manual/</ulink></releaseinfo>
+    </biblioentry>
+ 
+    <biblioentry id="bib.cug.phpd">
+      <abbrev id="bib.cug.phpd.abbrev">PHPD</abbrev>
+
+      <title>PHP Documentation</title>
+
+      <releaseinfo>Available at <ulink url="http://www.php.net/manual/en">http://www.php.net/manual/en</ulink></releaseinfo>
+    </biblioentry>
+
+     <biblioentry id="bib.cug.ssid">
+      <abbrev id="bib.cug.ssid.abbrev">SSID</abbrev>
+
+      <title>Apache Server Side Include Documentation</title>
+
+      <releaseinfo>Available at <ulink
+      url="http://www.apache.org/docs/howto/ssi.html ">http://www.apache.org/docs/howto/ssi.html
+      </ulink></releaseinfo>
+    </biblioentry>
+
+    <biblioentry id="bib.cug.xcep">
+      <abbrev id="bib.cug.xcep.abbrev">XCEP</abbrev>
+
+      <title>The &SYS_ORG_NAME; Code exchange Policy</title>
+
+      <releaseinfo>Available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
+    </biblioentry>
+
+    <biblioentry id="bib.cug.xosp">
+      <abbrev id="bib.cug.xosp.abbrev">XOSP</abbrev>
+
+      <title>Xerox and Open Source White Paper</title>
+
+      <author>
+        <firstname>Laurent</firstname>
+
+        <surname>Julliard</surname>
+      </author>
+
+      <releaseinfo>Available at <ulink
+      url="http://opensource.codex.xerox.com/xerox/resources.html">http://opensource.codex.xerox.com/xerox/resources.html</ulink></releaseinfo>
+    </biblioentry>
+
+  </bibliography>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

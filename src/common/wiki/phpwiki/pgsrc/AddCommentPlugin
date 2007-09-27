@@ -1,0 +1,43 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
+X-Rcs-Id: $Id: AddCommentPlugin,v 1.4 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AddCommentPlugin;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+WikiPlugin to let users attach comments to the end of a page. Since v1.3.8.
+Change the layout via the templates comment.tmpl and addcomment.tmpl, and the CSS classes
+wikicomment, wikicomment-header, wikicomment-body, wikicomment-footer
+
+!! Usage
+<verbatim>
+     <?plugin AddComment order||=normal jshide||=0 mode||=show,add noheader||=0 ?>
+</verbatim>
+
+!! Plugin Arguments
+__jshide__: |
+  Boolean if the comments and/or textbox should be initially hidden and on click expanded. Default: 0
+__order__:  |
+  List comments in chronological (order=normal) or reverse order (order=reverse)
+__mode__:  |
+  List of add and/or show.  Default: add,show
+__noheader__:  |
+  Boolean if the "Comments" h2 header should be omitted. Default: 0
+__pagename__:  |
+  Attach to which page? Default: current pagename
+
+!! Known Problems
+
+jshide does not work yet. Not very well tested.
+
+!! Examples
+
+<?plugin AddComment jshide||=1 ?>
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

@@ -1,0 +1,23 @@
+<?php
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing
+// Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
+// http://codex.xrce.xerox.com
+//
+// $Id$
+//
+// CodeX Database Configuration File
+//
+
+// Please specify your database details here:
+$sys_dbhost="localhost";
+$sys_dbname="codex";
+$sys_dbuser="codexadm";
+$sys_dbpasswd="%sys_dbpasswd%";
+
+// for phpWiki
+$sys_server="mysql";
+$sys_server_join="30";
+
+// End of customizations -- place nothing after the closing PHP tag!
+?>

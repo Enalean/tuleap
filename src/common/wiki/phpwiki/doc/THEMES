@@ -1,0 +1,61 @@
+! Brief Example of Creating Your Own Theme
+
+To create or modify one of the existing themes:
+* Make a copy of one of the themes.
+* Look through the default theme, and for any of those templates you
+  want to modify, duplicate them in your new theme folder with the
+  same directory structure and modify them there instead of the
+  originals.
+* Fix the name in themeinfo.php:
+  $Theme = new Theme('NewName');
+* or if you have to override some default Theme methods
+  class Theme_NewName extends Theme;
+  ...
+  $Theme = new Theme_NewName('NewName');
+
+
+Note:
+If you base your theme on the default theme instead of one of the
+others, you can safely delete any files you DID NOT modify from the
+original (so long as you keep the default theme!).
+
+Review the themeinfo.php for any necessary changes, and add the name
+of your theme to index.php.
+  define('THEME','NewName');
+
+! Template Structure
+
+Templates currently must use the .tmpl extension (simple PHP parsed files).
+Other file extensions are reserved for future use (i.e. .tpl for Smarty or 
+.html for our old template expansion.)
+
+Only one template is called, ususally the "html.tmpl" template, 
+which includes all other templates then.
+
+Theme templates are regular xhtml, but the php parts within "<?" and "?>" 
+are treated especially by phpwiki. HTML entities within the php parts 
+should be created by our HtmlElement methods, which create well-formed 
+HTML objects. 
+Pure HTML entities, e.g. <? echo "<br>" ?> will be escaped to &lt;br&gt;.
+
+You can easily embed other templates by your own, e.g. <?= Template('body') ?>
+
+Templates are used
+* by the master action (html and htmldump), which include most other 
+  plugins in a hierarchical manner, 
+* by certain actions (editpage) or plugins (e.g. info, userprefs, 
+  addcomment, ...) or 
+* by certain pagetypes (e.g. wikiblog, comment, wikiforum)
+
+To include templates from other themes use this syntax:
+  <?= Template('default/search') ?>
+includes the search template from the default theme.
+
+Warning!
+When you write your own templates or change existing ones, you might 
+easily destroy XHTML validity of the generated pages. By using 
+the various HTML() methods within a plugin's php code it is guaranteed 
+to produce validating XHTML, by using custom templates not.
+
+----
+PhpWikiDocumentation

@@ -1,0 +1,25 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+<P>Pour que les utilisateurs puissent trouver votre projet dans l'arbre des projets, vous devez sélectionner les différentes catégories auquel il appartient.
+
+<P>Votre projet ne sera visible dans l'arbre des projets qu'après (1) son approbation et (2) sa catégorisation dans l'arbre des projets que vous pouvez renseigner ci-dessous.
+
+<?php
+print '<P>'.$GLOBALS['Language']->getText('register_category','select_3_classifs',$GLOBALS['sys_name']) .'</p>';
+?>
+
+<FONT size=-1>
+<FORM action="confirmation.php" method="post">
+
+<?php
+// HTML select for all available categories for this group
+print trove_get_html_allcat_selectfull($data['project']['built_from_template']);
+?>
+<hr />

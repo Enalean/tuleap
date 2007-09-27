@@ -1,0 +1,217 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="CreatingANewProject">
+    <title>Creating a New Project</title>
+
+    <para>So - you are a freshly registered CodeX user and you want to make
+    your developer or project leader life easier. In other words you want to:</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>Avoid the pain and cost of creating your own project
+        infrastructure (with servers and backup)</para>
+      </listitem>
+
+      <listitem>
+        <para>Avoid paying a premium price for commercial version control,
+        defect tracking and task management tools</para>
+      </listitem>
+
+      <listitem>
+        <para>Quickly setup a project environment that you can share
+        with your colleagues, your partners, your contractors or your
+        customers where ever they are while keeping your information
+        safe and under control.</para>
+      </listitem>
+
+      <listitem>
+        <para>Make your organization globally more productive and efficient
+        by possibly letting others re-use your software and build on it.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>If any of these points is appealing to you then you should
+    definitely host your software project on CodeX. Let&#39;s see how you can
+    do that.</para>
+
+    <section id="ProjectRegistration">
+      <title>Project Registration</title>
+
+      <para>Before you create a new project you must be a registered user (see
+      <xref linkend="ClassesOfCitizens" />). You then login and select the
+      item &#34;Register New Project&#34; in the upper part of the CodeX Main
+      Menu.</para>
+
+      <para>The project registration is an easy process:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Project Registration</emphasis></para>
+
+          <para>Some information about CodeX Services. Just read it.</para>
+          <para>Do not forget to read and agree the Terms of Services Agreement.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Name</emphasis></para>
+
+          <para>Give the project short name and the project full name.
+          Carefully read the restrictions that apply to both names
+          before you type anything. The full name can be changed at
+          any time in the life of the project. The short name
+          cannot<footnote><para>Actually it can but you have to ask
+          the CodeX Team to do it for you.</para></footnote>. So think
+          about it twice before you make a decision!</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Template</emphasis></para>
+        
+          <para>You already registered a CodeX project and would now like to reuse
+          the same configuration (services, trackers, documents, references, ...) ? 
+          Make your old project a template project (see <xref linkend="ProjectType" />) 
+          and you will find it here in the list of available 
+          project templates. Check your old project as template and your new registered
+          project will be staffed as you are used to. If you don't want to reuse
+          a specific template just keep the Default CodeX Template checked and go on.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Description</emphasis></para>
+
+          <para>This is where the rubber hits the road! Tell us about your
+          project. Give an accurate description. This is really important if
+          you want to maximize the chance of re-use by others. Also
+          list any information related to Intellectual Property like
+          Invention Proposal or Patents related to the software whether
+          pending or already filed. Give the list of software needed (whether
+          internal or 3rd party) to make your own software run properly. And the
+          last field is entirely for you. Write down all the things that you
+          consider as crucial for your project or for the community of users.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Services</emphasis></para>
+        
+          <para>You can choose which services will be activated for your project. 
+          Please note that you will be able to change those preferences after 
+          project creation.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project Categorization</emphasis></para>
+
+          <para>Please select up to three classifications for this project in 
+          each of the Trove root categories. This will help potential developers 
+          and users to find your project and engage. If the project does not 
+          require any or all of these classification, simply select 
+          "None Selected". If you used a project template that had already been
+	  classified you will find its categories already selected here.
+          You can change the trove categories for this project at any time.
+          You can categorize your project according to the seven criteria
+          listed in <xref linkend="SoftwareMap" />.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Software Policy</emphasis></para>
+
+          <para>Most of the time the only valid choice here is the
+          default one: &#34;&SYS_ORG_NAME; Code eXchange
+          Policy&#34;. As explained earlier in this document the CodeX
+          Team assisted by &SYS_ORG_NAME; lawyers have carefully
+          crafted the CodeX Policy and it is very unlikely that you
+          need to create your own. If you do you&#39;ll have to talk
+          to us and to the &SYS_ORG_NAME; Legal Department to validate
+          it. A number of truly Open Source licenses are also
+          mentioned in the list. Finally you can also choose you own
+          licensing conditions.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Final Confirmation</emphasis></para>
+
+          <para>Last chance to review the submitted information before you
+          send it to the CodeX Team for validation. Don&#39;t worry: the
+          project members can later update all pieces of information shown on
+          this page.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>After you validate the project registration, the CodeX Team
+      reviews the information you submitted and decides to approve it or not.
+      This process can take up to 24 hours but in most cases it&#39;s less
+      than a couple of hours. So far all projects have been accepted so there
+      is little to fear ... Shortly after the CodeX Team approval you&#39;ll
+      receive an e-mail summarizing the characteristics of your project
+      including a pointer to your new &#34;Project Summary&#34; page. Bookmark
+      it in a safe place!</para>
+
+      <para></para>
+
+      <para></para>
+
+      <para></para>
+
+      <para></para>
+    </section>
+
+    <section id="Post-RegistrationConfiguration">
+      <title>Post-Registration Configuration</title>
+
+      <para>The first thing to do after you receive the confirmation
+      for your project registration is to visit the &#34;Project
+      Summary&#34; page (URL included in the e-mail) and finish the
+      configuration of your project.  The 2 following actions are the
+      most frequent ones that have to be taken after a project is
+      registered:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Categorize your project in the Software
+          Map</emphasis></para>
+
+          <para>If you haven't done it during the project registration
+          process, you should do it now!
+          Your project categorization appears on your
+          &#34;Project Summary&#34; page. To categorize your project
+          select the &#34;categorize it now&#34; link and fill out the
+          category form fields.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Build the project team</emphasis></para>
+
+          <para>Once a project is created, the creator is assigned the
+          role of project administrator on this project. It is her
+          responsability to define who are the project members and
+          what their permissions are. This can be done by accessing
+          the &#34;Project Admin&#34; page, typing the names of all
+          the registered users  promote as team members and then
+          define their permissions.</para>
+        </listitem>
+      </itemizedlist>
+
+      <tip>
+        <title>Tip: Cannot find an appropriate Topic? Contact us</title>
+
+        <para>Rather than putting in place a heavy hierarchy of project topics
+        and sub-topics, the CodeX Team has decided to start small and create
+        only a handful of top-level topics in the hierarchy. As time goes and
+        as more and more projects register on CodeX we&#39;ll refine the
+        hierarchy. If you cannot find the appropriate topic for your project,
+        please contact us through the &#34;Contact Us&#34; link in the CodeX
+        Main Menu or submit a request in the appropriate Discussion Forum.</para>
+      </tip>
+    </section>
+  </chapter>

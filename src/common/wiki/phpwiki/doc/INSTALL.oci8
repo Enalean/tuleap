@@ -1,0 +1,70 @@
+Installing phpwiki with Oracle 
+------------------------------
+
+(derived from the MySQL INSTALL file!)
+
+This assumes that you have a working Oracle server and client setup.
+Installing Oracle is beyond the scope of this document. If you cannot get
+Oracle working together with PHP, look at:
+http://otn.oracle.com/tech/opensource/php/php_troubleshooting_faq.html
+
+The oci8 database backend (WikiDB/backend/oci8.php) has been developped with an
+Oracle 10g database. It should work with earlier versions but no test has been 
+made.
+
+1. Create a database schema/user using the appropriate user interface 
+   or sqlplus.
+   Example:
+
+	sqlplus system/manager
+	SQL> create user phpwiki identified by phpwiki
+          2  default tablespace users
+          3  temporary tablespace temp;
+
+        User created.
+
+        SQL> grant connect, resource to phpwiki;
+
+        Grant succeeded.
+
+        SQL> revoke unlimited tablespace from phpwiki;
+
+        Revoke succeeded.
+
+        SQL> alter user phpwiki quota unlimited on users;
+
+        User altered.
+
+
+2. Create tables inside your database database schema
+
+        sqlplus phpwiki/phpwiki @ oci8-initialize.sql
+
+   Note: 
+        The script uses 'phpwiki_' as object prefix. You have to define this
+	prefix in your phpWiki config.ini file.
+	You have to use a prefix to avoid issues with Oracle reserved names.
+
+3. Edit your config/config.ini to reflect your settings.
+
+	a) DATABASE_TYPE should be set to 'SQL'.
+	b) DATABASE_DSN should be set to something like
+           'oci8://username:password@dbstring'.
+	   (where 'dbstring' designates your database instance -- as defined
+	   in your tnsnames.ora or a 10g Easy Connect string)
+        c) DATABASE_PREFIX should be 'phpwiki_'
+           (unless you modified the oci8-initialize.sql script)
+	d) DBAUTH_ parameters (need more testing): ensure all tables have the 
+	   'phpwiki_' prefix. You need to have at least the following 2 SQL
+	   statement changed:
+	   DBAUTH_PREF_SELECT = 
+	    "SELECT prefs FROM phpwiki_pref WHERE userid='$userid'"
+	   DBAUTH_PREF_UPDATE = 
+	    "UPDATE phpwiki_pref SET prefs='$pref_blob' where userid='$userid'"
+
+That's it. phpwiki should now work.
+
+/Phil
+Philippe.Vanhaesendonck@topgame.be
+
+$Id: INSTALL.oci8,v 1.2 2004/07/25 17:46:44 dfrankow Exp $

@@ -1,0 +1,119 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id: fr_FR.tab 1778 2005-06-24 08:10:38Z nterray $
+#  *
+#  */
+advanced_search	all	tous
+advanced_search	and_search	tous les mots
+advanced_search	error_search_minlength	Le mot recherché doit contenir au moins trois charactères
+advanced_search	headline	Résultats de la recherche dans&nbsp;: $1
+advanced_search	no_matches_found	Aucun résultat trouvé
+advanced_search	no_matches_found_no_under_section	Aucun résultat trouvé - Aucune section disponible (vérifiez vos permissions)
+advanced_search	none	aucun
+advanced_search	or_search	au moins un mot
+advanced_search	search_button	Chercher
+advanced_search	search_in	Chercher dans
+advanced_search	select	Selectionner
+common	login	S'identifier
+common	logout	Se déconnecter
+common	myaccount	Mon compte
+common	newaccount	Nouveau compte
+group	activity	Taux d'activité&nbsp;:&nbsp;
+group	activitystat	Voir les <a href="/project/stats/?group_id=$1">statistiques d'activité du projet</a>.
+group	developer_info	Equipe-Projet
+group	developers	Développeurs&nbsp;
+group	long_bugs	Gestion des bugs
+group	long_docman	Gestion de documents&nbsp;: Documentation du projet
+group	long_forum	Forums de discussion
+group	long_ftp	Espace FTP anonyme
+group	long_homepage	Page d'accueil du projet
+group	long_mail	Listes de diffusion
+group	long_news	Dernières annonces
+group	long_patch	Gestionnaire de corrections
+group	long_pm	Gestion des tâches
+group	long_scm	Gestion de sources
+group	long_support	Support technique
+group	long_survey	Sondages
+group	long_tracker	Outils de suivi
+group	nodescription	Ce projet n'a pas encore soumis de description.
+group	norelease	Ce projet n'a pas encore publié de fichier
+group	project_admins	Administrateurs&nbsp;
+group	project_developers	Développeurs&nbsp;
+group	public_area	Zones publiques
+group	registered	Enregistré le&nbsp;:&nbsp;
+group	short_admin	Administration
+group	short_bugs	Bugs
+group	short_docman	Documents
+group	short_files	Fichiers
+group	short_forum	Forums
+group	short_homepage	Accueil
+group	short_mail	Listes
+group	short_main	Écran principal
+group	short_memberlist	Développeurs
+group	short_news	Annonces
+group	short_patch	Patchs
+group	short_pm	Tâches
+group	short_scm	Sources
+group	short_summary	En bref
+group	short_support	Support
+group	short_survey	Sondages
+group	short_tracker	Suivi
+menu	about_gforge	À propos de $1
+menu	account_maintenance	Gestion du compte
+menu	admin	Administration
+menu	bookmark_page	Ajouter aux signets
+menu	change_my_theme	Changer de thème
+menu	code_snippet	Boite à outils
+menu	code_snippet_library	Bibliothèque de code
+menu	compile_farm	Ferme de compilation
+menu	diary_notes	Journal et notes
+menu	discussion_forums	Forums de discussion
+menu	documentation	Documentations sur le site
+menu	home	Accueil
+menu	login	Identification
+menu	login_ssl	Identification sécurisée (SSL)
+menu	logout	Sortir
+menu	my_account	Mon compte
+menu	my_personal_page	Ma page personnelle
+menu	mypage	Ma page
+menu	new_project	Nouveau projet
+menu	new_releases	Sorties récentes
+menu	new_user	Nouvel utilisateur via SSL
+menu	other_site_mirrors	Miroirs d'autres sites
+menu	project_admin	Admin. du projet
+menu	project_help_wanted	Demande d'aide
+menu	project_summary	Résumé du projet
+menu	projectree	Arbre des projets
+menu	register_project	Enregistrer un projet
+menu	reporting	Statistiques
+menu	search	Recherche
+menu	site_status	État du site
+menu	software_map	Recherche thématique
+menu	submit	Proposer
+menu	top_projects	Meilleurs projets
+searchbox	advanced_search	Recherche avancée
+searchbox	docs	Les documents de ce projet
+searchbox	forum	Ce forum
+searchbox	forums	Les forums de ce projet
+searchbox	frs	Les fichiers de ce projet
+searchbox	full	Le projet entier
+searchbox	news	Les annonces de ce projet
+searchbox	people	Personne
+searchbox	search	Rechercher
+searchbox	skill	Savoir-faire
+searchbox	softwaregroup	Logiciel/Groupe
+searchbox	task	Tâches
+searchbox	tasks	Les tâches de ce projet
+searchbox	trackers	Le suivi de ce projet
+

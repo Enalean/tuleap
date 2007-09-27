@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>TestTemplateCVS</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TestTemplateCVS</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//tr[3]/td[1]/a/b</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=CVS</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=CVS Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>tracked</td>
+	<td>label=On</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>mailing_list</td>
+	<td>nicolas.terray@xerox.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>custom_mailing_header</td>
+	<td>[template_cvs]</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_preamble</td>
+	<td>This is the preamble of CVS</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>SUBMIT</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Configuration updated succesfully</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Register New Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>register_tos_i_agree</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_full_name</td>
+	<td>Test Template CVS Instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_unix_name</td>
+	<td>test-t-cvs-i</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.forms[1].built_from_template[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_short_description</td>
+	<td>Test template cvs instance</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_purpose</td>
+	<td>-</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>project_register_next</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>siteadmin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Page personnelle de Site Administrator</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Page principale</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=approbation requise</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[3].submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Se déconnecter</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_loginname</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>form_pw</td>
+	<td>template_admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Personal Page for Template Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Test Template CVS Instance</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=CVS</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This is the preamble of CVS</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=CVS Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>tracked</td>
+	<td>On</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>form_preamble</td>
+	<td>This is the preamble of CVS</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>mailing_list</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>custom_mailing_header</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="OtherServices">
+    <title>Other Services</title>
+
+    <section id="ShellAccount">
+      <title>Shell Account</title>
+
+      <para><emphasis role="bold">Important Note</emphasis>: this
+      feature can be deactivated by your CodeX site administrator and
+      may therefore be unavailable in your organization.</para>
+
+      <para>If the CodeX administrators have enabled this feature,
+      each registered user receives its own Unix shell account on the
+      CodeX Shell Account server. You can access your CodeX Shell
+      Account in 2 ways:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">SSH</emphasis>: the secured remote shell
+          is the preferred way to connect to the CodeX Shell Account server.
+          SSH clients are available for all platforms (Windows, Linux, Unix
+          and Mac) and allows a secure link with your personal directories. It
+          also provides you with a number of other useful utilities like scp
+          for remote file transfer. To access your account type the
+          following command and use your CodeX login and password to
+          authenticate yourself:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+ssh -l loginname &SYS_SHELL_HOST;
+</programlisting>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Telnet</emphasis>: telnet comes standard
+          with Windows and Unix environment. Use the following command to
+          connect to the CodeX Shell Account server and provide your login and
+          password as requested. (Remark: on some site telnet might be
+          disabled for security reasons)</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+telnet &SYS_SHELL_HOST;
+</programlisting>
+        </listitem>
+      </itemizedlist>
+
+      <para>Whether you use SSH or Telnet, a welcome banner will be displayed
+      right after you log in. This message tells you what are the directories
+      you are allowed to access. Use the Unix &#34;cd&#34; command to change
+      the current working directory. Once logged in and if you are a member of
+      several projects you must specify for which project you are going to
+      work in this shell session. To this end use the following command:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+newgrp projectname
+</programlisting>
+
+      <para>You can use this command as many time as you want during a shell
+      session when you are about to do work for another one of your project.</para>
+
+      <para></para>
+      <para></para>
+    </section>
+    
+    <section id="FTPStorageSpaces">
+      <title>FTP Anonymous Storage Space</title>
+
+      <para>Each project receives its own FTP storage, the Anonymous FTP Space.
+      If you need a controlled access to your files, it is recommended to use 
+      the web-based File Release System (<xref
+        linkend="FileRelease" />).</para>
+
+      <para>The anonymous FTP space can be used by the project
+        members to upload any kind of documents or project data and
+        deliverables they want. This storage will then be visible to
+        any CodeX users and all files placed in this directory can be
+        freely downloaded. So make sure that you use this storage
+        space for world readable files only.</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para>Anonymous Users access: use an ftp client to connect
+            to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use
+            &#34;ftp&#34; as login and your email address as the
+            password. Then <literal>cd
+            /pub/projectname</literal> to access
+            the FTP Anonymous space.</para>
+          </listitem>
+
+          <listitem>
+            <para>Project Members access: use an ftp client to connect
+            to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use CodeX
+            login and password and then type <literal>cd
+            /var/lib/codex/ftp/pub/projectname</literal>
+            to access the FTP Anonymous space. From there project
+            members have both read and write access which means that
+            they can upload files.</para>
+
+	    <para>To point to this storage space in your Web pages or
+	    your email to other users simply use the following
+	    URL:</para>
+
+            <para><literal>ftp://projectname.&SYS_DEFAULT_DOMAIN;:/pub/projectname</literal></para>
+
+          </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="MSWindowsSharedResources">
+      <title>MS Windows Shared Resources</title>
+
+    <para><emphasis role="bold">Important Note</emphasis>: this
+    feature can be deactivated by your CodeX site administrator and
+    may therefore be unavailable in your organization.</para>
+
+	<para>Windows users (as well as Linux/Unix users equipped with Samba) can also use mapped
+		network drives to access the following storage spaces from their Windows
+		Explorer:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>Your user home directory,</para>
+        </listitem>
+
+        <listitem>
+          <para>The various project home directories (where the project Web
+          site is located)</para>
+        </listitem>
+
+        <listitem>
+          <para>The FTP incoming space where you can directly drag and drop
+          your file releases instead of using FTP upload (See <xref
+          linkend="ReleaseAdministration" />)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>To access your CodeX shared resources, open your file explorer,
+      browse the Entire Microsoft Network, open the &SYS_SAMBA_DOMAIN; domain and click on
+      the CodeX machine. Use your CodeX login and password to connect to the
+      resources (If they are not the same as your Windows login/password a
+      dialog box will pop up asking for the appropriate CodeX login/password)</para>
+
+      <para>Shared resources can also be directly accessed at:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><literal>\\codex\your_login_name</literal> (User home
+          directory - for all users)</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>\\codex\Projects</literal> (All project directories -
+          for project members)</para>
+        </listitem>
+
+        <listitem>
+          <para><literal>\\codex\Ftp_Incoming</literal> (FTP upload space -
+          for project members)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Needless to say all read and write permissions put in place by
+      CodeX to protect your data still apply to these shared resources.</para>
+    </section>
+    
+    <section id="SoapAPI">
+      <title>SOAP API</title>
+      <para>CodeX provides a SOAP API to access CodeX through web-services.
+            At this time, only session (login/logout) and tracker 
+            services are available.
+            <para>
+                <note>Note: the mail notification is not active with the SOAP API</note>
+            </para>
+      </para>
+      <para>A human-friendly description of the services is available at <ulink url="/soap/">
+        http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>. It is a list of
+        services, with a description of each function, its input, ouput and documentation</para>
+      <para>A more detailed description of the services is also available with 
+      the more formal WSDL language at <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>.
+      The WSDL also includes the types definition.
+      </para>
+    </section>
+    
+    <section id="CodeXCLI">
+      <title>CodeX Command Line Interface (CLI)</title>
+      <para>Another way to use CodeX is to use the command line interface (CLI).
+        It's a client application that use the SOAP API to interact with the 
+        CodeX server. At this time, only session (login/logout) 
+        and tracker services are available. The CLI is currently missing a few 
+        features of the SOAP API (e.g. it is not possible to attach a file, 
+        a CC address or a dependency to an artifact), and the mail notification is 
+        not active with the CLI.
+      </para>
+      <para>The full CLI documentation is available at <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+      </para>
+    </section>
+    
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

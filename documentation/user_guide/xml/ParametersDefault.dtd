@@ -1,0 +1,34 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the Codex Component Software License
+// http://codex.xerox.com
+//
+// $Id: ParametersDefault.dtd 1298 2005-01-04 13:13:21Z guerin $
+//
+// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
+-->
+
+<!-- DO NOT MODIFY FILE - SEE BELOW!! -->
+
+<!-- This DTD file contains entities that are used to in the user
+guide content. If you want to customize the content for your own site
+do not modify this file. Use the 
+/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd file 
+instead and redefine your entities there. If this file doesn't exist create it.-->
+
+<!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">
+<!ENTITY SYS_CVS_HOST "cvs.codex.xerox.com">
+<!ENTITY SYS_SVN_HOST "svn.codex.xerox.com">
+<!ENTITY SYS_DOWNLOAD_HOST "download.codex.xerox.com">
+<!ENTITY SYS_SHELL_HOST "shell.codex.xerox.com">
+<!ENTITY SYS_LISTS_HOST "lists.codex.xerox.com">
+<!ENTITY FTPINCOMING_DIR "/home/ftp/incoming">
+<!ENTITY FTPFILES_DIR "/home/ftp/codex">
+<!ENTITY SYS_ORG_NAME "Xerox">
+<!ENTITY SYS_LONG_ORG_NAME "Xerox Corporation">
+<!ENTITY SYS_EMAIL_ADMIN  "codex-admin@codex.xerox.com">
+<!ENTITY SYS_EMAIL_CONTACT "codex-contact@codex.xerox.com">
+<!ENTITY SYS_SAMBA_DOMAIN "WCRT">

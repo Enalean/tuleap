@@ -1,0 +1,101 @@
+<!-- 
+// 
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+// 
+// These are the Docbook tags  that are most commonly used in the
+// CodeX User Guide
+//
+// $Id$
+// 
+// Originally written by Laurent Julliard and Stéphane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+
+<!-- Special character from Wrod for ... : replace this replace in the XML file by ... -->
+&hellip;
+
+<!-- Cross referencing an item -->
+<xref linkend="" />
+
+<!-- Insert a figure with caption and title as it will appear in the List of figures -->
+<figure id="Figure">
+    <title></title>
+    
+    <mediaobject>
+      <imageobject>
+        <imagedata format="PNG"
+                   fileref="../screenshots/.png" />
+      </imageobject>
+    </mediaobject>
+</figure>
+
+<!-- A basic paragraph -->
+<para></para>
+
+<!-- A paragraph which uses courrier font - used for commands -->
+<para><literal></literal></para>
+
+<!-- A note: a paragraph with a side bar to stress its importance-->
+<para><note><para></para></note></para>
+
+<!-- A tip: a paragraph which shows as a grey box -->
+<para><tip><title>TIP</title><para></para></tip></para>
+
+<!-- A footnote -->
+<footnote><para></para></footnote>
+
+<!-- Put text in bold -->
+<emphasis role="bold"></emphasis>
+
+<!-- Put text in underline -->
+<emphasis role="underline"></emphasis>
+
+<!-- Put text in italic -->
+<emphasis></emphasis>
+
+<!-- A section (of whatever level) -->
+<section id="">
+    <title></title>
+    <para></para>
+</section>
+
+<!-- A chapter -->
+<chapter id="">
+    <title></title>
+</chapter>
+
+<!-- An hyperlink -->
+<ulink url="http://">http://</ulink>
+
+<!-- A bulleted list -->
+<itemizedlist mark="bullet" spacing="compact">
+    <listitem>
+      <para><emphasis role="bold"></emphasis></para>
+    </listitem>
+    
+    <listitem>
+      <para><emphasis role="bold"></emphasis></para>
+    </listitem>
+</itemizedlist>
+
+<!-- A numbered list -->
+<procedure>
+    <step>
+      <para><emphasis role="bold"></emphasis>: </para>
+    </step>
+    
+    <step>
+      <para><emphasis role="bold"></emphasis>: </para>
+    </step>
+</procedure>
+
+<!-- A literal command -->
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+my command
+on several line
+
+</programlisting>

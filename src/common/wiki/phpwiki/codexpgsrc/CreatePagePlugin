@@ -1,0 +1,75 @@
+Date: Mon, 20 Dec 2004 01:30:02 -0800
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: CreatePagePlugin,v 1.4 2004/12/22 18:52:17 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CreatePagePlugin;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+WikiPlugin to easily create new pages, optionally with default content. Since v1.3.8
+
+This allows you to create a page geting the new pagename from a 
+forms-based interface, and optionally with the initial content from 
+some template.
+
+Put a "<~?plugin-form ~CreatePage ?~>" at some page, browse this page, 
+enter the name of the page to create, then click the button.
+
+!! Usage
+<verbatim>
+     <?plugin-form CreatePage ?>
+     <?plugin-form CreatePage template=CategoryHomePage ?>
+     <?plugin-form CreatePage template=SomeTemplatePage vars="year=2004&name=None" ?>
+</verbatim>
+
+!! Plugin Arguments
+*s*: |
+  The pagename, which will passed to the plugin. Default: ""
+*initial_content*:  |
+  The new page will be pre-filled with this content. Default: ""
+*template*:  |
+  The new page will be pre-filled with the content of this page. Default: ""
+*vars*: |
+  variables to be expanded. Default: ""
+*overwrite*: |
+  Whether to overwrite an existing page. Default: "" 
+
+!! Known Problems
+
+None
+
+!! Variable Expansion
+
+The content (either initial_content or template) might hold some variables, which will be 
+expanded on creation. Unassigned variables will stay as %%<var>%%, assigned variables without 
+matching %%<var>%% placeholder will be ignored, without any warning.
+
+A variable in a template is denoted as <tt>%%var%%</tt>, which will be expanded by the 
+value of <tt>var</tt> given to the vars argument (in urlencoded php notation).
+
+Some special variables are automatically assigned:
+
+%%ctime%% | 
+  $WikiTheme->formatDateTime(time())
+%%author%% | 
+  $user->getId()
+
+This forms together with page templates and the PhpWiki:WikiFormRichPlugin and 
+optionally the PhpWiki:SqlResultPlugin a framework to create templated pages.
+
+!! Authors
+
+Dan Frankowski, Reini Urban
+
+!! Examples
+
+<?plugin-form CreatePage s=MyHomePage ?>
+
+See also PhpWiki:EasilyCreateNewPages, PhpWiki:WikiFormRichPlugin, PhpWiki:SqlResultPlugin
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: BookInfo.xml 1862 2005-07-28 16:32:57Z schneide $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Laurent</firstname>
+
+        <surname>Julliard</surname>
+
+        <affiliation>
+          <orgname>Xerox/XGS/BPS - CodeX Team, Laurent.Julliard@crt.xerox.com</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2000</year>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <year>2006</year>
+      <year>2007</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>Ce document est diffusé sous la licence Codex Component Software License</para>
+
+      <para>Copyright protection claimed includes all forms and matters of
+      copyrightable material and information now allowed by statutory or
+      judicial law or hereinafter granted, including without limitation,
+      material generated from the software programs which are displayed on the
+      screen such as icons, screen displays, looks, etc.</para>
+
+      <para>Imprimé aux Etats-Unis d'Amérique</para>
+
+      <para>Xerox et tous les produits Xerox mentionnés dans cette
+      publication sont des marques déposées de Xerox
+      Corporation.</para>
+
+      <para>Ce document a été formaté à l'aide de la DTD XML
+      DocBook. La version HTML a été générée avec le génerateur HTML
+      de DocBook. La version PDF a été faite à l'aide de Apache
+      FOP.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>2.9.4</revnumber>
+
+        <date>18-Jan-2006</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Version française initiale par  L. Julliard basée sur la version 2.9.4 anglaise du 21-Déc-2005</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.5</revnumber>
+
+        <date>2-Mar-2006</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Ajout d'une section concernant la gestion des références.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Survey Manager suite à l'amélioration de ST 
+	des boutons radio spécifiques pour les sondages
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour des chapitres Vue d'ensemble du site
+	CodeX, Créer un nouveau projet et Administration d'un projet
+	pour les patron de projets.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Service d'annonces
+	pour inclure les amélioration de ST sur les annonces
+	privées (SR #265).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Dans paragraphe type de projet : correction 
+	du lien sur références et ajout de détails sur la création de
+	projets à partir d'un projet de patron. 
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.0</revnumber>
+
+        <date>03-Avr-2007</date>
+
+        <authorinitials>Equipe CodeX</authorinitials>
+
+        <revremark>Mise à jour pour la version 3.2 de CodeX :
+        Documentation du nouveau service Fichiers, documentation 
+        des templates, documentation du mode CVS Watch, nombreuses 
+        corrections (voir SR #337).
+        </revremark>
+      </revision>
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

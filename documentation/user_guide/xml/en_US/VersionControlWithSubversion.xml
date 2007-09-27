@@ -1,0 +1,1368 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2002-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="VersionControlWithSubversion">
+  <title>Version Control with Subversion</title>
+
+  <para>This chapter is not a Subversion Tutorial. It focuses on the
+  integration of Subversion with CodeX and how to use it in an optimal
+  way in this context. If you are not familiar with Subversion we
+  warmly advise you to first read some of the documents listed in the
+  references section (see <xref linkend="SubversionReferences" />).</para>
+
+  <para>It is important to note that a version control tool like
+  Subversion is just a part of the overall configuration management
+  activity. Therefore, Subversion alone does not constitute a complete
+  configuration management solution for your project. Depending on the
+  maturity of a project, the project may have specific policies
+  regarding the use of the software baseline or the integration of bug
+  fixes, etc. The Subversion tool may allow you to enforce some of
+  these mechanisms but project managers should make sure that these
+  policies are documented, maintained and well understood by all
+  project members.</para>
+
+  <para> For example, a project may wish both to commit changes daily
+  to avoid loss of work, and to also insure that the baseline is
+  always unit tested code. Since the end of the day may arrive before
+  the code or unit tests are complete, a single baseline cannot
+  accommodate both uses, so the project may opt to use Subversion
+  branches. Don&#39;t worry if you do not initially know enough to
+  write the final configuration management policy for your project -
+  this always tends to evolve as the project matures - but do
+  communicate regularly with the project members and improve your
+  configuration management plan on a regular basis.</para>
+
+  <section id="Subversion:TheNextGenerationCVS">
+    <title>Subversion: The Next Generation CVS</title>
+
+    <para>Subversion is an Open Source version control system that
+    manages your files and directories history over time. The
+    Subversion effort started in early 2000 under the leadership of
+    Karl Fogel, a recognized guru of CVS and author of the so-called
+    'CVS Black Book'(see <xref linkend="SubversionReferences"
+    />). Like millions of developers in the world, Karl had used CVS
+    for years and acknowledged the fact that, in spite of its merits,
+    it had a number of shortfalls that would be nice to fix.</para>
+
+    <para>From the very beginning the Subversion team, sponsored by
+    the CollabNet company, clearly stated that the goal was not to
+    produce a revolutionary version control system but rather to build
+    on the strengths of CVS and wipe out all of its weaknesses. As a
+    result, like CVS, Subversion belongs to the family of concurrent
+    version control system. It means that a team of multiple
+    developers can concurrently manage their own version of the same
+    source code and gracefully merge the changes brought to the
+    software by the various team players.</para>
+
+    <para>But Subversion also comes with a number of enhancements over
+    CVS:</para>
+
+    <itemizedlist mark="bullet">
+      <listitem>
+	<para><emphasis role="bold">Directory versioning</emphasis>:
+	because CVS relies on the native file system of the machine it
+	runs on it has been impossible to implement the versioning of
+	directories. Subversion implements a "virtual" filesystem
+	stored in a database that tracks changes to the entire
+	directory and file tree.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">True version history</emphasis>:
+	moving and renaming files in a CVS repository has some
+	limitations mainly due to the fact that versioning is attached
+	to individual files. With Subversion you can add, delete,
+	rename and copy files or entire directories without doing any
+	compromise on the file naming or the file history.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Atomic commits</emphasis>: although
+	CodeX provides an additional layer on top of CVS which gives
+	an atomic view of the commits, CVS itself has no notion of the
+	fact that you may have committed a dozen file at the same time
+	to fix a single bug. Subversion on the contrary stamps the
+	entire tree with a new revision number each time you make a
+	change.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Versioned metadata</emphasis>: Subversion can
+	attach any number of properties (in the form of key/value
+	pairs) to files and directories. Properties are themselves
+	versioned like the files and directories they are attached
+	to.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Various access protocols</emphasis>:
+	Like CVS, Subversion offers a choice of network protocols to
+	access a subversion repository. It can be a local file system
+	access or a network access through the Subversion own's
+	lightweight protocol (svnserve) or a secured remote access
+	through SSH. Additionally and more importantly, Subversion can
+	be accessed through the WebDAV protocol which is an extension
+	of the HTTP protocol. This has a number of advantages like the
+	ability to run all transactions through secure HTTP, go
+	through firewalls and take advantage of the HTTP
+	authentication methods.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Efficient diff'ing</emphasis>:
+	when you create a working copy on your desktop machine, a
+	complete version of the original file is kept on your disk
+	which allows developers to perform <literal>status</literal>
+	and <literal>diff</literal> operations even when working
+	offline.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Efficient branching and
+	tagging</emphasis>: in Subversion these 2 operations are performed
+	by literally copying (all or part of) the repository. The
+	copy is virtual in the sense that the virtual filesystem
+	establishes hard links to indicate from which revision the
+	copy comes from. As a result branching and tagging takes a
+	very small amount of disk space and, above all, it takes a
+	constant amount of time regardless of the repository
+	size.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Fine grain access
+	control</emphasis>: in its CodeX incarnation, your Subversion
+	repository operates on top of the HTTP (or HTTPS) protocol and
+	it therefore take advantage of the rich HTTP authentication
+	mechanism. As a result CodeX allows you to fine tune who has
+	access to which part of your Subversion repository whether for
+	read, write or no access at all.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Extensibility</emphasis>: like CVS,
+	Subversion comes with a number of facility to hook custom
+	processing at the various stage of a commit operation
+	(pre-check, post-check,etc.). Unlike CVS, Subversion comes
+	with well documented library APIs with bindings available for
+	several languages like C/C++, Java, Python and Perl.</para>
+      </listitem>
+    </itemizedlist>
+
+
+    <section id="SubversionClients">
+      <title>Subversion Clients</title>
+
+      <para>Subversion has a client-server architecture. In other
+      words, CodeX developers who want to interact with the Subversion
+      repository of their project must have Subversion installed on
+      their desktop machine, hereafter called client. The CodeX server
+      permanently runs a Subversion server in the background to which
+      Subversion clients talk to to act upon the Subversion
+      repository. Subversion clients come in various flavors for all
+      sorts of platforms (Windows and all Unix): command line
+      interface, graphical based interface and web based
+      interface.</para>
+
+      <section id="SubversionCommandLineInterface">
+	<title>Command Line Interface</title>
+
+	<para>Subversion comes with a command line interface that can
+	be used on virtually any platform (Linux/Unix, MS Windows,
+	Mac...). Even though Subversion has multiple command line
+	options, most commands that you normally use have one or two
+	command-line options and are very easy to remember and look a
+	lot like cvs commands. Refer to <xref
+	linkend="SubversionReferences" /> for more information about
+	how to use the Subversion command line.</para>
+      </section>
+
+      <section id="SubversionGraphicalFront-ends">
+	<title>Graphical Front-ends</title>
+
+	<para>Subversion already has a number of graphical
+	front-ends. rapidSVN is part of the standard Subversion
+	package and runs on Linux and Windows. TortoiseSVN is another
+	option for MS Windows users. jSVN is a Java based client that
+	can run on any platform. As time goes the list of graphical
+	front-ends will certainly grow. Refer to <xref
+	linkend="SubversionReferences" /> for more information about
+	those graphical clients.</para>
+      </section>
+
+      <section id="SettingUprapidSVNforCodeX">
+	<title>Setting up rapidSVN for CodeX</title>
+
+        <para>As mentioned above, rapidSVN is the graphical user
+        interface that comes with Subversion for Linux and
+        Windows. Below are all the instructions needed to get rapidSVN
+        running on a CodeX project. In the instructions below,
+        "username" is the CodeX user login name, and "projectname" is
+        the CodeX short project name the user is working on.</para>
+
+        <itemizedlist mark="bullet">
+        <listitem>
+	  <para>Download rapidSVN from the Subversion Web site and
+          install it on your PC.</para>
+        </listitem>
+
+        <listitem>
+	  <para>Launch the rapidSVN application.</para>
+        </listitem>
+	
+        <listitem>
+	  <para>Create a new bookmark for your Subversion repository:
+	  <literal>Bookmarks->Add Repository...</literal></para>
+	  <para>When prompted enter the URL to your repository:
+	  <literal>http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal></para>
+        </listitem>
+
+        <listitem>
+	  <para>Click on the new bookmark corresponding to your
+	  repository and type you CodeX user name and password when
+	  asked to. You should now be able to browse the repository
+	  and see the file status and revision history.
+          </para>
+        </listitem>
+	
+        <listitem>
+	  <para>To create your own working copy use the menu item
+	  <literal>Repository->Checkout...</literal></para>
+	  <para>When the dialog box pops up, type the same URL as
+	  above and choose where you want your working copy to be
+	  created.</para>
+        </listitem>
+	
+        <listitem>
+	  <para>A second bookmark corresponding to the new working
+	  copy should now appear in the bookmark pane on the left hand
+	  side of the screen. On the right hand side appears the list
+	  of files and directories of your working copy along with
+	  their revision number and status. From there use your
+	  favorite editor to modify the source code, hit the refresh
+	  button in rapidSVN to see modified files and commit your
+	  changes when your are done.
+          </para>
+        </listitem>
+        </itemizedlist>
+
+      </section>
+    </section>
+
+    <section id="SubversionReferences">
+      <title>Subversion References</title>
+
+      <para>As stated earlier in this chapter, this document is not a
+      Subversion Tutorial. If you want to learn more about Subversion
+      refer to the following documents:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para>The Subversion Book. See <ulink url="http://svnbook.red-bean.com/">http://svnbook.red-bean.com</ulink>).</para>
+	</listitem>
+
+	<listitem>
+	  <para>The Official Subversion Web Site. See <ulink
+	  url="http://subversion.tigris.org/">http://subversion.tigris.org/</ulink>
+	  This is where you'll find the subversion software including
+	  the rapidSVN client.</para>
+	</listitem>
+
+	<listitem>
+	  <para>TortoiseSVN. A graphical MS Windows and Linux
+	  graphical client. See <ulink
+	  url="http://tortoisesvn.tigris.org/">http://tortoisesvn.tigris.org/</ulink>. </para>
+	</listitem>
+
+	<listitem>
+	  <para>jSVN. A graphical 100% Java graphical client. See
+	  <ulink
+	  url="http://jsvn.alternatecomputing.com/">http://jsvn.alternatecomputing.com/</ulink>.</para>
+	</listitem>
+      </itemizedlist>
+
+    </section>
+  </section>
+
+  <section id="SubversionIntegrationinCodeX">
+    <title>Subversion Integration in CodeX</title>
+
+    <section id="TheSubversionRepository">
+      <title>The Subversion Repository</title>
+
+      <para>Whenever a new project is hosted on CodeX, a new
+      Subversion repository is automatically created and properly
+      initialized. Each project has its own Subversion repository as
+      opposed to what happens in most Subversion servers, where
+      several projects share the same repository. Having its own
+      repository has a certain number of advantages: the Subversion
+      logs, history files, and all administrative files (e.g. hook
+      scripts) are unique to each project repository.  This allows you
+      to fully customize the behavior of Subversion for a given
+      project without impacting the others.</para>
+
+      <note><para>All interactions with a Subversion repository should
+      normally happen through a Subversion client. However if need be
+      and if this feature is available on your CodX server, you can
+      get access to your Subversion repository via your CodeX shell
+      account (see <xref linkend="ShellAccount" />). Once the shell
+      session is active you'll find your subversion repository under
+      <literal>/svnroot/projectname</literal> you should never do that
+      unless you know exactly what you are doing.</para></note>
+    </section>
+
+
+    <section id="TheSubversionRepositoryStructure">
+      <title>The Subversion Repository Structure</title>
+
+      <para>When a new Codex project is created, it comes with a
+      virgin subversion repository that the project team must
+      populate. Due to the fact that Subversion manages branching and
+      tagging through its virtual filesystem (and not through labels
+      attached to individual files as in CVS) there is a recommended
+      way to organize your repository. The layout suggested below can
+      be considered as a de-facto standard and we highly recommend
+      that you follow this best practice.</para>
+
+
+      <para>If you expect your CodeX project to manage only one
+      project deliverable then you can create the following top-level
+      directories in your repository:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/trunk
+/branches
+/tags
+      </programlisting>
+
+      <para>where <literal>/trunk</literal> contains the main line of
+      development, <literal>/branches</literal> contains branch copies
+      and <literal>/tags</literal> contains tag copies of your source
+      code that generally correspond to a given release.</para>
+
+      <para>If you expect your CodeX project to manage several
+      software deliverables that are managed independently one from
+      each other, then it is often a good idea to first create
+      top-level directories that carry the name of the sub-project and
+      under each of these directories repeat the same structure as
+      above. Assuming you have two subprojects named
+      <literal>engine</literal> and <literal>client</literal>, the
+      initial layout of your repository should look like this:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/engine/trunk
+/engine/branches
+/engine/tags
+/client/trunk
+/client/branches
+/client/tags
+      </programlisting>
+
+      <para>More on the repository layout is available in the
+      Subversion book listed in <xref linkend="SubversionReferences"
+      />.</para>
+
+    </section>
+  </section>
+
+  <section id="SubversionBrowsingInterface">
+    <title>The Subversion Browsing Interface</title>
+
+    <para>CodeX offers a number a facilities that allow you to
+    interact with your Subversion repository through the Web
+    interface. The Subversion Web interface does not intend to replace
+    the Subversion client that you should normally use on your desktop
+    computer. It rather focuses on providing you with additional
+    features not found in Subversion clients.</para>
+
+    <para>The Subversion Web interface can be accessed via the
+    &#34;Subversion&#34; item in the Project Main Menu or via the
+    Subversion service listed in the Public Area (see <xref
+    linkend="FigureASampleProjectSummaryPage" />). The CodeX
+    Subversion Web interface provides the following features to CodeX
+    end-users:</para>
+
+    <itemizedlist mark="bullet">
+      <listitem>
+	<para><emphasis role="bold">Accessing the Subversion
+	repository</emphasis>: The welcome page of the CodeX
+	Subversion service gives you all the information you need to
+	access the Subversion repository from your Subversion
+	client. Among other things it tells you what the Subversion
+	root path is and how to checkout the source code. This page
+	may also be customized to display project specific
+	instructions (see <xref
+	linkend="SubversionAdministrationInterface"/>).</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Browsing the Subversion
+	repository</emphasis>: this feature allows you to browse the
+	Subversion repository even if you don't have a Subversion
+	client installed on your desktop machine. </para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Querying Subversion </emphasis>:
+	If the Subversion tracking feature has been activated for your
+	project all Subversion events (commit, file addition or
+	deletion) are tracked down in the CodeX database. This audit
+	trail can be searched using several criteria.</para>
+      </listitem>
+
+      <listitem>
+	<para><emphasis role="bold">Subversion Administration
+	</emphasis>: this service allows project administrator to
+	perform the most common Subversion administration and
+	configuration tasks from the CodeX Web interface (for more
+	details see <xref
+	linkend="SubversionAdministrationInterface"/>).</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Let's review some of these features in more details.</para>
+
+    <section id="BrowsingTheSubversionRepository">
+    <title>Browsing The Subversion Repository</title>
+
+    <para>In order to interact with the Subversion repository of any
+    CodeX-hosted project, you normally need to have Subversion installed on
+    your machine.  However CodeX also offers a built-in Web browsing
+    interface to the Subversion repository which allows you to navigate in
+    the source code, download it, view a file history or compare two
+    revisions of the same file.</para>
+
+      <figure id="FigureASampleSubversionWebSession">
+	<title>Browsing the Subversion repository - A sample session</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	    fileref="../../slides/en_US/SVN_Web_Session.png" width="12cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="QueryingSubversion">
+    <title>Querying Subversion</title>
+
+      <para>If a project has the Subversion Tracking feature activated
+      (see <xref linkend="SubversionAdministrationInterface" />), the
+      Subversion Web interface will bring very useful features to the
+      software engineers:</para>
+
+      <itemizedlist mark="dash">
+	<listitem>
+	  <para><emphasis role="bold">Atomic Subversion commit and
+	  unique commit ID</emphasis>: all changes (file modification,
+	  addition or removal) that are committed in one go from your
+	  Subversion client are assigned a unique commit ID also known
+	  as a Subversion revision number.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Commit
+	  cross-referencing</emphasis>: the unique commit ID (or
+	  revision number) generated at each commit can be referenced
+	  in future commits, or in the follow-up comments of project
+	  artifacts like bugs/tasks/support requests simply by using
+	  the pattern <literal>commit #XXXX</literal>, or
+	  <literal>revision #XXXX</literal> or even <literal>rev
+	  #XXXX</literal> (where XXXX is the unique commit ID).
+	  Any reference of that kind will be automatically
+	  transformed into an hyperlink to the Subversion tracking
+	  database. This mechanism makes it very easy to go from
+	  project artifacts like bugs, support requests or tasks to
+	  source code changes and vice-versa (more on this mechanism
+	  at <xref linkend="Cross-ReferencingSubversionCommits"
+	  />).</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Commit search</emphasis>:
+	  another side benefit of the Subversion Tracking database is
+	  that you can use various search criteria to query the
+	  Subversion tracking database. You can search code changes by
+	  authors (who made the change), by revision number, by file
+	  path or by keywords to be found in the log message. Results
+	  can also be sorted by clicking on the headers of the search
+	  results (see <xref linkend="FigureSubversionSearch"
+	  />).</para>
+
+	  <para>A click on one of the selected commit ID brings you to
+	  a complete description of the change, the files that were
+	  impacted and the nature of the change with a direct link
+	  into the Subversion repository if you want to browse the file or
+	  look at the code modification (see <xref
+	  linkend="FigureSubversionShowCommit" />).</para>
+	</listitem>
+      </itemizedlist>
+	  
+    </section>
+
+
+      <figure id="FigureSubversionSearch">
+	<title>Querying the Subversion tracking database of a given project</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_svnsearch.png" width="15cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+    <section id="Cross-ReferencingSubversionCommits">
+    <title>Cross-Referencing Artifacts and Subversion Commits</title>
+
+      <para>While working in the development or the maintenance phase
+      of a software project, it is vital to keep track of the changes
+      made to the source code. This is what Version Control systems
+      like Subversion do. In addition to keeping track of the source
+      code change history it is often critical to relate the changes
+      to the artifact (a task, a defect or a support request) that led
+      the developers to make a change in the code. And conversely,
+      when reading the artifact description it is also very helpful to
+      immediately see how the change was implemented.</para>
+
+      <para>The integration of Subversion in CodeX precisely provides
+      CodeX users with this bi-directional cross-referencing
+      mechanism. This is achieved through the use of reference patterns
+      that are automatically detected by CodeX in either the follow-up
+      comments of the project artifacts or in the messages attached to
+      a Subversion commit.</para>
+      
+      <para>The text patterns to type in a commit message or a
+      follow-up comment are as follows:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para> <emphasis role="bold">XXX #NNN</emphasis>: this
+	  pattern refers to the artifact XXX number NNN, where NNN is
+	  the unique artifact ID, and XXX is the tracker short name
+	  (e.g. &#34;bug #123&#34;, &#34;task #321&#34;, &#34;req
+	  #12&#34;, etc.).  If you don't know the tracker short name
+	  or don't want to specify it, you may simply use &#34;art
+	  #NNN&#34;. When browsing a message containing this pattern
+	  anywhere in CodeX, the pattern will be automatically
+	  transformed into an hyperlink to the artifact
+	  description.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">revision #YYY or 
+	  rev #YYY</emphasis>: this pattern refers to the commit YYY where
+	  YYY is the commit revision number. When browsing a message
+	  containing this pattern anywhere in CodeX, the pattern will
+	  be automatically transformed into an hyperlink to the commit
+	  description which include log messages, impacted files,
+	  versions and author of the change(see <xref
+	  linkend="FigureSubversionShowCommit" />) .</para>
+	</listitem>
+
+        <listitem>
+        <para>The CodeX reference mechanism allows cross-referencing with any CodeX object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
+        </listitem>
+      </itemizedlist>
+
+
+      <figure id="FigureSubversionShowCommit">
+	<title>The detail of an atomic Subversion commit</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_svnshowcommit.png" width="15cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+
+      <para><tip><title>Tip: cross-reference artifacts and Subversion
+      commits</title><para>It is considered a best practice to always
+      reference a bug, a task or a support request in any of the log
+      message attached to a Subversion commit. Similarly when closing
+      the related artifact (task, bug,etc.) make sure you mention the
+      revision number in the follow-up comment. You will find this
+      extremely convenient while trying to keep track of the changes
+      and why they were made.</para></tip></para>
+
+    </section>
+  </section>
+
+  <section id="SubversionAdministrationInterface">
+    <title>Subversion Administration Interface</title>
+
+    <para>Through the CodeX Web interface, project administrators can
+    perform the most common administration and configuration tasks on
+    their Subversion repository. The administration functions can be
+    accessed through the <literal>SVN Admin</literal> menu item in the
+    Subversion menu bar.</para>
+      
+
+    <section id="SubversionGeneralSettings">
+    <title>General Settings</title>
+
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para><emphasis role="bold">Subversion
+	    Tracking</emphasis>: Being a version control system
+	    Subversion is, of course, natively taking care of all your
+	    file history and is able to tell you what changes were
+	    made by whom and at what date. The file history is
+	    something you can look at either through your Subversion
+	    client or through the Subversion Web Browsing
+	    interface.</para>
+
+	    <para>If you activate the Subversion tracking (default)
+	    for your project CodeX will also keep track of all the
+	    code changes in the CodeX database. This will give you
+	    extra capabilities on your Subversion repository as
+	    explained in <xref linkend="QueryingSubversion" />.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Subversion
+	    Preamble</emphasis>: In some cases (e.g. when your project
+	    already has its own subversion server in place), the
+	    project Subversion repository might not be hosted by the
+	    CodeX server. In this case, the Subversion information
+	    displayed in the welcome page of the CodeX Subversion
+	    service are inadequate. Fortunately, the project
+	    administrator can customize the Subversion Information
+	    page here.</para>
+	  </listitem>
+      </itemizedlist>
+    </section>
+
+
+      <section id="SubversionAccessControl">
+	<title>Subversion Access Control</title>
+	
+
+      <section id="DefaultSubversionAccessPermissions">
+	<title>Default Access Permissions</title>
+
+        <para>Subversion access permission depends upon the project status
+        (private or public) and the class of citizen a user belongs to
+        (see <xref linkend="ClassesOfCitizens" />).</para>
+
+	<para>Regarding private projects, only project members have
+	access to the Subversion repository. By default they all have
+	read and write access. This can be modified by customizing
+	access permissions as explained below.</para>
+
+	<para>With respect to the public projects, the default access
+	permissions are as follows:</para>
+
+	<itemizedlist mark="bullet">
+
+	  <listitem>
+	    <para><emphasis role="bold">Anonymous Users</emphasis>:
+	    users who have not registered with CodeX (or are not
+	    logged in) have <emphasis role="underline">no access at
+	    all</emphasis> to the Subversion repositories.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Registered Users</emphasis>:
+	    have read-only access to Subversion repositories. In other
+	    words they can checkout a working copy of the software but
+	    they are not allowed to commit any changes they have made
+	    to the source code. Source code contributions (bug fix,
+	    enhancements&hellip;) from this class of user must return
+	    to the project team via the Patch Tracker (see <xref
+	    linkend="PatchTemplate" /> ).</para>
+
+	    <note><para><emphasis role="bold">Note</emphasis>: if
+	    the &#34;restricted users&#34; mode is on (See <xref
+	    linkend="ClassesOfCitizens" />), then there is no 
+        access for non project members by default.</para></note>
+        <note><para><emphasis role="bold">Note</emphasis>: all
+	    source code accesses are recorded by CodeX. Project
+	    administrators always have access to the list of people
+	    who accessed the source code (see <xref
+	    linkend="SourceCodeAccessLogs" />).</para></note>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Project Members</emphasis>:
+	    members of a CodeX hosted project are granted a password
+	    protected read/write access. As mentionned above in the
+	    section about private projects, it is also possible to
+	    grant read-only access to the project members.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Project
+	  Administrators</emphasis>: same as project members.</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+      <section id="CustomizedSubversionAccessPermissions">
+	<title>Customized Access Permissions</title>
+
+	<para>Thanks to the integration of Subversion in the CodeX
+	environment, project administrators can redefine access
+	permissions for some or all CodeX users.</para>
+
+	<para>This can be achieved by specifying access permission
+	rules that will complement or even override the default
+	settings. The syntax of the access permission rules follows
+	the following pattern:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[path]
+name = permission
+      </programlisting>
+
+	<para>where: </para>
+	<itemizedlist mark="dash">
+
+	  <listitem><para><literal>path</literal> is the path to the
+	  directory or to the filename (relative to
+	  <literal>/svnroot/projectname</literal>) in your repository
+	  for which you want to redefine access
+	  permissions.</para></listitem>
+
+	  <listitem>
+	    <para><literal>name</literal> is either a CodeX login name
+	    or group name. The name * (star) means any registered
+	    user.</para>
+
+	    <para>If it is a group name it must be preceded with the @
+	    character. The line <literal>name = permission</literal>
+	    can be repeated as many times as necessary for a given
+	    path. To define groups of users use the following
+	    block statement:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[groups]
+groupname = username1,username2,...
+      </programlisting>
+
+	    <para>All project defined user groups (see <xref linkend="UserGroups" />) are 
+		also defined in the CodeX default permissions settings and ready to use
+		if you wish to redefine access permissions.</para>
+
+	  </listitem>
+
+	  <listitem><para><literal>permission</literal> is either
+	  <literal>r</literal> for read-only access,
+	  <literal>rw</literal> for read-write access or blank if
+	  access is forbidden.</para></listitem>
+	</itemizedlist>
+
+	<para>As an illustration, the default permission settings of a
+	CodeX repository as explained in the previous section are
+	expressed through the following set of rules:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[groups]
+members = member1,member2,...,memberN
+
+[/]
+* = r
+@members = rw
+      </programlisting>
+
+	<para>where <literal>member1,member2,...,memberN</literal> are
+	the CodeX login name of the CodeX project members.</para>
+        <para>Additionnaly, all existing
+        user groups defined in this project are listed in this section.</para>
+        <para>These default permission settings are automatically generated, and cannot
+        be edited. You should consider this section as the beginning of the Subversion permission
+        file: project administrators can then edit additional permissions that will be added below the automatic section.
+        </para>
+        <para>Please note that it is not possible to restrict permissions already granted on the same directory.</para>
+       <para>For instance, a public project has the default permission file detailed above; it is useless to add a stricter rule on the root directory. For instance, adding:
+</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/]
+* = 
+      </programlisting>
+      <para>will not prevent registered users to access the repository, since the default rule already grants this permission. However, it is possible to restrict permissions on a subfolder:
+</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[/secret]
+* = 
+@members = rw
+      </programlisting>
+      <para>will indeed prevent registered users from reading the '/secret' directory.</para>
+      <para>If you really need to prevent access to the whole repository, you should contact a CodeX administrator (s/he will create a .CODEX_PRIVATE file in the repository).</para>
+	<para>For more information about the format of this file you
+	should refer to the Subversion Book (see <xref
+	linkend="SubversionReferences" />).</para>
+
+      </section>
+
+    </section>
+
+      <section id="SubversionEmailNotification">
+	<title>Subversion Email Notification</title>
+
+	<para>In addition to tracking the changes in the CodeX
+	database, CodeX can also send a nicely formatted email message
+	to individual email addresses or mailing lists each time there
+	is a change in the source code. The email message contains
+	the log message, the author of the change, the list of
+	impacted files and pointers to the Subversion repository
+	showing what changes were made. </para>
+
+	<para>Project Administrators can configure the following
+	settings for email notification:</para>
+
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para><emphasis role="bold">Email addresses</emphasis>: a
+	    comma separated list of email addresses of people to whom
+	    the email notification must be sent can be given. If you
+	    want to notify a large group of people then we strongly
+	    advise you to create a mailing list first (see
+	    below).</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Subject Header</emphasis>: is
+	    a piece of text that will appear as a trailer in the
+	    Subject of all the email notifications sent to the
+	    addressees. This trailer is supposed to help the addressee
+	    to quickly spot the messages in their Inbox or to put
+	    filters in place to route the email notification to a
+	    given folder.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<para><tip><title>Tip: create a specific mailing list for
+	Subversion events notification</title><para>If you intend to
+	generate email notification for the changes made in your
+	Subversion repository, it is a good practice to create a
+	specific mailing list called
+	<literal>projectname-svnevents</literal>. By doing so, CodeX
+	users and project members interested in receiving the email
+	notification just need to subscribe to the mailing list. In
+	addition, the CodeX mailing list manager will archive all the
+	email messages which can prove very useful for future
+	reference.  See <xref linkend="MailingLists" /> for mailing
+	list creation.</para></tip></para>
+
+    </section>
+
+  </section>
+
+  <section id="ATypicalSubversionLifeCycle">
+    <title>A Typical Subversion Life Cycle</title>
+
+    <para>As stated earlier, the intent of this chapter is not to give
+    a formal Subversion training but rather to explain what are the
+    steps a project team typically goes through when using Subversion
+    and, more generally, all the CodeX tools involved in a Software
+    release process.</para>
+
+    <para>It also deals with the problem of contributing source code
+    when you are not part of a project team. In this section all
+    examples are given in the form of Subversion command lines but
+    transposing them to graphical front-ends should be relatively
+    straightforward.</para>
+
+    <figure id="FigureATypicalSubversionSoftwareDevelopmentLifeCycleOnCodeX">
+      <title>A Typical Software Development Life Cycle on CodeX</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../slides/en_US/SVN_Life_Cycle.png" width="14cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="SubversionLoggingIn">
+      <title>Logging In</title>
+
+      <para><emphasis>Audience: all CodeX users</emphasis></para>
+
+      <para>Unlike CVS when used with the pserver protocol there is no
+      explicit login command to issue to start working with a
+      Subversion repository. Subversion will ask for your login name
+      and password only when performing an operation (e.g. commit)
+      that requires authentication.</para>
+
+    </section>
+
+    <section id="SubversionImportingExistingSourceCode">
+      <title>Importing Existing Source Code</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>As the happy administrator of a new CodeX project, the
+      first thing to do is to populate your freshly brewed Subversion
+      repository with your project source code. To do so, first create
+      a new directory <literal>topdirectory</literal> on your
+      workstation and populate this top level directory with the
+      recommended directory layout documented earlier (see <xref
+      linkend="TheSubversionRepositoryStructure" />).</para>
+
+      <para>Place yourself into the <literal>topdirectory</literal> and  type the following command (in one line):</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn --username loginname import . 
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname 
+--message "Initial repository version"
+        </programlisting>
+
+      <para>Where:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para><literal>projectname</literal> is the
+            project short name</para>
+	</listitem>
+
+	<listitem>
+	  <para><literal>loginname</literal> is your CodeX login (all
+	  lowercase). The --username option is only needed if your
+	  CodeX login name is different from the Unix or Windows login
+	  name you are currently working with.</para>
+	</listitem>
+
+      </itemizedlist>
+
+      <note><para>If your Subversion server is configured in secure mode, note that you should use 
+      <literal>https://&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal> instead of 
+      <literal>http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname</literal> 
+      in all the examples given on these pages.</para></note>
+
+      <para><tip><title>Tip: made a mistake while importing your
+      source code?</title><para>It is not unusual to make a mistake
+      when importing your source code into a fresh Subversion
+      repository especially for new users.  Typical mistakes are
+      directories placed at the wrong level or with the wrong
+      name. Nothing to fear though... If you want to start again from
+      a fresh Subversion repository contact the CodeX Team to get your
+      Subversion repository reinitialized. Alternatively you can
+      easily delete or move directories and files with any subversion
+      client afterwards.</para></tip></para>
+
+      <note><para>Note that if you already have a Subversion
+      repository available, the CodeX Team can help you migrate this
+      repository on CodeX and preserve all of your project history. We
+      just need a dump of your Subversion tree generated with the
+      <literal>svnadmin dump</literal> command. With this dump the
+      CodeX Team will re-install everything for you on the CodeX
+      server. Contact us for more information.</para></note>
+    </section>
+
+    <section id="SubversionCheckingCodeOut">
+      <title>Checking Code Out</title>
+
+      <para><emphasis>Audience: all CodeX users</emphasis></para>
+
+      <para>Once a Subversion repository has been populated other
+      CodeX users can checkout the source code and place it on their
+      own workstation. The result is called a working copy in the
+      Subversion jargon. Note that &#39;checkout&#39; in the
+      Subversion world does not mean that the user has acquired any
+      sort of lock on the file. The Subversion paradigm is: anyone
+      (with the right permissions) can retrieve a working copy for
+      editing; changes are reconciled or flagged for conflict
+      resolution when the file is committed. Unlike other tools (RCS,
+      SCCS, ClearCase...) Subversion is a concurrent version control
+      system.</para>
+
+      <para>A working copy is NOT an image of the Subversion
+      repository. It is rather a snapshot of the source tree at some
+      point in time and, by default, it&#39;s the latest version at
+      the time the working copy is created or updated. One of the
+      interesting features of a working copy is that it is a
+      self-contained entity. In other words, a working copy contains
+      all the necessary information for Subversion to know exactly
+      which Subversion server and repository it is coming from and the
+      corresponding moment in the history of the source tree . This is
+      also why you won&#39;t see the URL option pointing to the
+      Subversion repository in all subsequent Subversion commands
+      presented here. These commands run from within a working copy,
+      so Subversion knows exactly where the Subversion repository
+      is.</para>
+
+      <para>To create a working copy of the entire project type the
+      following command:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn checkout http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname
+</programlisting>
+
+      <para>Where:</para>
+
+      <itemizedlist mark="bullet"	spacing="compact">
+	<listitem>
+	  <para><literal>projectname</literal> is the
+            project short name</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="SubversionUpdatingtheSourceCode">
+      <title>Updating the Source Code</title>
+
+      <para><emphasis>Audience: all CodeX users</emphasis></para>
+
+      <para>Running an update command from within a working copy has
+      the effect of updating the working copy (or a subpart of it)
+      with the latest version of each source file from the
+      repository. To update a working copy type:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn update
+        </programlisting>
+
+    </section>
+
+    <section id="SubversionExaminingyourChanges">
+      <title>Examining your Changes</title>
+
+      <para>If you want to know what files have changed on the
+      Subversion repository since your last update or which ones have
+      been modified in your own working copy, run the following
+      command:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn status
+        </programlisting>
+
+      <para>The output will show you a list of files which undergo
+      some changes either because they were modified, added or
+      deleted.</para>
+
+      <para>To compare your locally modified version of a file with
+      the original version in the Subversion repository, you can use
+      the diff command:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn diff filename
+        </programlisting>
+
+      <para>If no <literal>filename</literal> is specified the diff
+      operation is applied recursively on all the files and
+      sub-directories.</para>
+
+    </section>
+
+    <section id="SubversionCommittingyourChanges">
+      <title>Committing your Changes (project team)</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>Project members involved in development activities will
+      likely want to contribute the changes made in their own working
+      copy back to the Subversion repository. In Subversion
+      terminology this is called a commit operation.</para>
+
+      <para>To commit changes you have made in your working copy, type
+      the following command:</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn commit -m&#34;Explain the nature of the change here...&#34; filenames
+        </programlisting>
+
+      <para>Where:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para>The -m option is followed by a text message explaining what
+            changes you have made.</para>
+	</listitem>
+
+	<listitem>
+	  <para>The <emphasis>filenames</emphasis> argument is
+	  optional. It can be individual files or directories. If
+	  there isn&#39;t any files mentioned Subversion will
+	  automatically commit all the modified files in the directory
+	  where you are located and all sub-directories
+	  recursively.</para>
+	</listitem>
+      </itemizedlist>
+
+      <para><tip><title>Tip: Include a bug or task number in your
+      commit messages</title><para>In the ideal world, all
+      modifications made to the source code of a project should be
+      related to either a bug logged or to a task assign to a
+      developer. If your project team lives in this wonderful world
+      :-) then don&#39;t forget to include the related bug or task ID
+      number at the beginning or at the end of your commit
+      message. The Subversion hook scripts can help you enforce this
+      rule by checking the format of all the submitted commit messages
+      and reject them if it does not follow the recommended
+      pattern.</para></tip></para>
+
+      <para><tip><title>Tip: update before you commit</title>
+
+	  <para>If you try to commit a modified file that was also
+	  modified on the Subversion repository in the meantime, the
+	  Subversion server will refuse to execute the <literal>svn
+	  commit</literal> command. You must first execute a
+	  <literal>svn update</literal> command to bring your own
+	  working copy up to date with latest version, merge your
+	  changes with those from others (Subversion does it
+	  automatically in most cases) and then only commit your own
+	  changes back to the Subversion repository. If you want to be
+	  immune from others&#39; changes then create a Subversion
+	  branch and work with it in isolation.</para>
+	</tip></para>
+
+    </section>
+
+    <section id="SubversionContributingyourChanges">
+      <title>Contributing your Changes (other users)</title>
+
+      <para><emphasis>Audience: all CodeX users</emphasis></para>
+
+      <para>This is a variant of the previous section for those of you
+      who do not have write access to the Subversion repository of a
+      project and, therefore, cannot commit their modifications to the
+      Subversion repository.</para>
+
+      <para>The variant explained here is actually a method that is
+      universally used in the Open Source world to contribute source
+      code modification to the project team. It consists in the
+      generation of a text file containing the differences between
+      your modified version of the source code and the original one
+      that you initially checked out.  This file is often referred to
+      as "diff file".</para>
+
+      <para>The reason why diff files are so popular is because they
+      follow a well-documented format. Diff files are sent to the
+      original project team which, upon reception, is going to use
+      another universal tool called <literal>patch</literal> to
+      automatically merge the contributed changes with the master copy
+      of the source code. This is why, by extension, a diff file is
+      also often referred to as a <emphasis>patch</emphasis>.</para>
+
+      <para>Diff files can be generated either with the
+      <emphasis>diff</emphasis> tool (part of the GNU tools) that is
+      available on all platforms including Windows or directly from
+      within a Subversion working copy.</para>
+
+      <para><emphasis role="bold">The Diff way:</emphasis></para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para>Use the diff way when you obtained the original source
+	  code from a File Release and not from the project Subversion
+	  repository.  Let&#39;s assume the original source file is
+	  under the directory <literal>project-0.1/</literal> and that
+	  your modified version is under
+	  <literal>project-0.1-new/</literal></para>
+	</listitem>
+
+	<listitem>
+	  <para>You can generate a diff file with the following
+	  command (all files in subdirectories will be checked
+	  recursively for changes)</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+diff -rc project-0.1/ project-0.1-new/
+</programlisting>
+
+	</listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">The Subversion way:</emphasis></para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para>This is the preferred way when you obtained the source
+	  code by creating your own Subversion working copy. Let&#39;s
+	  assume that you are at the top level of the working
+	  copy.</para>
+	</listitem>
+
+	<listitem>
+	  <para>You can generate a diff file between your version and
+	  the very latest version in the Subversion repository for the
+	  entire source tree by typing with the following Subversion
+	  command:</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn diff
+</programlisting>
+          <para></para>
+	</listitem>
+
+	<listitem>
+	  <para>If you want to generate a diff against a specific
+	  version of the source tree, then specify the revision number
+	  in the command line (revision #9398 in the example below):</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn diff -r 9398
+</programlisting>
+	</listitem>
+      </itemizedlist>
+
+      <para>In both cases, you should redirect the output of the diff
+      or svn diff command in a text file. Compress the output file if
+      it&#39;s a large one and use the CodeX Patch Tracker (see <xref
+      linkend="PatchTemplate" />) to submit your patch to the project
+      team.</para>
+
+      <para>And thanks for contributing some code!</para>
+    </section>
+
+    <section id="SubversionExportingandPackaging">
+      <title>Exporting and Packaging</title>
+
+      <para><emphasis>Audience: project members</emphasis></para>
+
+      <para>There is a quick and easy way to release a pre-packaged
+      version of your source file and make it available to all CodeX
+      users through the File Release mechanism (see <xref
+      linkend="FileRelease" />).</para>
+
+      <procedure>
+	<step>
+	  <para>Make sure all the project members involved in software
+	  development have committed the changes that were supposed to
+	  appear in this new release.</para>
+	</step>
+
+	<step>
+	  <para>Update your own working copy with the changes
+	  committed by all other project members with the following
+	  command:</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn update
+</programlisting>
+          <para></para>
+	</step>
+
+	<step>
+	  <para>Update the ChangeLog, Release Notes and README file at
+	  the top of your source tree and commit the changes for these
+	  3 files.</para>
+	</step>
+
+	<step>
+	  <para>Create a tagged copy of your source code from the main
+	  development line with the appropriate version
+	  number. Assuming that the name of the release is
+	  <literal>myproject-1.4</literal> the creation of the new
+	  release is as follows:</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn copy
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/trunk
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1.4
+-m "Tagging the 1.4 release"
+</programlisting>
+          <para></para>
+	</step>
+
+	<step>
+	  <para>Your software release is now ready. Export a clean
+	  image of the release 1.4 (without Subversion specific
+	  files) from the Subversion repository by typing:</para>
+
+	  <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn export
+http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1.4
+</programlisting>
+          <para></para>
+	</step>
+
+	<step>
+	  <para>Create a ZIP or tar archive with the entire
+	  <literal>myproject-1.4/</literal> directory</para>
+	</step>
+
+	<step>
+	  <para>Deliver this archive through the File Release service (see <xref linkend="FileReleaseDelivery" />).</para>
+	</step>
+
+	<step>
+	  <para>Done! Nice job...Take a break. And remember to
+	  announce the availability of your new version via the CodeX
+	  News service (see <xref linkend="NewsService" />).</para>
+	</step>
+      </procedure>
+    </section>
+  </section>
+
+  <section id="SubversionforProjectAdministrators">
+    <title>Subversion for Project Administrators</title>
+
+
+    <section id="SubversionHookScripts">
+      <title>Subversion Hook Scripts</title>
+
+      <para>CodeX offers an easy to use Web interface to administrate
+      the common settings of your Subversion repository like access
+      control and email notification. In case project administrators
+      want to go deeper in customizing the behavior of their CodeX
+      repository, they can get access to the Subversion hook
+      scripts.</para>
+
+      <para>In order to access those hook scripts, you must be
+      granted the right to log into the CodeX server with your Shell
+      Account (see <xref linkend="ShellAccount" />)<footnote><para>The
+      Shell Account may have been deactivated by your CodeX site
+      administrators.</para></footnote>.</para>.
+
+      <para>Once logged in, type the following commands at the shell
+      prompt:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para><literal>newgrp projectname</literal> (where <literal>projectname</literal> is the
+            short project name)</para>
+	</listitem>
+
+	<listitem>
+	  <para><literal>cd /svnroot/projectname/hooks</literal></para>
+	</listitem>
+
+	<listitem>
+	  <para>If the hook scripts you want to customize does not yet
+	  exist in the <literal>hooks</literal> directory, first
+	  create them by copying the corresponding template file
+	  provided by Subversion (<literal>.tmpl</literal>
+	  extension). Then edit the hook scripts in place.</para>
+	</listitem>
+
+	<listitem>
+	  <para><literal>exit</literal> (Logout)</para>
+	</listitem>
+      </itemizedlist>
+
+      <para><tip><title>***Important Note***: Mind the CodeX
+      Hooks!</title><para>If you decide to customize the Subversion
+      hook scripts for your repository make sure to preserve the
+      statements that could have been inserted by CodeX in the first
+      place. The CodeX statements are clearly marked with a
+      recognizable header and trailer. </para></tip></para>
+
+    </section>
+
+  </section>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

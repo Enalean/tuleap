@@ -1,0 +1,650 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Laurent</firstname>
+
+        <surname>Julliard</surname>
+
+        <affiliation>
+          <orgname>Xerox/XIG/ISTC - Open Source Team, Laurent.Julliard@crt.xerox.com</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2000</year>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <year>2006</year>
+      <year>2007</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>This document is licensed under the Codex Component Software License</para>
+
+      <para>Copyright protection claimed includes all forms and matters of
+      copyrightable material and information now allowed by statutory or
+      judicial law or hereinafter granted, including without limitation,
+      material generated from the software programs which are displayed on the
+      screen such as icons, screen displays, looks, etc.</para>
+
+      <para>Printed in United States of America</para>
+
+      <para>Xerox ®, The Document Company ®, and all Xerox products mentioned
+      in this publication are trademarks of Xerox Corporation.</para>
+
+      <para>This document was formatted with the DocBook XML DTD. HTML
+      version rendered with DocBook HTML native renderer. PDF version
+      rendered with Apache FOP.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>05-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Initial draft by L. Julliard</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.1.1</revnumber>
+
+        <date>06-Jul-2001</date>
+
+        <authorinitials>John Stidd</authorinitials>
+
+        <revremark>Corrections from John Stidd</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>20-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>First fully written version. Sent out for proof-reading</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>25-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Survey Manager chapter written.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.3.1</revnumber>
+
+        <date>25-Jul-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Many thanks to S. Alexander, P. Austin, C. Baltus, J.
+        Breindenbach, R. Campbell, J. Espinoza, L. Lindquist, J. Stidd, R.
+        Stoos, J. Tirabassi, V. Tuttle for their edits.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.0</revnumber>
+
+        <date>02-Aug-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>First final version published on the CodeX site</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.1</revnumber>
+
+        <date>13-Sep-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>CVS email notification, Advanced Search and Windows Shared
+        Resources added</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.2</revnumber>
+
+        <date>03-Oct-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>More on PHP scripts for Virtual Hosts</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.3</revnumber>
+
+        <date>18-Feb-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Bug field types now showing in Bug Field Usage screen</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.4</revnumber>
+
+        <date>25-Feb-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Bug, Patch, SR email notification revised</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.5</revnumber>
+
+        <date>22-Mar-2001</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Code Snippet Library and Patch manager updated with ability
+        to upload files. New Bug Search Facility and Bug report definition
+        added.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.6</revnumber>
+
+        <date>14-Jun-2002</date>
+
+        <authorinitials>Laurent Julliard, Stephane Bouhet</authorinitials>
+
+        <revremark>Project Web site creation with FrontPage and DreamWeaver
+        added</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.7</revnumber>
+
+        <date>04-Sep-2002</date>
+
+        <authorinitials>Laurent Julliard, Stephane Bouhet</authorinitials>
+
+        <revremark>Conversion to DocBook DTD to generate both online and PDF version</revremark>
+      </revision>
+
+     <revision>
+        <revnumber>2.0</revnumber>
+
+        <date>19-Sep-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Major Release. Bug Attachment, CC List, new
+        notification process, type of search criteria, Custom fields
+        documented in the bug tracking system. Merge with existing
+        on-line CodeX help.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>2.1</revnumber>
+
+        <date>22-Nov-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>XML changes to succesfully go through an XML validator. Fixed a formatting problem in the Table of Contents.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>2.2</revnumber>
+
+        <date>25-Nov-2002</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Document Mgr updated with access to registered users only.</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>2.3</revnumber>
+
+        <date>06-Feb-2003</date>
+
+        <authorinitials>St&eacute;phane Bouhet</authorinitials>
+
+        <revremark>Add the Email notification mechanism for the Task Manager.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.4</revnumber>
+
+        <date>22-May-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>CVS chapter revamped to include the new CVS Web interface (CVS query and Administration)</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.5</revnumber>
+
+        <date>01-Aug-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Almost everything making documentation Xerox specific was removed. Company name, machine names,etc. are now definable XML entities.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6</revnumber>
+
+        <date>14-Oct-2003</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>New chapter about the CodeX generic tracker and modification in all impacted chapters.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.1</revnumber>
+
+        <date>23-Feb-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Small update on File Release mechanism, concerning hidden packages and email notifications.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.2</revnumber>
+
+        <date>24-Feb-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Tried to clarify the Event/Role based Notification Settings related to bug #33791. Corrected the corresponding figure to match the explanation.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.3</revnumber>
+
+        <date>2-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information about the CVS preamble customization.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.4</revnumber>
+
+        <date>9-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information about setting up WinCVS for CodeX, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.5</revnumber>
+
+        <date>16-Mar-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Updated instructions to make cross-references with pattern 'xxx #nnn'</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.6</revnumber>
+
+        <date>23-Mar-2004</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Source Code access logs can be filtered by users</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.7</revnumber>
+
+        <date>23-Apr-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added Service Configuration section in Project Administration chapter</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.8</revnumber>
+
+        <date>26-May-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added Document Manager tip about copy-pasting vs. uploading documents</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.9</revnumber>
+
+        <date>30-Aug-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added Artifact Mass Change section in Tracker chapter</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.10</revnumber>
+
+        <date>9-Sep-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added Tracker Artifact Import section in Tracker chapter. 
+	Added link in the Project Administration chapter to the Tracker Artifact
+	Import section. Corrected typos in chapter Project Administration,
+	section Data Export</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.11</revnumber>
+
+        <date>28-Sep-2004</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added User Group section in the Project Administration chapter.
+        Added Permissions section in the File Release chapter.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.12</revnumber>
+
+        <date>10-Nov-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Added documentation on patch from ST (bind tracker fields to 
+        user groups) in the Tracker chapter.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.13</revnumber>
+
+        <date>24-Nov-2004</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Minor correction on summary of Tracker Access Permissions for Mass Update and Import</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.14</revnumber>
+
+        <date>04-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Minor correction on codex-contact and codex-admin email parameters</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.15</revnumber>
+
+        <date>06-Jan-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>In the Project Administration chapter:
+        Changed "Source Code Access Log" into "Access Log" (SR 109 on Partners).
+        Added a few words on logging accesses with viewCVS (SR 96 on Partners).
+        Updated sample picture.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.16</revnumber>
+
+        <date>11-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added documentation about ranks in the document manager.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.17</revnumber>
+
+        <date>11-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added documentation about ranks in the package admin page.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.18</revnumber>
+
+        <date>13-Jan-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Minor update, introducing 'Restricted' user status.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.6.19</revnumber>
+
+        <date>22-Feb-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Corrected typos in chapter tracker artifact cross-referencing.
+        Slight rephrasing in SVN chapter in the cross-referencing section 
+	(related to SR 163 on Partners)
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7</revnumber>
+
+        <date>3-Mar-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Patch Manager chapter is now deprecated.
+	Add a whole section about CodeX tracker templates in the Tracker chapter.
+	This section is a copy paste of main processes from the deprecated Bug, SR, Patch 
+	and Task Manager chapters. In CVS and Subversion chapters refer to the new
+	tracker template section instead of the Patch Manager chapter.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.1</revnumber>
+
+        <date>16-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Reworked document manager chapter after major update of this service.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.2</revnumber>
+
+        <date>17-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added information on document cross-referencing.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.3</revnumber>
+
+        <date>18-Mar-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark> Tracker chapter: Add a tip for handling csv files under 
+	Excel corresponding to SR 162 on partners. Point from Project Administration
+	Chapter to this tip.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.4</revnumber>
+
+        <date>30-Mar-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Registration phase: added tip for LDAP authentication.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.7.5</revnumber>
+
+        <date>25-Apr-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Fixed bug #2511 on cvs help.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.8</revnumber>
+
+        <date>19-May-2005</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added initial Wiki documentation.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9</revnumber>
+
+        <date>08-Jul-2005</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Added section on tracker permissions, and moved deprecated Patch chapter at the end of the documentation
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.1</revnumber>
+
+        <date>28-Jul-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Updated tracker and user permissions chapters with respect to the removal of the Technicians role
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.2</revnumber>
+
+        <date>6-Oct-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Add section about export of tracker search results in Tracker chapter.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.3</revnumber>
+
+        <date>29-Nov-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update artifact import section on:
+	- new option to send follow-up mails thanks to ST !! 
+	- csv parsing checks now follow-up comments to avoid double submission.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.4</revnumber>
+
+        <date>21-Dec-2005</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Project defined user groups are now available in
+	the project SVN Access File
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.5</revnumber>
+
+        <date>2-Mar-2006</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Added section on reference configuration
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update Survey Manager section for ST enhancement
+	on custom radio buttons for surveys
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update chapters CodeX Site Overview,
+	Creating a new Project, and Project Administration
+	for project templates.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Update section News Service to include ST 
+	enhancement on private news (SR #265).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>In the paragraph type of project : correct 
+	link to references and add details about the creation of
+	new projects from a template project. 
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.0</revnumber>
+
+        <date>3-Apr-2007</date>
+
+        <authorinitials>CodeX team</authorinitials>
+
+        <revremark>Update for the 3.2 CodeX release:
+        Documentation of the new File service, documentation of templates,
+        documentation of CVS Watch, and many fixes (see SR #337).
+        </revremark>
+      </revision>
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

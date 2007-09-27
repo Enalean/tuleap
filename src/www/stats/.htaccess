@@ -1,0 +1,41 @@
+<IfModule mod_php3.c>
+<Files views_graph.png>
+ForceType application/x-httpd-php3
+</Files>
+<Files users_graph.png>
+ForceType application/x-httpd-php3
+</Files>
+<Files weekly_views.png>
+ForceType application/x-httpd-php3
+</Files>
+</IfModule>
+
+<IfModule mod_php4.c>
+<Files views_graph.png>
+ForceType application/x-httpd-php
+</Files>
+<Files users_graph.png>
+ForceType application/x-httpd-php
+</Files>
+<Files weekly_views.png>
+ForceType application/x-httpd-php
+</Files>
+</IfModule>
+
+<IfModule sapi_apache2.c>
+<Files views_graph.png>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+<Files users_graph.png>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+<Files weekly_views.png>
+ AcceptPathInfo on
+ SetOutputFilter PHP
+ SetInputFilter PHP
+</Files>
+</IfModule>

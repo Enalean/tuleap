@@ -1,0 +1,37 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+// Restricted users are only granted access to their projects pages
+// Still, there are a few possible customizations proposed here.
+
+// comment/uncomment forbidden URLs
+$forbidden_url = array( 
+          '/snippet/',     // Code Snippet Library
+          '/softwaremap/', // browsable software map
+          '/new/',         // list of the newest releases made on the CodeX site
+          '/search/',      // search for people, projects, and artifacts in trackers!
+          '/people/',      // people skills and profile
+          '/stats/',       // CodeX site statistics
+          '/top/',         // projects rankings (active, downloads, etc)
+          '/project/register.php',    // Register a new project
+          '/export/',      // CodeX XML feeds
+          '/info.php'      // PHP info
+          );
+        
+// Use true/false for those options
+$allow_codex_welcome_page=false;// Allow access to CodeX welcome page (at e.g. http://codex.xerox.com/)
+$allow_news_browsing=false;     // Allow restricted users to read/comment news, including for their project
+$allow_user_browsing=true;      // Allow restricted users to access other user's page (Developer Profile)
+$allow_access_to_codex_forums=true;   // CodeX help forums are accessible through the 'Discussion Forums' link
+$allow_access_to_codex_trackers=false;// CodeX trackers are used for support requests on CodeX
+$allow_access_to_codex_docs=false; // CodeX documents (Note that the User Guide is always accessible)
+$allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
+
+
+?>

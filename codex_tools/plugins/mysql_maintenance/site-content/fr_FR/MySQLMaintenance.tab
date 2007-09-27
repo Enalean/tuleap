@@ -1,0 +1,4 @@
+plugin_MySQLMaintenance	descriptor_description	Execute ANALYZE sur les tables CodeX.
+plugin_MySQLMaintenance	title	Maintenance MySQL
+plugin_MySQLMaintenance	submit	Exécuter ANALYZE TABLE sur toutes les tables maintenant !
+plugin_MySQLMaintenance	result	Résultats de la requête ANALYZE TABLE :

@@ -1,0 +1,46 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: CommentUtiliserUnWiki,v 1.5 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CommentUtiliserUnWiki;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+''"Wiki wiki"'' signifie "vite" en hawaïien.
+
+__Ce qu'il est suffisant de savoir :__
+
+* Pour éditer n'importe quelle page autorisée, cliquez sur le lien Éditer au bas de la page. Vous devriez faire cela tout de suite et lire le code source de cette page, cela aura plus de sens.
+* Vous obtenez de l'italique en encadrant les mots par des paires d'apostrophes ''comme ceci''.
+* Vous obtenez du __texte en gras__ en utilisant deux symboles souligné (underscore) de chaque côté.
+* Et l'__''italique gras''__ en combinant les deux.
+* Vous aurez des puces en utilisant un astérisque * en début de ligne.
+* Pour avoir une police à chasse fixe, indentez avec une espace :
+
+ ceci est certainement un poème
+ au sujet de la chasse fixe
+ je l'éditai de velours blême
+ sans trouver de rime pour fixe
+
+* Vous pouvez séparer les paragraphes à l'aide d'une ligne blanche. Exemple :
+
+Je suis un paragraphe.
+
+Je suis moi aussi un paragraphe. Nous sommes juste deux petits paragraphes.
+
+
+* Vous pouvez obtenir des règles horizontales à l'aide de quatre tirets (ou plus) comme ceci :
+---------
+* Pour créer des hyperliens, vous n'avez qu'à capitaliser les initiales des mots et les coller ensemble. Supposons que vous voulez créer une page sur la façon dont Steve Wainstead mange des vers, alors vous mettez les initiales en majuscules et collez les mots ensemble comme ceci : SteveWainsteadMangeDesVersVivants. Si la page n'existe pas encore, un point d'interrogation apparaît après le lien, vous invitant à créer cette page : CettePageNeDevraitPasExister (et s'il-vous-plaît, ne détruisez pas l'exemple en la créant).
+* Pour lier des pages hors du Wiki, vous pouvez simplement taper l'URL et Wiki créera le lien pour vous : http://www.lemonde.fr/
+* Pour insérer des images, fournissez juste le lien entre crochets comme ceci : __[[!http://www.votremachine.votredomaine/images/photo.png]__. Les URL d'image qui ne sont pas entre crochets apparaissent juste comme des hyperliens vers l'image.
+* Maintenant vous êtes prêt pour AjouterDesPages.
+
+----
+Un WikiWikiWeb est conçu pour être édité vite et facilement. Il dispose d'un marquage très simple décrit dans RèglesDeFormatageDesTextes.
+----
+Si vous n'aimez pas la taille de la fenêtre d'édition de texte que vous obtenez, vous pouvez la changer. Voir PréférencesUtilisateurs.
+----
+DocumentationDePhpWiki

@@ -1,0 +1,14 @@
+# Force mime-type for PHP scripts without .php extension
+<Files projects>
+ForceType application/x-httpd-php
+</Files>
+<Files users>
+ForceType application/x-httpd-php
+</Files>
+<Files foundry>
+ForceType application/x-httpd-php
+</Files>
+<Files goto>
+ForceType application/x-httpd-php
+</Files>
+

@@ -1,0 +1,117 @@
+#/**
+#  *
+#  * CVS scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/index.php
+#
+cvs_index	config_updated	Configuration updated
+cvs_index	full_success	succesfully
+cvs_index	partial_success	partly<br>Email Address Appears Invalid, e-mail notification is off.
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/admin_commit.php
+#
+cvs_admin_commit	title	CVS Administration
+cvs_admin_commit	tracking_hdr	CVS Tracking
+cvs_admin_commit	tracking_msg	When CVS tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database; only the CVS history is available
+cvs_admin_commit	tracking_lbl	CVS Tracking
+cvs_admin_commit	watches_hdr	CVS Watch Mode
+cvs_admin_commit	watches_msg	CVS creates working copies of project files read-only, to remind developers to run the cvs edit command before working on them.
+cvs_admin_commit	watches_lbl	CVS Watch Mode
+cvs_admin_commit	notif_hdr	E-mail notification on commits
+cvs_admin_commit	notif_msg	Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.
+cvs_admin_commit	mail_to	Mail To
+cvs_admin_commit	subject	Subject header
+cvs_admin_commit	preamble_hdr	CVS Preamble
+cvs_admin_commit	preamble_msg	Introductory message to replace the default one on the <a href="$1">CVS welcome page</a>. (HTML tags allowed)
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/cvs_intro.php
+#
+# Rk: for the introduction text see the intro.txt file
+#
+cvs_intro	title	CVS Information
+cvs_intro	repo_history	Repository History
+cvs_intro	no_history	This project has no CVS history.
+cvs_intro	nb_commits	Developer Commits (Last 7 days/Total)
+cvs_intro	browse_title	Browse the CVS Tree
+cvs_intro	browse_msg	Browsing the CVS tree gives you a great view into the current status of this project's code. You may also view the complete histories of any file in the repository.
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/browse_commit.php
+#
+cvs_browse_commit	title	CVS Commit Browsing
+cvs_browse_commit	browse_by	Browse commits by
+cvs_browse_commit	id	ID
+cvs_browse_commit	branch	Branch
+cvs_browse_commit	who	Submitted by
+cvs_browse_commit	keyword	Keywords in log messages
+cvs_browse_commit	date	Commit date
+cvs_browse_commit	pick_date	Click Here to Pick up a date
+cvs_browse_commit	nb_at_once	commits at once
+cvs_browse_commit	no_commit	No Commit matches your criteria
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/detail_commit.php
+#
+cvs_detail_commit	title	CVS Commit #$1 - Details
+cvs_detail_commit	error_notfound	Commit #$1 not found in this project
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/commit_utils.php
+#
+cvs_commit_utils	error_project	Only Projects Can Use The CVS Web Service
+cvs_commit_utils	error_off	This Project Has Turned CVS Off
+cvs_commit_utils	menu_info	CVS Info
+cvs_commit_utils	menu_browse	Browse CVS Tree
+cvs_commit_utils	menu_my	My CVS Commits
+cvs_commit_utils	menu_query	CVS Query
+cvs_commit_utils	menu_admin	CVS Admin
+cvs_commit_utils	error_nogid	ERROR - no group_id
+cvs_commit_utils	sorted_by	sorted by
+cvs_commit_utils	matching	matching commits
+cvs_commit_utils	sort_msg	Click a column heading to sort results (up or down), or <A HREF="$1"><b>Reset sort</b></a>. You can also <a href="$2"><b>$3 multicolumn sort</b></a>.
+cvs_commit_utils	activate	activate	
+cvs_commit_utils	deactivate	deactivate	
+cvs_commit_utils	description	Description
+cvs_commit_utils	id	ID
+cvs_commit_utils	who	Submitted by
+cvs_commit_utils	date	Date
+cvs_commit_utils	no_date	no date on this log
+cvs_commit_utils	on_log	on this log
+cvs_commit_utils	commit	Commit #
+cvs_commit_utils	checkin	Checkin -
+cvs_commit_utils	impacted_file	List of impacted files
+cvs_commit_utils	file	File
+cvs_commit_utils	rev	Revision
+cvs_commit_utils	branch	Branch
+cvs_commit_utils	type	Type
+cvs_commit_utils	add	Add
+cvs_commit_utils	change	Change
+cvs_commit_utils	remove	Delete
+cvs_commit_utils	added_line	Added Lines
+cvs_commit_utils	removed_line	Removed Lines
+#
+#-----------------------------------------------
+# Script: SF/www/cvs/viewvc.php
+#
+cvs_viewvc	title	Browse CVS Tree	
+cvs_viewvc	error_noaccess	Access Denied	
+cvs_viewvc	error_noaccess_msg	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
+
+
+
+
+
+
+

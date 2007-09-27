@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta http-equiv="Content-Style-Type" content="text/css" />
+		<meta http-equiv="Content-Language" content="fr" />
+		<title>Documentation de ServerUpdate</title>
+		<link rel="stylesheet" href="../style.css" type="text/css" media="screen, print" />
+		<link rel="stylesheet" href="screenshots.css" type="text/css" media="screen" />
+	</head>
+	<body>
+		<div id="documentation">
+		    <h1>Documentation de ServerUpdate</h1>
+			<div class="section">
+				<h2><a name="introduction">Introduction</a></h2>
+				<div class="section">Ce plugin permet aux administrateurs de mettre à jour automatiquement le serveur CodeX via une interface web. Les fonctionnalités sont:
+					<dl>
+						<dt><a href="#view">Visualiser les mises à jour disponibles</a></dt>
+						<dd>Visualiser clairement et de manière graphique les mises à jour du serveur, avec leur niveau d'importance et leurs éventuelles interventions manuelles.</dd>
+						<dt><a href="#update">Effectuer une ou plusieurs mises à jour</a></dt>
+						<dd>Effectuer les mises à jour facilement en un clic en multipliant les contrôles de sécurité, et en informant l'administrateur des éventuelles opérations manuelles à effectuer.</dd>
+                        <dt><a href="#script">Visualiser les scripts de mises à jour et leurs exécutions</a></dt>
+						<dd>Certaines mises à jour sont accompagnées de scripts de mises à jour qu'il est nécessaire d'exécuter. Le plugin de mise à jour du serveur s'occupe lui-même d'exécuter ces scripts, en vous informant du déroulement et du succès de l'exécution. Vous avez par la suite la possiblité de consulter l'ensemble des exécutions des scripts.</dd>
+                        <dt><a href="#preferences">Préférences</a></dt>
+						<dd>Visualisation des préférences du plugin.</dd>
+					</dl>
+				</div>
+				<!-- ################################################################# -->
+				<h2 id="view">Visualiser les mises à jour disponibles</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Mises à jour disponibles'" src="updates.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Mises à jour disponibles'</div>
+					</div>
+					<p>Cette interface affiche les informations à propos des mises à jour disponibles. Chaque mise à jour correspond à une révision. Les mises à jours sont affichées dans l'ordre ascendant des révision. Pour chacune, les propriétés suivantes sont affichées :
+                        <ul>
+                            <li>Une indication sur l'importance de la mise à jour (les valeurs possibles sont <strong>minor</strong>, <strong>normal</strong> et <strong>critical</strong>). Voir le code couleur associé,</li>
+                            <li>Le numéro de la révision,</li>
+                            <li>La date à laquelle la révision a été effectuée,</li>
+                            <li>Le message associé à la révision (le message de commit). Celui-ci est important et donne des indications sur les modifications intervenue lors de la mise à jour et éventuellement donne plus d'informations sur les opérations manuelles à effectuer (lancement d'un script, mise à jour de base de données, etc.),</li>
+                            <li>Les fichiers impactés par cette révision,</li>
+                            <li>Un lien vers le détail de la révision,</li>
+                            <li>Des informations complémentaires concernant la mise à jour :
+                                <ul>
+                                    <li>Une indication sur les éventuelles opérations manuelles liées à la mise à jour. 
+                                        Si tel est le cas, la mise à jour n'est pas autorisée, ceci pour vous 'forcer' à lire le message de commit et à effectuer 
+                                        les opérations associées (voir la section <a href="#force">Interventions manuelles et Mode force</a> pour plus de détails).</li>
+                                    <li>Une indication sur la présence éventuelle d'un script de mise à jour à exécuter. 
+                                        Si tel est le cas, l'exécution du script est possible sous certaines conditions 
+                                        (voir la section <a href="#strategy">Stratégie de mise à jour</a> pour plus de détails).</li>
+                                    <li>Une indication sur une  éventuelle modification de la base données. 
+                                        Dans ce cas, il est fortement recommandé de lire le message de commit et de suivre les indications.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                    <h3>Filtrer les mises à jour</h3>
+                    <div class="screenshot">
+                        <img alt="Capture d'écran du filtre" src="filter.png" />
+                        <div class="legend">Capture d'écran du filtre</div>
+                    </div>
+                    <p>Le filtre vous permet de consulter les mises à jour selon leur niveau d'importance.
+                       Les mises à jours sont toujours triées par révision.</p>
+				</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+				<!-- ################################################################# -->
+				<h2 id="update">Effectuer une ou plusieurs mises à jour</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Mises à jour automatique du serveur'" src="update_process.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Mises à jour automatique du serveur'</div>
+					</div>
+					<p>Le plugin permet de mettre à jour le serveur automatiquement via l'interface web de CodeX.
+                       La mise à jour du serveur s'effectue toujours de la révision courante de votre copie de travail
+                       vers la révision de votre choix (supérieure à la révision courante), et en effectuant <strong>toutes</strong>
+                       les mises à jours intermédiaires.
+                       Pour mettre à jour automatiquement le serveur, cliquer sur l'icone de mise à jour à droite de la révision souhaitée.
+                       La mise à jour s'effectue en deux temps.
+                       <ol>
+                        <li>Simulation de mise à jour
+                            <ul>
+                                <li>Le système simule la mise à jour en vérifiant :
+                                    <ul>
+                                        <li>qu'il n'y a pas de mise à jour manuelle,</li>
+                                        <li>qu'il n'y pas de conflits au niveau de Subversion,</li>
+                                        <li>qu'il n'y a pas de conflits au niveau des scripts.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Mise à jour effective
+                            <ul>
+                                <li>Si aucun conflit n'est détecté au niveau de la simulation,</li>
+                                <li>Après confirmation de la part de l'utilisateur,</li>
+                                <li>Mise à jour incrémentale (révision par révision)</li>
+                                <li>Test de succès pour chaque révision,</li>
+                                <li>Compte-rendu à l'utilisateur des actions effectuées pour chaque révision,</li>
+                                <li>Détails des éventuelles exécutions de scripts de mise à jour.</li>
+                            </ul> 
+                       </ol>
+                    </p>
+                    
+                    <h3 id="strategy">Stratégie de mise à jour</h3>
+                    <h4 id="simulationStrategy">Stratégie au niveau de la simulation :</h4>
+                    <p>Le système vérifie tout d'abord qu'il n'existe pas de <strong>mise à jour manuelle</strong> entre la révision courante et la mise à jour demandée.
+                    Une mise à jour manuelle interdit dans un premier temps la mise à jour du serveur.
+                    Il est en effet possible de forcer la mise à jour, mais nous souhaitons attirer votre attention sur les dangers d'une telle opérations 
+                    (voir la section <a href="#force">Mode force</a> pour plus de détails).
+                    </p>
+                    <p>Le système vérifie ensuite qu'il n'y a pas de <strong>conflit au niveau de subversion</strong>.
+                    Pour ce faire, le système simule une mise à jour <strong>globale</strong> de la révision courante vers la révision demandée.
+                    (en utilisant la commande subversion <kbd>svn merge --dry-run -r &lt;révision copie de travail&gt;:&lt;révision demandée&gt; &lt;dépôt subversion&gt; &lt;répertoire copie de travail&gt;</kbd>).
+                    </p>
+                    <p>Le système vérifie ensuite qu'il n'y a pas de <strong>conflit au niveau des scripts de mise à jour</strong>.
+                    
+                    Un script de mise à jour sera exécuté si et seulement si :
+                    <ul>
+                        <li>Le script est ajouté dans la mise à jour demandée <strong>et</strong></li>
+                        <li>il n'est pas supprimé dans une révision ultérieure <strong>et</strong></li>
+                        <li>il n'est pas modifié après la dernière révision de la mise à jour demandée.</li>
+                    </ul>
+                    Dans le cas où un script serait modifié, la seule exécution du script sera effectuée lors de la dernière modification.<br /><br />
+                    
+                    Un script de mise à jour ne sera pas exécuté si :
+                    <ul>
+                        <li>Ce même script est supprimé dans une révision ultérieure. Deux cas peuvent alors se présenter :
+                            <ul>
+                                <li>la mise à jour demandée va jusqu'à la suppression du script : dans ce cas, le script est simplement ignoré (non exécuté), et la mise à jour est possible.</li>
+                                <li>la mise à jour demandée ne va pas jusqu'à la suppression du script : dans ce cas, la mise à jour n'est pas autorisée. En effet, si un script est supprimé, 
+                                    il est possible que les révisions intermédiaires laissent le serveur dans un état instable. Il est donc obligatoire de mettre à jour le serveur jusqu'à
+                                    la suppression du script.</li>
+                            </ul>
+                        </li>
+                        <li>Ce script a été ajouté avant la révision courante (la première apparition de ce script dans la mise à jour demandée est une modification ou une suppression). 
+                            Ce cas extrèmement rare pourrait résulter d'une erreur de script <strong>et</strong> d'une mise à jour du serveur avant correction de l'erreur. Dans ce cas,
+                            la mise à jour du serveur n'est pas autorisée. Il faudra traiter la situation au cas par cas.
+                        </li>
+                        <li>Ce script est modifié dans une révision ultérieure ne faisant pas partie de la mise à jour demandée. Dans ce cas, il est obligatoire
+                            d'effectuer la mise à jour jusqu'à la dernière modification du script.
+                        </li>
+                    </ul>
+                    </p>
+                    <h4 id="updateStrategy">Stratégie au niveau de la mise à jour :</h4>
+                    Après la simulation et la confirmation de la mise à jour, le système adopte <em>presque</em> la même stratégie, sauf en ce qui concerne la mise à jour subversion.
+                    La mise à jour est incrémentale, en analysant à chaque fois le retour subversion pour détecter les éventuelles erreurs.
+                    La commande subversion utilisée est la suivante : 
+                    <kbd>svn update -r &lt;révision demandée&gt;</kbd>
+                    
+                    <h4 id="force">Interventions manuelles et Mode force :</h4>
+                    <p>Certaines mises à jour peuvent nécessiter des interventions spéciales, qu'il est préférable de faire manuellement.
+                    Il peut s'agir d'opérations à faire <strong>en plus</strong> de la simple mise à jour de la copie de travail,
+                    comme la modification d'un fichier système, nécessitant les droits root par exemple, ou encore une intervention nécessitant l'arrêt temporaire du serveur).
+                    Dans ce cas, la révision est étiquetée comme nécessitant une intervention manuelle et comme nous l'avons vu lors de la <a href="#simulationStrategy">stratégie de la simulation</a>,
+                    une telle situation est bloquante du point de la mise à jour automatique. Cela permet d'attirer votre attention sur le caractère spécial de la mise à jour
+                    et sur le message de commit qui contiendra les indications quant à la nature de la mise à jour.
+                    Il est malgré tout possible de forcer la mise à jour, mais nous souhaitons attirer votre attention sur les dangers d'une telle opérations
+                    Le non respect des indications données dans le message de commit d'une telle mise à jour peut entraîner le serveur dans un état instable.
+                    N'utilisez donc le mode "<em>force</em>" que si vous êtes sûr de savoir ce que vous faîtes.</p>
+				</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+                <!-- ################################################################# -->
+				<h2 id="script">Visualiser les scripts de mise à jour</h2>
+				<div class="section">
+					<div class="screenshot">
+						<img alt="Capture d'écran de l'interface 'Consultation des scripts de mises à jour'" src="scripts.png" />
+                        <div class="legend">Capture d'écran de l'interface 'Consultation des scripts de mises à jour'</div>
+					</div>
+					<p>Cette interface affiche les informations concernant les scripts de mise à jour.
+                    Pour chaque script, le statut du script est affiché (Appliqué, Jamais appliqué, Appliqué avec des erreurs),
+                    avec la possibilité d'afficher le détails de chaque exécution :
+                    <ul>
+                        <li>date et heure d'exécution du script,</li>
+                        <li>mode d'exécution du script (interface web ou console),</li>
+                        <li>statut de l'exécution du script (succès ou erreur),</li>
+                        <li>messages d'erreurs le cas échéant.</li>
+                    </ul>
+                    </p>
+				</div>
+                <!-- ################################################################# -->
+                <h2><a name="preferences">Préférences</a></h2>
+				<div class="section">
+                    Les préférences suivantes du plugin sont consultables :
+                    <ul>
+                        <li>Le dépôt Subversion</li>
+                        <li>Répertoire racine de votre serveur (la copie de travail)</li>
+                        <li>Le répertoire des scripts.</li>
+                    </ul>
+				</div>
+				
+			</div>
+				<div class="go_to_top"><a href="#documentation" title="Aller au sommet">sommet de page</a></div>
+			</div>
+            <div class="copyright">Copyright &copy; Xerox Corporation, CodeX Team, 2001-2005. All Rights Reserved</div>
+		</div>
+	</body>
+</html>

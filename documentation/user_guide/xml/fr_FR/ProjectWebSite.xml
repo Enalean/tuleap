@@ -1,0 +1,634 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: ProjectWebSite.xml 1849 2005-07-11 14:14:12Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="ProjectWebSite">
+    <title>Site Web d'un projet</title>
+
+    <section id="VisitingaWebSite">
+      <title>Visiter un site Web</title>
+
+		<para>Lorsqu'un projet est créé sur CodeX un site Web spécifique est initialisé.
+			Vous pouvez accéder au site Web de deux façons différentes :</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>En tapant l'URL suivant sur votre navigateur Web favori
+          (nom_projet est le nom court du projet) :</para>
+
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://nom_projet.&SYS_DEFAULT_DOMAIN;
+          </programlisting>
+          <para>Ou si votre serveur CodeX est en mode sécurisé :</para>
+          <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+https://nom_projet.&SYS_DEFAULT_DOMAIN;
+          </programlisting>
+        </listitem>
+
+        <listitem>
+          <para>En cliquant sur le lien &#34;Site Web&#34; dans la
+          barre de services du projet en haut de la page de
+          sommaire.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Si l'équipe de projet n'a pas créé ses propres pages Web,
+      vous verrez apparaître la page d'accueil par défaut vous
+      informant que le site sera bientôt disponible complétée d'un
+      lien de retour vers le site CodeX.</para>
+    </section>
+
+    <section id="WebSiteCreation">
+      <title>Création d'un site Web</title>
+
+      <section id="DirectoryStructureandLocation">
+        <title>Emplacement et structure des répertoires</title>
+
+        <para>Chaque projet possède son propre emplacement de stockage
+        des pages HTML, des images, des fichiers de données et des
+        documents qui constituent le site Web. Tous ces fichiers
+        doivent être placés dans :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/home/groups/nom_projet
+</programlisting>
+
+        <para>Si vous avez la possibilité d'utiliser votre compte
+        Shell (voir <xref linkend="ShellAccount" />) pour vous
+        connecter au serveur CodeX et vous placer dans ce répertoire
+        en utilisant la commande Unix &#34;cd
+        /home/groups/nom_projet&#34; vous verrez trois
+        répertoires :</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">htdocs</emphasis> : c'est dans
+            ce répertoire que doivent se trouver toutes les pages HTML
+            y compris celles incluant du PHP ou des directives SSI
+            (voir ci-dessous pour plus de détails). Toutes les images,
+            icônes ou documents utilisés ou référencés dans vos pages
+            Web doivent aussi se trouver à  cet endroit (ou dans un
+            sous-répertoire sous htdocs). Dans le jargon
+            Apache<footnote><para>Apache est un serveur HTTP développé
+            par la Consortium Apache. Il est disponible sous une
+            licence Open Source et il est de loin de le serveur Web le
+            plus populaire avec plus de 60% de part de marché. Pour
+            plus d'information consultez le site Web Apache sur <ulink
+            url="http://www.apache.org">http://httpd.apache.org</ulink></para></footnote>
+            le répertoire
+            <literal>/home/groups/projectname/htdocs</literal> est
+            appelé le 'Document Root' (Racine des documents) de votre
+            site Web.</para>
+
+			<para>Apache s'attend à  ce que la page d'accueil de votre site Web se trouve dans
+				un des fichiers suivants :</para>
+
+            <itemizedlist mark="bullet"
+                          spacing="compact">
+              <listitem>
+                <para><literal>index.html, index.htm</literal> pour les pages en HTML pur</para>
+              </listitem>
+
+              <listitem>
+                <para><literal>index.shtml</literal> pour les pages utilisant les extensions SSI de Apache</para>
+              </listitem>
+
+              <listitem>
+                <para><literal>index.php</literal> si vous incluez du PHP dans vos pages.</para>
+              </listitem>
+            </itemizedlist>
+
+			<para>Si votre page d'accueil se nomme index.php, prenez soins de renommer le
+				fichier index.php d'origine en utilisant les commandes suivantes depuis
+				votre compte Shell :</para>
+
+            <para><literal>
+            cd /home/groups/nom_projet/htdocs
+            mv index.php index_default.php </literal></para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">cgi-bin</emphasis> : ce
+            répertoire accueille tous les scripts CGI. Les scripts CGI
+            peuvent être écrits en Perl, Python , Shell ou même
+            C.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">log</emphasis> : il s'agit d'un
+            répertoire réservé. N'y placez aucun fichier.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section id="WebSiteScriptingwithPHP">
+        <title>Utilisez PHP pour votre site Web</title>
+
+        <para>Les membres d'un projet peuvent concevoir des sites Web
+        sophistiqués en utilisant le <ulink
+        url="http://www.php.net">langage PHP</ulink>. PHP est en train
+        de devenir un langage de scripting serveur pour le Web
+        extrêmement populaire. PHP est facile à  apprendre , il est
+        optimisé pour le Web et interagit aisément avec les bases de
+        données SQL.</para>
+
+        <para>Si vous décidez d'inclure des scripts PHP dans les pages
+        Web de votre projet, assurez-vous d'utiliser l'extension
+        &#34;.php&#34; pour tous les fichiers concernés. Pour les
+        pages contenant du HTML pur utilisez les extensions
+        habituelles &#34;htm&#34; ou &#34;html&#34;.</para>
+
+        <para>Pour des <ulink
+        url="http://www.php.net/manual/en/security.php">raisons de
+        sécurité</ulink> vos scripts PHP ont uniquement le droit
+        d'accéder à  des fichiers situés sous la racine des documents
+        (DocumentRoot) de votre projet à  savoir
+        <literal>/home/groups/nom_projet/htdocs</literal>.</para>
+
+<!-- We removed access to the pre_vhost.php include file for security reasons
+        <para>CodeX offers a system wide include file called
+        &#34;pre_vhosts.php&#34; that you should include at the very top of
+        all your PHP pages if you want to be given access to the current user,
+        session and group (project) information. This include file create
+        various variables functions and objects that can be helpful in your
+        PHP scripts:</para>
+
+       <table frame="all">
+          <title>PHP Key User and Project entities</title>
+          <tgroup cols="3">
+            <colspec colname="c1" colwidth="120pt" />
+
+            <colspec colname="c2" colwidth="90pt"  />
+
+            <colspec colname="c3" colwidth="260pt" />
+            <thead>
+              <row>
+                <entry>Name</entry>
+
+                <entry>Type</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>$group_id</entry>
+
+                <entry>Integer</entry>
+
+                <entry>ID of your project (as shown in the group_id argument
+                of many CodeX services)</entry>
+              </row>
+
+              <row>
+                <entry>$group_name</entry>
+
+                <entry>String</entry>
+
+                <entry>Short project name</entry>
+              </row>
+
+              <row>
+                <entry>$project</entry>
+
+                <entry>Object</entry>
+
+                <entry>Object of class Project that gives access to your
+                project properties (see below)</entry>
+              </row>
+
+              <row>
+                <entry>user_getid()</entry>
+
+                <entry>Function</entry>
+
+                <entry>Function returning the ID of the user that is currently
+                browsing your Project Web site (0 if the user is not logged
+                in)</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+        <para></para>
+                
+        <para>In addition Web site designers also have access to a series of
+        user and project related functions and methods:</para>
+
+        <table frame="all">
+          <title>PHP User and Project functions</title>
+          <tgroup cols="3">
+            <colspec colname="c1" colwidth="120pt" />
+
+            <colspec colname="c2" colwidth="90pt"  />
+
+            <colspec colname="c3" colwidth="260pt" />
+
+            <thead>
+              <row>
+                <entry>Name</entry>
+
+                <entry>Return Type</entry>
+
+                <entry>Description</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry nameend="c3" namest="c1" align="center"><para></para><emphasis role="bold">*** USER
+                FUNCTIONS ***</emphasis><para></para></entry>
+              </row>
+
+              <row>
+                <entry>user_getid()</entry>
+
+                <entry>Function</entry>
+
+                <entry>Function returning the ID of the user that is currently
+                browsing your Project Web site (0 if the user is not logged
+                in)</entry>
+              </row>
+
+              <row>
+                <entry>user_getname($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return login name of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_getrealname($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the full name of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_getemail($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the email address of user $user_id</entry>
+              </row>
+
+              <row>
+                <entry>user_gettimezone($user_id)</entry>
+
+                <entry>String</entry>
+
+                <entry>Return the time zone of the current user</entry>
+              </row>
+
+              <row>
+                <entry>user_isloggedin()</entry>
+
+                <entry>Boolean</entry>
+
+                <entry>Says whether the current visitor is logged in CodeX or
+                not (anonymous user)</entry>
+              </row>
+
+              <row>
+                <entry>user_ismember($group_id)</entry>
+
+                <entry>Boolean</entry>
+
+                <entry>Says whether the current visitor is a member of the
+                project $group_id</entry>
+              </row>
+
+              <row>
+                <entry nameend="c3" namest="c1" align="center"><para></para><emphasis role="bold">***
+                PROJECT FUNCTIONS ***</emphasis><para></para></entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getGroupId()</entry>
+
+                <entry>Integer</entry>
+
+                <entry>Project ID. Same as $group_id variable</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getUnixName()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project Short name. Same as $group_name variable</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getPublicName()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project long name</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getDescription()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project short description</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;getPurpose()</entry>
+
+                <entry>String</entry>
+
+                <entry>Project long description</entry>
+              </row>
+
+              <row>
+                <entry>$project-&#62;isPublic()</entry>
+
+                <entry>Integer</entry>
+
+                <entry>0 if project is Private. 1 if Public</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <section id="PHPCodeSample">
+          <title>PHP Code Sample</title>
+
+          <para>Find below some sample pieces of PHP code that you can use in
+          your Web pages:</para>
+
+          <example>
+            <title>PHP Code Sample: greeting your visitors</title>
+
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;?php
+
+require(&#39;pre_vhosts.php&#39;);
+
+if ( user_isloggedin() ) {
+   $user_id = user_getid();
+   $user_fullname = user_getrealname($user_id);
+   echo &#34;&#60;b&#62;Welcome to $user_fullname!&#60;/b&#62;;
+
+   // Your HTML/PHP code here
+
+}
+?&#62;
+            </programlisting>
+          </example>
+
+          <example>
+            <title>PHP Code Sample: displaying project information</title>
+
+            <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;?php require (&#39;pre_vhosts.php&#39;); ?&#62;
+&#60;HTML&#62;
+&#60;BODY&#62;
+&#60;H1&#62;&#60;?php echo $project-&#62;getPublicName(); ?&#62; Web site&#60;/H1&#62;
+&#60;P&#62;Project goal: &#60;?php echo $project-&#62;getPurpose();?&#62;
+&#60;/BODY&#62;
+&#60;/HTML&#62;
+            </programlisting>
+          </example>
+        </section>
+-->
+      </section>
+
+      <section id="WebSitePublishing">
+        <title>Publication du site Web</title>
+
+        <para>Vous pouvez utiliser différentes méthodes pour publier les pages
+        de votre site Web sur le serveur CodeX :</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>&Eacute;dition à  distance avec des éditeurs HTML comme
+            celui de Netscape/Mozilla, Microsoft Frontpage ou Emacs
+            avec accès FTP transparent.</para>
+          </listitem>
+
+          <listitem>
+            <para>&Eacute;dition locale sur votre machine et transfert des fichiers soit par FTP ou, encore mieux, par SCP.</para>
+          </listitem>
+
+          <listitem>
+            <para>De petits changements peuvent aussi être effectués
+            depuis votre compte Shell CodeX en utilisant un éditeur
+            comme vi, emacs mais nous vous déconseillons d'effectuer
+            des modifications lourdes par ce biais.</para>
+          </listitem>
+        </itemizedlist>
+
+        <section id="NetscapeComposer4.x">
+          <title>Netscape Composer 4.x</title>
+
+          <para>Vous pouvez utiliser Netscape Composer 4.x pour éditer
+          des pages HTML à  distance. Pour ce faire affichez la page
+          concernée depuis le navigateur Netscape puis utilisez
+          l'entrée du menu Fichier-&#62;Editer la page pour modifier
+          le contenu de la page et cliquez finalement sur le bouton
+          'Publier' dans la barre d'outil située en haut de la
+          page.</para>
+
+          <para>Saisissez les paramètres suivants dans la boîte de
+          dialogue :</para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para>Upload Files to this location :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
+</programlisting>
+            <para></para>
+            </listitem>
+
+            <listitem>
+              <para>Login and Password : tapez votre nom d'utilisateur
+              et votre mot de passe CodeX. Cliquez sur la case à 
+              cocher pour éviter d'avoir à  taper le mot de passe à 
+              chaque opération de sauvegarde.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section id="NetscapeComposer6.x">
+          <title>Netscape Composer 6.x</title>
+
+			<para>Avec Netscape version 6 (ou Mozilla 1.0 et au delà) il n'est plus possible
+				d'éditer une page HTML sans en avoir au préalable une copie locale. Pour
+				utiliser le mécanisme de publication de Netscape 6 créez tout d'abord la
+				structure arborescente et les pages de votre site Web sur votre poste de
+				travail, travaillez sur cette copie locale puis publiez les pages
+				modifiées via FTP.</para>
+
+			<para>Les utilisateurs Windows ont aussi la possibilité de pointer directement
+				sur les répertoires des projets sur CodeX (voir <xref
+					linkend="MSWindowsSharedResources"/>) et de travailler sur les
+				fichiers HTML comme s'ils étaient situés sur votre poste de travail. Dans ce
+				cas aucune action de publication n'est nécessaire.</para>
+        </section>
+
+        <section id="MicrosoftFrontPage">
+          <title>Microsoft FrontPage</title>
+
+			<para>Vous ne pouvez pas utiliser les fonctions de publication de FrontPage car
+				CodeX ne supporte pas les extensions de Frontpage. De plus, la publication
+				via FTP ne fonctionne pas non plus car Frontpage ne permet pas de spécifier
+				complètement le chemin d'accès au site Web distant. L'une des solutions de
+				rechange consiste à mapper un disque réseau sur
+				<literal>\\codex\projects</literal> (voir <xref
+					linkend="MSWindowsSharedResources"/>) et à travailler
+				directement sur les répertoires du serveur Web de votre projet.</para>
+        </section>
+
+        <section id="MacromediaDreamweaver">
+          <title>Macromedia Dreamweaver</title>
+
+			<para>Vous pouvez utiliser DreamWeaver pour créer le site Web de votre projet.
+				Contrairement à FrontPage, DreamWeaver supporte parfaitement la
+				publication à distance par FTP. Pour créer un nouveau site utilisez le menu
+				Site -> New Site. Dans la boîte de dialogue renseignez le nom du site et le
+				répertoire local pointant à la racine. Choisissez 'FTP access' comme
+				méthode d'accès et indiquez
+				<literal>nom_projet.&SYS_DEFAULT_DOMAIN;</literal> en tant que
+				serveur hôte et <literal>/home/groups/nom_projet/htdocs</literal>
+				pour le répertoire de publication . Le nom d'utilisateur et le mot de passe
+				sont les mêmes que ceux de votre compte CodeX.</para>
+        </section>
+
+        <section id="LocalEditingandRemoteTransfer">
+          <title>&Eacute;dition locale et transfert à distance</title>
+
+			<para>Pour ceux d'entre vous qui utilisez un éditeur HTML dépourvu d'une
+				fonctionnalité d'exportation des fichiers à distance, il est possible de
+				transférer vos fichiers HTML par d'autres moyens.</para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+				<para><emphasis role="bold">FTP</emphasis> : c'est le moyen le plus
+					simple de transférer vos pages Web vers l'emplacement CodeX distant.
+					Utilisez un client ftp de votre choix pour vous connecter au serveur
+					<literal>nom_projet.&SYS_DEFAULT_DOMAIN;</literal> et
+					utilisez votre nom d'utilisateur et mot de passe CodeX. Une fois
+					connecté, utilisez la commande suivante : </para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+cd /home/groups/nom_projet/htdocs
+</programlisting>
+
+				<para>et utilisez enfin la commande put (ou mput) pour transférer les
+					fichiers modifiés. Vérifiez que les fichiers ont été correctement mis
+					à jour à l'aide de votre navigateur. Prenez garde au cache de votre
+					navigateur et assurez vous de forcer le rechargement de la page pour
+					être bien sûr d'afficher la dernière version !</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">SCP</emphasis> :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
+</programlisting>
+
+				<para>où nom_utilisateur est votre nom d'utilisateur CodeX. L'option -r
+					déclenche une copie récursive et copie donc tous les fichiers dans le
+					répertoire ainsi que tous les autres fichiers dans les sous-répertoires
+                                        tout en préservant la même structure arborescente.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+      </section>
+    </section>
+
+    <section id="ReferencingtheCodeXSite">
+      <title>Référencer le site CodeX</title>
+
+		<para>L'équipe CodeX demande à ce que tous les sites Web des projets affichent le logo
+			CodeX sur leur page d'accueil. Ceci pour deux raisons :</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+			<para>Tout d'abord, en référençant le site CodeX sur votre page Web vous
+				permettez à vos utilisateurs d'être informé de l'existence de CodeX et vous
+				leur donnez une chance de le visiter et de prendre connaissance d'autres
+				projets hébergés sur CodeX. Ce faisant vous augmentez les opportunités de
+				réutilisation.</para>
+        </listitem>
+
+        <listitem>
+			<para>La seconde raison tient au fait que la présence du logo CodeX sur votre site
+				Web déclenchera l'incrémentation automatique d'un compteur d'accès que
+				CodeX maintient pour vous. Le nombre d'accès à votre site est consultable
+				depuis la page de sommaire de votre projet en cliquant sur le lien
+				&#34;Statistiques&#34; situé sous la description du projet (voir <xref
+					linkend="FigureASampleProjectSummaryPage"/>). Ceci nous aidera
+				aussi à identifier les projets qui pourraient avoir besoin de capacités
+				d'hébergement plus importantes en raison de leur niveau
+				d'activité.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Pour afficher le logo CodeX sur votre page Web utilisez l'URL suivant :</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
+      </programlisting>
+
+		<para>utilisez &quot;https&quot; au lieu de &quot;http&quot; si votre serveur est
+			configuré pour fonctionner en mode sécurisé.</para>
+
+		<para>Vous pouvez utiliser ce logo dans des balises de type ancre ou image. Ainsi vous
+			pouvez par exemple lui associer un hyperlien pointant directement sur la page de
+			sommaire de votre projet :</para>
+
+        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+&#60;A href=&#34;http://&SYS_DEFAULT_DOMAIN;/projects/nom_projet&#34;&#62;
+&#60;IMG src=&#34;http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1 width=&#34;80&#34;
+     height=&#34;20&#34; border=&#34;0&#34; alt=&#34;Code source disponible !&#34;&#62;
+&#60;/A&#62;
+        </programlisting>
+
+<note><para><emphasis role="bold">Attention !</emphasis> Veillez à remplacer le nombre situé après
+&#34;group_id&#34; (N dans cet exemple) par votre propre identifiant de projet. Vous pouvez
+prendre connaissance de votre identifiant de projet en visitant n'importe quelle page Web
+d'un des services de votre projet et en cherchant la valeur du paramètre group_id dans l'URL
+(voir la barre de navigation de votre navigateur Web).</para></note>
+    </section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

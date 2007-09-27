@@ -1,0 +1,63 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<p>
+The <?php print $GLOBALS['sys_name']; ?> Team would like to extend an invitation to any 
+<?php print $GLOBALS['sys_org_name']; ?> Software project to be hosted on the <?php print $GLOBALS['sys_name']; ?> site. 
+</p>
+
+<p><B>The Process</B>
+
+<P>Registering a project with <?php print $GLOBALS['sys_name']; ?> is an easy process, but we do require
+some information in order to automate things as much as possible. The entire
+process should take about 5 to 10 minutes.
+
+<P>During signup, we will present you with some legal documents 
+regarding your account with us. Please do not
+ignore these; they are very important to you and your project.</p>
+
+<p>
+<?php print $GLOBALS['sys_name']; ?> offers a full suite of services. If
+you haven't already, please be sure to browse 
+the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a> documentation.
+</p>
+
+<p>
+<b>Use of Project Account</b>
+</p>
+
+<p>The space and the services given to you on this server must be
+used in compliance with <?php print $GLOBALS['sys_org_name']; ?>
+policies. For more information, please read the <a href="/tos/tos.php"><?php print
+$GLOBALS['sys_name']; ?> Terms of Service</a>.</p>
+
+
+<p>
+<b><?php print $GLOBALS['sys_name']; ?> Link</b>
+</p>
+
+<p>
+If you host a web site for your project, you must place one of our approved
+graphic images on your site with a link back to <?php print $GLOBALS['sys_name']; ?>. The graphic may
+either link to the main <?php print $GLOBALS['sys_name']; ?> site or to your project page on
+<?php print $GLOBALS['sys_name']; ?>. We will leave placement up to you.  For information about how
+to insert a <?php print $GLOBALS['sys_name']; ?> logo which will track your page views, please read
+the <a href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html" target="side_window"><?php print $GLOBALS['sys_name']; ?> Logo display documentation</a>.
+</p>
+
+<p>
+<b>Code eXchange Policy</b>
+</p>
+
+<p>
+In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy explains the rights and duties implied by code sharing and reuse. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and <?php print $GLOBALS['sys_org_name']; ?> in general) will still own the code and the <?php print $GLOBALS['sys_org_name']; ?> standard Copyright statement must be present in your source code.
+</p>
+
+<br /><hr /><br />
+<P align=center><input type="checkbox" name="i_agree" id="register_tos_i_agree" /> <label for="register_tos_i_agree">I agree</label> to the <a href="/tos/tos.php"><?=$GLOBALS['sys_name']?> Terms of Service Agreement</a>.</p>

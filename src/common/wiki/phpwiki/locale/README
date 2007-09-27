@@ -1,0 +1,398 @@
+
+This document describes how to add a new language translation to PhpWiki.
+
+If you just want to use one of the existing language translations, see
+part Four in 'config/config.ini' for the DEFAULT_LANGUAGE or your special
+starter script (wiki or index.php) to change the current or default language
+of your Wiki. Modify or add a line that sets $LANG to use the two-letter
+code of one of the supported languages, like this:
+
+    // Select your language/locale - default language "en": English
+    // English "en"  (English    - HomePage)
+    // Dutch   "nl" (Nederlands - ThuisPagina)
+    // Spanish "es" (Español    - PáginaPrincipal)
+    // French  "fr" (Français   - PageAccueil))
+    // German  "de" (Deutsch    - StartSeite)
+    // Swedish "sv" (Svenska    - Framsida)
+    // Italian "it" (Italiano   - PaginaPrincipale)
+    // Japanese "ja" (Japanese   - ¥Û¡¼¥à¥Ú¡¼¥¸)
+    // Chinese  "zh" (Chinese   - ?)
+    $LANG="it";
+
+Phpwiki uses the DEFAULT_LANGUAGE internally, when no $GLOBALS['LANG'] is given.
+With certain starter script which set $LANG you can easily provide a multi-lingual wiki.
+For convenience provide some InterWikiMap entries for easier switching to the other 
+languages then. See http://phpwiki.org/MultiLingualWiki
+
+Phpwiki uses GNU gettext tools to provide and maintain multi-lingual
+messages for different languages. Even if you are already familiar
+with xgettext you will want to read this document to be aware of
+translation issues and tips specific to PhpWiki; perhaps skimming
+through the Makefile section.
+
+PhpWiki does not require gettext support to be compiled in to PHP. It
+automatically provides a pure PHP replacement in case it's not
+available.
+
+
+Formalities
+===========
+The modern English language has no clear rules for differentiating
+between the formal and informal use of the spoken word. This both
+simplifies and complicates matters for translators, as many languages
+do still make such a distinction. For the most part, PhpWiki is written
+using the casual forms of messages and explanatory text--after all the
+WikiWikiWeb is an open and friendly place. :-)
+
+However, there is no reason why translations of Wiki commands like
+"Edit" or "FindPages" should not be written formally. For the sake of
+recognition or clarity when the word function is the same as another
+common computer term or menu-item, if you feel it would be more
+effective to employ a formal variation then please do so. When the
+formal word is significantly longer than the informal word, make a
+judgement call or substitute an abbreviation, provided that it will
+be easily recognised.
+
+Remember that a good and thorough translation is a subjective and
+collective process. Once people have had a chance to test-drive your
+newly-translated PhpWiki there will always be suggestions for
+reshaping and improving it.
+
+Diversity and Change are part of WikiEssence. By all means don't
+belabour the translation process, and have some fun!
+
+
+General Steps
+=============
+The general steps to creating a new language module for PhpWiki:
+
+1. Copy and rename the master template to create a new file for your
+   language ('phpwiki.pot' => 'xx.po').
+
+2. Translate all the strings in the new language file ('.po file').
+   Empty strings will be kept in english.
+
+3. Run 'make' to automatically create or update any additional files
+   ('.po' => '.mo' => 'phpwiki.php' files).
+
+4. Create translations of the content for the default pages ('pgsrc'
+   files).
+
+
+Example
+=======
+Let's assume for example that you would like to add an Islandic
+translation to PhpWiki.
+
+
+Text Strings
+------------
+Duplicate the file phpwiki.pot in the 'locale/po/' folder and name it
+'is.po' ('is' is the code for Islandic). Next, translate all the
+strings inside 'is.po' from English to Islandic. Unix Hint: Emacs has
+a handy "po translation mode" for you. See README.coding in the doc folder.
+
+
+Character Encoding
+------------------
+
+Currently most of the language files are saved using the ISO-8859-1
+character encoding to preserve accented characters. Make sure the text
+editor you use is capable of performing the appropriate Latin-1
+translation. Strictly speaking, ISO-8859-1 is *different* than Windows
+code page 1252 or MacRoman. Upon quick inspection one will notice that
+many of the letters do occupy the same positions in each of their'
+respective encoding tables, so it is easy to understand how people can
+make this false assumption.
+
+Limitation:
+PhpWiki is not able to translate between different character sets on the 
+fly (iconv). Certain languages, like Japanese or Chinese use special character 
+sets (euc-jp, utf-8), which must be defined in part four in config/config.ini.
+Therefore other languages in different character sets will not be correctly 
+displayed.
+PhpWiki is not yet properly utf-8 safe. That means that certain valid utf-8 multichar 
+sequences with \0 in it, will break the traditional php string or pcre functions or 
+that the length of the string will be miscalculated.
+There's an experimental utf-8 patch on the sf.net patches site if you want to try that.
+See http://phpwiki.org/Utf8Migration
+
+Word Reordering
+---------------
+Different languages have different word ordering requirements. When a
+key word such as a person's name needs to be added to the end of a
+sentence in english, there is no guarantee that the same word will
+appear at the end of a sentence once translated to another language.
+
+PhpWiki has been designed with this in mind. (Standard printf
+notations like %s and %1$s, %2$s will work with PhpWiki, even though
+reordering of variable-substitutions is not actually part of PHP).
+(The printf(3) manual page on your system may be of some help.)
+
+
+Take the following English phrase as an example. This message would be
+displayed in the browser when someone wants to compare two revisions
+of a Wiki page. The corresponding entry for the German translation for
+this phrase (from the file 'de.po') reads:
+ 
+    #: ../lib/diff.php:251
+    #, c-format
+    msgid "Differences between %s and %s of %s."
+    msgstr "Der Unterschiedsergebnis von %3$s, zwischen %1$s und %2$s"
+
+In the English version, PhpWiki will substitute the phrases "version
+1", "version 2" and the name of the page being compared. The
+placeholder '%s' indicates where text will later be substituted, while
+'%d' is used to indicate a number will be inserted.
+
+Sentence structure of German is different than English, and this case
+dictates that the "page name" must come first, then followed by
+"Verson 1." and finally "Version 2."
+
+To summarize, when the word ordering must differ, insert "1$", "2$"
+etc. into the middle of '%s' and repeat for each instance of '%s' in
+the phrase.  If you use this "$" notation, you must use it for each
+of the the format specifications within the string.
+
+Here are a couple more examples. They are fictional but they serve to
+illustrate how to handle special cases, should they arise:
+
+
+#msgid "Page version '%d' named '%s' is not available."
+#msgstr "Xyqlmn vvvm » %2$s « mnqee » %1$d « Gvbbbnbhkkk eeek."
+
+The %s and %d are reversed, so '2$' and '1$' have been used to
+indicate the new ordering. The punctuation marks for this language
+dictate extra spacing, so this has also been accounted for in the
+translation (i.e. the quote marks are only for emphasis, they are not
+considered part of the %s placeholder).
+
+
+#msgid "Page named '%s' version '%d' written by author '%s' is not available."
+#msgstr "Qppn wwmoooppp '%3$s' vvvm '%1$s' mnqee '%2$d' Gvbbbnbhkkk eeek."
+
+Name and author are reversed. Even though the position of the number
+('%d') isn't changed, still it must be changed to '%2$d' --- if you
+use a '$' on one of the format specifiers you must use it on all of
+them.  The punctuation for this particular language is the same as
+english so it is unchanged.
+
+
+While translating the text strings if you are uncertain about the
+syntax, look at the '.po' files of the other languages as an
+example. If you are stuck or simply can't make any sense of all this,
+just ask one of the PhpWiki programmers on the mailing list to help
+out.
+
+The 'phpwiki.php' files do not need to be created or edited because
+the Makefile will create and update these files automatically. See the
+'Makefile' section below.
+
+
+Default Pages
+-------------
+Most of the work will be in the translation of the default pgsrc
+files. As a starting point you can copy the English 'pgsrc' directory:
+
+    mkdir locale/is
+    cp -rv pgsrc locale/is
+
+For these 'pgsrc' files it will be sufficient to change the page names
+to Islandic, and maybe translate the HomePage and give it an Islandic
+name. Again, for anything you don't know, look at the 'nl' or 'de'
+versions.
+
+The best approach to translating the default page content is to do all
+of your page editing in the web browser itself, then perform a page
+dump to save the pages as MIME text files.  Some of the pages are
+locked so you will have to log into PhpWiki as the administrator
+before you can edit them.
+
+<FIXME>
+   Add instructions for editing MIME headers of files before moving
+   files into '/locale/is/pgsrc'
+
+ - keep modification date, page name and lock, remove author.
+   Use action=PageDump - "Preview as developer format" for this.
+   Example:
+
+   Date: Sun, 27 Jan 2002 17:28:55 -0500
+   Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+   X-Rcs-Id: $Id: README,v 1.13 2005/01/08 22:41:42 rurban Exp $
+   Content-Type: application/x-phpwiki;
+     pagename=Neueste%C4nderungen;
+     flags=PAGE_LOCKED;
+     charset=iso-8859-1
+   Content-Transfer-Encoding: binary
+
+ - Make sure to rename files with accents in the page name converted
+   to uppercase hex codes as shown in the pagename= line of the
+   Content-Type header.
+
+   (e.g. "GästeBuch" => "G%E4steBuch")
+
+ - Translate body text and rename plugin pages to match changes
+   specified in the '.po' file. Leave plugin code as english.
+   Example:
+
+   <?plugin RecentChanges days||=30 show_all||=0 show_minor||=0 ?>
+
+</FIXME>
+
+
+Makefile
+-------- 
+The Makefile calls 'xgettext' to automatically perform a number of
+important translation tasks:
+
+ * Scans through all the source code and retrieves the english
+   strings used as text arguments, then collects and indexes them into
+   the file 'phpwiki.pot'.
+
+ * Merges any new differences of the collected English text strings
+   with similar text strings found during any previous runs of 'make',
+   stored inside each of the translated '.po' files.
+
+ * Makes note of which English text strings have been added, reworded
+   or removed. The translated strings in the '.po' files are then marked
+   as "fuzzy" translations for all cases where the English text has been
+   changed. This makes it easy for translators to spot which items need
+   to be updated. (Emacs' po mode also uses this information).
+
+ * The necessary '.mo' files and 'phpwiki.php' text files are
+   synchronized and sorted according to the translated contents of the
+   '.po' files, for each of the locale subdirectories.
+
+When a new language module is added to PhpWiki, the 'Makefile' in the
+'locale' folder also needs to be updated. The process:
+
+ 0. Change into the locale directory (if you're not already there.)
+
+ 1. If there isn't one already, Create a new .po (in the po/ subdirectory)
+    for your translations:
+
+      cp po/phpwiki.pot po/xx.po
+
+    where 'xx' should be the two letter character code for the language
+    you are translating to.
+
+ 2. If you've created a new .po file (or if there are new .php source files
+    containing translatable strings,) update the Makefile:
+ 
+      make depend
+
+ 3. To make sure the list of translatable strings in the .po is in sync
+    with the actual php source code:
+ 
+      make po
+
+ 4. Edit the translations in the .po file.  If you have emacs available,
+    emacs' po-mode is very helpful when doing this.
+
+ 5. Translators may include comments in the po file. If using a text
+    editor other than emacs (with po-mode), add any comments BEFORE an
+    entry, and prefix each line with # like this:
+
+# This entry is important for French punctuation rules which stipulate
+# a space before each colon.
+#: ../lib/display.php:54 ../lib/plugin/PageGroup.php:91
+#: ../lib/plugin/PageGroup.php:156 ../lib/plugin/PageGroup.php:167
+#: ../lib/plugin/PageGroup.php:183 ../lib/plugin/PageGroup.php:190
+#: ../lib/plugin/PageHistory.php:216 ../lib/plugin/UnfoldSubpages.php:164
+#: ../themes/default/templates/head.tmpl:46
+#, c-format
+msgid "%s: %s"
+msgstr "%s : %s"
+
+ 6. To update the compiled translation files (phpwiki.mo and
+    phpwiki.php):
+
+      make
+
+Make will then automatically generate and update all the necessary
+files. If this step fails because you don't have the necessary
+software installed, then send your '.po' files to one of the PhpWiki
+developers who will run Makefile for you.
+
+
+NOTE: "Fuzzy" translations will NOT be included in the final '.mo' and
+'phpwiki.php' files. If you are not using the emacs editor, make sure
+to remove the fuzzy marks from any *completed translations* before you
+run the makefile, like this:
+
+    #: ../lib/plugin/BackLinks.php:44
+    #, fuzzy, c-format
+    msgid "These pages link to %s:"
+    msgstr "%d pages pointent vers %s."
+
+should become:
+
+    #: ../lib/plugin/BackLinks.php:44
+    #, c-format
+    msgid "These pages link to %s:"
+    msgstr "%d pages pointent vers %s."
+
+and...
+
+    #: ../lib/Toolbar.php:160 ../templates/browse.html:54
+    #, fuzzy
+    msgid "Lock page"
+    msgstr "Bloquear página"
+
+should become:
+
+    #: ../lib/Toolbar.php:160 ../templates/browse.html:54
+    msgid "Lock page"
+    msgstr "Bloquear página"
+
+
+HTML Templates
+--------------
+The template files do not need to be translated. As of PhpWiki 1.3 all
+the text strings in the html templates are cross-referenced with the
+translations in the '.po' files.
+
+*** Note: Updating html template translations from PhpWiki 1.2 to 1.3: ***
+
+The translated version of the tips for TextFormattingRules must be
+moved from the old html template 'editpage.html', and placed into the
+'pgsrc' for the default page of TextFormattingRules. A plugin now
+extracts this text and inserts it when editing a page in PhpWiki,
+rather than it being embedded within the html template itself.
+
+It is suggested this paragraph would go at the top of the page. It
+must be in a section heading entitled "Summary" in order for the
+editpage template to find it. Of course you will substitute the
+translations for "TextFormattingRules" and "Summary", according to the
+wording you used for these phrases when you translated the '.po' file.
+
+Refer to the English "TextFormattingRules" and German (de)
+"TextFormatierungsRegeln" pages to see working examples.
+
+
+Finale
+======
+After you have finished translating, you will want to see the result
+of your efforts. Change the LANG setting in 'config.ini' to the
+two-letter code for your language.
+
+Et voilà, Phpwiki should now speak Islandic!
+
+If your translation was a success, you may also want to add a
+translation of these instructions for translating PhpWiki ;-)
+
+About gettext
+-------------
+To learn more about GNU gettext and '.po' files, you may find some
+information at:
+
+    <http://www.iro.umontreal.ca/contrib/po/HTML/>
+    <http://www.gnu.org/directory/gettext>
+
+Good luck,
+Jan Nieuwenhuizen <janneke@gnu.org>
+Arno Hollosi <ahollosi@mail.com>
+Carsten Klapp <carstenklapp@users.sourceforge.net>
+Reini Urban <rurban@x-ray.at>
+
+$Id: README,v 1.13 2005/01/08 22:41:42 rurban Exp $

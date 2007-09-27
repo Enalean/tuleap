@@ -1,0 +1,66 @@
+Date: Sat, 5 Jun 2004 16:49:57 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginRessourcesRss,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginRessourcesRss;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!! Description
+
+RSS (Really Simple Syndication) est un moyen pour extraire d'un site web 
+du contenu régulièrement mis à jour. Un fichier RSS est un simple fichier 
+texte comportant la description synthétique du contenu.
+
+PluginRessourcesRss est un plugin wiki pour afficher des ressources RSS.
+
+
+!!  Usage
+
+<verbatim>
+  <?plugin RssFeed?>
+  <?plugin RssFeed url=http://somesite.tld/linktofeed.rss ?>
+</verbatim>
+
+!! Arguments
+Argument|
+  Valeur par défaut|
+    Description
+
+url|
+  (vide)|
+    URL de ressources RSS
+
+feed|
+  (vide)|
+    nom de la source RSS
+
+description|
+  (vide)|
+    Description de la source RSS
+
+maxitem|
+  0|
+    nombre maximum d'entrées (0 = illimitée)
+
+!! Code source (depuis v1.3.8):
+* [PhpWikiCvs:lib/plugin/RssFeed.php]
+* [PhpWikiCvs:lib/RssParser.php] _révisé pour allow_url_fopen=Off_
+
+!! Exemples
+
+* sources ~PhpWikiRss pour PhpWiki:RecentChanges :
+<verbatim>
+  <?plugin RssFeed feed=PhpWikiRss description="PhpWiki:RecentChanges"
+	           url=http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss ?>
+</verbatim>
+
+* [PhpWikiDemo:sidebar/]  _Exemple barre verticale_
+
+-------------
+
+PluginWiki
+

@@ -1,0 +1,44 @@
+/*
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+*/
+@import url(style.css);
+
+.footer          { font-size: x-small;  }
+
+.calendar_font_othermonth,
+.calendar_font,
+.calendar_font_month,
+.calendar_font_day,
+.osdn,
+.osdntext,
+.smaller,
+.header_actions ul      { font-size: small;    }
+
+/*input text fields*/
+.textfield_small { width: 10em; }
+.textfield_medium { width: 25em; }
+
+body,
+.menutable,
+.disable,
+.command,
+.small,
+.titlebar,
+.tablink,
+.tabsellink         { font-size: medium;   }
+
+.normal,
+.slogan,
+.maintitlebar    { font-size:large;     }
+
+/* Vertical spacing */
+.vspace-bottom { margin-bottom: 4ex; }
+.vspace-top { margin-top: 4ex; }
+.vspace-both { margin-top: 4ex; margin-bottom: 4ex; }
+

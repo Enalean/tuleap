@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002-2003, CodeX Team, Xerox
+//
+-->
+<?xml-stylesheet type="text/css"
+href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
+?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
+[
+<!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd">
+%ParametersLocal;
+%ParametersDefault;
+
+<!-- Entities for inclusion of document chapters -->
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
+<!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
+<!ENTITY ChapterCodeXSiteOverview SYSTEM "CodeXSiteOverview.xml">
+<!ENTITY ChapterBecomingACodeXCitizen SYSTEM "BecomingACodeXCitizen.xml">
+<!ENTITY ChapterCreatingANewProject SYSTEM "CreatingANewProject.xml">
+<!ENTITY ChapterProjectSummary SYSTEM "ProjectSummary.xml">
+<!ENTITY ChapterProjectAdministration SYSTEM "ProjectAdministration.xml">
+<!ENTITY ChapterTracker SYSTEM "Tracker.xml">
+<!ENTITY ChapterBugTrackingSystem SYSTEM "BugTrackingSystem.xml">
+<!ENTITY ChapterTaskManager SYSTEM "TaskManager.xml">
+<!ENTITY ChapterFileRelease SYSTEM "FileRelease.xml">
+<!ENTITY ChapterVersionControlWithCVS SYSTEM "VersionControlWithCVS.xml">
+<!ENTITY ChapterVersionControlWithSubversion SYSTEM "VersionControlWithSubversion.xml">
+<!ENTITY ChapterPatchManager SYSTEM "PatchManager.xml">
+<!ENTITY ChapterDocumentManager SYSTEM "DocumentManager.xml">
+<!ENTITY ChapterDocumentManagerPlugin SYSTEM "DocumentManagerPlugin.xml">
+<!ENTITY ChapterWiki SYSTEM "Wiki.xml">
+<!ENTITY ChapterSupportRequestManager SYSTEM "SupportRequestManager.xml">
+<!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
+<!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
+<!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
+<!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY References SYSTEM "References.xml">
+
+<!-- Entity definition and inclusion for default and custom parameters
+(e.g. site name, server names, company name,etc.)
+Remark: local redefinition must be first because once defined
+an entity cannot be redefined. Hence this particular order  -->
+
+]>
+
+<book>
+  <title>CodeX User Guide</title>
+
+  <subtitle>&#34;Collaborative Software Development and Project Management for the enterprise&#34;</subtitle>
+
+  <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
+
+  &BookInfo;
+
+  &ChapterIntroduction;
+  &ChapterCodeXSiteOverview;
+  &ChapterBecomingACodeXCitizen;
+  &ChapterCreatingANewProject;
+  &ChapterProjectSummary;
+  &ChapterProjectAdministration;
+  &ChapterTracker;
+  &ChapterFileRelease;
+  &ChapterVersionControlWithCVS;
+  &ChapterVersionControlWithSubversion;
+  &ChapterDocumentManagerPlugin;
+  &ChapterWiki;
+  &ChapterCommunicationServices;
+  &ChapterSurveyManager;
+  &ChapterProjectWebSite;
+  &ChapterOtherServices;
+  &ChapterBugTrackingSystem;
+  &ChapterTaskManager;
+  &ChapterSupportRequestManager;
+  &ChapterPatchManager;
+  &ChapterDocumentManager;
+
+  &References;
+
+</book>

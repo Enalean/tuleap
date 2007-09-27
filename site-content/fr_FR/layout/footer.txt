@@ -1,0 +1,24 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+-->
+<center>
+<span class="footer">
+
+<!-- This Copyright statement below MUST NOT be MODIFIED and MUST ALWAYS
+APPEAR IN THE FOOTER -->
+Logiciel CODEX&trade; CORE. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation.
+
+Le logiciel CODEX&trade; CORE est couvert par la licence <a href="http://www.fsf.org/licenses/gpl.html">GNU General Public License</a> version 2.
+<br>
+Logiciel CODEX&trade; COMPONENT. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation. All rights reserved.
+
+Le logiciel CODEX&trade; COMPONENT est couvert par la <a href="/admin/show_license.php">LICENCE DU LOGICIEL CODEX&trade; COMPONENT</a>.
+</span>
+</center>
+<BR>&nbsp;

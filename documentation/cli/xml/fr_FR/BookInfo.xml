@@ -1,0 +1,74 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+-->
+  <bookinfo>
+    <authorgroup>
+      <author>
+        <firstname>Marc</firstname>
+
+        <surname>Nazarian</surname>
+
+        <affiliation>
+          <orgname>Xerox, Marc.Nazarian@xrce.xerox.com</orgname>
+        </affiliation>
+      </author>
+    </authorgroup>
+
+    <copyright>
+      <year>2006</year>
+
+      <holder>The Document Company - Xerox. All rights reserved.</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>This document is licensed under the Codex Component Software License</para>
+
+      <para>Portion of this documentation is inspired from the  GForge Command-line Interface documentation contained in GForge.</para>
+      <para>Copyright 2005 GForge, LLC</para>
+      <para>http://gforge.org/</para>
+
+      <para>Xerox ®, The Document Company ®, and all Xerox products mentioned
+      in this publication are trademarks of Xerox Corporation.</para>
+
+      <para>This document was formatted with the DocBook XML DTD. HTML
+      version rendered with DocBook HTML native renderer. PDF version
+      rendered with Apache FOP.</para>
+    </legalnotice>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+
+        <date>29-Aout-2006</date>
+
+        <authorinitials>Marc Nazarian</authorinitials>
+
+        <revremark>Version initiale par M. Nazarian</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>0.2</revnumber>
+
+        <date>17-Janvier-2007</date>
+
+        <authorinitials>Marc Nazarian</authorinitials>
+
+        <revremark>Ajout du module de gestion des fichiers</revremark>
+      </revision>
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+

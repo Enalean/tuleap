@@ -1,0 +1,115 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+<chapter id="DirStructure">
+  <title>CodeX Directory Structure</title>
+  <para>In this paragraph, we will focus on the source code directory structure. For a more general presentation of CodeX File Structure, see the CodeX Administration Guide.</para>
+  <para>As mentioned in the previous chapter, all CodeX source code is located under '/home/httpd', or '~user/testserver/httpd' on your development environment: PHP scripts, Perl scripts, shell scripts, configuration file templates, utilities, etc.</para>
+  <para>Here is a description of the main directories (path is given as relative to 'testserver/httpd'):</para>
+  <itemizedlist mark="bullet"
+                spacing="compact">
+    <listitem>
+      <para><emphasis role="bold"><literal>cgi-bin</literal></emphasis> This is the directory containing the only CGI script: the CVSWeb interface script, written in Perl.</para>
+    </listitem>
+    <listitem>
+      <para><emphasis role="bold"><literal>codex_tools</literal></emphasis> contains several tools and utilities used in CodeX administration: DB backup script, installation scripts, etc. </para>
+    </listitem>
+    <listitem>
+      <para><emphasis role="bold"><literal>documentation</literal></emphasis> contains the user guide, installation guide, administration guide, and hopefully this guide. Some of those guides are available as HTML only, while others are written in DocBook XML format and rendered in HTML and PDF. The transformation from XML to PDF and HTML requires a java interpreter and an XSLT engine: this setup is currently not described in this document.</para>
+    </listitem>
+    <listitem>
+      <para><emphasis role="bold"><literal>plugins</literal></emphasis> contains the plugins installed into CodeX. One directory to rule them all. The mirror in /etc/codex/ is for customization.</para>
+    </listitem>
+    <listitem>
+      <para><emphasis role="bold"><literal>site-content</literal></emphasis> is the repository for site specific text: introductory messages, local instructions, license, policies, etc. Files located in the site-content directory are simple text files but may contain HTML tags, as well as PHP instructions. They are usually included in the page by one of the higher level PHP scripts.</para>
+    </listitem>
+    <listitem>
+      <para><emphasis role="bold"><literal>SF</literal></emphasis> stands for SourceForge. This is the main source directory, containing all PHP scripts, and more. </para>
+
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/backend</literal></emphasis> This is a directory containing deprecated scripts (see <literal>SF/backend/zones/README</literal> for details.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/common</literal></emphasis> contains PHP classes (in Object-Oriented sense) that are inherited by other higher level objects. These classes are pure PHP and contain only logic, and no HTML rendering at all. For the moment, these PHP classes are only used by the generic tracker service.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/db</literal></emphasis> contains database related scripts:</para>
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/db/upgrades</literal></emphasis> is the repository for upgrade scripts written in either Perl or SQL</para>
+            </listitem>
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/db/mysql</literal></emphasis> has two files, <literal>database_initvalues.sql</literal> and <literal>database_structure.sql</literal>, that define the original database available when a a new CodeX server is installed. These files <emphasis role="bold">must</emphasis> be updated when database patches are added to the <literal>SF/db/upgrades</literal> directory.</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/etc</literal></emphasis> is the directory where configuration file templates are stored: local.inc, and Apache configuration (httpd.conf, mailman.conf and cvsweb.conf). </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/utils</literal></emphasis> contains various utilities like cron jobs or initialization scripts. Most files in this directory are written in Perl. </para>
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/utils/cvs1</literal></emphasis> has all cvs-related scripts, e.g. <literal>log_accum</literal> that generates post-commit messages and emails them.</para>
+            </listitem>
+            <listitem>
+              <para><literal><emphasis role="bold">SF/utils/underworld-dummy</emphasis></literal> contains cron jobs that concern the dummy user (mostly, DB dumps) .</para>
+            </listitem>
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/utils/underworld-root</literal></emphasis> contains cron jobs dealing with statistics.</para>
+            </listitem>
+          </itemizedlist>
+
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold"><literal>SF/www</literal></emphasis> contains all the PHP scripts (except those in SF/common). Services are organized in different directories (e.g. <literal>tracker, forum, survey, docman, cvs</literal> etc.). Most services are quite independent from each other, so you can modify one without interfering with others. There are some special directories though; here are a few examples:
+  </para>
+
+          <itemizedlist mark="bullet"
+                        spacing="compact">
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/www/include</literal></emphasis> contains PHP scripts that are included by  all other scripts, e.g. <literal>pre.php</literal>.</para>
+            </listitem>
+            <listitem>
+              <para>Site level services like <emphasis role="bold"><literal>SF/www/admin</literal></emphasis> (user management, project creation scripts, etc.), <emphasis role="bold"><literal>SF/www/my</literal></emphasis> for user home pages, <emphasis role="bold"><literal>SF/www/snippet</literal></emphasis> for code snippets.</para>
+            </listitem>
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/www/scripts</literal></emphasis> contains javascript files</para>
+            </listitem>
+            <listitem>
+              <para><emphasis role="bold"><literal>SF/www/themes</literal></emphasis> contains UI theme data: stylesheets and images</para>
+            </listitem>
+          </itemizedlist>
+
+
+        </listitem>
+      </itemizedlist>
+    </listitem>
+
+
+  </itemizedlist>
+
+</chapter>
+
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->

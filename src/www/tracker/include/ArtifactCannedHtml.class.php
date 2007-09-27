@@ -1,0 +1,147 @@
+<?php
+//
+// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
+//
+// $Id$
+//
+//
+//	Originally by to the SourceForge Team,1999-2000
+//
+//  Written for CodeX by Thierry Jacquin
+//
+
+//require_once('common/tracker/ArtifactCanned.class.php');
+
+$Language->loadLanguageMsg('tracker/tracker');
+
+class ArtifactCannedHtml extends ArtifactCanned {
+
+	/**
+	 *  ArtifactCannedHtml() - constructor
+	 *
+	 *  @param $artifact_type - the ArtifactType object embedding this ArtifactCanned sets
+	 */
+	function ArtifactCannedHtml(&$artifact_type) {
+		return $this->ArtifactCanned($artifact_type);
+	}
+
+	/**
+	 *  Display the create canned form
+	 *
+	 *  @return void
+	 */
+	function displayCreateForm(){
+	  global $Language;
+
+	  echo '<h3>'.$Language->getText('tracker_include_canned','create_response').'</h3>';
+	  $atid = $this->ArtifactType->getID();
+	  $g = $this->ArtifactType->getGroup();
+	  $group_id = $g->getID();
+     echo '<P>';
+     echo $Language->getText('tracker_include_canned','save_time');
+     echo '<P>';
+     echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
+     echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
+     echo '<INPUT TYPE="HIDDEN" NAME="create_canned" VALUE="y">';
+     echo '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
+     echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
+     echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
+     echo '<B>'.$Language->getText('tracker_include_canned','title').':</B><BR>';
+     echo '<INPUT TYPE="TEXT" NAME="title" VALUE="" SIZE="50" MAXLENGTH="50">';
+     echo '<P>';
+     echo '<B>'.$Language->getText('tracker_include_canned','message_body').'</B><BR>';
+     echo '<TEXTAREA NAME="body" ROWS="20" COLS="65" WRAP="HARD"></TEXTAREA>';
+     echo '<P>';
+     echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
+     echo '</FORM>';
+
+
+}	
+
+/**
+	 *  Display the update canned form
+	 *
+	 *  @return void
+	 */
+	function displayUpdateForm() {
+	  global $Language;
+	  echo "<P>";
+	  $atid = $this->ArtifactType->getID();
+	  $id = 
+	    $g = $this->ArtifactType->getGroup();
+	  $group_id = $g->getID();
+	  $id = $this->getID();
+      echo $Language->getText('tracker_include_canned','save_time');
+      echo '<P>';
+      echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
+      echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
+      echo '<INPUT TYPE="HIDDEN" NAME="update_canned" VALUE="y">';
+      echo '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
+      echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
+      echo '<INPUT TYPE="HIDDEN" NAME="artifact_canned_id" VALUE="'.$id.'">';
+      echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
+      echo '<B>'.$Language->getText('tracker_include_canned','title').':</B><BR>';
+      echo '<INPUT TYPE="TEXT" NAME="title" VALUE="'.$this->getTitle().'" SIZE="50" MAXLENGTH="50">';
+      echo '<P>';
+      echo '<B>'.$Language->getText('tracker_include_canned','message_body').'</B><BR>';
+      echo '<TEXTAREA NAME="body" ROWS="20" COLS="65" WRAP="HARD">'.$this->getBody().'</TEXTAREA>';
+      echo '<P>';
+      echo '<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">';
+      echo '</FORM>';
+
+	}
+
+
+
+	/**
+	 *  Display the different Canned Responses associated to this tracker
+	 *
+	 *  @return void
+	 */
+	function displayCannedResponses() {
+	  global $Language;
+	$group_id = $this->ArtifactType->Group->getID();
+	$atid = $this->ArtifactType->getID();
+
+	  echo '<H2>'.$Language->getText('tracker_import_admin','tracker').
+	    ' \'<a href="/tracker?group_id='.$group_id.'&atid='.$atid.'">'.$this->ArtifactType->getName().'</a>\' - '.
+	    $Language->getText('tracker_admin_index','create_modify_cannedresponse').'</a></H2>';
+	  $result = $this->ArtifactType->getCannedResponses();
+	  $rows=db_numrows($result);
+	  echo "<P>";
+	  
+	  if($result && $rows > 0) {
+	    /*
+  	    Links to update pages
+  	    */
+  	    echo "\n<H3>".$Language->getText('tracker_include_canned','existing_responses')."</H3><P>";
+  	    
+  	    $title_arr=array();
+  	    $title_arr[]=$Language->getText('tracker_include_canned','title');
+  	    $title_arr[]=$Language->getText('tracker_include_canned','body_extract');
+ 	    $title_arr[]=$Language->getText('tracker_include_canned','delete');
+ 	    
+  	    echo html_build_list_table_top ($title_arr);
+  	    $atid = $this->ArtifactType->getID();
+	    $g = $this->ArtifactType->getGroup();
+	    $group_id = $g->getID();
+	    for ($i=0; $i < $rows; $i++) {
+	      echo '<TR class="'. util_get_alt_row_color($i) .'">'.
+	      '<TD><A HREF="/tracker/admin?func=canned&update_canned=1&artifact_canned_id='.
+	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.'">'.
+	      db_result($result, $i, 'title').'</A></TD>'.
+	      '<TD>'.substr(db_result($result, $i, 'body'),0,160).
+	      '<b>...</b></TD>'.
+	      '<td align="center"><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id='.
+	      db_result($result, $i, 'artifact_canned_id').'&atid='.$atid.'&group_id='.$group_id.
+		'" onClick="return confirm(\''.$Language->getText('tracker_include_canned','delete_canned',db_result($result, $i, 'title')).'\')">'.
+		'<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A></td></TR>';
+	    }
+	    echo '</TABLE>';
+	  
+	  } else {
+	    echo "\n<H3>".$Language->getText('tracker_include_canned','no_canned_response')."</H3>";
+	  }
+	}
+}
+?>

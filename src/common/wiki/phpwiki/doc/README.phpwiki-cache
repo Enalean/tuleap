@@ -1,0 +1,144 @@
+InstallWikiPluginCached       
+
+!!!Requirements
+
+I don't know, tested it with the followings: 
+* WikiPluginCached needs
+** PhpWiki >= 1.3.3
+** Pear Cache >= 1.0
+** GD >= 1.6
+* TexToPng needs
+** TeX 3.14159
+** GNU Ghostscript 6.51 
+** LaTex2HTML Version 99.2beta8 (1.43)
+** Perl >= 5.6.1 built for i586-linux
+* VisualWiki needs
+** graphviz 1.8.x (http://www.graphviz.org/)
+
+!!!Installation
+phpwiki comes with its own copy of PEAR::Cache. 
+You have to configure the PLUGINCACHED Pear/Cache Settings in config/config.ini
+
+*  set PLUGIN_CACHED_CACHE_DIR to a directory accessible by your apache user.
+ 
+!!!Example Calls from Wiki
+!! TexToPng
+This produces a little help screen:
+ < ?plugin TexToPng ?> 
+ 
+A simple formula:
+ < ?plugin TexToPng tex="$x^2$" ?> 
+ 
+Let's show off 
+ < ?plugin TexToPng tex="$$/int^/infty_{-/infty} dx {1 /over /sqrt {x^2+1}}$$" subslash="on" ?> 
+
+----
+
+The available options for TexToPng are:
+;tex:TeX Commands (default: text mode), use $...$ for inline math formula style and $$...$$ for large formula style
+;img:          image type (png, jpeg or gif), if chosen image type is not available use the first possible from png, gif, jpeg (in that order)
+;magstep:      magnify image by (1.2 to the magstep)
+;subslash:     substitute slashes by backslashes (to avoid the backslash bug of the database pear interface)
+;antialias:    render ps to img with antialias option. This produces higher quality output but is slower and needs more disk space.
+;transparent:  produce transparent background instead of white background. Seems to be buggy (in pstoimg - not my fault)
+
+!!VisualWiki
+Standard call:
+ < ?plugin VisualWiki ?>
+Help:
+ < ?plugin VisualWiki help="1" ?>
+
+!!!Known Bugs
+
+WikiPluginCached 0.8
+* VisualWiki and TexToPng use png image type for communication with
+  the image creating scripts (dot and pstoimg), so they rely on
+  CreateImageFronPNG(...)
+* RecentChangesCached produces a strange RSS-link for the RSS-image
+  when it has to store a new html snippet in the cache immediately 
+  after an edit/save cycle.
+
+
+
+
+
+
+
+
+
+
+!!!Examples
+
+This extension of WikiPlugin replaces my old WikiPluginImageCache and allows to cache the following kinds of output:
+
+* html
+** example: [RecentChangesCached - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/RecentChangesCached_php] (RecentChanges with a 15 minutes caching interval)
+* images
+** example: [TexToPng - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/TexToPng_php] (TeX to image converter)
+** and  [CacheTest - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/CacheTest_php] (simple example)
+* image maps
+** example: [VisualWiki - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/VisualWiki_php] (VisualWiki draws a graph of some [WikiPage]s showing their mutual linkage using [graphviz|http://www.graphviz.org]).
+
+!!!Requirements
+I used the following versions
+* PhpWiki 1.3.3
+* PEAR Cache 1.1 (needed files are included in the tar ball below)
+* GD >= 1.8
+* For TexToPng
+** Tex 3.14159
+** Perl 5.6.1 built for i586-linux
+** GNU Ghostscript 6.51
+** LaTex2HTML Version 99.2beta8 (1.43)
+* For VisualWiki
+** graphviz 1.8.? (http://www.graphviz.org)
+
+
+!!!Source
+
+These files actually belong to WikiPluginCached
+
+* [imagecache - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/imagecache_php] (fetches images from the cache)
+* [WikiPluginCached - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/WikiPluginCached_php] (abstract class for cached [WikiPlugin]s)
+* [plugincache-config - source|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/plugincache-config_php] (config file for the PEAR Cache)
+
+!!!Tar
+
+[WikiPluginCached, Examples, and needed Pear Cache as tar.gz|http://amor.rz.hu-berlin.de/~h0444nmx/wiki/wikiplugincached.tar.gz]
+
+!!!Installation
+* EITHER copy the tarball into your phpwiki directory and use
+      tar -xvzf wikiplugincached-0.8.tar.gz
+* OR copy the following files manually:
+**      imagecache.php            ''into''  lib/imagecache.php
+**      !WikiPluginCached.php     ''into''  lib/!WikiPluginCached.php
+**      plugincache-config.php    ''into''  lib/plugincache-config.php
+**      !TexToPng.php             ''into''  lib/plugin/!TexToPng.php
+**      !CacheTest.php            ''into''  lib/plugin/!CacheText.php
+**      !VisualWiki.php           ''into''  lib/plugin/!VisualWiki.php
+**      !RecentChangesCached.php  ''into''  lib/plugin/!RecentChangesCached.php
+**      Cache.php                 ''into''  lib/pear/Cache.php
+**      Error.php                 ''into''  lib/pear/Cache/Error.php
+**      Container.php             ''into''  lib/pear/Cache/Container.php
+**      file.php                  ''into''  lib/pear/Cache/Container/file.php
+**      imgfile.php               ''into''  lib/pear/Cache/Container/imgfile.php
+* copy your own index.php config file into getimg.php and substitute the wiki start up instruction (to be found at the end of the file)
+    include "lib/main.php";
+  by
+      include "lib/imagecache.php";
+* modify configuration file plugincache-config.php according to your wishes, %%%especially:
+**  set 'cache_dir' to a directory accessible by your apache user.
+**  set database to 'file'
+;;:''There is a hack which allows to let apache determine whether the image needs to be recreated. You have to include a symbolic link from your wiki dir to your cache dir and make the getimg.php file the 404 ErrorDocument. So whenever Apache tries to load an image not present in this dir, Apache will call the 404 (=file not found) ErrorDocument which creates the image on the fly. You have to use 'imgfile' as database entry in plugincache-config.php, though. Furthermore you have to replace the old value of 'cache_url' which should be '../getimg.php?' by '../path/to/cache'. Remember: This really is a hack because it needs my modified cache-filesystem-interface which is not part of the official pear distribution.''
+
+!!!Documentation
+At the moment, the source documentation is incomplete, but the example files should help a lot
+
+!!!To Do
+* complete doc
+* There is a bug in RecentChangesCached which scrambles the rss link during the first run.
+* VisualWiki and TexToPng use png image type for communication with the image creating scripts (dot and pstoimg), so they rely on CreateImageFromPNG(...) which is not necessary.
+
+--JohannesGroﬂe
+
+----
+WikiPlugin TexToPng VisualWiki

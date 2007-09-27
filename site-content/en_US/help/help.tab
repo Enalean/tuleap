@@ -1,0 +1,49 @@
+#/**
+#  *
+#  * help scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/help/browse_bug_query_field.php
+#
+help_browse_bug_query_field	no_field	No such field: $1
+help_browse_bug_query_field	bug_search_criteria	Bug Search - Selection Criteria
+help_browse_bug_query_field	field_name	Field Name
+help_browse_bug_query_field	field_type	Field Type
+help_browse_bug_query_field	description	Description
+#
+#-----------------------------------------------
+# Script: SF/www/help/browse_tracker_query_field.php
+#
+help_browse_tracker_query_field	at_not_created	ArtifactType could not be created
+help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory could not be created
+help_browse_tracker_query_field	af_not_created	ArtifactField could not be created
+help_browse_tracker_query_field	art_search_criteria	Artifact Search -  Selection Criteria
+#
+#-----------------------------------------------
+# Script: SF/www/help/index.php
+#
+help_index	welcome	Welcome to $1
+help_index	page_info	Information Page
+#
+#-----------------------------------------------
+# Script: SF/www/help/show_help.php
+#
+help_show_help	page_not_found	$1 Help System - Error: page not found
+help_show_help	page_not_available	<h4>Sorry, the help page you have requested (section $1) is not available.<br> \nPlease inform the <a href="mailto:$2">$3 Site Administrator</a></h4>
+#
+#-----------------------------------------------
+# Script: SF/www/help/trove_cat.php
+#
+help_trove_cat	no_such_trove_cat	No such trove category
+help_trove_cat	trove_cat	Trove Category - $1
+help_trove_cat	full_cat_name	Full Category Name
+help_trove_cat	short_name	Short Name
+help_trove_cat	desc	Description

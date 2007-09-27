@@ -1,0 +1,51 @@
+Date: Sat, 5 Jun 2004 16:49:56 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PluginIns%E9rer,v 1.1 2004/06/08 14:19:04 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PluginIns%E9rer;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+PluginInsérer peut être utilisé pour embarquer en inclusion
+des pages (extérieures) dans une page wiki.
+
+!!Arguments
+
+=src= |
+  URL de la page à importer
+=height= |
+  la hauteur initiale du cadre d'importation. Si possible,
+  après que la page à inclure soit chargée, la cadre est
+  re-dimensionné via javascript de telle sorte qu'il remplisse
+  entièrement la page d'importation (voir plus bas pour plus d'info).
+
+!! Bugs / Avertissements
+
+o Les pages sont incorporées en utilisant les balises =<iframe>=. Les anciens 
+  navigateurs ne supportent pas les ''iframe''. Dans ce cas l'utilisateur 
+  sera averti par un lien vers les données à importer.
+
+o Quand c'est possible, du code javascript est utilisé pour ajuster la
+  hauteur du _iframe_ de telle sorte qu'il remplisse entièrement la page 
+  qui l'accueille. Malheureusement, cela semble possible quand la page
+  à incorporer vient du même serveur que la page wiki (cette restriction
+  est due à des impératifs de sécurité du langage javascript).
+
+o Le code de détection de récursivité ne fonctionne pas encore. Soyez prudent
+  en évitant les imporation récusives ou vous serez désolé (ou au moins
+  amusé).
+
+! Exemple
+
+<verbatim>
+<?plugin Transclude src="http://phpwiki.sourceforge.net/demo/ChangeLog" ?>
+</verbatim>
+
+donne
+
+<?plugin Transclude src="http://phpwiki.sourceforge.net/demo/ChangeLog" ?>

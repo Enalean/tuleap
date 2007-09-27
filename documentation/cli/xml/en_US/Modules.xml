@@ -1,0 +1,1046 @@
+<!--
+//
+// Portion of this file is inspired from the  GForge Command-line Interface
+// contained in GForge.
+// Copyright 2005 GForge, LLC
+// http://gforge.org/
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+//
+// $Id$
+//
+// Written by Marc Nazarian 2006, CodeX Team, Xerox
+//
+-->
+<chapter id="Modules">
+    <title>Module functions and parameters</title>
+
+    <section id="CoreFunctions">
+        <title>Core functions</title>
+        
+        <para>These functions do not act over a specific module. They are the following:</para>
+        
+        <section id="CoreFunctionLogin">
+            <title>login</title>
+            <para>login: Log in to the server
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--username: Specifies the name of the user you'll be working with. The username is the one you
+                        usually use in the CodeX login page.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--password: Specifies the password to login with. If none is provided, you will be asked for one
+                        interactively.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you plan working on. If you don't specify this, any future
+                        function call will require you to specify the project in which the function will be applied.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>login command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php login --username=john --password=johnpass --project=myproject
+Logged in.
+(OR)
+[mnazaria@linux codex cli ]$ ./codex.php login --username=marc --project=myproject
+Password:
+Logged in.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="CoreFunctionLogout">
+            <title>logout</title>
+            <para>logout: End a session. This removes all the information of the session from your computer.
+                <para>
+                    <example>
+                        <title>logout command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php logout
+Session terminated.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+    </section>
+
+    <section id="TrackerFunctions">
+        <title>Tracker functions</title>
+        
+        <section id="TrackerFunctionTypeList">
+            <title>trackerlist</title>
+            <para>
+                trackerlist: Display a list of the trackers for the project.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
+                        will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>trackerlist command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker trackerlist --project=guineapig
+Array
+(
+    [0] => Array
+           (
+            [group_artifact_id] => 113
+            [group_id] => 5
+            [name] => Bugs
+            [description] => Bugs Tracker
+            [item_name] => bug
+            [open_count] => 3
+            [total_count] => 15
+            [field_sets] => Array
+            (... list of trackers, field sets and fields ...)
+                        </programlisting>
+                    </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionList">
+            <title>list</title>
+            <para>
+                list: Display a list of artifacts that belong to a specified tracker.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID of the tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--limit: Maximum number of returned artifacts.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--offset: Numbers of returned artifact that will be skipped (offset parameter can not stand alone, it works with limit parameter).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[field_name][operator][value]: criteria to filter the returned artifacts. Works with standard fields and custom fields.</para>
+                        <para>Example : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
+                        <para>Allowed operators are &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
+                        will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>list command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker list --tracker_id=113 --status=0 --assigned_to=142
+Array
+(
+    [0] => Array
+            (
+                [artifact_id] => 7173
+                [group_artifact_id] => 113
+                [status_id] => 0
+                [submitted_by] => 102
+                [open_date] => 1115311786
+                [close_date ] => 1125064392
+                [summary] => New bug
+                [details] => small bug
+                [severity] => 3
+                [extra_fields] => Array
+                                    (
+                                        [0] => Array
+                                                (
+                                                    [field_id] => 128
+                                                    [field_value] => 142
+                                                )
+                                        [1] => Array
+                                                (
+                                                    [field_id] => 129
+                                                    [field_value] => 41
+                                                )
+                                        [2] => Array
+                                                (
+                                                    [field_id] => 130
+                                                    [field_value] => 42
+                                                )
+                                    )
+            )
+)
+                    </programlisting>
+                </example>
+                <note>Note: In this example, "assigned_to" corresponds to an extra_field and 
+                      142 is the search value for this field. We find this field in the 
+                      extra fields list, with the field_id 128.
+                </note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAdd">
+            <title>add</title>
+            <para>
+                add: Add a new artifact to a tracker
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID of the tracker the new artifact will belong to.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--summary: Summary for the artifact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--details: Details for the artifact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: Status_id of the artifact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--severity: Severity of the artifact (1: lowest, 9: highest).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[extra_field_name]: Extra field value. extra_field_name must be the name of the extra field (field_name). The value of the extra field depends on its type. For multiple-value fields, separate the values with a comma.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>add command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker add --tracker_id=371 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=142
+Confirm you want to add a new tracker with the following information:
+group_id: 160
+group_artifact_id: 371
+summary: Back button is not working
+details: When I read my email and I press the back button, a blank page appears
+severity: 4
+assigned_to: 142
+Is this information correct? (y/n): y
+7374
+                    </programlisting>
+                </example>
+                <note>Note: In this example, "assigned_to" corresponds to an extra_field and 
+                      142 is a valid value ID for this extra field.
+                      The value returned (7374) is the ID of the new artifact.
+                </note>
+                <note>Note: The mail notification system is not implemented for the moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionUpdate">
+            <title>update</title>
+            <para>
+                update: Update an artifact information
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID of the tracker the artifact to update belong to.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : ID of the artifact to update.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: New status_id of the artifact</para>
+                    </listitem>
+                    <listitem>
+                        <para>--summary: Summary for the artifact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--details: Details for the artifact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--severity: Severity of the artifact (1: lowest, 9: highest).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[extra_field_name]: Extra field value. extra_field_name is the name of the extra field. The value of the extra field depends on its type.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>update command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker update --tracker_id=371 --id=7374 --severity=6 --extra_field_notice_textfield="Increased priority"
+Confirm you want to update the tracker with the following information:
+group_id: 160
+group_artifact_id: 371
+severity: 6
+extra_field_notice_textfield="Increased priority"
+Is this information correct? (y/n): y
+7374
+                    </programlisting>
+                </example>
+                <note>Note: The mail notification system is not implemented for the moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionComments">
+            <title>comments</title>
+            <para>
+                comments: Retrieve all the messages posted in an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>comments command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker comments --tracker_id=371 --id=7374
+Array
+(
+    [0] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => we will keep them gray
+        [date] => 1117810766
+        [by] => 142
+        [comment_type_id] => 100
+        )
+    [1] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => maybe we can add a gradient
+        [date] => 1117809234
+        [by] => 135
+        [comment_type_id] => 100
+        )
+    [2] => Array
+        (
+        [artifact_id] => 7374
+        [comment] => i think most buttons should be green
+        [date] => 1117723406
+        [by] => 1142
+        [comment_type_id] => 100
+        )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAddComment">
+            <title>addComment</title>
+            <para>
+                addComment: Post a new follow-up comment in an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : Tracker ID the artifact belongs to.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--message* : Message to post.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>addComment command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
+                    </programlisting>
+                </example>
+                <note>Note: The mail notification system is not implemented for the moment.</note>
+                </para>
+            </para>
+        </section>
+
+<!--
+
+        <section id="TrackerFunctionFiles">
+            <title>files</title>
+            <para>
+                files: Show a list of files attached to the artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>files command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker files __tracker_id=116 __id=3
+Array
+(
+    [0] => Array
+        (
+            [id] => 11
+            [artifact_id] => 3
+            [name] => screenshot.jpg
+            [description] => 11
+            [filesize] => 364983
+            [filetype] => image/jpeg
+            [adddate] => 1124372802
+            [submitted_by] => 102
+        )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionGetFile">
+            <title>getfile</title>
+            <para>
+                getfile: Download a file from an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__file id* : ID of the file to download.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__output: File name to save the file as. If not specified, the contents of the file are outputted to the screen.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>getfile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker getfile __type=116 __id=3 __file_id=11 __output=/home/mnazaria/screenshot.jpg
+File retrieved successfully.
+                    </programlisting>
+                 </example>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionAddFile">
+            <title>addfile</title>
+            <para>
+                addfile: Attach a file to an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>__tracker_id* : Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__id* : Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__file* : Local file to attach.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__description: Description of the file.</para>
+                    </listitem>
+                    <listitem>
+                        <para>__project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>addfile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker addfile __type=116 __id=3 __file=/home/mnazaria/image_patch.diff __description="This is the patch to apply"
+                    </programlisting>
+                </example>
+                <note>Note: The value returned (12) is the ID of the new file.</note>
+                <note>Note: The mail notification system is not implemented for the moment.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionTechnicians">
+            <para>
+                
+            </para>
+        </section>
+-->
+    </section>
+    
+    <section id="FRSFunctions">
+        <title>File Release System functions</title>
+        
+        <section id="FRSFunctionPackages">
+            <title>packages</title>
+            <para>packages: Display a list of available packages for a project
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to retrieve the packages in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>packages command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs packages --project=myproject
+Array
+(
+    [0] => Array 
+            (
+                [package_id] => 13
+                [group_id] => 121
+                [name] => CodeX installation
+                [status_id] => 1
+                [rank] => 10
+                [approve_license] => 1
+             )
+    [1] => Array 
+            (
+                [package_id] => 64
+                [group_id] => 121
+                [name] => CLI installation
+                [status_id] => 1
+                [rank] => 20
+                [approve_license] => 1
+             )
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionAddPackage">
+            <title>addpackage</title>
+            <para>addpackage: Add a package to the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--name*: name of the new package that will be created.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: status_id of the new package. By default, the status is active.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--rank: rank of the new package that will be created. By default, set to 0.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>addpackage command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs addpackage --project=myproject --name="my_new_package" --status_id=1
+65
+                        </programlisting>
+                    </example>
+                    <note>Note: The value returned (65) is the ID of the new package.</note>
+               </para>
+            </para>
+        </section>
+        
+        <section id="FRSFunctionReleases">
+            <title>releases</title>
+            <para>releases: Display a list of available releases for a project and a given package
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: the id of the package the releases belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to retrieve the releases in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>releases command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs releases --package_id=6
+Array
+(
+    [0] => Array 
+            (
+                [release_id] => 73
+                [package_id] => 6
+                [name] => CodeX 2.8
+                [note] => 
+                [changes] => New incredible functions in this new versions.
+                [status_id] => 1
+                [release_date] => 1163776835
+                [released_by] => 142
+             )
+    [1] => Array 
+            (
+                [release_id] => 78
+                [package_id] => 6
+                [name] => CodeX 3.0
+                [note] => CodeX platform in version 3.0
+                [changes] => So crazy changes for this new release !
+                [status_id] => 1
+                [release_date] => 1163776125
+                [released_by] => 142
+             )
+     ...
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="FRSFunctionAddRelease">
+            <title>addrelease</title>
+            <para>addrelease: Add a release to the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package this release will belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--name*: name of the new release that will be created.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--notes: notes about this new release
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--changes: changes of this new release
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status_id: status_id of the new release. By default, the status is active.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_date: date of the new release, with YYYY-MM-DD format. By default, the release_date is the current date/time.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the release in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>addrelease command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs addrelease --package_id=6 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
+84
+                        </programlisting>
+                    </example>
+                    <note>Note: The value returned (84) is the ID of the new release.</note>
+               </para>
+            </para>
+        </section>
+        
+        <section id="FRSFunctionFiles">
+            <title>files</title>
+            <para>files: Display a list of available files for a project, a given package and a given release
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: the id of the package the files belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: the id of the release the files belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to retrieve the files in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>files command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs files --package_id=6 --release_id=49
+Array
+(
+    [0] => Array 
+            (
+                [file_id] => 196
+                [release_id] => 49
+                [filename] => p6_r49/my_file.odg
+                [file_size] => 128
+                [type_id] => 6000
+                [processor_id] => 2000
+                [release_time] => 1163776835
+                [post_date] => 1163776835
+             )
+     ...
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="FRSFunctionAddFile">
+            <title>addfile</title>
+            <para>addfile: Add a file to the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package this file will belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release this file will belong to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. Please note that for adding big files, it is better to use the uploaded way, because memory error could happen. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--uploaded_file(*): location of the new file that will be created. The file must already be located in the incoming directory on the server. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--type_id: type_id of the new file
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--processor_id: processor_id of the new file
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the file in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>addfile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs addfile --package_id=6 --release_id=49 --local_file=/home/mnazaria/my_file.pdf
+627
+
+(for a local file or )
+
+[mnazaria@linux codex cli ]$ ./codex.php frs addfile --package_id=6 --release_id=49 --uploaded_file=my_file.pdf
+627
+
+(for a file already uploaded in the incoming directory of your server)
+                        </programlisting>
+                    </example>
+                    <note>Note: The value returned (627) is the ID of the new file.</note>
+               </para>
+               <para>
+                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
+                the memory_limit directive in PHP file configuration (php.ini).
+                If problems still remain, please upload your files on the server before (using scp or ftp), and then use 
+                the second method (--uploaded_file)</note>
+               </para>
+            </para>
+        </section>
+        
+        <section id="FRSFunctionGetFile">
+            <title>getfile</title>
+            <para>getfile: Get the content of a file in the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: id of the file we want to get the content
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--output: output location to download the file. If not specified, the content of the file is displayed on the standard output
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to get the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getfile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php frs getfile --package_id=6 --release_id=49 --file_id=644 --output=/home/mnazaria/downloaded_file.pdf
+File retrieved successfully.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+    <section id="DocmanFunctions">
+        <title>Document Manager functions</title>
+        
+        <para>This module works with the docman plugin and will be available only if the plugin is installed.</para>
+        
+        <section id="DocmanFunctionList">
+            <title>list</title>
+            <para>list: Display a list of items contained in a folder
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: the ID of the folder.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to retrieve the packages in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>list command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman list --id=59 --project=myproject
+Array
+(
+    [0] => Array 
+            (
+                [item_id] => 241
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The PDF version of the CLI User Guide
+                [create_date] => 1170168829
+                [update_date] => 1170168829
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 1
+             )
+    [1] => Array 
+            (
+                [item_id] => 296
+                [parent_id] => 59
+                [group_id] => 112
+                [title] => CLI User Guide
+                [description] => The HTML version of the CLI User Guide
+                [create_date] => 1172759281
+                [update_date] => 1172759281
+                [delete_date] => 
+                [user_id] => 102
+                [status] => 0
+                [obsolescence_date] => 0
+                [rank] => -2
+                [item_type] => 3
+             )
+    
+)
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionCreateDocument">
+            <title>createDocument</title>
+            <para>createDocument: Add a document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the document will be created in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--type*: nature of the document. Available types are "file", "link", "wiki", and "embedded_file"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: content of the document, according to the type of the document:
+                            <itemizedlist mark="bullet">
+                                <listitem><para>the file location for "file" type</para></listitem>
+                                <listitem><para>the url for "link" type</para></listitem>
+                                <listitem><para>the name of the Wiki Page for "wiki" type</para></listitem>
+                                <listitem><para>the raw content for "embedded_file" type.</para></listitem>
+                            </itemizedlist>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createDocument command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
+1
+                        </programlisting>
+                    </example>
+               </para>
+               <para>
+                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
+                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
+                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
+                </note>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionCreateFolder">
+            <title>createFolder</title>
+            <para>createFolder: Add a folder to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the folder will be created in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new folder
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new folder
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--ordering: place where the new folder will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createFolder command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionDelete">
+            <title>delete</title>
+            <para>delete: Delete an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to delete
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>delete command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman delete --project=myproject --id=361
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMonitor">
+            <title>monitor</title>
+            <para>monitor: Monitor an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to monitor
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>monitor command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman monitor --project=myproject --id=249
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+        <section id="DocmanFunctionMove">
+            <title>move</title>
+            <para>move: Move an item
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to move
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--parent*: ID of the folder the item will be moved in
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>move command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php docman move --project=myproject --id=241 --parent=59
+1
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+    
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+End:
+-->
+

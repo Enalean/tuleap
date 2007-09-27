@@ -1,0 +1,17 @@
+This is a "setuid" program that allows a registered user to start a
+CodeX test server.  It looks up the user name and test server directory in a
+file (/etc/cxserv.conf), performs some sanity checks on the installation,
+and then directly implements the start/stop/restart operations.  It is very
+careful about things like buffer overruns, and ought to greatly reduce the
+amount of time that anyone needs to stay as root.  I suspect that a
+legitimate user of the tool could probably use it to get some level of
+privileged access, but I think that an illegitimate user would have a hard
+time exploiting it.
+
+There are some debugging aids in the "debugging" subdirectory.
+
+This program was written by Jim Mayer, jmayer@crt.xerox.com.
+
+----------------
+$Id$
+Copyright (c) 2003, Xerox Corporation, SSTC.  All rights reserved.

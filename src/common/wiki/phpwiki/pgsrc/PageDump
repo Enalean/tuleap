@@ -1,0 +1,25 @@
+Date: Thu, 11 Dec 2003 19:59:05 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.7pre)
+X-Rcs-Id: $Id: PageDump,v 1.2 2004/05/25 12:43:29 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageDump;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+View a wiki page in MIME format or download it as backup of a single
+page. _A complete dump of all pages can be produced in
+PhpWikiAdministration._
+
+<?plugin PageDump?>
+----
+Enter exact page name to dump:
+<?plugin-form PageDump?>
+
+TitleSearch:
+<?plugin-form TitleSearch?>
+
+----
+See also: [ViewSource|phpwiki:?action=viewsource], PluginManager.

@@ -1,0 +1,81 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="Introduction">
+    <title>Introduction</title>
+
+    <para>The goal of the &SYS_ORG_NAME; Code eXchange Initiative
+    (CodeX) is to transpose and apply the principles of Open Source
+    [XOSP] into our own corporate environment. Establishing
+    collaborative software development and project management
+    practices as one of our core software engineering values will
+    improve the quality of our software and the productivity of our
+    development teams while providing a rich, attractive and cost
+    efficient.</para>
+
+    <para>The CodeX initiative is supported by an internal Web site of
+    the same name that is available at <ulink
+    url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;/</ulink>.
+    <!-- The CodeX web site is provided as a service to all
+    &SYS_ORG_NAME; software development teams who want to work
+    efficiently in a collaborative mode.  While being well and alive
+    the software community at &SYS_ORG_NAME; is also asking for more
+    communication and has a strong desire to establish bridges with
+    the rest of the company. Further, it shows a desire to speed up
+    the innovation process and to develop more flexible, better
+    quality and more usable software in less time. --></para>
+
+    <para>The CodeX User Guide was written not only to describe the
+    CodeX features and services; it is also packed with tips and
+    guidelines to help you get the most out of CodeX and manage your
+    project in an optimal way.</para>
+
+    <para>We hope that you enjoy working with CodeX. If so, keep
+    talking about the CodeX initiative to fellow programmers, project
+    managers and managers. CodeX users are our best advocates. Also
+    keep in mind that this User Guide is yours and, following source
+    code sharing principles, we welcome your corrections and
+    contributions.</para>
+
+    <para>Enjoy CodeX!</para>
+
+    <para>The CodeX Team</para>
+
+    <figure id="FigureTheCodeXHomePage">
+      <title>The CodeX Home Page</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_homepage.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure id="FigureTheCodeXHomePageTabTheme">
+      <title>The CodeX Home Page, with a different theme (with tabs)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_homepagetabtheme.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

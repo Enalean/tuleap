@@ -1,0 +1,25 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+if (user_isloggedin()) {
+   $username=user_getname();
+} else $username='<I>username</I>';
+print '<h2>Subversion Access '.help_button('VersionControlWithSubversion.html').'</h2>
+<P>By default Subversion read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the Subversion repository.  
+<P>Project members are granted read (checkout) and write (commit) access to the Subversion repository. Below is a typical command you would use to checkout the source code of this project.';
+if (!user_isloggedin()) {
+  print ' In the command below substitute <I>username</I> with the proper value.';
+}
+print ' Enter your site password when
+prompted.';
+
+echo '<P><span class="command">svn checkout --username '.$username.' '. $svn_url .'</span>';
+
+print '<P>'.help_button('VersionControlWithSubversion.html',false,'[More on how to use Subversion &hellip;]');
+?>

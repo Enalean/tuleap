@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="selenium/lib/prototype.js"></script>
+<title>setUp</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">setUp</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td id="codex_reset_db">/plugins/tests/reset_db.php_TO_REMOVE_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>mysql -h</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+<br />
+<input type="text" id="codex_code" /><input type="button" id="codex_dounlock" value="Unlock" />
+<script type="text/javascript">
+if ($('codex_reset_db').innerHTML.match(/_TO_REMOVE_/)) {
+    var hash = Math.floor(Math.random()*10000);
+    document.write('<div>Please type the following code to reset your database : '+hash+'</div>');
+    Event.observe('codex_dounlock', 'click', function() {
+            if ($('codex_code').value == hash) {
+                $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
+                alert('Reset db should have been unlocked. Enjoy!');
+            }
+    });
+}
+</script>
+</body>
+</html>

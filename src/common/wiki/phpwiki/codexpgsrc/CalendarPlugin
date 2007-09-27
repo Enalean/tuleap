@@ -1,0 +1,99 @@
+Date: Wed, 2 Feb 2005 20:32:44 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: CalendarPlugin,v 1.7 2005/02/26 18:31:32 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CalendarPlugin;
+  pgsrc_version="2 $Revision: 1.7 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The CalendarPlugin can be used to generate a monthly calendar in a
+wiki page. It's handy for PersonalWiki~s.
+
+Individual dates in the calendar link to specially named wiki pages.
+The names for the "day pages" are by default formed by appending the
+date to the pagename on which the calendar appears.
+
+_This feature was inspired by [Manila|http://manila.userland.com/],
+and first implemented by GaryBenson. It was later implemented as a
+WikiPlugin by JeffDairiki._
+
+!!Usage:
+
+<verbatim>
+<?plugin Calendar?>
+</verbatim>
+
+will get you:
+<?plugin Calendar?>
+
+--------
+
+!! Plugin Arguments
+
+!Selection of Month
+
+<strong>year</strong>:
+
+  Specify the year for the calendar.  (Default: current year.)
+
+<strong>month</strong>:
+
+  Specify the month for the calendar.  (Default: current month.)
+
+<strong>month_offset</strong>:
+
+  Added to ''month''. Can be used to include several months worth of
+  calendars on a single wiki page.
+
+  <?plugin Calendar month_offset=+1?>
+
+!"Day Page" Names
+
+<strong>date_format</strong>:
+
+  [Strftime| php-function:strftime] style format string used to
+  generate page names for the "day pages." The default value is
+  =%Y-%m-%d=.
+
+<strong>prefix</strong>:
+
+  Prepended to the date (formatted per ''date_format'') to generate
+  the "day page" names. The default value is =~[pagename]/=.
+
+!Appearance
+
+<strong>month_format</strong>:
+
+  [Strftime| php-function:strftime] style format string used to
+  generate the title of the calendar. (Default: =%B, %Y=.)
+
+<strong>wday_format</strong>:
+
+  [Strftime| php-function:strftime] style format string used to
+  generate the day-of-week names at the top of the calendar.
+
+<strong>start_wday</strong>:
+
+  What day of the week does the calendar start on. This should be
+  specified as an integer in the range zero (Sunday) through six
+  (Saturday), inclusive.
+
+  <?plugin Calendar start_wday=1 ?>
+
+-----
+
+! Patch for 1.2
+
+GaryBenson wrote the first calendar implementation for PhpWiki 1.2.
+(Since 1.2 doesn't support plugins, it uses a =###CALENDAR###= token
+as a trigger.) Gary provides a screenshot at [ http://inauspicious.org/files/screenshots/calender.png | screenshot ], 
+a [patch | http://inauspicious.org/files/phpwiki/phpwiki-1.2.0-calendar.patch] (on 1.2.0), and
+[calendar.php | http://inauspicious.org/files/phpwiki/calendar.php]
+(which renders a view of the year.)
+
+----
+
+PhpWikiDocumentation

@@ -1,0 +1,47 @@
+Date: Sat, 5 Jun 2004 16:49:53 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: AjouterDesCommentaires,v 1.1 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AjouterDesCommentaires;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!Description
+
+PluginWiki pour permettre aux utilisateurs d'ajouter des commentaires à
+la fin de la page. Existe depuis la version 1.3.8. Change l'apparence via les modèles 
+comment.tmpl et addcomment.tmpl, et les classes CSS wikicomment, 
+wikicomment-header, wikicomment-body, wikicomment-footer.
+
+!!Usage
+<verbatim>
+     <?plugin AddComment order||=normal jshide||=0 mode||=show,add noheader||=0 ?>
+</verbatim>
+
+!!Arguments
+__jshide__: |
+  Booléen si les commentaires et/ou le texte doivent être initialement cachés
+  et développés par un clique. Par défaut : 0
+__order__:  |
+  Affiche les commentaires dans l'ordre chronologique (order=normal) ou inverse (order=reverse)
+__mode__:  |
+  Ajouter et/ou montrer. Défaut : add,show
+__noheader__:  |
+  Booléen si le titre "Commentaires" au format h2 doit être omis. Par défaut : 0
+__pagename__:  |
+  Attacher à quelle page ? Par défaut : la page courante.
+
+!!Avertissements
+
+jshide pas vraiment bien testé.
+
+!!Exemples
+
+<?plugin AddComment jshide||=1 ?>
+
+----
+
+PluginWiki

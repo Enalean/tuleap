@@ -1,0 +1,17 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+
+$message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
+. "to confirm your registration you must visit the following url: \n\n"
+. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+. "Enjoy the site.\n\n"
+. " -- The ".$GLOBALS['sys_name']." Team\n";
+
+?>

@@ -1,0 +1,168 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="ProjectSummary">
+    <title>Project Summary</title>
+
+    <para>The Project Summary page is the entry point of a CodeX hosted
+    project. And, for any project, it is the only page you need to know about.
+    From this page both ordinary registered users and project
+    members/administrators can access all project resources and services.
+    Unlike the Project Administration page (see <xref
+    linkend="ProjectAdministration" />), the Project Summary page is public
+    and can be visited by any CodeX user including anonymous ones. In some
+    sense the Project Summary page displays the public face of a project.</para>
+
+    <section id="AccessingAProjectSummaryPage">
+      <title>Accessing a Project Summary Page</title>
+
+      <para>For project members, accessing the Project Summary page of one of
+      their projects is pretty easy: go to your Personal Page and click on the
+      appropriate project name.</para>
+
+      <para>For registered users there are several ways by which you can
+      access the Project Summary page of a CodeX hosted project:</para>
+
+      <procedure>
+        <step>
+          <para>You can use the search box and look for a project name that
+          you know of</para>
+        </step>
+
+        <step>
+          <para>You can explore the Software Map if you know where the project
+          is</para>
+        </step>
+
+        <step>
+          <para>You can click on the Project name if it appears on the CodeX
+          Site statistics on the right hand side of the CodeX home page</para>
+        </step>
+
+        <step>
+          <para>And finally you can type the Web URL to access the project
+          page. All projects can be accessed at:</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
+</programlisting>
+        </step>
+      </procedure>
+
+      <para>If your are thinking of visiting the Project Summary of a project
+      on a regular basis we strongly advise you to bookmark it in your
+      Personal Page the first time you access the page by using the
+      &#34;Bookmark This Page&#34; link in the CodeX Main Menu. (see <xref
+      linkend="LoginAndPersonalPage" />)</para>
+
+      <tip>
+        <title>The Project Summary Page is not the Project Home Page!</title>
+
+        <para>The Project Home Page is not the same as the Project Summary
+        Page. The Project Summary Page is an overview of all the software
+        related activities and deliverables but it is not a substitute for a
+        real Web Site where you describe what the project is about, related
+        links and resources, etc. CodeX also offers a Web Site to each
+        project. The &#34;Home Page&#34; item in the Project Main Menu is
+        precisely a pointer to this Web Site (see <xref
+        linkend="ProjectWebSite" /> for more information on your Project Web
+        Site and how to use it).</para>
+      </tip>
+
+      <para></para>
+
+      <para></para>
+
+      <para></para>
+      <para></para>
+    </section>
+
+    <section id="ProjectSummaryPageContent">
+      <title>Project Summary Page Content</title>
+
+      <para>A sample Project Summary page is available in <xref
+      linkend="FigureASampleProjectSummaryPage" />. The page is split in
+      several areas:</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Project Main Menu</emphasis>: is at the
+          top of the page right below the Project name. The Project Main Menu
+          is a recap of all the services available for a given project. As you
+          browse the various services and resources of a given project this
+          menu will always be visible.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Short Description and Categorization</emphasis>:
+          already described before. Next to the short description is a pointer
+          to a longer description and to additional information provided by
+          the creator of the project.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Project members and Administrators</emphasis>:
+          are listed in the upper right corner of the page. A click on a name
+          will direct you to the user page where you can learn more about the
+          CodeX user and send him/her an e-mail.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Latest File Release</emphasis>: show the
+          list of most recent packages available for download along with their
+          revision. A Release Notes icon (<inlinemediaobject><imageobject><imagedata
+          format="PNG" fileref="../../icons/manual16c.png" /></imageobject></inlinemediaobject>)
+          allows you to see the latest changes and developers comments
+          associated with this revision. Then comes the monitor icon (<inlinemediaobject><imageobject><imagedata
+          format="PNG" fileref="../../icons/mail16d.png" /></imageobject></inlinemediaobject>).
+          Selecting this icon will cause this package to be monitored for you.
+          Anytime the project development team posts a new release, you will
+          be automatically notified via e-mail. All monitored File Releases
+          are listed in your Personal Page and can be cancelled from this
+          page.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Public Areas</emphasis>: this is an
+          iconic list of all available services for this project along with
+          some information next to it. Click on any of this item to access a
+          service. The role of this area is pretty much equivalent to the
+          Project Main Menu at the top of the screen except that it shows
+          additional information about each of the service (e.g. total number
+          of open bugs, tasks, ...)</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Latest News</emphasis>: the last 10
+          pieces of news posted by the project members. Some of this news
+          might also be visible on the CodeX front page if the CodeX Team
+          decided that it was worth a site announcement.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigureASampleProjectSummaryPage">
+        <title>A sample Project Summary Page</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG" fileref="../../screenshots/en_US/sc_projectsummarypage.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+      </figure>
+    </section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

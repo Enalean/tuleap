@@ -1,0 +1,130 @@
+<!-- -*-html-*- -->
+<!-- $Id: editpage.tmpl,v 1.57 2005/05/06 17:53:20 rurban Exp $ -->
+<?php if (isset($PREVIEW_CONTENT)) { ?>
+  <p><strong><?=_("Preview only!  Changes not saved.")?></strong>
+<!-- FIXME: it would be nice to put a link to the #editarea anchor below,
+     but it does not work currently with the <base> declared in top.tmpl.
+     I think we need to do away with using <base> altogether... -->
+     <?= fmt("Please continue editing.  (You'll find your %s at the bottom of the page.)",
+          /* HTML::a(array("href" => "#editarea"), */ _("edit area") /*)  */) ?>
+  </p>
+  <hr class="printer" noshade="noshade" />
+  <?= $PREVIEW_CONTENT ?>
+  <hr class="printer" noshade="noshade" />
+<?php } ?>
+
+<?= $PAGE_LOCKED_MESSAGE ?>
+<?= $CONCURRENT_UPDATE_MESSAGE ?>
+
+<?php if (! $IS_CURRENT) { ?>
+  <p><strong><?=_("Warning: You are editing an old revision.")?>
+        <?=_("Saving this page will overwrite the current version.")?></strong></p>
+<?php } ?>
+<?php /*
+ * FIXME: Hack! 
+ * The funky URL used for the form action parameter is bogus.
+ * This is needed, otherwise the redirect to the real browser
+ * page won't work with some browsers. (NS4 and Mozilla 0.97 won't accept
+ * a redirect from a page to itself.)
+ */ ?>
+<form method="post" id="editpage" name="editpage"
+      action="<?= $request->getPostURL() ?>"
+      accept-charset="<?=CHARSET?>">
+  <?php if (!empty($_GET['start_debug'])) echo '<input type="hidden" name="start_debug" value="1" >'; ?>
+  <?php /* To clear beyond a larger logo, such as in the Hawaiian theme */ ?>
+  <br clear="all" class="clear-floats" />
+  <table width="100%">
+    <tr><td><?= $EDIT_TOOLBAR ?></td>
+        <td align="right"><div id="editarea-size">
+    <?=_("Size").':'?>
+    <label for="pref[editHeight]"><b><?=_("H")?></b></label> <?=$HEIGHT_PREF?> 
+    <label for="pref[editWidth]"><b><?=_("W")?></b></label> <?=$WIDTH_PREF?>
+    <noscript><?=Button("submit:", _("Adjust"), 'wikiaction')?></noscript>
+  </div></td></tr></table>
+  <a name="editarea"></a><?=$EDIT_TEXTAREA?>
+<!-- FIXME: fix layout, move CSS to CSS -->
+<div class="toolbar" style="text-align: center;">
+  <label for="edit[summary]"><?=_("Summary").':'?></label> <?=$SUMMARY_INPUT?>
+</div>
+<?php if (ENABLE_CAPTCHA) { ?>
+<div class="toolbar" style="text-align: center;">
+  <?php echo $CAPTCHA_IMAGE ?><br/>
+  <?php echo $CAPTCHA_LABEL ?><?= $CAPTCHA_INPUT ?>
+</div> 
+<?php } ?>
+<table summary="Toolbar: Page editing options." class="toolbar" width="100%"
+       cellpadding="0" cellspacing="0" border="0">
+<tr valign="middle">
+  <td> 
+    <?=$MINOR_EDIT_CB ?> <label for="edit[minor_edit]"><?=_("This is a minor change.")?></label><br />
+    <?=$OLD_MARKUP_CB?>  <label for="useOldMarkup"><?=_("Use old markup")?></label> <?=$OLD_MARKUP_CONVERT?>
+  </td>
+  <td align="center">
+    <?= $PREVIEW_B ?>
+    <?php if ($SAVE_B)  { ?> 
+      <?=$SEP?><?= $SAVE_B ?>
+    <?php } ?>
+  </td>
+  <td>&nbsp; <?=$AUTHOR_MESSAGE?></td>
+</tr>
+<tr>
+  <td>
+    <?php if ($user->isAdmin()) { ?> 
+    <?= $LOCKED_CB ?> <label for="edit[lock]"><?=_("Locked")?></label>
+    <?php } ?>
+  </td>
+  <td colspan="2" align="right">
+    <?php if (!$user->isAuthenticated()) { ?>
+    <?= Template('signin', array('FORMNAME' => 'editpage')) ?>
+    <?php } ?>
+  </td>
+</tr>
+<?php if (0) {
+// Not yet supported within the same request. 
+// Better use a button to the external UpLoad page. 
+// Or fix action=edit to handle the uploaded filename within the same request.
+?>
+<tr>
+  <td colspan="3"><?plugin UpLoad ?></td>
+</tr>
+<?php } ?>
+</table>
+
+<hr noshade="noshade" />
+
+<script language="JavaScript1.3" type="text/javascript">
+<!--
+function showOldMarkupRules(show) {
+  if (document.getElementById) {
+    if (!show) {
+      document.getElementById('newMarkup').style.display="block";
+      document.getElementById('oldMarkup').style.display="none";
+    } else {
+      document.getElementById('newMarkup').style.display="none";
+      document.getElementById('oldMarkup').style.display="block";
+    }
+  }
+}
+// -->
+</script>
+
+<div id="oldMarkup" class="wiki-edithelp">
+<!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
+<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
+<?plugin IncludePage page=_("OldTextFormattingRules") section=_("Synopsis") quiet=1?>
+</div>
+<div id="newMarkup" class="wiki-edithelp">
+<!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
+<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
+<?plugin IncludePage page=_("TextFormattingRules") section=_("Synopsis") quiet=1?>
+</div>
+<?=$HIDDEN_INPUTS?>
+</form>
+
+<script language="JavaScript1.3" type="text/javascript">
+<!--
+if (document.getElementById) {
+  showOldMarkupRules(document.getElementById('useOldMarkup').checked);
+}
+// -->
+</script>

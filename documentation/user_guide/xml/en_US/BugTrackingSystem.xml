@@ -1,0 +1,1981 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+      
+<chapter id="BugTrackingSystem">
+  <title>Bug Tracking System (deprecated)</title>
+
+  <para><tip><title>** The Bug Tracking System is DEPRECATED
+  **</title> <para>In CodeX version 1.7 and above, the Bug Tracking
+  System has been discontinued. It is now replaced by the CodeX
+  Tracker Service (see <xref linkend="TrackerService"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Bug Tracking System.</para></tip></para>
+
+  <para>The CodeX Bug Tracking System (BTS) is one of the most powerful
+    services offered to CodeX hosted projects. It is also one of the most
+    popular along with CVS, the default Version Control System offered on
+    CodeX. The CodeX BTS has been improved over time based on the constant
+    flow of feedback received from CodeX users and we think that it is now on
+    the par with many expensive commercial products.</para>
+
+  <para>In improving the CodeX BTS, the CodeX Team also tried to maintain a
+    fair balance between sophistication and ease of use. As a consequence, a
+    fairly simple and straightforward BTS is configured by default for all new
+    hosted projects. Then it is up to the project members to decide how much
+    information they want to see attached to a bug and modify their BTS
+    configuration accordingly. The BTS Administration module is here to help
+    in this respect.</para>
+
+  <section id="CodeXBTSPrinciples">
+    <title>CodeX BTS Principles</title>
+
+    <para>Before we enter into the bug submission process by itself
+      let&#39;s spend some time on some of the CodeX basic principles. CodeX
+      is about source code sharing. It also has as an objective to make it
+      easy for anybody in the Corporation to contribute something to software
+      development projects. Contributions are diverse: it can be feedback from
+      integrators or end-customers, it can be (localized) documentation or
+      patches but it can also be bug reports.</para>
+
+    <para>One of the golden rules in a source code-sharing environment is to
+      display your code to make your community of users grow and have as large
+      as possible a beta-tester community. In order for this community to work
+      efficiently they must be free to submit bugs to any project. And this is
+      the CodeX philosophy: bug submission is open to all users and it is up
+      to the project team (also known as the Core Team) to decide what to do
+      with this bug.</para>
+
+    <para>This is a pervasive principle throughout CodeX. Patches and
+      documentation contribution follows exactly the same principle: the
+      community has the freedom to contribute, the Core Team then decide what
+      to do with the contributions.</para>
+
+    <para>The term bug typically refers to a problem, or something that
+      doesn&#39;t work as expected. The BTS was developed with this in mind.
+      However, many projects have decided to use the BTS for not only
+      reporting and managing bugs, but also for reporting and managing
+      requests to enhance the code or even requirements management. The BTS
+      works nicely in all cases.</para>
+  </section>
+
+  <section id="BugSubmission">
+    <title>Bug Submission</title>
+
+    <para>To submit a bug report to a given project, first go to the Project
+      Summary page (see <xref linkend="AccessingAProjectSummaryPage" />) and
+      then select either the &#34;Bugs&#34; item from the Project Main Menu in
+      the upper part of the page or the &#34;Bug Tracking System&#34; item
+      from the Public Area.</para>
+
+    <para>From there you enter the project BTS and the first screen you are
+      faced with is the bug selection and browsing screen (more about this
+      facility in <xref linkend="BugBrowsing" />). For now let&#39;s click on
+      the &#34;Submit a Bug&#34; item from the BTS Menu Bar in the upper part
+      of the welcome screen (see <xref
+				       linkend="FigureASampleBugTrackingSystemWelcomeScreen" />).</para>
+
+    <figure id="BugSubmissionScreenFromTheCodeXProject">
+      <title>Bug submission screen from the CodeX project</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_bugsubmission.png" width="14.5cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para><xref linkend="BugSubmissionScreenFromTheCodeXProject" /> shows a
+      sample submission screen from one of the CodeX hosted projects. Because
+      of the BTS high level of customizability no two bug submission screens
+      look alike. Depending on the project more or less fields may appear on
+      the bug submission form but expect most of them to be close to the one
+      shown on <xref linkend="BugSubmissionScreenFromTheCodeXProject" />.</para>
+
+    <para>In the example provided on <xref
+					   linkend="BugSubmissionScreenFromTheCodeXProject" />, the user is asked
+      to choose a bug Category, a bug Group, a Priority and an Assignee from a
+      series of pull down menus. Then comes a one-line description for the bug
+      and a longer piece of text where you can fully characterize the bug.
+      When submitting a new bug, make the Bug Summary as explicit as possible.
+      Do not use a clueless summary like: &#34;Service X doesn&#39;t work&#34;
+      or &#34;Blocking problem in Document Mgr&#34;. Explain the nature of the
+      bug. Giving an explicit Bug Summary and Description is immensely helpful
+      to the project members in charge of the bug classification and
+      characterization. A unique Bug ID is automatically assigned to the
+      submitted bug.</para>
+
+    <para>Bug submission forms vary from project to project but they also
+      vary according to the citizen class the user belongs to. Depending
+      whether you are a project member or an ordinary registered user the bug
+      field displayed on the screen may differ. As an example, on <xref
+									linkend="BugSubmissionScreenFromTheCodeXProject" />, the bug submitter
+      using the form is probably a project member because giving access to the
+      &#34;Assigned to&#34; field to an ordinary registered user doesn&#39;t
+      make much sense. It is very unlikely that users external to the project
+      team know enough about the project organization to correctly assign the
+      bug. Therefore bug fields shown to project members and registered users
+      on the submission form can be configured in the BTS Administration
+      module (see <xref linkend="BTSAdministration" />)</para>
+
+    <para>In any case don&#39;t forget to click on the &#34;Submit&#34;
+      button when you are finished !</para>
+
+    <para><tip><title>Tip: make sure your bug hasn&#39;t yet been submitted</title><para>About
+      to submit a bug to a CodeX Project? Before you do that, make sure that
+      others haven&#39;t yet submitted a similar bug. To do so you can either
+      browse the bug database through the Bug Selection and Browsing facility
+      or you can use the search box in the CodeX Main Menu and search by
+      keywords.</para></tip></para>
+  </section>
+
+  <section id="BugBrowsing">
+    <title>Bug Browsing</title>
+
+    <para>CodeX provides project members, ordinary registered users and even
+      anonymous users with the ability to browse the bug database according to
+      a variable set of criteria.</para>
+
+    <section id="SelectionCriteria">
+      <title>Selection Criteria</title>
+
+      <para>The upper part of the Bug browsing screen is devoted to the
+        selection criteria. <xref
+				  linkend="FigureASampleBugTrackingSystemWelcomeScreen" /> shows the
+        default set of selection criteria that is available when a new project
+        is created. You can select bugs by Category (the module in which the
+        bug occurred), Group (nature of the bug like Crash, Documentation
+        Typo, ...), Status (e.g. Open, Closed, ...) and Assignee (the person
+        in charge of the bug). Other projects may show more, less or different
+        selection fields depending on the configuration put in place by the
+        project administrators.</para>
+
+      <para>How selection criteria are filled out depend on their field type. The BTS currently has 6 different types of field used as search criteria:</para>
+
+      <section id="BugSelectBoxField">
+	<title>Select Box Field</title>
+
+	<para>A select box field can take its value in a set of
+	predefined values. If you are using the simple search
+	interface only one value can be selected at a time. If you
+	want to select multiple values at once use the Advanced Search
+	facility.</para>
+
+	<para>There might be 2 specific values in the list of choices:
+	'Any' matches any value in the list and 'None' matches the
+	items where no value has been assigned yet</para>
+      </section>
+
+      <section id="BugTextField">
+	<title>Text Field</title> <para>A Text field can contain any
+	kind of text . There are two ways to query an text
+	field:</para>
+
+
+	<itemizedlist mark="bullet" spacing="compact">
+
+	  <listitem>
+	    <para> <emphasis role="underline">Keyword
+	    search</emphasis>: you can type a series of space
+	    separated keywords that will ALL be searched for in the
+	    text field (including as subtring in
+	    words)</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline"></emphasis>Regular
+	    expression: You can also specify a <ulink
+	    url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	    Extended Regular Expression</ulink> as a matching criteria
+	    (mind the surrounding /.../ !)</para>
+
+	    <para>Examples:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para>/^[Aa]ddition/ : matches any text field starting
+		with either 'addition'or 'Addition'</para>
+	      </listitem>
+	      <listitem>
+		<para>/foo|bar|dim/ : matches text fields containing the string 'foo', 'bar' or 'dim'</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	</itemizedlist>
+
+      </section>
+
+      <section id="BugDateField">
+	<title>Date Field</title>
+
+	<para>A date criteria follows the following pattern:
+	YYYY-MM-DD where YYYY is the year number, MM is the month
+	number and DD is the day number.</para>
+
+	<para>Examples: 1999-03-21 is March 21st, 1999, 2002-12-05 is
+	Dec 5th, 2002. </para>
+
+      </section>
+
+      <section id="BugIntegerField">
+	<title>Integer Field</title>
+
+	<para>An integer field can take positive or (possibly)
+	negative values and has no decimal part.</para>
+
+	<para>Examples: 0, 1, +2, -100&hellip;</para>
+
+	<para>There are several ways to query an integer field. Here
+	are the values you can specify in a integer query field:</para>
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Integer</emphasis>: if you type a single integer the field
+	    will be matched against this value (e.g. 610)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &ge; or &le; followed by an integer
+	    the search will look for integer values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120 , &lt; -30)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the 'integer1-integer2' notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. 800 - 900 for integers
+	  between 800 and 900, -45 - 12 for integers between -45 and
+	  +12)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	  Extended Regular Expression</ulink> can also be used as a
+	  matching criteria (e.g. /^4.*8$/ will look for all integer
+	  values starting with a '4', ending with an '8' with any
+	  number of digits in between.</para>
+	  </listitem>
+	  </itemizedlist>
+      </section>
+
+      <section id="BugFloatingPointNumberField">
+	<title>Floating Point Number Field</title><para>A floating
+	point number field can take positive or (possibly) negative
+	values, may have a decimal part or use the exponential
+	notation for large values.. .</para>
+
+	<para>Examples: 0, 1.23, -2.456, 122.45E+12&hellip;</para>
+
+	<para>There are several ways to query an floating point number
+	field. Here are the values you can specify in such a
+	field:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Number</emphasis>: if you type a single number the field
+	    will be matched against this value (e.g. 2.35)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &ge; or &le; followed by a number
+	    the search will look for all values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120.3 , &lt; -3.3456E-2)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the 'number1-number2' notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. -1.2 - 4.5 for integers greater than or equal to -1.2 and lesser than or equal to 4.5)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	  Extended Regular Expression</ulink> can also be usedas a
+	  matching criteria (e.g. /^4.*8$/ will look for all integer
+	  values starting with a '4', ending with an '8' with any
+	  number of characters in between including the decimal point.</para>
+	  </listitem>
+	  </itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="BugQueries">
+      <title>Favorites and Predefined Bug Queries</title>
+
+      <para><tip><title>Tip: save and re-use your bug database query</title><para>If
+        you often run the same bug database query with the same set of
+        selection criteria, it is probably a good idea to save this query for
+        later re-use. To do this: select the appropriate bug report, then
+        choose your search criteria, click on the &#34;Browse&#34; button to
+        run the query. Finally click on the &#34;Bookmark this Page&#34; item
+        in the CodeX Main Menu. A new bookmark will show up in your Personal
+        Page. A click on this bookmark will run the exact same query again.</para></tip></para>
+
+      <para>Your favorite bug queries can be saved via the CodeX
+      bookmark mechanism as explained in the Tip box but there are
+      also shortcuts in the Bug Menu Bar for the most common
+      queries. They are:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Open Bugs</emphasis>: display all the
+            bugs that are not yet closed for this project.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">My Bugs</emphasis>: display the bugs
+            assigned to you (based on the CodeX account you are currently
+            using)</para>
+	</listitem>
+      </itemizedlist>
+
+      <para>Also notice that CodeX always keeps track of the last ran bug
+        query. Next time you enter the bug welcome screen, CodeX will use the
+        same set of selection criteria in the selection boxes and update the
+        bug report accordingly.</para>
+
+      <section id="AdvancedSearchMode">
+	<title>Advanced Search Mode</title>
+
+	<para>At any time during the search phase, you can toggle the search
+          mode from Simple to Advanced and vice-versa (see the Advanced Search
+          link). The Advance Search mode allows you to select multiple values
+          for each selection criteria. Using this mode you could search for
+          both open and suspended bugs assigned to project members A and B.</para>
+      </section>
+    </section>
+
+    <section id="BugSearchResults">
+      <title>Bug Search Results</title> 
+      
+      <para>After you have submitted the bug selection, CodeX runs a
+      query against the bug database, select the matching bugs and
+      displays them right below the selection criteria. Columns
+      displayed in the bug list are entirely configurable by the
+      project team (see <xref linkend="BugReports" />). Therefore, the
+      bug browsing screen might look completely different from the one
+      shown in <xref
+      linkend="FigureASampleBugTrackingSystemWelcomeScreen" />.</para>
+
+      <figure id="FigureASampleBugTrackingSystemWelcomeScreen">
+	<title>A sample Bug Tracking System welcome screen (bug browsing)</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_bugbrowsing.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>Bug priority is color coded, red being the highest
+      priority and gray the lowest (see Priority color coding at the
+      bottom of the screen).  Finally, bugs are listed by chunks of N
+      bugs where N is user-definable. If more than N bugs are
+      retrieved from the bug database you are invited to click on the
+      navigation bar to display the next or previous chunk of
+      bugs.</para>
+
+      <para>To access a given bug from the bug list, simply click on
+      the corresponding &#34;Bug ID&#34; number listed in the first
+      column of the bug list.</para>
+
+      <section id="BugListSorting">
+	<title>Bug List Sorting</title>
+
+	<para>By default, bugs are sorted by Bug ID which happens to
+	be the chronological order in which bugs have been
+	submitted.</para>
+
+	<para>The bug list can be sorted by any of the columns
+	displayed on the screen by clicking on the column
+	heading. Clicking twice on the same heading reverses the sort
+	order from ascending to descending and vice-versa.  The
+	sorting direction is shown by a small up or down arrow next to
+	the sort criteria right above the bug list. One exception to
+	this rule is for sorting by Priority. Priority being shown as
+	such but as a color code, there is a special link at the
+	bottom of the screen to sort the bug list by Priority.</para>
+
+	<para>For more sophisticated processing you can also activate
+	the multi-column sort.  In this mode sort criteria cumulates
+	as you click on column headings.  So you can for instance
+	click 'Severity' first and 'Assigned To' second to see who in
+	the team is assigned critical bugs and how many.At any point
+	in the multi-column sort process, a click on one of the sort
+	criteria displayed in the list (criteria 1 > criteria 2 >
+	criteria 3...)  will bring you backward in the sort criteria
+	list. Using this feature you can easily test various sorting
+	strategies.</para>
+
+	<note><para>Note:Sorting criteria, like selection criteria,
+	are also saved into your preferences and the same sorting
+	criterion is re-used in subsequent bug queries.</para></note>
+
+	<para><tip><title>Tip: keep an eye on unassigned
+	bugs</title><para>In most cases when a bug is submitted by a
+	person external to the project team, the bug assignee is given
+	the value &#34;None&#34;. In other words the bug has been
+	submitted but it is awaiting an assignment by the project
+	member in charge of the bug dispatch. Since nobody is in
+	charge, the bug can be completely overlooked by the project
+	team. Two solutions can help with this problem: 1) Use a an
+	e-mail address where all new submissions are sent (see <xref
+	linkend="BugReportManagement" />) and/or 2) Assign somebody in
+	the team the responsibility to run a bug query once or twice a
+	day to collect the bugs which Assignee field is &#34;None&#34;
+	and give him/her the responsibility to assign the
+	bugs.</para></tip></para>
+
+      </section>
+
+
+      <section id="PrinterFriendlyVersion">
+	<title>Printer Friendly Version</title>
+
+	<para>At any point in the process of browsing the bug database
+	you can click on the &#34;Printer Version&#34; link to display
+	a simplified and non-decorated bug list that will print
+	nicely. For better readability we strongly advise you to print
+	the bug list in landscape format.</para>
+      </section>
+
+      <section id="BugReports">
+	<title>Bug Reports</title>
+
+	<para>Bug reports allows for the definition of a specific
+	layout of the bug browsing screen where one can choose the
+	selection criteria and the columns used in the bug matching
+	list. Depending on the project, users may enjoy the ability to
+	choose from several bug reports by using the upper pull-down
+	menu of the bug browsing screen. If no project or user
+	specific bug report has been defined, the CodeX
+	&#39;Default&#39; report is the only one available.</para>
+
+	<para>Project members and project administrators can define
+	their own bug report either for personal use or for
+	project-wide use. See <xref linkend="BugReportManagement" />
+	for more details on managing bug reports.</para>	
+      </section>
+
+    </section>
+   
+  </section>
+  
+  <section id="BugUpdate">
+    <title>Bug Update</title>
+
+    <para>Once you have selected a given bug from the bug report generated
+      by the Bug Browsing module a new screen appears showing all of the bug
+      details. If you are a member of the project the bug belongs to, the
+      detailed view is made of text fields and menus that you can update with
+      new values. On the other hand, if you are an anonymous user or a
+      registered user that does not belong to the project team, all the fields
+      will appear as immutable text. Non-project members cannot edit any of
+      the bug fields. They can only submit a follow-up comment to a bug.</para>
+
+    <para>All the screen shots used in this section assume that the CodeX
+      user is part of the project team. For non-project members the screen
+      layout is basically the same but the information shown on the screen
+      cannot be changed.</para>
+
+    <para>The Bug Update screen is divided in several parts: <emphasis role="bold">Headers,
+      Comments, CC List, Bug Attachments, Dependencies and History.</emphasis></para>
+
+    <section id="BugHeaders">
+      <title>Headers</title>
+
+      <para>This is where you&#39;ll find all the bug fields associated with
+        a bug description. As shown on <xref
+					     linkend="FigureHeaderOfBugUpdateScreen" />, many of these fields are
+        assigned a set of predefined values (Status, Category, Resolution)
+        while some others have a number format (Effort) or a free text format
+        (Summary). The set of fields used in your project BTS, as well as the
+        related set of predefined values can be configured by project members
+        with appropriate permissions. (see <xref linkend="BTSAdministration" />
+        for more details on the BTS configuration)</para>
+
+      <figure id="FigureHeaderOfBugUpdateScreen">
+	<title>Header of Bug Update screen (bug fields)</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_bugupdateheader.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="BugComments">
+      <title>Comments</title>
+
+      <para>As many follow-up comments as needed can be attached to any
+        given bug. Follow-up comments are free text fields where virtually any
+        kind of information or comment can be typed in. The &#34;Original
+        Submission&#34; field filled out by the bug submitter can actually be
+        considered as the first follow-up comment in a bug life.</para>
+
+      <para>Follow-up comments have two interesting extensions:</para>
+
+      <itemizedlist mark="bullet">
+	<listitem>
+	  <para><emphasis role="bold">Canned Response</emphasis>: It is not
+            infrequent to see the project members in charge of the bug
+            classification and dispatch process to post the same follow-up
+            comments again and again. Typical examples of repeatedly posted
+            comments are: a thank you message to the originator, a request for
+            the originator to provide commonly missing information like
+            version numbers or type of machine used, etc. Rather than typing
+            the same comments all the time, CodeX allows project members to
+            create a predefined set of responses. After these canned responses
+            have been defined, posting a follow-up comment is just a matter of
+            selecting the appropriate response from the pull down menu and
+            submitting the changes. Defining a new Canned Response can be done
+            on the fly from the bug submission form by clicking on the
+            &#34;define a new Canned Response&#34; link</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Comment Types</emphasis>: In order to
+            avoid the exponential growth of new bug fields to store all sorts
+            of free text information, CodeX offers an interesting mechanism
+            called Comment Types. The project team has the ability to define a
+            list of labels that can then be used to categorize the nature of a
+            follow-up comment. This is a very helpful feature to characterize
+            the nature of the information contained in a follow-up comment and
+            to quickly identify these comments in the long list of follow-up
+            comments. Typical examples of such comment types are
+            &#34;Workaround&#34; for a comment where you explain how to work
+            around a bug, &#34;Impacted Files&#34; to give the list of source
+            files impacted by the bug resolution, &#34;Test case&#34; to
+            document how to test the code in the future to make sure that this
+            case will be tested in the future test suite, etc. Comment types
+            are defined in the Bug Administration module (see <xref
+								    linkend="BTSAdministration" />)</para>
+	</listitem>
+      </itemizedlist>
+
+
+      <figure id="FigureFollowupCommentsAttachedToABug">
+	<title>Follow-up comments attached to a bug</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_bugupdatecomments.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      
+    </section>
+
+    <section id="BugCCList">
+      <title>CC List</title>
+
+      <para>As explained later in this chapter (see <xref
+      linkend="BugEmailNotification" />) the CodeX BTS offers a powerful
+      email notification system for those users who, at some point,
+      were involved in the life of the bug whether as a submitter, an
+      assignee or as a person who posted a follow-up comment
+      (commenter).</para>
+
+      <para>Sometimes it is however useful to involve other people in
+      the email notification process even if they did not play an
+      explicit role in the bug so far. For instance, you may want a QA
+      contact or the originator of the bug when different from the
+      submitter to receive a carbon-copy (CC) of the email
+      notifications. This is precisely what the CC List is intended
+      for. Inserting CC names in the CC list will allow these people
+      to receive bug updates for this specific bug.</para>
+
+      <section id="BugCCNames">
+        <title>CC Names</title>
+
+        <para>The CC names can be either email addresses or a
+        CodeX login name if the user has a CodeX account.</para>
+
+        <itemizedlist mark="bullet">
+	  <listitem>
+            <para><emphasis role="bold">CodeX login name</emphasis>:
+            when the person you want involve in the notification
+            process has a CodeX account use it in place of her email
+            address. Using the CodeX login name give to the recipient
+            the ability to customize the kind of bug update events she
+            wants to receive. For more information on how to customize
+            notification preferences for a given project see <xref
+            linkend="BugEmailNotificationSettings" />.</para>
+          </listitem>
+          <listitem>
+            <para><emphasis role="bold">Email Address</emphasis>:
+            there is no restriction on the type of email address you
+            can type. It can either individuals or mailing list - see
+            <xref linkend="MailingLists" />. Unlike CC names entered
+            as login names, CC names added in the form of email
+            addresses have no customization capabilities and 
+            receive all bug updates.</para>
+          </listitem>
+	</itemizedlist>
+
+      </section>
+
+      <section id="BugAddingDeletingCCNames">
+        <title>Adding and Deleting CC Names</title>
+
+        <para>Several CC names can be added at once by separating them
+        with commas in the 'Add CC' field. Using the comment field,
+        one can also explain why these CC names were added and/or who
+        they are.</para>
+
+        <para>CC names addition and deletion is subject to a number of
+        permission rules:</para>
+
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>Adding a CC name: Anonymous users cannot add CC
+            names. Any other CodeX user who is logged in can add CC
+            names and the CC list will clearly show who added this
+            entry and when.</para>
+          </listitem>
+          <listitem>
+            <para>Deleting a CC name: users with Bug Administrator
+            permissions in a given project (see <xref
+            linkend="UserPermissions" />) can delete any entry in
+            the CC list for any bug of this project. All other users
+            can delete CC entries that were either added by themselves
+            or entries where the CC name matches their own name or
+            email address in any CodeX projects. In other words a
+            CodeX user has the right to undo what she has done or
+            remove herself from a CC list in any project. </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+    </section>
+
+    <section id="BugAttachments">
+      <title>Bug Attachments</title>
+
+      <para>In addition to comments, the CodeX Bug Tracking System
+      allows you to attach virtually any piece of information to a bug
+      in the form of a file. Typical examples of bug attachments are
+      application screen shots in PNG, GIF, JPEG or whatever image
+      format is appropriate; it can also be core dumps, a binary image
+      of program that crashed or even a simple text file showing a
+      stack trace or an error message.</para>
+
+      <para>Bug attachments can be of any type (image, video, sound,
+      text, binary&hellip;) and a comment field can be optionally used
+      to annotate the attachment. The maximum size of a file is 512
+      KByte.</para>
+    </section>
+
+    <section id="BugDependencies">
+      <title>Bug Dependencies</title>
+
+      <para>The next section on the bug update screen deals with bug
+      dependencies (see <xref linkend="FigureBugDependencies"
+      />). CodeX users have the ability to establish a dependency link
+      from a bug to one or several other bugs or from a bug to one or
+      several other tasks of the same project.</para>
+
+      <para>The CodeX system does not impose any semantic on the
+      nature of these dependency links. However the following meanings
+      are commonly accepted and used by the CodeX community for
+      dependency links:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>When a bug is closed with Resolution field set to
+            &#34;Duplicate&#34; then a bug-to-bug dependency for this bug
+            means the bugs it depends on is considered as the &#34;master&#34;
+            bug by the project members. All other bug submissions that are
+            actually a duplicate of this master will be made dependent on the
+            master bug (probably the first one that was submitted)</para>
+	</listitem>
+
+	<listitem>
+	  <para>In all other cases a bug-to-bug dependency link means that a
+            bug cannot be resolved as long as the bug it depends on is not
+            resolved itself.</para>
+	</listitem>
+
+	<listitem>
+	  <para>A bug-to-task dependency means that a task has been created
+            to cover or encompass the work required to resolve the bug.
+            Creating a task to fix a bug generally happens when the bug fix
+            implies a major rework or because the work that is being done in
+            the related task will resolve the bug as a side effect.</para>
+
+	  <figure id="FigureBugDependencies">
+	    <title>Bug Dependencies</title>
+
+	    <mediaobject>
+	      <imageobject>
+		<imagedata format="PNG"
+			   fileref="../../screenshots/en_US/sc_bugupdatedependencies.png" width="15.3cm" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+	</listitem>
+      </itemizedlist>
+
+      <para>To create a bug-to-bug or task-to-task dependency, click on the
+        corresponding bugs and tasks listed in the &#34;Dependent on Bug&#34;
+        and &#34;Dependent on Task&#34; list boxes. To delete a bug or task
+        dependency simply unselect the appropriate bug or task from the same
+        list boxes and validate the changes by clicking on the &#34;Submit
+        Changes&#34; button either at the top or at the bottom of the screen</para>
+
+      <para>The dependency section shows the bug-to-bug dependencies in both
+        ways (cross-reference): it shows the list of bug(s) the displayed bug
+        depends on but also the list of bugs that depend upon the displayed
+        bug.</para>
+    </section>
+
+    <section id="BugHistory">
+      <title>Bug History</title>
+
+      <para>The last part of the bug update screen is devoted to bug state
+        history (see <xref linkend="FigureBugHistory" />). Thanks to this
+        section you can review the entire history of a bug. The bug history
+        keeps track of all the changes that occurred on all bug fields since
+        the bug creation.</para>
+
+      <para>The bug history shows what fields changed, what was the old
+        value before the change took place, who changed it and when. Since the
+        bug history only shows the old value of a bug field it requires a bit
+        of exercise to determine what the new value was right after the change
+        took place. Let&#39;s take an example: assuming that the current value
+        of the Priority field for the bug displayed in <xref
+							     linkend="FigureBugHistory" /> is currently &#34;9-Major&#34;, by
+        reading the history list from the top you can say that the current
+        value of 9 was given on March 15th, 2001 at 9am by L. Julliard and the
+        previous Priority level was &#34;3&#34;. Looking further down in the
+        history list, the value &#34;3&#34; was given to the Priority field on
+        March 15th, 2001 at 5:35am and before that date it was at level
+        &#34;5&#34;. And since there is no other Priority item in the history
+        list you can safely assume that &#34;5&#34; was the Priority value
+        assigned to the bug when it was first created.</para>
+
+      <figure id="FigureBugHistory">
+	<title>Bug History</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_bughistory.png" width="13.5cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="BugCreateTask">
+      <title>Deriving a New Task from a Bug</title>
+
+      <para>When a bug submitted to a project happens to be a big work
+      to fix it is not unusual to create a new task in the CodeX Task
+      Manager to plan and track this work.</para>
+
+      <para>CodeX makes it very easy to derive a new task from an
+      existing bug. Just click on the 'Create Task' item in the CodeX
+      BTS menu bar at the top of the screen. A new task form will show
+      up with  some fields  pre-filled with values derived from
+      the bug form. You can then modify the proposed values, and
+      validate the new task.</para>
+    </section>
+    
+  </section>
+
+  <section id="BugEmailNotification">
+    <title>E-mail Notification</title>
+
+    <para>The CodeX BTS is equipped with a powerful and flexible
+    e-mail notification system. Unless otherwise instructed by the
+    project administrators or the users themselves, the e-mail
+    notification system follows simple default rules. Whenever a bug
+    is created or updated - whether with an additional follow-up
+    comment, a new attachment or a change in any of the bug fields -
+    an e-mail message is sent to the following actors:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+	<para>The bug submitter (the person who initially submitted the bug)</para>
+      </listitem>
+
+      <listitem>
+	<para>The bug assignee (the project member to whom the bug is
+          currently assigned)</para>
+      </listitem>
+
+      <listitem>
+	<para>The people on the CC list if any (the persons who are
+	listed in the CC list of a given bug)</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Beside these simple rules, the Administration module of the
+    CodeX BTS allows CodeX users to customize the email notification
+    process. For further information see <xref
+    linkend="BugEmailNotificationSettings" />). </para>
+
+    <para>The e-mail message generated by the BTS first shows the most
+    recent changes that occurred on the bug if this is a bug update. It
+    is then followed by a complete snapshot of the bug. Web pointers
+    are also included in the message to quickly and easily access the
+    bug form on CodeX.</para>
+
+  </section>
+
+  <section id="BugReporting">
+    <title>Bug reporting</title>
+
+    <para>As explained earlier in this document (<xref
+						       linkend="ProjectDataExport" />), CodeX can export your project data
+      outside of the CodeX system for re-use in another tool or document.
+      However for simple statistics, you can also use the Bug Reporting
+      module. This function can be accessed from the Bug Menu Bar via the item
+      &#34;Reporting&#34;.</para>
+
+    <figure id="FigureValueDistributionOfTheBugCategoryFieldForTheCodeXProject">
+      <title>Value distribution of the Bug Category field for the CodeX
+        project</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_bugreporting.png" width="13cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The Bug reporting mechanism allows you to see how your project
+      bugs (open only or all of them) are distributed across the set of
+      predefined values used in the various pull-down menu fields. For
+      instance you might want to see how your bugs are distributed across the
+      possible status, category or resolution values (see <xref
+								linkend="FigureValueDistributionOfTheBugCategoryFieldForTheCodeXProject" />
+      for an example of how the bugs of the CodeX project are distributed
+      across the various CodeX modules also known as the Bug Category field).</para>
+  </section>
+
+  <section id="BTSAdministration">
+    <title>BTS Administration</title>
+
+    <para>As we went through the description of the CodeX BTS features, we
+      referred several times to the flexibility of this system and how easy it
+      is to customize your own project Bug Tracking System. The BTS
+      Administration is accessible by clicking on the item &#34;Admin&#34; in
+      the Bug Menu bar.</para>
+
+    <para>Depending on your level of permissions you'll be given
+    access to various parts of the BTS Administration module. Access
+    permissions are summarized in the table below:</para>
+
+
+       <table frame="all">
+          <title>BTS Administration Access Levels</title>
+          <tgroup cols="2">
+            <colspec colname="c1" colwidth="200pt" />
+
+            <colspec colname="c2" colwidth="250pt"  />
+
+            <thead>
+              <row>
+                <entry>BTS Administration Sub-modules</entry>
+                <entry>Access Permission</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+	    <entry><link linkend="BugFieldUsageManagement">Field Usage Management</link></entry>
+                <entry>Only available to project administrators and
+                project members with Bug Admin. permission on the
+                BTS.</entry>
+              </row>
+
+              <row>
+                <entry><link linkend="BugFieldValuesManagement">Field Values Management</link></entry>
+                <entry>Same as above.</entry>
+              </row>
+
+              <row>
+                <entry><link linkend="BugReports">Bug Reports</link></entry>
+
+	        <entry>Only Project administrators can define project
+	        wide bug reports that will be available to
+	        all users. All other CodeX users (except anonymous
+	        users) can define personal bug reports.</entry>
+              </row>
+
+              <row>
+                <entry><link linkend="BugEmailNotificationSettings">Email Notification Settings</link></entry>
+
+	        <entry>Only Project administrators can add email
+	        addresses in the global email notification
+	        field. Project members must at least have Bug
+	        Tech. permission on the BTS to watch bugs of other
+	        team members. Any registered CodeX user can customize
+	        her notification preferences.</entry>
+              </row>
+
+              <row>
+                <entry><link linkend="BugOtherConfigurationSettings">Other Configuration Settings</link></entry>
+
+	        <entry>For project administrators and project members
+	        with Bug Admin. permission on the BTS</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+
+
+    <section id="BugFieldUsageManagement">
+      <title>Field Usage Management</title>
+
+      <para>When a project is first created, its bug tracking system
+      comes pre-configured with a set of bug fields
+      that are probably enough for the majority of projects hosted on
+      CodeX. However CodeX has a much longer list of bug fields
+      available for use in your own project BTS. Conversely you can
+      also decide that the default BTS comes with too many fields and
+      you can remove fields from your project BTS and make it even
+      simpler.</para>
+
+      <para>The CodeX Bug Tracker offers a list of about 30 fields
+      that you can choose from to customize your project BTS. They are
+      called 'Standard Fields'. Although the list of standard fields
+      is quite rich, there might still be cases when one would like to
+      use other fields in their own bug tracker. Should this happen,
+      there are two ways to solve the problem:</para>
+
+      <procedure>
+	<step>
+	  <para><emphasis role="bold">Ask the Site
+	Administrator</emphasis>: if you think that the missing field
+	is not specific to your project and should be part of a good
+	bug tracking system, then we urge you to contact the CodeX
+	Site Administrators and ask them to create the new field. By
+	doing so CodeX will over time offer a richer and more
+	pertinent set of standard fields.</para>
+	</step>
+	
+	<step>
+	  <para><emphasis role="bold">Use the Custom
+	Fields</emphasis>: in addition to the list of standard fields,
+	CodeX offers 'Custom fields'. These are generic fields
+	(either text, date or select box fields) that can be entirely
+	customized by the project team. If the fields you are thinking
+	of adding are really specific to your project then you should
+	definitely use the custom fields.</para>
+	</step>
+      </procedure>
+
+
+      <section id="BugFieldList">
+	<title>Bug Field List</title>
+
+	<para>To decide what field to use and what field not to use
+	select the item &#34;Manage Field Usage&#34; on the welcome
+	page of the BTS Administration module. The Field Usage screen
+	(<xref linkend="FigureBugFieldUsageScreenOfACodeXHostedProject"
+	/>) shows you the full list of bug fields available on
+	CodeX. The list is divided in 3 parts:</para>
+
+	<procedure>
+	  <step>
+	    <para>the list of bug fields currently used by this
+	specific project</para>
+	  </step>
+	  
+	  <step>
+	    <para>the list of unused standard fields</para>
+	  </step>
+	  
+	  <step>
+	    <para>the list of unused custom fields</para>
+	  </step>
+	</procedure>
+
+
+	<para>Information displayed on the Bug Field list page are as follows:</para>
+
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field.  To change the Status of a field
+	    (Used/Unused) as well as other parameters simply click on
+	    the field name.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Type</emphasis>:bug fields can be of several types:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Select
+		Box</emphasis>: this field will take its value from a
+		predefined list of values that can be defined by the
+		Project Adminstrator</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Text Field</emphasis>
+		and <emphasis role="underline">Text Area</emphasis>:
+		allows the user to enter free text either in a
+		one-line text field or in a multi-line text
+		area.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Date Field</emphasis>:
+		fields that only accept ISO formatted dates (YYYY-MM-DD)</para>
+	      </listitem>
+	      
+	    </itemizedlist>
+
+	    <para><emphasis role="bold">Important
+	    Remark</emphasis>: Some fields appear twice in the
+	    list. Although they have the same name they actually come
+	    with a different type. Choose the type that best suits
+	    your needs: predefined values ('Select Box') or free text
+	    ('Text Field').</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Rank on Screen</emphasis>: the
+	    rank number allows you to place the field with respect to
+	    the others both in the bug submission form and in the bug
+	    update form. The fields with smaller values will appear
+	    first on the screen. The rank values doesn't have to be
+	    consecutive values. It is a good idea to use values like
+	    10,20,30,... so that it is easy for you to insert new
+	    fields in the future without having to renumber all the
+	    fields.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">System</emphasis>:
+		these fields have a limited level of
+		customization. System fields of type 'Select Box' have
+		a fixed number of values defined globally for the
+		entire site. You can only change the label and the
+		rank of these existing values but you can't create any
+		new one.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		these fields are fully customizable. You can
+		create/delete field values, make it appear or not on
+		the bug forms, etc.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Required</emphasis>: required fields are always in use. They are often fields considered vital for a Bug Tracking System  like Bug ID, bug submitter,etc.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Used</emphasis>: the field is used by your project.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Unused</emphasis>: the field is not used by your project.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	</itemizedlist>
+
+
+	<figure id="FigureBugFieldUsageScreenOfACodeXHostedProject">
+	  <title>Field Usage screen of a CodeX hosted project</title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldusage.png" width="15.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+
+      <section id="StandardBugFields">
+	<title>Standard Bug Fields</title>
+
+	<para>Standard bug fields are common to all CodeX
+	projects. You can customize them to a certain extent but not
+	all standard fields have the same degree of
+	customizablity. For instance, fields with status
+	&#34;Required&#34; are mandatory fields (e.g. Priority,
+	Resolution, ...). You cannot remove them from the list of used
+	fields but you can still tune some of their settings.</para>
+
+	<para>To change the status of a field from used to unused (or
+	vice-versa) and tune the field settings click on the
+	corresponding field label and set the bug field parameters as
+	you wish.</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Rank on screen</emphasis>: this
+            arbitrary number allows you to define the position of this field
+            on the screen relative to other fields. The fields with smaller
+            numbers are displayed first. This placement information has an
+            impact on the bug fields showing on the bug submission form, the
+            bug selection criteria and the bug report columns.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>: Used or Unused.
+            Changing the status in either direction can be done at any time in
+            the life of the project without negative impact on the existing
+            set of bugs. Newly used bug fields will appear with value
+            &#34;None&#34; in old bugs and bug fields becoming unused will
+            simply be hidden from the user view but are still present in the
+            bug database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Display this field
+	    ...</emphasis>: you can decide if you want to see this
+	    field to appear on the bug submission form for project
+	    members and non project members. In general non project
+	    members are given access to restricted set of fields when
+	    they submit a bug. As an example they are not supposed to
+	    know how critical a bug is ('Severity' field), how to
+	    prioritize it ('Priority' field) (or whom a bug should be
+	    assigned to ('Assigned To' field). Therefore these fields
+	    should probably not appear on non project members submission
+	    form.</para>
+
+	    <para>Finally, some fields have fixed display settings and
+	    they always or never appear on the submission form. For
+	    instance the 'Bug ID' field never appears on the bug
+	    submission form because by definition a bug not yet
+	    submitted has no Bug ID.</para>
+	    
+	    <figure id="FigureBugFieldUsageSettings">
+	      <title>Bug field usage settings</title>
+	      
+	      <mediaobject>
+		<imageobject>
+		  <imagedata format="PNG"
+			   fileref="../../screenshots/en_US/sc_bugfieldusagesettings.png" width="8cm" />
+		</imageobject>
+	      </mediaobject>
+	    </figure>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+      <section id="CustomBugFields">
+	<title>Custom Bug Fields</title>
+
+	<para>Custom fields are generic fields that go one step beyond
+	in terms of flexibility. They allow for a full customization
+	including a name change. When a project is first created it
+	comes with the following list of unused custom fields:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para>10 Text Fields: text fields are one line text fields</para>
+	  </listitem>
+	  <listitem>
+	    <para>10 Text Areas: text areas are multi-line text
+	  fields</para>
+	  </listitem> 
+
+	  <listitem>
+	    <para>10 Select Boxes: select boxes are fields which
+	  possible value is chosen from a list of user definable values</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para>5 Date Fields: fields accepting ISO formatted dates (YYYY-MM-DD).</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>Compared to standard bug fields (see <xref
+	linkend="StandardBugFields" />), custom field settings offer
+	additional customization capabilities:</para>
+      
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>:
+	  define the name of the new custom field.</para></listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Field size</emphasis>: for
+	    one-line text fields you can define the size (in
+	    characters) the field will have on the screen as well as
+	    the maximum number of characters that can be typed in this
+	    field. For text areas (multi-line fields) it's the number
+	    of rows and columns (in characters) that the field will
+	    show on the screen when displayed. </para></listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Allow Empty Value</emphasis>:
+	    determines whether leaving the field blank in the bug form
+	    is allowed or not. If unchecked the bug tracker won't
+	    accept the bug form unless the field is given a
+	    value.</para></listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Keep Change
+	    History</emphasis>: determines whether changes made to
+	    this field will be kept in the bug history (see <xref
+	    linkend="BugHistory" /> )</para></listitem>
+ 	</itemizedlist>
+
+	<para><tip><title>Tip: Use Standard Fields
+	First!</title><para>At any time in the life of your project
+	you can enrich your bug tracking system with new custom
+	fields. However before you decide to use a custom field make
+	sure that there isn't a standard field that already plays the
+	same role. By using standard fields whenever possible, you'll
+	contribute to keep the global CodeX environment consistent and
+	make it easier for visitors, contributors or new team members
+	to switch from project to another.</para></tip></para>
+	
+      </section>
+
+    </section>
+
+    <section id="BugFieldValuesManagement">
+      <title>Field Values Management</title>
+
+      <para>Once the list of bug fields to be used in your project BTS
+      has been defined, the next step is to define a set of predefined
+      values for the fields of type 'Select Box'. These values will
+      show up in the pull-down menus when a bug is submitted or
+      updated.</para>
+
+      <section id="BugFieldValuesFieldList">
+	<title>Bug Fields with Customizable Values</title>
+
+	<para>To configure values assigned to your used bug fields
+	select the item &#34;Manage Field Values&#34; on the welcome
+	page of the Bug Administration or select the &#34;Field
+	Values&#34; item from the Bug Administration menu bar at the
+	top of the screen.</para>
+
+	<figure id="FigureBugFieldListWithUserDefinableValues">
+	  <title>Bug field list  with user definable values</title>
+
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvaluesmgt.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para>The list of used (and required) fields which type is a
+	pull-down menu will appear on the screen. Other field types
+	like number fields or text fields (e.g.  Effort or Summary) do
+	not appear in this list because setting a list of predefined
+	values for these field types doesn&#39;t make any sense.  In
+	addition you&#39;ll always see required bug fields like
+	&#34;Comment Type&#34; and &#34;Canned Response&#34; items in
+	the list. (See <xref linkend="FigureBugFieldListWithUserDefinableValues"/>)
+        </para>
+
+	<para>Information displayed on this page are as follows:</para>
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Field Label</emphasis>: the
+	    name of the field. Click on this name to view the list of
+	    values for this field.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: what
+	    this field is about</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">System</emphasis>:
+		these fields have a limited level of
+		customization. System fields of type 'Select Box' have
+		a fixed number of values defined globally for the
+		entire site. You can only change the label of system
+		defined values but you cannot create new ones.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		these fields are fully customizable. You can create
+		new field values as well as hide/unhide existing
+		ones.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+
+      <section id="BugBrowsingBugFieldValues">
+	<title>Browsing Bug Field Values</title>
+
+	<para>A click on any of the bug fields with user-definable
+	values (see <xref linkend="BugFieldValuesFieldList" />) will
+	bring you to the list of existing values for this field (see <xref
+	linkend="FigureListOfValuesForBugFieldStatus" />).</para>
+
+	<para>The table of values shows tha following inormation:</para>
+
+
+	<itemizedlist mark="dash" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">ID</emphasis> (optional): the ID
+	    column is only shown for fields which have
+	    a 'System' scope. For this type of field the ID often
+	    carry a semantic meaning and if you redefine the label of
+	    a value associated with a given ID it is important
+	    that you know about the ID.</para>
+
+	    <para>As an example the 'Severity' field has 9 possible
+	    values and the bugs with the highest ID are always
+	    considered as the most critical bug by the system. So it
+	    would be a bad idea to redefine the value label for ID 9
+	    to something like 'Very Minor' :-) but it is ok to
+	    redefine it as 'Fatal'</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Value Label</emphasis>: text
+	    label of the value as shown in the select box. Click on
+	    this label to modify the value settings (see <xref
+	    linkend="BugUpdatingaBugFieldValue" />)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>:
+	    meaning of the value</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: defines the
+	    order of the field values in the select box. The smaller
+	    values appear first in the select box.
+</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Active</emphasis>:
+		the value is currently visible in the pull-down menus
+		and can be assigned to the corresponding bug
+		field.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Hidden</emphasis>:
+		the value is currently not visible in the pull-down
+		menu. However if this value was used in the past by
+		any of your project bugs, it will continue to show up
+		OK for this specific bug.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Permanent</emphasis>:
+		this value has been defined for the entire CodeX
+		system and it cannot be hidden.  It is active for all
+		CodeX projects and will remain as is forever.  Well,
+		at least until the CodeX Team decides otherwise</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+ 
+	</itemizedlist>
+	
+	<para><xref linkend="FigureListOfValuesForBugFieldStatus" />
+	shows the list of available values for the Status bug
+	field. The status field was chosen on purpose. Not only is the
+	Status field a required field of the CodeX BTS, but it also
+	comes with set of predefined values that are available to all
+	CodeX projects. By default only &#34;Open&#34; and
+	&#34;Closed&#34; values are active (and permanent in this
+	case) but there is a series of 7 other values (Accepted,
+	Analyzed, etc.)  that you can choose from if you want to have
+	a finer grain Status field.</para>
+
+	<para>Of course you are free to add your own values to the
+	Status field. This is actually what has been done for this
+	particular project: the Status value &#34;Assigned&#34; as
+	been added to the list of active values. However, in order to
+	keep a certain harmony from one CodeX project to another, we
+	highly recommend that you use the list of predefined status
+	values as much as you can before creating new ones.</para>
+
+	<figure id="FigureListOfValuesForBugFieldStatus">
+	  <title>List of values for the 'Status' bug field</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvalues.png" width="13cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="BugCreatingaBugFieldValue">
+	<title>Creating a Bug Field Value</title>
+	
+	<para>To add a value use the form right below the list of
+	field values (not shown on <xref
+	linkend="FigureBugFieldListWithUserDefinableValues" />).</para>
+
+      </section>
+
+      <section id="BugBindingFieldToValueList">
+	<title>Binding a Field to a List of Values</title>
+	
+	<para>Not only does the CodeX BTS allows you to create a list
+	of values for a select box but it also offers the ability to
+	associate a select box with a list of predefined values that
+	is actually dynamically generated by the CodeX system. A
+	typical example of this is when one would like to create a new
+	select box showing the list of project members. You could also
+	create it manually but such a list would be tedious to create
+	and maintain.</para>
+
+	<para> So instead of creating your own set of values you can
+	bind a select box to such a list of predefined values that
+	CodeX will keep current for you. Note that if you decide to
+	bind a select box to a list of dynamically generatedc values
+	you can no longer create your own values. The following lists
+	are currently available (others may be added in the
+	future):</para>
+
+	<itemizedlist mark="dash" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Project Members</emphasis> :
+	    list of people belonging to the project.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Project Administrators</emphasis> :
+	    project members who have been granted the status of
+	    project administrators.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Bug Technicians</emphasis>: project
+	    members who have been granted the permission to process
+	    bugs (see <xref linkend="UserPermissions" /> for more
+	    information on user permissions).</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Bug Submitters</emphasis>: the full list
+	    of people who once submitted a bug to the
+	    project.</para>
+	  </listitem>
+	</itemizedlist>
+
+      </section>
+
+      <section id="BugUpdatingaBugFieldValue">
+	<title>Updating a Bug Field Value</title>
+	
+	<para>From the screen showing the list of values for a given field (see <xref
+	linkend="FigureBugFieldListWithUserDefinableValues" />) screen you can change the properties of a bug field value:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Value</emphasis>: change the value
+            itself. The value typed here will appear as is in the pull-down
+            menu.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Rank</emphasis>: a number that allows
+            you to specify where you want this value to appear in the list of
+            all active values. The values with smaller rank are displayed
+            first. When the &#34;None&#34; value is available for this bug
+            field it has a rank number of 10. This number is deliberately
+            small because by convention &#34;None&#34; always appear at the
+            top of the pull-down menu. Please be a good CodeX citizen and
+            choose rank numbers higher than 10 for your own values.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Status</emphasis>: Active or Hidden.
+            As explained above going from one to the other in the course of
+            the project life has no negative impact on the bug database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: says a bit
+            more about the meaning of this value.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<figure id="FigureUpdatingABugFieldValue">
+	  <title>Setting a Bug field value</title>
+	  
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugfieldvalueupdate.png" width="12cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+	<para><tip><title>Tip: Leave some space between rank
+	numbers</title><para>Whether for Fields or Field Values
+	remember to use large numbers (in the hundreds or the
+	thousands like 100, 200, 300,..) when you create new
+	values. By doing so you&#39;ll make your life easier if you
+	ever want to insert new values in between existing ones in the
+	future. And avoid a tedious renumbering of the existing
+	items.</para></tip></para>
+      </section>
+    </section>
+
+    <section id="BugReportManagement">
+      <title>Bug Report Management</title>
+
+      <para>Knowing that project administrators, project members and other
+        CodeX users may have different needs in searching the project bug
+        database, CodeX offers the ability to define project or user specific
+        bug reports.</para>
+
+      <para>Choosing a bug report consists in deciding what bug fields you
+        want to use as search criteria and what fields you want to see in the
+        bug table where the results of the search are displayed. You can also
+        define the order in which the search criteria and the column in the
+        result table will appear on the screen.</para>
+
+      <para>Project Administrators have the ability to define bug reports
+        that will be usable by all project members whereas non-project
+        administrators can only define reports for their personal use.</para>
+
+      <para><tip><title>Bug Reports specifies the report layout not the
+        report content</title><para>If you use the Bug Report Manager you
+        probably noticed that it does not allow you to define the values to
+        match for the search criteria. This is on purpose. Defining a report
+        template and filling the bug search template with content (values) are
+        2 distinct operations on CodeX. So once a bug report is defined (e.g
+        &#39;Simple Report&#39;, &#39;QA report&#39;, &#39;Daily report&#39;
+        ...) you can go to the bug browsing module and use it for all sorts of
+        queries. Select the bug report you want, fill the search criteria with
+        the values you are interested in, click on the browse button and then
+        save the entire query with the CodeX bookmarking mechanism (see tip in
+        <xref linkend="SelectionCriteria" />). And voila!</para></tip></para>
+
+      <section id="BugReportBrowsing">
+	<title>Browsing Bug Reports</title>
+
+	<para>Clicking on the 'Bug Reports' item in the Bug
+	Administration menu bar at the top of the page displays the
+	list of available bug reports (see <xref
+	linkend="FigureBugReportBrowsing" />) with the following
+	information:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">ID</emphasis>: a number that
+	    uniquely identify the bug report. A click on the report ID
+	    brings you to the bug report configuration screen (see <xref linkend="BugReportSetting" />).</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Report Name</emphasis>: the
+	    report short name as it will appear in the bug report
+	    select box when you'll be using the bug browsing screen
+	    (e.g. Simple Report, QA report, Monthly Report&hellip;).</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the bug report.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis>:</para>
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Project</emphasis>:
+		this report will be usable by all project
+		members. Only project administrators can define
+		project-wide reports.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis
+		role="underline">Personal</emphasis>: this report will
+		be usable by its creator only.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Delete?</emphasis>: click the
+	    trash icon to delete the report. Project-wide reports can
+	    only be deleted by project administrators.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<figure id="FigureBugReportBrowsing">
+	  <title>List of bug reports from the CodeX project</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugreportbrowsing.png" width="14.3cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+      <section id="BugReportSetting">
+	<title>Bug Report Setting</title>
+
+	<para>After you click on a report ID in the bug report list
+	(see <xref linkend="BugReportBrowsing" />, the bug report
+	setting screen appears (see <xref
+	linkend="FigureBugReportSetting" />). This screen allows you
+	to define what bug fields you'd like to see in your bug report
+	and at what place, both as search criteria and in the list of
+	bugs retrieved from the database (called bug search results
+	table) .</para>
+
+	<para>Information available on this screen are as follows:</para>
+
+	<itemizedlist mark="bullet"
+		      spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Name</emphasis>: each report
+	    must be given a name. This name must not be too long as it
+	    will appear in a select box in the bug browsing module
+	    when you are asked to choose what bug report you want to
+	    use to query your bug database.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Scope</emphasis> (optional):
+	    project administrators can define project-wide reports
+	    that will be made available to all users. Non project
+	    administrators can only define personal bug report.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Description</emphasis>: a longer description of the report.</para>
+	  </listitem
+>
+	  <listitem>
+	    <para><emphasis role="bold">Field selection</emphasis>:
+	    the bug field table shows all the bug fields that are
+	    currently in use in your project Bug Tracking System. For
+	    each field you can set up the following parameters:</para>
+
+	    <itemizedlist mark="bullet" spacing="compact">
+	      <listitem>
+		<para><emphasis role="underline">Use as a Search
+		Criteria</emphasis>: If you check this box the field
+		will appear as one of the selection criteria when you
+		search the bug database.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Search</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first on the list of selection
+		criteria displayed on the screen. These number doesn't
+		have to be consecutive numbers.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Use as a Report
+		Column</emphasis>: If you check this box the field
+		will appear as one of the column in the bug search results 
+		table.</para>
+	      </listitem>
+	      
+	      <listitem>
+		<para><emphasis role="underline">Rank on
+		Report</emphasis>: A number can be entered in this
+		field. The rank number allows you to place the field
+		with respect to the others. The fields with smaller
+		values will appear first in the bug search results
+		table (from left to right). These number doesn't have
+		to be consecutive numbers.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Column
+	    Width</emphasis>(optional): In case you want to impose a
+	    specific width to the column in the report table you can
+	    specify a column width in percentage of the total page
+	    width. This is optional and our recommendation is to leave
+	    it blank unless your Web browser doesn't make a good job
+	    at formatting your table. If you want a column to be as
+	    narrow as possible while preserving word boundaries enter
+	    a very small percentage like 1 or 2 in the column width
+	    field.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<note><para><emphasis role="bold">Note</emphasis>: it is
+	perfectly OK to use a field as a search criteria and not as a
+	column in the bug report and vice versa. For the fiels you
+	don't want to use at all in the report leave all boxes and
+	text fields blank.</para></note>
+
+	<figure id="FigureBugReportSetting">
+	  <title>Setting a  bug report</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_bugreportsetting.png" width="14.2cm" />
+	    </imageobject>
+	</mediaobject>
+	</figure>
+	
+      </section>
+
+    </section>
+
+
+    <section id="BugEmailNotificationSettings">
+      <title>Email Notification Settings</title> <para>As explained
+      earlier in <xref linkend="BugEmailNotification" /> the BTS comes
+      with a predefined set of rules to keep people involved in bug
+      management aware of the bugs life. The default rules can however
+      be complemented or tuned in a number of ways:</para>
+
+      <section id="BugGlobalEmailNotification">
+	<title>Global Email Notification</title>
+
+	<para>In addition to the default notification rules, the
+	project administrators have the ability to specify a list of
+	comma separated email addresses to which new bug submissions
+	(and optionally all bug updates) will be systematically
+	sent. Note that email notification will be sent to users
+	regardless of their personal preferences (see <xref
+	linkend="BugEventRoleBasedEmailNotification" />).</para>
+
+	<para>This feature is typically used to send new bug
+	submissions to a number of well identified persons in the team
+	who are in charge of qualifying and dispatching the
+	bugs.</para>
+
+	<para><tip>
+	  <title>Tip: Create a Distribution List to notify several people</title>
+	  
+	  <para>If you want to notify many people at once, we suggest
+	  that you use the CodeX Mailing Lists service to create a
+	  distribution lists (see <xref linkend="MailingLists"
+	  />). Once the Mailing List is up and running type the e-mail
+	  address in the Global Email Notification field.</para>
+
+	  <para>Creating a Mailing List on CodeX has several
+	  advantages: first individuals can (un)subscribe by
+	  themselves and second all messages sent to a CodeX mailing
+	  list are kept in an archive that can serve as an audit
+	  trail for your bug tracking system.</para>
+
+	  </tip>
+        </para>
+
+      </section>
+
+
+      <section id="BugWatchers">
+	<title>Bug Watchers</title>
+
+	<para>The BTS offers to all project members the ability to be
+	carbon-copied on all bug notifications sent to some other
+	project members. If you use this feature you'll be able to
+	watch at others' email notifications exactly like if you were the
+	person you are watching. </para>
+
+	<para>Here are a couple of examples where the bug watch
+	feature can be extremely useful:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="bold">Backups</emphasis>: when a
+	    team member is away from the office it is often convenient
+	    to delegate her bug management activity to another person
+	    in the team acting as a backup. Becoming the backup of
+	    another team member is as easy as inserting her name in
+	    the Bug Watchers field of the backup person when the team
+	    member quits and remove it when the team member
+	    returns.</para>
+
+	    <para>As soon as you specify a person name in the bug
+	    watchers field you'll start receiving all the bug
+	    notification of this person and you can act accordingly on her
+	    behalf.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">QA Contacts</emphasis>:
+	    another possible use is for the QA team members to fill
+	    the bug watcher field with the names of the software
+	    engineers whom QA activity they are responsible for.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<note><para>Remark: The goal of the bug watch feature is not to spy on
+	you. To make sure that you are only watched by authorized persons,
+	CodeX always shows you the list of CodeX users who are
+	currently watching your bug notifications.</para></note>
+
+      </section>
+
+      <section id="BugEventRoleBasedEmailNotification">
+	<title>Event/Role Based Notification Settings</title>
+
+	<para>This is the most sophisticated part of the customization
+	process. It allows any user to specify what types of events
+	she wants to be notified by email. Note that these settings
+	are project specific so you can tune your email notification
+	settings for each project you are involved with.</para>
+
+	<para>The customization matrix (see <xref
+	linkend="FigureBugNotificationMatrix" />) presents you with a
+	series of check boxes. Each check box allows you to specify
+	what kind of bug events you want to be aware of depending on
+	the role you play in this bug.</para>
+
+	<para>There are 4 roles defined with respect to a bug:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Submitter</emphasis>: the person
+	  who initially reported the bug by filling the bug submission
+	  form.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Assignee</emphasis>: the person
+	  who is responsible for managing the bug.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">CC</emphasis>: the person
+	  is mentioned in the list of CC names.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Commenter</emphasis>: the person
+	  once posted a follow-up comment in the bug.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>For each of these roles you can instruct the BTS to send
+	email notification to you only when some specific events
+	occur. Nine different events (see the right most column on
+	<xref linkend="FigureBugNotificationMatrix" />) are monitored
+	by the BTS. The description of the events is self explanatory
+	and only appeal one comment: the first 8 events in the list
+	can only occur on bug updates. Only the last event relates to
+	the submission of a new bug.</para>
+
+	<para>Let's review the sample matrix shown on <xref
+	linkend="FigureBugNotificationMatrix" /> and see, step by
+	step, how this user has configured her notification
+	settings:</para>
+
+	<itemizedlist>
+	  <listitem><para>First let's look at the Commenter column. The
+	  Commenter column says that this user has decided that if she
+	  was involved in a bug as a Commenter (she just posted a
+	  follow-up comment at some point in time) then she is only
+	  interested in receiving email notification when the status
+	  of the bug goes to 'Closed' or when any of the fields
+	  Priority, Status and Severity is modified. All other events
+	  will be ignored by the BTS and no notification will be sent
+	  to this user.</para></listitem>
+
+	  <listitem><para>Second, looking at the matrix by row, one can see
+	  that the user said that when she makes a modification to a bug
+	  herself (Event 'I am the author of the change') she doesn't
+	  want to receive any email notification whatever is role 
+	  in this bug is.</para></listitem>
+
+	  <listitem><para>Finally, the user also said that when a new
+	  bug is submitted to the project and is immediately assigned
+	  to her (Assignee role) she wants to be notified. However if
+	  she is the submitter of the new bug then she is not
+	  interested in receiving the notification.</para> <para>Note
+	  that CC and Commenter roles are meaningless for event 'A new
+	  bug has been submitted' because CC names and Commenters can
+	  only be added in bug updates.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<figure id="FigureBugNotificationMatrix">
+	  <title>Personal Notification Settings</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+			 fileref="../../screenshots/en_US/sc_bugnotificationmatrix.png" width="12.5cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+
+    </section>
+
+    <section id="BugOtherConfigurationSettings">
+      <title>Other Configuration Settings</title>
+
+      <para>This module allows you to define the following configuration
+        parameters for the CodeX Bug Tracking System:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Bug submission
+	  preamble</emphasis>: an introductory message that displays
+	  at the top of the Bug submission form. This is a convenient
+	  way to give directions and recommendations to the bug
+	  submitter. The text must use HTML tags for formatting which
+	  gives a great flexibility to shape the content of this
+	  preamble (you can use bold, italic, embedded
+	  URL&hellip;)</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="bold">Bug submission access
+	  control</emphasis>: by default users who are not logged in
+	  (also know as anonymous users) are allowed to submit a new
+	  bug and post additional followup comments to an existing
+	  bug. By unchecking this box you can explicitely request that
+	  the user be logged in before submitting or updating a
+	  bug.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+  </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

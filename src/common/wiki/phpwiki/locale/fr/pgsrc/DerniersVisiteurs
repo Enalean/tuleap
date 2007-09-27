@@ -1,0 +1,16 @@
+Date: Sat, 5 Jun 2004 16:49:54 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: DerniersVisiteurs,v 1.2 2004/06/08 14:19:03 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=DerniersVisiteurs;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Ajoutez votre nom ici, et datez votre visite !
+
+Arno Hollosi, Aredridel Stauck, Jeff Dairiki, Steve Wainstead, les auteurs de PhpWiki.
+
+Julien Pierre De La Brière et Pierrick Meignen, deux traducteurs pour la version française.

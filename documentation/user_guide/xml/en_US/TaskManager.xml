@@ -1,0 +1,645 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="TaskManager">
+    <title>Task Manager (deprecated)</title>
+
+  <para><tip><title>** The Task Manager is DEPRECATED **</title>
+  <para>In CodeX version 1.7 and above, the Task Manager has been
+  discontinued. It is now replaced by the CodeX Tracker Service (see
+  <xref linkend="TrackerService"/>). This chapter is included in the
+  CodeX User Guide for projects that originally used the legacy Task
+  Manager.</para></tip></para>
+
+  <para>The CodeX Task Manager can be seen as a light weight project
+  manager. By light weight we mean that it is nowhere near a project
+  management software like CA-SuperProject, MS-Project or other
+  powerful and complex desktop products available on the market. The
+  CodeX Task Manager cannot build a Gantt or Pert chart, it
+  doesn&#39;t have any planning capabilities. It is rather a time
+  sheet tool which allows project members to track their time and
+  manage other things like weekly TODO list for instance.</para>
+
+    <para>However the CodeX Task Manager offer a number of features that makes
+    it very complementary with the above mentioned project planning tools:</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>Like all CodeX tools, the Task Manager is entirely web based.
+        Therefore any project member can update his/her time sheet regardless
+        of its physical location.</para>
+      </listitem>
+
+      <listitem>
+        <para>Tasks can be created and managed by authorized project members.</para>
+      </listitem>
+
+      <listitem>
+        <para>Each project member has its own time sheet showing all open
+        tasks assigned to her, their priority, description, start and end
+        dates, percentage completion, related tasks, follow-up comments and a
+        full audit trail of the past changes.</para>
+      </listitem>
+
+      <listitem>
+        <para>Task data can be collected by the project leader(s) at any point
+        in time and exported out of the CodeX project thanks to the Project
+        Data Export facility (see <xref linkend="ProjectDataExport" />). This
+        allows for easy generation of progress reports or project re-planning.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>As mentioned earlier in this document, the CodeX Bug Tracking system
+    has undergone a number of modifications and enhancements derived from the
+    CodeX users feedback. We expect the CodeX Task Manager to evolve in the
+    same way in the near future. We have as an objective to keep it simple
+    while providing a better integration with other tools that project teams
+    are using for project planning activities. Therefore we value your
+    comments on the way you work and how we could make your life easier with
+    CodeX.</para>
+
+    <section id="TaskManagerPrinciples">
+      <title>Task Manager Principles</title>
+
+      <para>Tasks can be created by any project member having the
+      &#34;Tech&#34; level of permission on the Task Manager (see <xref
+      linkend="UserPermissions" />). A task can be assigned to one or
+      several project members and each of the project members will see the
+      tasks in their own time sheet as soon as assignees are designated.</para>
+
+      <para>Tasks are grouped under subprojects. The experience shows that
+      Subprojects generally correspond to high level tasks or modules in the
+      project. Note that, in its current version, the CodeX Task Manager
+      offers a one level only hierarchy where to organize your tasks. In other
+      words, you cannot create a subproject in an subprojects only tasks.</para>
+
+      <para>As you already know the general rule in CodeX is that, by default,
+      all information is visible to the CodeX community. This principle also
+      applies to the CodeX Task Manager and by default all your project task
+      are visible to the entire CodeX community. If you want some of your
+      tasks to be visible only to the project members you can create a private
+      subproject and assign the private tasks to it.</para>
+
+      <para><tip><title>The CodeX Task Manager is not a project planning tool</title><para>This
+      is best illustrated by the fact that CodeX does not maintain any kind of
+      dependency between the task fields that are time related. Starts date,
+      end date, percentage complete and total efforts are not inter-dependent.
+      In other words changing any of these values will not cause CodeX to
+      compute new values for the other ones. It is entirely up to the project
+      members to keep the time related fields in sync.</para></tip></para>
+    </section>
+
+    <section id="TaskBrowsing">
+      <title>Task Browsing</title>
+
+      <para>To access the Task Manager of a given project, first go to the
+      Project Summary page (see <xref linkend="AccessingAProjectSummaryPage" />)
+      and then select either the &#34;Tasks&#34; item from the Project Main
+      Menu in the upper part of the page or the &#34;Project/Task Manager&#34;
+      item listed the Public Area at the bottom of the Project Summary page.</para>
+
+      <para>The welcome screen shows the list of subprojects that have been
+      created in this project (<xref
+      linkend="FigureATaskManagerHomePageShowing2Subprojects" />). If a
+      project uses its Task Manager there is at least one subproject listed on
+      the page because any new task must be assigned to a subproject.</para>
+
+      <figure id="FigureATaskManagerHomePageShowing2Subprojects">
+        <title>A Task Manager home page showing 2 subprojects</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_pmhomepage.png" width="13cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Also note that, when more than one subproject have been defined by
+      the project team, a special subproject item called &#34;All tasks in all
+      subprojects&#34; appears at the bottom of the list. This item is
+      generated by CodeX and allows you to access all tasks of all subprojects
+      at once.</para>
+
+      <para>By clicking on one of the subproject label you will then be
+      directed to the Task selection and browsing screen (<xref
+      linkend="FigureASampleTaskManagerBrowsingScreen" />) that allows you to
+      better define what set of tasks you are interested in. The Task Manager
+      doesn&#39;t have the degree of customizability found in the Bug Tracking
+      System. As a consequence all the screenshots used in this document that
+      have been taken from a particular project on CodeX will look very
+      similar for any other CodeX hosted project.</para>
+
+      <para>The Task selection and browsing screen offers a set of 3 criteria
+      to choose from:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Subproject</emphasis>: select the
+          subproject that you want to explore or &#34;Any&#34; if you want the
+          search operation to operate across the entire set of subprojects.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Assignee</emphasis>: select the name of
+          the project member the tasks have been assigned to, &#34;Any&#34; if
+          you want all assignees to be part of the search or &#34;None&#34; to
+          look at the tasks that have not yet been assigned to a project
+          member.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Status</emphasis>: select the status of
+          the tasks you are interested in, &#34;Any&#34; if you want to see
+          all statuses and &#34;None&#34; for tasks that have not be given a
+          status yet (more on the status values and their meaning in <xref
+          linkend="TaskSubmission" />).</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigureASampleTaskManagerBrowsingScreen">
+        <title>A sample Task Manager browsing screen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_pmbrowsing.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>A click on the &#34;Browse&#34; button initiates the search
+      operation and the matching tasks are displayed in a table format. The
+      task report shows a certain number of tasks fields. Like in the Bug
+      Tracking System, a click on any of the column label will instantly sort
+      the list of tasks according to this criterion. Most of the columns have
+      a straightforward meaning and we&#39;ll only focus on those with
+      specific features:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Task ID</emphasis>: this is a unique
+          task ID number. A click on this ID number will show you the task
+          details.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">End Date</emphasis>: overdue task have
+          an end date appearing in bold characters. An asterisk (*) on the
+          left hand side of the end date denotes a task that was due more than
+          30 days ago.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Depend On</emphasis>: shows a list of
+          task ID numbers depending on the task if any. Each task ID number is
+          an hyperlink to the corresponding task details.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Project members will also find useful shortcuts in the Task
+      Manager menu to quickly access all currently open tasks (&#34;Browse
+      Open Tasks&#34;) and also all the tasks they are in charge of (&#34;My
+      Tasks&#34;). The latter is also visible in your Personal Page.</para>
+
+      <para><tip><title>Tip: Obtaining nice printouts of task and bug report</title><para>If
+      you want to print nice reports do not forget to set up the paper
+      orientation to &#34;Landscape&#34; in the print dialog box of your Web
+      browser (File -&#62; Page Setup for IE) to avoid table clipping. Another
+      option to generate more sophisticated printouts is to use the
+      &#34;Project Data Export&#34; facility to instantly download bugs and
+      tasks data in your favorite desktop application like Excel, Word, etc.
+      (see <xref linkend="ProjectDataExport" />)</para></tip></para>
+
+      <para><emphasis role="bold">Advanced Search Mode</emphasis></para>
+
+      <para>At any time during the search phase, you can toggle the search
+      mode from Simple to Advanced and vice-versa (see the Advanced Search
+      link). The Advance Search mode allows you to select multiple values for
+      each selection criteria. Using this mode you could search for say tasks
+      in &#34;New features&#34; and &#34;Administration - Maintenance&#34;
+      subprojects which status is either open or or suspended.</para>
+    </section>
+
+    <section id="TaskSubmission">
+      <title>Task Submission</title>
+
+      <para>First of all it is worth mentioning that unlike most other CodeX
+      services, new tasks can only be created by project members with
+      appropriate permissions on the Task Manager, not by ordinary registered
+      users. To create a new task in a given project, first go to the Project
+      Summary page (see <xref linkend="AccessingAProjectSummaryPage" />) and
+      then select either the &#34;Tasks&#34; item from the Project Main Menu
+      and select the subproject the new task belongs to. Finally click on the
+      &#34;Add Task&#34; item in the Task Manager menu (<xref
+      linkend="FigureASampleTaskManagerBrowsingScreen" />) appearing in the
+      upper part of the screen.</para>
+
+      <para><xref linkend="FigureTaskSubmissionScreen" /> shows the task
+      submission screen from one of the CodeX hosted project (the CodeX
+      project itself actually). Let&#39;s review the task fields in order:</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para><emphasis role="bold">Percent complete</emphasis>: goes from
+          &#34;Not Started&#34; to &#34;100%&#34; by step of 5%. This field
+          indicates how much of the task has been completed so far.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Priority</emphasis>: task priority on a
+          scale from 1 (lowest) to 9 (highest)</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Task Summary</emphasis>: A one line
+          description of the task</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Task Details</emphasis>: a comprehensive
+          description of the task. This field accept formatted text with break
+          lines. Web locations (http://...) typed in the task summary will be
+          automatically transformed into hyperlink when they are later
+          displayed.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Start Date and End Date</emphasis>:
+          calendar days at which the task is expected to start and finish</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Assigned To</emphasis>: project members
+          in charge of the task (multiple selection is possible)</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Dependent on Task</emphasis>: List of
+          task(s) the new task depends on. Note that the Task Manager does not
+          associate any semantic to the dependency link. It is a very common
+          practice in CodeX to use this dependency relation as a time
+          dependency but it can be any kind of dependency you see relevant for
+          your own project.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Effort (Hours)</emphasis>: Initial
+          estimation of the number of working hours required to perform the
+          new task.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>When a new task is created its status is automatically set to
+      Open. This can be changed later in the Task Update screen (see below)</para>
+
+      <figure id="FigureTaskSubmissionScreen">
+        <title>Task Submission screen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/en_US/sc_pmsubmission.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="TaskUpdate">
+      <title>Task Update</title>
+
+      <para>Once a task has been created a project member with appropriate
+      permissions can update any of the task field to reflect the task
+      progress. Note that ordinary registered users cannot modify a task. They
+      can only view the task details and post a follow-up comment.</para>
+
+      <para>To update a task, first use the Task browsing and selection module
+      to retrieve the task you are interested in (remember to use the &#34;My
+      Tasks&#34; shortcut in the Task Manager menu if it&#39;s one of your
+      task).</para>
+
+      <para>All the screenshots used in this section assumes that the CodeX
+      user is part of the project team. For non project members the screen
+      layout is roughly the same but information shown on the screen cannot be
+      changed.</para>
+
+      <para>The Task Update screen is divided in 4 parts: <emphasis
+      role="bold">Headers, Comments, Dependencies and History</emphasis>.</para>
+
+      <section id="TaskHeaders">
+        <title>Headers</title>
+
+        <figure id="FigureTaskUpdateScreenTheTaskHeaders">
+          <title>Task Update screen: the Task Headers</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_pmheaders.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>This is where you&#39;ll find all the task fields associated
+        with a task description. As shown on <xref
+        linkend="FigureTaskUpdateScreenTheTaskHeaders" />, many of these
+        fields (e.g. Status, Subprojects, Priority) are assigned a set of
+        predefined values while some others have a number format (Effort) or a
+        free text format (Task Summary). Most of these fields have already
+        been described in <xref linkend="TaskSubmission" />. In this section
+        we&#39;ll only focus on the fields that have not yet been explored:</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Status</emphasis>: a task status value
+            can be one of</para>
+
+            <itemizedlist mark="bullet"
+                          spacing="compact">
+              <listitem>
+                <para><emphasis role="underline">None</emphasis>: this value
+                is normally not used in the CodeX system because all new tasks
+                are automatically set to Open (see below). However it is
+                perfectly ok to use it e.g. for tasks that have not yet been
+                assigned or for pending tasks</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Open</emphasis>: this is the
+                status that you should use for all on-going task. This is the
+                default status when a new task is created</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Closed</emphasis>: Change the
+                task status to Closed when a task is completed.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Deleted</emphasis>: Use this
+                status for a task that is no longer relevant. Either because
+                the project directions have changed and it doesn&#39;t make
+                sense to perform this task or when this task is actually
+                covered by another one. Marking the task as deleted will not
+                delete it for real.</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="underline">Suspended</emphasis>: the
+                task is on-hold for some time. Use this transient status when
+                you don&#39;t want the list of Open tasks cluttered with task
+                that have been delayed by weeks or months.</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section id="TaskComments">
+        <title>Comments</title>
+
+        <para>As many follow-up comments as needed can be attached to any
+        given task. Follow-up comments are free text fields where virtually
+        any kind of information or comment can be typed in. The &#34;Original
+        Comment&#34; field filled out by the task submitter can actually be
+        considered as the first follow-up comment in the life of a task.</para>
+
+        <para>For your convenience, the original comment can be modified by
+        using the [Edit] link next to the &#34;Original Comment&#34; field (<xref
+        linkend="FigureTaskUpdateScreenTheTaskFollowupComments" />). We
+        recommend using this feature only to correct typos or add pivotal
+        information overlooked in the initial description. For all other
+        occasions, use the follow-up comments mechanism and do not touch the
+        original description. Follow-up comments allows you to track the
+        history of a task, how the work was done, what source files were
+        impacted, etc.</para>
+
+        <figure id="FigureTaskUpdateScreenTheTaskFollowupComments">
+          <title>Task Update screen: the Task Follow-up comments</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_pmcomments.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="TaskCCList">
+	      <title>CC List</title>
+	
+	      <para>As the CodeX BTS, the Task Manager offers the same powerful email 
+	      notification system (refer to the BTS for more details <xref
+	      linkend="BugCCList" />).</para>
+      </section>
+	
+      <section id="TaskAttachments">
+        <title>Task Attachments</title>
+
+        <para>In addition to comments, the Task Manager
+      allows you to attach virtually any piece of information to a task
+      in the form of a file. The mechanism is same as the BTS one (see <xref linkend="BugAttachments" />.</para>
+
+      </section>
+
+      <section id="TaskDependencies">
+        <title>Dependencies</title>
+
+        <para>The next section on the task update screen deals with
+        task-to-task dependencies (see <xref
+        linkend="FigureTaskUpdateScreenTheTaskDependencies" />). CodeX users
+        have the ability to establish a dependency link from a task to one or
+        several other tasks.</para>
+
+        <para>The CodeX system does not impose any semantic on the nature of
+        the dependency links between tasks. However it is a common CodeX
+        practice to assume a time dependency between the task displayed on the
+        screen and the selected tasks in the dependency list. In other words,
+        the task in the dependency list must be completed first.</para>
+
+        <figure id="FigureTaskUpdateScreenTheTaskDependencies">
+          <title>Task Update screen: the Task Dependencies</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_pmdependencies.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>The task dependency section also gives cross-reference
+        information and shows the list of tasks and bugs that depend on the
+        task you are currently viewing. Refer to <xref
+        linkend="BugDependencies" /> for more information about bug-to-tasks
+        dependencies.</para>
+      </section>
+
+      <section id="TaskHistory">
+        <title>History</title>
+
+        <para>The last part of the task update screen is devoted to task state
+        history (see <xref linkend="FigureTaskUpdateScreenTheTaskHistory" />).
+        Thanks to this section you can review the entire history of a task.
+        The Task History keeps track of all the changes that occurred on all
+        task fields since the task creation.</para>
+
+        <para>The Task History shows what fields changed, what was the old
+        value before the change took place, who changed it and when. Since the
+        Task History only gives you the old value of a bug field it requires a
+        bit of exercise to determine what the new value was right after the
+        change took place.</para>
+
+        <para>A Task Change History must be read from top to bottom. Referring
+        to the task headers (<xref
+        linkend="FigureTaskUpdateScreenTheTaskHeaders" />) you can see that
+        task #12 has its status set to Closed and an effort of 10 hours.
+        Exploring the Task Change History you can say that the status was set
+        to &#34;Closed&#34; on February 9th, 2001 at 11:47am and that the task
+        was &#34;Open&#34; before the change took place. Similarly the effort
+        was updated at the same date and time and went down from 24 hours to
+        10 hours. You can also infer from the Task Change History that the
+        task priority (currently at 7) was never changed in the life of the
+        task because it doesn&#39;t show up in the list. This task was given
+        Priority 7 when it was first created and it never changed after that.</para>
+
+        <figure id="FigureTaskUpdateScreenTheTaskHistory">
+          <title>Task Update screen: the Task History</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_pmhistory.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+    </section>
+
+    <section id="TaskEmailNotification">
+      <title>Email Notification</title>
+
+    <para>The Task Manager is equipped with a powerful and flexible
+    e-mail notification system. This system works as the BTS one (see <xref
+        linkend="BugEmailNotification" />.</para>
+    </section>
+
+    <section id="TaskManagerAdministration">
+      <title>Task Manager Administration</title>
+
+      <para>The Task Manager Administration is available under the item
+      &#34;Admin&#34; in the Task Menu bar. Only project members with Task
+      Administrator permission are allowed to interact with this module.</para>
+
+      <para>The Task Administration module gives access to
+      the following administrative functions:</para>
+
+    <section id="TaskManagerAddaSubproject">
+      <title>Add a Subproject</title>
+
+      <para>This is to create a new subproject in the Task
+      Manager. Subprojects generally correspond to high level modules
+      or activities in the project. To create a project you must give
+      it a short subproject name, a one line description and decide
+      whether it is a public or private subprojects. Private
+      Subprojects are only visible to project members.</para>
+    </section>
+
+    <section id="TaskManagerUpdateaSubproject">
+      <title>Update a Subproject</title>
+
+      <para>Use this function whenever you want to update a
+      subproject. You can change its name and description, whether it
+      is public or private.  You can also mark a subproject as
+      deleted. Deleted subprojects will disappear from the Task
+      selection and browsing screen as well as all the tasks that
+      belong to this subproject. At any point in time you can decide
+      to re-activate a deleted subproject without loosing any
+      data.</para>
+    </section>
+
+    <section id="TaskManagerPersonalConfigurationSettings">
+      <title>Personal Configuration Settings</title>
+
+      <para>This page allows a user to set up personal preferences for
+      the Task Manager. In its current version it allows the user to
+      specify which default date should be displayed in the task
+      submission form for the 'Start Date' and 'End Date'
+      fields. There are two possible choices:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Current Date</emphasis>: if you
+	  choose this value, the task creation form displays the
+	  current date in both the 'Start Date' and 'End Date'
+	  fields. This is the default setting.</para>
+	</listitem>
+    
+	<listitem>
+	  <para><emphasis role="bold">No Date</emphasis>: both fields
+	  remain empty and the 'Start Date' and 'End Date' are
+	  undefined. You may select this option if you use the task
+	  manager as a simple TODO list where start and end dates do not
+	  really matter.</para>
+	</listitem>
+      </itemizedlist>
+
+    </section>
+
+    <section id="TaskEmailNotificationSettings">
+      <title>Email Notification Settings</title> 
+      <para>The Task Manager comes with a predefined set of rules to keep people involved in task
+      management aware of the task life. The mechanism is the same as the BTS one (see 
+      <xref linkend="BugEmailNotificationSettings" />)</para>
+
+    </section>
+
+
+    <section id="TaskManagerOtherConfigurationSettings">
+      <title>Other Configuration Settings</title>
+
+        <para>This module allows you to define the following
+        configuration parameters for the CodeX Bug Tracking
+        System:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para>An introductory message that displays at the top of
+            the Bug submission form. This is a convenient way to give
+            directions and recommendations to the bug submitter. The text must
+            use HTML tags for formatting which gives a great flexibility to
+            shape the content of this preamble (you can use bold, italic,
+            embedded URL, ...)</para>
+	</listitem>
+
+	<listitem>
+	  <para>Other items may be added in the future.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+
+
+  </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

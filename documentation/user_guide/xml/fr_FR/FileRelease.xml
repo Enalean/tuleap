@@ -1,0 +1,628 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: FileRelease.xml 1307 2005-01-11 14:52:59Z guerin $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="FileRelease">
+    <title>Publication de fichiers</title>
+
+    <section id="SourceCodeReleaseGuidelines">
+      <title>Publication du code source : conseils</title>
+
+      <para>Il existe deux façons pour un administrateur de projet de
+      donner accès au code source d'un projet hébergé sur CodeX : le
+      système de contrôle de version (CVS ou Subversion) et le système
+      de publication de fichiers. A première vue, le fait d'avoir deux
+      systèmes de livraison du code source peut paraître
+      redondant. Cependant les deux outils ont été développés avec des
+      objectifs différents et pour des cibles d'utilisateurs
+      différentes. En ce sens ils sont très complémentaires. Proposer
+      les deux outils à vos utilisateurs est un vrai plus.</para>
+
+      <itemizedlist mark="bullet">
+
+        <listitem>
+          <para><emphasis role="bold">Le système de contrôle de
+          version (SCV)</emphasis> offre un accès au code source y
+          compris l'historique des différentes versions de chaque
+          fichier. Toutefois accéder au SCV nécessite l'installation
+          d'un logiciel particulier sur le poste client. Certains
+          utilisateurs ne peuvent pas ou ne souhaitent pas le
+          faire. L'accès au SCV est particulièrement adapté aux
+          utilisateurs de CodeX qui souhaitent approfondir le code,
+          ajouter de nouvelles extensions, corriger des anomalies et
+          proposer des modifications à l'équipe de projet. A noter que
+          certains projets n'autorisent pas l'accès de leur SCV aux
+          personnes qui n'appartiennent pas à l'équipe. D'où
+          l'importance du mécanisme de publication de fichiers.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Le mécanisme de publication de
+          fichiers</emphasis> permet de livrer le logiciel (source,
+          binaire ou documentation) sous forme de fichiers d'archive
+          (zip, tar, jar...) qu'un utilisateur autorisé peut
+          facilement télécharger depuis le site Web de CodeX. Aucun
+          outil ni connaissance particulière n'est nécessaire. En
+          complément de la fourniture éventuelle du code source,
+          fournir des versions binaires prêtes à utiliser de vos
+          logiciels est une excellente pratique. Le service de
+          publication de fichiers est particulièrement adapté aux
+          utilisateurs qui souhaitent utiliser rapidement votre logiciel
+          sans attendre.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Comme  vous  pouvez  le  voir,  les   deux services   sont
+      fondamentalement différents et nous vous encourageons vivement à
+      les   utiliser  tous les   deux. Dans  le  but  de  vous aider à
+      comprendre pourquoi ces outils sont complémentaires,  le cycle de vie
+      typique d'un projet est illustré sur la  <xref
+      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX"
+      />.</para>
+    </section>
+
+    <section id="FileReleaseJargon">
+      <title>Jargon du service de publication de fichiers</title>
+
+      <para>Avant d'aller plus avant dans la description du service de
+      publication de fichiers nous allons définir quelques termes clés
+      utilisés dans cette section. Ces termes sont clés pour la
+      compréhension de ce service aussi bien pour les administrateurs
+      que pour les utilisateurs. (voir <xref
+      linkend="FigureTheFileReleaseStructure" />).</para>
+
+      <figure id="FigureTheFileReleaseStructure">
+        <title>Structure du service de publication de fichiers</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../slides/fr_FR/File_Release.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Paquets</emphasis> : les paquets
+          sont les conteneurs de plus haut niveau du service de
+          publication de fichiers. Un paquet peut contenir une ou
+          plusieurs version d'un logiciel. En général un paquet
+          correspond à un délivrable de haut niveau de votre
+          projet. Supposons que votre équipe travaille sur un moteur
+          de base de données. Dans ce cas les paquets pourraient être
+          BD-moteur pour le moteur de la base de données elle-même,
+          BD-pilotes pour les différents pilotes ODBC et JDBC. Un
+          troisième paquet DB-doc pourrait être créé pour délivrer la
+          documentation versionnée dans un conteneur distinct.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Versions</emphasis> : une version
+          est une collection de fichiers individuels qui ont été figés
+          à un certain moment, versionnés et livrés. En général les
+          fichiers contenus dans un conteneur &#34;Version&#34; sont
+          comme leur nom l'indique de la même version. Si nous
+          reprenons l'exemple du projet de moteur de base de données
+          on pourrait imaginer que le paquet BD-moteur contient une
+          version 1.0, une version 1.1 et une version
+          2.0beta. BD-pilote pourrait aussi avoir une version 1.0 mais
+          pas de version 1.2 ou 2.0beta si les pilotes 1.0
+          fonctionnent avec le moteur version 1.2 et 2.0beta. En
+          d'autres termes, le nommage des versions est totalement
+          libre d'un paquet à l'autre.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Fichiers</emphasis> : les
+          fichiers sont les entités de base qu'on trouve dans une
+          version. En nous appuyant encore une fois sur notre exemple
+          de moteur de base de données, on peut imaginer que la
+          version 1.0 du paquet BD-moteur comprend le fichier
+          bd-moteur-src-1.0.zip pour le code source et
+          bd-moteur-win32-1.0.zip pour la version précompilée pour MS
+          Windows. Lorsque la version 1.2 est publiée, elle pourrait
+          comporter les fichiers bd-moteur-src-1.2.zip pour les
+          sources, bd-moteur-win32-1.0.zip pour la version précompilée
+          pour MS Windows et bd-moteur-linux-intel-1.0.zip pour la
+          version précompilée pour Linux sur plateforme Intel. Nous
+          n'avons rien dit du paquet BD-doc. Il est peut être vide
+          pour le moment ;-)</para>
+        </listitem>
+      </itemizedlist>
+
+      <note><para>A première vue cette structure peut paraître un peu
+      complexe. Néanmoins c'est véritablement le genre de structure
+      qu'une équipe de projet doit adopter pour rendre ses livraisons
+      faciles à comprendre et à télécharger. Réfléchir à la structure
+      de vos délivrables logiciels et documentation peut vous aider
+      considérablement dans l'organisation de votre projet et de vos
+      processus de travail (comme les opérations de build ou de
+      test). Ne négligez pas cette partie de votre
+      projet.</para></note>
+    </section>
+
+    <section id="FileReleaseBrowsingandDownload">
+      <title>Navigation dans les fichiers publiés et téléchargement</title>
+
+      <para>La version la plus récente de chaque paquet d'un projet
+      est toujours visible sur la page de sommaire (voir <xref
+      linkend="FigureASampleProjectSummaryPage" />). Cette version
+      peut être immédiatement téléchargée en cliquant sur le lien
+      &#34;Téléchargement&#34; ou en visitant la liste complète des
+      paquets et versions en cliquant sur le lien &#34;Voir tous les
+      fichiers du projet&#34;.</para>
+
+      <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
+        <title>L'écran de publication des fichiers du projet CodeX Administration Project</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/fr_FR/sc_filereleasedownloads.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Le premier exemple illustré sur la <xref
+      linkend="FigureTheFileReleaseScreenOfTheCodeXProject" /> 
+      montre l'écran de publication des fichiers du projet
+      &#34;CodeX Administration Project.&#34;
+      </para>
+      
+      <section id="FileReleaseBrowsingPackages">
+        <title>Navigation dans les paquets</title>
+        <para>
+        Comme expliqué dans la <xref linkend="FileReleaseJargon" />, les projets 
+        peuvent contenir plusieurs paquets. Dans l'exemple, 
+        le projet comporte trois paquets, nommés &#34;CodeX Installation ISO Image&#34;,
+        &#34;CodeX specifics themes&#34; et &#34;CodeX CLI&#34;.
+        </para>
+        <para>
+        Le contenu de chaque paquet peut être caché en cliquant sur l'icône 
+        <emphasis>moins</emphasis> située juste avant le nom du paquet.
+        Cela peut être utile pour améliorer la lisibilité si votre projet 
+        comprend beaucoup de paquets et de versions.
+        Pour rendre visible un paquet caché, il suffit de cliquer sur l'icône 
+        <emphasis>plus</emphasis> avant le nom du paquet.
+        Par défaut, tous les paquets sont visibles.
+        </para>
+        <para>
+        CodeX vous permet également de surveiller des paquets. De cette manière, 
+        vous serez averti lors de la parution d'une nouvelle version ou lors de 
+        la modification d'une version existante.
+        Pour surveiller un paquet, il suffit de cliquer sur l'icône représentant 
+        une cloche, située après le nom du paquet.
+        Si vous surveillez déjà le paquet, il y a un petit signe rouge sur la cloche,
+        vous permettant d'arrêter de surveiller le paquet en question.
+        Si vous ne surveillez pas le paquet, la cloche aura un petit 
+        <emphasis>plus</emphasis> vert.
+        </para>
+      </section>
+      
+      <section id="FileReleaseBrowsingReleases">
+        <title>Navigation dans les versions</title>
+        <para>
+        Un paquet peut contenir plusieurs versions. Dans l'exemple, 
+        le paquet &#34;CodeX Installation ISO Image&#34; contient 8 versions 
+        de 2.4 à 3.0.1, listées dans l'ordre chronologique. Chaque version 
+        contient un certain nombre de fichiers.
+        </para>
+        <para>
+        Tout comme les paquets, le contenu des versions peut être caché afin 
+        d'améliorer la lisibilité. Le mécanisme est identique : il suffit de 
+        cliquer sur les icônes <emphasis>plus</emphasis> et 
+        <emphasis>moins</emphasis> pour rendre visible/cacher le contenu des 
+        versions.
+        Par défaut, seule la première version de chaque paquet est visible.
+        Il s'agit de la dernière version disponible.
+        </para>
+        <para>Après chaque nom de version, l'icône représentant un fichier texte 
+        vous donne accès aux notes et aux changements de la version.
+        </para>
+      </section>
+      
+      <section id="FileReleaseDonwloadingFiles">
+        <title>Téléchargement de fichiers</title>
+        <para>
+        Chaque version contient un certain nombre de fichiers qui peuvent être 
+        téléchargés. Dans le cas de notre exemple, la version 3.0.1 contient 
+        deux archives d'images ISO pouvant être téléchargées.
+        Les fichiers appartenant aux autres versions ne sont pas visibles dans 
+        cet exemple. Pour les rendre visible, il suffit de cliquer sur l'icône 
+        <emphasis>plus</emphasis> qui se trouve avant le nom des versions.
+        Certaines informations sur les fichiers sont également affichées, comme 
+        la taille du fichier, son type, son architecture (le cas échéant) 
+        la date et le nombre de fois qu'il a été téléchargé.
+        Pour télécharger un fichier, il suffit de cliquer sur le nom du fichier 
+        et de suivre les instructions.
+        </para>
+      </section>
+      
+    </section>
+
+    <section id="FileReleaseDelivery">
+      <title>Administration et Livraison de fichiers</title>
+
+      <para>Cette section s'adresse uniquement aux administrateur de 
+      projet ou aux administrateurs du service fichier. Elle explique par 
+      le menu le processus de livraison de fichiers. 
+      Il se décompose en deux étapes :</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">Création de paquets</emphasis> :
+          il faut tout d'abord créer un ou plusieurs paquets. Ceci ne
+          doit être fait qu'une seule fois. Lorsque les paquets sont
+          en place vous pouvez y ajouter de nouvelles versions à
+          n'importe quel moment.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Création de versions</emphasis> :
+          une fois le paquet créé on peut y ajouter une ou plusieurs
+          versions. Pour chaque version, on peut attacher des fichiers, 
+          définir la date de publication, lister les changements contenus 
+          dans cette version, etc....</para>
+        </step>
+      </procedure>
+      <para>De plus, vous pouvez aussi définir des permissions d'accès
+      au niveau de chaque paquet et de chaque version.
+      </para>
+
+      <para>Si vous êtes administrateur de votre projet ou administrateur du 
+      service fichier de votre projet, vous remarquerez que l'interface des 
+      fichiers contient certains lien supplémentaires, vous permettant de 
+      réaliser les actions d'administration sur le service Fichier (Voir 
+      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />
+          <figure id="FigureTheFileReleaseAdminScreenOfTheCodeXProject">
+            <title>L'écran du service Fichier du projet &#34;CodeX Administration project&#34;, si vous êtes administrateur</title>
+    
+            <mediaobject>
+              <imageobject>
+                <imagedata format="PNG"
+                           fileref="../../screenshots/fr_FR/sc_filereleasedownloadsadmin.png" width="15.3cm" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+      </para>
+      
+      <section id="PackageAdministration">
+        <title>Administration des paquets</title>
+        
+        <para>Pour administrer les paquets, vous devez être administrateur du 
+        projet ou administrateur du service Fichier. La création et la modification 
+        de paquets sont quasiment identiques.
+        </para>
+        
+        <section id="PackageCreation">
+        <title>Création d'un paquet</title>
+
+        <para>Pour créer un paquet, il suffit de cliquer sur le lien 
+        [ajouter un paquet] situé en haut de l'écran du service Fichier.
+        Vous devez ensuite remplir le formulaire, en renseignant le nom du paquet, 
+        son rang à l'écran et son statut :
+        
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para><emphasis role="bold">Nom du paquet</emphasis> : Il s'agit du 
+                nom qui apparaîtra dans l'interface des Fichiers. Le nom des paquets 
+                doit être unique à l'intérieur d'un même projet.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Rang à l'écran</emphasis> : le rang 
+                indique la position à laquelle le paquet s'affichera à l'écran.
+                Vous pouvez choisir entre les valeurs : 'au début', 'à la fin', 
+                ou après chaque paquet déjà présent.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Statut</emphasis> : un paquet actif 
+                sera affiché, alors qu'un paquet caché n'apparaîtra pas à l'écran.
+                Les administrateurs veront toutefois les paquets caché, afin de 
+                pouvoir les modifier. Dans ce cas, ils sont affichés en italique 
+                pour les différencier des autres.
+                </para>
+            </listitem>
+        </itemizedlist>
+        
+        </para>
+        </section>
+        
+        
+        <section id="PackageModification">
+        <title>Modification d'un paquet</title>
+        
+        <para>Pour modifier un paquet, cliquer sur l'icône d'édition située après 
+        chaque nom de paquet. Ensuite, le formulaire de modification est identique 
+        à celui de création, à l'exception près que vous pouvez maintenant définir 
+        des permissions sur le paquet (see 
+        <xref linkend="FigureAPartOfThePackageAdministrationScreenCodeXProject" />).
+        </para>
+        <figure id="FigureAPartOfThePackageAdministrationScreenCodeXProject">
+          <title>Ecran de modification du paquet CLI du projet &#34;CodeX Administration&#34;</title>
+    
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/fr_FR/sc_filereleasepackageadmin.png" width="10cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+          
+        <para>Les membres projet ayant les droits 'Administrateur Fichier' 
+        (see <xref linkend="UserPermissions" />) peuvent définir et modifier 
+        les permissions des paquets.
+        </para>
+
+        <para>Par défaut, les permissions appliquées à un paquet s'appliquent à 
+        toutes les versions et les fichiers de ce paquet. Mais vous pouvez également 
+        affecter des permissions différentes pour chaque version (voir 
+        ci-dessous).</para>
+
+        </section>
+      </section>
+
+      <section id="ReleaseAdministration">
+        <title>Administration des versions</title>
+        
+        <para>Pour administrer les versions, vous devez être administrateur du 
+        projet ou administrateur du service Fichier. La création et la modification 
+        de versions sont identiques.
+        </para>
+        
+        <section id="ReleaseCreation">
+        <title>Création et modification d'une version</title>
+
+        <para>Une fois le paquet créé vous pouvez y insérer de
+        nouvelles versions immédiatement. Pour ce faire, cliquez sur
+        le lien [Créer une version] situé en regard du paquet
+        approprié (voir <xref
+        linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject"
+        />).</para>
+
+        <para>Le processus de création et de modification de versions est vraiment 
+        très simple à utiliser. Il peut se décomposer en 6 étapes, mais certaines 
+        sont optionnelles.
+        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodeXProject" />).
+        Dans tous les cas, vous pouvez modifier les versions a posteriori.
+        </para>
+        
+        <figure id="FigureTheReleaseModificationScreenOfTheCodeXProject">
+          <title>Ecran de modification d'une version du projet CodeX</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/fr_FR/sc_frsreleases.png" width="15.3cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+		
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para><emphasis role="bold">Etape 1 - Propriétés de la version</emphasis></para>
+            <para>La première étape est la seule obligatoire pour créer la version dans 
+            un premier temps. Cette étape vous permet de modifier le paquet de la version,
+            la date et le statut de la version. Vous devez également renseigner le nom de
+            la version.
+            </para>
+          </listitem>
+        
+          <listitem>
+            <para><emphasis role="bold">Etape 2 - Télécharger et attacher les fichiers à une version (facultatif)</emphasis></para>
+            <para>Cette étape est optionnelle dans le sens où vous pouvez ajouter 
+            les fichiers après avoir créé la version, mais il est évident qu'une 
+            version devrait toujours contenir au moins un fichier pour être pertinente. 
+            Comme expliqué auparavant, plusieurs fichiers peuvent être attachés 
+            à une même version. Pour ajouter un fichier, cliquer sur le lien 
+            [ajouter un fichier]. Une boîte de sélection apparaît alors, vous 
+            permettant de sélectionner le fichier à ajouter.
+            Il y a deux moyens d'attacher un fichier :
+            
+            <itemizedlist mark="bullet" spacing="compact">
+                <listitem>
+                <para><emphasis role="underline">Téléchargement direct</emphasis> : 
+                vous pouvez télécharger le fichier via l'interface web en utilisant 
+                l'option &#34;Fichier Local - Parcourir&#34; de la boîte de 
+                sélection, et en choisissant le fichier approprié sur votre 
+                disque local.
+                </para>
+                </listitem>
+                <listitem>
+                <para><emphasis role="underline">FTP / SCP</emphasis> : 
+                télécharger votre fichier via ftp ou scp avant et sélectionner 
+                son nom dans la boîte de sélection, dans la section 
+                &#34;Liste des fichiers FTP/SCP&#34;.</para>
+                <para>
+                    <tip><title>Astuce: Comment télécharger vos fichiers avec FTP ou SCP</title>
+                    <para>CodeX vous permet de télécharger vos fichiers par FTP (ou SCP).
+                    Pour ce faire, suivez les indications qui vous sont données 
+                    lorsque vous cliquez sur le <emphasis>?</emphasis> situé après 
+                    le lien [ajouter un fichier].
+                    Par ailleurs, si vous êtes un utilisateur Windows, vous pouvez 
+                    aussi accéder à l'espace de chargement FTP directement depuis
+                    l'explorateur Windows et y glisser les fichiers (voir
+                    <xref linkend="MSWindowsSharedResources" />). Ensuite
+                    rafraîchissez la page Web ou cliquez sur le lien 
+                    &#34;Rafraîchir la liste des fichiers&#34; puis ajouter un 
+                    nouveau fichier pour voir apparaître les fichiers chargés.
+                    </para>
+                    </tip>
+                </para>
+                <para>Avant de charger les fichiers assurez-vous de leur
+                donner des noms parlants pour les utilisateurs. Idéalement
+                le nom des fichiers doit comprendre le numéro de version
+                et une extension indiquant s'il s'agit d'un fichier source
+                ou binaire.
+                </para>
+                </listitem>
+                <para>Après avoir attaché un fichier à une version, vous pouvez 
+                fournir des informations complémentaires pour chacun d'eux.
+                Pour chaque fichier, vous pouvez spécifier l'architecture 
+                matérielle auquel il est destiné, son type (source, binaire, 
+                documentation ainsi que le type de compression). Ceci n'est pas 
+                absolument necessaire mais ces informations sont très utiles aux 
+                utilisateurs.</para>
+            
+                <para><tip><title>Coup de pouce : compressez toujours vos
+                délivrables</title><para>Pour économiser l'espace de
+                stockage sur le serveur CodeX ainsi que sur les machines
+                des utilisateurs et pour minimiser l'utilisation de la
+                bande passante du réseau, veillez à compresser les
+                fichiers livrés. utilisez Winzip sur Windows et compress,
+                gzip ou même mieux bzip2 sur
+                Linux/Unix.</para></tip></para> 
+             </itemizedlist>
+           </para>
+         </listitem>
+         
+         <listitem>
+            <para><emphasis role="bold">Etape 3 - Renseigner les notes concernant la version et les modifications (facultatif)</emphasis></para>
+            <para>Avec la version, vous pouvez également fournir des notes et/ou 
+            des modification (change log). Vous pouvez au choix copier/coller du 
+            texte ou télécharger les notes en cliquant sur le lien [télécharger].
+            </para>
+            
+            <para>Les notes concernant la version sont typiquement un
+            texte court (10 à 20 lignes) et de haut niveau résumant
+            les modifications visibles pour l'utilisateur (nouvelle
+            interface utilisateur, nouvelles fonctionnalités,
+            nouvelles interfaces de programmation...). C'est un
+            document important et les versions publiées devraient
+            toutes être assorties de ce document. Il permet par
+            exemple à vos utilisateurs de décider s'ils doivent 
+            mettre à jour leur ancienne version ou pas..</para>
+
+            <para>Le document décrivant les modifications (ChangeLog)
+            est un document beaucoup plus technique décrivant en détail
+            tous les défauts corrigés dans cette version et tous les
+            changements intervenus dans le code, le design ou
+            l'architecture. Ce document n'est pas aussi critique que
+            le précédent pour l'utilisateur final mais il est critique
+            pour ceux qui utilisent votre logiciel dans d'autres
+            activités de développement ou d'intégration.</para>
+
+            <para><tip><title>Coup de pouce : comment générer
+            facilement un fichier de recensement des
+            modifications</title><para>Si vous utilisez CVS comme
+            outil de contrôle de version vous pouvez très facilement
+            générer un fichier de Changelog informatif et correctement
+            formaté. L'outil cvs2cl disponible sur <ulink
+            url="http://www.red- bean.com/cvs2cl">http://www.red-
+            bean.com/cvs2cl</ulink> extrait automatiquement tous les
+            messages associés aux opérations de commit et les présente
+            avec la liste des fichiers impactés, les dates de
+            modifications et le nom de l'auteur. C'est une excellente 
+            base pour un document de type ChangeLog.</para></tip></para>
+            
+          </listitem>
+        
+          <listitem>
+            <para><emphasis role="bold">Etape 4 - Modification des permissions d'une version (facultatif)</emphasis></para>
+            <para>Si vous ne spécifiez aucune permission d'accès pour
+            une version, la version hérite des permissions définies pour le
+            paquet dans lequel elle se trouve. (Par défaut un paquet a la permission
+            &#34;utilisateurs-enregistrés&#34;.)Si vous avez besoin d'un contrôle d'accès plus fin sur
+            vos délivrables logiciels, vous pouvez aussi définir des
+            permissions au niveau de chaque version.
+            </para>
+
+            <para>Pour cela, séléctionnez le lien &#34;[Voir/Modifier]&#34; de la 
+            partie permissions, puis procédez à la sélection des groupes d'utilisateurs
+            autorisés pour définir des permissions sur une
+            version.</para>
+
+          </listitem>
+        
+          <listitem>
+            <para><emphasis role="bold">Step 5 - Créer automatiquement une annonce (facultatif)</emphasis></para>
+            <para>Cette étape est optionnelle, vous pouvez choisir de ne pas en 
+            tenir compte. Cette étape donne la possibilité aux administrateurs du 
+            projet de soumettre automatiquement une annonce concernant la nouvelle 
+            version tout juste créée (si vous n'êtes pas administrateur du projet ou 
+            pas administrateur des annonces, vous ne verrez tout simplement pas 
+            cette étape). Pour créer une annonce, il suffit de cocher la case 
+            située en regard de &#34;Soumettre une annonce&#34;, puis de compléter 
+            votre annonce. Le sujet et le message de l'annonce sont préremplis avec 
+            un texte par défaut. Vous pouvez bien entendu les modifier avant de 
+            valider. L'annonce apparaîtra sur la page de sommaire de votre projet. 
+            Il s'agit là d'un bon moyen d'avertir vos utilisateurs de la 
+            disponibilité d'une nouvelle version. L'annonce apparaîtra ensuite 
+            dans la page d'administration des annonces, comme toute autre annonce.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Step 6 - Envoyer une notification par email (facultatif)</emphasis></para>
+            <para>Cette étape est optionnelle, c'est à dire qu'elle peut
+            ne pas apparaître à l'écran. Si certains utilisateurs
+            CodeX ont activé la surveillance de l'un de vos paquets,
+            l'étape 4 vous indiquera combien l'ont fait. CodeX vous
+            donne alors la possibilité de leur envoyer (ou pas) une
+            notification email les avertissant de la publication d'une
+            nouvelle version conformément à leur demande. Nous vous
+            conseillons vivement de ne pas négliger cette étape et de
+            tenir vous utilisateurs informés.</para>
+            
+            <para></para>
+            <para></para>
+            <para></para>
+            <para></para>
+            
+            <para><tip><title>Coup de pouce : fournissez toujours un
+            fichier LISEZMOI (ou README en
+            anglais)</title><para>Lorsque vous préparez les fichiers
+            d'une nouvelle version, assurez vous de toujours inclure
+            dans le répertoire de pluReleasePropertiess haut niveau de votre archive un
+            fichier LISEZMOI (ou README). Ce fichier doit comporter
+            toutes les informations utiles concernant votre projet
+            telles que l'adresse de votre site Web sur CodeX, les
+            listes de distributions destinées aux utilisateurs, comment
+            soumettre un bug ou une demande d'assistance à l'équipe de
+            projet (via CodeX bien sûr)</para></tip></para>
+            
+          </listitem>
+        </itemizedlist>
+
+        </section>
+    </section>
+  </section>
+  
+  <section id="ManageProcessorsList">
+    <title>Administration de la liste des processeurs</title>
+      <para>
+          Les administrateurs projet et les administrateur du service fichier 
+          peuvent gérer la liste des processeurs pour un projet donné. 
+          Le processeur est une propriété (optionnelle) d'un délivrable. 
+          Selon le projet ou selon votre domaine d'activité, vous pouvez 
+          souhaiter ajouter certains processeurs à la liste existante. 
+          Pour ce faire, suivez le lien &#34;administration - Gérer les processeurs&#34;
+          du service Fichier. Vous obtenez alors la liste des processeurs pour le projet 
+          courant. Les processeurs <emphasis>systèmes</emphasis> ne sont pas 
+          modifiables (et ne peuvent être supprimés).
+          Les autres processeurs sont spécifiques au projet courant. 
+          Vous pouvez les modifier, les supprimer et en créer de nouveaux.
+          Un processeur a pour attribut un nom et un rang d'affichage dans la 
+          liste des processeurs..
+      </para>
+  </section>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

@@ -1,0 +1,360 @@
+<!--
+SF_FORUM 0.1 (2000-03-07)
+
+Same as XMLNews-Story except that root element is no longer nitf, but is
+the group element instead, containing multiple forums, in turn containing
+multiple nitf entries.
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT group (forum*)>
+<!ATTLIST group
+  name CDATA>
+<!ELEMENT forum (nitf+)>
+<!ATTLIST forum
+  name CDATA>
+
+<!--
+************************************************************************
+XMLNEWS-STORY (1999-04-05)
+
+Copyright (c) 1999 by XMLNews.org
+
+Description:
+
+XMLNews-Story is a compatible subset of the News Industry
+Text Format (NITF-XML) DTD of 21 September 1998.  Documentation and
+tutorial information, together with the latest version of the schema, are 
+available from http://www.xml.org/.  The root element  is
+<nitf>.  The system identifier for the DTD is
+"http://www.xmlnews.org/dtds/xmlnews-story.dtd".
+
+************************************************************************
+-->
+
+<!-- Hyperlink anchor -->
+<!ELEMENT a (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+<!ATTLIST a
+  href CDATA #REQUIRED>
+
+<!-- Audio clip -->
+<!ELEMENT audio (audio.caption?, audio.producer?, audio.data)>
+<!ATTLIST audio
+  src CDATA #REQUIRED
+  length NMTOKEN #IMPLIED>
+
+<!-- Audio clip caption -->
+<!ELEMENT audio.caption (caption)>
+
+<!-- Audio clip data -->
+<!ELEMENT audio.data EMPTY>
+<!ATTLIST audio.data
+  copyright CDATA #IMPLIED>
+
+<!-- Audio clip producer -->
+<!ELEMENT audio.producer (byline)+>
+
+<!-- Document base URL -->
+<!ELEMENT base EMPTY>
+<!ATTLIST base
+  href CDATA #REQUIRED>
+
+<!-- Information block -->
+<!ELEMENT block (dateline?, copyrite?, (img | audio | video | p | ol | ul | dl | table | bq | pre)*, datasource?)>
+
+<!-- Body of the news story -->
+<!ELEMENT body (body.head?, body.content?, body.end?)>
+
+<!-- Main content of a news story -->
+<!ELEMENT body.content (p | ol | ul | dl | h1 | h2 | h3 | h4 | block)*>
+
+<!-- End information for a news story -->
+<!ELEMENT body.end (tagline)>
+
+<!-- Printable header information for a news story -->
+<!ELEMENT body.head (hedline?, byline*, distributor?, dateline?, series?)>
+
+<!-- Block quotation -->
+<!ELEMENT bq ((h1 | h2 | h3 | h4 | block)+, credit?)>
+
+<!-- Line Break -->
+<!ELEMENT br EMPTY>
+
+<!-- Story byline -->
+<!ELEMENT byline (bytag)>
+
+<!-- Tag in a byline. -->
+<!ELEMENT bytag (#PCDATA)>
+
+<!-- Caption -->
+<!ELEMENT caption (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Date and time -->
+<!ELEMENT chron (#PCDATA)>
+<!ATTLIST chron
+  norm CDATA #IMPLIED>
+
+<!-- City -->
+<!ELEMENT city (#PCDATA)>
+
+<!-- Copyright statement -->
+<!ELEMENT copyrite (#PCDATA | copyrite.year | copyrite.holder)*>
+
+<!-- Copyright holder -->
+<!ELEMENT copyrite.holder (#PCDATA)>
+
+<!-- Copyright year -->
+<!ELEMENT copyrite.year (#PCDATA)>
+
+<!-- Country name -->
+<!ELEMENT country (#PCDATA)>
+
+<!-- Quotation credit -->
+<!ELEMENT credit (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Block data source -->
+<!ELEMENT datasource (#PCDATA)>
+
+<!-- Dateline -->
+<!ELEMENT dateline (location, story.date?)>
+
+<!-- Descriptive data -->
+<!ELEMENT dd (block)>
+
+<!-- Denominator -->
+<!ELEMENT denom (#PCDATA)>
+
+<!-- News distributor -->
+<!ELEMENT distributor (#PCDATA | org)*>
+
+<!-- Descriptive list -->
+<!ELEMENT dl (lh?, (dt?, dd)+)>
+
+<!-- Description title -->
+<!ELEMENT dt (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Emphasized phrase -->
+<!ELEMENT em (#PCDATA)>
+
+<!-- Event name -->
+<!ELEMENT event (#PCDATA)>
+
+<!-- Fraction -->
+<!ELEMENT frac (numer, denom)>
+
+<!-- Person's function -->
+<!ELEMENT function (#PCDATA)>
+
+<!-- Level one heading -->
+<!ELEMENT h1 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Level two heading -->
+<!ELEMENT h2 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Level three heading -->
+<!ELEMENT h3 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Level four heading -->
+<!ELEMENT h4 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Document header -->
+<!ELEMENT head (title, base?)>
+
+<!-- Story headline group -->
+<!ELEMENT hedline (hl1, hl2*)>
+
+<!-- Story headline -->
+<!ELEMENT hl1 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Story subheadline -->
+<!ELEMENT hl2 (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Image -->
+<!ELEMENT img (img.caption?, img.producer?, img.data)>
+<!ATTLIST img
+  src CDATA #REQUIRED
+  width NMTOKEN #IMPLIED
+  height NMTOKEN #IMPLIED>
+
+<!-- Image caption -->
+<!ELEMENT img.caption (caption)>
+
+<!-- Image data -->
+<!ELEMENT img.data EMPTY>
+<!ATTLIST img.data
+  copyright CDATA #IMPLIED>
+
+<!-- Image producer -->
+<!ELEMENT img.producer (byline)+>
+
+<!-- Foreign language phrase -->
+<!ELEMENT lang (#PCDATA)>
+<!ATTLIST lang
+  lang NMTOKEN #IMPLIED>
+
+<!-- List header -->
+<!ELEMENT lh (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- List item -->
+<!ELEMENT li (block)>
+
+<!-- Location in story -->
+<!ELEMENT location (#PCDATA | sublocation | city | state | region | country)*>
+
+<!-- Monetary phrase -->
+<!ELEMENT money (#PCDATA)>
+<!ATTLIST money
+  unit CDATA #IMPLIED>
+
+<!-- Family name -->
+<!ELEMENT name.family (#PCDATA)>
+
+<!-- Given name -->
+<!ELEMENT name.given (#PCDATA)>
+
+<!-- XMLNews-Story root element -->
+<!ELEMENT nitf (head, body)>
+<!ATTLIST nitf
+  baselang CDATA #IMPLIED
+  change.date CDATA #FIXED "$Date$"
+  change.time CDATA #FIXED "0000"
+  unr CDATA #IMPLIED
+  version CDATA #FIXED "-//XMLNews//DTD XMLNEWS-STORY $Revision$//EN">
+
+<!-- Numeric expression -->
+<!ELEMENT num (#PCDATA | frac | sub | sup)*>
+
+<!-- Numerator -->
+<!ELEMENT numer (#PCDATA)>
+
+<!-- Object title -->
+<!ELEMENT object.title (#PCDATA)>
+
+<!-- Ordered list -->
+<!ELEMENT ol (lh?, li+)>
+
+<!-- Organization -->
+<!ELEMENT org (#PCDATA | orgid)*>
+
+<!-- Organization identifier -->
+<!ELEMENT orgid EMPTY>
+<!ATTLIST orgid
+  idsrc CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+<!-- Paragraph -->
+<!ELEMENT p (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Person -->
+<!ELEMENT person (#PCDATA | name.given | name.family | function)*>
+
+<!-- Preformatted text -->
+<!ELEMENT pre (#PCDATA)>
+
+<!-- Pronounciation -->
+<!ELEMENT pronounce EMPTY>
+<!ATTLIST pronounce
+  guide CDATA #IMPLIED
+  phonetic CDATA #IMPLIED>
+
+<!-- Quoted phrase -->
+<!ELEMENT q (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Geographical region -->
+<!ELEMENT region (#PCDATA)>
+
+<!-- Series -->
+<!ELEMENT series EMPTY>
+<!ATTLIST series
+  series.name CDATA #IMPLIED
+  series.part NMTOKEN "0"
+  series.totalpart NMTOKEN "0">
+
+<!-- Geographical state -->
+<!ELEMENT state (#PCDATA)>
+
+<!-- Story date -->
+<!ELEMENT story.date (#PCDATA)>
+
+<!-- Subscript phrase -->
+<!ELEMENT sub (#PCDATA)>
+
+<!-- Geographical sublocation -->
+<!ELEMENT sublocation (#PCDATA)>
+
+<!-- Superscript phrase -->
+<!ELEMENT sup (#PCDATA)>
+
+<!-- Table -->
+<!ELEMENT table (caption?, thead?, tfoot?, tbody+)>
+
+<!-- Story tag line -->
+<!ELEMENT tagline (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q)*>
+
+<!-- Table body -->
+<!ELEMENT tbody (tr+)>
+<!ATTLIST tbody
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Table data cell -->
+<!ELEMENT td (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q | p | ol | ul | dl | h1 | h2 | h3 | h4 | img | audio | video)*>
+<!ATTLIST td
+  rowspan NMTOKEN "1"
+  colspan NMTOKEN "1"
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Table footer -->
+<!ELEMENT tfoot (tr+)>
+<!ATTLIST tfoot
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Table heading cell -->
+<!ELEMENT th (#PCDATA | chron | copyrite | event | function | location | money | num | object.title | org | person | virtloc | a | br | em | lang | pronounce | q | p | ol | ul | dl | h1 | h2 | h3 | h4)*>
+<!ATTLIST th
+  rowspan NMTOKEN "1"
+  colspan NMTOKEN "1"
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Table header -->
+<!ELEMENT thead (tr+)>
+<!ATTLIST thead
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Document title -->
+<!ELEMENT title (#PCDATA)>
+
+<!-- Table row -->
+<!ELEMENT tr (th | td)+>
+<!ATTLIST tr
+  align (left | center | right | justify) #IMPLIED
+  valign (top | middle | bottom | baseline) #IMPLIED>
+
+<!-- Unordered list -->
+<!ELEMENT ul (lh?, li+)>
+
+<!-- Video clip -->
+<!ELEMENT video (video.caption?, video.producer?, video.data)>
+<!ATTLIST video
+  src CDATA #REQUIRED
+  length NMTOKEN #IMPLIED>
+
+<!-- Video clip caption -->
+<!ELEMENT video.caption (caption)>
+
+<!-- Video clip data -->
+<!ELEMENT video.data EMPTY>
+<!ATTLIST video.data
+  copyright CDATA #IMPLIED>
+
+<!-- Video clip producer -->
+<!ELEMENT video.producer (byline)+>
+
+<!-- Virtual location -->
+<!ELEMENT virtloc (#PCDATA)>
+
+<!-- end of DTD -->

@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: ProjectSummary.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="ProjectSummary">
+    <title>Sommaire du projet</title>
+
+    <para>La page de Sommaire du Projet est le point d'entrée d'un
+    projet hébergé sur CodeX et c'est véritablement la seule page dont
+    vous ayez à vous souvenir ou à conserver dans vos signets. A
+    partir de cette page les utilisateurs enregistrés, les membres du
+    projet ou les administrateurs peuvent accéder à l'ensemble des
+    ressources et des services qui leur sont
+    accessibles. Contrairement à la page d'Administration du Projet
+    (voir <xref linkend="ProjectAdministration" />), le Sommaire du
+    Projet est accessible à tous les utilisateurs. D'une certaine
+    façon il s'agit de la façade publique du projet.</para>
+
+    <section id="AccessingAProjectSummaryPage">
+      <title>Accéder au Sommaire du Projet</title>
+
+      <para>Pour les membres d'un projet, la façon la plus simple
+      d'accéder à la page de sommaire consiste à se rendre sur la page
+      personnelle et à cliquer sur le nom de projet approprié.</para>
+
+      <para>Pour les autres utilisateurs il existe plusieurs façons de
+      se rendre sur le page de sommaire d'un projet :</para>
+
+      <procedure>
+        <step>
+          <para>Vous pouvez utiliser la boîte de recherche par
+          mots-clés pour retrouver un projet dont vous connaissez tout
+          ou partie du nom.</para>
+        </step>
+
+        <step>
+          <para>Vous pouvez explorer l'arbre des projets si vous savez
+          dans quelles catégories se trouve le projet.</para>
+        </step>
+
+        <step>
+          <para>Vous pouvez aussi cliquer sur le nom du projet s'il
+          apparaît dans le tableau de bord de la page d'accueil de
+          CodeX.</para>
+        </step>
+
+        <step>
+          <para>Et enfin vous pouvez aussi indiquer explicitement
+          l'URL à votre navigateur sous la forme :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
+</programlisting>
+        </step>
+      </procedure>
+
+      <para>Si vous devez consulter régulièrement des projets dont
+      vous n'êtes pas membre de, nous vous conseillons de faire
+      apparaître l'URL de la page de sommaire dans votre page
+      personnelle CodeX en utilisant la fonction &#34;Cette page en
+      signet&#34; du menu de CodeX (voir <xref
+      linkend="LoginAndPersonalPage" />)</para>
+
+      <tip>
+        <title>Le Sommaire du Projet n'est pas sa Page d'Accueil !</title>
+
+        <para>La page de sommaire du projet ne doit pas être confondue
+        avec la page d'accueil. La page de sommaire donne une vue
+        d'ensemble des activités et des délivrables du projet alors
+        que la page d'accueil est le point d'entrée du site Web de
+        votre projet. Le site Web d'un projet peut être utilisé pour
+        accueillir vos visiteurs, les informer et les orienter vers les
+        différents services de CodeX. (voir <xref
+        linkend="ProjectWebSite" /> pour plus d'information sur
+        l'élaboration du site Web de votre projet)</para>
+      </tip>
+
+      <para></para>
+
+      <para></para>
+
+      <para></para>
+      <para></para>
+    </section>
+
+    <section id="ProjectSummaryPageContent">
+      <title>Contenu de la page de sommaire</title>
+
+      <para>Un exemple de page de sommaire d'un projet est visible sur
+      la <xref linkend="FigureASampleProjectSummaryPage" />. La page
+      se divise en plusieurs zones :</para>
+
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Menu principal du
+          projet</emphasis> : il se trouve en haut de la page juste
+          sous le nom du projet. Le menu principal est un
+          récapitulatif de l'ensemble des services disponibles pour ce
+          projet. Ce menu reste visible sur toutes les pages qui
+          concernent le projet dans lequel vous naviguez.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Description courte et
+          catégorisation</emphasis> : ces éléments ont déjà été décrits
+          auparavant. A côté de la description courte figure un
+          pointeur vers une description plus détaillée du
+          projet.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Membres et administrateurs du
+          projet</emphasis> : ils apparaissent en haut à droite de la
+          page. Un clic sur l'un des noms vous donnera plus
+          d'information sur l'utilisateur et la possibilité de lui
+          envoyer un email.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Derniers fichiers
+          publiés</emphasis> : montre la liste des versions les plus
+          récentes des paquets logiciels disponibles en
+          téléchargement. L'icône Notes 
+          (<inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/manual16c.png"
+          /></imageobject></inlinemediaobject>) permet de consulter
+          les notes concernant cette version ainsi qu'un résumé des
+          changements (Changelog). A proximité se situe l'icône de
+          surveillance de ce paquet
+          (<inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/mail16d.png"
+          /></imageobject></inlinemediaobject>). La sélection de cette
+          icône active la surveillance automatique de ce paquet
+          logiciel par CodeX. A chaque fois que l'équipe de projet
+          dépose une nouvelle version du logiciel, un message de
+          notification vous est envoyé. Tous les paquets sous
+          surveillance se trouvent sur votre Page Personnelle et la
+          surveillance peut être désactivée depuis cette page.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Zones publiques</emphasis> : il
+          s'agit d'une liste de tous les services disponibles pour ce
+          projet assortis d'informations complémentaires (comme par
+          exemple le nombre d'artefact ouvert ou fermé). Le rôle de
+          cette liste est quasiment identique à celui du menu
+          principal du projet situé en haut de la page à savoir
+          fournir un accès rapide à chacun des services du
+          projet.</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Dernières annonces</emphasis> :
+          les dix dernières annonces publiées par les membres du
+          projet. Certaines de ces annonces peuvent aussi apparaître
+          sur le page d'accueil du site si l'équipe CodeX en décide
+          ainsi.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure id="FigureASampleProjectSummaryPage">
+        <title>Un exemple de page de Sommaire d'un projet</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_projectsummarypage.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+      </figure>
+    </section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

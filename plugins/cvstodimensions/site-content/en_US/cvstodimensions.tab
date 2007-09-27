@@ -1,0 +1,64 @@
+
+plugin_cvstodimensions	descriptor_description	Passerelle CVS vers Dimensions
+plugin_cvstodimensions	descriptor_name	CVStoDIM
+
+plugin_cvstodimensions	title	CVStoDIM
+
+
+plugin_cvstodimensions	service_lbl_key	Passerelle
+plugin_cvstodimensions	service_desc_key	CVS to Dimensions
+
+plugin_cvstodimensions	toolbar_intro	Information passerelle
+plugin_cvstodimensions	toolbar_parameters	Paramètres
+plugin_cvstodimensions	toolbar_transfer	Transfert
+plugin_cvstodimensions	toolbar_historic	Historique
+plugin_cvstodimensions	toolbar_help	Aide
+
+plugin_cvstodimensions	intro_title	Transfert vers 26C
+plugin_cvstodimensions	intro_text	<p>La gestion de configuration des développements chez DDSI s'appuie sur l'outil de gestion de versions CVS (modèle 1 avec CVS/CodeX) et sur le logiciel de gestion de configuration Dimensions de Serena (modèle 2 et 3 avec Dimensions/26C).</p><p>Quel que soit l'outil de gestion de configuration utilisé, 26C reste le référentiel unique.</p><p>Si vous gérez actuellement vos sources avec CVS, il demeure important d'archiver régulièrement les versions stables de votre projet dans 26C.</p><p>A cet effet, vous pouvez utiliser cette passerelle afin de transférer les éléments gérés dans CVS vers Dimensions/26C.</p><p>Seulement certains tags CVS sont transférables dans 26C :<br>Assurez-vous d'avoir taggé vos composants avec la nomenclature suivante : « GxxRyyCzz » car seul ces tags sont transférables (aucun caractère avant ou après n'est autorisé).</p><p>En cas de problème, contactez l'équipe gcl : http://isi.francetelecom.fr/gcl/</p>
+
+plugin_cvstodimensions	parameters_title	Paramètres 26C pour le transfert
+plugin_cvstodimensions	parameters_text	<p>Indiquez ci-dessous les paramètres de votre enveloppe Dimensions.</p><p>Pour chaque module, veuillez indiquer le design part correspondant.</p><p>En cliquant sur le bouton « enregistrer » vous ne perdez pas vos paramètres en naviguant d'un onglet à un autre et vous conservez ces paramètres lors des prochaines connexions.</p>	
+plugin_cvstodimensions	parameters_product	Product  
+plugin_cvstodimensions	parameters_database	Database 26C 
+plugin_cvstodimensions	parameters_module	Module 
+plugin_cvstodimensions	parameters_status	Statut   
+plugin_cvstodimensions	parameters_status_initial	Statut initial 
+plugin_cvstodimensions	parameters_status_final	Statut final 
+plugin_cvstodimensions	parameters_save	Enregistrer
+
+plugin_cvstodimensions	transfer_title	Transfert du projet
+plugin_cvstodimensions	transfer_text	<p>Choisissez ci-dessous le tag CVS à transférer dans 26C.</p><p>Seul les tags du type GxxRyyCzz sont transférables (pas de caractères avant ni après autorisés).</p><p>Attention : les tags doivent être transférés « dans l'ordre ». C'est-à-dire qu'une fois qu'un tag n est transféré vous ne pouvez plus transférer le tag n-1.</p><p>Vous devez disposer du rôle « gestionnaire de configuration » dans Dimensions pour pouvoir réaliser le transfert. Le mot de passe à renseigner correspond à celui de 26C. Les users CodeX et 26C doivent être identiques (code alliance).</p>
+plugin_cvstodimensions	transfer_tag	Tag a transférer 
+plugin_cvstodimensions	transfer_password	Mot de passe 26C 
+plugin_cvstodimensions	transfer_transfer	Transférer
+
+plugin_cvstodimensions	historic_title	Historique des transferts
+plugin_cvstodimensions	historic_tag	Tag
+plugin_cvstodimensions	historic_date	Date du transfert
+plugin_cvstodimensions	historic_submission	Soumis par
+plugin_cvstodimensions	historic_state	Etat
+plugin_cvstodimensions	historic_state_success	Succès
+plugin_cvstodimensions	historic_state_inprogress	En cours
+plugin_cvstodimensions	historic_state_failure	Echec
+
+plugin_cvstodimensions	feedback_no_modules	Votre projet CVS ne contient aucun module.
+plugin_cvstodimensions	feedback_no_tags	Votre projet CVS ne contient aucun tag.
+plugin_cvstodimensions	feedback_no_cvs_project	Votre projet n'a pas encore été créé dans CVS, il le sera dans un délai de deux heures maximum.
+plugin_cvstodimensions	feedback_missing_field	Veuillez remplir le champ $1.
+plugin_cvstodimensions	feedback_transfer_missing_field	Veuillez remplir le champ $1 dans la vue Paramètres.
+plugin_cvstodimensions	feedback_save	Les paramètres ont bien étés enregistrés.
+plugin_cvstodimensions	feedback_transfer_done	Le transfert vers Dimensions s'est effectué avec succès.
+plugin_cvstodimensions	feedback_transfer_inprogress	Le transfert vers Dimensions est en cours.Veuillez attendre la fin de ce transfert avant d'en effectuer un à nouveau.
+plugin_cvstodimensions	feedback_transfer_failed	Echec du transfert.
+plugin_cvstodimensions	feedback_transfer_wait	Un transfert vers Dimensions est déjà en cours, veuillez patienter avant d'effectuer un autre transfert.
+plugin_cvstodimensions	feedback_transfer_alreadyDone	Le transfert vers Dimensions de ce tag a déjà été effectué.
+
+plugin_cvstodimensions	error_product	Sauvegarde annulée : product incorrect.
+plugin_cvstodimensions	error_connexion	Sauvegarde annulée : database incorrecte.
+plugin_cvstodimensions	error_parameters_database	Une erreur est survenue lors de l'enregistrement des paramètres. Veuillez réessayer.
+plugin_cvstodimensions	error_transfert_cancel_modules	Transfert annulé : Le(s) modules(s) suivant(s) n'est pas répertoriés dans 26C : $1
+plugin_cvstodimensions	error_transfert_cancel_role	Transfert annulé : Vous n'avez pas le rôle de gestionnaire de configuration sur le product 26C.
+plugin_cvstodimensions	error_transfert_cancel_configuration	Transfert annulé : Le product cible n'est pas configuré pour la passerelle. Merci de contacter l'équipe GCL.
+plugin_cvstodimensions	error_transfert_cancel_product	Transfert annulé : product incorrect.
+plugin_cvstodimensions	error_transfert_cancel_dmcli	Transfert annulé : echec de la commande dmcli. Contacter l'équipe GCL. <br/>$1

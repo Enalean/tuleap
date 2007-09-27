@@ -1,0 +1,185 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2005, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="WikiService">
+  <title>Wiki Service</title>
+
+  <para>CodeX offers a Wiki service to each project. The wiki
+  available in CodeX is based on a popular wiki tool called <ulink
+  url="http://phpwiki.sourceforge.net">phpWiki</ulink>.</para>
+
+
+  <section id="WikiOverview">
+    <title>Wiki Overview</title>
+
+    <section id="WikiDefinition">
+      <title>Wiki Definition</title>
+
+      <para>A Wiki is a website that allows anyone to easily add
+      content or to edit the content that is already in place.</para>
+
+      <para>A wiki enables documents to be written collectively in a
+      simple markup language using a web browser. A single page in a
+      wiki is referred to as a "wiki page," while the entire body of
+      pages, which are usually highly interconnected via hyperlinks,
+      is called "the wiki.". CodeX offers an intermediate
+      representation called a "Wiki Document": it is a wiki page that
+      is directly accessible from the project wiki main page.</para>
+
+      <para>A defining characteristic of wiki technology is the ease
+      with which pages can be created and updated. There is no review
+      or approval process before modifications are accepted, and CodeX
+      wikis are open to all CodeX registered users.</para>
+    </section>
+
+    <section id="WikiPageFormatting">
+      <title>Wiki Page Formatting</title>
+
+      <para>In CodeX wikis, there are three representations for each
+      page: the HTML code, the web page resulting from rendering that
+      code by a web browser, and the user-editable source code, from
+      which the server produces the HTML. The latter format, known as
+      "wikitext", is written in a simplified markup language.</para>
+
+      <para>The reasoning behind this design is that HTML, with its
+      large library of nested tags, is too complicated to allow
+      fast-paced editing, and distracts from the actual content of the
+      pages. It is also viewed as beneficial that users cannot use all
+      the functionality that HTML allows, such as JavaScript and
+      Cascading Style Sheets, because of the consistency in look and
+      feel that is thereby enforced, and for security reasons.</para>
+    </section>
+
+    <section id="WikiLinkingandCreatingPages">
+      <title>Linking and Creating Pages</title>
+
+      <para>Wikis are a true hypertext medium, with non-linear
+      navigational structures. Each page typically contains a large
+      number of links to other pages. Links are automatically created using a
+      specific syntax, the so-called "link pattern."</para>
+
+      <para>CodeX wikis use CamelCase as a link pattern, produced by
+      capitalizing words in a phrase and removing the spaces between
+      them (the word "CamelCase" is itself an example of
+      CamelCase). The term CamelCase comes from the uppercase "bumps"
+      in the middle of the compound word, suggesting the bumps of a
+      camel.</para>
+
+      <para> CodeX wikis also allow other ways of creating wiki links
+      by putting anything into square brackets. This allows the
+      creation of page titles containing blank characters.</para>
+
+      <para>New pages in a wiki are created simply by creating the
+      appropriate links on a topically related page. If the link does
+      not exist, it is emphasized as a "new" link. Following that link
+      opens an edit window, which then allows the user to enter the
+      text for the new page. This mechanism ensures that so-called
+      "orphan" pages (which have no links pointing to them) are rarely
+      created.</para>
+    </section>
+
+    <section id="WikiSearching">
+      <title>Searching</title>
+
+      <para>CodeX wikis offer a title search, as well as a full text
+      search.</para>
+    </section>
+  </section>
+
+  <section id="CodeXWikis">
+    <title>CodeX Wikis</title>
+
+    <para>CodeX wikis are project-specific. So two different projects may use the same page names without conflict.</para>
+
+    <section id="WikiCreation">
+      <title>Wiki Creation</title>
+
+      <para>The wiki has to be initialized by a project administrator
+      before use: simply click on the "Wiki" link in the service bar,
+      select the wiki language, press 'Create', and wait for the
+      creation process to complete.</para>
+
+      <para>Please note that the language of the wiki is initialized
+      once and for all: it cannot be changed later, and it is viewed
+      in the selected language, whatever the user preferences. </para>
+
+      <para>The wiki creation phase creates a default set of useful
+      wiki pages: a welcome page, a sandbox to play with, the PhpWiki
+      documentation, etc.</para>
+    </section>
+
+    <section id="WikiPermissions">
+      <title>Wiki Permissions</title>
+
+      <para>By default, CodeX wikis are viewable and editable by any
+      CodeX registered user.</para>
+
+      <para>While this is usually the best policy, some wikis should
+      not be public. For those cases, CodeX offers a permission
+      mechanism based on user groups, as for file releases and
+      documents (see <xref linkend="UserGroups"/>, <xref
+      linkend="PackageModification"/> and <xref
+      linkend="DocAccessPermissions"/>). Permissions may be set at
+      the wiki level, and apply to all pages, or at the page level, so
+      that only selected pages are protected.</para>
+    </section>
+
+    <section id="ExamplesofWikiPages">
+      <title>Examples of Wiki Usage</title>
+
+      <para>Project Wikis hosted on CodeX may typically be used for
+      many different purposes. The following examples are just
+      suggestions:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <para><emphasis role="bold">Meeting minutes</emphasis>:
+	  wikis are very convenient places to hold meeting
+	  minutes. Simply type the meeting name as a wiki link, click
+	  on this new link and type the minutes. Additionally, anybody
+	  can edit and correct the content later.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Project Calendar</emphasis>:
+	  CodeX wiki pages may include a shared calendar, that every
+	  team member can access and edit (see the CalendarPlugin
+	  page).</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Documentation</emphasis>: a wiki
+	  is a convenient way of providing project documentation (user
+	  guide, administration guide, FAQ, etc.). This documentation
+	  can be updated at any time by any team member, partners or
+	  even customers if they have been granted proper access
+	  permissions.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="MoreWikiDocumentation">
+      <title>More Documentation</title>
+
+      <para>All CodeX wikis are initialized with some default pages,
+      including the PhpWiki documentation. See the
+      PhpWikiDocumentation page for a description of all the PhpWiki
+      features: syntax, plugins, etc.</para>
+    </section>
+
+  </section>
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

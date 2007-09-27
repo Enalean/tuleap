@@ -1,0 +1,49 @@
+If you ever make changes to the CodeX code base, please keep us
+informed of your changes via email at codex-contact@codex.xerox.com or
+even better, submit a patch file with the modifications you made
+through our Patch Manager.
+
+- Xerox internal users should use the CodeX patch manager to submit
+new patches . Visit http://codex.xerox.com/patch/?group_id=1
+
+- Xerox customers using the CodeX platform must visit
+http://codex.partners.xrce.xerox.com/ and follow the instructions.
+
+CONTRIBUTION GUIDELINES
+=======================
+
+While we want to encourage you to submit code contributions and patches
+to CodeX, we do need to make sure they are cleanly implemented and
+make sense in the way they are designed.
+
+When designing your changes, think about a few things:
+
+-Is this scalable? For example, if you want to have a pop-up box
+listing groups or users, that obviously would never scale up to CodeX
+levels. It might work great if you have 10 projects on your test
+version of CodeX, but what happens when you have 10,000?
+
+-Is it secure? When updating or inserting into the database, are you
+checking to make sure that the user has permissions to do it and that
+they have not hacked your HTML form to get around limited security?
+
+-Is it readable? All your code should be properly indented and if/else
+statements should always include braces {}. Vertical linespacing also
+helps improve readability and maintainability.
+
+-Is it commented? Did you add simple comments throughout your code
+explaining why/how you're approaching the task?
+
+-Is it customizable? When you implement a new feature make sure that
+it can be configured to match the needs of a large spectrum of
+users. In some cases it may just require a little bit more work to
+make hundreds of users happy instead of just a couple.
+
+When you prepare your patches, make sure they are tested and known to
+work, and make sure that each patch handles basically one feature at a
+time. If you group a bunch of features into a single patch, we may not
+be able to accept them all, or all at the same time.
+
+The CodeX Team will review all patches submitted and get back to the
+originator to inform him/her of the decision we took with respect to
+the merge in the main CodeX source tree.

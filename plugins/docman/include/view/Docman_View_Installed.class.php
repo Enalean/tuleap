@@ -1,0 +1,21 @@
+<?php
+
+/**
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* 
+* $Id$
+*
+* Docman_View_Installed
+*/
+
+require_once('Docman_View_ProjectHeader.class.php');
+
+class Docman_View_Installed extends Docman_View_ProjectHeader {
+    /* protected */ function _content($params) {
+        echo '<h2>Congratulations!</h2>';
+        echo '<p>You can now create folders and documents in <a href="'.  $params['default_url'] .'">your Advanced Document Manager</a>.<br />';
+        echo 'Do not permissions to set permissions!</p>';
+    }
+}
+
+?>

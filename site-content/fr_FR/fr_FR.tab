@@ -1,0 +1,79 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+system	locale	fr_FR
+system	strftimefmt	%e %B %Y  %H:%M
+system	datefmt	d/m/Y H:i
+system	datefmt_short	d/m/Y
+system	decimal_separator	,
+system	thousand_separator	' '
+conf	content_encoding	iso-8859-1
+conf	default_font	verdana,arial,helvetica,sans-serif
+conf	language_code	fr
+conf	language_id	2
+global	perm_denied	Permission Refusée
+global	error_perm_denied	Erreur - Permission Refusée
+global	back_home	Retour à la page d'accueil
+global	back	Retour
+global	btn_delete	Détruire
+global	btn_cancel	Annuler
+global	btn_update	Mettre à jour
+global	btn_submit	Valider
+global	btn_browse	Afficher
+global	btn_create	Créer
+global	btn_close	Fermer
+global	btn_reset	Réinitialiser
+global	reset	réinitialiser
+global	yes	Oui
+global	no	Non
+global	on	Activé
+global	off	Désactivé
+global	any	Tous
+global	none	Aucun
+global	begin	Début
+global	end	Fin
+global	next	Suivant
+global	prev	Précédent
+global	printer_version	Version imprimable
+global	error	Erreur
+global	help	Aide
+global	by	par
+global	select	Sélectionner
+global	unchanged	Inchangé
+global	or	ou
+global	and	et
+global	activate	activer
+global	deactivate	désactiver
+global	Project	Projet
+global	System	Système
+global	Personal	Personnel
+global	default	Défaut
+global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mailto:$1'>$1</a>.
+global	open	Ouvert
+global	closed	Fermé
+global	status	Statut
+global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+global	at_the_beginning	Au début
+global	at_the_end	À la fin
+global	after	Après $1
+global	missing_parameters	Paramètres manquants
+global	error_upload	Erreur de chargement de fichier.
+global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+global	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
+global	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
+global	service_conf_not_inherited	La configuration de ce service ne sera pas héritée dans les sous-projets
+

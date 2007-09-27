@@ -1,0 +1,309 @@
+/*
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+*/
+
+/* general stuff */
+BODY { 
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  background-color: #FFFFFF;
+  font-family: helvetica,arial,verdana,sans-serif;
+  font-size: small;
+  color: #333333;
+}
+
+A { text-decoration: none; color: #8b4020 }
+a:hover { text-decoration: underline; color: #ff0000; }
+a:visited { text-decoration:none; color: #8b4020}
+a:active { text-decoration:none; color: #000000}
+
+/*input text fields*/
+.textfield_small { width: 10em; }
+.textfield_medium { width: 25em; }
+
+img { border: none; }
+
+.smaller { font-size: x-small; }
+.small { font-size: small; }
+.normal { font-size: normal; }
+
+.center { text-align: center; }
+.left { text-align: left; }
+.error { font-weight: bold; color: #980000; }
+.feedback { color: red; }
+.bold { font-weight: bold; }
+.disable { color: gray; font-size: small;}
+.highlight { color: red; }
+.newproject { background-color: #EEEEEE; }
+.top_up { color: #009900; }
+.top_down { color: #CC0000; }
+.command { font-family: courier,sans-serif; font-size: small;}
+.subdomain { color: green; }
+.bg_confirmdownload { background-color: #FFFFFF; }
+
+PRE,TT { font-family: courier,sans-serif; }
+
+input {
+ background-color:#fff4a8;
+/*
+ *border: thin solid #a01b1b;
+ *padding: 2px;
+*/
+ color: #000000;
+}
+select {
+ background-color:#fff4a8;
+/*
+ *border: thin solid #a01b1b;
+ *padding: 2px;
+*/
+ color: #000000;
+}
+
+option {
+ background-color:#fff4a8;
+/*
+ *border: thin solid #a01b1b;
+ *padding: 2px;
+*/
+ color: #000000;
+}
+
+textarea {
+ background-color:#fff4a8;
+/*
+ *border: thin solid #a01b1b;
+ *padding: 2px;
+*/
+ color: #000000;
+}
+
+/* forum */
+.thread { background-color: #DDDDDD; }
+.threadbody { background-color: #EEEEEE; }
+.threadmsg { background-color: #E3E3E3; }
+
+/* .footer { color: #333333; } */
+.standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
+
+/* content frame specific */
+.contenttable { background-color: #FFFFFF; vertical-align: top; width: 99%; border-spacing: 0; border: 0; }
+
+/* left menu specific */
+.menuframe { background-color: #f4d495; vertical-align: top; text-align: left; width: 60px; }
+.menutable { background-color: #f4d495; vertical-align: top; width: 150px; border-spacing: 0; border: 0;  font-size: small;}
+.menutitle { vertical-align: top; font-weight: bold; text-align: left; color: #333333; }
+.menuitem { vertical-align: top; text-align: right; color: #333333; }
+
+/* group menu specific (see tabs and tabselect too) */
+.groupmenutable { background-color: #f9e4a2; width: 100% ; border-top: thin solid #000000; border-bottom: thin solid #000000; }
+
+/* classic box */
+.boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
+.boxtitle { background-image: url("/themes/savannah/images/leopard.png"); background-color: #eddb5a; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; vertical-align: middle}
+.boxitem {  /*background-image: url("/themes/savannah/images/sand.png");*/ background-color: #fff5c6; text-align: left; color: #333333; }
+.boxitemalt { background-color: #ffffff; text-align: left; color: #333333; }
+.boxhighlight { background-color: #f4d495; text-align: left; color: #333333; }
+
+/* spartan box */
+/* priority  */
+.priora { background-color: #f9f7f2; }
+.priorb { background-color: #f4f0e8; }
+.priorc { background-color: #efeade; }
+.priord { background-color: #eae3d5; }
+.priore { background-color: #e2dbcc; }
+.priorf { background-color: #ddd7c7; }
+.priorg { background-color: #d8d1be; }
+.priorh { background-color: #d6ceb8; }
+.priori { background-color: #d3caaf; }
+
+/* page specific */
+
+.center { text-align: center; }
+.boxspace { font-size: 2pt; }
+.alignright { text-align: right }
+.maintitlebar { color: #FFFFFF; font-size: large;}
+.slogan { font-weight: bold; font-size: large;}
+.osdn { font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: #bbbbbb; font-size: x-small;}
+.osdntext { font-weight: bold; text-decoration: none; color: #bbbbbb;  font-size: x-small;}
+.osdntext:visited { font-weight: bold; text-decoration: none; color: #bbbbbb; }
+.osdntext:hover { font-weight: bold; text-decoration: none; color: #bbbbbb; }
+.footer { color: #000000; font-size: xx-small; }
+
+.tabs { color: #000000; }
+.tabs:visited { color: #000000; }
+.tabs:hover { color:#FF0000; } 
+.tabselect { color: #000000; font-weight: bold; }
+.tabselect:visited { color: #000000; font-weight: bold; }
+.tabselect:hover { color:#FF0000; font-weight: bold; }
+
+.titlebar { text-decoration:none; color:#000000; font-weight: bold; font-size: small;}
+.develtitle { color:#000000; font-weight: bold; }
+.legallink { color:#000000; font-weight: bold; }
+
+.sortbutton { color: #000000; text-decoration: none; }
+.sortbutton:hover { text-decoration: underline; }
+.sortbutton:visited { color: #000000;}
+
+/* calendar (fixed font size) */
+.calendar_month { background-color: #E0DDD2; }
+.calendar_day { background-color: #FFE6B5; }
+.calendar_currentday { background-color: #FFFFA3; }
+.calendar_nextmonth { background-color: #DBEAF5; }
+.calendar_daymonth { background-color: white; } 
+.calendar_font_othermonth { font-size: x-small; color: gray; }
+.calendar_font { font-size: x-small; color: black; }
+.calendar_font_month { font-size: x-small; color: black; }
+.calendar_font_day { font-size: x-small; color: black; }
+
+/* Help classes */
+.bg_help {
+  background-color: #ffffff;
+}
+
+/* Vertical spacing */
+.vspace-bottom { margin-bottom: 3ex; }
+.vspace-top { margin-top: 3ex; }
+.vspace-both { margin-top: 3ex; margin-bottom: 3ex; }
+
+/* text with tooltips (e.g. artifact fields) */
+.tooltip { text-decoration:none; color: #000000}
+.tooltip:hover { text-decoration:none; color: #ff0000}
+
+
+/* dynamic fields                                */
+/*************************************************/
+/* Only background-color property is used        */
+/* Only full hexa are allowed                    */
+/* don't use names (purple, red, yellow)         */
+/* don't use half hexa (#FF0000 instead of #F00) */
+.codex_field_dependencies_highlight_change {
+    background-color: #FFCC00;
+}
+
+/* field sets */
+.fieldset_separator { text-align: center; background-color: #CCCCCC; }
+td.artifact_spacer { width: 5%; }
+
+/* {{{ feedback */
+.feedback_error, .feedback_warning, .feedback_info, .feedback_debug {
+        font-family:sans-serif;
+        background-color: #f7f7f7;
+        background-position: 20px 50%;
+        background-repeat:no-repeat;
+        margin-left:0px;
+        margin-bottom:10px;
+        list-style:none;
+        padding:10px 50px;
+}
+
+.feedback_error {
+        border:thick solid #ff0000;
+        color:#ff0000;
+        font-weight:bold;
+        background-image: url(../images/ic/error.png)
+}
+.feedback_warning {
+        border:medium solid darkorange;
+        color:peru;
+        font-weight:normal;
+        background-image: url(../images/ic/warning.png)
+}
+.feedback_info {
+        border:thin solid darkblue;
+        color:darkblue;
+        font-weight:normal;
+        background-image: url(../images/ic/info.png)
+}
+.feedback_debug {
+        font-family:monospace;
+        color:yellow;
+        font-weight:normal;
+        background-color:black;
+        display:none; 
+}
+/* }}} */
+
+/* {{{ File Release System */
+.frs_filename_col {
+    width: 50%;
+}
+.frs_size_col {
+    width: 10%;
+}
+.frs_downloads_col {
+    width: 10%;
+}
+.frs_architecture_col {
+    width: 10%;
+}
+.frs_filetype_col {
+    width: 10%;
+}
+.frs_date_col {
+    width: 10%;
+}
+fieldset.package {
+    margin-bottom: 20px;
+}
+fieldset.package legend {
+    font-size: larger;
+    padding-right: 10px;
+}
+.release {
+    background-color: #CCCC99;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    margin-top: 1px;
+}
+.release_date {
+    width: 10%;
+    text-align: right;
+}
+table.release tr td img {
+    vertical-align: bottom;
+}
+.files_table {
+    margin-bottom: 20px;
+}
+/* }}} */
+
+
+.iframe_service {
+    width:100%;
+    height:650px;
+}
+.iframe_showonly {
+    text-align:right;
+    font-size:0.85em;
+}
+
+/* {{{ password validator */
+.password_validator_ok,
+.password_validator_ko {
+    background:transparent url(../images/ic/tick.png) left top no-repeat;
+    padding-left:20px;
+}
+.password_validator_ko {
+    background-image:url(../images/ic/cross.png);
+}
+.password_strategy_bad {
+    color:red;
+    font-weight:bold;
+}
+.password_strategy_good {
+    color:green;
+    font-weight:bold;
+}
+/* }}} */
+

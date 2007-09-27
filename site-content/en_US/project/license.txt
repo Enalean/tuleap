@@ -1,0 +1,50 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+?>
+<P><?php print $GLOBALS['sys_name']; ?> was created to promote collaborative software development and project management across <?php print $GLOBALS['sys_org_name']; ?> and to have one single
+place where to shop for pieces of source code.
+
+<p>To keep things simple, <?php print $GLOBALS['sys_org_name']; ?> have put together a <a
+href="/docman/display_doc.php?docid=16&group_id=1" target="side_window"><?php print $GLOBALS['sys_org_name']; ?> Code eXchange
+Policy</a> that defines the terms and conditions under which source
+code can be shared inside <?php print $GLOBALS['sys_org_name']; ?>.
+
+<P>We think that this policy serves well the purpose of code sharing
+while offering a good level of protection. However if this default
+policy doesn't fit your needs select the item "Other" in the menu
+below and let us know why you wish to use another policy. Your new
+policy will be reviewed by the <?php print $GLOBALS['sys_org_name']; ?> Legal Department and the <?php print $GLOBALS['sys_name']; ?> Team for approval.
+
+<P>Choosing a new policy is a serious decision. Please take some time
+to read the <a href="/docman/display_doc.php?docid=16&group_id=1"
+target="side_window">default <?php echo $GLOBALS['sys_name']; ?> Corporate Policy</a> before making a choice about
+your project.
+
+<P>
+Remark: if you are applying for a website hosting-only project and do not
+expect to host any source code on <?php print
+$GLOBALS['sys_name']; ?>, please select "website-only" from the
+choices below and proceed.</p>
+
+
+<P><B>Policy for This Project</B></p>
+
+<?php
+	echo '<SELECT NAME="form_license">';
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		print ">$v\n";
+	}
+	echo '</SELECT>';
+
+?>
+<P>
+If you selected "other", please provide an explanation along
+with a description of your license. 
+<BR><TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10></TEXTAREA>

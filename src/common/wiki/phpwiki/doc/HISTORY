@@ -1,0 +1,599 @@
+1.3.11 June, 28? 2004, Reini Urban:
+
+Lots of bugfixes, a new EDIT_TOOLBAR from mediawiki, more page 
+permission enhancements, reduce memory usage for pagelists which 
+need no page content, and admin plugin overhaul.
+
+fixes:
+* fixed Today link in all templates if USE_PATH_INFO = false
+* fixed PluginManager fatal error line 222
+* utf-8 pagenames fixed (typed foreign names from IE)
+* CGI: no PATH_INFO fix 
+* fix some too loose PagePerms for signed, but not authenticated users
+  (admin, owner, creator), and edit and view for Bogo and Password users 
+* security fix for create ACL: action=edit is now checked for create
+* fixed syntax errors in signin.tmpl 
+* fixed important WikiDB bug with DEBUG > 0: wrong assertion 
+  around line 172 (#954648)
+* RssFeed stability fix for empty feeds or broken connections 
+* fixed Sidebar theme CSS, added existing dates to jscalendar
+* fixed ImageLinks, broken since 1.3.10 (Bug #956068)
+* fixed lib/pear/File_Passwd loading
+* fixed missing DEBUG warnings (Support #954260)
+* TranslateText: verbatim needed a pagebreak
+* fixed duplicate session_id warning with adodb
+* fixed adodb DbPassUser login
+* fixed external DbPassUser login
+* fixed adodb action=upgrade
+* fixed FilePassUser locking problems
+* fixed a lot of LDAP auth and group issues
+* fixed LDAP options handling (by John Cole)
+* fixed possible security problems: allowing only posixly strict usernames, 
+  and an actual LDAP Injection problem, detected by Steve Christey, MITRE.
+* honor s=wildcard arguments for WikiAdmin plugins
+* fixed flatfile assertion (#963268) - check existing previous version
+* fixed all msg references from index.php to config/config.ini
+* fixed immediate LANG and THEME in-session updates if not stored in prefs
+* fixed USER_AUTH_POLICY=old, use only USER_AUTH_ORDER methods (besides HttpAuth)
+  and removed LDAP, POP3, IMAP default configs.
+* RelatedChanges: fixed days links
+* fix Rename: Change pagename in all linked pages
+* fixed PageChangeNotification for not-current users
+* fixed UpLoadPlugin for filenames with space (Bug #969532)
+* fixed label support for CreateTocPlugin (Bug #969495)
+* fixed Apache2 crashing with old markup and the CreateTocPlugin. 
+  Still cannot edit though.
+* catch fatals and request->args changes on dumping
+* fixed unneeded UserPreferences plugin login screen on dumphtml
+* catch SOAP fatal on GooglePlugin without GOOGLE_LICENSE_KEY
+* silently ignore jshide argument on MacIE for AddComment and CreateToc
+* PhpWiki is now allow_call_time_pass_reference = Off safe (php.ini)
+  Some external libraries are not (Pear_DB odbc, adodb oracle)
+* fixed sql statements for pagedata where it is not needed, fixing the 
+  typical PageList memory exhaustion on simple page lists.
+
+changes:
+* WikiAdminSetAcl functional
+* enabled PagePerm for all admin plugins (no admin required): 
+  Remove, Rename, Replace, SetAcl, Chown
+* new Error-style with collapsed output of repeated messages 
+* trim pagenames to avoid abuse
+* no double login page header, better login msg. 
+* improved FileFinder include_path logic (NormalizeLocalFileName, ...)
+** init global FileFinder to add proper include paths at startup
+   adds PHPWIKI_DIR if started from another dir, lib/pear also
+** fix slashify for Windows
+* check more config-default and predefined constants 
+* AutoSplit pagenames at subpage seperators, esp for Sidebar theme
+* improve Pagelist layout by equal pagename width for limited lists 
+* added CPAN to interwiki.map
+* ExternalSearchPlugin useimage arg (RFE #952323)
+* Simplified some strings for easier translation 
+* added hash and object support for SessionPassUser userid session variable
+* Auth Page=>DB PassUser upgrade: delete existing Page prefs, if Db prefs are saved.
+* renamed DB_Session.php to DbSession.php
+* vastly improved french locale support, which is now complete (by Pierrick Meignen).
+  english, german and french are now completely translated. The others partially.
+* improved ~SetupWiki (virgin setup) loading all required action pages in english,
+  if no foreign translation found (by Pierrick Meignen)
+* show RelatedChanges only if minimum two links on the current page.
+* PageDump: ViewSource link, better actionpage usage, MessageID TZ
+* brought WikiUser (old) uptodate
+* added owner and acl fields to dumps
+* import GOOGLE_LICENSE_KEY and FORTUNE_DIR from config.ini
+* renamed global $Theme to $WikiTheme (gforge nameclash)
+
+new:
+* new ENABLE_EDIT_TOOLBAR (from mediawiki), JS_SEARCHREPLACE currently broken.
+* new config options: 
+** ENABLE_PAGEPERM to turn off ACL (no owner at the statusline if off)
+** FORTUNE_DIR to enable random quotes for new pages
+* implemented WikiDB page creator and ownership
+* added action=pdf: only page formatter missing
+* new XmlParser, HtmlParser: new libs for HTML->wiki import and htmlarea3 support
+** RssFeed broken
+* new pagename utf8 detection logic (from mediawiki)
+* new action=chown|setacl|rename|dump action shortcuts pointing to the plugin
+* new SyntaxHighlighter plugin (based on work by alecthomas),
+  needs highlight from http://www.andre-simon.de/
+* new Ploticus plugin. full application/xhtml+xml support not yet 
+  (javascript document.write() not supported with ENABLE_XHTML_XML)
+* new ListPages plugin (by Dan Frankowski)
+* new TeX2png plugin (by Pierrick Meignen)
+* added support for ?force_unlock=1 parameter for stale File_Passwd locks
+  (should not be needed anymore, we lock only when we actually change the passwd)
+* added mysql-4.1 fix at action=upgrade
+* author, owner, creator support for WikiAdmin* and AllPages plugins:
+** AllPagesCreatedByMe, AllPagesLastEditedByMe, AllPagesOwnedByMe
+* added action revert, with button from action=diff
+* added option regex to WikiAdminSearchReplace
+* added oracle PearDB backend (by Philippe Vanhaesendonck)
+
+
+1.3.10 May, 13 2004, Reini Urban, Joby Walker:
+
+In short: paging support, adodb rewrite, permission problem fixed.
+
+fixes:
+* fixed severe permission problem:
+  Default permissions not honored. Everybody was able to edit.
+* set UserPreferences for bool and int fixed
+* POP3 auth
+* dba open problems improved, but not generally fixed
+* fixed dba session reading, but still broken
+* support wikiword links and image links in RichTable content,
+  backlinks still not working.
+* fixed navbar links in theme smaller, and made them default
+* fixed loading of localized pagenames on action=upgrade
+* fixed interwiki.map loading on certain PrettyWiki setups
+* re-enabled php-4.0.6 support (broken since 1.3.8: superglobals, array_key_exists),
+  4.0.4-pl1 and 4.0.5 do work, but not stable enough.
+* fix running phpwiki in "http://server/" (empty DATA_PATH)
+* fix PhpWiki:PrettyWiki detection: starter script includes index.php,
+  and include main.php by its own to override certain config values.
+* fix WikiAdminRemove arguments passed from WikiAdminSelect,
+  WikiAdminRemove deleted too many args if passed from WikiAdminSelect
+* session transportation improved, no db objects stored
+* PageGroup support for [links] and subpages
+* HttpClient fixes for older php's
+* RssFeed for allow_url_fopen=false, IMAGE support, empty ITEM list
+* Theme buttons are now also searched in the default theme
+* numerous other minor bugfixes.
+
+changes:
+* ADODB update from ancient mysql-only, to 4.21 with all supported databases.
+  transaction support, with mysql locking-workarounds
+* pear not in our include_path anymore: either use your pear or our pear, 
+  by adding it to your include_path or not. use now 1:1 copies of pear libs.
+* CreateToc parses now headers with links and formatting optionally, if 
+  TOC_FULL_SYNTAX is defined
+* PageChangeNotification: userids, not emails are printed
+* default theme navbar consistency: linkButtons instead of action buttons
+* _~WikiTranslation what=buttons, noT=1, nolinks=1
+* ~SetupWiki (virgin setup) also loads all mandatory pages now 
+  and overwrites ReleaseNotes
+* PageChangeNotification changed subject to "[WikiName] Page change %s",
+  update your filters accordingly
+* action=upgrade now linked in PhpWikiAdministration, 
+  db: fix page.id auto_increment and ADD session.sess_ip
+* some internal InlineParser optimization
+* DBAuthParam statement syntax change: variables now like '$userid'
+
+new:
+* new ini-style config instead of old index.php, by Joby Walker
+* paging support for pagelists longer than limit
+* PopularNearby plugin: same as the classic most popular footer
+* formatted single-line plugins supported
+* RelatedChanges plugin: only those which are links at the current page
+* new GoogleLink pref: add "[G]" lookup on unknown links
+* added chinese language support, by Yan-ren Tsai (druryl)
+* added missing MacOSX buttons, by Carsten Klapp.
+* new Crao theme from http://wiki.crao.net, by Arnaud Fontaine and Laurent Lunati
+* extended PhpWiki:InlineImages markup (size, border, ...)
+
+1.3.9-p1 May,5 2004, Reini Urban:
+
+Bugfix patch for the following 1.3.9 problems:
+
+* Default permissions not honored. Everybody was able to edit.
+* set UserPreferences for bool and int fixed
+* dba open problems improved
+* session transportation improved, no db objects stored
+* php-4.0.6 support re-enabled (superglobals, array_key_exists)
+* WikiAdminRemove deleted too many if args passed from WikiAdminSelect
+* PageGroup support for [links] and subpages
+* disabled default dba sessions, broken!
+* HttpClient fixes for older php's
+* RssFeed for allow_url_fopen=false, IMAGE support, empty ITEM list
+
+1.2.4 (the old-stable version) May, 4 2004, Reini Urban:
+* improves possible deadlocks in DBA, 
+* fixes problems with DBA open failures.
+
+1.2.3 (the old-stable version) Apr, 29 2004, Reini Urban:
+* added the most popular footer for dba
+* added remove for dba
+* fixed a warning on info page
+
+1.3.9 Apr, 12 2004, Reini Urban:
+
+Bugfix release for the following 1.3.8 problems:
+
+* syntax errors in lib/plugin/UpLoad.php
+* syntax errors in lib/plugin/WikiAdminRemove.php
+* syntax error in schemas/mysql.sql
+* several path issues (cannot findfile...), which were caused 
+  by a chdir for bindtextdomain in lib/config.php.
+    Failed opening required 'lib/stdlib.php', 
+    templates/html.tmpl: not found, and more
+* added self-registration for DbPassUser
+* added GoTo plugin, RateIt action page
+
+1.3.8 Jan-Apr 2004, Reini Urban:
+
+External plugable authentification, DB prefs and sessions, 
+some more fixes, docs, themes and plugins.
+
+* new WikiUserNew class (after a kick in the ass by Carsten Klapp), 
+  with new Preferences (finally from DB), and improved DB_Session (+ ADODB support)
+* changed cookie policy: only WIKI_ID stored as string, older pref cookies deleted.
+  They should be stored in the users homepage or in a db.
+* individual PagePermissions (enabled, but not yet enforced)
+* enabled WikiGroup
+* new WikiAdminRename, WikiAdminSearchReplace, WikiAdminSetAcl
+* several other new plugins: WikiPoll, WhoIsOnline, UpLoad, 
+  RichTable, CreateToc, AddComment, _WikiTranslation, TranslateText
+* pear DB update, pear DB query simplification as in ADODB.
+* InterWiki image buttons
+* PageList + WikiDB: enhanced sortby + limit support, sortable gridbuttons enforced
+* preliminary SOAP support (only nusoap, no soap extension yet)
+* Japanese language support added, thanks to Tadashi Jokagi <webmaster@elf.no-ip.org>
+* minor theme/default overhaul and new theme/smaller
+* fixed WikiAdminSelect, WikiAdminRemove
+* fixed UnfoldSubpages sortby
+* fixed XHTML dumps (css, images, unlinked pages, \r\r\n issue)
+* preliminary experimental action=upgrade
+* experimental PearDB sqlite support
+* started work for php5 fixes (XmlElement problems)
+
+1.3.4 until 1.3.7, 2002-2003 Jeff, Carsten and Steve Wainstead:
+
+* several stable releases with better documentation (most plugins) and various bugfixes.
+* EditMetaData (by MichaelVanDam) for example. (forgot what else was new)
+* Jochen Kalmbach's new UserFileManagement and UserRegistration didn't went upstream. 
+  (personal uploads, ...)
+
+1.3.3 early 2002, Jeff strikes back, with the help of Carsten Klapp:
+
+* major feature enhancements:
+* Cache all output and use a clever page cache. Get rid of plugin-head.
+* new PageType class. Formatter and Search engine rewrite.
+* Validator
+* broke several older plugins: InterWikiSearch, WikiAdminSelect. broke image buttons
+* Carsten Klapp's beloved MACOSX theme, button factory and CSS wizardry in general.
+* XHTML dumps, WikiBlog as page type.
+* PluginManager and several more plugins.
+
+1.3.2 early 2002, Reini Urban strikes:
+
+* Start of external authorisation in the config, but not in code.
+* Store Preferences in the users PersonalPage (Jeff)
+* Sessions in DB, pear DB update
+* concept of Subpages, UnfoldSubpages, SiteMap, AllPages, AllUsers, ...
+* PageList (Jeff and Reini)
+* Several new plugins: RedirectTo, plugin-head architecture. 
+  Normalize template names. WikiAdminSelect architecture: WikiAdminRemove
+* VisualWiki, TexToPng, text2png + several cached plugins (by Johannes Groﬂe)
+* PhpWeather (?), PrevNext, image buttons, 
+* IncludePage (Joe Edelman), FrameInclude (Reini), Transclude (Jeff)
+* Calendar (contributed by ?), CalendarList, WikiBlog, ...
+
+.... a small hole here .... (three years no detailed HISTORY. see the outline above)
+
+02/12/01 More Jeff's hacks:
+
+* More CSS stuff.  I think it's neat.
+* Added tables! And modified the footnote stuff a litte.
+  See TextFormattingRules for details.
+* Fixed bugs: including (I hope the two which
+  Reini Urban <rurban@x-ray.at> just reported.)  Also added
+  Reini's patches to the README.  Thanks!
+
+02/11/01 Jeff's hacks continue:
+
+* User preferences can be stored in a cookie.  Currently the only user preference
+  is the size of the textarea on the edit page.  See the UserPreferences wiki page.
+
+* When a zip/file is uploaded, set the author to the user who does the upload
+  (ie. the administrator).  Also enter the upload in RecentChanges.
+* Don't load RecentChanges from zip or dir.  Only from file.
+
+* Clean up error reporting.  Warning messages screw up header() and setcookie()
+  operations, and also corrupt the zip dumps.  New function
+  PostponeErrorMessages() allows one to postpone the reporting of selected warnings.
+
+* Beginnings of CSS support.  Still in the ugly stage.
+
+* More bug fixes.
+
+02/11/01 Jeff's hacks continue:
+
+* Moved user configuration stuff into index.php.  What was index.php is
+  now in lib/main.php.
+
+* Refactored the DB configuration variables.  There's one define() constant
+  which specifies type database type, and one hash (used by all the 
+  databases) which holds database, file, and server selection.
+  The actual file/table names are now "hard-coded" into the individual
+  database modules --- I have added the hook for setting a prefix
+  to be applied to all file/table names.
+  I think it's much cleaner, but let me know if you think otherwise.
+  (I've only tested the dba and mysql backends.)
+  
+* Refactored the dump/load zip/directory stuff.  You can now upload zip-dumps
+  or individual files from your local (client) machine.
+  See PhpWikiAdministration.
+
+* Fixed a bunch of bugs --- mostly the one's I introduced in my last big
+  commit.
+
+02/09/01 Jeff hack's again:
+
+* Pagename in PATH_INFO support added.  This is configurable,
+  cause, near as I can figure, if the php interpreter is run stand-alone
+  in /cgi-bin there's no way to pass any useful PATH_INFO to it.
+  (If a stand-alone php, in say /usr/local/bin, is used as a CGI interpreter,
+  PATH_INFO will work, as long as php was configured with --enable-discard-path .)
+
+  Along with this I refactored the semantics of all the query arguments to
+  make them (IMHO) more consistent.
+
+* Redid the administrator authentication stuff.  Eliminated admin.php ---
+  all access is now through index.php.  (New file lib/userauth.php.)
+  Still a little rough, but a big improvement, I think.  Hopefully this
+  can be developed into a more general user identification scheme...
+
+  Along with eliminating admin.php and the new auth scheme, completely
+  refactored index.php.   It should be easy now to swap config.php and index.php.
+  (I'll do that soon.)
+
+* Continued cleaning out page reference stuff.
+
+* Force archive of old page if author changes.  (Unless new author
+  is admin.)
+  
+* More warning fixes in diff.php
+
+* Refactored the semantics of the phpwiki: URL's.  
+  See pgsrc/PhpWikiAdministration and pgsrc/MagicPhpWikiURLs
+  for more information.
+
+Bug fixes:
+* Don't show signature image if $SignatureImg (in config.php) is left unset
+* Bug fix: hang on full zip dump 
+* Bug fix: hang on diff
+* Bug fix: unzip failed on some old zip-dumps
+* Bug fix: check for DB files in /tmp was broken
+* Minor security fix: pagename must now be url-encoded
+* Spelling fixes in pgsrc/*
+
+1.2.0 02/01/01
+* Support for PHP 4.0.4 (using the dba_* interface for DBM files),
+  thanks to Joel Uckelman
+* Swedish translation added, thanks to Jon ≈slund
+* dbmlib.php has all functions in mysql/postgresql, thanks to Jan Hidder
+* German version updated
+* Dutch translation updated
+* Spanish version updated
+* More robust support for flat file based Wiki (INSTALL.flatfile
+  included)
+* "named internal links," i.e. [wow | HomePage]
+* New IF syntax added to templates
+* New PhpWikiAdministration page added
+* New term/defintion syntax (for <DT><DD> tags)
+* Plenty of bug fixes
+
+1.1.9 11/05/00: 
+* Spanish language support added, thanks to Sandino Araico 
+  S·nchez <sandino@sandino.net>
+* German language support thanks to Arno Hollosi
+* Postgresql version brought up to date (plus fixes from Sandino)
+* Neil Brown contributed a patch Arno worked in to heavily modify
+  lib/transform.php, much cleaner structure now
+* Various page updates to English pages
+* Schema update for mSQL
+* Assorted E_NOTICE warnings fixed throughout (though still not done)
+* URL no longer stored in page source of RecentChanges
+* various bugs squashed
+
+1.1.8 10/25/00: 
+* Internationalization, with support for Dutch, and an architecture
+  to add more languages easily
+* Term/defintion tags updated to next and use tabless markup
+* MostPopular works for all implementations, except flat files
+* Flat file database support; it's not yet complete but the basic Wiki
+  functionality is there, thanks to Ari
+* New zip file format for page dumps follows standard email format
+* Removed tabs from all default pages
+* Added whitespace padding to pages after they are serialized and
+  written to the DBM file; this goes a long way towards fixing the
+  memory leak problems for DBM-based Wikis.
+* Numerous bug fixes, as always
+* Some refactoring of the database interface
+
+1.1.7 07/15/00: A lot was added since the 1.1.6b release. Diffs are
+    the handiwork of Jeff Dairiki, though Arno wrote the second
+    revision. Features and changes include:
+
+* Page diffs, with color
+* "MostPopular" page added which dynamically tracks most viewed pages
+  (MySQL only so far)
+* Admin functions: page dumps, page loads, Zip dumps, page locking
+* MySQL, DBM, mSQL and Postgresql support all functional and appear stable
+* Full HTML compliance in page output
+* Tabless markup language introduced for <UL> and <OL>
+* Fixed raw HTML exploit in [info] page
+* Perl script included to reduce the size of a DBM file
+* documentation updates
+* page source updates
+* gazillion feature enhancements and bug fixes, no doubt necessitating
+  another gazillion feature enhancements and bug fixes ;-)
+
+1.1.6b 06/27/00: The wrong wiki_config.php3 file was included in 1.1.6, 
+and this release corrects that; also in my hurry, I included all the CVS
+directories and files, and a test file. That stuff was left out.
+
+1.1.6 06/26/00: Added templates, Postgresql support, mSQL support, new
+database schema, new date storage format, an "info" link on all pages,
+and introduced some new bugs (RecentChanges is broken ;-)
+
+1.1.5 06/08/00: Here are the comments from the CVS logs:
+
+fixed magic_quotes_gpc=1 bug for $pagename
+fixed raw-HTML exploit for $pagename
+fixed javascript: links exploit
+Concurrent editing of pages is detected now - fixes LostUpdateProblem
+(note: EditLinks is *not* treated this way yet)
+search term is now preg_quote()'ed instead of chars removed
+bugfix: UpdateRecentChanges didn't link names of new-style pages.
+Fixed FindPage and search boxes
+Added headings (!,!!,!!!), suppression of wiki linking (!WikiName), and linebreaks (%%%)
+changed mySQL schema: column 'data' renamed 'hash' because 'dada' is a
+reserved word. (update your tables!)
+
+This release should work fine with the new linking scheme, but then
+again, hey, it's beta!
+
+1.1.4 05/11/00: I added the new linking
+scheme, which largely follows the scheme of Wikic
+(http://wiki.cs.uiuc.edu/RefactoringBrowser/Wiki+Syntax). Both "classic
+Wiki" linking and the new linking are supported; you can now also link
+things by using square brackets, like this:
+
+[this is a page link]
+[this is an external link | http://wcsb.org/]
+[ftp://ftp.redhat.com/]
+
+Reference links are still supported.
+
+1.1.3 04/22/00: I rewrote UpdateRecentChanges completely; it's more
+efficient now because it only loops over the lines once, and entries are
+now newest-first instead of oldest-first.
+
+1.1.2 04/20/00: I finally solved the problem once and for all (I hope!)
+with loading pages into a brand new wiki. Vim allows you to change the
+file formats so I wrote a two line ex script to convert all the pages to
+dos format. (This gives them the CR/NL, unlike Un*x).
+
+1.1.1 04/15/00: I changed the way Wiki markup is converted and 
+displayed. Before pages were rendered line by line; now it accumulates
+all the HTML in a variable and does one "echo" to display the page. 
+While this might be a bit slower (it will use a little bit more memory)
+this means PhpWiki can be modified so the HTML can be written to a file.
+a whole PhpWiki site might either be served as static HTML, or
+periodically exported to disk after a period of activity. This is the
+secod beta (more or less) of the 1.1 release.
+
+1.1.0 04/10/00: Support for MySQL added. Thanks to Arno Hollosi for 
+his excellent work! He also provided patches to clean up the wiki_setup
+procedure and fix rendering bugs with italics and bold text, amongst
+others. Alister <alister@minotaur.nu> provided patches for arbitrary
+numbers of reference links, fixing a rotten logic error on my part.
+Removed "static" declarations to help the PHP4 porters.
+
+1.03 03/21/00: Refactored index.php3 and wiki_display.php3, which 
+had dbm function calls in them. Thanks to Christian Lindig
+<lindig@gaertner.de> for pointing this out. This should make it
+a little easier to port to a different database.
+
+1.02 02/02/00: Disabled embedded HTML, due to security holes 
+described in this CERT advisory: http://www.cert.org/advisories/CA-2000-02.html
+You can re-enable it by removing the comment tags in wiki_display.php3.
+Please be certain of what you are doing if you allow this!
+
+1.01 02/01/11: Fixed bug where header rules (<hr>) were inserted
+whenever four or more dashes occured; this only works if it starts the
+line now. Thanks to Gerry Barksdale.
+
+1.00 01/25/00: Changed the names of all files except index.php3; I
+prefaced them all with "wiki_" to avoid collisions with other files 
+that might be in the include path. Thanks to Grant Morgan for the 
+suggestion. A few corrections to the default pages; I think the 
+small rendering problems are due to Unix's lack of a carriage 
+return.
+
+0.99 01/20/00: Added a logic change suggested by Clifford Adams, 
+where a copy is saved to the archive if the previous author was 
+different. A different person that is. Fixed a rendering bug. This was
+breaking: http://c2.com/cgi-bin/wiki followed by
+http://c2.com/cgi-bin/wiki?PhpWiki on the same line. Because PHP only
+can do *global* search and replace, the second URL was incompletely
+swapped and linked. Using rsort() on the array of matches worked.
+Added a patch from Grant Morgan for servers with magic_quotes_gpc set.
+
+0.98 01/18/00: Added code to build the $ServerAddress dyanamically. Now,
+PhpWiki will work as soon as it's untarred. No configuration should be
+necessary.
+
+0.97 01/16/00: Added a feature suggested by Clifford Adams. It stores
+the author's remote address and disables the EditCopy the next time they
+edit a page. Added <DL><DT><DD> support and debugged it. A new Wiki will
+load a set of new pages, so the Wiki is ready to go out of the box.
+
+0.96 01/15/00: Added EditCopy. This uses a second DBM file and could use
+some more pounding. I also found a bug when two URL's appear on the same
+line, like:
+http://foo.com/ http://foo.com/WikiWikiWeb
+In this case the second URL will not be linked correctly due to PHP's
+replace-all-or-nothing regular expression functions.
+
+0.95 01/04/00: Severe reworking of the list code (UL amd OL tags). I
+added a stack class and "implemented recursion," which seemed the
+logical way to accomplish nested tags. There are a couple of minor bugs
+to work out, and I have to get DL tags working. I changed some constants
+to define()'s instead. There are magic numbers in stdlib.php3 that
+probably should be defined. I also used while() loops while doing
+push/pop operations which also gives me the willies, but I put in bounds
+checking.
+
+0.94: 12/22/99 Mostly code cleanups; added code for waiting on the dbm
+file if not available; added more comments. 
+
+0.93: 12/21/99 Added full text search. Moved configuration code to a new
+file, config.php3. Fixed another bug in RecentChanges. Page titles now
+link to full search, which is a bit more useful. Added code to create a
+new RecentChanges if none existed.
+
+0.92: 12/20/99 Added REMOTE_HOST to RecentChanges edits; fixed a bug
+where I typed in PUT instead of POST in editpage.php3; patched
+RecentChanges so hopefully the lines won't get screwed up anymore.
+
+0.91: 12/20/99 Fixed bug that occurred when creating new pages.
+
+0.90: 12/19/99 Added user-defined links (i.e. [1], [2] etc) and embedded
+images. This is the first beta release. Only an issue with second-level
+lists remains, and a couple of other minor things.
+
+0.81: 12/19/99 Fixed another wiki word linking issue. It arose from
+having similar patterns in words in the same line.
+
+0.80: 12/18/99 I'm bumping up the version to .8 because it's that close.
+I finally solved the crucial linking problem, by reinventing how
+classic Wiki does it ;-) URL's are first replaced with tokens, then Wiki
+words are linked, then linked URL's are put back. I improved the code a
+great deal for the differnet "modes" of display text; I have a function
+maintain the mode, and whether end tags are needed or not.
+
+0.07: 12/18/99 Fixed minor bug in preformatted/bulleted code output; fixed
+reverse linking of page titles
+
+0.06: 12/15/99: Added ChangeSpacesToTabs
+
+0.05: 12/14/99: Added title searches, RecentChanges, fixed numerous bugs like
+only trying to render valid page names, the last-edited-date, removed
+the navigation toolbars, linked the new logo to HomePage, and a half
+dozen other odd things. It's almost ready.
+
+0.04: 12/12/99: Several additions to markup:
+   italics 
+   bold
+   preformatted text
+   unordered lists (one level only, tow levels breaks)
+
+In addition, wiki links have been further debugged, but I still
+haven't solved the problem with wiki-links inside URLs.
+   
+0.03: 12/4/99: Pages are now serialized arrays instead of text blobs. Some
+markup rules have been implemented. HTML is escaped; Wiki linking works
+but
+undefined pages do not have the question mark after them (they look like
+a regular link to a Wiki page.) URL's hyperlink and should accept most
+legal
+URL's.
+
+0.02: 12/3/99: Basic page editing/saving/displaying is now working.
+
+Prior to 0.02, there were no numbered releases, and in fact there
+was only one release, so I guess that would be 0.01 :-)
+
+$Id: HISTORY,v 1.12 2004/06/28 13:40:33 rurban Exp $

@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: DocumentManager.xml 1394 2005-03-17 10:55:31Z guerin $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<chapter id="DocumentManager">
+  <title>Ancien Gestionnaire de documents (obsolète)</title>
+
+  <para><tip><title>** The Document Manager is DEPRECATED
+  **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Document Manager.</para></tip></para>
+
+  <para>La documentation est probablement le délivrable le plus
+  important d'un projet après le logiciel lui-même. CodeX propose un
+  service spécifique pour la gestion de la documentation.</para>
+
+  <para>Bien que le gestionnaire de documents de CodeX ne soit pas
+  comparable à un système de gestion documentaire dédié, il est
+  cependant extrêmement pratique pour gérer les documents critiques
+  pour votre communauté d'utilisateurs. Quelques exemples : manuel
+  d'installation, d'administration ou d'utilisation, documentation des
+  API, Foire aux Questions, etc...</para>
+
+  <para>Le gestionnaire de documents offre les fonctionnalités
+  suivantes :</para>
+
+  <itemizedlist mark="bullet"
+		spacing="compact">
+    <listitem>
+      <para>Le gestionnaire de documents peut gérer tout type de
+      documents. Cependant nous encourageons vivement les personnes en
+      charge de la publication des documents à adopter des formats
+      comme HTML ou PDF afin qu'ils soient facilement et rapidement
+      lisibles par tous.</para>
+    </listitem>
+
+    <listitem>
+      <para>Les documents sont rangés dans des groupes (ou
+      dossiers). Les dossiers n'ont qu'un seul niveau de profondeur ce
+      qui signifie qu'un dossier ne peut comporter de
+      sous-dossier.</para>
+    </listitem>
+
+    <listitem>
+      <para>Les documents peuvent être édités en ligne s'ils sont au format HTML ou texte.</para>
+    </listitem>
+
+    <listitem>
+      <para>Des règles de contrôle d'accès peuvent être définies pour
+      chaque document ou dossier.</para>
+    </listitem>
+
+  </itemizedlist>
+
+  <section id="DocumentAccess">
+    <title>Accès aux documents</title>
+
+    <section id="DocumentBrowsing">
+      <title>Navigation parmi les documents</title>
+
+    <para>Pour accéder au gestionnaire de documents, sélectionnez
+    l'entrée &#34;Documentation&#34; dans la barre des services du
+    projet en haut de l'écran. La page d'accueil du gestionnaire de
+    documents présente la liste de tous les documents publiés et
+    rangés par groupe (dossier).</para>
+
+    <para>Pour lire un document il suffit de cliquer sur son titre.</para>
+
+    <figure id="FigureASampleDocumentManagerWelcome">
+      <title>Un exemple de page d'accueil du gestionnaire de documents</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/fr_FR/sc_documentbrowsing.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+    </section>
+
+    <section id="DocumentCrossReference">
+      <title>Références croisées sur les documents</title>
+
+      <para>A l'instar des artefacts, des commits CVS, des numéros de
+      révision Subversion et autres objets CodeX, les documents
+      peuvent être référencés dans les commentaires associés aux
+      artefacts ou aux messages de commit. L'utilisation du patron "doc
+      #NNN" crée automatiquement un lien vers le document dont
+      l'identifiant est NNN. L'identifiant d'un document est visible
+      sur la page principale du gestionnaire de documents lorsqu'on
+      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.
+    </para>
+
+    </section>
+  </section>
+
+  <section id="DocumentSubmission">
+    <title>Soumission de documents</title>
+
+    <para>Seuls les membres du projet ayant le rôle 'Technicien' pour
+    le gestionnaire de documents dans la matrice des 'Permissions
+    utilisateurs' (voir <xref linkend="UserPermissions" />) peuvent
+    soumettre des documents. Pour soumettre un nouveau document,
+    cliquez sur le lien &#34;Soumettre un nouveau document&#34; situé
+    dans la barre de menu du gestionnaire de documents (<xref
+    linkend="FigureASampleDocumentManagerWelcome" />). Indiquez
+    ensuite les informations demandées comme le titre, la description
+    et le corps du document.</para>
+
+    <para>Le corps du document lui-même peut être soit copié-collé
+    directement dans la zone de texte réservée à cet effet soit
+    téléchargé en utilisant le bouton &#34;Browse&#34; (ou
+    &#34;Parcourir&#34;) pour désigner le document et en cochant la
+    case &#34;Chargement du fichier&#34;. Sélectionnez ensuite le
+    groupe (le dossier) auquel appartient le document et cliquez sur
+    le bouton &#34;Valider&#34;.</para>
+
+    <para>Un document doit toujours être attaché à un groupe. C'est
+    pour cette raison que CodeX propose un groupe par défaut pour
+    chaque projet appelé 'Documents'. Il est possible de renommer ce
+    groupe par défaut.</para>
+
+    <para><tip><title>Coup de pouce : documents collés ou
+    téléchargés</title> <para>Un document collé directement dans la
+    zone de texte sera affiché dans une page CodeX lors de la
+    consultation. S'il s'agit d'un document utilisant des balises HTML
+    son apparence suivra les styles CodeX et les balises HTML, TITLE
+    et HEAD d'origine seront ignorées. Un document téléchargé, au
+    contraire, sera affiché tel quel dans une fenêtre séparée du
+    navigateur. Les documents collés présente aussi l'avantage d'être
+    modifiable en ligne alors qu'un document téléchargé peut
+    uniquement être modifié en chargeant une nouvelle version.</para>
+    </tip></para>
+
+    <para>Le titre et le résumé du document peuvent contenir des
+    balises HTML. Vous pouvez donc utiliser différents effets
+    typographiques ainsi que des pointeurs vers d'autres sites ou
+    documents, etc&hellip;</para>
+
+    <para><tip><title>Coup de pouce : référencer des documents
+    externes</title> <para>Il est parfois pratique de créer des
+    documents factices qui ne font que pointer vers d'autres
+    emplacements tels qu'un fichier dans un autre gestionnaire de
+    document ou un autre site web. Pour ce faire, il suffit d'encadrer
+    le titre du document avec une balise HREF (hyperlien) pointant sur
+    l'emplacement cible.</para>
+    </tip></para>
+
+  </section>
+
+  <section id="DocumentAdministration">
+    <title>Administration des documents</title>
+
+    <para>Le gestionnaire de documents fournit un certain nombre de
+    fonctions d'administration permettant de changer les droits
+    d'accès aux documents, de modifier leur ordre de présentation ou
+    le groupe auquel ils appartiennent, de créer de nouveaux groupes
+    de documents, etc...</para>
+
+    <figure id="FigureTheDocumentManagerAdministrationScreen">
+      <title>L'écran d'administration du gestionnaire de documents</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/fr_FR/sc_documentadmin.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="DocumentPublication">
+      <title>Publication d'un document</title>
+
+      <para>Une fois qu'un nouveau document a été soumis par un membre
+      du projet ayant le rôle de 'Technicien' sur le gestionnaire de
+      documents, il est immédiatement visible dans la page d'accueil
+      du gestionnaire de documents.</para>
+
+    </section>
+
+    <section id="DocumentUpdate">
+      <title>Mise à jour d'un document</title>
+
+      <para>Seuls les membres du projet ayant le rôle d'administrateur
+      sur le gestionnaire de document peuvent modifier un document
+      existant.</para>
+
+      <para>Un document peut être mis à jour de plusieurs façons :</para>
+
+      <itemizedlist mark="bullet"
+		    spacing="compact">
+	<listitem>
+	  <para>Le titre, la description, et le corps du document
+	  peuvent être modifiés. Dans ce cas c'est le contenu du
+	  document lui-même qui est actualisé.</para>
+	</listitem>
+
+	<listitem>
+	  <para>Vous pouvez modifier le groupe (le dossier) auquel le
+	  document appartient.</para>
+	</listitem>
+
+	<listitem>
+	  <para>Vous pouvez modifier le rang d'affichage du document
+	  au sein du groupe de documents.</para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>Pour mettre à jour un document, cliquez sur le lien
+      &#34;Administration&#34; dans la barre de menu du gestionnaire
+      de documents (<xref
+      linkend="FigureASampleDocumentManagerWelcome" />). Vous verrez
+      ensuite apparaître la liste de l'ensemble des documents du
+      projet trié par groupe et par rang d'affichage. Choisissez le
+      document à mettre à jour en cliquant sur son titre et effectuez
+      les modifications souhaitées sur le document lui-même, son rang
+      et son groupe dans l'écran de mise à jour.</para>
+
+    </section>
+
+    <section id="DocumentGroupManagement">
+      <title>Gestion des groupes de documents</title>
+
+      <para>Dans la terminologie CodeX, un groupe de documents est
+      équivalent à un dossier.</para>
+
+      <figure id="FigureTheDocumentGroupsAdministrationScreen">
+	<title>L'écran d'administration des groupes de documents</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/fr_FR/sc_documentadmingroups.png" width="13cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>Pour créer, supprimer ou modifier le nom des groupes de
+      documents, cliquez sur le lien &#34;Administration&#34; dans la
+      barre de menu du gestionnaire de documents (<xref
+      linkend="FigureASampleDocumentManagerWelcome" />) et, ensuite,
+      sur le lien &#34;Modifier les groupes de documents&#34; dans le
+      menu suivant.</para>
+
+      <para>Pour créer un nouveau groupe, utilisez les champs &#34;Nom
+      du groupe&#34; et &#34;Rang&#34; situés en haut de l'écran puis
+      cliquez sur le bouton &#34;Créer&#34;. Vous pouvez aussi mettre
+      à jour un groupe existant en cliquant sur son nom dans la liste
+      des groupes.</para>
+
+      <para>Les groupes de documents disposent d'un rang qui définit
+      leur ordre d'apparition à l'écran, les dossiers de plus faibles
+      rangs étant affichés en premier.</para>
+
+      <para>Les droits d'accès peuvent être définis en cliquant sur le
+      lien &#34;[Définir les permissions].</para>
+
+      <para>Les groupes de documents peuvent être supprimés en
+      cliquant sur l'icône figurant une corbeille. Seuls les groupes
+      vides peuvent être supprimés : il faut donc au préalable
+      supprimer ou déplacer les documents qui s'y trouvent.</para>
+
+    </section>
+
+    <section id="DocAccessPermissions">
+      <title>Définir les droits d'accès</title>
+      
+      <para>La définition des droits d'accès aux documents est très
+      similaires à celle des fichiers (<xref
+      linkend="PackageModification" />) : vous devez tout d'abord
+      créer des groupes d'utilisateurs et assigner ces groupes
+      d'utilisateurs à des documents individuels ou à des groupes de
+      documents.</para>
+
+      <para>Par défaut, les documents et les groupes de documents
+      n'ont pas de permissions d'accès définis : tous les utilisateurs,
+      y compris les utilisateurs anonymes (non connectés) ont accès à
+      tous les documents. Cependant, vous pouvez choisir de limiter
+      l'accès à certains documents qui, par exemple, contiennent des
+      informations confidentielles.</para>
+
+      <para>Les permissions d'accès peuvent être définies à deux
+      niveaux distincts : celui d'un groupe de documents ou bien à
+      celui d'un document individuel :</para>
+
+      <itemizedlist mark="bullet">
+
+        <listitem>
+          <para><emphasis role="bold">Permissions sur les groupes de documents</emphasis></para>
+
+          <para>En cliquant sur le lien '[Définir les permissions]' de
+          l'écran de mise à jour des groupes de document (voir <xref
+          linkend="FigureTheDocumentGroupsAdministrationScreen" />),
+          un membre du projet ayant le rôle 'Administrateur' (voir
+          <xref linkend="UserPermissions" />) peut définir des
+          permissions d'accès sur n'importe quel groupe de
+          documents.</para>
+
+          <para>La page d'édition des permissions montre l'ensemble
+          des groupes d'utilisateurs définis au niveau du
+          projet. Sélectionnez les groupes d'utilisateurs autorisés à
+          consulter le contenu du groupe de document et cliquez sur
+          'Valider les permissions'. Il est possible de sélectionner
+          plusieurs groupes à la fois. Si vous cliquez sur 'Retour aux
+          valeurs d'origines', les permissions d'accès à ce groupe de
+          documents seront supprimés et n'importe quel utilisateur
+          sera à nouveau capable de télécharger les documents qui s'y
+          trouvent.</para>
+
+          <para>Les permissions attachées à un groupe de documents
+          s'appliquent à tous les documents qui s'y trouvent. Mais vous
+          avez aussi la possibilité de définir des permissions d'accès
+          spécifiques pour chaque document (voir ci-dessous).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Permissions sur les
+          documents</emphasis></para>
+
+          <para>Si vous le souhaitez, vous pouvez aussi contrôler les
+          droits d'accès au niveau de chaque document.</para>
+
+          <para>La marche est suivre est similaire à celle utilisée
+          pour les groupes de documents. Il vous suffit de cliquer sur
+          le lien '[Définir les permissions]' sur la page
+          d'administration du gestionnaire de documents (voir <xref
+          linkend="FigureTheDocumentManagerAdministrationScreen"
+          />). Sélectionnez les groupes d'utilisateurs qui auront
+          accès au document choisi et validez.</para>
+
+          <para>Si vous ne spécifiez aucune permission particulière
+          pour un document (ou que vous les réinitialisez à leur
+          valeur d'origine), le document hérite des permissions
+          définies au niveau du groupe de document auquel il
+          appartient. Cependant, lorsque vous définissez des
+          permissions d'accès pour un document, elles prennent le pas
+          sur les permissions définies pour le groupe de
+          documents. Les droits d'accès définis pour un document
+          peuvent être indifféremment plus restrictifs ou plus
+          permissifs que pour le groupe de documents.
+          </para>
+        </listitem>
+
+      </itemizedlist>
+      <para><tip><title>Coup de pouce : mise à jour des permissions
+      existantes</title> <para>Il existe un raccourci qui permet aux
+      administrateurs du projet ou du gestionnaire de documents de
+      mettre rapidement à jour les permissions d'un document ou d'un
+      groupes de documents. Ce raccourci se matérialise par une icône
+      en forme de cadenas sur la page principale du gestionnaire de
+      document. Un simple clic sur ce cadenas permet de modifier les
+      permissions associées à l'objet correspondant.
+      </para></tip></para>
+    </section>
+      </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

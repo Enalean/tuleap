@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+<?xml-stylesheet type="text/css"
+href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
+?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
+[
+<!-- Entities for inclusion of document chapters -->
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
+<!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
+<!ENTITY ChapterArchitecture SYSTEM "Architecture.xml">
+<!ENTITY ChapterDevEnvironmentSetup SYSTEM "DevEnvironmentSetup.xml">
+<!ENTITY ChapterDirStructure SYSTEM "DirStructure.xml">
+<!ENTITY ChapterCodeXDevelopment SYSTEM "CodeXDevelopment.xml">
+<!ENTITY ChapterCodexFramework SYSTEM "CodexFramework.xml">
+<!ENTITY ChapterSubmittingCode SYSTEM "SubmittingCode.xml">
+<!ENTITY ChapterDocumentation SYSTEM "Documentation.xml">
+
+<!-- Entity definition and inclusion for default and custom parameters
+(e.g. site name, server names, company name,etc.)
+Remark: local redefinition must be first because once defined
+an entity cannot be redefined. Hence this particular order  
+
+Also note that we are re-using parameters from the User Guide to
+avoid duplications -->
+
+<!ENTITY % ParametersDefault SYSTEM "../../../user_guide/xml/ParametersDefault.dtd">
+<!ENTITY % ParametersLocal SYSTEM "/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd">
+%ParametersLocal;
+%ParametersDefault;
+]>
+
+<book>
+  <title>CodeX Programmer Guide</title>
+
+  <subtitle>&#34;Breaking the Barriers to Source Code Sharing inside &SYS_ORG_NAME;&#34;</subtitle>
+
+  <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
+
+  &BookInfo;
+
+  &ChapterIntroduction;
+  &ChapterArchitecture;
+  &ChapterDevEnvironmentSetup; 
+  &ChapterDirStructure;
+  &ChapterCodeXDevelopment;
+  &ChapterCodexFramework;
+  &ChapterSubmittingCode;
+  &ChapterDocumentation;  
+</book>

@@ -1,0 +1,324 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+<chapter id="DocumentManager">
+  <title>Legacy Document Manager (deprecated)</title>
+
+  <para><tip><title>** The Document Manager is DEPRECATED
+  **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
+  is included in the CodeX User Guide for projects that originally
+  used the legacy Document Manager.</para></tip></para>
+
+  <para>Documentation is probably the second most important deliverable in a
+    software project after the software work products themselves. CodeX
+    provides a specific service to manage your project documents.</para>
+
+  <para>Although the CodeX Document Manager cannot be compared
+    with dedicated document management systems, it
+    is however very handy to publish documents that are critical to
+    your community of users. Examples are: Installation, Administration
+    or User Guide, API documentation, Frequently Asked Questions,
+    etc...</para>
+
+  <para>The Document Manager features are as follows:</para>
+
+  <itemizedlist mark="bullet"
+		spacing="compact">
+    <listitem>
+      <para>The CodeX Document Manager can handle any type of
+      document. However we strongly encourage editors to publish their
+      documents in HTML and/or PDF to make it readable quickly and
+      easily.</para>
+    </listitem>
+
+    <listitem>
+      <para>Documents are stored in groups (or folders). The folders are
+        only one level deep which means you can&#39;t have subfolders in a
+        folder.</para>
+    </listitem>
+
+    <listitem>
+      <para>Documents can be edited on line (if in text or HTML format).</para>
+    </listitem>
+
+    <listitem>
+      <para>Access control rules can be defined for each document or document group.</para>
+    </listitem>
+
+  </itemizedlist>
+
+  <section id="DocumentAccess">
+    <title>Access to Documents</title>
+
+    <section id="DocumentBrowsing">
+      <title>Document Browsing</title>
+
+    <para>To access the Document Manager select the &#34;Docs&#34; item from
+      the Project Menu at the top of the screen of the Project Summary page.
+      The welcome page of the Document Manager shows the list of all the
+      documents published by the project by group.</para>
+
+    <para>To read a document simply click on the title.</para>
+
+    <figure id="FigureASampleDocumentManagerWelcome">
+      <title>A sample Document Manager welcome page</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_documentbrowsing.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+    </section>
+
+    <section id="DocumentCrossReference">
+      <title>Cross-Referencing documents</title>
+
+      <para>Like artifacts, CVS/Subversion commits, and other CodeX objects,
+      documents may be referenced in artifact comments or commit messages.
+      Simply type the "doc #NNN" pattern to automatically create
+      a link to the document with ID number NNN. Document IDs are
+      visible in the 'Docs' main page by hovering over a document title
+      with the mouse pointer. Please refer to <xref linkend="ReferenceOverview" /> 
+      for more details on CodeX references.</para>
+
+    </section>
+  </section>
+
+  <section id="DocumentSubmission">
+    <title>Document Submission</title>
+
+    <para>Only project members with the 'Technician' role in the 'User Permissions'
+      matrix (see <xref linkend="UserPermissions" />) can submit documentation.
+      To submit a new document, click on the
+      &#34;Submit New Documentation&#34; link in the Document Manager menu 
+      (<xref linkend="FigureASampleDocumentManagerWelcome" />). Then provide the
+      document title, the document description and the body of the text.</para>
+
+    <para>The document itself can either be copy-pasted directly in the
+      document text area or uploaded with the help of the &#34;Browse&#34;
+      button and the &#34;Upload&#34; checkbox. Then select a document group
+      from the pull-down menu and click on the &#34;Submit&#34;
+      button.</para>
+
+    <para>A document has to be attached to a group in any case. This is why
+      CodeX provides a default group called 'Documents' to each project. 
+      This default group may be renamed.</para>
+
+    <para><tip><title>Tip: Copy-pasted vs. uploaded documents</title>
+    <para>A copy-pasted document will be embedded in a CodeX page, so its 
+      appearance will be modified, and some tags like HTML, TITLE, or HEAD
+      will be ignored. An uploaded document, on the opposite, will be displayed
+      "as-is" in the browser window. Another difference is that a copy-pasted
+      document can be edited online, whereas an uploaded document can only be 
+      updated by uploading a new version.</para>
+    </tip></para>
+
+    <para>The document title and summary can contain HTML tags. So you can
+      use all sorts of typographic effects as well as pointers to other
+      locations or documents, etc.</para>
+
+    <para><tip><title>Tip: Referencing external documents</title>
+    <para>It is sometimes convenient to create placeholder documents
+    that actually point to an external location like file in another
+    document management system or web site. To do this, simply
+    surround the document title with an HREF tag (hyperlink) pointing
+    to the target location.</para>
+    </tip></para>
+
+  </section>
+
+  <section id="DocumentAdministration">
+    <title>Document Administration</title>
+
+    <para>The Document Manager provides a number of administration functions
+      like changing the document access permissions, display position or group,
+      creating new document groups, etc.</para>
+
+    <figure id="FigureTheDocumentManagerAdministrationScreen">
+      <title>The Document Manager Administration screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+		     fileref="../../screenshots/en_US/sc_documentadmin.png" width="15.3cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="DocumentPublication">
+      <title>Document Publication</title>
+
+      <para>Once a new document has been submitted by a project
+      member with 'Technician' rights on the Document Manager, it
+      is immediately visible on the Document Manager welcome page.</para>
+
+    </section>
+
+    <section id="DocumentUpdate">
+      <title>Document Update</title>
+
+      <para>Only members with the 'Administration' right on the
+      Document Manager can modify an existing document.</para>
+
+      <para>You can update a document in several ways:</para>
+
+      <itemizedlist mark="bullet"
+		    spacing="compact">
+	<listitem>
+	  <para>The title, description and document body can be modified. In
+            this case you update the document content.</para>
+	</listitem>
+
+	<listitem>
+	  <para>You can change the group (or folder) a document belongs to.</para>
+	</listitem>
+
+	<listitem>
+	  <para>You can change the document display rank in the document group.</para>
+	</listitem>
+
+      </itemizedlist>
+
+      <para>To update a document click on the &#34;Admin&#34; link in the
+        Document Manager menu (<xref linkend="FigureASampleDocumentManagerWelcome" />).
+        What you see next is the list of all documents of the project sorted
+        by group and by rank. Then choose the
+        document you want to update from the list. Click on the document title
+        to make the document update screen appear. From here you can modify
+        any part of the document, its rank, and the group it belongs to.</para>
+
+    </section>
+
+    <section id="DocumentGroupManagement">
+      <title>Document Group Management</title>
+
+      <para>In the CodeX Terminology, a CodeX Document group is
+      equivalent to a folder.</para>
+
+      <figure id="FigureTheDocumentGroupsAdministrationScreen">
+	<title>The Document Groups Administration screen</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+		       fileref="../../screenshots/en_US/sc_documentadmingroups.png" width="13cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>To create, delete or change the name of document groups, click
+        on the &#34;Admin&#34; link in the Document Manager menu (<xref
+        linkend="FigureASampleDocumentManagerWelcome" />) and then the
+        &#34;Edit Document Groups&#34; item in the next menu.</para>
+
+      <para>To add a new group, use the &#34;Group Name&#34; and &#34;Rank&#34; text fields
+        at the top of the screen and click on the &#34;Create&#34; button. You
+        can also update an existing group by clicking on its name in the group list.</para>
+
+      <para>Document groups have a display rank property that defines
+      how document groups are ordered. Document groups with smaller ranks 
+      are displayed first.</para>
+
+      <para>Access permissions can be defined by clicking on the &#34;[Define Permissions]&#34; link.</para>
+      <para>Document groups can be deleted by clicking on the trash icon in the group list. 
+      Only empty document groups may be deleted: move or delete documents that belong to a group before trying to delete it.
+      </para>
+
+    </section>
+
+    <section id="DocAccessPermissions">
+      <title>Setting Access Permissions</title>
+      
+      <para>Setting document access permissions is very similar to
+      setting file access permissions (<xref
+      linkend="PackageModification" />): you need to create user
+      groups (see <xref linkend="UserGroups" />), and assign those
+      user groups to documents or document groups.</para>
+
+      <para>By default, document and document groups have no specific
+      access permissions: access to all documents is granted to
+      anybody, including anonymous user.  However, in some cases, you
+      might want to restrict acces to a particular document, e.g. when
+      it contains confidential data.</para>
+
+      <para>Access permissions can be defined at two different levels:
+      document groups and documents:</para>
+
+      <itemizedlist mark="bullet">
+
+        <listitem>
+          <para><emphasis role="bold">Document Group Permissions</emphasis></para>
+
+          <para>By clicking on '[Define Permissions] on the "Edit
+          Document Groups" screen (see <xref
+          linkend="FigureTheDocumentGroupsAdministrationScreen" />), a
+          project member with the 'Admin' right on the document manager (see
+          <xref linkend="UserPermissions" />) can attach access
+          permissions to any existing document group.</para>
+
+          <para>The document group permissions edition page lists all
+          the project user groups. Simply select the user groups that
+          will be allowed to display documents from the document group
+          and press 'Submit'. You may select several groups at the
+          same time if needed. If you press 'Reset To Defaults', the
+          access permissions to this document group will be reset, so
+          any user will be able to download any of the documents
+          located in the group.</para>
+
+          <para>Permissions attached to a document group apply to all
+          documents that belong to this group.  But you may also set
+          different permissions to specific documents (see
+          below).</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Document permissions</emphasis></para>
+
+          <para>If you need finer grained access control to your
+          documents, you can also define permissions at the document
+          level.</para>
+
+          <para>The procedure is similar to the document group
+          permissions definition. Simply click on 'Define Permissions'
+          on the document manager 'admin' page (see <xref
+          linkend="FigureTheDocumentManagerAdministrationScreen" />)
+          to attach access permissions to a document. Then select
+          allowed user groups and submit.</para>
+
+          <para>If you do not specify any access permissions for a
+          document (or reset them to default), it inherits the access
+          permissions from the document group it belongs to. However,
+          when you define a permission for a document, it overrides
+          the permissions defined for the group. Permissions set for
+          the document can be either stricter or less strict than the
+          group permissions.</para>
+
+        </listitem>
+
+      </itemizedlist>
+      <para><tip><title>Tip: Updating existing permissions</title>
+        <para>There is a shortcut to update document and document group permissions. For project
+        administrators or document manager administrators, the main 'Docs' page displays small lock icons
+        next to protected documents and groups. Simply click on the lock to update permissions
+        for the corresponding object.
+      </para></tip></para>
+    </section>
+      </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

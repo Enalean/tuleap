@@ -1,0 +1,828 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/add.php
+#
+tracker_add	invalid	Cet outil de suivi n'est plus valide.
+tracker_add	add_a	Créer un(e) 
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/browse.php
+#
+tracker_browse	search_report	Rapport de recherche
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/download.php
+#
+tracker_download	file_is_null	Rien ici - Le fichier a une taille nulle
+tracker_download	file_not_found	Impossible de trouver le fichier attaché  (id $1)
+#
+#-----------------------------------------------
+tracker_fieldeditor	edit	éditer
+tracker_fieldeditor	preview	prévisualiser
+tracker_fieldeditor	warning	Vos modifications n'ont pas été sauvées. N'oubliez pas de valider le formulaire !
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/gotoid.php
+#
+tracker_gotoid	art_belongs_to	Note&nbsp;: Cet artefact appartient au projet '$1'
+tracker_gotoid	art_is_a	<br>Note&nbsp;: Cet artefact est du type '$1' (pas '$2')
+tracker_gotoid	commit_belongs_to	Note&nbsp;: Ce commit appartient au projet '$1'
+tracker_gotoid	invalid_tracker	Nom de l'outil de suivi invalide.
+tracker_gotoid	invalid_art_nb	Numéro d'artefact invalide&nbsp;: $1.
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/group_selection.php
+#
+tracker_group_selection	project_sel	Sélection du projet
+tracker_group_selection	my_proj	mes projets
+tracker_group_selection	all_proj	tous les projets
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/import_admin.php
+#
+tracker_import_admin	not_get_atf	Impossible d'obtenir un ArtefactTypeFactory
+tracker_import_admin	art_import	Importation d'artefacts dans un outil de suivi
+tracker_import_admin	welcome	<h3>Importation des artefacts</h3><P>Vous pouvez importer des artefacts dans un outil de suivi un partir d'un fichier texte (au format CSV). Cliquer sur les liens ci-dessous soit pour importer de nouveaux artefacts soit pour mettre à jour des artefacts existants.<P>
+tracker_import_admin	art_data_import	Importation des artefacts
+tracker_import_admin	import_format	Format d'importation
+tracker_import_admin	import	Importer
+tracker_import_admin	show_format	Voir le format
+tracker_import_admin	tracker	Outil de suivi
+tracker_import_admin	disabled	Les outils de suivi ont été désactivés par ce projet.
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/import.php
+#
+tracker_import	art_import	Importation dans l'outil de suivi&nbsp;:
+tracker_import	parse_report	Rapport d'analyse des artefacts
+tracker_import	ready	Prêt à importer $1 artefact(s)&nbsp;: $2 artefact(s) nouveau(x) , $3 artefact(s) existant(s)
+tracker_import	success_import	$1 artefact(s) importé(s) avec succès
+tracker_import	format_hdr	Format d'importation des artefacts
+tracker_import	format_msg	Pour importer les artefacts à partir d'un fichier CSV vous devez fournir les champs suivants. Les valeurs montrées en exemple indiquent le type de données. <br>Pour <b>créer</b> de nouveaux artefacts vous devez au moins fournir les champs obligatoires marqués du signe <span class="highlight"><big>*</big></b></span> sauf le numéro ID de l'artefact qui ne doit pas être spécifié. Tous les autres champs peuvent être omis de votre fichier CSV auquel cas ils seront initialisés à leur valeur par défaut. <br>Pour <b>mettre à jour</b> des artefacts existants vous devez simplement spécifier son numéro ID ainsi que les champs que vous souhaitez mettre à jour. Les champs non spécifiés resteront inchangés.<br>Notez par ailleurs que le fichier CSV doit utiliser le jeu de caractères ISO-8859-1.
+tracker_import	sample_cvs_file	Exemple de fichier CSV&nbsp;:
+tracker_import	import_new_hdr	Importer des artefacts $1 
+tracker_import	import_new_msg	Vous pouvez importer des artefacts dans cet outil de suivi en indiquant un fichier au format CSV. <br>Voir le <a href="$1">Format d'importation CSV</a> pour plus de détails.
+tracker_import	upload_file	Télécharger le fichier&nbsp;:	
+tracker_import	max_upload_size	(La taille maximum du fichier est de $1 Mb)
+tracker_import	submit_info	Charger les artefacts
+tracker_import	send_notifications	Envoyer les notifications&nbsp;:
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/index.php
+#
+tracker_index	art_id_necessary	L'ID de l'artefact est nécessaire
+tracker_index	not_create_at	ArtefactType n'a pas pu être créé
+tracker_index	browser_not_supported	Désolé, votre navigateur (Netscape 4.x) n'est pas supporté. Pour créer $1, veuillez utiliser un autre navigateur.
+tracker_index	a_tracker	un outil de suivi
+tracker_index	an_artif	un artefact
+tracker_index	not_create_art	L'artefact n'a pas pu être créé
+tracker_index	artifact_has_changed_title	ATTENTION: Votre mise à jour n'a pas été appliquée.
+tracker_index	artifact_has_changed	Cet artefact a été mis à jour par quelqu'un d'autre depuis que vous l'avez affiché. Vos modifications sont donc susceptibles d'effacer les leurs.<br> Pour continuer, vous devez utiliser le bouton Retour ("Back") de votre navigateur et récupérer la nouvelle version de l'artefact: <ul><li>soit en <a href="$1" target="_blank">chargeant l'artefact dans une nouvelle fenêtre</a> et en mettant vos nouvelles valeurs là, </li><li>soit en rechargeant le formulaire en utilisant le bouton "Rafraichir" de votre navigateur (Notez que cela va effacer les modifications que vous auriez pu faire; nous vous recommandons de copier vos changements importants avant de rafraichir).</li></ul>
+tracker_index	cc_list_invalid	Erreur&nbsp;: La liste de CC est invalide
+tracker_index	invalid_filename	Nom de fichier invalide
+tracker_index	not_create_file	L'objet fichier n'a pas pu être créé
+tracker_index	not_create_file_obj	L'objet fichier n'a pas pu être créé&nbsp;: $1
+tracker_index	not_attach_file	Impossible d'attacher le fichier à l'artefact&nbsp;: $1
+tracker_index	create_success	- Artefact créé avec succès (no. $1)
+tracker_index	invalid_filename_attach	Nom de fichier invalide pour un attachement
+tracker_index	trackers_for	Outil de suivi pour $1
+tracker_index	admin_all_trackers	Administration des outils de suivi
+tracker_index	create_new_tracker	Créer un outil de suivi
+tracker_index	no_accessible_trackers_hdr	Aucun outil de suivi disponible
+tracker_index	no_accessible_trackers_msg	<strong>Aucun outil de suivi n'a été créé, ou vous n'êtes pas autorisé à les consulter.</strong>
+tracker_index	choose_tracker	Choisissez un outil de suivi pour visualiser, éditer ou ajouter des artefacts.
+tracker_index	total	total
+tracker_index	file_delete	Fichier détruit&nbsp;: $1
+tracker_index	file_delete_success	Fichier détruit avec succès
+tracker_index	file_upload_err	Téléchargement du fichier&nbsp;: $1
+tracker_index	file_upload_success	Fichier téléchargé avec succès
+tracker_index	update_success	Mise à jour réussie
+tracker_index	not_saved_comment	Le commentaire n'a pu être sauvegardé
+tracker_index	open	ouvert
+tracker_index	updated_aid	Modification de $1
+tracker_index	mass_change	Mise à jour massive
+tracker_index	invalid_field_dependency	Dépendance entre champs invalide
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/masschange_detail.php
+#
+tracker_masschange_detail	selected_items	Mettre à jour les artefacts sélectionnés
+tracker_masschange_detail	no_items_selected	Aucun artefact sélectionné
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/masschange.php
+#
+tracker_masschange	mass_change_report	Rapport de mise à jour massive
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/tracker_import_utils.php
+#
+tracker_import_utils	field_not_known	"$1" est un champ inconnu dans cet outil de suivi $2
+tracker_import_utils	field_mandatory	"$1" est un champ obligatoire dans l'outil de suivi $2. Veuillez le spécifier dans votre fichier CSV.
+tracker_import_utils	not_a_predefined_value	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>la valeur "$3" ne figure pas parmi les valeurs prédéfinies du champ "$4" ($5).
+tracker_import_utils	field_mandatory_and_current	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire pour cet outil de suivi $4. Veuillez le spécifier dans votre fichier CSV (la valeur courante est "$5").
+tracker_import_utils	incorrect_date	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>La date "$3" a un format incorrect (AAAA-MM-JJ).
+tracker_import_utils	field_mandatory_and_line	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>"$3" est un champ obligatoire dans l'outil de suivi $4. Veuillez le spécifier dans votre fichier CSV.	
+tracker_import_utils	already_submitted	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>L'utilisateur $3 a déjà soumis un artefact avec le même résumé ("$4"). Veuillez ne pas essayer de l'importer à nouveau.	
+tracker_import_utils	art_not_exists	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>l'artefact spécifié (id=$3) n'existe pas dans l'outil de suivi $4
+tracker_import_utils	date	Date
+tracker_import_utils	type	Type
+tracker_import_utils	comment	Commentaire
+tracker_import_utils	comment_parse_error	$1 n'insérera aucun commentaire pour cet artefact.
+tracker_import_utils	new	NOUVEAU
+tracker_import_utils	column_mismatch	<b>Ligne $1 [</b>$2<b>]</b>&nbsp;:<br>le nombre de valeurs ($3) ne correspond pas au nombre de champs ($4).<br>
+tracker_import_utils	no_followups	Aucun commentaire posté
+tracker_import_utils	not_a_user	"$1", l'auteur du commentaire no. $2 n'est ni un nom d'utilisateur ni une adresse e-mail valide.
+tracker_import_utils	specify_originator	Vous devez spécifier l'auteur du commentaire no. $1 ($2).
+tracker_import_utils	specify_valid_user	"Aucun" n'est pas un nom d'auteur valide pour un commentaire. Veuillez spécifier un nom d'utilisateur ou une adresse e-mail valide pour le commentaire #$1.
+tracker_import_utils	problem_insert_dependent	Erreur à l'insertion les dépendances d'artefacts (ID artefact = $1).<br>
+tracker_import_utils	problem_add_cc	Erreur à l'ajout de la liste CC (ID artefact = $1).<br>
+tracker_import_utils	problem_insert_followup	Erreur  l'insertion du commentaire (ID artefact = $1).<br>
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/tracker_selection.php
+#
+tracker_selection	no_tracker_available	Aucun outil de suivi disponible pour ce projet !
+tracker_selection	tracker_sel	Sélection d'un outil de suivi
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/admin_trackers.php
+#
+tracker_admin_trackers	all_admin	Administration des outils de suivi
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/field_usage.php
+#
+tracker_admin_field_usage	tracker_admin	Administration outil de suivi 
+tracker_admin_field_usage	usage_admin	- Administration des champs
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/field_values_details.php
+#
+tracker_admin_field_values_details	values_admin	- Administration des valeurs des champs
+tracker_admin_field_values_details	manage_for	 - Administration des valeurs des champs pour '$1'
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/index.php
+#
+tracker_admin_index	create_tracker	- Créer un outil de suivi
+tracker_admin_index	tracker_created	Outil de suivi créé - Cliquer sur l'identifiant du nouvel outil de suivi pour achever sa configuration
+tracker_admin_index	not_create_canned	ArtifactCanned n'a pas pu être créé
+tracker_admin_index	not_retrieved_report	ArtifactReport n'a pas pu être récupéré&nbsp;: $1 
+tracker_admin_index	not_updated_report	ArtifactReport n'a pas pu être mis à jour
+tracker_admin_index	not_created_report	ArtifactReport n'a pas pu être créé
+tracker_admin_index	new_report_created	Nouveau rapport créé
+tracker_admin_index	report_deleted	Rapport détruit
+tracker_admin_index	not_create_canneditem	ArtifactCanned n'a pas pu être créé
+tracker_admin_index	not_found_canneditem	Item ArtifactCanned #$1 est introuvable
+tracker_admin_index	not_update_canneditem	Item ArtifactCanned #$1 n'a pas pu être mis à jour
+tracker_admin_index	deleted_cannedresponse	Réponse type détruite
+tracker_admin_index	updated_cannedresponse	Réponse type mise à jour
+tracker_admin_index	not_delete_canneditem	ArtifactCanned Item #$1 n'a pu être détruit
+tracker_admin_index	modify_cannedresponse	Modifier la réponse type
+tracker_admin_index	create_modify_cannedresponse	Créer/Modifier les réponses type
+tracker_admin_index	art_admin	Administration outil de suivi - Options de notification personnelle
+tracker_admin_index	update_success	 - Mise à jour réussie
+tracker_admin_index	update_failed	 - La mise à jour a échoué&nbsp;: $1
+tracker_admin_index	options	 - Options
+tracker_admin_index	update_success_title	MISE A JOUR REUSSIE
+tracker_admin_index	values_updated	Valeurs de champ mises à jour
+tracker_admin_index	value_updated	Valeur de champ mise à jour
+tracker_admin_index	value_created	Valeur de champ créée
+tracker_admin_index	value_deleted	Valeur de champ détruite
+tracker_admin_index	field_created	Champ créé avec les permissions par défaut
+tracker_admin_index	field_updated	Champ mis à jour
+tracker_admin_index	field_deleted	Champ détruit
+tracker_admin_index	modify_usage	 - Modifier l'utilisation d'un champ
+tracker_admin_index	modify_usage_for	 - Modifier l'utilisation d'un champ pour '$1'
+tracker_admin_index	deletion_failed	Outil de suivi '$1' - La destruction a échoué - 
+tracker_admin_index	delete_success	Outil de suivi '$1' - Destruction réussie
+tracker_admin_index	tracker_deleted	<H2>Outil de suivi '$1' - Détruit</H2> <p>Dans le cas où vous auriez détruit cet outil de suivi par inadvertance et que vous souhaitiez le restaurer, veuillez contacter l'<a href="mailto:$2">administrateur du site</A> dans les 10 jours qui viennent.</p>
+tracker_admin_index	fieldset_created	Groupe de champs créé avec les permissions par défaut
+tracker_admin_index	fieldset_updated	Groupe de champs mis à jour
+tracker_admin_index	fieldset_deleted	Groupe de champs détruit
+tracker_admin_index	modify_fieldset	 - Modifier le groupe de champs
+tracker_admin_index	modify_fieldset_for	 - Modifier le groupe de champs '$1'
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/admin/restore.php
+#
+tracker_admin_restore	restore_failed	L'opération de restauration a échoué
+tracker_admin_restore	tracker_restored	Outil de suivi restauré
+tracker_admin_restore	delay_failed	Echec de l'opération de report
+tracker_admin_restore	delayed_deletion	Destruction reportée
+tracker_admin_restore	pending_deletions	Outil de suivi en attente de destruction
+tracker_admin_restore	tracker_deleted	Outil de suivi détruit
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactCannedHtml.class.php
+#
+tracker_include_canned	create_response	Créer une nouvelle réponse
+tracker_include_canned	save_time	Créer des réponses type peut vous économiser beaucoup de temps si vous postez couramment les mêmes réponses aux utilisateurs.
+tracker_include_canned	title	Titre
+tracker_include_canned	message_body	Message&nbsp;:
+tracker_include_canned	existing_responses	Réponses existantes&nbsp;:
+tracker_include_canned	body_extract	Message (extrait)
+tracker_include_canned	delete	Détruire ?
+tracker_include_canned	delete_canned	Détruire cette réponse type&nbsp;: $1 ?
+tracker_include_canned	no_canned_response	Aucune réponse type définie pour cet outil de suivi
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactFieldHtml.class.php
+#
+tracker_include_field	error_no_atid	ERREUR - pas group_artifact_id
+tracker_include_field	start	Début&nbsp;:
+tracker_include_field	end	Fin&nbsp;:
+tracker_include_field	any_time	N'importe quand
+tracker_include_field	pick_date	Cliquer ici pour choisir une date
+tracker_include_field	unknown_display_type	$1&nbsp;: Type d'affichage du champ inconnu
+tracker_include_field	unknown_value	*** valeur inconnue ***
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactFileHtml.class.php
+#
+tracker_include_artifactfile	invalid_name	ArtifactFile&nbsp;: Nom de fichier invalide
+tracker_include_artifactfile	not_attached	Fichier pas attaché&nbsp;: la taille doit être inférieure à $1 Mb
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactHtml.class.php
+#
+tracker_include_artifact	project	Projet :
+tracker_include_artifact	submit	Valider
+tracker_include_artifact	follow_ups	Commentaires
+tracker_include_artifact	cc_list	Destinataires en copie (CC)
+tracker_include_artifact	use_canned	Utiliser une réponse type&nbsp;:
+tracker_include_artifact	define_canned	ou définir une nouvelle réponse type
+tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>Vous n'êtes PAS connecté</H2><P>Veuillez <A HREF="$1">vous connecter,</A> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></B><P>Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
+tracker_include_artifact	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
+tracker_include_artifact	fill_cc_list_lbl	<p><B>Ajouter en CC&nbsp;:&nbsp;</b>
+tracker_include_artifact	fill_cc_list_cmt	Commentaire
+tracker_include_artifact	attachment	Fichiers attachés
+tracker_include_artifact	upload_checkbox	<B>Cocher pour télécharger&hellip;</b>
+tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;et&nbsp;attacher le fichier&nbsp;:</B>
+tracker_include_artifact	upload_file_msg	<br><span class="small"><i>(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)</i></span>
+tracker_include_artifact	upload_file_desc	<P><B>Description du fichier&nbsp;:</B>&nbsp;
+tracker_include_artifact	dependencies	Dépendances	
+tracker_include_artifact	aids	IDs Artefact&nbsp;:
+tracker_include_artifact	fill	(Remplissez la liste en utilisant la virgule comme séparateur)
+tracker_include_artifact	dependent_on	Dépendant de&nbsp;:
+tracker_include_artifact	change_history	Historique des changements&nbsp;:
+tracker_include_artifact	field	Champ
+tracker_include_artifact	old_val	Ancienne valeur
+tracker_include_artifact	new_val	Nouvelle valeur
+tracker_include_artifact	no_changes	Aucun changement intervenu pour le moment	
+tracker_include_artifact	no_file_attached	Aucun fichier attaché	
+tracker_include_artifact	file_attachment	Fichiers attachés
+tracker_include_artifact	name	Nom
+tracker_include_artifact	desc	Description
+tracker_include_artifact	size_kb	Taille (KB)	
+tracker_include_artifact	size	Taille
+tracker_include_artifact	posted_on	posté le	
+tracker_include_artifact	delete_attachment	Détruire cet attachement ?	
+tracker_include_artifact	cc_empty	La liste des CC est vide
+tracker_include_artifact	artifact	Artefact
+tracker_include_artifact	summary	Résumé
+tracker_include_artifact	group	Groupe
+tracker_include_artifact	comment_type	Type de commentaire&nbsp;:
+tracker_include_artifact	add_comment	Ajouter un commentaire&nbsp;:
+tracker_include_artifact	depend_on	Dépend de&nbsp;:
+tracker_include_artifact	cc_address	Adresse en CC
+tracker_include_artifact	comment	Commentaire
+tracker_include_artifact	added_by	Ajouté par
+tracker_include_artifact	delete_cc	Détruire cette destinataire en CC ?
+tracker_include_artifact	add_cc	Ajouter CC&nbsp;:
+tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet artefact n'a pas déjà été soumis ?</span></b> (utiliser la boîte de recherche)	
+tracker_include_artifact	latest_modif	DERNIERES MODIFICATIONS
+tracker_include_artifact	full_snapshot	COPIE COMPLETE
+tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien :
+tracker_include_artifact	update_sent	Notification de la mise à jour de l'artefact envoyée
+tracker_include_artifact	changes_by	Modifié par :
+tracker_include_artifact	anon_user	Utilisateur anonyme
+tracker_include_artifact	add_flup_comment	Commentaire additionnel
+tracker_include_artifact	add_attachment	Fichiers attachés additionnels
+tracker_include_artifact	file_name	Nom du fichier&nbsp;:
+tracker_include_artifact	what	Champ
+tracker_include_artifact	removed	Enlevé
+tracker_include_artifact	added	Ajouté
+tracker_include_artifact	dep_list_empty	La liste des dépendances est vide
+tracker_include_artifact	dep_list	Liste des dépendances
+tracker_include_artifact	del_dep	Détruire cette dépendance ?
+tracker_include_artifact	no_depend	Aucun artefact ne dépend de celui-ci
+tracker_include_artifact	copy_art	Dupliquer Cet Artifact
+tracker_include_artifact	is_copy	ce $1 est une copie de $2
+tracker_include_artifact	copy_of	Copie de $1
+tracker_include_artifact	copy	Copie
+tracker_include_artifact	references	Références :
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactReportHtml.class.php
+#
+tracker_include_report	prio_colors	Echelle de priorité&nbsp;:
+tracker_include_report	items	Items
+tracker_include_report	check_items	Cocher art.
+tracker_include_report	clear_items	Décocher art.
+tracker_include_report	mass_change_all	Tous les mettre à jour ($1 artefacts)
+tracker_include_report	check_all_items	Cocher tous
+tracker_include_report	clear_all_items	Décocher tous
+tracker_include_report	selected	Sélection de $1
+tracker_include_report	using_report	Utiliser le rapport
+tracker_include_report	btn_go	Valider
+tracker_include_report	or_use	ou utiliser la
+tracker_include_report	simple_search	Recherche simple
+tracker_include_report	adv_search	Recherche avancée	
+tracker_include_report	at_once	s à la fois.
+tracker_include_report	sorted_by	trié(s) par
+tracker_include_report	matching	artefact(s)
+tracker_include_report	sort_results	Cliquer sur une entête de colonne pour trier les résultats (ordre ascendant ou descendant), 
+tracker_include_report	sort_sev	trier par $1
+tracker_include_report	reset_sort	réinitialiser le tri
+tracker_include_report	multicolumn_sort	Vous pouvez aussi <a href="$1"><b> $2 le tri multi-colonnes</b></a>.
+tracker_include_report	sev_colors	Echelle de sévérité&nbsp;:
+tracker_include_report	no_match	Aucun artefact correspondant	
+tracker_include_report	report_mgmt	Administration Outil de suivi - Gestion des rapports de recherche
+tracker_include_report	report_admin	  - Administration des rapports
+tracker_include_report	scope	Portée
+tracker_include_report	report_name	Nom du rapport
+tracker_include_report	id	ID
+tracker_include_report	mod	(Cliquer pour modifier)
+tracker_include_report	delete_report	Détruire ce rapport&nbsp;: $1  ?
+tracker_include_report	no_rep_def	Aucun rapport défini pour le moment.
+tracker_include_report	create_report	Vous pouvez <b><A HREF="$1">créer un nouveau rapport</a></b>
+tracker_include_report	create_rep	Créer un nouveau rapport
+tracker_include_report	field_label	Label du champ
+tracker_include_report	search_crit	Utiliser comme critère de recherche	
+tracker_include_report	rank_search	Rang à la recherche
+tracker_include_report	rep_col	Utiliser comme colonne dans le rapport
+tracker_include_report	rank_repo	Rang dans le rapport
+tracker_include_report	col_width	Largeur de la colonne (optionnelle)
+tracker_include_report	modify_report	Modifier le rapport
+tracker_include_report	btn_export	Exporter artefacts correspondants
+tracker_include_report	export_only_report_fields	Exporter uniquement les champs du rapport
+#
+#-----------------------------------------------
+# Script: SF/www/tracker/include/ArtifactTypeHtml.class.php
+#
+tracker_include_type	submit_new	Nouveau
+tracker_include_type	my	Mes $1
+tracker_include_type	open	$1 Ouvert
+tracker_include_type	reporting	Analyse statistique
+tracker_include_type	admin	Administration
+tracker_include_type	settings	Options générales
+tracker_include_type	field_usage	Utilisation des champs
+tracker_include_type	field_values	Valeurs des champs
+tracker_include_type	canned_resp	Réponse type
+tracker_include_type	reports	Rapports
+tracker_include_type	mail_notif	Options de notification
+tracker_include_type	pending_removal	Destruction des outils de suivi
+tracker_include_type	no_pending	Aucun outil de suivi en attente de destruction
+tracker_include_type	pending_deletion	Outil de suivi en attente de destruction
+tracker_include_type	deletion_date	Date de destruction
+tracker_include_type	delay	Retarder ?
+tracker_include_type	restore	Restaurer ?
+tracker_include_type	delay_deletion	Retarder la destruction de cet outil de suivi ?
+tracker_include_type	restore_tracker	Restaurer cet outil de suivi ?
+tracker_include_type	warning	** AVERTISSEMENT !! ** Détruire cet outil de suivi et toutes ses dépendances (restauration impossible) ?
+tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi en totalité ou à partir d'un outil de suivi existant
+tracker_include_type	manage	Gérer les outils de suivi
+tracker_include_type	admin_or_del	Administrer ou détruire un outil de suivi.	
+tracker_include_type	instantiate	Instancier dans les nouveaux projets
+tracker_include_type	administration	 - Administration
+tracker_include_type	mng_field_usage	Gérer l'utilisation des champs
+tracker_include_type	define_use	Définir les champs utilisés par cet outil de suivi.	
+tracker_include_type	mng_field_values	Gérer les valeurs des champs
+tracker_include_type	define_values	Définir les valeurs associées aux champs utilisés par cet outil de suivi.
+tracker_include_type	mng_response	Gérer les réponses type
+tracker_include_type	add_del_resp	Ajouter, modifier our détruire les réponses type.
+tracker_include_type	mng_reports	Gérer les rapports de recherche de l'outil de suivi
+tracker_include_type	define_reports	Définir les rapports de recherche de cet outil de suivi&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
+tracker_include_type	define_title	Définir le titre, la description, etc&hellip; de cet outil de suivi.
+tracker_include_type	define_notif	Les utilisateurs peuvent définir des options de notification personnelles relatives aux modifications des artefacts de cet outil. Les administrateurs du projet peuvent aussi définir des règles de notification globale.
+tracker_include_type	user	Utilisateur
+tracker_include_type	perm	Permissions
+tracker_include_type	del_user	Détruire cet utilisateur ?
+tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
+tracker_include_type	allow_copy	Autoriser la copie d'artefacts&nbsp;:
+tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
+tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
+tracker_include_type	fill_name	Veuillez remplir le nom de l'outil de suivi.
+tracker_include_type	fill_desc	Veuillez remplir la description de l'outil de suivi.
+tracker_include_type	fill_short	Veuillez remplir le nom court de l'outil de suivi.
+tracker_include_type	choose_proj	Veuillez d'abord choisir un projet et un outil de suivi.
+tracker_include_type	choose_tmpl	Veuillez d'abord choisir un patron.
+tracker_include_type	select_proj	Veuillez d'abord sélectionner un projet !
+tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</h2><p>Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:</p>
+tracker_include_type	short_name	Nom court
+tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
+tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
+tracker_include_type	from_tmpl	A partir d'un patron prédéfini par CodeX&nbsp;:
+tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant&nbsp;:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>
+tracker_include_type	proj_id	ID du projet&nbsp;:
+tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
+tracker_include_type	list_all_fields	Liste de tous les champs disponibles
+tracker_include_type	type	Type
+tracker_include_type	rank_screen	Rang à l'écran
+tracker_include_type	used	Utilisé
+tracker_include_type	unused	Inutilisé
+tracker_include_type	warning_loose_data	** AVERTISSEMENT !! ** Si vous détruisez ce champ, vous perdrez TOUTES les données associées. Vous pouvez aussi lui donner le statut INUTILISE, Continuer ?
+tracker_include_type	no_field_in_use	---- Aucun champ utilisé. En choisir un ci-dessous ----
+tracker_include_type	used_field	---- CHAMPS UTILISÉS ----
+tracker_include_type	no_unused_field	---- AUCUN CHAMP INUTILISÉ ----
+tracker_include_type	no_used_field	---- AUCUN CHAMP UTILISÉ ----
+tracker_include_type	unused_field	---- CHAMPS INUTILISÉS ----
+tracker_include_type	sb	Boîte de sélection
+tracker_include_type	mb	Boîte de sélections multiples
+tracker_include_type	tf	Champ texte
+tracker_include_type	ta	Zone texte
+tracker_include_type	df	Champ date
+tracker_include_type	ff	Champ flottant
+tracker_include_type	if	Champ entier
+tracker_include_type	create_field	Créer un nouveau champ
+tracker_include_type	upd_label	Modifier le champ '$1'	
+tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des outils de suivi de CodeX. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
+tracker_include_type	field_ident	Identification et description du champ
+tracker_include_type	field_type	Type du champ
+tracker_include_type	display_info	Informations d'affichage
+tracker_include_type	display_size	Taille d'affichage
+tracker_include_type	allow_empty	Autoriser la valeur vide
+tracker_include_type	keep_change_history	Conserver l'historique des changements
+tracker_include_type	misc	Divers&nbsp;:
+tracker_include_type	use_field	Utiliser ce champ
+tracker_include_type	fields_requ	champs obligatoires
+tracker_include_type	bind_to_list	associer le champ à une liste de valeurs
+tracker_include_type	bind_to	Associer à
+tracker_include_type	group_members	Membres du projet
+tracker_include_type	group_admins	Administrateurs du projet
+tracker_include_type	tracker_admins	Administrateurs de l'outil de suivi
+tracker_include_type	submitters	Personnes ayant soumis un artefact
+tracker_include_type	techicians	Techniciens de l'outil de suivi
+tracker_include_type	bind	Associer
+tracker_include_type	create_value	Créer une nouvelle valeur de champ
+tracker_include_type	update_value	Modifier la valeur de champ
+tracker_include_type	note_standard	<b>**NOTE IMPORTANT**</b> Vous êtes en train de modifier une valeur permanente. Les valeurs de champ permanentes ont très souvent une signification <b>très</b> particulière dans le système CodeX et nous vous recommandons vivement de ne changer ni son label/n ni sa description à moins que leur significations ne soient identiques.
+tracker_include_type	permanent	Permanente
+tracker_include_type	active	Active
+tracker_include_type	hidden	Cachée
+tracker_include_type	no_values	Aucune valeur définie pour le moment
+tracker_include_type	exist_values	Valeurs existantes
+tracker_include_type	value_label	Label de la valeur
+tracker_include_type	rank	Rang
+tracker_include_type	del_value	Détruire cette valeur ?	
+tracker_include_type	no_active_val	---- AUCUNE VALEUR ACTIVE ----
+tracker_include_type	active_val	---- VALEURS ACTIVES ----
+tracker_include_type	no_hidden_val	---- AUCUNE VALEUR CACHÉE ----
+tracker_include_type	hidden_val	---- VALEURS CACHÉES ----
+tracker_include_type	global_mail_notif	Notification e-mail globale
+tracker_include_type	admin_note	<B>En tant qu'administrateur de l'outil de suivi</B> vous pouvez spécifier des adresses e-mail (séparées par des virgules) qui recevront systématiquement les notifications de soumission (et éventuellement de modification) d'artefacts.
+tracker_include_type	send_all	Envoyer à chaque modification
+tracker_include_type	check_perms	Vérifier les permissions
+tracker_include_type	admin_conf	<P>L'administrateur de l'outil de suivi a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artefacts.<P><u>Destinataires</u>&nbsp;:
+tracker_include_type	send_all_or_not	(Envoyer à chaque modification&nbsp;: $1)
+tracker_include_type	admin_not_conf	<P>L'administrateur de l'outil de suivi n'a pas encore spécifié d'adresses e-mail qui recevront systématiquement une notification par e-mail des nouveaux artefacts soumis.
+tracker_include_type	perso_mail_notif	Notification e-mail personnelle 
+tracker_include_type	users_to_watch	Utilisateurs à suivre
+tracker_include_type	backup_person	Vous pouvez demander à recevoir une copie de toutes les notifications envoyées à un ou plusieurs utilisateurs. Donner la liste des noms de login des utilisateurs à suivre, séparés par des virgules.</b>
+tracker_include_type	watchers	Pour votre information, votre propre notifications e-mail sont actuellement suivies par&nbsp;: <u>$1</u>	
+tracker_include_type	no_watcher	Pour votre information, <u>personne</u> ne suit actuellement vos propres notifications e-mail. 
+tracker_include_type	event_settings	Options spécifiques par évènement/rôle
+tracker_include_type	tune_settings	Vous pouvez ajuster vos options de notification et décider de quels types de modifications vous voulez être averti en fonction du rôle que vous jouez.
+tracker_include_type	role_is	Si mon rôle vis à vis d'un artefact est&nbsp;:
+tracker_include_type	def_default	Définir la valeur par défaut
+tracker_include_type	val	Valeur
+tracker_include_type	unknown_stat	Statut inconnu
+tracker_include_type	report_system	Système d'analyse
+tracker_include_type	tracker_report_syst	Système d'analyse des outils de suivi
+tracker_include_type	aging_rep	Analyse de la durée de vie
+tracker_include_type	tracker_aging_rep	Analyse de la durée de vie
+tracker_include_type	avg_time	Analyse de la durée de vie moyenne pour les $1 fermé(es)
+tracker_include_type	nb_open	Nombre de $1 ouvert(es)
+tracker_include_type	rep_field	Analyse statistique du champ
+tracker_include_type	open_by	$1 ouvert(es) par $2
+tracker_include_type	all_by	Tou(te)s les $1 par $2
+tracker_include_type	changing_items	Changer $1 artefact(s) sélectionné(s)&nbsp;: 
+tracker_include_type	submit_mass_change	Valider
+tracker_include_type	occurrence	Occurrence
+tracker_include_type	notify_me	Je veux être notifié lorsque&nbsp;:
+tracker_include_type	permissions	Permissions
+tracker_include_type	manage_permissions	Gérer les Permissions
+tracker_include_type	manage_permissions_title	 - Gérer les Permissions
+tracker_include_type	define_manage_permissions	Définir des permissions sur l'outil de suivi et ses champs
+tracker_include_type	manage_tracker_permissions	Gérer les permissions de l'outil de suivi
+tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions de l'outil de suivi
+tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à l'outil de suivi.
+tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des champs
+tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
+tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
+tracker_include_type	edit_field_perm	Editer les permissions du champ
+tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
+tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
+tracker_include_type	mng_field_dependencies_title	 - Gérer les dépendances entre champs
+tracker_include_type	define_field_dependencies	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ.
+tracker_include_type	manage_fieldsets	Gérer les groupes de champs
+tracker_include_type	define_manage_fieldsets	Définir les groupes de champs de l'outil de suivi.
+tracker_include_type	fieldsets	Groupes de champs
+tracker_include_type	fieldset	Groupe du champs
+tracker_include_type	create_fieldset	Créer un nouveau groupe de champs
+tracker_include_type	list_all_fieldsets	Liste de tous les groupes de champs
+tracker_include_type	fieldset_ident	Identification et description du groupe de champs
+tracker_include_type	fieldset_name	Nom du groupe de champs
+tracker_include_type	fieldset_desc	Description
+tracker_include_type	fieldset_display	Information d'affichage
+tracker_include_type	fields_inside	Champs
+tracker_include_type	update_fieldset	Modifier le groupe de champs '$1'
+tracker_include_type	warning_delete_fieldset	** ATTENTION!! ** Effacer ce groupe de champs (aucune récupération possible) ?
+tracker_include_type	rank_in_fieldset	Rang dans le groupe de champs
+tracker_include_type	current_date	Date courante.
+tracker_include_type	date_value	Date particulière :
+
+tracker_include_type	add	Ajouter
+tracker_include_type	error_gn_default_not_added	Erreur lors de l'ajout de la notification globale par défaut
+tracker_include_type	error_gn_not_added	Erreur lors de l'ajout de la notification globale
+tracker_include_type	error_gn_not_deleted	Erreur lors de la suppression de la notification globale
+tracker_include_type	error_missing_param	Paramètres manquants
+tracker_include_type	info_gn_default_added	Notification globale par défaut ajoutée
+tracker_include_type	info_gn_default_not_added	Notification globale par défaut pas ajoutée
+tracker_include_type	info_gn_deleted	Notification globale supprimée
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactCanned.class.php
+#
+tracker_common_canned	not_valid	Aucun objet ArtifactType valide
+tracker_common_canned	name_requ	le nom et la description sont requis
+tracker_common_canned	perm_denied	Permission refusée
+tracker_common_canned	invalid_id	ID ArtifactCanned invalide
+tracker_common_canned	missing_param	Paramètres manquants
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/Artifact.class.php
+#
+tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à cet outil de suivi
+tracker_common_artifact	invalid_id	ID Artefact invalide
+tracker_common_artifact	row	Enregistrement $1&nbsp;:
+tracker_common_artifact	double_subm	  ERREUR - DOUBLE SOUMISSION. Vous avez déjà soumis un artefact (id=$1) avec le même résumé.  
+tracker_common_artifact	insert_err	L'INSERTION du nouvel artefact a échoué. Veuillez rapporter à l'administrateur&nbsp;:<br>Requête SQL&nbsp;:<br>$1<br>
+tracker_common_artifact	field_err	 Artefact créé, mais l'insertion de la valeur du champ a échoué - $1 : $2
+tracker_common_artifact	def_err	  Artefact créé, mais l'insertion de la valeur du champ par défaut - $1 : $2
+tracker_common_artifact	enter_email	 Vous devez fournir une adresse e-mail !
+tracker_common_artifact	add_comment	 Commentaire ajouté à l'artefact 
+tracker_common_artifact	field_upd_fail	La mise à jour de la valeur de champ $1 a échoué
+tracker_common_artifact	canned_used	 Réponse type utilisée 
+tracker_common_artifact	unable_canned	 Impossibilité d'utiliser la réponse type 
+tracker_common_artifact	upd_fail	LA MISE A JOUR A ECHOUÉ
+tracker_common_artifact	upd_success	 Artefact mis à jour avec succès
+tracker_common_artifact	cc_add_fail	L'ajout de CC a échoué
+tracker_common_artifact	cc_added	CC ajouté
+tracker_common_artifact	prob_cc_list	erreur en détruisant une ancienne liste de CC (aid=$1). 
+tracker_common_artifact	err_cc_id	Erreur CC ID $1 n'appartient pas à cet ID d'artefact
+tracker_common_artifact	err_del_cc	Erreur à la destruction du CC ID $1 : $2
+tracker_common_artifact	cc_remove	CC enlevé
+tracker_common_artifact	invalid_art	 Artefact invalide no. $1
+tracker_common_artifact	depend_add_fail	L'ajout de dépendances sur l'artefact no. $1 a échoué
+tracker_common_artifact	depend_add	Dépendances ajoutées
+tracker_common_artifact	depend_removed	Dépendances enlevées
+tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
+tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
+tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFactory.class.php
+#
+tracker_common_factory	db_err	Erreur base de données
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactField.class.php
+#
+tracker_common_field	unkown	Type d'affichage inconnu
+tracker_common_field	not_found	(Erreur - Introuvable)
+tracker_common_field	name_requ	Le nom du champ, son type de donnée et son type d'affichage sont obligatoires.
+tracker_common_field	upd_err	Erreur lors de la mise à jour de artifact_field ($1-$2) : $3
+tracker_common_field	use_err	Erreur lors de la mise à jour de artifact_field_usage ($1-$2) : $3
+tracker_common_field	del_err	Erreur lors de la destruction de artifact_field ($1-$2) : $3
+tracker_common_field	use_del_err	Erreur lors de la destruction de artifact_field_usage ($1-$2) : $3
+tracker_common_field	vl_ins_err	Erreur lors de l'insertion de artifact_field_value_list ($1-$2-$3) : $4
+tracker_common_field	vl_upd_err	Erreur lors de la mise à jour de artifact_field_value_list ($1-$2-$3) : $4
+tracker_common_field	vl_del_err	Erreur lors de la destruction de artifact_field_value_list ($1-$2-$3) : $4
+tracker_common_field	val_requ	Nom de la valeur obligatoire.
+tracker_common_field	val_exist	Cet ID de valeur existe déjà.
+tracker_common_field	val_id_requ	L'ID de la valeur et son nom sont obligatoires.
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldFactory.class.php
+#
+tracker_common_field_factory	missing	Champs manquants&nbsp;: $1 <p>La valeur vide n'est pas autorisée pour les champs listés ci-dessus. Retournez à la page précédente et essayez à nouveau.
+tracker_common_field_factory	use_ins_err	Erreur lors de l'insertion de artifact_field_usage ($1-$2) : $3
+tracker_common_field_factory	vl_ins_err	Erreur lors de l'insertion de artifact_field_value_list ($1-$2) : $3
+tracker_common_field_factory	label_requ	Le label du champ, son type de donnée et son type d'affichage sont obligatoires.
+tracker_common_field_factory	ins_err	Erreur lors de l'insertion de artifact_field ($1-$2) : $3
+tracker_common_field_factory	ugroup_not_exist	Le champ $1 n'a pu être associé au groupe inconnu $2
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFile.class.php
+#
+tracker_common_file	invalid	Aucun artefact valide
+tracker_common_file	name_requ	 Le nom du fichier, son type, sa taille et ses données sont obligatoires
+tracker_common_file	del_err	Destruction impossible
+tracker_common_file	invalid_id	ID ArtifactFile invalide
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFromID.class.php
+#
+tracker_common_fromid	not_create	L'ArtifactType n'a pas pu être créé
+tracker_common_fromid	not_create_a	L'Artifact n'a pas pu être créé
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactGroup.class.php
+#
+tracker_common_group	name_requ	Le nom est obligatoire
+tracker_common_group	invalid	ID ArtifactGroup invalide
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactReport.class.php
+#
+tracker_common_report	name_requ	Nom ,description et portée sont obligatoires
+tracker_common_report	not_found	fetchData rapport introuvable
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactReportFactory.class.php
+#
+tracker_common_reportfactory	ins_err	Erreur lors de l'insertion de artifact_report ($1-$2) : $3
+tracker_common_reportfactory	f_ind_err	Erreur lors de l'insertion de artifact_report_field ($1-$2) : $3
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/Artifacts.class.php
+#
+tracker_common_artifacts	not_get	Récupération impossible des artefacts&nbsp;: $1
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactTypes.class.php
+#
+tracker_common_type	invalid	Pas d'objet de groupe valide
+tracker_common_type	no_match	Group_id dans la BDD ne correspond pas à l'objet Group
+tracker_common_type	perm_fail	La création des permissions utilisateurs a échoué&nbsp;: $1
+tracker_common_type	name_requ	Le nom , la description et la nom court sont obligatoires.
+tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques. Retournez à la page précédente et modifiez ce champ.
+tracker_common_type	invalid_templ	group_id_template invalide.
+tracker_common_type	load_fail	impossible de charger le nouvel outil de suivi
+tracker_common_type	invalid_at	ArtifactTypeID invalide
+tracker_common_type	invalid_date	La date de report ne doit pas se situer dans le passé
+tracker_common_type	perm_err	Erreur lors de la mise à jour des permissions utilisateur - user_id=$1 - $2
+tracker_common_type	invalid_name	erreur nom d'utilisateur invalide '$1'
+tracker_common_type	copy_fail	Erreur lors de l'insertion de l'évènement de la notification
+tracker_common_type	notif_fail	Erreur lors de l'insertion du rôle de la notification
+tracker_common_type	del_err	Erreur lors de la destruction des dépendances $1 : $2
+tracker_common_type	none_found	Aucun trouvé 
+tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
+tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactTypes.class.php
+#
+tracker_common_types	err_bugs	Erreur à la création de ArtifactType pour l'outil de suivi de Bug
+tracker_common_types	bugs	Bugs
+tracker_common_types	bug_desc	Outil de suivi des bugs
+tracker_common_types	bug_ex	Interface (exemple)
+tracker_common_types	v1_ex	v1.0 (exemple)
+tracker_common_types	fail_bug	La création de l'outil de suivi Bug a échoué&nbsp;: $1
+tracker_common_types	err_sr	Erreur à la création de ArtifactType pour l'outil de suivi de support
+tracker_common_types	sr	Demande de support
+tracker_common_types	sr_desc	Outils de suivi de demandes de support
+tracker_common_types	sr_ex	Problème d'installation (exemple)
+tracker_common_types	fail_sr	Erreur à la création de l'outil de suivi des demandes de support&nbsp;: $1
+tracker_common_types	err_patch	Erreur à la création de ArtifactType pour l'outil de suivi des corrections
+tracker_common_types	patch	Corrections
+tracker_common_types	patch_desc	Outil de suivi des corrections
+tracker_common_types	patch_ex1	Widget (exemple)
+tracker_common_types	patch_ex2	instable (exemple)
+tracker_common_types	fail_patch	Erreur à la création de l'outil de suivi des corrections&nbsp;: $1
+tracker_common_types	err_fr	Erreur à la création de ArtifactType pour l'outil de suivi des demandes de fonctionnalités
+tracker_common_types	fr	Demandes de fonctionnalités
+tracker_common_types	fr_desc	Outil de suivi demandes de fonctionnalités
+tracker_common_types	fr_ex1	Amélioration d'interface (exemple)
+tracker_common_types	fr_ex2	Prochaine version (exemple)
+tracker_common_types	fail_fr	Erreur à la création de l'outil de suivi des demandes de fonctionnalités&nbsp;: $1
+tracker_common_types	role_SUBMITTER_short_desc	A soumis
+tracker_common_types	role_ASSIGNEE_short_desc	En charge
+tracker_common_types	role_CC_short_desc	CC
+tracker_common_types	role_COMMENTER_short_desc	Commentateur
+tracker_common_types	role_SUBMITTER_desc	La personne qui a soumis l'artefact
+tracker_common_types	role_ASSIGNEE_desc	La personne à qui l'artefact est confié
+tracker_common_types	role_CC_desc	La personne qui est dans le liste CC
+tracker_common_types	role_COMMENTER_desc	Une personne qui a posté un commentaire
+tracker_common_types	event_ROLE_CHANGE_short_desc	Le rôle a changé
+tracker_common_types	event_NEW_COMMENT_short_desc	Nouveau commentaire
+tracker_common_types	event_NEW_FILE_short_desc	Nouvel attachement
+tracker_common_types	event_CC_CHANGE_short_desc	Changement des CC
+tracker_common_types	event_CLOSED_short_desc	L'artefact est fermé
+tracker_common_types	event_PSS_CHANGE_short_desc	Changement PSS
+tracker_common_types	event_ANY_OTHER_CHANGE_short_desc	Tout autre changement
+tracker_common_types	event_I_MADE_IT_short_desc	Je l'ai fais
+tracker_common_types	event_NEW_ARTIFACT_short_desc	Nouvel artefact
+tracker_common_types	event_ROLE_CHANGE_desc	On me donne ou on m'enlève ce rôle
+tracker_common_types	event_NEW_COMMENT_desc	Un nouveau commentaire a été ajouté
+tracker_common_types	event_NEW_FILE_desc	Un nouveau fichier est attaché
+tracker_common_types	event_CC_CHANGE_desc	Une nouvelle adresse est ajoutée/retirée de la liste des CC
+tracker_common_types	event_CLOSED_desc	L'artefact est fermé
+tracker_common_types	event_PSS_CHANGE_desc	Changement dans Priorité,Statut,Sévérité
+tracker_common_types	event_ANY_OTHER_CHANGE_desc	Tout changement autre que ceux mentionnés ci-dessus
+tracker_common_types	event_I_MADE_IT_desc	Je suis l'auteur de la modification
+tracker_common_types	event_NEW_ARTIFACT_desc	Un nouvel artefact a été soumis
+#
+# Tracker permissions
+#
+#
+tracker_admin_permissions	fields_no_ugroups	<div><em>Aucun groupe ne peut accéder à ce tracker</em></div>
+tracker_admin_permissions	fields_tracker_intro	<div></div>
+tracker_admin_permissions	fields_tracker_toggle_field	<div>Vous pouvez <a href='$1'>basculer vers l'affichage par champ</a> en cliquant sur le label d'un champ dans le tableau ci-dessous.</div>
+tracker_admin_permissions	fields_tracker_toggle_group	<div>Vous pouvez <a href='$1'>basculer vers l'affichage par groupe d'utilisateurs</a> en cliquant sur le nom d'un groupe dans le tableau ci-dessous.</div>
+tracker_admin_permissions	ignore_g_anon_read	Le groupe '$1' est ignoré car le groupe '$2' peut lire
+tracker_admin_permissions	ignore_g_anon_submit	Le groupe '$1' est ignoré car le groupe '$2' peut soumettre
+tracker_admin_permissions	ignore_g_anon_update	Le groupe '$1' est ignoré car le groupe '$2' peut mettre à jour
+tracker_admin_permissions	ignore_g_regis_read	Le groupe '$1' est ignoré car le groupe '$2' peut lire
+tracker_admin_permissions	ignore_g_regis_submit	Le groupe '$1' est ignoré car le groupe '$2' peut soumettre
+tracker_admin_permissions	ignore_g_regis_update	Le groupe '$1' est ignoré car le groupe '$2' peut mettre à jour
+tracker_admin_permissions	ignore_g_tech_update	Le groupe '$1' est ignoré car le groupe '$2' peut mettre à jour
+tracker_admin_permissions	ignore_ug_during_copy	Veuillez noter que certaines permissions du tracker original n'ont pas été copiées
+tracker_admin_permissions	permissions	Droits d'accès
+tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès à tous les artefacts
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts confiés au groupe
+tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
+tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts confiés au groupe ou soumis par le groupe
+tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Peut Soummettre
+tracker_admin_permissions	TRACKER_FIELD_READ	Lecture Seule
+tracker_admin_permissions	TRACKER_FIELD_UPDATE	Mise à Jour
+tracker_admin_permissions	TRACKER_NONE	-
+tracker_admin_permissions	tracker_ignore_g_anon_full	Le groupe '$1' est ignoré car le groupe '$2' a accès à tous les artefacts
+tracker_admin_permissions	tracker_ignore_g_regis_full	Le groupe '$1' est ignoré car le groupe '$2' a accès à tous les artefacts
+tracker_admin_permissions	tracker_ignore_g_regis_assignee	Le groupe '$1' est ignoré car le groupe '$2' a accès aux artefacts confiés au groupe
+tracker_admin_permissions	tracker_ignore_g_regis_submitter	Le groupe '$1' est ignoré car le groupe '$2' a accès aux artefacts soumis par le groupe
+tracker_admin_permissions	tracker_ignore_g_regis_submitter_assignee	Le groupe '$1' est ignoré car le groupe '$2' a accès aux artefacts confiés au groupe, ou soumis par le groupe
+tracker_admin_permissions	tracker_intro	<div></div>
+tracker_admin_permissions	ugroup	Groupes d'utilisateurs
+tracker_admin_permissions	ug_may_have_no_access	<div>* il est possible que ces groupes n'aient pas accès au tracker (pas de <a href="$1">permission sur l'outil de suivi</a> définie).</div>
+#
+# Tracker field dependencies
+#
+#
+tracker_field_dependencies	noscript	Un navigateur avec javascript d'activé est obligatoire pour gérer les dépendances entre champs.
+tracker_field_dependencies	choose_field	-- Choisir un champ
+#tracker_field_dependencies	if_then	Si le champ %1 est sélectionné à %2 alors le champ %3 proposera %4
+tracker_field_dependencies	source	Source&nbsp;:
+tracker_field_dependencies	target	Cible&nbsp;:
+tracker_field_dependencies	saved	Sauvegardé avec succès
+tracker_field_dependencies	inline_help	Selectionnez un champ source et un champ cible pour editer les dépendances entre ces champs.
+#
+#--------------------------------------
+# Tracker fieldsets
+# Script: SF/www/tracker/admin/fieldset.php
+#
+tracker_admin_fieldset	tracker_admin	Administration outil de suivi
+tracker_admin_fieldset	fieldset_admin	Administration des groupes de champs
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSet.class.php
+#
+tracker_common_fieldset	invalid_at	Invalid ArtifactFieldSetID
+tracker_common_fieldset	name_requ	Le nom du groupoe de champ est obligatoire.
+tracker_common_fieldset	fieldset_default_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_desc_key	Détails de l'artefact
+tracker_common_fieldset	fieldset_default_bugs_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_bugs_desc_key	Détails du bug
+tracker_common_fieldset	fieldset_status_bugs_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_bugs_desc_key	Etat d'avancement du bug
+tracker_common_fieldset	fieldset_default_patches_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_patches_desc_key	Détails du patch
+tracker_common_fieldset	fieldset_patchtext_patches_lbl_key	Coller le code du correctif ici (texte uniquement)
+tracker_common_fieldset	fieldset_patchtext_patches_desc_key	Coller le code du correctif ici (texte uniquement) OU joignez un fichier dans la section 'Fichiers attachés'
+tracker_common_fieldset	fieldset_status_patches_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_patches_desc_key	Etat d'avancement du patch
+tracker_common_fieldset	fieldset_default_SR_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_SR_desc_key	Détails de la demande de support
+tracker_common_fieldset	fieldset_status_SR_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_SR_desc_key	Etat d'avancement de la demande de support
+tracker_common_fieldset	fieldset_default_tasks_lbl_key	Détails
+tracker_common_fieldset	fieldset_default_tasks_desc_key	Détails de la tâche
+tracker_common_fieldset	fieldset_status_tasks_lbl_key	Etat
+tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la tâche
+#
+#-----------------------------------------------
+# Script: SF/common/tracker/ArtifactFieldSetFactory.class.php
+#
+tracker_common_fieldset_factory	delete_only_empty_fieldset	Impossible de supprimer un groupe de champs non vide.
+tracker_common_fieldset_factory	label_requ	Le nom du groupe de champs est obligatoire.
+tracker_common_fieldset_factory	ins_err	Erreur lors de l'insertion de artifact_field_set ($1-$2) : $3

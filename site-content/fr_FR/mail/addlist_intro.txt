@@ -1,0 +1,24 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+
+echo '
+
+<P>Les listes de diffusion sont nommées selon le modèle suivant&nbsp;: <em>nom_projet-nom_liste@'. $GLOBALS['sys_lists_host'] .'</em>
+<P> Dans le but d\'harmoniser les pratiques en matière de création de liste de distribution sur '.$GLOBALS['sys_name'].' nous vous recommandons de créer les listes de distribution suivantes pour votre projet&nbsp;:<BR>
+<ul>
+<li><b>'.group_getunixname($group_id).'-interet</b>&nbsp;: pour les discussions générales entre utilisateurs.
+<li><b>'.group_getunixname($group_id).'-devel</b>&nbsp;: pour les discussions entre développeurs.
+<li><b>'.group_getunixname($group_id).'-annonce</b>&nbsp;: pour les annonces de nouvelles versions ou d\'évènements relatifs au projet.
+</ul>
+
+<P>Cela prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement créée.
+<P>';
+
+?>

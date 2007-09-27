@@ -1,0 +1,164 @@
+#/**
+#  *
+#  * forum scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/forum/admin/index.php
+#
+forum_admin_index	msgs_del	$1 message(s) deleted
+forum_admin_index	msg_not_in_group	Message is not in your group
+forum_admin_index	msg_not_found	Message not found
+forum_admin_index	upd_err	Error Updating Forum Info
+forum_admin_index	upd_success	Forum Info Updated Successfully
+forum_admin_index	del_a_msg	Delete a message
+forum_admin_index	delete_warn	WARNING! You are about to permanently delete a message and all of its followups!!
+forum_admin_index	enter_msg_id	Enter the Message ID
+forum_admin_index	add_a_forum	Add a Forum
+forum_admin_index	existing_forums	Existing Forums
+forum_admin_index	forum_name	Forum Name
+forum_admin_index	description	Description
+forum_admin_index	is_public	Is Public?
+forum_admin_index	monitor	Want to monitor this forum?
+forum_admin_index	monitor_recommendation	As the Forum creator it is <u>strongly recommend</u> that you monitor this forum to be instantly notified via email of any new message posted to the Forum.
+forum_admin_index	once_added_no_delete	Once you add a forum, it cannot be modified or deleted!
+forum_admin_index	add_this_forum	Add This Forum
+forum_admin_index	change_status	Change Forum Status
+forum_admin_index	forum_not_found	No Forums Found
+forum_admin_index	none_found_for_group	No forum for this project
+forum_admin_index	update_f_status	Update Forum Status
+forum_admin_index	private_explain	You can make forums private from here. Please note that private forums can still be viewed by members of your project, not the general public.
+forum_admin_index	forum	Forum
+forum_admin_index	update	Update
+forum_admin_index	deleted	Deleted
+forum_admin_index	forum_admin	Forum Administration
+forum_admin_index	add_forum	Add Forum
+forum_admin_index	del_msg	Delete Message
+forum_admin_index	update_forum_status	Update Forum Info/Status
+forum_admin_index	params_missing	Missing forum name or description, please press the "Back" button and complete this information
+#
+#-----------------------------------------------
+# Script: SF/www/forum/expand.php
+#
+forum_expand	expand_threads	Expand/Collapse Threads
+forum_expand	prefs	Preference Set
+forum_expand	now_expand	Threads will now be expanded
+forum_expand	now_collaps	Threads will now be collapsed
+#
+#-----------------------------------------------
+# Script: SF/www/forum/forum.php
+#
+forum_forum	by	By
+forum_forum	reply	reply
+forum_forum	forum_restricted	Forum is restricted
+forum_forum	no_msg	No Messages in $1
+forum_forum	nested	Nested
+forum_forum	flat	Flat
+forum_forum	threaded	Threaded
+forum_forum	no_comments	No Comments
+forum_forum	show	Show $1
+forum_forum	change_view	Change View
+forum_forum	thread	Thread
+forum_forum	author	Author
+forum_forum	date	Date
+forum_forum	prev_msg	Previous Messages
+forum_forum	next_msg	Next Messages
+forum_forum	start_new_thread	Start a New Thread
+forum_forum	choose_forum_first	Error - choose a forum first
+#
+#-----------------------------------------------
+# Script: SF/www/forum/forum_utils.php
+#
+forum_forum_utils	news	News
+forum_forum_utils	news_not_found	Error - this news item was not found
+forum_forum_utils	posted_by	Posted By
+forum_forum_utils	summary	Summary
+forum_forum_utils	proj_latest_news	Project Latest News
+forum_forum_utils	discuss_forum	Discussion Forums
+forum_forum_utils	stop_monitor	Stop Monitoring Forum
+forum_forum_utils	monitor	Monitor Forum
+forum_forum_utils	save_place	Save Place
+forum_forum_utils	start_thread	Start New Thread
+forum_forum_utils	admin	Admin
+forum_forum_utils	forum_monitored	Forum already monitored
+forum_forum_utils	insert_err	Error inserting into forum_monitoring
+forum_forum_utils	add_err	Error Adding Forum '$1'.
+forum_forum_utils	forum_added	Forum '$1' Added.
+forum_forum_utils	welcome_to	Welcome to $1
+forum_forum_utils	not_found	Not Found
+forum_forum_utils	broken_thread	Broken Thread
+forum_forum_utils	post_without_id	Trying to post without a forum ID
+forum_forum_utils	include_body_and_subject	Must include a message body and subject
+forum_forum_utils	do_not_double_post	You appear to be double-posting this message, since it has the same subject and followup information as a prior post.
+forum_forum_utils	msg_not_exist	Trying to followup to a message that doesn't exist.
+forum_forum_utils	no_folowup_id	No followup ID present when trying to post to an existing thread.
+forum_forum_utils	insert_fail	INSERT FAILED
+forum_forum_utils	post_failed	Posting Failed
+forum_forum_utils	msg_posted	Message Posted
+forum_forum_utils	could_post_if_logged	You could post if you were logged in
+forum_forum_utils	msg	Message
+forum_forum_utils	subj	Subject
+forum_forum_utils	html_displays_as_text	HTML tags will display in your post as text
+forum_forum_utils	post_comment	Post Comment
+forum_forum_utils	log_to_post	<A HREF="$1"><u>Log in first</u></A><span class="highlight"> to post messages</span>
+forum_forum_utils	read_and_respond	Read and respond to this message at
+forum_forum_utils	stop_monitor_explain	You are receiving this email because you elected to monitor this forum. \nTo stop monitoring this forum, login and visit
+forum_forum_utils	mail_sent	email sent
+forum_forum_utils	mail_not_sent	email not sent
+forum_forum_utils	people_monitoring	people monitoring
+forum_forum_utils	no_one_monitoring	no one monitoring
+forum_forum_utils	on_post_monitoring	You are monitoring this forum.
+forum_forum_utils	on_post_not_monitoring	$1<strong>Monitor the forum</strong>
+#
+#-----------------------------------------------
+# Script: SF/www/forum/index.php
+#
+forum_index	forums_for	Forums for '$1'
+forum_index	no_forums	No forums found for '$1'
+forum_index	choose_forum	Choose a forum and you can browse, search, and post messages.
+#
+#-----------------------------------------------
+# Script: SF/www/forum/message.php
+#
+forum_message	by	By
+forum_message	date	Date
+forum_message	subject	Subject
+forum_message	thread_view	Thread View
+forum_message	post_followup	Post a followup to this message
+forum_message	choose_msg_first	Must choose a message first
+#
+#-----------------------------------------------
+# Script: SF/www/forum/monitor.php
+#
+forum_monitor	monitor	Monitor a forum
+forum_monitor	monitor_off	Monitoring has been turned off
+forum_monitor	no_mails_anymore	You will not receive any more emails from this forum.
+forum_monitor	now_monitoring	Forum is now being monitored
+forum_monitor	get_followups	You will now be emailed followups to this entire forum.
+forum_monitor	to_turn_monitor_off	To turn off monitoring, simply click the <B>Stop Monitoring Forum</B>.
+forum_monitor	choose_forum_first	Choose a forum First
+#
+#-----------------------------------------------
+# Script: SF/www/forum/save.php
+#
+forum_save	save_place	Save your place
+forum_save	save_your_place	Save Your Place
+forum_save	insert_err	Error inserting into forum_saved_place
+forum_save	msg_highlighted	New messages will be highlighted when you return.
+forum_save	update_err	Error updating time in forum_saved_place
+forum_save	place_saved	Your place was saved
+#
+#-----------------------------------------------
+# Script: SF/www/forum/thread.php
+#
+forum_thread	post_to_thread	Post to this thread
+forum_thread	choose_thread	Choose Thread
+forum_thread	choose_thread_first	Sorry, Choose A Thread First
+forum_thread	view_thread	View Thread

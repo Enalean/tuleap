@@ -1,0 +1,74 @@
+#/**
+#  *
+#  * Default message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+system	locale	en_US
+system	strftimefmt	%Y %B %e  %H:%M
+system	datefmt	Y-m-d H:i
+system	datefmt_short	Y-m-d
+system	decimal_separator	.
+system	thousand_separator	,
+conf	content_encoding	iso-8859-1
+conf	default_font	verdana,arial,helvetica,sans-serif
+conf	language_code	en
+conf	language_id	1
+global	perm_denied	Permission Denied
+global	error_perm_denied	Error - Permission Denied
+global	back_home	Back to Home Page
+global	back	Back
+global	btn_delete	Delete
+global	btn_cancel	Cancel
+global	btn_update	Update
+global	btn_submit	Submit
+global	btn_browse	Browse
+global	btn_create	Create
+global	btn_close	Close
+global	btn_reset	Reset
+global	reset	reset
+global	yes	Yes
+global	no	No
+global	on	On
+global	off	Off
+global	any	Any
+global	none	None
+global	begin	Begin
+global	end	End
+global	next	Next
+global	prev	Previous
+global	printer_version	Printer version
+global	error	Error
+global	help	Help
+global	by	By
+global	select	Select
+global	unchanged	Unchanged
+global	or	or
+global	and	and
+global	activate	activate
+global	deactivate	deactivate
+global	Project	Project
+global	System	System
+global	Personal	Personal
+global	default	Default
+global	mail_failed	The mail was not accepted for the delivery. Please contact <a href='mailto:$1'>$1</a>.
+global	open	Open
+global	closed	Closed
+global	status	Status
+global	return_to	<p>Requested page currently loading. If it does not, try <a href="$1">$1</a>.</p>
+global	at_the_beginning	At the beginning
+global	at_the_end	At the end
+global	after	After $1
+global	missing_parameters	Missing parameters
+global	error_upload	File upload error. Please try again.
+global	error_upload_nofile	File upload error($1). No file was uploaded. 
+global	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
+global	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
+global	error_upload_unknown	File upload error($1). Unknown error code.
+global	service_conf_not_inherited	The configuration of this service will not be inherited for sub-projects
+

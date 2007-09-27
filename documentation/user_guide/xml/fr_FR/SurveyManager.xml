@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: SurveyManager.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="SurveyManager">
+    <title>Gestionnaire de sondages</title>
+
+    <para>Le gestionnaire de sondage permet à une équipe de projet de
+    créer des sondages d'opinion. Fournir un service de sondage dans
+    un environnement dédié aux activités de développement logiciel
+    peut paraître un peu étrange au premier abord. Cependant, si vous
+    vous souvenez que CodeX est aussi un outil qui permet de rester en
+    contact avec votre communauté d'utilisateurs, vous réaliserez
+    assez rapidement qu'être à l'écoute de cette communauté est le
+    meilleur moyen de la faire croître et de la satisfaire.</para>
+
+    <para>Rester à l'écoute de sa communauté peut se faire de
+    plusieurs façons sur CodeX :</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>par le biais des listes de diffusion et des forums web,</para>
+      </listitem>
+
+      <listitem>
+        <para>à partir des commentaires reçus en réponse à une annonce
+        publiée sur la page de sommaire de votre projet,</para>
+      </listitem>
+
+      <listitem>
+        <para>en analysant le contenu des demandes d'aide reçues sur
+        une certaine période.</para>
+ 
+      </listitem>
+    </itemizedlist>
+
+    <para>Tous ces moyens de communication permettent aux utilisateurs
+    de CodeX de "pousser" des avis et demandes spontanés vers le
+    projet concernant un sujet qui leur tient vraiment à coeur. Mais
+    que faire si vous souhaitez recueillir l'avis de votre communauté
+    d'utilisateurs sur un certain nombre de sujets et que vous voulez
+    que les réponses soient choisies parmi une liste de choix définis
+    par l'équipe de projet ? C'est précisément ce que permet de faire
+    le gestionnaire de sondages :</para>
+
+    <itemizedlist mark="bullet"
+                  spacing="compact">
+      <listitem>
+        <para>formuler une liste de questions précises,</para>
+      </listitem>
+
+      <listitem>
+        <para>définir un ensemble de réponses possibles pour faciliter l'analyse statistique,</para>
+      </listitem>
+
+      <listitem>
+        <para>rendre le sondage accessible à tout utilisateur présent sur l'Intranet,</para>
+      </listitem>
+
+      <listitem>
+        <para>passer les résultats en revue pour identifier les
+        principales tendances de votre communauté
+        d'utilisateurs.</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure id="FigureSurveyManagerWelcomeScreen">
+      <title>Page d'accueil du gestionnaire de sondages</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/fr_FR/sc_surveywelcome.png" width="15.3cm" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="PublishingaSurvey">
+      <title>Publier un sondage</title>
+
+      <para><emphasis>Audience : membres du projet</emphasis></para>
+
+      <para>Vous avez travaillé dur pour créer ce sondage parfaitement
+      peaufiné et vous désirez maintenant atteindre l'audience la plus
+      large possible. CodeX vous permet de rendre votre sondage
+      visible de plusieurs façons :</para>
+
+      <procedure>
+        <step>
+          <para><emphasis role="bold">Via le gestionnaire de sondages lui-même</emphasis> :
+          aussitôt qu'un sondage est créé il apparaît sur la page
+          d'accueil du gestionnaire de sondages (voir <xref
+          linkend="FigureSurveyManagerWelcomeScreen" />). Tout
+          utilisateur visitant la page de sommaire du projet verra
+          aussi le nombre de sondages disponibles dans la zone publique
+          sous la rubrique sondage. En cliquant sur le lien
+          &#34;Sondages&#34;, l'utilisateur pourra répondre aux
+          sondages disponibles.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">Service d'annonces du
+          projet</emphasis> : lorsque vous disposez d'un nouveau
+          sondage, assurez-vous de publier une annonce annonçant sa
+          disponibilité, qui est supposé y répondre et le pointeur Web
+          (URL) où se trouve le sondage (voir ci-dessous). En publiant
+          une annonce vous avez aussi une chance de la voir apparaître
+          sur la page d'accueil du site si l'équipe CodeX en décide
+          ainsi.</para>
+        </step>
+
+        <step>
+          <para><emphasis role="bold">E-mail</emphasis> : le sondage
+          que vous avez créé est accessible directement via un
+          pointeur Web (URL) du site CodeX. En conséquence vous pouvez
+          informer votre communauté d'utilisateur en incluant ce
+          pointeur Web dans tout document tel que message e-mail, page
+          Web ou tout autre document. Même les personnes qui ne sont
+          pas enregistrées sur CodeX peuvent participer à un
+          sondage.</para>
+        </step>
+      </procedure>
+
+      <para>Tous les sondages créés sur CodeX sont accessibles via un
+      pointeur Web (URL) comme celui-ci :</para>
+
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
+</programlisting>
+
+      <para>où N est l'identifiant (ID) de votre projet et X
+      l'identifiant du sondage tel qu'il est présenté sur la liste des
+      sondages affichés sur la page d'accueil du gestionnaire de sondages. Votre
+      identifiant de projet est visible sur la page d'administration du
+      gestionnaire de sondages (voir <xref linkend="FigureSurveyManagerWelcomeScreen"
+      />).</para>
+
+      <para>Répondre à un sondage se fait en accédant au sondage comme
+      indiqué précédemment, puis en répondant à la série de questions
+      et enfin en cliquant sur le bouton &#34;Valider&#34; situé au
+      bas de la page. La <xref
+      linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> montre
+      un exemple de sondage.</para>
+
+      <para><tip><title>Note importante : confidentialité des
+      sondages</title><para>Les informations collectées dans ces
+      enquêtes sont strictement internes à &SYS_ORG_NAME;. Elles sont
+      uniquement destinées à mieux comprendre le profil du projet et
+      de la population sondée. L'identité des personnes répondant au
+      sondage ne sont visibles ni pour les administrateurs du projet,
+      ni par une partie tierce et encore moins par le public. Les
+      informations collectées sont uniquement présentées de façon
+      agrégée et non pas dans le but de mettre en évidence un ou
+      plusieurs utilisateurs ou développeurs.</para></tip></para>
+
+      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
+        <title>Un exemple de sondage émanant du projet CodeX</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/fr_FR/sc_surveysample.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="AdministeringSurveys">
+      <title>Administration des sondages</title>
+
+      <para><emphasis>Audience : membres du projet</emphasis></para>
+
+      <para>Les fonctions d'administration du gestionnaire de sondages sont uniquement utilisables par les administrateurs du projet. Le module d'administration vous permet de</para>
+
+      <itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem>
+          <para>Créer ou modifier un sondage</para>
+        </listitem>
+
+        <listitem>
+          <para>Créer ou modifier des questions</para>
+        </listitem>
+
+        <listitem>
+          <para>passer en revue les résultats d'un sondage</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Pour accéder aux fonctions d'administration, rendez vous
+      sur la page de sommaire de votre projet, cliquez sur le lien
+      &#34;Sondages&#34; de la barre de services située en haut de
+      l'écran puis sur le lien &#34;Administration&#34; du menu du
+      gestionnaire de sondages (voir <xref linkend="FigureSurveyManagerWelcomeScreen"
+      />). A partir de cette page vous avez accès à l'ensemble des
+      fonctions d'administrations (voir <xref
+      linkend="FigureSurveyManagerAdministrationScreen" />).</para>
+
+      <figure id="FigureSurveyManagerAdministrationScreen">
+        <title>&Eacute;cran d'administration du gestionnaire de sondages</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+                       fileref="../../screenshots/fr_FR/sc_surveyadmin.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="SurveyStructure">
+        <title>Structure d'un sondage</title>
+
+        <para>Pour maîtriser le processus de création et de mise à
+        jour d'un sondage, il est nécessaire de bien comprendre que le
+        gestionnaire de sondages gère deux réservoirs d'entités distinctes : un réservoir de
+        sondages et un réservoir de questions. En conséquence, la
+        création d'un sondage complet est un processus en deux
+        étapes :</para>
+
+        <procedure>
+          <step>
+            <para>Vous devez tout d'abord créer un ensemble de
+            questions avec les réponses possibles. Toutes les
+            questions de tous les sondages d'un projet sont gérées dans
+            un même réservoir.</para>
+          </step>
+
+          <step>
+            <para>La création du sondage se fait ensuite en
+            définissant son titre et en attachant une série de
+            questions précédemment définies.</para>
+          </step>
+        </procedure>
+
+        <para>L'un des intérêts de cette gestion séparée des questions
+        et des sondages réside dans le fait de pouvoir utiliser la
+        même question dans différents sondages si besoin est.</para>
+      </section>
+
+      <section id="CreatingorEditingQuestions">
+        <title>Créer et éditer des questions</title>
+
+        <para>En tout premier lieu vous devez définir un jeu de
+        questions et les réponses possibles pour chacune
+        d'elles. Créer un bon sondage n'est pas chose aisée et cela
+        demande du travail et de la réflexion : la valeur ajoutée des
+        réponses reçues est directement liée à la qualité des
+        questions. Quelques conseils : ne mettez pas trop de questions
+        dans un sondage, les questions doivent être courtes, claires,
+        sans ambiguïté et non redondantes. Prenez donc du temps pour
+        penser aux questions avec votre équipe.</para>
+
+        <para>Pour créer des questions, cliquez sur le lien du même
+        nom dans la barre de menu du gestionnaire de sondages ou dans la page d'accueil du
+        module d'administration. Pour définir une question il suffit
+        de taper le texte et de choisir un type de question. Il existe
+        5 types de réponses possibles (voir <xref
+        linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> pour
+        quelques exemples de questions) :</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para><emphasis role="bold">Boutons radio 1-5</emphasis> :
+            ce type de question oblige l'utilisateur à répondre en
+            cochant un des boutons radio parmi les valeurs 1 à
+            5.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Boutons radio Oui/Non</emphasis> : 
+	    il s'agit d'une variante du type
+            précédent où seules les réponses Oui ou Non sont
+            possibles.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Boutons radio spécifiques</emphasis> : 
+	    ce type de question permet à l'administrateur projet 
+	    de définir un ensemble de réponses parmi lesquelles 
+	    l'utilisateur pourra en choisir une. Les différents choix sont affichés 
+        sous forme de boutons radio.</para>
+          </listitem>
+          
+          <listitem>
+            <para><emphasis role="bold">Boîte de sélection</emphasis> : 
+	    ce type de question permet à l'administrateur projet 
+	    de définir un ensemble de réponses parmi lesquelles 
+	    l'utilisateur pourra en choisir une. Les différents choix sont proposés 
+        dans une boîte de sélection.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Champ texte</emphasis> :
+            question pour laquelle vous souhaitez une réponse sous
+            forme de texte court (une ligne).</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Zone de texte</emphasis> :
+            comme précédemment si ce n'est que l'utilisateur peut
+            saisir plusieurs lignes de texte. A utiliser lorsque vous
+            souhaitez obtenir des réponses détaillées à vos
+            questions.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Commentaire</emphasis> : il ne
+            s'agit pas vraiment d'une question mais d'un moyen
+            d'insérer des commentaires entre deux questions dans votre
+            sondage.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Aucun</emphasis> : choisir ce
+            type de réponse pour une question revient à la
+            désactiver. La question disparaît alors de tous les
+            sondages qui l'utilisent. Comme souvent en pareil cas dans
+            CodeX, la question n'est pas détruite et toutes les
+            réponses associées émanant des divers sondages demeurent
+            intactes.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>A tout moment durant la phase de création vous pouvez
+        afficher la liste complète des questions en cliquant sur le
+        lien 'Lister les questions existantes' au bas de
+        l'écran.</para>
+
+        <para>Modifier des questions est aussi possible. Pour ce
+        faire, cliquez sur le lien 'Modifier les questions' dans le
+        menu de la page d'administration du gestionnaire de sondages ou dans la page
+        d'accueil du module d'administration. Vous verrez alors
+        s'afficher la liste des questions actuellement disponibles dans
+        le réservoir. En cliquant sur l'identifiant de la question
+        situé dans la colonne de gauche, vous pouvez modifier les
+        propriétés de la question.</para>
+
+        <para><emphasis role="underline">Remarque</emphasis> : modifier
+        une question après que des réponses aient été collectées est une
+        très mauvaise idée particulièrement si vous changez le type de
+        la question. Dans ce cas les réponses déjà collectées
+        deviennent incohérentes avec le nouveau type de la
+        question. Il est toutefois parfaitement possible de clarifier
+        ou de corriger des fautes dans l'intitulé d'une question sans
+        pour autant affecter les réponses déjà collectées.</para>
+      </section>
+
+      <section id="CreatingorEditingaSurvey">
+        <title>Créer ou modifier un sondage</title>
+
+        <para>Une fois que vous avez créé des questions, vous pouvez
+        créer un sondage et lui attacher des questions.</para>
+
+        <para>Pour créer un sondage cliquez sur le lien du même
+        nom dans la barre de menu du gestionnaire de sondages ou dans la page d'accueil du
+        module d'administration (voir <xref
+        linkend="FigureSurveyManagerAdministrationScreen" />). Ensuite, saisissez les informations suivantes :</para>
+
+        <itemizedlist mark="bullet"
+                      spacing="compact">
+          <listitem>
+            <para>Le nom du sondage (donnez lui un titre court)</para>
+          </listitem>
+
+          <listitem>
+            <para>La liste des questions attachées à ce sondage. Il
+            s'agit d'une liste d'identifiant des questions que vous
+            voulez voir apparaître dans ce sondage séparés par des
+            virgules. Pour consulter la liste des identifiants dans
+            une fenêtre séparée, cliquez sur le lien 'Lister les
+            questions existantes' et choisissez les identifiants
+            appropriés dans la liste. Les questions apparaîtront dans
+            le sondage dans le même ordre que les identifiants.</para>
+          </listitem>
+
+          <listitem>
+            <para>Le statut d'un sondage : il peut être actif ou
+            pas. Tant qu'un sondage est inactif il n'apparaît pas sur
+            l'écran de bienvenue du gestionnaire de sondages et il n'est donc pas
+            accessibles aux utilisateurs.
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>Si vous autorisez les réponses anonymes ou non. Autoriser les 
+            réponses anonymes permettra à des personnes non enregistrées (ou à des 
+            utilisateurs non authentifiés) de pouvoir répondre au sondage. Si 
+            les réponses anonymes ne sont pas autorisées, seuls les utilisateurs 
+            enregistrés et authentifiés pourront répondre au sondage.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Au bas de la page se trouve la liste de l'ensemble des
+        sondages du projet. Vous pouvez éditer l'un d'entre eux en
+        cliquant sur l'identifiant dans la colonne de gauche. La
+        modification d'un sondage peut aussi se faire en cliquant sur
+        le lien &#34;Modifier les sondages&#34; dans la barre de menu
+        du gestionnaire de sondages puis en cliquant sur le sondage concerné. Lors de
+        l'édition d'un sondage vous pouvez modifier la liste des questions ou
+        leur ordre sans effet sur les réponses existantes. Si vous
+        supprimez une question de la liste, vous ne pourrez plus
+        consulter les réponses associées s'il y en a. Elles ne sont
+        cependant pas perdues. En ré-insérant la question dans la
+        liste vous pourrez consulter les réponses associées (voir la
+        section suivante).</para>
+      </section>
+
+      <section id="ReviewingSurveyResults">
+        <title>Consulter les résultats d'un sondage</title>
+
+        <para><emphasis>Audience : membres du projet</emphasis></para>
+
+        <para>A n'importe quel moment dans le cycle de vie d'un
+        sondage, il est possible de consulter les réponses recueillies
+        auprès des utilisateurs qui ont déjà participé au
+        sondage. Pour consulter les résultats d'une enquête cliquez
+        sur le lien 'Voir les résultats' dans la barre du menu d'administration
+        du gestionnaire de sondages puis choisissez le sondage qui vous intéresse.</para>
+
+        <figure id="FigureSurveyResults">
+          <title>Résultats d'un sondage</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/fr_FR/sc_surveyresults.png" width="11cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Une liste de l'ensemble des questions du sondage
+        apparaît alors à l'écran. A côté de chaque question on trouve
+        une vue agrégée de toutes les réponses. Pour les questions
+        de type 'champ texte' ou 'zone texte' vous pouvez passer en
+        revue toutes les réponses. Pour les boutons radio, le
+        gestionnaire de sondages calcule le nombre total de réponses,
+        la moyenne des valeurs ainsi que la distribution des
+        valeurs.</para>
+
+        <para><tip> <title>Exportez les résultats de vos sondages pour
+        une analyse plus fine</title> <para>Si vous souhaitez procéder
+        à des traitements plus poussés sur les réponses d'un sondage,
+        souvenez-vous que CodeX permet aux administrateurs du projet
+        d'exporter les données du projet y compris les résultats des
+        sondages. Pour plus d'information voir <xref
+        linkend="ProjectDataExport" /> </para></tip></para>
+      
+
+      </section>
+    </section>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

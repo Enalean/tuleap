@@ -1,0 +1,67 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+$web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
+
+// Message preamble with Web pointers and server names
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+$message = 
+'Your project registration has been approved. 
+
+Project Full Name:    '.$row_grp['group_name'].'
+Project Unix Name:    '.$row_grp['unix_group_name'].'
+Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
+Project Web Server:   '.$web_server.'
+CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
+Subversion Server:    '.$svn_url.'
+Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
+
+// Directions for project administrators on what to do next
+$message = $message .'
+
+Please take some time to read the site documentation about the tools
+and services offered by '.$GLOBALS['sys_name'].' to project
+administrators. Most of the documentation (including a detailed User
+Guide) is available under the "Site documentation" link on the 
+'.$GLOBALS['sys_name'].' Home page.
+
+We now invite you to visit the Public Summary page of your project at
+'.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
+create a short public description for your project and categorize it
+in the Software Map if it hasn\'t been done.
+This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
+
+Once on your Project Summary Page you will see a "Project Admin" link.
+This Admin. page allows you to fully administrate your project
+environment you can create task or defect trackers, mailing lists,
+forums, etc.  and why not publish your first project news
+to advertise its creation (we\'ll put it on the front page !).
+
+Other miscellaneous points:
+
+- Your CVS and Subversion accounts for this project will become
+active at the next '.$GLOBALS['sys_crondelay'].'-hour cron update.  If this
+is not the case please open a support ticket so that we may take a
+look at the problem.
+
+- Also note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
+to be aware of your project specific server names (see above). If you
+are in a hurry, you may try shelling into
+'. $GLOBALS['sys_shell_host']. ' and pointing your CVS client to
+'. $GLOBALS['sys_cvs_host'].'.
+
+- Remark: if you already have a CVS or subversion repository of your
+own and want to transfer it as is on '.$GLOBALS['sys_name'].' then
+contact the  '.$GLOBALS['sys_name'].' team.
+
+Let us know if there is anything we can do to help you.
+
+ -- The '.$GLOBALS['sys_name'].' Team';
+
+?>

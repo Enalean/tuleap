@@ -1,0 +1,77 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id$
+#  *
+#  */
+plugin_pluginsadministration	descriptor_description	Offers a web interface for managing plugins.
+plugin_pluginsadministration	descriptor_name	Plugins Administration
+#
+#
+#
+plugin_pluginsadministration	Actions	Actions
+plugin_pluginsadministration	change_to_unavailable	Change to No
+plugin_pluginsadministration	change_to_available	Change to Yes
+plugin_pluginsadministration	Description	Description
+plugin_pluginsadministration	discard_changes	Discard changes ?
+plugin_pluginsadministration	unavailable	No
+plugin_pluginsadministration	available	Yes
+plugin_pluginsadministration	feedback_available	$1 is now available.
+plugin_pluginsadministration	feedback_unavailable	$1 is now unavailable. Web space and CGI remain accessible!
+plugin_pluginsadministration	Hook:	Hook:
+plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
+plugin_pluginsadministration	install_plugin	Install this Plugin
+plugin_pluginsadministration	install	Install a Plugin
+plugin_pluginsadministration	menu	Plugins
+plugin_pluginsadministration	not_yet_installed	Not Yet Installed Plugins
+plugin_pluginsadministration	Plugin	Plugin
+plugin_pluginsadministration	Plugins	Plugins
+plugin_pluginsadministration	plugins	Installed Plugins
+plugin_pluginsadministration	plugin_uninstalled	Plugin "$1" have been uninstalled.
+plugin_pluginsadministration	plugin_not_uninstalled	Plugin "$1" have not been uninstalled.
+plugin_pluginsadministration	priorities	Priorities between plugins
+plugin_pluginsadministration	Priority	Priority
+plugin_pluginsadministration	properties	Display properties of plugin
+plugin_pluginsadministration	select_hook	Select hook:
+plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
+plugin_pluginsadministration	Available?	Available?
+plugin_pluginsadministration	title	Plugins Administration
+plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
+plugin_pluginsadministration	uninstall	Uninstall
+plugin_pluginsadministration	uninstall_plugin	Uninstall this Plugin
+plugin_pluginsadministration	upload	Upload Archive
+plugin_pluginsadministration	update_priorities	Update Priorities
+plugin_pluginsadministration	Version	Version
+plugin_pluginsadministration	Scope	Scope
+plugin_pluginsadministration	scope_0	System
+plugin_pluginsadministration	scope_1	Projects
+plugin_pluginsadministration	scope_2	Users
+#
+#
+#
+plugin_pluginsadministration_properties	display_priorities	Display priorities of hook $1
+plugin_pluginsadministration_properties	properties_addproject	Add project:
+plugin_pluginsadministration_properties	properties_av_for_prj	Available for all projects
+plugin_pluginsadministration_properties	properties_delproject	Remove project:
+plugin_pluginsadministration_properties	properties_description:	Description:
+plugin_pluginsadministration_properties	properties_is_av_for_prj	This plugin available for all projects:
+plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:
+plugin_pluginsadministration_properties	properties_name:	Name:
+plugin_pluginsadministration_properties	properties_no	No
+plugin_pluginsadministration_properties	properties_no_prj_for_plugin	No project can use this plugin
+plugin_pluginsadministration_properties	properties_plugin	Properties of plugin "$1"
+plugin_pluginsadministration_properties	properties_projects:	Projects:
+plugin_pluginsadministration_properties	properties_scope:	Scope:
+plugin_pluginsadministration_properties	properties_version:	Version:
+plugin_pluginsadministration_properties	properties_yes	Yes
+plugin_pluginsadministration_properties	return	<< Return to plugins

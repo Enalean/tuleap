@@ -1,0 +1,274 @@
+/*
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
+*/
+
+/* general stuff */
+BODY { 
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  background-color: #bcbcad;
+  font-family: helvetica,arial,verdana,sans-serif;
+  font-size: medium;
+  color: #333333;
+}
+
+A { text-decoration: none; color: #8b4020 }
+a:hover { text-decoration: underline; color: #ff0000; }
+a:visited { text-decoration:none; color: #8b4020}
+a:active { text-decoration:none; color: #000000}
+
+/*input text fields*/
+.textfield_small { width: 10em; }
+.textfield_medium { width: 25em; }
+
+img { border: none; }
+
+.smaller { font-size: small; }
+.small { font-size: medium; }
+.normal { font-size: large; }
+
+.center { text-align: center; }
+.left { text-align: left; }
+.error { font-weight: bold; color: #980000; }
+.feedback { color: red; }
+.bold { font-weight: bold; }
+.disable { color: gray; font-size: medium;}
+.highlight { color: red; }
+.newproject { background-color: #EEEEEE; }
+.top_up { color: #009900; }
+.top_down { color: #CC0000; }
+.command { font-family: courier,sans-serif; font-size: medium;}
+.subdomain { color: green; }
+.bg_confirmdownload { background-color: #F7F7F7; }
+
+PRE,TT { font-family: courier,sans-serif; }
+
+/* forum */
+.thread { background-color: #DDDDDD; }
+.threadbody { background-color: #EEEEEE; }
+.threadmsg { background-color: #E3E3E3; }
+
+/* .footer { color: #333333; } */
+.standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
+
+/* content frame specific */
+.contenttable { background-color: #F7F7F7; vertical-align: top; width: 99%; border-spacing: 0; border: 0; }
+
+/* left menu specific */
+.menuframe { background-color: #e8e8e0; vertical-align: top; text-align: left; width: 60px; }
+.menutable { background-color: #e8e8e0; vertical-align: top; width: 150px; border-spacing: 0; border: 0; font-size: medium; }
+.menutitle { vertical-align: top; font-weight: bold; text-align: left; color: #333333; }
+.menuitem { vertical-align: top; text-align: right; color: #333333; }
+
+/* group menu specific (see tabs and tabselect too) */
+.groupmenutable { background-color: #e8e8e0; width: 100% ; border-top: thin solid #000000; border-bottom: thin solid #000000; }
+
+/* classic box */
+.boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
+.boxtitle { background-color: #E0DDD2; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
+.boxitem {  background-color: #EAECEF; text-align: left; color: #333333; }
+.boxitemalt { text-align: left; background-color: #ffffff; }
+.boxhighlight { background-color: #e8e8e0; text-align: left; color: #333333; }
+
+/* spartan box */
+/* priority  */
+.priora { background-color: #dadada; }
+.priorb { background-color: #dad0d0; }
+.priorc { background-color: #dacaca; }
+.priord { background-color: #dac0c0; }
+.priore { background-color: #dababa; }
+.priorf { background-color: #dab0b0; }
+.priorg { background-color: #daaaaa; }
+.priorh { background-color: #da9090; }
+.priori { background-color: #da8a8a; }
+
+/* page specific */
+
+.center { text-align: center; }
+.boxspace { font-size: 2pt; }
+.alignright { text-align: right }
+.maintitlebar { color: #FFFFFF; font-size: large;}
+.slogan { font-weight: bold; font-size: large; }
+.osdn { font-family: verdana,arial,helvetica,sans-serif; font-weight: bold; color: #ffffff; font-size: small; }
+.osdntext { font-weight: bold; text-decoration: none; color: #ffffff; font-size: small; }
+.osdntext:visited { font-weight: bold; text-decoration: none; color: #ffffff; }
+.osdntext:hover { font-weight: bold; text-decoration: none; color: #ffffff; }
+.footer { color: white; font-size: x-small; }
+
+.tabs { color: #000000; }
+.tabs:visited { color: #000000; }
+.tabs:hover { color:#FF0000; } 
+.tabselect { color: #000000; font-weight: bold; }
+.tabselect:visited { color: #000000; font-weight: bold; }
+.tabselect:hover { color:#FF0000; font-weight: bold; }
+
+.titlebar { text-decoration:none; color:#000000; font-weight: bold; font-size: medium;}
+.develtitle { color:#000000; font-weight: bold; }
+.legallink { color:#000000; font-weight: bold; }
+
+.sortbutton { color: #000000; text-decoration: none; }
+.sortbutton:hover { text-decoration: underline; }
+.sortbutton:visited { color: #000000;}
+
+/* calendar (fixed font size) */
+.calendar_month { background-color: #E0DDD2; }
+.calendar_day { background-color: #FFE6B5; }
+.calendar_currentday { background-color: #FFFFA3; }
+.calendar_nextmonth { background-color: #DBEAF5; }
+.calendar_daymonth { background-color: white; } 
+.calendar_font_othermonth { font-size: small; color: gray; }
+.calendar_font { font-size: small; color: black; }
+.calendar_font_month { font-size: small; color: black; }
+.calendar_font_day { font-size: small; color: black; }
+
+/* Help classes */
+.bg_help {
+  background-color: #ffffff;
+}
+
+/* Vertical spacing */
+.vspace-bottom { margin-bottom: 4ex; }
+.vspace-top { margin-top: 4ex; }
+.vspace-both { margin-top: 4ex; margin-bottom: 4ex; }
+
+/* text with tooltips (e.g. artifact fields) */
+.tooltip { text-decoration:none; color: #000000}
+.tooltip:hover { text-decoration:none; color: #ff0000}
+
+
+/* dynamic fields                                */
+/*************************************************/
+/* Only background-color property is used        */
+/* Only full hexa are allowed                    */
+/* don't use names (purple, red, yellow)         */
+/* don't use half hexa (#FF0000 instead of #F00) */
+.codex_field_dependencies_highlight_change {
+    /* background-color: #8b4020; */
+}
+
+/* field sets */
+.fieldset_separator { text-align: center; background-color: #CCCCCC; }
+td.artifact_spacer { width: 8%; }
+
+
+/* {{{ feedback */
+.feedback_error, .feedback_warning, .feedback_info, .feedback_debug {
+        font-family:sans-serif;
+        background-color: #f7f7f7;
+        background-position: 20px 50%;
+        background-repeat:no-repeat;
+        margin-left:0px;
+        margin-bottom:10px;
+        list-style:none;
+        padding:10px 50px;
+}
+
+.feedback_error {
+        border:thick solid #ff0000;
+        color:#ff0000;
+        font-weight:bold;
+        background-image: url(../images/ic/error.png)
+}
+.feedback_warning {
+        border:medium solid darkorange;
+        color:peru;
+        font-weight:normal;
+        background-image: url(../images/ic/warning.png)
+}
+.feedback_info {
+        border:thin solid darkblue;
+        color:darkblue;
+        font-weight:normal;
+        background-image: url(../images/ic/info.png)
+}
+.feedback_debug {
+        font-family:monospace;
+        color:yellow;
+        font-weight:normal;
+        background-color:black;
+        display:none; 
+}
+/* }}} */
+
+/* {{{ File Release System */
+.frs_filename_col {
+    width: 50%;
+}
+.frs_size_col {
+    width: 10%;
+}
+.frs_downloads_col {
+    width: 10%;
+}
+.frs_architecture_col {
+    width: 10%;
+}
+.frs_filetype_col {
+    width: 10%;
+}
+.frs_date_col {
+    width: 10%;
+}
+fieldset.package {
+    margin-bottom: 20px;
+}
+fieldset.package legend {
+    font-size: larger;
+    padding-right: 10px;
+}
+.release {
+    background-color: #D1CEC4;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    margin-top: 1px;
+}
+.release_date {
+    width: 10%;
+    text-align: right;
+}
+table.release tr td img {
+    vertical-align: bottom;
+}
+.files_table {
+    margin-bottom: 20px;
+}
+/* }}} */
+
+.iframe_service {
+    width:100%;
+    height:650px;
+}
+.iframe_showonly {
+    text-align:right;
+    font-size:0.85em;
+}
+
+/* {{{ password validator */
+.password_validator_ok,
+.password_validator_ko {
+    background:transparent url(../images/ic/tick.png) left top no-repeat;
+    padding-left:20px;
+}
+.password_validator_ko {
+    background-image:url(../images/ic/cross.png);
+}
+.password_strategy_bad {
+    color:red;
+    font-weight:bold;
+}
+.password_strategy_good {
+    color:green;
+    font-weight:bold;
+}
+/* }}} */
+

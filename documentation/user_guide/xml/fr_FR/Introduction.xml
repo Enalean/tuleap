@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id: Introduction.xml 911 2004-03-15 14:18:29Z ljulliar $
+//
+// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
+-->
+  <chapter id="Introduction">
+    <title>Introduction</title>
+
+    <para>L'objectif de l'initiative Code eXchange (CodeX) de
+    &SYS_ORG_NAME; est de transposer et d'appliquer les principes du
+    développement Open Source dans notre propre environnement
+    d'entreprise. L'établissement du développement logiciel et la
+    gestion de projets en mode collaboratif comme l'une des valeurs
+    centrales de notre ingénierie logicielle, améliore la qualité des
+    composants, la productivité des équipes de projet tout en offrant
+    un environnement de travail riche, attractif et efficace.</para>
+
+    <para>L'initiative CodeX est supportée par un site Web interne
+    disponible sur <ulink
+    url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Ce
+    site est ouvert aux équipes de développement de &SYS_ORG_NAME; qui
+    souhaitent travailler de façon efficace en mode collaboratif. <!--
+    The CodeX web site is provided as a service to all &SYS_ORG_NAME;
+    software development teams who want to share their project source
+    code with others.  While being well and alive the software
+    community at &SYS_ORG_NAME; is also asking for more communication
+    and has a strong desire to establish bridges with the rest of the
+    company. Further, it shows a desire to speed up the innovation
+    process and to develop more flexible, better quality and more
+    usable software in less time. --></para>
+
+    <para>Le Guide de l'utilisateur CodeX décrit les services et les
+    fonctionnalités de CodeX mais il fournit aussi de nombreux
+    conseils pour vous aider à tirer le meilleur parti de CodeX à
+    gérer vos projets de façon optimale.</para>
+
+    <para>Nous espérons que vous appréciez CodeX. N'hésitez pas à en
+    parler à vos collègues programmeurs, chefs de projets ou
+    responsables de groupe. Gardez aussi présent à l'esprit que ce
+    guide de l'utilisateur est avant tout fait pour vous et que nous serons
+    donc heureux de recevoir toutes vos suggestions de corrections ou
+    d'améliorations.</para>
+
+    <para>Profitez de CodeX !</para>
+
+    <para>L'équipe CodeX</para>
+
+    <figure id="FigureTheCodeXHomePage">
+      <title>La page d'accueil de CodeX</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/fr_FR/sc_homepage.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure id="FigureTheCodeXHomePageTabTheme">
+      <title>La page d'accueil de CodeX avec un thème différent (avec des onglets)</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/fr_FR/sc_homepagetabtheme.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
+

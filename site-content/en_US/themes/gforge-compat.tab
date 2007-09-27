@@ -1,0 +1,118 @@
+#/**
+#  *
+#  * This file is licensed under the CodeX Component Software License 
+#  * http://codex.xrce.xerox.com 
+#  * 
+#  * THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A 
+#  * COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU 
+#  * PUBLIC LICENSE. 
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  * @version   $Id: fr_FR.tab 1778 2005-06-24 08:10:38Z nterray $
+#  *
+#  */
+advanced_search	and_search	with all words
+advanced_search	all	all
+advanced_search	or_search	with one word
+advanced_search	none	none
+advanced_search	search_button	Search
+advanced_search	search_in	Search in
+advanced_search	select	Select
+advanced_search	headline	$1 Search Result
+advanced_search	no_matches_found	No matches found
+advanced_search	no_matches_found_no_under_section	No matches found - No sections available (check your permissions)
+advanced_search	error_search_minlength	Search must be at least three characters
+common	login	Log In
+common	logout	Log Out
+common	myaccount	My Account
+common	newaccount	New Account
+group	activity	Activity Percentile:&nbsp;
+group	activitystat	View project activity <a href="/project/stats/?group_id=$1">statistics</a>.
+group	developer_info	Developer Info
+group	developers	Developers
+group	long_bugs	Bug Tracking
+group	long_scm	SCM Repository
+group	long_docman	DocManager: Project Documentation
+group	long_forum	Public Forums
+group	long_ftp	Anonymous FTP Space
+group	long_homepage	Project Home Page
+group	long_mail	Mailing Lists
+group	long_news	Latest News
+group	long_patch	Patch Manager
+group	long_pm	Task Manager
+group	long_support	Tech Support Manager
+group	long_survey	Surveys
+group	long_tracker	Tracker
+group	nodescription	This project has not yet submitted a description.
+group	norelease	This Project Has Not Released Any Files
+group	project_admins	Project Admins
+group	project_developers	Developers
+group	public_area	Public Areas
+group	registered	Registered:&nbsp;
+group	short_admin	Admin
+group	short_bugs	Bugs
+group	short_scm	SCM
+group	short_docman	Docs
+group	short_files	Files
+group	short_forum	Forums
+group	short_homepage	Home Page
+group	short_mail	Lists
+group	short_main	Main
+group	short_memberlist	Developers
+group	short_news	News
+group	short_patch	Patches
+group	short_pm	Tasks
+group	short_summary	Summary
+group	short_support	Support
+group	short_survey	Surveys
+group	short_tracker	Tracker
+menu	about_gforge	About $1
+menu	account_maintenance	Account Maintenance
+menu	admin	Admin
+menu	bookmark_page	Bookmark Page
+menu	change_my_theme	Change My Theme
+menu	code_snippet	Code&nbsp;Snippets
+menu	code_snippet_library	Code Snippet Library
+menu	compile_farm	Compile Farm
+menu	diary_notes	Diary &amp; Notes
+menu	discussion_forums	Discussion Forums
+menu	documentation	Site Docs
+menu	home	Home
+menu	login	Login
+menu	login_ssl	Login via SSL
+menu	logout	Logout
+menu	my_account	My Account
+menu	my_personal_page	My Personal Page
+menu	mypage	My&nbsp;Page
+menu	new_project	Register New Project
+menu	new_releases	New Releases
+menu	new_user	New User via SSL
+menu	other_site_mirrors	Other Site Mirrors
+menu	project_admin	Project Admin
+menu	project_help_wanted	Project&nbsp;Openings
+menu	project_summary	Project Summary
+menu	projectree	Project&nbsp;Tree
+menu	register_project	Register Project
+menu	reporting	Reporting
+menu	search	Search
+menu	site_status	Site Status
+menu	software_map	Software Map
+menu	submit	Submit
+menu	top_projects	Top Projects
+searchbox	advanced_search	Advanced search
+searchbox	docs	This project's documents
+searchbox	forum	This forum
+searchbox	forums	This project's forums
+searchbox	frs	This project's releases
+searchbox	full	Search the entire project
+searchbox	news	This project's news
+searchbox	people	People
+searchbox	search	Search
+searchbox	skill	Skill
+searchbox	softwaregroup	Software/Group
+searchbox	task	Tasks
+searchbox	tasks	This project's tasks
+searchbox	trackers	This project's trackers

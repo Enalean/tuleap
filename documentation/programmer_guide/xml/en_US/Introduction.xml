@@ -1,0 +1,81 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
+// This file is licensed under the CodeX Component Software License
+// http://codex.xerox.com
+//
+// $Id$
+//
+// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+//
+-->
+
+  <chapter id="Introduction">
+    <title>Introduction</title>
+
+    <para>The goal of this document is to provide a short guide for starting
+    development for the CodeX platform: architecture, development environment setup, directory structure and programming tips and conventions.</para>
+
+    
+    <para>No, this guide does not present all the mechanisms and functions available to the CodeX programmer: it is only a startup guide that will help write the first scripts. Then, there is a lot more to learn by looking at the existing code!</para>
+    
+    <para>Enjoy programming CodeX!</para>
+    
+    <para>The CodeX Team</para>
+
+    <section id="SkillRequirements">
+      <title>Skill Requirements</title>
+      <para>Even though programming for the CodeX platform does not require very advanced skills, existing knowledge in a few technologies will greatly help. More precisely, here are the initial skills that are the most useful:
+</para>
+      <itemizedlist spacing="compact" mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">PHP</emphasis> Almost all CodeX source code is written in PHP. Note that, starting from version 2.2, only PHP4 will be supported.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">MySQL</emphasis> and more generally SQL language is used very often when programming for CodeX. With PHP, there is no state saved between successive calls, so all needed data is read from a mySQL database each time a script is executed.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Web application programming</emphasis>: for instance, CGI programming, GET/POST mechanisms, cookies, Apache server, and also rendering languages like HTML, CSS, or Javascript in some cases.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Script programming</emphasis>: CodeX strongly rely on system tools, so some knowledge is required in Shell programming, Perl, Python, and Linux administration.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="ProgrammerReferences">
+      <title>Programmer References</title>
+      <para>Here is a list of useful resources freely available to the programmer:</para>
+      <itemizedlist spacing="compact" mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">PHP Manual</emphasis>, available at
+          <ulink url="http://www.php.net/manual/en/">http://www.php.net/manual/en/</ulink>:
+          this is an invaluable resource for PHP programmers: function references, comprehensive search and user examples.
+          </para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">MySQL Reference Manual</emphasis>, available at
+          <ulink url="http://dev.mysql.com/doc/mysql/en/index.html">http://dev.mysql.com/doc/mysql/en/index.html</ulink>:
+          reference manual with SQL syntax, examples and user comments.
+          </para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">CodeX Installation Guide</emphasis>: this guide gives an overview of the system aspects of CodeX: user accounts, file system, RPM packages, SSH, cron jobs, as well as information on CodeX customization: UI themes, site content.
+          </para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">CodeX Administration Guide</emphasis>: this guide details administration tasks, file structure, and tools configuration (MySQL, Apache, CVS, etc.). It is a reference document when it comes to modifying any administrative script.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+End:
+-->
+
+

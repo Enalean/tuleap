@@ -1,0 +1,38 @@
+plugin_ldap	descriptor_description	Plugin LDAP pour CodeX. Permet l'affichage des information LDAP des utilisateurs, ainsi que l'authentification LDAP.
+plugin_ldap	people_ldap	Annuaire d'entreprise
+plugin_ldap	err_sync	Impossible de récupérer les données de l'utilisateur de l'annuaire.
+plugin_ldap	dir_user_notfound	Utilisateur inconnu dans l'annuaire.
+plugin_ldap	ldap_login_help	Merci d'entrer d'entrer votre nom d'utilisateur et mot de passe de l'annuaire d'entreprise.<br /><br /><em> Si vous avez un problème pour vous authentifier, merci d'envoyer un email aux <a href="mailto:$1?Subject=Impossible de se connecter sur $2">administrateurs $2</a></em>.
+plugin_ldap	err_account_creation	Impossible de créer le compte. Merci de contacter un administrateur.
+plugin_ldap	more_from_directory	Plus d'info de l'annuaire $1
+plugin_ldap	directory	Annuaire
+plugin_ldap	total_entries	Nombre total d'entrées
+plugin_ldap	entry_#	No. entrée
+plugin_ldap	entry_dn	Entrée dn
+plugin_ldap	attributes	attributs
+plugin_ldap	ldap_login	Login sur l'annuaire d'entreprise&nbsp;:
+plugin_ldap	not_found	Erreur - Introuvable
+plugin_ldap	no_ldap_login_found	Login sur l'annuaire d'entreprise introuvable
+plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
+#
+#-----------------------------------------------
+# Script: plugins/ldap/www/welcome.php
+#
+#
+plugin_ldap	welcome_title	Bienvenue $1
+plugin_ldap	welcome_first_login	Premier login sur $1
+plugin_ldap	welcome_fill_form	Merci de remplir les champs suivants avant d'accéder à la suite&nbsp;:
+plugin_ldap	welcome_btn_update	Mettre à jour mon compte
+plugin_ldap	welcome_preferences	Préférences du compte
+plugin_ldap	welcome_your_data	Détails du compte
+plugin_ldap	welcome_ldap_login	Nom de l'utilisateur&nbsp;:
+plugin_ldap	welcome_email	Adresse email&nbsp;: 
+plugin_ldap	welcome_codex_login	Login interne $1&nbsp;:
+plugin_ldap	welcome_codex_login_j	<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>.
+plugin_ldap	welcome_error_up	Erreur lors de la mise à jour des paramètres de l'utilisateur
+plugin_ldap	welcome_error_up_expl	Une erreur s'est produite pendant la mise à jour du compte: $1.
+plugin_ldap	welcome_err_notz	Prière de choisir un autre fuseau horaire que 'Aucun'. <br /><br />Cliquez sur 'Retour' et choisissez un fuseau horaire.
+plugin_ldap	welcome_tz	Fuseau Horaire
+plugin_ldap	welcome_communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <I>(Faible trafic)</I>
+plugin_ldap	welcome_siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
+plugin_ldap	welcome_mandatory	Les champs marqués $1 sont obligatoires.

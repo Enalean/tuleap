@@ -1,0 +1,38 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// $Id$
+//
+
+if (user_isloggedin()) {
+   $username=strtolower(user_getname());
+} else $username='nom_utilisateur';
+print '<h2>Accès CVS '.help_button('VersionControlWithCVS.html').'</h2>
+<P>En configuration par défaut, l\'accès en lecture seule à CVS est autorisé pour tous les utilisateurs enregistrés de '.$GLOBALS['sys_name'].'. Les utilisateurs anonymes n\'ont pas accès au dépôt CVS. Les utilisateurs souhaitant avoir accès au dépôt CVS doivent donc créer leur compte utilisateur sur '.$GLOBALS['sys_name'].'. 
+<P>Les membres d\'un projet ont un accès en lecture (checkout) et en écriture (commit) au dépôt CVS.
+<P> Vous trouverez ci-dessous les commandes typiques à utiliser pour s\'authentifier auprès d\'un serveur CVS et pour obtenir une copie de travail (checkout) du code source de ce projet. Dans les commandes ci-dessous veuillez remplacer <I>nom_module</I> ';
+if (!user_isloggedin()){
+   print 'et <I>nom_utilisateur</I> .';
+} else print ' par les valeurs appropriées.'; 
+print ' Entrer votre mot de passe utilisateur à l\'invite de CVS.';
+if ($GLOBALS['sys_disable_subdomains']){
+  $cvs_domain=$row_grp['http_domain'];
+} else {
+  $cvs_domain='cvs.'.$row_grp['http_domain'];
+}
+if (strpos($shell,'/cvssh') !== false) { // Users with restricted shell
+print '<P><span class="command">export CVS_RSH=ssh
+<BR>&nbsp;<BR>cvs -d:ext:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' co <I>nom_module</I>
+</span>';
+} else {
+print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' login
+<BR>&nbsp;<BR>cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cvsroot/'.$row_grp['unix_group_name'].' co <I>nom_module</I>
+</span>';
+}
+
+
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[Plus d\'information sur CVS&hellip;]');
+?>

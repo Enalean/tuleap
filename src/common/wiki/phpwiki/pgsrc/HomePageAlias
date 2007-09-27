@@ -1,0 +1,14 @@
+Date: Sat, 15 Feb 2003 15:47:41 -0800
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.4pre)
+Content-Type: application/x-phpwiki;
+  pagename=HomePageAlias;
+  pgsrc_version="1 $Revision: 1.1 $";
+  flags="";
+  lastmodified=1045352861;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RedirectTo page=HomePage ?>
+
+(This is a demonstration of the RedirectToPlugin.)
