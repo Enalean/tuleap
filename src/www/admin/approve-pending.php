@@ -158,6 +158,7 @@ if (db_numrows($res_grp) < 1) {
                     print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
                 }
                 if ($p->usesSVN()) {
+                    $s =& $sf->getServerById($p->services['svn']->getServerId());
                     print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
                 }
                 print '</ul>';
