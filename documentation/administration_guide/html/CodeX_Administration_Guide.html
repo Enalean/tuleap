@@ -2391,18 +2391,16 @@ Now you have a fresh CVS or SVN repository and the team can start the import aga
 <h2><a name="HowTo_Change_User_Name"></a>Changing a User Name on CodeX</h2>
 <em>How a CodeX administrator can change a user's login name</em>
 <UL>
+<LI>Log as root on the codex server</LI>
 <li>First of all, make sure that the new login name is not already used!</li>
-<LI> First log as root on the codex server</LI>
-
-<LI> Edit the following files and change the old user name with the new one
-<BR>  /etc/passwd (2 occurences on the same line: login and home directory)
-<BR>  /etc/shadow (1 occurence) (this file is read only, you can force the modification)
-<BR>  /etc/group (1 occurence for the user's own group plus as many
-occurences as projects the user is a member of - take note of these
-project for re-use later in this howto)</LI>
-
-<LI> cd /home/users</LI>
-<LI> rename the user's directory to the new name (mv old_name new_name)</LI>
+<li>Second of all, make sure that the Xerox cron job won't run while you do the update (you may edit the root crontab if necesary)!</li>
+<LI> Modify the system files with groupmod and usermod.
+<br>Use this command to rename the group associated with the user:
+<br><tt>   groupmod -n new_name old_name</tt>
+<br>Use this command to update the username, initial group and home directory:
+<br><tt>   usermod -d /home/users/new_name -m -g new_name -l new_name old_name </tt>
+<br>
+</li>
 
 <LI> Edit each of the CVS writers file for the projects the user belong to and modify the name. You can find all the relevant writers file by typing the following Unix command:<br>
 <tt>grep -rsl old_name /cvsroot/*/CVSROOT/writers</tt>
