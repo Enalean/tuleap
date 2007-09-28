@@ -9,7 +9,7 @@
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //
 
-$Language->loadLanguageMsg('svn/svn');
+$GLOBALS['Language']->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
         global $group_id, $Language, $there_are_specific_permissions;
@@ -511,8 +511,8 @@ function svn_utils_svn_repo_exists($gname) {
 }
 
 
-$SVNACCESS = "None";
-$SVNGROUPS = "None";
+$GLOBALS['SVNACCESS'] = "None";
+$GLOBALS['SVNGROUPS'] = "None";
 
 /**
  * Function svn_utils_parse_access_file : parse the .SVNAccessFile of the project $gname 
@@ -698,5 +698,80 @@ function svn_utils_check_access($username, $gname, $svnpath) {
 function svn_utils_is_there_specific_permission($gname) {
     $specifics = svn_utils_read_svn_access_file($gname);
     return !$specifics || $specifics != '';
+}
+
+function svn_get_revisions(&$project, $offset, $chunksz, &$_path, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0) {
+    global $SVNACCESS, $SVNGROUPS;
+    $select = 'SELECT DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
+    $from = "FROM svn_commits,user ";
+    $where = "WHERE svn_commits.group_id=". $project->getGroupId() ." AND user.user_id=svn_commits.whoid ";
+
+    //check user access rights
+    $forbidden = svn_utils_get_forbidden_paths(user_getname(),$project->getUnixName(false));
+    if (!empty($forbidden)) {
+        $from .= ",svn_dirs,svn_checkins ";
+        $join = "";
+        $where_forbidden = "";
+        while (list($no_access,) = each($forbidden)) {
+            if ($no_access == $_path) {
+                $_path = '';
+            }
+            $join= " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id "; 
+            $where_forbidden .= " AND svn_dirs.dir not like '%".substr($no_access,1)."%' ";
+        }
+        $where .= $join.$where_forbidden;
+    }
+
+    //if status selected, and more to where clause
+    if ($_path != '') {
+        $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".$_path."%' ";
+        if (!isset($forbidden) || empty($forbidden)) {
+          $from .= ",svn_dirs,svn_checkins ";
+        }
+    } else {
+        $path_str = "";
+    }
+
+
+    //if revision selected, and more to where clause
+    if (isset($_rev_id) && $_rev_id != '') {
+        $commit_str=" AND svn_commits.revision='$_rev_id' ";
+    } else {
+        $commit_str='';
+    }
+
+    if (isset($_commiter) && $_commiter && ($_commiter != 100)) {
+        $commiter_str=" AND user.user_name='$_commiter' ";
+    } else {
+        //no assigned to was chosen, so don't add it to where clause
+        $commiter_str='';
+    }
+
+    if (isset($_srch) && $_srch != '') {
+        $srch_str = "AND svn_commits.description like '%".$_srch."%' ";
+    } else {
+        $srch_str = "";
+    }
+
+    $where .= $commiter_str.$commit_str.$srch_str.$path_str;
+
+ 
+    if (!isset($pv) || !$pv) { $limit = " LIMIT $offset,$chunksz";}
+
+    if (!isset($order_by) || $order_by == '') {
+        $order_by = " ORDER BY revision desc ";
+    }
+
+    $sql=$select.$from.$where.$order_by.$limit;
+
+    $result=db_query($sql);
+
+    /* expensive way to have total number of rows. Don't know of a cheaper one */
+
+    $sql1=$select.$from.$where; 
+    $result1=db_query($sql1);
+    $totalrows = db_numrows($result1);
+    
+    return array($result, $totalrows);
 }
 ?>
