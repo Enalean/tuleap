@@ -469,7 +469,7 @@ function svn_utils_read_svn_access_file($gname) {
 
     $fd = @fopen("$filename", "r");
     if (!$fd) {
-	$feedback .= $Language->getText('svn_utils','file_err',$filename);
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_utils','file_err',$filename));
         $buffer = false;
     } else {
         $in_settings = false;
@@ -537,7 +537,7 @@ function svn_utils_parse_access_file($gname) {
 
   $f = @fopen($filename, "rb");
   if ($f === false) {
-    exit_error($Language->getText('global','error'),$Language->getText('svn_utils','file_err',$filename));
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_utils','file_err',$filename));
   } else {
     $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
     $perm_pat    = '/^\s*([^ ]*)\s*=\s*(.*)$/';
