@@ -1,0 +1,13 @@
+#/**
+#  *
+#  * export scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  *
+#  */
+#
+rss	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
+

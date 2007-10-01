@@ -1,6 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
+require_once('common/rss/RSS.class.php');
 
 /**
 * Widget_ProjectLatestSvnCommits
@@ -55,6 +56,25 @@ class Widget_ProjectLatestSvnCommits extends Widget {
         return true;
     }
     function displayRss() {
+        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
+        $rss = new RSS(array(
+            'title'       => $this->getTitle(),
+            'description' => '',
+            'link'        => get_server_url(),
+            'language'    => 'en-us',
+            'copyright'   => $GLOBALS['Language']->getText('rss','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time()))),
+            'pubDate'     => gmdate('D, d M Y G:i:s',time()).' GMT',
+        ));
+        while($data = db_fetch_array($this->latest_revisions)) {
+            $rss->addItem(array(
+                'title'       => '#'.$data['revision'] .' by '. $data['who'] .' on '. format_date($GLOBALS['sys_datefmt'], $data['date']),
+                'description' => util_make_links(nl2br($data['description'])),
+                'link'        => '/svn/?func=detailrevision&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id']
+            ));
+        }
+        $rss->display();
+        exit;
+
     }
 }
 ?>
