@@ -700,7 +700,8 @@ function svn_utils_is_there_specific_permission($gname) {
     return !$specifics || $specifics != '';
 }
 
-function svn_get_revisions(&$project, $offset, $chunksz, &$_path, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0) {
+function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0) {
+    global $_path;
     global $SVNACCESS, $SVNGROUPS;
     $select = 'SELECT DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
     $from = "FROM svn_commits,user ";

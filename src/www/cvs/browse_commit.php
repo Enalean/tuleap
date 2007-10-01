@@ -53,10 +53,8 @@ if (isset($morder)) {
 
 
 // get project name
-$sql = "SELECT unix_group_name from groups where group_id=$group_id";
-
-$result = db_query($sql);
-$projectname = db_result($result, 0, 'unix_group_name');
+$project =& project_get_object($group_id);
+$projectname = $project->getUnixName(false);
 
 //
 // Memorize order by field as a user preference if explicitly specified.
@@ -131,96 +129,14 @@ if ($set=='my') {
 /*
 	Display commits based on the form post - by user or status or both
 */
-
-//if tag selected, and more to where clause
-if (isset($_tag) && ($_tag != 100)) {
-	//for open tasks, add status=100 to make sure we show all
-	$tag_str="AND cvs_checkins.stickytag='$_tag'";
-} else {
-	//no status was chosen, so don't add it to where clause
-	$tag_str='';
-}
-
-//if status selected, and more to where clause
-if (isset($_branch) && ($_branch != 100)) {
-	//for open tasks, add status=100 to make sure we show all
-	$branch_str="AND cvs_checkins.branchid='$_branch'";
-} else {
-	//no status was chosen, so don't add it to where clause
-	$branch_str='';
-}
-
-//if assigned to selected, and more to where clause
-if (isset($_commit_id) && ($_commit_id != '')) {
-  $commit_str="AND cvs_commits.id='$_commit_id' AND cvs_checkins.commitid != 0 ";
-} else {
-  $_commit_id= '';
-  $commit_str='';
-}
-
-if (isset($_commiter) && ($_commiter != 100)) {
-	$commiter_str="AND user.user_id=cvs_checkins.whoid ".
-	  "AND user.user_name='$_commiter' ";
-} else {
-	//no assigned to was chosen, so don't add it to where clause
-	$commiter_str='';
-}
-
-if (isset($_srch) && ($_srch != '')) {
-  $srch_str = "AND cvs_descs.description like '%".$_srch."%' ";
-} else {
-  $srch_str = "";
-  $_srch = '';
-}
-
-//build page title to make bookmarking easier
-//if a user was selected, add the user_name to the title
-//same for status
-
-//commits_header(array('title'=>'Browse Commits'.
-//	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
-//	(($_tag && ($_tag != 100))?' By Status: '. get_commits_status_nam//e($_status):''),
-//		   'help' => 'CommitsManager.html'));
-
-// get repository id
-$query = "SELECT id from cvs_repositories where cvs_repositories.repository='/cvsroot/".$projectname."' ";
-$rs = db_query($query);
-$repo_id = db_result($rs, 0, 0);
-
-$select = 'SELECT distinct cvs_checkins.commitid as id, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as f_when, user.user_name as who ';
-$from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
-$where = "WHERE cvs_checkins.descid=cvs_descs.id ".
-	"AND cvs_checkins.commitid=cvs_commits.id ".
-	"AND user.user_id=cvs_checkins.whoid ".
-        "AND cvs_checkins.repositoryid=".$repo_id." ".
-	"$commiter_str ".
-        "$commit_str ".
-	"$srch_str ".
-	"$branch_str ";
-
- 
-if (!isset($pv) || (!$pv)) { $limit = " LIMIT $offset,$chunksz";}
-
-if (!isset($order_by)) {
-  $order_by = " ORDER BY id desc, f_when desc ";
-}
-
-$sql=$select.
-$from.
-$where.
-$order_by.
-$limit;
-
-$result=db_query($sql);
-
-/* expensive way to have total rows number didn'get a cheaper one */
-
-$sql1=$select.
-$from.
-$where; 
-$result1=db_query($sql1);
-$totalrows = db_numrows($result1);
-
+$_tag      = isset($_tag) ? $_tag : 100;
+$_branch   = isset($_branch) ? $_branch : 100;
+$_commit_id= isset($_commit_id) ? $_commit_id : ''; 
+$_commiter = isset($_commiter) ? $_commiter : 100; 
+$_srch     = isset($_srch) ? $_srch : '';
+$order_by  = isset($order_by) ? $order_by : ''; 
+$pv        = isset($pv) ? $pv : 0;
+list($result, $totalrows) = cvs_get_revisions($project, $offset, $chunksz, $_tag, $_branch, $_commit_id, $_commiter, $_srch, $order_by, $pv);
 
 /*
 	creating a custom technician box which includes "any"

@@ -662,4 +662,94 @@ function get_group_id_from_repository($repository) {
     return group_getid_by_name(basename($repository));
 }
 
+function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0) {
+    //if tag selected, and more to where clause
+    if ($_tag != 100) {
+        //for open tasks, add status=100 to make sure we show all
+        $tag_str="AND cvs_checkins.stickytag='$_tag'";
+    } else {
+        //no status was chosen, so don't add it to where clause
+        $tag_str='';
+    }
+    
+    //if status selected, and more to where clause
+    if ($_branch != 100) {
+        //for open tasks, add status=100 to make sure we show all
+        $branch_str="AND cvs_checkins.branchid='$_branch'";
+    } else {
+        //no status was chosen, so don't add it to where clause
+        $branch_str='';
+    }
+    
+    //if assigned to selected, and more to where clause
+    if ($_commit_id != '') {
+      $commit_str="AND cvs_commits.id='$_commit_id' AND cvs_checkins.commitid != 0 ";
+    } else {
+      $commit_str='';
+    }
+    
+    if ($_commiter != 100) {
+        $commiter_str="AND user.user_id=cvs_checkins.whoid ".
+          "AND user.user_name='$_commiter' ";
+    } else {
+        //no assigned to was chosen, so don't add it to where clause
+        $commiter_str='';
+    }
+    
+    if ($_srch != '') {
+      $srch_str = "AND cvs_descs.description like '%".$_srch."%' ";
+    } else {
+      $srch_str = "";
+    }
+    
+    //build page title to make bookmarking easier
+    //if a user was selected, add the user_name to the title
+    //same for status
+    
+    //commits_header(array('title'=>'Browse Commits'.
+    //	(($_assigned_to)?' For: '.user_getname($_assigned_to):'').
+    //	(($_tag && ($_tag != 100))?' By Status: '. get_commits_status_nam//e($_status):''),
+    //		   'help' => 'CommitsManager.html'));
+    
+    // get repository id
+    $query = "SELECT id from cvs_repositories where cvs_repositories.repository='/cvsroot/".$project->getUnixName(false)."' ";
+    $rs = db_query($query);
+    $repo_id = db_result($rs, 0, 0);
+    
+    $select = 'SELECT distinct cvs_checkins.commitid as id, cvs_checkins.commitid as revision, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as date, cvs_commits.comm_when as f_when, user.user_name as who ';
+    $from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
+    $where = "WHERE cvs_checkins.descid=cvs_descs.id ".
+        "AND cvs_checkins.commitid=cvs_commits.id ".
+        "AND user.user_id=cvs_checkins.whoid ".
+            "AND cvs_checkins.repositoryid=".$repo_id." ".
+        "$commiter_str ".
+            "$commit_str ".
+        "$srch_str ".
+        "$branch_str ";
+    
+     
+    if (!$pv) { $limit = " LIMIT $offset,$chunksz";}
+    
+    if (!$order_by) {
+      $order_by = " ORDER BY id desc, f_when desc ";
+    }
+    
+    $sql=$select.
+    $from.
+    $where.
+    $order_by.
+    $limit;
+    
+    $result=db_query($sql);
+    
+    /* expensive way to have total rows number didn'get a cheaper one */
+    
+    $sql1=$select.
+    $from.
+    $where; 
+    $result1=db_query($sql1);
+    $totalrows = db_numrows($result1);
+    
+    return array($result, $totalrows);
+}
 ?>

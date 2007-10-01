@@ -122,7 +122,7 @@ if (!isset($group_id) || !$group_id) {
     $project = group_get_object($group_id); 
     $root = $project->getUnixName(false);
 
-    list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_path, $_rev_id, $_commiter, $_srch, $order_by, $pv);
+    list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);
     $statement=$Language->getText('svn_browse_revision','view_commit');
 
     /*

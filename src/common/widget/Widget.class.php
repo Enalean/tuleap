@@ -17,6 +17,7 @@ require_once('common/widget/Widget_ProjectLatestNews.class.php');
 require_once('common/widget/Widget_ProjectPublicAreas.class.php');
 require_once('common/widget/Widget_ProjectRss.class.php');
 require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
+require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
 
 /**
 * Widget
@@ -146,6 +147,9 @@ require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
             case 'projectlatestsvncommits':
                 $o =& new Widget_ProjectLatestSvnCommits();
                 break;
+            case 'projectlatestcvscommits':
+                $o =& new Widget_ProjectLatestCvsCommits();
+                break;
             default:
                 $em =& EventManager::instance();
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
@@ -167,7 +171,7 @@ require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
                 break;
             case $lm->OWNER_TYPE_GROUP:
                 $widgets = array('projectlatestfilereleases', 'projectlatestnews', 
-                    'projectpublicareas', 'projectlatestsvncommits'
+                    'projectpublicareas', 'projectlatestsvncommits', 'projectlatestcvscommits'
                 );
                 break;
             case $lm->OWNER_TYPE_HOME:
