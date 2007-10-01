@@ -1,4 +1,5 @@
 <?php
+require_once('FileModuleMonitorFactory.class.php');
 /**
 * ServiceFile
 * 

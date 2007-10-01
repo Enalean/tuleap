@@ -132,9 +132,6 @@ require_once('common/include/User.class.php');
 //group functions like get_name, etc
 require_once('Group.class.php');
 
-//Project extends Group and includes preference accessors
-require_once('Project.class.php');
-
 //library to set up context help
 require_once('help.php');
 
@@ -246,6 +243,9 @@ if(!IS_SCRIPT) {
     $HTML = new $name_of_theme_class($root_for_theme);
     $GLOBALS['Response'] =& $HTML;
 }
+
+//Project extends Group and includes preference accessors
+require_once('Project.class.php');
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
