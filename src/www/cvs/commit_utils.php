@@ -719,6 +719,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     $select = 'SELECT distinct cvs_checkins.commitid as id, cvs_checkins.commitid as revision, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as date, cvs_commits.comm_when as f_when, user.user_name as who ';
     $from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
     $where = "WHERE cvs_checkins.descid=cvs_descs.id ".
+    "AND ". (check_cvs_access(user_getname(), $project->getUnixName(false), '') ? 1 : 0) ." ".
         "AND cvs_checkins.commitid=cvs_commits.id ".
         "AND user.user_id=cvs_checkins.whoid ".
             "AND cvs_checkins.repositoryid=".$repo_id." ".

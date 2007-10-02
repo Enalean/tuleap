@@ -94,10 +94,10 @@ if (!isset($set)) {
 			$set='custom';
 		} else {
 			$set='custom';
-			$_commiter=0;
+			$_commiter=100;
 		}
 	} else {
-		$_commiter=0;
+		$_commiter=100;
 		$set='custom';
 	}
 }
