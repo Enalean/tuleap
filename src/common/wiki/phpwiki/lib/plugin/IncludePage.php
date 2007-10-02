@@ -57,11 +57,11 @@ extends WikiPlugin
     function getWikiPageLinks($argstr, $basepage) {
         extract($this->getArgs($argstr));
 
-        if ($page) {
+        if (isset($page) && $page) {
             // Expand relative page names.
             $page = new WikiPageName($page, $basepage);
         }
-        if (!$page or !$page->name)
+        if (!isset($page) or !$page or !$page->name)
             return false;
         return array($page->name);
     }
@@ -119,6 +119,34 @@ extends WikiPlugin
 
                     HTML::div(array('class' => 'transclusion'),
                               false, $content));
+    }
+	
+    /** 
+     * handles the arguments: section, sectionhead, lines, words, bytes,
+     * for UnfoldSubpages, IncludePage, ...
+     */
+    function extractParts ($c, $pagename, $args) {
+        extract($args);
+
+        if ($section)
+            $c = extractSection($section, $c, $pagename, $quiet,
+                                $sectionhead);
+        if ($lines) {
+            $c = array_slice($c, 0, $lines);
+            $c[] = sprintf(_(" ... first %d lines"), $bytes);
+        }
+        if ($words) {
+            $c = firstNWordsOfContent($words, $c);
+        }
+        if ($bytes) {
+            $ct = implode("\n", $c); // one string
+            if (strlen($ct) > $bytes) {
+                $ct = substr($c, 0, $bytes);
+                $c = array($ct, sprintf(_(" ... first %d bytes"), $bytes));
+            }
+        }
+        $ct = implode("\n", $c); // one string
+        return $ct;
     }
 };
 

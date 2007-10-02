@@ -139,7 +139,7 @@ class WikiPlugin
         // always override sortby,limit from the REQUEST. ignore defaults if defined as such.
         foreach (array('sortby', 'limit') as $key) {
             if (array_key_exists($key, $defaults)) {
-                if ($val = $request->getArg($key))
+                if ($val = $GLOBALS['request']->getArg($key))
                     $args[$key] = $val;
                 elseif (!empty($args[$key])) {
                     $GLOBALS['request']->setArg($key, $args[$key]);

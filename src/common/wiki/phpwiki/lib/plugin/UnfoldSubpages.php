@@ -27,10 +27,16 @@ rcs_id('$Id: UnfoldSubpages.php,v 1.21 2005/09/11 13:20:07 rurban Exp $');
  *	      The section extractor is currently quite unstable.
  * Usage:   <?plugin UnfoldSubpages sortby=-mtime words=50 maxpages=5 ?>
  * Author:  Reini Urban <rurban@x-ray.at>
+ * 
+ * Todo: follow RedirectTo
  */
-include_once("lib/PageList.php");
+
+require_once("lib/PageList.php");
+require_once("lib/TextSearchQuery.php");
+require_once("lib/plugin/IncludePage.php");
+
 class WikiPlugin_UnfoldSubpages
-extends WikiPlugin
+extends WikiPlugin_IncludePage
 {
     function getName() {
         return _("UnfoldSubpages");
@@ -42,7 +48,7 @@ extends WikiPlugin
 
     function getVersion() {
         return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.21 $");
+                            "\$Revision: 1.22 $");
     }
 
     function getDefaultArguments() {
@@ -55,7 +61,6 @@ extends WikiPlugin
                    'quiet'   => false, // print no header
                    'sortby'   => '',    // [+|-]pagename, [+|-]mtime, [+|-]hits
                    'maxpages' => false, // maximum number of pages to include (== limit)
-                   'sections' => false, // maximum number of sections per page to include
                    'smalltitle' => false, // if set, hide transclusion-title,
                    			//  just have a small link at the start of 
             				//  the page.
@@ -65,6 +70,7 @@ extends WikiPlugin
                                 	//  per page to include
                    'bytes'   => false, 	// maximum number of bytes
                                 	//  per page to include
+                   'sections' => false, // maximum number of sections per page to include
                    'section' => false, 	// this named section per page only
                    'sectionhead' => false // when including a named
                    			//  section show the heading
@@ -106,10 +112,11 @@ extends WikiPlugin
             if ($page->exists()) {
                 $r = $page->getCurrentRevision();
                 $c = $r->getContent();   // array of lines
-                // trap recursive redirects
+                // follow redirects
                 if (preg_match('/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/', 
                                implode("\n", $c), $m)) 
                 {
+                    // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {
                     	if (!$quiet)
                             $content->pushContent(
@@ -117,21 +124,14 @@ extends WikiPlugin
                                                 $cpagename.' => '.$m[1])));
                         continue;
                     }
+	            $cpagename = $m[1];
+	            $page = $dbi->getPage($cpagename);
+                    $r = $page->getCurrentRevision();
+                    $c = $r->getContent();   // array of lines
                 }
-                if ($section)
-                    $c = extractSection($section, $c, $cpagename, $quiet,
-                                        $sectionhead);
-                if ($lines)
-                    $c = array_slice($c, 0, $lines)
-                        . sprintf(_(" ... first %d lines"), $bytes);
-                if ($words)
-                    $c = firstNWordsOfContent($words, $c);
-                if ($bytes) {
-                    if (strlen($c) > $bytes)
-                        $c = substr($c, 0, $bytes)
-                            . sprintf(_(" ... first %d bytes"), $bytes);
-                }
-                $ct = implode("\n", $c); // one string
+
+                // moved to IncludePage
+                $ct = $this->extractParts ($c, $cpagename, $args);
 
                 array_push($included_pages, $cpagename);
                 if ($smalltitle) {
@@ -164,6 +164,11 @@ extends WikiPlugin
 };
 
 // $Log: UnfoldSubpages.php,v $
+// Revision 1.22  2007/06/03 21:58:51  rurban
+// Fix for Bug #1713784
+// Includes this patch and a refactoring.
+// RedirectTo is still not handled correctly.
+//
 // Revision 1.21  2005/09/11 13:20:07  rurban
 // use TitleSearch and iterators instead of get_all_pages
 //
