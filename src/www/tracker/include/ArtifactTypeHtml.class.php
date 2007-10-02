@@ -2488,7 +2488,7 @@ EOS;
                     echo '<input type="text" name="add_cc" id="tracker_cc" size="30">';
                     echo $Language->getText('tracker_include_artifact','fill_cc_list_cmt');
                     echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
-                    autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
+                    echo autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
                 }
                 
 	

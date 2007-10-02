@@ -171,7 +171,7 @@ if (($func=='edit')||($func=='do_create')) {
                     echo '<div id="ugroup_members_add_panel_button"><a href="add_user_to_ugroup.php" onclick="Element.hide(this); $(\'ugroup_members_add_panel_field\').style.visibility = \'visible\'; $(\'ugroup_members_add_field\').focus(); return false;">Add a user</a></div>';
                     echo '<div id="ugroup_members_add_panel_field">';
                     echo 'Type the user to add: '. '<input type="text" class="textfield_medium" id="ugroup_members_add_field" />';
-                    autocomplete_for_users('ugroup_members_add_field', 'ugroup_members_add_autocomplete', array(
+                    echo autocomplete_for_users('ugroup_members_add_field', 'ugroup_members_add_autocomplete', array(
                         'afterUpdateElement' => <<<EOS
 var empty = $('ugroup_members_empty');
 if (empty && empty.visible()) {

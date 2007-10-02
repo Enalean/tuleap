@@ -1,16 +1,15 @@
 <?php
 function autocomplete_for_users($input, $autocomplete, $options = array()) {
-    _autocomplete_for_lists_or_users(0, 1, $input, $autocomplete, $options);
+    return _autocomplete_for_lists_or_users(0, 1, $input, $autocomplete, $options);
 }
 function autocomplete_for_lists_users($input, $autocomplete, $options = array()) {
-    _autocomplete_for_lists_or_users(1, 1, $input, $autocomplete, $options);
+    return _autocomplete_for_lists_or_users(1, 1, $input, $autocomplete, $options);
 }
 function _autocomplete_for_lists_or_users($include_mailinglists, $include_users, $input, $autocomplete, $options = array()) {
-    ?>
-    <div id="<?=$autocomplete?>" class="lists_users_autocomplete"></div>
-    <script type="text/javascript">
-    Event.observe(window, 'load', function() {
-            new Ajax.Autocompleter('<?=$input?>', '<?=$autocomplete?>', '/autocomplete.php?users=<?=$include_users?>&mailinglists=<?=$include_mailinglists?>', {
+    $html = '<div id="'. $autocomplete .'" class="lists_users_autocomplete"></div>
+    <script type="text/javascript">';
+    $html .= "Event.observe(window, 'load', function() {
+            new Ajax.Autocompleter('$input', '$autocomplete', '/autocomplete.php?users=$include_users&mailinglists=$include_mailinglists', {
                     paramName: 'search_for',
                     method: 'GET',
                     tokens: ',',
@@ -28,12 +27,12 @@ function _autocomplete_for_lists_or_users($include_mailinglists, $include_users,
                             range.moveStart('character', p);
                             range.select();
                         }
-                        <?=isset($options['afterUpdateElement'])?$options['afterUpdateElement']:''?>
+                        ". (isset($options['afterUpdateElement'])?$options['afterUpdateElement']:'') ."
                     }
             });
     });
-    </script>
-    <?php
+    </script>";
+    return $html;
 }
 
 

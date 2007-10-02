@@ -448,3 +448,13 @@ table.release tr td img {
 }
 /* }}} */
 
+.artifact fieldset {
+    margin-bottom:10px;
+}
+.artifact fieldset legend {
+    font-size:1.3em;
+    font-weight: bold;
+}
+
+
+

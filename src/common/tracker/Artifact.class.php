@@ -2285,14 +2285,6 @@ class Artifact extends Error {
             // Header first
             if ($ascii) {
 		$out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
-            } else {
-                        $title_arr=array();
-                        $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
-                        //$title_arr[]=$Language->getText('tracker_import_utils','date');
-                        //$title_arr[]=$Language->getText('global','by');
-                        
-                        $out .= html_build_list_table_top ($title_arr,false,false,true,null,null,0,0);
-                        $out .= '<tr><td>';
             }
             
             // Loop throuh the follow-up comments and format them
@@ -2352,7 +2344,7 @@ class Artifact extends Error {
             }
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "</td></tr></TABLE>");
+            $out .= ($ascii ? "$sys_lf" : "");
         
             return($out);
                 
