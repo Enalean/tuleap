@@ -9,7 +9,7 @@
 require_once('pre.php');
 require_once('cache.php');
 require_once('www/forum/forum_utils.php');
-//require_once('features_boxes.php'); GForge compat?
+require_once('features_boxes.php');
 
 $Language->loadLanguageMsg('homepage/homepage');
 
@@ -33,8 +33,7 @@ $HTML->box1_bottom();
 
 echo '<TD width="35%" VALIGN="TOP">';
 
-echo cache_display('show_features_boxes','0',1800);
-//echo show_features_boxes(); GForge compat ???
+echo show_features_boxes();
 
 ?>
 
