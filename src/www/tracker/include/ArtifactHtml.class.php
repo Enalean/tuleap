@@ -168,13 +168,13 @@ class ArtifactHtml extends Artifact {
             //
             $html = '';
             if ( !$ro ) {
-                $html .= '<p><b>'.$Language->getText('tracker_include_artifact','use_canned').'</b>&nbsp;';
-                $html .= $this->ArtifactType->cannedResponseBox ();
-                $html .= '&nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$group_artifact_id.'&group_id='.$group_id.'&create_canned=1">'.$Language->getText('tracker_include_artifact','define_canned').'</A>';
-                $html .= '</p>';
-                
+                if (db_numrows($this->ArtifactType->getCannedResponses())) {
+                    $html .= '<p><b>'.$Language->getText('tracker_include_artifact','use_canned').'</b>&nbsp;';
+                    $html .= $this->ArtifactType->cannedResponseBox ();
+                    $html .= '</p>';
+                }
                 $field = $art_field_fact->getFieldFromName('comment_type_id');
-                if ( $field && $field->isUsed()) {
+                if ( $field && $field->isUsed() && db_numrows($field->getFieldPredefinedValues($group_artifact_id)) > 1) {
                     $field_html = new ArtifactFieldHtml( $field );
                     $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
@@ -190,6 +190,7 @@ class ArtifactHtml extends Artifact {
                 $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
                 $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
+            $html .= "<br /><br />";
             $html .=  $this->showFollowUpComments($group_id);
             
             echo $this->_getSection(
