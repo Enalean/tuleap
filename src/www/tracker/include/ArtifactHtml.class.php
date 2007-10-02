@@ -167,6 +167,25 @@ class ArtifactHtml extends Artifact {
             // Followups comments
             //
             $html = '';
+            $html .= '<script type="text/javascript">';
+            $html .= "function tracker_reorder_followups() {
+                var element = $('artifact_section_followups');
+                if (element) {
+                    element.cleanWhitespace();
+                    var elements = [];
+                    var len = element.childNodes.length;
+                    for(var i = len - 1 ; i >= 0 ; --i) {
+                        elements.push(Element.remove(element.childNodes[i]));
+                    }
+                    for(var i = 0 ; i < len ; ++i) {
+                        element.appendChild(elements[i]);
+                    }
+                    console.log(elements);
+                }
+            }";
+            $html .= 'document.write(\'<div style="text-align:right; font-size:0.85em;"><a href="#reorder" onclick="tracker_reorder_followups();return false;">[invert order of the follow-ups]</a></div>\');';
+            $html .= '</script>';
+            $html .= '<div>';
             if ( !$ro ) {
                 if (db_numrows($this->ArtifactType->getCannedResponses())) {
                     $html .= '<p><b>'.$Language->getText('tracker_include_artifact','use_canned').'</b>&nbsp;';
@@ -190,7 +209,8 @@ class ArtifactHtml extends Artifact {
                 $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
                 $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
-            $html .= "<br /><br />";
+            $html .= '</div>';
+            $html .= "<br />";
             $html .=  $this->showFollowUpComments($group_id);
             
             echo $this->_getSection(
