@@ -254,7 +254,7 @@ class Layout extends Response {
         <SCRIPT language="JavaScript">
         <!--
         function help_window(helpurl) {
-                HelpWin = window.open(helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=640,width=800');
+                HelpWin = window.open(helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000');
 		HelpWin.focus();
         }
         // -->

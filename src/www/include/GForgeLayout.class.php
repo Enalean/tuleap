@@ -372,7 +372,7 @@ class GForgeLayout extends TabbedLayout {
 	<script language="JavaScript" type="text/javascript">
 	<!--
 	function help_window(helpurl) {
-		HelpWin = window.open( helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=400,width=400');
+		HelpWin = window.open( helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000');
 	}
 	// -->
 	<?php 
