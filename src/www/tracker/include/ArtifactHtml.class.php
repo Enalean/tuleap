@@ -180,10 +180,8 @@ class ArtifactHtml extends Artifact {
                     for(var i = 0 ; i < len ; ++i) {
                         element.appendChild(elements[i]);
                     }
-                    console.log(elements);
                 }
             }";
-            $html .= 'document.write(\'<div style="text-align:right; font-size:0.85em;"><a href="#reorder" onclick="tracker_reorder_followups();return false;">[invert order of the follow-ups]</a></div>\');';
             $html .= '</script>';
             $html .= '<div>';
             if ( !$ro ) {
@@ -213,9 +211,14 @@ class ArtifactHtml extends Artifact {
             $html .= "<br />";
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
+            $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
+            $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
+            $title .= '<script type="text/javascript">';
+            $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
+            $title .= '</script>';
             echo $this->_getSection(
                 'artifact_section_followups',
-                $Language->getText('tracker_include_artifact','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments'),
+                $title,
                 $html,
                 true
             );
