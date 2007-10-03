@@ -583,7 +583,7 @@ class Artifact extends Error {
      */
     function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,&$feedback) {
       global $art_field_fact,$Language;
-      if ($canned_response != 100) {
+      if ($canned_response && $canned_response != 100) {
 	
 	$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
 	$res3=db_query($sql);
@@ -715,8 +715,7 @@ class Artifact extends Error {
         	$vfl = $art_field_fact->extractFieldList();
 
 	        // make sure  required fields are not empty
-        	if ( !$canned_response || 
-                	($art_field_fact->checkEmptyFields($vfl) == false) ) {
+        	if ( ($art_field_fact->checkEmptyFields($vfl) == false) ) {
                 	exit_missing_param();
             	}
 	    }
