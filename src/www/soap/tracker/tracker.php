@@ -2286,11 +2286,11 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
     $return = array();
     $rows = db_numrows($followups_res);
     for ($i=0; $i < $rows; $i++) {
-        $comment = util_make_links(db_result($followups_res, $i, 'old_value'),$group_id,$group_artifact_id);
+        $comment = util_make_links(db_result($followups_res, $i, 'new_value'),$group_id,$group_artifact_id);
     
         $return[] = array (
             'artifact_id'          => db_result($followups_res, $i, 'artifact_id'),    
-            'comment'               => $comment, //db_result($followups_res, $i, 'old_value'),
+            'comment'               => $comment, //db_result($followups_res, $i, 'new_value'),
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
@@ -3455,11 +3455,15 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
                 );
             }
         } else {
-            // used to put non-field changes (e.g: cc list, etc)
-                $return[]=array(
+            // used to put non-field changes (e.g: cc list, follow-up comments, etc)
+        	    $field_name = db_result($history, $i, 'field_name');
+            	if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+        	    	$field_name = "comment";
+            	}
+            	$return[]=array(
                 //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                 //'artifact_id' => db_result($history, $i, 'artifact_id'),
-                'field_name' => db_result($history, $i, 'field_name'),
+                'field_name' => $field_name,
                 'old_value' => db_result($history, $i, 'old_value'),
                 'new_value' => db_result($history, $i, 'new_value'),
                 'modification_by' => db_result($history, $i, 'user_name'),

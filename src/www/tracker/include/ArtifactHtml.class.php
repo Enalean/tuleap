@@ -211,7 +211,7 @@ class ArtifactHtml extends Artifact {
             }
             $html .= '</div>';
             $html .= "<br />";
-            $html .=  $this->showFollowUpComments($group_id);
+            $html .=  $this->showFollowUpComments($group_id,$pv);
             
             echo $this->_getSection(
                 'artifact_section_followups',
@@ -674,9 +674,14 @@ class ArtifactHtml extends Artifact {
                 
                         for ($i=0; $i < $rows; $i++) {
                             $field_name = db_result($result, $i, 'field_name');
-                            $value_id_old =  db_result($result, $i, 'old_value');
                             $value_id_new =  db_result($result, $i, 'new_value');
-
+			    if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name) && $value_id_new == "") {
+			        //removed followup comment is not recorded
+				    $value_id_old = $Language->getText('tracker_include_artifact','flup_hidden');
+			    } else {
+			        $value_id_old =  db_result($result, $i, 'old_value');
+                }
+                            
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
 				  if ($field->userCanRead($group_id,$group_artifact_id)) {
@@ -708,7 +713,7 @@ class ArtifactHtml extends Artifact {
 				  }
                                 } else {
 				    $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'.$field_name.'</TD><TD>';
+                                        '"><TD>'.((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment" : $field_name).'</TD><TD>';
 				    $html .= $value_id_old.'</TD><TD>';
 				    $html .= $value_id_new;
 				    $html .= '</TD>'.
@@ -954,7 +959,29 @@ class ArtifactHtml extends Artifact {
         </TABLE>';
     }
 
+    /**
+         * Display the follow-up comment update form	 
+         *
+         * @param comment_id: id of the follow-up comment
+         * 
+         *
+         * @return void
+         */
+    function displayEditFollowupComment($comment_id) {
+    	 
+    	$group = $this->ArtifactType->getGroup();
+    	$group_artifact_id = $this->ArtifactType->getID();
+    	$group_id = $group->getGroupId();
+    	echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
+    	echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=browse" METHOD="post">
+		<INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
+		<INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
+		<P><TEXTAREA NAME="followup_update" ROWS="7" COLS="80" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
+		<P><INPUT TYPE="submit" VALUE="Submit">
+		</FORM>';
 
+    }
+    
 }
 
 ?>

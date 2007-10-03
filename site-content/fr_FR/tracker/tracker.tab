@@ -54,6 +54,11 @@ tracker_group_selection	my_proj	mes projets
 tracker_group_selection	all_proj	tous les projets
 #
 #-----------------------------------------------
+# Script: SF/www/tracker/edit_comment.php
+#
+tracker_edit_comment	upd_followup	Editer le commentaire
+#
+#-----------------------------------------------
 # Script: SF/www/tracker/import_admin.php
 #
 tracker_import_admin	not_get_atf	Impossible d'obtenir un ArtefactTypeFactory
@@ -304,6 +309,7 @@ tracker_include_artifact	add_comment	Ajouter un commentaire&nbsp;:
 tracker_include_artifact	depend_on	Dépend de&nbsp;:
 tracker_include_artifact	cc_address	Adresse en CC
 tracker_include_artifact	comment	Commentaire
+tracker_include_artifact	delete_comment	Supprimer ce commentaire ?
 tracker_include_artifact	added_by	Ajouté par
 tracker_include_artifact	delete_cc	Détruire cette destinataire en CC ?
 tracker_include_artifact	add_cc	Ajouter CC&nbsp;:
@@ -315,6 +321,8 @@ tracker_include_artifact	update_sent	Notification de la mise à jour de l'artefac
 tracker_include_artifact	changes_by	Modifié par :
 tracker_include_artifact	anon_user	Utilisateur anonyme
 tracker_include_artifact	add_flup_comment	Commentaire additionnel
+tracker_include_artifact	rem_followup	Commentaire supprimé
+tracker_include_artifact	add_followup	Commentaire ajouté
 tracker_include_artifact	add_attachment	Fichiers attachés additionnels
 tracker_include_artifact	file_name	Nom du fichier&nbsp;:
 tracker_include_artifact	what	Champ
@@ -329,6 +337,9 @@ tracker_include_artifact	is_copy	ce $1 est une copie de $2
 tracker_include_artifact	copy_of	Copie de $1
 tracker_include_artifact	copy	Copie
 tracker_include_artifact	references	Références :
+tracker_include_artifact	flup_hidden	[Non enregistré]
+tracker_include_artifact	del	supp
+tracker_include_artifact	last_edited	Dernière édition par:
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
@@ -580,6 +591,8 @@ tracker_common_artifact	field_err	 Artefact créé, mais l'insertion de la valeur 
 tracker_common_artifact	def_err	  Artefact créé, mais l'insertion de la valeur du champ par défaut - $1 : $2
 tracker_common_artifact	enter_email	 Vous devez fournir une adresse e-mail !
 tracker_common_artifact	add_comment	 Commentaire ajouté à l'artefact 
+tracker_common_artifact	comment_removed	Commentaire supprimé
+tracker_common_artifact	err_del_comment	Erreur lors de la suppression du commentaire $1: $2 
 tracker_common_artifact	field_upd_fail	La mise à jour de la valeur de champ $1 a échoué
 tracker_common_artifact	canned_used	 Réponse type utilisée 
 tracker_common_artifact	unable_canned	 Impossibilité d'utiliser la réponse type 
@@ -598,6 +611,8 @@ tracker_common_artifact	depend_removed	Dépendances enlevées
 tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
 tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.
 tracker_common_artifact	bad_field_value	La valeur $2 n'est pas autorisée pour le champ $1.
+tracker_common_artifact	followup_upd_succ	Commentaire mise à jour.
+tracker_common_artifact	followup_upd_fail	La mise à jour du commentaire a échoué.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class.php
@@ -741,6 +756,7 @@ tracker_common_types	event_PSS_CHANGE_desc	Changement dans Priorité,Statut,Sévér
 tracker_common_types	event_ANY_OTHER_CHANGE_desc	Tout changement autre que ceux mentionnés ci-dessus
 tracker_common_types	event_I_MADE_IT_desc	Je suis l'auteur de la modification
 tracker_common_types	event_NEW_ARTIFACT_desc	Un nouvel artefact a été soumis
+tracker_common_types	event_COMMENT_CHANGE_desc	Un commentaire a été modifié
 #
 # Tracker permissions
 #

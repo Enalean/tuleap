@@ -327,6 +327,41 @@ if ( $func == 'gotoid' ) {
                 break;
         }
 
+    case 'delete_comment' : {
+		
+		if ( !user_isloggedin() ) {
+		    exit_not_logged_in();
+                    return;
+                }
+                
+		if ( !user_ismember($group_id) ) {
+                    exit_permission_denied();
+                    return;
+                }
+                
+                $ah=new ArtifactHtml($ath,$_REQUEST['aid']);
+                if (!$ah || !is_object($ah)) {
+                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+                } else if ($ah->isError()) {
+                    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                } else {		    
+		    if ($ah->userCanEditFollowupComment($_REQUEST['artifact_history_id'])) {    
+			$ah->deleteFollowupComment($_REQUEST['aid'],$_REQUEST['artifact_history_id']);
+
+			// unsent artifact_id var to make sure that it doesn;t
+                        // impact the next artifact query.
+                        unset($aid);
+                        unset($HTTP_GET_VARS['aid']);
+                        require('./browse.php');
+		    } else {
+                        // Invalid permission
+                        exit_permission_denied();
+                        return;		    
+		    }
+		}		
+	        break;
+    }
+        
     case 'delete_dependent' : {
         
                 if ( !user_isloggedin() ) {
@@ -679,6 +714,22 @@ if ( $func == 'gotoid' ) {
             require('./browse.php');
             break;
         }
+
+	case 'editcomment' : {
+	   
+	    if ( !user_isloggedin()) {
+	        exit_not_logged_in();
+	        return;
+	    }
+	    $ah=new ArtifactHtml($ath,$aid);
+	    if (!$ah || !is_object($ah)) {
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+            } else {
+		require('./edit_comment.php');
+	    }
+	    break;
+	
+	}
         
         case 'import' : {
 	   if ( !user_isloggedin()) {
@@ -732,6 +783,17 @@ if ( $func == 'gotoid' ) {
         
         case 'browse' : {
 	  $masschange = false;
+	  if (user_isloggedin() && isset($_REQUEST['followup_update']) && $_REQUEST['followup_update']) {
+              $ah = new ArtifactHtml($ath,$_REQUEST['artifact_id']);
+              if ($ah->updateFollowupComment($_REQUEST['artifact_history_id'],$_REQUEST['followup_update'],$changes)) {  
+                  $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
+                  $agnf =& new ArtifactGlobalNotificationFactory();
+                  $addresses = $agnf->getAllAddresses($ath->getID());
+                  $ah->mailFollowupWithPermissions($addresses,$changes);		  
+              } else {
+                  $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
+              }
+          }	  
 	  require('./browse.php');
                 break;
         }

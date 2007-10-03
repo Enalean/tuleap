@@ -401,6 +401,10 @@ table.release tr td img {
     font-weight:bold; 
     color:#999;
 }
+.followup_comment_title_edited_user {    
+    font-weight:bold; 
+    color:#999;
+}
 .followup_comment_title_date {
     font-size:0.95em; 
     color:#666;

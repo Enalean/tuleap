@@ -360,6 +360,13 @@ ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
 # Found in SR #904
 ALTER TABLE svn_commits ADD INDEX idx_search (group_id, whoid, id);
 
+# SR #886
+INSERT INTO artifact_notification_event_default (event_id,event_label,rank,short_description_msg,description_msg) VALUES (10,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc");
+
+INSERT INTO artifact_notification_event (event_id,group_artifact_id,event_label,rank,short_description_msg,description_msg) SELECT 10,group_artifact_id,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc" FROM artifact_group_list WHERE group_artifact_id > 100;
+
+UPDATE artifact_history SET new_value = old_value , old_value = "" WHERE field_name = "comment";
+
 ###############################################################################
 # This should have been done earlier. Nevertheless, fix remaining shells if any
 
