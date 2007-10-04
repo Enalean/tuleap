@@ -428,7 +428,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	                        
 				    } else if ( $field->isUsername() ) {        
 						if ($nolink)
-						    $html_result .= "<TD $width>$value</TD>\n";
+						    $html_result .= "<TD $width>".util_user_link($value)."</TD>\n";
 						else
 						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
 					

@@ -243,11 +243,9 @@ function PageInfoRow ($label, $rev, &$request, $is_current = false)
 
     $row = HTML::tr(HTML::td(array('align' => 'right'), $label));
     if ($rev) {
-        $author = $rev->get('author');
+        $author = $WikiTheme->getAuthorMessage($rev);
         $dbi = $request->getDbh();
 
-        $iswikipage = (isWikiWord($author) && $dbi->isWikiPage($author));
-        $authorlink = $iswikipage ? WikiLink($author) : $author;
         $version = $rev->getVersion();
         $linked_version = WikiLink($rev, 'existing', $version);
         if ($is_current)
@@ -259,7 +257,7 @@ function PageInfoRow ($label, $rev, &$request, $is_current = false)
         $row->pushContent(HTML::td(fmt("version %s", $linked_version)),
                           HTML::td($WikiTheme->getLastModifiedMessage($rev,
                                                                       false)),
-                          HTML::td(fmt("by %s", $authorlink)),
+                          HTML::td($author),
                           HTML::td($revertbutton)
                           );
     } else {

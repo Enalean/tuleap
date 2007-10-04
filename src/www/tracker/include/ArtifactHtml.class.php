@@ -712,7 +712,7 @@ class ArtifactHtml extends Artifact {
                         
                                     $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
 				  }
                                 } else {
 				    $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
@@ -721,7 +721,7 @@ class ArtifactHtml extends Artifact {
 				    $html .= $value_id_new;
 				    $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
+                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
 				}
 
                         }

@@ -51,6 +51,11 @@ account_options	csv_separator	Séparateur CSV
 account_options	comma	virgule
 account_options	semicolon	point-virgule
 account_options	tab	tabulation
+account_options	username_display	Affichage des noms
+account_options	codex_login_and_name	Login (nom complet)
+account_options	codex_name_and_login	Nom complet (login)
+account_options	codex_login	Login
+account_options	realname	Nom complet
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

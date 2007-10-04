@@ -65,7 +65,7 @@ function forum_header($params) {
 					<h3>'.$Language->getText('forum_forum_utils','news_not_found').'</h3>';
 			} else {
 				echo '
-				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.user_getname( db_result($result,0,'submitted_by')).'<BR>
+				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.user_get_name_display_from_id( db_result($result,0,'submitted_by')).'<BR>
 				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
 				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>
@@ -287,7 +287,7 @@ function show_thread($thread_id,$et=0) {
 			if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) { $ret_val .= '<B>'; }
 
 			$ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
-				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
+				'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 			/*
 				Show the body/message if requested
@@ -351,7 +351,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) { $ret_val .= '<B>'; }
 
 			$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-				'<TD>'.db_result($result, $i, 'user_name').'</TD>'.
+				'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 			/*

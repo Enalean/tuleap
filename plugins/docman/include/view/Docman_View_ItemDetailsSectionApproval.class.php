@@ -97,7 +97,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
             $html .= '<td>';
-            $html .= user_getrealname($this->table->getOwner());
+            $html .= user_get_name_display_from_id($this->table->getOwner());
             $html .= '</td>';
             $html .= '</tr>';
 
@@ -147,7 +147,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<tr'.$_trClass.'>';
 
                 // Name
-                $html .= '<td>'.user_getrealname($reviewer->getId()).'</td>';
+                $html .= '<td>'.user_get_name_display_from_id($reviewer->getId()).'</td>';
 
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
@@ -238,7 +238,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
         $html .= '<td>';
-        $html .= user_getrealname($this->table->getOwner());
+        $html .= user_get_name_display_from_id($this->table->getOwner());
         $html .= '</td>';
         $html .= '</tr>';
             

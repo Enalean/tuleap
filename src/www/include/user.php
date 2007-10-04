@@ -301,6 +301,62 @@ function user_get_result_set_from_email($email) {
 	return $USER_RES["_".$user_id."_"];
 }       
 
+// Get user name from user id, according to the user prefs: Codex login or Real name
+function user_get_name_display_from_id($user_id) {
+    
+    if ($user_id == 100) {
+        return user_getname($user_id);
+    }
+    
+    $u_display = user_get_preference("username_display");
+    // 0 - realname (username)
+    // 1 - username (realname)
+    // 2 - username
+    // 3 - realname
+    if ($u_display == 2) {
+        $uname = user_getname($user_id);
+    } else if ($u_display == 3){
+        $uname = user_getrealname($user_id);
+    } else if ($u_display == 1){
+        $uname = user_getname($user_id)." (".user_getrealname($user_id).")";
+    } else {
+        $uname = user_getrealname($user_id)." (".user_getname($user_id).")";
+    }
+    return $uname;
+    
+}
+
+// Get user name from Codex login, according to the user prefs: Codex login or Real name
+function user_get_name_display_from_unix($user_name) {
+    
+    if ($user_name == $GLOBALS['Language']->getText('global','none')) {
+        //return None
+    	return $user_name;
+    }
+    
+    $u_display = user_get_preference("username_display");
+    if ($u_display == 2) {
+    	//Codex login
+        return $user_name;
+    } else {
+    	// need Real name   
+        // Note: this is not optimal! We should use some caching.
+        // We should also factorize with user_get_name_display_from_id
+        $sql = sprintf('SELECT realname FROM user'.
+                       ' WHERE user_name = "%s"',
+                       db_escape_string($user_name));
+        $res = db_query($sql);
+        if (db_numrows($res) < 1) {
+            return $user_name;				
+        } else {
+            if ($u_display == 3) { return  db_result($res,0,'realname'); }
+            else if ($u_display == 1) { return  $user_name." (".db_result($res,0,'realname').")"; }
+            else return db_result($res,0,'realname')." ($user_name)";
+        }
+    }    
+    
+}
+
 function user_get_timezone() {
 	if (user_isloggedin()) {
 		$result=user_get_result_set(user_getid());

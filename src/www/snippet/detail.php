@@ -117,7 +117,7 @@ if ($type=='snippet') {
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="center">'.
 			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
-				db_result($result,$i,'user_name').'</b></a></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
+				user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</b></a></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 
@@ -252,7 +252,7 @@ if ($type=='snippet') {
 				$changes_output.'<td align="center">'.
 			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="center">'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
-				db_result($result,$i,'user_name').
+				user_get_name_display_from_unix(db_result($result,$i,'user_name')).
 				'</b></a></TD><TD ALIGN="center">'.
 			        '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').

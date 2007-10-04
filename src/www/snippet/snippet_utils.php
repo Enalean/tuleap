@@ -101,7 +101,7 @@ function snippet_show_package_snippets($version) {
             }
             echo '</center></TD>
                              <TD>'.db_result($result,$i,'name').'</TD><TD>'.
-				db_result($result,$i,'user_name').'</TD></TR>';
+				user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</TD></TR>';
 		}
 	}
 	echo '</TABLE>';

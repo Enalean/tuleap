@@ -158,7 +158,7 @@ extends _RecentChanges_Formatter
     }
 
     function authorLink ($rev) {
-        $author = $rev->get('author');
+        $author = user_get_name_display_from_unix($rev->get('author'));
         if ( $this->authorHasPage($author) ) {
             return WikiLink($author);
         } else

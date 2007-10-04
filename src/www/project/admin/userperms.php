@@ -219,7 +219,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
     $i=0;
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
-        print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.$row_dev['user_name'].'</TD>';
+        print '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.user_get_name_display_from_unix($row_dev['user_name']).'</TD>';
         print '
 			<TD>
 			<INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;'.$Language->getText('global','yes').'<BR>

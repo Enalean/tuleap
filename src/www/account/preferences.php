@@ -125,7 +125,37 @@ echo '>'.$Language->getText('account_options', 'font_size_large');
 echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
 ?>
                     </tr>
-                </table>
+                   <tr>
+                        <td>
+ 	  	 <?php echo $Language->getText('account_options', 'username_display').':'; ?>
+ 	  	 </TD><TD>
+ 	  	 <?php
+ 	  	 // build the username_display select-box
+ 	  	 print '<select name="username_display">'."\n";
+ 	  	 $u_display = user_get_preference("username_display");
+ 	  	 print '<option value="0"';
+ 	  	 if ($u_display == 0) {
+ 	  	     print ' selected="selected"';
+ 	  	 }
+                 print '>'.$Language->getText('account_options','codex_name_and_login').'</option>';
+ 	  	 print '<option value="1"';
+ 	  	 if ($u_display == 1) {
+ 	  	     print ' selected="selected"';
+ 	  	 }
+                 print '>'.$Language->getText('account_options','codex_login_and_name').'</option>';
+ 	  	 print '<option value="2"';
+ 	  	 if ($u_display == 2) {
+ 	  	     print ' selected="selected"';
+ 	  	 }
+                 print '>'.$Language->getText('account_options','codex_login').'</option>';
+ 	  	 print '<option value="3"';
+ 	  	 if ($u_display == 3) {
+ 	  	     print ' selected="selected"';
+ 	  	 }
+                 print '>'.$Language->getText('account_options','real_name').'</option>';
+                 print '</select>';
+ 	  	 ?>
+                    </tr>                </table>
             </fieldset>
             <fieldset>
                 <legend>Import/export</legend>

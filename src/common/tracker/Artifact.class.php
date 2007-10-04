@@ -2649,7 +2649,7 @@ class Artifact extends Error {
                             $comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
                             if ( $comment_type != "" ) {
                                 $out .= sprintf($fmt,
-                                            (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                            (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                 (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
@@ -2658,12 +2658,12 @@ class Artifact extends Error {
                             } else {
                                 if ($field_name == "comment") {
                                     $out .= sprintf($fmt,
-                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                 format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                 $comment_txt);
                                 } else {
                                     $out .= sprintf($fmt,
-                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                 format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                                 (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                                 format_date($sys_datefmt,db_result($result, $i, 'date')),

@@ -428,7 +428,7 @@ function util_make_reference_links ($data,$group_id) {
 function util_user_link ($username) {
   global $Language;
     if ( $username == $Language->getText('global','none') || empty($username)) { return $username; }
-    return '<a href="/users/'.$username.'">'.$username.'</a>';
+    return '<a href="/users/'.$username.'">'.user_get_name_display_from_unix($username).'</a>';
 }
 
 function util_multi_user_link ($usernames) {

@@ -136,7 +136,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                     $return .= '
                                                    <BR>&nbsp;';
                 }
-                $return .= '&nbsp;&nbsp;&nbsp;<I>'.db_result($result,$i,'user_name') .' - '.
+                $return .= '&nbsp;&nbsp;&nbsp;<I>'.user_get_name_display_from_unix(db_result($result,$i,'user_name')) .' - '.
                     format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
                     $proj_name . $summ_txt;
         
