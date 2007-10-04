@@ -2578,13 +2578,36 @@ class Artifact extends Error {
                         } else {
                             $fmt = "\n".'
                             <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
-                                <div class="followup_comment_title" style="float:left;">
-                                <span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>
+                                <div class="followup_comment_title" style="float:left;">';
+                            $fmt .= '<script type="text/javascript">document.write(\'<span>';
+                            $fmt .= $GLOBALS['HTML']->getImage('ic/toggle_minus.png', array('id' => 'comment_'. $comment_id .'_toggle', 'style' => 'vertical-align:middle'));
+                            $fmt .= '</span>\');</script>';
+                            $fmt .= '<script type="text/javascript">';
+                            $fmt .= "Event.observe($('comment_". $comment_id ."_toggle'), 'click', function (evt) {
+                                var toggle = $('comment_". $comment_id ."_toggle');
+                                var element = $('comment_". $comment_id ."_content');
+                                if (element) {
+                                    Element.toggle(element);
+                                    
+                                    //replace image
+                                    var src_search = 'toggle_minus';
+                                    var src_replace = 'toggle_plus';
+                                    if (toggle.src.match('toggle_plus')) {
+                                        src_search = 'toggle_plus';
+                                        src_replace = 'toggle_minus';
+                                    }
+                                    toggle.src = toggle.src.replace(src_search, src_replace);
+                                }
+                                Event.stop(evt);
+                                return false;
+                            });";
+                            $fmt .= '</script>';
+                            $fmt .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>
                                     <span class="followup_comment_title_user">%s </span>
                                     <span class="followup_comment_title_date">on %s</span>';
                             if ($field_name != "comment") {
                                 $fmt .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
-                                $fmt .= '<span class="followup_comment_title_edited_user">%s</span>';
+                                $fmt .= '<span class="followup_comment_title_edited_user">%s </span>';
                                 $fmt .= '<span class="followup_comment_title_date">on %s</span>'.")";
                             }
                             $fmt .= '</div>';
@@ -2600,7 +2623,7 @@ class Artifact extends Error {
                                 $fmt .= '</div>';
                             }
                             $fmt .= '<div style="clear:both;"></div>';
-                            $fmt .= '<div class="followup_comment_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
+                            $fmt .= '<div class="followup_comment_content" id="comment_'. $comment_id .'_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
                             </div>';
                         }
                 
