@@ -445,16 +445,16 @@ class ArtifactHtml extends Artifact {
                 <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
                 <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
                 <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
-        
+        echo '<TABLE><TR><TD class="artifact">';
         $summary = $this->getValue('summary');
           
         echo "<TABLE width='100%'><TR><TD>";
         echo "<H2>[ ".$Language->getText('tracker_include_artifact','copy_of',$this->ArtifactType->getItemName()." #".$this->getID())." ] ".$summary."</H2>";
         echo "</TD></TR></TABLE>";
           
-        
-        echo '
-            <table>
+        $html = '';
+        $html .= '
+            <table width="100%">
               <tr><td colspan="'.$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'.group_getname($group_id).'</TD></tr>';
         
         // Now display the variable part of the field list (depend on the project)
@@ -521,130 +521,129 @@ class ArtifactHtml extends Artifact {
             
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                echo '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                echo '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
-                echo $fieldset_html;
+                $html .= '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
+                $html .= $fieldset_html;
             }
             
         }
         
-        echo '</TABLE>';
-          
-        echo '<table cellspacing="0">';
+        $html .= '</TABLE>';
+        
+        echo $this->_getSection(
+            'artifact_section_details',
+            'Details',
+            $html,
+            true
+        );
         
         //
         // Followups comments
         //
-        echo '<TR><TD colspan="2" align="top"><HR></td></TR>';
+        $html = '';
+        $html .= '<div>';
         if ( !$ro ) {
-        echo '
-                        <TR><TD>
-                        <h3>'.$Language->getText('tracker_include_artifact','follow_ups').' '.help_button('ArtifactUpdate.html#ArtifactComments').'</h3></td>
-                        <TD>
-                        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'">
-                        </td></tr>';
-        
-        echo '
-                        <tr><TD colspan="2" align="top">
-                        <B>'.$Language->getText('tracker_include_artifact','use_canned').'</B>&nbsp;';
-        
-        echo $this->ArtifactType->cannedResponseBox ();
-            
-        echo '
-                        &nbsp;&nbsp;&nbsp;<A HREF="/tracker/admin/?func=canned&atid='.$group_artifact_id.'&group_id='.$group_id.'&create_canned=1">'.$Language->getText('tracker_include_artifact','define_canned').'</A>
-                        </TD></TR>';
-        
-        echo '
-                        <TR><TD colspan="2">';
-        
-        $field = $art_field_fact->getFieldFromName('comment_type_id');
-        if ( $field && $field->isUsed()) {
-          $field_html = new ArtifactFieldHtml( $field );
-          echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
-        $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
-        }
-        echo '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA><p>';
+            if (db_numrows($this->ArtifactType->getCannedResponses())) {
+                $html .= '<p><b>'.$Language->getText('tracker_include_artifact','use_canned').'</b>&nbsp;';
+                $html .= $this->ArtifactType->cannedResponseBox ();
+                $html .= '</p>';
+            }
+            $field = $art_field_fact->getFieldFromName('comment_type_id');
+            if ( $field && $field->isUsed() && db_numrows($field->getFieldPredefinedValues($group_artifact_id)) > 1) {
+                $field_html = new ArtifactFieldHtml( $field );
+                $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
+                $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
+            }
+            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="80" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
         } else {
-        if ($pv == 0) {
-          echo '<br><TR><TD COLSPAN="2"><B>'.$Language->getText('tracker_include_artifact','add_comment').'</B><BR>
-                            <TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+            if ($pv == 0) {
+                $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
+            }
         }
+        if (!user_isloggedin() && ($pv == 0)) {
+            $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
+            $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
         }
-          
-        echo '</td></tr>';
-          
+        $html .= '</div>';
+        $html .= "<br />";
+        
+        $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
+        $title .= help_button('ArtifactUpdate.html#ArtifactComments');
+        echo $this->_getSection(
+            'artifact_section_followups',
+            $title,
+            $html,
+            true
+        );
+
+        
         //
         // CC List
         //
-        echo '          
-                <TR><TD colspan="2"><hr></td></tr>
-                
-                <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('ArtifactUpdate.html#ArtifactCCList').'</h3>';
+        $html = '';
+        $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
+        $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
+        $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
+        $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
+        $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
+        $html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
         
-        if ( !$ro ) {
-        echo $Language->getText('tracker_include_artifact','fill_cc_list_msg');
-        echo $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-        echo '<input type="text" name="add_cc" id="tracker_cc" size="30">';
-        echo '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
-        echo '<input type="text" name="cc_comment" size="40" maxlength="255">';
-        echo autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
-        }
-          
-        echo '</TD></TR>';
-          
+        echo $this->_getSection(
+            'artifact_section_cc',
+            $Language->getText('tracker_include_artifact','cc_list').' '. help_button('ArtifactUpdate.html#ArtifactCCList'),
+            $html,
+            true
+        );
+                
         //
         // File attachments
         //
-        echo '
-                <TR><TD colspan="2"><hr></td></tr>
-                <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('ArtifactUpdate.html#ArtifactAttachments').'</h3>';
+        $html = '';
+        $html .= $Language->getText('tracker_include_artifact','upload_checkbox');
+        $html .= ' <input type="checkbox" name="add_file" VALUE="1">';
+        $html .= $Language->getText('tracker_include_artifact','upload_file_lbl');
+        $html .= '<input type="file" name="input_file" size="40">';
+        $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
+
+        $html .= $Language->getText('tracker_include_artifact','upload_file_desc');
+        $html .= '<input type="text" name="file_description" size="60" maxlength="255">';
         
-        
-        echo $Language->getText('tracker_include_artifact','upload_checkbox');
-        echo ' <input type="checkbox" name="add_file" VALUE="1">';
-        echo $Language->getText('tracker_include_artifact','upload_file_lbl');
-        echo '<input type="file" name="input_file" size="40">';
-        echo $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
-        
-        echo $Language->getText('tracker_include_artifact','upload_file_desc');
-        echo '<input type="text" name="file_description" size="60" maxlength="255">';
-          
-        echo '</TD></TR>';
+        echo $this->_getSection(
+            'artifact_section_attachments',
+            $Language->getText('tracker_include_artifact','attachment').' '. help_button('ArtifactUpdate.html#ArtifactAttachments'),
+            $html,
+            true
+        );
         
         //
         // Artifact dependencies
         //
-        echo '
-                <TR><TD colspan="2"><hr></td></tr>
-                <TR ><TD colspan="2">';
-        
-        echo '<h3>'.$Language->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies').'</h3>
-                <B>'.$Language->getText('tracker_include_artifact','depend_on').'</B><BR>
-                <P>';
+        $html = '
+        <P><B>'.$Language->getText('tracker_include_artifact','dependent_on').'</B><BR>
+        <P>';
         if ( !$ro ) {
-        echo '
+        $html .= '
                         <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255" value="'.$this->getID().'">
-                        &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>
-                  </TD></TR>';
-        
+                        &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
         }
-          
-          //
+        
+        echo $this->_getSection(
+            'artifact_section_dependencies',
+            $Language->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies'),
+            $html,
+            true
+        );
+
+        //
         // Final submit button
         //
-        echo '
-                <TR><TD COLSPAN="'.(2*$fields_per_line).'">
-                        <P>
-                        <hr>
-                        <B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'<P><center>
-                        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="SUBMIT">
-                        </center>
-                        </FORM>
-                </TD></TR>
-                </TABLE>';
+        echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
+        echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
+        echo '</td></tr>';
+        echo '</table>';
+        echo '</form>';
     }
 
 	
