@@ -2577,8 +2577,9 @@ class Artifact extends Error {
                                 ($comment_type != ""? "%s$sys_lf%s" : '%s');
                         } else {
                             $fmt = "\n".'
-                            <div class="'. util_get_alt_row_color($i) .' followup_comment">
+                            <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
                                 <div class="followup_comment_title" style="float:left;">
+                                <span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>
                                     <span class="followup_comment_title_user">%s </span>
                                     <span class="followup_comment_title_date">on %s</span>';
                             if ($field_name != "comment") {
@@ -2594,7 +2595,7 @@ class Artifact extends Error {
                                 $fmt .= '</a>';
                                 $fmt .= '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" ';
                                 $fmt .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
-                                $fmt .= $GLOBALS['HTML']->getImage('ic/trash.png', array('border' => 0));
+                                $fmt .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0));
                                 $fmt .= '</a>';
                                 $fmt .= '</div>';
                             }
