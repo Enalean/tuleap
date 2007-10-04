@@ -2651,7 +2651,7 @@ class Artifact extends Error {
                                 $out .= sprintf($fmt,
                                             (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                            user_getname(db_result($result, $i, 'mod_by')),
+                                                (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
                                             $comment_type,
                                             $comment_txt);
@@ -2665,7 +2665,7 @@ class Artifact extends Error {
                                     $out .= sprintf($fmt,
                                                 (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_getname(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                                 format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                                user_getname(db_result($result, $i, 'mod_by')),
+                                                (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                                 format_date($sys_datefmt,db_result($result, $i, 'date')),
                                                 $comment_txt);
                                 }
