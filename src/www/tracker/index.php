@@ -348,11 +348,7 @@ if ( $func == 'gotoid' ) {
 		    if ($ah->userCanEditFollowupComment($_REQUEST['artifact_history_id'])) {    
 			$ah->deleteFollowupComment($_REQUEST['aid'],$_REQUEST['artifact_history_id']);
 
-			// unsent artifact_id var to make sure that it doesn;t
-                        // impact the next artifact query.
-                        unset($aid);
-                        unset($HTTP_GET_VARS['aid']);
-                        require('./browse.php');
+                        require('./detail.php');
 		    } else {
                         // Invalid permission
                         exit_permission_denied();
