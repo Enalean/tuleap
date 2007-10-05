@@ -2556,9 +2556,27 @@ class Artifact extends Error {
             // Header first
             if ($ascii) {
                 $out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
+            } else {
+                if ($rows > 0) {
+                    $out .= '<div style="text-align:right">';
+                    $out .= '<script type="text/javascript">
+                    function tracker_expand_all_comments() {
+                        $H(tracker_comment_togglers).values().each(function (value) {
+                                (value)(null, true, true);
+                        });
+                    }
+                    
+                    function tracker_collapse_all_comments() {
+                        $H(tracker_comment_togglers).values().each(function (value) {
+                                (value)(null, true, false);
+                        });
+                    }</script>';
+                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">expand all</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">collapse all</a></div>';
+                }
             }
             
             // Loop throuh the follow-up comments and format them
+            $last_visit_date = user_get_preference('tracker_'. $this->ArtifactType->getId() .'_artifact_'. $this->getId() .'_last_visit');
             for ($i=0; $i < $rows; $i++) {
                 $comment_type = db_result($result, $i, 'comment_type');
                 $comment_type_id = db_result($result, $i, 'comment_type_id');
@@ -2576,31 +2594,42 @@ class Artifact extends Error {
                                 $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf".
                                 ($comment_type != ""? "%s$sys_lf%s" : '%s');
                         } else {
+                            $style = '';
+                            $toggle = 'ic/toggle_minus.png';
+                            if ($last_visit_date > db_result($orig_date, 0, 'date') && $i > 0) {
+                                $style = 'style="display:none;"';
+                                $toggle = 'ic/toggle_plus.png';
+                            }
                             $fmt = "\n".'
                             <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
                                 <div class="followup_comment_title" style="float:left;">';
                             $fmt .= '<script type="text/javascript">document.write(\'<span>';
-                            $fmt .= $GLOBALS['HTML']->getImage('ic/toggle_minus.png', array('id' => 'comment_'. $comment_id .'_toggle', 'style' => 'vertical-align:middle'));
+                            $fmt .= $GLOBALS['HTML']->getImage($toggle, array('id' => 'comment_'. $comment_id .'_toggle', 'style' => 'vertical-align:middle'));
                             $fmt .= '</span>\');</script>';
                             $fmt .= '<script type="text/javascript">';
-                            $fmt .= "Event.observe($('comment_". $comment_id ."_toggle'), 'click', function (evt) {
+                            $fmt .= "tracker_comment_togglers[$comment_id] = function (evt, force, expand) {
                                 var toggle = $('comment_". $comment_id ."_toggle');
                                 var element = $('comment_". $comment_id ."_content');
                                 if (element) {
-                                    Element.toggle(element);
-                                    
-                                    //replace image
-                                    var src_search = 'toggle_minus';
-                                    var src_replace = 'toggle_plus';
-                                    if (toggle.src.match('toggle_plus')) {
-                                        src_search = 'toggle_plus';
-                                        src_replace = 'toggle_minus';
+                                    if (!force || (expand && !element.visible()) || (!expand && element.visible())) {
+                                        Element.toggle(element);
+                                        
+                                        //replace image
+                                        var src_search = 'toggle_minus';
+                                        var src_replace = 'toggle_plus';
+                                        if (toggle.src.match('toggle_plus')) {
+                                            src_search = 'toggle_plus';
+                                            src_replace = 'toggle_minus';
+                                        }
+                                        toggle.src = toggle.src.replace(src_search, src_replace);
                                     }
-                                    toggle.src = toggle.src.replace(src_search, src_replace);
                                 }
-                                Event.stop(evt);
+                                if (evt) {
+                                    Event.stop(evt);
+                                }
                                 return false;
-                            });";
+                            };
+                            Event.observe($('comment_". $comment_id ."_toggle'), 'click', tracker_comment_togglers[$comment_id]);";
                             $fmt .= '</script>';
                             $fmt .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>
                                     <span class="followup_comment_title_user">%s </span>
@@ -2626,8 +2655,8 @@ class Artifact extends Error {
                             }
                             $fmt .= '</div>';
                             $fmt .= '<div style="clear:both;"></div>';
-                            $fmt .= '<div class="followup_comment_content" id="comment_'. $comment_id .'_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
-                            </div>';
+                            $fmt .= '<div class="followup_comment_content" '. $style .' id="comment_'. $comment_id .'_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>';
+                            $fmt .= '</div>';
                         }
                 
                         // I wish we had sprintf argument swapping in PHP3 but
@@ -2677,6 +2706,12 @@ class Artifact extends Error {
                                 }
                             }
                         }
+            }
+            if (!$ascii) {
+                if ($rows > 0) {
+                    $out .= '<div style="text-align:right">';
+                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">expand all</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">collapse all</a></div>';
+                }
             }
         
             // final touch...

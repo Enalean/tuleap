@@ -168,7 +168,8 @@ class ArtifactHtml extends Artifact {
             //
             $html = '';
             $html .= '<script type="text/javascript">';
-            $html .= "function tracker_reorder_followups() {
+            $html .= "var tracker_comment_togglers = {};
+            function tracker_reorder_followups() {
                 var element = $('artifact_section_followups');
                 if (element) {
                     element.cleanWhitespace();
@@ -221,13 +222,12 @@ class ArtifactHtml extends Artifact {
             }";
             $html .= '</script>';
             $html .= '</div>';
-            $html .= '<br />';
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
             $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
             $title .= '<script type="text/javascript">';
-            $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
+            $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
             $title .= '</script>';
             echo $this->_getSection(
                 'artifact_section_followups',
@@ -235,6 +235,9 @@ class ArtifactHtml extends Artifact {
                 $html,
                 true
             );
+            if (user_get_preference('tracker_comment_invertorder')) {
+                echo '<script type="text/javascript">tracker_reorder_followups();</script>';
+            }
             
             //
             // CC List
@@ -325,6 +328,7 @@ class ArtifactHtml extends Artifact {
             echo '</td></tr>';
             echo '</table>';
             echo '</form>';
+            user_set_preference('tracker_'. $this->ArtifactType->getId() .'_artifact_'. $this->getId() .'_last_visit', time());
         }
         
         /**
