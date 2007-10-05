@@ -2611,17 +2611,20 @@ class Artifact extends Error {
                                 $fmt .= '<span class="followup_comment_title_date">on %s</span>'.")";
                             }
                             $fmt .= '</div>';
+                            $fmt .= '<div style="text-align:right;">';
+                            $fmt .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\'%s\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
+                            $fmt .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
+                            $fmt .= '</a>\');</script>';
                             if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
-                                $fmt .= '<div style="text-align:right;">';
                                 $fmt .= '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
-                                $fmt .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0));
+                                $fmt .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
                                 $fmt .= '</a>';
                                 $fmt .= '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" ';
                                 $fmt .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
-                                $fmt .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0));
+                                $fmt .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
                                 $fmt .= '</a>';
-                                $fmt .= '</div>';
                             }
+                            $fmt .= '</div>';
                             $fmt .= '<div style="clear:both;"></div>';
                             $fmt .= '<div class="followup_comment_content" id="comment_'. $comment_id .'_content">'.($comment_type != ""? '<div class="followup_comment_content_type"><b>%s</b></div>' : "").'%s</div>
                             </div>';
@@ -2651,23 +2654,26 @@ class Artifact extends Error {
                                 $out .= sprintf($fmt,
                                             (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                                (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
+                                            (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
+                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
                                             $comment_type,
                                             $comment_txt);
                             } else {
                                 if ($field_name == "comment") {
                                     $out .= sprintf($fmt,
-                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
-                                                format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                                $comment_txt);
+                                            (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                            format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
+                                            $comment_txt);
                                 } else {
                                     $out .= sprintf($fmt,
-                                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
-                                                format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                                (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
-                                                format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                                $comment_txt);
+                                            (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
+                                            format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                            (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
+                                            format_date($sys_datefmt,db_result($result, $i, 'date')),
+                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
+                                            $comment_txt);
                                 }
                             }
                         }

@@ -196,19 +196,32 @@ class ArtifactHtml extends Artifact {
                     $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                $html .= '<TEXTAREA NAME="comment" ROWS="7" COLS="80" WRAP="SOFT"></TEXTAREA>';
+                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:100%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA>';
+                    $html .= '<TEXTAREA NAME="comment" ROWS="10" COLS="80" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
                 $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
                 $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
+            $html .= '<script type="text/javascript">';
+            $html .= "function tracker_quote_comment(who, element) {
+                var textarea = $('tracker_artifact_comment');
+                if (textarea && element) {
+                    textarea.value += '\\n\\n'+ who +':\\n> ';
+                    console.log(element.textContent);
+                    console.log(element.textContent.replace(/\\n/gi, '\\n> '));
+                    textarea.value += element.textContent.replace(/\\n/gi, '\\n> ');
+                    textarea.value += '\\n';
+                    textarea.scrollTop = textarea.scrollHeight;
+                }
+            }";
+            $html .= '</script>';
             $html .= '</div>';
-            $html .= "<br />";
+            $html .= '<br />';
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
