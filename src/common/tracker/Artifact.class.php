@@ -2656,7 +2656,7 @@ class Artifact extends Error {
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                             (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
+                                            addslashes(addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')))),
                                             $comment_type,
                                             $comment_txt);
                             } else {
@@ -2664,7 +2664,7 @@ class Artifact extends Error {
                                     $out .= sprintf($fmt,
                                             (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
+                                            addslashes(addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')))),
                                             $comment_txt);
                                 } else {
                                     $out .= sprintf($fmt,
@@ -2672,7 +2672,7 @@ class Artifact extends Error {
                                             format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
                                             (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
-                                            addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'))),
+                                            addslashes(addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')))),
                                             $comment_txt);
                                 }
                             }

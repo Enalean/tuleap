@@ -196,11 +196,12 @@ class ArtifactHtml extends Artifact {
                     $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:100%" WRAP="SOFT"></TEXTAREA>';
+                $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<TEXTAREA NAME="comment" ROWS="10" COLS="80" WRAP="SOFT"></TEXTAREA>';
+                    $html .= '<TEXTAREA NAME="comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
@@ -211,10 +212,9 @@ class ArtifactHtml extends Artifact {
             $html .= "function tracker_quote_comment(who, element) {
                 var textarea = $('tracker_artifact_comment');
                 if (textarea && element) {
+                    var str = element.textContent ? element.textContent : element.innerText;
                     textarea.value += '\\n\\n'+ who +':\\n> ';
-                    console.log(element.textContent);
-                    console.log(element.textContent.replace(/\\n/gi, '\\n> '));
-                    textarea.value += element.textContent.replace(/\\n/gi, '\\n> ');
+                    textarea.value += str.replace(/\\n/gi, '\\n> ');
                     textarea.value += '\\n';
                     textarea.scrollTop = textarea.scrollHeight;
                 }
@@ -255,7 +255,7 @@ class ArtifactHtml extends Artifact {
                 $Language->getText('tracker_include_artifact','cc_list').' '. help_button('ArtifactUpdate.html#ArtifactCCList'),
                 $html,
                 db_numrows($this->getCCList()),
-                db_numrows($this->getCCList()) ? '' : '<em>'. $GLOBALS['Language']->getText('tracker_include_artifact','cc_empty') .'</em>'
+                db_numrows($this->getCCList()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','cc_empty') .'</div>'
             );
                     
             //
@@ -279,7 +279,7 @@ class ArtifactHtml extends Artifact {
                 $Language->getText('tracker_include_artifact','attachment').' '. help_button('ArtifactUpdate.html#ArtifactAttachments'),
                 $html,
                 db_numrows($this->getAttachedFiles()),
-                db_numrows($this->getAttachedFiles()) ? '' : '<em>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</em>'
+                db_numrows($this->getAttachedFiles()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</div>'
             );
 
             //
@@ -303,7 +303,7 @@ class ArtifactHtml extends Artifact {
                 $Language->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies'),
                 $html,
                 db_numrows($this->getDependencies()),
-                db_numrows($this->getDependencies()) ? '' : '<em>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</em>'
+                db_numrows($this->getDependencies()) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
             );
             
             //
@@ -567,11 +567,11 @@ class ArtifactHtml extends Artifact {
                 $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                 $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
             }
-            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="80" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
+            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="7" COLS="60" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
             }
         }
         if (!user_isloggedin() && ($pv == 0)) {
@@ -994,7 +994,7 @@ class ArtifactHtml extends Artifact {
     	echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=browse" METHOD="post">
 		<INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
 		<INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
-		<P><TEXTAREA NAME="followup_update" ROWS="7" COLS="80" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
+		<P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
 		<P><INPUT TYPE="submit" VALUE="Submit">
 		</FORM>';
 

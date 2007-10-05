@@ -2467,7 +2467,7 @@ EOS;
                      echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                           $field_html->fieldBox('',$atid,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                echo '<TEXTAREA NAME="comment" ROWS="7" COLS="60" WRAP="SOFT"></TEXTAREA><p>';
+                echo '<TEXTAREA NAME="comment" ROWS="10"  style="width:100%" WRAP="SOFT"></TEXTAREA><p>';
                                 
         
                 echo '</td></tr>';
