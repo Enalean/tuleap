@@ -990,18 +990,17 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
     function displayEditFollowupComment($comment_id) {
-    	 
-    	$group = $this->ArtifactType->getGroup();
-    	$group_artifact_id = $this->ArtifactType->getID();
-    	$group_id = $group->getGroupId();
-    	echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
-    	echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=browse" METHOD="post">
-		<INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
-		<INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
-		<P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
-		<P><INPUT TYPE="submit" VALUE="Submit">
-		</FORM>';
-
+         
+        $group = $this->ArtifactType->getGroup();
+        $group_artifact_id = $this->ArtifactType->getID();
+        $group_id = $group->getGroupId();
+        echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
+        echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=updatecomment" METHOD="post">
+        <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
+        <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
+        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
+        <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
+        </FORM>';
     }
     
 }

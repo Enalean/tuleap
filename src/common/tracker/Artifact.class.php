@@ -407,7 +407,7 @@ class Artifact extends Error {
 	// first make sure this wasn't double-submitted
 	$field = $art_field_fact->getFieldFromName('summary');
 	if ( $field && $field->isUsed()) {
-	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary=\"".htmlspecialchars($vfl['summary'])."\"");
+	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary='".htmlspecialchars($vfl['summary'])."'");
 	  if ($res && db_numrows($res) > 0) {
 	    $this->setError($Language->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
 	    return false;           
@@ -658,39 +658,34 @@ class Artifact extends Error {
     */
     function updateFollowupComment($comment_id,$comment_txt,&$changes) {
 
-    	if ($comment_txt == '') {
-    		//don't  allow submit of empty comment
-    		return false;
-    	}
+        $sql = sprintf('SELECT field_name, new_value FROM artifact_history'
+            .' WHERE artifact_id=%d'
+            .' AND artifact_history_id=%d'
+            .' AND (field_name="%s" OR field_name LIKE "%s")',
+        $this->getID(),$comment_id,"comment","lbl_%_comment");
+        $qry = db_query($sql);
+        $new_value = db_result($qry,0,'new_value');
 
-    	$sql = sprintf('SELECT field_name, new_value FROM artifact_history'
-			.' WHERE artifact_id=%d'
-			.' AND artifact_history_id=%d'
-			.' AND (field_name="%s" OR field_name LIKE "%s")',
-    	$this->getID(),$comment_id,"comment","lbl_%_comment");
-    	$qry = db_query($sql);
-    	$new_value = db_result($qry,0,'new_value');
+        if ($new_value == $comment_txt) {
+            //comment doesn't change
+            return false;
+        }
 
-    	if ($new_value == $comment_txt) {
-    		//comment doesn't change
-    		return false;
-    	}
-
-    	if ($qry) {
-			$fname = db_result($qry,0,'field_name');
-			if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
-    		    $comment_lbl = $fname;
-			} else {
-				$comment_lbl = "lbl_".$comment_id."_comment";    
-			}
-    		//now add new comment entry
-    		$this->addHistory($comment_lbl,$new_value,$comment_txt,false,false,$comment_id);
-    		$changes['comment']['del'] = stripslashes($new_value);
-    		$changes['comment']['add'] = stripslashes($comment_txt);
-    		return true;
-    	} else {
-    		return false;
-    	}
+        if ($qry) {
+            $fname = db_result($qry,0,'field_name');
+            if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+                $comment_lbl = $fname;
+            } else {
+                $comment_lbl = "lbl_".$comment_id."_comment";    
+            }
+            //now add new comment entry
+            $this->addHistory($comment_lbl,$new_value,$comment_txt,false,false,$comment_id);
+            $changes['comment']['del'] = stripslashes($new_value);
+            $changes['comment']['add'] = stripslashes($comment_txt);
+            return true;
+        } else {
+            return false;
+        }
 
     }
     
@@ -1415,8 +1410,7 @@ class Artifact extends Error {
     	$flup_array = array();
     	$qry = sprintf('SELECT artifact_history_id, date FROM artifact_history'.
     					' WHERE artifact_id = %d'.
-    					' AND field_name = "%s"'.
-    					' AND new_value <> ""',
+    					' AND field_name = "%s"',
     	$this->getID(),"comment");
     	$res = db_query($qry);
     	while ($row = db_fetch_array($res)) {
@@ -1459,7 +1453,6 @@ class Artifact extends Error {
     		"WHERE artifact_history.artifact_id=".$this->getID()." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
     		"AND artifact_history.mod_by=user.user_id ".
-    		"AND artifact_history.new_value <> '' ".
     		"AND artifact_history.type = artifact_field_value_list.value_id ".
     		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
     		"AND artifact_field_value_list.field_id = artifact_field.field_id ".
@@ -1478,7 +1471,6 @@ class Artifact extends Error {
     		"WHERE artifact_history.artifact_id=".$this->getID()." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
     		"AND artifact_history.mod_by=user.user_id ".
-    		"AND artifact_history.new_value <> '' ".
     		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
     		"ORDER BY FIELD(artifact_history_id, ".implode(',',$comment_array).")";    		
     		$res_value = db_query($sql);

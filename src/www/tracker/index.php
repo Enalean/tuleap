@@ -780,21 +780,23 @@ if ( $func == 'gotoid' ) {
 	  require('./export.php');
                 break;
         }
-        
+        case 'updatecomment':
+            if (user_isloggedin() && isset($_REQUEST['followup_update'])) {
+                $ah = new ArtifactHtml($ath,$_REQUEST['artifact_id']);
+                if ($ah->updateFollowupComment($_REQUEST['artifact_history_id'],$_REQUEST['followup_update'],$changes)) {  
+                    $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
+                    $agnf =& new ArtifactGlobalNotificationFactory();
+                    $addresses = $agnf->getAllAddresses($ath->getID());
+                    $ah->mailFollowupWithPermissions($addresses,$changes);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
+                }
+            }
+            require('./detail.php');
+            break;
         case 'browse' : {
-	  $masschange = false;
-	  if (user_isloggedin() && isset($_REQUEST['followup_update']) && $_REQUEST['followup_update']) {
-              $ah = new ArtifactHtml($ath,$_REQUEST['artifact_id']);
-              if ($ah->updateFollowupComment($_REQUEST['artifact_history_id'],$_REQUEST['followup_update'],$changes)) {  
-                  $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
-                  $agnf =& new ArtifactGlobalNotificationFactory();
-                  $addresses = $agnf->getAllAddresses($ath->getID());
-                  $ah->mailFollowupWithPermissions($addresses,$changes);		  
-              } else {
-                  $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
-              }
-          }	  
-	  require('./browse.php');
+                $masschange = false;
+                require('./browse.php');
                 break;
         }
         
