@@ -1459,4 +1459,100 @@ function util_return_to($url) {
     exit;
 }
 
+
+/* 
+* return the apporximate distance between a time and now 
+* inspired from ActionView::Helpers::DateHelper in RubyOnRails
+*/
+function util_time_ago_in_words($time, $include_seconds = false) {
+    return util_distance_of_time_in_words($time, time(), $include_seconds) .' ago';
+}
+function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {    
+    $distance_in_minutes = round((abs($to_time - $from_time))/60);
+    $distance_in_seconds = round(abs($to_time - $from_time));
+    
+    if ($distance_in_minutes <= 1) {
+        if (!$include_seconds) {
+            return ($distance_in_minutes == 0) ? 'less than a minute' : '1 minute';
+        } else {
+            if ($distance_in_seconds < 4) {
+                return 'less than 5 seconds';
+            } else if ($distance_in_seconds < 9) {
+                return 'less than 10 seconds';
+            } else if ($distance_in_seconds < 19) {
+                return 'less than 20 seconds';
+            } else if ($distance_in_seconds < 39) {
+                return 'half a minute';
+            } else if ($distance_in_seconds < 59) {
+                return 'less than a minute';
+            } else {
+                return '1 minute';
+            }
+        }
+    } else if ($distance_in_minutes <= 44) {
+        return "$distance_in_minutes minutes";
+    } else if ($distance_in_minutes <= 89) {
+        return "about 1 hour";
+    } else if ($distance_in_minutes <= 1439) {
+        return "about ". round($distance_in_minutes / 60.0) ." hours";
+    } else if ($distance_in_minutes <= 2879) {
+        return "1 day";
+    } else if ($distance_in_minutes <= 43199) {
+        return round($distance_in_minutes / 1440) ." days";
+    } else if ($distance_in_minutes <= 86399) {
+        return "about 1 month";
+    } else if ($distance_in_minutes <= 525959) {
+        return round($distance_in_minutes / 43200) ." months";
+    } else if ($distance_in_minutes <= 1051919) {
+        return "about 1 year";
+    } else {
+        return "over ". round($distance_in_minutes / 525960) ." years";
+    }
+}
+
+/* expected result :
+0            less than a minute      less than 5 seconds
+2            less than a minute      less than 5 seconds
+7            less than a minute      less than 10 seconds
+12           less than a minute      less than 20 seconds
+21           less than a minute      half a minute
+30           1 minute                half a minute
+50           1 minute                less than a minute
+60           1 minute                1 minute
+90           2 minutes               2 minutes
+130          2 minutes               2 minutes
+3000         about 1 hour            about 1 hour
+6000         about 2 hours           about 2 hours
+87000        1 day                   1 day
+172860       2 days                  2 days
+2592060      about 1 month           about 1 month
+5184060      2 months                2 months
+31557660     about 1 year            about 1 year
+63115200     over 2 years            over 2 years
+
+$now = time();
+$times = array(
+    '0' => $now - 0,
+    '2' => $now - 2,
+    '7' => $now - 7,
+    '12' => $now - 12,
+    '21' => $now - 21,
+    '30' => $now - 30,
+    '50' => $now - 50,
+    '60' => $now - 60,
+    '90' => $now - 90,
+    '130' => $now - 130,
+    50*60 => $now - 50*60,
+    100*60 => $now - 100*60,
+    1450*60 => $now - 1450*60,
+    2881*60 => $now - 2881*60,
+    43201*60 => $now - 43201*60,
+    86401*60 => $now - 86401*60,
+    525961*60 => $now - 525961*60,
+    1051920*60 => $now - 1051920*60,
+);
+foreach($times as $key => $time) {
+    echo $key ."\t\t\t". util_time_ago_in_words($time, false) ."\t\t\t". util_time_ago_in_words($time, true) ."\n";
+}
+*/
 ?>
