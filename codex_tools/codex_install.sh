@@ -493,6 +493,17 @@ $RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdt
 $RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
 
+# -> HTML Purifier
+echo "Removing installed htmlpurifier if any .."
+$RPM -e htmlpurifier 2>/dev/null
+$RPM -e htmlpurifier-docs 2>/dev/null
+echo "Installing htmlpurifier RPM for CodeX...."
+cd ${RPMS_DIR}/htmlpurifier
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/htmlpurifier-2*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
+
+
 # Create Apache config file for Munin (not in RPM...)
 $CAT <<'EOF' >/etc/httpd/conf.d/munin.conf
 #

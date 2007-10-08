@@ -210,6 +210,16 @@ cd ${RPMS_DIR}/highlight
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
 
+# -> HTML Purifier
+echo "Removing installed htmlpurifier if any .."
+$RPM -e htmlpurifier 2>/dev/null
+$RPM -e htmlpurifier-docs 2>/dev/null
+echo "Installing htmlpurifier RPM for CodeX...."
+cd ${RPMS_DIR}/htmlpurifier
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/htmlpurifier-2*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
+
 
 # -> subversion
 # backup config file for apache
