@@ -47,7 +47,9 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
             $label = $Language->getText($matches[1], $matches[2]);
         }
     }
-    
+    $hp =& CodeX_HTMLPurifier::getInstance();
+    $description = $hp->purify($description);
+    $label = $hp->purify($label);
 
     echo '<TR class="'. util_get_alt_row_color($row_num) .'">
             <TD>

@@ -153,10 +153,11 @@ $HTML->box1_top($Language->getText('project_admin_index','p_edit',group_getname(
 
 $project=new Project($group_id);
 
+$hp =& CodeX_HTMLPurifier::getInstance();
 
 print '&nbsp;
 <BR>
-'.$Language->getText('project_admin_index','short_desc',htmlentities(db_result($res_grp,0,'short_description'), ENT_QUOTES));
+'.$Language->getText('project_admin_index','short_desc',$hp->purify(db_result($res_grp,0,'short_description'), CODEX_HP_LIGHT));
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }

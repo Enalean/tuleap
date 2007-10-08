@@ -12,6 +12,7 @@ require_once('common/include/Response.class.php');
 
 require_once('common/event/EventManager.class.php');
 
+require_once('common/include/CodeX_HTMLPurifier.class.php');
 
 
 //$Language->loadLanguageMsg('include/include');
@@ -615,11 +616,12 @@ echo html_blankimage(5,100);
                 $link=str_replace('$group_id',$group_id,$link);
             }
             $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
+            $hp =& CodeX_HTMLPurifier::getInstance();
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
-                            'label'       => $service_data['label'],
+                            'label'       => $hp->purify($service_data['label']),
                             'enabled'     => $enabled,
-                            'description' => $service_data['description']);
+                            'description' => $hp->purify($service_data['description']));
         }
         return $tabs;
     }

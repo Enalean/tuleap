@@ -16,6 +16,7 @@ require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
+require_once('common/include/CodeX_HTMLPurifier.class.php');
 
 $Language->loadLanguageMsg('include/include');
 $em =& EventManager::instance();
@@ -26,6 +27,8 @@ if ($project->isFoundry()) {
 	header ("Location: /foundry/". $project->getUnixName() ."/");
 	exit;
 }       
+
+$hp =& CodeX_HTMLPurifier::getInstance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 
@@ -56,7 +59,7 @@ if ($project->getStatus() == 'H') {
 
 // LJ Pointer to more detailed description added
 if ($project->getDescription()) {
-	print "<P>" . htmlentities($project->getDescription(), ENT_QUOTES);
+	print "<P>" . $hp->purify($project->getDescription(), CODEX_HP_LIGHT, $group_id) . "</P>";
 	$details_prompt = '['.$Language->getText('include_project_home','more_info').'...]';
 } else {
   print '<P>'.$Language->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id");
