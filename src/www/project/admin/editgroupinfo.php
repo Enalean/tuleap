@@ -30,7 +30,7 @@ if (isset($Update)) {
     // so we have to explicity set 0
     
     $sql = 'UPDATE groups SET '
-        ."group_name='$form_group_name',"
+        ."group_name='".htmlspecialchars($form_group_name)."',"
         ."short_description='$form_shortdesc',"
         ."register_purpose='".htmlspecialchars($form_purpose)."', "
         ."required_software='".htmlspecialchars($form_required_sw)."', "
