@@ -35,7 +35,7 @@ php_value upload_max_filesize 128M
 php_admin_value upload_tmp_dir /var/tmp
 
 # For phpwiki
-php_value allow_call_time_pass_reference on
+php_flag allow_call_time_pass_reference on
 
 # Debugging 2047=all, 2039=all-notice
 #php_flag display_errors on
