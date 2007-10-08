@@ -1349,6 +1349,8 @@ It probably means that the machine host name is not properly configured. Try:
 service sendmail restart
 </pre>
 Or edit /etc/sysconfig/network and enter the machine fully qualified name as HOSTNAME.
+<br><b>OR</b> edit /etc/hosts and add codex.xerox.com in the first line. E.g.
+<pre>127.0.0.1       codex.xerox.com atlas localhost.localdomain localhost</pre>
 
 <h2>Aliases</h2>
 <u>/etc/aliases</u><br>
