@@ -484,19 +484,15 @@ while ($ln = pop(@groupdump_array)) {
 		    system("echo \"$MARKER_END\" >> $filename");
 		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: enable notifications\" notify; co -q notify");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
-		}
-	    }
 
-	    # Apply cvs watch on only if cvs_watch_mode changed to on 
-	    if (($cvs_watch_mode) && ($gstatus eq 'A')&& (! $blockispresent))
-	    {    
-		print("apply cvs watch on to the project : $gname\n");
-		$id = getpgrp();                # You *must* use a shell that does setpgrp()!
-		&cvs_watch($cvs_dir,$gname,$id,1);
-		system("chown -R $cxname:$gid $cvs_dir");
-		system("chmod g+rw $cvs_dir");
+                    # Apply cvs watch on only if cvs_watch_mode changed to on 
+                    print("apply cvs watch on to the project : $gname\n");
+                    $id = getpgrp();                # You *must* use a shell that does setpgrp()!
+                    &cvs_watch($cvs_dir,$gname,$id,1);
+                    system("chown -R $cxname:$gid $cvs_dir");
+                    system("chmod g+rw $cvs_dir");
+                }
 	    }
-
 
             #
             #  CVS WATCH OFF
