@@ -214,7 +214,13 @@ class ArtifactHtml extends Artifact {
                 var textarea = $('tracker_artifact_comment');
                 if (textarea && element) {
                     var str = element.textContent ? element.textContent : element.innerText;
-                    textarea.value += '\\n\\n'+ who +':\\n> ';
+                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 1) != '\\n') {
+                        textarea.value += '\\n';
+                    }
+                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 2, textarea.value.length - 1) != '\\n') {
+                        textarea.value += '\\n';
+                    }
+                    textarea.value += who +':\\n> ';
                     textarea.value += str.replace(/\\n/gi, '\\n> ');
                     textarea.value += '\\n';
                     textarea.scrollTop = textarea.scrollHeight;
