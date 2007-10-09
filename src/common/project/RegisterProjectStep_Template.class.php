@@ -104,7 +104,6 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
             return false;
         } else {
             $p =& group_get_object($data['project']['built_from_template']);
-            var_dump($data['project']['built_from_template'], user_ismember($data['project']['built_from_template'],'A'));
             if (!$p->isTemplate() && !user_ismember($data['project']['built_from_template'],'A')) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
                 return false;
