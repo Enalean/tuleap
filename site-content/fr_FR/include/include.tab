@@ -455,6 +455,20 @@ include_user	invalid_u_id	ID utilisateur invalide
 include_utils	prio_colors	Échelle de couleurs des priorités
 include_utils	address_problem	Les adresses suivantes présentent une anomalie
 include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
+include_utils	time_ago	il y a $1
+include_utils	1_minute	1 minute
+include_utils	less_1_minute	moins d'une minute
+include_utils	less_than_X_seconds	moins de $1 seconds
+include_utils	half_a_minute	30 secondes
+include_utils	X_minutes	$1 minutes
+include_utils	about_1_hour	environ 1 heure
+include_utils	about_X_hours	environ $1 heures
+include_utils	about_1_day	environ 1 jour
+include_utils	X_days	$1 jours
+include_utils	about_1_month	environ 1 mois
+include_utils	X_months	$1 mois
+include_utils	about_1_year	environ 1 an
+include_utils	over_X_years	$1 ans
 #
 #-----------------------------------------------
 # Script: SF/www/include/vars.php

@@ -1465,7 +1465,7 @@ function util_return_to($url) {
 * inspired from ActionView::Helpers::DateHelper in RubyOnRails
 */
 function util_time_ago_in_words($time, $include_seconds = false) {
-    return util_distance_of_time_in_words($time, time(), $include_seconds) .' ago';
+    return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, time(), $include_seconds));
 }
 function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {    
     $distance_in_minutes = round((abs($to_time - $from_time))/60);
@@ -1473,40 +1473,40 @@ function util_distance_of_time_in_words($from_time, $to_time, $include_seconds =
     
     if ($distance_in_minutes <= 1) {
         if (!$include_seconds) {
-            return ($distance_in_minutes == 0) ? 'less than a minute' : '1 minute';
+            return $GLOBALS['Language']->getText('include_utils', ($distance_in_minutes == 0) ? 'less_1_minute' : '1_minute');
         } else {
             if ($distance_in_seconds < 4) {
-                return 'less than 5 seconds';
+                return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 5);
             } else if ($distance_in_seconds < 9) {
-                return 'less than 10 seconds';
+                return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 10);
             } else if ($distance_in_seconds < 19) {
-                return 'less than 20 seconds';
+                return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 20);
             } else if ($distance_in_seconds < 39) {
-                return 'half a minute';
+                return $GLOBALS['Language']->getText('include_utils', 'half_a_minute');
             } else if ($distance_in_seconds < 59) {
-                return 'less than a minute';
+                return $GLOBALS['Language']->getText('include_utils', 'less_1_minute');
             } else {
-                return '1 minute';
+                return $GLOBALS['Language']->getText('include_utils', '1_minute');
             }
         }
     } else if ($distance_in_minutes <= 44) {
-        return "$distance_in_minutes minutes";
+        return $GLOBALS['Language']->getText('include_utils', 'X_minutes', $distance_in_minutes);
     } else if ($distance_in_minutes <= 89) {
-        return "about 1 hour";
+        return $GLOBALS['Language']->getText('include_utils', 'about_1_hour');
     } else if ($distance_in_minutes <= 1439) {
-        return "about ". round($distance_in_minutes / 60.0) ." hours";
+        return $GLOBALS['Language']->getText('include_utils', 'about_X_hours');
     } else if ($distance_in_minutes <= 2879) {
-        return "1 day";
+        return $GLOBALS['Language']->getText('include_utils', 'about_1_day');
     } else if ($distance_in_minutes <= 43199) {
-        return round($distance_in_minutes / 1440) ." days";
+        return $GLOBALS['Language']->getText('include_utils', 'X_days', round($distance_in_minutes / 1440));
     } else if ($distance_in_minutes <= 86399) {
-        return "about 1 month";
+        return $GLOBALS['Language']->getText('include_utils', 'about_1_month');
     } else if ($distance_in_minutes <= 525959) {
-        return round($distance_in_minutes / 43200) ." months";
+        return $GLOBALS['Language']->getText('include_utils', 'X_months', round($distance_in_minutes / 43200));
     } else if ($distance_in_minutes <= 1051919) {
-        return "about 1 year";
+        return $GLOBALS['Language']->getText('include_utils', 'about_1_year');
     } else {
-        return "over ". round($distance_in_minutes / 525960) ." years";
+        return $GLOBALS['Language']->getText('include_utils', 'over_X_years', round($distance_in_minutes / 525960));
     }
 }
 
