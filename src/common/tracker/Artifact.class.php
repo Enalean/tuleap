@@ -2577,13 +2577,21 @@ class Artifact extends Error {
                 $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
                 $orig_date = $this->getOriginalCommentDate($comment_id);
                 
-                if ( ($comment_type_id == 100) ||($comment_type == "") )
+                if ( ($comment_type_id == 100) ||($comment_type == "") ) {
                     $comment_type = '';
-                else
+                } else {
                     $comment_type = '['.$comment_type.']';
+                }
+                
                 if ($ascii) {
                     $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf%s";
+                    $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
+                    $out .= sprintf($fmt,
+                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
+                                    ($comment_type != '' ? $comment_type.$sys_lf : '') . $comment_txt
+                                    );
                 } else {
                     $style = '';
                     $toggle = 'ic/toggle_minus.png';
@@ -2591,14 +2599,14 @@ class Artifact extends Error {
                         $style = 'style="display:none;"';
                         $toggle = 'ic/toggle_plus.png';
                     }
-                    $fmt = "\n".'
+                    $out .= "\n".'
                     <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
                         <div class="followup_comment_title" style="float:left;">';
-                    $fmt .= '<script type="text/javascript">document.write(\'<span>';
-                    $fmt .= $GLOBALS['HTML']->getImage($toggle, array('id' => 'comment_'. $comment_id .'_toggle', 'style' => 'vertical-align:middle'));
-                    $fmt .= '</span>\');</script>';
-                    $fmt .= '<script type="text/javascript">';
-                    $fmt .= "tracker_comment_togglers[$comment_id] = function (evt, force, expand) {
+                    $out .= '<script type="text/javascript">document.write(\'<span>';
+                    $out .= $GLOBALS['HTML']->getImage($toggle, array('id' => 'comment_'. $comment_id .'_toggle', 'style' => 'vertical-align:middle'));
+                    $out .= '</span>\');</script>';
+                    $out .= '<script type="text/javascript">';
+                    $out .= "tracker_comment_togglers[$comment_id] = function (evt, force, expand) {
                         var toggle = $('comment_". $comment_id ."_toggle');
                         var element = $('comment_". $comment_id ."_content');
                         if (element) {
@@ -2621,67 +2629,60 @@ class Artifact extends Error {
                         return false;
                     };
                     Event.observe($('comment_". $comment_id ."_toggle'), 'click', tracker_comment_togglers[$comment_id]);";
-                    $fmt .= '</script>';
-                    $fmt .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>
-                            <span class="followup_comment_title_user">%s </span>
-                            <span class="followup_comment_title_date">%s</span>';
-                    if ($field_name != "comment") {
-                        $fmt .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
-                        $fmt .= '<span class="followup_comment_title_edited_user">%s </span>';
-                        $fmt .= '<span class="followup_comment_title_date">%s</span>'.")";
-                    }
-                    $fmt .= '</div>';
-                    $fmt .= '<div style="text-align:right;">';
-                    $fmt .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\'%s\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
-                    $fmt .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
-                    $fmt .= '</a>\');</script>';
-                    if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
-                        $fmt .= '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
-                        $fmt .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
-                        $fmt .= '</a>';
-                        $fmt .= '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" ';
-                        $fmt .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
-                        $fmt .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
-                        $fmt .= '</a>';
-                    }
-                    $fmt .= '</div>';
-                    $fmt .= '<div style="clear:both;"></div>';
-                    $fmt .= '<div class="followup_comment_content" '. $style .' id="comment_'. $comment_id .'_content">';
-                    if ($comment_type != "") {
-                        $fmt .= '<div class="followup_comment_content_type"><b>'. $comment_type .'</b></div>';
-                    }
-                    $fmt .= '%s</div>';
-                    $fmt .= '</div>';
-                }
-        
-                // I wish we had sprintf argument swapping in PHP3 but
-                // we don't so do it the ugly way...
-                if ($ascii) {
-                    $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
-                    $out .= sprintf($fmt,
-                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
-                                    (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
-                                    ($comment_type != '' ? $comment_type.$sys_lf : '') . $comment_txt
-                                    );
-                } else {
-                    $date_ago = '<span title="'. format_date($sys_datefmt,db_result($orig_date, 0, 'date')) .'">'. util_time_ago_in_words(db_result($orig_date, 0, 'date')) .'</span>';
-                    $mod_ago = '<span title="'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'">'. util_time_ago_in_words(db_result($result, $i, 'date')) .'</span>';
-                    $comment_txt = util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
-                    if ($field_name == "comment") {
-                        $out .= sprintf($fmt,
-                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
-                                $date_ago,
-                                addslashes(addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')))),
-                                $comment_txt);
+                    $out .= '</script>';
+                    $out .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle')) .' </a></span>';
+                    $out .= '<span class="followup_comment_title_user">';
+                    if (db_result($orig_subm, 0, 'mod_by')==100) {
+                        $out .= db_result($orig_subm, 0, 'email');
                     } else {
-                        $out .= sprintf($fmt,
-                                (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):'<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>'),
-                                $date_ago,
-                                (db_result($result, $i, 'mod_by')==100?db_result($result, $i, 'email'):'<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>'),
-                                $mod_ago,
-                                addslashes(addslashes(db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')))),
-                                $comment_txt);
+                        $out .= '<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>';
                     }
+                    $out .= ' </span>';
+                    $out .= '<span class="followup_comment_title_date">';
+                    $out .= '<span title="'. format_date($sys_datefmt,db_result($orig_date, 0, 'date')) .'">'. util_time_ago_in_words(db_result($orig_date, 0, 'date')) .'</span>';
+                    $out .= '</span>';
+                    if ($field_name != "comment") {
+                        $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
+                        $out .= '<span class="followup_comment_title_edited_user">';
+                        if (db_result($result, $i, 'mod_by')==100) {
+                            $out .= db_result($result, $i, 'email');
+                        } else {
+                            $out .= '<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>';
+                        }
+                        $out .= ' </span>';
+                        $out .= '<span class="followup_comment_title_date">';
+                        $out .= '<span title="'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'">'. util_time_ago_in_words(db_result($result, $i, 'date')) .'</span>';
+                        $out .= '</span>'.")";
+                    }
+                    $out .= '</div>';
+                    $out .= '<div style="text-align:right;">';
+                    if (db_result($orig_subm, 0, 'mod_by')==100) {
+                        $user_quoted = db_result($orig_subm, 0, 'email');
+                    } else {
+                        $user_quoted = user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'));
+                    }
+                    $user_quoted = addslashes(addslashes($user_quoted));
+                    $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
+                    $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
+                    $out .= '</a>\');</script>';
+                    if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
+                        $out .= '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
+                        $out .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
+                        $out .= '</a>';
+                        $out .= '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" ';
+                        $out .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
+                        $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
+                        $out .= '</a>';
+                    }
+                    $out .= '</div>';
+                    $out .= '<div style="clear:both;"></div>';
+                    $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. $comment_id .'_content">';
+                    if ($comment_type != "") {
+                        $out .= '<div class="followup_comment_content_type"><b>'. $comment_type .'</b></div>';
+                    }
+                    $out .= util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
+                    $out .= '</div>';
+                    $out .= '</div>';
                 }
             }
             if (!$ascii) {
