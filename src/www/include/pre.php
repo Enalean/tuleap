@@ -276,6 +276,7 @@ if (!IS_SCRIPT &&
     $SCRIPT_NAME != '/current_css.php'  && 
     $SCRIPT_NAME != '/account/login.php'  && 
     $SCRIPT_NAME != '/account/register.php'&& 
+    $SCRIPT_NAME != '/account/change_pw.php'&& 
     $SCRIPT_NAME != '/include/check_pw.php'&& 
     $SCRIPT_NAME != '/account/lostpw.php' &&
     $SCRIPT_NAME != '/account/lostlogin.php' &&
