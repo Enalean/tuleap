@@ -44,16 +44,34 @@ if (($action_select=='activate')) {
     db_query("UPDATE user SET status='".$newstatus."'".$shell.
 	     " WHERE user_id IN ($list_of_users)");
 
-    /*// Now send the user verification emails
+    // Now send the user verification emails
     $res_user = db_query("SELECT email, confirm_hash FROM user "
 			 . " WHERE user_id IN ($list_of_users)");
 	
-    while ($row_user = db_fetch_array($res_user)) {
-        if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'])) {
+     // Send a notification message to the user when account is activated by the Site Administrator
+            $date = getdate(time());
+            $hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
+            $minutesleft = 60 - $date['minutes'];
+            $base_url = get_server_url();
+     
+     while ($row_user = db_fetch_array($res_user)) {
+        $from = $GLOBALS['sys_noreply'];
+            $to = $row_user['email'];
+            $subject = $Language->getText('admin_approve_pending_users', 'title', array($GLOBALS['sys_name']));
+            
+            include($Language->getContent('admin/new_account_email'));
+
+            $mail = new Mail();
+            $mail->setSubject($subject);
+            $mail->setFrom($from);
+            $mail->setTo($to);
+            $mail->setBody($body);
+            if (!$mail->send()) {
                 $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-        }
+            }
         usleep(250000);
-    }*/
+    }
+
 
 } else if($action_select=='validate'){
     if($status=='restricted'){

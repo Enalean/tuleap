@@ -1,0 +1,21 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2003. All Rights Reserved
+// http://codex.xerox.com
+//
+// 
+//
+
+$body = "You are now a registered user on ".$GLOBALS['sys_name']
+.". As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
+."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
+."project.\n\n\n ** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".$GLOBALS['sys_name']
+." to create your Shell account. Some features like CVS access depend on it. Your Shell account will be activated in about $hoursleft "
+."hour $minutesleft minutes from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
+."the Site Documentation (<". $base_url ."/docs/site/>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
+."(Define your skills profile, your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
+.$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
+            
+
+?>
