@@ -293,9 +293,11 @@ class ReferenceManager {
      */
     function insertReferences(&$html,$group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
-        $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
+        if (!preg_match('/[^\s]{5000,}/', $html)) {
+            $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
+        }
         $this->tmpGroupIdForCallbackFunction = null;
     }
 

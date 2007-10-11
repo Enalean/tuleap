@@ -138,7 +138,7 @@ if (!isset($group_id) || !$group_id) {
     */
     echo '<H3>'.$Language->getText('svn_browse_revision','browse_commit').'</H3>'; 
     echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
-        <TABLE WIDTH="10%" BORDER="0">
+        <TABLE BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
