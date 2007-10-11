@@ -286,10 +286,12 @@ class ReferenceManager {
      * @param $html the string which may contain invalid 
      */
     function insertReferences(&$html,$group_id) {
-
+	
+        if (!preg_match('/[^\s]{5000,}/', $html)) {
         $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
+        }
     }
 
     /**
