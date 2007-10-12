@@ -111,4 +111,9 @@ plugin_serverupdate_preferences	working_directory	Working directory:
 plugin_serverupdate_preferences	svn_repository	SVN Repository:
 plugin_serverupdate_preferences	script_directory	Script directory:
 plugin_serverupdate_preferences	norepository	SVN Repository not detected.
-
+#
+# Widgets
+#
+plugin_serverupdate_widgets	my_serverupdates	My Server Updates
+plugin_serverupdate_widgets	my_serverupdates_up_to_date	Your Server is up to date.
+plugin_serverupdate_widgets	my_serverupdates_norepository	SVN Repository not detected.

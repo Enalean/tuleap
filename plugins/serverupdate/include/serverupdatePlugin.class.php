@@ -16,6 +16,8 @@ class ServerUpdatePlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
         $this->_addHook('site_admin_menu_hook',   'siteAdminHooks', true);
         $this->_addHook('cssfile', 'cssFile', false);
+        $this->_addHook('widget_instance', 'myPageBox', false);
+        $this->_addHook('widgets', 'widgets', false);
     }
     
     function &getPluginInfo() {
@@ -49,6 +51,17 @@ class ServerUpdatePlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
         }
+    }
+    
+    function myPageBox($params) {
+        if (user_is_super_user() && $params['widget'] == 'myserverupdates') {
+            require_once('ServerUpdate_Widget_MyServerUpdates.class.php');
+            $params['instance'] = new ServerUpdate_Widget_MyServerUpdates($this->_getPluginPath());
+        }
+    }
+    
+    function widgets($params) {
+        $params['codex_widgets'][] = 'myserverupdates';
     }
     
     function process() {

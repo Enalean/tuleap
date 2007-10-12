@@ -117,4 +117,9 @@ plugin_serverupdate_preferences	working_directory	Copie de travail :
 plugin_serverupdate_preferences	svn_repository	Dépôt SVN :
 plugin_serverupdate_preferences	script_directory	Répertoire des scripts :
 plugin_serverupdate_preferences	norepository	Dépôt SVN non détecté.
-
+#
+# Widgets
+#
+plugin_serverupdate_widgets	my_serverupdates	Maj de mon serveur
+plugin_serverupdate_widgets	my_serverupdates_up_to_date	Votre serveur est à jour.
+plugin_serverupdate_widgets	my_serverupdates_norepository	Dépôt SVN non détecté.
