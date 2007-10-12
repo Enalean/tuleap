@@ -32,3 +32,4 @@ instead and redefine your entities there. If this file doesn't exist create it.-
 <!ENTITY SYS_EMAIL_ADMIN  "codex-admin@codex.xerox.com">
 <!ENTITY SYS_EMAIL_CONTACT "codex-contact@codex.xerox.com">
 <!ENTITY SYS_SAMBA_DOMAIN "WCRT">
+<!ENTITY SYS_UPDATE_SITE "http://codex.xerox.com/downloads/eclipse">

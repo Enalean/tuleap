@@ -178,9 +178,6 @@ newgrp nom_projet
       <para>CodeX fournit une API SOAP pour accéder à CodeX avec les 'web services'.
             Actuellement, seuls les sessions 
             (login/logout) et le service Outil de suivi sont disponibles via l'API.
-            <para>
-                <note>Note : la notification par mail n'est pas active avec l'API SOAP.</note>
-            </para>
       </para>
       <para>Une description des services est disponible à l'adresse 
         <ulink url="/soap/">
@@ -208,6 +205,43 @@ newgrp nom_projet
       </para>
       <para>La documentation du client en ligne de commande est disponible à l'adresse : 
         <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+      </para>
+    </section>
+
+    <section id="CodeXEclipsePlugin">
+      <title>Plugin Eclipse CodeX</title>
+      <para>CodeX dispose d'un plugin pour l'IDE Eclipse. 
+        Ce plugin vous permet de parcourir vos artefacts, 
+        de les modifier, et d'en créer de nouveaux, le 
+        tout dans l'environnement Eclipse.
+      </para>
+      <para>Le plugin Eclipse est disponible pour la version 3.2 d'Eclipse et nécessite le JRE 1.5</para>
+      <para>Le plugin Eclipse peut être installé par le mécanisme updatesite d'Eclipse.
+        Le site web updatesite CodeX est : &SYS_UPDATE_SITE;
+      </para>
+      <para>
+        Pour installer le plugin CodeX avec le mécanisme "update site" d'Eclipse, veuillez suivre les instructions ci-dessous:
+        <procedure>
+            <step><para>Dans le menu principal d'Eclipse, sélectionnez <emphasis role="bold">Help > Software Update > Find and install...</emphasis></para></step>
+            <step><para>Cochez la case <emphasis role="bold">Search for new features to install</emphasis>, puis cliquez sur Next</para></step>
+            <step><para>Pressez le bouton <emphasis role="bold">New Remote Site...</emphasis></para></step>
+            <step>
+                <para>Remplissez la boîte de dialogue avec :
+                    <substeps>
+                     <step><para><emphasis role="bold">Name:</emphasis> CodeX (par exemple)</para></step>
+                     <step><para><emphasis role="bold">URL:</emphasis> &SYS_UPDATE_SITE;</para></step>
+                    </substeps>
+                </para>
+            </step>
+            <step><para>Cochez la case <emphasis role="bold">CodeX</emphasis> (vous pouvez déplier pour voir le détails de la feature), puis cliquez sur OK</para></step>
+            <step><para>Eclipse vous demandera ensuite d'accepter la licence. Si vous acceptez la licence, cochez "I accept the terms in the license agreement".</para></step>
+            <step><para>Cliquez sur le bouton <emphasis role="bold">Finish</emphasis></para></step>
+            <step><para>Eclipse vous demande de confirmer les feature à installer. Cliquez sur le bouton <emphasis role="bold">Install</emphasis>.</para></step>
+            <step><para>Eclipse va télécharger les features et peut avoir besoin de redémarrer pour terminer l'installation</para></step>
+            <step><para>Profitez de CodeX !</para></step>
+        </procedure>
+      </para>
+      <para>La documentation du plugin Eclipse est disponible à l'adresse <ulink url="/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf</ulink>
       </para>
     </section>
     
