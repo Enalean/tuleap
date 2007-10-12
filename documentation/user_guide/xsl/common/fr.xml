@@ -7,6 +7,8 @@
 <!-- To update this file: edit the corresponding document at -->
 <!-- http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/docbook/gentext/locale/ -->
 
+   <l:gentext key="page.citation" text="page"/>
+
    <l:gentext key="Abstract" text="R&#233;sum&#233;"/>
    <l:gentext key="abstract" text="R&#233;sum&#233;"/>
    <l:gentext key="Answer" text="R&#160;:"/>
@@ -341,6 +343,7 @@
       <l:template name="set" text="%t"/>
       <l:template name="setindex" text="%t"/>
       <l:template name="table" text="Tableau %n. %t"/>
+      <l:template name="tip" text="%t"/>
    </l:context>
 
    <l:context name="section-xref">
