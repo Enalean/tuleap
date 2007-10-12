@@ -210,6 +210,15 @@ newgrp projectname
         This plugin will let you browse your artefacts, 
         modify them and create new ones whithin Eclipse 
         environment.
+        <figure id="FigureCodeXEclipsePlugin">
+          <title>CodeX plugin for Eclipse IDE</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                         fileref="../../screenshots/en_US/sc_eclipseplugin.png" width="15.5cm" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </para>
       <para>The CodeX Eclipse plugin is to be deployed on Eclipse 3.2 and needs JRE 1.5</para>
       <para>The Eclipse plugin can be installed and updated with the updatesite mecanism.
