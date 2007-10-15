@@ -579,7 +579,7 @@ class SVNUpdate {
      */
     function getSVNInfos() {
         $svn_infos = array();
-        $infos = $this->_SVNCommand("svn info ".$this->getWorkingCopyDirectory());
+        $infos = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn info ; cd -");
         
         $svn_infos['revision'] = $this->_getSVNInfoRevision($infos);
         $svn_infos['repository'] = $this->_getSVNInfoRepository($infos);
