@@ -25,11 +25,11 @@ class RSS {
         $channel_elements   = array('title', 'description', 'link', 'language', 'rating', 'image', 'textinput', 'copyright', 'pubDate', 'lastBuildDate', 'docs', 'managingEditor', 'webMaster', 'skipHours', 'skipDays');
         $image_elements     = array('title', 'description', 'link', 'url', 'width', 'height');
         $textinput_elements = array('title', 'description', 'link', 'name');
-        $item_elements      = array('title', 'description', 'link');
+        $item_elements      = array('title', 'description', 'link', 'dc:creator', 'pubDate', 'guid');
         header("Content-Type: text/xml");
         echo '<?xml version="1.0"  encoding="ISO-8859-1" ?>'. "\n";
         echo '<?xml-stylesheet type="text/xsl"  href="/export/rss.xsl" ?>'. "\n";
-        echo '<rss version="0.91">';
+        echo '<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">';
         echo '<channel>';
         foreach($channel_elements as $channel_element) {
             if (isset($this->channel[$channel_element])) {

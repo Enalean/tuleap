@@ -35,6 +35,10 @@ if ( !isset($pv) ) {
 	if ( $pv ) $ro = true;
 }
 
+$GLOBALS['HTML']->addFeed(
+    $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. $ah->getValue('summary'), 
+    '/tracker/?func=rss&aid='. $ah->getId() .'&atid='. $ath->getID() .'&group_id='. $group->getGroupId()
+);
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),

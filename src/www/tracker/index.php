@@ -109,6 +109,18 @@ if ( $func == 'gotoid' ) {
         $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
         switch ($func) {
+        case 'rss':
+            if ($aid) {
+                $ah=new ArtifactHtml($ath,$aid);
+                if (!$ah || !is_object($ah)) {
+                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                } else {
+                    $ah->displayRSS();
+                }
+            } else {
+               require('./browse.php');
+            }
+            break;
         case 'add' : {
             if (browser_is_netscape4()) {
 	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif')));

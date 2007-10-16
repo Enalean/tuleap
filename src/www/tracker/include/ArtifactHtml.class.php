@@ -15,6 +15,7 @@ require_once('common/tracker/Artifact.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/ReferenceManager.class.php');
 require_once('javascript_helpers.php');
+require_once('common/rss/RSS.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -1007,6 +1008,52 @@ class ArtifactHtml extends Artifact {
         <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
+    }
+    
+    
+    /**
+    * displayRSS
+    * 
+    * Display the follow-ups of this artifact as a rss feed
+    *
+    */
+    function displayRSS() {
+        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
+        $group = $this->ArtifactType->getGroup();
+        $rss = new RSS(array(
+            'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary'),
+            'description' => '',
+            'link'        => '<![CDATA['.get_server_url() .'/tracker/?atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId() .']]>',
+            'language'    => 'en-us',
+            'copyright'   => $GLOBALS['Language']->getText('rss','copyright',array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y',time()))),
+            'pubDate'     => gmdate('D, d M Y h:i:s',$this->getLastUpdateDate()).' GMT',
+        ));
+        $result=$this->getFollowups ();
+        for($i=0 ; $i < db_numrows($result) ; $i++) {
+            $comment_type = db_result($result, $i, 'comment_type');
+            $comment_type_id = db_result($result, $i, 'comment_type_id');
+            $comment_id = db_result($result, $i, 'artifact_history_id');
+            $field_name = db_result($result, $i, 'field_name');
+            $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
+            $orig_date = $this->getOriginalCommentDate($comment_id);
+            
+            if ( ($comment_type_id == 100) ||($comment_type == "") ) {
+                $comment_type = '';
+            } else {
+                $comment_type = '<strong>['.$comment_type.']</strong><br />';
+            }
+            $rss->addItem(array(
+                'title'       => '<![CDATA['.$GLOBALS['Language']->getText('tracker_include_artifact','add_flup_comment') .' #'.$comment_id.']]>',
+                'description' => '<![CDATA['.$comment_type . util_make_links(nl2br(db_result($result, $i, 'new_value')),$group->getGroupId(),$this->ArtifactType->getID()).']]>',
+                'pubDate'     => gmdate('D, d M Y h:i:s',db_result($orig_date, 0, 'date')).' GMT',
+                'dc:creator'      => user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')),
+                'link'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>',
+                'guid'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>'
+            ));
+        }
+        $rss->display();
+        exit;
+
     }
     
 }
