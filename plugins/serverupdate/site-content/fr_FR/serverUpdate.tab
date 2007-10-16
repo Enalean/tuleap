@@ -121,5 +121,8 @@ plugin_serverupdate_preferences	norepository	Dépôt SVN non détecté.
 # Widgets
 #
 plugin_serverupdate_widgets	my_serverupdates	Maj de mon serveur
+plugin_serverupdate_widgets	my_serverupdates_revision	Révision
+plugin_serverupdate_widgets	my_serverupdates_message	Message
+plugin_serverupdate_widgets	my_serverupdates_date	Date
 plugin_serverupdate_widgets	my_serverupdates_up_to_date	Votre serveur est à jour.
 plugin_serverupdate_widgets	my_serverupdates_norepository	Dépôt SVN non détecté.
