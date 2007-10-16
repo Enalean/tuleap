@@ -51,15 +51,16 @@ class Layout extends Response {
 		);
 
 	var $bgpri = array();
+    var $feeds;
     
 	// Constuctor
 	function Layout($root) {
 		GLOBAL $bgpri;
         
-        
 		// Constructor for parent class...
 		$this->Response();
         
+        $this->feeds = array();
         $this->javascript_files = array();
         
 		/*
@@ -131,6 +132,10 @@ class Layout extends Response {
     
     function includeJavascriptFile($file) {
         $this->javascript_files[] = $file;
+    }
+    
+    function addFeed($title, $href) {
+        $this->feeds[] = array('title' => $title, 'href' => $href);
     }
     
     function _getFeedback() {
@@ -295,6 +300,11 @@ class Layout extends Response {
                 if (isset($project_feed)) {
                     echo $project_feed;
                 }
+        //Add additionnal feeds
+        $hp =& CodeX_HTMLPurifier::getInstance();
+        foreach($this->feeds as $feed) {
+            echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
+        }
 	}
     
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
