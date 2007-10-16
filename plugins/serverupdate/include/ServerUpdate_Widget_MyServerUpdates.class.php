@@ -39,26 +39,42 @@ class ServerUpdate_Widget_MyServerUpdates extends Widget {
                 $i = 0;
     
                 $html .= '<table style="width:100%">';
+                $html .= '<tr>';
+                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_revision').'</th>';
+                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_message').'</th>';
+                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_date').'</th>';
+                $html .= '</tr>';
                 foreach($commits as $commit) {
                         $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
-                        // Révision
+                        // Revision
                         $html .= '<td align="left">';
-                        $html .= '<a href="plugins/serverupdate/">'.$commit->getRevision().'</a>';
+                        $html .= '<a href="/plugins/serverupdate/">'.$commit->getRevision().'</a>';
                         $html .= '</td>';
                     
+                        $max_nb_car_message = 100;
+                        // Message
+                        $html .= '<td align="left">';
+                        $message = $commit->getMessage();
+                        if (strlen($message) > $max_nb_car_message) {
+                            $message = substr($message, 0, $max_nb_car_message);
+                            $message .= '(...)';
+                        }
+                        $html .= nl2br(htmlentities($message));
+                        $html .= '</td>';
+                        
                         // Date
                         $html .= '<td align="right">';
-                        $html .= util_timestamp_to_userdateformat($commit->getDate(), true);
+                        $html .= util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate()));
                         $html .= '</td>';
                     
                         $html .= '</tr>';
                 }
                 $html .= '</table>';
             } else {
-                $html .= '<a href="plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date').'</a>';
+                $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date').'</a>';
             }
         } else {
-            $html .= '<a href="plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository').'</a>';
+            $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository').'</a>';
         }
         return $html;
     }
