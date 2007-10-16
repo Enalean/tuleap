@@ -51,15 +51,15 @@ class ServerUpdate_Widget_MyServerUpdates extends Widget {
                         $html .= '<a href="/plugins/serverupdate/">'.$commit->getRevision().'</a>';
                         $html .= '</td>';
                     
-                        $max_nb_car_message = 100;
+                        $max_nb_car_message = 75;
                         // Message
                         $html .= '<td align="left">';
-                        $message = $commit->getMessage();
+                        $message = nl2br(htmlentities($commit->getMessage()));
                         if (strlen($message) > $max_nb_car_message) {
                             $message = substr($message, 0, $max_nb_car_message);
-                            $message .= '(...)';
+                            $message .= '<a href="/plugins/serverupdate/" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_readmore').'">(...)</a>';
                         }
-                        $html .= nl2br(htmlentities($message));
+                        $html .= $message;
                         $html .= '</td>';
                         
                         // Date
