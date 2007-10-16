@@ -55,10 +55,10 @@ class ServerUpdate_Widget_MyServerUpdates extends Widget {
                 }
                 $html .= '</table>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date');
+                $html .= '<a href="plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date').'</a>';
             }
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
+            $html .= '<a href="plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository').'</a>';
         }
         return $html;
     }
