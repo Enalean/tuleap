@@ -40,15 +40,16 @@ class Update_001 extends CodeXUpgrade {
 */
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require_once((getenv('SF_LOCAL_INC_PREFIX')?getenv('SF_LOCAL_INC_PREFIX'):'').'/etc/codex/conf/local.inc');
+require_once(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 //database abstraction
-require_once(dirname(__FILE__).'/../../www/include/database.php');
+require_once(dirname(__FILE__).'/../../common/dao/include/DataAccessObject.class.php');
+require_once(dirname(__FILE__).'/../../common/dao/CodexDataAccess.class.php');
 
 define("WEB_ENVIRONMENT", "web");
 define("CONSOLE_ENVIRONMENT", "console");
 
-/*abstract*/ class CodeXUpgrade {
+/*abstract*/ class CodeXUpgrade extends DataAccessObject {
 
     //abstract public function _process();    // signature for the _process function.
 
@@ -65,6 +66,8 @@ define("CONSOLE_ENVIRONMENT", "console");
     function CodeXUpgrade() {
         $this->_upgradeError = null;
         $this->setEnvironment();
+        $da =& CodexDataAccess::instance();
+        parent::DataAccessObject($da);
     }
     
     function getUpgradeErrors() {
@@ -99,18 +102,19 @@ define("CONSOLE_ENVIRONMENT", "console");
      * Set a connection to the database
      */
     function databaseConnect() {
-        db_connect();
+        return true;
     }
     /**
      * Returns if the database connection is set or not
      * @return true if the database connection is set, false otherwise
      */
     function isDatabaseConnected() {
-        $isConnected = false;
+        /*$isConnected = false;
         if (getConnection()) {
             $isConnected = true;
         }
-        return $isConnected;
+        return $isConnected;*/
+        return true;
     }
     
     /**
@@ -121,8 +125,8 @@ define("CONSOLE_ENVIRONMENT", "console");
     function isAlreadyApplied() {
         $upgrade_name = get_class($this);
         $sql = "SELECT * FROM plugin_serverupdate_upgrade WHERE script = '".$upgrade_name."'";
-        $resource = db_query($sql);
-        if (db_numrows($resource) > 0) {
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
         return false;
@@ -136,13 +140,65 @@ define("CONSOLE_ENVIRONMENT", "console");
     function isAlreadyAppliedWithSuccess() {
         $upgrade_name = get_class($this);
         $sql = "SELECT * FROM plugin_serverupdate_upgrade WHERE script = '".$upgrade_name."' AND success = 1";
-        $resource = db_query($sql);
-        if (db_numrows($resource) > 0) {
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
         return false;
     }
     
+    /**
+     * Test if a table exists.
+     *
+     * @return boolean true if given table exists in database.
+     */
+    function tableExists($table) {
+        $sql = sprintf('SHOW TABLES LIKE %s', 
+                       $this->da->quoteSmart($table));
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test if field exists in given table.
+     *
+     * @return boolean true if given field exists in given table.
+     */
+    function fieldExists($table, $field) {
+        $sql = sprintf('SHOW COLUMNS FROM %s LIKE %s', 
+                       $table,
+                       $this->da->quoteSmart($field));
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Test if index exists in given table.
+     *
+     * @return boolean true if given index exists in given table.
+     */
+    function indexNameExists($table, $index) {
+        $sql = sprintf('SHOW INDEX FROM %s',
+                       $table);
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            while($row = $dar->getRow()) {
+                if($row['Key_name'] == $index) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Apply the upgrade
      * This is the generic function :
@@ -164,7 +220,7 @@ define("CONSOLE_ENVIRONMENT", "console");
             // 4) store the upgrade in database
             $store_success = $this->storeUpgrade();
             if (!$store_success) {
-                $this->addUpgradeError("Upgrade store in database failed : ".@mysql_error());
+                $this->addUpgradeError("Upgrade store in database failed : ".$this->da->isError());
             }
         } else {
             // No database connection (impossible to store it in tha database, because no connection)
@@ -180,15 +236,15 @@ define("CONSOLE_ENVIRONMENT", "console");
     function storeUpgrade() {
         $upgrade_stored = false;
         if ($this->isDatabaseconnected()) {
-            $errors = array();
+            /*$errors = array();
             foreach( $this->getUpgradeErrors() as $e) {
-                $errors[] = mysql_real_escape_string($e);
-            }
+                $errors[] = $this->da->quoteSmart($e);
+            }*/
             // Store the upgrade into database
             $sql = "INSERT INTO plugin_serverupdate_upgrade(date, script, execution_mode, success, error) ";
-            $sql .= "VALUES (UNIX_TIMESTAMP(), '".get_class($this)."', '".$this->getEnvironment()."', '".(($this->isUpgradeError())?0:1)."', '".implode( "; ", $errors)."')";
-            $resource = db_query($sql);
-            if (db_affected_rows($resource) == 1) {
+            $sql .= "VALUES (UNIX_TIMESTAMP(), '".get_class($this)."', '".$this->getEnvironment()."', '".(($this->isUpgradeError())?0:1)."', ".$this->da->quoteSmart(implode("; ", $this->getUpgradeErrors())).")";
+            $updated = $this->update($sql);
+            if($updated && $this->da->affectedRows() === 1) {
                 $upgrade_stored = true;
             }
         }

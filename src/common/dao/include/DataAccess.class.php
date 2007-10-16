@@ -51,6 +51,19 @@ class DataAccess {
     }
 
     /**
+     * Return number of rows affected by the last INSERT, UPDATE or DELETE.
+     *
+     * @return int
+     */
+    function affectedRows() {
+        if($this->db) {
+            return mysql_affected_rows($this->db);
+        } else {
+            return mysql_affected_rows();
+        }
+    }
+
+    /**
     * Returns any MySQL errors
     * @return string a MySQL error
     */
