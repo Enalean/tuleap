@@ -189,12 +189,12 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_BASIC:
-            $clean = nl2br(util_make_links(htmlentities($html), $groupId));
+            $clean = nl2br(util_make_links(htmlentities($html, ENT_QUOTES), $groupId));
             break;
 
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
-            $clean = htmlentities($html);
+            $clean = htmlentities($html, ENT_QUOTES);
             break;
         }
         return $clean;
