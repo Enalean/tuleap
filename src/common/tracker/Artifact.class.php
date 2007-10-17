@@ -2394,7 +2394,7 @@ class Artifact extends Error {
 	    // Now display other special fields
         
         // Then output the history of bug comments from newest to oldest
-	    $body .= $this->showFollowUpComments($group_id, true);
+	    $body .= $this->showFollowUpComments($group_id, 0, true);
 	    
 	    // Then output the CC list
 	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
