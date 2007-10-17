@@ -34,7 +34,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * require_once('pre.php');
  * require_once('common/include/CodeX_HTMLPurifier.class.php');
  * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
- * $hp =& CodeX_HTMLPurifier::getInstance();
+ * $hp =& CodeX_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
  */
@@ -61,7 +61,7 @@ class CodeX_HTMLPurifier {
      *
      * @access: static
      */
-    function &getInstance() {
+    function &instance() {
         static $purifier;
         if(!$purifier) {
             $purifier = new CodeX_HtmlPurifier();
@@ -181,7 +181,7 @@ class CodeX_HTMLPurifier {
             $html = nl2br(util_make_links($html, $groupId));
         case CODEX_PURIFIER_STRIP_HTML:
         case CODEX_PURIFIER_FULL:
-            $hp =& HTMLPurifier::getInstance();
+            $hp =& HTMLPurifier::instance();
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);
             // Quite big object, it's better to unset it (memory).

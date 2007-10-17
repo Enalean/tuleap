@@ -28,7 +28,7 @@ if ($project->isFoundry()) {
 	exit;
 }       
 
-$hp =& CodeX_HTMLPurifier::getInstance();
+$hp =& CodeX_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 

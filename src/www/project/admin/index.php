@@ -153,7 +153,7 @@ $HTML->box1_top($Language->getText('project_admin_index','p_edit',group_getname(
 
 $project=new Project($group_id);
 
-$hp =& CodeX_HTMLPurifier::getInstance();
+$hp =& CodeX_HTMLPurifier::instance();
 
 print '&nbsp;
 <BR>

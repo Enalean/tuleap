@@ -301,7 +301,7 @@ class Layout extends Response {
                     echo $project_feed;
                 }
         //Add additionnal feeds
-        $hp =& CodeX_HTMLPurifier::getInstance();
+        $hp =& CodeX_HTMLPurifier::instance();
         foreach($this->feeds as $feed) {
             echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
         }
@@ -626,7 +626,7 @@ echo html_blankimage(5,100);
                 $link=str_replace('$group_id',$group_id,$link);
             }
             $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
-            $hp =& CodeX_HTMLPurifier::getInstance();
+            $hp =& CodeX_HTMLPurifier::instance();
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
                             'label'       => $hp->purify($service_data['label']),
