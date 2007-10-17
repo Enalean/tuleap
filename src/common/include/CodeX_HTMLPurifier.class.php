@@ -181,7 +181,7 @@ class CodeX_HTMLPurifier {
             $html = nl2br(util_make_links($html, $groupId));
         case CODEX_PURIFIER_STRIP_HTML:
         case CODEX_PURIFIER_FULL:
-            $hp =& HTMLPurifier::instance();
+            $hp =& HTMLPurifier::getInstance();
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);
             // Quite big object, it's better to unset it (memory).
