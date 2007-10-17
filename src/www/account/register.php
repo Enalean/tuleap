@@ -85,7 +85,9 @@ function register_valid($confirm_hash)	{
 
 function display_account_form($register_error)	{
     global $HTTP_POST_VARS, $Language;
-
+    
+    $hp =& CodeX_HTMLPurifier::instance();
+    
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
@@ -98,7 +100,7 @@ function display_account_form($register_error)	{
         
 <form action="/account/register.php" method="post">
 <p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php print stripslashes($form_loginname); ?>">
+<input type="text" name="form_loginname" value="<?php print $hp->purify(stripslashes($form_loginname)); ?>">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
 <?php user_display_choose_password(); ?>
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
