@@ -49,7 +49,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $mdContent .= $metaMdHtml->getName($sthCanChange);
         $mdContent .= $metaMdHtml->getDescription($sthCanChange);
         $mdContent .= $metaMdHtml->getType($sthCanChange);
-        $mdContent .= $metaMdHtml->getDefaultValue($sthCanChange);
         $mdContent .= $metaMdHtml->getEmptyAllowed($sthCanChange);
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $mdContent .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
@@ -89,8 +88,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                                                  /*$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_rank'),*/
                                                  $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_status'),
                                                  $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete')));
-            
-            $dfltv = $md->getDefaultValue();
             $vIter =& $md->getListOfValueIterator();
             $vIter->rewind();
             $rowColorIdx = 0;
@@ -118,12 +115,8 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                 if($displayed) {
 
                     $class = ' class="'.html_get_alt_row_color($rowColorIdx++).'"';
-                    if($dfltv == $e->getId()) {
-                        $class .= ' style="font-weight: bold;"';
-                    }
-                    
                     echo '<tr'.$class.'>';
-                    
+
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
                     if($e->getId() > 100) {
@@ -147,11 +140,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                     $trash = '-';
                     if($canDelete) {
                         $link = '?group_id='.$params['group_id'].'&action=admin_delete_love&loveid='.$e->getId().'&md='.$md->getLabel();
-                        
-                        $dfltlabel = Docman_MetaMetadataHtml::getDefaultValueLabel($md);
-                        $warn = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_warn', array($name, $dfltlabel));
+                        $warn = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_warn', array($name));
                         $alt  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_alt', array($name));
-                        $trash = html_trash_link($link, $warn, $alt);                    
+                        $trash = html_trash_link($link, $warn, $alt);
                     }
                     echo '<td>'.$trash.'</td>';
 

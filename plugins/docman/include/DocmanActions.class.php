@@ -52,7 +52,8 @@ class DocmanActions extends Actions {
     }
     
     function &_getEventManager() {
-        return EventManager::instance();
+        $em =& EventManager::instance();
+        return $em;
     }
     
     function expandFolder() {
@@ -108,33 +109,6 @@ class DocmanActions extends Actions {
                                'field'     => 'owner');
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
                                            $logEventParam);
-    }
-
-    function _updateOwnerOnItemCreation($id, $group_id, $owner, &$user) {
-        if($owner != "") {
-            $_owner_id = $this->_checkOwnerChange($owner, $user);
-                                
-            if($_owner_id != $user->getId()) {
-                $_update_row['id']      = $id;
-                $_update_row['user_id'] = $_owner_id;
-
-                $item_factory =& $this->_getItemFactory();
-                $item_factory->update($_update_row);
-
-                $_oldowner = user_getname($user->getId());
-                $_newowner = user_getname($_owner_id);
-                $this->_raiseOwnerChangeEvent($user, $user, $group_id,
-                                              $_oldowner, $_newowner);
-                
-                return $_owner_id;
-            }
-            else {
-                return $user->getId();
-            }
-        }
-        else {
-            return $user->getId();
-        }
     }
 
     /**
@@ -244,38 +218,7 @@ class DocmanActions extends Actions {
     }
 
     function createFolder() {
-        $request =& $this->_controler->request;
-        $item_factory =& $this->_getItemFactory();
-        if ($request->exist('item')) {
-            $item = $request->get('item');
-            $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
-            $user =& $this->_controler->getUser();
-            $item['user_id']  = $user->getId();
-            $item['group_id'] = $request->get('group_id');
-            $id = $item_factory->create($this->sanitizeItemData($item), $request->get('ordering'));
-            
-            if ($id) {
-                $this->_controler->_viewParams['action_result'] = $id;
-                $new_item =& $item_factory->getItemFromDb($id);
-                $parent   =& $item_factory->getItemFromDb($item['parent_id']);
-                if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
-                    $this->permissions(array('id' => $id, 'force' => true));
-                } else {
-                    $pm =& PermissionsManager::instance();
-                    $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
-                }
-                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
-                    'group_id' => $request->get('group_id'),
-                    'parent'   => &$parent,
-                    'item'     => &$new_item,
-                    'user'     => &$user)
-                );
-                
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_folder_created'));
-
-            }
-        }
-        $this->event_manager->processEvent('send_notifications', array());
+        $this->createDocument();
     }
     
     function createDocument() {
@@ -326,6 +269,11 @@ class DocmanActions extends Actions {
                         'item'     => &$new_item,
                         'user'     => &$user)
                     );
+
+                    $info_item_created = 'info_document_created';
+                    if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                        $info_item_created = 'info_folder_created';
+                    }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
                     
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
@@ -342,9 +290,6 @@ class DocmanActions extends Actions {
                             $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
                         }
                     }
-
-                    // Change owner if needed
-                    //$this->_updateOwnerOnItemCreation($id, $item['group_id'], $item['owner'], $user);
                     
                     //Submit News about this document
                     if ($request->exist('news')) {
@@ -363,6 +308,7 @@ class DocmanActions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
+
     function update() {
         $request =& HTTPRequest::instance();
         if ($request->exist('item')) {
@@ -459,11 +405,37 @@ class DocmanActions extends Actions {
 
             // Update real metatata
             if($request->exist('metadata')) {
+                $groupId = (int) $request->get('group_id');
                 $metadata_array = $request->get('metadata');
-                $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
+                $mdvFactory = new Docman_MetadataValueFactory($groupId);
                 $mdvFactory->updateFromRow($data['id'], $metadata_array);
                 if($mdvFactory->isError()) {
                     $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
+                } else {
+                    // Recursive update of properties
+                    if($request->exist('recurse')) {
+                        $recurseArray = $request->get('recurse');
+
+                        // Check if all are actually inheritable
+                        $metadataFactory = new Docman_MetadataFactory($groupId);
+                        $inheritableMdLabelArray = $metadataFactory->getInheritableMdLabelArray();
+                        if(count(array_diff($recurseArray, $inheritableMdLabelArray)) == 0) {
+                            $dPm =& Docman_PermissionsManager::instance($groupId);
+                            if($dPm->currentUserCanWriteSubItems($data['id'])) {
+                                $subItemsWritableVisitor =& $dPm->getSubItemsWritableVisitor();
+                                if($this->_controler->_actionParams['recurseOnDocs']) {
+                                    $itemIdArray = $subItemsWritableVisitor->getItemIdList();
+                                } else {
+                                    $itemIdArray = $subItemsWritableVisitor->getFolderIdList();
+                                }
+                                // Remove the first element (parent item) to keep
+                                // only the children.
+                                array_shift($itemIdArray);
+                                $recurseArray = $request->get('recurse');
+                                $mdvFactory->massUpdateFromRow($data['id'], $recurseArray, $itemIdArray);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -736,25 +708,35 @@ class DocmanActions extends Actions {
             }
         }
     }
-    
+
     function delete() {
         $user =& $this->_controler->getUser();
         $request =& $this->_controler->request;
-        
-        $item_factory = new Docman_ItemFactory();
-        $item =& $item_factory->getItemFromDb($request->get('id'));
-        $item_factory->setGroupId($item->getGroupId());
-        if ($item) {
-            if (!$item_factory->isRoot($item)) {
-                $item =& $item_factory->getItemSubTree($request->get('id'), array('user' => &$user));
+
+        $_sGroupId = (int) $request->get('group_id');
+        $_sId      = (int) $request->get('id');
+
+        $itemFactory = new Docman_ItemFactory($_sGroupId);
+        $parentItem = $itemFactory->getItemFromDb($_sId);
+
+        // Cannot delete root.
+        if($parentItem && !$itemFactory->isRoot($parentItem)) {
+            // Cannot delete one folder if at least on of the document inside
+            // cannot be deleted
+            $dPm =& Docman_PermissionsManager::instance($_sGroupId);
+            $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
+            if($subItemsWritable) {
+                $item = $itemFactory->getItemSubTree($parentItem->getId(),
+                                                     array('user'            => &$user,
+                                                           'ignore_collapse' => true));
                 if ($item) {
                     $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user' => &$user, 'parent' => $item_factory->getItemFromDb($item->getParentId())))) {
+                    if ($item->accept($deletor, array('user' => &$user))) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                     }
                 }
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
@@ -850,13 +832,6 @@ class DocmanActions extends Actions {
                         $md->setUseIt(PLUGIN_DOCMAN_METADATA_UNUSED);
                     }
                 }
-
-                // Default value
-                if($md->canChangeDefaultValue()) {
-                    $_dflt_value = $request->get('dflt_value');
-                    Docman_MetadataValueFactory::validateInput($md, $_dflt_value);
-                    $md->setDefaultValue($_dflt_value);
-                }                
 
                 $updated = $mdFactory->update($md);
                 if($updated) {
@@ -972,53 +947,24 @@ class DocmanActions extends Actions {
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md =& $mdFactory->getFromLabel($_mdLabel);
 
-        if($md !== null 
-           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
+        if($md !== null
+           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
            && $md->getLabel() != 'status') {
 
             $love = new Docman_MetadataListOfValuesElement($md->getId());
             $love->setId($_loveId);
 
-            $updated = true;
-            if($_loveId == $md->getDefaultValue()) {
-                // We are about to delete the default value
-                // so reset to none (value == 100)
-                $md->setDefaultValue(100);
-
-                $updated = $mdFactory->update($md);
-                if($updated) {
-                    $this->_controler->feedback->log('info', 'Property default value reset to None.');
-                }
-                else {
-                    $this->_controler->feedback->log('error', 'Cannot reset property default value to none.');
-                }
-            }
-            
-            if($updated) {
-                // Delete value
-                $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-                $deleted = $loveFactory->delete($love);
-
-                if($deleted) {
-                    $this->_controler->feedback->log('info', 'Element successfully deleted.');
-
-                    // Update values to current default                
-                    $mdvFactory = new Docman_MetadataValueFactory($_gid);
-                    $reset = $mdvFactory->updateToMetadataDefaultValue($_loveId, $md);
-
-                    if($reset) {
-                        $this->_controler->feedback->log('info', 'Documents labeled with the deleted element was successfuly updated.');
-                    }
-                    else {
-                        $this->_controler->feedback->log('warning', 'The element was deleted but an error occured on documents update. Some documents may still be labeled with the deleted value.');
-                    }
-                }
-                else {
-                    $this->_controler->feedback->log('error', 'An error occured on element deletion.');
-                }
+            // Delete value
+            $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
+            $deleted = $loveFactory->delete($love);
+            if($deleted) {
+                $this->_controler->feedback->log('info', 'Element successfully deleted.');
+                $this->_controler->feedback->log('info', 'Documents labeled with the deleted element were reset to the "None" value.');
+            } else {
+                $this->_controler->feedback->log('error', 'An error occured on element deletion.');
             }
         }
-        else {            
+        else {
             // Sth really strange is happening... user try to delete a value
             // that do not belong to a metadata with a List type !?
             // If this happen, shutdown the server, format the hard drive and

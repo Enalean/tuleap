@@ -295,6 +295,7 @@ class DocmanController extends Controler {
 
             $i = $this->request->get('item');
             $new_item = $item_factory->getItemFromRow($i);
+            $new_item->setGroupId($this->_viewParams['group_id']);
             // Build metadata list (from db) ...
             $mdFactory->appendItemMetadataList($new_item);
             // ... and set the value (from user input)
@@ -741,7 +742,7 @@ class DocmanController extends Controler {
         case 'newGlobalDocument':
             if ($dpm->oneFolderIsWritable($user)) {
                 $this->_viewParams['hierarchy'] =& $this->getItemHierarchy($root);
-                $this->view = 'NewDocument';
+                $this->view = 'New_FolderSelection';
             } else {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
                 $this->view = $item->accept($get_show_view, $this->request->get('report'));
@@ -749,12 +750,20 @@ class DocmanController extends Controler {
             break;
         case 'newDocument':
         case 'newFolder':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
-                $this->view = 'Details';
+            if ($this->request->exist('cancel')) {
+                $this->_set_redirectView();
             } else {
-                $this->_viewParams['hierarchy'] =& $this->getItemHierarchy($root);
-                $this->view = ucfirst($view);
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
+                    $this->view = 'Details';
+                } else {
+                    //$this->_viewParams['hierarchy'] =& $this->getItemHierarchy($root);
+                    $this->_viewParams['ordering'] = $this->request->get('ordering');
+                    if($this->request->get('item_type') == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                        $view = 'newFolder';
+                    }
+                    $this->view = ucfirst($view);
+                }
             }
             break;
         case 'monitor':
@@ -1100,6 +1109,7 @@ class DocmanController extends Controler {
                             $this->_viewParams['force_ordering']      = $this->request->get('ordering');
                             $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
                             $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
+                            $this->_viewParams['hierarchy']           =& $this->getItemHierarchy($root);
                             $this->_set_createItemView_afterCreate($view);
                         }
                     }
@@ -1107,25 +1117,47 @@ class DocmanController extends Controler {
             }
             break;
         case 'update':
+            $this->_viewParams['recurseOnDocs'] = false;
+            $this->_actionParams['recurseOnDocs'] = false;
+            if($this->request->get('recurse_on_doc') == 1) {
+                $this->_viewParams['recurseOnDocs'] = true;
+                $this->_actionParams['recurseOnDocs'] = true;
+            }
         case 'update_wl':
         case 'new_version':
             if (!$this->userCanWrite($item->getId())) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                 $this->view = 'Details';
             } else {
+                // For properties update ('update' action), we need to confirm
+                // the recursive application of metadata update.
+                if($view == 'update' &&
+                   $this->request->exist('recurse') &&
+                   !$this->request->exist('cancel')) {
+                    $this->_viewParams['recurse'] = $this->request->get('recurse');
+                    if(!$this->request->exist('validate_recurse')) {
+                        $recursionConfirmed = false;
+                    } elseif($this->request->get('validate_recurse') != 'true') {
+                        $recursionConfirmed = false;
+                    } else {
+                        $recursionConfirmed = true;
+                    }
+                } else {
+                    $recursionConfirmed = true;
+                }
+
                 $valid = true;
                 if ($this->request->exist('confirm')) {
                     //Validations
                     if ($view == 'update') {
                         $this->updateMetadataFromUserInput($item);
-    
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                     } else {
                         $this->updateItemFromUserInput($item);
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)));
                     }
                     //Actions
-                    if ($valid) {
+                    if ($valid && $recursionConfirmed) {
                         if ($view == 'update_wl') {
                             $this->action = 'update';
                         } else {
@@ -1134,7 +1166,7 @@ class DocmanController extends Controler {
                     }
                 }
                 //Views
-                if ($valid) {
+                if ($valid && $recursionConfirmed) {
                     if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
                         $this->_viewParams['redirect_to'] = $redirect_to;
                     }
@@ -1147,6 +1179,7 @@ class DocmanController extends Controler {
                     } else {
                         $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                         $mdFactory->appendAllListOfValuesToItem($item);
+                        $this->_viewParams['recursionConfirmed'] = $recursionConfirmed;
                         $this->view = 'Edit';
                     }
                 }

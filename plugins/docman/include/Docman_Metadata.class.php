@@ -57,8 +57,10 @@ class Docman_Metadata {
     var $isMultipleValuesAllowed;
     var $keepHistory;
     var $special;
-    var $defaultValue;
     var $useIt;
+
+    var $value;
+    var $defaultValue;
 
     function Docman_Metadata() {
         $this->id = null;
@@ -72,10 +74,10 @@ class Docman_Metadata {
         $this->isMultipleValuesAllowed = null;
         $this->keepHistory = null;
         $this->special = null;
-        $this->defaultValue = null;
         $this->useIt = null;
 
         $this->value = null;
+        $this->defaultValue = null;
     }
 
     //{{{ Accessors
@@ -162,15 +164,15 @@ class Docman_Metadata {
     function getDefaultValue() {
         return $this->defaultValue;
     }
-   
+
     function setUseIt($v) {
         $this->useIt = $v;
     }
     function getUseIt() {
         return $this->useIt;
-    }    
+    }
     ///}}} Accessors
- 
+
     //{{{ Convenient accessors
     function isEmptyAllowed() {
         if($this->isEmptyAllowed == PLUGIN_DOCMAN_DB_TRUE) {
@@ -258,14 +260,6 @@ class Docman_Metadata {
         return $this->canChangeIsMultipleValuesAllowed;
     }
 
-    var $canChangeDefaultValue;
-    function setCanChangeDefaultValue($v) {
-        $this->canChangeDefaultValue = $v;
-    }
-    function canChangeDefaultValue() {
-        return $this->canChangeDefaultValue;
-    }
-
     var $canChangeValue;
     function setCanChangeValue($v) {
         $this->canChangeValue = $v;
@@ -295,7 +289,6 @@ class Docman_Metadata {
         if(isset($row['empty_ok'])) $this->isEmptyAllowed = $row['empty_ok'];
         if(isset($row['mul_val_ok'])) $this->isMultipleValuesAllowed = $row['mul_val_ok'];
         if(isset($row['special'])) $this->special = $row['special'];
-        if(isset($row['default_value'])) $this->defaultValue = $row['default_value'];
         if(isset($row['use_it'])) $this->useIt = $row['use_it'];
 
         $this->setCanChangeValue(true);
@@ -313,12 +306,11 @@ class Docman_Metadata {
      * Check if 2 metadata are the same.
      * This check neither the 'label' nor the 'group_id'
      */
-    function equals($md, $loveMap=array()) {
+    function equals($md) {
         return ($this->equivalent($md) &&
                 $this->sameDescription($md) &&
                 $this->sameIsEmptyAllowed($md) &&
                 $this->sameIsMultipleValuesAllowed($md) &&
-                $this->sameDefaultValue($md, $loveMap) &&
                 $this->sameUseIt($md));
     }
 
@@ -339,26 +331,9 @@ class Docman_Metadata {
     }
 
     /**
-     * loveMap contains the mapping of love values with $md (parameter) indexes.
-     */
-    function sameDefaultValue($md, $loveMap) {
-        $defaultValueEquals = false;
-        if($this->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            if(isset($loveMap[$md->getDefaultValue()])) {
-                if($loveMap[$md->getDefaultValue()] == $this->getDefaultValue()) {
-                    $defaultValueEquals = true;
-                }
-            }
-        } else {
-            $defaultValueEquals = ($md->getDefaultValue() == $this->getDefaultValue());
-        }
-        return $defaultValueEquals;
-    }
-
-    /**
      * Update current metadata based on the one passed in param
      */
-    function update($md, $loveMap=array()) {
+    function update($md) {
         $this->setName($md->getName());
         $this->setType($md->getType());
         $this->setDescription($md->getDescription());
@@ -367,17 +342,6 @@ class Docman_Metadata {
         $this->setIsMultipleValuesAllowed($md->getIsMultipleValuesAllowed());
         $this->setKeepHistory($md->getKeepHistory());
         $this->setSpecial($md->getSpecial());
-        if($this->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            // Adapt the default value to the current context
-            // otherwise set to default
-            if(isset($loveMap[$md->getDefaultValue()])) {
-                $this->setDefaultValue($loveMap[$md->getDefaultValue()]);
-            } else {
-                $this->setDefaultValue(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
-            }
-        } else {
-            $this->setDefaultValue($md->getDefaultValue());
-        }
         $this->setUseIt($md->getUseIt());
     }
 }
@@ -396,6 +360,11 @@ class Docman_Metadata {
 class Docman_ListMetadata extends Docman_Metadata {
     var $listOfValue;
 
+    function Docman_ListMetadata() {
+        parent::Docman_Metadata();
+        $this->defaultValue = array();
+    }
+
     /**
      * @param array of Docman_MetadataListOfValuesElements
      */
@@ -409,6 +378,21 @@ class Docman_ListMetadata extends Docman_Metadata {
     function &getListOfValueIterator() {
         $i = new ArrayIterator($this->listOfValue);
         return $i;
+    }
+
+    function setDefaultValue($v) {
+        if(is_a($v, 'Iterator')) {
+            $v->rewind();
+            //if(is_a($love, 'Docman_MetadataListOfValuesElement')) {
+            while($v->valid()) {
+                $love = $v->current();
+                $this->defaultValue[] = $love->getId();
+                $v->next();
+            }
+        } else {
+            $this->defaultValue[] = $v;
+        }
+
     }
 }
 

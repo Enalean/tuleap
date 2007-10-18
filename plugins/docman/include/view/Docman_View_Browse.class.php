@@ -30,13 +30,17 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
     }
 
     /* protected */ function _mode($params) {
-
+        $html = '';
         // No mode selector in printer version
         if(isset($params['pv']) && $params['pv'] > 0) {
+            // Close table opened in method 'breadCrumbs' in 'Display' class.
+            $html .= '</tr>';
+            $html .= '</table>';
+            echo $html;
             return;
         }
 
-        $html = '<td align="right">';
+        $html .= '<td align="right">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()" style="font-family:monospace;">';
         $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .'</option>';

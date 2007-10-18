@@ -115,7 +115,6 @@ class Docman_MetadataFactory {
             $md->setCanChangeIsEmptyAllowed(true);
             $md->setCanChangeIsMultipleValuesAllowed(true);
             $md->setCanChangeDescription(true);
-            $md->setCanChangeDefaultValue(true);
         }
 
         return $md;
@@ -163,11 +162,10 @@ class Docman_MetadataFactory {
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
-    /*private*/ function &_buildHardCodedMetadataList(&$mdLabelArray, $onlyUsed = false) {
+    function &getHardCodedMetadataList($onlyUsed = false) {
         $mda = array();
-        foreach($mdLabelArray as $mdLabel) {
+        foreach($this->hardCodedMetadata as $mdLabel) {
             $md =& $this->getHardCodedMetadataFromLabel($mdLabel);
-            
             if(in_array($md->getLabel(), $this->modifiableMetadata)) {
                 $this->appendHardCodedMetadataParams($md);
             }
@@ -176,43 +174,47 @@ class Docman_MetadataFactory {
                 if($md->isUsed()) {
                     $mda[] =& $md;
                 }
-            }
-            else {            
+            } else {            
                 $mda[] =& $md;
             }
         }
         return $mda;
     }
-    
+
     /**
-     * Return an array of HardCoded metadata
+     * Get an array of metadata label for all inheritable metadata.
      *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
+     * - All Real metadata are inheritable.
+     * - Only 'Status' static metadata is inheritable.
      */
-    function &getHardCodedMetadataListForDocuments($onlyUsed = false) {
-        $mda =& $this->_buildHardCodedMetadataList($this->hardCodedMetadata, $onlyUsed);
-        return $mda;
+    function getInheritableMdLabelArray() {
+        $mdla = array();
+
+        // Status
+        $md = $this->getHardCodedMetadataFromLabel('status');
+        $this->appendHardCodedMetadataParams($md);
+        if($md->isUsed()) {
+            $mdla['status'] = 'status';
+        }
+
+        // Real metadata
+        $dao =& $this->getDao();
+        $dar = $dao->searchByGroupId($this->groupId, true, array());
+        while($dar->valid()) {
+            $row = $dar->current();
+            $mdla[$row['label']] = $row['label'];
+            $dar->next();
+        }
+        return $mdla;
     }
 
-    function getHardCodedMetadataListForFolders($onlyUsed = false) {
-        $mdOnSubmit = array('title', 'description',// 'owner'
-                            'create_date', 'update_date');
-        $mda =& $this->_buildHardCodedMetadataList($mdOnSubmit, $onlyUsed);
-        return $mda;
-    }
-
-    function getMetadataLabelToSkipCreation() {
-        $labels = array('owner', 'create_date', 'update_date');
-        return $labels;
-    }
-   
     /**
      * Return all metadata for current project.
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
     function &getMetadataForGroup($onlyUsed = false) {        
-        $mda = array_merge($this->getHardCodedMetadataListForDocuments($onlyUsed),
+        $mda = array_merge($this->getHardCodedMetadataList($onlyUsed),
                            $this->getRealMetadataList($onlyUsed));
         
         $i = new ArrayIterator($mda);
@@ -264,32 +266,63 @@ class Docman_MetadataFactory {
      */
     function appendItemMetadataList(&$item) {
         $mda = array();
-        if(Docman_ItemFactory::getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            $isFolder = true;
-            $mda = $this->getHardCodedMetadataListForFolders(true);
-        }
-        else {
-            $isFolder = false;
-            $mda =& $this->getHardCodedMetadataListForDocuments(true);
-        }
 
+        // Static metadata
+        $mda = $this->getHardCodedMetadataList(true);
         foreach($mda as $md) {
             $md->setValue($item->getHardCodedMetadataValue($md->getLabel()));
             $item->addMetadata($md);
             unset($md);
         }
         
-        if(!$isFolder) {
-            $mdIter =& $this->getRealMetadataIterator(true);
-            $mdIter->rewind();
-            while($mdIter->valid()) {
-                $md = $mdIter->current();
-                $this->addMetadataValueToItem($item, $md);
-                $mdIter->next();
-            }
-        }        
+        // Dynamic metadata
+        $mdIter =& $this->getRealMetadataIterator(true);
+        $mdIter->rewind();
+        while($mdIter->valid()) {
+            $md = $mdIter->current();
+            $this->addMetadataValueToItem($item, $md);
+            $mdIter->next();
+        }
     }
 
+    /**
+     * Applies metadata values of item1 to item2.
+     *
+     * @param $item1 Docman_Item Reference item.
+     * @param $item2 Docman_Item Item to modify.
+     * @param $mdLabelArray Array List of metadata labels to copy.
+     */
+    function appliesItem1MetadataToItem2($item1, &$item2, $mdLabelArray) {
+        $i1Iter =& $item1->getMetadataIterator();
+        $i1Iter->rewind();
+        while($i1Iter->valid()) {
+            $srcMd = $i1Iter->current();
+
+            if(isset($mdLabelArray[$srcMd->getLabel()])) {
+                $dstMd = $item2->getMetadataFromLabel($srcMd->getLabel());
+                $dstMd->setDefaultValue($srcMd->getValue());
+                $item2->addMetadata($dstMd);
+                unset($dstMd);
+            }
+
+            $i1Iter->next();
+        }
+    }
+
+    /**
+     * For a given Item, add the default metadata values.
+     */
+    function appendDefaultValuesToItem(&$item) {
+        // Get parent
+        $itemFactory = new Docman_ItemFactory();
+        $parentItem = $itemFactory->getItemFromDb($item->getParentId());
+        $this->appendItemMetadataList($parentItem);
+
+        // Get inheritables metadata
+        $inheritableMdla = $this->getInheritableMdLabelArray();
+
+        $this->appliesItem1MetadataToItem2($parentItem, $item, $inheritableMdla);
+    }
 
     /**
      * Return the metadata value for a given metadata and item.
@@ -403,8 +436,7 @@ class Docman_MetadataFactory {
                                 $md->getDescription(),
                                 $md->getIsEmptyAllowed(),
                                 $md->getIsMultipleValuesAllowed(),
-                                $md->getUseIt(),
-                                $md->getDefaultValue());
+                                $md->getUseIt());
     }
 
     // Today only usage configuration supported
@@ -430,14 +462,6 @@ class Docman_MetadataFactory {
     function create(&$md) {
         $md->setGroupId($this->groupId);
 
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $dfltValue = $md->getDefaultValue();
-            if(!is_numeric($dfltValue) || $dfltValue < 100) {
-                $md->setDefaultValue(100);
-            }
-            // @todo: check that default value is in the value list.
-        }
-
         $dao =& $this->getDao();
         $mdId = $dao->create($this->groupId, 
                              $md->getName(),
@@ -447,7 +471,6 @@ class Docman_MetadataFactory {
                              $md->getIsEmptyAllowed(),
                              $md->getIsMultipleValuesAllowed(),
                              $md->getSpecial(),
-                             $md->getDefaultValue(),
                              $md->getUseIt());
 
         if($mdId !== false) {
@@ -463,24 +486,11 @@ class Docman_MetadataFactory {
             if($mdId !== false) {
                 // Update existing items, and give them the default
                 // value of the metadata.
-                // *WARNING*: Only lists are fully implemented (be carful of
-                // default value for other fields).
+                // We only need to do that with list of value element for
+                // beeing able to easily manipulate 'None' value (esp. for
+                // reports).
                 $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
-                
-                $itemFactory = new Docman_ItemFactory($this->groupId);
-                $itemIter =& $itemFactory->getDocumentsIterator(); 
-
-                while($itemIter->valid()) {
-                    $item =& $itemIter->current();
-
-                    $mdv =& $mdvFactory->newMetadataValue($item->getId(), $mdId, $md->getType(), $md->getDefaultValue());
-                    $inserted = $mdvFactory->create($mdv);
-                    //@todo: we should catch an error here. But actually, the
-                    //best thing to do is to rollback the transaction and since
-                    //we do not use tables that support transactions...
-
-                    $itemIter->next();
-                }
+                $mdvFactory->updateOrphansLoveItem($mdId);
             }
         }
 
@@ -648,13 +658,6 @@ class Docman_MetadataFactory {
                 if($love->getId() != 100) {
                     $newLoveId = $newLoveFactory->create($love);
                     $metadataMapping['love'][$love->getId()] = $newLoveId;
-                    
-                    // If we found the loveId that is the default value in
-                    // template: we have to update the metadata field.
-                    if($md->getDefaultValue() == $love->getId()) {
-                        $newMd->setDefaultValue($newLoveId);
-                        $this->update($newMd);
-                    }
                 }
                 
                 $loveIter->next();
@@ -739,7 +742,6 @@ class Docman_MetadataFactory {
             $md->setCanChangeIsEmptyAllowed(true);
             $md->setCanChangeIsMultipleValuesAllowed(true);
             $md->setCanChangeDescription(true);
-            $md->setCanChangeDefaultValue(true);
 
             $mda[] = $md;
 
@@ -751,13 +753,12 @@ class Docman_MetadataFactory {
         $mda = array();
 
         // Hardcoded
-        $hcmda = $this->_buildHardCodedMetadataList($this->hardCodedMetadata, true);
+        $hcmda = $this->getHardCodedMetadataList(true);
         foreach($hcmda as $md) {
             if($md->getName() == $name) {
                 $mda[] = $md;
             }
         }
-
         // Real
         $this->_findRealMetadataByName($name, $mda);
         $ai = new ArrayIterator($mda);
@@ -811,7 +812,7 @@ class Docman_MetadataFactory {
             // Get corresponding metadata in current project (if any)
             if(isset($mdMap['md'][$srcMd->getId()])) {
                 $dstMd = $srcMdFactory->getFromLabel($srcMdFactory->getLabelFromId($mdMap['md'][$srcMd->getId()]));
-                $dstMd->update($srcMd, $mdMap['love']);
+                $dstMd->update($srcMd);
                 $this->updateRealMetadata($dstMd);
                 //print "Update MD: ".$srcMd->getName()."<br>";
                 if($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {

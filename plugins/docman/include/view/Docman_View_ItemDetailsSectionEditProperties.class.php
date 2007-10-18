@@ -23,40 +23,161 @@
  * 
  */
 require_once('Docman_View_ItemDetailsSectionProperties.class.php');
+require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
-    
     var $token;
-    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token) {
+    var $subItemsWritable;
+    var $recursionConfirmed;
+    var $recurse;
+    var $recurseOnDocs;
+
+    var $nbDocsImpacted;
+    var $nbFoldersImpacted;
+
+    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token, $recursionConfirmed, $recurse, $recurseOnDocs) {
         parent::Docman_View_ItemDetailsSectionProperties($item, $url, $theme_path, true, $force);
         $this->token = $token;
+        $this->formName = 'update_metadata';
+        $this->subItemsWritable = null;
+        $this->recursionConfirmed = $recursionConfirmed;
+        $this->recurse = $recurse;
+        $this->recurseOnDocs = $recurseOnDocs;
+
+        $this->nbDocsImpacted = null;
+        $this->nbFoldersImpacted = null;
     }
+
+    function _getDirectLinkField() {
+        return '';
+    }
+
     function getContent() {
-        $params = array('form_name' => 'update_metadata');
-        $html  = '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
+        $html = '';
+        $params = array('form_name' => $this->formName);
+        $html  .= '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
+        if(!$this->recursionConfirmed && $this->_subItemsAreWritable()) {
+            $html .= '<div class="docman_confirm_delete">';
+            $nbDocs = 0;
+            if($this->recurseOnDocs) {
+                $nbDocs = $this->nbDocsImpacted;
+            }
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_update_recursion_warning', array($nbDocs, $this->nbFoldersImpacted));
+            $html .= '</div>';
+        }
         $html .= parent::getContent($params);
         $html .= '</form>';
         return $html;
     }
+
     function _showField($field) {
         return $field->getField();
     }
+
+    function _getFieldLabel(&$field) {
+        return $field->getLabel(true);
+    }
+
+    function _subItemsAreWritable() {
+        if($this->subItemsWritable === null) {
+            $dPm =& Docman_PermissionsManager::instance($this->item->getGroupId());
+            $this->subItemsWritable = $dPm->currentUserCanWriteSubItems($this->item->getId());
+
+            // Cache some info.
+            $subItemsWritableVisitor =& $dPm->getSubItemsWritableVisitor();
+            $this->nbDocsImpacted = $subItemsWritableVisitor->getDocumentCounter();
+            $this->nbFoldersImpacted = $subItemsWritableVisitor->getFolderCounter();
+        }
+        return $this->subItemsWritable;
+    }
+
+    function _getDefaultValuePropertyField($field) {
+        $html = '';
+
+        $html .= '<tr style="vertical-align:top;">';
+        $checked = '';
+        if($this->_subItemsAreWritable()) {
+            if(in_array($field->md->getLabel(), $this->recurse)) {
+                $checked = ' checked="checked"';
+            }
+            $html .= '<td style="text-align: center;"><input type="checkbox" name="recurse[]" value="'.$field->md->getLabel().'"'.$checked.' /></td>';
+        }
+        $html .= '<td class="label">';
+        $fieldHtml = $this->_getFieldLabel($field);
+        if($checked != '') {
+            $html .= '<strong>'.$fieldHtml.'</strong>';
+        } else {
+            $html .= $fieldHtml;
+        }
+        $html .= '</td>';
+        $html .= '<td class="value">'.$this->_showField($field).'</td>';
+        $html .= '</tr>';
+        return $html;
+    }
+
+    function _getDefaultValuesTableHeader() {
+       $html = '';
+       if($this->_subItemsAreWritable()) {
+           $html .= '<tr>';
+           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_rec').'</th>';
+           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_md').'</td>';
+           $html .= '<th>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_val').'</th>';
+           $html .= '</tr>';
+       }
+       return $html;
+    }
+
+    function _getDefaultValues() {
+        $html = '';
+        if($this->_subItemsAreWritable()) {
+            if(!$this->recursionConfirmed) {
+                $html .= '<input type="hidden" name="validate_recurse" value="true" />';
+            }
+        }
+
+        // Table
+        $html .= parent::_getDefaultValues();
+
+        // Apply on Folder/Doc selection
+        $docChecked = '';
+        $fldChecked = ' selected="selected"';
+        if($this->recurseOnDocs) {
+            $docChecked = ' selected="selected"';
+            $fldChecked = '';
+        }
+        $html .= '<hr />';
+        $html .= '<p><strong>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_title').'</strong></p>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_docs_desc').'</p>';
+        $html .= '<p>';
+        $html .= '<select name="recurse_on_doc">';
+        $html .= '<option value="0"'.$fldChecked.'>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_fold').'</option>';
+        $html .= '<option value="1"'.$docChecked.'>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_docs').'</option>';
+        $html .= '</select>';
+        $html .= '</p>';
+
+        return $html;
+    }
+
     function _getAdditionalRows() {
-        $html  = '<tr><td>';
+        $html  = '<p>';
         if ($this->token) {
             $html .= '<input type="hidden" name="token" value="'. $this->token .'" />';
         }
         $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="update" />';
-        $html .= '</td><td>';
-        $html .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" />';
+
+        if($this->recursionConfirmed){
+            $confirmStr = $GLOBALS['Language']->getText('global','btn_submit');
+        } else {
+            $confirmStr = $GLOBALS['Language']->getText('global','btn_apply');
+        }
+        $html .= '<input type="submit" name="confirm" value="'. $confirmStr .'" />';
+        $html .= ' ';
         $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" />';
-        $html .= '</td></tr>';
+        $html .= '</p>';
         return $html;
     }
-    
-    function _getFieldLabel(&$field) {
-        return $field->getLabel(true);
-    }
+
+
 }
 ?>

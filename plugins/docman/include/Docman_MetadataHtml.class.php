@@ -60,6 +60,24 @@ class Docman_MetadataHtmlFactory {
 
         return $mdh;
     }
+
+    function buildFieldArray($mdIter, $mdla, $whitelist, $formName, $themePath) {
+        $fields = array();
+        $formParams = array('form_name' => $formName,
+                            'theme_path' => $themePath);
+
+        $mdIter->rewind();
+        while($mdIter->valid()) {
+            $md =& $mdIter->current();
+            if(($whitelist && isset($mdla[$md->getLabel()]))
+               || (!$whitelist && !isset($mdla[$md->getLabel()]))) {
+                $fields[$md->getLabel()] = $this->getFromMetadata($md, $formParams);
+            }
+            $mdIter->next();
+        }
+        return $fields;
+    }
+
 }
 
 class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
@@ -349,7 +367,12 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
 
         // If no values selected, select the default value
         if(count($selectedElements) == 0) {
-            $selectedElements[] = $this->md->getDefaultValue();
+            $dfltValue = $this->md->getDefaultValue();
+            if(is_array($dfltValue)) {
+                $selectedElements = $dfltValue;
+            } else {
+                $selectedElements[] = $dfltValue;
+            }
         }
 
         $name     = $this->_getFieldName();
@@ -472,6 +495,21 @@ class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
     function _getHtmlValue() {
         return $this->getValue();
     }
+
+    function _getField() {
+        $name  = $this->_getFieldName();
+        $value = $this->md->getValue();
+        if($value === null) {
+            $value = $this->md->getDefaultValue();
+        }
+        $v = '';
+        if($value != null && $value != '' && $value > 0) {
+            $v = user_getname($value);
+        }
+        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$v.'" />';
+        return $field;
+    }
+
 }
 
 ?>

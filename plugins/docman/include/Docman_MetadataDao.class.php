@@ -68,14 +68,13 @@ class Docman_MetadataDao extends DataAccessObject {
 
     // Very limited implementation of update
     // right now, only 'use_it' field is concerned by update
-    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt, $defaultValue) {
+    function updateById($id, $name, $description, $emptyAllowed, $mulValuesAllowed, $useIt) {
         $row = array('field_id' => $id,
                      'name' => $name,
                      'description' => $description,
                      'empty_ok' => $emptyAllowed,
                      'mul_val_ok' => $mulValuesAllowed,
-                     'use_it' => $useIt,
-                     'default_value' => $defaultValue);
+                     'use_it' => $useIt);
         return $this->updateFromRow($row);
     }
 
@@ -108,15 +107,15 @@ class Docman_MetadataDao extends DataAccessObject {
     }
 
     function create($groupId, $name, $type, $description, $isRequired,
-                    $isEmptyAllowed, $mulValuesAllowed, $special, $defaultValue, $useIt) {
+                    $isEmptyAllowed, $mulValuesAllowed, $special, $useIt) {
         $sql = sprintf('INSERT INTO plugin_docman_metadata('.
                        'group_id, name, data_type, description,'.
                        'required, empty_ok, mul_val_ok, special,'.
-                       'default_value, use_it'.
+                       'use_it'.
                        ') VALUES ('.
-                       '%d, %s, %d, %s,'.                       
+                       '%d, %s, %d, %s,'.
                        '%d, %d, %d, %d,'.
-                       '%s, %d'.
+                       '%d'.
                        ')',
                        $groupId,
                        $this->da->quoteSmart($name),
@@ -126,7 +125,6 @@ class Docman_MetadataDao extends DataAccessObject {
                        $isEmptyAllowed,
                        $mulValuesAllowed,
                        $special,
-                       $this->da->quoteSmart($defaultValue),
                        $useIt);
 
         $mdId = $this->_createAndReturnId($sql);
@@ -140,7 +138,7 @@ class Docman_MetadataDao extends DataAccessObject {
             }
             else {
                 return $mdId;
-            }            
+            }
         }
         else {
             return false;

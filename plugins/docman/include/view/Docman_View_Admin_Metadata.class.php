@@ -92,7 +92,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
                                         array('action' => 'admin_delete_metadata',
                                               'md' => $md->getLabel()));
                 
-                $dfltlabel = '';//Docman_MetaMetadataHtml::getDefaultValueLabel($md);
+                $dfltlabel = '';//
                 $warn = '';//$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_warn', array($name, $dfltlabel));
                 $alt  = '';//$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_alt', array($name));
                 $trash = html_trash_link($link, $warn, $alt);                    
@@ -126,7 +126,6 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $md->setCanChangeDescription(true);
         $md->setCanChangeIsEmptyAllowed(true);
         $md->setIsEmptyAllowed(true);
-        $md->setCanChangeDefaultValue(true);
 
         $sthCanChange = '';
         $metaMdHtml = new Docman_MetaMetadataHtml($md);        

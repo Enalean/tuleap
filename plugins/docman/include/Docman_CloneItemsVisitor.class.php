@@ -204,13 +204,10 @@ class Docman_CloneItemsVisitor {
                             
                             $oldValue->next();
                         }
-                        // No match found: set default value.
+                        // No match found: set None value.
                         if(count($ea) == 0) {
-                            $newMdFactory = $this->_getMetadataFactory($this->dstGroupId);
-                            $newMdId = $metadataMapping['md'][$oldMd->getId()];
-                            $newMd   = $newMdFactory->getFromLabel('field_'.$newMdId);
                             $e = new Docman_MetadataListOfValuesElement();
-                            $e->setId($newMd->getDefaultValue());
+                            $e->setId(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
                             $ea[] = $e;
                         }
                         $newMdv->setValue($ea);

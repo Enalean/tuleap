@@ -274,20 +274,21 @@ class Docman_Item {
             $value = $this->getUpdateDate();
             break;
 
-        case 'status': 
+        case 'status':
             $st = $this->getStatus();
             if($st === null) {
-                $st = 100;
+                $ea = array();
+            } else {
+                $status = Docman_MetadataListOfValuesElementFactory::getStatusList($st);
+                $ea = array($status);
             }
-            $status = Docman_MetadataListOfValuesElementFactory::getStatusList($st);
-            $ea = array($status);
             $value = new ArrayIterator($ea);
             break;
 
         case 'obsolescence_date':
             $value = $this->getObsolescenceDate();
             break;
-            
+
         case 'rank':
             $value = $this->getRank();
             break;

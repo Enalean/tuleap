@@ -63,11 +63,6 @@ class Docman_MetadataComparator {
         if(!$dstMd->sameIsMultipleValuesAllowed($srcMd)) {
             $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_allowmultiplevalue', array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_'.$srcMd->getIsMultipleValuesAllowed())));
         }
-        if(!$dstMd->sameDefaultValue($srcMd, $loveMap)) {
-            $loveFactory = new Docman_MetadataListOfValuesElementFactory();
-            $e = $loveFactory->getByElementId($srcMd->getDefaultValue());
-            $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_dfltvalue', array(Docman_MetadataHtmlList::_getElementName($e)));
-        }
         if(!$dstMd->sameUseIt($srcMd)) {
             $diffArray[] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_useit', array($GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_param_'.$srcMd->getUseIt())));
         }
@@ -232,7 +227,7 @@ class Docman_MetadataComparator {
                 if($dstMd !== false) {
                     $matchingMd[$dstMdLabel] = true;
                     $dstMdStatus = 'equivalent';
-                    if($dstMd->equals($srcMd, $mdMap['love'])) {
+                    if($dstMd->equals($srcMd)) {
                         $dstMdStatus = 'equals';
                     } else {
                         $sthToImport = true;

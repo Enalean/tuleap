@@ -24,11 +24,12 @@
  */
 
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
+require_once('Docman_View_ItemRanking.class.php');
 require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 require_once(dirname(__FILE__).'/../Docman_MetadataComparator.class.php');
 require_once('common/include/UserManager.class.php');
 
-class Docman_View_ItemDetailsSectionPaste 
+class Docman_View_ItemDetailsSectionPaste
 extends Docman_View_ItemDetailsSectionActions {
     var $itemToPaste;
     var $srcGo;
@@ -62,7 +63,7 @@ extends Docman_View_ItemDetailsSectionActions {
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_noadmin', array($this->srcGo->getPublicName(), $this->dstGo->getPublicName(), $docmanIcons->getThemeIcon('warning.png')));
             }
         }
-        
+
         return $html;
     }
 
@@ -77,56 +78,17 @@ extends Docman_View_ItemDetailsSectionActions {
         $mdDiffers = false;
         $content = $this->checkMdDifferences($mdDiffers);
 
-        // Paste
-        $itemFactory =& Docman_ItemFactory::instance($item->getGroupId());
-        $brotherIter = $itemFactory->getChildrenFromParent($this->item);
-
-        $selectedValue = 'beginning';        
-
         $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
         $content .= '<form name="select_paste_location" method="POST" action="?">';
         $content .= '<input type="hidden" name="action" value="paste" />';
         $content .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
         $content .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
-        $content .= '<p>Location ';
-
-        $vals = array('beginning', 'end', '--');
-        $texts = array($GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_beg'), 
-                       $GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_end'), 
-                       '----');
-        $i = 3;
-        
-        $pm =& Docman_PermissionsManager::instance($item->getGroupId());
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
-        
-        $brotherIter->rewind();
-        while($brotherIter->valid()) {
-            $item = $brotherIter->current();
-            if ($pm->userCanWrite($user, $item->getId())) {
-                $vals[$i]  = $item->getRank()+1;
-                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_rank_after').' '.$item->getTitle();
-                $i++;
-            }
-            $brotherIter->next();
-        }
-
-        // Cannot use html_build_select_box_from_arrays because of to lasy == operator
-        // In this case because of cast string values are converted to 0 on cmp. So if
-        // there is a rank == 0 ... so bad :/
-        $content .= '<select name="rank">'."\n";
-        $maxOpts = count($vals);
-        for($i = 0; $i < $maxOpts; $i++) {
-            $selected = '';
-            if($vals[$i] === $selectedValue) {
-                $selected = ' selected="selected"';
-            }
-            $content .= '<option value="'.$vals[$i].'"'.$selected.'>'.$texts[$i].'</option>'."\n";
-        }
-        $content .= '</select>';
+        $content .= '<p>';
+        $itemRanking = new Docman_View_ItemRanking();
+        $itemRanking->setDropDownName('rank');
+        $content .= $itemRanking->getDropDownWidget($this->item);
         $content .= '</p>';
 
-        
         if($mdDiffers == 'admin') {
             $content .= '<p>';
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($this->srcGo->getPublicName()));
@@ -144,7 +106,6 @@ extends Docman_View_ItemDetailsSectionActions {
         $content .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
 
         $content .= '</form>';
-        
         return $content;
     }
 

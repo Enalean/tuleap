@@ -83,40 +83,11 @@ class Docman_View_NewDocument extends Docman_View_New {
         }
         return $html;
     }
-    
-    function _getGeneralProperties($params) {
-        $html = '';
-        
-        $mdFactory = new Docman_MetadataFactory($params['group_id']);
 
-        if(isset($params['force_item'])) {
-            $new_document =& $params['force_item'];
-        }
-        else {
-            $new_document = new Docman_Document();
-            $mdFactory->appendItemMetadataList($new_document);
-        }
-
-        // Append, for list Metadata the list of values associated in the DB
-        // (content of select box)
-        $mdFactory->appendAllListOfValuesToItem($new_document);
-
-        $metadataToSkip = $mdFactory->getMetadataLabelToSkipCreation();
-        $get_fields = new Docman_View_GetFieldsVisitor($metadataToSkip);
-        $fields = $new_document->accept($get_fields, array('form_name'  => $params['form_name'],
-                                                           'theme_path' => $params['theme_path']));
-        $html .= '<table>';
-        foreach($fields as $field) {
-            $html .= '<tr>';
-            $html .= '<td>'.$field->getLabel().'</td>';
-            $html .= '<td>'.$field->getField().'</td>';
-            $html .= '</tr>';
-        }
-        $html .= '</table>';
-
-        return $html;
+    function _getNewItem() {
+        $i = new Docman_Document();
+        return $i;
     }
-
 }
 
 ?>

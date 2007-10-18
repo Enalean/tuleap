@@ -66,7 +66,7 @@ plugin_docman	admin_md_detail_val_delete	Supprimer
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
 plugin_docman	admin_md_detail_val_perm	Permanent
-plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catégorie courante. Tous les documents déjà étiquetté avec cette valeur se verront affecter la valeur par défaut de la catégory : \'$2\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catégorie courante. Tous les documents déjà étiquetté avec cette valeur se verront affecter la valeur \'None\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
 plugin_docman	admin_md_detail_val_delete_alt	Supprimer la valeur '$1'
 plugin_docman	admin_md_detail_val_create_title	Créer une nouvelle valeur
 plugin_docman	admin_md_detail_val_create_name	Nom :
@@ -103,7 +103,6 @@ plugin_docman	admin_md_import_param_desc	Description : <strong><em>nouveau texte
 plugin_docman	admin_md_import_param_allowempty	Autoriser la valeur vide : <strong>$1</strong>
 plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sélection multiple : <strong>$1</strong>
 plugin_docman	admin_md_import_param_useit	Usage : <strong>$1</strong>
-plugin_docman	admin_md_import_param_dfltvalue	Valeur par défaut : <strong>$1</strong>
 plugin_docman	admin_md_import_param_0	Désactivé
 plugin_docman	admin_md_import_param_1	Activé
 
@@ -272,20 +271,28 @@ plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> Il y a des différ
 plugin_docman	details_paste_mddiff_title	Propriétés de document
 plugin_docman	details_paste_button_paste	Coller
 plugin_docman	details_paste_button_pasteanyway	Coller [force]
-plugin_docman	details_paste_rank_after	Après
-plugin_docman	details_paste_rank_beg	Au début
-plugin_docman	details_paste_rank_end	A la fin
 plugin_docman	details_paste_title	Coller '$1' dans '$2'
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
 plugin_docman	details_permissions_perms	Permissions d'accès
 plugin_docman	details_permissions_recursive	récursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
 plugin_docman	details_properties	Propriétés
+plugin_docman	details_properties_dfltv	Valeurs par défaut
+plugin_docman	details_properties_dfltv_desc	Définissez les propriétés par défaut pour les éléments qui seront créés dans ce dossier.
+plugin_docman	details_properties_dfltv_rec	Appliquer<br>récursivement
+plugin_docman	details_properties_dfltv_md	Propriété
+plugin_docman	details_properties_dfltv_val	Valeur
+plugin_docman	details_properties_dfltv_include_docs_desc	Par défaut les mise à jour n'affecte que les dossiers, vous pouvez également mettre à jour les documents avec la liste déroulante ci-dessous
+plugin_docman	details_properties_dfltv_include_docs	Appliquer sur les documents et les dossiers
+plugin_docman	details_properties_dfltv_include_fold	Appliquer seulement sur les dossiers
+plugin_docman	details_properties_dfltv_include_title	Options de récursion
 plugin_docman	details_properties_edit	Editer les propriétés
+plugin_docman	details_properties_folder	Propriétés du dossier
 plugin_docman	details_properties_view_doc_lbl	Lien direct :
 plugin_docman	details_properties_view_doc_val	Cliquer pour ouvrir le document
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
+plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application récursive des valeurs par défaut.</h3><p>Vous êtes sur le point d'appliquer les valeurs sélectionnées dans dans l'ensemble de champ <strong>Valeur par défaut</strong> ci-dessous sur <strong>$1 documents and $2 folders</strong>.</p>
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
@@ -303,6 +310,7 @@ plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
 plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
+plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
 plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
 plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
 plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
@@ -441,6 +449,16 @@ plugin_docman	move_position_end	A la fin
 plugin_docman	move_position_select	Personnalisée <em>(prochaine étape)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
+plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoir parent
+plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoir où vous souhaitez que ce document apparaisse.
+plugin_docman	new_fldsel_location_help	<p><em>Aide</em>:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante <em>Position</em> permet de sélectionner la position au sein du dossier sélectionné.</li></ul></p>
+plugin_docman	new_fldsel_typehelp	Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un nouveau dossier.
+plugin_docman	new_fldsel_location	Chemin
+plugin_docman	new_fldsel_type	Nature du document
+plugin_docman	new_fldsel_createfolder	Créer un dossier
+plugin_docman	new_fldsel_createdoc	Créer un document
+
+plugin_docman	new_dfltvalues	Valeur par défaut
 plugin_docman	new_document	Nouveau document
 plugin_docman	new_document_action	Créer le document
 plugin_docman	new_document_embedded	Fichier embarqué
@@ -578,6 +596,11 @@ plugin_docman	view_documenttable_begin	Début
 plugin_docman	view_documenttable_previous	Précédent
 plugin_docman	view_documenttable_next	Suivant
 plugin_docman	view_documenttable_end	Fin
+
+plugin_docman	view_itemrank_after	Après
+plugin_docman	view_itemrank_beg	Au début
+plugin_docman	view_itemrank_end	A la fin
+plugin_docman	view_itemrank_position	Position :
 
 plugin_docman	view_Icons	Icônes
 plugin_docman	view_Table	Table

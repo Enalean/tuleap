@@ -212,9 +212,15 @@ class Docman_ItemFactory {
     /**
      *
      */
-    function userHasPermission(&$user, &$item) {
-        $dPm =& Docman_PermissionsManager::instance($this->groupId);
-        return $dPm->userCanRead($user, $item->getId());
+    function userHasPermission(&$user, &$item, $ignorePerms = false) {
+        $userCanRead = false;
+        if($ignorePerms === true) {
+            $userCanRead = true;
+        } else {
+            $dPm =& Docman_PermissionsManager::instance($this->groupId);
+            $userCanRead = $dPm->userCanRead($user, $item->getId());
+        }
+        return $userCanRead;
     }
     
     /**
@@ -236,20 +242,25 @@ class Docman_ItemFactory {
 
     /**
      * Build a subtree from with the list of items
-     * 
+     *
      * @param $parentId int Id of tree root.
-     * @return Item 
+     * @param $params['user']
+     * @param $params['filter']          (Optional)
+     * @param $params['ignore_collapse'] (Optional)
+     * @param $params['ignore_perms']    (Optional)
+     * @return Item
      */
     function &getItemSubTree($parentId, $params = null) {
+        //
+        // Parameters
+        //
         $_parentId = (int) $parentId;
-               
         $user =& $params['user'];
 
-        // {{1}} Exclude collapsed items      
+        // {{1}} Exclude collapsed items
         $expandedFolders = array();
-        if (!isset($params['ignore_collapse']) 
-            || !$params['ignore_collapse']) {
-            $expandedFolders =& $this->_getExpandedUserPrefs($_parentId, 
+        if(!isset($params['ignore_collapse']) || !$params['ignore_collapse']) {
+            $expandedFolders =& $this->_getExpandedUserPrefs($_parentId,
                                                              user_getid());
         }
 
@@ -257,15 +268,24 @@ class Docman_ItemFactory {
         $filter = null;
         if(isset($params['filter'])) {
             $filter =& $params['filter'];
-        }  
+        }
+
+        $ignorePerms = false;
+        if(isset($params['ignore_perms']) && $params['ignore_perms'] === true) {
+            $ignorePerms = true;
+        }
 
         $searchItemsParams = array();
         if(isset($params['ignore_obsolete'])) {
             $searchItemsParams['ignore_obsolete'] = $params['ignore_obsolete'];
         }
+
+        //
+        // Treatment
+        //
         $dao =& $this->_getItemDao();
         $dar = $dao->searchByGroupId($this->groupId, $filter, $searchItemsParams);
-        
+
         $this->preloadItemPerms($dar, $user);
 
         $parentIdList = array();
@@ -286,7 +306,7 @@ class Docman_ItemFactory {
                 $row =& $dar->current();
 
                 $item =& $this->getItemFromRow($row);
-                if($item && $this->userHasPermission($user, $item)) {
+                if($item && $this->userHasPermission($user, $item, $ignorePerms)) {
                     $insert = false;
                     $type = $this->getItemTypeForItem($item);
                     if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE 
@@ -668,11 +688,17 @@ class Docman_ItemFactory {
         }
         return $this->dao;
     }
-    
+
     function update($row) {
         $dao =& $this->_getItemDao();
         return $dao->updateFromRow($row);
     }
+
+    function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
+        $dao =& $this->_getItemDao();
+        $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);
+    }
+
     function create($row, $ordering) {
         $dao =& $this->_getItemDao();
         $id = $dao->createFromRow($row);

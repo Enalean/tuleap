@@ -254,13 +254,47 @@ class Docman_MetadataValueFactory extends Error {
     }
 
     /**
-     * This function update the values binded to a deleted ListOfValueElement.
-     *
-     * 
+     * For each metadata in '$recurseArray', apply the metadata value of
+     * '$srcItemId' item on items in '$itemIdArray'.
      */
-    function updateToMetadataDefaultValue($deletedLoveId, &$md) {
+    function massUpdateFromRow($srcItemId, $recurseArray, $itemIdArray) {
+        foreach($recurseArray as $mdLabel) {
+            $this->massUpdate($srcItemId, $mdLabel, $itemIdArray);
+        }
+    }
+
+    function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
+        $mdFactory = new Docman_MetadataFactory($this->groupId);
+        if($mdFactory->isRealMetadata($mdLabel)) {
+            $md  = $mdFactory->getFromLabel($mdLabel);
+            $dao =& $this->getDao();
+            $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);
+        } else {
+            $itemFactory = new Docman_ItemFactory($this->groupId);
+            $itemFactory->massUpdate($srcItemId, $mdLabel, $itemIdArray);
+        }
+    }
+
+    /**
+     * Delete usage of $loveId as a metadata value.
+     * If an item is only assigned to the deleted value, it is automaticaly
+     * defaulted to '100'
+     */
+    function deleteLove($mdId, $loveId) {
         $dao =& $this->getDao();
-        return $dao->updateToListOfValueElementDefault($md->getId(), $deletedLoveId, $md->getDefaultValue());
+        $deleted = $dao->deleteLove($loveId);
+        if($deleted) {
+            return $this->updateOrphansLoveItem($mdId);
+        }
+        return $deleted;
+    }
+
+    /**
+     * Ensure there is no item w/o a value for '$mdId' metadata
+     */
+    function updateOrphansLoveItem($mdId) {
+        $dao =& $this->getDao();
+        return $dao->updateOrphansLoveItem($mdId);
     }
 
     /**

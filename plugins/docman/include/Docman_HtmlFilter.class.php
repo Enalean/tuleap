@@ -80,13 +80,17 @@ class Docman_HtmlFilter {
     }
 
     function toHtml($formName, $trashLinkBase) {
-        $trashLink = $trashLinkBase.$this->filter->md->getLabel();
-        $trashWarn = 'Are your sure you want to remove from filter list?';
-        $trashAlt  = '';
+        $trashLink = '';
+        if($trashLinkBase) {
+            $trashLink = $trashLinkBase.$this->filter->md->getLabel();
+            $trashWarn = 'Are your sure you want to remove from filter list?';
+            $trashAlt  = '';
+            $trashLink = html_trash_link($trashLink, $trashWarn, $trashAlt);
+        }
 
         $html = '<tr>';
         $html .= '<td>';
-        $html .= html_trash_link($trashLink, $trashWarn, $trashAlt);
+        $html .= $trashLink;
         $html .= '&nbsp;';
         $html .= $this->_fieldName();
         $html .= ': ';

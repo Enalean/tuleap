@@ -24,6 +24,7 @@
  */
 
 require_once('common/permission/PermissionsManager.class.php');
+require_once('www/project/admin/permissions.php');
 
 class Docman_PermissionsManagerDao extends DataAccessObject {
 

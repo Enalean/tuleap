@@ -1,7 +1,7 @@
 <?php
 /**
 * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
-* 
+*
 * 
 *
 * Docman_View_GetFieldsVisitor
@@ -17,24 +17,7 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
         $this->mdLabelToSkip = $mdLabelToSkip;
     }
 
-    function _buildFieldArray(&$mdIter, $formName, $themePath) {
-        $mdIter->rewind();
-        while($mdIter->valid()) {
-            $md =& $mdIter->current();                      
-            
-            if(!in_array($md->getLabel(), $this->mdLabelToSkip)) {
-
-                $fields[$md->getLabel()] = Docman_MetadataHtmlFactory::getFromMetadata($md, array('form_name' => $formName,
-                                                                                                  'theme_path' => $themePath));
-            }
-
-            $mdIter->next();
-        }
-        return $fields;       
-    }
-
-    function visitItem(&$item, $params = array()) {
-        $mdIter =& $item->getMetadataIterator();
+    function buildFieldArray($mdIter, $params) {
         $formName = '';
         if(isset($params['form_name'])) {
             $formName = $params['form_name'];
@@ -43,11 +26,25 @@ class Docman_View_GetFieldsVisitor /* implements Visitor*/ {
         if(isset($params['theme_path'])) {
             $themePath = $params['theme_path'];
         }
-        return $this->_buildFieldArray($mdIter, $formName, $themePath);
+        $mdHtmlFactory = new Docman_MetadataHtmlFactory();
+        return $mdHtmlFactory->buildFieldArray($mdIter, $this->mdLabelToSkip, false, $formName, $themePath);
     }
+
+    function visitItem(&$item, $params = array()) {
+        $mdIter = $item->getMetadataIterator();
+        return $this->buildFieldArray($mdIter, $params);
+    }
+
     function visitFolder(&$item, $params = array()) {
-        return $this->visitItem($item, $params);
+        $folderMetadata = array('title', 'description','create_date', 'update_date');
+        $mda = array();
+        foreach($folderMetadata as $mdLabel) {
+            $mda[] = $item->getMetadataFromLabel($mdLabel);
+        }
+        $mdIter = new ArrayIterator($mda);
+        return $this->buildFieldArray($mdIter, $params);
     }
+
     function visitDocument(&$item, $params = array()) {
         return $this->visitItem($item, $params);
     }

@@ -262,85 +262,6 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }  
 
-    /**
-     * create a row in the table plugin_docman_item
-     *
-     * @return true or id(auto_increment) if there is no error
-     */
-    function create($parent_id=null, $group_id=null, $title=null, 
-                    $description=null, $create_date=null, $update_date=null, 
-                    $user_id=null, $rank=null, $item_type=null, $link_url=null,
-                    $wiki_page=null, $file_is_embedded=null) {
-
-        $arg    = array();
-        $values = array();
-
-        if($parent_id !== null) {
-            $arg[]    = 'parent_id';
-            $values[] = ((int) $parent_id);
-        }
-
-        if($group_id !== null) {
-            $arg[] = 'group_id';
-            $values[] = ((int) $group_id);
-        }
-
-        if($title !== null) {
-            $arg[] = 'title';
-            $values[] = $this->da->quoteSmart($title);
-        }
-
-        if($description !== null) {
-            $arg[] = 'description';
-            $values[] = $this->da->quoteSmart($description);
-        }
-
-        if($create_date !== null) {
-            $arg[] = 'create_date';
-            $values[] = ((int) $create_date);
-        }
-
-        if($update_date !== null) {
-            $arg[] = 'update_date';
-            $values[] = ((int) $update_date);
-        }
-
-        if($user_id !== null) {
-            $arg[] = 'user_id';
-            $values[] = ((int) $user_id);
-        }
-
-        if($rank !== null) {
-            $arg[] = 'rank';
-            $values[] = ((int) $rank);
-        }
-
-        if($item_type !== null) {
-            $arg[] = 'item_type';
-            $values[] = ((int) $item_type);
-        }
-
-        if($link_url !== null) {
-            $arg[] = 'link_url';
-            $values[] = $this->da->quoteSmart($link_url);
-        }
-
-        if($wiki_page !== null) {
-            $arg[] = 'wiki_page';
-            $values[] = $this->da->quoteSmart($wiki_page);
-        }
-
-        if($file_is_embedded !== null) {
-            $arg[] = 'file_is_embedded';
-            $values[] = ((int) $file_is_embedded);
-        }
-
-        $sql = 'INSERT INTO plugin_docman_item'
-            .'('.implode(', ', $arg).')'
-            .' VALUES ('.implode(', ', $values).')';
-        return $this->_createAndReturnId($sql, $update_date);
-    }
-
     function createFromRow($row) {
         $row['create_date'] = $row['update_date'] = time();
         $arg    = array();
@@ -488,6 +409,18 @@ class Docman_ItemDao extends DataAccessObject {
             $this->update($sql);
         }
     }
+
+    function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
+        $sql = sprintf('UPDATE plugin_docman_item item_src,  plugin_docman_item item_dst'.
+                       ' SET item_dst.'.$mdLabel.' = item_src.'.$mdLabel.
+                       ' WHERE item_src.item_id = %d'.
+                       '  AND item_dst.item_id IN (%s)',
+                       $srcItemId,
+                       implode(',',$itemIdArray));
+        return $this->update($sql);
+    }
+
+
     /**
      * Delete entry that match $item_id in plugin_docman_item
      *

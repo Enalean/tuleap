@@ -27,6 +27,8 @@ require_once('Docman_VersionFactory.class.php');
 class DocmanActionsDeleteVisitor /* implements Visitor */ {
     
     function DocmanActionsDeleteVisitor(&$file_storage, &$docman) {
+        //More coherent to have only one delete date for a whole hierarchy.
+        $this->deleteDate   = time();
         $this->file_storage =& $file_storage;
         $this->docman       =& $docman;
     }
@@ -34,13 +36,11 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
     function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
-        $parent =& $params['parent'];
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
             $it =& $items->iterator();
             while($it->valid()) {
                 $o =& $it->current();
-                $params['parent'] =& $item;
                 if (!$o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
                 }
@@ -53,7 +53,6 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             return false;
         } else {
             //Mark the folder as deleted;
-            $params['parent'] =& $parent;
             return $this->_deleteItem($item, $params);
         }
     }
@@ -94,14 +93,13 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
 
     function _deleteItem($item, $params) {
         if ($this->docman->userCanWrite($item->getId())) {
-            $item->setDeleteDate(time());
+            $item->setDeleteDate($this->deleteDate);
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
             $em =& $this->_getEventManager();
             $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
                 'group_id' => $item->getGroupId(),
                 'item'     => &$item,
-                'parent'   => &$params['parent'],
                 'user'     => &$params['user'])
             );
             return true;

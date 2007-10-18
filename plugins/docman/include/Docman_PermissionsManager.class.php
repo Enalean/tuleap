@@ -24,6 +24,7 @@
  */
 
 require_once('Docman_PermissionsManagerDao.class.php');
+require_once('Docman_SubItemsWritableVisitor.class.php');
 
 class Docman_PermissionsManager {
     var $groupId;
@@ -34,6 +35,10 @@ class Docman_PermissionsManager {
     var $cache_admin;
     var $dao;
     var $currentUser;
+    var $item_factory;
+
+    // No cache, just convenient accessor.
+    var $subItemsWritableVisitor;
 
     function Docman_PermissionsManager($groupId) {
         $this->groupId = $groupId;
@@ -44,6 +49,9 @@ class Docman_PermissionsManager {
         $this->cache_admin = array();
         $this->dao = null;
         $this->currentUser = null;
+        $this->item_factory = null;
+
+        $this->subItemsWritableVisitor = null;
     }
 
     /**
@@ -68,13 +76,15 @@ class Docman_PermissionsManager {
         }
         return $this->dao;
     }
+
     var $item_factory;
-    function &_getItemFactory() {
-        if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
+    function &_getItemFactory($groupId=0) {
+        if (!isset($this->item_factory[$groupId])) {
+            $this->item_factory[$groupId] =& new Docman_ItemFactory($groupId);
         }
-        return $this->item_factory;
+        return $this->item_factory[$groupId];
     }
+
     function userCanAccess(&$user, $item_id) {
         if (!isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
@@ -167,6 +177,52 @@ class Docman_PermissionsManager {
     function currentUserCanAdmin() {
         $user =& $this->getCurrentUser();
         return $this->userCanAdmin($user);
+    }
+
+    /**
+     * Check if the current logged user has write access on a item tree.
+     *
+     * $itemId Integer the parent item id.
+     */
+    function currentUserCanWriteSubItems($itemId) {
+        $user =& $this->getCurrentUser();
+        return $this->userCanWriteSubItems($user, $itemId);
+    }
+
+    /**
+     * Check if given user has write access on a item tree.
+     *
+     * $user   User User object.
+     * $itemId Integer The parent item id.
+     */
+    function userCanWriteSubItems(&$user, $itemId) {
+        $item    =& $this->_getItemTreeForPermChecking($itemId, $user);
+        $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->groupId, $user);
+        return $item->accept($this->subItemsWritableVisitor);
+    }
+
+    /**
+     * Get a item tree without permission checking.
+     *
+     * Get all sub-items, not deleted, not obsolete regardtheless of the
+     * permissions of the user.
+     * WARNING: use the result tree carfully as you may expose protected data
+     * by mistake.
+     */
+    function &_getItemTreeForPermChecking($itemId, $user) {
+        $itemFactory = $this->_getItemFactory($this->groupId);
+        $item = $itemFactory->getItemSubTree($itemId,
+                                             array('user' => &$user,
+                                                   'ignore_perms' => true,
+                                                   'ignore_collapse' => true));
+        return $item;
+    }
+
+    /**
+     * Setup the 'IsWritable' visitor object.
+     */
+    function &getSubItemsWritableVisitor() {
+        return $this->subItemsWritableVisitor;
     }
 
     function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId) {

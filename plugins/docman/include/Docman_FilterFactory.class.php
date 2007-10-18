@@ -107,6 +107,16 @@ class Docman_FilterFactory {
         return $md;
     }
 
+    /**
+     * Fake filter only used to display the global text search as a default
+     * option when no filter selected.
+     */
+    function getFakeGlobalSearchFilter() {
+        $md = $this->getGlobalSearchMetadata();
+        $filter = new Docman_FilterGlobalText($md, '');
+        return $filter;
+    }
+
     function getGlobalSearchFilter($request) {
         $md = $this->getGlobalSearchMetadata();
         

@@ -31,6 +31,18 @@
   margin-bottom: 0.5em;
 }
 
+#docman_new_item_location_current_folder {
+  font-weight: bold;
+}
+
+.tips {
+  background-color: #EEEEEE;
+}
+
+div.tips {
+  width: 80em;
+}
+
 .dir input {
  border: 1px solid black;
 }

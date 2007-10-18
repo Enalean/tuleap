@@ -102,6 +102,16 @@ class Docman_ReportHtml {
         return $html;
     }
 
+    function _getFilterDisplayBox($filter, $params, $trashLinkBase, &$displayedFilters) {
+        $html = '';
+        $htmlFilter = Docman_HtmlFilterFactory::getFromFilter($filter);
+        if($htmlFilter !== null) {
+            $displayedFilters[] = $filter->md->getLabel();
+            $html .= $htmlFilter->toHtml('plugin_docman_filters', $trashLinkBase);
+        }
+        return $html;
+    }
+
     /**
      *
      */
@@ -110,26 +120,21 @@ class Docman_ReportHtml {
 
         $html .= '<table class="docman_form">';
         $fi = $this->report->getFilterIterator();
-
         $trashLinkBase = $this->view->_buildSearchUrl($params, array('del_filter' => ''));
-            
+
         if($fi->count() == 0) {
             $html .= '<div style="text-align:center; font-style:italic;">';
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_no_filters');
+            $filterFactory = new Docman_FilterFactory($this->report->getGroupId());
+            $f = $filterFactory->getFakeGlobalSearchFilter();
+            $html .= $this->_getFilterDisplayBox($f, $params, false, $displayedFilters);
             $html .= '</div>';
         }
 
         // Display filters fields
         $fi->rewind();
-        while($fi->valid()) {        
+        while($fi->valid()) {
             $f =& $fi->current();
-             
-            $htmlFilter = Docman_HtmlFilterFactory::getFromFilter($f);
-            if($htmlFilter !== null) {
-                $displayedFilters[] = $f->md->getLabel();
-                $html .= $htmlFilter->toHtml('plugin_docman_filters', $trashLinkBase);
-            }
-                
+            $html .= $this->_getFilterDisplayBox($f, $params, $trashLinkBase, $displayedFilters);
             $fi->next();
         }
 

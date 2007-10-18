@@ -47,9 +47,19 @@ class Docman_MetadataListOfValuesElementFactory {
         return $_plugin_docman_metadata_love_dao_instance;
     }
 
+    /**
+     * Delete the the ListOfValueElement.
+     * Then keep metadata_value consistent: if there is no entry for a given
+     * (item, $this->metadataId), create a default entry (NONE value).
+     */
     function delete(&$love) {
         $dao =& $this->getDao();
-        return $dao->delete($love->getId());
+        $deleted = $dao->delete($love->getId());
+        if($deleted) {
+            $mdvFactory = new Docman_MetadataValueFactory(null);
+            $deleted = $mdvFactory->deleteLove($this->metadataId, $love->getId());
+        }
+        return $deleted;
     }
 
     function deleteByMetadataId() {
@@ -86,6 +96,9 @@ class Docman_MetadataListOfValuesElementFactory {
                                    $love->getStatus());
     }
 
+    /**
+     * Add 'None' value as a value of the list for metadata $this->metadataId.
+     */
     function createNoneValue() {
         $dao =& $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
