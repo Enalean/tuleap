@@ -29,6 +29,105 @@ function show_features_boxes() {
     return $return;
 }
 
+function foundry_features_boxes($group_id) {
+    GLOBAL $HTML,$Language;
+    $return  = "";
+    $comma_sep_groups=$GLOBALS['foundry']->getProjectsCommaSep();
+
+    $return .= $HTML->box1_top($Language->getText('include_features_boxes','most_active'),0);
+    $return .= foundry_active_projects($comma_sep_groups);
+    $return .= $HTML->box1_middle($Language->getText('include_features_boxes','top_downloads'));
+    $return .= foundry_top_downloads($comma_sep_groups);
+    $return .= $HTML->box1_middle($Language->getText('include_features_boxes','featured_projects'));
+    $return .= foundry_featured_projects($group_id);
+    $return .= $HTML->box1_bottom(0);
+    return $return;
+}
+
+function foundry_active_projects($comma_sep_groups) {
+    $return  = "";
+    $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
+        "project_weekly_metric.ranking,project_weekly_metric.percentile ".
+        "FROM groups,project_weekly_metric ".
+        "WHERE groups.group_id=project_weekly_metric.group_id AND ".
+        "groups.is_public=1 AND groups.type=1 ".
+        "AND project_weekly_metric.group_id IN ($comma_sep_groups) ".
+        "ORDER BY ranking ASC LIMIT 20";
+    $result=db_query($sql);
+    if (!$result || db_numrows($result) < 1) {
+        return '';//db_error();
+    } else {
+        while ($row=db_fetch_array($result)) {
+            $return .= '<B>( '.$row['percentile'].'% )</B>'
+                .' <A HREF="/projects/'.$row['unix_group_name'].
+                '/">'.$row['group_name'].'</A><BR>';
+        }
+        $return .= '<CENTER><A href="/top/mostactive.php?type=week">[ More ]</A></CENTER>';
+    }
+    return $return;
+}
+
+function foundry_featured_projects($group_id) {
+    global $Language;
+    $return  = "";
+    $sql="SELECT groups.group_name,groups.unix_group_name,".
+        "groups.group_id,foundry_preferred_projects.rank ".
+        "FROM groups,foundry_preferred_projects ".
+        "WHERE foundry_preferred_projects.group_id=groups.group_id ".
+        "AND foundry_preferred_projects.foundry_id='$group_id' ".
+        "ORDER BY rank ASC";
+
+    $res_grp=db_query($sql);
+    $rows=db_numrows($res_grp);
+
+    if (!$res_grp || $rows < 1) {
+        $return .= $Language->getText('include_features_boxes','no_projects');
+        //		$return .= db_error();
+    } else {
+        for ($i=0; $i<$rows; $i++) {
+            $return .= '<A href="/projects/'. 
+                strtolower(db_result($res_grp,$i,'unix_group_name')) .'/">'. 
+                db_result($res_grp,$i,'group_name') .'</A><BR>';
+        }
+    }
+    return $return;
+}
+
+function foundry_top_downloads($comma_sep_groups) {
+    global $Language;
+    $return  = "";
+    $return .= "<B>".$Language->getText('include_features_boxes','downloads_yesterday').":</B>\n";
+	
+#get yesterdays day
+    $yesterday = date("Ymd",time()-(3600*24));
+	
+    $res_topdown = db_query("SELECT groups.group_id,"
+                            ."groups.group_name,"
+                            ."groups.unix_group_name,"
+                            ."frs_dlstats_group_agg.downloads "
+                            ."FROM frs_dlstats_group_agg,groups WHERE day='$yesterday' "
+                            ."AND frs_dlstats_group_agg.group_id=groups.group_id "
+                            ."AND frs_dlstats_group_agg.group_id IN ($comma_sep_groups) "
+                            ."AND groups.type=1 "
+                            ."ORDER BY downloads DESC LIMIT 10");
+
+    if (!$res_topdown || db_numrows($res_topdown) < 1) {
+        //return db_error();
+        return ""; 
+    } else {
+        // print each one
+        while ($row_topdown = db_fetch_array($res_topdown)) {
+            if ($row_topdown['downloads'] > 0) 
+                $return .= '<BR><A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
+                    . $row_topdown['group_name'] .'</A> ('. $row_topdown[downloads] .")\n";
+        }
+    }
+    //$return .= '<P align="center"><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A>';
+	
+    return $return; 
+
+}
+
 function show_top_downloads() {
     global $Language;
     $return  = "";
