@@ -107,6 +107,7 @@ class WidgetLayoutManager {
     * @param  layout_id 
     */
     function displayAvailableWidgets($owner_id, $owner_type, $layout_id) {
+        $GLOBALS['Language']->loadLanguageMsg('widget/widget');
         $used_widgets = array();
         $sql = "SELECT * 
         FROM layouts_contents 
@@ -118,12 +119,12 @@ class WidgetLayoutManager {
         while($data = db_fetch_array($res)) {
             $used_widgets[] = $data['name'];
         }
-        echo '<h3>Widgets</h3>';
+        echo '<h3>'. $GLOBALS['Language']->getText('widget_add', 'title') .'</h3>';
         echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;layout_id='. $layout_id .'" method="POST">';
         echo '<table cellpadding="2" cellspacing="0">';
-        $this->_displayWidgetsSelectionForm('CodeX Widgets', Widget::getCodeXWidgets($owner_type), $used_widgets);
+        $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets'), Widget::getCodeXWidgets($owner_type), $used_widgets);
         echo '<tr><td>&nbsp;</td><td></td></tr>';
-        $this->_displayWidgetsSelectionForm('External Widgets', Widget::getExternalWidgets($owner_type), $used_widgets);
+        $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
         echo '</table>';
         echo '</form>';
     }
@@ -138,20 +139,25 @@ class WidgetLayoutManager {
     function _displayWidgetsSelectionForm($title, $widgets, $used_widgets) {
         if (count($widgets)) {
             echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';
-            $i = 0;
+            $widget_rows = array();
             foreach($widgets as $widget_name) {
                 if ($widget = Widget::getInstance($widget_name)) {
-                    echo '<tr class="'. util_get_alt_row_color($i++) .'">';
-                    echo '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
-                    echo '<td align="right">';
+                    $row = '';
+                    $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
+                    $row .= '<td align="right">';
                     if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-                        echo '<em>Already used</em>';
+                        $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
                     } else {
-                        echo '<input type="submit" name="name['. $widget_name .'][add]" value="Add" />';
+                        $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
                     }
-                    echo '</td>';
-                    echo '</tr>';
+                    $row .= '</td>';
+                    $widget_rows[$widget->getTitle()] = $row;
                 }
+            }
+            uksort($widget_rows, 'strnatcasecmp');
+            $i = 0;
+            foreach($widget_rows as $row) {
+                echo '<tr class="'. util_get_alt_row_color($i++) .'">'. $row .'</tr>';
             }
         }
     }

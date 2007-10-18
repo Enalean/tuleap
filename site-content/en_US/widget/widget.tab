@@ -1,0 +1,19 @@
+#/**
+#  *
+#  * Tracker scripts message catalog (English)
+#  *
+#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
+#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * http://codex.xrce.xerox.com
+#  *
+#  *
+#  */
+#
+widget	preferences_title	Preferences
+
+widget_add	title	Widgets
+widget_add	codex_widgets	CodeX Widgets
+widget_add	external_widgets	External Widgets
+widget_add	add	Add
+widget_add	already_used	Alread used
+
