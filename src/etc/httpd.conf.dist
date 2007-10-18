@@ -310,11 +310,12 @@ SetEnvIf User-Agent ^CodeX let_me_in
 # 
 # Don't allow access to include directory for anyone.
 #
-<Directory "/usr/share/codex/src/www/include">
-   AllowOverride none
-   Order allow,deny
-   Deny from all
- </Directory>
+# Not possible because of check_pw.php function...
+#<Directory "/usr/share/codex/src/www/include">
+#   AllowOverride none
+#   Order allow,deny
+#   Deny from all
+# </Directory>
 
 #
 # UserDir: The name of the directory that is appended onto a user's home
