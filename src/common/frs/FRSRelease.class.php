@@ -163,7 +163,26 @@ class FRSRelease extends Error {
      * @return boolean true if the release is active, false otherwise
      */
     function isActive() {
-        return $this->getStatusID() == 1;
+        $release_factory = new FRSReleaseFactory();
+        return $this->getStatusID() == $release_factory->STATUS_ACTIVE;
+    }
+    
+    /**
+     * Determines if the release is hidden or not
+     * @return boolean true if the release is hidden, false otherwise
+     */
+    function isHidden() {
+        $release_factory = new FRSReleaseFactory();
+        return $this->getStatusID() == $release_factory->STATUS_HIDDEN;
+    }
+    
+    /**
+     * Determines if the release is deleted or not
+     * @return boolean true if the release is boolean, false otherwise
+     */
+    function isDeleted() {
+        $release_factory = new FRSReleaseFactory();
+        return $this->getStatusID() == $release_factory->STATUS_DELETED;
     }
     
     /**

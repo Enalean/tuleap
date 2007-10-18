@@ -57,6 +57,25 @@ foreach($res as $p => $nop) {
 if ($request->exist('func')) {
     switch ($request->get('func')) {
         case 'delete': //Not yet
+            if ($package_id = $request->get('id')) {
+                    /*
+                         Delete the corresponding package only if it is empty
+                    */
+                    $res_release = $frsrf->getFRSReleasesFromDb($package_id, null, $group_id);
+                    $num_releases = count($res_release);
+                    //make sure there is no more release in the package
+                    if($num_releases>0){
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_empty'));
+                    }else{
+                        $res = $frspf->delete_package($group_id, $package_id);
+                        if ($res == 0) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_yours'));
+                        } else {
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages','p_del'));
+                        }
+                    }
+                }
+                $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             break;
         case 'add':
             $package =& new FRSPackage(array('group_id' => $group_id));
@@ -112,7 +131,7 @@ if ($request->exist('func')) {
                     $package_data = $request->get('package');
                     // we check if the name already exist only if the name has changed
                     if ($package_data['name'] == html_entity_decode($package->getName()) || !$frspf->isPackageNameExist($package_data['name'], $group_id)) {
-                        if ($package_data['status_id'] != 1) {
+                        if ($package_data['status_id'] == $frspf->STATUS_HIDDEN) {
                             //if hiding a package, refuse if it has releases under it
                             // LJ Wrong SQL statement. It should only check for the existence of
                             // LJ active packages. If only hidden releases are in this package
@@ -120,7 +139,7 @@ if ($request->exist('func')) {
                             // LJ $res=db_query("SELECT * FROM frs_release WHERE package_id='$package_id'");
                             if ($frsrf->isActiveReleases($package_id)) {
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_admin_editpackages','cannot_hide'));
-                                $package_data['status_id'] = 1;
+                                $package_data['status_id'] = $frspf->STATUS_ACTIVE;
                             }
                         }
                         //update an existing package

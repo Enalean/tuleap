@@ -33,6 +33,10 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class FRSPackageFactory {
+    
+    var $STATUS_ACTIVE = 1;
+    var $STATUS_DELETED = 2;
+    var $STATUS_HIDDEN = 3;
 
     function FRSPackageFactory() {
         
@@ -108,7 +112,7 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         if($status_id){
 			$_status_id= (int) $status_id;  	
-        	$dar = $dao->searchActivePackagesByGroupId($_id);
+        	$dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
         }else{
         	$dar = $dao->searchByGroupId($_id);
         }
@@ -181,6 +185,37 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         return $id;
+    }
+    
+    function _delete($package_id){
+        $_id = (int) $package_id;
+        $dao =& $this->_getFRSPackageDao();
+        return $dao->delete($_id, $this->STATUS_DELETED);
+    }
+    
+    /*
+    
+    Delete an empty package
+    
+    first, make sure the package is theirs
+    and delete the package from the database
+        
+    return 0 if release not deleted, 1 otherwise
+    */
+    function delete_package($group_id, $package_id) {
+
+        $package =& $this->getFRSPackageFromDb($package_id, $group_id);
+        
+        if (!$package_id) {
+            //package not found for this project
+            return 0;
+        } else {
+            
+            //delete the package from the database
+            $this->_delete($package_id);
+
+            return 1;
+        }
     }
     
 	/** return true if user has Read or Update permission on this package 

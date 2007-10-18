@@ -144,7 +144,7 @@ while (list ($package_id, $package) = each($packages)) {
     if ($package->isActive()) {
         $emphasis = 'strong';
         $can_see_package = true;
-    } else {
+    } else if ($package->isHidden()){
         $emphasis = 'em';
         if (user_ismember($group_id,'R2')) {
             $can_see_package = true;
@@ -162,7 +162,7 @@ while (list ($package_id, $package) = each($packages)) {
                 print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">';
                 print '       '. $GLOBALS['HTML']->getImage('ic/edit.png');
                 print '     </a>';
-                //print '     <a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id . '">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+                //print '     &nbsp;&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES) .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
             }
             print ' &nbsp; ';
             print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
@@ -172,9 +172,13 @@ while (list ($package_id, $package) = each($packages)) {
                 print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
             }
             print '  </a>';
+            if (user_ismember($group_id,'R2')) {
+                print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES) .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+            }
         }
         print '</legend>';
-        if (!$package->isActive()) {
+        
+        if ($package->isHidden()) {
             //TODO i18n
             print '<div style="text-align:center"><em>'.$Language->getText('file_showfiles', 'hidden_package').'</em></div>';
         }
@@ -204,7 +208,7 @@ while (list ($package_id, $package) = each($packages)) {
                     if ($package_release->isActive()) {
                         $emphasis = 'strong';
                         $can_see_release = true;
-                    } else {
+                    } else if($package_release->isHidden()){
                         $emphasis = 'em';
                         if (user_ismember($group_id,'R2')) {
                             $can_see_release = true;
@@ -237,7 +241,7 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     print '  </td>';
                     print ' <td style="text-align:center">';
-                    if (!$package_release->isActive()) {
+                    if ($package_release->isHidden()) {
                         print '<em>'.$Language->getText('file_showfiles', 'hidden_release').'</em>';
                     } 
                     print '</td> ';

@@ -77,9 +77,9 @@ class FRSPackageDao extends DataAccessObject {
         return $this->_search(' p.group_id = '.$_id, '', ' ORDER BY rank ASC ');
     }
     
-    function searchActivePackagesByGroupId($id){
+    function searchActivePackagesByGroupId($id, $status_active){
     	$_id = (int) $id;
-    	return $this->_search(' group_id='.$_id.' AND status_id = 1','','ORDER BY rank');
+    	return $this->_search(' group_id='.$_id.' AND status_id = '.$status_active,'','ORDER BY rank');
     }
    
     function _search($where, $group = '', $order = '', $from = array()) {
@@ -251,8 +251,8 @@ class FRSPackageDao extends DataAccessObject {
      * @param $package_id int
      * @return true if there is no error
      */
-    function delete($package_id) {
-        $sql = sprintf("DELETE FROM frs_package WHERE package_id=%d",
+    function delete($package_id, $status_deleted) {
+        $sql = sprintf("UPDATE frs_package SET status_id= ".$status_deleted." WHERE package_id=%d",
                        $package_id);
 
         $deleted = $this->update($sql);

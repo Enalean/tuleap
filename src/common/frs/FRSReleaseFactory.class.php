@@ -33,6 +33,11 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class FRSReleaseFactory {
+    
+    var $STATUS_ACTIVE = 1;
+    var $STATUS_DELETED = 2;
+    var $STATUS_HIDDEN = 3;
+    
 
 	function FRSReleaseFactory() {
 
@@ -75,8 +80,8 @@ class FRSReleaseFactory {
 	function & getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		if(isset($status_id) && $status_id == 1 && isset($group_id) && $group_id){
-			$dar = $dao->searchActiveReleasesByPackageId($_id);
+		if(isset($status_id) && $status_id == $this->STATUS_ACTIVE && isset($group_id) && $group_id){
+			$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 		}else{
 			$dar = $dao->searchByPackageId($_id);
 		}
@@ -136,7 +141,7 @@ class FRSReleaseFactory {
 	function isActiveReleases($package_id) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
-		$dar = $dao->searchActiveReleasesByPackageId($_id);
+		$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 
 		if ($dar->isError()) {
 			return;
@@ -198,7 +203,7 @@ class FRSReleaseFactory {
 	function _delete($release_id){
     	$_id = (int) $release_id;
     	$dao =& $this->_getFRSReleaseDao();
-    	return $dao->delete($_id);
+    	return $dao->delete($_id,$this->STATUS_DELETED);
     }
 
 	/*

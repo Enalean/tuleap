@@ -31,6 +31,7 @@ class FRSPackageTest extends UnitTestCase {
         global $GLOBALS;
         
         $active_value = 1;
+        $deleted_value = 2;
         $hidden_value = 3;
         
         $p =& new FRSPackage();
@@ -39,7 +40,48 @@ class FRSPackageTest extends UnitTestCase {
         
         $p->setStatusId($hidden_value);
         $this->assertFalse($p->isActive());
+        
+        $p->setStatusId($deleted_value);
+        $this->assertFalse($p->isActive());
     }
+    
+    function testIsDeleted() {
+        global $GLOBALS;
+        
+        $active_value = 1;
+        $deleted_value = 2;
+        $hidden_value = 3;
+        
+        $p =& new FRSPackage();
+        $p->setStatusId($deleted_value);
+        $this->assertTrue($p->isDeleted());
+        
+        $p->setStatusId($hidden_value);
+        $this->assertFalse($p->isDeleted());
+        
+        $p->setStatusId($active_value);
+        $this->assertFalse($p->isDeleted());
+    }
+    
+    function testIsHidden() {
+        global $GLOBALS;
+        
+        $active_value = 1;
+        $deleted_value = 2;
+        $hidden_value = 3;
+        
+        $p =& new FRSPackage();
+        $p->setStatusId($hidden_value);
+        $this->assertTrue($p->isHidden());
+        
+        $p->setStatusId($active_value);
+        $this->assertFalse($p->isHidden());
+        
+        $p->setStatusId($deleted_value);
+        $this->assertFalse($p->isHidden());
+    }
+    
+    
 
 }
 ?>

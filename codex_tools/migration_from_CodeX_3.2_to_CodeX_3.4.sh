@@ -390,6 +390,10 @@ UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvs
 UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND reference_id='16';
 
 ###############################################################################
+# Update file release system, delete frs_status table
+DROP TABLE IF EXISTS frs_status;
+
+###############################################################################
 # Update plugin docman
 
 DROP TABLE IF EXISTS plugin_docman_report;

@@ -1,5 +1,6 @@
 <?php
 require_once('FileModuleMonitorFactory.class.php');
+require_once('FRSPackageFactory.class.php');
 /**
 * ServiceFile
 * 
@@ -10,6 +11,8 @@ require_once('FileModuleMonitorFactory.class.php');
 * @author  N. Terray
 */
 class ServiceFile extends Service {
+    
+    
     /**
     * getPublicArea
     * 
@@ -34,6 +37,7 @@ class ServiceFile extends Service {
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''
         );
+        
         $packages = $this->_getPackagesForUser(user_getid());
         if (count($packages)) {
             $ret['content'] .= '
@@ -92,12 +96,13 @@ class ServiceFile extends Service {
     * @param  user_id  
     */
     function _getPackagesForUser($user_id) {
+        $frspf =& new FRSPackageFactory();
         $packages = array();
         $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
         "FROM frs_package,frs_release ".
         "WHERE frs_package.package_id=frs_release.package_id ".
         "AND frs_package.group_id='". $this->getGroupId() ."' ".
-        "AND frs_release.status_id=1 ".
+        "AND frs_release.status_id=' ".$frspf->STATUS_ACTIVE."' ".
         "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
         $res_files = db_query($sql);
         $rows_files = db_numrows($res_files);

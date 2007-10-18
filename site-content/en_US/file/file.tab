@@ -50,6 +50,11 @@ file_admin_editpackages	create_canceled	Package creation canceled
 file_admin_editpackages	edit_package	Edit a Package
 file_admin_editpackages	update_canceled	Package update canceled
 file_admin_editpackages	p_not_exists	Package does not exist
+file_admin_editpackages	p_not_yours	Not Your Package Or Package Doesn't Exist
+file_admin_editpackages	p_del	Package Deleted
+file_admin_editpackages	p_not_empty	Sorry - you cannot delete a package that still contains releases.
+file_admin_editpackages	warn	** WARNING!! ** Delete this package (no possible restore operation)?
+
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php

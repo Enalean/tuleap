@@ -6,6 +6,7 @@
 */
 
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 
 class CLI_Action_Frs_AddRelease extends CLI_Action {
     function CLI_Action_Frs_AddRelease() {
@@ -61,7 +62,8 @@ class CLI_Action_Frs_AddRelease extends CLI_Action {
     }
     function validate_status_id(&$status_id) {
         if (!$status_id) {
-            $status_id = 1;
+            $frsrf = new FRSReleaseFactory();            
+            $status_id = $frsrf->STATUS_ACTIVE;
         }
         return true;
     }

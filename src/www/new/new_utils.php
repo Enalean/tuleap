@@ -5,7 +5,7 @@
 // http://sourceforge.net
 //
 // 
-
+require_once ('common/frs/FRSReleaseFactory.class.php');
 
 function new_utils_get_new_projects ($start_time,$offset,$limit) {
   $query = "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .
@@ -49,7 +49,9 @@ function new_utils_get_new_releases_long($start_time, $offset, $limit) {
   return $select.$from.$where.$group;
 }
 
-function new_utils_get_new_releases($start_time,&$select,&$from,&$where) {
+function new_utils_get_new_releases($start_time,&$select,&$from,&$where ) {
+    $frsrf = new FRSReleaseFactory();
+
   $select = "SELECT groups.group_name AS group_name, "
 	  . "groups.group_id AS group_id, "
 	  . "groups.unix_group_name AS unix_group_name, "
@@ -63,7 +65,7 @@ function new_utils_get_new_releases($start_time,&$select,&$from,&$where) {
   $where = "WHERE frs_release.release_date > $start_time "
          . "AND frs_release.package_id = frs_package.package_id "
 	 . "AND frs_package.group_id = groups.group_id "
-         . "AND frs_release.status_id=1 ";
+         . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE;
 
 }
 

@@ -851,7 +851,7 @@ CREATE TABLE frs_filetype (
 #
 # Table structure for table 'frs_package'
 #
-
+#status_active = 1, status_deleted = 2, status_hidden = 3
 CREATE TABLE frs_package (
   package_id int(11) NOT NULL auto_increment,
   group_id int(11) NOT NULL default '0',
@@ -878,7 +878,7 @@ CREATE TABLE frs_processor (
 #
 # Table structure for table 'frs_release'
 #
-
+#status_active = 1, status_deleted = 2, status_hidden = 3
 CREATE TABLE frs_release (
   release_id int(11) NOT NULL auto_increment,
   package_id int(11) NOT NULL default '0',
@@ -895,15 +895,6 @@ CREATE TABLE frs_release (
   KEY idx_frs_release_package (package_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'frs_status'
-#
-
-CREATE TABLE frs_status (
-  status_id int(11) NOT NULL auto_increment,
-  name text,
-  PRIMARY KEY  (status_id)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'group_cvs_full_history'

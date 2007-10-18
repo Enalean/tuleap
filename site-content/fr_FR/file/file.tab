@@ -55,6 +55,11 @@ file_admin_editpackages	create_canceled	Création du paquet annulée
 file_admin_editpackages	edit_package	Edition d'un paquet
 file_admin_editpackages	update_canceled	Mise à jour du paquet annulée
 file_admin_editpackages	p_not_exists	Le paquet n'existe pas
+file_admin_editpackages	p_not_yours	Le paquet n'existe as ou ne vous appartient pas.
+file_admin_editpackages	p_del	Paquet supprimé
+file_admin_editpackages	p_not_empty	Désolé, vous ne pouvez pas supprimer un paquet qui contient encore des versions.
+file_admin_editpackages	warn	** ATTENTION!! ** Voulez vosu vraiment supprimer ce paquet (il est impossible de revenir en arrière)?
+
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/editreleasepermissions.php

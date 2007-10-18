@@ -66,7 +66,7 @@ if ($request->exist('func')) {
             case 'add':
                 $release =& new FRSRelease();
                 $release->setPackageId($package_id);
-                $release->setStatusId(1);
+                $release->setStatusId($frsrf->STATUS_ACTIVE);
                 $release->setReleaseDate(time());
                 frs_display_release_form($is_update = false, $release, $group_id, $Language->getText('file_admin_editreleases', 'create_new_release'), '?func=create&amp;postExpected=&amp;group_id='. $group_id .'&amp;package_id='. $package_id);
                 break;

@@ -1,7 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
-
+require_once('common/frs/FRSPackageFactory.class.php');
 /**
 * Widget_MyMonitoredFp
 * 
@@ -19,10 +19,12 @@ class Widget_MyMonitoredFp extends Widget {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
     function getContent() {
+        $frsrf = new FRSReleaseFactory();        
         $html_my_monitored_fp = '';
         $sql="SELECT groups.group_name,groups.group_id ".
             "FROM groups,filemodule_monitor,frs_package ".
             "WHERE groups.group_id=frs_package.group_id ".
+            "AND frs_package.status_id !=".$frsrf->STATUS_DELETED." ".
             "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
             "AND filemodule_monitor.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
     
@@ -41,6 +43,7 @@ class Widget_MyMonitoredFp extends Widget {
                     "FROM groups,filemodule_monitor,frs_package ".
                     "WHERE groups.group_id=frs_package.group_id ".
                     "AND groups.group_id=$group_id ".
+                    "AND frs_package.status_id !=".$frsrf->STATUS_DELETED." ".
                     "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
                     "AND filemodule_monitor.user_id='".user_getid()."'  LIMIT 100";
                 $result2 = db_query($sql2);

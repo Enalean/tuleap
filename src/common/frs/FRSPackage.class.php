@@ -13,6 +13,7 @@
  
 require_once('common/include/Error.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 
 
 
@@ -98,7 +99,26 @@ class FRSPackage extends Error {
      * @return boolean true if the package is active, false otherwise
      */
     function isActive() {
-        return $this->getStatusID() == 1;
+        $frsrf = new FRSPackageFactory();
+        return $this->getStatusID() == $frsrf->STATUS_ACTIVE;
+    }
+    
+    /**
+     * Determines if the package is hidden or not
+     * @return boolean true if the package is hidden, false otherwise
+     */
+    function isHidden() {
+        $frsrf = new FRSPackageFactory();
+        return $this->getStatusID() == $frsrf->STATUS_HIDDEN;
+    }
+    
+    /**
+     * Determines if the package is deleted or not
+     * @return boolean true if the package is deleted, false otherwise
+     */
+    function isDeleted() {
+        $frsrf = new FRSPackageFactory();
+        return $this->getStatusID() == $frsrf->STATUS_DELETED;
     }
     
     function initFromArray($array) {

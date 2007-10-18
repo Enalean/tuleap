@@ -428,7 +428,7 @@ function getReleases($sessionKey,$group_id,$package_id) {
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
-        if (!$package || $package->getGroupID() != $group_id) {
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new soap_fault(invalid_package_fault,'getReleases','Invalid Package','');
         }
         // check access rights to this package
@@ -572,7 +572,7 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
-        if (!$package || $package->getGroupID() != $group_id) {
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new soap_fault(invalid_package_fault,'getFiles','Invalid Package','');
         }
         // check access rights to this package
@@ -583,7 +583,7 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
-        if (!$release || $release->getPackageID() != $package_id) {
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
             return new soap_fault(invalid_release_fault,'getFiles','Invalid Release','');
         }
         // check access rights to this release
@@ -667,7 +667,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
-        if (!$package || $package->getGroupID() != $group_id) {
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new soap_fault(invalid_package_fault,'getFile','Invalid Package','');
         }
         // check access rights to this package
@@ -678,7 +678,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
-        if (!$release || $release->getPackageID() != $package_id) {
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
             return new soap_fault(invalid_release_fault,'getFile','Invalid Release','');
         }
         // check access rights to this release

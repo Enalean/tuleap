@@ -66,12 +66,11 @@ class FRSReleaseDao extends DataAccessObject {
         	$_package_id = null;
         }
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, "
-        		      ."r.status_id, s.name AS status_name "
-              		  ."FROM frs_release AS r, frs_package AS p, frs_status AS s "
+        		      ."r.status_id "
+              		  ."FROM frs_release AS r, frs_package AS p "
               		  ."WHERE p.group_id= %s "
 			  		  ."AND r.package_id = p.package_id "
-			  		  .($package_id ? "AND p.package_id = %s " : "")
-			  		  ."AND s.status_id=r.status_id",
+			  		  .($package_id ? "AND p.package_id = %s " : ""),
 			  			$this->da->quoteSmart($_group_id),
 			  			$this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
@@ -104,9 +103,9 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function searchActiveReleasesByPackageId($id){
+    function searchActiveReleasesByPackageId($id, $status_active){
     	$_id = (int) $id;
-        return $this->_search(' package_id='.$_id.' AND status_id = 1','','ORDER BY release_date DESC, release_id DESC');
+        return $this->_search(' package_id='.$_id.' AND status_id = '.$status_active,'','ORDER BY release_date DESC, release_id DESC');
     }
     
     function searchReleaseByName($release_name, $package_id){
@@ -310,8 +309,8 @@ class FRSReleaseDao extends DataAccessObject {
      * @param $release_id int
      * @return true if there is no error
      */
-    function delete($release_id) {
-        $sql = sprintf("DELETE FROM frs_release WHERE release_id=%d",
+    function delete($release_id, $status_deleted) {
+        $sql = sprintf("UPDATE frs_release SET status_id = ".$status_deleted." WHERE release_id=%d",
                        $release_id);
 
         $deleted = $this->update($sql);

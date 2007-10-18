@@ -271,9 +271,6 @@ INSERT INTO frs_filetype VALUES ('8002','html');
 INSERT INTO frs_filetype VALUES ('8003','pdf');
 INSERT INTO frs_filetype VALUES ('9999','Other');
 
-INSERT INTO frs_status VALUES ('1','status_active');
-INSERT INTO frs_status VALUES ('3','status_hidden');
-
 INSERT INTO frs_processor VALUES ('1000','i386','10','100');
 INSERT INTO frs_processor VALUES ('2000','PPC','20','100');
 INSERT INTO frs_processor VALUES ('3000','MIPS','30','100');
@@ -2059,7 +2056,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Franï¿½ais','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 -- install and enable pluginsadministration
