@@ -125,7 +125,7 @@ if (!$art_report_html) {
 while (list($field,$value_id) = each($prefs)) {
     if (!is_array($value_id)) {
 		unset($prefs[$field]);
-		$prefs[$field][] = $value_id;
+		$prefs[$field][] = htmlspecialchars($value_id);
 		//echo '<br> DBG Setting $prefs['.$field.'] [] = '.$value_id;
 	    } else {
 		//echo '<br> DBG $prefs['.$field.'] = ('.implode(',',$value_id).')';
@@ -146,7 +146,6 @@ while (list($field,$value_id) = each($prefs)) {
 		}
     }
 }
-
 /* ==================================================
    Memorize order by field as a user preference if explicitly specified.
    
