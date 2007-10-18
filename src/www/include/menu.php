@@ -74,19 +74,6 @@ function menu_site() {
     $HTML->menuhtml_bottom();
 }
 
-function menu_foundry_links() {
-  GLOBAL $HTML,$Language;
-    $HTML->menuhtml_top($Language->getText('include_menu','sf_foundries'));
-    $HTML->menu_entry('/about_foundries.php', $Language->getText('include_menu','about_foudries'));
-    echo '<P>
-';
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6771)), '3D');
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6772)), $Language->getText('include_menu','games'));
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(6770)), 'Java');
-    $HTML->menu_entry('/foundry/'. strtolower(group_getunixname(1872)), $Language->getText('include_menu','printing'));
-    $HTML->menuhtml_bottom();
-}
-
 function menu_search() {
   GLOBAL $HTML,$Language;
     $HTML->menuhtml_top($Language->getText('include_menu','search'));
@@ -101,60 +88,6 @@ function menu_project($grp) {
     print '<P>';
     $HTML->menu_entry('/project/admin/?group_id='.$grp,$Language->getText('include_menu','proj_admin'));
     $HTML->menuhtml_bottom();
-}
-
-function menu_foundry($grp) {
-  GLOBAL $HTML,$Language;
-    $unix_name=strtolower(group_getunixname($grp));
-    $HTML->menuhtml_top($Language->getText('include_menu','foundry').': ' . group_getname($grp));
-    $HTML->menu_entry('/foundry/'. $unix_name .'/',$Language->getText('include_menu','summary_page'));
-    print '<P>';
-    $HTML->menu_entry('/foundry/'. $unix_name .'/admin/', $Language->getText('include_menu','foundry_admin'));
-    $HTML->menuhtml_bottom();
-}
-
-function menu_foundry_guides($grp) {
-  GLOBAL $HTML,$Language;
-    /*
-      Show list of projects in this portal
-    */
-    $HTML->menuhtml_top($Language->getText('include_menu','foundry_guides'));
-
-    $sql="SELECT db_images.width,db_images.height,db_images.id ".
-	"FROM db_images,foundry_data ".
-	"WHERE db_images.id=foundry_data.guide_image_id ".
-	"AND foundry_data.foundry_id='$grp'";
-    $result=db_query($sql);
-    $rows=db_numrows($result);
-	
-    if (!$result || $rows < 1) {
-	//		echo $Language->getText('include_features_boxes','no_projects');
-	echo db_error();
-    } else {
-	echo '<IMG SRC="/dbimage.php?id='.db_result($result,$i,'id').'" HEIGHT="'.db_result($result,$i,'height').'" WIDTH="'.db_result($result,$i,'width').'"><BR>';
-    }
-
-    //echo html_image('foundry/'.$grp.'admin.png',array()).'<BR>';
-
-    $sql = "SELECT user.realname,user.user_id,user.user_name ".
-	"FROM user,user_group ".
-	"WHERE user.user_id=user_group.user_id ".
-	"AND user_group.admin_flags='A' ".
-	"AND user_group.group_id='$grp'";
-
-    $result=db_query($sql);
-    $rows=db_numrows($result);
-
-    if (!$result || $rows < 1) {
-	echo $Language->getText('include_features_boxes','no_projects');
-	echo db_error();
-    } else {
-	for ($i=0; $i<$rows; $i++) {
-	    $HTML->menu_entry('/users/'. db_result($result,$i,'user_name').'/', db_result($result,$i,'realname'));
-	}
-    }
-    $HTML->menuhtml_bottom();
-
 }
 
 function menu_loggedin($page_title) {
@@ -225,19 +158,11 @@ function menu_print_sidebar($params) {
             //echo menu_project ($params['group']);
             echo menu_software();
             echo menu_site();
-        } else {
-            //this is a foundry page
-            echo menu_foundry_guides($params['group']);
-            echo menu_foundry($params['group']);
         }
     } else {
 	echo menu_software();
 	echo menu_site();
     }
-
-    //Foundry Links
-    //(LJ) We do not want the foundry stuff
-    //(LJ)	echo menu_foundry_links();
 
     //search menu
     echo menu_search();

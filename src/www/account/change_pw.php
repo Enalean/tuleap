@@ -17,20 +17,21 @@ $Language->loadLanguageMsg('account/account');
 // ###### checks for valid register from form post
 
 function register_valid($user_id)	{
+    $request =& HTTPRequest::instance();
 
-    if (!isset($GLOBALS['Update'])) {
+    if (!$request->isPost() || !$request->exist('Update')) {
 		return 0;
 	}
 	
 	// check against old pw
-	$res = db_query("SELECT user_pw, status FROM user WHERE user_id=" . $user_id);
-	if (! $res) {
-	  $GLOBALS['register_error'] = "Internal error: Cannot locate user in database.";
+	$res = db_query("SELECT user_pw, status FROM user WHERE status IN ('A', 'R') AND user_id=".db_ei($user_id));
+	if (!$res  || db_numrows($res) != 1) {
+        $GLOBALS['Response']->addFeedback('error', "Internal error: Cannot locate user in database.");
 	  return 0;
 	}
 	
 	$row_pw = db_fetch_array();
-	if ($row_pw['user_pw'] != md5($GLOBALS['form_oldpw'])) {
+	if ($row_pw['user_pw'] != md5($request->get('form_oldpw'))) {
 		$GLOBALS['Response']->addFeedback('error', "Old password is incorrect.");
 		return 0;
 	}
@@ -40,15 +41,15 @@ function register_valid($user_id)	{
 		return 0;
 	}
 
-	if (!$GLOBALS['form_pw']) {
+	if (!$request->exist('form_pw')) {
 		$GLOBALS['Response']->addFeedback('error', "You must supply a password.");
 		return 0;
 	}
-	if ($GLOBALS['form_pw'] != $GLOBALS['form_pw2']) {
+	if ($request->get('form_pw') != $request->get('form_pw2')) {
 		$GLOBALS['Response']->addFeedback('error', "Passwords do not match.");
 		return 0;
 	}
-	if (!account_pwvalid($GLOBALS['form_pw'], $errors)) {
+	if (!account_pwvalid($request->get('form_pw'), $errors)) {
         foreach($errors as $e) {
             $GLOBALS['Response']->addFeedback('error', $e);
         }
@@ -56,7 +57,7 @@ function register_valid($user_id)	{
 	}
 	
 	// if we got this far, it must be good
-        if (!account_set_password($user_id,$GLOBALS['form_pw']) ) {
+        if (!account_set_password($user_id,$request->get('form_pw')) ) {
             $GLOBALS['Response']->addFeedback('error', "Internal error: Could not update password.");
             return 0;
 	}
@@ -88,11 +89,10 @@ if (register_valid($user_id)) {
 
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title'); ?></b>
-<?php if (isset($register_error)) print '<p><span class="highlight"><b>'. $register_error .'</b></span>'; ?>
 <form action="change_pw.php" method="post" autocomplete="off" >
 <p><? echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" value="" name="form_oldpw">
-<?php user_display_choose_password(is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
+<?php user_display_choose_password(is_numeric($request->get('user_id')) ? (int) $request->get('user_id') : 0); ?>
 <p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 

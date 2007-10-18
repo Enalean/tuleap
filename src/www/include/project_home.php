@@ -6,6 +6,7 @@
 //
 // $Id$
 
+require_once('pre.php');
 require_once('vars.php');
 require_once('www/news/news_utils.php');
 require_once('trove.php');
@@ -22,6 +23,8 @@ if ($project->isFoundry()) {
 	header ("Location: /foundry/". $project->getUnixName() ."/");
 	exit;
 }       
+
+$group_id = (int) $group_id;
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 
@@ -40,7 +43,7 @@ site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'
 // ########################################## top area, not in box 
 $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name "
 	. "FROM user,user_group "
-	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=$group_id AND "
+	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".$group_id." AND "
 	. "user_group.admin_flags = 'A'");
 
 if ($project->getStatus() == 'H') {
@@ -89,7 +92,7 @@ if (! $project->hideMembers()) {
     echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','devels').':</SPAN><BR>';
     
     //count of developers on this project
-    $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+    $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=".$group_id);
     print db_numrows($res_count);
 
 
@@ -147,12 +150,12 @@ if ($project->usesForum()) {
 	html_image("ic/notes16.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','public_forums'))); 
 	print '&nbsp;'.$Language->getText('include_project_home','public_forums').'</A>';
 	$res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
-		. "forum_group_list.group_id=$group_id AND forum.group_forum_id=forum_group_list.group_forum_id "
+		. "forum_group_list.group_id=".$group_id." AND forum.group_forum_id=forum_group_list.group_forum_id "
 		. "AND forum_group_list.is_public=1");
 	$row_count = db_fetch_array($res_count);
 	print ' ( '.$Language->getText('include_project_home','msg',$row_count['count']).' ';
 
-	$res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
+	$res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=".$group_id." "
 		. "AND is_public=1");
 	$row_count = db_fetch_array($res_count);
 	print $Language->getText('include_project_home','forums',$row_count['count'])." )\n";
@@ -175,10 +178,10 @@ if ($project->usesBugs()) {
 	print '<HR SIZE="1" NoShade><A href="/bugs/?group_id='.$group_id.'">';
 	html_image("ic/bug16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','bug_track'))); 
 	print '&nbsp;'.$Language->getText('include_project_home','bug_track').'</A>';
-	$res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=$group_id AND status_id != 3");
+	$res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=".$group_id." AND status_id != 3");
 	$row_count = db_fetch_array($res_count);
 	print " ( <B>$row_count[count]</B>";
-	$res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=$group_id");
+	$res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=".$group_id);
 	$row_count = db_fetch_array($res_count);
 	print ' '.$Language->getText('include_project_home','open_bugs').', '.$Language->getText('include_project_home','total',$row_count['count']).' )';
 }
@@ -191,9 +194,9 @@ if ($project->usesSupport()) {
 	<A href="/support/?group_id='.$group_id.'">';
 	html_image("ic/support16b.jpg",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','supp_manager')));
 	print '&nbsp;'.$Language->getText('include_project_home','tech_supp_manager').'</A>';
-	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id");
+	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=".$group_id);
 	$row_count = db_fetch_array($res_count);
-	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id AND support_status_id='1'");
+	$res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=".$group_id." AND support_status_id='1'");
 	$row_count2 = db_fetch_array($res_count);
 	print ' ( '.$Language->getText('include_project_home','open_requ', $row_count2['count']).', '.$Language->getText('include_project_home','open_requ', $row_count['count']).' )';
 }
@@ -224,9 +227,9 @@ if ($project->usesPatch()) {
 		<A href="/patch/?group_id='.$group_id.'">';
 	html_image("ic/patch.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','patch_manager')));
 	print '&nbsp;'.$Language->getText('include_project_home','patch_manager').'</A>';
-	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id");
+	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=".$group_id);
 	$row_count = db_fetch_array($res_count);
-	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id AND patch_status_id='1'");
+	$res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=".$group_id." AND patch_status_id='1'");
 	$row_count2 = db_fetch_array($res_count);
 	print ' ( '.$Language->getText('include_project_home','open_patches',$row_count2['count']).', '.$Language->getText('include_project_home','total',$row_count['count']).' )';
 }
@@ -237,7 +240,7 @@ if ($project->usesMail()) {
 	print '<HR SIZE="1" NoShade><A href="/mail/?group_id='.$group_id.'">';
 	html_image("ic/mail16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','mail_lists'))); 
 	print '&nbsp;'.$Language->getText('include_project_home','mail_lists').'</A>';
-	$res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
+	$res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=".$group_id." AND is_public=1");
 	$row_count = db_fetch_array($res_count);
 	print ' ( '.$Language->getText('include_project_home','public_mail_lists',$row_count['count']).' )';
 }
@@ -248,7 +251,7 @@ if ($project->usesPm()) {
 	print '<HR SIZE="1" NoShade><A href="/pm/?group_id='.$group_id.'">';
 	html_image("ic/taskman16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$Language->getText('include_project_home','task_manager')));
 	print '&nbsp;'.$Language->getText('include_project_home','proj_task_man').'</A>';
-	$sql="SELECT * FROM project_group_list WHERE group_id='$group_id' AND is_public=1";
+	$sql="SELECT * FROM project_group_list WHERE group_id=".$group_id." AND is_public=1";
 	$result = db_query ($sql);
 	$rows = db_numrows($result);
 	if (!$result || $rows < 1) {
@@ -291,7 +294,7 @@ if ($project->usesCVS()) {
 	html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'CVS'));
 	print ' '.$Language->getText('include_project_home','cvs_repo').'</A>';
 // LJ Cvs checkouts added 
-	$sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='$group_id'";
+	$sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id=".$group_id;
 	$result = db_query($sql);
         $cvs_commit_num=db_result($result,0,0);
         $cvs_add_num=db_result($result,0,1);
@@ -314,7 +317,7 @@ if ($project->usesService('svn')) {
 	print '<HR SIZE="1" NoShade><A href="/svn/?group_id='.$group_id.'">';
 	html_image("ic/svn16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
 	print ' '.$Language->getText('include_project_home','svn_repo').'</A>';
-	$sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='$group_id'";
+	$sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id=".$group_id;
 	$result = db_query($sql);
         $svn_accesses = db_result($result,0,0);
         if (!$svn_accesses) $svn_accesses=0;

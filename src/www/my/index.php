@@ -24,6 +24,7 @@ require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('my/my');
 $em =& EventManager::instance();
+$purifier =& CodeX_HTMLPurifier::instance();
 
 // define undefined vars
 if (!isset($hide_item_id)) {
@@ -524,8 +525,8 @@ if (user_isloggedin()) {
 		for ($i=0; $i<$rows; $i++) {
 		    $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
 		    $html_my_bookmarks .= '
-                                           <B><A HREF="'. db_result($result,$i,'bookmark_url') .'">'.
-			db_result($result,$i,'bookmark_title') .'</A></B> '.
+                                           <B><A HREF="'. $purifier->purify(db_result($result,$i,'bookmark_url')) .'">'.
+			$purifier->purify(db_result($result,$i,'bookmark_title')) .'</A></B> '.
 			'<SMALL><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$Language->getText('my_index', 'edit_link').']</A></SMALL></TD>'.
 			'<td><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id') .
 			'" onClick="return confirm(\''.$Language->getText('my_index', 'del_bookmark').'\')">'.

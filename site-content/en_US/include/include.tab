@@ -450,6 +450,7 @@ include_user	invalid_u_id	Invalid User ID
 include_utils	prio_colors	Priority Colors
 include_utils	address_problem	There are problems with the following addresses
 include_utils	email_explain	Email addresses must either be valid CodeX user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+include_utils	invalid_email	Email format invalid
 #
 #-----------------------------------------------
 # Script: SF/www/include/vars.php

@@ -373,5 +373,9 @@ $sys_max_size_upload = 67108864;
 $sys_max_size_attachment = 16777216;
 
 
+// Enable 'user skills' facility.
+// (1 to enable, 0 to disable)
+$sys_enable_user_skills = 1;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

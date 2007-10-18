@@ -25,7 +25,7 @@ function user_isrestricted() {
 		return false;
 	}
 	$user_id=user_getid();
-	$res = db_query("SELECT status FROM user WHERE user_id='$user_id' AND status='R'");
+	$res = db_query("SELECT status FROM user WHERE user_id='".db_es($user_id)."' AND status='R'");
 	if (!$res || db_numrows($res) < 1) {
 		//matching row wasn't found
 		return false;
@@ -77,7 +77,7 @@ function user_ismember($group_id,$type=0) {
 		for everyone else, do a query
 	*/
 	$query = "SELECT user_id FROM user_group "
-		. "WHERE user_id='$user_id' AND group_id='$group_id'";
+		. "WHERE user_id='".db_es($user_id)."' AND group_id='".db_es($group_id)."'";
 
 	$type=strtoupper($type);
 
@@ -208,7 +208,7 @@ function user_getname($user_id = 0) {
 			return $USER_NAMES["user_$user_id"];
 		} else {
 			//fetch the user name and store it for future reference
-			$result = db_query("SELECT user_id,user_name FROM user WHERE user_id='$user_id'");
+			$result = db_query("SELECT user_id,user_name FROM user WHERE user_id='".db_es($user_id)."'");
 			if ($result && db_numrows($result) > 0) {
 				//valid user - store and return
 				$USER_NAMES["user_$user_id"]=db_result($result,0,"user_name");
@@ -247,7 +247,7 @@ function user_getemail($user_id) {
 
 function user_getid_from_email($email) {
 	global $Language;
-	$result = db_query("SELECT user_id FROM user WHERE email='$email'");
+	$result = db_query("SELECT user_id FROM user WHERE email='".db_es($email)."'");
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"user_id");
 	} else {
@@ -272,7 +272,7 @@ function user_get_result_set($user_id) {
 
 	global $USER_RES;
 	if (!isset($USER_RES["_".$user_id."_"]) || !$USER_RES["_".$user_id."_"]) {
-		$USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='$user_id'");
+		$USER_RES["_".$user_id."_"]=db_query("SELECT * FROM user WHERE user_id='".db_es($user_id)."'");
 		return $USER_RES["_".$user_id."_"];
 	} else {
 		return $USER_RES["_".$user_id."_"];
@@ -284,7 +284,7 @@ function user_get_result_set_from_unix($user_name) {
 	//so it doesn't have to be fetched each time
 		
 	global $USER_RES;
-	$res = db_query("SELECT * FROM user WHERE user_name='$user_name'");
+	$res = db_query("SELECT * FROM user WHERE user_name='".db_es($user_name)."'");
 	$user_id = db_result($res,0,'user_id');
 	$USER_RES["_".$user_id."_"] = $res;
 	return $USER_RES["_".$user_id."_"];
@@ -294,7 +294,7 @@ function user_get_result_set_from_email($email) {
 	//so it doesn't have to be fetched each time
 		
 	global $USER_RES;
-    $sql = "SELECT * FROM user WHERE (user_name='$email' or email='$email')";
+    $sql = "SELECT * FROM user WHERE (user_name='".db_es($email)."' or email='".db_es($email)."')";
 	$res = db_query($sql);
 	$user_id = db_result($res,0,'user_id');
 	$USER_RES["_".$user_id."_"] = $res;
@@ -330,12 +330,12 @@ function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
 		$preference_name=strtolower(trim($preference_name));
-		$result=db_query("UPDATE user_preferences SET preference_value='$value' ".
-			"WHERE user_id='".user_getid()."' AND preference_name='$preference_name'");
+		$result=db_query("UPDATE user_preferences SET preference_value='".db_es($value)."' ".
+			"WHERE user_id='".user_getid()."' AND preference_name='".db_es($preference_name)."'");
 		if (db_affected_rows($result) < 1) {
 			echo db_error();
 			$result=db_query("INSERT INTO user_preferences (user_id,preference_name,preference_value) ".
-				"VALUES ('".user_getid()."','$preference_name','$value')");
+				"VALUES ('".user_getid()."','".db_es($preference_name)."','".db_es($value)."')");
 		}
 
 		// Update the Preference cache if it was setup by a user_get_preference
@@ -396,7 +396,7 @@ function user_del_preference($preference_name) {
             unset($user_pref[$preference_name]);
         }
         $sql = 'DELETE FROM user_preferences'
-            .' WHERE preference_name="'.$preference_name.'"'
+            .' WHERE preference_name="'.db_es($preference_name).'"'
             .' AND user_id='.user_getid();
         $res = db_query($sql);
         if(db_affected_rows($res) != 1) {

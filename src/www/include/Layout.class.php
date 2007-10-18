@@ -97,7 +97,14 @@ class Layout extends Response {
             if (!$is_anon && !headers_sent() && $fb) {
                 $this->_serializeFeedback();
             }
-            header('Location: '. $url);
+            // Protect against CRLF injections,
+            // This seems to be fixed in php 4.4.2 and 5.1.2 according to
+            // http://php.net/header
+            if(strpos($url, "\n")) {
+                trigger_error('HTTP header injection detected. Abort.', E_USER_ERROR);
+            } else {
+                header('Location: '. $url);
+            }
         }
         exit();
     }

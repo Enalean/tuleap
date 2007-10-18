@@ -4,7 +4,7 @@ require_once('common/include/HTTPRequest.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * $Id: HTTPRequestTest.php 1901 2005-08-18 14:54:55Z nterray $
+ * $Id$
  *
  * Tests the class HTTPRequest
  */
@@ -18,18 +18,25 @@ class HTTPRequestTest extends UnitTestCase {
 
     function setUp() {
         $_REQUEST['exists'] = '1';
+        $_REQUEST['exists_empty'] = '';
+        $_SERVER['server_exists'] = '1';
         if (get_magic_quotes_gpc()) {
             $_REQUEST['quote'] = "l\\'avion";
             $_REQUEST['array'] = array('quote_1' => "l\\'avion", 'quote_2' => array('quote_3' => "l\\'oiseau"));
+            $_SERVER['server_quote'] = "l\\'avion du server";
         } else {
             $_REQUEST['quote'] = "l'avion";
             $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
+            $_SERVER['server_quote'] = "l\'avion du server";
         }
     }
     
     function tearDown() {
         unset($_REQUEST['exists']);
         unset($_REQUEST['quote']);
+        unset($_REQUEST['exists_empty']);
+        unset($_SERVER['server_exists']);
+        unset($_SERVER['server_quote']);
     }
     
     function testGet() {
@@ -43,12 +50,30 @@ class HTTPRequestTest extends UnitTestCase {
         $this->assertTrue($r->exist('exists'));
         $this->assertFalse($r->exist('does_not_exist'));
     }
-    
+
+    function testExistAndNonEmpty() {
+        $r =& new HTTPRequest();
+        $this->assertTrue($r->existAndNonEmpty('exists'));
+        $this->assertFalse($r->existAndNonEmpty('exists_empty'));
+        $this->assertFalse($r->existAndNonEmpty('does_not_exist'));
+    }
+
     function testQuotes() {
         $r =& new HTTPRequest();
         $this->assertIdentical($r->get('quote'), "l'avion");
     }
-    
+
+    function testServerGet() {
+        $r =& new HTTPRequest();
+        $this->assertEqual($r->getFromServer('server_exists'), '1');
+        $this->assertFalse($r->getFromServer('does_not_exist'));
+    }
+
+    function testServerQuotes() {
+        $r =& new HTTPRequest();
+        $this->assertIdentical($r->getFromServer('server_quote'), "l'avion du server");
+    }
+
     function testSingleton() {
         $this->assertReference(
                 HTTPRequest::instance(),

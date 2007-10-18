@@ -54,28 +54,29 @@ function group_get_object($group_id,$res=false,$force_update=false) {
 	//returns appropriate object
 	
 	global $GROUP_OBJ;
+    $group_id = (int) $group_id;
 	if (!isset($GROUP_OBJ["_".$group_id."_"]) || $force_update) {
 		if ($res) {
 			//the db result handle was passed in
 		} else {
-			$res=db_query("SELECT * FROM groups WHERE group_id='$group_id'");
+			$res=db_query("SELECT * FROM groups WHERE group_id=".$group_id);
 		}
 		if (!$res || db_numrows($res) < 1) {
 			$GROUP_OBJ["_".$group_id."_"]=false;
 		} else {
-		        $GROUP_OBJ["_".$group_id."_"]= new Group($group_id,$res);
+            $GROUP_OBJ["_".$group_id."_"]= new Group($group_id);
 		}
 	}
 	return $GROUP_OBJ["_".$group_id."_"];
 }
 
 function group_get_object_by_name($groupname) {
-	$res=db_query("SELECT * FROM groups WHERE unix_group_name='$groupname'");
+	$res=db_query("SELECT * FROM groups WHERE unix_group_name='".db_es($groupname)."'");
 	return group_get_object(db_result($res,0,'group_id'),$res);
 }
 
 function group_getid_by_name($groupname) {
-	$res = db_query("SELECT group_id FROM groups WHERE unix_group_name='$groupname'");
+	$res = db_query("SELECT group_id FROM groups WHERE unix_group_name='".db_es($groupname)."'");
 	if (db_numrows($res) == 0) return false;
 	else return db_result($res,0,'group_id');
 }
@@ -102,8 +103,8 @@ class Group extends Error {
 	function Group($id) {
 	global $Language;
 		$this->Error();
-		$this->group_id=$id;
-		$this->db_result=db_query("SELECT * FROM groups WHERE group_id='$id'");
+		$this->group_id=(int)$id;
+		$this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
 		if (db_numrows($this->db_result) < 1) {
 			//function in class we extended
 			$this->setError($Language->getText('include_group','g_not_found'));

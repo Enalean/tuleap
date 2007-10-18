@@ -6,18 +6,23 @@
 //
 // $Id$
 
-require_once('pre.php'); 
-   
+require_once('pre.php');
+
 $Language->loadLanguageMsg('account/account');
 
-$HTML->header(array(title=>$Language->getText('account_pending', 'title')));
+$HTML->header(array('title'=>$Language->getText('account_pending', 'title')));
+
+$request =& HTTPRequest::instance();
+$purifier =& CodeX_HTMLPurifier::instance();
+
+$form_user = $purifier->purify($request->get('form_user'));
 ?>
 
 <P><?php echo $Language->getText('account_pending', 'message'); ?>
 
-<P><A href="pending-resend.php?form_user=<?php print $form_user; ?>">[<?php echo $Language->getText('account_pending', 'btn_resend'); ?>]</A>
+<P><A href="pending-resend.php?form_user=<?php echo $form_user; ?>">[<?php echo $Language->getText('account_pending', 'btn_resend'); ?>]</A>
 <BR><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
- 
+
 <?php
 $HTML->footer(array());
 

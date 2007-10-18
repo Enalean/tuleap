@@ -17,20 +17,27 @@ $em =& EventManager::instance();
 
 $HTML->header(array('title'=>$Language->getText('account_options', 'title')));
 
+$purifier =& CodeX_HTMLPurifier::instance();
+
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
 
-$HTML->box1_top($Language->getText('account_options', 'title').": ".user_getrealname(user_getid()));
+// MV: I don't know why user_getrealname is used here since we already have
+// the info in $row_user! However it could be reused to make an ldap call to
+// display the realname.
+$html_realname = $purifier->purify(user_getrealname(user_getid()));
+
+$HTML->box1_top($Language->getText('account_options', 'title').": ".$html_realname);
 ?>
 
 <p><?php echo $Language->getText('account_options', 'welcome'); ?>,
-    <b><?php echo user_getrealname(user_getid()); ?></b>
+    <b><?php echo $html_realname; ?></b>
 
 <p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
 
 <UL>
-<LI><A href="/users/<?php print $row_user['user_name']; ?>/">
+<LI><A href="/users/<?php echo $purifier->purify($row_user['user_name']); ?>/">
 <B><?php echo $Language->getText('account_options', 'view_developer_profile'); ?></B></A>
 <LI><A HREF="/people/editprofile.php"><B><?php echo $Language->getText('account_options', 'edit_skills_profile'); ?></B></A>
 </UL>
@@ -50,7 +57,7 @@ $HTML->box1_top($Language->getText('account_options', 'title').": ".user_getreal
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
-<TD><B><?php print $row_user['user_name']; ?></B></td>
+<TD><B><?php echo $purifier->purify($row_user['user_name']); ?></B></td>
 <td>
 <?php
 $display_change_password = true;
@@ -71,7 +78,7 @@ if ($display_change_password) {
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
-<TD><B><?php print $row_user['realname']; ?></B></td>
+<TD><B><?php echo $html_realname; ?></B></td>
 <td>
 <?php
 $display_change_realname = true;
