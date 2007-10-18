@@ -10,12 +10,12 @@
 function new_utils_get_new_projects ($start_time,$offset,$limit) {
   $query = "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .
            "WHERE is_public=1 AND status='A' AND type=1 AND type=1 " .
-           "AND register_time < ".intval($start_time)." ".
+           "AND register_time < ".db_ei($start_time)." ".
            "ORDER BY register_time ";
   if (isset($limit) && $limit != 0) {
-    $query .= "DESC LIMIT ".intval($limit);
+    $query .= "DESC LIMIT ".db_ei($limit);
   } elseif (isset($offset)) {
-    $query .= "DESC LIMIT ".intval($offset).",21";
+    $query .= "DESC LIMIT ".db_ei($offset).",21";
   }
   
   return($query);
@@ -44,7 +44,7 @@ function new_utils_get_new_releases_long($start_time, $offset, $limit) {
           . "AND groups.type=1 ";  //don't include templates or test projects
 
   $group = "GROUP BY frs_release.release_id "
-	 . "ORDER BY frs_release.release_date DESC LIMIT ".intval($offset).",".intval($limit);
+	 . "ORDER BY frs_release.release_date DESC LIMIT ".db_ei($offset).",".db_ei($limit);
 
   return $select.$from.$where.$group;
 }
@@ -60,7 +60,7 @@ function new_utils_get_new_releases($start_time,&$select,&$from,&$where) {
 
   $from = "FROM groups,frs_package,frs_release ";
 
-  $where = "WHERE frs_release.release_date > ".intval($start_time)." "
+  $where = "WHERE frs_release.release_date > ".db_ei($start_time)." "
          . "AND frs_release.package_id = frs_package.package_id "
 	 . "AND frs_package.group_id = groups.group_id "
          . "AND frs_release.status_id=1 ";
