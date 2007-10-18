@@ -257,7 +257,7 @@ if ($set=='my') {
     reset($prefs);
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
-		    $pref_stg .= '&'.$field.'[]='.$value_id;
+		    $pref_stg .= '&'.$field.'[]='.urlencode(stripslashes($value_id));
 		}
 	
 		// build part of the HTML title of this page for more friendly bookmarking
