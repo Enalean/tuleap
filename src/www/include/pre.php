@@ -244,9 +244,6 @@ print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
 if ($_SERVER['SERVER_NAME'] != 'localhost' &&
     $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
     $_SERVER['SCRIPT_NAME'] != '/index.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/export/rss_sfnews.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/export/rss_sfprojects.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/export/rss_sfnewreleases.php' &&
     $_SERVER['SCRIPT_NAME'] != '/current_css.php'  &&
     $_SERVER['SCRIPT_NAME'] != '/account/login.php'  &&
     $_SERVER['SCRIPT_NAME'] != '/account/register.php'&&
