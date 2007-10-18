@@ -258,6 +258,17 @@ if ($_SERVER['SERVER_NAME'] != 'localhost' &&
     strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0 &&
     strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 ) {
 
+    $return_to = urlencode((($_SERVER['REQUEST_URI'] === "/")?"/my/":$_SERVER['REQUEST_URI']));
+
+    //if  user  requests a page in light view, it should be redirected to light login
+    $url = parse_url($_SERVER['REQUEST_URI']);
+    if(isset($url['query'])) {
+        $query = $url['query'];
+        if (strstr($query,'pv=2')) {
+            $return_to .= "&pv=2";
+        }
+    }
+
     if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
         header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
     } else {
