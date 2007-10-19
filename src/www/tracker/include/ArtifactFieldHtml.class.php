@@ -194,57 +194,75 @@ class ArtifactFieldHtml extends ArtifactField {
 	 * date_field_name: date field_name source 
 	 * pv : printer version
 	 */
-	function fieldRelation($value,$value_name,$atid,$form_name,$date_field_name,$pv=false){
-	    global $Language;
-	    $str_name="";
-	    $str_label="";
-	    if (!$pv) {
-		$sql = sprintf('SELECT DISTINCT af.field_name,af.label '.
-			       'FROM artifact_field af,artifact_field_usage afu '.
-		               'WHERE af.group_artifact_id = %d '.
-			       'AND af.group_artifact_id= afu.group_artifact_id '.
-			       'AND af.field_id= afu.field_id '.
-			       'AND afu.use_it= 1 '.
-		               'AND af.display_type= %s',
-         	               $atid,DataAccess::quoteSmart("DF"));
-                $res=db_query($sql);
-		for($i=0;$i<db_numrows($res);$i++){
-		    $field_value[$i] = db_fetch_array($res);
+	function fieldRelation($value,$value_name,$atid,$form_name,$date_field_name,$pv=false) {
+	    
+		global $Language;
+	    
+		$names  = array();
+	    $labels = array();
+    
+	    $sql = sprintf('SELECT DISTINCT af.field_name,af.label '.
+		               'FROM artifact_field af,artifact_field_usage afu '.
+	                   'WHERE af.group_artifact_id = %d '.
+			           'AND af.group_artifact_id= afu.group_artifact_id '.
+			           'AND af.field_id= afu.field_id '.
+			           'AND afu.use_it= 1 '.
+	                   'AND af.display_type= %s',
+                       $atid,DataAccess::quoteSmart("DF"));
+        
+        $res=db_query($sql);
+
+        for($i=0;$i<db_numrows($res);$i++){
+	        $field_value[$i] = db_fetch_array($res);
 		    if ($field_value[$i][0] != $date_field_name){
-                        $field = new ArtifactField();
-	                $field->fetchData($atid,$field_value[$i][0]);
-			if (!$field->isStandardField()) {
-	                        $str_name.= $field_value[$i][0].'-';
-			        $str_label.= $field_value[$i][1].'-';
-			}
-	            }
+                $field = new ArtifactField();
+	            $field->fetchData($atid,$field_value[$i][0]);
+		    	if (!$field->isStandardField()) {
+	                $names[count($names)]   = $field_value[$i][0];
+			        $labels[count($labels)] = $field_value[$i][1];
+			    }
 	        }
-		//add the standard fields and exclude the source date field to be compared 
-		if ($date_field_name == "open_date") {
-		    $str_name  .= "close_date";
-		    $str_label .= "End Date";
-		} else if ($date_field_name == "close_date") {
-		    $str_name  .= "open_date";
-		    $str_label .= "Submitted On";		
-		} else {
-		    $str_name  .= "open_date-close_date";
-		    $str_label .= "Submitted On-End Date";
-		}
-		
-            $today = false;
-	    $size = 10;
-	    $maxlength = 10;
-	    
-	    $timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
-	    $html = '<INPUT TYPE="text" name="'.$this->field_name.
-	        '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-		'<a href="javascript:show_calendar_cmb(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',\''.$str_name.'\',\''.$str_label.'\',\''.$date_field_name.'\');">'.
-		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
-	    
-	    $html .= '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';
-	    } else {
-	        $html = $value;
 	    }
+	
+    	//add the standard fields and exclude the source date field to be compared 
+	    if ($date_field_name == "open_date") {
+	        $names[count($names)]   = "close_date";
+		    $labels[count($labels)] = addslashes("End Date");
+	    } else if ($date_field_name == "close_date") {
+    	    $names[count($names)]   = "open_date";
+		    $labels[count($labels)] = addslashes("Submitted On");		
+	    } else {
+    	    $names[count($names)]   = "open_date";
+		    $labels[count($labels)] = addslashes("Submitted On");
+	        $names[count($names)]   = "close_date";
+		    $labels[count($labels)] = addslashes("End Date");
+	    }
+    
+	    $js  = "var names  = new Array();";
+	    $js .= "var labels = new Array();";
+        for($i=0;$i<count($names);$i++) {
+            $js .= "names[".$i."]  = '".$names[$i]."';";
+            $js .= "labels[".$i."] = '".addslashes($labels[$i])."';";
+        }
+        echo '<script language="javascript">';
+        echo $js;
+        echo '</script>';
+
+		if (!$pv) {
+            $today = false;
+	        $size = 10;
+	        $maxlength = 255;
+	    
+	        $timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
+	        $html = '<INPUT TYPE="text" name="'.$this->field_name.
+	                '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.stripslashes($value).'">'.
+		            '<a href="javascript:show_calendar_cmb(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',\''.$date_field_name.'\',window.names,window.labels);">'.
+		            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
+	    
+		    $html .= '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';
+		} else {
+	        $html = $value;
+		}
 	    return $html;
 	}
 		

@@ -29,7 +29,7 @@ $first_value = $GLOBALS['Language']->getText('date_field', 'first_value');
 //Modified by Mahmoud MAALEJ for CodeX project
 //alert('hello world!');
 
-function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_path,arr1,arr2,date_field) {
+function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_path,date_field,names,labels) {
         var arr_months = <?php echo $months; ?>;
         var week_days = <?php echo $days; ?>;
         var n_weekstart = <?php echo $start; ?>; // day week starts from (normally 0 or 1)
@@ -123,12 +123,12 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
                 "<tr>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar_cmb('"+
                 //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+arr1+"','"+arr2+"','"+date_field+"');\">"+
+                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"',window.opener.names,window.opener.labels);\">"+
 		"<img src=\""+img_theme_path+"/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar_cmb('"+
                 //str_target+"', '"+ dt2dtstr(dt_prev_month)+"'+document.cal.time.value);\">"+
-		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme_file+"','"+img_theme_path+"','"+arr1+"','"+arr2+"','"+date_field+"');\">"+
+		str_target+"', '"+ dt2dtstr(dt_prev_month)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"');\">"+
                 "<img src=\""+img_theme_path+"/calendar/prev.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous month\"></a></td>\n"+
 
@@ -138,12 +138,12 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
 
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar_cmb('"
                 //+str_target+"', '"+dt2dtstr(dt_next_month)+"'+document.cal.time.value);\">"+
-                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme_file+"','"+img_theme_path+"','"+arr1+"','"+arr2+"','"+date_field+"');\">"+
+                +str_target+"', '"+dt2dtstr(dt_next_month)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"',window.opener.names,window.opener.labels);\">"+
                 "<img src=\""+img_theme_path+"/calendar/next.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next month\"></a></td>\n"+
                 "        <td class=\"calendar_month\" align=\"right\"><a href=\"javascript:window.opener.show_calendar_cmb('"
                 //+str_target+"', '"+dt2dtstr(dt_next_year)+"'+document.cal.time.value);\">"+
-		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+arr1+"','"+arr2+"','"+date_field+"');\">"+
+		+str_target+"', '"+dt2dtstr(dt_next_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"',window.opener.names,window.opener.labels);\">"+
                 "<img src=\""+img_theme_path+"/calendar/next_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"next year\"></a></td>\n"+
                 "</tr>\n");
@@ -195,48 +195,45 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
           str_buffer +=
 	         "</table>\n" +
                   "</tr>\n</td>\n</table>\n";
+
+	  if ((names.length > 0) && (names[0] != '')) {
           
-       	  
-	  var array1 = arr1.split("-");
-          var array2 = arr2.split("-");
-	  if ((array1.length > 0) && (array1[0] != '')) {
-              str_buffer += '<script>\n';
+          str_buffer += '<script type="text/javascript">\n';
 	      str_buffer += 'var name;\n';
-              str_buffer += 'var label;\n';
-              str_buffer += 'function cmb_change () {\n';
-              str_buffer += '    var cmb = document.choice.CMB_'+date_field+';\n';
-              str_buffer += '    window.name = cmb.value;\n';
-              str_buffer += '    window.label = cmb.options[cmb.selectedIndex].text;\n';
-              str_buffer += '    window.opener.before_close("'+date_field+'");\n';
-              str_buffer += '    window.close();\n';
-              str_buffer += '    return(window.name);\n';
-              str_buffer += '}\n';
-              str_buffer += '</script>\n';
-              str_buffer += '<FORM name="choice">\n';
-              str_buffer += '<p align="center"><?php echo $description_date_field;?></p><p align="center"><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
-              str_buffer += '    <OPTION VALUE="'+'0'+'">'+'<?php echo $first_value;?>'+'</OPTION>\n';
+          str_buffer += 'var label;\n';
           
-	      for(i=0;i<array1.length;i++){
-                  if ((array1[i] != '') && (array2[i] != '')) {
-	              str_buffer += '    <OPTION VALUE="'+array1[i]+'">'+array2[i]+'</OPTION>\n';
+          str_buffer += 'function cmb_change () {\n';
+          str_buffer += '    var cmb = document.choice.CMB_'+date_field+';\n';
+          str_buffer += '    window.name = cmb.value;\n';
+          str_buffer += '    window.label = cmb.options[cmb.selectedIndex].text;\n';
+          str_buffer += '    window.opener.before_close("'+date_field+'");\n';
+          str_buffer += '    window.close();\n';
+          str_buffer += '    return(window.name);\n';
+          str_buffer += '}\n';
+          str_buffer += '</script>\n';
+          str_buffer += '<FORM name="choice">\n';
+          str_buffer += '<p align="center"><?php echo $description_date_field;?></p><p align="center"><SELECT ID="CMB_'+date_field+'" NAME="CMB_'+date_field+'" onchange="javascript:cmb_change();">\n';
+          str_buffer += '    <OPTION VALUE="'+'0'+'">'+'<?php echo $first_value;?>'+'</OPTION>\n';
+          
+	      for(i=0;i<names.length;i++){
+              if ((names[i] != '') && (labels[i] != '')) {
+	              str_buffer += "    <OPTION VALUE='"+names[i]+"'>"+labels[i]+"</OPTION>\n";
 	          }
-              }
+          }
     
 	      str_buffer += '</SELECT></p>\n';
-              str_buffer += '</FORM>\n';
-           }
-	   str_buffer +=
-	       "</body>\n" +
-                   "</html>\n";
+          str_buffer += '</FORM>\n';
+      }
 	  
-
-        window.vWinCal = window.open("", "Calendar",
+	  str_buffer += "</body>\n" + "</html>\n";
+	  
+      window.vWinCal = window.open("", "Calendar",
                 "width=270,height=330,status=no,resizable=yes,top=200,left=200");
-        window.vWinCal.opener = self;
-        window.vWinCal.focus();
-        var calc_doc = window.vWinCal.document;
-        calc_doc.write (str_buffer);
-        calc_doc.close();
+      window.vWinCal.opener = self;
+      window.vWinCal.focus();
+      var calc_doc = window.vWinCal.document;
+      calc_doc.write (str_buffer);
+      calc_doc.close();
 		
 }
 // datetime parsing and formatting routines. modify them if you wish other datetime format
@@ -265,8 +262,8 @@ function dt2tmstr(dt_datetime) {
 
 
 function before_close(date_field){
-    var txt    = document.artifact_form[date_field];
-    var hidden = document.artifact_form["DTE_"+date_field+"_name"];
-    txt.value  =  window.vWinCal.label;
-    hidden.value= window.vWinCal.name;
+    var txt      = document.artifact_form[date_field];
+    var hidden   = document.artifact_form["DTE_"+date_field+"_name"];
+    txt.value    = window.vWinCal.label;
+    hidden.value = window.vWinCal.name;
 }
