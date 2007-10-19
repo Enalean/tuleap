@@ -5,12 +5,21 @@
  * $Id$
  *
  * HTTPRequest
+ * @package CodeX
  */
 
 require_once('browser.php');
 require_once('common/include/CodeX_Request.class.php');
 
+/**
+ * @package CodeX
+ */
 class HTTPRequest extends CodeX_Request {
+    /**
+     * @var array
+     * @access private
+     */
+    var $clean;
 
     function HTTPRequest() {
     }
@@ -18,6 +27,7 @@ class HTTPRequest extends CodeX_Request {
     /**
      * Get the value of $variable in $_REQUEST (user submitted values).
      *
+     * @access private
      * @param string $variable Name of the parameter to get.
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
@@ -105,6 +115,7 @@ class HTTPRequest extends CodeX_Request {
      * Remove slashes in $value. If $value is an array, remove slashes for each
      * element.
      *
+     * @access private
      * @param mixed $value
      * @return mixed
      */
@@ -138,6 +149,7 @@ class HTTPRequest extends CodeX_Request {
     /**
      * Check if $variable exists in $array.
      *
+     * @access private
      * @param string $variable Name of the parameter.
      * @return boolean
      */
