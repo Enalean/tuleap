@@ -112,7 +112,7 @@ $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
 while (list($field,$value_id) = each($prefs)) {
     if (!is_array($value_id)) {
 		unset($prefs[$field]);
-		$prefs[$field][] = $value_id;
+		$prefs[$field][] = htmlspecialchars($value_id);
 		//echo '<br> DBG Setting $prefs['.$field.'] [] = '.$value_id;
 	    } else {
 		//echo '<br> DBG $prefs['.$field.'] = ('.implode(',',$value_id).')';
@@ -135,7 +135,6 @@ while (list($field,$value_id) = each($prefs)) {
 		$prefs[$f_name] = $$f_name;
     }
 }
-
 /* ==================================================
    Memorize order by field as a user preference if explicitly specified.
    
@@ -247,7 +246,7 @@ if ($set=='my') {
     reset($prefs);
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
-		    $pref_stg .= '&'.$field.'[]='.$value_id;
+		    $pref_stg .= '&'.$field.'[]='.urlencode(stripslashes($value_id));
 		}
 	
 		// build part of the HTML title of this page for more friendly bookmarking
