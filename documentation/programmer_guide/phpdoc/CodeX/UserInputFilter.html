@@ -1,44 +1,139 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class UserInputFilter</title>
-			<link rel="stylesheet" href="../media/stylesheet.css" />
-			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
-		</head>
-		<body>
-			<div class="page-body">			
+<head>
+	<title>Docs For Class UserInputFilter</title>
+	<link rel="stylesheet" type="text/css" href="../media/style.css">
+	<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+</head>
+<body>
+
+<table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
+  <tr>
+	<td class="header-top-left"><img src="../media/logo.png" border="0" alt="phpDocumentor " /></td>
+    <td class="header-top-right">CodeX<br /><div class="header-top-right-subpackage"></div></td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+  <tr>
+    <td colspan="2" class="header-menu">
+      
+                        
+                      		[ <a href="../classtrees_CodeX.html" class="menu">class tree: CodeX</a> ]
+		[ <a href="../elementindex_CodeX.html" class="menu">index: CodeX</a> ]
+            [ <a href="../elementindex.html" class="menu">all elements</a> ]
+    </td>
+  </tr>
+  <tr><td colspan="2" class="header-line"><img src="../media/empty.png" width="1" height="1" border="0" alt=""  /></td></tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="195" class="menu">
+		<div class="package-title">CodeX</div>
+  <div class="package">
+	<div id="todolist">
+			<p><a href="../todolist.html">Todo List</a></p>
+	</div>
+	</div>
+      <b>Packages:</b><br />
+  <div class="package">
+              <a href="../li_CodeX.html">CodeX</a><br />
+      	</div>
+      <br />
+                        <b>Files:</b><br />
+        <div class="package">
+				<span style="padding-left: 1em;"><a href="../CodeX/_include---CodeX_Request.class.php.html">CodeX_Request.class.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../CodeX/_filter---FilterRule.class.php.html">FilterRule.class.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../CodeX/_include---HTTPRequest.class.php.html">HTTPRequest.class.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../CodeX/_include---SOAPRequest.class.php.html">SOAPRequest.class.php</a></span><br />
+			<span style="padding-left: 1em;"><a href="../CodeX/_filter---UserInputFilter.class.php.html">UserInputFilter.class.php</a></span><br />
+	  </div>
+            <br />
+                  <b>Classes:</b><br />
+        <div class="package">
+		    		<a href="../CodeX/CodeX_Request.html">CodeX_Request</a>    	 <br />
+	    		<a href="../CodeX/FilterRule.html">FilterRule</a>    	 <br />
+	    		<a href="../CodeX/HTTPRequest.html">HTTPRequest</a>    	 <br />
+	    		<a href="../CodeX/SOAPRequest.html">SOAPRequest</a>    	 <br />
+	    		<a href="../CodeX/UserInputFilter.html">UserInputFilter</a>    	 <br />
+	  </div>
+                </td>
+    <td>
+      <table cellpadding="10" cellspacing="0" width="100%" border="0"><tr><td valign="top">
+
+<h1>Class: UserInputFilter</h1>
+Source Location: /filter/UserInputFilter.class.php<br /><br />
+
 <h2 class="class-name">Class UserInputFilter</h2>
 
 <a name="sec-description"></a>
 <div class="info-box">
-	<div class="info-box-title">Description</div>
+	<div class="info-box-title">Class Overview</div>
 	<div class="nav-bar">
-					<span class="disabled">Description</span> |
-															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+					<span class="disabled">Class Overview</span>
 						
-					</div>
+													| <a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								</div>
 	<div class="info-box-body">
-        		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">User input validation and sanitization.</p>
-<p class="description"><p>Motto: filter input / escape output</p><p><strong>About User input validation</strong><br />  Goal: verify that user input match application expectations.  The theorical approach of this is to check that user input match the  expectations but not to modify those inputs.</p><p>However due to some PHP limitations (on intergers for instance) and to take  legacy into account (usage of register_globals, or direct access to  $_REQUEST, ...) and to prevent validation code error, it's better to  sanitize submitted inputs.</p><p>UserInputFilter framework propose to validate inputs with common rules  (integer, float, etc) and is extendable with custom rules. For instance for  docman, we can add a rule that ensure that a property label is 'field_XXX'  where XXX is an integer.</p><p>We can also use this framework to expect more complex things (the submitted  group_id exist, is public, is accessible by current user, etc).</p><p>What does that mean concretly:<br />  The UserInputFilter class will provide an method to validate the  expectations. This method will return a boolean value (match the expactation  or not). This method will also sanitize the value.</p><p><strong>About the impact on HTTPRequest</strong><br />  For this to be efficient, it could be a good idea to modify HTTPRequest  class to add the notion of 'tained' parameter.</p><p>For instance, $request-&gt;get('key') could return a value only if 'key' was  validated. Obvioulsy, it will be always possible to get the original  parameter with $request-&gt;getTained('key') that would make the usage of  tained data much more obvious.</p><p>However is a very first approach, $request-&gt;get() will still return the  tained value if nothing is found in clean array but will raise a notice.</p><p><strong>Phpdoc about this class</strong><br /></p></p>
-	<ul class="tags">
-				<li><span class="field">example:</span> <a href="../__examplesource/exsource_programmer_guide_examples_filter_filterrequest.php_f36fe391c175cfb7fee17d3868d4f63b.html">Basic usage of this class.</a></li>
-				<li><span class="field">example:</span> <a href="../__examplesource/exsource_programmer_guide_examples_filter_multiplerules.php_8d38b9ac45200d84029901fe01c9d5e1.html">Filtering with a lot of stupid rules.</a></li>
-				<li><span class="field">example:</span> <a href="../__examplesource/exsource_ation_programmer_guide_examples_filter_onerule.php_6034f92f2c9c4241bd6f7820ab3bf325.html">Filtering with one smart rule.</a></li>
-				<li><span class="field">uses:</span> <a href="../CodeX/HTTPRequest.html">HTTPRequest</a></li>
-				<li><span class="field">uses:</span> <a href="../CodeX/FilterRule.html">FilterRule</a></li>
-			</ul>
+		<table width="100%" border="0">
+		<tr><td valign="top" width="60%" class="class-overview">
+
+        		<p align="center" class="short-description"><strong>User input validation and sanitization.
+</strong></p>
+<span class="description"><p>Motto: filter input / escape output</p><p><strong>About User input validation</strong><br />  Goal: verify that user input match application expectations.  The theorical approach of this is to check that user input match the  expectations but not to modify those inputs.</p><p>However due to some PHP limitations (on intergers for instance) and to take  legacy into account (usage of register_globals, or direct access to  $_REQUEST, ...) and to prevent validation code error, it's better to  sanitize submitted inputs.</p><p>UserInputFilter framework propose to validate inputs with common rules  (integer, float, etc) and is extendable with custom rules. For instance for  docman, we can add a rule that ensure that a property label is 'field_XXX'  where XXX is an integer.</p><p>We can also use this framework to expect more complex things (the submitted  group_id exist, is public, is accessible by current user, etc).</p><p>What does that mean concretly:<br />  The UserInputFilter class will provide an method to validate the  expectations. This method will return a boolean value (match the expactation  or not). This method will also sanitize the value.</p><p><strong>About the impact on HTTPRequest</strong><br />  For this to be efficient, it could be a good idea to modify HTTPRequest  class to add the notion of 'tained' parameter.</p><p>For instance, $request-&gt;get('key') could return a value only if 'key' was  validated. Obvioulsy, it will be always possible to get the original  parameter with $request-&gt;getTained('key') that would make the usage of  tained data much more obvious.</p><p>However is a very first approach, $request-&gt;get() will still return the  tained value if nothing is found in clean array but will raise a notice.</p><p><strong>Phpdoc about this class</strong><br /></p></span>
 		<p class="notes">
-			Located in <a class="field" href="_filter---UserInputFilter.class.php.html">/filter/UserInputFilter.class.php</a> (line <span class="field">58</span>)
+			Located in <a class="field" href="_filter---UserInputFilter.class.php.html">/filter/UserInputFilter.class.php</a> [<span class="field">line 58</span>]
 		</p>
+
 		
-				
 		<pre></pre>
-	
-			</div>
+
+		
+				<strong>Author(s):</strong>
+		<ul>
+		  			 		  			 		  			 		  			 		  			 		  		</ul>
+		
+		<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Example:</strong>&nbsp;&nbsp;</td><td><a href="../__examplesource/exsource_programmer_guide_examples_filter_filterrequest.php_f36fe391c175cfb7fee17d3868d4f63b.html">Basic usage of this class.</a></td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Example:</strong>&nbsp;&nbsp;</td><td><a href="../__examplesource/exsource_programmer_guide_examples_filter_multiplerules.php_8d38b9ac45200d84029901fe01c9d5e1.html">Filtering with a lot of stupid rules.</a></td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Example:</strong>&nbsp;&nbsp;</td><td><a href="../__examplesource/exsource_ation_programmer_guide_examples_filter_onerule.php_6034f92f2c9c4241bd6f7820ab3bf325.html">Filtering with one smart rule.</a></td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Uses:</strong>&nbsp;&nbsp;</td><td><a href="../CodeX/HTTPRequest.html">HTTPRequest</a></td>
+  </tr>
+  <tr>
+    <td class="indent"><strong>Uses:</strong>&nbsp;&nbsp;</td><td><a href="../CodeX/FilterRule.html">FilterRule</a></td>
+  </tr>
+</table>
+<br />
+
+		</td>
+
+		
+				<td valign="top" width="20%" class="class-overview">
+		<p align="center" class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
+		<ul>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodUserInputFilter">UserInputFilter</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodaddRule">addRule</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodgetError">getError</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodgetErrors">getErrors</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodisError">isError</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodvalidate">validate</a></li>
+		  		  <li><a href="../CodeX/UserInputFilter.html#methodvalidateRequest">validateRequest</a></li>
+		  		</ul>
+		</td>
+		
+		</tr></table>
+		<div class="top">[ <a href="#top">Top</a> ]</div>
+	</div>
 </div>
+
 
 
 
@@ -47,249 +142,328 @@
 	<div class="info-box">
 		<div class="info-box-title">Method Summary</span></div>
 		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+			<a href="#sec-description">Class Overview</a>
+									    					| <span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
 		</div>
-		<div class="info-box-body">			
+		<div class="info-box-body">
 			<div class="method-summary">
-																																																												
-												<div class="method-definition">
-											<span class="method-result">UserInputFilter</span>
-										<a href="#UserInputFilter" title="details" class="method-name">UserInputFilter</a>
-										()
-									</div>
+				<table border="0" cellspacing="0" cellpadding="0" class="method-summary">
+																																																																								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">UserInputFilter</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#UserInputFilter" title="details" class="method-name">UserInputFilter</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Constructor</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#addRule" title="details" class="method-name">addRule</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$argName</span>, <span class="var-type"><a href="../CodeX/FilterRule.html">FilterRule</a></span>&nbsp;<span class="var-name">$rule</span>)
-									</div>
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#addRule" title="details" class="method-name">addRule</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Add a rule for given argument</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">boolean</span>
-										<a href="#getError" title="details" class="method-name">getError</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$argName</span>)
-									</div>
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getError" title="details" class="method-name">getError</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Return error for given parameter, false otherwise.</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">Iterator|boolean</span>
-										<a href="#getErrors" title="details" class="method-name">getErrors</a>
-										()
-									</div>
+											<tr><td class="method-definition"><span class="method-result">Iterator|boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#getErrors" title="details" class="method-name">getErrors</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Return all errors if errors were found during validation false otherwise.</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">boolean</span>
-										<a href="#isError" title="details" class="method-name">isError</a>
-										()
-									</div>
+											<tr><td class="method-definition"><span class="method-result">boolean</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#isError" title="details" class="method-name">isError</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Return is errors were found during validation.</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#validate" title="details" class="method-name">validate</a>
-										()
-									</div>
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#validate" title="details" class="method-name">validate</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Apply all rules on HTTPRequest instance.</td></tr>
+				</div>
 																<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#validateRequest" title="details" class="method-name">validateRequest</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">&$request</span>, <span class="var-type"><a href="../CodeX/HTTPRequest.html">HTTPRequest</a></span>&nbsp;<span class="var-name">$request</span>)
-									</div>
-								</div>
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#validateRequest" title="details" class="method-name">validateRequest</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Apply all validation rules on given request object.</td></tr>
+				</div>
+												</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
 		</div>
-	</div>		
+	</div>
 
-	
+
 	<a name="sec-methods"></a>
 	<div class="info-box">
 		<div class="info-box-title">Methods</div>
 		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
-						
-		</div>
+			<a href="#sec-description">Class Overview</a>
+																			| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
+					</div>
 		<div class="info-box-body">
-			<A NAME='method_detail'></A>
+			<a name='method_detail'></a>
 
 <a name="methodUserInputFilter" id="UserInputFilter"><!-- --></a>
 <div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">Constructor UserInputFilter</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 62]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>UserInputFilter UserInputFilter(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Constructor
+</strong></p>
+
+	<br />
 	
-	<div class="method-header">
-		<span class="method-title">Constructor UserInputFilter</span> (line <span class="line-number">62</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Constructor</p>
-	
-	<div class="method-signature">
-		<span class="method-result">UserInputFilter</span>
-		<span class="method-name">
-			UserInputFilter
-		</span>
-				()
-			</div>
-	
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodaddRule" id="addRule"><!-- --></a>
 <div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">addRule</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 77]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void addRule(
+string
+$argName, <a href="../CodeX/FilterRule.html">FilterRule</a>
+$rule&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Add a rule for given argument
+</strong></p>
+<span class="description"><p>A rule can be applied on a http argument ($group_id, $user_password,  etc) but can also applies on the request itself (check if the method  used is 'post', etc).</p></span>
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$argName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Name of parameter in HTTP request.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"><a href="../CodeX/FilterRule.html">FilterRule</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$rule:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The rule to apply on the given argument.</span>			</td></tr>
+				</table>
+
+	<br />
 	
-	<div class="method-header">
-		<span class="method-title">addRule</span> (line <span class="line-number">77</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Add a rule for given argument</p>
-<p class="description"><p>A rule can be applied on a http argument ($group_id, $user_password,  etc) but can also applies on the request itself (check if the method  used is 'post', etc).</p></p>
-	<ul class="tags">
-				<li><span class="field">todo:</span> Define how to apply rules on request.</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addRule
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$argName</span>, <span class="var-type"><a href="../CodeX/FilterRule.html">FilterRule</a></span>&nbsp;<span class="var-name">$rule</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$argName</span><span class="var-description">: Name of parameter in HTTP request.</span>			</li>
-					<li>
-				<span class="var-type"><a href="../CodeX/FilterRule.html">FilterRule</a></span>
-				<span class="var-name">$rule</span><span class="var-description">: The rule to apply on the given argument.</span>			</li>
-				</ul>
+<strong>Information Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Todo:</strong>&nbsp;&nbsp;</td><td>Define how to apply rules on request.</td>
+  </tr>
+</table>
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodgetError" id="getError"><!-- --></a>
 <div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">getError</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 120]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean getError(
+string
+$argName&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Return error for given parameter, false otherwise.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">string</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$argName:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> Request parameter name.</span>			</td></tr>
+				</table>
+
+	<br />
 	
-	<div class="method-header">
-		<span class="method-title">getError</span> (line <span class="line-number">120</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Return error for given parameter, false otherwise.</p>
-	
-	<div class="method-signature">
-		<span class="method-result">boolean</span>
-		<span class="method-name">
-			getError
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$argName</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$argName</span><span class="var-description">: Request parameter name.</span>			</li>
-				</ul>
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodgetErrors" id="getErrors"><!-- --></a>
 <div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">getErrors</span> (line <span class="line-number">103</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Return all errors if errors were found during validation false otherwise.</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> Each element is an array '(argName, rule)'.</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">Iterator|boolean</span>
-		<span class="method-name">
-			getErrors
-		</span>
-				()
-			</div>
-	
+
+<div class="method-header">
+	<span class="method-title">getErrors</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 103]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>Iterator|boolean getErrors(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Return all errors if errors were found during validation false otherwise.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Return:</strong>&nbsp;&nbsp;</td><td>Each element is an array '(argName, rule)'.</td>
+  </tr>
+</table>
+<br />
+
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodisError" id="isError"><!-- --></a>
 <div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">isError</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 111]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>boolean isError(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Return is errors were found during validation.
+</strong></p>
+
+	<br />
 	
-	<div class="method-header">
-		<span class="method-title">isError</span> (line <span class="line-number">111</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Return is errors were found during validation.</p>
-	
-	<div class="method-signature">
-		<span class="method-result">boolean</span>
-		<span class="method-name">
-			isError
-		</span>
-				()
-			</div>
-	
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodvalidate" id="validate"><!-- --></a>
 <div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">validate</span> (line <span class="line-number">87</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Apply all rules on HTTPRequest instance.</p>
-<p class="description"><p>Use HTTPRequest singleton</p></p>
-	<ul class="tags">
-				<li><span class="field">see:</span> <a href="../CodeX/UserInputFilter.html#methodvalidateRequest">UserInputFilter::validateRequest()</a></li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			validate
-		</span>
-				()
-			</div>
-	
+
+<div class="method-header">
+	<span class="method-title">validate</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 87]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void validate(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Apply all rules on HTTPRequest instance.
+</strong></p>
+<span class="description"><p>Use HTTPRequest singleton</p></span>
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>See:</strong>&nbsp;&nbsp;</td><td><a href="../CodeX/UserInputFilter.html#methodvalidateRequest">UserInputFilter::validateRequest()</a></td>
+  </tr>
+</table>
+<br />
+
+
 		
-			
-	</div>
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodvalidateRequest" id="validateRequest"><!-- --></a>
 <div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">validateRequest</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 95]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void validateRequest(
+
+&$request, <a href="../CodeX/HTTPRequest.html">HTTPRequest</a>
+$request&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Apply all validation rules on given request object.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type"><a href="../CodeX/HTTPRequest.html">HTTPRequest</a></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$request:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> The request object to validate.</span>			</td></tr>
+					<tr><td class="indent">
+				<span class="var-type"></span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">&$request:&nbsp;</span></td>
+				<td>
+							</td></tr>
+				</table>
+
+	<br />
 	
-	<div class="method-header">
-		<span class="method-title">validateRequest</span> (line <span class="line-number">95</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Apply all validation rules on given request object.</p>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			validateRequest
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">&$request</span>, <span class="var-type"><a href="../CodeX/HTTPRequest.html">HTTPRequest</a></span>&nbsp;<span class="var-name">$request</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"><a href="../CodeX/HTTPRequest.html">HTTPRequest</a></span>
-				<span class="var-name">$request</span><span class="var-description">: The request object to validate.</span>			</li>
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">&$request</span>			</li>
-				</ul>
+
 		
-			
-	</div>
-						
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 		</div>
 	</div>
 
 
-	<p class="notes" id="credit">
-		Documentation generated on Fri, 19 Oct 2007 16:50:18 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0a2</a>
-	</p>
-	</div></body>
-</html>
+        <div class="credit">
+		    <hr class="separator" />
+		    Documentation generated on Fri, 19 Oct 2007 17:52:00 +0200 by <a href="http://www.phpdoc.org">phpDocumentor 1.4.0a2</a>
+	      </div>
+      </td></tr></table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
