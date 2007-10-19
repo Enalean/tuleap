@@ -35,46 +35,30 @@ class ServerUpdate_Widget_MyServerUpdates extends Widget {
         if ($svnupdate->getRepository() != "") {
             $commits = $svnupdate->getCommits();
             
-            if (count($commits) > 0) {
-                $i = 0;
-    
-                $html .= '<table style="width:100%">';
-                $html .= '<tr>';
-                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_revision').'</th>';
-                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_message').'</th>';
-                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_date').'</th>';
-                $html .= '</tr>';
+            $nb_commits = count($commits);
+            if ($nb_commits > 0) {
+                $nb_critical_updates = 0;
+                $critical_updates = false;
                 foreach($commits as $commit) {
-                        $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
-                        // Revision
-                        $html .= '<td align="left">';
-                        $html .= '<a href="/plugins/serverupdate/">'.$commit->getRevision().'</a>';
-                        $html .= '</td>';
-                    
-                        $max_nb_car_message = 75;
-                        // Message
-                        $html .= '<td align="left">';
-                        $message = nl2br(htmlentities($commit->getMessage()));
-                        if (strlen($message) > $max_nb_car_message) {
-                            $message = substr($message, 0, $max_nb_car_message);
-                            $message .= '<a href="/plugins/serverupdate/" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_readmore').'">(...)</a>';
-                        }
-                        $html .= $message;
-                        $html .= '</td>';
-                        
-                        // Date
-                        $html .= '<td align="right">';
-                        $html .= util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate()));
-                        $html .= '</td>';
-                    
-                        $html .= '</tr>';
+                    if ($commit->getLevel() == 'critical') {
+                        $critical_updates = true;
+                        $nb_critical_updates++;
+                    }
                 }
-                $html .= '</table>';
+                
+                if ($critical_updates) {
+                    $html .= '<p><a style="background:red; color:white; padding: 2px 8px; font-weight:bold;" href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_critical_updates', $nb_critical_updates).'</a> '.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_ontheserver').'</p>';
+                } else {
+                    $html .= '<p><a style="background:orange; color:white; padding: 2px 8px; font-weight:bold;" href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_updates', $nb_commits).'</a> '.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_ontheserver').'</p>';
+                }
+                $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_see_updates').'</a>';
             } else {
-                $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date').'</a>';
+                $html .= '<p><a style="background:green; color:white; padding: 2px 8px; font-weight:bold;" href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date').'</a></p>';
+                $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_goto_serverupdate').'</a>';
             }
         } else {
             $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository').'</a>';
+            $html .= '<a href="/plugins/serverupdate/">'.$GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_goto_serverupdate').'</a>';
         }
         return $html;
     }

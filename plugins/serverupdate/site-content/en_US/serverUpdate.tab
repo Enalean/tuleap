@@ -115,9 +115,10 @@ plugin_serverupdate_preferences	norepository	SVN Repository not detected.
 # Widgets
 #
 plugin_serverupdate_widgets	my_serverupdates	My Server Updates
-plugin_serverupdate_widgets	my_serverupdates_revision	Revision
-plugin_serverupdate_widgets	my_serverupdates_message	Message
-plugin_serverupdate_widgets	my_serverupdates_readmore	See the entire commit message
-plugin_serverupdate_widgets	my_serverupdates_date	Date
-plugin_serverupdate_widgets	my_serverupdates_up_to_date	Your Server is up to date.
+plugin_serverupdate_widgets	my_serverupdates_up_to_date	Server up to date.
+plugin_serverupdate_widgets	my_serverupdates_nb_critical_updates	$1 critical updates
+plugin_serverupdate_widgets	my_serverupdates_nb_updates	$1 updates available
+plugin_serverupdate_widgets	my_serverupdates_ontheserver	on the server.
 plugin_serverupdate_widgets	my_serverupdates_norepository	SVN Repository not detected.
+plugin_serverupdate_widgets	my_serverupdates_see_updates	See the updates
+plugin_serverupdate_widgets	my_serverupdates_goto_serverupdate	Go to Server Update plugin.

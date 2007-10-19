@@ -121,9 +121,10 @@ plugin_serverupdate_preferences	norepository	Dépôt SVN non détecté.
 # Widgets
 #
 plugin_serverupdate_widgets	my_serverupdates	Maj de mon serveur
-plugin_serverupdate_widgets	my_serverupdates_revision	Révision
-plugin_serverupdate_widgets	my_serverupdates_message	Message
-plugin_serverupdate_widgets	my_serverupdates_readmore	Voir le message de commit en entier
-plugin_serverupdate_widgets	my_serverupdates_date	Date
-plugin_serverupdate_widgets	my_serverupdates_up_to_date	Votre serveur est à jour.
+plugin_serverupdate_widgets	my_serverupdates_nb_critical_updates	$1 mises à jour critiques
+plugin_serverupdate_widgets	my_serverupdates_nb_updates	$1 mises à jour disponibles
+plugin_serverupdate_widgets	my_serverupdates_ontheserver	sur le serveur.
+plugin_serverupdate_widgets	my_serverupdates_up_to_date	Serveur à jour.
 plugin_serverupdate_widgets	my_serverupdates_norepository	Dépôt SVN non détecté.
+plugin_serverupdate_widgets	my_serverupdates_see_updates	Voir les mises à jour.
+plugin_serverupdate_widgets	my_serverupdates_goto_serverupdate	Plugin Mises à jour du serveur
