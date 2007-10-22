@@ -109,12 +109,14 @@ $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
    will avoid to deal with scalar in simple search and array in 
    advanced which would greatly complexifies the code)
  ================================================== */
+$all_prefs = array();
 while (list($field,$value_id) = each($prefs)) {
     if (!is_array($value_id)) {
 		unset($prefs[$field]);
-		$prefs[$field][] = htmlspecialchars($value_id);
+		$all_prefs[$field][] = htmlspecialchars($value_id);
 		//echo '<br> DBG Setting $prefs['.$field.'] [] = '.$value_id;
-	    } else {
+    } else {
+        $all_prefs[$field] = $value_id;
 		//echo '<br> DBG $prefs['.$field.'] = ('.implode(',',$value_id).')';
     }
 
@@ -122,19 +124,22 @@ while (list($field,$value_id) = each($prefs)) {
     if ( ($field_object)&&($field_object->isDateField()) ) {
 		if ($advsrch) {
 		    $field_end = $field.'_end';
-		    $prefs[$field_end] = $$field_end;
+		    $all_prefs[$field_end] = array($$field_end);
 		    //echo 'DBG Setting $prefs['.$field.'_end]= '.$prefs[$field.'_end'].'<br>';
 		} else {
 		    $field_op = $field.'_op';
-		    $prefs[$field_op] = $$field_op;
-		    if (!$prefs[$field_op])
-				$prefs[$field_op] = '>';
+            if (!$$field_op) {
+                $all_prefs[$field_op] = array('>');
+            } else {
+                $all_prefs[$field_op] = array($$field_op);
+            }
 		    //echo 'DBG Setting $prefs['.$field.'_op]= '.$prefs[$field.'_op'].'<br>';
 		}
 		$f_name  = "DTE_".$field."_name";
 		$prefs[$f_name] = $$f_name;
     }
 }
+$prefs = $all_prefs;
 /* ==================================================
    Memorize order by field as a user preference if explicitly specified.
    
@@ -203,7 +208,7 @@ if (!isset($set)) {
 				else if ($field == 'report_id')
 				    $report_id = $value_id;
 				else
-				    $prefs[$field][] = $value_id;
+				    $prefs[$field][] = urldecode($value_id);
 		
 				//echo '<br>DBG restoring prefs : $prefs['.$field.'] []='.$value_id;
 		    }
@@ -217,7 +222,6 @@ if (!isset($set)) {
 		$set='open';
     }
 }
-
 
 if ($set=='my') {
     /*
