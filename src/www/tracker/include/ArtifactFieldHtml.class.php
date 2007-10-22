@@ -238,15 +238,15 @@ class ArtifactFieldHtml extends ArtifactField {
 		    $labels[count($labels)] = addslashes("End Date");
 	    }
     
-	    $js  = "var names_".$date_field_name."  = new Array();";
-	    $js .= "var labels_".$date_field_name."  = new Array();";
+	    $js  = "\nvar names_".$date_field_name."  = new Array();";
+	    $js .= "\nvar labels_".$date_field_name."  = new Array();";
         for($i=0;$i<count($names);$i++) {
-            $js .= "names_".$date_field_name." [".$i."]  = '".$names[$i]."';";
-            $js .= "labels_".$date_field_name." [".$i."] = '".addslashes($labels[$i])."';";
+            $js .= "\nnames_".$date_field_name." [".$i."]  = '".$names[$i]."';";
+            $js .= "\nlabels_".$date_field_name." [".$i."] = '".addslashes($labels[$i])."';";
         }
-        echo '<script language="javascript">';
-        echo $js;
-        echo '</script>';
+        echo "\n<script language='javascript'>";
+        echo "\n".$js;
+        echo "\n</script>";
 
 		if (!$pv) {
             $today = false;
