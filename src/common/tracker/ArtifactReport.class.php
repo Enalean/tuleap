@@ -774,7 +774,7 @@ class ArtifactReport extends Error {
 	      	if (($field->isDateField()) && (!ereg ("^[0-9]{4}-[0-9]{1}|[0-9]{2}-[0-9]{1}|[0-9]{2}$", isset($prefs[$field->getName()][0]) ? stripslashes($prefs[$field->getName()][0]) : null)) &&  
 		    ($prefs[$field->getName()][0] != null)) {
 		    if (!$advsrch) {
-		        $operator  = html_entity_decode($prefs[$field->getName().'_op'][0]);
+		        $operator  = $prefs[$field->getName().'_op'][0];
 		        if ($operator == null) {
   		            $operator = '>';
 		        }
@@ -806,7 +806,7 @@ class ArtifactReport extends Error {
 		        $from  .= " JOIN (SELECT atf.artifact_id,atf.field_id,DATE_FORMAT(FROM_UNIXTIME(atf.".$field->getValueFieldName()."),'%Y-%m-%d') dte from artifact_field_value atf) TV".$count." ON (TV".$count.".artifact_id=a.artifact_id".
 			    " AND TV".$count.".field_id=".$field->getID().")";
 			
-		        $operator  = html_entity_decode($prefs[$field->getName().'_op'][0]);
+		        $operator  = $prefs[$field->getName().'_op'][0];
 		        if ($operator == null) {
   		            $operator = '>';
 		        }
