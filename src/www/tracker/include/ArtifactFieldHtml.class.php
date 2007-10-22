@@ -223,7 +223,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			    }
 	        }
 	    }
-	
+
     	//add the standard fields and exclude the source date field to be compared 
 	    if ($date_field_name == "open_date") {
 	        $names[count($names)]   = "close_date";
@@ -238,11 +238,11 @@ class ArtifactFieldHtml extends ArtifactField {
 		    $labels[count($labels)] = addslashes("End Date");
 	    }
     
-	    $js  = "var names  = new Array();";
-	    $js .= "var labels = new Array();";
+	    $js  = "var names_".$date_field_name."  = new Array();";
+	    $js .= "var labels_".$date_field_name."  = new Array();";
         for($i=0;$i<count($names);$i++) {
-            $js .= "names[".$i."]  = '".$names[$i]."';";
-            $js .= "labels[".$i."] = '".addslashes($labels[$i])."';";
+            $js .= "names_".$date_field_name." [".$i."]  = '".$names[$i]."';";
+            $js .= "labels_".$date_field_name." [".$i."] = '".addslashes($labels[$i])."';";
         }
         echo '<script language="javascript">';
         echo $js;
@@ -256,7 +256,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	        $timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	        $html = '<INPUT TYPE="text" name="'.$this->field_name.
 	                '" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.stripslashes($value).'">'.
-		            '<a href="javascript:show_calendar_cmb(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',\''.$date_field_name.'\',window.names,window.labels);">'.
+		            '<a href="javascript:show_calendar_cmb(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',\''.$date_field_name.'\',window.names_'.$date_field_name.',window.labels_'.$date_field_name.');">'.
 		            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 	    
 		    $html .= '<INPUT TYPE="hidden" NAME="DTE_'.$date_field_name.'_name" VALUE="'.$value_name.'">';

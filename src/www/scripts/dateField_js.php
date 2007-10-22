@@ -123,7 +123,7 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
                 "<tr>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar_cmb('"+
                 //str_target+"', '"+dt2dtstr(dt_prev_year)+"'+document.cal.time.value);\">"+
-                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"',window.opener.names,window.opener.labels);\">"+
+                str_target+"', '"+dt2dtstr(dt_prev_year)+"','"+css_theme_file+"','"+img_theme_path+"','"+date_field+"',window.opener.names_+date_field,window.opener.labels_+date_field);\">"+
 		"<img src=\""+img_theme_path+"/calendar/prev_year.png\" width=\"16\" height=\"16\" border=\"0\""+
                 " alt=\"previous year\"></a></td>\n"+
                 "        <td class=\"calendar_month\"><a href=\"javascript:window.opener.show_calendar_cmb('"+
@@ -216,9 +216,9 @@ function show_calendar_cmb(str_target, str_datetime, css_theme_file, img_theme_p
           str_buffer += '    <OPTION VALUE="'+'0'+'">'+'<?php echo $first_value;?>'+'</OPTION>\n';
           
 	      for(i=0;i<names.length;i++){
-              if ((names[i] != '') && (labels[i] != '')) {
+              //if ((names[i] != '') && (labels[i] != '')) {
 	              str_buffer += "    <OPTION VALUE='"+names[i]+"'>"+labels[i]+"</OPTION>\n";
-	          }
+	          //}
           }
     
 	      str_buffer += '</SELECT></p>\n';
