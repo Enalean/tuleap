@@ -1797,7 +1797,11 @@ function artifacts_to_soap($at_arr) {
 function artifact_query_result_to_soap($artifacts, $total_artifacts_number) {
     $return = array();
     $return['total_artifacts_number'] = $total_artifacts_number;
-    $return['artifacts'] = artifacts_to_soap($artifacts);
+    if ($total_artifacts_number == 0 && $artifacts == false) {
+        $return['artifacts'] = null;
+    } else {
+        $return['artifacts'] = artifacts_to_soap($artifacts);
+    }
     return $return;
 }
 
