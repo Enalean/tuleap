@@ -2456,7 +2456,6 @@ CREATE TABLE cvs_branches (
 ); 
 
 # CREATE SVN support tables
-
 CREATE TABLE svn_checkins (
   id int(11) NOT NULL auto_increment,
   type enum('Change','Add','Delete'),
@@ -2640,7 +2639,7 @@ CREATE TABLE artifact_field (
   PRIMARY KEY  (field_id,group_artifact_id),
   KEY idx_fk_field_name (field_name),
   KEY idx_fk_group_artifact_id (group_artifact_id),
-  KEY idx_grp_name (group_artifact_id, field_name (20))
+  KEY idx_fname_grp (field_name(20), group_artifact_id)
 );
 
 #

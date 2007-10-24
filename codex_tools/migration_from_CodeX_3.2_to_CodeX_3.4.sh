@@ -383,6 +383,10 @@ UPDATE artifact_history SET new_value = old_value , old_value = "" WHERE field_n
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh-restricted' WHERE shell='/usr/local/bin/cvssh-restricted';
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvssh';
 
+###############################################################################
+# Small speedup in history export. See SR #837
+ALTER TABLE artifact_field DROP INDEX idx_grp_name;
+ALTER TABLE artifact_field ADD INDEX idx_fname_grp(field_name(20), group_artifact_id);
 
 ###############################################################################
 # This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
