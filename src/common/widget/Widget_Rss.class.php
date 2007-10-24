@@ -14,12 +14,9 @@ require_once('Widget.class.php');
 /* abstract */ class Widget_Rss extends Widget {
     var $rss_title;
     var $rss_url;
-    var $owner_id;
-    var $owner_type;
     function Widget_Rss($id, $owner_id, $owner_type) {
         $this->Widget($id);
-        $this->owner_id   = $owner_id;
-        $this->owner_type = $owner_type;
+        $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {
         return $this->rss_title ? $this->rss_title : 'RSS Reader';
@@ -60,7 +57,14 @@ require_once('Widget.class.php');
         $prefs .= '</table>';
         return $prefs;
     }
-    
+    function cloneContent($id, $owner_id, $owner_type) {
+        $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url) 
+        SELECT  ". $owner_id .", '". $owner_type ."', title, url
+        FROM widget_rss
+        WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";
+        $res = db_query($sql);
+        return db_insertid($res);
+    }
     function loadContent($id) {
         $sql = "SELECT * FROM widget_rss WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);

@@ -13,6 +13,7 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/createntlm.inc');
 require_once('common/password/PasswordStrategy.class.php');
 require_once('common/password/PasswordRegexpValidator.class.php');
+require_once('common/widget/WidgetLayoutManager.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -304,28 +305,8 @@ function account_create($loginname=''
     }
 }
 function account_create_mypage($user_id) {
-    
-    db_query("INSERT INTO user_layouts (user_id, layout_id, is_default) 
-    VALUES ($user_id, 1, 1);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 1, 'mysurveys', 4);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 1, 'mymonitoredforums', 2);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 1, 'mybookmarks', 1);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 2, 'myartifacts', 0);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 2, 'mymonitoredfp', 1);");
-    
-    db_query("INSERT INTO user_layouts_contents (user_id, layout_id, column_id, name, rank) 
-    VALUES ($user_id, 1, 1, 'myprojects', 0);");
-
+    $lm =& new WidgetLayoutManager();
+    $lm->createDefaultLayoutForUser($user_id);
 }
 
 function account_redirect_after_login() {

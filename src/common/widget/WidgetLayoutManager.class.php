@@ -96,6 +96,85 @@ class WidgetLayoutManager {
         }
         return $readonly;
     }
+    /**
+    * createDefaultLayoutForUser
+    * 
+    * Create the first layout for the user and add some initial widgets:
+    * - MyArtifacts
+    * - MyProjects
+    * - MyBookmarks
+    * - MySurveys
+    * - MyMonitoredFP
+    * - MyMonitoredForums
+    * - and widgets of plugins if they want to listen to the event default_widgets_for_new_owner
+    *
+    * @param  owner_id The id of the newly created user
+    */
+    function createDefaultLayoutForUser($owner_id) {
+        $owner_type = $this->OWNER_TYPE_USER;
+        $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) VALUES (1, 1, $owner_id, '$owner_type')";
+        if (db_query($sql)) {
+            
+            $sql = "INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank) VALUES ";
+            $sql .= "($owner_id, '$owner_type', 1, 1, 'myprojects', 0)";
+            $sql .= ",($owner_id, '$owner_type', 1, 1, 'mybookmarks', 1)";
+            $sql .= ",($owner_id, '$owner_type', 1, 1, 'mymonitoredforums', 2)";
+            $sql .= ",($owner_id, '$owner_type', 1, 1, 'mysurveys', 4)";
+            $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 0)";
+            $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 1)";
+            
+            $em =& EventManager::instance();
+            $widgets = array();
+            $em->processEvent('default_widgets_for_new_owner', array('widgets' => &$widgets, 'owner_type' => $owner_type));
+            foreach($widgets as $widget) {
+                $sql .= ",($owner_id, '$owner_type', 1, ". $widget['column'] .", '". $widget['name'] ."', ". $widget['rank'] .")";
+            }
+            db_query($sql);
+        }
+        echo db_error();
+    }
+    
+    /**
+    * createDefaultLayoutForProject
+    * 
+    * Create the first layout for a new project, based on its parent template.
+    * Add some widgets based also on its parent configuration and on its service configuration.
+    *
+    * @param  group_id  the id of the newly created project
+    * @param  template_id  the id of the project template
+    */
+    function createDefaultLayoutForProject($group_id, $template_id) {
+        $project =& project_get_object($group_id);
+        $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) 
+        SELECT layout_id, is_default, $group_id, owner_type 
+        FROM owner_layouts 
+        WHERE owner_type = '". $this->OWNER_TYPE_GROUP ."'
+          AND owner_id = $template_id
+        ";
+        if (db_query($sql)) {
+            $sql = "SELECT layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences, content_id
+            FROM layouts_contents
+            WHERE owner_type = '". $this->OWNER_TYPE_GROUP ."'
+              AND owner_id = $template_id
+            ";
+            if ($req = db_query($sql)) {
+                while($data = db_fetch_array($req)) {
+                    if ($w = Widget::getInstance($data['name'])) {
+                        $w->setOwner($template_id, $this->OWNER_TYPE_GROUP);
+                        if ($w->canBeUsedByProject($project)) {
+                            $content_id = $w->cloneContent($w['content_id'], $group_id, $this->OWNER_TYPE_GROUP);
+                            $sql = "INSERT INTO layouts_contents(owner_id, owner_type, content_id, layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences) 
+                            VALUES (". $group_id .", '". $this->OWNER_TYPE_GROUP ."', ". $content_id .", ". $data['layout_id'] .", ". $data['column_id'] .", '". $data['name'] ."', ". $data['rank'] .", ". $data['is_minimized'] .", ". $data['is_removed'] .", ". $data['display_preferences'] .")
+                            ";
+                            db_query($sql);
+                            echo db_error();
+                        }
+                    }
+                }
+            }
+        }
+        echo db_error();
+    }
     
     /**
     * displayAvailableWidgets
@@ -189,7 +268,7 @@ class WidgetLayoutManager {
         $res = db_query($sql);
         echo db_error();
         $column_id = db_result($res, 0, 'id');
-        $column_id = $column_id ? $column_id : 0;
+        $column_id = $column_id ? $column_id : 1;
         
         //content_id
         if ($widget->isUnique()) {
@@ -226,10 +305,10 @@ class WidgetLayoutManager {
         } else {
             //Insert
             $sql = "INSERT INTO layouts_contents(owner_type, owner_id, layout_id, column_id, name, content_id, rank) 
-            SELECT owner_type, owner_id, layout_id, column_id, '$name', $content_id, rank - 1 
-            FROM layouts_contents 
-            WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND layout_id = $layout_id AND column_id = $column_id 
-            ORDER BY rank ASC
+            SELECT R1.owner_type, R1.owner_id, R1.layout_id, R1.column_id, '$name', $content_id, IFNULL(R2.rank, 1) - 1 
+            FROM ( SELECT '$owner_type' AS owner_type, $owner_id AS owner_id, $layout_id AS layout_id, $column_id AS column_id ) AS R1 
+            LEFT JOIN layouts_contents AS R2 USING ( owner_type, owner_id, layout_id, column_id ) 
+            ORDER BY rank ASC 
             LIMIT 1";
             db_query($sql);
             echo db_error();

@@ -15,7 +15,7 @@ class Widget_ProjectLatestFileReleases extends Widget {
         $this->Widget('projectlatestfilereleases');
         $request =& HTTPRequest::instance();
         $project =& project_get_object($request->get('group_id'));
-        if ($project && $project->usesFile()) {
+        if ($project && $this->canBeUsedByProject($project)) {
             $this->content = $project->services['file']->getSummaryPageContent();
         }
     }
@@ -27,6 +27,9 @@ class Widget_ProjectLatestFileReleases extends Widget {
     }
     function isAvailable() {
         return isset($this->content['title']);
+    }
+    function canBeUsedByProject(&$project) {
+        return $project->usesFile();
     }
 }
 ?>

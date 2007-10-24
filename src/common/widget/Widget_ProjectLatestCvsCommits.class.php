@@ -23,7 +23,7 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function _getLinkToMore() {
         return '/cvs/?func=browse&group_id='.$this->group_id;
     }
-    function _canLoadCommitsForProject(&$project) {
+    function canBeUsedByProject(&$project) {
         return $project->usesCvs();
     }
     function isAvailable() {

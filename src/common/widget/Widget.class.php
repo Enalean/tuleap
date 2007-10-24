@@ -33,6 +33,8 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     var $content_id;
     var $id;
     var $hasPreferences;
+    var $owner_id;
+    var $owner_type;
     /**
     * Constructor
     */
@@ -90,6 +92,25 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
         return $this->content_id;
     }
     function loadContent($id) {
+    }
+    function setOwner($owner_id, $owner_type) {
+        $this->owner_id = $owner_id;
+        $this->owner_type = $owner_type;
+    }
+    function canBeUsedByProject(&$project) {
+        return false;
+    }
+    /**
+    * cloneContent
+    * 
+    * Take the content of a widget, clone it and return the id of the new content
+    * 
+    * @param $id the id of the content to clone
+    * @param $owner_id the owner of the widget of the new widget
+    * @param $owner_type the type of the owner of the new widget (see WidgetLayoutManager)
+    */
+    function cloneContent($id, $owner_id, $owner_type) {
+        return $this->getInstanceId();
     }
     function create(&$request) {
     }

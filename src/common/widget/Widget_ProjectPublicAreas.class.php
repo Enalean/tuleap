@@ -282,5 +282,8 @@ class Widget_ProjectPublicAreas extends Widget {
             print $area;
         }
     }
+    function canBeUsedByProject(&$project) {
+        return true;
+    }
 }
 ?>

@@ -46,6 +46,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
         $this->_addHook('widgets',                           'widgets',                           false);
         $this->_addHook('codex_daily_start',                 'codexDaily',                        false);
+        $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',       false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -229,6 +230,17 @@ class DocmanPlugin extends Plugin {
         $lm = new WidgetLayoutManager();
         if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
             $params['codex_widgets'][] = 'mydocman';
+        }
+    }
+    function default_widgets_for_new_owner($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        $lm = new WidgetLayoutManager();
+        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+            $params['widgets'][] = array(
+                'name' => 'mydocman',
+                'column' => 1,
+                'rank' => 2,
+            );
         }
     }
     /**

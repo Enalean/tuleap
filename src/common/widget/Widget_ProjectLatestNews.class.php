@@ -15,7 +15,7 @@ class Widget_ProjectLatestNews extends Widget {
         $this->Widget('projectlatestnews');
         $request =& HTTPRequest::instance();
         $project =& project_get_object($request->get('group_id'));
-        if ($project && $project->usesFile()) {
+        if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
             $this->content = news_show_latest($request->get('group_id'),10,false);
         }
@@ -35,6 +35,9 @@ class Widget_ProjectLatestNews extends Widget {
     function displayRss() {
         global $Language;
         include('www/export/rss_sfnews.php');
+    }
+    function canBeUsedByProject(&$project) {
+        return $project->usesNews();
     }
 }
 ?>

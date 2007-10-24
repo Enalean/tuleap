@@ -18,5 +18,8 @@ class Widget_ProjectRss extends Widget_Rss {
         $request =& HTTPRequest::instance();
         $this->Widget_Rss('projectrss', $request->get('group_id'), $lm->OWNER_TYPE_GROUP);
     }
+    function canBeUsedByProject(&$project) {
+        return true;
+    }
 }
 ?>

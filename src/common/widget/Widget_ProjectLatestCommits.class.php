@@ -17,14 +17,13 @@ class Widget_ProjectLatestCommits extends Widget {
         $this->Widget($id);
         $request =& HTTPRequest::instance();
         $project =& project_get_object($request->get('group_id'));
-        if ($project && $this->_canLoadCommitsForProject($project)) {
+        if ($project && $this->canBeUsedByProject($project)) {
             list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
             $this->group_id = $project->getGroupId();
         }
     }
     /* protected */ function _getLinkToCommit($data) { }
     /* protected */ function _getLinkToMore() { }
-    /* protected */ function _canLoadCommitsForProject(&$project) { }
     
     function getContent() {
         $html = '';

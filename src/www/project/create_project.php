@@ -289,6 +289,10 @@ function create_project($data) {
 	    $clone->CloneWiki();
 	}
 	
+        //Create the summary page
+        $lm =& new WidgetLayoutManager();
+        $lm->createDefaultLayoutForProject($group_id, $template_id);
+        
         //Create project specific references if template is not default site template
         if (!$system_template) {
             $reference_manager =& ReferenceManager::instance();
