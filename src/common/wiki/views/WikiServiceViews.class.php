@@ -297,14 +297,14 @@ class WikiServiceViews extends WikiViews {
 
   }
 
-
-
-  print '
-      (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
-      <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
-      $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
-      </li>';
-    
+  //Display printer_version link only in wiki pages
+  if (isset($_REQUEST['pagename'])) {
+      print '
+          (<a href="'.$_SERVER['REQUEST_URI'].'&pv=1" title="'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'lighter_display').'">
+          <img src="'.util_get_image_theme("msg.png").'" border="0">&nbsp;'.
+          $GLOBALS['Language']->getText('global','printer_version').'</A> ) 
+          </li>';
+  }  
 
  
   print '
