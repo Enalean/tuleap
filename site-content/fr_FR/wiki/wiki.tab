@@ -23,7 +23,7 @@ wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1Documents Wiki</h3>
 wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1Pages Wiki</h3>
 wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1Pages Wiki Vides</h3>
 wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Créer une nouvelle Page Wiki</h3>
-wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description&nbsp;:</em>$2</p></li>
+wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>Description&nbsp;:&nbsp;</em>$2</p></li>
 wiki_views_wikiserviceviews	pagename	Nom de la Page&nbsp;:
 wiki_views_wikiserviceviews	menuadmin	Admin	
 wiki_views_wikiserviceviews	menupages	Pages	
