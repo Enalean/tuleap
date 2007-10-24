@@ -61,7 +61,11 @@ class ServerUpdatePlugin extends Plugin {
     }
     
     function widgets($params) {
-        $params['codex_widgets'][] = 'myserverupdates';
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        $lm = new WidgetLayoutManager();
+        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+            $params['codex_widgets'][] = 'myserverupdates';
+        }
     }
     
     function process() {
