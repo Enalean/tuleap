@@ -549,23 +549,84 @@ INSERT INTO layouts (id, name, description, scope) VALUES
 INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
 INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
 
-##
+########## Users
 
 INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
 SELECT user_id, 'u', 1, 1 
 FROM user;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT user_id, 'u', 1, 1, 'mysurveys', 4
-FROM user;
-
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 2
+SELECT user_id, 'u', 1, 1, 'myprojects', 0
 FROM user;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'mybookmarks', 1
 FROM user;
+
+# Add mydocman only if docman is installed
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mydoman', 2
+FROM user, plugin
+WHERE plugin.name = 'serverupdate';
+
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 3
+FROM user;
+
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT user_id, 'u', 1, 1, 'mysurveys', 4
+FROM user;
+
+# only if user have project with legacy bugs
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT ug.user_id, 'u', 1, 2, 'mybugs', 5
+FROM groups g, user_group ug, service s
+WHERE g.group_id = ug.group_id
+  AND g.group_id = s.group_id
+  AND g.status = 'A'
+  AND s.short_name = 'bugs'
+  AND s.is_used = 1
+  AND s.is_active = 1;
+
+# only if user have project with legacy tasks
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT ug.user_id, 'u', 1, 2, 'mytasks', 5
+FROM groups g, user_group ug, service s
+WHERE g.group_id = ug.group_id
+  AND g.group_id = s.group_id
+  AND g.status = 'A'
+  AND s.short_name = 'task'
+  AND s.is_used = 1
+  AND s.is_active = 1;
+
+# only if user have project with legacy support requests
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT ug.user_id, 'u', 1, 2, 'mysrs', 5
+FROM groups g, user_group ug, service s
+WHERE g.group_id = ug.group_id
+  AND g.group_id = s.group_id
+  AND g.status = 'A'
+  AND s.short_name = 'support'
+  AND s.is_used = 1
+  AND s.is_active = 1;
+
+
+
+# Add myadmin only to current admins
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT user_id, 'u', 1, 2, 'myadmin', -2
+FROM user INNER JOIN user_group USING(user_id)
+WHERE user_group.group_id = 1
+  AND admin_flags = 'A';
+
+# Add myserverupdate only to current admins
+# and only if serverupdate is installed
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT user_id, 'u', 1, 2, 'myserverupdate', -1
+FROM user INNER JOIN user_group USING(user_id), plugin
+WHERE user_group.group_id = 1
+  AND admin_flags = 'A'
+  AND plugin.name = 'serverupdate';
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 2, 'myartifacts', 0
@@ -575,27 +636,43 @@ INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, 
 SELECT user_id, 'u', 1, 2, 'mymonitoredfp', 1
 FROM user;
 
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT user_id, 'u', 1, 1, 'myprojects', 0
-FROM user;
 
-##
+
+########## Projects
 
 INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default) 
 SELECT group_id, 'g', 1, 1 
 FROM groups;
 
+# only if FRS is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 1, 'projectpublicareas', 0
-FROM groups;
+SELECT g.group_id, 'g', 1, 1, 'projectlatestfilereleases', 0
+FROM groups g INNER JOIN service s USING(group_id)
+WHERE s.short_name = 'file' AND is_active = 1 AND is_used = 1;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 2, 'projectlatestfilereleases', 0
+SELECT group_id, 'g', 1, 1, 'projectpublicareas', 1
 FROM groups;
 
+
+
+# only if News is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 2, 'projectlatestnews', 1
-FROM groups;
+SELECT group_id, 'g', 1, 2, 'projectlatestnews', 0
+FROM groups g INNER JOIN service s USING(group_id)
+WHERE s.short_name = 'news' AND is_active = 1 AND is_used = 1;
+
+# only if SVN is used
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 1
+FROM groups g INNER JOIN service s USING(group_id)
+WHERE s.short_name = 'svn' AND is_active = 1 AND is_used = 1;
+
+# only if CVS is used
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 2
+FROM groups g INNER JOIN service s USING(group_id)
+WHERE s.short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
 
 TODO plugins
