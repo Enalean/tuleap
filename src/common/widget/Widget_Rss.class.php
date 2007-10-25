@@ -37,6 +37,9 @@ require_once('Widget.class.php');
             foreach($items as $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
                 $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
+                if ($item->get_date()) {
+                    $content .= '<span style="color:#999;"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
+                }
                 $content .= '</td></tr>';
             }
             $content .= '</table>';
