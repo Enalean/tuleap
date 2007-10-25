@@ -1737,7 +1737,7 @@ function artifact_to_soap($artifact) {
                     $extrafieldvalues[] = array (    
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
-                        'field_value' => $value
+                        'field_value' => html_entity_decode($value)
                     );
                 }
             }
@@ -1774,12 +1774,12 @@ function artifact_to_soap($artifact) {
         // summary
         $field_summary = $art_field_fact->getFieldFromName('summary');
         if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['summary'] = $artifact->getSummary();
+                $return['summary'] = html_entity_decode($artifact->getSummary());
         }
         // details
         $field_details = $art_field_fact->getFieldFromName('details');
         if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['details'] = $artifact->getDetails();
+                $return['details'] = html_entity_decode($artifact->getDetails());
         }
         // severity
         $field_severity = $art_field_fact->getFieldFromName('severity');
@@ -2299,7 +2299,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
     
         $return[] = array (
             'artifact_id'          => db_result($followups_res, $i, 'artifact_id'),    
-            'comment'               => $comment, //db_result($followups_res, $i, 'new_value'),
+            'comment'               => html_entity_decode($comment), //db_result($followups_res, $i, 'new_value'),
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
