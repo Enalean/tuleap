@@ -88,6 +88,8 @@ class Widget_MyTasks extends Widget {
                 $this->content .= $html_hdr.$html;
             }
             $this->content .= '</table>';
+        } else {
+            $this->content .= $GLOBALS['Language']->getText('my_index', 'no_task');
         }
     }
     function getTitle() {

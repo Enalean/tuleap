@@ -73,6 +73,8 @@ class Widget_MySrs extends Widget {
                 $this->content .= $html_hdr.$html;
             }
             $this->content .= '</table>';
+        } else {
+            $this->content .= $GLOBALS['Language']->getText('my_index', 'no_support');
         }
     }
     function getTitle() {

@@ -77,6 +77,8 @@ class Widget_MyBugs extends Widget {
             }
     
             $this->content .= '</table>';
+        } else {
+            $this->content .= $GLOBALS['Language']->getText('my_index', 'no_bug');
         }
     }
     function getTitle() {

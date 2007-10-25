@@ -21,9 +21,10 @@ class Widget_MySurveys extends Widget {
     
     function Widget_MySurveys() {
         $this->Widget('mysurveys');
+        $no_survey = true;
         // Get id and title of the survey that will be promoted to user page. default = survey whose id=1
         if ($GLOBALS['sys_my_page_survey']) {
-            $developer_survey_id = $GLOBALS['sys_my_page_survey'];	
+            $developer_survey_id = $GLOBALS['sys_my_page_survey'];
         } else {
             $developer_survey_id = "1";
         }
@@ -44,8 +45,12 @@ class Widget_MySurveys extends Widget {
             $result = db_query($sql);
             
             if (db_numrows($result) < 1) {
+                $no_survey = false;
                 $this->content .= '<a href="/survey/survey.php?group_id='. $group_id .'&survey_id='. $developer_survey_id .'">'. $survey_title .'</a>';
             }             
+        }
+        if ($no_survey) {
+            $this->content .= $GLOBALS['Language']->getText('my_index', 'no_survey');
         }
     }
     function getTitle() {
