@@ -490,6 +490,10 @@ class DocmanController extends Controler {
                 $this->view = 'Tree';
             }
             break;
+        case 'getRootFolder':
+            $this->_viewParams['action_result'] = $root->getId();
+            $this->_setView('getRootFolder');
+            break;
         case 'collapseFolder':
             $this->action = 'collapseFolder';
             $this->_viewParams['item'] =& $root;

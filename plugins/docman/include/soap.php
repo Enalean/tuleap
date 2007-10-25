@@ -57,6 +57,19 @@ $GLOBALS['server']->wsdl->addComplexType(
 // Function definition
 //
 $GLOBALS['server']->register(
+    'getRootFolder',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        ),
+    array('listFolderResponse'=>'xsd:int'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getRootFolder',
+    'rpc',
+    'encoded',
+    'Returns the document object id that is at the top of the docman given a group object.'
+);
+$GLOBALS['server']->register(
     'listFolder',
     array(
         'sessionKey'=>'xsd:string',
@@ -152,6 +165,48 @@ $GLOBALS['server']->register(
 // Function implementation
 //
 /**
+* getRootFolder
+* 
+* Returns the document object that is at the top of the docman given a group object.
+*
+*/
+function getRootFolder($sessionKey,$group_id) {
+    global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'getRootFolder','Could Not Get Group','');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'getRootFolder', $group->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getRootFolder', 'Restricted user: permission denied.', '');
+        }
+        
+        $request =& new SOAPRequest(array(
+            'group_id' => $group_id,
+            //needed internally in docman vvv
+            'action'       => 'getRootFolder',
+        ));
+        $plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $result = $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new soap_fault('', 'getRootFolder', $msg, '');
+            } else {
+                return $result;
+            }
+        } else {
+            return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','');
+        }
+    } else {
+        return new soap_fault(invalid_session_fault,'getRootFolder','Invalid Session','');
+    }
+}
+
+/**
 * listFolder
 * 
 * TODO: description
@@ -191,7 +246,7 @@ function listFolder($sessionKey,$group_id,$item_id) {
             return new soap_fault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN,'monitor','Unavailable plugin','');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'monitorDocmanItem','Invalid Session','');
+        return new soap_fault(invalid_session_fault,'listFolder','Invalid Session','');
     }
 }
 

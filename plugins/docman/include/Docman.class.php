@@ -55,7 +55,12 @@ class Docman extends DocmanController {
         $this->view = 'RedirectAfterCrud';
     }
     /* protected */ function _setView($view) {
-    	   $this->view = $view;
+        if ($view == 'getRootFolder') {
+            $this->feedback->log('error', 'Unable to process request');
+            $this->_set_redirectView();
+        } else {
+            $this->view = $view;
+        }
     }
     /* protected */ function _set_moveView_errorPerms() {
         $this->view = 'Details';

@@ -11,6 +11,7 @@
 
 require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');
 
+require_once('CLI_Action_Docman_GetRoot.class.php');
 require_once('CLI_Action_Docman_List.class.php');
 require_once('CLI_Action_Docman_CreateDocument.class.php');
 require_once('CLI_Action_Docman_CreateFolder.class.php');
@@ -21,6 +22,7 @@ require_once('CLI_Action_Docman_Move.class.php');
 class CLI_Module_Docman extends CLI_Module {
     function CLI_Module_Docman() {
         $this->CLI_Module("docman", "Manage documents");
+        $this->addAction(new CLI_Action_Docman_GetRoot());
         $this->addAction(new CLI_Action_Docman_List());
         $this->addAction(new CLI_Action_Docman_CreateDocument());
         $this->addAction(new CLI_Action_Docman_CreateFolder());
