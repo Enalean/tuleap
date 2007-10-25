@@ -44,18 +44,13 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     }
     
     function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
-        if ($this->canBeDisplayed()) {
-            $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
-        }
+        $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
     }
     function getTitle() {
         return '';
     }
     function getContent() {
         return '';
-    }
-    function canBeDisplayed() {
-        return true;
     }
     function getPreferencesForm($layout_id, $owner_id, $owner_type) {
         $GLOBALS['Language']->loadLanguageMsg('widget/widget');
