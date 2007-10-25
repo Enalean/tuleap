@@ -18,7 +18,7 @@ define ('get_artifact_field_fault', '3015');
 define ('add_cc_fault', '3016');
 define ('invalid_field_fault', '3017');
 define ('delete_cc_fault', '3018');
-
+define ('get_service_fault', '3020');
 
 require_once ('nusoap.php');
 require_once ('pre.php');
@@ -1247,6 +1247,11 @@ function &getTrackerList($sessionKey, $group_id) {
         }
         if (!checkRestrictedAccess($group)) {
             return new soap_fault(get_group_fault, 'getTrackerList', 'Restricted user: permission denied.', '');
+        }
+        
+        $project = new Project($group_id);
+        if (!$project->usesService('tracker')) {
+            return new soap_fault(get_service_fault, 'getTrackerList', 'Tracker service is not used for this project.', '');
         }
         
         $atf = new ArtifactTypeFactory($group);
