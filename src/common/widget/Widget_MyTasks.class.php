@@ -1,6 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
+require_once('WidgetLayoutManager.class.php');
 require_once('www/my/my_utils.php');
 
 /**
@@ -18,9 +19,9 @@ class Widget_MyTasks extends Widget {
     
     function Widget_MyTasks() {
         $this->Widget('mytasks');
-        $this->can_be_displayed = true;
         $this->content = '';
-        
+        $lm =& new WidgetLayoutManager();
+        $this->setOwner(user_getid(), $lm->OWNER_TYPE_USER);
         $last_group=0;
     
         $sql = 'SELECT groups.group_id, groups.group_name, project_group_list.group_project_id, project_group_list.project_name '.
@@ -31,13 +32,11 @@ class Widget_MyTasks extends Widget {
             "AND project_group_list.is_public!='9' ".
           'AND project_group_list.group_project_id=project_task.group_project_id GROUP BY group_id,group_project_id';
     
-    
         $result=db_query($sql);
         $rows=db_numrows($result);
     
         if ($result && $rows >= 1) {
             $request =& HTTPRequest::instance();
-            $this->can_be_displayed = true;
             $this->content .= '<table style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
     
@@ -97,8 +96,19 @@ class Widget_MyTasks extends Widget {
     function getContent() {
         return $this->content;
     }
-    function canBeDisplayed() {
-        return $this->can_be_displayed;
+    function isAvailable() {
+        $sql = "SELECT s.short_name
+        FROM groups g, user_group ug, service s
+        WHERE g.group_id = ug.group_id
+        AND g.group_id = s.group_id
+        AND ug.user_id = ". $this->owner_id ."
+        AND g.status = 'A'
+        AND s.short_name = 'task'
+        AND s.is_used = 1
+        AND s.is_active = 1
+        LIMIT 1";
+        $result=db_query($sql);
+        return $result && db_numrows($result) > 0;
     }
 }
 ?>

@@ -18,8 +18,9 @@ class Widget_MySrs extends Widget {
     
     function Widget_MySrs() {
         $this->Widget('mysrs');
-        $this->can_be_displayed = true;
         $this->content = '';
+        $lm =& new WidgetLayoutManager();
+        $this->setOwner(user_getid(), $lm->OWNER_TYPE_USER);
         
         $sql='SELECT group_id FROM support '.
             'WHERE support_status_id = 1 '.
@@ -30,7 +31,6 @@ class Widget_MySrs extends Widget {
         $rows=db_numrows($result);
         if ($result && $rows >= 1) {
             $request =& HTTPRequest::instance();
-            $this->can_be_displayed = true;
             $this->content .= '<table style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
     
@@ -81,8 +81,19 @@ class Widget_MySrs extends Widget {
     function getContent() {
         return $this->content;
     }
-    function canBeDisplayed() {
-        return $this->can_be_displayed;
+    function isAvailable() {
+        $sql = "SELECT s.short_name
+        FROM groups g, user_group ug, service s
+        WHERE g.group_id = ug.group_id
+        AND g.group_id = s.group_id
+        AND ug.user_id = ". $this->owner_id ."
+        AND g.status = 'A'
+        AND s.short_name = 'support'
+        AND s.is_used = 1
+        AND s.is_active = 1
+        LIMIT 1";
+        $result=db_query($sql);
+        return $result && db_numrows($result) > 0;
     }
 }
 ?>
