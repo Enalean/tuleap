@@ -77,7 +77,6 @@ class Docman_PermissionsManager {
         return $this->dao;
     }
 
-    var $item_factory;
     function &_getItemFactory($groupId=0) {
         if (!isset($this->item_factory[$groupId])) {
             $this->item_factory[$groupId] =& new Docman_ItemFactory($groupId);
@@ -85,6 +84,13 @@ class Docman_PermissionsManager {
         return $this->item_factory[$groupId];
     }
 
+    /**
+    * Return true if the user can access the item
+    * 
+    * can access = user can read the item && user can access its parent
+    * 
+    * @return boolean
+    */
     function userCanAccess(&$user, $item_id) {
         if (!isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
@@ -99,11 +105,22 @@ class Docman_PermissionsManager {
         }
         return $this->cache_access[$user->getId()][$item_id];
     }
+    
+    /**
+    * Return true if the user can read the item
+    * 
+    * User can read an item if:
+    * - he is super user,
+    * - he is admin of the current docman,
+    * - he can write the item (@see userCanWrite),
+    * - or one of his ugroups has READ permission on the item
+    * @return boolean
+    */
     function userCanRead(&$user, $item_id) {
         if(!isset($this->cache_read[$user->getId()][$item_id])) {
             $pm =& $this->_getPermissionManagerInstance();
             $this->cache_read[$user->getId()][$item_id] = $user->isSuperUser() 
-                || $this->userCanAdmin($user, $item_id) //There are default perms for admin
+                || $this->userCanAdmin($user) //There are default perms for admin
                 || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups($this->groupId, array())) 
                 || $this->userCanWrite($user, $item_id);
                 
@@ -111,6 +128,16 @@ class Docman_PermissionsManager {
         return $this->cache_read[$user->getId()][$item_id];
     }
 
+    /**
+    * Return true if the user can write the item
+    * 
+    * User can read an item if:
+    * - he is super user,
+    * - he is admin of the current docman,
+    * - he can manage the item (@see userCanManage),
+    * - or one of his ugroups has WRITE permission on the item
+    * @return boolean
+    */
     function userCanWrite(&$user, $item_id) {
         if(!isset($this->cache_write[$user->getId()][$item_id])) {
             $pm =& $this->_getPermissionManagerInstance();
@@ -126,6 +153,15 @@ class Docman_PermissionsManager {
         return $this->cache_write[$user->getId()][$item_id];
     }
 
+    /**
+    * Return true if the user can write the item
+    * 
+    * User can read an item if:
+    * - he is super user,
+    * - he is admin of the current docman,
+    * - or one of his ugroups has MANAGE permission on the item
+    * @return boolean
+    */
     function userCanManage(&$user, $item_id) {
         if(!isset($this->cache_manage[$user->getId()][$item_id])) {
             $pm =& $this->_getPermissionManagerInstance();
@@ -140,6 +176,11 @@ class Docman_PermissionsManager {
         return $this->cache_manage[$user->getId()][$item_id];
     }
 
+    /**
+    * Return true if the user has one of his ugroups with ADMIN permission on docman
+    * @return boolean
+    * @access protected
+    */
     function _isUserDocmanAdmin($user) {
         $has_permission = false;
 
@@ -160,6 +201,10 @@ class Docman_PermissionsManager {
         return $has_permission;
     }
 
+    /**
+    * Return true if the user can administrate the current docman
+    * @return boolean
+    */
     function userCanAdmin(&$user) {
         if(!isset($this->cache_admin[$user->getId()][$this->groupId])) {
             //Todo: see if this code already exists in permission_xxx
@@ -174,6 +219,11 @@ class Docman_PermissionsManager {
         return $this->cache_admin[$user->getId()][$this->groupId];
     }
 
+    /**
+    * Return true if the current user can administrate the current docman
+    * @return boolean
+    * @see userCanAdmin
+    */
     function currentUserCanAdmin() {
         $user =& $this->getCurrentUser();
         return $this->userCanAdmin($user);
@@ -182,7 +232,9 @@ class Docman_PermissionsManager {
     /**
      * Check if the current logged user has write access on a item tree.
      *
-     * $itemId Integer the parent item id.
+     * @param $itemId Integer the parent item id.
+     * @see userCanWriteSubItems
+     * @return boolean
      */
     function currentUserCanWriteSubItems($itemId) {
         $user =& $this->getCurrentUser();
@@ -192,8 +244,9 @@ class Docman_PermissionsManager {
     /**
      * Check if given user has write access on a item tree.
      *
-     * $user   User User object.
-     * $itemId Integer The parent item id.
+     * @param $user   User User object.
+     * @param $itemId Integer The parent item id.
+     * @return boolean
      */
     function userCanWriteSubItems(&$user, $itemId) {
         $item    =& $this->_getItemTreeForPermChecking($itemId, $user);
