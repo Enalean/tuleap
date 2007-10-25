@@ -135,7 +135,7 @@ class ArtifactFactory extends Error {
 	        	    return false;
                 }
                 
-                if ($af->isDateField()) {
+                if ($af->isDateField() && ($cr['field_name'] != 'open_date' && $cr['field_name'] != 'close_date')) {
                     // The SQL query expects a timestamp, whereas the given date is in YYYY-MM-DD format
                     $cr['field_value'] = strtotime($cr['field_value']);
                 }
@@ -146,7 +146,15 @@ class ArtifactFactory extends Error {
                 }
                 
 				if ($af->isStandardField()) {
-                    $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".$cr['field_value']."')";
+                    if ($cr['operator'] == '=' && ($cr['field_name'] == 'open_date' || $cr['field_name'] == 'close_date')) {
+                        // special case for open_date and close_date with operator = : the hours, minutes, and seconds are stored, so we have to compare an interval
+                        list($year,$month,$day) = util_date_explode($cr['field_value']);
+                        $time_end = mktime(23, 59, 59, $month, $day, $year);
+                        $sql_where .= " AND (a.".$cr['field_name']." >= '".strtotime($cr['field_value'])."')";
+                        $sql_where .= " AND (a.".$cr['field_name']." <= '".$time_end."')";
+                    } else {
+                        $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".strtotime($cr['field_value'])."')";
+                    }
 				} else {
                     $sql_select .= ", afv".$cpt_criteria.".valueInt ";
                     $sql_from .= ", artifact_field af".$cpt_criteria.", artifact_field_value afv".$cpt_criteria." ";
