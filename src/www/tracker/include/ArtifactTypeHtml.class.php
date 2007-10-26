@@ -1983,16 +1983,16 @@ EOS;
 		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 		
 		if ($this->userIsAdmin()) {
-		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
-		    help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
-		    echo '
+	    	echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
+			help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
+			echo '
 			<P>'.$Language->getText('tracker_include_type','toggle_notif_note').'<BR>
-			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getToggleNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');     
-		} else if ($this->getToggleNotification()) {
+			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getStopNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');     
+		} else if ($this->getStopNotification()) {
 		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
-		    help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
-		    echo '
-			    <P>'.$Language->getText('tracker_include_type','toggle_notif_warn').'<BR>';
+			help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
+			echo '
+			<P><b>'.$Language->getText('tracker_include_type','toggle_notif_warn').'</b><BR>';
 		}
 		
 		echo '<h3><a name="GlobalEmailNotification"></a>'.$Language->getText('tracker_include_type','global_mail_notif').' '.

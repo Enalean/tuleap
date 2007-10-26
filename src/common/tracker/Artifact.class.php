@@ -2166,7 +2166,7 @@ class Artifact extends Error {
       global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
         
       // check if notification is temporarily stopped in this tracker
-      if (!$this->ArtifactType->getToggleNotification()) {
+      if (!$this->ArtifactType->getStopNotification()) {
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
