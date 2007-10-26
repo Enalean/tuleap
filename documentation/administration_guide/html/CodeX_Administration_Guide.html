@@ -3017,11 +3017,15 @@ Some projects may want to switch from CVS to Subversion. There are many good rea
 <ul>
 <li>Log in as root.
 <li>If not already done, install cvs2svn from <a href="http://cvs2svn.tigris.org">http://cvs2svn.tigris.org</a>
+<li>Check that the SVN repository is empty:
+<pre>svnlook info /svnroot/projname</pre>
 <li>Then simply type:
 <pre>cvs2svn --existing-svnrepos -s /svnroot/projname --tmpdir=/tmp /cvsroot/projname</pre>
 This will convert the CVS repository with all the historical information (including all commits, tags and branches).
 To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
 <br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the 'xerox_crontab.sh' script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
+<li>Activate the Subversion service in CodeX if it is disabled.
+<li>You may also populate the CodeX DB with subversion revision details: you need to execute as codexadm '/usr/lib/codex/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to CodeX logins won't appear.
 </ul>
 
 <hr>
