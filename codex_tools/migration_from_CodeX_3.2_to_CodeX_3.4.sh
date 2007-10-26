@@ -388,6 +388,12 @@ UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvs
 ALTER TABLE artifact_field DROP INDEX idx_grp_name;
 ALTER TABLE artifact_field ADD INDEX idx_fname_grp(field_name(20), group_artifact_id);
 
+
+###############################################################################
+# Allow to temporarily disable tracker notifications. See SR #890
+
+ALTER TABLE artifact_group_list ADD stop_notification INT(11) NOT NULL DEFAULT '0' AFTER instantiate_for_new_projects;
+
 ###############################################################################
 # This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
 

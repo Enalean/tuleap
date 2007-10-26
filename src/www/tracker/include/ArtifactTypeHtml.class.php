@@ -1982,6 +1982,19 @@ EOS;
 		<INPUT type="hidden" name="atid" value="'.$this->getID().'">
 		<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
 		
+		if ($this->userIsAdmin()) {
+		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
+		    help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
+		    echo '
+			<P>'.$Language->getText('tracker_include_type','toggle_notif_note').'<BR>
+			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getToggleNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');     
+		} else if ($this->getToggleNotification()) {
+		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
+		    help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
+		    echo '
+			    <P>'.$Language->getText('tracker_include_type','toggle_notif_warn').'<BR>';
+		}
+		
 		echo '<h3><a name="GlobalEmailNotification"></a>'.$Language->getText('tracker_include_type','global_mail_notif').' '.
 		help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
 		

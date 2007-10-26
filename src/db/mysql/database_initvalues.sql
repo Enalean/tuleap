@@ -1140,17 +1140,17 @@ INSERT INTO project_field_usage VALUES (103,100,1,1,1,120,NULL,NULL,NULL,NULL,NU
 -- Dumping data for table 'artifact_group_list'
 --
 
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 0, NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 0, NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, NULL, NULL, 1);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, NULL, NULL, 0);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 1);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 0, NULL, NULL, 1, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 0, NULL, NULL, 1, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, NULL, NULL, 1, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, NULL, NULL, 0, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 1, 0);
 
 --
 -- This tracker has the id 100 to force the next id to be greater than 100
 -- 100 is a special value (None value)
 --
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects) VALUES (100, 100, 'None', 'None', '', 0, NULL, NULL, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (100, 100, 'None', 'None', '', 0, NULL, NULL, 0, 0);
 
 --
 -- Dumping data for table 'artifact_field_set'

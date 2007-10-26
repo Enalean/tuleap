@@ -2163,8 +2163,10 @@ class Artifact extends Error {
     * @return void
     */
     function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
-        global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
+      global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
         
+      // check if notification is temporarily stopped in this tracker
+      if (!$this->ArtifactType->getToggleNotification()) {
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
@@ -2267,6 +2269,7 @@ class Artifact extends Error {
             }
 	    }
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
+      }
     }
 
 
