@@ -319,8 +319,7 @@ proto.do_table = function() {
 	return false;
       }
 
-    var html = 
-    '<table border="1" class="wiki-dl-table" cellpadding="6" cellspacing="0"><tbody>';
+    var html = '<table border="1"><tbody>';
   
     for(i=0; i<rows;i++) {
       html = html + "<tr>";
