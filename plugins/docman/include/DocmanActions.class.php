@@ -589,6 +589,16 @@ class DocmanActions extends Actions {
                 break;
         }
     }
+    /**
+    * User has asked to set or to change permissions on an item
+    * This method is the direct action of the docman controler but can also be called internally (@see createDocument)
+    * To call it directly, you have to give two extra parameters (in $params):
+    * - id : the id of the item
+    * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
+    *           Pretty difficult to know if a user can update the permissions which does not exist for a new item...
+    * 
+    * The asked permissions are given in the request, in the param 'permissions' as an array(ugroup => permission)
+    */
     function permissions($params) {
         $request =& HTTPRequest::instance();
         $id = isset($params['id']) ? $params['id'] : $request->get('id');
@@ -646,6 +656,7 @@ class DocmanActions extends Actions {
                 }
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
                 if ($this->_controler->request->get('recursive')) {
+                    //clone permissions for sub items
                     $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
                 }
@@ -660,54 +671,124 @@ class DocmanActions extends Actions {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
+    /**
+    * Set the permission for a ugroup on an item.
+    * 
+    * The difficult part of the algorithm comes from two point:
+    * - There is a hierarchy between ugroups (@see ugroup_get_parent)
+    * - There is a hierarchy between permissions (READ < WRITE < MANAGE)
+    * 
+    * Let's see a scenario:
+    * I've selected WRITE permission for Registered users and READ permission for Project Members
+    * => Project Members ARE registered users therefore they have WRITE permission.
+    * => WRITE is stronger than READ permission.
+    * So the permissions wich will be set are: WRITE for registered and WRITE for project members
+    * 
+    * The force parameter must be set to true if you want to bypass permissions checking (@see permission_add_ugroup). 
+    * Pretty difficult to know if a user can update the permissions which does not exist for a new item...
+    * 
+    * @param $group_id integer The id of the project
+    * @param $item_id integer The id of the item
+    * @param $permission_definition array The definission of the permission (pretty name, relations between perms, internal name, ...)
+    * @param $old_permissions array The permissions before
+    * @param &$done_permissions array The permissions after
+    * @param $ugroup_id The ugroup_id we want to set permission now
+    * @param $wanted_permissions array The permissions the user has asked
+    * @param &$history array Does a permission has been set ?
+    * @param $force boolean true if you want to bypass permissions checking (@see permission_add_ugroup).
+    *
+    * @access protected
+    */
     function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history, $force = false) {
+        //Do nothing if we have already choose a permission for ugroup
         if (!isset($done_permissions[$ugroup_id])) {
+            
+            //if the ugroup has a parent
             if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
+                
+                //first choose the permission for the parent
                 $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history, $force);
+                
+                //is there a conflict between given permissions?
                 if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
-                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_perms', array($old_permissions[$ugroup_id]['ugroup']['name'],$old_permissions[$parent]['ugroup']['name'],$permission_definition[$done_permissions[$parent]]['label'])));
+                    
+                    //warn the user that there was a conflict
+                    $this->_controler->feedback->log(
+                        'warning', 
+                        $GLOBALS['Language']->getText(
+                            'plugin_docman', 
+                            'warning_perms', 
+                            array(
+                                $old_permissions[$ugroup_id]['ugroup']['name'],
+                                $old_permissions[$parent]['ugroup']['name'],
+                                $permission_definition[$done_permissions[$parent]]['label']
+                            )
+                        )
+                    );
+                    
+                    //remove permissions which was set for the ugroup
                     if (count($old_permissions[$ugroup_id]['permissions'])) {
                         foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
                             permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
                             $history[$permission] = true;
                         }
                     }
+                    
+                    //The permission is none (default) for this ugroup
                     $done_permissions[$ugroup_id] = 100;
                 }
             }
+            
+            //If the permissions have not been set (no parent || no conflict)
             if (!isset($done_permissions[$ugroup_id])) {
-                //We clear if needed
+                
+                //remove permissions if needed
                 $perms_cleared = false;
                 if (count($old_permissions[$ugroup_id]['permissions'])) {
                     foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
                         if ($permission != $permission_definition[$wanted_permissions[$ugroup_id]]['type']) {
+                            //The permission has been changed
                             permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
                             $history[$permission] = true;
                             $perms_cleared = true;
                             $done_permissions[$ugroup_id] = 100;
                         } else {
+                            //keep the old permission
                             $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
                         }
                     }
                 }
+                
+                //If the user set an explicit permission and there was no perms before or they have been removed
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
+                    //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
                     permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id, $force);
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {
+                    //else set none(default) permission
                     $done_permissions[$ugroup_id] = 100;
                 }
             }
         }
     }
+    
+    /**
+    * Return the parent (or grand parent) of ugroup $parent which has a bigger permission
+    * @return integer the ugroup id which has been found or false
+    */
     function _getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission) {
+        //No need to search for parent if the wanted permission is the default one
         if ($wanted_permission == 100) {
             return false;
         } else {
+            //If the parent permission is bigger than the wanted permission
             if ($permission_definition[$done_permissions[$parent]]['order'] >= $permission_definition[$wanted_permission]['order']) {
+                //then return parent
                 return $parent;
             } else {
+                //else compare with grand parents (recursively)
                 if (($parent = ugroup_get_parent($parent)) !== false) {
                     return $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission);
                 } else {
