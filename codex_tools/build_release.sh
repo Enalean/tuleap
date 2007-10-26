@@ -1,8 +1,13 @@
 #!/bin/sh
-PACKAGE_DIR=/root/packages-rhel4
-BUILD_DIR=/root/build_dir
-ISO_LABEL="CodeX 3.2 sup"
-ISO_FILE="/tmp/codex-3.2.sup.iso"
+CX_VERSION='support/CX_3_2_SUP'
+CX_SHORT_VERSION='3.2'
+PACKAGE_DIR=/root/CodeX_Packaging/code.xrce/$CX_VERSION/packages-rhel4
+SOURCE_DIR=/root/CodeX_Packaging/src/$CX_VERSION
+BUILD_DIR=/root/CodeX_Packaging/build_dir
+echo `cd $SOURCE_DIR; svn update`
+CX_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
+ISO_LABEL="CodeX $CX_SHORT_VERSION sup"
+ISO_FILE="/tmp/codex-$CX_SHORT_VERSION.sup.r$CX_REVISION.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -15,6 +20,7 @@ CHMOD='/bin/chmod'
 RSYNC='/usr/bin/rsync'
 GREP='/bin/grep'
 RM='/bin/rm'
+MV='/bin/mv'
 
 # Misc functions
 die() {
@@ -36,22 +42,26 @@ $RM codex_install.sh INSTALL migration_* README  RELEASE_NOTES
 # Copy the install script at the top directory
 echo "Copying the CodeX installation script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/codex_install.sh $BUILD_DIR
+$CP -af $SOURCE_DIR/codex_tools/codex_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codex_install.sh
 
 # Copy the migration script at the top directory
 echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh $PACKAGE_DIR/CodeX/src/codex_tools/migration_from_CodeX_3.0.1_to_CodeX_3.2.sh $BUILD_DIR
+$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh $SOURCE_DIR/codex_tools/migration_from_CodeX_3.0.1_to_CodeX_3.2.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh
 $CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0.1_to_CodeX_3.2.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
-$RSYNC -av --delete $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
+$RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
 mkdir -p $BUILD_DIR/CodeX
-$RSYNC -a --delete $PACKAGE_DIR/CodeX/src $BUILD_DIR/CodeX
-
+BRANCH_NAME=`echo $SOURCE_DIR|sed 's/.*\///'`
+if [ -e $BUILD_DIR/CodeX/src ]; then
+  $MV $BUILD_DIR/CodeX/src $BUILD_DIR/CodeX/$BRANCH_NAME
+fi
+$RSYNC -a --delete $SOURCE_DIR $BUILD_DIR/CodeX
+$MV $BUILD_DIR/CodeX/$BRANCH_NAME $BUILD_DIR/CodeX/src
 # Only copy the latest RPMs from RPMS CodeX
 echo "Copying the CodeX RPMS packages..."
 $MKDIR -p $BUILD_DIR/RPMS_CodeX
@@ -62,7 +72,7 @@ do
     cd $PACKAGE_DIR/RPMS_CodeX/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
     $MKDIR -p $BUILD_DIR/RPMS_CodeX/$i
-    $RSYNC -a --delete $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
+    $RSYNC -a --exclude='.svn' --delete $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
     cd $BUILD_DIR/RPMS_CodeX/$i
     old_rpms=`$LS -1 | $GREP -v $newest_rpm`
     for j in $old_rpms
