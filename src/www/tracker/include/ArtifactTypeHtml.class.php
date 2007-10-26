@@ -1989,7 +1989,7 @@ EOS;
 			<P>'.$Language->getText('tracker_include_type','toggle_notif_note').'<BR>
 			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getStopNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');     
 		} else if ($this->getStopNotification()) {
-		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
+		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','notification_suspended').' '.
 			help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';			        
 			echo '
 			<P><b>'.$Language->getText('tracker_include_type','toggle_notif_warn').'</b><BR>';

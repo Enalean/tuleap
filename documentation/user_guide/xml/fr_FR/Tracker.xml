@@ -3529,6 +3529,21 @@ width="14.5cm" />
         </figure>
 
       </section>
+
+      <section id="ToggleEmailNotification">
+	<title>Suspension des notifications email</title>
+
+	<para>Il est parfois utile de suspendre toutes les notifications
+        email d'un outil de suivi particulier, par exemple lors
+        de tâches de maintenance. En sélectionnant cette option, 
+        un administrateur de l'outil de suivi peut suspendre les notifications
+        globales, ainsi que les notifications par rôle/évènement</para>
+
+	<para>Cette option est typiquement utilisée lors d'une mise à jour massive,
+        ou pour faire des tests.</para>
+
+      </section>
+
     </section>
 
   </section>

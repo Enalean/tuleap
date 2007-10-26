@@ -3343,6 +3343,21 @@ width="14.5cm" />
 	</figure>
 
       </section>
+
+      <section id="ToggleEmailNotification">
+	<title>Suspend Email Notification</title>
+
+	<para>Sometimes, it can be convenient to suspend all email
+        notifications for one specific tracker, for instance during 
+        maintenance tasks. By selecting this option, 
+        a tracker administrator disables both global notifications and
+        event/role notifications.</para>
+
+	<para>This feature is typically used when doing mass-changes 
+        or for testing purposes.</para>
+
+      </section>
+
     </section>
 
   </section>

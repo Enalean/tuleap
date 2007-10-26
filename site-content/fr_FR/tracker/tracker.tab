@@ -499,6 +499,7 @@ tracker_include_type	active_val	---- VALEURS ACTIVES ----
 tracker_include_type	no_hidden_val	---- AUCUNE VALEUR CACHÉE ----
 tracker_include_type	hidden_val	---- VALEURS CACHÉES ----
 tracker_include_type	toggle_notification	Suspension des notifications
+tracker_include_type	notification_suspended	Notifications Suspendues
 tracker_include_type	toggle_notif_note	<B>En tant qu'administrateur de l'outil de suivi</B>, vous pouvez temporairement suspendre toutes les notifications par e-mail de cet outil de suivi, quels que soient les paramètres de notification spécifiés ci-dessous.
 tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suivi a temporairement suspendu les notifications par e-mail de cet outil de suivi. Les paramètres ci-dessous ne sont donc pas pris en compte.
 tracker_include_type	stop_notification	Suspendre les notifications par e-mail
