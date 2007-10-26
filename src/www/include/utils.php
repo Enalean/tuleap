@@ -1494,7 +1494,7 @@ function util_distance_of_time_in_words($from_time, $to_time, $include_seconds =
     } else if ($distance_in_minutes <= 89) {
         return $GLOBALS['Language']->getText('include_utils', 'about_1_hour');
     } else if ($distance_in_minutes <= 1439) {
-        return $GLOBALS['Language']->getText('include_utils', 'about_X_hours');
+        return $GLOBALS['Language']->getText('include_utils', 'about_X_hours', round($distance_in_minutes / 60));
     } else if ($distance_in_minutes <= 2879) {
         return $GLOBALS['Language']->getText('include_utils', 'about_1_day');
     } else if ($distance_in_minutes <= 43199) {
