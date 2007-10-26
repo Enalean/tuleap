@@ -38,7 +38,7 @@ require_once('Widget.class.php');
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
                 $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
                 if ($item->get_date()) {
-                    $content .= '<span style="color:#999;"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
+                    $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['sys_datefmt'], $item->get_date('U')) .'"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
                 }
                 $content .= '</td></tr>';
             }
