@@ -791,10 +791,20 @@ proto.format_a = function(element) {
     label = label.replace(/\s+/g, ' ');
     label = label.replace(/^\s+/, '');
     label = label.replace(/\s+$/, '');
-    
+
     if (Wikiwyg.is_ie) {
         if (href.match(/http(.+)goto\?key\=(.+)/)){
 	        this.appendOutput(label);
+	    }
+		else if ((href.match(/(http|https)(.+)pagename\=(.+)\&(.+)group_id\=(.+)/)) && (label == href)){
+			this.appendOutput(label);
+		}
+		else if ((href.match(/(http|https)(.+)pagename\=(.+)\&(.+)group_id\=(.+)/)) && (label != href)){
+			this.appendOutput('['+label+'|'+href+']');
+		}
+        else if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&(.+)group_id=[0-9]+/)){
+	        href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&(.+)group_id=[0-9]+/, '$2');
+	        this.make_wikitext_link(label, href, element);
 	    }
         else if (href.match(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/)){
 	        href = href.replace(/http(.+)\/wiki\/index.php\?pagename=(.+)\&group_id=[0-9]+/, '$2');
@@ -826,8 +836,18 @@ proto.format_a = function(element) {
         if (href.match(/goto\?key=(.+)/)){
 	        this.appendOutput(label);
 	    }
-	    else if (href.match(/index.php\?pagename=(.+)\&group_id\=[0-9]+/)){
-	        href = href.replace(/index.php\?pagename=(.+)\&group_id\=[0-9]+/, '$1');
+		else if ((href.match(/(http|https)(.+)pagename\=(.+)\&(.+)group_id\=(.+)/)) && (label == href)){
+			this.appendOutput(label);
+		}
+		else if ((href.match(/(http|https)(.+)pagename\=(.+)\&(.+)group_id\=(.+)/)) && (label != href)){
+			this.appendOutput('['+label+'|'+href+']');
+		}
+	    else if (href.match(/index.php\?pagename\=(.+)\&(.+)group_id\=[0-9]+/)){
+	        href = href.replace(/index.php\?pagename\=(.+)\&(.+)group_id\=[0-9]+/, '$1');
+            this.make_wikitext_link(label, href, element);
+        }
+	    else if (href.match(/index.php\?pagename\=(.+)\&group_id\=[0-9]+/)){
+	        href = href.replace(/index.php\?pagename\=(.+)\&group_id\=[0-9]+/, '$1');
             this.make_wikitext_link(label, href, element);
         }
 	    else if (href.match(/.+uploads\/[0-9]+\/[0-9]+\/.*/)){
