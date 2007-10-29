@@ -34,7 +34,7 @@ function export_file_logs($project, $span, $who) {
     
     $sql_file = filedownload_logs_extract($project,$span,$who);
     $col_list_file = array('time','user','email','title','local_time');
-    $file_title = array ('time'      => 'Files',
+    $file_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
 			'user'       => '',
 			'email'      => '',
 			'title'      => '',
@@ -66,7 +66,7 @@ function export_cvs_logs($project, $span, $who) {
     
     $sql_cvs = cvsaccess_logs_extract($project,$span,$who);			
     $col_list_cvs = array('day','user','email','cvs_checkouts','cvs_browse');
-    $cvs_title = array ('day'            => 'CVS',
+    $cvs_title = array ('day'            => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_access'),
 			'user'           => '',
 			'email'          => '',
 			'cvs_checkouts'  => '',
@@ -99,7 +99,7 @@ function export_svn_logs($project,$span,$who) {
     
     $sql_svn = svnaccess_logs_extract($project,$span,$who);
     $col_list_svn = array('day','user','email','svn_access_count','svn_browse');
-    $svn_title = array ('day'              => 'Subversion',
+    $svn_title = array ('day'              => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','subversion'),
 			'user'             => '',
 			'email'            => '',
 			'svn_access_count' => '',
@@ -132,7 +132,7 @@ function export_doc_logs($project, $span, $who) {
     
     $sql_doc = 	doc_logs_extract($project, $span, $who);		
     $col_list_doc = array('time','user','email','title','local_time');
-    $docs_title = array ('time'      => 'Docs',
+    $docs_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','docs'),
 			'user'       => '',
 			'email'      => '',
 			'title'      => '',
@@ -164,7 +164,7 @@ function export_wiki_pg_logs($project, $span, $who, $sf) {
 
     $sql_wiki_pg = wiki_logs_extract($project, $span, $who);			
     $col_list_wiki_pg = array('time','user','email','title','local_time');
-    $wiki_pg_title = array ('time'       => 'Wiki Pages',
+    $wiki_pg_title = array ('time'       => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_access'),
 			    'user'       => '',
 			    'email'      => '',
 			    'title'      => '',
@@ -190,14 +190,16 @@ function export_wiki_pg_logs($project, $span, $who, $sf) {
         }
     } else {
         //to be used in 'Show Format' link
-        $dsc_list = array( 'time'       => $GLOBALS['Language']->getText('project_export_access_logs_export','date_desc'),
+        if ($result_wiki_pg && $rows_wiki_pg > 0) {
+    		$dsc_list = array( 'time'       => $GLOBALS['Language']->getText('project_export_access_logs_export','date_desc'),
 		           'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user_desc'),
 		           'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email_desc'),
 		           'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','page_desc'),
 		           'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time_desc'));	
-	$record = pick_a_record_at_random($result_wiki_pg, $rows_wiki_pg, $col_list_wiki_pg);
-        prepare_access_logs_record($project->getGroupId(),$record);   
-        display_exported_fields($col_list_wiki_pg,$lbl_list_wiki_pg,$dsc_list,$record);
+			$record = pick_a_record_at_random($result_wiki_pg, $rows_wiki_pg, $col_list_wiki_pg);
+        	prepare_access_logs_record($project->getGroupId(),$record);   
+        	display_exported_fields($col_list_wiki_pg,$lbl_list_wiki_pg,$dsc_list,$record);
+        }
     }
 }
 
@@ -208,7 +210,7 @@ function export_wiki_att_logs($project, $span, $who) {
 
     $sql_wiki_att = wiki_attachments_logs_extract($project, $span, $who);			
     $col_list_wiki_att = array('time','user','email','title','local_time');
-    $wiki_att_title = array ('time'       => 'Wiki Attachments',
+    $wiki_att_title = array ('time'       => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','wiki_attachments'),
 			     'user'       => '',
 			     'email'      => '',
 			     'title'      => '',
@@ -241,7 +243,7 @@ function export_document_logs($project, $span, $who) {
     $logs = plugins_log_extract($project, $span, $who);
     $sql_document = $logs[0]['sql'];
     $col_list_document = array('time','user','email','title','local_time');
-    $documents_title = array ('time'         => 'Documents',
+    $documents_title = array ('time'         => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','documents'),
 				'user'       => '',
 				'email'      => '',
 				'title'      => '',
@@ -269,7 +271,8 @@ function export_document_logs($project, $span, $who) {
 
 $project = new Project($group_id);
     
-if ($export == 'access_logs') {
+if (isset($export)) {
+  if ($export == 'access_logs') {
 
     $span = 52*30.5;
     $who = "allusers";
@@ -286,13 +289,13 @@ if ($export == 'access_logs') {
     export_wiki_att_logs($project, $span, $who);
     export_document_logs($project, $span, $who);
 
-} else if ($export == "access_logs_format") {
+  } else if ($export == "access_logs_format") {
 		       
     $span = 52*30.5;
     $who = "allusers";
     echo $GLOBALS['Language']->getText('project_export_bug_deps_export','bug_deps_export_format',array($GLOBALS['Language']->getText('project_admin_utils', 'access_logs')));
     export_wiki_pg_logs($project,$span,$who,1);
-    
+  }  
 }
 
 

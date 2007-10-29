@@ -38,12 +38,23 @@ if (isset($_REQUEST['SUBMIT'])) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=access_logs.csv');
 
-    export_file_logs($project, $period, $who);
-    export_cvs_logs($project, $period, $who);	
-    export_svn_logs($project, $period, $who);
-    export_doc_logs($project, $period, $who);
-    export_wiki_pg_logs($project, $period, $who,0);
-    export_wiki_att_logs($project, $period, $who);
+	if ($project->usesFile()) {
+    	export_file_logs($project, $period, $who);
+	}
+    if ($project->usesCVS()) {
+		export_cvs_logs($project, $period, $who);
+    }	
+    if ($project->usesSVN()) {
+    	export_svn_logs($project, $period, $who);
+    }
+    if($project->usesDocman()) {
+    	export_doc_logs($project, $period, $who);
+    }
+  	if ($project->usesWiki()) {
+    	export_wiki_pg_logs($project, $period, $who,0);
+    	export_wiki_att_logs($project, $period, $who);
+  	}
+  	// Need a hook?
     export_document_logs($project, $period, $who);
     exit;
 
@@ -140,10 +151,7 @@ switch($view) {
 }
 
 
-//LJ stats_site_agregate( $group_id );
-//Display 'Export Matching Logs' button, only if logs exist
-if (access_logs_exist($project, $span, $who)) {
-    echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
+echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="who" VALUE="'.$who.'">
 	<INPUT TYPE="HIDDEN" NAME="span" VALUE="'.$span.'">
@@ -151,7 +159,7 @@ if (access_logs_exist($project, $span, $who)) {
 	<TABLE align="left"><TR><TD>
 	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
 	</TD></TR></TABLE></FORM>';
-}
+
 print '<BR><P>';
 
 //

@@ -284,7 +284,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','accesses').'</B></TD>'
 			. '<TD><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
 			. '</TR>' . "\n";
-		
+		$i=0;
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
@@ -420,26 +420,5 @@ function plugins_logs_daily($project, $span = 7, $who = 'allusers') {
     }
 }
 
-function access_logs_exist($project, $span, $who) {
-
-    $sql_file = filedownload_logs_extract($project,$span,$who);
-    $res_file = db_query($sql_file);
-    $sql_cvs = cvsaccess_logs_extract($project,$span,$who);
-    $res_cvs = db_query($sql_cvs);
-    $sql_svn = svnaccess_logs_extract($project, $span, $who);
-    $res_svn = db_query($sql_svn);
-    $sql_doc = doc_logs_extract($project, $span, $who);
-    $res_doc = db_query($sql_doc);
-    $sql_wiki_pg = wiki_logs_extract($project, $span, $who);
-    $res_wiki_pg = db_query($sql_wiki_pg);
-    $sql_wiki_att = wiki_attachments_logs_extract($project, $span, $who);
-    $res_wiki_att = db_query($sql_wiki_att);
-    $logs = plugins_log_extract($project, $span, $who);
-    $sql_document = $logs[0]['sql'];
-    $res_document = db_query($sql_document);
-    
-    return (($res_file && db_numrows($res_file)>0) || ($res_cvs && db_numrows($res_cvs)>0) || ($res_svn && db_numrows($res_svn)>0) || ($res_doc && db_numrows($res_doc)>0) || ($res_wiki_pg && db_numrows($res_wiki_pg)>0) || ($res_wiki_att && db_numrows($res_wiki_att)>0) || ($res_document && db_numrows($res_document)>0));
-
-}
 
 ?>

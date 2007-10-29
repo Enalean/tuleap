@@ -619,6 +619,7 @@ project_export_index	show_format	Voir le format
 project_export_index	export_x	Exporter $1
 project_export_index	support_request	Suivi de demandes de support
 project_export_index	survey_responses	Réponses aux sondages
+project_export_index	access_logs	Journal des accès
 project_export_index	direct_db_access	Accès direct à la base de données 
 project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)
 project_export_index	db_connection_params	Paramètres de connexion à la base de données&nbsp;:
@@ -673,6 +674,27 @@ project_export_survey_responses_export	response_desc	Réponse à la question
 project_export_survey_responses_export	date_desc	Heure à laquelle la réponse a été enregistrée
 project_export_survey_responses_export	date_stamp_desc	Un identifiant unique pour l'ensemble des réponses fournies à ce sondage par un utilisateur donné
 project_export_survey_responses_export	user_id_desc	Identifiant encrypté de l'utilisateur
+#
+#-----------------------------------------------
+# Script: src/www/project/export/access_logs_export.php
+#
+project_export_access_logs_export	time	Date
+project_export_access_logs_export	user	Utilisateur
+project_export_access_logs_export	email	E-mail
+project_export_access_logs_export	page	Nom de la page
+project_export_access_logs_export	document	Document
+project_export_access_logs_export	doc	Doc
+project_export_access_logs_export	file	Fichier
+project_export_access_logs_export	attachment	Pièce jointe
+project_export_access_logs_export	access	Accès	
+project_export_access_logs_export	file_brows	Visualisation de fichiers
+project_export_access_logs_export	chk_upd	Checkout/Update
+project_export_access_logs_export	local_time	Heure locale
+project_export_access_logs_export	date_desc	La date (jour/mois/année) de l'accès
+project_export_access_logs_export	user_desc	Auteur de l'accès
+project_export_access_logs_export	email_desc	Adresse e-mail de l'auteur de l'accès
+project_export_access_logs_export	page_desc	Page wiki accédée
+project_export_access_logs_export	local_time_desc	Heure locale de l'accès (H:m)
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php
@@ -746,6 +768,7 @@ project_stats_source_code_access	all_users	Tous les utilisateurs
 project_stats_source_code_access	non_proj_members	Utilisateurs non membres
 project_stats_source_code_access	access_log_from	Journal d'accès pour 
 project_stats_source_code_access	for_last	sur les derniers...
+project_stats_source_code_access	logs_export	Exporter le journal d'accès correspondant
 #
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access_utils.php

@@ -64,7 +64,9 @@ function build_csv_header($col_list, $lbl_list) {
     $line = '';
     reset($col_list);
     while (list(,$col) = each($col_list)) {
-	$line .= tocsv($lbl_list[$col]).get_csv_separator();
+    	if (isset($lbl_list[$col])) {
+			$line .= tocsv($lbl_list[$col]).get_csv_separator();
+    	}
     }
     $line = substr($line,0,-1);
     return $line;
@@ -629,15 +631,18 @@ function prepare_survey_responses_record($group_id, &$record, $salt) {
 
 function prepare_access_logs_record($group_id, &$record) {
 
-    $time = $record['time'];    
-    $record['time'] = format_date('Y-m-d',$time);    
-    $record['local_time'] = strftime("%H:%M", $time);
+    if (isset($record['time'])) {
+    	$time = $record['time'];
+    	$record['time'] = format_date('Y-m-d',$time);
+    	$record['local_time'] = strftime("%H:%M", $time);
+    }
     $uid = user_getid_from_email($record['email']);
     $record['user'] = user_getrealname($uid)."(".user_getname($uid).")";
     //for cvs & svn access logs
-    $day = $record['day'];
-    $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
-
+    if (isset($record['day'])) {
+    	$day = $record['day'];
+	    $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
+    }
 }
 
 function pe_utils_format_task_assignees ($group_id,$task_id) {
