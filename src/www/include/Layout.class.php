@@ -539,7 +539,7 @@ echo html_blankimage(5,100);
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
         while (list($short_name,$service_data) = each($project->service_data_array)) {
-            if ($short_name == "admin") {
+            if ((string)$short_name == "admin") {
                 // for the admin service, we will check if the user is allowed to use the service
                 // it means : 1) to be a super user, or
                 //            2) to be project admin
