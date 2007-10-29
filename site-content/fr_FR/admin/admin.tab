@@ -119,7 +119,7 @@ admin_approve_pending_users	all_accounts	tous les comptes
 admin_approve_pending_users	status	avec le statut
 admin_approve_pending_users	status_restricted	restreint
 admin_approve_pending_users	status_standard	standard
-admin_approve_pending_users	title	Bienvenue sur $1 !
+admin_approve_pending_users	email_title	Bienvenue sur $1 !
 
 #
 #-----------------------------------------------

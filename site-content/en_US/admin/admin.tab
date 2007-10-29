@@ -114,7 +114,7 @@ admin_approve_pending_users	all_accounts	all accounts
 admin_approve_pending_users	status	with status
 admin_approve_pending_users	status_restricted	restricted
 admin_approve_pending_users	status_standard	standard
-admin_approve_pending_users	title	Welcome to $1!
+admin_approve_pending_users	email_title	Welcome to $1!
 
 #
 #-----------------------------------------------
