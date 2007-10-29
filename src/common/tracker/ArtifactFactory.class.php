@@ -153,7 +153,11 @@ class ArtifactFactory extends Error {
                         $sql_where .= " AND (a.".$cr['field_name']." >= '".strtotime($cr['field_value'])."')";
                         $sql_where .= " AND (a.".$cr['field_name']." <= '".$time_end."')";
                     } else {
-                        $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".strtotime($cr['field_value'])."')";
+                        if ($af->isDateField()) {
+                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".strtotime($cr['field_value'])."')";
+                        } else {
+                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".$cr['field_value']."')";
+                        }
                     }
 				} else {
                     $sql_select .= ", afv".$cpt_criteria.".valueInt ";
