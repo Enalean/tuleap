@@ -36,7 +36,8 @@ class WidgetLayoutManager {
         if ($data = db_fetch_array($req)) {
             $readonly = $this->_currentUserCanUpdateLayout($owner_id, $owner_type);
             if (!$readonly) {
-                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">[Add widget]</a>';
+                $GLOBALS['Language']->loadLanguageMsg('widget/widget');
+                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">['. $GLOBALS['Language']->getText('widget_add', 'link_add') .']</a>';
             }
             $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
             $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';

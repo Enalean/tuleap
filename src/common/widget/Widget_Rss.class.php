@@ -56,7 +56,7 @@ require_once('Widget.class.php');
     function getInstallPreferences() {
         $prefs  = '';
         $prefs .= '<table>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="http://www.zdnet.fr/feeds/rss/actualites/informatique/?l=5" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $GLOBALS['Language']->getText('widget_rss', 'default_url') .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
