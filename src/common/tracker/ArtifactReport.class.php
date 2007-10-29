@@ -684,8 +684,8 @@ class ArtifactReport extends Error {
 	  
 	  $arr = explode(',',$morder);
 	  while (list(,$attr) = each($arr)) {
-	    $field =& $this->fields[substr($attr,0,(strlen($attr)-1))]; //$art_field_fact->getFieldFromName(substr($attr,0,(strlen($attr)-1)));
-	    if ($field && $field->isUsed() && $field->isShowOnResult()) {
+          $key = substr($attr,0,(strlen($attr)-1));
+	    if (isset($this->fields[$key]) && $this->fields[$key]->isUsed() && $this->fields[$key]->isShowOnResult()) {
 	      preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
 	      list(,$mattr,$mdir) = $match;
 	      //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
