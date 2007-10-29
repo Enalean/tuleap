@@ -396,7 +396,7 @@ class ArtifactFieldFactory extends Error {
 	      $res_insert = db_query($sql_insert);
 	      //echo $sql_insert;
 	      if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-		$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field_array["field_id"],$atid_dest,db_error())));
+		$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($field->getID(),$atid_dest,"query: ".$sql_insert.", error: ".db_error())));
 		return false;
 	      }
 
