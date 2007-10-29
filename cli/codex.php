@@ -33,12 +33,12 @@ define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
 if (array_key_exists("CODEX_WSDL", $_ENV)) {
 	define("WSDL_URL", $_ENV["CODEX_WSDL"]);
 } else {
-	define("WSDL_URL", "http://codex.xerox.com/soap/index.php?wsdl");
+	define("WSDL_URL", "%wsdl_domain%/soap/index.php?wsdl");
 }
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.3.6";
+$CLI_VERSION = "0.4.0";
 
 error_reporting(E_ALL);
 
@@ -183,6 +183,7 @@ EOT;
         echo "\n";
     }
     echo $default_module;
+    echo "Currently using WSDL from ".WSDL_URL."\n";
 }
 /*
 Available modules:
