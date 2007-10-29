@@ -613,6 +613,7 @@ project_export_index	show_format	Show Format
 project_export_index	export_x	Export $1
 project_export_index	support_request	Support Request
 project_export_index	survey_responses	Survey Responses
+project_export_index	access_logs	Project Access Logs
 project_export_index	direct_db_access	Direct Database Access 
 project_export_index	generate_full_db	Generate Full Project Database</a> </b> (<- Click to generate)
 project_export_index	db_connection_params	Database connection parameters:
@@ -667,6 +668,27 @@ project_export_survey_responses_export	response_desc	The response to the questio
 project_export_survey_responses_export	date_desc	Date/Time the user response was registered
 project_export_survey_responses_export	date_stamp_desc	A unique identifier for the responses that belong to a survey taken by a given user
 project_export_survey_responses_export	user_id_desc	Encrypted user identifier
+#
+#-----------------------------------------------
+# Script: src/www/project/export/access_logs_export.php
+#
+project_export_access_logs_export	time	Date
+project_export_access_logs_export	user	User
+project_export_access_logs_export	email	Email
+project_export_access_logs_export	page	Page Name
+project_export_access_logs_export	document	Document
+project_export_access_logs_export	doc	Doc
+project_export_access_logs_export	file	File
+project_export_access_logs_export	attachment	Attachment
+project_export_access_logs_export	access	Accesses	
+project_export_access_logs_export	file_brows	File Browsing
+project_export_access_logs_export	chk_upd	Checkout/Update
+project_export_access_logs_export	local_time	Local Time
+project_export_access_logs_export	date_desc	The date (D/M/Y) when the user access occured
+project_export_access_logs_export	user_desc	Author of the access
+project_export_access_logs_export	email_desc	E-mail address of access author
+project_export_access_logs_export	page_desc	Wiki page accessed
+project_export_access_logs_export	local_time_desc	Local time of the access (H:m)
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php
@@ -740,6 +762,7 @@ project_stats_source_code_access	all_users	All Users
 project_stats_source_code_access	non_proj_members	Non Project Members
 project_stats_source_code_access	access_log_from	Access Log From
 project_stats_source_code_access	for_last	For Last...
+project_stats_source_code_access	logs_export	Export Matching Logs
 #
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access_utils.php
