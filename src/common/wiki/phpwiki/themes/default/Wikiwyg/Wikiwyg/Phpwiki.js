@@ -678,9 +678,52 @@ proto.format_span = function(element) {
 Support for plugin RichTable in phpwiki
  =============================================================================*/
 proto.format_table = function(element) {
-    this._table="true";
+	var attributes = ["title", "bgcolor", "border", "cellspacing", "cellpadding"
+	                 ,"align", "width", "height", "valign"];
+    
+	this._table="true";
     this.assert_blank_line();
-    this.appendOutput('<?plugin RichTable *border=1, cellpadding=0, cellspacing=0,\n');
+    this.appendOutput('<?plugin RichTable ');
+	if(!Wikiwyg.is_ie){
+	    if(element.hasAttributes()){
+	        var attrs = element.attributes;
+		    this.appendOutput('*');
+	        for (var i = 0; i<attrs.length; i++){
+	            this.appendOutput(attrs[i].name + '=' + attrs[i].value);
+				if (i < attrs.length -1){
+				    this.appendOutput(', ');
+				}
+	        }
+		    this.appendOutput('\n');
+	    }
+	}else{
+		var has_attributes = "false";
+		var attributes_it_has = new Array();
+		for(var j=0; j<attributes.length; j++){
+		    if (element.getAttribute(attributes[j]) && element.getAttribute(attributes[j]) != '' && element.getAttribute(attributes[j]) != 'null'){
+				attributes_it_has.push(attributes[j]);
+			    has_attributes = "true";
+			}
+		}
+		if(has_attributes == "true"){
+		    this.appendOutput('*');
+	        for (var i = 0; i<attributes_it_has.length; i++){
+		        if (element.getAttribute(attributes_it_has[i]) 
+				    && element.getAttribute(attributes_it_has[i]) != '' 
+					&& element.getAttribute(attributes_it_has[i]) != 'null'){
+				    this.appendOutput(attributes_it_has[i] + '=' + element.getAttribute(attributes_it_has[i]));
+					if (i < attributes_it_has.length - 1){
+					    this.appendOutput(', ');
+					}
+			    }else{
+			        this.appendOutput('');
+			    }
+		    }
+		}else{
+		    this.appendOutput('');
+		}
+		this.appendOutput('\n');
+	}
     this.walk(element);
     this.appendOutput('\n?>\n\n');
     this.assert_blank_line();
@@ -693,8 +736,49 @@ proto.format_tr = function(element) {
 }
 
 proto.format_td = function(element) {
+	var attributes = ["title", "bgcolor", "border", "cellspacing", "cellpadding"
+	                 ,"align", "width", "height", "valign"];
+
     this.appendOutput('|');
-    this.walk(element);
+	if(!Wikiwyg.is_ie){
+	    if(element.hasAttributes()){
+	        var attrs = element.attributes;
+		    this.appendOutput('* ');
+	        for (var i = 0; i<attrs.length; i++){
+	            this.appendOutput(attrs[i].name + '=' + attrs[i].value);
+				if (i < attrs.length -1){
+				    this.appendOutput(', ');
+				}
+	        }
+	    }
+	}else{
+		var has_attributes = "false";
+		var attributes_it_has = new Array();
+		for(var j=0; j<attributes.length; j++){
+		    if (element.getAttribute(attributes[j]) && element.getAttribute(attributes[j]) != '' && element.getAttribute(attributes[j]) != 'null'){
+				attributes_it_has.push(attributes[j]);
+			    has_attributes = "true";
+			}
+		}
+        if(has_attributes == "true"){
+		    this.appendOutput('* ');
+	        for (var i = 0; i<attributes_it_has.length; i++){
+		        if (element.getAttribute(attributes_it_has[i]) 
+				    && element.getAttribute(attributes_it_has[i]) != '' 
+					&& element.getAttribute(attributes_it_has[i]) != 'null'){
+				    this.appendOutput(attributes_it_has[i] + '=' + element.getAttribute(attributes_it_has[i]));
+					if (i < attributes_it_has.length - 1){
+					    this.appendOutput(', ');
+					}
+				}else{
+			        this.appendOutput('');
+				}
+	        }
+	    }else{
+		    this.appendOutput('');
+		}
+	}
+	this.walk(element);
     this.appendOutput('\n');
 }
 
