@@ -15,6 +15,7 @@ require_once('common/include/ReferenceManager.class.php');
 require_once('trove.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/wiki/lib/WikiCloner.class.php');
+require_once('common/widget/WidgetLayoutManager.class.php');
 
 /**
 * create_project
@@ -23,7 +24,7 @@ require_once('common/wiki/lib/WikiCloner.class.php');
 *
 * @param  data  
 */
-function create_project($data) {
+function create_project($data, $do_not_exit = false) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
     
@@ -305,13 +306,16 @@ function create_project($data) {
             'ugroupsMapping' => $ugroup_mapping,
             'group_id'       => $group_id
         ));
-        
-        $content = '';
-        include($GLOBALS['Language']->getContent('project/complete'));
-        site_header(array('title'=>$GLOBALS['Language']->getText('register_confirmation','registration_complete')));
-        echo $content;
-        site_footer(array());
-        exit(0);
+        if (!$do_not_exit) {
+            $content = '';
+            include($GLOBALS['Language']->getContent('project/complete'));
+            site_header(array('title'=>$GLOBALS['Language']->getText('register_confirmation','registration_complete')));
+            echo $content;
+            site_footer(array());
+            exit(0);
+        } else {
+            return $group_id;
+        }
     }
 }
 

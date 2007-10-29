@@ -154,12 +154,14 @@ if (db_numrows($res_grp) < 1) {
             if ($p->usesFile() || $p->usesSVN()) {
                 print '<br><u>'. $Language->getText('admin_approve_pending','distributed_services') .'</u>:<br><ul>';
                 if ($p->usesFile()) {
-                    $s =& $sf->getServerById($p->services['file']->getServerId());
-                    print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
+                    if ($s =& $sf->getServerById($p->services['file']->getServerId())) {
+                        print '<li>'. $Language->getText('project_admin_editservice', 'service_file_lbl_key') .': '. $s->getName() .'</li>';
+                    }
                 }
                 if ($p->usesSVN()) {
-                    $s =& $sf->getServerById($p->services['svn']->getServerId());
-                    print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
+                    if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
+                        print '<li>'. $Language->getText('project_admin_editservice', 'service_svn_lbl_key') .': '. $s->getName() .'</li>';
+                    }
                 }
                 print '</ul>';
             }
