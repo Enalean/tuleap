@@ -74,7 +74,7 @@ class FRSReleaseDao extends DataAccessObject {
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, " .
         "r.status_id " .
         "FROM frs_release AS r, frs_package AS p " .
-        "WHERE p.status_id != ".$this->STATUS_DELETED." AND p.group_id= %s " .
+        "WHERE p.status_id != ".$this->STATUS_DELETED." AND r.status_id != ".$this->STATUS_DELETED." AND p.group_id= %s " .
         "AND r.package_id = p.package_id " .
          ($package_id ? "AND p.package_id = %s " : ""), $this->da->quoteSmart($_group_id), $this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
