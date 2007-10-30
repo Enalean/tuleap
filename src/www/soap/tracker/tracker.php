@@ -2683,7 +2683,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
                 'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
                 'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
-                'summary' => db_result($dependencies, $i, 'summary'),
+                'summary' => html_entity_decode(db_result($dependencies, $i, 'summary')),
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => db_result($dependencies, $i, 'name'),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
