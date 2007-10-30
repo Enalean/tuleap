@@ -3277,7 +3277,7 @@ CREATE TABLE notifications (
 );
 
 -- 
--- Table structure for table 'layouts'
+-- Structure de la table 'layouts'
 -- 
 
 DROP TABLE IF EXISTS layouts;
@@ -3285,14 +3285,14 @@ CREATE TABLE IF NOT EXISTS layouts (
   id int(11) unsigned NOT NULL auto_increment,
   name varchar(255) NOT NULL default '',
   description text NOT NULL,
-  scope varchar(1) NOT NULL default 'S',
+  scope char(1) NOT NULL default 'S',
   PRIMARY KEY  (id)
 );
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'layouts_rows'
+-- Structure de la table 'layouts_rows'
 -- 
 
 DROP TABLE IF EXISTS layouts_rows;
@@ -3307,7 +3307,7 @@ CREATE TABLE IF NOT EXISTS layouts_rows (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'layouts_rows_columns'
+-- Structure de la table 'layouts_rows_columns'
 -- 
 
 DROP TABLE IF EXISTS layouts_rows_columns;
@@ -3322,7 +3322,7 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'owner_layouts'
+-- Structure de la table 'owner_layouts'
 -- 
 
 DROP TABLE IF EXISTS owner_layouts;
@@ -3337,7 +3337,7 @@ CREATE TABLE IF NOT EXISTS owner_layouts (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table 'layouts_contents'
+-- Structure de la table 'layouts_contents'
 -- 
 
 DROP TABLE IF EXISTS layouts_contents;
@@ -3346,23 +3346,26 @@ CREATE TABLE IF NOT EXISTS layouts_contents (
   owner_type varchar(1) NOT NULL default 'u',
   layout_id int(11) unsigned NOT NULL default '0',
   column_id int(11) unsigned NOT NULL default '0',
-  name varchar(255) NOT NULL,
-  content_id int(11) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL default '',
   rank int(11) NOT NULL default '0',
-  is_minimzed tinyint(1) NOT NULL default '0',
+  is_minimized tinyint(1) NOT NULL default '0',
+  is_removed tinyint(1) NOT NULL default '0',
   display_preferences tinyint(1) NOT NULL default '0',
-  KEY (user_id, owner_type, layout_id, name, content_id),
-  KEY (name)
+  content_id int(11) unsigned NOT NULL default '0',
+  KEY user_id (owner_id,owner_type,layout_id,name,content_id)
 );
+
 
 DROP TABLE IF EXISTS widget_rss;
 CREATE TABLE IF NOT EXISTS widget_rss (
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
-  user_id int(11) unsigned NOT NULL default '0',
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
   title varchar(255) NOT NULL,
   url TEXT NOT NULL,
-  KEY (user_id)
+  KEY (owner_id, owner_type)
 );
+
 
 #
 # EOF
