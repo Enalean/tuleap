@@ -1,0 +1,312 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Guide Utilisateur du plugin Eclipse CodeX</title><meta name="generator" content="DocBook XSL Stylesheets V1.51.1"><link rel="home" href="#id2899419" title="Guide Utilisateur du plugin Eclipse CodeX"><link rel="next" href="#Installation" title="Chapitre 1. Installation"><link rel="chapter" href="#Installation" title="Chapitre 1. Installation"><link rel="chapter" href="#GettingStarted" title="Chapitre 2. Prise en main rapide"><link rel="chapter" href="#Servers" title="Chapitre 3. Serveurs"><link rel="chapter" href="#ArtifactList" title="Chapitre 4. Liste des Artéfacts"><link rel="chapter" href="#ArtifactDetails" title="Chapitre 5. Détails des artéfact"><link rel="chapter" href="#Preferences" title="Chapitre 6. Préférences"><LINK rel="stylesheet" href="/current_css.php" type="text/css"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><table width="100%" cellspacing="0" cellpadding="5"><tr><td class="bg_help"><div align="center"><font size="-1"><i>
+  Copyright © Xerox Corporation, CodeX Team, 2001-2006. All Rights Reserved</i></font></div><br><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Guide Utilisateur du plugin Eclipse CodeX</th></tr><tr><td width="20%" align="left"> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="#Installation">Suivant</a></td></tr></table><hr></div><div class="book"><div class="titlepage"><div align="center"><img src="../../../images/icons/codex.png"><br><br><div><h1 class="title"><a name="id2899419"></a>Guide Utilisateur du plugin Eclipse CodeX</h1></div><br><br><p>Version 0.1<br><font size="-2">01-Oct-2007</font></p><hr></div><div><p><a href="nl/fr/FR/doc/help/html/revhistory.html"><b>Historique des versions</b></a></p></div><div><div class="authorgroup"><p><b>Auteurs</b></p><table><tr><td><b>Marc Nazarian</b></td><td></td><td><div class="affiliation"><span class="orgname">Xerox, Marc.Nazarian@xrce.xerox.com<br></span></div></td></tr></table><p></p></div></div><div><div class="legalnotice"><p>This document is licensed under the Codex Component Software License</p><p>Xerox ®, The Document Company ®, and all Xerox products mentioned
+      in this publication are trademarks of Xerox Corporation.</p><p>This document was formatted with the DocBook XML DTD. HTML
+      version rendered with DocBook HTML native renderer. PDF version
+      rendered with Apache FOP.</p></div></div><div><p class="copyright">Copyright © 2007 The Document Company - Xerox. All rights reserved.</p></div><hr></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>1. <a href="#Installation">Installation</a></dt><dt>2. <a href="#GettingStarted">Prise en main rapide</a></dt><dd><dl><dt>2.1. <a href="#GettingStartedOverview">Introduction</a></dt><dt>2.2. <a href="#GettingStartedServers">Connecter votre serveur CodeX</a></dt><dt>2.3. <a href="#GettingStartedProjectsAndTrackers">Parcourir vos projets et vos outils de suivi</a></dt><dt>2.4. <a href="#GettingStartedArtifacts">Parcourir, modifier et créer des artéfacts</a></dt></dl></dd><dt>3. <a href="#Servers">Serveurs</a></dt><dd><dl><dt>3.1. <a href="#ServersIntroduction">Introduction</a></dt><dt>3.2. <a href="#ServersConfiguration">Configurations des serveurs</a></dt><dd><dl><dt>3.2.1. <a href="#ServersAddServer">Ajouter un serveur CodeX</a></dt><dt>3.2.2. <a href="#ServersEditServer">Modifier la configuration d'un serveur</a></dt><dt>3.2.3. <a href="#ServersRemoveServer">Supprimer une configuration</a></dt></dl></dd><dt>3.3. <a href="#ServersUsage">Utilisation des serveurs</a></dt><dd><dl><dt>3.3.1. <a href="#ServersUsageConnect">Se connecter à un serveur CodeX</a></dt><dt>3.3.2. <a href="#ServersUsageBrowse">Parcourir un serveur CodeX</a></dt></dl></dd></dl></dd><dt>4. <a href="#ArtifactList">Liste des Artéfacts</a></dt><dd><dl><dt>4.1. <a href="#ArtifactListIntroduction">Introduction</a></dt><dt>4.2. <a href="#ArtifactListBrowse">Parcourir la liste des artéfacts</a></dt><dd><dl><dt>4.2.1. <a href="#ArtifactListBrowseFilter">Filtrer les artéfacts</a></dt><dt>4.2.2. <a href="#ArtifactListBrowseList">Liste des artéfacts</a></dt><dt>4.2.3. <a href="#ArtifactListBrowsePagination">Pagination de la liste des artéfacts</a></dt></dl></dd></dl></dd><dt>5. <a href="#ArtifactDetails">Détails des artéfact</a></dt><dd><dl><dt>5.1. <a href="#ArtifactDetailsIntroduction">Introduction</a></dt><dt>5.2. <a href="#ArtifactDetailsTabs">Onglets des détail d'un artéfact</a></dt><dd><dl><dt>5.2.1. <a href="#ArtifactDetailsTabsDetails">Onglet Détails</a></dt><dt>5.2.2. <a href="#ArtifactDetailsTabsFollowUp">Onglet Suivis</a></dt><dt>5.2.3. <a href="#ArtifactDetailsTabsCCList">Onglet Liste des CC</a></dt><dt>5.2.4. <a href="#ArtifactDetailsTabsDependencies">Onglet Dépendances</a></dt><dt>5.2.5. <a href="#ArtifactDetailsTabsHistory">Onglet Historique</a></dt></dl></dd></dl></dd><dt>6. <a href="#Preferences">Préférences</a></dt><dd><dl><dt>6.1. <a href="#PreferencesIntroduction">Introduction</a></dt><dt>6.2. <a href="#PreferencesServers">Préférences des serveurs</a></dt><dt>6.3. <a href="#PreferencesReports">Préférences des rapport</a></dt><dd><dl><dt>6.3.1. <a href="#PreferenceReportsPagination">Nombre d'artéfacts affichés par page</a></dt><dt>6.3.2. <a href="#PreferenceReportsSeverityColors">Préférences des couleurs de sévérité</a></dt></dl></dd></dl></dd></dl></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="Installation"></a>Chapitre 1. Installation</h2></div></div><p>Le plugin Eclipse a été développé pour la version 3.2 d'Eclipse et nécessite le JRE 1.5</p><p>Le plugin Eclipse peut être installé et mis à jour grâce au mécanisme du siteupdate.
+    Le site update du plugin CodeX est : [YOUR_CODEX_SERVER]/downloads/eclipse
+    </p><p>
+        Pour installer le plugin CodeX avec le mécanisme "update site" d'Eclipse, veuillez suivre les instructions ci-dessous:
+        </p><div class="procedure"><ol type="1"><li><p>Dans le menu principal d'Eclipse, sélectionnez <span class="bold"><b>Help &gt; Software Update &gt; Find and install...</b></span></p></li><li><p>Cochez la case <span class="bold"><b>Search for new features to install</b></span>, puis cliquez sur Next</p></li><li><p>Pressez le bouton <span class="bold"><b>New Remote Site...</b></span></p></li><li><p>Remplissez la boîte de dialogue avec :
+                    <ol type="a"><li><p><span class="bold"><b>Name:</b></span> CodeX (par exemple)</p></li><li><p><span class="bold"><b>URL:</b></span> [YOUR_CODEX_SERVER]/downloads/eclipse</p></li></ol>
+                </p></li><li><p>Cochez la case <span class="bold"><b>CodeX</b></span> (vous pouvez déplier pour voir le détails de la feature), puis cliquez sur OK</p></li><li><p>Eclipse vous demandera ensuite d'accepter la licence. Si vous acceptez la licence, cochez "I accept the terms in the license agreement".</p></li><li><p>Cliquez sur le bouton <span class="bold"><b>Finish</b></span></p></li><li><p>Eclipse vous demande de confirmer les feature à installer. Cliquez sur le bouton <span class="bold"><b>Install</b></span>.</p></li><li><p>Eclipse va télécharger les features et peut avoir besoin de redémarrer pour terminer l'installation</p></li><li><p>Profitez de CodeX !</p></li></ol></div><p>
+    </p></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="GettingStarted"></a>Chapitre 2. Prise en main rapide</h2></div></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>2.1. <a href="#GettingStartedOverview">Introduction</a></dt><dt>2.2. <a href="#GettingStartedServers">Connecter votre serveur CodeX</a></dt><dt>2.3. <a href="#GettingStartedProjectsAndTrackers">Parcourir vos projets et vos outils de suivi</a></dt><dt>2.4. <a href="#GettingStartedArtifacts">Parcourir, modifier et créer des artéfacts</a></dt></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="GettingStartedOverview"></a>2.1 Introduction</h2></div></div><p>
+    	    		Ce plugin vous permet de parcourir vos artéfacts CodeX dans l'environnement Eclipse.
+    		    	Si vous ne savez pas ce qu'est CodeX, vous pouvez visiter notre site web <a href="http://codex.xrce.xerox.com" target="_top">http://codex.xrce.xerox.com</a>.
+	    </p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_eclipseplugin.png"></td></tr></table></div></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="GettingStartedServers"></a>2.2 Connecter votre serveur CodeX</h2></div></div><p>
+            Pour connecter un serveur CodeX, ouvrir la perspective CodeX et
+            </p><div class="procedure"><ol type="1"><li><p>cliquer sur l'icone "Ajouter un nouveau serveur" de la vue CodeX
+                        <span class="inlinemediaobject"><img src="../../../images/icons/computer_add.png"></span></p>,
+              </li><li><p>puis remplir le formulaire de configuration:
+                <ol type="a"><li><p><span class="bold"><b>Nom :</b></span> le nom du serveur tel qu'il apparaîtra dans l'interface d'Eclipse</p></li><li><p><span class="bold"><b>URL :</b></span> l'URL du serveur CodeX (e.g: http://codex.xerox.com)</p></li><li><p><span class="bold"><b>Nom d'utilisateur :</b></span> votre nom d'utilisateur CodeX</p></li><li><p><span class="bold"><b>Mot de passe :</b></span> votre mot de passe CodeX (<span class="bold"><b>Attention</b></span> : si vous renseignez votre mot de passe, il sera stocké sur votre ordinateur. Si vous ne le souhaitez pas, il vous suffit de laisser ce champ vide, et votre mot de passe vous sera demandé lors de la connexion au serveur CodeX)</p></li></ol></p></li><li><p>appliquer les modifications,</p></li><li><p>puis cliquer sur le boutton OK.</p></li></ol></div><p>
+        </p><p>
+            Le serveur CodeX est maintenant stocké dans les préférences Eclipse.
+            Vous pouvez dès lors parcourir vos projets et vos outils de suivi (Voir <a href="#GettingStartedProjectsAndTrackers" title="2.3 Parcourir vos projets et vos outils de suivi">Section 2.3</a>).
+        </p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="GettingStartedProjectsAndTrackers"></a>2.3 Parcourir vos projets et vos outils de suivi</h2></div></div><p>
+            Une fois que le serveur CodeX est configuré et connecté, 
+            il doit apparaître dans la vue "CodeX".
+        </p><p>
+            Vous pouvez alors parcourir les projets dont vouys êtes membre,
+            et pour chaque projet, visualiser ses outils de suivi.
+	        </p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_serverview.png"></td></tr></table></div><p>
+		</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="GettingStartedArtifacts"></a>2.4 Parcourir, modifier et créer des artéfacts</h2></div></div><p>
+            Après avoir sélectionner un outil de suivi, double cliquer dessus pour 
+            faire apparaître la liste de ses artéfacts.
+            </p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactlistview.png"></td></tr></table></div><p>
+            Puis, double-cliquer à nouveau sur un artéfact de la liste pour voir 
+            les détails de l'artéfact, et pour le modifier !
+            </p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailsview.png"></td></tr></table></div><p>
+        </p><p>Profitez de CodeX !</p></div></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="Servers"></a>Chapitre 3. Serveurs</h2></div></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>3.1. <a href="#ServersIntroduction">Introduction</a></dt><dt>3.2. <a href="#ServersConfiguration">Configurations des serveurs</a></dt><dd><dl><dt>3.2.1. <a href="#ServersAddServer">Ajouter un serveur CodeX</a></dt><dt>3.2.2. <a href="#ServersEditServer">Modifier la configuration d'un serveur</a></dt><dt>3.2.3. <a href="#ServersRemoveServer">Supprimer une configuration</a></dt></dl></dd><dt>3.3. <a href="#ServersUsage">Utilisation des serveurs</a></dt><dd><dl><dt>3.3.1. <a href="#ServersUsageConnect">Se connecter à un serveur CodeX</a></dt><dt>3.3.2. <a href="#ServersUsageBrowse">Parcourir un serveur CodeX</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ServersIntroduction"></a>3.1 Introduction</h2></div></div><p>
+			Le plugin CodeX Eclipse vous permet de travailler sur plusieurs
+			serveur CodeX en même temps. Les serveurs CodeX et leurs configurations
+			sont stockés dans les préférences Eclipse.
+		</p><p>
+			Les serveurs CodeX sont affichés dans la vue "CodeX".
+			Si la vue CodeX n'est pas ouverte, vous pouvez l'ouvrir
+			en ouvrant la perspective CodeX.
+			Pour ce faire, sélectionner 
+			<span class="bold"><b>Window</b></span> &gt; 
+			<span class="bold"><b>Open perspective</b></span> &gt;
+			<span class="bold"><b>Others...</b></span> 
+			et sélectionnez la perspective "CodeX".
+		</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ServersConfiguration"></a>3.2 Configurations des serveurs</h2></div></div><p>
+			Pour utiliser le plugin CodeX, la première chose à faire 
+			est de configurer (au moins) un serveur.
+		</p><p>
+			La configuration d'un serveur est stockée dans les préférences Eclipse.
+			Vous pouvez visualiser toutes les configurations des serveurs en
+			regardant les préférences du plugin CodeX (
+			<span class="bold"><b>Window</b></span> &gt;
+			<span class="bold"><b>Preferences...</b></span> &gt;
+			<span class="bold"><b>CodeX</b></span> &gt;
+			<span class="bold"><b>servers</b></span>).
+			
+			Il existe aussi un raccourci pour accéder directement aux préférences
+			des serveurs : presser le bouton "préférences"
+			<span class="inlinemediaobject"><img src="../../../images/icons/preferences.png"></span>
+			dans la vue "CodeX".
+		</p><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ServersAddServer"></a>3.2.1 Ajouter un serveur CodeX</h3></div></div><p>
+					Pour ajouter un serveur CodeX, vous pouvez
+					</p><div class="itemizedlist"><ul type="disc"><li><p>cliquer sur l'icone "ajouter un serveur" 
+							<span class="inlinemediaobject"><img src="../../../images/icons/computer_add.png"></span>
+							dans la barre d'outils de la vue "CodeX",</p></li><li><p>faire un clic droit dans la vue "CodeX" et sélectionner "ajouter un serveur",</p></li><li><p>sélectionner Window &gt; Preferences... &gt; CodeX &gt; serveurs ; et cliquer sur le bouton "New..."</p></li></ul></div><p>
+					Toutes ces actions mènent au même écran :
+					</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_addserverpreferences.png"></td></tr></table></div><p>		
+				</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ServersEditServer"></a>3.2.2 Modifier la configuration d'un serveur</h3></div></div><p>
+					Pour modifier un serveur, vous pouvez
+					</p><div class="itemizedlist"><ul type="disc"><li><p>effectuer un clic droit sur un serveur dans la vue CodeX et cliquer sur "Modifier un serveur",</p></li><li><p>sélectionner Window &gt; Preferences... &gt; CodeX &gt; serveurs ; choisir la configuration à modifier et cliquer sur le bouton "Edit...".</p></li></ul></div><p>
+					Toutes ces actions mènent au même écran (le même que pour ajouter un serveur, sauf que les données sont remplies avec la configuration courante du serveur).
+				</p><p>
+					Après avoir effectuer des modifications, cliquer sur le bouton Appliquer pour les enregistrer.
+					La configuration sera alors enregistrée et stockée.
+				</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ServersRemoveServer"></a>3.2.3 Supprimer une configuration</h3></div></div><p>
+					Pour supprimer une configuration,
+					sélectionner Window &gt; Preferences... &gt; CodeX &gt; serveurs ; 
+					sélectionner la configuration à supprimer, et cliquer
+					sur le bouton "Supprimer".
+					Il n'est pas possible de retrouver une configuration supprimée.
+				</p></div></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ServersUsage"></a>3.3 Utilisation des serveurs</h2></div></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ServersUsageConnect"></a>3.3.1 Se connecter à un serveur CodeX</h3></div></div><p>
+				Si la connexion du serveur n'est pas initialisée, le serveur 
+				a un petit point rouge sur son icone.
+				<span class="inlinemediaobject"><img src="../../../images/icons/computer_red.png"></span>.
+	            Pour initialiser une connexion, il suffit d'ouvrir le serveur (un clic à gauche de l'icone).
+	            Si vous n'avez pas stocké votre mot de passe, il vous sera alors demandé.
+	            Quand le serveur est connecté, l'icone du serveur doit avoir un point vert
+	            <span class="inlinemediaobject"><img src="../../../images/icons/computer_green.png"></span>,
+	            et vous devez voir vos projets hébergés sur ce serveur.
+			</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ServersUsageBrowse"></a>3.3.2 Parcourir un serveur CodeX</h3></div></div><p>
+				Une fois le serveur connecté, tous lesprojets dont vous êtes membre
+				apparaissent sous le serveur.
+				</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_serverview.png"></td></tr></table></div><p>	
+				Vous pouvez ouvrir chaque projet, et vous verrez tous les 
+				outils de suivi 	du projet.
+			</p><p>
+				Pour chaque outil de suivi, un double clic sur le nom de l'outil
+				de suivi ouvrira la liste de ses artéfacts dans une autre vue 
+				Eclipse (la vue 	"Liste des Artéfacts", voir <a href="#ArtifactList" title="Chapitre 4. Liste des Artéfacts">Chapitre 4. Liste des Artéfacts</a>). 
+				Le rapport utilisé est le rapport par défaut.
+				Si vous souhaitez ouvrir la liste des artéfacts avec un autre 
+				rapport, il vous suffit d'effectuer un clic droit sur l'outil de suivi
+				et de sélectionner "Ouvrir la liste des artéfacts avec le rapport ..."
+				puis de sélectionner le rapport désiré.
+				Vous pouvez ouvrir plusieurs outils de suivi en même temps.
+			</p><p>
+				En survolant le nom de l'outil de suivi, le nombre d'artéfacts ouverts et 
+				le nombre total d'artéfacts sont affichés si vous avez les droits 
+				de les voir.
+			</p><p>
+				Vous pouvez également accéder à l'administration d'un outil de
+				suivi. Pour ce faire, il faut effectuer un clic droit sur le nom 
+				d'un outil de suivi et sélectionner "Administration du tracker". Cela aura
+				pour effet d'ouvrir le navigateur interne d'Eclipse sur la page
+				d'administration de l'outil de suivi.
+			</p></div></div></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="ArtifactList"></a>Chapitre 4. Liste des Artéfacts</h2></div></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>4.1. <a href="#ArtifactListIntroduction">Introduction</a></dt><dt>4.2. <a href="#ArtifactListBrowse">Parcourir la liste des artéfacts</a></dt><dd><dl><dt>4.2.1. <a href="#ArtifactListBrowseFilter">Filtrer les artéfacts</a></dt><dt>4.2.2. <a href="#ArtifactListBrowseList">Liste des artéfacts</a></dt><dt>4.2.3. <a href="#ArtifactListBrowsePagination">Pagination de la liste des artéfacts</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ArtifactListIntroduction"></a>4.1 Introduction</h2></div></div><p>
+	    		La liste des artéfacts est affichée dans la vue "Liste des artéfacts".
+	    		En double-cliquant sur un outil de suivi dans la vue "CodeX", cette vue
+	    		s'ouvre automatiquement. Si ce n'est pas le cas, vous pouvez l'ouvrir
+	    		en sélectionnant dans le menu principal d'Eclipse
+	    		Window &gt; Show view &gt; CodeX &gt; Liste des artéfacts.
+	    	</p><p>
+			Vous pouvez ouvrir plusieurs outils de suivi en même temps.
+	    	</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ArtifactListBrowse"></a>4.2 Parcourir la liste des artéfacts</h2></div></div><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactlistview.png"></td></tr></table></div><p>
+			La vue "Liste des artéfacts" est composée de 3 parties :
+			</p><div class="itemizedlist"><ul type="disc"><li><p>le filtre des rapports, qui vous permet de construire une 
+				requête pour filtrer les artéfacts (partie haute de la vue)</p></li><li><p>la liste des artéfacts (il y a une pagination)</p></li><li><p>la partie de contrôle en bas de la vue qui vous
+				permet d'avancer dans les résultats de la requête.</p></li></ul></div><p>
+		</p><p>
+			Pour changer de rapport :
+			</p><div class="procedure"><ol type="1"><li><p>sélectionnez le menu de la vue,</p></li><li><p>sélectionnez "Choisir un rapport...",</p></li><li><p>puis sélectionnez le rapport désiré.</p></li></ol></div><p>
+			Cela aura pour effet d'afficher la liste avec le rapport sélectionné.
+		</p><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactListBrowseFilter"></a>4.2.1 Filtrer les artéfacts</h3></div></div><p>
+				Le filtre vous permet de construire une requête en donnant
+				des critères aux champs des artéfacts. Les champs utilisés 
+				dans les filtres sont les champs définis dans l'administration
+				des outils de suivi de CodeX.
+			</p><p>
+				Pour lancer la requête, pressez le boutton "Chercher".
+				Cela va rafraichir la liste des artéfacts (le nombre
+				d'artéfacts qui répondent à la requête est affiché dans la
+				partie "pagination" de cette vue).
+			</p><p>
+				Le nombre d'artéfacts affichés par page peut être paramétré.
+				Pour le modifier, entrez le nombre souhaité dans la boîte 
+				"Afficher ** artéfacts à la fois".
+				</p><div class="tip" style="margin-left: 1.5in; margin-right: 1.5in;"><table border="1" cellspacing="0" cellpadding="5" bordercolor="#000000" bgcolor="#EEEEEE"><tr><td><h3 class="admonitiontitle">Modifier la valeur de la pagination</h3><p class="admonitionbody">
+						La valeur par défaut est enregistrée dans les préférences du
+						plugin. Pour la changer, sélectionnez 
+						Window &gt; Preferences... &gt; CodeX &gt; rapport.
+						Attention à ne pas mettre une valeur trop élevée. Cela
+						pourrait rendre l'utilisation du plugin vraiment lente.
+					</p></td></tr></table></div><p>
+			</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactListBrowseList"></a>4.2.2 Liste des artéfacts</h3></div></div><p>
+				La liste des artéfacts est affichée avec la couleur de leur
+				sévérité. Vous pouvez également modifier la couleur des sévérité
+				dans les préférences du plugin.
+			</p><p>
+				Le tri des artéfacts est activé uniquement si tous les
+				artéfacts sont affichés sur la même page.
+				Pour trier la liste selon un champ, il vous suffit
+				de cliquer sur la colonne du champ en question.
+			</p><p>
+				Pour afficher un artéfact, double cliquez sur l'artéfact
+				dans la liste.
+				Le détail de l'artéfact s'affichera dans une troisième vue
+				nommée "Détails de l'artéfact" (voir <a href="#ArtifactDetails" title="Chapitre 5. Détails des artéfact">Chapitre 5. Détails des artéfact</a>
+				pour plus de détails).
+			</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactListBrowsePagination"></a>4.2.3 Pagination de la liste des artéfacts</h3></div></div><p>
+				La partie pagination vous donne des informations à propos
+				de la page courante : le nombre d'artéfacts affichés sur
+				le nombre le nombre total d'artéfacts.
+				Par exemple : <font color="red">&lt;code&gt;items 21 - 40 / 60&lt;/code&gt;</font> signifie que
+				vous visualisez sur la page courante 20 artéfacts, de la 
+				position 21 à la position 40 dans la liste, et qu'il y a 
+				en tout 60 artéfacts qui répondent à la requête.
+			</p><p>
+				Pour visualiser la page suivante (si elle existe) cliquez 
+				sur le bouton "suivant". Le bouton "précédent" vous amènera 
+				à la page précédente.
+				Les boutons "Début" et "Fin" vous afficheront respectivement
+				la première page et la dernière page des résultats.
+			</p></div></div></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="ArtifactDetails"></a>Chapitre 5. Détails des artéfact</h2></div></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>5.1. <a href="#ArtifactDetailsIntroduction">Introduction</a></dt><dt>5.2. <a href="#ArtifactDetailsTabs">Onglets des détail d'un artéfact</a></dt><dd><dl><dt>5.2.1. <a href="#ArtifactDetailsTabsDetails">Onglet Détails</a></dt><dt>5.2.2. <a href="#ArtifactDetailsTabsFollowUp">Onglet Suivis</a></dt><dt>5.2.3. <a href="#ArtifactDetailsTabsCCList">Onglet Liste des CC</a></dt><dt>5.2.4. <a href="#ArtifactDetailsTabsDependencies">Onglet Dépendances</a></dt><dt>5.2.5. <a href="#ArtifactDetailsTabsHistory">Onglet Historique</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ArtifactDetailsIntroduction"></a>5.1 Introduction</h2></div></div><p>
+	    		</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailsview.png"></td></tr></table></div><p>
+			La vue "Détail des artéfacts" est la vue qui vous
+			permet de voir le détail d'un artéfact, de le modifier
+			et d'en créer de nouveaux.
+			Cette vue vous permet d'ouvrir plusieurs artéfacts 
+			en même temps.
+	    </p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="ArtifactDetailsTabs"></a>5.2 Onglets des détail d'un artéfact</h2></div></div><p>
+	    		Le détail d'un artéfact est composé de plusieurs
+	    		onglets. Chaque onglet correspond à une section
+	    		dans l'interface de CodeX.
+	    </p><p>
+	    		Pour valider les modifications, cliquez sur le bouton
+	    		"Soumettre les changements".
+	    		Dans le cas d'un nouvel artéfact, le bouton pour le
+	    		soumettre est "Créer un artéfact".
+	    		Pour annuler les changements et revenir aux valeurs
+	    		de l'artéfact, cliquez sur le bouton "Annuler".
+	    	</p><p>
+	    		Aucune modification ne sera réellement enregistrée avant 
+	    		d'avoir validé en pressant le bouton "Soumettre".
+	    		L'appui sur le bouton envoie les modifications au serveur
+	    		CodeX, comme vous le feriez dans votre navigateur web.
+	    	</p><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactDetailsTabsDetails"></a>5.2.1 Onglet Détails</h3></div></div><p>
+	    			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailstabdetails.png"></td></tr></table></div><p>
+	    			Dans cet onglet sont affichés tous les champs
+	    			de l'artéfact. Ils sont regroupés en groupe
+	    			de champs (fieldset) que vous pouvez plier et 
+	    			déplier.
+	    		</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactDetailsTabsFollowUp"></a>5.2.2 Onglet Suivis</h3></div></div><p>
+	    			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailstabfollowup.png"></td></tr></table></div><p>
+				Dans cet onglet, vous trouverez les commentaires et les 
+				fichiers attachés de l'artéfact.
+	    		</p><p>Le champ "Détails" de l'artéfact est ré-affiché dans cet onglet pour mémoire.</p><p>Vous pouvez ensuite écrire un nouveau commentaire.</p><p>Les commentaires existants sont affichés juste en dessous.	</p><p>
+	    			On trouve ensuite la section des fichiers attachés.
+	    			Pour ajouter un nouveau fichier attaché, cliquez sur le bouton
+	    			"Ajouter un fichier attaché", et sélectionnez le fichier 
+	    			sur votre disque. 
+	    			La liste des fichiers attachés de l'artéfact sont affichés 
+	    			en dessous. Pour télécharger un fichier, double-cliquez sur
+	    			le nom du fichier. Une fenêtre vous demandera alors 
+	    			l'emplacement pour sauvegarder le fichier.
+	    			Pour supprimer un fichier attaché, cliquez sur l'icone de la poubelle
+	    			<span class="inlinemediaobject"><img src="../../../images/icons/delete.png"></span> (le fichier ne sera pas réellement supprimé tant que vous ne soumettrez pas les modifications).
+	    		</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactDetailsTabsCCList"></a>5.2.3 Onglet Liste des CC</h3></div></div><p>
+	    			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailstabcclist.png"></td></tr></table></div><p>
+				Dans cet onglet, vous pouvez visualiser la liste des CC de l'artéfact,
+				et en ajouter de nouveaux.
+	    		</p><p>
+	    			Pour ajouter une CC, pressez le bouton "Ajouter une nouvelle adresse en CC",
+	    			puis remplissez les champs.
+			</p><p>
+				Pour supprimer une CC existante, pressez l'icone de la poubelle
+	    			<span class="inlinemediaobject"><img src="../../../images/icons/delete.png"></span> (la CC ne sera pas supprimée tant que vous ne validerez pas les modifications).
+			</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactDetailsTabsDependencies"></a>5.2.4 Onglet Dépendances</h3></div></div><p>
+	    			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailstabdependencies.png"></td></tr></table></div><p>
+				Dans cet onglet, vous pouvez visualiser les dépendances entre
+				artéfacts.
+	    		</p><p>
+	    			Pour créer une nouvelle dépendance avec l'artéfact courant, cliquez sur
+	    			le bouton "Ajouter une dépendance", et rentrez un ou plusieurs identifiants
+	    			d'artéfacts (séparés par une virgule) et cliquez sur OK.
+				Les dépendances entre artéfacts apparaissent dans la table juste 
+				dessous, avec leur description, l'outil de suivi et le projet auxquels 
+				ils 	appartiennent.
+			</p><p>
+	        		Pour supprimer une dépendance, il vous suffit de cliquer
+	        		sur la poubelle  
+		        <span class="inlinemediaobject"><img src="../../../images/icons/delete.png"></span>
+                à droite de la description de l'artéfact  (la dépendance ne sera pas supprimée tant que vous ne validerez pas les modifications).
+		    </p><p>
+		    		La section des dépendances vous montre les dépendances 
+		    		dans les deux sens : vous voyez la liste des artéfacts 
+		    		dont l'artéfact 	courant dépend, ainsi que la liste des
+		    		artéfacts qui dépendent de l'artéfact courant.
+		    </p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="ArtifactDetailsTabsHistory"></a>5.2.5 Onglet Historique</h3></div></div><p>
+	    			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_artifactdetailstabhistory.png"></td></tr></table></div><p>
+				Le dernier onglet vous montre l'historique de l'artéfact.
+				L'historique de l'artéfact garde la trace de toute modification
+				d'un champ de l'artéfact.
+	    		</p><p>
+		    		L'historique de l'artéfact vous affiche le nom du champ modifié,
+		    		l'ancienne et la nouvelle valeur de ce champ, le nom de 
+		    		l'utilisateur qui a effectué la modification, ainsi que l'heure
+		    		de la modification.
+			</p><p>
+				Ces données ne sont pas éditables.
+			</p></div></div></div><div class="chapter"><div class="titlepage"><div><h2 class="title"><a name="Preferences"></a>Chapitre 6. Préférences</h2></div></div><div class="toc"><p><b>Table des matières</b></p><dl><dt>6.1. <a href="#PreferencesIntroduction">Introduction</a></dt><dt>6.2. <a href="#PreferencesServers">Préférences des serveurs</a></dt><dt>6.3. <a href="#PreferencesReports">Préférences des rapport</a></dt><dd><dl><dt>6.3.1. <a href="#PreferenceReportsPagination">Nombre d'artéfacts affichés par page</a></dt><dt>6.3.2. <a href="#PreferenceReportsSeverityColors">Préférences des couleurs de sévérité</a></dt></dl></dd></dl></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="PreferencesIntroduction"></a>6.1 Introduction</h2></div></div><p>
+    			Les préférences du plugin CodeX sont enregistrées dans les préférences
+    			Eclipse. Pour les atteindre, sélectionnez dans le menu principal d'Eclipse 
+    			<span class="bold"><b>Window</b></span> &gt;
+    			<span class="bold"><b>Preferences...</b></span> &gt;
+    			<span class="bold"><b>CodeX</b></span>.
+    		</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_preferences.png"></td></tr></table></div></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="PreferencesServers"></a>6.2 Préférences des serveurs</h2></div></div><p>
+			Cette section est la partie gestion des serveurs
+			CodeX. Toutes les configurations existantes sont 
+			affichées dans la table. Pour chaque configuration,
+			vous pouvez l'éditer ou la supprimer.
+			Pour ajouter une nouvelle configuration, pressez le
+			bouton  "Nouveau...".
+			</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_preferencesservers.png"></td></tr></table></div><p>
+		</p><p>
+			Pour plus de détail, voir <a href="#ServersConfiguration" title="3.2 Configurations des serveurs">Section 3.2</a>
+		</p></div><div class="section"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="PreferencesReports"></a>6.3 Préférences des rapport</h2></div></div><p>
+			Ces préférences concernent les rapports 
+			(liste d'artéfacts, résultats des requêtes).
+		</p><div class="section"><div class="titlepage"><div><h3 class="title"><a name="PreferenceReportsPagination"></a>6.3.1 Nombre d'artéfacts affichés par page</h3></div></div><p>
+				Vous pouvez changer le nombre par défaut d'artéfacts
+				affichés par page dans la vue "Liste des artéfacts".
+				Attention à ne pas donner un nombre trop élevé, pour
+				des raisons de performance.
+				Le nombre par défaut est 50.
+				En cliquant sur "Restaurer les valeurs par défaut", vous 
+				reviendrez à cette valeur.
+			</p></div><div class="section"><div class="titlepage"><div><h3 class="title"><a name="PreferenceReportsSeverityColors"></a>6.3.2 Préférences des couleurs de sévérité</h3></div></div><p>
+				Dans la liste des artéfacts, les artéfacts sont affichés
+				avec une couleur qui dépend de leur sévérité. Les couleurs
+				par défaut sont les mêmes que celles de Codex. Vous pouvez
+				toutefois les redéfinir pour chaque valeur de sévérité,
+				ou revenir aux valeurs par défaut en cliquant sur 
+				"Restaurer les valeurs par défaut".
+				</p><div class="mediaobject"><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" align="center"><tr><td><img src="../../../images/screenshots/sc_preferences.png"></td></tr></table></div><p>
+			</p></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="#Installation">Suivant</a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"> </td><td width="40%" align="right" valign="top"> Chapitre 1. Installation</td></tr></table></div><br><div align="center"><font size="-1"><i>
+  Copyright © Xerox Corporation, CodeX Team, 2001-2006. All Rights Reserved</i></font></div></td></tr></table></body></html>
