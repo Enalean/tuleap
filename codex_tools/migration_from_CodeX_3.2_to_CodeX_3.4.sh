@@ -746,6 +746,7 @@ TODO revision #6417 #6479 : themes, db, local.inc
 TODO revision #6419 (follow-up comments) : themes
 
 TODO "Add the SOAP API change in release notes (about function getArtifacts, about getAttachedFiles that does not return the content of the files anymore for performance reasons)"
+TODO "Add Eclipse plugin documentation in the site documentation"
 
 todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "If you have custom themes:"
