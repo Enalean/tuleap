@@ -166,7 +166,7 @@ class FRSPackageFactory {
     var $dao;
     function &_getFRSPackageDao() {
         if (!$this->dao) {
-            $this->dao =& new FRSPackageDao(CodexDataAccess::instance());
+            $this->dao =& new FRSPackageDao(CodexDataAccess::instance(), $this->STATUS_DELETED);
         }
         return $this->dao;
     }

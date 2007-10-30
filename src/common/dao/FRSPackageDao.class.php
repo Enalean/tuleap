@@ -25,10 +25,13 @@
 require_once('include/DataAccessObject.class.php');
 
 class FRSPackageDao extends DataAccessObject {
+    
+    var $STATUS_DELETED;
 
-    function FRSPackageDao(&$da) {
+    function FRSPackageDao(&$da, $status_deleted) {
         DataAccessObject::DataAccessObject($da);
         $this->table_name = 'frs_package';
+        $this->STATUS_DELETED = $status_deleted;
     }
 
     /**
@@ -49,14 +52,14 @@ class FRSPackageDao extends DataAccessObject {
     
     function searchByFileId($file_id){
        $_file_id = (int) $file_id;
-       return $this->_search(' f.file_id ='.$_file_id.' AND f.release_id = r.release_id AND r.package_id = p.package_id','',
+       return $this->_search(' f.file_id ='.$_file_id.' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!='.$this->STATUS_DELETED,'',
 			   				 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r','frs_file AS f'));
     }
     
     function searchInGroupByReleaseId($id, $group_id) {
        $_id = (int) $id;
        $_group_id = (int) $group_id;
-       return $this->_search('p.group_id = '.$_group_id.' AND r.release_id = '.$_id.' AND p.package_id = r.package_id','',
+       return $this->_search('p.group_id = '.$_group_id.' AND r.release_id = '.$_id.' AND p.package_id = r.package_id AND r.status_id!='.$this->STATUS_DELETED,'',
 	   						 'ORDER BY rank DESC LIMIT 1', array('frs_release AS r'));
     }
 
@@ -86,7 +89,7 @@ class FRSPackageDao extends DataAccessObject {
         $sql = 'SELECT p.* '
             .' FROM frs_package AS p '
             .(count($from) > 0 ? ', '.implode(', ', $from) : '') 
-            .(trim($where) != '' ? ' WHERE '.$where.' ' : '') 
+            .(trim($where) != '' ? ' WHERE '.$where.' AND p.status_id != '.$this->STATUS_DELETED.' ' : '') 
             .$group
             .$order;
         return $this->retrieve($sql);
@@ -209,7 +212,7 @@ class FRSPackageDao extends DataAccessObject {
 
         $sql = 'UPDATE frs_package'
             .' SET '.implode(', ', $argArray)
-            .' WHERE package_id='.((int) $package_id);
+            .' WHERE  status_id != '.$this->STATUS_DELETED.' AND package_id='.((int) $package_id);
 
         $inserted = $this->update($sql);
         return $inserted;
