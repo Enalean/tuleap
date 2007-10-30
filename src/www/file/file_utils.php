@@ -401,7 +401,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         'release_new_file_version'
     ), 'help' => 'QuickFileRelease.html'));
     echo '<H3>'.$title.'</H3>';
-    $sql = "SELECT * FROM frs_processor ORDER BY rank";
+    $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".$group_id.") ORDER BY rank";
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     $processor_name = util_result_column_to_array($result, 1);
