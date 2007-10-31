@@ -59,6 +59,7 @@ GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
+DIFF='/usr/bin/diff'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
@@ -70,8 +71,8 @@ fi
 
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
-MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
-SERVICE PERL"
+MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+SERVICE PERL DIFF"
 
 # Functions
 create_group() {
@@ -130,7 +131,7 @@ done
 #
 RH_RELEASE="4"
 yn="y"
-## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4
+## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4 (?)
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
     cat <<EOF
