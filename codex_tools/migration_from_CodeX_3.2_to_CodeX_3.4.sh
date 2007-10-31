@@ -651,9 +651,9 @@ FROM groups;
 
 # only if FRS is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT g.group_id, 'g', 1, 1, 'projectlatestfilereleases', 0
-FROM groups g INNER JOIN service s USING(group_id)
-WHERE s.short_name = 'file' AND is_active = 1 AND is_used = 1;
+SELECT group_id, 'g', 1, 1, 'projectlatestfilereleases', 0
+FROM service
+WHERE short_name = 'file' AND is_active = 1 AND is_used = 1;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT group_id, 'g', 1, 1, 'projectpublicareas', 1
@@ -664,20 +664,20 @@ FROM groups;
 # only if News is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT group_id, 'g', 1, 2, 'projectlatestnews', 0
-FROM groups g INNER JOIN service s USING(group_id)
-WHERE s.short_name = 'news' AND is_active = 1 AND is_used = 1;
+FROM service
+WHERE short_name = 'news' AND is_active = 1 AND is_used = 1;
 
 # only if SVN is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 1
-FROM groups g INNER JOIN service s USING(group_id)
-WHERE s.short_name = 'svn' AND is_active = 1 AND is_used = 1;
+FROM service
+WHERE short_name = 'svn' AND is_active = 1 AND is_used = 1;
 
 # only if CVS is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 2
-FROM groups g INNER JOIN service s USING(group_id)
-WHERE s.short_name = 'cvs' AND is_active = 1 AND is_used = 1;
+FROM service
+WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
 
 TODO plugins
