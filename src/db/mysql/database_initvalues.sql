@@ -2393,16 +2393,16 @@ WHERE g.group_id = ug.group_id
 -- Add myadmin only to current admins
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT DISTINCT user_id, 'u', 1, 2, 'myadmin', -2
-FROM user INNER JOIN user_group USING(user_id)
-WHERE user_group.group_id = 1
+FROM user_group
+WHERE group_id = 1
   AND admin_flags = 'A';
 
 -- Add myserverupdate only to current admins
 -- and only if serverupdate is installed
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT DISTINCT user_id, 'u', 1, 2, 'myserverupdate', -1
-FROM user INNER JOIN user_group USING(user_id), plugin
-WHERE user_group.group_id = 1
+FROM user_group, plugin
+WHERE group_id = 1
   AND admin_flags = 'A'
   AND plugin.name = 'serverupdate';
 
