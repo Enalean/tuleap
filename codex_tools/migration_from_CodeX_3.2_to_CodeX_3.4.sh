@@ -64,7 +64,7 @@ PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
-MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
+MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL DIFF"
 
 # Functions
@@ -110,7 +110,7 @@ substitute() {
 ##############################################
 # CodeX 3.2 to 3.4 migration
 ##############################################
-echo "Migration script from CodeX 3.2 data to CodeX 3.4"
+echo "Migration script from CodeX 3.2 to CodeX 3.4"
 echo
 yn="y"
 read -p "Continue? [yn]: " yn
@@ -118,6 +118,15 @@ if [ "$yn" = "n" ]; then
     echo "Bye now!"
     exit 1
 fi
+
+##############################################
+# Check that all command line tools we need are available
+#
+for cmd in `echo ${CMD_LIST}`
+do
+    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
+done
+
 
 ##############################################
 # Check the machine is running CodeX 3.2
@@ -356,6 +365,11 @@ DROP TABLE IF EXISTS trove_treesums;
 # fix for SR #923
 ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date
 
+# Should verify that column does not already exist!!!!! (can have been updated in support branch)
+# see rev #6417
+ALTER TABLE user ADD COLUMN last_pwd_update INT(11) UNSIGNED NOT NULL default '0'
+UPDATE user SET last_pwd_update = XXXXX # Problem 
+ALTER TABLE user ADD COLUMN last_access_date INT(11) UNSIGNED NOT NULL default '0'
 
 # SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
 ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';
