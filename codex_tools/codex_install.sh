@@ -922,10 +922,12 @@ $CP log_accum /usr/lib/codex/bin
 $CP commit_prep /usr/lib/codex/bin
 $CP cvssh /usr/lib/codex/bin
 $CP cvssh-restricted /usr/lib/codex/bin
+
 $CAT <<'EOF' >> /etc/shells
 /usr/lib/codex/bin/cvssh
 /usr/lib/codex/bin/cvssh-restricted
-EOF  	 
+EOF
+
 cd /usr/lib/codex/bin
 $CHOWN codexadm.codexadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
