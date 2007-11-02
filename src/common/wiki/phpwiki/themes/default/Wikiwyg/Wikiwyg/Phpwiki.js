@@ -743,14 +743,25 @@ proto.format_td = function(element) {
 	if(!Wikiwyg.is_ie){
 	    if(element.hasAttributes()){
 	        var attrs = element.attributes;
-		    this.appendOutput('* ');
+			var supprotedAttributes = new Array();
 	        for (var i = 0; i<attrs.length; i++){
-	            this.appendOutput(attrs[i].name + '=' + attrs[i].value);
-				if (i < attrs.length -1){
-				    this.appendOutput(', ');
+			    for (var j = 0; j <attributes.length; j++){
+			        if(attrs[i].name == attributes[j]){
+						supprotedAttributes.push(attrs[i].name);
+				    }
+	            }
+			}
+			if (supprotedAttributes.length != 0){
+			    this.appendOutput('* ');
+				for (var n=0; n<supprotedAttributes.length; n++){
+				    this.appendOutput(supprotedAttributes[n] + '=' + attrs[supprotedAttributes[n]].value);
+					if (n < supprotedAttributes.length -1){
+				        this.appendOutput(', ');
+				    }
 				}
-	        }
+			}
 	    }
+		this.appendOutput('\n');
 	}else{
 		var has_attributes = "false";
 		var attributes_it_has = new Array();
