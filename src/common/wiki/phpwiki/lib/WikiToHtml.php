@@ -243,13 +243,6 @@ function replace_rich_table($matched) {
         // A lot of things need to be cleanned such as links (namedurls, wikipages, labeled urls,
         // inline, images, automagic links, etc.)
 
-        //Fix for internal links
-        //Remove <a> tags from href attribute of other <a> tags
-        //this is due to WikiWords converted to ahrefs by Phpwiki TransformText prior call.
-        $pattern = '/\<a href\=\".*(\<a href\=\".*\" class\=\"wiki\"\>.*\<\/a\>).*\" class\=\"wiki\"\>.*\<\/a\>\<\/a\>/Umsi';
-        $replace_string = '\1';
-        $html_table = preg_replace($pattern, $replace_string, $html_table);
-
         // Fix for external links (namedurls). Urls inside 'href' attribute of  'a' tags
         // are converted with linkicons due to TransformText() prior call.
         $pattern = '/\<a href\=\"\<a href\=.*\<\/a\>\" target\=\"\" class\=\"namedurl\"\>\<span.*\>\<img.*\/\>(\<a href\=.*\<\/span\>\<\/a\>)\<\/span\>\<\/a\>/';
@@ -271,11 +264,11 @@ function replace_rich_table($matched) {
 		$html_table = preg_replace($pattern, $replace_string, $html_table);
 
         // Fix for attachments links
-        $pattern = '/\<a href\=\"\<a href\=\".*\" target\=\"\" class\=\"namedurl\"\>.*\<img.*\>(.*)\<\/span\>\<\/a\>\" class\=\"interwiki\"\>.*Upload:.*\<\/a> class\=\"wikipage\"\>(.*)\<\/span\>\<\/a\>/';
-        $replace_string = '<a href="\1" class="interwiki">Upload:\2</a>';
+        $pattern = '/\<a href\=\"\<a href\=\".*\" target\=\"\" class\=\"namedurl\"\>\<span[^>]+\>\<img.*\/\>([^<]+).*\<\/a\>\" class\=\"interwiki\"\>\<span[^>]+\>(\<img[^>]+\>).*(Upload:|Attach:).*\<\/a> class\=\"wikipage\"\>(.*)\<\/span\>\<\/a\>/';
+        $replace_string = '<a href="\1" class="interwiki">\2\3\4</a>';
         $html_table = preg_replace($pattern, $replace_string, $html_table);
 
-        // Clean links patterns that contain spaces
+        // Clean links patterns that contain spaces²
         $pattern = '/\<a href\=\"\<a href\=\"(.*)\".*\>.*\<img.*\/\>.*\<img.*\/\>(.*)\<\/span\>(.*)\<\/a\>/Umsi';
         $replace_string = '<a href="\1" target="" class="namedurl">\2\3</a>';
         $html_table = preg_replace($pattern, $replace_string, $html_table);
@@ -303,6 +296,13 @@ function replace_rich_table($matched) {
         // Remove blockquotes from cells
         $pattern = '/\<\/blockquote.*\>/Umsi';
         $replace_string = '';
+        $html_table = preg_replace($pattern, $replace_string, $html_table);
+		
+        //Fix for internal links
+        //Remove <a> tags from href attribute of other <a> tags
+        //this is due to WikiWords converted to ahrefs by Phpwiki TransformText prior call.
+        $pattern = '/\<a href\=\"[^<]+(\<a href\=\".*\" class\=\"wiki\"\>.*\<\/a\>)[^"]*\" class\=\"wiki\"\>.*\<\/a\>\<\/a\>/Umsi';
+        $replace_string = '\1';
         $html_table = preg_replace($pattern, $replace_string, $html_table);
 
         return $html_table;
