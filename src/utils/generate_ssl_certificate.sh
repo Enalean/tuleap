@@ -19,6 +19,7 @@ RM='/bin/rm'
 CHMOD='/bin/chmod'
 SERVICE='/sbin/service'
 OPENSSL='/usr/bin/openssl'
+TAR='/bin/tar'
 
 echo "Generating a self-signed certificate to enable SSL support."
 echo "When asked to enter the 'Common Name', please use your server domain name (sys_default_domain)."
@@ -31,9 +32,12 @@ fi
 
 export SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
 SSL_CERT='/etc/httpd/conf/ssl.crt/server.crt'
+SSL_CSR='/etc/httpd/conf/ssl.csr/server.csr'
 # Remove existing key and certificate
+$TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
 $RM $SSL_KEY
 $RM $SSL_CERT
+$RM $SSL_CSR
 
 # Generate a new key
 $OPENSSL genrsa 1024 > $SSL_KEY
@@ -43,7 +47,14 @@ serialno="0x$((date; echo "$$"; cat $SSL_KEY) | md5sum | cut -b1-7)"
 
 # Create new certificate, valid for 10 years
 umask 77
-$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT -set_serial "$serialno" 
+# All in one (no CSR) 
+#$OPENSSL req -new -key $SSL_KEY -x509 -days 3650 -out $SSL_CERT -set_serial "$serialno" 
+
+# Generate Certificate Signing Request (CSR)
+$OPENSSL req -new -key $SSL_KEY -out $SSL_CSR 
+
+# Generate a self-signed certificate
+$OPENSSL req -key $SSL_KEY -in $SSL_CSR -x509 -days 3650 -out $SSL_CERT -set_serial "$serialno"
 
 # Restart httpd server
 #$SERVICE httpd restart
