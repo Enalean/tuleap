@@ -43,7 +43,7 @@ if (!isset($view) ||  !$view ) {
 
 print '<DIV ALIGN="CENTER">';
 print '<font size="+1"><b>'.$Language->getText('project_stats_index','usage_stats').' </b></font><BR>';
-print '<IMG SRC="stats_graph.png?group_id='.$group_id.'&span='.$span.'&view='.$view.'">';
+print '<IMG SRC="stats_graph.php?group_id='.$group_id.'&span='.$span.'&view='.$view.'">';
 print '</DIV>';
 
 if ( $view == 'daily' ) {
