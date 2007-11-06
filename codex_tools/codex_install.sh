@@ -170,7 +170,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring \
+   mysql MySQL-python php-mbstring php-gd \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    xorg-x11-deprecated-libs neon \
@@ -963,6 +963,7 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 # Configure vsftpd
 $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
 $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
+$PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
 # Add welcome messages
 $CAT <<'EOF' > /var/lib/codex/ftp/.message
