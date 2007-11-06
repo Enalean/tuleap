@@ -37,7 +37,7 @@ etc...
 <!ENTITY SYS_EMAIL_ADMIN  "codex-admin@%sys_default_domain%">
 <!ENTITY SYS_EMAIL_CONTACT "codex-contact@%sys_default_domain%">
 <!ENTITY SYS_SAMBA_DOMAIN "%sys_win_domain%">
-<!ENTITY SYS_UPDATE_SITE "http://%sys_default_domain%/downloads/eclipse">
+<!ENTITY SYS_UPDATE_SITE "http://%sys_default_domain%/plugins/eclipse/www/updatesite/">
 
 <!-- 
 Redefine here (with the blank string "") the chapters you don't want to be included in the book (and only these ones) 
