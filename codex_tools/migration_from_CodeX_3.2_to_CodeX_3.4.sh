@@ -792,7 +792,7 @@ TODO Update codex_aliases.conf (FollowSymlinks dans /downloads/). Automatic or m
 ##############################################
 # Update ParametersLocal.dtd
 #
-TODO Update ParametersLocal.dtd (<!ENTITY SYS_UPDATE_SITE "http://%sys_default_domain%/plugins/eclipse/www/updatesite/">). Automatic or manual suggestion?
+TODO Update ParametersLocal.dtd (<!ENTITY SYS_UPDATE_SITE "http://%sys_default_domain%/plugins/eclipse/updatesite/">). Automatic or manual suggestion?
 
 
 ##############################################
