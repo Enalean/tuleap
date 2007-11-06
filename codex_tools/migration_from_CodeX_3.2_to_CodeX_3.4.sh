@@ -718,6 +718,8 @@ $CAT <<EOF >> /etc/codex/conf/local.inc
 //Proxy used to access to Internet. "host:port"
 \$sys_proxy = "";
 
+// 3rd Party libraries
+\$htmlpurifier_dir = "/usr/share/htmlpurifier";
 
 ?>
 EOF
@@ -733,7 +735,7 @@ cd $INSTALL_DIR/src/utils
 ##############################################
 # Update codex_aliases.conf
 #
-TODO Update codex_aliases.conf (FollowSymlinks dans /downloads/)
+TODO Update codex_aliases.conf (FollowSymlinks dans /downloads/). Automatic or manual suggestion?
 
 ##############################################
 # Restarting some services
@@ -762,6 +764,7 @@ TODO "Add the SOAP API change in release notes (about function getArtifacts, abo
 TODO "Add Eclipse plugin documentation in the site documentation"
 
 todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
+todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
 todo "If you have custom themes:"
 todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed"
 todo "-----------------------------------------"
