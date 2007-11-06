@@ -67,6 +67,15 @@ CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL DIFF"
 
+CHCON='/usr/bin/chcon'
+SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
+SELINUX_ENABLED=1
+if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
+   # SELinux not installed
+   SELINUX_ENABLED=0
+fi
+
+
 # Functions
 create_group() {
     # $1: groupname, $2: groupid
@@ -210,6 +219,18 @@ $SERVICE smb stop
 ##############################################
 # Now install/update CodeX specific RPMS 
 #
+
+# SELinux CodeX-specific policy
+if [ $SELINUX_ENABLED ]; then
+    echo "Removing existing SELinux policy .."
+    $RPM -e selinux-policy-targeted-sources 2>/dev/null
+    $RPM -e selinux-policy-targeted 2>/dev/null
+    echo "Installing New SELinux targeted policy for CodeX...."
+    cd ${RPMS_DIR}/selinux-policy-targeted
+    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
+fi
+
 
 echo "Installing Highlight RPMs for CodeX...."
 # -> highlight
@@ -368,7 +389,7 @@ ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL defau
 # Should verify that column does not already exist!!!!! (can have been updated in support branch)
 # see rev #6417
 ALTER TABLE user ADD COLUMN last_pwd_update INT(11) UNSIGNED NOT NULL default '0'
-UPDATE user SET last_pwd_update = XXXXX # Problem 
+UPDATE user SET last_pwd_update = XXXXX # Problem !!!!
 ALTER TABLE user ADD COLUMN last_access_date INT(11) UNSIGNED NOT NULL default '0'
 
 # SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
@@ -710,19 +731,50 @@ mysqlcheck -Aao $pass_opt
 ###############################################################################
 echo "Updating local.inc"
 
-# Remove end PHP marker
-substitute '/etc/codex/conf/local.inc' '\?\>' ''
+# sys_proxy
+$GREP -q ^\$sys_proxy  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
 
-$CAT <<EOF >> /etc/codex/conf/local.inc
-
+  $CAT <<EOF >> /etc/codex/conf/local.inc
 //Proxy used to access to Internet. "host:port"
 \$sys_proxy = "";
 
+?>
+EOF
+fi
+
+# htmlpurifier
+$GREP -q ^\$htmlpurifier_dir  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
 // 3rd Party libraries
 \$htmlpurifier_dir = "/usr/share/htmlpurifier";
 
 ?>
 EOF
+fi
+
+# sys_password_lifetime (normally done in 3.2 branch)
+$GREP -q ^\$sys_password_lifetime  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+// Default password duration. User will be asked to change its password
+// after 'sys_password_lifetime' days.
+// 0 = no duration
+\$sys_password_lifetime = 0;
+
+?>
+EOF
+fi
+
 
 ##############################################
 # Fix SELinux contexts if needed
@@ -772,7 +824,9 @@ TODO "Add Eclipse plugin documentation in the site documentation"
 todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
 todo "If you have custom themes:"
-todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed"
+todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed" #XXX ???
+todo "  -New icons: close.png, comment.png, cross.png, group.png, quote.png, tick.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic
+todo "  -Updated CSS: Everything below the line '/* {{{ Widgets */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css.
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
