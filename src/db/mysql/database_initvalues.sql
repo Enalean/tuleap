@@ -2399,9 +2399,9 @@ FROM user;
 
 -- Add mydocman only if docman is installed
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT user_id, 'u', 1, 1, 'mydoman', 2
+SELECT user_id, 'u', 1, 1, 'mydocman', 2
 FROM user, plugin
-WHERE plugin.name = 'serverupdate';
+WHERE plugin.name = 'doman';
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 3
