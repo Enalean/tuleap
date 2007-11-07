@@ -1082,6 +1082,8 @@ crontab -u root /tmp/cronfile
 
 echo "Installing  codexadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
+# Daily CodeX PHP cron (obsolete documents...)
+10 0 * * * /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/src/utils/codex_daily.php
 # Re-generate the CodeX User Guides on a daily basis
 00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
 30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh

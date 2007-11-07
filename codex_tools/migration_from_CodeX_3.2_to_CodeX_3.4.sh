@@ -777,6 +777,24 @@ fi
 
 
 ##############################################
+# Update codexadm crontab: add codex_daily.php at 00:15
+#
+
+echo "Backing up sourceforge crontab in /tmp/crontab.sourceforge.bak"
+crontab -u sourceforge -l > /tmp/crontab.sourceforge.bak
+echo "Installing new sourceforge user crontab..."
+$CAT <<'EOF' >/tmp/cronfile
+# Daily CodeX PHP cron (obsolete documents...)
+10 0 * * * /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/src/utils/codex_daily.php
+# Re-generate the CodeX User Guides on a daily basis
+00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
+30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
+45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
+EOF
+crontab -u sourceforge /tmp/cronfile
+
+
+##############################################
 # Fix SELinux contexts if needed
 #
 echo "Update SELinux contexts if needed"

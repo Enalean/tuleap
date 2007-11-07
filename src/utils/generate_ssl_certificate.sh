@@ -34,10 +34,12 @@ export SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
 SSL_CERT='/etc/httpd/conf/ssl.crt/server.crt'
 SSL_CSR='/etc/httpd/conf/ssl.csr/server.csr'
 # Remove existing key and certificate
-$TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
-$RM $SSL_KEY
-$RM $SSL_CERT
-$RM $SSL_CSR
+if [ -f $SSL_CSR ]; then 
+  $TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
+fi
+$RM -f $SSL_KEY
+$RM -f $SSL_CERT
+$RM -f $SSL_CSR
 
 # Generate a new key
 $OPENSSL genrsa 1024 > $SSL_KEY

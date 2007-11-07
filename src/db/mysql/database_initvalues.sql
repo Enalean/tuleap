@@ -24,15 +24,68 @@
 # it a member of the group_id 1 later on so that he as a super user status
 # for the entire site
 
-INSERT INTO user VALUES (100, 'None', 'noreply@_DOMAIN_NAME_', \
-'*********34343', '0', NULL, 'S', '0', '0', '0', 0, '0', NULL, 940000000, NULL, 1, \
-0, 0, NULL, NULL, 0, '', 'GMT', '', 0, '',1, '0');
+INSERT INTO user SET \
+        user_id = 100, \
+        user_name = 'None', \
+        email = 'noreply@_DOMAIN_NAME_', \
+        user_pw = '*********34343', \
+        realname = '0', \
+        register_purpose = NULL, \
+        status = 'S', \
+        shell = '0', \
+        unix_pw = '0', \
+        unix_status = '0', \
+        unix_uid = 0, \
+        unix_box = '0', \
+        ldap_id = NULL, \
+        add_date = 940000000, \
+        confirm_hash = NULL, \
+        mail_siteupdates = 0, \
+        mail_va = 0, \
+        sticky_login = 0, \
+        authorized_keys = NULL, \
+        email_new = NULL, \
+        people_view_skills = 0, \
+        people_resume = '', \
+        timezone = 'GMT', \
+        windows_pw = '', \
+        fontsize = 0, \
+        theme = '', \
+        language_id = 1, \
+        last_pwd_update = '0', \
+        last_access_date = '0';
 
-INSERT INTO user VALUES (101, 'admin', 'codex-admin@_DOMAIN_NAME_', \
-'6f3cac6213ffceee27cc85414f458caa', 'Site Administrator', NULL, 'A', \
-'/bin/bash', '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', 'A', 1,'shell1', NULL, \
-940000000, NULL, 0, 0, 0, NULL, NULL, 0, '', 'GMT', \
-'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', 0, '',1, '0');
+INSERT INTO user SET \
+        user_id = 101, \
+        user_name = 'admin', \
+        email = 'codex-admin@_DOMAIN_NAME_', \
+        user_pw = '6f3cac6213ffceee27cc85414f458caa', \
+        realname = 'Site Administrator', \
+        register_purpose = NULL, \
+        status = 'A', \
+        shell = '/bin/bash', \
+        unix_pw = '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', \
+        unix_status = 'A', \
+        unix_uid = 1, \
+        unix_box = 'shell1', \
+        ldap_id = NULL, \
+        add_date = 940000000, \
+        confirm_hash = NULL, \
+        mail_siteupdates = 0, \
+        mail_va = 0, \
+        sticky_login = 0, \
+        authorized_keys = NULL, \
+        email_new = NULL, \
+        people_view_skills = 0, \
+        people_resume = '', \
+        timezone = 'GMT', \
+        windows_pw = 'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', \
+        fontsize = 0, \
+        theme = '', \
+        language_id = 1, \
+        last_pwd_update = '0', \
+        last_access_date = '0';
+
 
 #
 # Default Data for 'groups'
