@@ -2121,6 +2121,9 @@ INSERT INTO plugin (name, available) VALUES ('docman', '1');
 -- install and enable serverupdate plugin
 INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
 
+-- install and enable eclipse plugin
+INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
+
 --
 -- Insert default references
 --
