@@ -2401,7 +2401,7 @@ FROM user;
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'mydocman', 2
 FROM user, plugin
-WHERE plugin.name = 'doman';
+WHERE plugin.name = 'docman';
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 1, 'mymonitoredforums', 3
