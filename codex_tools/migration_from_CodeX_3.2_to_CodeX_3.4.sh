@@ -820,6 +820,7 @@ TODO revision #6419 (follow-up comments) : themes
 
 TODO "Add the SOAP API change in release notes (about function getArtifacts, about getAttachedFiles that does not return the content of the files anymore for performance reasons)"
 TODO "Add Eclipse plugin documentation in the site documentation"
+TODO "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin"
 
 todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
