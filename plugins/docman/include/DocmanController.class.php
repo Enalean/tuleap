@@ -386,7 +386,9 @@ class DocmanController extends Controler {
                 $project = group_get_object($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
                 $this->_cloneDocman($tmplGroupId, $_gid, false);
-
+                if (!$item_factory->getRoot($_gid)) {
+                    $item_factory->createRoot($_gid, 'roottitle_lbl_key');
+                }
                 $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
                 $this->view = 'Redirect';
             } else {
