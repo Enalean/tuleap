@@ -57,8 +57,8 @@ $req_doc_groups->execute() or die($base->errstr());
 while (my @z =$req_doc_groups->fetchrow_array())
 {
     print " ---- Creating directory :$z[1]  \n";
-    `mkdir $z[1]`;
-    chdir ($z[1]);
+    `mkdir "$z[1]"`;
+    chdir ("$z[1]");
     my $sql = "select data,filename from doc_data where doc_group=$z[0]";
     my $req=$base->prepare($sql) or die($base->errstr());
     $req->execute() or die($base->errstr());
