@@ -253,9 +253,8 @@ $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
 # -> subversion
 # backup config file for apache
-$MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.3.2.codex
-echo "Installing Subversion 1.4 RPMs for CodeX...."
-echo "Installing Subversion RPMs for CodeX...."
+$MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.3.4.codex
+echo "Installing Subversion 1.4.4 RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
@@ -266,9 +265,8 @@ $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
 
-$CP -a /etc/httpd/conf.d/subversion.conf.3.2.codex /etc/httpd/conf.d/subversion.conf
+$CP -a /etc/httpd/conf.d/subversion.conf.3.4.codex /etc/httpd/conf.d/subversion.conf
 
-todo "Subversion has been upgraded to version 1.4. There is some benefit (repository size reduction) in dumping/reloading your repositories, but it is absolutely not needed. See http://subversion.tigris.org/svn_1.4_releasenotes.html for more details."
 
 ##############################################
 # Install the CodeX software 
@@ -282,6 +280,7 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
+# Add FollowSymLinks option to directory /usr/share/codex/downloads
 for f in /etc/httpd/conf.d/codex_aliases.conf; do
     yn="0"
     fn=`basename $f`
@@ -374,72 +373,134 @@ done
 
 echo "Starting DB update for CodeX 3.4 This might take a few minutes."
 
-$CAT <<EOF | $MYSQL $pass_opt codex
 
 ###############################################################################
 # SR #283 - Remove trove_treesums table 
 
+echo "- removing trove_treesums table"
+$CAT <<EOF | $MYSQL $pass_opt codex
 DROP TABLE IF EXISTS trove_treesums;
+EOF
 
 
-# Should verify that column does not already exist!!!!! (can have been updated in support branch)
+#
+echo "- CodeX 3.2 updates"
+
 # fix for SR #923
+# Check if column already exists
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_update_date
+SHOW COLUMNS FROM artifact LIKE 'last_update_date';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date
+EOF  
+fi
 
-# Should verify that column does not already exist!!!!! (can have been updated in support branch)
+
 # see rev #6417
+# Check if column already exists
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_pwd_update
+SHOW COLUMNS FROM user LIKE 'last_pwd_update';
+EOF
+if [ $? -ne 0 ]; then
+  timestamp=`date +%s`
+  $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE user ADD COLUMN last_pwd_update INT(11) UNSIGNED NOT NULL default '0'
-UPDATE user SET last_pwd_update = XXXXX # Problem !!!!
+UPDATE user SET last_pwd_update = $timestamp
+EOF
+fi
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_access_date
+SHOW COLUMNS FROM user LIKE 'last_access_date';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE user ADD COLUMN last_access_date INT(11) UNSIGNED NOT NULL default '0'
-
-# SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
-ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';
-UPDATE bug_field SET field_name='release_name' where field_name='release';
-
-# SR #894 - Project long name way too short
-ALTER TABLE groups CHANGE group_name group_name VARCHAR( 255 ) DEFAULT NULL;
-
-# Support for more than 4GB table in MySQL -> 1TB
-ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
-
-# Found in SR #904
-ALTER TABLE svn_commits ADD INDEX idx_search (group_id, whoid, id);
-
-# SR #886
-INSERT INTO artifact_notification_event_default (event_id,event_label,rank,short_description_msg,description_msg) VALUES (10,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc");
-
-INSERT INTO artifact_notification_event (event_id,group_artifact_id,event_label,rank,short_description_msg,description_msg) SELECT 10,group_artifact_id,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc" FROM artifact_group_list WHERE group_artifact_id > 100;
-
-UPDATE artifact_history SET new_value = old_value , old_value = "" WHERE field_name = "comment";
+EOF
+fi
 
 ###############################################################################
 # This should have been done earlier. Nevertheless, fix remaining shells if any
 
+echo "- fix shell paths"
+$CAT <<EOF | $MYSQL $pass_opt codex
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh-restricted' WHERE shell='/usr/local/bin/cvssh-restricted';
 UPDATE user SET shell='/usr/lib/codex/bin/cvssh' WHERE shell='/usr/local/bin/cvssh';
+EOF
 
 ###############################################################################
+# This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
+echo "- fix typo in file reference link"
+$CAT <<EOF | $MYSQL $pass_opt codex
+UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND reference_id='16';
+EOF
+
+
+# SR #772 - Rename 'release' field from legacy tracker to 'release_name' to avoid conflict in MySQL 5
+echo "- rename 'release' legacy field"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+ALTER TABLE bug CHANGE release release_name varchar(255) NOT NULL default '';
+UPDATE bug_field SET field_name='release_name' where field_name='release';
+EOF
+
+
+# SR #894 - Project long name way too short
+echo "- increase group_name size"
+$CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE groups CHANGE group_name group_name VARCHAR( 255 ) DEFAULT NULL;
+EOF
+
+
+# Support for more than 4GB table in MySQL -> 1TB
+echo "- increase size of artifact_file table"
+$CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE artifact_file MAX_ROWS = 1000000 AVG_ROW_LENGTH = 1000000;
+EOF
+
+
+# Found in SR #904
+echo "- add index on svn_commits table (ignore errors)"
+$CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE svn_commits ADD INDEX idx_search (group_id, whoid, id);
+EOF
+
 # Small speedup in history export. See SR #837
+echo "- modify index on artifact_field table (ignore errors)"
+$CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact_field DROP INDEX idx_grp_name;
 ALTER TABLE artifact_field ADD INDEX idx_fname_grp(field_name(20), group_artifact_id);
+EOF
+
+
+###############################################################################
+# Update file release system, delete frs_status table
+echo "- drop frs_status table"
+$CAT <<EOF | $MYSQL $pass_opt codex
+DROP TABLE IF EXISTS frs_status;
+EOF
 
 
 ###############################################################################
 # Allow to temporarily disable tracker notifications. See SR #890
+echo "- add stop_notification column in artifact_group_list"
 
+# Check if column already exists
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q stop_notification
+SHOW COLUMNS FROM artifact_group_list LIKE 'stop_notification';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact_group_list ADD stop_notification INT(11) NOT NULL DEFAULT '0' AFTER instantiate_for_new_projects;
+EOF  
+fi
+
+
 
 ###############################################################################
-# This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
-
-UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND reference_id='16';
-
-###############################################################################
-# Update file release system, delete frs_status table
-DROP TABLE IF EXISTS frs_status;
-
-###############################################################################
-# Update plugin docman
+# Update docman plugin
+echo "- document manager update"
+$CAT <<EOF | $MYSQL $pass_opt codex
 
 DROP TABLE IF EXISTS plugin_docman_report;
 CREATE TABLE plugin_docman_report (
@@ -485,10 +546,15 @@ update plugin_docman_item set status = status + 100;
 alter table plugin_docman_item change column status status TINYINT(4) DEFAULT 100 NOT NULL;
 
 ALTER TABLE plugin_docman_metadata DROP PRIMARY KEY, ADD PRIMARY KEY  (field_id);
+EOF
 
 
 ###############################################################################
 # Personalizeable layout
+
+echo "- personalizeable layout update"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
 -- --------------------------------------------------------
 
 -- 
@@ -715,13 +781,21 @@ FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
 
-TODO plugins
+EOF
+
 
 ###############################################################################
-# 
-
+# SR #886
+echo "- artifact follow-up modification"
+$CAT <<EOF | $MYSQL $pass_opt codex
+INSERT INTO artifact_notification_event_default (event_id,event_label,rank,short_description_msg,description_msg) VALUES (10,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc");
+INSERT INTO artifact_notification_event (event_id,group_artifact_id,event_label,rank,short_description_msg,description_msg) SELECT 10,group_artifact_id,"COMMENT_CHANGE",100,"event_COMMENT_CHANGE_short_desc","event_COMMENT_CHANGE_desc" FROM artifact_group_list WHERE group_artifact_id > 100;
+# 'AND old_value != ""' -> to avoid erasing data if statement was already executed
+UPDATE artifact_history SET new_value = old_value , old_value = "" WHERE field_name = "comment" AND old_value != "";
 
 EOF
+
+
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
@@ -802,17 +876,15 @@ cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
 
-##############################################
-# Update codex_aliases.conf
-#
-TODO Update codex_aliases.conf (FollowSymlinks dans /downloads/). Automatic or manual suggestion?
 
 ##############################################
 # Update ParametersLocal.dtd
 #
-TODO Update ParametersLocal.dtd (<!ENTITY SYS_UPDATE_SITE "http://%sys_default_domain%/plugins/eclipse/updatesite/">). Automatic or manual suggestion?
-
-
+$CAT <<'EOF' >>/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
+<!ENTITY SYS_UPDATE_SITE "http://$sys_default_domain/plugins/eclipse/updatesite/">
+EOF
+todo "If only HTTPS is enabled, update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
+	
 ##############################################
 # Restarting some services
 #
@@ -833,19 +905,15 @@ $INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
 
-TODO revision #6417 #6479 : themes, db, local.inc
-TODO revision #6419 (follow-up comments) : themes
-
-TODO "Add the SOAP API change in release notes (about function getArtifacts, about getAttachedFiles that does not return the content of the files anymore for performance reasons)"
-TODO "Add Eclipse plugin documentation in the site documentation"
-TODO "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin"
-
-todo "Warn your users that use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
+todo "Add Eclipse plugin documentation in the site documentation (links available from /plugins/eclipse/). Documentation is available in French and English."
+todo "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin"
+todo "Warn your users who use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
+TODO "Warn your users of the SOAP API changes in functions getArtifacts, getAttachedFiles (that does not return the content of the files anymore for performance reasons), and of the new docman API function getRootFolder)"
 todo "If you have custom themes:"
-todo "  - add a call to warning_for_services_which_configuration_is_not_inherited() if needed" #XXX ???
 todo "  -New icons: close.png, comment.png, cross.png, group.png, quote.png, tick.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic
 todo "  -Updated CSS: Everything below the line '/* {{{ Widgets */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css.
+todo "  -If you redefined generic_header_start() in your theme layout class, you should add a call to warning_for_services_which_configuration_is_not_inherited() (see Layout.class.php)"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 

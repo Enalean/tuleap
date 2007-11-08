@@ -1319,7 +1319,7 @@ $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex
 # End of installation
 #
 todo "If you are behind a proxy, then you need to declare the proxy in two files: "
-todo "* local.inc (for external RSS feeds support)
+todo "* sys_proxy in /etc/codex/conf/local.inc (for external RSS feeds support)"
 todo "* /home/codexadm/.subversion/servers for the Server Update plugin"
 todo "In order to enable the subversion update, you also need to type the following commands (as codexadm):"
 todo "     cd /usr/share/codex/"
