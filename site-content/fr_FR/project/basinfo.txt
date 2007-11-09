@@ -11,7 +11,7 @@
 informations saisies sur cette page seront visibles pour les
 utilisateurs de <?php print $GLOBALS['sys_name']; ?> une fois votre
 projet enregistré. Veuillez donc fournir des informations aussi
-précise que possible.
+précises que possible.
 
 <P>Si l'équipe <?php print $GLOBALS['sys_name']; ?> approuve votre
 projet, votre environnement de projet devra être uniquement utilisé à

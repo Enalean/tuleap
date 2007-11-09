@@ -11,9 +11,9 @@
 
 <P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
 
-<P>Le "nom complet" est un descriptif and ne comporte pas de restriction (sauf sur sa longueur limitée à 255 caractères) et il peut être modifié à tout moment.</P>
+<P>Le "nom complet" est un descriptif et ne comporte pas de restriction (sauf sur sa longueur limitée à 255 caractères) et il peut être modifié à tout moment.</P>
 
-<p>Le "nom court" (aussi appelé "nom du groupe") présentent certaines restrictions&nbsp;:
+<p>Le "nom court" (aussi appelé "nom du groupe") présente certaines restrictions&nbsp;:
 
 <UL>
 <LI>Il ne doit correspondre à aucun nom court existant
