@@ -496,6 +496,12 @@ fi
 
 ###############################################################################
 # Update docman plugin
+# Check if docman is installed
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q docman
+SELECT * FROM plugin WHERE name = 'docman';
+EOF
+if [ $? -eq 0 ]; then
+
 echo "- document manager update"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
@@ -653,6 +659,7 @@ sub create_docman_for_template_projects {
 
 create_docman_for_template_projects;
 EOF
+fi
 
 ###############################################################################
 # Personalizeable layout
