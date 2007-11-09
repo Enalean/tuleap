@@ -851,9 +851,9 @@ fi
 # Update codexadm crontab: add codex_daily.php at 00:15
 #
 
-echo "Backing up sourceforge crontab in /tmp/crontab.sourceforge.bak"
-crontab -u sourceforge -l > /tmp/crontab.sourceforge.bak
-echo "Installing new sourceforge user crontab..."
+echo "Backing up codexadm crontab in /tmp/crontab.codexadm.bak"
+crontab -u codexadm -l > /tmp/crontab.codexadm.bak
+echo "Installing new codexadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
 # Daily CodeX PHP cron (obsolete documents...)
 10 0 * * * /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/src/utils/codex_daily.php
@@ -862,7 +862,7 @@ $CAT <<'EOF' >/tmp/cronfile
 30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
 45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
 EOF
-crontab -u sourceforge /tmp/cronfile
+crontab -u codexadm /tmp/cronfile
 
 
 ##############################################
@@ -906,7 +906,7 @@ todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs t
 todo "Add Eclipse plugin documentation in the site documentation (links available from /plugins/eclipse/). Documentation is available in French and English."
 todo "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin"
 todo "Warn your users who use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
-TODO "Warn your users of the SOAP API changes in functions getArtifacts, getAttachedFiles (that does not return the content of the files anymore for performance reasons), and of the new docman API function getRootFolder)"
+todo "Warn your users of the SOAP API changes in functions getArtifacts, getAttachedFiles (that does not return the content of the files anymore for performance reasons), and of the new docman API function getRootFolder)"
 todo "If you have custom themes:"
 todo "  -New icons: close.png, comment.png, cross.png, group.png, quote.png, tick.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic
 todo "  -Updated CSS: Everything below the line '/* {{{ Widgets */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css.
