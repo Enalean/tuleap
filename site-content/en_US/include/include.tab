@@ -455,14 +455,14 @@ include_utils	less_1_minute	less than a minute
 include_utils	less_than_X_seconds	less than $1 seconds
 include_utils	half_a_minute	half a minute
 include_utils	X_minutes	$1 minutes
-include_utils	about_1_hour	about 1 hour
-include_utils	about_X_hours	about 2 hours
-include_utils	about_1_day	about 1 day
+include_utils	about_1_hour	1 hour
+include_utils	about_X_hours	$1 hours
+include_utils	about_1_day	1 day
 include_utils	X_days	$1 days
-include_utils	about_1_month	about 1 month
+include_utils	about_1_month	1 month
 include_utils	X_months	$1 months
-include_utils	about_1_year	about 1 year
-include_utils	over_X_years	over $1 years
+include_utils	about_1_year	1 year
+include_utils	over_X_years	$1 years
 
 #
 #-----------------------------------------------

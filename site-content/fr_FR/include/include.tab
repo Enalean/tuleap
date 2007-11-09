@@ -461,14 +461,15 @@ include_utils	less_1_minute	moins d'une minute
 include_utils	less_than_X_seconds	moins de $1 seconds
 include_utils	half_a_minute	30 secondes
 include_utils	X_minutes	$1 minutes
-include_utils	about_1_hour	environ 1 heure
-include_utils	about_X_hours	environ $1 heures
-include_utils	about_1_day	environ 1 jour
+include_utils	about_1_hour	1 heure
+include_utils	about_X_hours	$1 heures
+include_utils	about_1_day	1 jour
 include_utils	X_days	$1 jours
-include_utils	about_1_month	environ 1 mois
+include_utils	about_1_month	1 mois
 include_utils	X_months	$1 mois
-include_utils	about_1_year	environ 1 an
+include_utils	about_1_year	1 an
 include_utils	over_X_years	$1 ans
+
 #
 #-----------------------------------------------
 # Script: SF/www/include/vars.php
