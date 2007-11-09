@@ -166,7 +166,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
 			// Files
-                        if (isset($add_file) && $add_file && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
                         
@@ -184,7 +184,7 @@ if ( $func == 'gotoid' ) {
                                 //
                                 //      Attach file to this Artifact.
                                 //
-                                if (isset($add_file) && $add_file) {
+                                if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                         $afh=new ArtifactFileHtml($ah);
                                         if (!$afh || !is_object($afh)) {
                                                 $feedback .= $Language->getText('tracker_index','not_create_file');
@@ -247,7 +247,7 @@ if ( $func == 'gotoid' ) {
 
 			// Files
 			// 
-                        if ($add_file && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
@@ -258,7 +258,7 @@ if ( $func == 'gotoid' ) {
                                 //
                                 //      Attach file to this Artifact.
                                 //
-                                if ($add_file) {
+                                if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                         $afh=new ArtifactFileHtml($ah);
                                         if (!$afh || !is_object($afh)) {
                                                 $feedback .= $Language->getText('tracker_index','not_create_file');
@@ -475,7 +475,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
                     }
                     // Files
-                        if (isset($add_file) && $add_file && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
@@ -496,18 +496,18 @@ if ( $func == 'gotoid' ) {
                         //
                         //  Attach file to this Artifact.
                         //
-                        if (isset($add_file) && $add_file) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                 $afh=new ArtifactFileHtml($ah);
                                 if (!$afh || !is_object($afh)) {
-                                        $feedback .= $Language->getText('tracker_index','not_create_file');
+                                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
                                         } elseif ($afh->isError()) {
-                                                $feedback .= $afh->getErrorMessage();
+                                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                                 } else {
                                         if (!$afh->upload($input_file,$input_file_name,$input_file_type,$file_description,$changes)) {
 					  $feedback .= ' <br>'.$Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage());
                                                 $was_error=true;
                                         } else {
-                                                $feedback .= ' <br>'.$Language->getText('tracker_index','file_upload_success');
+                                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','file_upload_success'));
                                         }
                                 }
                         }
@@ -558,7 +558,7 @@ if ( $func == 'gotoid' ) {
 		  exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 		}
 		// Files
-                if ($add_file && !util_check_fileupload($input_file)) {
+                if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
 		  exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                 }
 
@@ -606,7 +606,7 @@ if ( $func == 'gotoid' ) {
 		    //
 		    //  Attach file to this Artifact.
 		    //
-		    if ($add_file) {
+		    if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
 		      $afh=new ArtifactFileHtml($ah);
 		      if (!$afh || !is_object($afh)) {
 			$feedback .= $Language->getText('tracker_index','not_create_file');
@@ -695,7 +695,7 @@ if ( $func == 'gotoid' ) {
             //
             //  Attach file to this Artifact.
             //
-            if ($add_file) {
+            if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                 
                 if (!util_check_fileupload($input_file)) {
                     exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename_attach'));

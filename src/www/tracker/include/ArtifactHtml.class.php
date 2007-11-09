@@ -273,9 +273,6 @@ class ArtifactHtml extends Artifact {
             //
             $html = '';
             if ($pv == 0) {
-                $html .= $Language->getText('tracker_include_artifact','upload_checkbox');
-                $html .= ' <input type="checkbox" name="add_file" VALUE="1">';
-                $html .= $Language->getText('tracker_include_artifact','upload_file_lbl');
                 $html .= '<input type="file" name="input_file" size="40">';
                 $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
 
@@ -624,9 +621,6 @@ class ArtifactHtml extends Artifact {
         // File attachments
         //
         $html = '';
-        $html .= $Language->getText('tracker_include_artifact','upload_checkbox');
-        $html .= ' <input type="checkbox" name="add_file" VALUE="1">';
-        $html .= $Language->getText('tracker_include_artifact','upload_file_lbl');
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
 
@@ -962,9 +956,6 @@ class ArtifactHtml extends Artifact {
         // File attachments
         //
         $html = '';
-        $html .= $Language->getText('tracker_include_artifact','upload_checkbox');
-        $html .= ' <input type="checkbox" name="add_file" VALUE="1">';
-        $html .= $Language->getText('tracker_include_artifact','upload_file_lbl');
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
 
