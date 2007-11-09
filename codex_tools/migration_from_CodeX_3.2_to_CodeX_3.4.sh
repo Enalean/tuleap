@@ -391,7 +391,7 @@ EOF
 if [ $? -ne 0 ]; then
   $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date
-EOF  
+EOF
 fi
 
 
@@ -429,7 +429,7 @@ EOF
 # This was forgotten in CodeX 3.2 migration script (see rev #5671 and SR #941)
 echo "- fix typo in file reference link"
 $CAT <<EOF | $MYSQL $pass_opt codex
-UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND reference_id='16';
+UPDATE reference SET link='/file/showfiles.php?group_id=$group_id&release_id=$1' WHERE keyword='release' AND id='16';
 EOF
 
 
@@ -489,7 +489,7 @@ EOF
 if [ $? -ne 0 ]; then
   $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE artifact_group_list ADD stop_notification INT(11) NOT NULL DEFAULT '0' AFTER instantiate_for_new_projects;
-EOF  
+EOF
 fi
 
 
