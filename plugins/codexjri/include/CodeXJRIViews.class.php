@@ -30,6 +30,7 @@ class CodeXJRIViews extends Views {
     function index() {
         $this->intro();
         $this->documentation();
+        $this->jars();
         $this->sources();
     }
     // }}}
@@ -40,6 +41,10 @@ class CodeXJRIViews extends Views {
     
     function documentation() {
         echo file_get_contents($GLOBALS['Language']->getContent('documentation', null, 'codexjri'));
+    }
+    
+    function jars() {
+        echo file_get_contents($GLOBALS['Language']->getContent('jars', null, 'codexjri'));
     }
     
     function sources() {

@@ -10,6 +10,7 @@
 #
 
 CODEXJRI_SOURCE_REPOSITORY="https://partners.xrce.xerox.com/svnroot/codexjri/dev/trunk"
+CODEXJRI_JAR_DIRECTORY="/home/mnazaria/workspace_Deployment/EclipsePluginUpdateSite/plugins"
 
 CODEX_TARGET_DIR="/home/mnazaria/CodeX/dev_server/httpd"
 
@@ -17,6 +18,12 @@ CODEX_TARGET_DIR="/home/mnazaria/CodeX/dev_server/httpd"
 # CodeXJRI sources
 #
 svn export --force $CODEXJRI_SOURCE_REPOSITORY/ $CODEX_TARGET_DIR/plugins/codexjri/www/sources/.
+
+#
+# CodeXJRI jar
+#
+cp $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plugins/codexjri/www/jars/.
+
 
 echo "##############################################"
 echo "  Don't forget to commit the modifications !  "

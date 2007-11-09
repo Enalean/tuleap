@@ -1,0 +1,13 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// 
+//
+?>
+
+<h3>Jar de CodeX JRI</h3>
+
+Téléchargez le <a href="jars/">jar de CodeX JRI</a>
