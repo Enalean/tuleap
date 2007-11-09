@@ -340,10 +340,10 @@ do
     j=`echo "$modified" | grep $i`
     if [ "$j" != "" ]; then
        if [ $one_has_been_found -eq 0 ]; then
-          echo "The following files differ from the site-content of CodeX:"
+          echo "  The following files differ from the site-content of CodeX:"
           one_has_been_found=1
        fi
-       echo $j
+       echo "    $j"
     fi
 done
 
@@ -538,30 +538,83 @@ CREATE TABLE plugin_docman_report_filter (
 alter table plugin_docman_metadata_value add FULLTEXT fltxt (valueText, valueString);
 alter table plugin_docman_metadata_value add FULLTEXT fltxt_txt (valueText);
 alter table plugin_docman_metadata_value add FULLTEXT fltxt_str (valueString);
-ALTER TABLE plugin_docman_metadata_value DROP INDEX idx_field_id;
-ALTER TABLE plugin_docman_metadata_value DROP INDEX idx_artifact_id;
-ALTER TABLE plugin_docman_metadata_value ADD INDEX idx_field_item_id (field_id, item_id);
 
 alter table plugin_docman_item add FULLTEXT fltxt_title (title);
 alter table plugin_docman_item add FULLTEXT fltxt_description (description);
 alter table plugin_docman_item add FULLTEXT fltxt (title, description);
-ALTER TABLE plugin_docman_item add INDEX idx_group_id (group_id);
-ALTER TABLE plugin_docman_item ADD INDEX parent_id (parent_id);
-ALTER TABLE plugin_docman_item ADD INDEX rank (rank);
 
 alter table plugin_docman_version add FULLTEXT fltxt (label, changelog, filename);
-ALTER TABLE plugin_docman_version ADD INDEX idx_item_id (item_id);
 
 update plugin_docman_item set status = status + 100;
 alter table plugin_docman_item change column status status TINYINT(4) DEFAULT 100 NOT NULL;
 
 ALTER TABLE plugin_docman_metadata DROP PRIMARY KEY, ADD PRIMARY KEY  (field_id);
 ALTER TABLE plugin_docman_metadata DROP INDEX idx_name;
-ALTER TABLE plugin_docman_metadata ADD INDEX idx_name (name (10));
 
-ALTER TABLE plugin_docman_metadata_love DROP INDEX idx_fv_value_id;
-ALTER TABLE plugin_docman_metadata_love ADD INDEX rank (rank);
-ALTER TABLE plugin_docman_metadata_love ADD INDEX name (name (10));
+EOF
+
+$PERL <<'EOF'
+use DBI;
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
+&db_connect;
+
+sub add_index {
+    my ($query, $c, $type);
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+    my ($columns)   = $_[2];
+    $type = ('', $_[3])[defined($_[3])];
+    drop_index($tablename, $indexname);
+
+    $query = "CREATE ". $type ." INDEX ". $indexname ." ON ". $tablename ."(". $columns .")";
+    print $query ."\n";
+    $c = $dbh->prepare($query);
+    $c->execute();
+}
+sub drop_index {
+    my ($query, $c);
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+
+    if (index_exists($tablename, $indexname) eq 1) {
+        $query = "DROP INDEX ". $indexname ." ON ". $tablename;
+        print $query ."\n";
+        $c = $dbh->prepare($query);
+        $c->execute();
+    }
+}
+sub index_exists {
+    my ($query, $c);
+    my ($found)     = 0;
+    my ($tablename) = $_[0];
+    my ($indexname) = $_[1];
+
+    $query = "SHOW INDEX FROM ".$tablename;
+    $c = $dbh->prepare($query);
+    $c->execute();
+    my($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment);
+    $c->bind_columns( undef, \$table, \$non_unique, \$key_name, \$seq_in_index, \$column_name, \$collation, \$cardinality, \$sub_part, \$packed, \$null, \$index_type, \$comment);
+    while($found eq 0 and $c->fetch()) {
+        if ($key_name eq $indexname) {
+            $found = 1;
+        }
+    }
+    return $found;
+}
+
+drop_index('plugin_docman_metadata_love', 'idx_fv_value_id');
+drop_index('plugin_docman_metadata_value', 'idx_field_id');
+drop_index('plugin_docman_metadata_value', 'idx_artifact_id');
+
+add_index('plugin_docman_metadata_value', 'idx_field_item_id', 'field_id, item_id');
+add_index('plugin_docman_item', 'idx_group_id', 'group_id');
+add_index('plugin_docman_item', 'parent_id', 'parent_id');
+add_index('plugin_docman_item', 'rank', 'rank');
+add_index('plugin_docman_version', 'idx_item_id', 'item_id');
+add_index('plugin_docman_metadata_love', 'rank', 'rank');
+add_index('plugin_docman_metadata_love', 'name', 'name (10)');
+add_index('plugin_docman_metadata', 'idx_name', 'name (10)');
+
 EOF
 
 /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/plugins/docman/db/upgrade_v2.6.php
@@ -570,9 +623,7 @@ EOF
 $PERL <<'EOF'
 use DBI;
 
-$root_path = "../../../src/";
-require $root_path."utils/include.pl";
-
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
 &db_connect;
 
 sub create_item {
