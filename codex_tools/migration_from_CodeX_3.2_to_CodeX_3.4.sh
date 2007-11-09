@@ -958,7 +958,14 @@ UPDATE artifact_history SET new_value = old_value , old_value = "" WHERE field_n
 
 EOF
 
+###############################################################################
+# Install and enable two plugins (eclipse and codexjri)
+echo "- add eclipse and codexjri plugins"
+$CAT <<EOF | $MYSQL $pass_opt codex
+INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
+INSERT INTO plugin (name, available) VALUES ('codexjri', '1');
 
+EOF
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
