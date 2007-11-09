@@ -340,7 +340,7 @@ do
     j=`echo "$modified" | grep $i`
     if [ "$j" != "" ]; then
        if [ $one_has_been_found -eq 0 ]; then
-          echo "The following files differs from the site-content of CodeX:"
+          echo "The following files differ from the site-content of CodeX:"
           one_has_been_found=1
        fi
        echo $j
