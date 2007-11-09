@@ -527,7 +527,7 @@ plugin_docman	report_save_new_report_p	Nouveau rapport projet...
 plugin_docman	report_save_P_reports	-- Rapports projet:
 plugin_docman	report_save_I_reports	-- Rapports personnels:
 plugin_docman	report_saved_prjreports	-- Recherche projet sauvegardée :
-plugin_docman	report_saved_persoreports	-- Mes recherches sauveagrdées :
+plugin_docman	report_saved_persoreports	-- Mes recherches sauvegardées :
 
 plugin_docman	report_settings_delete	Êtes vous sûrs de vouloir supprimer le rapport \'$1\'?
 plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
