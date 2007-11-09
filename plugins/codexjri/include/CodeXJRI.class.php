@@ -12,7 +12,7 @@ require_once('CodeXJRIActions.class.php');
 class CodeXJRI extends Controler {
     
     function CodeXJRI() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+        
     }
     
     function request() {
