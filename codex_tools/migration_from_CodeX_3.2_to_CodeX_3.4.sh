@@ -257,13 +257,10 @@ $MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.3.4.code
 echo "Installing Subversion 1.4.4 RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
-$RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm 
-$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
+$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm ${newest_rpm}/apr-util-0*.i386.rpm \
+     ${newest_rpm}/subversion-1.*.i386.rpm  ${newest_rpm}/mod_dav_svn*.i386.rpm \
+     ${newest_rpm}/subversion-perl*.i386.rpm ${newest_rpm}/subversion-python*.i386.rpm \
+     ${newest_rpm}/subversion-tools*.i386.rpm
 
 $CP -a /etc/httpd/conf.d/subversion.conf.3.4.codex /etc/httpd/conf.d/subversion.conf
 
