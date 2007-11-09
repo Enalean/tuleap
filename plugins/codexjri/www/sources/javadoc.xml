@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="javadoc">
+<target name="javadoc">
+<javadoc access="protected" 
+	author="true" 
+	classpath="lib/commons-logging-1.0.4.jar:lib/saaj.jar:lib/mail.jar:lib/commons-discovery-0.2.jar:lib/xerces.jar:lib/wsdl4j-1.5.1.jar:lib/jaxrpc.jar:lib/axis.jar:lib/activation.jar" 
+	destdir="doc" 
+	doctitle="CodeX Java Remote Interface Javadoc" 
+	nodeprecated="false" 
+	nodeprecatedlist="false" 
+	noindex="false" 
+	nonavbar="false" 
+	notree="false" 
+	packagenames="com.xerox.xrce.codex.jri.model,com.xerox.xrce.codex.jri.utils,com.xerox.xrce.codex.jri.exceptions,com.xerox.xrce.codex.jri.messages" 
+	source="1.5" 
+	sourcepath="src" 
+	splitindex="true" 
+	use="true" 
+	version="true"/>
+</target>
+</project>

@@ -1,0 +1,12 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// 
+//
+?>
+
+CodeX JRI (Java Remote Interface) est l'API Java pour CodeX.<br />
+For now, it allows you to work with trackers.

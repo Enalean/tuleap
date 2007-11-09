@@ -905,6 +905,7 @@ $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
 todo "Add Eclipse plugin documentation in the site documentation (links available from /plugins/eclipse/). Documentation is available in French and English."
 todo "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin"
+todo "Update the site-content/<language>/homepage.tab to promote CodeX JRI"
 todo "Warn your users who use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
 todo "Warn your users of the SOAP API changes in functions getArtifacts, getAttachedFiles (that does not return the content of the files anymore for performance reasons), and of the new docman API function getRootFolder)"
 todo "If you have custom themes:"

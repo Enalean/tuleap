@@ -1,0 +1,13 @@
+<?
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// 
+//
+?>
+
+<h3>CodeX JRI sources</h3>
+
+<a href="sources/">CodeX JRI sources</a> (licensed under the <a href="/admin/show_license.php">CodeX Component Licence</a>)

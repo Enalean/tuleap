@@ -2124,6 +2124,9 @@ INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
 -- install and enable eclipse plugin
 INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
 
+-- install and enable codexjri plugin
+INSERT INTO plugin (name, available) VALUES ('codexjri', '1');
+
 --
 -- Insert default references
 --
