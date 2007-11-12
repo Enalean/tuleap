@@ -316,11 +316,12 @@ class ArtifactHtml extends Artifact {
             //
             // History
             //
+            $is_there_history = db_numrows($this->getHistory());
             echo $this->_getSection(
                 'artifact_section_history', 
                 $Language->getText('tracker_include_artifact','change_history').' '.help_button('ArtifactUpdate.html#ArtifactHistory'),
                 $this->showHistory($group_id,$group_artifact_id),
-                false
+                !$is_there_history
             );
             
             // 
