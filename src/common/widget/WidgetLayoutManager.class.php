@@ -52,7 +52,7 @@ class WidgetLayoutManager {
                     $req_content = db_query($sql);
                     while ($data = db_fetch_array($req_content)) {
                         $c =& Widget::getInstance($data['name']);
-                        if ($c !== null) {
+                        if ($c && $c->isAvailable()) {
                             $c->loadContent($data['content_id']);
                             $col->add($c, $data['is_minimized'], $data['display_preferences']);
                         }
@@ -145,7 +145,7 @@ class WidgetLayoutManager {
     * @param  template_id  the id of the project template
     */
     function createDefaultLayoutForProject($group_id, $template_id) {
-        $project =& project_get_object($group_id);
+        $project =& project_get_object($group_id, true);
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) 
         SELECT layout_id, is_default, $group_id, owner_type 
         FROM owner_layouts 
@@ -160,7 +160,8 @@ class WidgetLayoutManager {
             ";
             if ($req = db_query($sql)) {
                 while($data = db_fetch_array($req)) {
-                    if ($w = Widget::getInstance($data['name'])) {
+                    $w = Widget::getInstance($data['name']);
+                    if ($w) {
                         $w->setOwner($template_id, $this->OWNER_TYPE_GROUP);
                         if ($w->canBeUsedByProject($project)) {
                             $content_id = $w->cloneContent($w['content_id'], $group_id, $this->OWNER_TYPE_GROUP);
@@ -222,16 +223,18 @@ class WidgetLayoutManager {
             $widget_rows = array();
             foreach($widgets as $widget_name) {
                 if ($widget = Widget::getInstance($widget_name)) {
-                    $row = '';
-                    $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
-                    $row .= '<td align="right">';
-                    if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-                        $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
-                    } else {
-                        $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                    if ($widget->isAvailable()) {
+                        $row = '';
+                        $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
+                        $row .= '<td align="right">';
+                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+                        } else {
+                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                        }
+                        $row .= '</td>';
+                        $widget_rows[$widget->getTitle()] = $row;
                     }
-                    $row .= '</td>';
-                    $widget_rows[$widget->getTitle()] = $row;
                 }
             }
             uksort($widget_rows, 'strnatcasecmp');

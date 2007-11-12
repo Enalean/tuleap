@@ -172,7 +172,7 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
                 break;
         }
-        if (!$o || !is_a($o, 'Widget') || !$o->isAvailable()) {
+        if (!$o || !is_a($o, 'Widget')) {
             $o = null;
         }
         return $o;
