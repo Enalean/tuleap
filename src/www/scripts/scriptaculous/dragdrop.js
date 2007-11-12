@@ -759,7 +759,12 @@ var Sortable = {
       if(dropon.previousSibling != element) {
         var oldParentNode = element.parentNode;
         element.style.visibility = "hidden"; // fix gecko rendering
+        
+        Sortable.createGuide(element);
         dropon.parentNode.insertBefore(element, dropon);
+        dropon.parentNode.insertBefore(Sortable._guide, element);
+        Sortable.markEmptyPlace(element);
+        
         if(dropon.parentNode!=oldParentNode) 
           Sortable.options(oldParentNode).onChange(element);
         Sortable.options(dropon.parentNode).onChange(element);
@@ -770,7 +775,12 @@ var Sortable = {
       if(nextElement != element) {
         var oldParentNode = element.parentNode;
         element.style.visibility = "hidden"; // fix gecko rendering
+        
+        Sortable.createGuide(element);
         dropon.parentNode.insertBefore(element, nextElement);
+        dropon.parentNode.insertBefore(Sortable._guide, element);
+        Sortable.markEmptyPlace(element);
+        
         if(dropon.parentNode!=oldParentNode) 
           Sortable.options(oldParentNode).onChange(element);
         Sortable.options(dropon.parentNode).onChange(element);
@@ -803,8 +813,10 @@ var Sortable = {
           }
         }
       }
-      
+      Sortable.createGuide(element);
       dropon.insertBefore(element, child);
+      dropon.insertBefore(Sortable._guide, element);
+      Sortable.markEmptyPlace(element);
       
       Sortable.options(oldParentNode).onChange(element);
       droponOptions.onChange(element);
@@ -813,6 +825,12 @@ var Sortable = {
 
   unmark: function() {
     if(Sortable._marker) Sortable._marker.hide();
+    
+    if(Sortable._guide && Sortable._guide.parentNode) {
+        Sortable._guide.parentNode.removeChild(Sortable._guide);
+    }
+    if(Sortable._emptyPlaceMarker) Element.hide(Sortable._emptyPlaceMarker);
+    
   },
 
   mark: function(dropon, position) {
@@ -941,6 +959,44 @@ var Sortable = {
         return name + "[]=" + encodeURIComponent(item);
       }).join('&');
     }
+  },
+  createGuide: function (element) {
+    if(!Sortable._guide) {
+      Sortable._guide = $('_guide') || Builder.node('div');
+      Sortable._guide.style.position = 'relative';
+      Sortable._guide.style.width = '1px';
+      Sortable._guide.style.height = '0px';
+      Sortable._guide.style.cssFloat = 'left';
+      Sortable._guide.id = 'guide';
+      
+      document.getElementsByTagName("body").item(0).appendChild(Sortable._guide);
+    }
+  },
+  markEmptyPlace: function(element) {
+    if(!Sortable._emptyPlaceMarker) {
+      Sortable._emptyPlaceMarker = $('emptyPlaceMarker') || Builder.node('div');
+      Element.hide(Sortable._emptyPlaceMarker);
+      Element.addClassName(Sortable._emptyPlaceMarker, 'emptyPlaceMarker');
+      Sortable._emptyPlaceMarker.style.position = 'absolute';
+      document.getElementsByTagName("body").item(0).appendChild(Sortable._emptyPlaceMarker);
+    }
+    
+    var pos = Position.cumulativeOffset(Sortable._guide);
+    Sortable._emptyPlaceMarker.style.left = (pos[0] + 5)+ 'px';
+    Sortable._emptyPlaceMarker.style.top = (pos[1] + 5) + 'px';
+    
+    var dim = {};
+    dim.width = (Element.getDimensions(element).width-5) + 'px';
+    dim.height = (Element.getDimensions(element).height-5) + 'px';
+    Sortable._emptyPlaceMarker.setStyle(dim);
+    
+    var mg = Element.getStyle(element, 'margin');
+    if(mg && mg != '') {
+      Sortable._emptyPlaceMarker.setStyle({margin : mg});
+    } else  {
+      Sortable._emptyPlaceMarker.setStyle({ margin : ''});
+    }
+    Element.show(Sortable._emptyPlaceMarker);
   }
 }
 
