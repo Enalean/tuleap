@@ -232,7 +232,9 @@ class ArtifactHtml extends Artifact {
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
-            $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
+            if ($pv == 0) {
+                $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
+            }
             $title .= '<script type="text/javascript">';
             $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
             $title .= '</script>';
@@ -258,11 +260,11 @@ class ArtifactHtml extends Artifact {
                 $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
                 $html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
             }
-            $html .= $this->showCCList($group_id,$group_artifact_id);
+            $html .= $this->showCCList($group_id,$group_artifact_id, false, $pv);
             
             echo $this->_getSection(
                 'artifact_section_cc',
-                $Language->getText('tracker_include_artifact','cc_list').' '. help_button('ArtifactUpdate.html#ArtifactCCList'),
+                $Language->getText('tracker_include_artifact','cc_list').' '. ($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactCCList') : ''),
                 $html,
                 db_numrows($this->getCCList()),
                 db_numrows($this->getCCList()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','cc_empty') .'</div>'
@@ -279,11 +281,11 @@ class ArtifactHtml extends Artifact {
                 $html .= $Language->getText('tracker_include_artifact','upload_file_desc');
                 $html .= '<input type="text" name="file_description" size="60" maxlength="255">';
             }
-            $html .= $this->showAttachedFiles($group_id,$group_artifact_id);
+            $html .= $this->showAttachedFiles($group_id,$group_artifact_id, false, $pv);
             
             echo $this->_getSection(
                 'artifact_section_attachments',
-                $Language->getText('tracker_include_artifact','attachment').' '. help_button('ArtifactUpdate.html#ArtifactAttachments'),
+                $Language->getText('tracker_include_artifact','attachment').' '. ($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactAttachments') : ''),
                 $html,
                 db_numrows($this->getAttachedFiles()),
                 db_numrows($this->getAttachedFiles()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</div>'
@@ -299,7 +301,7 @@ class ArtifactHtml extends Artifact {
                     <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
                     &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
             }
-            $html .=  $this->showDependencies($group_id,$group_artifact_id);
+            $html .=  $this->showDependencies($group_id,$group_artifact_id, false, $pv);
             
             $html .= '
             <P><B>'.$Language->getText('tracker_include_artifact','dependent_on').'</B><BR>
@@ -307,7 +309,7 @@ class ArtifactHtml extends Artifact {
             $html .= $this->showInverseDependencies($group_id,$group_artifact_id);
             echo $this->_getSection(
                 'artifact_section_dependencies',
-                $Language->getText('tracker_include_artifact','dependencies').' '.help_button('ArtifactUpdate.html#ArtifactDependencies'),
+                $Language->getText('tracker_include_artifact','dependencies').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactDependencies') : ''),
                 $html,
                 db_numrows($this->getDependencies()),
                 db_numrows($this->getDependencies()) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
@@ -319,7 +321,7 @@ class ArtifactHtml extends Artifact {
             $is_there_history = db_numrows($this->getHistory());
             echo $this->_getSection(
                 'artifact_section_history', 
-                $Language->getText('tracker_include_artifact','change_history').' '.help_button('ArtifactUpdate.html#ArtifactHistory'),
+                $Language->getText('tracker_include_artifact','change_history').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactHistory') : ''),
                 $this->showHistory($group_id,$group_artifact_id),
                 !$is_there_history
             );

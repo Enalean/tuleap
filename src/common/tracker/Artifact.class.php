@@ -2672,9 +2672,11 @@ class Artifact extends Error {
                         $user_quoted = user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'));
                     }
                     $user_quoted = addslashes(addslashes($user_quoted));
-                    $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
-                    $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
-                    $out .= '</a>\');</script>';
+                    if ($pv == 0) {
+                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
+                        $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
+                        $out .= '</a>\');</script>';
+                    }
                     if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
                         $out .= '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
                         $out .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
@@ -2718,7 +2720,7 @@ class Artifact extends Error {
          *
          * @return void
          */
-        function showCCList ($group_id, $group_artifact_id, $ascii=false) {
+        function showCCList ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
         
             global $sys_datefmt,$sys_lf,$Language;
         
@@ -2753,11 +2755,16 @@ class Artifact extends Error {
                         $title_arr[]=$Language->getText('tracker_include_artifact','fill_cc_list_cmt');
                         $title_arr[]=$Language->getText('tracker_include_artifact','added_by');
                         $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
-                        $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                        if ($pv == 0) {
+                            $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                        }
                         $out .= html_build_list_table_top ($title_arr);
                 
-                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
-                            '<td align="center">%s</td><td align="center">%s</td></tr>';
+                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>';
+                        if ($pv == 0) {
+                            $fmt .= '<td align="center">%s</td>';
+                        }
+                        $fmt .= '</tr>';
                 }
                 
             // Loop through the cc and format them
@@ -2820,7 +2827,7 @@ class Artifact extends Error {
          *
          * @return void
          */
-        function showDependencies ($group_id, $group_artifact_id, $ascii=false) {
+        function showDependencies ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
         
             global $sys_datefmt,$sys_lf,$Language;
         
@@ -2854,11 +2861,16 @@ class Artifact extends Error {
                         $title_arr[]=$Language->getText('tracker_include_artifact','summary');
                         $title_arr[]=$Language->getText('tracker_import_admin','tracker');
                         $title_arr[]=$Language->getText('tracker_include_artifact','group');
-                        $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                        if ($pv == 0) {
+                            $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                        }
                         $out .= html_build_list_table_top ($title_arr);
                 
-                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
-                            '<td align="center">%s</td><td align="center">%s</td></tr>';
+                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>';
+                        if ($pv == 0) {
+                            $fmt .= '<td align="center">%s</td>';
+                        }
+                        $fmt .= '</tr>';
                 }
                 
             // Loop through the denpendencies and format them
@@ -2908,7 +2920,7 @@ class Artifact extends Error {
          *
          * @return void
          */
-        function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false) {
+        function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
             global $sys_datefmt,$sys_lf,$Language;
         
@@ -2939,7 +2951,9 @@ class Artifact extends Error {
                 $title_arr[]=$Language->getText('tracker_include_artifact','size_kb');
                 $title_arr[]=$Language->getText('global','by');
                 $title_arr[]=$Language->getText('tracker_include_artifact','posted_on');
-		$title_arr[]=$Language->getText('tracker_include_canned','delete');
+                if ($pv == 0) {
+                    $title_arr[]=$Language->getText('tracker_include_canned','delete');
+                }
         
                 $out = html_build_list_table_top ($title_arr);
             }
@@ -2949,8 +2963,11 @@ class Artifact extends Error {
                         $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
                             $Language->getText('tracker_import_utils','date').": %s  ".$Language->getText('tracker_include_artifact','name').": %s  ".$Language->getText('tracker_include_artifact','size').": %dKB   ".$Language->getText('global','by').": %s$sys_lf%s$sys_lf%s";
             } else {
-                        $fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>'.
-                    '<td align="center">%s</td></tr>';
+                        $fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
+                        if ($pv == 0) {
+                            $fmt .= '<td align="center">%s</td>';
+                        }
+                        $fmt .= '</tr>';
             }
         
             // Determine which protocl to use for embedded URL in ASCII format
