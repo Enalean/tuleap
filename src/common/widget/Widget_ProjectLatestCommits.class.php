@@ -48,7 +48,7 @@ class Widget_ProjectLatestCommits extends Widget {
         return $html;
     }
     function isAvailable() {
-        return $this->latest_revisions ? true : false;
+        return $this->latest_revisions && user_isloggedin() ? true : false;
     }
     function hasRss() {
         return false;

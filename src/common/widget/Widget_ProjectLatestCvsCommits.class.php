@@ -26,8 +26,5 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesCvs();
     }
-    function isAvailable() {
-        return $this->latest_revisions && user_isloggedin() ? true : false;
-    }
 }
 ?>
