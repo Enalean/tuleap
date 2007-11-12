@@ -51,12 +51,15 @@ class Widget_ProjectLatestCommits extends Widget {
         return $this->latest_revisions ? true : false;
     }
     function hasRss() {
-        return true;
+        return false;
     }
+    /*
+    Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {
+        $project =& project_get_object($this->group_id);
         $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $rss = new RSS(array(
-            'title'       => $this->getTitle(),
+            'title'       => $project->getPublicName() .' - '. $this->getTitle(),
             'description' => '',
             'link'        => get_server_url(),
             'language'    => 'en-us',
@@ -73,6 +76,6 @@ class Widget_ProjectLatestCommits extends Widget {
         $rss->display();
         exit;
 
-    }
+    }*/
 }
 ?>
