@@ -354,7 +354,15 @@ class ArtifactHtml extends Artifact {
                 $sign = 'plus';
                 $display = 'display:none;';
             }
-            $html .= $GLOBALS['HTML']->getImage('ic/toggle_'. $sign .'.png', array('border' => 0, 'id' => $id.'_toggle', 'style' => 'cursor:hand; cursor:pointer'));
+            $html .= $GLOBALS['HTML']->getImage(
+                'ic/toggle_'. $sign .'.png', 
+                array(
+                    'border' => 0, 
+                    'id'     => $id.'_toggle', 
+                    'style'  => 'cursor:hand; cursor:pointer', 
+                    'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')
+                )
+            );
             $html .= $title .'</legend><div id="'. $id .'_alternate" style="display:none;"></div>';
             $html .= '<script type="text/javascript">';
             $html .= "Event.observe($('". $id ."_toggle'), 'click', function (evt) {
