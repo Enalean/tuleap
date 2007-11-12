@@ -81,7 +81,7 @@ if ($action=='activate') {
 
 
 // get current information
-$res_grp = db_query("SELECT * FROM groups WHERE status='P'");
+$res_grp = db_query("SELECT * FROM groups WHERE status='P' ORDER BY register_time");
 
 if (db_numrows($res_grp) < 1) {
     site_admin_header(array('title'=>$Language->getText('admin_approve_pending','no_pending')));
