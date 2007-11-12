@@ -27,7 +27,7 @@
 	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.$data['project']['form_full_name'].'">
 	<P>
 	<B>Unix Name:</B><BR>
-	'.$data['project']['form_unix_name'].'
+	<INPUT size="40" maxlength="40" type="text" name="form_unix_name" VALUE="'.$data['project']['form_unix_name'].'">
 	<P>
 	<B>License:</B><BR>
 	<SELECT NAME="form_license">
