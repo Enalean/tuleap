@@ -17,12 +17,12 @@ if (isset($_REQUEST['group_id'])) {
 
 
 
-if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision') {
+if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision' && user_isloggedin()) {
     $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
 
     require('./detail_revision.php');
 
- } else if (                                                                  //We'll browse
+ } else if (user_isloggedin() &&                                                             //We'll browse
             (
              (isset($_REQUEST['func']) && $_REQUEST['func'] === 'browse')     //if user ask for it
              || (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '')     //or if user set rev_id
