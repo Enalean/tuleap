@@ -78,7 +78,7 @@ Object.extend(com.xerox.codex.FieldEditor.prototype, {
     updatePreview: function(display_warning) {
         new Ajax.Updater(this.preview, '/make_links.php?group_id='+this.options.group_id, {
                 parameters: {
-                    text: $F(this.element).replace('<', '&lt;')
+                    text: $F(this.element)
                 },
                 onComplete: (function() {
                     Element.show(this.preview);
