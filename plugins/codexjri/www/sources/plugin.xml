@@ -3,7 +3,7 @@
 <plugin
    id="com.xerox.xrce.codex.jri"
    name="CodeX Java Remote Interface Plug-in"
-   version="1.0.2"
+   version="1.0.3"
    provider-name="Xerox Corporation"
    >
 

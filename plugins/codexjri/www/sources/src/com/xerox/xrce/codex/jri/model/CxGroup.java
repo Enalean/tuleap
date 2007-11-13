@@ -21,6 +21,7 @@ import com.xerox.xrce.codex.jri.exceptions.CxException;
 import com.xerox.xrce.codex.jri.exceptions.CxRemoteException;
 import com.xerox.xrce.codex.jri.exceptions.CxServerException;
 import com.xerox.xrce.codex.jri.messages.JRIMessages;
+import com.xerox.xrce.codex.jri.model.tracker.CxTracker;
 import com.xerox.xrce.codex.jri.model.wsproxy.ArtifactType;
 import com.xerox.xrce.codex.jri.model.wsproxy.Group;
 import com.xerox.xrce.codex.jri.model.wsproxy.TrackerDesc;
