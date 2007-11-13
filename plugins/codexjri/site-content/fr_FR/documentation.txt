@@ -10,4 +10,4 @@
 
 <h3>Documentation de CodeX JRI</h3>
 
-<a href="sources/doc/index.html">Documentation de CodeX JRI</a> (javadoc)
+<a href="documentation/index.html">Documentation de CodeX JRI</a> (javadoc)
