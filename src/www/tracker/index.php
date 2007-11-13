@@ -207,7 +207,7 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-                            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $ah->getId() .'&func=detail');
+                            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                         }
                 }
                 break;
@@ -287,7 +287,7 @@ if ( $func == 'gotoid' ) {
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-                            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $ah->getId() .'&func=detail');
+                            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                         }
                 }
                 break;
@@ -473,7 +473,7 @@ if ( $func == 'gotoid' ) {
                         //data control layer
                         $changed = $ah->handleUpdate($artifact_id_dependent,$canned_response,$changes);
                         if (!$changed) {
-                                $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                                $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                                 exit();
                         }
                 
@@ -515,7 +515,7 @@ if ( $func == 'gotoid' ) {
                         if (!isset($was_error) || !$was_error) {
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
                         }
-                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                 }
                 break;
         }
@@ -702,7 +702,7 @@ if ( $func == 'gotoid' ) {
             $agnf =& new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $ah->mailFollowupWithPermissions($addresses, $changes);
-            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
             break;
         }
 
