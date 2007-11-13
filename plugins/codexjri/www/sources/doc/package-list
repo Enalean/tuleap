@@ -1,4 +1,5 @@
 com.xerox.xrce.codex.jri.exceptions
 com.xerox.xrce.codex.jri.messages
 com.xerox.xrce.codex.jri.model
+com.xerox.xrce.codex.jri.model.tracker
 com.xerox.xrce.codex.jri.utils

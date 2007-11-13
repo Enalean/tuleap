@@ -31,7 +31,7 @@ $CP $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plug
 #
 # make an archive of the sources
 #
-cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' ; cd -
+cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar.gz -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' ; cd -
 
 
 echo "################################################################################"

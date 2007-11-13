@@ -11,7 +11,7 @@
 	noindex="false" 
 	nonavbar="false" 
 	notree="false" 
-	packagenames="com.xerox.xrce.codex.jri.model,com.xerox.xrce.codex.jri.utils,com.xerox.xrce.codex.jri.exceptions,com.xerox.xrce.codex.jri.messages" 
+	packagenames="com.xerox.xrce.codex.jri.model,com.xerox.xrce.codex.jri.model.tracker,com.xerox.xrce.codex.jri.utils,com.xerox.xrce.codex.jri.exceptions,com.xerox.xrce.codex.jri.messages" 
 	source="1.5" 
 	sourcepath="src" 
 	splitindex="true" 
