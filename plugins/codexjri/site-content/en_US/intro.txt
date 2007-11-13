@@ -9,5 +9,4 @@
 ?>
 
 The CodeX JRI (Java Remote Interface) is the Java API for CodeX.<br />
-Cette API vous permet d'accéder aux outils de suivi.
-
+For now, it allows you to work with trackers.
