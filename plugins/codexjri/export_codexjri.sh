@@ -11,7 +11,6 @@
 CP='/bin/cp'
 TAR='/bin/tar'
 
-
 CODEXJRI_SOURCE_REPOSITORY="https://partners.xrce.xerox.com/svnroot/codexjri/dev/trunk"
 CODEXJRI_JAR_DIRECTORY="/home/mnazaria/workspace_Deployment/EclipsePluginUpdateSite/plugins"
 
@@ -29,9 +28,9 @@ $CP $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plug
 
 
 #
-# make an archive of the sources
+# make an archive of the sources, and remove the sources!
 #
-cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar.gz -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' ; cd -
+cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar.gz -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' --remove-files ; cd -
 
 
 echo "################################################################################"
