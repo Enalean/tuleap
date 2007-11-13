@@ -287,9 +287,9 @@ class Layout extends Response {
         
 ?>
         <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
-        <link rel="alternate" title="<? echo $GLOBALS['sys_name'].$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnews.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
+        <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo $sys_url; ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
 <?php
                 // If in a project page, add a project news feed
                 if ($GLOBALS['group_id']) {

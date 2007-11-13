@@ -7,11 +7,13 @@ $Language->loadLanguageMsg('export/export');
 
 $server = get_server_url();
 
-if ($option == "newest") {
-  if (!isset($limit) || $limit == 0) {
+$request =& HTTPRequest::instance();
+
+if ($request->get('option') == "newest") {
+  if (!$request->get('limit')) {
     $query = new_utils_get_new_projects(time(),0,10);
   } else {
-    $query = new_utils_get_new_projects(time(),0,$limit);
+    $query = new_utils_get_new_projects(time(),0,$request->get('limit'));
   }
   /**
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
@@ -21,10 +23,10 @@ if ($option == "newest") {
   $res = db_query($query);
 } else {
   $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
-		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ORDER BY group_id'.($limit?" LIMIT $limit":""));
+		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ORDER BY group_id'.($request->get('limit')?" LIMIT ".$request->get('limit'):""));
 }
 
-if ($type == "rss") {
+if ($request->get('type') == "rss") {
 
 header("Content-Type: text/xml");
 print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
@@ -59,7 +61,7 @@ while ($row = db_fetch_array($res)) {
 print " </channel>\n";
  print "</rss>\n";
 
-} else if ($type == "csv") {
+} else if ($request->get('type') == "csv") {
 
     header('Content-Type: text/csv');
     if ($option == "newest") {
@@ -112,7 +114,7 @@ print " </channel>\n";
 	
 	print "$row[group_id],";
 	print "$row[unix_group_name],";
-	print "\"$row[group_name]\",";
+	print '"$row[group_name]",';
 	print '"'.ereg_replace(" *\r*\n *"," ",$row['short_description']).'",';
 	print '"'.join(',',$lang).'",';
 	print '"'.join(',',$os).'",';

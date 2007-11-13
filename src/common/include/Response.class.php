@@ -42,7 +42,8 @@ class Response {
     	   return $this->_feedback->fetchAsPlainText();
     }
     function &_getFeedbackDao() {
-        return new FeedbackDao(CodexDataAccess::instance());
+        $f =& new FeedbackDao(CodexDataAccess::instance());
+        return $f;
     }
     function _serializeFeedback() {
         $dao =& $this->_getFeedbackDao();
