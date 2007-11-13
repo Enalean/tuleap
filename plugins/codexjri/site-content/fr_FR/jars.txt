@@ -10,4 +10,4 @@
 
 <h3>Jar de CodeX JRI</h3>
 
-Téléchargez le <a href="jars/">jar de CodeX JRI</a>
+Téléchargez le <a href="jars/com.xerox.xrce.codex.jri.jar">jar de CodeX JRI</a>

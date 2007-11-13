@@ -10,4 +10,4 @@
 
 <h3>Sources de CodeX JRI</h3>
 
-<a href="sources/">Code Source de CodeX JRI</a> (sous licence <a href="/admin/show_license.php">CodeX Component Licence</a>)
+Téléchargez le <a href="sources/codexjri_src.tar.gz">Code Source de CodeX JRI</a> (sous licence <a href="/admin/show_license.php">CodeX Component Licence</a>)

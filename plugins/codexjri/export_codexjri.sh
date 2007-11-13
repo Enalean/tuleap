@@ -8,6 +8,9 @@
 # Purpose:
 #    Automatically copy CodeX JRI into CodeX plugin
 #
+CP='/bin/cp'
+TAR='/bin/tar'
+
 
 CODEXJRI_SOURCE_REPOSITORY="https://partners.xrce.xerox.com/svnroot/codexjri/dev/trunk"
 CODEXJRI_JAR_DIRECTORY="/home/mnazaria/workspace_Deployment/EclipsePluginUpdateSite/plugins"
@@ -22,9 +25,17 @@ svn export --force $CODEXJRI_SOURCE_REPOSITORY/ $CODEX_TARGET_DIR/plugins/codexj
 #
 # CodeXJRI jar
 #
-cp $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plugins/codexjri/www/jars/.
+$CP $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plugins/codexjri/www/jars/.
 
 
-echo "##############################################"
-echo "  Don't forget to commit the modifications !  "
-echo "##############################################"
+#
+# make an archive of the sources
+#
+cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' ; cd -
+
+
+echo "################################################################################"
+echo "  Don't forget to:"
+echo "  - update the symbolic link com.xerox.xrce.codex.jri.jar to point the last jar"
+echo "  - commit the modifications !  "
+echo "################################################################################"
