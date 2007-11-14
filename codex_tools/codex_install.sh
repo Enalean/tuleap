@@ -583,6 +583,32 @@ dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
 
+echo "Creating MySQL conf file..."
+$CAT <<'EOF' >/etc/my.cnf
+[mysqld]
+log-bin=codex-bin
+skip-innodb
+skip-bdb
+# file attachment can be 16M in size so take a bit of slack
+# on the mysql packet size
+set-variable = max_allowed_packet=128M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+# Default to using old password format for compatibility with mysql 3.x
+# clients (those using the mysqlclient10 compatibility package).
+old_passwords=1
+
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[mysqld_safe]
+err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+EOF
+
+
 # Start database
 $SERVICE mysqld start
 
@@ -780,31 +806,6 @@ substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
 $MYSQL -u codexadm codex --password=$codexadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
 rm -f /tmp/database_initvalues.sql
 fi
-
-echo "Creating MySQL conf file..."
-$CAT <<'EOF' >/etc/my.cnf
-[mysqld]
-log-bin=codex-bin
-skip-innodb
-skip-bdb
-# file attachment can be 16M in size so take a bit of slack
-# on the mysql packet size
-set-variable = max_allowed_packet=128M
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-# Default to using old password format for compatibility with mysql 3.x
-# clients (those using the mysqlclient10 compatibility package).
-old_passwords=1
-
-[mysql.server]
-user=mysql
-basedir=/var/lib
-
-[mysqld_safe]
-err-log=/var/log/mysqld.log
-pid-file=/var/run/mysqld/mysqld.pid
-
-EOF
 
 
 ##############################################
