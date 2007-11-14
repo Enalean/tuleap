@@ -36,7 +36,7 @@ if ( !isset($pv) ) {
 }
 
 $GLOBALS['HTML']->addFeed(
-    $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. $ah->getValue('summary'), 
+    $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. html_entity_decode($ah->getValue('summary'), ENT_QUOTES), 
     '/tracker/?func=rss&aid='. $ah->getId() .'&atid='. $ath->getID() .'&group_id='. $group->getGroupId()
 );
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
