@@ -203,7 +203,7 @@ class ArtifactHtml extends Artifact {
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<TEXTAREA NAME="comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
+                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
