@@ -95,4 +95,4 @@ bookmark_rmproject	mail_body	This message is being sent to notify the administra
 #
 my_redirect	page_title	Redirect to
 my_redirect	return_to	<p>Requested page currently loading. If it does not, try <a href="$1">$1</a>.</p>
-my_redirect	default_txt	You are on the Codex redirection page. You may found useful links on your <a href="/my">personnal page</a>.
+my_redirect	default_txt	You are on the Codex redirection page. You may found useful links on your <a href="/my">personal page</a>.

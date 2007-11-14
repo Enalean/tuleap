@@ -98,7 +98,7 @@ admin_approve_pending_users	no_validated	No Validated User Registration to Appro
 admin_approve_pending_users	user_info	Show User Info / Send a mail note
 admin_approve_pending_users	user_edit	Edit User/Group Settings
 admin_approve_pending_users	activate	Activate
-admin_approve_pending_users	validate_notice	Validate : An email is send to the user for confirmation. If he follows the link inside the email, the account is actived.
+admin_approve_pending_users	validate_notice	Validate : An email is sent to the user for confirmation. If he/she follows the link inside the email, the account is activated.
 admin_approve_pending_users	activate_notice	Activate : The account is instantly active.
 admin_approve_pending_users	delete	Delete
 admin_approve_pending_users	purpose	Purpose
@@ -187,7 +187,7 @@ admin_massmail_execute	done	Done!
 #
 admin_massmail	title	Administrative Mass Mail Engine
 admin_massmail	header	Mail Engine for $1 Subscribers
-admin_massmail	warning	Be <span class="highlight"><B>VERY</B></span> careful with this form, because sutmitting it WILL send email to lots of users.
+admin_massmail	warning	Be <span class="highlight"><B>VERY</B></span> careful with this form, because submitting it WILL send email to lots of users.
 admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
 admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
 admin_massmail	to_devel	Send only to project developers 
@@ -320,7 +320,7 @@ admin_trove_cat_delete	header	Delete a Trove Category
 admin_trove_cat_delete	warning	<span class="feedback">**WARNING**</span> You are about to delete a trove category of the software map.
 admin_trove_cat_delete	caution_child	<span class="feedback">**CAUTION**</span> This category has <b>$1 child</b> categorie(s). Deleting the category will also delete all the child categories recursively!!
 admin_trove_cat_delete	no_child	This category has NO child category
-admin_trove_cat_delete	caution_proj	<span class="feedback">**CAUTION**</span> This category and its childs (if any) are being used by <b>$1 project(s)</b>. Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)
+admin_trove_cat_delete	caution_proj	<span class="feedback">**CAUTION**</span> This category and its children (if any) are being used by <b>$1 project(s)</b>. Deleting this category will reset existing project categories to the parent category (or 'None' if the parent is a root category)
 admin_trove_cat_delete	no_proj	This category is NOT used by any project
 admin_trove_cat_delete	error_nocat	That trove category does not exist
 #-----------------------------------------------

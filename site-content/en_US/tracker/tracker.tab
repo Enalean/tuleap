@@ -251,7 +251,7 @@ tracker_include_field	start	Start:
 tracker_include_field	end	End:
 tracker_include_field	any_time	Any time
 tracker_include_field	pick_date	Click Here to Pick up a date
-tracker_include_field	unknown_display_type	$1: UNKNOW ARTIFACT FIELD DISPLAY TYPE
+tracker_include_field	unknown_display_type	$1: UNKNOWN ARTIFACT FIELD DISPLAY TYPE
 tracker_include_field	unknown_value	*** unknown value ***
 #
 #-----------------------------------------------
@@ -464,7 +464,7 @@ tracker_include_type	upd_label	Update Field '$1'
 tracker_include_type	imp_note	<b>** IMPORTANT NOTE **</b> '$1' is a standard field of the CodeX Tracker. Its purpose is global to all trackers and we strongly advise you not to change its label and description unless they have a similar meaning which preserves the role of the field.
 tracker_include_type	field_ident	Field Identification and Description
 tracker_include_type	field_type	Field Type
-tracker_include_type	display_info	Display informations
+tracker_include_type	display_info	Display information
 tracker_include_type	display_size	Display Size
 tracker_include_type	allow_empty	Allow Empty Value
 tracker_include_type	keep_change_history	Keep Change History
@@ -516,7 +516,7 @@ tracker_include_type	tune_settings	You can tune your notification settings and d
 tracker_include_type	role_is	If my role in an artifact is:
 tracker_include_type	def_default	Define Default Value
 tracker_include_type	val	Value
-tracker_include_type	unknown_stat	Unknow status
+tracker_include_type	unknown_stat	Unknown status
 tracker_include_type	report_system	Reporting System
 tracker_include_type	tracker_report_syst	Tracker Reporting System
 tracker_include_type	aging_rep	Aging Report
@@ -671,7 +671,7 @@ tracker_common_group	invalid	Invalid ArtifactGroup ID
 # Script: SF/common/tracker/ArtifactReport.class.php
 #
 tracker_common_report	name_requ	Name, Description and scope are required
-tracker_common_report	not_found	fetchData unfound report
+tracker_common_report	not_found	fetchData report not found
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactReportFactory.class.php

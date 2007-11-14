@@ -54,6 +54,6 @@ sendmessage	send_btn	Send Message
 #-----------------------------------------------
 # Script: SF/www/sflogo.php
 #
-sflogo	err_logger	An error occured in the logger.	
+sflogo	err_logger	An error occurred in the logger.	
 sflogo	err_nogroup	xxxxx NO GROUP ID SPECIFIED xxxxxxx	
 

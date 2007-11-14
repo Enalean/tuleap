@@ -192,7 +192,7 @@ include_license	msg_declined	You have chosen to decline the terms and conditions
 #-----------------------------------------------
 # Script: SF/www/include/logger.php
 #
-include_logger	log_err	An error occured in the logger.\n
+include_logger	log_err	An error occurred in the logger.\n
 #
 #-----------------------------------------------
 # Script: SF/www/include/menu.php

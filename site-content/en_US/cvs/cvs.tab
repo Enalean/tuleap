@@ -14,7 +14,7 @@
 # Script: SF/www/cvs/index.php
 #
 cvs_index	config_updated	Configuration updated
-cvs_index	full_success	succesfully
+cvs_index	full_success	successfully
 cvs_index	partial_success	partly<br>Email Address Appears Invalid, e-mail notification is off.
 #
 #-----------------------------------------------

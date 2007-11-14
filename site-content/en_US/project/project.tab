@@ -57,7 +57,7 @@ project_admin_editservice	edit_s	Edit Service
 project_admin_editservice	s_not_exist	Service does not exist: $1
 project_admin_editservice	forbidden	Forbidden
 project_admin_editservice	no_access_inactive_s	You cannot access an inactive service
-## There must be a label and description value here for each service name (system or project wide) that should be localised
+## There must be a label and description value here for each service name (system or project wide) that should be localized
 ## Naming rule for the key: 
 ## service_<service short name>_lbl_key for the service label
 ## service_<service short name>_desc_key for the service description
@@ -297,7 +297,7 @@ project_reference	url	URL pointed by the reference
 project_reference	warning_del_r	*********** WARNING ***********  Do you want to delete the reference pattern? This will remove this reference pattern ($1) from ALL projects of this server. Are you SURE you want to continue ?
 project_reference	extract_syntax	Parameters:\n  group_id : project where reference patterns are defined\n  text     : input text
 project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where reference patterns are defined<br>- text : input text
-## Description value here for each reference pattern (system or project wide) that should be localised
+## Description value here for each reference pattern (system or project wide) that should be localized
 ## Naming rule for the key: 
 ## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Tracker Artifact
@@ -352,7 +352,7 @@ project_admin_utils	added_project	Added project
 project_admin_utils	data_updated	Data updated
 project_admin_utils	changed_patch_mgr_settings	Changed Patch Mgr Settings
 project_admin_utils	changed_task_mgr_other_settings	Changed Task Manager Other Settings
-project_admin_utils	changed_public_info	Changed Public Infor
+project_admin_utils	changed_public_info	Changed Public Information
 project_admin_utils	changed_trove	Changed Trove Categorization
 project_admin_utils	upd_ug	Changed user group $1
 project_admin_utils	del_ug	Deleted user group $1
@@ -526,7 +526,7 @@ project_admin_userimport	import_format	To import users, you need to provide a si
 project_export_artifact_deps_export	at_not_created	ArtifactType could not be created
 project_export_artifact_deps_export	tracker_no_longer_valid	This tracker is no longer valid.
 project_export_artifact_deps_export	art_deps_export	Dependencies Export
-project_export_artifact_deps_export	no_deps_found	No depencies  found. Could not generate an export.
+project_export_artifact_deps_export	no_deps_found	No dependencies  found. Could not generate an export.
 project_export_artifact_deps_export	db_access_err	Error while accessing your dependencies database. Please report the error to the $1 Administrator
 project_export_artifact_deps_export	deps_export_format	Dependencies Export Format
 project_export_artifact_deps_export	deps_export_format_msg	The dependencies export provides you with the following fields. The sample values indicate what the field data types are.
@@ -541,7 +541,7 @@ project_export_artifact_deps_export	depend_on_art	Depend on Artifact
 project_export_artifact_export	ath_not_created	ArtifactTypeHtml could not be created
 project_export_artifact_export	follow_up_comments	Follow-up Comments
 project_export_artifact_export	depend_on	Depend on
-project_export_artifact_export	all_followup_comments	All follow-up comments in one chunck of text
+project_export_artifact_export	all_followup_comments	All follow-up comments in one chunk of text
 project_export_artifact_export	depend_on_list	List of artifacts this artifact depends on
 project_export_artifact_export	art_export	Artifact Export
 project_export_artifact_export	no_art_found	No artifact found. Could not generate an export.
@@ -597,7 +597,7 @@ project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php
 #
-project_export_index	proj_db_success	Your project database has been succesfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
+project_export_index	proj_db_success	Your project database has been successfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
 project_export_index	export_to_csv_or_db	Your project data can either be exported in individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See $1 for more information.
 project_export_index	export_to_csv_hdr	Text File Export $2
 project_export_index	export_to_csv_msg	Click on the links below to generate a text file export (CSV format).
@@ -652,7 +652,7 @@ project_export_support_request_export	assigned_to_desc	Project member the suppor
 project_export_support_request_export	open_date_desc	Support request submission date
 project_export_support_request_export	close_date_desc	Support request close date
 project_export_support_request_export	status_desc	Status (Open, Closed&hellip;)
-project_export_support_request_export	follow_up_desc	All follow-up comments in one chunck of text including the original description
+project_export_support_request_export	follow_up_desc	All follow-up comments in one chunk of text including the original description
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/survey_responses_export.php
@@ -684,7 +684,7 @@ project_export_access_logs_export	access	Accesses
 project_export_access_logs_export	file_brows	File Browsing
 project_export_access_logs_export	chk_upd	Checkout/Update
 project_export_access_logs_export	local_time	Local Time
-project_export_access_logs_export	date_desc	The date (D/M/Y) when the user access occured
+project_export_access_logs_export	date_desc	The date (D/M/Y) when the user access occurred
 project_export_access_logs_export	user_desc	Author of the access
 project_export_access_logs_export	email_desc	E-mail address of access author
 project_export_access_logs_export	page_desc	Wiki page accessed

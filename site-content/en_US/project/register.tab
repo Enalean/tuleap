@@ -21,7 +21,7 @@ register_category	select_3_classifs	Please select up to three classifications fo
 # Script: src/common/project//confirmation.php
 #
 register_confirmation	registration_complete	Registration Complete
-register_confirmation	upd_fail	UDPATING TO ACTIVE FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	upd_fail	UPDATING TO ACTIVE FAILED. <B>PLEASE</B> report to $1 $2
 register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@$1 $2
 register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to $1 $2
 register_confirmation	open_discussion	Open Discussion

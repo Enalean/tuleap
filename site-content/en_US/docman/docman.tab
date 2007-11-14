@@ -62,7 +62,7 @@ docman_download	error_nodoc	Couldn't find file associated with document ID #$1
 docman_new	error_noproj	No valid project (group_id) was selected
 docman_new	error_size	Document must be non null and less than $1 chars in length	
 docman_new	title_new	New Document Submitted
-docman_new	error_dbinsert	An error occured	
+docman_new	error_dbinsert	An error occurred	
 docman_new	insert_ok	Your document has been added
 docman_new	title_add	Add new document	
 docman_new	header_add	Add new document	
