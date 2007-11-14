@@ -97,7 +97,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
             $forum_id=db_result($result,$i,'forum_id');
             if (news_check_permission($forum_id,$group_id)) {
                 if (!$dl_compact_displayed) {
-                    echo '<dl compact>';
+                    $return .=  '<dl compact>';
                     $dl_compact_displayed = true;
                     $no_news_item_displayed = false;
                 }
