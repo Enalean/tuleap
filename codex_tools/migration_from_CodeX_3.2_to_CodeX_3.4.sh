@@ -567,7 +567,7 @@ sub add_index {
     drop_index($tablename, $indexname);
 
     $query = "CREATE ". $type ." INDEX ". $indexname ." ON ". $tablename ."(". $columns .")";
-    print $query ."\n";
+    # print $query ."\n";
     $c = $dbh->prepare($query);
     $c->execute();
 }
@@ -578,7 +578,7 @@ sub drop_index {
 
     if (index_exists($tablename, $indexname) eq 1) {
         $query = "DROP INDEX ". $indexname ." ON ". $tablename;
-        print $query ."\n";
+        # print $query ."\n";
         $c = $dbh->prepare($query);
         $c->execute();
     }
@@ -699,7 +699,7 @@ sub create_docman_for_template_projects {
     $c->execute();
     while (my ($group_id) = $c->fetchrow()) {
 	if(docman_exist($group_id)) {
-	    print "Docman exist for group $group_id\n";
+	    #print "Docman exist for group $group_id\n";
 	}
 	else {
 	    print "Create docman for group $group_id\n";
@@ -970,7 +970,7 @@ EOF
 ###############################################################################
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
-mysqlcheck -Aao $pass_opt
+mysqlcheck -Aaos $pass_opt
 
 ###############################################################################
 echo "Updating local.inc"

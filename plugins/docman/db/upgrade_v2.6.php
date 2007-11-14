@@ -17,7 +17,7 @@ do {
     $affectedRows += $aff;
     $res = db_query($sql);
 } while(($aff = db_affected_rows($res)) > 0);
-echo "% Affected rows: ".$affectedRows."\n";
+//echo "% Affected rows: ".$affectedRows."\n";
 
 // Step 2:
 // Default value upgrade
@@ -34,7 +34,7 @@ if(db_numrows($res) > 0) {
         ' WHERE item_id IN (SELECT i.item_id FROM plugin_docman_item i WHERE i.item_type = 1)';
     $res = db_query($sql);
     $affectedRows = db_affected_rows($res);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 
     // Then, applies default values
 
@@ -53,7 +53,7 @@ if(db_numrows($res) > 0) {
         ' AND md.special != 100';
     $res = db_query($sql);
     $affectedRows = db_affected_rows($res);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 
     echo "* 'Date' properties.\n";
     $sql = 'INSERT INTO plugin_docman_metadata_value(item_id, field_id, valueDate)'.
@@ -67,7 +67,7 @@ if(db_numrows($res) > 0) {
         ' AND md.special != 100';
     $res = db_query($sql);
     $affectedRows = db_affected_rows($res);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 
     echo "* 'String' properties.\n";
     $sql = 'INSERT INTO plugin_docman_metadata_value(item_id, field_id, valueString)'.
@@ -81,7 +81,7 @@ if(db_numrows($res) > 0) {
         ' AND md.special != 100';
     $res = db_query($sql);
     $affectedRows = db_affected_rows($res);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 
     echo "* 'Text' properties.\n";
     $sql = 'INSERT INTO plugin_docman_metadata_value(item_id, field_id, valueText)'.
@@ -94,13 +94,13 @@ if(db_numrows($res) > 0) {
         ' AND md.default_value != ""'.
         ' AND md.special != 100';
     $res = db_query($sql);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 
     echo "Remove old 'default_value' column in properties table\n";
     $sql = 'ALTER TABLE plugin_docman_metadata DROP COLUMN default_value';
     $res = db_query($sql);
     $affectedRows = db_affected_rows($res);
-    echo "% Affected rows: ".$affectedRows."\n";
+    //echo "% Affected rows: ".$affectedRows."\n";
 }
 
 // Step 3: optim
@@ -111,7 +111,7 @@ $sql = 'ALTER TABLE plugin_docman_metadata DROP INDEX idx_group_id';
 $res = db_query($sql);
 $sql = 'ALTER TABLE plugin_docman_metadata ADD INDEX idx_group_id (group_id, use_it)';
 $res = db_query($sql);
-echo "% Done\n";
+//echo "% Done\n";
 
 echo "~~ Upgrade completed ~~\n";
 ?>
