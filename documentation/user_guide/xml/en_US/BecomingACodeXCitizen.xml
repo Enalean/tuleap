@@ -233,8 +233,8 @@
       </mediaobject>
     </figure>
 
-    <para>CodeX allows you to personalize your page to feed your needs. 
-    The content of your page is given by <emphasis>widgets</emphasis>. All widgets can be moved (1), 
+    <para>CodeX allows you to personalize your page to fit your needs. 
+    The content of your page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
     collapsed or closed (2). Some of them can provide a rss feed (3) or 
     preferences can be set (4).</para>
     
@@ -284,7 +284,7 @@
         </para>
       </listitem>
       <listitem>
-        <para>...</para>
+        <para><emphasis role="bold">RSS Reader</emphasis> allows you to include public rss (or atom) feeds into your personnal page.</para>
       </listitem>
     </itemizedlist>
   </section>

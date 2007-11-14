@@ -264,7 +264,7 @@
     </figure>
 
     <para>CodeX vous permet de personnaliser votre page à votre convenance. 
-    Le contenu de la page est fourni par des <emphasis>widgets</emphasis>. 
+    Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
     Tous les widgets peuvent être déplacés (1), fermé ou supprimé (2). Certains d'entre eux 
     peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
     
@@ -312,7 +312,7 @@
         </para>
       </listitem>
       <listitem>
-        <para>...</para>
+        <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques.</para>
       </listitem>
     </itemizedlist>
   </section>
