@@ -232,12 +232,16 @@ class ArtifactHtml extends Artifact {
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
-            if ($pv == 0) {
-                $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
-            }
             $title .= '<script type="text/javascript">';
             $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
             $title .= '</script>';
+            $title .= ' <a href="/tracker/?func=rss&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $this->ArtifactType->getGroupId() .'" ';
+            $hp =& CodeX_HTMLPurifier::instance();
+            $title .= ' title="'. $hp->purify($group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. html_entity_decode($this->getValue('summary'), ENT_QUOTES)) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
+            $title .= '[xml]</a> ';
+            if ($pv == 0) {
+                $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
+            }
             echo $this->_getSection(
                 'artifact_section_followups',
                 $title,
@@ -1023,7 +1027,7 @@ class ArtifactHtml extends Artifact {
         $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $group = $this->ArtifactType->getGroup();
         $rss = new RSS(array(
-            'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary'),
+            'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary') .' - '. $GLOBALS['Language']->getText('tracker_include_artifact','follow_ups'),
             'description' => '',
             'link'        => '<![CDATA['.get_server_url() .'/tracker/?atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId() .']]>',
             'language'    => 'en-us',
