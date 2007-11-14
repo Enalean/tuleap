@@ -1053,7 +1053,9 @@ cd $INSTALL_DIR/src/utils
 $CAT <<'EOF' >>/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
 <!ENTITY SYS_UPDATE_SITE "http://$sys_default_domain/plugins/eclipse/updatesite/">
 EOF
-todo "If only HTTPS is enabled, update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
+todo "If only HTTPS is enabled on the CodeX server:"
+todo " * update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
+todo " * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work."
 	
 ##############################################
 # Restarting some services
