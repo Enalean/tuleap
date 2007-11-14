@@ -41,14 +41,14 @@ if ($request->get('users') || $request->get('mailinglists')) {
         $us_informal = $data['is_list'] ? '' : 'informal';
         $email = $data['is_list'] ? $data['email'].'@'.$GLOBALS['sys_lists_host'] : $data['email'];
         if (!$data['is_list']) {
-            echo '<li><span style="font-weight:bold" class="'. $ml_informal .'">'. $data['name'] .'</span><span class="informal"> ('. $data['realname'] .')</span><div class="'. $us_informal .'"">'. $email .'</div></li>';
+            echo '<li><span style="font-weight:bold" class="'. $ml_informal .'">'. $data['name'] .'</span><span class="informal"> ('. $data['realname'] .')</span><div class="'. $us_informal .'">'. $email .'</div></li>';
         } else {
-            echo '<li><div style="font-style:italic;font-weight:bold; background:url('. util_get_dir_image_theme() .'ic/group.png) left top no-repeat; padding-left:18px" class="'. $us_informal .'"">'. $email .'</div></li>';
+            echo '<li><div style="font-style:italic;font-weight:bold; background:url('. util_get_dir_image_theme() .'ic/group.png) left top no-repeat; padding-left:18px" class="'. $us_informal .'">'. $email .'</div></li>';
         }
     }
     echo '</ul>';
     if ($i >= 25) {
-        echo '<div><span class="informal" style="font-style:italic;">There are more than '. $nb_max .' results. Please refine your request</div>';
+        echo '<div><span class="informal" style="font-style:italic;">There are more than '. $nb_max .' results. Please refine your request</span></div>';
     }
 }
 ?>
