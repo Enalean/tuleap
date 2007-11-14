@@ -105,6 +105,13 @@ class TabbedLayout extends Layout {
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnews.php" type="application/rss+xml">
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
+    <?php
+        //Add additionnal feeds
+        $hp =& CodeX_HTMLPurifier::instance();
+        foreach($this->feeds as $feed) {
+            echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
+        }
+    ?>
     <link rel="SHORTCUT ICON" href="<?php echo $this->imgroot; ?>favicon.ico">
     <?php
         $em =& EventManager::instance();
