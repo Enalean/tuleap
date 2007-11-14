@@ -169,7 +169,7 @@
     registered user doesn&#39;t make much sense. It is very unlikely
     that users external to the project team know enough about the
     project organization to correctly assign the bug. That's the reason why 
-    artefact fields shown to users on the submission form can be
+    artifact fields shown to users on the submission form can be
     configured in the Tracker Administration module (see <xref
     linkend="TrackerAdministration" />)</para>
 
@@ -207,7 +207,7 @@
         tracker administrators.</para>
 
       <para>How selection criteria are filled out depend on their
-      field type. The Tracker Service currently has several the follwoing types
+      field type. The Tracker Service currently has several the following types
       of fields used as search criteria:</para>
 
       <section id="ArtifactSelectBoxField">
@@ -398,11 +398,11 @@
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
 	  <para><emphasis role="bold">Open Artifacts</emphasis>: display all the
-            artefacts that are not yet closed for this project.</para>
+            artifacts that are not yet closed for this project.</para>
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="bold">My Artifacts</emphasis>: display the artefacts
+	  <para><emphasis role="bold">My Artifacts</emphasis>: display the artifacts
             assigned to you (based on the CodeX account you are currently
             using)</para>
 	</listitem>
@@ -647,7 +647,7 @@
 	  text pattern to refer to other artifacts, documents, files, or CVS or
 	  Subversion commits.  These pattern will be automatically
 	  displayed as hyperlinks when the follow-up comment is
-	  displayed on the screen. This is an extremelly powerful and
+	  displayed on the screen. This is an extremely powerful and
 	  easy to use mechanism that is covered in more details in
 	  <xref linkend="ArtifactCrossReferencing" />.</para>
 	</listitem>
@@ -742,7 +742,7 @@
             <para>Deleting a CC name: users with Tracker Administrator
             permissions on a given tracker (see <xref
 		linkend="UserPermissions" />) can delete any entry in the
-            CC list for any artefact of this tracker. All other users can
+            CC list for any artifact of this tracker. All other users can
             delete CC entries that were either added by themselves or
             entries where the CC name matches their own name or email
             address in any CodeX projects. In other words a CodeX user
@@ -836,7 +836,7 @@
       If you don't know the tracker short name or don't want to specify it, you
       may simply use  &#34;art #NNN&#34;.
       Each time CodeX displays a piece of text that follows this pattern it will
-      automagically create an hyperlink to the web page showing all
+      auto-magically create an hyperlink to the web page showing all
       the details of the artifact.</para>
 
       <para>CodeX reference patterns may be used to reference artifacts, as well as source
@@ -1320,7 +1320,7 @@ width="14.5cm" />
 	  <row>
 	    <entry><link linkend="ArtifactUpdate">Artifact
 	    Update</link></entry> <entry>By default only project
-	    members can update an artefact. Non members have only
+	    members can update an artifact. Non members have only
 	    limited access and can only add a comment or attach a
 	    file.</entry>
 	  </row>
@@ -1547,7 +1547,7 @@ width="14.5cm" />
       <title>The Patch Tracker Template</title>
 
       <para>The role of the Patch tracker is to let non project
-      membres or project members with restricted permissions to
+      members or project members with restricted permissions to
       contribute source code modifications to the project.</para>
 
       <para>On how to generate source code patches see the CVS chapter
@@ -2453,7 +2453,7 @@ width="14.5cm" />
 	    determines whether leaving the field blank in the artifact
 	    submission or update form is allowed or not. If unchecked
 	    the tracker won't accept the form unless the field is
-	    given a value. The fiels that must be filled out are
+	    given a value. The fields that must be filled out are
 	    marked with a red start on the submission and modification
 	    forms.</para></listitem>
 
@@ -2719,7 +2719,7 @@ width="14.5cm" />
 	    <para><emphasis role="bold">Value</emphasis>: change the
 	    value itself. The value typed here will appear as is in
 	    the pull-down menu. Keep in mind that if you change a
-	    value, the change will also reflect in the artefacts that
+	    value, the change will also reflect in the artifacts that
 	    were using the old value.</para>
 	  </listitem>
 	  
@@ -2737,7 +2737,7 @@ width="14.5cm" />
 	  <listitem>
 	    <para><emphasis role="bold">Status</emphasis>: Active or Hidden.
             As explained above going from one to the other in the course of
-            the project life has no negative impact on the artefact database.</para>
+            the project life has no negative impact on the artifact database.</para>
 	  </listitem>
 	  
 	  <listitem>
@@ -2775,7 +2775,7 @@ width="14.5cm" />
       <para>As an example, if you define a field Operating System(Linux, MacOS X, MS Windows, NetBSD) and a field Version(2.0, 2.1, 2.2, 2.4, 2.6, 3.0, 10.1, 10.2, 10.3, 10.4 (Tiger), NT, 2000, XP), you can define dependencies in the tracker administration interface:</para>
 
       <orderedlist numerotation="arabic" spacing="compact">
-        <listitem><para>First, select the source field "Operating System" then the target field "Version". All values for both fields are displayed. Values which are part of a dependency between the two field are emphasised (in bold).</para></listitem>
+        <listitem><para>First, select the source field "Operating System" then the target field "Version". All values for both fields are displayed. Values which are part of a dependency between the two field are emphasized (in bold).</para></listitem>
         <listitem><para>To create dependencies between Linux and the corresponding versions, you just have to select the source value and check/uncheck corresponding values in the target field. The highlighting helps to link source and target values, with the small arrows indicating the direction of reading, "source to target".</para></listitem>
         <listitem><para>You can cancel your modifications by clicking on the reset button. Once validated, the modifications are saved.</para></listitem>
       </orderedlist>
@@ -2832,7 +2832,7 @@ width="14.5cm" />
         </mediaobject>
       </figure>
 
-      <para>Once dependencies are defined, the final user (when submiting/updating an artifact) will see the Version options filtered according to the selection of the Operating System:</para>
+      <para>Once dependencies are defined, the final user (when submitting/updating an artifact) will see the Version options filtered according to the selection of the Operating System:</para>
       <figure id="FigureFieldDependenciesFinalUserLinux">
         <title>Proposed versions for Linux</title>
         <mediaobject>
@@ -2916,7 +2916,7 @@ width="14.5cm" />
 	  />).</para>
 
       <figure id="FigureTrackerCannedResponses">
-	<title>Definition of Canned Reponses</title>
+	<title>Definition of Canned Responses</title>
 
 	<mediaobject>
 	  <imageobject>
@@ -3011,7 +3011,7 @@ width="14.5cm" />
 		<para><emphasis role="underline">System</emphasis>:
 		this report is defined at the system level and cannot
 		be removed. The default tracker report that comes
-		preconfigured with each tracker is a system
+		pre-configured with each tracker is a system
 		report.</para>
 	      </listitem>
 	    </itemizedlist>
@@ -3248,7 +3248,7 @@ width="14.5cm" />
 	    linkend="FigureTrackerNotificationMatrix" />) presents you with a
 	series of check boxes. Each check box allows you to specify
 	what kind of events you want to be aware of depending on
-	the role you play with repect to the artifact.</para>
+	the role you play with respect to the artifact.</para>
 
 	<para>There are 4 roles defined with respect to an artifact:</para>
 

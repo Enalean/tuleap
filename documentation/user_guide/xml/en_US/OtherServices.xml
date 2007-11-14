@@ -183,7 +183,7 @@ newgrp projectname
       </para>
       <para>A human-friendly description of the services is available at <ulink url="/soap/">
         http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>. It is a list of
-        services, with a description of each function, its input, ouput and documentation</para>
+        services, with a description of each function, its input, output and documentation</para>
       <para>A more detailed description of the services is also available with 
       the more formal WSDL language at <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>.
       The WSDL also includes the types definition.
@@ -207,8 +207,8 @@ newgrp projectname
     <section id="CodeXEclipsePlugin">
       <title>CodeX Eclipse plugin</title>
       <para>CodeX provides a plugin for the Eclipse IDE. 
-        This plugin will let you browse your artefacts, 
-        modify them and create new ones whithin Eclipse 
+        This plugin will let you browse your artifacts, 
+        modify them and create new ones within Eclipse 
         environment.
         <figure id="FigureCodeXEclipsePlugin">
           <title>CodeX plugin for Eclipse IDE</title>
@@ -221,11 +221,11 @@ newgrp projectname
         </figure>
       </para>
       <para>The CodeX Eclipse plugin is to be deployed on Eclipse 3.2 and needs JRE 1.5</para>
-      <para>The Eclipse plugin can be installed and updated with the updatesite mecanism.
+      <para>The Eclipse plugin can be installed and updated with the updatesite mechanism.
         The CodeX update site for this plugin is: &SYS_UPDATE_SITE;
       </para>
       <para>
-        To install the CodeX plugin with Eclipse update site mecanism, please follow the instructions below:
+        To install the CodeX plugin with Eclipse update site mechanism, please follow the instructions below:
         <procedure>
             <step><para>In the Eclipse main toolbar, select <emphasis role="bold">Help > Software Update > Find and install...</emphasis></para></step>
             <step><para>Check <emphasis role="bold">Search for new features to install</emphasis>, then click Next</para></step>
@@ -246,7 +246,7 @@ newgrp projectname
             <step><para>Enjoy CodeX!</para></step>
         </procedure>
       </para>
-      <para>The full Eclipe plugin documentation is available at <ulink url="/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf</ulink>
+      <para>The full Eclipse plugin documentation is available at <ulink url="/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf</ulink>
       </para>
     </section>
     

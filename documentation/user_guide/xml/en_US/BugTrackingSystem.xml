@@ -188,7 +188,7 @@
 	    <para> <emphasis role="underline">Keyword
 	    search</emphasis>: you can type a series of space
 	    separated keywords that will ALL be searched for in the
-	    text field (including as subtring in
+	    text field (including as substring in
 	    words)</para>
 	  </listitem>
 
@@ -203,7 +203,7 @@
 	    <itemizedlist mark="dash" spacing="compact">
 	      <listitem>
 		<para>/^[Aa]ddition/ : matches any text field starting
-		with either 'addition'or 'Addition'</para>
+		with either 'addition' or 'Addition'</para>
 	      </listitem>
 	      <listitem>
 		<para>/foo|bar|dim/ : matches text fields containing the string 'foo', 'bar' or 'dim'</para>
@@ -301,7 +301,7 @@
 	  <listitem><para><emphasis role="underline">Regular
 	  expression</emphasis>: <ulink
 	  url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
-	  Extended Regular Expression</ulink> can also be usedas a
+	  Extended Regular Expression</ulink> can also be used as a
 	  matching criteria (e.g. /^4.*8$/ will look for all integer
 	  values starting with a '4', ending with an '8' with any
 	  number of characters in between including the decimal point.</para>
@@ -410,7 +410,7 @@
 	bottom of the screen to sort the bug list by Priority.</para>
 
 	<para>For more sophisticated processing you can also activate
-	the multi-column sort.  In this mode sort criteria cumulates
+	the multi-column sort.  In this mode sort criteria accumulate
 	as you click on column headings.  So you can for instance
 	click 'Severity' first and 'Assigned To' second to see who in
 	the team is assigned critical bugs and how many.At any point
@@ -735,7 +735,7 @@
       <para>To create a bug-to-bug or task-to-task dependency, click on the
         corresponding bugs and tasks listed in the &#34;Dependent on Bug&#34;
         and &#34;Dependent on Task&#34; list boxes. To delete a bug or task
-        dependency simply unselect the appropriate bug or task from the same
+        dependency simply de-select the appropriate bug or task from the same
         list boxes and validate the changes by clicking on the &#34;Submit
         Changes&#34; button either at the top or at the bottom of the screen</para>
 
@@ -1029,7 +1029,7 @@
 		<para><emphasis role="underline">Select
 		Box</emphasis>: this field will take its value from a
 		predefined list of values that can be defined by the
-		Project Adminstrator</para>
+		Project Administrator</para>
 	      </listitem>
 	      <listitem>
 		<para><emphasis role="underline">Text Field</emphasis>
@@ -1340,7 +1340,7 @@
 	bring you to the list of existing values for this field (see <xref
 	linkend="FigureListOfValuesForBugFieldStatus" />).</para>
 
-	<para>The table of values shows tha following inormation:</para>
+	<para>The table of values shows tha following information:</para>
 
 
 	<itemizedlist mark="dash" spacing="compact">
@@ -1464,7 +1464,7 @@
 	<para> So instead of creating your own set of values you can
 	bind a select box to such a list of predefined values that
 	CodeX will keep current for you. Note that if you decide to
-	bind a select box to a list of dynamically generatedc values
+	bind a select box to a list of dynamically generated values
 	you can no longer create your own values. The following lists
 	are currently available (others may be added in the
 	future):</para>
@@ -1740,7 +1740,7 @@
 
 	<note><para><emphasis role="bold">Note</emphasis>: it is
 	perfectly OK to use a field as a search criteria and not as a
-	column in the bug report and vice versa. For the fiels you
+	column in the bug report and vice versa. For the fields you
 	don't want to use at all in the report leave all boxes and
 	text fields blank.</para></note>
 
@@ -1965,7 +1965,7 @@
 	  control</emphasis>: by default users who are not logged in
 	  (also know as anonymous users) are allowed to submit a new
 	  bug and post additional followup comments to an existing
-	  bug. By unchecking this box you can explicitely request that
+	  bug. By un-checking this box you can explicitly request that
 	  the user be logged in before submitting or updating a
 	  bug.</para>
 	</listitem>

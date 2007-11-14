@@ -36,7 +36,7 @@
           to do so. SCM access is well suited for CodeX users who want
           to get deeper in the project code, add some new extensions,
           fix bugs and contribute changes back to the project
-          team. Please be awre that certain projects decide to
+          team. Please be aware that certain projects decide to
           restrict the access to the SCM to project members
           only. Hence the importance of the file release
           mechanism.</para>
@@ -181,7 +181,7 @@
         </para>
         <para>
         CodeX gives you the opportunity to monitor the packages. Like this, 
-        you will be notifyed when a new release is available, or if a release 
+        you will be notified when a new release is available, or if a release 
         is updated, etc.
         In order to monitor a package, click the <emphasis>bell</emphasis> icon 
         located after the package name.
@@ -206,7 +206,7 @@
         By default, only the first release of each package (which is the latest one) 
         is expanded.
         </para>
-        <para>After each release name, the icon reresenting a text file let you 
+        <para>After each release name, the icon representing a text file let you 
         read the notes and the changelog of the current release.
         </para>
       </section>
@@ -440,7 +440,7 @@
             <para><emphasis role="bold">Step 3 - Add Release Notes and/or Changelog (optional)</emphasis></para>
             <para>With the release, you can also provide notes or changelog, and 
             even both! You can either cut and paste or upload Release Notes and ChangeLog.
-            To upload a release note or a changleog, click the <emphasis>Upload</emphasis> link.
+            To upload a release note or a changelog, click the <emphasis>Upload</emphasis> link.
             </para>
             
             <para>The Release Notes is typically a short (10 to 20 lines) and

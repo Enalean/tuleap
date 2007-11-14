@@ -93,7 +93,7 @@ john.smith@xerox.com</programlisting>
           fileref="../../icons/trash.png" /></imageobject></inlinemediaobject>) next
           to the person&#39;s name to revoke his/her membership. Revoking
           membership has absolutely no effect on the history and the data
-          integrity of the project. In other words all tracker artefacts assigned or submitted by this person will continue to show
+          integrity of the project. In other words all tracker artifacts assigned or submitted by this person will continue to show
           up as before in the project database. Only the ability of this person to
           perform project management tasks is affected. Also notice that in order
           to remove a project administrator from the project member list, another
@@ -218,7 +218,7 @@ john.smith@xerox.com</programlisting>
 	      not automatically be part of the newly registered project.
 	      A template project does not appear any more in the Software 
 	      Map and is excluded from project statistics on the CodeX Dashboard
-	      (see <xref linkend="TheCodeXDashboard" />) like the newest projets 
+	      (see <xref linkend="TheCodeXDashboard" />) like the newest projects 
 	      listing, most active projects, etc.
 	    </para>
 	  </listitem>
@@ -458,7 +458,7 @@ john.smith@xerox.com</programlisting>
 <para>Here is a list of predefined reference patterns:</para>
       <itemizedlist mark="bullet">
         <listitem><para><emphasis role="bold">art #num or artifact #num</emphasis>: 
-        Reference to artifact number 'num'. Note that 'num' is a system-wide number and is unique accross projects. This reference links to the artifact detail/update page. In addition to the 'art' and 'artifact' keywords, artifacts may be referenced using the related tracker short name. For example, an artifact in the bug tracker can be referenced with <emphasis role="bold">bug #NNN</emphasis>, a support request with <emphasis role="bold">sr #NNN</emphasis>, a task with <emphasis role="bold">task #NNN</emphasis> and a patch with <emphasis role="bold">patch #NNN</emphasis>. So, when you create a custom tracker, make sure that you specify a meaningful tracker short name.</para></listitem>
+        Reference to artifact number 'num'. Note that 'num' is a system-wide number and is unique across projects. This reference links to the artifact detail/update page. In addition to the 'art' and 'artifact' keywords, artifacts may be referenced using the related tracker short name. For example, an artifact in the bug tracker can be referenced with <emphasis role="bold">bug #NNN</emphasis>, a support request with <emphasis role="bold">sr #NNN</emphasis>, a task with <emphasis role="bold">task #NNN</emphasis> and a patch with <emphasis role="bold">patch #NNN</emphasis>. So, when you create a custom tracker, make sure that you specify a meaningful tracker short name.</para></listitem>
         <listitem><para><emphasis role="bold">commit #num or cvs #num</emphasis>: 
         Reference to CVS commit number 'num'. This is a system-wide number. The reference links to the commit details page: log message, impacted files, link to diff view, etc.</para></listitem>
         <listitem><para><emphasis role="bold">rev #num or revision #num or svn #num</emphasis>: 
@@ -483,7 +483,7 @@ john.smith@xerox.com</programlisting>
 <para>
 While working in the development or the maintenance phase of a software project, it is vital to keep track of the changes made to the source code. This is what Version Control systems like CVS and Subversion do. In addition to keeping track of the source code change history it is often critical to relate the changes to the artifact (a task, a defect or a support request) that led the developers to make a change in the code. And conversely, when reading the artifact description it is also very helpful to immediately see how the change was implemented.
 </para><para>
-The integration of CVS and Subversion in CodeX precisely provide the CodeX users with this bi-directionnal cross-referencing mechanism. This is achieved through the use of references that are automatically detected by CodeX in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
+The integration of CVS and Subversion in CodeX precisely provide the CodeX users with this bi-directional cross-referencing mechanism. This is achieved through the use of references that are automatically detected by CodeX in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
 </para>
 <para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in CodeX. So you may now create your own reference pattern to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
 
@@ -659,8 +659,8 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           <itemizedlist spacing="compact">
             <listitem>
               <para><emphasis role="underline">None</emphasis>: the
-              user has the same permissionson this tool as a non
-              poject member.</para>
+              user has the same permissions on this tool as a non
+              project member.</para>
             </listitem>
 
             <listitem>
@@ -679,8 +679,8 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           <itemizedlist spacing="compact">
             <listitem>
               <para><emphasis role="underline">None</emphasis>: the
-              user has the same permissionson this tool as a non
-              poject member.</para>
+              user has the same permissions on this tool as a non
+              project member.</para>
             </listitem>
 
             <listitem>
@@ -1282,7 +1282,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
       populations.</para>
 
       <para>The Access Logs provide project members with a complete
-      audit trail of who accessed what on the projet. The page shows
+      audit trail of who accessed what on the project. The page shows
       the following information:</para>
 
       <itemizedlist mark="bullet">

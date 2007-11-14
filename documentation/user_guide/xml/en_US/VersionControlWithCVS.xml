@@ -103,7 +103,7 @@
       their project must have CVS installed on their desktop machine,
       hereafter called client. The CodeX server permanently runs a CVS
       server in the background to which CVS clients talk to to act
-      upon the CVS repository. CVS clients come in various flavour for
+      upon the CVS repository. CVS clients come in various flavors for
       all sorts of platforms (Windows, Mac and all Unix): command line
       interface, graphical based interface and web based
       interface.</para>
@@ -341,7 +341,7 @@
         <listitem>
           <para><emphasis role="bold">Project Members</emphasis>:
           members of a CodeX hosted project are granted a password
-          protected read/write access. As mentionned above in the
+          protected read/write access. As mentioned above in the
           section about private projects, it is also possible to grant
           read-only access to the project members.</para>
         </listitem>
@@ -514,7 +514,7 @@
       immediately see how the change was implemented.</para>
 
       <para>The integration of CVS in CodeX precisely provide the
-      CodeX users with this bi-directionnal cross-referencing
+      CodeX users with this bi-directional cross-referencing
       mechanism. This is achieved through the use of reference patterns
       that are automatically detected by CodeX in either the follow-up
       comments of the project artifacts or in the messages attached to
@@ -555,7 +555,7 @@
    reference a bug, a task or a support request in any of the log
    message attached to a CVS commit. Similarly when closing the
    related artifact (task, bug,etc.) make sure you mention the commit
-   ID in the follow-up comment. You will find this extremelly
+   ID in the follow-up comment. You will find this extremely
    convenient while trying to keep track of the changes and why it was
    made.</para></tip></para>
 
@@ -604,7 +604,7 @@
 	  of the file changes.</para>
 
 	 <para>Watch mode will be effective in maximum two hours after you change its value.
-	 Be carreful : if you enable or disable watches by command line (not by the interface) the watch mode in the CVS 		 administration won't be updated.
+	 Be careful : if you enable or disable watches by command line (not by the interface) the watch mode in the CVS 		 administration won't be updated.
 	 </para>
 
         </listitem>

@@ -436,35 +436,6 @@ if ( user_isloggedin() ) {
           </listitem>
         </itemizedlist>
 
-        <section id="NetscapeComposer4.x">
-          <title>Netscape Composer 4.x</title>
-
-          <para>You can use Netscape Composer 4.x to edit remote HTML pages.
-          To do this browse your project Web Page, then use the File-&#62;Edit
-          Page menu item, edit your HTML document and finally press on the
-          'Publish' icon on the upper menu bar.</para>
-
-          <para>In the dialog box specify the following parameters:</para>
-
-          <itemizedlist mark="bullet"
-                        spacing="compact">
-            <listitem>
-              <para>Upload Files to this location:</para>
-
-<programlisting format="linespecific" linenumbering="unnumbered" width="80">
-ftp://projectname.&SYS_DEFAULT_DOMAIN;/home/groups/projectname/htdocs/
-</programlisting>
-            <para></para>
-            </listitem>
-
-            <listitem>
-              <para>Login and Password: type your CodeX login and password.
-              Click on the save password checkbox to avoid retyping the
-              password for each Save operation.</para>
-            </listitem>
-          </itemizedlist>
-        </section>
-
         <section id="NetscapeComposer6.x">
           <title>Netscape Composer 6.x</title>
 

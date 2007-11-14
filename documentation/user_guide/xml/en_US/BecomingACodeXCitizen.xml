@@ -126,7 +126,7 @@
 	    depending on the site configuration valid email addresses
 	    may be limited to those in the &SYS_ORG_NAME; domain (or
 	    &SYS_ORG_NAME; affiliated domains). Make sure your email
-	    address is corrent or you won't receive the registration
+	    address is correct or you won't receive the registration
 	    confirmation message in your mailbox and won't be able to
 	    complete the registration process.</para>
 	  </step>
@@ -239,7 +239,7 @@
     preferences can be set (4).</para>
     
     <para>New widgets can be added through the link "Add widgets" (5). Here is an
-    uncomplete list of available widgets for the personnal page:</para>
+    incomplete list of available widgets for the personal page:</para>
     
     <itemizedlist mark="bullet">
       <listitem>
@@ -284,7 +284,7 @@
         </para>
       </listitem>
       <listitem>
-        <para><emphasis role="bold">RSS Reader</emphasis> allows you to include public rss (or atom) feeds into your personnal page.</para>
+        <para><emphasis role="bold">RSS Reader</emphasis> allows you to include public rss (or atom) feeds into your personal page.</para>
       </listitem>
     </itemizedlist>
   </section>
@@ -328,7 +328,7 @@
           The import/export format is CSV format. Like CSV norm is
           not implemented by the same way in each software, we allow you
           to change the CSV separator, in order to fit with your
-          prefered software!
+          preferred software!
           The available separators are:
           <itemizedlist mark="bullet">
             <listitem><para>comma (,) : the default separator.</para></listitem>

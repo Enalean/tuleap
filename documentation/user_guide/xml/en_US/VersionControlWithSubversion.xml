@@ -312,7 +312,7 @@
 
       <note><para>All interactions with a Subversion repository should
       normally happen through a Subversion client. However if need be
-      and if this feature is available on your CodX server, you can
+      and if this feature is available on your CodeX server, you can
       get access to your Subversion repository via your CodeX shell
       account (see <xref linkend="ShellAccount" />). Once the shell
       session is active you'll find your subversion repository under
@@ -698,7 +698,7 @@
 	  <listitem>
 	    <para><emphasis role="bold">Project Members</emphasis>:
 	    members of a CodeX hosted project are granted a password
-	    protected read/write access. As mentionned above in the
+	    protected read/write access. As mentioned above in the
 	    section about private projects, it is also possible to
 	    grant read-only access to the project members.</para>
 	  </listitem>
@@ -779,7 +779,7 @@ members = member1,member2,...,memberN
 
 	<para>where <literal>member1,member2,...,memberN</literal> are
 	the CodeX login name of the CodeX project members.</para>
-        <para>Additionnaly, all existing
+        <para>Additionally, all existing
         user groups defined in this project are listed in this section.</para>
         <para>These default permission settings are automatically generated, and cannot
         be edited. You should consider this section as the beginning of the Subversion permission
