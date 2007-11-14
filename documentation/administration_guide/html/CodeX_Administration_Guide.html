@@ -68,7 +68,7 @@ License
 <dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
 <dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
 <dt><a href="#HowTo_recoversvn">Recover a Subversion repository</a></dt>
-<dt><a href="#HowTo_distributed">Set up a distibuted Architecture</a></dt>
+<dt><a href="#HowTo_distributed">Set up a distributed Architecture</a></dt>
 <dt><a href="#HowTo_passwords">Set up a validator for users' password</a></dt>
 </dl></dd>
 </dl>
@@ -335,7 +335,7 @@ case
 the normal recovery procedure won't work because the user will never
 receive
 the e-mail notification (given that his/her email address is wrong).
-The CodeX Admininstrator must use the User Admininstration module,
+The CodeX Administrator must use the User Administration module,
 update
 the
 e-mail address of the user&nbsp; and then tell the user to proceed as
@@ -355,7 +355,7 @@ changed then contact the user and
 ask him/her to update the address.</li>
     <li> If the person is no longer with your company, go to the CodeX
 User
-Admininstration page, spot the user login name and click either on
+Administration page, spot the user login name and click either on
 'Suspend' or 'Delete' link for this account.&nbsp; Opting for account
 suspension gives a chance to the user to complain that she is still
 alive and we can easily reactivate the account without loosing personal
@@ -384,14 +384,14 @@ strongly recommend
 that they use internal and approved e-mail address only. Ideally the
 user should also use the canonical form of her email address type it
 is
-it appears in your company directory. By doing so, CodeX lookups in
+it appears in your company directory. By doing so, CodeX look-ups in
 your
 company directory will work correctly. <br>
   </li>
 </ol>
 <h2> Site News Push</h2>
 CodeX offers a mass mail engine to the CodeX Administration Team
-makeing it possible to push an announcement to a all or part of your
+making it possible to push an announcement to a all or part of your
 CodeX population. Be careful that it's ideal for
 spamming
 so use it with caution and only when needed (see below). The mass mail
@@ -405,7 +405,7 @@ article, new
 CodeX
 User Guide,...</li>
   <li> New major features available in CodeX</li>
-  <li> Maintenance operation: hardware or sofware upgrade&nbsp; and
+  <li> Maintenance operation: hardware or software upgrade&nbsp; and
 all
 the
 events that will prevent the CodeX server from operating normally must
@@ -421,7 +421,7 @@ difficulties
 to reach the CodeX server</li>
 </ul>
 <b><font color="#ff0000">Remark:</font></b> when a mass mail message is
-eent the CodeX Administration team may receive
+sent the CodeX Administration team may receive
 many copies
 of it. This is due to the fact that messages are sent
 by
@@ -443,7 +443,7 @@ The <b>Developer Survey</b> is a special survey that appears in the
 user's&nbsp; personal page.&nbsp; The developer is a general survey
 that gives site administrators the opportunity
 to better understand the
-population of users (e.g. how they heared about CodeX, do they like it,
+population of users (e.g. how they heard about CodeX, do they like it,
 etc.).
 This survey can only be answered once. The Developer Survey is
 automatically created at&nbsp; CodeX installation
@@ -478,7 +478,7 @@ When a new user registers on CodeX three accounts are created:
 implemented
 in PHP:</li>
   <br>
-Information about login name and encrypted password arestored in the
+Information about login name and encrypted password are stored in the
 CodeX database.<br>
 &nbsp; <li> <b>A Unix account</b> with the same name/password as the
 Web
@@ -492,7 +492,7 @@ the CodeX database
 user table and in the Linux password and group files. User IDs (uid)
 are in the range (20000-49999), the uid number is determined
 when
-the user account is first created on the CodeX Web frontend. It's a
+the user account is first created on the CodeX Web front-end. It's a
 sequential
 number incremented for each newly created account. Account ID of
 deleted users
@@ -527,7 +527,7 @@ These are not real login account but are just used to give source code
 checkout
 capabilities
 to anonymous users. By default CodeX does not allow anonymous CVS
-access and these accounts are not used unless a project explicitely
+access and these accounts are not used unless a project explicitly
 asks for anonymous CVS access to be activated.We keep maintaining them
 in case a project would like to activate
 anonymous
@@ -561,7 +561,7 @@ as
 Project
 Admin page. In other word there is a direct mapping between project
 membership as
-defined through the Web frontend and group membership on the Unix side.</li>
+defined through the Web front-end and group membership on the Unix side.</li>
   </ul>
   <ul>
 &nbsp;
@@ -602,7 +602,7 @@ to user.group: <b>codexadm.codexadm</b> (rwxr-xr-x) <br>
     <tr>
       <td valign="top">src</td>
       <td valign="top">The directory where all PHP scripts of the Web
-front end as well as backend scripts reside.<br>
+front end as well as back-end scripts reside.<br>
       </td>
     </tr>
     <tr>
@@ -627,7 +627,7 @@ HTML formatting, DB connection. <br>
     </tr>
     <tr>
       <td valign="top">src/utils</td>
-      <td valign="top">This is where all the backend Perl scripts
+      <td valign="top">This is where all the back-end Perl scripts
 are located.&nbsp;</td>
     </tr>
     <tr>
@@ -640,7 +640,7 @@ published by Xerox&nbsp; to correct CodeX defects or add new features.
 information).&nbsp;</td>
     </tr>
     <tr>
-      <td valign="top">src/backend</td>
+      <td valign="top">src/back-end</td>
       <td valign="top">This subdirectory is not used by CodeX because
 all
 the configuration files contained in this directory are elsewhere on
@@ -651,7 +651,7 @@ file system. See the src/backend/zones/README for more information</td>
       <td valign="top">src/etc</td>
       <td valign="top">This is the directory where a number of CodeX
 configuration files are located. These template files (hence the .dist
-extension) are instanciated by the CodeX installation script,
+extension) are instantiated by the CodeX installation script,
 customized at installation time and
 copied over to the target directories. <br>
       <b><font color="#ff0000">Remark:</font></b> the database.inc
@@ -690,11 +690,11 @@ shell script used to redirect some emails (e.g noreply address) to a
 black hole!<br>
         </li>
         <li><b>log_accum</b> and <b>commit_prep</b>: a set of
-perl scripts that send an email notification on a CVS commit. These
+Perl scripts that send an email notification on a CVS commit. These
 script are used by CodeX whenever a project activate the email
 notification in the CVS Administration interface of CodeX.</li>
         <li><span style="font-weight: bold;">commit_email.pl</span>: a
-perl script used that send an email notification on a Subversion
+Perl script used that send an email notification on a Subversion
 commit. This script is used by CodeX whenever a project
 activates the email notification in the Subversion Administration
 interface of
@@ -1311,7 +1311,7 @@ URLs:
 xww.<span style="font-style: italic;">your.codex.domain</span>, www.<span
  style="font-style: italic;">your.codex.domain</span> or simply <span
  style="font-style: italic;">your.codex.domain</span>. and any aliases
-that you may have defined yoursefl in the file <span
+that you may have defined yourself in the file <span
  style="font-family: monospace;">/var/named/codex.zone</span>. The
 Apache Document
 Root is at <span style="font-family: monospace;">/usr/share/codex/src/www</span>
@@ -1370,7 +1370,7 @@ server
 must be told which directories are allowed as CVS root directories.
 These are
 the various places where the CVS repositories are located. Allowed CVS
-repostories are given to the CVS server through the&nbsp; --allow-root=<span
+repositories are given to the CVS server through the&nbsp; --allow-root=<span
  style="font-style: italic;">pathname</span> command line options where
 <span style="font-style: italic;">pathname</span> is the allowed path.
 This option is repeated as many times
@@ -1572,10 +1572,10 @@ must not be modified.<br>
 <p> </p>
 <hr width="100%" size="2">
 <h1><a name="Samba"></a>Samba</h1>
-Samab allows Windows users to access a number of CodeX shared resources
+Samba allows Windows users to access a number of CodeX shared resources
 (see below). The Samba password file
 <span style="font-family: monospace;">/etc/smbpasswd</span> is
-generated automatically by the CodeX backend scripts like the
+generated automatically by the CodeX back-end scripts like the
 <span style="font-family: monospace;">/etc/passwd</span>,
 <span style="font-family: monospace;">/etc/shadow</span> and <span
  style="font-family: monospace;">/etc/group</span> files. The
@@ -1778,7 +1778,7 @@ script<br>
     </li>
   </ul>
 </ol>
-The output of all the backend scripts run through xerox_crontab.sh is
+The output of all the back-end scripts run through xerox_crontab.sh is
 sent to
 the
 codex-admin email alias for verification .<br>
@@ -1971,7 +1971,7 @@ For a user guide, please read the on-line plugin documentation.
 <!-- ################################################################# -->
 <h3 id="update">Process one or more updates</h3>
 <p>The plugin allows you to update automatically the CodeX server through the CodeX web interface.
-   The update is always processed from the current revision of the working copy to the choosen revision
+   The update is always processed from the current revision of the working copy to the chosen revision
    (greater than the current revision), by updating <strong>all</strong>
    the revisions between.
    To update the server, click the icon on the right of the wished revision.
@@ -2051,7 +2051,7 @@ The subversion command used is the following one:
 It would be operations to do <strong>in addition</strong> of the simple working copy update,
 such as a file system modification, needing root permissions for example, or also an intervention that would need a temporary server stop).
 In this case, the revision is labelled as needing a manual intervention and as we saw it explaining <a href="#simulationStrategy">simulation strategy</a>,
-such a situation is stoping regarding the automatic update. This to catch your attention about the special type of the update
+such a situation is stopping regarding the automatic update. This to catch your attention about the special type of the update
 and to make you read the commit message that contains information about the the update.
 However, it is possible to enforce the update, but we wish to catch your attention about the danger of such an operation.
 If you don't respect the indication given in the commit message of such an update, you could find your server in an unstable state.
@@ -2266,7 +2266,7 @@ taginfo to put constraints on the TAG formats, or readers and writers which are
 2 files to allow/deny access to the CVS repo.
 
 <P>If we had one single CVS repository on CodeX then the unique and global
-"CVSROOT" directory would rapidly become a big mess and it would be extremelly
+"CVSROOT" directory would rapidly become a big mess and it would be extremely
 difficult to maintain all the project specific configurations in this single
 "CVSROOT" directory. Hence the decision to have one CVS repository per project
 on CodeX.
@@ -2284,11 +2284,11 @@ directories <b>*PLUS*</b> the "CVSROOT" directory from the original CVS reposito
 <li>Having the CVSROOT in the tarball is not  mandatory but if the project had
 any specific settings in any of the CVS administration file (see above) then
 there is no chance that the CodeX admin can rebuilt the same environment on
-CodeX. In practive very few projects actually use these admin files but you
+CodeX. In practice very few projects actually use these admin files but you
 can't never know hence the request for the CVSROOT directory to be included in
 the tarball. One file that is always used though is the CVSROOT/history file
 where all the actions like commit, add, checkout, etc. are automatically logged
-by CVS. If the team wants this file to be preseved then again the CVSROOT has
+by CVS. If the team wants this file to be preserved then again the CVSROOT has
 to be provided
 
 <li>Create a temporary directory: <tt><br>cd /tmp
@@ -2322,7 +2322,7 @@ one and the project specific instructions must be merged with the files by the
 same name in the CVSROOT directory created by CodeX.
 <ul>
 <li><b>**Never touch**</b> the CVSROOT/readers, writers, passwd and config files created by CodeX
-<li>Be carefull not to overwrite what is already in the CVSROOT/loginfo and val-tags file. Append the content of these given files at the end of the corresponding ones generated by CodeX.
+<li>Be careful not to overwrite what is already in the CVSROOT/loginfo and val-tags file. Append the content of these given files at the end of the corresponding ones generated by CodeX.
 <li>For the history file : extract the lines belonging to the hosted project from the history file provided by the project team (remember it is very likely that
 this file is global to many projects) and update the content (especially the
 name of the directories and path listed in the history file if they are not the
@@ -2384,7 +2384,7 @@ The fastest and safest way (where xxx is the project name):
 $ cd /usr/share/codex/src/utils
 $./xerox_crontab.sh
 </pre>
-<li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewcvs.
+<li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewVC.
 </ul>
 Now you have a fresh CVS or SVN repository and the team can start the import again.
 <hr>
@@ -2393,7 +2393,7 @@ Now you have a fresh CVS or SVN repository and the team can start the import aga
 <UL>
 <LI>Log as root on the codex server</LI>
 <li>First of all, make sure that the new login name is not already used!</li>
-<li>Second of all, make sure that the Xerox cron job won't run while you do the update (you may edit the root crontab if necesary)!</li>
+<li>Second of all, make sure that the Xerox cron job won't run while you do the update (you may edit the root crontab if necessary)!</li>
 <LI> Modify the system files with groupmod and usermod.
 <br>Use this command to rename the group associated with the user:
 <br><tt>   groupmod -n new_name old_name</tt>
@@ -2466,8 +2466,8 @@ on the CodeX server. Here is the procedure to follow to change a group name (ass
 <li>/svnroot
 </tt></ul>
 <li>Edit <tt>/etc/cvs_root_allow</tt> and change project name
-<li>Edit <tt>/etc/passwd</tt> and change the project name in the <tt>anoncvs_xxx</tt> entry (3 occurences on one line)
-<li>Edit <tt>/etc/group</tt> and change the project name (1 occurence on one line)
+<li>Edit <tt>/etc/passwd</tt> and change the project name in the <tt>anoncvs_xxx</tt> entry (3 occurrences on one line)
+<li>Edit <tt>/etc/group</tt> and change the project name (1 occurrence on one line)
 
 <br>Comment: the last 3 would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
 
@@ -2476,7 +2476,7 @@ on the CodeX server. Here is the procedure to follow to change a group name (ass
 Then edit the 'config' and  'commitinfo' files and change the project name wherever it appears. Last, commit the changes. (you may also directly edit those files in the /cvsroot/projectname/CVSROOT directory, but don't forget to also edit the ',v' files then).
 
 <li>Edit the 'groups' table of the Codex DB with phpMyAdmin and change
-the name (2 occurences in 2 columns: <tt>unix_group_name,
+the name (2 occurrences in 2 columns: <tt>unix_group_name,
 http_domain</tt>). Then edit the 'service' table, and change the link to the 'Project Summary' and potentially to the 'Project Home Page'. All other fields can be changed by the project admin via the Web interface.
 
 - Updating the DNS aliases does not seem to be that urgent and we can
@@ -2494,7 +2494,7 @@ not clear for the moment how to rename the mailing list. So in this case it
 probably means creating new (empty) mailing lists for the new project.
 Of course one can still keep the ones with old project names in it. This is
 no problem.
-<br>See additionnal hints there:<a href="https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists">https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists</a>.
+<br>See additional hints there:<a href="https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists">https://www-s.acm.uiuc.edu/wiki/space/Rename+Mailman+lists</a>.
 
 And voil&agrave;!
 
@@ -2506,7 +2506,7 @@ And voil&agrave;!
 It is fairly common for a new CodeX user to enter the wrong email address
 when registering.  When CodeX sends the
 registration confirmation message to the new user, the message bounces at
-whatever mail server owns the non-existant address, and a message is sent
+whatever mail server owns the non-existent address, and a message is sent
 back to the originator (aliased to the CodeX administrators) saying that the
 message could not be delivered, with the registration confirmation message
 attached.  What we then need to do is forward this to the user who is trying
@@ -2615,7 +2615,7 @@ Vicki Tuttle
 CodeX is a system where any Xerox employee can register. When an
 employee leaves the company the account remains valid and the CodeX
 administrators discover that the user is no longer with the company
-when the mass mail engine is used to send an annoucement to all
+when the mass mail engine is used to send an announcement to all
 users.
 
 <P>The goal of this document is to document what to do with these
@@ -2641,7 +2641,7 @@ appropriate result and see if any project is listed on the upper right corner of
 <p>By doing so, the Unix account is inhibited which is what we want for
 security reasons but it is still here so all the files on the CodeX
 server marked with this user uid will still appear as being owned by
-this user. On top of that it is perfectly ok to supend a Unix account
+this user. On top of that it is perfectly ok to suspend a Unix account
 as soon as we have an e-mail error for sbdy and if this person comes
 back to us complaining that his/her account is no longer accessible we
 can restore the account very quickly with no data loss at all (and ask
@@ -2649,7 +2649,7 @@ him/her to update her e-mail address)
 
 <P>In case of doubt or if you are in a hurry and don't have time to
 check whether a user is a project member then always use this
-scenarion. <u>Actually we should probably always use this scenario to
+scenario. <u>Actually we should probably always use this scenario to
 start with and then once in a year change the Unix status to 'Deleted'
 when we have no news from the user</u>
 
@@ -2706,7 +2706,7 @@ necessary to get the specific patches and also the specific spec file</li>
 standard spec file to see what are the changes.</li>
   <li>Merge the changes you made in the old codex specific spec file in
 the new spec file</li>
-  <li>Don't forgfet to append the 'codex' suffix to the release name in
+  <li>Don't forget to append the 'codex' suffix to the release name in
 the new spec file.</li>
   <li>Also change the name of the new spec file to reflect the version
 number and the codex prefix (e.g. cvs-1.11.1p1-8.7.spec)</li>
@@ -2876,7 +2876,7 @@ of the selected mailing list, then it is OK.
 <hr>
 
 <h2><a name="HowTo_Delete_Bug"></a>Delete a bug from the CodeX database</h2>
-<p><em>Delete a bug with its given bug_id from all concernced DB tables.</em>
+<p><em>Delete a bug with its given bug_id from all concerned DB tables.</em>
 
 <p>Some projects might ask to delete submitted bugs from CodeX because of sensitive data that the bug information contains. While the functionality "delete bug" is not integrated into CodeX you can use this little sql script to do the work by hand.</p>
 
@@ -2909,12 +2909,12 @@ of the selected mailing list, then it is OK.
 <p><em>Enabling restricted users to benefit from code sharing without compromising security.</em>
 
 <h3>Overview</h3>
-<p>One of CodeX main benefits is to enable code sharing and reusability in a corporation. The goal is to provide visibility of your project and code in the whole community of users. Still, in some cases, this visibility becomes an issue: 
+<p>One of CodeX main benefits is to enable code sharing and re-usability in a corporation. The goal is to provide visibility of your project and code in the whole community of users. Still, in some cases, this visibility becomes an issue: 
 <ul><li>When CodeX is used for customer interaction, e.g. to collect customer support requests and bugs. 
 <li>when some project members are from other companies (contractors), and should not have access to the whole site
 </ul>
 <p>In both cases, external people (customers and contractors) need an access to the server; yet, they should not be granted access to all the other projects hosted on CodeX.
-<p>A solution to this problem has already been put in place: use two servers instead of one (one for internal use, one for 'partners'). Yet, there is an issue with projects that are being developped internally and that have customer feedback. In this case, you need to duplicate the project, which is not convenient; customers cannot access commit pages referenced in commit emails (because they point to the internal server),etc.
+<p>A solution to this problem has already been put in place: use two servers instead of one (one for internal use, one for 'partners'). Yet, there is an issue with projects that are being developed internally and that have customer feedback. In this case, you need to duplicate the project, which is not convenient; customers cannot access commit pages referenced in commit emails (because they point to the internal server),etc.
 <p>Now, there is another solution by enabling restricted users on your server: these users (typically, external users), are granted access to their project pages only, and are denied access to any other page (other projects, software map, etc.). Normal users still have access to the whole server.
 
 <h3>Configuration</h3>
@@ -2943,7 +2943,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 See also 'CodeX Installation Guide'.
 <h3>Setting restricted users privileges</h3>
-<p>You may fine tune the priviledges of restricted users on your system. Simply copy /usr/share/codex/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/codex/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
 <pre>
 // comment/uncomment forbidden URLs
 $forbidden_url = array(
@@ -3011,7 +3011,7 @@ project_admin_editservice	service_<<i>service short name</i>>_desc_key	<<i>your 
 
 <h2><a name="HowTo_cvs2svn">Convert a CVS repository to Subversion</a></h2>
 <p>
-Some projects may want to switch from CVS to Subversion. There are many good reasons for this, e.g. performance increase over CVS as well as many new features like directory and symbolic link versionning, file and directory move, truly atomic commits, etc.
+Some projects may want to switch from CVS to Subversion. There are many good reasons for this, e.g. performance increase over CVS as well as many new features like directory and symbolic link versioning, file and directory move, truly atomic commits, etc.
 <p>Unfortunately, project members cannot do the full conversion process by themselves because of permission issues.
 <p>Here are the step-by-step instructions:
 <ul>
@@ -3057,7 +3057,7 @@ chown -R codexadm.projectname /svnroot/projectname
 <h2><a name="HowTo_recoversvn">Recover a Subversion repository</a></h2>
 <p>
 Subversion repositories based on Berkley DB might get corrupted if a 'svn' command crashes.
-In that case, access to the Subversion repository is denied (even for read access, e.g. with viewcvs).
+In that case, access to the Subversion repository is denied (even for read access, e.g. with viewVC).
 <p>For instance, TortoiseSVN returns this error code: 
 <pre>Error 500 - internal server error trying to update on project projectname
 </pre>
