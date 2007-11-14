@@ -228,28 +228,65 @@
       <mediaobject>
 	<imageobject>
 	  <imagedata format="PNG"
-		     fileref="../../screenshots/en_US/sc_mypersonalpage.png" width="13.2cm"/>
+		     fileref="../../screenshots/en_US/sc_mypersonalpage.png" />
 	</imageobject>
       </mediaobject>
     </figure>
 
-    <para>Another section is dedicated to the Discussion Forums and
-    the Software packages that you are currently monitoring. To cancel
+    <para>CodeX allows you to personalize your page to feed your needs. 
+    The content of your page is given by <emphasis>widgets</emphasis>. All widgets can be moved (1), 
+    collapsed or closed (2). Some of them can provide a rss feed (3) or 
+    preferences can be set (4).</para>
+    
+    <para>New widgets can be added through the link "Add widgets" (5). Here is an
+    uncomplete list of available widgets for the personnal page:</para>
+    
+    <itemizedlist mark="bullet">
+      <listitem>
+        <para><emphasis role="bold">Monitored File Packages</emphasis> lists packages that you are currently monitoring, by project. To cancel
     any of the monitored items just click on the trash icon
     (<inlinemediaobject><imageobject><imagedata format="PNG"
     fileref="../../icons/trash.png"
     /></imageobject></inlinemediaobject>) next to the item
-    label.</para>
-
-    <para>There is also a bookmark section. These are bookmarks to
-    your favorite pages in CodeX. Note that in many cases CodeX uses
-    URL with enough embedded information to bookmark sophisticated
-    items like Software Map browsing, typical search in your project
-    Bug or Task database, etc ... Bookmarked items can be edited which
-    means that both the title of the bookmark and its destination URL
-    can be modified. Finally, the list of projects you belong to is
-    listed in the lower right corner. Selecting any if these projects
-    brings you to the corresponding Project Summary page.</para>
+    label.
+        </para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">Monitored Forums</emphasis> lists forums that you are currently monitoring, by project. To cancel
+    any of the monitored items just click on the trash icon
+    (<inlinemediaobject><imageobject><imagedata format="PNG"
+    fileref="../../icons/trash.png"
+    /></imageobject></inlinemediaobject>) next to the item
+    label.
+        </para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">My Artifacts</emphasis> lists artifacts you have submitted or assigned to you, by project.
+        </para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">My Bookmarks</emphasis> lists your favorite 
+        bookmarks (your favorite pages in CodeX or external). Note that in many cases CodeX uses
+        URL with enough embedded information to bookmark sophisticated
+        items like Software Map browsing, typical search in your project
+        Bug or Task database, etc ... Bookmarked items can be edited which
+        means that both the title of the bookmark and its destination URL
+        can be modified.
+        </para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">My Projects</emphasis> lists the projects you belong to. Selecting any of these projects
+    brings you to the corresponding Project Summary page.
+        </para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">Quick Survey</emphasis>: On going site survey (if any) not yet taken.
+        </para>
+      </listitem>
+      <listitem>
+        <para>...</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section id="AccountMaintenance">
