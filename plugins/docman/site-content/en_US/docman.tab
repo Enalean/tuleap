@@ -23,23 +23,23 @@ plugin_docman	approval_notif_mail_notif_all	All at once\n
 plugin_docman	approval_notif_mail_notif_owner_comment	Table owner message:\n$1\n\n
 plugin_docman	approval_notif_reject_mail_body	Your document '$1' was  rejected by $3 <$4>.\nDirect access to the approval table:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' was rejected by a reviewer
-plugin_docman	approval_notif_approve_mail_body	Your document '$1' was approved by all reviewers.\nYou can access to the table with the following link:\n<$2>\n\nPlease note that the document status was not automaticaly changed. You can\nchange the document properties:\n<$3>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
+plugin_docman	approval_notif_approve_mail_body	Your document '$1' was approved by all reviewers.\nYou can access to the table with the following link:\n<$2>\n\nPlease note that the document status was not automatically changed. You can\nchange the document properties:\n<$3>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' was approved by all reviewers
 plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' was approved by a reviewer
 plugin_docman	approval_notif_approve_user_mail_body	Your document '$1' was approved by $3 <$4>.\nYou can access to the table with the following link:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notification_failure	No email sent to reviewers.
 plugin_docman	approval_notification_success	Email sent to reviewer.
 plugin_docman	approval_review_success	Your review was successfully recorded.
-plugin_docman	approval_review_failure	An error occured on review recording.
+plugin_docman	approval_review_failure	An error occurred on review recording.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
 plugin_docman	approval_useradd_failure	No users was added to the list.
 plugin_docman	approval_userdel_success	$1 was removed from the approval table.
 plugin_docman	approval_userdel_failure	Cannot remove $1 from the approval table.
 plugin_docman	approval_tableupd_success	Table settings updated.
 plugin_docman	approval_tableupd_failure	Table settings was not updated.
-plugin_docman	approval_tableins_failure	An error occured on approval table creation for this item.
+plugin_docman	approval_tableins_failure	An error occurred on approval table creation for this item.
 plugin_docman	approval_tabledel_success	Table successfully deleted.
-plugin_docman	approval_tabledel_failure	An error occurded on table deletion.
+plugin_docman	approval_tabledel_failure	An error occurred on table deletion.
 
 plugin_docman	admin_md_detail_backtomenu	Back to Properties menu
 plugin_docman	admin_md_detail_param_title	Property parameters
@@ -108,7 +108,7 @@ plugin_docman	admin_md_import_param_1	Enabled
 
 
 plugin_docman	admin_metadata_title	Manage Properties
-plugin_docman	admin_metadata_import_desc	You can import properties from any public projects or private projects you are membre of.
+plugin_docman	admin_metadata_import_desc	You can import properties from any public projects or private projects you are member of.
 plugin_docman	admin_metadata_import_title	Import properties from another project
 plugin_docman	admin_metadata_import_submit	Check before import
 plugin_docman	admin_metadata_list_title	Available properties
@@ -267,7 +267,7 @@ plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
 plugin_docman	details_notifications_cascade_sendemail	...and for the whole sub-hierarchy.
 plugin_docman	details_paste_importmd	Import properties from $1:
-plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> There are differences in properties definitions between $1 and $2. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both $1 and $2 will be copied.</li><li>Ask to a document manager admin to import $2 properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn't impact documents</strong> themselve. This only refers to properties.</p>
+plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> There are differences in properties definitions between $1 and $2. You <strong>may loose</strong> some <strong>properties informations</strong>.</p><p>You may either:<ul><li>Paste anyway, so only properties that exists in both $1 and $2 will be copied.</li><li>Ask to a document manager admin to import $2 properties definitions</li></ul></p><p><strong>Note:</strong> This <strong>doesn't impact documents</strong> themselves. This only refers to properties.</p>
 plugin_docman	details_paste_mddiff_title	Document properties
 plugin_docman	details_paste_button_paste	Paste
 plugin_docman	details_paste_button_pasteanyway	Paste Anyway
@@ -396,7 +396,7 @@ plugin_docman	md_bo_badlabel	Unknown property label '$1'.
 plugin_docman	md_cdate_name	Create Date
 plugin_docman	md_cdate_desc	When the document was added into the document manager.
 plugin_docman	md_del_success	"$1" successfully deleted
-plugin_docman	md_del_failure	An error occured on "$1" deletion
+plugin_docman	md_del_failure	An error occurred on "$1" deletion
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description of the document.
 plugin_docman	md_install_commentkeyword_name	Comments
@@ -487,7 +487,7 @@ plugin_docman	notifications_on	You're monitoring '$1'.
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
-plugin_docman	obso_warn_email_body	As document owner, you are notified of the obsolescense in one month of the\ndocument:\nTitle: $1\nProject: $2\nObsolescence date: $3\nDirect Link: <$4>\n\nThis document will dispear from your document manager in one month if you\ndo nothing. The document will remain accessible through the administration\ninterface though.\nYou can change the obsolescence date of your document or make it permanent with\nthe following link:\n<$5>\n\n--\nThis is an automatic message sent by a robot. Please do not reply to this email.\n
+plugin_docman	obso_warn_email_body	As document owner, you are notified of the obsolescence in one month of the\ndocument:\nTitle: $1\nProject: $2\nObsolescence date: $3\nDirect Link: <$4>\n\nThis document will disappear from your document manager in one month if you\ndo nothing. The document will remain accessible through the administration\ninterface though.\nYou can change the obsolescence date of your document or make it permanent with\nthe following link:\n<$5>\n\n--\nThis is an automatic message sent by a robot. Please do not reply to this email.\n
 
 plugin_docman	operation_canceled	Operation Canceled
 
@@ -504,9 +504,9 @@ plugin_docman	redirect	<div style="text-align:center"><p>Document Manager update
 
 plugin_docman	report_add_filter	Add
 plugin_docman	report_clear_filters	Clear all
-plugin_docman	report_clone_success	Report sucessfully cloned.
+plugin_docman	report_clone_success	Report successfully cloned.
 plugin_docman	report_custom_fltr	Customize filters
-plugin_docman	report_del_failure	An error occured on report deletion
+plugin_docman	report_del_failure	An error occurred on report deletion
 plugin_docman	report_del_notadmin	Only admin can delete Project wide reports.
 plugin_docman	report_del_notfound	Report not found. Cancel deletion.
 plugin_docman	report_del_notowner	You can not delete report you do not own. Cancel deletion.
@@ -542,7 +542,7 @@ plugin_docman	report_settings_my	Show my saved search
 plugin_docman	report_settings_report_name	Report
 plugin_docman	report_settings_report_delete	Delete
 plugin_docman	report_settings_report_description	Description:
-plugin_docman	report_settings_report_info	You can customize your report by adding text and an image. Note: an image is just a reference on any valid image available in documention manager (across projects).
+plugin_docman	report_settings_report_info	You can customize your report by adding text and an image. Note: an image is just a reference on any valid image available in documentation manager (across projects).
 plugin_docman	report_settings_report_image	Image Id:
 plugin_docman	report_settings_report_image_help	Refer to a document id available in the document manager (Warning: <strong>permissions apply</strong>).
 plugin_docman	report_settings_report_image_current	Current image:
@@ -555,7 +555,7 @@ plugin_docman	report_settings_title	Search report administration
 plugin_docman	report_scope_I	Personal
 plugin_docman	report_scope_P	Project
 plugin_docman	report_toggle_tooltip	Toggle search criteria selection
-plugin_docman	report_upd_failure	An error occured on report update.
+plugin_docman	report_upd_failure	An error occurred on report update.
 plugin_docman	report_upd_notfound	Report not found. Cancel update.
 plugin_docman	report_upd_success	Report successfully updated.
 plugin_docman	report_upd_groupmismatch	Project ids mismatch. Cancel update.
