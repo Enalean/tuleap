@@ -764,10 +764,15 @@ class Artifact extends Error {
                         
                         // check if the user can update the field or not
                         if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
-                            // The user does not have the permissions to update the current field,
-                            // we exit the function with an error message
-                            $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
-                            return false;
+                            // we only throw an error if the values has changed
+                            $old_values = $field->getValues($this->getID());
+                            list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+                            if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
+                                // The user does not have the permissions to update the current field,
+                                // we exit the function with an error message
+                                $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+                                return false;
+                            }
                         }
 
 			//don't take into account the none value if there are several values selected
