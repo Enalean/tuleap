@@ -118,7 +118,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
         </listitem>
         
         <listitem>
-            <para>The portail of the project (see below).</para>
+            <para><emphasis role="bold">A customizeable zone</emphasis> (see below).</para>
         </listitem>
       </itemizedlist>
 
@@ -135,6 +135,9 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
       The content of the page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
       collapsed or closed (2). Some of them can provide an rss feed (3) or 
       preferences can be set (4).</para>
+      
+      <para>Other users than project admins will see the corresponding static page. 
+      The widgets will be the same, in the same position, but they won't be able to modify the page.</para>
       
       <para>New widgets can be added through the link "Add widgets" (5). Here is an
       incomplete list of available widgets for the project summary page:</para>
@@ -161,19 +164,19 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
           <para><emphasis role="bold">Latest File Release</emphasis>: show the
           list of most recent packages available for download along with their
           revision. A Release Notes icon (<inlinemediaobject><imageobject><imagedata
-          format="PNG" fileref="../../icons/manual16c.png" /></imageobject></inlinemediaobject>)
+          format="PNG" fileref="../../icons/text.png" /></imageobject></inlinemediaobject>)
           allows you to see the latest changes and developers comments
           associated with this revision. Then comes the monitor icon (<inlinemediaobject><imageobject><imagedata
-          format="PNG" fileref="../../icons/mail16d.png" /></imageobject></inlinemediaobject>).
+          format="PNG" fileref="../../icons/notification_stop.png" /></imageobject></inlinemediaobject>).
           Selecting this icon will cause this package to be monitored for you.
           Anytime the project development team posts a new release, you will
           be automatically notified via e-mail. All monitored File Releases
           are listed in your Personal Page and can be canceled from this
-          page.
+          page or from the main page of the file release system.
           </para>
         </listitem>
         <listitem>
-          <para><emphasis role="bold">RSS Reader</emphasis> allows project admins to include public rss (or atom) feeds. For exemple the reader can display a feed published by external tools used by the project (like continuous integration).</para>
+          <para><emphasis role="bold">RSS Reader</emphasis> allows project admins to include public rss (or atom) feeds. For example the reader can display a feed published by external tools used by the project (like continuous integration).</para>
         </listitem>
       </itemizedlist>
     </section>

@@ -127,7 +127,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         </listitem>
         
         <listitem>
-          <para>Le portail du projet (voir ci-dessous).</para>
+          <para><emphasis role="bold">Une zone configurable</para> (voir ci dessous).</para>
         </listitem>
       </itemizedlist>
 
@@ -145,6 +145,9 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
       Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
       peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
       
+      <para>Les utilisateurs autres qu'administrateurs du projet verront une page statique. 
+      Les widgets seront les même, organisés de la même façon, mais les utilisateurs ne pourrront pas modifier la page.</para>
+      
       <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
       Voici une liste non-exhaustive de widgets disponible pour les projets :</para>
       
@@ -155,20 +158,21 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           récentes des paquets logiciels disponibles en
           téléchargement. L'icône Notes 
           (<inlinemediaobject><imageobject><imagedata format="PNG"
-          fileref="../../icons/manual16c.png"
+          fileref="../../icons/text.png"
           /></imageobject></inlinemediaobject>) permet de consulter
           les notes concernant cette version ainsi qu'un résumé des
           changements (Changelog). A proximité se situe l'icône de
           surveillance de ce paquet
           (<inlinemediaobject><imageobject><imagedata format="PNG"
-          fileref="../../icons/mail16d.png"
+          fileref="../../icons/notification_stop.png"
           /></imageobject></inlinemediaobject>). La sélection de cette
           icône active la surveillance automatique de ce paquet
           logiciel par CodeX. A chaque fois que l'équipe de projet
           dépose une nouvelle version du logiciel, un message de
           notification vous est envoyé. Tous les paquets sous
           surveillance se trouvent sur votre Page Personnelle et la
-          surveillance peut être désactivée depuis cette page.</para>
+          surveillance peut être désactivée depuis cette page ou depuis 
+          la page principale du gestionnaire de fichiers.</para>
         </listitem>
 
         <listitem>
@@ -190,7 +194,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           ainsi.</para>
         </listitem>
         <listitem>
-          <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques.</para>
+          <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques. Par exemple le lecteur peut afficher un flux publié par un outil externe utilisé par le projet (ex: intégration continue)</para>
         </listitem>
       </itemizedlist>
     </section>
