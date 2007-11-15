@@ -262,7 +262,7 @@ class ArtifactHtml extends Artifact {
                 $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
                 $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
                 $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
-                $html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
+                //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
             }
             $html .= $this->showCCList($group_id,$group_artifact_id, false, $pv);
             
@@ -623,7 +623,7 @@ class ArtifactHtml extends Artifact {
         $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
         $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
-        $html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
+        //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
         
         echo $this->_getSection(
             'artifact_section_cc',
@@ -958,7 +958,7 @@ class ArtifactHtml extends Artifact {
         $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
         $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
-        $html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
+        //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
         
         echo $this->_getSection(
             'artifact_section_cc',
