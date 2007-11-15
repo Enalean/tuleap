@@ -265,10 +265,10 @@
 
     <para>CodeX vous permet de personnaliser votre page à votre convenance. 
     Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
-    Tous les widgets peuvent être déplacés (1), fermé ou supprimé (2). Certains d'entre eux 
+    Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
     peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
     
-    <para>Les widgets peuvent être ajoutées grâce au lien "Ajouter des widgets" (5). 
+    <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
     Voici une liste non-exhaustive de widgets disponible pour votre page personnelle :</para>
     
     <itemizedlist mark="bullet">
@@ -297,14 +297,11 @@
         A
         noter que ces pointeurs peuvent être très sophistiqués. Ils
         permettent par exemple de mémoriser une requête multi-critères
-        effectuée sur un outil de suivi. Enfin on trouve aussi sur cette
-        page la liste des projets auxquels vous appartenez. Cliquer
-        sur l'un de ces projets vous renvoie vers la Page de Sommaire de
-        ce projet.</para>
+        effectuée sur un outil de suivi.</para>
       </listitem>
       <listitem>
         <para><emphasis role="bold">Mes projets</emphasis> liste les projets auxquels vous appartenez. La sélection d'un de ces projets
-        vous amène au sa page sommaire.
+        vous amène sur sa page sommaire.
         </para>
       </listitem>
       <listitem>
