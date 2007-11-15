@@ -1003,7 +1003,7 @@ if [ "$yn" = "y" ]; then
 fi
 if [ "$disable_subdomains" = "y" ]; then
   echo "HomePage service disabled in project configuration..."
-  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET is_used = '0' WHERE short_name = 'homepage'"
+  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET is_used = '0', is_active = '0' WHERE short_name = 'homepage'"
 else
   todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
 fi
@@ -1327,6 +1327,9 @@ todo "     cd /usr/share/codex/"
 todo "     svn status -u --username <your_login_on_partners>"
 todo "   Accept the certificate permanently, and type in your password."
 
+todo "If only HTTPS is enabled on the CodeX server:"
+todo " * update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
+todo " * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work."
 todo "Project web site CGIs are currently disabled. If you want to use them, you"
 todo "   should install the custom httpd-suexec RPM provided "
 todo "   (e.g. 'rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm')."
