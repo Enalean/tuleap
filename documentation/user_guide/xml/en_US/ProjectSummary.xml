@@ -116,7 +116,47 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
           will direct you to the user page where you can learn more about the
           CodeX user and send him/her an e-mail.</para>
         </listitem>
+        
+        <listitem>
+            <para>The portail of the project (see below).</para>
+        </listitem>
+      </itemizedlist>
 
+      <figure id="FigureASampleProjectSummaryPage">
+        <title>A sample Project Summary Page</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG" fileref="../../screenshots/en_US/sc_projectsummarypage.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+      </figure>
+      
+      <para>CodeX allows project admins to personalize the project summary page. 
+      The content of the page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
+      collapsed or closed (2). Some of them can provide an rss feed (3) or 
+      preferences can be set (4).</para>
+      
+      <para>New widgets can be added through the link "Add widgets" (5). Here is an
+      incomplete list of available widgets for the project summary page:</para>
+      
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para><emphasis role="bold">Public Areas</emphasis>: this is an
+          iconic list of all available services for this project along with
+          some information next to it. Click on any of this item to access a
+          service. The role of this area is pretty much equivalent to the
+          Project Main Menu at the top of the screen except that it shows
+          additional information about each of the service (e.g. total number
+          of open bugs, tasks, ...)
+          </para>
+        </listitem>
+        <listitem>
+          <para><emphasis role="bold">Latest News</emphasis>: the last 10
+          pieces of news posted by the project members. Some of this news
+          might also be visible on the CodeX front page if the CodeX Team
+          decided that it was worth a site announcement.
+          </para>
+        </listitem>
         <listitem>
           <para><emphasis role="bold">Latest File Release</emphasis>: show the
           list of most recent packages available for download along with their
@@ -129,35 +169,13 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
           Anytime the project development team posts a new release, you will
           be automatically notified via e-mail. All monitored File Releases
           are listed in your Personal Page and can be canceled from this
-          page.</para>
+          page.
+          </para>
         </listitem>
-
         <listitem>
-          <para><emphasis role="bold">Public Areas</emphasis>: this is an
-          iconic list of all available services for this project along with
-          some information next to it. Click on any of this item to access a
-          service. The role of this area is pretty much equivalent to the
-          Project Main Menu at the top of the screen except that it shows
-          additional information about each of the service (e.g. total number
-          of open bugs, tasks, ...)</para>
-        </listitem>
-
-        <listitem>
-          <para><emphasis role="bold">Latest News</emphasis>: the last 10
-          pieces of news posted by the project members. Some of this news
-          might also be visible on the CodeX front page if the CodeX Team
-          decided that it was worth a site announcement.</para>
+          <para><emphasis role="bold">RSS Reader</emphasis> allows project admins to include public rss (or atom) feeds. For exemple the reader can display a feed published by external tools used by the project (like continuous integration).</para>
         </listitem>
       </itemizedlist>
-
-      <figure id="FigureASampleProjectSummaryPage">
-        <title>A sample Project Summary Page</title>
-            <mediaobject>
-                <imageobject>
-                    <imagedata format="PNG" fileref="../../screenshots/en_US/sc_projectsummarypage.png" width="15.3cm" />
-                </imageobject>
-            </mediaobject>
-      </figure>
     </section>
   </chapter>
 <!--

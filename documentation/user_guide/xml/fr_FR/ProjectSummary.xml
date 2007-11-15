@@ -125,7 +125,30 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           d'information sur l'utilisateur et la possibilité de lui
           envoyer un email.</para>
         </listitem>
+        
+        <listitem>
+          <para>Le portail du projet (voir ci-dessous).</para>
+        </listitem>
+      </itemizedlist>
 
+      <figure id="FigureASampleProjectSummaryPage">
+        <title>Un exemple de page de Sommaire d'un projet</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_projectsummarypage.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+      </figure>
+
+      <para>CodeX permet aux administrateurs du projet de personnaliser la page sommaire du projet. 
+      Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
+      Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
+      peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
+      
+      <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
+      Voici une liste non-exhaustive de widgets disponible pour les projets :</para>
+      
+      <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Derniers fichiers
           publiés</emphasis> : montre la liste des versions les plus
@@ -166,16 +189,10 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           sur le page d'accueil du site si l'équipe CodeX en décide
           ainsi.</para>
         </listitem>
+        <listitem>
+          <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques.</para>
+        </listitem>
       </itemizedlist>
-
-      <figure id="FigureASampleProjectSummaryPage">
-        <title>Un exemple de page de Sommaire d'un projet</title>
-            <mediaobject>
-                <imageobject>
-                    <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_projectsummarypage.png" width="15.3cm" />
-                </imageobject>
-            </mediaobject>
-      </figure>
     </section>
   </chapter>
 <!--
