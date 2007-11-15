@@ -715,6 +715,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     $query = "SELECT id from cvs_repositories where cvs_repositories.repository='/cvsroot/".$project->getUnixName(false)."' ";
     $rs = db_query($query);
     $repo_id = db_result($rs, 0, 0);
+    $repo_id = $repo_id ? $repo_id : -1;
     
     $select = 'SELECT distinct cvs_checkins.commitid as id, cvs_checkins.commitid as revision, cvs_descs.id as did, cvs_descs.description, cvs_commits.comm_when as c_when, cvs_commits.comm_when as date, cvs_commits.comm_when as f_when, user.user_name as who ';
     $from = "FROM cvs_descs, cvs_checkins, user, cvs_commits ";
