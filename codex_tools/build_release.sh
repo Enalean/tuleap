@@ -1,13 +1,21 @@
 #!/bin/sh
-CX_VERSION='support/CX_3_2_SUP'
-CX_SHORT_VERSION='3.2'
+#CX_VERSION='support/CX_3_2_SUP'
+#CX_SHORT_VERSION='3.2.sup'
+CX_VERSION='dev/trunk'
+CX_SHORT_VERSION='trunk'
 PACKAGE_DIR=/root/CodeX_Packaging/code.xrce/$CX_VERSION/packages-rhel4
 SOURCE_DIR=/root/CodeX_Packaging/src/$CX_VERSION
-BUILD_DIR=/root/CodeX_Packaging/build_dir
-echo `cd $SOURCE_DIR; svn update`
+BUILD_DIR=/root/CodeX_Packaging/temp_dir/$CX_VERSION
+echo "Building ISO image for version: $CX_VERSION"
+yn="0"
+read -p "Update source and package working copies? [y|n]:" yn
+if [ "$yn" = "y" ]; then
+  echo `cd $SOURCE_DIR; svn update`
+  echo `cd $PACKAGE_DIR; svn update`
+fi
 CX_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
-ISO_LABEL="CodeX $CX_SHORT_VERSION sup"
-ISO_FILE="/tmp/codex-$CX_SHORT_VERSION.sup.r$CX_REVISION.iso"
+ISO_LABEL="CodeX $CX_SHORT_VERSION"
+ISO_FILE="/root/CodeX_Packaging/iso_images/codex-$CX_SHORT_VERSION.r$CX_REVISION.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -48,9 +56,8 @@ $CHMOD +x $BUILD_DIR/codex_install.sh
 # Copy the migration script at the top directory
 echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh $SOURCE_DIR/codex_tools/migration_from_CodeX_3.0.1_to_CodeX_3.2.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0_to_CodeX_3.0.1.sh
-$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.0.1_to_CodeX_3.2.sh
+$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.2_to_CodeX_3.4.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.2_to_CodeX_3.4.sh
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages..."
@@ -89,7 +96,7 @@ for i in $RPM_LIST
 do
     if [ ! -e $PACKAGE_DIR/RPMS_CodeX/$i ];
     then
-        echo "Removing depracted package: $i"
+        echo "Removing deprecated package: $i"
         echo $RM -rf $BUILD_DIR/RPMS_CodeX/$i
     fi
 done
@@ -234,7 +241,7 @@ EOF
 
 # Build ISO image
 echo "Building ISO image in $ISO_FILE..."
-mkisofs -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -o "$ISO_FILE" $BUILD_DIR
+mkisofs -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
 
 echo "CodeX ISO image available at $ISO_FILE ..."
 echo "Done!"
