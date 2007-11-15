@@ -15,12 +15,8 @@ $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$action = '';
 $action_select = '';
 $status= '';
-if (isset($_REQUEST['action'])) {
-    $action = $_REQUEST['action'];
-}
 if (isset($_REQUEST['action_select'])) {
     $action_select = $_REQUEST['action_select'];
 }
@@ -35,7 +31,7 @@ if (isset($_REQUEST['page'])) {
 if (($action_select=='activate')) {
 
     $shell="";
-    if ($action=='restricted_pending' && $status=='restricted') {
+    if ($status=='restricted') {
         $newstatus='R';
         $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
     } else $newstatus='A';
@@ -163,8 +159,7 @@ if (db_numrows($res) < 1) {
                 echo '>'.$Language->getText('admin_approve_pending_users','status_restricted').'        
             </select>';
             }     
-            echo '<INPUT TYPE="HIDDEN" NAME="action" VALUE="activate_account">
-            <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+            echo '<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
             </TD>';
@@ -187,7 +182,6 @@ if (db_numrows($res) < 1) {
                 <option value="standard">'.$Language->getText('admin_approve_pending_users','status_standard').'
                 <option value="restricted">'.$Language->getText('admin_approve_pending_users','status_restricted').'        
             </select>
-            <INPUT TYPE="HIDDEN" NAME="action" VALUE="restricted_pending">
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
@@ -204,7 +198,6 @@ if (db_numrows($res) < 1) {
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
                 </select>
             '.$Language->getText('admin_approve_pending_users','account').'          
-            <INPUT TYPE="HIDDEN" NAME="action" VALUE="user_approval_pending">
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
@@ -279,7 +272,6 @@ if (db_numrows($res) < 1) {
                 <option value="standard">'.$Language->getText('admin_approve_pending_users','status_standard').'
                 <option value="restricted">'.$Language->getText('admin_approve_pending_users','status_restricted').'        
             </select>
-            <INPUT TYPE="HIDDEN" NAME="action" VALUE="restricted_pending_all">
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
@@ -294,7 +286,6 @@ if (db_numrows($res) < 1) {
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'
                 </select>
             '.$Language->getText('admin_approve_pending_users','all_accounts').'          
-            <INPUT TYPE="HIDDEN" NAME="action" VALUE="user_approval_pending_all">
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$user_list.'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
