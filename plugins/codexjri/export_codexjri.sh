@@ -22,7 +22,7 @@ CODEX_TARGET_DIR="/home/mnazaria/CodeX/dev_server/httpd"
 #
 # CodeXJRI sources
 #
-svn export --force $CODEXJRI_SOURCE_REPOSITORY/ $CODEX_TARGET_DIR/plugins/codexjri/www/sources/.
+svn export --force $CODEXJRI_SOURCE_REPOSITORY/ $CODEX_TARGET_DIR/plugins/codexjri/src/.
 
 #
 # CodeXJRI documentation (javadoc)
@@ -39,7 +39,7 @@ $CP $CODEXJRI_JAR_DIRECTORY/com.xerox.xrce.codex.jri*.jar $CODEX_TARGET_DIR/plug
 #
 # make an archive of the sources, and remove the sources!
 #
-cd $CODEX_TARGET_DIR/plugins/codexjri/www/sources/ ; $TAR -cf codexjri_src.tar.gz -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' --remove-files
+cd $CODEX_TARGET_DIR/plugins/codexjri/src/ ; $TAR -cf codexjri_src.tar.gz -v -z -h src lib WSDLClassesGenerator\ JRI.launch doc plugin.xml --exclude '.svn' --remove-files
 $RMDIR lib
 $RM wsdl/CodeXJRI.wsdl
 $RMDIR wsdl
