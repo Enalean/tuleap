@@ -46,7 +46,7 @@ account_options	shell_account_title	 Information compte shell
 account_options	shell_box	Serveur Shell
 account_options	shell_shared_keys	Clés SSH partagées
 account_options	shell_edit_keys	Editer les Clés
-account_options	remember_me	"Souviens-toi de moi" <u><i>($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</i></u>
+account_options	remember_me	"Souviens-toi de moi" <u><span style="color:#666">($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</span></u>
 account_options	csv_separator	Séparateur CSV
 account_options	comma	virgule
 account_options	semicolon	point-virgule
@@ -230,8 +230,8 @@ account_register	email	Adresse e-mail
 account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
 account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
-account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
-account_register	communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <I>(Faible trafic)</I>
+account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <span style="color:#666">(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</span>
+account_register	communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <span style="color:#666">(Faible trafic)</span>
 account_register	purpose	Motif
 account_register	purpose_directions	<em>Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site</em><br>
 account_register	btn_register	Créer le compte

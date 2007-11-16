@@ -281,7 +281,7 @@ tracker_include_artifact	fill_cc_list_cmt	Commentaire
 tracker_include_artifact	attachment	Fichiers attachés
 tracker_include_artifact	upload_checkbox	<B>Cocher pour télécharger&hellip;</b>
 tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;et&nbsp;attacher le fichier&nbsp;:</B>
-tracker_include_artifact	upload_file_msg	<br><span class="small"><i>(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)</i></span>
+tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)</span>
 tracker_include_artifact	upload_file_desc	<P><B>Description du fichier&nbsp;:</B>&nbsp;
 tracker_include_artifact	dependencies	Dépendances	
 tracker_include_artifact	aids	IDs Artefact&nbsp;:

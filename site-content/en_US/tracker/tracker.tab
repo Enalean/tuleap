@@ -276,7 +276,7 @@ tracker_include_artifact	fill_cc_list_cmt	Comment
 tracker_include_artifact	attachment	Attachments
 tracker_include_artifact	upload_checkbox	<B>Check to Upload&hellip;</b>
 tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;and&nbsp;attach File:</B>
-tracker_include_artifact	upload_file_msg	<br><span class="small"><i>(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</i></span>
+tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</span>
 tracker_include_artifact	upload_file_desc	<P><B>File Description:</B>&nbsp;
 tracker_include_artifact	dependencies	Dependencies	
 tracker_include_artifact	aids	Artifact IDs:

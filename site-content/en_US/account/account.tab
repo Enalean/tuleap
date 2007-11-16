@@ -41,7 +41,7 @@ account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys
 account_options	shell_edit_keys	Edit Keys
-account_options	remember_me	"Remember me" <u><i>($1 remembers your login/password. If you change this preference make sure to logout and login again)</i></u>
+account_options	remember_me	"Remember me" <u><span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span></u>
 account_options	csv_separator	CSV separator
 account_options	comma	comma
 account_options	semicolon	semicolon
@@ -225,8 +225,8 @@ account_register	email	Email Address
 account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>	 
 account_register	tz	Timezone
 account_register	mandatory	Fields marked with $1 are mandatory.
-account_register	siteupdate	Receive Email about Site Updates <I>(Very low traffic and includes security notices. Highly Recommended.)</I>
-account_register	communitymail	Receive additional community mailings. <I>(Low traffic.)</I>
+account_register	siteupdate	Receive Email about Site Updates <span style="color:#666">(Very low traffic and includes security notices. Highly Recommended.)</span>
+account_register	communitymail	Receive additional community mailings. <span style="color:#666">(Low traffic.)</span>
 account_register	purpose	Purpose 
 account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
 account_register	btn_register	Register
