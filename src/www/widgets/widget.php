@@ -43,7 +43,7 @@ if ($owner) {
                     } else {
                         if ($request->get('action') == 'update' && ($layout_id = (int)$request->get('layout_id'))) {
                             if ($owner_type == $lm->OWNER_TYPE_USER || user_ismember($group_id, 'A') || user_is_super_user()) {
-                                if ($widget->updatePreferences($request)) {
+                                if ($request->get('cancel') || $widget->updatePreferences($request)) {
                                     $lm->hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
                                 }
                             }
