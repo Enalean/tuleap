@@ -352,7 +352,7 @@ plugin_docman	field_update_date	Date de dernière mise à jour :
 
 plugin_docman	filters	Filtres
 plugin_docman	filters_advsearch_0	(ou utiliser <a href="$1">la recherche simple</a>)
-plugin_docman	filters_advsearch_1	(or utiliser <a href="$1">la recherche avancée</a>)
+plugin_docman	filters_advsearch_1	(ou utiliser <a href="$1">la recherche avancée</a>)
 plugin_docman	filters_global_txt	Recherche globale de texte
 plugin_docman	filters_html_date_start	Début :
 plugin_docman	filters_html_date_end	Fin :
