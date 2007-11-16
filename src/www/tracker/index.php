@@ -352,7 +352,7 @@ if ( $func == 'gotoid' ) {
 		    if ($ah->userCanEditFollowupComment($_REQUEST['artifact_history_id'])) {    
 			$ah->deleteFollowupComment($_REQUEST['aid'],$_REQUEST['artifact_history_id']);
 
-                        require('./detail.php');
+                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
 		    } else {
                         // Invalid permission
                         exit_permission_denied();
