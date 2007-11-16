@@ -303,7 +303,7 @@ class ArtifactHtml extends Artifact {
                     $html .= '
                     <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
                     <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
-                    &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
+                    &nbsp;<span style="color:#666">'.$Language->getText('tracker_include_artifact','fill').'</span><p>';
             }
             $html .=  $this->showDependencies($group_id,$group_artifact_id, false, $pv);
             
@@ -659,7 +659,7 @@ class ArtifactHtml extends Artifact {
         $html .= '
                         <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255" value="'.$this->getID().'">
-                        &nbsp;<i>'.$Language->getText('tracker_include_artifact','fill').'</i><p>';
+                        &nbsp;<span style="color:#666">'.$Language->getText('tracker_include_artifact','fill').'</span><p>';
         }
         
         echo $this->_getSection(
