@@ -1,8 +1,8 @@
 #!/bin/sh
-#CX_VERSION='support/CX_3_2_SUP'
-#CX_SHORT_VERSION='3.2.sup'
-CX_VERSION='dev/trunk'
-CX_SHORT_VERSION='trunk'
+CX_VERSION='support/CX_3_4_SUP'
+CX_SHORT_VERSION='3.4.sup'
+#CX_VERSION='dev/trunk'
+#CX_SHORT_VERSION='trunk'
 PACKAGE_DIR=/root/CodeX_Packaging/code.xrce/$CX_VERSION/packages-rhel4
 SOURCE_DIR=/root/CodeX_Packaging/src/$CX_VERSION
 BUILD_DIR=/root/CodeX_Packaging/temp_dir/$CX_VERSION
@@ -176,8 +176,8 @@ http://codex.xrce.xerox.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 3.0.1 please run migration_from_CodeX_3.0.1_to_CodeX_3.2.sh.
-- For an update from 3.0 please run migration_from_CodeX_3.0_to_CodeX_3.0.1.sh first to upgrade to 3.0.1, then run migration_from_CodeX_3.0.1_to_CodeX_3.2.sh.
+- For an update from 3.2 please run migration_from_CodeX_3.2_to_CodeX_3.4.sh.
+- For an update from a prior release, please update to CodeX 3.2 first.
 
 -- The CodeX Team
    <info@codex.xerox.com>
@@ -189,48 +189,52 @@ CodeX: The Xerox Solution to Maximize the Value of Your Corporate Software Asset
 Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2001-2007. All Rights Reserved
 http://codex.xrce.xerox.com
 
-This is CodeX 3.2.
+This is CodeX 3.4.
 
 Please read the README and INSTALL files carefully, and get in touch with us
 at codex-contact@codex.xerox.com if you have questions.
 
 
-What's new in CodeX 3.2?
+What's new in CodeX 3.4?
 
-- Distributed services: 
-  CodeX now supports a distributed architecture that allows some services (files, Subversion)
-  to be located on satellite servers. 
-  Please read the administration guide for more details on how to setup a 
-  distributed architecture.
-  Also note that this feature is still experimental.
+- Eclipse Plugin: 
+  CodeX users may now access their tasks and bugs directly from Eclipse!
+  An Eclipse plugin is provided with CodeX 3.4. It allows full access to
+  CodeX trackers: you may list, filter, edit and submit artifacts directly
+  from the Eclipse IDE.
+  This is implemented over the CodeX SOAP interface.
 
-- Improved Services:
-  - The interface to the File Release Manager has been rewritten to offer a
-    simpler, faster and more convenient experience.
-  - The Document Manager has been upgraded with new features, like the
-    ability to clone folders (within a project and across projects), the 'empty'
-    document type, etc.
 
-- Web service API and Command Line Client improved.
-  You may now use the CLI or the SOAP interface to access the tracker service, 
-  the document manager and the file manager.
+- Customize your personnal page and the project summary page with CodeX widgets.
+  You may now select what information you want to display on your page, organize it,
+  and even import external information through the new RSS reader.
+  Project administrators may also customize the project summary page to display
+  relevant information about the project.
 
-- The server update mechanism has been improved. 
-  This tool is intended for CodeX administrators to help them manage CodeX updates.
+- Artifact Edition improvement.
+  The user interface of the artifact edition page has been improved. You may
+  now edit, delete, point to, quote and sort follow-up comments. You can also
+  fold/unfold the artifact details appropriately.
   
-- Project templates have been improved.
-  The template mechanism now supports the document manager, forums, CVS/SVN, in 
-  addition to trackers and services.
 
-Other changes:
-- the project creation interface has been improved
-- new roles: Subversion admin and News admin
-- support for CVS watch mode through the CodeX interface.
-- embed external services in CodeX pages (service configuration)
-- permissions on news.
-- news promotion mechanism updated
-- Subversion upgraded to version 1.4.3
+- CodeX Java Runtime Interface.
+  Java developpers may now build CodeX extensions and tools with the CodeX JRI.
+  The CodeX JRI is a java layer over the SOAP API that provides Java classes 
+  to interact with the CodeX server. JARS and Javadoc are available.
 
+
+- Many other improvements
+  * SOAP API extended (mostly for tracker interaction)
+  * New document manager features (obsolete documents, metadata, search and filtering)
+  * various security fixes: password robustness tool, XSS fixes, htmlpurifier integration
+  * template mechanism extended to all services
+  * test projects
+  * tracker: temporarily suspend email notifications
+  * tracker: prevent fortuitous deletion of artifact data during concurrent update.
+  * performance improvements: new_parse script, DB indexes
+  * File packages may now be deleted
+  * access logs export
+  * Subversion upgraded to version 1.4.4
 and many more smaller additions and fixes.
 
 Enjoy CodeX!
