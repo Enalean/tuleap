@@ -710,12 +710,12 @@ class ArtifactHtml extends Artifact {
                         for ($i=0; $i < $rows; $i++) {
                             $field_name = db_result($result, $i, 'field_name');
                             $value_id_new =  db_result($result, $i, 'new_value');
-			    if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name) && $value_id_new == "") {
-			        //removed followup comment is not recorded
-				    $value_id_old = $Language->getText('tracker_include_artifact','flup_hidden');
-			    } else {
-			        $value_id_old =  db_result($result, $i, 'old_value');
-                }
+			    //if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name) && $value_id_new == "") {
+			    //    //removed followup comment is not recorded
+				//    $value_id_old = $Language->getText('tracker_include_artifact','flup_hidden');
+			    //} else {
+			          $value_id_old =  db_result($result, $i, 'old_value');
+                //}
                             
                                 $field = $art_field_fact->getFieldFromName($field_name);
                                 if ( $field ) {
@@ -748,7 +748,7 @@ class ArtifactHtml extends Artifact {
 				  }
                                 } else {
 				    $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'.((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment" : $field_name).'</TD><TD>';
+                                        '"><TD>'.((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment&nbsp;#".((int)substr($field_name,4,-8)) : $field_name).'</TD><TD>';
 				    $html .= $value_id_old.'</TD><TD>';
 				    $html .= $value_id_new;
 				    $html .= '</TD>'.
