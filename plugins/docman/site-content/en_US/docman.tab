@@ -33,7 +33,7 @@ plugin_docman	approval_notif_approve_user_mail_body	Your document '$1' was appro
 plugin_docman	approval_notif_approve_user_mail_com	with comments
 plugin_docman	approval_notif_comment_mail_subject	[$1] a reviewer commented '$2'
 plugin_docman	approval_notif_comment_mail_body	Your document '$1' was commented (but neither approved nor rejected) by '$2' <$3>.\n$5\nYou can access to the table with the following link:\n<$4>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
-plugin_docman	approval_notif_comment_mail_seq	\nImportant note: this approval table is configured in 'Sequential' mode.\nThe sequence is frozen until $2 approve or reject the document\n\n
+plugin_docman	approval_notif_comment_mail_seq	\nImportant note: this approval table is configured in 'Sequential' mode.\nThe notification sequence is on hold until $1 approves or rejects the document.
 plugin_docman	approval_notif_declined_mail_subject	[$1] a reviewer will not review '$2'
 plugin_docman	approval_notif_declined_mail_body	Your document '$1' will not be reviewed by $3 <$4>.\n\nYou can access to the table with the following link:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notification_failure	No email sent to reviewers.

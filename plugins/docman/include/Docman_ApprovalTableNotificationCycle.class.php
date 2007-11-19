@@ -295,7 +295,8 @@ class Docman_ApprovalTableNotificationCycle {
 
         $commentSeq = '';
         if($this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
-            $commentSeq = Docman::txt('approval_notif_comment_mail_seq');
+            $commentSeq = Docman::txt('approval_notif_comment_mail_seq', $reviewer->getRealName());
+            $commentSeq .= "\n";
         }
 
         $mail =& $this->_getEmailToOwner();
