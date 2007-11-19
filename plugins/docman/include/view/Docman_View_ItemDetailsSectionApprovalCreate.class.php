@@ -55,7 +55,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $atsm = new Docman_ApprovalTableNotificationCycle();
         $atsm->setItem($this->item);
 
-        $atf = new Docman_ApprovalTableFactory($this->item->getId());
+        $atf =& new Docman_ApprovalTableFactory($this->item);
         $table = $atf->getTable(false);
         $atsm->setTable($table);
 
@@ -256,7 +256,7 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         $html .= '<h3>'.Docman::txt('details_approval_create_settings').'</h3>';
 
-        $this->atf = new Docman_ApprovalTableFactory($this->item->getId());
+        $this->atf =& new Docman_ApprovalTableFactory($this->item);
         $this->table = $this->atf->getTable();
         if($this->table !== null) {
             $html .= $this->_getGlobalSettings();

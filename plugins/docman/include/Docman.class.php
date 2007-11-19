@@ -138,7 +138,7 @@ class Docman extends DocmanController {
         $html .= $GLOBALS['HTML']->box1_top($boxTitle, 0);
 
         $user =& $this->getUser();
-        $atf = new Docman_ApprovalTableFactory(null);
+        $atf =& new Docman_ApprovalTableFactory(null);
 
         if($reviewer) {
             $reviewsArray = $atf->getAllPendingReviewsForUser($user->getId());

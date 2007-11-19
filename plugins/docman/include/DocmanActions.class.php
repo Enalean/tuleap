@@ -1242,9 +1242,6 @@ class DocmanActions extends Actions {
             if(count($usUserArray) > 0) {
                 $nbUserAdded = $atf->addUsers($usUserArray);
                 if($nbUserAdded < count($usUserArray)) {
-                    // Raise an error if some users where not added
-                    $this->_controler->feedback->log('warning',
-                                                     Docman::txt('approval_useradd_failure', array(implode(', ', $atf->getUserNotFound()))));
                     $noError = false;
                 } else {
                     $userAdded = true;
@@ -1260,11 +1257,23 @@ class DocmanActions extends Actions {
                     if($atf->addUgroup($ugroup)) {
                         $ugroupAdded = true;
                     } else {
-                        $this->_controler->feedback->log('warning', Docman::txt('approval_ugroupadd_failure', ugroup_get_name_from_id($ugroup)));
                         $noError = false;
                     }
                 }
             }
+        }
+
+        if(count($atf->err['db']) > 0) {
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', implode(', ', array_unique($atf->err['db']))));
+        }
+        if(count($atf->err['perm']) > 0) {
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', implode(', ', array_unique($atf->err['perm']))));
+        }
+        if(count($atf->err['notreg']) > 0) {
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', implode(', ', array_unique($atf->err['notreg']))));
+        }
+        if(count($atf->warn['double']) > 0) {
+            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', implode(', ', array_unique($atf->warn['double']))));
         }
 
         if($userAdded && $noError) {
@@ -1340,7 +1349,7 @@ class DocmanActions extends Actions {
         $sSelUserAct = $this->_controler->_actionParams['sel_user_act'];
         $resendNotif = $this->_controler->_actionParams['resend_notif'];
 
-        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $atf =& new Docman_ApprovalTableFactory($item);
         if($atf->createTableIfNotExist($user->getId())) {
             $this->_approval_update_settings($atf, $sStatus, $notification, $description);
             $this->_approval_update_add_users($atf, $usUserList, $sUgroup);
@@ -1366,7 +1375,7 @@ class DocmanActions extends Actions {
     function approval_delete() {
         // Params
         $item = $this->_controler->_actionParams['item'];
-        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $atf =& new Docman_ApprovalTableFactory($item);
         if($atf->tableExist()) {
             $deleted = $atf->deleteTable();
             if($deleted) {
@@ -1384,7 +1393,7 @@ class DocmanActions extends Actions {
         $usRank  = $this->_controler->_actionParams['rank'];
 
         // Action
-        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $atf =& new Docman_ApprovalTableFactory($item);
         $atf->updateUser($sUserId, $usRank);
     }
 
@@ -1409,7 +1418,7 @@ class DocmanActions extends Actions {
             $review->setReviewDate(null);
         }
 
-        $atf = new Docman_ApprovalTableFactory($item->getId());
+        $atf =& new Docman_ApprovalTableFactory($item);
         $updated = $atf->updateReview($review);
         if($updated) {
             $this->_controler->feedback->log('info', Docman::txt('approval_review_success'));

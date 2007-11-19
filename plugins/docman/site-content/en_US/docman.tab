@@ -15,8 +15,8 @@ plugin_docman	action_showactions	Show options
 
 plugin_docman	approval_force_notify_success	Reviewers were notified.
 plugin_docman	approval_review_state_0	Not Yet
-plugin_docman	approval_review_state_1	Approve
-plugin_docman	approval_review_state_2	Reject
+plugin_docman	approval_review_state_1	Approved
+plugin_docman	approval_review_state_2	Rejected
 plugin_docman	approval_review_state_3	Comment only
 plugin_docman	approval_review_state_4	Will not review
 plugin_docman	approval_notif_mail_subject	[$1] Please review '$2'
@@ -40,9 +40,11 @@ plugin_docman	approval_notification_failure	No email sent to reviewers.
 plugin_docman	approval_notification_success	Email sent to reviewer.
 plugin_docman	approval_review_success	Your review was successfully recorded.
 plugin_docman	approval_review_failure	An error occurred on review recording.
-plugin_docman	approval_ugroupadd_failure	Some members of user group '$1' could not be appened to the approval table. They are already member of the table.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
-plugin_docman	approval_useradd_failure	Some users could not be  appened to the approval table: "$1". Note: Only registered users can be member of an approval table.
+plugin_docman	approval_useradd_err_perm	Cannot add following user(s). No access to document: <em>$1</em>.
+plugin_docman	approval_useradd_err_db	Cannot add  following user(s). Internal error: <em>$1</em>.
+plugin_docman	approval_useradd_err_notreg	Cannot add following user(s). Not registered users. <em>$1</em>. 
+plugin_docman	approval_useradd_warn_double	Already in this approval table: <em>$1</em>.
 plugin_docman	approval_userdel_success	All selected users were successfully removed from the approval table.
 plugin_docman	approval_userdel_failure	Cannot remove $1 from the approval table.
 plugin_docman	approval_tableupd_success	Table settings updated.

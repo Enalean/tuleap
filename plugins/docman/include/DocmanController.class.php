@@ -1003,7 +1003,7 @@ class DocmanController extends Controler {
             break;
 
         case 'approval_user_commit':
-            $atf = new Docman_ApprovalTableFactory($item->getId());
+            $atf =& new Docman_ApprovalTableFactory($item);
             $table = $atf->getTable();
             if (!$this->userCanRead($item->getId())
                 || !$atf->isReviewer($user->getId())

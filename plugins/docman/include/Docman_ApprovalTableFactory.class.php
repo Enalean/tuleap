@@ -27,20 +27,22 @@ require_once('Docman_ApprovalTable.class.php');
 require_once('Docman_ApprovalTableNotificationCycle.class.php');
 
 class Docman_ApprovalTableFactory {
-    var $itemId;
+    var $item;
     var $reviewerCache;
+    var $err;
+    var $warn;
 
-    /**
-     * Keep a cache of users not added into the table to provide meaningful
-     * error message.
-     * @access private
-     */
-    var $userNotFoundCache;
-
-    function Docman_ApprovalTableFactory($itemId) {
-        $this->itemId = $itemId;
+    function Docman_ApprovalTableFactory($item) {
+        $this->item = $item;
         $this->reviewerCache = null;
-        $this->userNotFoundCache = array();
+
+        // Cache of error messages
+        $this->err = array();
+        $this->err['db'] = array();
+        $this->err['perm'] = array();
+        $this->err['notreg'] = array();
+        $this->warn = array();
+        $this->warn['double'] = array();
     }
 
     function createTableFromRow($row) {
@@ -51,12 +53,12 @@ class Docman_ApprovalTableFactory {
 
     function createTable($userId) {
         $dao =& $this->_getApprovalTableDao();
-        return $dao->createTable($this->itemId, $userId, '');
+        return $dao->createTable($this->item->getId(), $userId, '');
     }
 
     function tableExist() {
         $dao =& $this->_getApprovalTableDao();
-        return $dao->tableExist($this->itemId);
+        return $dao->tableExist($this->item->getId());
     }
 
     function createTableIfNotExist($userId) {
@@ -70,9 +72,9 @@ class Docman_ApprovalTableFactory {
 
     function deleteTable() {
         $dao =& $this->_getApprovalTableDao();
-        $deleted = $dao->deleteTable($this->itemId);
+        $deleted = $dao->deleteTable($this->item->getId());
         if($deleted) {
-            $deleted = $dao->truncateTable($this->itemId);
+            $deleted = $dao->truncateTable($this->item->getId());
         }
         return $deleted;
     }
@@ -85,7 +87,7 @@ class Docman_ApprovalTableFactory {
      */
     function updateTable($status, $notification, $description) {
         $dao =& $this->_getApprovalTableDao();
-        $updated = $dao->updateTable($this->itemId, '', $status, $notification, $description);
+        $updated = $dao->updateTable($this->item->getId(), '', $status, $notification, $description);
         if($updated) {
             // It will be great to have a generic feedback mecanism to report
             // several messages (Here: report that the table was successfully
@@ -107,14 +109,14 @@ class Docman_ApprovalTableFactory {
 
         $dao =& $this->_getApprovalTableDao();
         
-        $dar = $dao->getTableById($this->itemId);
+        $dar = $dao->getTableById($this->item->getId());
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $table = $this->createTableFromRow($row);
         }
 
         if($withReviewers && $table !== null) {
-            $dar = $dao->getReviewerList($this->itemId);
+            $dar = $dao->getReviewerList($this->item->getId());
             $dar->rewind();
             while($dar->valid()) {
                 $row = $dar->current();
@@ -178,7 +180,7 @@ class Docman_ApprovalTableFactory {
     }
 
     /**
-     * Return the list of ugroups selectable to fill the notification table.
+     * Return the list of ugroup selectable to fill the notification table.
      *
      * It contains: all dynamic ugroups plus project members and admins.
      */
@@ -205,7 +207,7 @@ class Docman_ApprovalTableFactory {
     function getReviewer($userId) {
         $reviewer = null;
         $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getReviewerById($this->itemId, $userId);
+        $dar = $dao->getReviewerById($this->item->getId(), $userId);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $reviewer = $this->createReviewerFromRow($row);
@@ -221,7 +223,7 @@ class Docman_ApprovalTableFactory {
     function isReviewer($userId) {
         if($this->reviewerCache === null) {
             $dao =& $this->_getApprovalTableDao();
-            $dar = $dao->getReviewerList($this->itemId);
+            $dar = $dao->getReviewerList($this->item->getId());
             $dar->rewind();
             while($dar->valid()) {
                 $row = $dar->current();
@@ -236,30 +238,31 @@ class Docman_ApprovalTableFactory {
     }
 
     /**
-     */
-    function getUserNotFound() {
-        return $this->userNotFoundCache;
-    }
-
-    /**
      * Add given user into the reviewer list if she's not already member.
-     * @todo: test is user can read the document.
      *
      * @access: private
      */
     function _addUser($userId) {
-        $dao =& $this->_getApprovalTableDao();
-        if(!$this->isReviewer($userId)) {
-            $added = $dao->addUser($this->itemId, $userId);
-            if($added) {
-                $this->reviewerCache[$userId] = true;
-                return true;
+        $dPm =& Docman_PermissionsManager::instance($this->item->getGroupId());
+        $um =& $this->_getUserManager();
+        $user =& $um->getUserById($userId);
+        if($dPm->userCanRead($user, $this->item->getId())) {
+            if(!$this->isReviewer($user->getId())) {
+                $dao =& $this->_getApprovalTableDao();
+                $added = $dao->addUser($this->item->getId(), $user->getId());
+                if($added) {
+                    $this->reviewerCache[$user->getId()] = true;
+                    return true;
+                } else {
+                    $this->err['db'][] = $user->getRealName();
+                }
             } else {
-                return false;
+                $this->warn['double'][] = $user->getRealName();
             }
         } else {
-            return false;
+            $this->err['perm'][] = $user->getRealName();
         }
+        return false;
     }
 
     /**
@@ -286,9 +289,8 @@ class Docman_ApprovalTableFactory {
                         $nbUserAdded++;
                     }
                 }
-            }
-            if(!$added) {
-                $this->userNotFoundCache[] = $user;
+            } else {
+                $this->err['notreg'][] = $user;
             }
         }
         return $nbUserAdded;
@@ -303,15 +305,8 @@ class Docman_ApprovalTableFactory {
         $nbUserAdded = 0;
         $nbMembers = 0;
 
-        $groupId = -1;
-        if($ugroupId <= 100) {
-            $itemFactory = $this->_getItemFactory();
-            $item = $itemFactory->getItemFromDb($this->itemId);
-            $groupId = $item->getGroupId();
-        }
-
         $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getUgroupMembers($ugroupId, $groupId);
+        $dar = $dao->getUgroupMembers($ugroupId, $this->item->getGroupId());
         if($dar && !$dar->isError()) {
             $dar->rewind();
             while($dar->valid()) {
@@ -335,7 +330,7 @@ class Docman_ApprovalTableFactory {
      */
     function updateUser($userId, $rank) {
         $dao =& $this->_getApprovalTableDao();
-        return $dao->updateUser($this->itemId, $userId, $rank);
+        return $dao->updateUser($this->item->getId(), $userId, $rank);
     }
 
     /**
@@ -343,7 +338,7 @@ class Docman_ApprovalTableFactory {
      */
     function delUser($userId) {
         $dao =& $this->_getApprovalTableDao();
-        $deleted = $dao->delUser($this->itemId, $userId);
+        $deleted = $dao->delUser($this->item->getId(), $userId);
         if($deleted) {
             if(isset($this->reviewerCache[$userId])) {
                 unset($this->reviewerCache[$userId]);
@@ -358,7 +353,7 @@ class Docman_ApprovalTableFactory {
      */
     function updateReview($review) {
         $dao =& $this->_getApprovalTableDao();
-        $updated = $dao->updateReview($this->itemId,
+        $updated = $dao->updateReview($this->item->getId(),
                                   $review->getId(),
                                   $review->getReviewDate(),
                                   $review->getState(),
@@ -459,7 +454,7 @@ class Docman_ApprovalTableFactory {
         $atsm->setTable($table);
 
         $itemFactory = $this->_getItemFactory();
-        $item = $itemFactory->getItemFromDb($this->itemId);
+        $item = $itemFactory->getItemFromDb($this->item->getId());
         $atsm->setItem($item);
 
         $um =& $this->_getUserManager();

@@ -410,7 +410,7 @@ extends Docman_View_ItemDetailsSection {
 
         $html .= $this->getToolbar();
 
-        $this->atf = new Docman_ApprovalTableFactory($this->item->getId());
+        $this->atf =& new Docman_ApprovalTableFactory($this->item);
         $this->table = $this->atf->getTable();
         if($this->table === null) {
             $html .= '<p>';
