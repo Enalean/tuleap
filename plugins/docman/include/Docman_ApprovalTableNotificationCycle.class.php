@@ -366,6 +366,7 @@ class Docman_ApprovalTableNotificationCycle {
      */
     function getTableState() {
         $nbApproved = 0;
+        $nbDeclined = 0;
         $rejected = false;
         $dao =& $this->_getApprovalTableDao();
         $dar = $dao->getReviewerList($this->item->getId());
@@ -379,13 +380,16 @@ class Docman_ApprovalTableNotificationCycle {
             case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
                 $rejected = true;
                 break;
+            case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
+                $nbDeclined++;
+                break;
             }
             $dar->next();
         }
         if($rejected) {
             return PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED;
         }
-        if($nbApproved == $dar->rowCount()) {
+        if(($nbApproved + $nbDeclined) == $dar->rowCount()) {
             return PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED;
         }
         return PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET;
@@ -421,10 +425,10 @@ class Docman_ApprovalTableNotificationCycle {
     }
 
     function &_getMail() {
+        $mail = new Mail();
         //require_once('common/mail/TestMail.class.php');
         //$mail = new TestMail();
         //$mail->_testDir = '/local/vm16/codev/crx1348-sttrunk/var/spool/mail';
-        $mail = new Mail();
         return $mail;
     }
 

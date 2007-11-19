@@ -1344,13 +1344,15 @@ class DocmanActions extends Actions {
         if($atf->createTableIfNotExist($user->getId())) {
             $this->_approval_update_settings($atf, $sStatus, $notification, $description);
             $this->_approval_update_add_users($atf, $usUserList, $sUgroup);
-            switch($sSelUserAct){
-            case 'del':
-                $this->_approval_update_del_users($atf, $sSelUser);
-                break;
-            case 'mail':
-                $this->_approval_update_notify_users($atf, $sSelUser);
-                break;
+            if(is_array($sSelUser) && count($sSelUser) > 0) {
+                switch($sSelUserAct){
+                case 'del':
+                    $this->_approval_update_del_users($atf, $sSelUser);
+                    break;
+                case 'mail':
+                    $this->_approval_update_notify_users($atf, $sSelUser);
+                    break;
+                }
             }
             // If needed, notify next reviewer
             if($resendNotif) {
