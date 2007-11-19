@@ -269,7 +269,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= $this->_getAddReviewers();
 
         $html .= '<p>';
-        $html .= '<td colspan="2"><input type="submit" value="'.Docman::txt('details_approval_create_submit').'"></td>';
+        $html .= '<input type="submit" value="'.Docman::txt('details_approval_create_submit').'">';
         $html .= '</p>';
 
         $html .= '</form>';
