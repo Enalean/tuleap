@@ -85,7 +85,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function _getPropertiesFields() {
+    function _getPropertiesFields($params) {
         $html = '';
 
         $params['theme_path'] = $this->theme_path;
@@ -121,7 +121,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $html .= '<fieldset>';
             $html .= '<legend>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_folder').'</legend>';
         }
-        $html .= $this->_getPropertiesFields();
+        $html .= $this->_getPropertiesFields($params);
         if($defaultValuesToManage) {
             $html .= '</fieldset>';
 
