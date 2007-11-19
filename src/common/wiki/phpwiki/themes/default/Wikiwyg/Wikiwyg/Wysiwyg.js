@@ -231,9 +231,9 @@ proto.do_pre = function(){
     var selection = this.get_pre_selection_text();
     
     if(!selection){
-        html = '<pre style="background-color:#FDFDF7"><br></pre><br>';
+        html = '<pre style="background-color:#FFFFCC"><br></pre><br>';
     }else{
-        html = '<pre style="background-color:#FDFDF7">' + unescape(selection) + '</pre><br>';
+        html = '<pre style="background-color:#FFFFCC">' + unescape(selection) + '</pre><br>';
     }
     this.insert_html(html, 1);
     this.format_command;

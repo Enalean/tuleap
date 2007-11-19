@@ -81,7 +81,7 @@ class WikiToHtml {
     // Preview preformatted areas with a light yellow background.
     function color_pre_tags() {
         $pattern = '/\<pre class\=\".*\"\>/Usi';
-        $replace_string = '<pre style="background-color:#FDFDF7">';
+        $replace_string = '<pre style="background-color:#FFFFCC">';
         $this->_html = preg_replace($pattern, $replace_string, $this->_html);
     }
 
