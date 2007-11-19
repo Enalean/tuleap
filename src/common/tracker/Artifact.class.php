@@ -2570,7 +2570,10 @@ class Artifact extends Error {
                         $H(tracker_comment_togglers).values().each(function (value) {
                                 (value)(null, true, false);
                         });
-                    }</script>';
+                    }
+                    var matches = location.hash.match(/#comment_(\d*)/);
+                    var linked_comment_id = matches ? matches[1] : null;
+                    </script>';
                     $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">expand all</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">collapse all</a></div>';
                 }
             }
@@ -2645,7 +2648,9 @@ class Artifact extends Error {
                     };
                     Event.observe($('comment_". $comment_id ."_toggle'), 'click', tracker_comment_togglers[$comment_id]);";
                     $out .= '</script>';
-                    $out .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment - #'. $comment_id .'">'. $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle', 'title' => 'Link to this comment - #'. $comment_id)) .'</a> </span>';
+                    $out .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment - #'. $comment_id .'" onclick="tracker_comment_togglers['. $comment_id .'](null, true, true);">';
+                    $out .= $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle', 'title' => 'Link to this comment - #'. $comment_id));
+                    $out .= '</a> </span>';
                     $out .= '<span class="followup_comment_title_user">';
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $out .= db_result($orig_subm, 0, 'email');
@@ -2700,6 +2705,11 @@ class Artifact extends Error {
                     $out .= util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
                     $out .= '</div>';
                     $out .= '</div>';
+                    $out .= '<script type="text/javascript">
+                    if (linked_comment_id == '. $comment_id .') {
+                        tracker_comment_togglers['. $comment_id .'](null, true, true);
+                    }
+                    </script>';
                 }
             }
             if (!$ascii) {
