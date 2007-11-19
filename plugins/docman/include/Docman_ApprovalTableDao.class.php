@@ -102,7 +102,12 @@ class Docman_ApprovalTableDao  extends DataAccessObject {
                 ' SET '.$_updStmt.
                 ' WHERE '.$_whereStmt;
 
-            return $this->update($sql);
+            $res = $this->update($sql);
+            if($res && $this->da->affectedRows() > 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
         else {
             return -1;
@@ -140,13 +145,20 @@ class Docman_ApprovalTableDao  extends DataAccessObject {
     }
 
     function getFirstReviewerByStatus($itemId, $status) {
+        if(is_array($status)) {
+            $_status = array_map("intval", $status);
+            $state = 'state IN ('.implode(',', $status).')';
+        } else {
+            $state = 'state = '.intval($status);
+        }
+
         $sql = sprintf('SELECT * '.
                        ' FROM plugin_docman_approval_user au'.
                        ' WHERE item_id = %d'.
-                       '  AND state = %d'.
+                       '  AND '.$state.
                        ' ORDER BY rank'.
                        ' LIMIT 1',
-                       $itemId, $status);
+                       $itemId);
         return $this->retrieve($sql);
     }
 
@@ -323,7 +335,23 @@ class Docman_ApprovalTableDao  extends DataAccessObject {
                        $userId, $state, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         return $this->retrieve($sql);
     }
-     
+
+    function getAllApprovalTableForUser($userId) {
+        $sql = sprintf('SELECT i.item_id, i.group_id, a.date, i.title, g.group_name'.
+                       ' FROM plugin_docman_approval a'.
+                       '  JOIN plugin_docman_item i ON (i.item_id = a.item_id)'.
+                       '  JOIN groups g ON (g.group_id = i.group_id)'.
+                       ' WHERE a.table_owner = %d'.
+                       ' AND a.status IN (%d, %d)'.
+                       ' AND i.delete_date IS NULL'.
+                       ' AND g.status = \'A\''.
+                       ' ORDER BY i.group_id ASC, a.date ASC',
+                       $userId,
+                       PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED,
+                       PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>

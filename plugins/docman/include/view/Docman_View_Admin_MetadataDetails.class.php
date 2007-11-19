@@ -76,9 +76,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         //
 
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            
-            echo '<hr />'."\n";
-
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_title').'</h3>';
 
             echo '<div class="docman_admin_list_values">'."\n";
@@ -154,8 +151,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             echo '</div><!--  docman_admin_list_values -->'."\n";
 
             if($md->getLabel() != 'status') {
-                echo '<hr />'."\n";
-            
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_title').'</h3>';
                 
                 $loveDetailsHtml = new Docman_View_LoveDetails($md);
@@ -177,7 +172,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             }
         }
 
-        echo '<hr />'."\n";
         $backUrl  = $this->buildUrl($params['default_url'],
                                     array('action' => 'admin_metadata'));
         echo '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_backtomenu').'</a></p>';

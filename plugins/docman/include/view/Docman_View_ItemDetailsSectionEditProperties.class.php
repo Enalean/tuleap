@@ -145,8 +145,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             $docChecked = ' selected="selected"';
             $fldChecked = '';
         }
-        $html .= '<hr />';
-        $html .= '<p><strong>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_title').'</strong></p>';
+
+        $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_title').'</h4>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_include_docs_desc').'</p>';
         $html .= '<p>';
         $html .= '<select name="recurse_on_doc">';

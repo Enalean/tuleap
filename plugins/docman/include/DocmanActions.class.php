@@ -1217,6 +1217,116 @@ class DocmanActions extends Actions {
         
     }
 
+    /**
+     * @access private
+     */
+    function _approval_update_settings($atf, $sStatus, $notification, $description) {
+        // Update settings
+        $updated = $atf->updateTable($sStatus, $notification, $description);
+        if($updated) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_tableupd_success'));
+        }
+    }
+
+    /**
+     * @access private
+     */
+    function _approval_update_add_users($atf, $usUserList, $sUgroups) {
+        $noError = true;
+        $userAdded = false;
+
+        // Update users
+        if(trim($usUserList) != '') {
+            $usUserArray = explode(',', $usUserList);
+            // First add individual users
+            if(count($usUserArray) > 0) {
+                $nbUserAdded = $atf->addUsers($usUserArray);
+                if($nbUserAdded < count($usUserArray)) {
+                    // Raise an error if some users where not added
+                    $this->_controler->feedback->log('warning',
+                                                     Docman::txt('approval_useradd_failure', array(implode(', ', $atf->getUserNotFound()))));
+                    $noError = false;
+                } else {
+                    $userAdded = true;
+                }
+            }
+        }
+
+        // Then add ugroups.
+        if($sUgroups !== null && count($sUgroups) > 0) {
+            foreach($sUgroups as $ugroup) {
+                $ugroupAdded = false;
+                if($ugroup > 0 && $ugroup != 100) {
+                    if($atf->addUgroup($ugroup)) {
+                        $ugroupAdded = true;
+                    } else {
+                        $this->_controler->feedback->log('warning', Docman::txt('approval_ugroupadd_failure', ugroup_get_name_from_id($ugroup)));
+                        $noError = false;
+                    }
+                }
+            }
+        }
+
+        if($userAdded && $noError) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_useradd_success'));
+        }
+    }
+
+    /**
+     * @access private
+     */
+    function _approval_update_del_users($atf, $selectedUsers) {
+        $deletedUsers = 0;
+        foreach($selectedUsers as $userId) {
+            if($atf->delUser($userId)) {
+                $deletedUsers++;
+            }
+        }
+
+        if(count($selectedUsers) == $deletedUsers) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_userdel_success'));
+        } else {
+            $this->_controler->feedback->log('error', Docman::txt('approval_userdel_failure'));
+        }
+    }
+
+    /**
+     * @access private
+     */
+    function _approval_update_notify_users($atf, $selectedUsers) {
+        $notifiedUsers = 0;
+        $atnc = $atf->_getApprovalTableNotificationCycle(true);
+        // For each reviewer, if he is selected, notify it
+        // This allow us to verify that we actully notify people
+        // member of the table!
+        $table = $atnc->getTable();
+        $ri = $table->getReviewerIterator();
+        while($ri->valid()) {
+            $reviewer = $ri->current();
+            if(in_array($reviewer->getId(), $selectedUsers)) {
+                if($atnc->notifyIndividual($reviewer->getId())) {
+                    $notifiedUsers++;
+                }
+            }
+            $ri->next();
+        }
+        if(count($selectedUsers) == $notifiedUsers) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_force_notify_success'));
+        }
+    }
+
+    /**
+     * @access private
+     */
+    function _approval_update_notif_resend($atf) {
+        $res = $atf->notifyReviewers();
+        if($res) {
+            $this->_controler->feedback->log('info', Docman::txt('approval_notification_success'));
+        } else {
+            $this->_controler->feedback->log('warning', Docman::txt('approval_notification_failure'));
+        }
+    }
+
     function approval_update() {
         // Params
         $item       = $this->_controler->_actionParams['item'];
@@ -1224,14 +1334,27 @@ class DocmanActions extends Actions {
         $sStatus    = $this->_controler->_actionParams['status'];
         $notification = $this->_controler->_actionParams['notification'];
         $description =  $this->_controler->_actionParams['description'];
+        $usUserList = $this->_controler->_actionParams['user_list'];
+        $sUgroup    = $this->_controler->_actionParams['ugroup_list'];
+        $sSelUser   = $this->_controler->_actionParams['sel_user'];
+        $sSelUserAct = $this->_controler->_actionParams['sel_user_act'];
+        $resendNotif = $this->_controler->_actionParams['resend_notif'];
 
         $atf = new Docman_ApprovalTableFactory($item->getId());
         if($atf->createTableIfNotExist($user->getId())) {
-            $updated = $atf->updateTable($sStatus, $notification, $description);
-            if($updated) {
-                $this->_controler->feedback->log('info', Docman::txt('approval_tableupd_success'));
-            } else {
-                $this->_controler->feedback->log('warning', Docman::txt('approval_tableupd_failure'));
+            $this->_approval_update_settings($atf, $sStatus, $notification, $description);
+            $this->_approval_update_add_users($atf, $usUserList, $sUgroup);
+            switch($sSelUserAct){
+            case 'del':
+                $this->_approval_update_del_users($atf, $sSelUser);
+                break;
+            case 'mail':
+                $this->_approval_update_notify_users($atf, $sSelUser);
+                break;
+            }
+            // If needed, notify next reviewer
+            if($resendNotif) {
+                $this->_approval_update_notif_resend($atf);
             }
         } else {
             $this->_controler->feedback->log('error', Docman::txt('approval_tableins_failure'));
@@ -1252,38 +1375,6 @@ class DocmanActions extends Actions {
         }
     }
 
-    function approval_add_user() {
-        // Params
-        $item       = $this->_controler->_actionParams['item'];
-        $user       = $this->_controler->getUser();
-        $usUserList = $this->_controler->_actionParams['user_list'];
-        $sUgroup    = $this->_controler->_actionParams['ugroup'];
-
-        // Extract info
-        $usUserArray = explode(',', $usUserList);
-
-        // Action
-        $_canAddUsers = false;
-        $atf = new Docman_ApprovalTableFactory($item->getId());
-        if($atf->createTableIfNotExist($user->getId())) {
-            $userAdded = $atf->addUsers($usUserArray);
-
-            $ugrpAdded = false;
-            if($sUgroup > 0 && $sUgroup != 100) {
-                $ugrpAdded = $atf->addUgroup($sUgroup);
-            }
-
-            if($userAdded || $ugrpAdded) {
-                $this->_controler->feedback->log('info', Docman::txt('approval_useradd_success'));
-            }
-            else {
-                $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_failure'));
-            }
-        } else {
-            $this->_controler->feedback->log('error', Docman::txt('approval_tableins_failure'));
-        }
-    }
-
    function approval_upd_user() {
         // Params
         $item    = $this->_controler->_actionParams['item'];
@@ -1293,21 +1384,6 @@ class DocmanActions extends Actions {
         // Action
         $atf = new Docman_ApprovalTableFactory($item->getId());
         $atf->updateUser($sUserId, $usRank);
-    }
-
-    function approval_del_user() {
-        // Params
-        $item       = $this->_controler->_actionParams['item'];
-        $sUserId = $this->_controler->_actionParams['user_id'];
-
-        // Action
-        $atf = new Docman_ApprovalTableFactory($item->getId());
-        $deleted = $atf->delUser($sUserId);
-        if($deleted) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_userdel_success'));
-        } else {
-            $this->_controler->feedback->log('error', Docman::txt('approval_userdel_failure'));
-        }
     }
 
     function approval_user_commit() {
@@ -1340,20 +1416,6 @@ class DocmanActions extends Actions {
         }
 
         $this->monitor($this->_controler->_actionParams);
-    }
-
-    function approval_notif_resend() {
-        // Params
-        $item      = $this->_controler->_actionParams['item'];
-
-        $atf = new Docman_ApprovalTableFactory($item->getId());
-        $res = $atf->notifyReviewers();
-        if($res) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_notification_success'));
-        }
-        else {
-            $this->_controler->feedback->log('warning', Docman::txt('approval_notification_failure'));
-        }
     }
 
     function report_del() {

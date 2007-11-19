@@ -24,16 +24,23 @@
  */
 
 require_once('Docman_ApprovalTable.class.php');
-require_once('Docman_ApprovalTableDao.class.php');
-require_once('common/mail/Mail.class.php');
+require_once('Docman_ApprovalTableNotificationCycle.class.php');
 
 class Docman_ApprovalTableFactory {
     var $itemId;
     var $reviewerCache;
 
+    /**
+     * Keep a cache of users not added into the table to provide meaningful
+     * error message.
+     * @access private
+     */
+    var $userNotFoundCache;
+
     function Docman_ApprovalTableFactory($itemId) {
         $this->itemId = $itemId;
         $this->reviewerCache = null;
+        $this->userNotFoundCache = array();
     }
 
     function createTableFromRow($row) {
@@ -122,80 +129,18 @@ class Docman_ApprovalTableFactory {
     }
 
     /**
-     * Notify everybody in the same time
-     *
-     * @return boolean Will return false only if there is no table or no
-     * reviewers to notify. If one notification fail, I don't have the tools to
-     * report it to the user.
-     */
-    function notifyAllAtOnce() {
-        $nbNotif = 0;
-        $table = $this->getTable();
-        if($table !== null) {
-            $rIter = $table->getReviewerIterator();
-            if($rIter !== null) {
-                $rIter->rewind();
-                while($rIter->valid()) {
-                    $reviewer = $rIter->current();
-                    if($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET) {
-                        $sent = $this->sendNotification($table->getOwner(), $reviewer->getId(), PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE, $table->getDescription());
-                        if($sent) {
-                            $nbNotif++; 
-                        }
-                    }
-                    $rIter->next();
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
-        if($nbNotif > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sequential notification
-     *
-     * Send a mail to the first reviewer that didn't already commit herself
-     * (review = not yet). If someone reject the document, CodeX doesn't send
-     * any emails.
-     */
-    function notifySequential() {
-        $table = $this->getTable(false);
-        
-        $dao =& $this->_getApprovalTableDao();
-
-        $dar = $dao->getFirstReviewerByStatus($this->itemId, PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            return false;
-        }
-        else {
-            $dar = $dao->getFirstReviewerByStatus($this->itemId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                $row = $dar->current();
-                return $this->sendNotification($table->getOwner(), $row['reviewer_id'], PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL, $table->getDescription());
-            }
-        }
-    }
-
-    /**
      * Call the right notification method regarding the notification type.
      * @access: private
      */
     function _notifyReviewers($notification) {
         $res = false;
+        $atsm =& $this->_getApprovalTableNotificationCycle(true);
         switch($notification) {
         case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-            $res = $this->notifyAllAtOnce();
+            $res = $atsm->notifyAllAtOnce();
             break;
         case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-            $res = $this->notifySequential();
+            $res = $atsm->notifyNextReviewer();
             break;
         default:
         }
@@ -222,161 +167,6 @@ class Docman_ApprovalTableFactory {
         }
     }
 
-    /**
-     * Build and send notification email to given user.
-     */
-    function sendNotification($ownerId, $reviewerId, $notificationType, $userComment) {
-        $mail = $this->getNotificationEmail($ownerId, $reviewerId, $notificationType, $userComment);
-        if($mail != null) {
-            return $mail->send();
-        }
-        return false;
-    }
-    
-    function getNotificationEmail($ownerId, $reviewerId, $notificationType, $userComment) {
-        $itemFactory = $this->_getItemFactory();
-        $item = $itemFactory->getItemFromDb($this->itemId);
-        if($item) {
-            // Users
-            $um =& $this->_getUserManager();
-            $owner    =& $um->getUserById($ownerId);
-            $reviewer =& $um->getUserById($reviewerId);
-            
-            // Project
-            $group = group_get_object($item->getGroupId());
-
-            // Url
-            $baseUrl = get_server_url().'/plugins/docman/?group_id='.$item->getGroupId();
-            $itemUrl   = $baseUrl .'&action=show&id='.$item->getId();
-            $reviewUrl = $baseUrl .'&action=details&section=approval&id='.$item->getId().'&user_id='.$reviewer->getId();
-
-            // Notification style
-            $notifStyle = '';
-            switch($notificationType) {
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                $notifStyle = Docman::txt('approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
-                break;
-            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                $notifStyle = Docman::txt('approval_notif_mail_notif_all');
-                break;
-            }
-
-            // Comment
-            $comment = '';
-            if($userComment != '') {
-                $comment = Docman::txt('approval_notif_mail_notif_owner_comment', array($userComment));
-                $comment .= "\n\n";
-            }
-
-            $subj = Docman::txt('approval_notif_mail_subject', array($GLOBALS['sys_name'], $item->getTitle()));
-            $body = Docman::txt('approval_notif_mail_body', array($item->getTitle(), 
-                                                                  $group->getPublicName(),
-                                                                  $owner->getRealName(),
-                                                                  $itemUrl,
-                                                                  $comment,
-                                                                  $notifStyle,
-                                                                  $reviewUrl,
-                                                                  $owner->getEmail()));
-
-            $mail =& $this->_getMail();
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setTo($reviewer->getEmail());
-            $mail->setSubject($subj);
-            $mail->setBody($body);
-
-            return $mail;
-        }
-        else {
-            return null;
-        }
-    }
-
-    function getTableState() {
-        $nbApproved = 0;
-        $rejected = false;
-        $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getReviewerList($this->itemId);
-        $dar->rewind();
-        while(!$rejected && $dar->valid()) {
-            $row = $dar->current();
-            switch($row['state']) {
-            case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                $nbApproved++;
-                break;
-            case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
-                $rejected = true;
-                break;
-            }
-            $dar->next();
-        }
-        if($rejected) {
-            return PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED;
-        }
-        if($nbApproved == $dar->rowCount()) {
-            return PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED;
-        }
-        return PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET;
-    }
-
-    /**
-     * Notify table owner.
-     *
-     * If type == Rejected we notify table owner that table was rejected by
-     *            $reviewerId
-     * If type == Approved and reviewerId != null: notifies owner that
-     *            $reviewerId approved the document
-     * If type == Approved and reviewerId == null: notifies owner that all
-     *            reviewers approved the document
-     */
-    function notifyOwner($type, $reviewerId=null) {
-        $mailSent = false;
-        $table = $this->getTable(false);
-        if($table !== null) {
-            $itemFactory = $this->_getItemFactory();
-            $item = $itemFactory->getItemFromDb($this->itemId);
-
-            $um =& $this->_getUserManager();
-            $owner =& $um->getUserById($table->getOwner());
-
-            $reviewer = null;
-            if($reviewerId !== null) {
-                $reviewer =& $um->getUserById($reviewerId);
-            }
-
-            $baseUrl = get_server_url().'/plugins/docman/?group_id='.$item->getGroupId();
-            $reviewUrl = $baseUrl .'&action=details&section=approval&id='.$item->getId();
-
-            switch($type) {
-            case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
-                $mail =& $this->_getMail();
-                $mail->setFrom($GLOBALS['sys_noreply']);
-                $mail->setTo($owner->getEmail());
-                $mail->setSubject(Docman::txt('approval_notif_reject_mail_subject', array($GLOBALS['sys_name'], $item->getTitle())));
-                $mail->setBody(Docman::txt('approval_notif_reject_mail_body', array($item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail())));
-                $mailSent = $mail->send();
-                break;
-            case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
-                $itemPropertiesUrl = $baseUrl .'&action=edit&id='.$item->getId();
-
-                $mail =& $this->_getMail();
-                $mail->setFrom($GLOBALS['sys_noreply']);
-                $mail->setTo($owner->getEmail());
-
-                if($reviewer !== null) {
-                    $mail->setSubject(Docman::txt('approval_notif_approve_user_mail_subject', array($GLOBALS['sys_name'], $item->getTitle())));
-                    $mail->setBody(Docman::txt('approval_notif_approve_user_mail_body', array($item->getTitle(), $reviewUrl, $reviewer->getRealName(), $reviewer->getEmail())));
-                } else {
-                    $mail->setSubject(Docman::txt('approval_notif_approve_mail_subject', array($GLOBALS['sys_name'], $item->getTitle())));
-                    $mail->setBody(Docman::txt('approval_notif_approve_mail_body', array($item->getTitle(), $reviewUrl, $itemPropertiesUrl)));
-                }
-                $mailSent = $mail->send();
-
-                break;
-            }
-            return $mailSent;
-        }
-    }
-
     //
     // User Management
     //
@@ -397,8 +187,10 @@ class Docman_ApprovalTableFactory {
                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $ugroups = array();
         while($row = db_fetch_array($res)) {
-            $ugroups['vals'][] = $row['ugroup_id'];
-            $ugroups['txts'][] = util_translate_name_ugroup($row['name']);
+            $r = array();
+            $r['value'] = $row['ugroup_id'];
+            $r['text'] = util_translate_name_ugroup($row['name']);
+            $ugroups[] = $r;
         }
 
         return $ugroups;
@@ -444,6 +236,12 @@ class Docman_ApprovalTableFactory {
     }
 
     /**
+     */
+    function getUserNotFound() {
+        return $this->userNotFoundCache;
+    }
+
+    /**
      * Add given user into the reviewer list if she's not already member.
      * @todo: test is user can read the document.
      *
@@ -473,11 +271,12 @@ class Docman_ApprovalTableFactory {
      * @param Array of string $userArray this method try to find a matching
      *   user in the given list. A matching user is a Active or Restricted
      *   CodeX user.
-     * @return true if at least one user was added to the list.
+     * @return int number of users added.
      */
     function addUsers($userArray) {
         $nbUserAdded = 0;
         foreach($userArray as $user) {
+            $added = false;
             $userName = util_user_finder($user, true);
             if($userName != '') {
                 $res = user_get_result_set_from_unix($userName);
@@ -488,11 +287,11 @@ class Docman_ApprovalTableFactory {
                     }
                 }
             }
+            if(!$added) {
+                $this->userNotFoundCache[] = $user;
+            }
         }
-        if($nbUserAdded > 0) {
-            return true;
-        }
-        return false;
+        return $nbUserAdded;
     }
 
     /**
@@ -502,6 +301,7 @@ class Docman_ApprovalTableFactory {
      */
     function addUgroup($ugroupId) {
         $nbUserAdded = 0;
+        $nbMembers = 0;
 
         $groupId = -1;
         if($ugroupId <= 100) {
@@ -509,12 +309,13 @@ class Docman_ApprovalTableFactory {
             $item = $itemFactory->getItemFromDb($this->itemId);
             $groupId = $item->getGroupId();
         }
- 
+
         $dao =& $this->_getApprovalTableDao();
         $dar = $dao->getUgroupMembers($ugroupId, $groupId);
         if($dar && !$dar->isError()) {
             $dar->rewind();
             while($dar->valid()) {
+                $nbMembers++;
                 $row = $dar->current();
                 $added = $this->_addUser($row['user_id']);
                 if($added) {
@@ -523,7 +324,7 @@ class Docman_ApprovalTableFactory {
                 $dar->next();
             }
         }
-        if($nbUserAdded > 0) {
+        if($nbUserAdded == $nbMembers) {
             return true;
         }
         return false;
@@ -564,23 +365,8 @@ class Docman_ApprovalTableFactory {
                                   $review->getComment(),
                                   $review->getVersion());
         if($updated) {
-            if($review->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED) {
-                $this->notifyOwner(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $review->getId());
-            }
-            elseif($this->getTableState() == PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED) {
-                $this->notifyOwner(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
-            }
-            else {
-                if($review->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED) {
-                    // Notify table owner
-                    $this->notifyOwner(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $review->getId());
-
-                    $table = $this->getTable(false);
-                    if($table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
-                        $this->notifySequential();
-                    }
-                }
-            }
+            $atsm =& $this->_getApprovalTableNotificationCycle();
+            $atsm->reviewUpdated($review);
             return true;
         }
         return false;
@@ -590,16 +376,45 @@ class Docman_ApprovalTableFactory {
         return Docman::txt('approval_review_state_'.$state);
     }
 
+    function getNotificationTypeName($type) {
+        return Docman::txt('details_approval_notif_'.$type);
+    }
+
+    /**
+     * Return all the review where the user doesn't commit himself yet.
+     */
     function getAllPendingReviewsForUser($userId) {
         $reviewsArray = array();
         $dao =& $this->_getApprovalTableDao();
         $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $docmanUrl = get_server_url().'/plugins/docman';
         while($dar->valid()) {
             $row = $dar->current();
-            
-            $baseUrl = get_server_url().'/plugins/docman/?group_id='.$row['group_id'];
+            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
             $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'].'&user_id='.$userId;
+            $reviewsArray[] = array('group' => $row['group_name'],
+                                    'group_id' => $row['group_id'],
+                                    'title' => $row['title'],
+                                    'date'  => $row['date'],
+                                    'url'   => $url);
+            $dar->next();
+        }
+        return $reviewsArray;
+    }
 
+    /**
+     * Return all the approval table not deleted and not closed where the user
+     * is the table owner.
+     */
+    function getAllApprovalTableForUser($userId) {
+        $reviewsArray = array();
+        $dao =& $this->_getApprovalTableDao();
+        $dar = $dao->getAllApprovalTableForUser($userId);
+        $docmanUrl = get_server_url().'/plugins/docman';
+        while($dar->valid()) {
+            $row = $dar->current();
+            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
+            $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'];
             $reviewsArray[] = array('group' => $row['group_name'],
                                     'group_id' => $row['group_id'],
                                     'title' => $row['title'],
@@ -632,9 +447,25 @@ class Docman_ApprovalTableFactory {
         return $i;
     }
 
-    function _getUserManager() {
+    function &_getUserManager() {
         $um =& UserManager::instance();
         return $um;
+    }
+
+    function &_getApprovalTableNotificationCycle($withReviewers=false) {
+        $atsm = new Docman_ApprovalTableNotificationCycle();
+
+        $table = $this->getTable($withReviewers);
+        $atsm->setTable($table);
+
+        $itemFactory = $this->_getItemFactory();
+        $item = $itemFactory->getItemFromDb($this->itemId);
+        $atsm->setItem($item);
+
+        $um =& $this->_getUserManager();
+        $owner =& $um->getUserById($table->getOwner());
+        $atsm->setOwner($owner);
+        return $atsm;
     }
 }
 

@@ -52,11 +52,9 @@ class Docman_View_NewFolder extends Docman_View_New {
         $html = '';
 
         $html .= '<div class="properties">'."\n";
-        $html .= '<fieldset class="general_properties">';
-        $html .= '<legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_dfltvalues') .'</legend>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_dfltvalues') .'</h3>';
         $fields = $this->_getDefaultValuesFields($params);
         $html .= $this->_getPropertiesFieldsDisplay($fields);
-        $html .= '</fieldset>';
         $html .= '</div>';
 
         return $html;

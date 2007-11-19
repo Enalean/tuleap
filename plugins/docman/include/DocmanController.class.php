@@ -80,7 +80,7 @@ class DocmanController extends Controler {
         $flash = user_get_preference('plugin_docman_flash');
         if ($flash) {
             user_del_preference('plugin_docman_flash');
-            $this->feedback = unserialize($flash);
+            $this->feedback = @unserialize($flash);
         } else {
             $this->feedback =& $GLOBALS['Response']->_feedback;
         }
@@ -917,37 +917,57 @@ class DocmanController extends Controler {
                 $this->view = 'RedirectAfterCrud';
             }
             break;
-                                        
+
         case 'approval_update':
             if (!$this->userCanWrite($item->getId())) {
                 $this->feedback->log('error', $this->txt('error_perms_edit'));
                 $this->view = 'Details';
             } else {
                 $this->_actionParams['item']   = $item;
+
+                // Settings
                 $this->_actionParams['status'] = (int) $this->request->get('status');
                 $this->_actionParams['description'] = $this->request->get('description');
                 $this->_actionParams['notification'] = (int) $this->request->get('notification');
-                $this->action = $view;
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
-            break;
-
-        case 'approval_add_user':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->_actionParams['item'] = $item;
+                // Users
                 $this->_actionParams['user_list'] = $this->request->get('user_list');
-                $this->_actionParams['ugroup']    = (int) $this->request->get('ugroup');
-                $this->action = $view;
+                $this->_actionParams['ugroup_list'] = null;
+                if(is_array($this->request->get('ugroup_list'))) {
+                    $this->_actionParams['ugroup_list'] = array_map('intval', $this->request->get('ugroup_list'));
+                }
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
+                // Selected users
+                $this->_actionParams['sel_user'] = null;
+                if(is_array($this->request->get('sel_user'))) {
+                    $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
+                }
+                $allowedAct = array('100', 'mail', 'del');
+                $this->_actionParams['sel_user_act'] = null;
+                if(in_array($this->request->get('sel_user_act'), $allowedAct)) {
+                    $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
+                }
+
+                // Resend
+                $this->_actionParams['resend_notif'] = false;
+                if($this->request->get('resend_notif') == 'yes') {
+                    $this->_actionParams['resend_notif'] = true;
+                }
+
+                //
+                // Special handeling of table deletion
+                if($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
+                    $this->_viewParams['default_url_params'] = array('action' => 'approval_create',
+                                                                     'delete' => 'confirm',
+                                                                     'id'     => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
+                } else {
+                    // Action!
+                    $this->action = $view;
+                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                                                                     'id'      => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
+                }
             }
             break;
 
@@ -996,7 +1016,7 @@ class DocmanController extends Controler {
 
                 $svState = 0;
                 $sState = (int) $this->request->get('state');
-                if($sState >= 0 && $sState < 3) {
+                if($sState >= 0 && $sState < 5) {
                     $svState = $sState;
                 }
                 $this->_actionParams['svState'] = $svState;

@@ -13,27 +13,37 @@ plugin_docman	action_update	Update
 plugin_docman	action_show	Show
 plugin_docman	action_showactions	Show options
 
+plugin_docman	approval_force_notify_success	Reviewers were notified.
 plugin_docman	approval_review_state_0	Not Yet
-plugin_docman	approval_review_state_1	Approved
-plugin_docman	approval_review_state_2	Rejected
+plugin_docman	approval_review_state_1	Approve
+plugin_docman	approval_review_state_2	Reject
+plugin_docman	approval_review_state_3	Comment only
+plugin_docman	approval_review_state_4	Will not review
 plugin_docman	approval_notif_mail_subject	[$1] Please review '$2'
-plugin_docman	approval_notif_mail_body	You are requested to review the following document:\n\nTitle: $1\nProject: $2\nRequester: $3 <$8>\nDirect link: <$4>\n\n$5Notification type: $6\n\nClick on the following link to approve or reject the document:\n<$7>\n\n--\nThis is an automatic message. Please do not reply to this email.\n
+plugin_docman	approval_notif_mail_body	You are requested to review the following document:\n\nProject: $2\nTitle: $1\nDocument: <$4>\n\nRequester: $3 <$8>\nYour review: <$7>\n\n$5Notification type: $6\n\nClick on the following link to approve or reject the document:\n<$7>\n\n--\nThis is an automatic message. Please do not reply to this email.\n
 plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifies reviewers one after another.\nPeople *will not be notified* to review the document *until you approved it*.\n
 plugin_docman	approval_notif_mail_notif_all	All at once\n
-plugin_docman	approval_notif_mail_notif_owner_comment	Table owner message:\n$1\n\n
+plugin_docman	approval_notif_mail_notif_owner_comment	Message:\n------------\n$1\n------------\n\n\n
 plugin_docman	approval_notif_reject_mail_body	Your document '$1' was  rejected by $3 <$4>.\nDirect access to the approval table:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' was rejected by a reviewer
-plugin_docman	approval_notif_approve_mail_body	Your document '$1' was approved by all reviewers.\nYou can access to the table with the following link:\n<$2>\n\nPlease note that the document status was not automatically changed. You can\nchange the document properties:\n<$3>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
-plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' was approved by all reviewers
-plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' was approved by a reviewer
+plugin_docman	approval_notif_approve_mail_body	Your document '$1' was approved by last reviewer: $3 <$4>.\nYou can access to the table with the following link:\n<$2>\n\nPlease note that the document status was not automaticaly changed. You can\nchange the document properties:\n<$5>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
+plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' was approved by last reviewer $3
+plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' was approved by a reviewer $3
 plugin_docman	approval_notif_approve_user_mail_body	Your document '$1' was approved by $3 <$4>.\nYou can access to the table with the following link:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
+plugin_docman	approval_notif_approve_user_mail_com	with comments
+plugin_docman	approval_notif_comment_mail_subject	[$1] a reviewer commented '$2'
+plugin_docman	approval_notif_comment_mail_body	Your document '$1' was commented (but neither approved nor rejected) by '$2' <$3>.\n$5\nYou can access to the table with the following link:\n<$4>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
+plugin_docman	approval_notif_comment_mail_seq	\nImportant note: this approval table is configured in 'Sequential' mode.\nThe sequence is frozen until $2 approve or reject the document\n\n
+plugin_docman	approval_notif_declined_mail_subject	[$1] a reviewer will not review '$2'
+plugin_docman	approval_notif_declined_mail_body	Your document '$1' will not be reviewed by $3 <$4>.\n\nYou can access to the table with the following link:\n<$2>\n\n--\nThis is an automatic email sent by a robot. Please do not reply to this email.
 plugin_docman	approval_notification_failure	No email sent to reviewers.
 plugin_docman	approval_notification_success	Email sent to reviewer.
 plugin_docman	approval_review_success	Your review was successfully recorded.
 plugin_docman	approval_review_failure	An error occurred on review recording.
+plugin_docman	approval_ugroupadd_failure	Some members of user group '$1' could not be appened to the approval table. They are already member of the table.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
-plugin_docman	approval_useradd_failure	No users was added to the list.
-plugin_docman	approval_userdel_success	$1 was removed from the approval table.
+plugin_docman	approval_useradd_failure	Some users could not be  appened to the approval table: "$1". Note: Only registered users can be member of an approval table.
+plugin_docman	approval_userdel_success	All selected users were successfully removed from the approval table.
 plugin_docman	approval_userdel_failure	Cannot remove $1 from the approval table.
 plugin_docman	approval_tableupd_success	Table settings updated.
 plugin_docman	approval_tableupd_failure	Table settings was not updated.
@@ -174,15 +184,20 @@ plugin_docman	details_actions_update	Update
 plugin_docman	details_actions_update_can	You can <a href="$1">update</a> this document.
 plugin_docman	details_actions_update_cannot	You cannot update this document.
 plugin_docman	details_approval	Approval Table
+plugin_docman	details_approval_approval_title	Approval cycle details
 plugin_docman	details_approval_admin	Admin
 plugin_docman	details_approval_comment	Comment
 plugin_docman	details_approval_create_reviewers_title	Add reviewers
 plugin_docman	details_approval_create_reviewers_hand	Enter list by hand (separate by ','):
-plugin_docman	details_approval_create_reviewers_ugroup	Append the members of a user group:
+plugin_docman	details_approval_create_reviewers_ugroup	Append the members to the table:
 plugin_docman	details_approval_create_reviewers_submit	Add to the table
 plugin_docman	details_approval_create_title	Approval table administration for $1
 plugin_docman	details_approval_create_settings	Approval table global settings
 plugin_docman	details_approval_create_no_reviewers	There are no reviewers for this document.
+plugin_docman	details_approval_create_submit	Update
+plugin_docman	details_approval_create_table_act	<strong>Actions</strong> with selected reviewers:
+plugin_docman	details_approval_create_table_act_mail	Force notification
+plugin_docman	details_approval_create_table_act_rm	Remove from table
 plugin_docman	details_approval_cycle_start_date	Approval cycle start date:
 plugin_docman	details_approval_date	Date
 plugin_docman	details_approval_doc_review_title	Document under review
@@ -190,10 +205,6 @@ plugin_docman	details_approval_doc_review_link	Click to open the document
 plugin_docman	details_approval_doc_review_name	Document name:
 plugin_docman	details_approval_doc_review_version	Document version:
 plugin_docman	details_approval_doc_review_version_na	Not applicable
-plugin_docman	details_approval_delete	Delete ?
-plugin_docman	details_approval_delete_reviewer	Delete this reviewer?
-plugin_docman	details_approval_delete_table	Delete current table:
-plugin_docman	details_approval_delete_table_act	Click to delete this approval table.
 plugin_docman	details_approval_email_back	Back to the approval settings.
 plugin_docman	details_approval_email_subject	Subject:
 plugin_docman	details_approval_email_title	Notification email
@@ -207,17 +218,19 @@ plugin_docman	details_approval_notif_2	Sequential
 plugin_docman	details_approval_notif_email	Notification email
 plugin_docman	details_approval_notif_email_act	See the notification email
 plugin_docman	details_approval_notif_relaunch	Relaunch notification:
-plugin_docman	details_approval_notif_relaunch_act	Click here to re-send notification email
 plugin_docman	details_approval_notif_help	$1 can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>
+plugin_docman	details_approval_notif_reviewers_submit	Notify selected people
+plugin_docman	details_approval_notif_reviewers_help	Send an email to selected people regardtheless
 plugin_docman	details_approval_notif_title	Notification
 plugin_docman	details_approval_notif_type	Notification Type:
 plugin_docman	details_approval_notif_submit	Update settings
-plugin_docman	details_approval_owner_comment	Owner comment:
+plugin_docman	details_approval_owner_comment	Requester comment:
 plugin_docman	details_approval_rank	Rank
 plugin_docman	details_approval_requester	Approval requester:
 plugin_docman	details_approval_review_comment	Add a comment:
 plugin_docman	details_approval_review_date	Review date:
 plugin_docman	details_approval_review_notif	Notification:
+plugin_docman	details_approval_review_help	Possible commitement are:<ul><li><strong>Not yet:</strong> Status quo. You can add comment but nobody will be notifed.</li><li><strong>Approve:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li><li><strong>Reject:</strong> Sends an email to the approval requester and stops the approval sequence if any.</li><li><strong>Comment only:</strong> Sends an email to the approval requester to inform there are comments. In <em>Sequential</em> notification type, the workflow is frozen.</li><li><strong>Will not review:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li></ul>
 plugin_docman	details_approval_review_review	Review:
 plugin_docman	details_approval_review_submit	Send my review
 plugin_docman	details_approval_review_table	Approval table:
@@ -226,13 +239,17 @@ plugin_docman	details_approval_review_title	Review
 plugin_docman	details_approval_review_version	Version reviewed:
 plugin_docman	details_approval_review_version_not_upd	Warning: the version of the document you reviewed is not the most up to date.
 plugin_docman	details_approval_reviewer	Name
+plugin_docman	details_approval_review	Review
+plugin_docman	details_approval_select	Select
 plugin_docman	details_approval_state	Review
 plugin_docman	details_approval_table_0	Disabled
 plugin_docman	details_approval_table_1	Available
 plugin_docman	details_approval_table_2	Closed
+plugin_docman	details_approval_table_3	Deleted
 plugin_docman	details_approval_table_status	Table status:
 plugin_docman	details_approval_table_title	Approval table
 plugin_docman	details_approval_table_description	Comment:
+plugin_docman	details_approval_table_help	Following table aims to organize the approval cycle:<ul><li>With <strong>Select</strong> you choose the reviewers on which you want to apply <strong>Actions</strong> (see below for available actions)</li><li>With <strong>Rank</strong> you select the order the emails will be sent to notify people (only in <em>Sequential</em> notification)</li><li>With <strong>Actions</strong> you can (with selected reviewers) either:<ul><li><strong>Remove from table</strong>. No history kept.</li><li>or <strong>Force notification</strong> to send the notification email regardless of their review state of the notififcation type.</li></ul></li></ul>
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
 plugin_docman	details_delete	Delete
@@ -390,7 +407,11 @@ plugin_docman	love_special_none_desc_key	None
 plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 
 plugin_docman	my_reviews	Documents under review
-plugin_docman	my_no_doc	No document under review.
+plugin_docman	my_reviews_reviewer	Reviewer
+plugin_docman	my_reviews_requester	Requester
+plugin_docman	my_no_review	No document under review.
+plugin_docman	my_no_request	No review requested
+plugin_docman	my_filters	Filters:
 
 plugin_docman	md_bo_badlabel	Unknown property label '$1'.
 plugin_docman	md_cdate_name	Create Date
@@ -451,7 +472,7 @@ plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr;
 
 plugin_docman	new_fldsel_title	New document - Parent Folder Selection
 plugin_docman	new_fldsel_location_desc	Please select the folder where you want this new document appears.
-plugin_docman	new_fldsel_location_help	<p><em>Help</em>:<ul><li><em>[other folders: ]</em> link displays the whole folder tree.</li><li><em>Position</em> select box allows to select the position within the selected folder.</li></ul></p>
+plugin_docman	new_fldsel_location_help	How to use folder selector:<ul><li><em>[other folders: ]</em> link displays the whole folder tree.</li><li><em>Position</em> select box allows to select the position within the selected folder.</li></ul>
 plugin_docman	new_fldsel_typehelp	You can either create a new document (file, link, wiki, etc) or a new folder.
 plugin_docman	new_fldsel_location	Location
 plugin_docman	new_fldsel_type	Item nature

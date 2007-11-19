@@ -76,6 +76,134 @@ class Docman extends DocmanController {
         }
     }
 
+    function displayMyPageBox() {
+        require_once('www/my/my_utils.php');
+
+        $html = '';
+
+        $request =& HTTPRequest::instance();
+
+        //
+        // Url params + user pref to decide if 'Reviews' or 'Requests' are
+        // displayed.
+        //
+
+        // Show can be either 'R' (reviewer) or 'O' (owner, requester)
+        $show = user_get_preference('plugin_docman_my_approval_show');
+        if($show === false) {
+            // No pref, set default: reviewer
+            $show = 'R';
+            user_set_preference('plugin_docman_my_approval_show', $show);
+        } else {
+            if($request->exist('plugin_docman_approval_show')) {
+                switch($request->get('plugin_docman_approval_show')) {
+                case 'O':
+                    $show = 'O';
+                    break;
+                case 'R':
+                default:
+                    $show = 'R';
+                }
+                user_set_preference('plugin_docman_my_approval_show', $show);
+            }
+        }
+
+        $reviewer = true;
+        if($show == 'O') {
+            $reviewer = false;
+        }
+
+        //
+        // Toogle url
+        //
+
+        $reviewerSelected = '';
+        $requesterSelected = '';
+        if($reviewer) {
+            $reviewerSelected = ' class="selected"';
+        } else {
+            $requesterSelected = ' class="selected"';
+        }
+        $reviewerHref = '<a href="?plugin_docman_approval_show=R"'.$reviewerSelected.'>['.$this->txt('my_reviews_reviewer').']</a>';
+        $requesterHref = '<a href="?plugin_docman_approval_show=O"'.$requesterSelected.'>['.$this->txt('my_reviews_requester').']</a>';
+
+        // Build box title
+        $boxTitle = $this->txt('my_reviews');
+        $boxTitle .= ' - ';
+        $boxTitle .= '<span class="my_art_filters">';
+        $boxTitle .= $this->txt('my_filters');
+        $boxTitle .= $reviewerHref.' - '.$requesterHref;
+        $boxTitle .= '</span>';
+
+        $html .= $GLOBALS['HTML']->box1_top($boxTitle, 0);
+
+        $user =& $this->getUser();
+        $atf = new Docman_ApprovalTableFactory(null);
+
+        if($reviewer) {
+            $reviewsArray = $atf->getAllPendingReviewsForUser($user->getId());
+        } else {
+            $reviewsArray = $atf->getAllApprovalTableForUser($user->getId());
+        }
+
+        if(count($reviewsArray) > 0) {
+            // Get hide arguments
+            $hideItemId = (int) $request->get('hide_item_id');
+            $hideApproval = null;
+            if($request->exist('hide_plugin_docman_approval')) {
+                $hideApproval = (int) $request->get('hide_plugin_docman_approval');
+            }
+
+            $prevGroupId = -1;
+            $hideNow = false;
+            $i = 0;
+
+            //$html .= '<TR><TD colspan="2">Reviewer - Requester</TD></TR>';
+            foreach($reviewsArray as $review) {
+                if($review['group_id'] != $prevGroupId) {
+                    list($hideNow,$count_diff,$hideUrl) = 
+                        my_hide_url('plugin_docman_approval',$review['group_id'], $hideItemId, 1, $hideApproval);
+                    $docmanUrl = $this->pluginPath.'/?group_id='.$review['group_id'];
+                    $docmanHref = '<a href="'.$docmanUrl.'">'.$review['group'].'</a>';
+                    if($prevGroupId != -1) {
+                        $html .= '<tr class="boxitem"><td colspan="2">';
+                    }
+                    $html .= '<strong>'.$hideUrl.$docmanHref.'</strong></td></tr>';
+                    $i = 0;
+                }
+
+                if(!$hideNow) {
+                    $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
+                    // Document
+                    $html .= '<td align="left">';
+                    $html .= '<a href="'.$review['url'].'">'.$review['title'].'</a>';
+                    $html .= '</td>';
+                
+                    // Date
+                    $html .= '<td align="right">';
+                    $html .= util_timestamp_to_userdateformat($review['date'], true);
+                    $html .= '</td>';
+                
+                    $html .= '</tr>';
+                }
+
+                $prevGroupId = $review['group_id'];
+            }
+        } else {
+            if($reviewer) {
+                $html .= $this->txt('my_no_review');
+            } else {
+                $html .= $this->txt('my_no_request');
+            }
+            $html .= '</td></tr>';
+        }
+
+        $html .= '<td><td colspan="2">&nbsp;</td></tr>';
+        $html .= $GLOBALS['HTML']->box1_bottom(0);
+        
+        echo $html;
+    }
+
     /**
      * Get the list of all futur obsolete documents and warn document owner
      * about this obsolescence.

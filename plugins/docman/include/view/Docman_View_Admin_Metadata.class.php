@@ -169,9 +169,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $content = '';
         
         $content .= $this->getMetadataTable($params['mdIter'], $params['group_id'], $params['default_url']);
-        $content .= '<hr />'."\n";
         $content .= $this->getNewMetadataForm($params['group_id']);
-        $content .= '<hr />'."\n";
         $content .= $this->getImportForm($params['group_id']);
 
         echo $content;
