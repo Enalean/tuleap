@@ -2,7 +2,6 @@
 //
 // Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
 //
-// 
 //
 //	Written for CodeX by Marc Nazarian
 //
@@ -332,10 +331,13 @@ class ArtifactFieldSetFactory extends Error {
             // And we remember the association source_fieldset_id <=> dest_fieldset_id to build
             // the association in the copied fields
             // Create a new FieldSet, with the same values than the source one
-            $sql_insert_fieldset = "INSERT INTO artifact_field_set VALUES ('', ".$atid_dest.", '".$fieldset_source_array['name']."', '".$fieldset_source_array['description']."', ".$fieldset_source_array['rank'].")";
+            $sql_insert_fieldset = "INSERT INTO artifact_field_set VALUES ('', ".$atid_dest.", '".
+                db_escape_string($fieldset_source_array['name'])."', '".
+                db_escape_string($fieldset_source_array['description'])."', ".
+                $fieldset_source_array['rank'].")";
             $res_insert_fieldset = db_query($sql_insert_fieldset);
             if (!$res_insert_fieldset || db_affected_rows($res_insert_fieldset) <= 0) {
-				$this->setError($Language->getText('tracker_common_field_factory','ins_err',array($fieldset_array["field_set_id"],$atid_dest,db_error())));
+				$this->setError($Language->getText('tracker_common_fieldset_factory','ins_err',array($fieldset_source_array["field_set_id"],$atid_dest,db_error())));
 				return false;
 			}
             $dest_fieldset_id = db_insertid($res_insert_fieldset);
