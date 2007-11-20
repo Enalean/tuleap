@@ -328,6 +328,19 @@ class DocmanController extends Controler {
     }
 
     function request() {
+        if ($this->request->exist('action') 
+            && ($this->request->get('action') == 'plugin_docman_approval_reviewer' 
+                || $this->request->get('action') == 'plugin_docman_approval_requester'
+                )
+            )
+        {
+            if ($this->request->get('hide')) {
+                user_set_preference('hide_'. $this->request->get('action'), 1);
+            } else {
+                user_del_preference('hide_'. $this->request->get('action'));
+            }
+            exit;
+        }
         if (!$this->request->exist('group_id')) {
             $this->feedback->log('error', 'Project is missing.');
             $this->_setView('Error');
@@ -512,7 +525,15 @@ class DocmanController extends Controler {
             $this->view = 'RedirectAfterCrud';
             break;
         case 'admin':
+            $this->view = ucfirst($view);
+            break;
         case 'details':
+            if ($this->request->get('section') == 'approval' 
+                && $this->request->exist('user_id') 
+                && $this->request->get('user_id') != $user->getId()) 
+            {
+                $GLOBALS['Response']->redirect('/account/login.php?return_to='. urlencode($_SERVER['REQUEST_URI']));
+            }
             $this->view = ucfirst($view);
             break;
         case 'admin_view':
@@ -917,37 +938,57 @@ class DocmanController extends Controler {
                 $this->view = 'RedirectAfterCrud';
             }
             break;
-                                        
+
         case 'approval_update':
             if (!$this->userCanWrite($item->getId())) {
                 $this->feedback->log('error', $this->txt('error_perms_edit'));
                 $this->view = 'Details';
             } else {
                 $this->_actionParams['item']   = $item;
+
+                // Settings
                 $this->_actionParams['status'] = (int) $this->request->get('status');
                 $this->_actionParams['description'] = $this->request->get('description');
                 $this->_actionParams['notification'] = (int) $this->request->get('notification');
-                $this->action = $view;
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
-            }
-            break;
-
-        case 'approval_add_user':
-            if (!$this->userCanWrite($item->getId())) {
-                $this->feedback->log('error', $this->txt('error_perms_edit'));
-                $this->view = 'Details';
-            } else {
-                $this->_actionParams['item'] = $item;
+                // Users
                 $this->_actionParams['user_list'] = $this->request->get('user_list');
-                $this->_actionParams['ugroup']    = (int) $this->request->get('ugroup');
-                $this->action = $view;
+                $this->_actionParams['ugroup_list'] = null;
+                if(is_array($this->request->get('ugroup_list'))) {
+                    $this->_actionParams['ugroup_list'] = array_map('intval', $this->request->get('ugroup_list'));
+                }
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
-                $this->view = 'RedirectAfterCrud';
+                // Selected users
+                $this->_actionParams['sel_user'] = null;
+                if(is_array($this->request->get('sel_user'))) {
+                    $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
+                }
+                $allowedAct = array('100', 'mail', 'del');
+                $this->_actionParams['sel_user_act'] = null;
+                if(in_array($this->request->get('sel_user_act'), $allowedAct)) {
+                    $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
+                }
+
+                // Resend
+                $this->_actionParams['resend_notif'] = false;
+                if($this->request->get('resend_notif') == 'yes') {
+                    $this->_actionParams['resend_notif'] = true;
+                }
+
+                //
+                // Special handeling of table deletion
+                if($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
+                    $this->_viewParams['default_url_params'] = array('action' => 'approval_create',
+                                                                     'delete' => 'confirm',
+                                                                     'id'     => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
+                } else {
+                    // Action!
+                    $this->action = $view;
+                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
+                                                                     'id'      => $item->getId());
+                    $this->view = 'RedirectAfterCrud';
+                }
             }
             break;
 
@@ -983,7 +1024,7 @@ class DocmanController extends Controler {
             break;
 
         case 'approval_user_commit':
-            $atf = new Docman_ApprovalTableFactory($item->getId());
+            $atf =& new Docman_ApprovalTableFactory($item);
             $table = $atf->getTable();
             if (!$this->userCanRead($item->getId())
                 || !$atf->isReviewer($user->getId())
@@ -996,7 +1037,7 @@ class DocmanController extends Controler {
 
                 $svState = 0;
                 $sState = (int) $this->request->get('state');
-                if($sState >= 0 && $sState < 3) {
+                if($sState >= 0 && $sState < 5) {
                     $svState = $sState;
                 }
                 $this->_actionParams['svState'] = $svState;

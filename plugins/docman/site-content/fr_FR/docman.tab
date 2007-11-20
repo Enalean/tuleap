@@ -13,9 +13,12 @@ plugin_docman	action_update	Mise à jour
 plugin_docman	action_show	Afficher
 plugin_docman	action_showactions	Afficher les options
 
+plugin_docman	approval_force_notify_success	Les approbateurs ont été notfiés.
 plugin_docman	approval_review_state_0	Pas encore
 plugin_docman	approval_review_state_1	Approuvé
 plugin_docman	approval_review_state_2	Réprouvé
+plugin_docman	approval_review_state_3	Commentaire seulement
+plugin_docman	approval_review_state_4	Pas d'avis
 plugin_docman	approval_notif_mail_subject	[$1] Merci d'approuver '$2'
 plugin_docman	approval_notif_mail_body	Vous êtes convié à approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou réprouver le document :\n<$7>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuver/réprouver pas le document.\n
@@ -27,13 +30,22 @@ plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a été approuv
 plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' a été approuvé par tous les approbateurs
 plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' a été approuvé par un approbateur
 plugin_docman	approval_notif_approve_user_mail_body	Votre document '$1' a été approuvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
+plugin_docman	approval_notif_approve_user_mail_com	avec des commentaires
+plugin_docman	approval_notif_comment_mail_subject	[$1] un approbateur a commenté '$2'
+plugin_docman	approval_notif_comment_mail_body	Votre document '$1' a été commenté (mais ni approuvé, ni rejeté) par '$2' <$3>.\n$5\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
+plugin_docman	approval_notif_comment_mail_seq	\nImportant : cette table d'approbation est configurée en mode 'Sequentiel'.\nLa séquence de notification est suspendue jusqu'à ce que $1 approuve ou rejette le document.
+plugin_docman	approval_notif_declined_mail_subject	[$1] un approbateur ne donnera pas son avis sur '$2'
+plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvé par $3 <$4>.\n\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notification_failure	Pas d'email envoyé aux approbateurs.
 plugin_docman	approval_notification_success	Email envoyé aux approbateurs.
 plugin_docman	approval_review_success	Votre approbation n'a pas été enregistrée.
 plugin_docman	approval_review_failure	Une erreur est survenue lors de l'enregistrement de votre approbation.
 plugin_docman	approval_useradd_success	L'utilisateur a été ajouté à la table.
-plugin_docman	approval_useradd_failure	Aucun utilisateur n'a été ajouté à la liste.
-plugin_docman	approval_userdel_success	$1 a été supprimé de la table d'approbation.
+plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : <em>$1</em>.
+plugin_docman	approval_useradd_err_db	Impossible d'ajouter les utilisateurs suivants. Erreur interne : <em>$1</em>.
+plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : <em>$1</em>. 
+plugin_docman	approval_useradd_warn_double	Déjà dans la table d'approbation : <em>$1</em>.
+plugin_docman	approval_userdel_success	Tous les utilisateurs sélectionnés ont été supprimé de la table d'approbation.
 plugin_docman	approval_userdel_failure	Impossible de supprimer $1 de la table d'approbation.
 plugin_docman	approval_tableupd_success	Paramètres de la tables modifiés.
 plugin_docman	approval_tableupd_failure	Le paramètres de la table n'ont pas été modifiés.
@@ -174,6 +186,7 @@ plugin_docman	details_actions_update	Mise à jour
 plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre à jour</a> ce document.
 plugin_docman	details_actions_update_cannot	Vous ne pouvez pas mettre à jour ce document.
 plugin_docman	details_approval	Table d'approbation
+plugin_docman	details_approval_approval_title	Détails du cycle d'approbation
 plugin_docman	details_approval_admin	Admin
 plugin_docman	details_approval_comment	Commentaire
 plugin_docman	details_approval_create_reviewers_title	Ajouter des approbateurs
@@ -183,6 +196,10 @@ plugin_docman	details_approval_create_reviewers_submit	Ajouter à la table
 plugin_docman	details_approval_create_title	Administration de la table d'approbation pour $1
 plugin_docman	details_approval_create_settings	Paramètres globaux de la table d'approbation
 plugin_docman	details_approval_create_no_reviewers	Il n'y a pas d'approbateurs pour ce document.
+plugin_docman	details_approval_create_submit	Mettre à jour
+plugin_docman	details_approval_create_table_act	<strong>Actions</strong> pour les approbateurs sélectionnés:
+plugin_docman	details_approval_create_table_act_mail	Forcer la notification
+plugin_docman	details_approval_create_table_act_rm	Supprimer de la table
 plugin_docman	details_approval_cycle_start_date	Date de début du cycle d'approbation :
 plugin_docman	details_approval_date	Date
 plugin_docman	details_approval_doc_review_title	Document sous approbation
@@ -190,10 +207,6 @@ plugin_docman	details_approval_doc_review_link	Cliquez pour ouvrir le document
 plugin_docman	details_approval_doc_review_name	Nom du document :
 plugin_docman	details_approval_doc_review_version	Version du document :
 plugin_docman	details_approval_doc_review_version_na	Pas applicable
-plugin_docman	details_approval_delete	Supprimer ?
-plugin_docman	details_approval_delete_reviewer	Supprimer cet approbateur ?
-plugin_docman	details_approval_delete_table	Supprimer la table courante :
-plugin_docman	details_approval_delete_table_act	Cliquez pour supprimer cette table d'approbation.
 plugin_docman	details_approval_email_back	Retour vers la table d'approbation.
 plugin_docman	details_approval_email_subject	Sujet :
 plugin_docman	details_approval_email_title	Email de notification
@@ -207,17 +220,19 @@ plugin_docman	details_approval_notif_2	Sequentiellement
 plugin_docman	details_approval_notif_email	Email de notification
 plugin_docman	details_approval_notif_email_act	Voir l'email de notification
 plugin_docman	details_approval_notif_relaunch	Relancer la notification :
-plugin_docman	details_approval_notif_relaunch_act	Cliquer ici pour envoyer à nouveau l'email de notification
 plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuver/réprouver.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuver/réprouver) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>
+plugin_docman	details_approval_notif_reviewers_submit	Notifier les personnes sélectionnées
+plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personnes sélectionnées
 plugin_docman	details_approval_notif_title	Notification
 plugin_docman	details_approval_notif_type	Type de notification :
 plugin_docman	details_approval_notif_submit	Mettre à jour les paramètres
-plugin_docman	details_approval_owner_comment	Commentaire du propriétaire :
+plugin_docman	details_approval_owner_comment	Commentaire du demandeur :
 plugin_docman	details_approval_rank	Rang
 plugin_docman	details_approval_requester	Demandeur d'approbation :
 plugin_docman	details_approval_review_comment	Ajouter un commantaire :
 plugin_docman	details_approval_review_date	Date d'approbation :
 plugin_docman	details_approval_review_notif	Notification :
+plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifié.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la séquence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>Séquentiel</em>, le workflow est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
 plugin_docman	details_approval_review_review	Approbation :
 plugin_docman	details_approval_review_submit	Envoyer mon approbation
 plugin_docman	details_approval_review_table	Table d'approbation :
@@ -226,13 +241,17 @@ plugin_docman	details_approval_review_title	Approbation
 plugin_docman	details_approval_review_version	Version en cours d'approbation :
 plugin_docman	details_approval_review_version_not_upd	Attention : la version du document que vous approuvez n'est pas la dernière.
 plugin_docman	details_approval_reviewer	Nom
+plugin_docman	details_approval_review	Approbation
+plugin_docman	details_approval_select	Sélectionner
 plugin_docman	details_approval_state	Approbation
 plugin_docman	details_approval_table_0	Désactivé
 plugin_docman	details_approval_table_1	Disponible
 plugin_docman	details_approval_table_2	Fermé
+plugin_docman	details_approval_table_3	Supprimé
 plugin_docman	details_approval_table_status	Status de la table :
 plugin_docman	details_approval_table_title	Table d'approbation
 plugin_docman	details_approval_table_description	Commentaire :
+plugin_docman	details_approval_table_help	La table suivante a pour but d'organiser le cycle d'approbation :<ul><li>Avec <strong>Selectionner</strong> vous choisissez les approbateurs sur lesquels vous voulez appliquer une <strong>action</strong> (voir ci-dessous)</li><li>Avec <strong>Rang</strong> vous sélectionnez l'ordre d'envoi des emails (seulement en mode séquentiel <em>Sequential</em>)</li><li>Avec <strong>Actions</strong> vous pouvez au choix :<ul><li><strong>Supprimer de la table</strong>. Historique perdu.</li><li>ou <strong>Forcer la notification</strong> pour envoyer un email de notification indépendamment de l'état d'approbation.</li></ul></li></ul>
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
 plugin_docman	details_delete	Suppression
@@ -390,7 +409,10 @@ plugin_docman	love_special_none_desc_key	Aucun
 plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 
 plugin_docman	my_reviews	Documents en attente d'approbation
-plugin_docman	my_no_doc	Il n'y a pas de document en attente d'approbation.
+plugin_docman	my_reviews_reviewer	Approbateur
+plugin_docman	my_reviews_requester	Demandeur d'approbation
+plugin_docman	my_no_review	Pas de documents à approuver.
+plugin_docman	my_no_request	Pas d'approbation demandée.
 
 plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
 plugin_docman	md_cdate_name	Date de création
@@ -451,7 +473,7 @@ plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr;
 
 plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoir parent
 plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoir où vous souhaitez que ce document apparaisse.
-plugin_docman	new_fldsel_location_help	<p><em>Aide</em>:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante <em>Position</em> permet de sélectionner la position au sein du dossier sélectionné.</li></ul></p>
+plugin_docman	new_fldsel_location_help	Comment utiliser le sélecteur de dossier:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante <em>Position</em> permet de sélectionner la position au sein du dossier sélectionné.</li></ul>
 plugin_docman	new_fldsel_typehelp	Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un nouveau dossier.
 plugin_docman	new_fldsel_location	Chemin
 plugin_docman	new_fldsel_type	Nature du document

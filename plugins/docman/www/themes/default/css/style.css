@@ -1,3 +1,12 @@
+h3, h4 {
+  border-bottom: 1px solid #999999;
+}
+
+h3 {
+  font-size: large;
+}
+
+
 .dir, .subdir {
  padding: 0;
  margin: 0;
@@ -31,20 +40,27 @@
   margin-bottom: 0.5em;
 }
 
+.docman_new_submit {
+  text-align:center;
+  margin-top: 1em;
+}
+
 #docman_new_item_location_current_folder {
   font-weight: bold;
 }
 
-.tips {
-  background-color: #EEEEEE;
-}
-
-div.tips {
-  width: 80em;
-}
-
 .dir input {
  border: 1px solid black;
+}
+
+.docman_help {
+  width: auto;
+  background:url(../images/ic/help.png) no-repeat;
+  background-position: 5px center;
+  border: 1px solid #DDDDDD;
+  padding: 0.5em;
+  padding-left: 40px;
+  margin: 0.5em;
 }
 
 /**
@@ -304,19 +320,6 @@ a img {
     font-weight: bold;
 }
 
-/*
- * New item Layout
- */
-.docman_new_item fieldset legend {
-  font-weight: bold;
-  font-size: larger;
-}
-
-.docman_new_item fieldset {
-  padding-left: 1em;
-  padding-bottom: 0.5em;
-}
-
 /* 
  * Metadata listofvalues admin
  */
@@ -343,13 +346,14 @@ a img {
  */
 
 /* Table */
-tr.docman_approval_readonly  {
+.docman_approval_readonly {
+  vertical-align: top;
   font-style: italic;
   color: grey;
 }
 
-tr.docman_approval_highlight {
-  font-weight: bold;
+.docman_approval_highlight {
+  vertical-align: top;
 }
 
 .docman_approval_email {
