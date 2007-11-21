@@ -525,15 +525,7 @@ class DocmanController extends Controler {
             $this->view = 'RedirectAfterCrud';
             break;
         case 'admin':
-            $this->view = ucfirst($view);
-            break;
         case 'details':
-            if ($this->request->get('section') == 'approval' 
-                && $this->request->exist('user_id') 
-                && $this->request->get('user_id') != $user->getId()) 
-            {
-                $GLOBALS['Response']->redirect('/account/login.php?return_to='. urlencode($_SERVER['REQUEST_URI']));
-            }
             $this->view = ucfirst($view);
             break;
         case 'admin_view':
