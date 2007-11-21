@@ -17,10 +17,12 @@ print "<H3>".$Language->getText('bookmark_add', 'title')."</H3>";
 $request =& HTTPRequest::instance();
 
 if ($request->exist('bookmark_url')) {
+    $purifier =& CodeX_HTMLPurifier::instance();
+
     $bookmark_url = $request->get('bookmark_url');
     $bookmark_title = $request->get('bookmark_title');
 
-    print $Language->getText('bookmark_add', 'message', array($bookmark_url, $bookmark_title))."<p>\n";
+    print $Language->getText('bookmark_add', 'message', array($purifier->purify($bookmark_url), $purifier->purify($bookmark_title)))."<p>\n";
 
 	$bookmark_id = bookmark_add ($bookmark_url, $bookmark_title);
 	print "<A HREF=\"$bookmark_url\">".$Language->getText('bookmark_add', 'visit')."</A> - ";
