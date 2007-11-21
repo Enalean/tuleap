@@ -22,19 +22,64 @@ class Docman_Widget_MyDocman extends Widget {
     }
     
     function getContent() {
-        require_once('www/my/my_utils.php');
-
         $html = '';
-
+        $html .= '<script type="text/javascript">';
+        $html .= "
+        function plugin_docman_approval_toggle(what, save) {
+            if ($(what).visible()) {
+                $(what+'_icon').src = '". util_get_dir_image_theme() ."pointer_right.png';
+                $(what).hide();
+                if (save) {
+                    new Ajax.Request('/plugins/docman/?action='+what+'&hide=1');
+                }
+            } else {
+                $(what+'_icon').src = '". util_get_dir_image_theme() ."pointer_down.png';
+                $(what).show();
+                if (save) {
+                    new Ajax.Request('/plugins/docman/?action='+what+'&hide=0');
+                }
+            }
+        }
+        </script>";
+        $html .= $this->_getReviews(true);
+        $html .= $this->_getReviews(false);
+        
+        return $html;
+    }
+    function _getReviews($reviewer = true) {
+        require_once('www/my/my_utils.php');
+        $html = '';
+        
+        $content_html_id = 'plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester');
+        $html .= '<div style="font-weight:bold;">';
+        $html .= $GLOBALS['HTML']->getImage(
+            'pointer_down.png', 
+            array(
+                'id' => $content_html_id .'_icon',
+                'onclick' => "plugin_docman_approval_toggle('$content_html_id', true)"
+            )
+        ).' ';
+        if ($reviewer) {
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_reviewer');
+        } else {
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_requester');
+        }
+        $html .= '</div>';
+        $html .= '<div id="'. $content_html_id .'" style="padding-left:20px;">';
+        
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
         
         $atf = new Docman_ApprovalTableFactory(null);
-        $reviewsArray = $atf->getAllPendingReviewsForUser($user->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        if($reviewer) {
+            $reviewsArray = $atf->getAllPendingReviewsForUser($user->getId());
+        } else {
+            $reviewsArray = $atf->getAllApprovalTableForUser($user->getId());
+        }
 
         if(count($reviewsArray) > 0) {
-            // Get hide arguments
             $request =& HTTPRequest::instance();
+            // Get hide arguments
             $hideItemId = (int) $request->get('hide_item_id');
             $hideApproval = null;
             if($request->exist('hide_plugin_docman_approval')) {
@@ -46,6 +91,7 @@ class Docman_Widget_MyDocman extends Widget {
             $i = 0;
 
             $html .= '<table style="width:100%">';
+            //$html .= '<TR><TD colspan="2">Reviewer - Requester</TD></TR>';
             foreach($reviewsArray as $review) {
                 if($review['group_id'] != $prevGroupId) {
                     list($hideNow,$count_diff,$hideUrl) = 
@@ -78,7 +124,21 @@ class Docman_Widget_MyDocman extends Widget {
             }
             $html .= '</table>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_no_doc');
+            if($reviewer) {
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_no_review');
+            } else {
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_no_request');
+            }
+        }
+        $html .= '</div>';
+        if (user_get_preference('hide_plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester'))) {
+            $html .= '<script type="text/javascript">';
+            $html .= "document.observe('dom:loaded', function() 
+                {
+                    plugin_docman_approval_toggle('$content_html_id', false);
+                }
+            );
+            </script>";
         }
         return $html;
     }

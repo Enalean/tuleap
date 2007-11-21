@@ -112,11 +112,10 @@ require_once('Docman_View_PermissionsForItem.class.php');
     function _getGeneralPropertiesFieldset($params) {
         $html = '';
         $html .= '<div class="properties">'."\n";
-        $html .= '<fieldset class="general_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</legend>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_generalproperties') .'</h3>';
         $html .= $this->_getGeneralProperties($params);
         $html .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
         $html .= '<input type="hidden" name="action" value="'. $this->_getAction() .'" />';
-        $html .= '</fieldset>';
         $html .= '</div>';
         return $html;
     }
@@ -127,32 +126,29 @@ require_once('Docman_View_PermissionsForItem.class.php');
 
     function _getSpecificPropertiesFieldset($params) {
         $html = '';
-        $html .= '<fieldset class="specific_properties"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</legend>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_specificproperties') .'</h3>';
         $html .= $this->_getSpecificProperties($params);
-        $html .= '</fieldset>';
         return $html;
     }
 
     function _getLocationFieldset($params) {
         $html = '';
-        $html .= '<fieldset class="location"><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</legend>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman', 'new_location') .'</h3>';
         $itemRanking = new Docman_View_ItemRanking();
         $itemRanking->setSelectedValue($params['ordering']);
         $itemRanking->setDropDownName('ordering');
         $html .= $itemRanking->getDropDownWidget($params['item']);
-        $html .= '</fieldset>';
         return $html;
     }
 
     function _getPermissionsFieldset($params) {
         $html = '';
-        $html .= '<fieldset><legend>Permissions</legend>';
+        $html .= '<h3>Permissions</h3>';
         $html .= '<div id="docman_new_permissions_panel">';
         $p =& new Docman_View_PermissionsForItem($this->_controller);
         $params['user_can_manage'] = $this->_controller->userCanWrite($this->newItem->getParentId());
         $html .= $p->fetch($this->newItem->getParentId(), $params);
         $html .= '</div>';
-        $html .= '</fieldset>';
         return $html;
     }
 
@@ -172,7 +168,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
                     $default_news_public_check = '';
                 }
             }
-            $html .= '<fieldset><legend>News</legend>';
+            $html .= '<h3>News</h3>';
             $html .= '<div id="docman_new_news_panel">';
 
             $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'new_news_letblank') .'</p>';
@@ -195,7 +191,6 @@ require_once('Docman_View_PermissionsForItem.class.php');
             $html .= '</td></tr></table>';
 
             $html .= '</div>';
-            $html .= '</fieldset>';
         }
         return $html;
     }
@@ -205,7 +200,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
 
         $this->setupNewItem($params);
 
-        $html  = '<br />';
+        $html  = '';
         $html .= '<form name="'.$params['form_name'].'" id="docman_new_form" action="'. $params['default_url'] .'" method="POST" '. $this->_getEnctype() .' class="docman_form">';
 
         $html .= '<div class="docman_new_item">'."\n";

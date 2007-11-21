@@ -118,14 +118,10 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         }
 
         if($defaultValuesToManage) {
-            $html .= '<fieldset>';
-            $html .= '<legend>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_folder').'</legend>';
+            $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_folder').'</h3>';
         }
         $html .= $this->_getPropertiesFields($params);
         if($defaultValuesToManage) {
-            $html .= '</fieldset>';
-
-            // Default values
             $html .= $this->_getDefaultValuesFields();
         }
 
@@ -181,11 +177,9 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     function _getDefaultValuesFields() {
         $html = '';
-        $html .= '<fieldset>';
-        $html .= '<legend>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv').'</legend>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_desc').'</p>';
         $html .= $this->_getDefaultValues();
-        $html .= '</fieldset>';
         return $html;
     }
 }

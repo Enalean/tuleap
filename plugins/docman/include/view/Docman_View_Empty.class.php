@@ -29,22 +29,19 @@ class Docman_View_Empty extends Docman_View_Display {
 
     function _content($params) {
         $item = $params['item'];
-        
+
         $dPm =& Docman_PermissionsManager::instance($item->getGroupId());
 
         $html  = '';
 
-        $html .= '<fieldset>';
-        $html .= '<legend>'.Docman::txt('view_empty_emptydoc').'</legend>';
+        $html .= '<h3>'.Docman::txt('view_empty_emptydoc').'</h3>';
         $html .= '<p>'.Docman::txt('view_empty_docisempty').'</p>';
         if($dPm->userCanWrite($params['user'], $item->getId())) {
             $upurl = $params['default_url'].'&amp;action=action_update&amp;id='.$item->getId();
             $html .= '<p><a href="'.$upurl.'">'.Docman::txt('view_empty_update').'</a></p>';
         }
-        $html .= '</fieldset>';
 
-        $html .= '<fieldset>';
-        $html .= '<legend>view_empty_docmd</legend>';
+        $html .= '<h3>'.Docman::txt('view_empty_docmd').'</h3>';
         $html .= '<table>';
         $html .= '<tr><td class="label">';
         $get_fields = new Docman_View_GetFieldsVisitor();
@@ -55,15 +52,13 @@ class Docman_View_Empty extends Docman_View_Display {
             $html .= '<td class="value">'. $field->getValue() .'</span></td>';
             $html .= '</tr>';
         }
-        
+
         $html .= '</table>';
 
         if($dPm->userCanWrite($params['user'], $item->getId())) {
             $editurl = $params['default_url'].'&amp;action=edit&amp;id='.$item->getId();
             $html .= '<p><a href="'.$editurl.'">'.Docman::txt('details_properties_edit').'</a></p>';
         }
-
-        $html .= '</fieldset>';
 
         print $html;
     }

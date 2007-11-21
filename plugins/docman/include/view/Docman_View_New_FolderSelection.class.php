@@ -42,8 +42,7 @@ extends Docman_View_Docman {
         $html .= '<form action="'.$params['default_url'].'" method="post">';
 
         // Location
-        $html .= '<fieldset>';
-        $html .= '<legend>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_location').'</legend>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_location').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_location_desc').'</p>';
         $parentsTree = new Docman_View_ParentsTree($this->_controller);
         $html .= $parentsTree->fetch(array(
@@ -52,12 +51,10 @@ extends Docman_View_Docman {
             'hierarchy'    => $params['hierarchy'],
             'input_name'   => 'id'
         ));
-        $html .= '<div class="tips">'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_location_help').'</div>';
-        $html .= '</fieldset>';
+        $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_location_help').'</div>';
 
         // Type
-        $html .= '<fieldset>';
-        $html .= '<legend>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_type').'</legend>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_type').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_typehelp').'</p>';
         $html .= '<p>';
         $html .= '<select name="item_type">';
@@ -65,7 +62,6 @@ extends Docman_View_Docman {
         $html .= '<option value="'.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.'">'.$GLOBALS['Language']->getText('plugin_docman', 'new_fldsel_createfolder').'</option>';
         $html .= '</select>';
         $html .= '</p>';
-        $html .= '</fieldset>';
 
         // Form params
         $html .= '<p>';
