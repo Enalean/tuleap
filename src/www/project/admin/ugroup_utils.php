@@ -393,11 +393,10 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     }
 
     // Then add all selected users
-    $pickList = array_unique($pickList);
     $user_count=count($pickList);
     
     for ($i=0; $i<$user_count; $i++) {
-        $sql="INSERT INTO ugroup_user (ugroup_id,user_id) SELECT $ugroup_id, user_id FROM user WHERE user_name = '". db_escape_string($pickList[$i])."'";
+        $sql="INSERT INTO ugroup_user (ugroup_id,user_id) VALUES ($ugroup_id,".$pickList[$i].")";
         if (!db_query($sql)) {
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($pickList[$i],db_error())));
         }
