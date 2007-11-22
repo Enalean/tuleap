@@ -480,7 +480,8 @@ class ArtifactField extends Error {
 		 case "close_date":
 		 case "summary":
 		 case "details":
-		 case "severity" :
+		 case "severity":
+		 case "last_update_date":
 		 	return true;
 		 default:
 		 	return false;

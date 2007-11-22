@@ -411,11 +411,15 @@ class ArtifactReportHtml extends ArtifactReport {
 				    $width .= ' class="small"';
 				    
 				    if ( $field->isDateField() ) {
-						if ($value)
-						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
-						else
+						if ($value) {
+							if ($field->getName() == 'last_update_date') {
+								$html_result .= "<TD $width>".format_date("Y-m-d H:i",$value).'</TD>'."\n";
+							} else {
+								$html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
+							}	
+						} else {
 						    $html_result .= '<TD align="center">-</TD>';
-	
+						}
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>$value</TD>\n";
@@ -944,8 +948,9 @@ class ArtifactReportHtml extends ArtifactReport {
                 $tf_report = 'TFREP_'.$field->getName();
                 $tf_colwidth = 'TFCW_'.$field->getName();
                 
-                $rep_field = $this->fields[$field->getName()];
-                if (!$rep_field) {
+                if (isset($this->fields[$field->getName()])) {
+                	$rep_field = $this->fields[$field->getName()];
+                } else {
                   $rep_field = new ArtifactReportField();
                 }       
         

@@ -574,12 +574,14 @@ EOS;
                         $can_submit_or_update = (($group_first 
                                                    && $second_part['shortname'] !== "artifact_id"
                                                    && $second_part['shortname'] !== "submitted_by"
-                                                   && $second_part['shortname'] !== "open_date")
+                                                   && $second_part['shortname'] !== "open_date"
+                                                   && $second_part['shortname'] !== "last_update_date")
                                                   ||
                                                   (!$group_first 
                                                    && $first_part['shortname'] !== "artifact_id"
                                                    && $first_part['shortname'] !== "submitted_by"
-                                                   && $first_part['shortname'] !== "open_date"));
+                                                   && $first_part['shortname'] !== "open_date"
+                                                   && $first_part['shortname'] !== "last_update_date"));
                         
                         $can_submit = $can_submit_or_update; //(And add here those who can only be submitted)
 
