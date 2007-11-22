@@ -1229,6 +1229,7 @@ INSERT INTO artifact_field VALUES (6,1,1,'open_date',4,'DF','','Submitted on','D
 INSERT INTO artifact_field VALUES (5,1,1,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (1,1,1,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (4,1,2,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (31,1,1,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (3,1,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (2,1,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (30,1,2,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
@@ -1267,6 +1268,7 @@ INSERT INTO artifact_field VALUES (9,2,3,'multi_assigned_to',5,'MB','','Assigned
 INSERT INTO artifact_field VALUES (12,2,3,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (13,2,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (14,2,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (16,2,3,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- SR tracker
 INSERT INTO artifact_field VALUES (9,3,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (7,3,6,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1279,6 +1281,7 @@ INSERT INTO artifact_field VALUES (2,3,5,'summary',1,'TF','60/150','Summary','On
 INSERT INTO artifact_field VALUES (1,3,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (10,3,6,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,3,5,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (13,3,5,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Empty tracker
 INSERT INTO artifact_field VALUES (1,4,7,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,4,7,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -1291,6 +1294,7 @@ INSERT INTO artifact_field VALUES (7,4,7,'severity',2,'SB','','Severity','Impact
 INSERT INTO artifact_field VALUES (8,4,7,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (9,4,7,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
 INSERT INTO artifact_field VALUES (10,4,7,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (12,4,7,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Patches tracker
 INSERT INTO artifact_field VALUES (1,5,8,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,5,8,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -1304,6 +1308,7 @@ INSERT INTO artifact_field VALUES (9,5,10,'status_id',2,'SB','','Status','Artifa
 INSERT INTO artifact_field VALUES (10,5,8,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (11,5,8,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (12,5,10,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (13,5,8,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 --
 -- Dumping data for table 'artifact_field_usage'
 --
@@ -1322,6 +1327,7 @@ INSERT INTO artifact_field_usage VALUES (10,1,1,NULL);
 INSERT INTO artifact_field_usage VALUES (9,1,1,1000);
 INSERT INTO artifact_field_usage VALUES (16,1,1,40);
 INSERT INTO artifact_field_usage VALUES (20,1,1,30);
+INSERT INTO artifact_field_usage VALUES (31,1,1,0);
 INSERT INTO artifact_field_usage VALUES (2,2,1,20);
 INSERT INTO artifact_field_usage VALUES (3,2,1,30);
 INSERT INTO artifact_field_usage VALUES (4,2,1,40);
@@ -1333,6 +1339,7 @@ INSERT INTO artifact_field_usage VALUES (11,2,1,50);
 INSERT INTO artifact_field_usage VALUES (15,2,0,0);
 INSERT INTO artifact_field_usage VALUES (1,2,1,1);
 INSERT INTO artifact_field_usage VALUES (10,2,1,0);
+INSERT INTO artifact_field_usage VALUES (16,2,1,0);
 INSERT INTO artifact_field_usage VALUES (9,3,1,NULL);
 INSERT INTO artifact_field_usage VALUES (7,3,1,30);
 INSERT INTO artifact_field_usage VALUES (12,3,0,0);
@@ -1342,6 +1349,7 @@ INSERT INTO artifact_field_usage VALUES (4,3,1,5);
 INSERT INTO artifact_field_usage VALUES (3,3,1,1000);
 INSERT INTO artifact_field_usage VALUES (2,3,1,900);
 INSERT INTO artifact_field_usage VALUES (1,3,1,1);
+INSERT INTO artifact_field_usage VALUES (13,3,1,0);
 INSERT INTO artifact_field_usage VALUES (9,2,1,70);
 INSERT INTO artifact_field_usage VALUES (12,2,1,10);
 
@@ -1378,6 +1386,7 @@ INSERT INTO artifact_field_usage VALUES (8,4,1,20);
 INSERT INTO artifact_field_usage VALUES (9,4,1,30);
 INSERT INTO artifact_field_usage VALUES (10,4,0,40);
 INSERT INTO artifact_field_usage VALUES (11,4,0,0);
+INSERT INTO artifact_field_usage VALUES (12,4,1,0);
 
 
 INSERT INTO artifact_field_usage VALUES (1,5,1,0);
@@ -1392,6 +1401,7 @@ INSERT INTO artifact_field_usage VALUES (9,5,1,0);
 INSERT INTO artifact_field_usage VALUES (10,5,1,0);
 INSERT INTO artifact_field_usage VALUES (11,5,0,0);
 INSERT INTO artifact_field_usage VALUES (12,5,1,0);
+INSERT INTO artifact_field_usage VALUES (13,5,1,0);
 --
 -- Dumping data for table 'artifact_field_value_list'
 --
@@ -2109,7 +2119,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO supported_languages VALUES \
 (1,'English','English_US.tab','en_US','ISO-8859-1',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Franï¿½ais','French_FR.tab','fr_FR','ISO-8859-1',1);
 
 
 -- install and enable pluginsadministration
