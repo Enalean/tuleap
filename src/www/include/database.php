@@ -117,4 +117,39 @@ function db_escape_string($string,$qhandle=false) {
     return mysql_escape_string($string);
   }
 }
+
+/**
+ * Alias for db_escape_string.
+ */
+function db_es($string,$qhandle=false) {
+    return db_escape_string($string,$qhandle);
+}
+
+/**
+ * Escape value as a valid decimal integer.
+ *
+ * If input is not a valid decimal integer, return '0'.
+ *
+ * @see http://php.net/language.types.integer
+ * @param  mixed $val a value to escape
+ * @return string Decimal integer encoded as a string
+ */
+function db_escape_int($val) {
+    $match = array();
+    if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val, $match)) {
+        return $match[1];
+    }
+    return '0';
+}
+
+/**
+ * Alias for db_escape_int
+ *
+ * @param mixed $val a value to escape
+ * @return string Decimal integer encoded as a string
+ */
+function db_ei($val) {
+    return db_escape_int($val);
+}
+
 ?>

@@ -469,4 +469,11 @@ $TZs[]='WET';
 $TZs[]='W-SU';
 $TZs[]='Zulu';
 
+function is_valid_timezone($tz) {
+    if(in_array($tz, $GLOBALS['TZs'])) {
+        return true;
+    }
+    return false;
+}
+
 ?>

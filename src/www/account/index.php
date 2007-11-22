@@ -18,13 +18,15 @@ $em =& EventManager::instance();
 
 my_header(array('title'=>$Language->getText('account_options', 'title')));
 
+$purifier =& CodeX_HTMLPurifier::instance();
+
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
 
 ?>
 <p><?php echo $Language->getText('account_options', 'welcome'); ?>,
-    <b><?php echo user_getrealname(user_getid()); ?></b>
+    <b><?php echo $purifier->purify(user_getrealname(user_getid())); ?></b>
 
 <p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
 <?php
@@ -32,7 +34,7 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 ?>
 
 <UL>
-<LI><A href="/users/<?php print $row_user['user_name']; ?>/">
+<LI><A href="/users/<?php echo $purifier->purify($row_user['user_name']); ?>/">
 <B><?php echo $Language->getText('account_options', 'view_developer_profile'); ?></B></A>
 <LI><A HREF="/people/editprofile.php"><B><?php echo $Language->getText('account_options', 'edit_skills_profile'); ?></B></A>
 </UL>
@@ -51,7 +53,7 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
-<TD><B><?php print $row_user['user_name']; ?></B></td>
+<TD><B><?php echo $purifier->purify($row_user['user_name']); ?></B></td>
 <td>
 <?php
 $display_change_password = true;
@@ -72,7 +74,7 @@ if ($display_change_password) {
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
-<TD><B><?php print $row_user['realname']; ?></B></td>
+<TD><B><?php echo $purifier->purify($row_user['realname']); ?></B></td>
 <td>
 <?php
 $display_change_realname = true;

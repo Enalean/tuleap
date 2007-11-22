@@ -14,13 +14,19 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw', array());
 
+$request =& HTTPRequest::instance();
+
 $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
+
+$purifier =& CodeX_HTMLPurifier::instance();
+
+$form_user = $purifier->purify($request->get('form_user'));
 ?>
 
 <P><?php echo $Language->getText('account_lostpw', 'message'); ?>
 
 <FORM action="lostpw-confirm.php" method="post">
-<P><INPUT type="hidden" name="form_user" value="<?php print isset($form_user) ? $form_user : ''; ?>">
+<P><INPUT type="hidden" name="form_user" value="<?php echo $form_user; ?>">
 Login Name:
 <INPUT type="text" name="form_loginname">
 <INPUT type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">

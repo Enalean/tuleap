@@ -10,10 +10,19 @@ require_once('bookmarks.php');
 
 $Language->loadLanguageMsg('my/my');
 
-if ($bookmark_url && $bookmark_title) {
+$request =& HTTPRequest::instance();
+
+//@filtertodo: check bookmark as int.
+$bookmark_id    = (int) $request->get('bookmark_id');
+$bookmark_url   = $request->get('bookmark_url');
+$bookmark_title = $request->get('bookmark_title');
+
+if ($request->exist('bookmark_url') && $request->exist('bookmark_title')) {
 	bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
-        header ("Location: /my/");
+    header ("Location: /my/");
 }
+
+$purifier =& CodeX_HTMLPurifier::instance();
 
 $HTML->header(array("title"=>$Language->getText('bookmark_edit', 'title')));
 
@@ -28,11 +37,12 @@ if ($result) {
 ?>
 <FORM METHOD="POST">
 <?php echo $Language->getText('bookmark_add', 'bkm_url'); ?>:<br>
-<input type="text" name="bookmark_url" size="60" value="<?php echo $bookmark_url; ?>">
+<input type="text" name="bookmark_url" size="60" value="<?php echo $purifier->purify($bookmark_url); ?>">
 <p>
 <?php echo $Language->getText('bookmark_add', 'bkm_title'); ?>:<br>
-<input type="text" name="bookmark_title" size="60" value="<?php echo $bookmark_title; ?>">
+<input type="text" name="bookmark_title" size="60" value="<?php echo $purifier->purify($bookmark_title); ?>">
 <p>
+
 <input type="submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 <?php

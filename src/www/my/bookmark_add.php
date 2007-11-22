@@ -14,11 +14,18 @@ $HTML->header(array("title"=>$Language->getText('bookmark_add', 'title')));
 
 print "<H3>".$Language->getText('bookmark_add', 'title')."</H3>";
 
-if (isset($bookmark_url) && $bookmark_url) {
-    print $Language->getText('bookmark_add', 'message', array($bookmark_url,stripslashes($bookmark_title)))."<p>\n";
+$request =& HTTPRequest::instance();
+
+if ($request->exist('bookmark_url')) {
+    $purifier =& CodeX_HTMLPurifier::instance();
+
+    $bookmark_url = $request->get('bookmark_url');
+    $bookmark_title = $request->get('bookmark_title');
+
+    print $Language->getText('bookmark_add', 'message', array($purifier->purify($bookmark_url), $purifier->purify($bookmark_title)))."<p>\n";
 
 	$bookmark_id = bookmark_add ($bookmark_url, $bookmark_title);
-	print '<A HREF="'. $bookmark_url .'">'.$Language->getText('bookmark_add', 'visit')."</A> - ";
+	print '<A HREF="'. $purifier->purify($bookmark_url) .'">'.$Language->getText('bookmark_add', 'visit')."</A> - ";
 	print '<A HREF="/my/bookmark_edit.php?bookmark_id='. $bookmark_id .'">'.$Language->getText('bookmark_add', 'edit')."</A>";
 	print '<p><A HREF="/my/">['.$Language->getText('global', 'back_home')."]</A>";
 } else {

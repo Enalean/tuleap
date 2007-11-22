@@ -68,7 +68,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
 function session_login_is_pwd_expired($user_id, $form_pw) {
     $expired = false;
     if (isset($GLOBALS['sys_password_lifetime']) && $GLOBALS['sys_password_lifetime']) {
-        $sql = "SELECT last_pwd_update FROM user WHERE user_id = ". $user_id;
+        $sql = "SELECT last_pwd_update FROM user WHERE user_id = ". db_ei($user_id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $now = time();
@@ -100,9 +100,13 @@ function session_login_valid_db($form_loginname, $form_pw, $allowpending = 0, &$
     }
 
     //get the user from the database using user_id and password
-	$res = db_query("SELECT user_id,status FROM user WHERE "
-                    . "user_name='$form_loginname' "
-                    . "AND user_pw='" . md5($form_pw) . "'");
+    $sql = sprintf('SELECT user_id,status'.
+                   ' FROM user'.
+                   ' WHERE user_name = "%s" '.
+                   ' AND user_pw= "%s"',
+                   db_escape_string($form_loginname),
+                   md5($form_pw));
+	$res = db_query($sql);
 	if (!$res || db_numrows($res) < 1) {
 		//invalid password or user_name
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','invalid_pwd'));
@@ -185,9 +189,9 @@ function session_require($req) {
 
 	if (isset($req['group']) && $req['group']) {
 		$query = "SELECT user_id FROM user_group WHERE user_id=" . user_getid()
-			. " AND group_id=$req[group]";
+			. " AND group_id=".db_ei($req['group']);
 		if ($req['admin_flags']) {
-		$query .= " AND admin_flags = '$req[admin_flags]'";	
+            $query .= " AND admin_flags = '".db_escape_string($req['admin_flags'])."'";
 		}
  
 		if ((db_numrows(db_query($query)) < 1) || !$req['group']) {
@@ -214,7 +218,7 @@ function session_setglobals($user_id) {
 //	unset($G_USER);
 
 	if ($user_id > 0) {
-		$result=db_query("SELECT user_id,user_name FROM user WHERE user_id='$user_id'");
+		$result=db_query("SELECT user_id,user_name FROM user WHERE user_id=".db_ei($user_id));
 		if (!$result || db_numrows($result) < 1) {
 			//echo db_error();
 			$G_USER = array();
@@ -235,14 +239,13 @@ function session_set_new($user_id) {
 	// concatinate current time, and random seed for MD5 hash
 	// continue until unique hash is generated (SHOULD only be once)
 	do {
-
-		$pre_hash = time() . rand() . $GLOBALS['REMOTE_ADDR'] . microtime();
+		$pre_hash = time() . rand() . $_SERVER['REMOTE_ADDR'] . microtime();
 		$GLOBALS['session_hash'] = md5($pre_hash);
 
-	} while (db_numrows(db_query("SELECT session_hash FROM session WHERE session_hash='$GLOBALS[session_hash]'")) > 0);
+	} while (db_numrows(db_query("SELECT session_hash FROM session WHERE session_hash='".db_escape_string($GLOBALS['session_hash'])."'")) > 0);
 		
 	// If permanent login configured then cookie expires in one year from now
-	$res = db_query('SELECT sticky_login from user where user_id = '.$user_id);
+	$res = db_query('SELECT sticky_login from user where user_id = '.db_ei($user_id));
 	if ($res) {
 	    $expire = (db_result($res,0,'sticky_login') ? time()+$GLOBALS['sys_session_lifetime']:0);
 	}
@@ -253,10 +256,9 @@ function session_set_new($user_id) {
 
 	// make new session entries into db
 	db_query("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES "
-		. "('$GLOBALS[session_hash]','$GLOBALS[REMOTE_ADDR]'," . time() . ",'$user_id')");
-
+		. "('".db_escape_string($GLOBALS['session_hash'])."','".db_escape_string($_SERVER['REMOTE_ADDR'])."'," . time() . ",".db_ei($user_id).")");
 	// set global
-	$res=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
+	$res=db_query("SELECT * FROM session WHERE session_hash='".db_escape_string($GLOBALS['session_hash'])."'");
 	if (db_numrows($res) > 1) {
 		session_delete($GLOBALS['session_hash']);
         exit_error($Language->getText('global','error'),$Language->getText('include_session','hash_err'));
@@ -277,12 +279,15 @@ function session_set() {
 
 	// here also check for good hash, set if new session is needed
 	if (isset($GLOBALS['session_hash']) && $GLOBALS['session_hash']) {
-		$result=db_query("SELECT * FROM session WHERE session_hash='$GLOBALS[session_hash]'");
+        $sql = 'SELECT *'.
+            ' FROM session'.
+            ' WHERE session_hash="'.db_escape_string($GLOBALS['session_hash']).'"';
+		$result=db_query($sql);
 		$G_SESSION = db_fetch_array($result);
 
 		// does hash exist?
 		if ($G_SESSION['session_hash']) {
-			if (session_checkip($G_SESSION['ip_addr'],$GLOBALS['REMOTE_ADDR'])) {
+			if (session_checkip($G_SESSION['ip_addr'],$_SERVER['REMOTE_ADDR'])) {
 				$id_is_good = 1;
 			} 
 		} // else hash was not in database
@@ -332,7 +337,7 @@ function session_continue($sessionKey) {
  * @return boolean true if the session is deleted in the database, false otherwise
  */
 function session_delete($sessionKey) {
-    return db_query("DELETE FROM session WHERE session_hash='$sessionKey'");
+    return db_query("DELETE FROM session WHERE session_hash='".db_escape_string($sessionKey)."'");
 }
 
 function session_hash() {

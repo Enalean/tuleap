@@ -15,22 +15,24 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw-confirm', array());
 
-if (!isset($session_hash)) {
-    $session_hash = '';
+if (!isset($GLOBALS['session_hash'])) {
+    $GLOBALS['session_hash'] = '';
 }
-$confirm_hash = md5($session_hash . strval(time()) . strval(rand()));
+$confirm_hash = md5($GLOBALS['session_hash'] . strval(time()) . strval(rand()));
 
-$res_user = db_query("SELECT * FROM user WHERE user_name='$form_loginname'");
+$request =& HTTPRequest::instance();
+
+$res_user = db_query("SELECT * FROM user WHERE user_name='".db_es($request->get('form_loginname'))."'");
 if (db_numrows($res_user) < 1) exit_error("Invalid User","That user does not exist.");
 $row_user = db_fetch_array($res_user);
 
-db_query("UPDATE user SET confirm_hash='$confirm_hash' WHERE user_id=$row_user[user_id]");
+db_query("UPDATE user SET confirm_hash='".$confirm_hash."' WHERE user_id=".$row_user['user_id']);
 
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 
 $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body',
-	      array($GLOBALS['sys_name'], 
-		    get_server_url()."/account/lostlogin.php?confirm_hash=$confirm_hash")));
+	      array($GLOBALS['sys_name'],
+                get_server_url()."/account/lostlogin.php?confirm_hash=".$confirm_hash)));
 
 $mail =& new Mail();
 $mail->setTo($row_user['email']);

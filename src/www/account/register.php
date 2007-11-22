@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+// $Id$
 
 require_once('pre.php');
 require_once('proj_email.php');
@@ -20,62 +20,74 @@ $Language->loadLanguageMsg('account/account');
 // ###### checks for valid register from form post
 
 function register_valid($confirm_hash)	{
-    global $HTTP_POST_VARS, $Language;
+    global $Language;
 
-    $request =& HTTPRequest:: instance();
+    $request =& HTTPRequest::instance();
     
-    if (!$HTTP_POST_VARS['form_loginname']) {
+    if (!$request->exist('form_loginname')) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nouser'));
 	return 0;
     }
-    if (!$HTTP_POST_VARS['form_pw']) {
+    if (!$request->exist('form_pw')) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
 	return 0;
     }
-    if ($HTTP_POST_VARS['timezone'] == 'None') {
+    $tz = $request->get('timezone');
+    if (!is_valid_timezone($tz) ||
+        $tz == 'None') {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
-    if (!$HTTP_POST_VARS['form_register_purpose'] && $GLOBALS['sys_user_approval']) {
+    if (!$request->exist('form_register_purpose') && $GLOBALS['sys_user_approval']) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
 	return 0;
     }
-    if (!validate_email($HTTP_POST_VARS['form_email'])) {
+    if (!validate_email($request->get('form_email'))) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
 	return 0;
     }
-    if (!account_namevalid($HTTP_POST_VARS['form_loginname'])) {
+    if (!account_namevalid($request->get('form_loginname'))) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
 	return 0;
     }
     if (db_numrows(db_query("SELECT user_id FROM user WHERE "
-			    . "user_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) {
+			    . "user_name LIKE '".db_es($request->get('form_loginname'))."'")) > 0) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
 	return 0;
     }
-    if ($HTTP_POST_VARS['form_pw'] != $HTTP_POST_VARS['form_pw2']) {
+    if ($request->get('form_pw') != $request->get('form_pw2')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         return 0;
     }
-    if (!account_pwvalid($HTTP_POST_VARS['form_pw'], $errors)) {
+    if (!account_pwvalid($request->get('form_pw'), $errors)) {
         foreach($errors as $e) {
             $GLOBALS['Response']->addFeedback('error', $e);
         }
         return 0;
     }
 
+    // Escape HTML injections in some parameters
+    // Note: this is not the right way to do, we should record them as is and
+    // escape on display but due to legacy, it's much more secure to escape now.
+    $purifier =& CodeX_HTMLPurifier::instance();
+
+    // Escape realname
+    $realname = $purifier->purify($request->get('form_realname'), CODEX_PURIFIER_STRIP_HTML);
+    // Escape register purpose
+    $register_purpose = $purifier->purify($request->get('form_register_purpose'));
+
     //use sys_lang as default language for each user at register
-    $res = account_create($HTTP_POST_VARS['form_loginname']
-                          ,$HTTP_POST_VARS['form_pw']
+    $res = account_create($request->get('form_loginname')
+                          ,$request->get('form_pw')
                           ,''
-                          ,$request->get('form_realname')
-                          ,$GLOBALS['form_register_purpose']
+                          ,$realname
+                          ,$register_purpose
                           ,$request->get('form_email')
                           ,'P'
                           ,$confirm_hash
-                          ,$GLOBALS['form_mail_site']
-                          ,$GLOBALS['form_mail_va']
-                          ,$GLOBALS['timezone']
+                          ,$request->get('form_mail_site')
+                          ,$request->get('form_mail_va')
+                          ,$tz
                           ,$Language->getText('conf','language_id')
                           ,account_nextuid()
                           ,'A');
@@ -84,40 +96,49 @@ function register_valid($confirm_hash)	{
 
 
 function display_account_form($register_error)	{
-    global $HTTP_POST_VARS, $Language;
-    
-    $hp =& CodeX_HTMLPurifier::instance();
-    
+    global $Language;
+
+    $request =& HTTPRequest::instance();
+    $purifier =& CodeX_HTMLPurifier::instance();
+
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
     $star = '<span class="highlight"><big>*</big></span>';
-    $form_loginname = isset($HTTP_POST_VARS['form_loginname'])?$HTTP_POST_VARS['form_loginname']:'';
-    $form_realname  = isset($HTTP_POST_VARS['form_realname'])?$HTTP_POST_VARS['form_realname']:'';
-    $form_email     = isset($HTTP_POST_VARS['form_email'])?$HTTP_POST_VARS['form_email']:'';
-   
+    $form_loginname = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
+    $form_realname  = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
+    $form_email     = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
+    // @todovalid: check if TZ in the tz list
+    
+    if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
+        $timezone = $request->get('timezone');
+    } else { 
+        $timezone = 'None';
+    }
+
+    $form_register_purpose = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
+
     ?>
         
 <form action="/account/register.php" method="post">
 <p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php print $hp->purify(stripslashes($form_loginname)); ?>">
+<input type="text" name="form_loginname" value="<?php echo $form_loginname; ?>">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
 <?php user_display_choose_password(); ?>
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php print htmlentities($form_realname, ENT_QUOTES); ?>">
+<INPUT size=40 type="text" name="form_realname" value="<?php echo $form_realname; ?>">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php print htmlentities($form_email, ENT_QUOTES); ?>"><BR>
+<INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
 
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php 
-    $timezone = (isset($HTTP_POST_VARS['timezone'])?stripslashes($HTTP_POST_VARS['timezone']):'None');
     echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
 
-<P><INPUT type="checkbox" name="form_mail_site" value="1" checked>
+<P><INPUT type="checkbox" name="form_mail_site" value="1" checked="checked">
 <?php print $Language->getText('account_register', 'siteupdate'); ?>
 
 <P><INPUT type="checkbox" name="form_mail_va" value="1">
@@ -128,7 +149,7 @@ function display_account_form($register_error)	{
 if ($GLOBALS['sys_user_approval'] == 1) {
     print $Language->getText('account_register', 'purpose').'&nbsp;'.$star.":<br>";
     print $Language->getText('account_register', 'purpose_directions');
-    echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose"></textarea></p>';
+    echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose">'.$form_register_purpose.'</textarea></p>';
 }
 ?>
 
@@ -143,11 +164,11 @@ if ($GLOBALS['sys_user_approval'] == 1) {
 
 // ###### first check for valid login, if so, congratulate
 
-if (isset($Register)) {
+$request =& HTTPRequest::instance();
 
-    $request =& HTTPRequest:: instance();
-    
-    $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
+if ($request->isPost() && $request->exist('Register')) {
+
+    $confirm_hash = substr(md5($GLOBALS['session_hash'] . $request->get('form_pw') . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash)) {
     

@@ -702,7 +702,7 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 			echo '<TR class="'. html_get_alt_row_color($j+1) .'">';
 			for ($i = 0; $i < $cols; $i++) {
 				if ($linkify && $i == 0) {
-					$link = '<A HREF="'.$PHP_SELF.'?';
+					$link = '<A HREF="'.$_SERVER['PHP_SELF'].'?';
 					$linkend = '</A>';
 					if ($linkify == "bug_cat") {
 						$link .= 'group_id='.$group_id.'&bug_cat_mod=y&bug_cat_id='.db_result($result, $j, 'bug_category_id').'">';
@@ -1044,7 +1044,7 @@ function util_check_fileupload($filename) {
  * Return the group name (i.e. project name) from the group_id
  */
 function util_get_group_name_from_id($group_id) {
-    $sql = "SELECT group_name FROM groups WHERE group_id = ".$group_id;
+    $sql = "SELECT group_name FROM groups WHERE group_id = ".db_ei($group_id);
     $result = db_query($sql);
     return db_result($result,0,0);
 }
@@ -1061,13 +1061,13 @@ function util_get_group_name_from_id($group_id) {
  * @return boolean
  */
 function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
-    $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".$aid;
+    $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".db_ei($aid);
     
     $result = db_query($sql);
     if ($result && db_numrows($result) > 0) {
         $atid = db_result($result,0,0);
         
-        $sql = "SELECT group_id,item_name FROM artifact_group_list WHERE group_artifact_id = ".$atid;
+        $sql = "SELECT group_id,item_name FROM artifact_group_list WHERE group_artifact_id = ".db_ei($atid);
         
         $result = db_query($sql);
         $rows=db_numrows($result);
@@ -1093,16 +1093,16 @@ function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
  */
 function util_get_group_from_legacy_id($atn,$aid) {
     if ($atn=='bug') {
-        $sql="select group_id from bug where bug_id=$aid";
+        $sql="select group_id from bug where bug_id=".db_ei($aid);
     } else if ($atn=='sr') {
-        $sql="select group_id from support where support_id=$aid";
+        $sql="select group_id from support where support_id=".db_ei($aid);
     } else if ($atn=='patch') {
-        $sql="select group_id from patch where patch_id=$aid";
+        $sql="select group_id from patch where patch_id=".db_ei($aid);
     } else if ($atn=='task') {
         // A bit more complicated since the group_id and project_task_id are not in the same table...
         $sql="SELECT project_group_list.group_id FROM project_task,project_group_list".
             " WHERE project_task.group_project_id=project_group_list.group_project_id".
-            " AND project_task.project_task_id=$aid";
+            " AND project_task.project_task_id=".db_ei($aid);
     } else {
         return 0;
     }
@@ -1118,12 +1118,12 @@ function util_get_group_from_legacy_id($atn,$aid) {
  * @return group_id, or 0 if group does not exist
  */
 function util_get_group_from_commit_id($cid) {
-  $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=$cid";
+  $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=".db_ei($cid);
   $res = db_query($sql);
   $repository_id = db_result($res, 0, 'repositoryid');
   if (!$repository_id) return 0;
 
-  $sql = "SELECT repository FROM cvs_repositories WHERE id=$repository_id";
+  $sql = "SELECT repository FROM cvs_repositories WHERE id=".db_ei($repository_id);
   $res = db_query($sql);
   $repository = db_result($res, 0, 'repository');
   if (!$repository) return 0;
@@ -1132,7 +1132,7 @@ function util_get_group_from_commit_id($cid) {
   $projname=eregi_replace(".*/cvsroot/","",$repository);
   if (!$projname) return 0;
 
-  $sql = "SELECT group_id FROM groups WHERE unix_group_name='$projname'";
+  $sql = "SELECT group_id FROM groups WHERE unix_group_name='".db_es($projname)."'";
   $res = db_query($sql);
   return db_result($res, 0, 'group_id');
 }    
@@ -1281,7 +1281,7 @@ function util_check_restricted_access($request_uri, $script_name) {
                 preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
                 $this_proj_name=$matches[1];
             }
-            $res_proj=db_query("SELECT group_id FROM groups WHERE unix_group_name='$this_proj_name'");
+            $res_proj=db_query("SELECT group_id FROM groups WHERE unix_group_name='".db_es($this_proj_name)."'");
             if (db_numrows($res_proj) < 1) { # project does not exist
                 return false;
             }
@@ -1301,7 +1301,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         if (strpos($req_uri,'/forum/') !== false) {
             if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
                 // Get corresponding project
-                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".$_REQUEST['forum_id']."'");
+                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".db_es($_REQUEST['forum_id'])."'");
                 $group_id=db_result($result,0,'group_id');
                 // News
                 if ($allow_news_browsing) {
@@ -1322,7 +1322,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         if (strpos($req_uri,'/tracker/download.php') !== false) {
             if (isset($_REQUEST['artifact_id'])) {
                 $result=db_query("SELECT group_id FROM artifact_group_list,artifact WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND artifact.artifact_id="
-                                 .$_REQUEST['artifact_id']);
+                                 .db_ei($_REQUEST['artifact_id']));
                 $group_id=db_result($result,0,'group_id');
             }
         }

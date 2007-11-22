@@ -449,6 +449,7 @@ include_user	invalid_u_id	Invalid User ID
 include_utils	prio_colors	Priority Colors
 include_utils	address_problem	There are problems with the following addresses
 include_utils	email_explain	Email addresses must either be valid CodeX user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+include_utils	invalid_email	Email format invalid
 include_utils	time_ago	$1 ago
 include_utils	1_minute	1 minute
 include_utils	less_1_minute	less than a minute

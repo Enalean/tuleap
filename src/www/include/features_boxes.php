@@ -145,8 +145,8 @@ function show_top_downloads() {
                             ."AND frs_package.package_id = frs_release.package_id "
                             ."AND frs_package.group_id = groups.group_id "
                             ."AND groups.type = 1 "
-                            ."AND filedownload_log.time > $start_time "
-                            ."AND filedownload_log.time < $end_time "
+                            ."AND filedownload_log.time > ".$start_time." "
+                            ."AND filedownload_log.time < ".$end_time." "
                             ."GROUP BY groups.group_id "
                             ."ORDER BY downloads DESC LIMIT 10");
 	

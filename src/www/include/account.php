@@ -33,7 +33,7 @@ function account_set_password($user_id,$password) {
                     . "unix_pw='" . account_genunixpw($password) . "',"
                     . "windows_pw='" . account_genwinpw($password) . "',"
                     . "last_pwd_update='".time()."'"
-                    ." WHERE user_id=" . $user_id );          
+                    ." WHERE user_id=" . db_ei($user_id));
     if (! $res) {
         return false;
     }
@@ -47,7 +47,7 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 	$ret = false;
 
     $user_unix_name = util_user_finder($user_unix_name, true);
-	$res_newuser = db_query("SELECT status,user_id,unix_status,unix_uid FROM user WHERE user_name='$user_unix_name'");
+	$res_newuser = db_query("SELECT status,user_id,unix_status,unix_uid FROM user WHERE user_name='".db_es($user_unix_name)."'");
 
 	if (db_numrows($res_newuser) > 0) {
 
@@ -61,14 +61,14 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 		$form_newuid = db_result($res_newuser,0,'user_id');
 
 		//if not already a member, add it
-		$res_member = db_query("SELECT user_id FROM user_group WHERE user_id='$form_newuid' AND group_id='$group_id'");
+		$res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$form_newuid." AND group_id='".db_es($group_id)."'");
 		if (db_numrows($res_member) < 1) {
 			//not already a member
-			db_query("INSERT INTO user_group (user_id,group_id) VALUES ('$form_newuid','$group_id')");
+			db_query("INSERT INTO user_group (user_id,group_id) VALUES (".$form_newuid.",'".db_es($group_id)."')");
 
 			//if no unix account, give them a unix_uid
 			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
-				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
+				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=".$form_newuid);
 			}
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));
             account_send_add_user_to_group_email($group_id,$form_newuid);
@@ -91,10 +91,10 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
     $base_url = get_server_url();
 
     // Get email address
-    $res = db_query("SELECT email FROM user WHERE user_id=$user_id");
+    $res = db_query("SELECT email FROM user WHERE user_id=".db_ei($user_id));
     if (db_numrows($res) > 0) {
         $email_address = db_result($res,0,'email');
-        $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=$group_id");
+        $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=".db_ei($group_id));
         if (db_numrows($res2) > 0) {
             $group_name = db_result($res2,0,'group_name');
             $unix_group_name = db_result($res2,0,'unix_group_name');
@@ -276,24 +276,24 @@ function account_create($loginname=''
     global $Language;
 
     $result=db_query("INSERT INTO user"
-                     ." SET user_name='".$loginname."'"
+                     ." SET user_name='".db_es($loginname)."'"
                      ." ,user_pw='".md5($pw)."'"
                      ." ,unix_pw='".account_genunixpw($pw)."'"
                      ." ,windows_pw='".account_genwinpw($pw)."'"
-                     ." ,ldap_id='".$ldap_id."'"
-                     ." ,realname=".DataAccess::quoteSmart($realname).""
-                     ." ,register_purpose='".$register_purpose."'"
-                     ." ,email=".DataAccess::quoteSmart($email).""
-                     ." ,add_date='". time()."'"
-                    . " ,last_pwd_update='".time()."'"
-                     ." ,status='".$status."'"
-                     ." ,confirm_hash='".$confirm_hash."'"
-                     ." ,mail_siteupdates='".$mail_site."'"
-                     ." ,mail_va='".$mail_va."'"
-                     ." ,timezone='".$timezone."'"
-                     ." ,language_id='".$lang_id."'"
-                     ." ,unix_uid='".$unix_uid."'"
-                     ." ,unix_status='".$unix_status."'");
+                     ." ,ldap_id='".db_es($ldap_id)."'"
+                     ." ,realname='".db_es($realname)."'"
+                     ." ,register_purpose='".db_es($register_purpose)."'"
+                     ." ,email='".db_es($email)."'"
+                     ." ,add_date=".time()
+                     ." ,last_pwd_update=".time()
+                     ." ,status='".db_es($status)."'"
+                     ." ,confirm_hash='".db_es($confirm_hash)."'"
+                     ." ,mail_siteupdates=".db_ei($mail_site)
+                     ." ,mail_va=".db_ei($mail_va)
+                     ." ,timezone='".db_es($timezone)."'"
+                     ." ,language_id=".db_ei($lang_id)
+                     ." ,unix_uid=".db_ei($unix_uid)
+                     ." ,unix_status='".db_es($unix_status)."'");
     
     if (!$result) {
         exit_error($Language->getText('include_exit', 'error'), db_error());

@@ -14,6 +14,7 @@
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
@@ -73,23 +74,22 @@ if (!IS_SCRIPT) {
 
 // Check URL for valid hostname and valid protocol
 if (!IS_SCRIPT &&
-    ($HTTP_HOST != $GLOBALS['sys_default_domain'])
-    && ($SERVER_NAME != 'localhost')
-    && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)
-    && (strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0)
-    && (!isset($GLOBALS['sys_https_host'])||($HTTP_HOST != $GLOBALS['sys_https_host']))) {
+    ($_SERVER['HTTP_HOST'] != $GLOBALS['sys_default_domain'])
+    && ($_SERVER['SERVER_NAME'] != 'localhost')
+    && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)
+    && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0)
+    && (!isset($GLOBALS['sys_https_host'])||($_SERVER['HTTP_HOST'] != $GLOBALS['sys_https_host']))) {
     if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-	$location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
+        $location = "Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI'];
     } else {
-	$location = "Location: http://".$GLOBALS['sys_default_domain']."$REQUEST_URI";
+        $location = "Location: http://".$GLOBALS['sys_default_domain'].$_SERVER['REQUEST_URI'];
     }
 }
 
 // Force SSL mode if required except if request comes from localhost, or for api scripts
 // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
-
-if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($SERVER_NAME != 'localhost') && (strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0)) {
-    $location = "Location: https://".$GLOBALS['sys_https_host']."$REQUEST_URI";
+if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($_SERVER['SERVER_NAME'] != 'localhost') && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)) {
+    $location = "Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI'];
 }
 
 if (!IS_SCRIPT && isset($location) && $location) {
@@ -113,11 +113,6 @@ if(!IS_SCRIPT) {
 
 //various html utilities
 require_once('utils.php');
-
-//PHP4-like functions - only if running php3
-if (substr(phpversion(),0,1) == "3") {
-    require_once('utils_php4.php');
-}
 
 //database abstraction
 require_once('database.php');
@@ -148,11 +143,6 @@ require_once('menu.php');
 
 db_connect();
 
-if (!$conn) {
-	print "Could Not Connect to Database".db_error();
-	exit;
-}
-
 if(!IS_SCRIPT) {
     //determine if they're logged in
     session_set();
@@ -177,9 +167,9 @@ if (user_isloggedin()) {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language
     //if we don't support it, just use system default
-    if (isset($HTTP_ACCEPT_LANGUAGE)) {
-	$res = language_code_to_result ($HTTP_ACCEPT_LANGUAGE);
-	$lang_code=db_result($res,0,'language_code');
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $res = language_code_to_result ($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $lang_code=db_result($res,0,'language_code');
     }
     if (!isset($lang_code)) { $lang_code = $GLOBALS['sys_lang']; }
     $Language = new BaseLanguage();
@@ -252,42 +242,51 @@ require_once('Project.class.php');
 // loading the license.php file in the register directory when
 // invoking project/register.php
 if(!IS_SCRIPT) {
-    require_once($DOCUMENT_ROOT.'/include/license.php');
-    if (license_already_declined()) {
-        exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
-    }
+require_once($_SERVER['DOCUMENT_ROOT'].'/include/license.php');
+if (license_already_declined()) {
+    exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
 }
-
+}
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
 // b) if it is a local access from localhost 
 
 /*
-print "<p>DBG: SERVER_NAME = ".$SERVER_NAME;
+print "<p>DBG: SERVER_NAME = ".$_SERVER['SERVER_NAME'];
 print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
 print "<p>DBG: user_isloggedin= ".user_isloggedin();
-print "<p>DBG: SCRIPT_NAME = ".$SCRIPT_NAME";
+print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
 */
 
 if (!IS_SCRIPT &&
-    $SERVER_NAME != 'localhost' && 
+    $_SERVER['SERVER_NAME'] != 'localhost' &&
     $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
-    $SCRIPT_NAME != '/current_css.php'  && 
-    $SCRIPT_NAME != '/account/login.php'  && 
-    $SCRIPT_NAME != '/account/register.php'&& 
-    $SCRIPT_NAME != '/account/change_pw.php'&& 
-    $SCRIPT_NAME != '/include/check_pw.php'&& 
-    $SCRIPT_NAME != '/account/lostpw.php' &&
-    $SCRIPT_NAME != '/account/lostlogin.php' &&
-    $SCRIPT_NAME != '/account/lostpw-confirm.php' &&
-    $SCRIPT_NAME != '/account/pending-resend.php' &&
-    $SCRIPT_NAME != '/account/verify.php' &&
-    $SCRIPT_NAME != '/scripts/check_pw.js.php' &&
-    strcmp(substr($SCRIPT_NAME,0,6),'/soap/') !=0 &&
-    strcmp(substr($SCRIPT_NAME,0,5),'/api/') !=0 ) {
-    
-    $return_to = urlencode((($REQUEST_URI === "/")?"/my/":$REQUEST_URI));
+    $_SERVER['SCRIPT_NAME'] != '/index.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/current_css.php'  &&
+    $_SERVER['SCRIPT_NAME'] != '/account/login.php'  &&
+    $_SERVER['SCRIPT_NAME'] != '/account/register.php'&&
+    $_SERVER['SCRIPT_NAME'] != '/account/change_pw.php'&&
+    $_SERVER['SCRIPT_NAME'] != '/include/check_pw.php'&&
+    $_SERVER['SCRIPT_NAME'] != '/account/lostpw.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/account/lostlogin.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/account/lostpw-confirm.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/account/pending-resend.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/account/verify.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/scripts/check_pw.js.php' &&
+    strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0 &&
+    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 ) {
+
+    $return_to = urlencode((($_SERVER['REQUEST_URI'] === "/")?"/my/":$_SERVER['REQUEST_URI']));
+
+    //if  user  requests a page in light view, it should be redirected to light login
+    $url = parse_url($_SERVER['REQUEST_URI']);
+    if(isset($url['query'])) {
+        $query = $url['query'];
+        if (strstr($query,'pv=2')) {
+            $return_to .= "&pv=2";
+        }
+    }
 
     if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
         header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
@@ -299,11 +298,10 @@ if (!IS_SCRIPT &&
 
 if (!IS_SCRIPT &&
     user_isrestricted()) {
-    if (!util_check_restricted_access($REQUEST_URI,$SCRIPT_NAME)) {
+    if (!util_check_restricted_access($_SERVER['REQUEST_URI'],$_SERVER['SCRIPT_NAME'])) {
         exit_restricted_user_permission_denied();
     }
 }
-require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/URL.class.php');
 $request =& HTTPRequest::instance();
 //Do nothing if we are not in a distributed architecture
@@ -318,7 +316,7 @@ if (!IS_SCRIPT &&
             $p =& project_get_object($components[3]);
         }
     } else if ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php' && $request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
-        $res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='". $request->get('root') ."'");
+        $res_grp=db_query("SELECT group_id FROM groups WHERE unix_group_name='". db_es($request->get('root')) ."'");
         if (db_numrows($res_grp) < 1) {
             //group was not found
             echo db_error();
