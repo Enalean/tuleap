@@ -137,7 +137,11 @@ while (list($field,$value_id) = each($prefs)) {
     if ( ($field_object)&&($field_object->isDateField()) ) {
 		if ($advsrch) {
 		    $field_end = $field.'_end';
-		    $all_prefs[$field_end] = array($$field_end);
+            if (!is_array($$field_end)) {
+                $all_prefs[$field_end] = array($$field_end);
+            } else {
+                $all_prefs[$field_end] = $$field_end;
+            }
 		    //echo 'DBG Setting $prefs['.$field.'_end]= '.$prefs[$field.'_end'].'<br>';
 		} else {
 		    $field_op = $field.'_op';
@@ -261,7 +265,11 @@ if ($set=='my') {
     reset($prefs);
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
-		    $pref_stg .= '&'.$field.'[]='.urlencode(stripslashes($value_id));
+            if (!is_array($value_id)) {
+                $pref_stg .= '&'.$field.'='.urlencode(stripslashes($value_id));
+            } else {
+                $pref_stg .= '&'.$field.'[]='.$value_id;
+            }
 		}
 	
 		// build part of the HTML title of this page for more friendly bookmarking

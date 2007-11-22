@@ -609,7 +609,7 @@ class ArtifactReport extends Error {
 	 */
 	function getValuesWhereClause($field,$prefs,$field_name,$advsrch,&$notany) {
 	  $notany=true;
-
+      $where = '';
 
 		//echo $field_name."->prefs[".$field->getName()."]=".$prefs[$field->getName()][0]."<br>";
           if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()])) ) {
