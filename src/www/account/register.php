@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// $Id$
+// 
 
 require_once('pre.php');
 require_once('proj_email.php');
@@ -108,11 +108,9 @@ function display_account_form($register_error)	{
     $form_loginname = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
     $form_realname  = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
     $form_email     = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
-    // @todovalid: check if TZ in the tz list
-    
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
-    } else { 
+    } else {
         $timezone = 'None';
     }
 
