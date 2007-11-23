@@ -262,7 +262,6 @@ print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
 if (!IS_SCRIPT &&
     $_SERVER['SERVER_NAME'] != 'localhost' &&
     $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
-    $_SERVER['SCRIPT_NAME'] != '/index.php' &&
     $_SERVER['SCRIPT_NAME'] != '/current_css.php'  &&
     $_SERVER['SCRIPT_NAME'] != '/account/login.php'  &&
     $_SERVER['SCRIPT_NAME'] != '/account/register.php'&&
