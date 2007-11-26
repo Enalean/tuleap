@@ -67,10 +67,10 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
             $nameUrl  = $this->buildUrl($defaultUrl,
                                         array('action' => 'admin_md_details',
                                               'md'     => $md->getLabel()));
-            $nameHref = '<a href="'.$nameUrl.'">'.$md->getName().'</a>';
+            $nameHref = '<a href="'.$nameUrl.'">'.$this->hp->purify($md->getName()).'</a>';
             $content .= '<td>'.$nameHref.'</td>';
 
-            $content .= '<td>'.$md->getDescription().'</td>';
+            $content .= '<td>'.$this->hp->purify($md->getDescription()).'</td>';
 
             $content .= '<td>';
             if($md->isRequired()) {

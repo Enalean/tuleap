@@ -26,6 +26,7 @@ class Docman_ReportHtml {
     var $report;
     var $view;
     var $defaultUrl;
+    var $hp;
 
     /**
      *
@@ -34,6 +35,7 @@ class Docman_ReportHtml {
         $this->report = $report;
         $this->view   = $view;
         $this->defaultUrl = $defaultUrl;
+        $this->hp = CodeX_HTMLPurifier::instance();
     }
 
     /**
@@ -45,7 +47,7 @@ class Docman_ReportHtml {
         if($value == $selected) {
             $html .= ' selected="selected"';
         }
-        $html .= '>'.$text."</option>\n";
+        $html .= '>'.$this->hp->purify($text)."</option>\n";
         return $html;
     }
 
@@ -338,7 +340,7 @@ class Docman_ReportHtml {
         $html = '';
 
         if($this->report->getDescription() !== null) {
-            $html .= nl2br(util_make_links(htmlentities($this->report->getDescription()), $this->report->getGroupId()));
+            $html .= $this->hp->purify($this->report->getDescription(), CODEX_PURIFIER_BASIC, $this->report->getGroupId());
         }
         $html .= $this->getReportImage();
 

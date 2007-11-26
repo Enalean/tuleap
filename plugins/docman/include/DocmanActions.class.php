@@ -1263,17 +1263,31 @@ class DocmanActions extends Actions {
             }
         }
 
+        $purifier =& CodeX_HTMLPurifier::instance();
+
         if(count($atf->err['db']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', implode(', ', array_unique($atf->err['db']))));
+            $ua  = array_unique($atf->err['db']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', $uas));
         }
         if(count($atf->err['perm']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', implode(', ', array_unique($atf->err['perm']))));
+            $ua  = array_unique($atf->err['perm']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', $uas));
         }
         if(count($atf->err['notreg']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', implode(', ', array_unique($atf->err['notreg']))));
+            $ua  = array_unique($atf->err['notreg']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', $uas));
         }
         if(count($atf->warn['double']) > 0) {
-            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', implode(', ', array_unique($atf->warn['double']))));
+            $ua  = array_unique($atf->warn['double']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', $uas));
         }
 
         if($userAdded && $noError) {

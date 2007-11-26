@@ -59,13 +59,15 @@ class Docman_HtmlFilterFactory {
 
 class Docman_HtmlFilter {
     var $filter;
+    var $hp;
 
     function Docman_HtmlFilter($filter) {
         $this->filter = $filter;
+        $this->hp =& CodeX_HTMLPurifier::instance();
     }
 
     function _fieldName() {
-        $html = $this->filter->md->getName();
+        $html = $this->hp->purify($this->filter->md->getName());
         return $html;
     }
 
@@ -73,7 +75,7 @@ class Docman_HtmlFilter {
         $html = '';
         $value = $this->filter->getValue();
         if($value !== null) {
-            $html .= '<input type="hidden" name="'.$this->filter->md->getLabel().'" value="'.$value.'" />';
+            $html .= '<input type="hidden" name="'.$this->filter->md->getLabel().'" value="'.$this->hp->purify($value).'" />';
             $html .= "\n";
         }
         return $html;
@@ -161,7 +163,7 @@ extends Docman_HtmlFilterDate {
 class Docman_HtmlFilterList extends Docman_HtmlFilter {
     
     function Docman_HtmlFilterList($filter) {
-        $this->filter = $filter;
+        parent::Docman_HtmlFilter($filter);
     }
 
     function buildSelectBox($vals, $txts) {
@@ -193,7 +195,7 @@ class Docman_HtmlFilterListAdvanced
 extends Docman_HtmlFilterList {
     
     function Docman_HtmlFilterListAdvanced($filter) {
-        $this->filter = $filter;
+        parent::Docman_HtmlFilterList($filter);
     }
 
     function buildSelectBox($vals, $txts) {
@@ -207,12 +209,12 @@ extends Docman_HtmlFilterList {
 class Docman_HtmlFilterText extends Docman_HtmlFilter {
 
     function Docman_HtmlFilterText($filter) {
-        $this->filter = $filter;
+        parent::Docman_HtmlFilter($filter);
     }
 
     function _valueSelectorHtml($formName=0) {
         $html = '';
-        $html .= '<input type="text" name="'.$this->filter->md->getLabel().'" value="'.$this->filter->getValue().'" class="text_field"/>';
+        $html .= '<input type="text" name="'.$this->filter->md->getLabel().'" value="'.$this->hp->purify($this->filter->getValue()).'" class="text_field"/>';
         return $html;
     }
 }

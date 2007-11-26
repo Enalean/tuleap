@@ -60,8 +60,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         $content .= '<td><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
                         $content .= '<td>'. format_date($GLOBALS['sys_datefmt'], $versions[$key]->getDate()) .'</td>';
                         $content .= '<td>'. $user                                                  .'</td>';
-                        $content .= '<td>'. $versions[$key]->getLabel()                            .'</td>';
-                        $content .= '<td>'. $versions[$key]->getChangelog()                        .'</td>';
+                        $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
+                        $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_BASIC) .'</td>';
                         $content .= '</tr>';
                     }
                     $content .= '</table>';

@@ -133,9 +133,11 @@ class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator {
 class Docman_MetadataHtml {
     var $md;
     var $formParams;
+    var $hp;
 
     function Docman_MetadataHtml(&$md, $formParams) {
         $this->md =& $md;
+        $this->hp =& CodeX_HTMLPurifier::instance();
         $this->formParams = $formParams; 
     }
 
@@ -147,12 +149,12 @@ class Docman_MetadataHtml {
     function getLabel($show_mandatory_information = true) {
         $desc = $this->md->getDescription();
         $html = '';
-        $html .= '<span title="'. $desc .'">';
+        $html .= '<span title="'. $this->hp->purify($desc) .'">';
         if($this->md->isSpecial()) {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'field_'.$this->md->getLabel());
         }
         else {
-            $html .= $this->md->getName() .":";
+            $html .= $this->hp->purify($this->md->getName()) .":";
         }
         if($show_mandatory_information && $this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
             $html .= '&nbsp;';
@@ -222,7 +224,7 @@ class Docman_MetadataHtml {
 class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 
     function getValue() {
-        $value = nl2br(util_make_links(htmlentities($this->md->getValue()), $this->md->getGroupId()));
+        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFY_BASIC, $this->md->getGroupId());
         return $value;
     }
 
@@ -243,14 +245,14 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 class Docman_MetadataHtmlString extends Docman_MetadataHtml {
 
     function getValue() {
-        $value = util_make_links(htmlentities($this->md->getValue()), $this->md->getGroupId());
+        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFY_BASIC, $this->md->getGroupId());
         return $value;
     }
 
     function _getField() {
         $value = $this->md->getValue();
         if($value === null) {
-            $value = $this->md->getDefaultValue();
+            $value = $this->hp->purify($this->md->getDefaultValue());
         }
         $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$value.'" id="'.$this->md->getLabel().'" />';
         return $field;
@@ -302,7 +304,11 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
  */
 class Docman_MetadataHtmlList extends Docman_MetadataHtml {
 
+    /**
+     * static
+     */
     function _getElementName(&$e, $hideNone=false) {
+        $hp =& CodeX_HTMLPurifier::instance();
         $name = '';
         switch($e->getId()) {
         case 100:
@@ -311,7 +317,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             }
             break;
         default:
-            $name = $e->getName();
+            $name = $hp->purify($e->getName());
         }
         return $name;
     }
@@ -323,7 +329,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
             $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
             break;
         default:
-            $name = $e->getDescription();
+            $name = $this->hp->purify($e->getDescription());
         }
         return $name;
     }

@@ -16,9 +16,11 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     var $dfltSearchParams = null;
 
     var $_controller;
-    
+    var $hp;
+
     function Docman_View_View(&$controller) {
         $this->_controller = $controller;
+        $this->hp =& CodeX_HTMLPurifier::instance();
     }
     
     function display($params = array()) {
