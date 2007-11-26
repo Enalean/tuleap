@@ -234,6 +234,7 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml {
         if($value === null) {
             $value = $this->md->getDefaultValue();
         }
+        $value = $this->hp->purify($value);
         $field = '<textarea name="'.$name.'" id="'.$this->md->getLabel().'">'.$value.'</textarea>';
         return $field;
     }
@@ -252,8 +253,9 @@ class Docman_MetadataHtmlString extends Docman_MetadataHtml {
     function _getField() {
         $value = $this->md->getValue();
         if($value === null) {
-            $value = $this->hp->purify($this->md->getDefaultValue());
+            $value = $this->md->getDefaultValue();
         }
+        $value = $this->hp->purify($value);
         $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$value.'" id="'.$this->md->getLabel().'" />';
         return $field;
     }

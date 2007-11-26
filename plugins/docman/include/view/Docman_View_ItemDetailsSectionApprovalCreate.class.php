@@ -95,7 +95,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<tr>';
         $html .= '<td>'.Docman::txt('details_approval_table_description').'</td>';
         $html .= '<td>';
-        $html .= '<textarea name="description">'.$this->table->getDescription().'</textarea>';
+        $html .= '<textarea name="description">'.$this->hp->purify($this->table->getDescription()).'</textarea>';
         $html .= '</td>';
         $html .= '</tr>';
 
