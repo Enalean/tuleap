@@ -200,6 +200,10 @@ class CodeX_HTMLPurifier {
         return $clean;
     }
 
+    function purifyMap($array, $level=0, $groupId=0) {
+        return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
+    }
+
 }
 
 ?>
