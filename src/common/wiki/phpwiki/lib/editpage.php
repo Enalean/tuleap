@@ -357,14 +357,15 @@ class PageEditor
         //        better use a certain text : link ratio.
 
         // 1. Not more then 20 new external links
-        if ($this->numLinks($newtext) - $this->numLinks($oldtext) >= NUM_SPAM_LINKS)
-        {
-            // Allow strictly authenticated users?
-            // TODO: mail the admin?
-            $this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                HTML($this->getSpamMessage(),
-                     HTML::p(HTML::strong(_("Too many external links."))));
-            return true;
+        if (defined("NUM_SPAM_LINKS")) {
+            if ($this->numLinks($newtext) - $this->numLinks($oldtext) >= NUM_SPAM_LINKS) {
+                // Allow strictly authenticated users?
+                // TODO: mail the admin?
+                $this->tokens['PAGE_LOCKED_MESSAGE'] = 
+                    HTML($this->getSpamMessage(),
+                         HTML::p(HTML::strong(_("Too many external links."))));
+                return true;
+            }
         }
         // 2. external babycart (SpamAssassin) check
         // This will probably prevent from discussing sex or viagra related topics. So beware.
