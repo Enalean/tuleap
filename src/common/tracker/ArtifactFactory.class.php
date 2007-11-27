@@ -13,6 +13,9 @@
 //require_once('common/include/Error.class.php');
 //require_once('common/tracker/Artifact.class.php');
 
+require_once ('common/tracker/ArtifactReport.class.php');
+require_once ('www/tracker/include/ArtifactTypeHtml.class.php');
+
 $Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFactory extends Error {
@@ -117,7 +120,7 @@ class ArtifactFactory extends Error {
         
         $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
         
-		$artifacts = array();
+        $artifacts = array();
 		if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
             $sql_from = " FROM artifact_group_list agl, artifact a ";
@@ -125,7 +128,7 @@ class ArtifactFactory extends Error {
                           a.group_artifact_id = agl.group_artifact_id ";
             
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
-			foreach ($criteria as $c => $cr) {
+            foreach ($criteria as $c => $cr) {
 				$af = $art_field_fact->getFieldFromName($cr['field_name']);
 				if (!$af || !is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
@@ -167,7 +170,7 @@ class ArtifactFactory extends Error {
                                     AND afv".$cpt_criteria.".".$af->getValueFieldName()." ".$operator." '".$cr['field_value']."') 
                                     AND af".$cpt_criteria.".field_id = afv".$cpt_criteria.".field_id 
                                     AND a.artifact_id = afv".$cpt_criteria.".artifact_id ";
-				}
+				}        
                 $cpt_criteria += 1;
 			}
 			
@@ -211,5 +214,111 @@ class ArtifactFactory extends Error {
 		}
 		return $artifacts;
 	}
+    
+    
+    function getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, &$total_artifacts) {
+        global $ath, $art_field_fact, $Language;
+        
+        $GLOBALS['group_id'] = $group_id;
+        
+        $chunksz = $max_rows;
+        $advsrch = 0;   // ?
+        $prefs = array();
+        
+        $report = new ArtifactReport($report_id, $group_artifact_id);
+        if (!$report || !is_object($report)) {
+            $this->setError('Cannot Get ArtifactReport From ID : '.$report_id);
+            return false;
+        } elseif ($report->isError()) {
+            $this->setError($report->getErrorMessage());
+            return false;
+        }
+        
+        $query_fields = $report->getQueryFields();
+        $result_fields = $report->getResultFields();
+        
+        // Filter part
+        foreach($criteria as $cr) {
+            $af = $art_field_fact->getFieldFromName($cr['field_name']);
+            if (!$af || !is_object($af)) {
+                $this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
+                return false;
+            } elseif ($art_field_fact->isError()) {
+                $this->setError($art_field_fact->getErrorMessage());
+                return false;
+            }
+            
+            if (! array_key_exists($cr['field_name'], $query_fields)) {
+                $this->setError('You cannot filter on field '.$cr['field_name'].': it is not a query field for report '.$report_id);
+                return false;
+            }
+            
+            if ($af->isSelectBox() || $af->isMultiSelectBox()) {
+                $prefs[$cr['field_name']] = explode("," , $cr['field_value']);
+            } else {
+                $prefs[$cr['field_name']] = array($cr['field_value']);
+            }
+        }
+        
+        // Sort part
+        $morder = '';
+        $array_morder = array();
+        foreach($sort_criteria as $sort_cr) {
+            $field_name = $sort_cr['field_name'];
+            // check if fieldname is ok
+            $af = $art_field_fact->getFieldFromName($sort_cr['field_name']);
+            if (!$af || !is_object($af)) {
+                $this->setError('Cannot Get ArtifactField From Name : '.$sort_cr['field_name']);
+                return false;
+            } elseif ($art_field_fact->isError()) {
+                $this->setError($art_field_fact->getErrorMessage());
+                return false;
+            }
+            
+            if (! array_key_exists($sort_cr['field_name'], $result_fields)) {
+                $this->setError('You cannot sort on field '.$sort_cr['field_name'].': it is not a result field for report '.$report_id);
+                return false;
+            }
+            
+            // check if direction is ok
+            $sort_direction = '>'; // by default, direction is ASC
+            if (isset($sort_cr['sort_direction']) && $sort_cr['sort_direction'] == 'DESC') {
+                $sort_direction = '<';
+            }
+            
+            $array_morder[] = $field_name.$sort_direction;
+        }
+        $morder = implode(',' , $array_morder);
+        
+        $group = group_get_object($group_id);
+        $ath = new ArtifactTypeHtml($group);
+
+        $artifact_report = new ArtifactReport($report_id, $group_artifact_id);
+
+        // get the total number of artifact that answer the query, and the corresponding IDs
+        $total_artifacts = $artifact_report->selectReportItems($prefs, $morder, $advsrch, &$aids);
+        
+        // get the SQL query corresponding to the query
+        $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
+        
+        $artifacts = array();
+        $result=db_query($sql);
+        $rows = db_numrows($result);
+		$this->fetched_rows=$rows;
+        if (db_error()) {
+			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+			return false;
+		} else {
+			while ($arr = db_fetch_array($result)) {
+				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true);
+                // artifact is not added if the user can't view it
+                if ($artifact->userCanView()) {
+                    $artifacts[$arr['artifact_id']] = $artifact;
+                }
+			}
+		}
+		return $artifacts;
+    }
+
 }
 ?>

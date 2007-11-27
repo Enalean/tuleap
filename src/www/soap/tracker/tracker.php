@@ -19,6 +19,7 @@ define ('add_cc_fault', '3016');
 define ('invalid_field_fault', '3017');
 define ('delete_cc_fault', '3018');
 define ('get_service_fault', '3020');
+define ('get_artifact_report_fault', '3021');
 
 require_once ('nusoap.php');
 require_once ('pre.php');
@@ -339,13 +340,37 @@ $server->wsdl->addComplexType(
 );
 
 $server->wsdl->addComplexType(
+    'SortCriteria',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
+        'sort_direction' => array('name'=>'sort_direction', 'type' => 'xsd:string')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfSortCriteria',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SortCriteria[]')),
+    'tns:SortCriteria'
+);
+
+
+$server->wsdl->addComplexType(
     'ArtifactQueryResult',
     'complexType',
     'struct',
     'sequence',
     '',
     array(
-        'total_artifacts_number' => array('name'=>'status_id', 'type' => 'xsd:int'),
+        'total_artifacts_number' => array('name'=>'total_artifacts_number', 'type' => 'xsd:int'),
         'artifacts' => array('name'=>'artifacts', 'type' => 'tns:ArrayOfArtifact')
     )
 );
@@ -611,6 +636,63 @@ $server->wsdl->addComplexType(
     'xsd:int'
 );
 
+$server->wsdl->addComplexType(
+    'ArtifactFromReport',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'fields'=>array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactFromReport',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFromReport[]')),
+    'tns:ArtifactFromReport'
+);
+
+$server->wsdl->addComplexType(
+    'ArtifactFieldFromReport',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_name'=>array('name'=>'field_name', 'type' => 'xsd:string'),
+        'field_value'=>array('name'=>'field_value', 'type' => 'xsd:string')
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfArtifactFieldFromReport',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldFromReport[]')),
+    'tns:ArtifactFieldFromReport'
+);
+
+$server->wsdl->addComplexType(
+    'ArtifactFromReportResult',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'total_artifacts_number' => array('name'=>'total_artifacts_number', 'type' => 'xsd:int'),
+        'artifacts' => array('name'=>'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport')
+    )
+);
+
 //
 // Function definition
 //
@@ -673,8 +755,32 @@ $server->register(
     'encoded',
     'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id 
      that are matching the given criteria. If offset AND max_rows are filled, it returns only 
-     max_rows artifacts, skipping the first offset ones. 
+     max_rows artifacts, skipping the first offset ones.
+     It is not possible to sort artifact with this function (use getArtifactsFromReport if you want to sort).
      Returns a soap fault if the group_id is not a valid one or if the group_artifact_id is not a valid one.'
+);
+
+$server->register(
+    'getArtifactsFromReport',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'group_artifact_id'=>'xsd:int',
+          'report_id' => 'xsd:int',
+          'criteria' => 'tns:ArrayOfCriteria',
+          'offset' => 'xsd:int',
+          'max_rows' => 'xsd:int',
+          'sort_criteria' => 'tns:ArrayOfSortCriteria'
+    ),
+    array('return'=>'tns:ArtifactFromReportResult'),
+    $uri,
+    $uri.'#getArtifactsFromReport',
+    'rpc',
+    'encoded',
+    'Returns the ArtifactReportResult of the tracker group_artifact_id in the project group_id 
+     with the report report_id that are matching the given criteria. 
+     If offset AND max_rows are filled, it returns only max_rows artifacts, skipping the first offset ones.
+     The result will be sorted, as defined in the param sort_criteria.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one or if the report_id is not a valid one.'
 );
 
 $server->register(
@@ -1647,7 +1753,7 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
         if (!$af || !is_object($af)) {
             return new soap_fault(get_artifact_factory_fault,'getArtifacts','Could Not Get ArtifactFactory','');
         } elseif ($af->isError()) {
-            return new soap_fault(get_artifact_factory_fault,'getArtifacts',$atf->getErrorMessage(),'');
+            return new soap_fault(get_artifact_factory_fault,'getArtifacts',$af->getErrorMessage(),'');
         }
         $total_artifacts = 0;
         // the function getArtifacts returns only the artifacts the user is allowed to view
@@ -1655,6 +1761,78 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
         return artifact_query_result_to_soap($artifacts, $total_artifacts); 
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactTypes','Invalid Session ','');
+    }
+}
+
+/**
+ * getArtifactsFromReport - returns an ArtifactReportResult that belongs to the project $group_id, to the tracker $group_artifact_id,
+ *                using the report $report_id and that match the criteria $criteria. If $offset and $max_rows are filled, 
+ *                the number of returned artifacts will not exceed $max_rows, beginning at $offset.
+ *
+ * !!!!!!!!!!!!!!!
+ * !!! Warning : If $max_rows is not filled, $offset is not taken into account. !!!
+ * !!!!!!!!!!!!!!!
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the array of artifacts
+ * @param int $group_artifact_id the ID of the tracker we want to retrieve the array of artifacts
+ * @param int $report_id the ID of the report that will be use to build the result
+ * @param array{SOAPCriteria} $criteria the criteria that the set of artifact must match
+ * @param int $offset number of artifact skipped. Used in association with $max_rows to limit the number of returned artifact.
+ * @param int $max_rows the maximum number of artifacts returned
+ * @param array{SOAPSortCriteria} $sort_criteria the sort criteria to sort the result 
+ * @return the SOAPArtifactFromReportResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
+ *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
+ */
+function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria) {
+    global $art_field_fact;
+    if (session_continue($sessionKey)) {
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'getArtifactsFromReport','Could Not Get Group','');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'getArtifactsFromReport',$grp->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactsFromReport', 'Restricted user: permission denied.', '');
+        }
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactsFromReport','Could Not Get ArtifactType','');
+        } elseif (! $at->userCanView()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactsFromReport','Permission Denied: You are not granted sufficient permission to perform this operation.','');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactsFromReport',$at->getErrorMessage(),'');
+        }
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactsFromReport', 'Could Not Get ArtifactFieldFactory','');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactsFromReport', $art_field_fact->getErrorMessage(),'');
+        }
+        $af = new ArtifactFactory($at);
+        if (!$af || !is_object($af)) {
+            return new soap_fault(get_artifact_factory_fault,'getArtifactsFromReport','Could Not Get ArtifactFactory','');
+        } elseif ($af->isError()) {
+            return new soap_fault(get_artifact_factory_fault,'getArtifactsFromReport',$af->getErrorMessage(),'');
+        }
+        
+        $ar = new ArtifactReport($report_id, $group_artifact_id);
+        if (!$ar || !is_object($ar)) {
+            return new soap_fault(get_artifact_report_fault,'getArtifactsFromReport','Could Not Get ArtifactFactory','');
+        } elseif ($ar->isError()) {
+            return new soap_fault(get_artifact_report_fault,'getArtifactsFromReport',$ar->getErrorMessage(),'');
+        }
+        
+        $total_artifacts = 0;
+        // the function getArtifacts returns only the artifacts the user is allowed to view
+        $artifacts = $af->getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, $total_artifacts);
+        if ($af->isError()) {
+            return new soap_fault(get_artifact_report_fault,'getArtifactsFromReport',$af->getErrorMessage(),'');
+        }
+        return artifact_report_result_to_soap($artifacts, $total_artifacts, $report_id, $group_artifact_id); 
+    } else {
+        return new soap_fault(invalid_session_fault,'getArtifactsFromReport','Invalid Session ','');
     }
 }
 
@@ -1810,6 +1988,63 @@ function artifact_query_result_to_soap($artifacts, $total_artifacts_number) {
     return $return;
 }
 
+/**
+ * artifact_report_to_soap : return the soap artifactreport structure giving a PHP Artifact Object.
+ * @access private
+ * 
+ * WARNING : We check the permissions here : only the readable fields are returned.
+ *
+ * @param Object{Artifact} $artifact the artifact to convert.
+ * @return array the SOAPArtifactReport corresponding to the Artifact Object
+ */
+function artifact_report_to_soap($artifact, $report) {
+    global $art_field_fact;
+
+    $return = array();
+    $return_fields = array();
+    // We check if the user can view this artifact
+    if ($artifact->userCanView(user_getid())) {
+        $result_fields = $report->getResultFields();
+        while (list($key,$field) = each($result_fields) ) {
+            //echo $key;
+            //print_r($field);
+            $artifact_field_report = array();
+            $artifact_field_report['field_name'] = $key;
+            // Some fields needs to be html-decoded
+            if ($key == 'details' || $key == 'summary') {
+                $artifact_field_report['field_value'] = html_entity_decode($artifact->getValue($key));
+            } else {
+                $artifact_field_report['field_value'] = $artifact->getValue($key);
+            }
+            
+            
+            $return_fields[] = $artifact_field_report;
+        }
+    }
+    $return['fields'] = $return_fields;
+    return $return;
+}
+
+function artifacts_report_to_soap($at_arr, $report_id, $group_artifact_id) {
+    // retrieve the report
+    $report = new ArtifactReport($report_id, $group_artifact_id);
+    $return = array();
+    foreach ($at_arr as $atid => $artifact) {
+        $return[] = artifact_report_to_soap($artifact, $report);
+    }
+    return $return;
+}
+
+function artifact_report_result_to_soap($artifacts, $total_artifacts_number, $report_id, $group_artifact_id) {
+    $return = array();
+    $return['total_artifacts_number'] = $total_artifacts_number;
+    if ($total_artifacts_number == 0 && $artifacts == false) {
+        $return['artifacts'] = null;
+    } else {
+        $return['artifacts'] = artifacts_report_to_soap($artifacts, $report_id, $group_artifact_id);
+    }
+    return $return;
+}
 
 function setArtifactData($status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact; 

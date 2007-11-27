@@ -285,6 +285,81 @@ Array
             </para>
         </section>
         
+        <section id="TrackerFunctionReportList">
+            <title>reportlist</title>
+            <para>
+                reportlist: Affiche la liste des artefacts appartenant au tracker spécifié, selon le rapport spécifié.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID du tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--limit: Nombre maximum d'artefacts retournés.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--offset: Nombre d'artefacts qui seront "sautés" (ce paramètre ne peut pas être utilisé seul, il doit être accompagné du paramètre limit).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[nom du champ][opérateur][valeur]: critère de filtre pour les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>Exemple : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
+                        <para>Les opérateurs autorisés sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--sort={[nom du champ] [direction du tri]}*: critère de tri pour classer les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>Exemple : --sort="severity DESC, open_date DESC, artifact_id ASC".</para>
+                        <para>Les directions autorisées sont ASC (ascendant) et DESC (descendant).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande reportlist</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
+Array
+(
+    [0] => Array
+            (
+                [artifact_id] => 7173
+                [group_artifact_id] => 113
+                [status_id] => 0
+                [submitted_by] => 102
+                [open_date] => 1115311786
+                [close_date ] => 1125064392
+                [summary] => New bug
+                [details] => small bug
+                [severity] => 3
+                [extra_fields] => Array
+                                    (
+                                        [0] => Array
+                                                (
+                                                    [field_id] => 128
+                                                    [field_value] => 142
+                                                )
+                                        [1] => Array
+                                                (
+                                                    [field_id] => 129
+                                                    [field_value] => 41
+                                                )
+                                        [2] => Array
+                                                (
+                                                    [field_id] => 130
+                                                    [field_value] => 42
+                                                )
+                                    )
+            )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
         <section id="TrackerFunctionReports">
             <title>reports</title>
             <para>

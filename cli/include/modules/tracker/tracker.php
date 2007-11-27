@@ -14,6 +14,7 @@ require_once('CLI_Action_Tracker_Trackerlist.class.php');
 require_once('CLI_Action_Tracker_Trackers.class.php');
 require_once('CLI_Action_Tracker_Tracker.class.php');
 require_once('CLI_Action_Tracker_List.class.php');
+require_once('CLI_Action_Tracker_ReportList.class.php');
 require_once('CLI_Action_Tracker_Add.class.php');
 require_once('CLI_Action_Tracker_Update.class.php');
 require_once('CLI_Action_Tracker_Comments.class.php');
@@ -45,6 +46,7 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->addAction(new CLI_Action_Tracker_Trackers());
         $this->addAction(new CLI_Action_Tracker_Tracker());
         $this->addAction(new CLI_Action_Tracker_List());
+        $this->addAction(new CLI_Action_Tracker_ReportList());
         $this->addAction(new CLI_Action_Tracker_Add());
         $this->addAction(new CLI_Action_Tracker_Update());
         $this->addAction(new CLI_Action_Tracker_Comments());
@@ -161,7 +163,9 @@ class CLI_Module_Tracker extends CLI_Module {
                     $passed_parameter != 'group_id' && 
                     $passed_parameter != 'project' && 
                     $passed_parameter != 'limit' &&
-                    $passed_parameter != 'offset') {
+                    $passed_parameter != 'offset' &&
+                    $passed_parameter != 'report_id' &&
+                    $passed_parameter != 'sort') {
                     $criteria['field_name'] = $passed_parameter;
                     $criteria['operator'] = $passed_operator;
                     $criteria['field_value'] = $passed_value;
@@ -171,6 +175,32 @@ class CLI_Module_Tracker extends CLI_Module {
         }
         return $criterias;
     }
+    
+    function getArtifactSortCriteria($sort_criteria) {
+        if (!$sort_criteria) {
+            $sort_criteria = array();
+        } else {
+            $SORT_SEPARATOR = ',';
+            $SORT_OPERATOR_SEPARATOR = ' ';
+            $array_sort = array();
+            $array_sort_string = explode($SORT_SEPARATOR, $sort_criteria);
+            foreach($array_sort_string as $sort_string) {
+                $array_sort_param = explode($SORT_OPERATOR_SEPARATOR, trim($sort_string));
+                $sort_item = array();
+                $sort_item['field_name'] = $array_sort_param[0];
+                // direction is optionnal, ASC is the default one
+                if (isset($array_sort_param[1]) && ($array_sort_param[1] == 'ASC' || $array_sort_param[1] == 'DESC')) {
+                    $sort_item['sort_direction'] = $array_sort_param[1];
+                } else {
+                    $sort_item['sort_direction'] = 'ASC';
+                }
+                $array_sort[] = $sort_item;
+            }
+            $sort_criteria = $array_sort;
+        }
+        return $sort_criteria;
+    }
+
 }
 
 /*

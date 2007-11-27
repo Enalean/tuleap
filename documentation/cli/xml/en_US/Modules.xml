@@ -271,6 +271,79 @@ Array
                 </para>
             </para>
         </section>
+        
+        <section id="TrackerFunctionReportList">
+            <title>reportlist</title>
+            <para>
+                reportlist: Display a list of artifacts that belong to a specified tracker, with the specific report.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id* : ID of the tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--limit: Maximum number of returned artifacts.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--offset: Numbers of returned artifact that will be skipped (offset parameter can not stand alone, it works with limit parameter).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--[field_name][operator][value]: criteria to filter the returned artifacts. Works with standard fields and custom fields.</para>
+                        <para>Example : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
+                        <para>Allowed operators are &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--sort={[field_name] [sort_direction]}*: criteria to sort the returned artifacts. Works with standard fields and custom fields.</para>
+                        <para>Example : --sort="severity DESC, open_date DESC, artifact_id ASC".</para>
+                        <para>Allowed directions are ASC (ascendant) and DESC (descendant).</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in
+                        will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>reportlist command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
+Array
+(
+    [0] => Array
+            (
+                [artifact_id] => 7173
+                [group_artifact_id] => 113
+                [status_id] => 0
+                [submitted_by] => 102
+                [open_date] => 1115311786
+                [close_date ] => 1125064392
+                [summary] => New bug
+                [details] => small bug
+                [severity] => 3
+                [extra_fields] => Array
+                                    (
+                                        [0] => Array
+                                                (
+                                                    [field_id] => 128
+                                                    [field_value] => 142
+                                                )
+                                        [1] => Array
+                                                (
+                                                    [field_id] => 129
+                                                    [field_value] => 41
+                                                )
+                                        [2] => Array
+                                                (
+                                                    [field_id] => 130
+                                                    [field_value] => 42
+                                                )
+                                    )
+            )
+)
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
 
         <section id="TrackerFunctionReports">
             <title>reports</title>
