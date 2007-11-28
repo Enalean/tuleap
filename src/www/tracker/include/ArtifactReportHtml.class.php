@@ -948,7 +948,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $tf_report = 'TFREP_'.$field->getName();
                 $tf_colwidth = 'TFCW_'.$field->getName();
                 
-                if (isset($this->fields[$field->getName()])) {
+                if (isset($this->fields[$field->getName()]) && $this->fields[$field->getName()]) {
                 	$rep_field = $this->fields[$field->getName()];
                 } else {
                   $rep_field = new ArtifactReportField();
