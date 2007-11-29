@@ -506,7 +506,7 @@ class ServerUpdateViews extends Views {
             $commits = $filter->apply($commits);
         }
         
-        if ($commits != null) {
+        if (is_array($commits)) {   // if there is an error, $commit is not an array (== false)
             if (count($commits) > 0) {
             
                 $output .= '<fieldset class="serverupdate"><legend>'.$Language->getText('plugin_serverupdate_update','Updates').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';

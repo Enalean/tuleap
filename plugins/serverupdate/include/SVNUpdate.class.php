@@ -110,19 +110,26 @@ class SVNUpdate {
      */
     function _getAllSVNCommit() {
         $commits = array();
-        $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn log --xml -v -r ".($this->getWorkingCopyRevision() + 1).":HEAD 2>&1");
+        $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn log --xml -v -r ".($this->getWorkingCopyRevision()).":HEAD 2>&1");
         
         // test if the function svn log returns an error
         eregi('(svn: PROPFIND of \'.*\': )(.*)', $xml_commits, $regs);
         
         if ($regs[2]) {
-            // error treatment
-            $commits = null;
             // we write the error we caught into the stderr
             $this->writeStdErr($xml_commits);
             $GLOBALS['Response']->addFeedback('error', $regs[1].$regs[2]);
+            return false;
         } else {
             $commits = $this->_setCommitsFromXML($xml_commits);
+        }
+        
+        // We skip the first commit, which is the commit corresponding to the current revision
+        if (count($commits) > 0) {
+            $commit1 = $commits[0];
+            if ($commit1->getRevision() == $this->getWorkingCopyRevision()) {
+                $commit_to_skip = array_shift($commits);
+            }
         }
         return $commits;
     }
