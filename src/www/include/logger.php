@@ -20,16 +20,18 @@ if (isset($group_id) && $group_id) {
 
 $request =& HTTPRequest::instance();
 
+$log_time=time();
+
 $sql = 'INSERT INTO activity_log'.
 '(day,hour,group_id,browser,ver,platform,time,page,type)'.
 ' VALUES ('.
-date('Ymd', mktime()).','.
-date('H', mktime()).','.
+date('Ymd', $log_time).','.
+date('H', $log_time).','.
 db_ei($log_group).','.
 '"'.db_escape_string(browser_get_agent()).'",'.
 floatval(browser_get_version()).','.
 '"'.db_escape_string(browser_get_platform()).'",'.
-time().','.
+$log_time.','.
 '"'.db_escape_string($request->getFromServer('PHP_SELF')).'",'.
 '0'.
 ')';
@@ -42,5 +44,13 @@ if (!$res_logger) {
 	exit;
 }
 
+$em =& EventManager::instance();
+$em->processEvent('logger_after_log_hook', array('isScript' => IS_SCRIPT,
+                                                 'groupId'  => $log_group,
+                                                 'time'     => $log_time));
+
+
+unset($log_time);
+unset($log_group);
 
 ?>
