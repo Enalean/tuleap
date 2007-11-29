@@ -111,7 +111,6 @@ class SVNUpdate {
     function _getAllSVNCommit() {
         $commits = array();
         $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn log --xml -v -r ".($this->getWorkingCopyRevision() + 1).":HEAD ");
-        $this->_SVNCommand("cd -");
         $commits = $this->_setCommitsFromXML($xml_commits);
         return $commits;
     }
@@ -353,7 +352,6 @@ class SVNUpdate {
      */
     function testUpdate($revision) {
         $simulation = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn merge --dry-run -r ".$this->getWorkingCopyRevision().":".$revision." ".$this->getRepository());
-        $this->_SVNCommand("cd -");
         return $simulation;
     }
     
@@ -581,7 +579,7 @@ class SVNUpdate {
      */
     function getSVNInfos() {
         $svn_infos = array();
-        $infos = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn info ; cd -");
+        $infos = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn info");
         
         $svn_infos['revision'] = $this->_getSVNInfoRevision($infos);
         $svn_infos['repository'] = $this->_getSVNInfoRepository($infos);
