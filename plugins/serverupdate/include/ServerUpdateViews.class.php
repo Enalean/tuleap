@@ -506,87 +506,89 @@ class ServerUpdateViews extends Views {
             $commits = $filter->apply($commits);
         }
         
-        if (count($commits) > 0) {
-        
-            $output .= '<fieldset class="serverupdate"><legend>'.$Language->getText('plugin_serverupdate_update','Updates').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
-            $titles = array();
-            $titles[] = $Language->getText('plugin_serverupdate_update','Revision');
-            $titles[] = $Language->getText('plugin_serverupdate_update','Date');
-            $titles[] = $Language->getText('plugin_serverupdate_update','Message');
-            $titles[] = $Language->getText('plugin_serverupdate_update','Details');
-            $titles[] = $Language->getText('plugin_serverupdate_update','Special');
-            $titles[] = $Language->getText('plugin_serverupdate_update','Actions');
-            $output .= html_build_list_table_top($titles);
+        if ($commits != null) {
+            if (count($commits) > 0) {
             
-            $i=0; // for color alternance
-            foreach($commits as $commit) {
-                $metadata = $commit->getMetaData();
-                $output .= '<tr class="'.$metadata->getLevelClass().'" >';
-                //Revision
-                $output .= '<td class="pluginsadministration_plugin_descriptor"><span class="pluginsadministration_name_of_plugin">'.$commit->getRevision().'</span></td>';
-                //Date
-                $output .= '<td class="pluginsadministration_plugin_descriptor">'.util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate())).'</td>';
-                //Message
-                $output .= '<td>';
-                $output .= nl2br(htmlentities($commit->getMessage()));
-                $output .= '<p><u>'.$Language->getText('plugin_serverupdate_update','ChangedFiles').'</u>';
-                $output .= '<ul>';
-                $files = $commit->getFiles();
-                foreach ($files as $file) {
-                    $output .= '<li>';
-                    $output .= '(<strong>'.$file->getAction().'</strong>) '.$file->getPath();
-                    $output .= '</li>';
-                }
-                $output .= '</ul>';
-                $output .= '</p>';
-                $output .= '</td>';
-                //Details
-                $output .= '<td>';
-                $output .= '<a href="'.URL_REPOSITORY_SHOW_DETAILS.$commit->getRevision().'">'.$Language->getText('plugin_serverupdate_update','detail_link').'</a>';
-                $output .= '</td>';
-                //Specials
-                $output .= '<td>';
-                if ($commit->needManualUpdate()) {
-                    $output .= '<img src="'.$this->getIconsPath().'manual_update.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'"/>';
-                }
-                if ($commit->containsDBUpdate()) {
-                    $output .= '<img src="'.$this->getIconsPath().'database_refresh.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'"/>';
-                }
-                foreach ($files as $file) {
-                    if ($svnupdate->getRevisionInWhichFileMustBeExecuted($file->getPath()) == $commit->getRevision()) {
-                        $output .= $file->showSpecials($this->getIconsPath());
-                    }
-                }
-                $output .= '</td>';
-                //Actions
-                $output .= '<td>';
-                    //Test Update
-                $output .=   '<a class="serverupdate_action" href="?action=testupdate&revision='.$commit->getRevision().'" title="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'">';
-                $output .=     '<img src="'.$this->getIconsPath().'convert.gif" border="0" alt="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'" />';
-                $output .=   '</a>';
+                $output .= '<fieldset class="serverupdate"><legend>'.$Language->getText('plugin_serverupdate_update','Updates').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
+                $titles = array();
+                $titles[] = $Language->getText('plugin_serverupdate_update','Revision');
+                $titles[] = $Language->getText('plugin_serverupdate_update','Date');
+                $titles[] = $Language->getText('plugin_serverupdate_update','Message');
+                $titles[] = $Language->getText('plugin_serverupdate_update','Details');
+                $titles[] = $Language->getText('plugin_serverupdate_update','Special');
+                $titles[] = $Language->getText('plugin_serverupdate_update','Actions');
+                $output .= html_build_list_table_top($titles);
                 
-                $output .= '</td>';
-                $output .= '</tr>';
-                $i++;
-            }
-            $output .= '</table>';
-            $output .= '</form></fieldset>';
-            
-            $output .= '<p class="small"><strong>'.$Language->getText('plugin_serverupdate_update','prio_colors').'</strong>';
-            $output .= '<table><tr>';
-            $svn_meta_data = new SVNCommitMetaData();
-            $levels = $svn_meta_data->getAvailableLevels();
-            foreach($levels as $level) {
-                $svn_meta_data->setLevel($level);
-                $output .=  '<td class="'.$svn_meta_data->getLevelClass().'">&nbsp;'.$level.'&nbsp;</td>';
-            }
-            $output .=  '</tr></table>';
-            
-        } else {
-            if (isset($GLOBALS['sort'])) {
-                $output .= '<B>'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NoCommitsCriteria').'</B>';
+                $i=0; // for color alternance
+                foreach($commits as $commit) {
+                    $metadata = $commit->getMetaData();
+                    $output .= '<tr class="'.$metadata->getLevelClass().'" >';
+                    //Revision
+                    $output .= '<td class="pluginsadministration_plugin_descriptor"><span class="pluginsadministration_name_of_plugin">'.$commit->getRevision().'</span></td>';
+                    //Date
+                    $output .= '<td class="pluginsadministration_plugin_descriptor">'.util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate())).'</td>';
+                    //Message
+                    $output .= '<td>';
+                    $output .= nl2br(htmlentities($commit->getMessage()));
+                    $output .= '<p><u>'.$Language->getText('plugin_serverupdate_update','ChangedFiles').'</u>';
+                    $output .= '<ul>';
+                    $files = $commit->getFiles();
+                    foreach ($files as $file) {
+                        $output .= '<li>';
+                        $output .= '(<strong>'.$file->getAction().'</strong>) '.$file->getPath();
+                        $output .= '</li>';
+                    }
+                    $output .= '</ul>';
+                    $output .= '</p>';
+                    $output .= '</td>';
+                    //Details
+                    $output .= '<td>';
+                    $output .= '<a href="'.URL_REPOSITORY_SHOW_DETAILS.$commit->getRevision().'">'.$Language->getText('plugin_serverupdate_update','detail_link').'</a>';
+                    $output .= '</td>';
+                    //Specials
+                    $output .= '<td>';
+                    if ($commit->needManualUpdate()) {
+                        $output .= '<img src="'.$this->getIconsPath().'manual_update.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NeedManualUpdate').'"/>';
+                    }
+                    if ($commit->containsDBUpdate()) {
+                        $output .= '<img src="'.$this->getIconsPath().'database_refresh.png" title="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'" alt="'.$GLOBALS['Language']->getText('plugin_serverupdate_update','ContainsDBUpdate').'"/>';
+                    }
+                    foreach ($files as $file) {
+                        if ($svnupdate->getRevisionInWhichFileMustBeExecuted($file->getPath()) == $commit->getRevision()) {
+                            $output .= $file->showSpecials($this->getIconsPath());
+                        }
+                    }
+                    $output .= '</td>';
+                    //Actions
+                    $output .= '<td>';
+                        //Test Update
+                    $output .=   '<a class="serverupdate_action" href="?action=testupdate&revision='.$commit->getRevision().'" title="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'">';
+                    $output .=     '<img src="'.$this->getIconsPath().'convert.gif" border="0" alt="'.$Language->getText('plugin_serverupdate_update','UpdateAction').'" />';
+                    $output .=   '</a>';
+                    
+                    $output .= '</td>';
+                    $output .= '</tr>';
+                    $i++;
+                }
+                $output .= '</table>';
+                $output .= '</form></fieldset>';
+                
+                $output .= '<p class="small"><strong>'.$Language->getText('plugin_serverupdate_update','prio_colors').'</strong>';
+                $output .= '<table><tr>';
+                $svn_meta_data = new SVNCommitMetaData();
+                $levels = $svn_meta_data->getAvailableLevels();
+                foreach($levels as $level) {
+                    $svn_meta_data->setLevel($level);
+                    $output .=  '<td class="'.$svn_meta_data->getLevelClass().'">&nbsp;'.$level.'&nbsp;</td>';
+                }
+                $output .=  '</tr></table>';
+                
             } else {
-                $output .= '<B>'.$GLOBALS['Language']->getText('plugin_serverupdate_update','UpToDate').'</B>';
+                if (isset($GLOBALS['sort'])) {
+                    $output .= '<B>'.$GLOBALS['Language']->getText('plugin_serverupdate_update','NoCommitsCriteria').'</B>';
+                } else {
+                    $output .= '<B>'.$GLOBALS['Language']->getText('plugin_serverupdate_update','UpToDate').'</B>';
+                }
             }
         }
         return $output;

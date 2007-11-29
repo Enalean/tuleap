@@ -110,9 +110,27 @@ class SVNUpdate {
      */
     function _getAllSVNCommit() {
         $commits = array();
-        $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn log --xml -v -r ".($this->getWorkingCopyRevision() + 1).":HEAD ");
-        $commits = $this->_setCommitsFromXML($xml_commits);
+        $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; svn log --xml -v -r ".($this->getWorkingCopyRevision() + 1).":HEAD 2>&1");
+        
+        // test if the function svn log returns an error
+        eregi('(svn: PROPFIND of \'.*\': )(.*)', $xml_commits, $regs);
+        
+        if ($regs[2]) {
+            // error treatment
+            $commits = null;
+            // we write the error we caught into the stderr
+            $this->writeStdErr($xml_commits);
+            $GLOBALS['Response']->addFeedback('error', $regs[1].$regs[2]);
+        } else {
+            $commits = $this->_setCommitsFromXML($xml_commits);
+        }
         return $commits;
+    }
+    
+    function writeStdErr($text) {
+        $handle = fopen('php://stderr', 'a');
+        fputs($handle, '['.date("D M d H:i:s Y").'] [error] [client '.$_SERVER['REMOTE_ADDR'].'] '.$text);
+        fclose($handle);
     }
     
     /**

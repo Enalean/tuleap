@@ -128,3 +128,4 @@ plugin_serverupdate_widgets	my_serverupdates_up_to_date	Serveur à jour.
 plugin_serverupdate_widgets	my_serverupdates_norepository	Dépôt SVN non détecté.
 plugin_serverupdate_widgets	my_serverupdates_see_updates	Voir les mises à jour.
 plugin_serverupdate_widgets	my_serverupdates_goto_serverupdate	Plugin Mises à jour du serveur
+plugin_serverupdate_widgets	my_serverupdates_error	Erreur du plugin de Mises à jour

@@ -122,3 +122,4 @@ plugin_serverupdate_widgets	my_serverupdates_ontheserver	on the server.
 plugin_serverupdate_widgets	my_serverupdates_norepository	SVN Repository not detected.
 plugin_serverupdate_widgets	my_serverupdates_see_updates	See the updates
 plugin_serverupdate_widgets	my_serverupdates_goto_serverupdate	Go to Server Update plugin.
+plugin_serverupdate_widgets	my_serverupdates_error	Server Update Error
