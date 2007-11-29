@@ -47,13 +47,10 @@ define('CODEX_PURIFIER_FULL',      15);
 define('CODEX_PURIFIER_DISABLED', 100);
 
 class CodeX_HTMLPurifier {
-    var $hpInstance;
-
     /**
      * Constructor
      */
     function CodeX_HTMLPurifier() {
-        $this->hpInstance = null;
     }
 
     /**
@@ -62,11 +59,11 @@ class CodeX_HTMLPurifier {
      * @access: static
      */
     function &instance() {
-        static $purifier;
-        if(!$purifier) {
-            $purifier = new CodeX_HtmlPurifier();
+        static $__codex_htmlpurifier_instance;
+        if(!$__codex_htmlpurifier_instance) {
+            $__codex_htmlpurifier_instance = new CodeX_HtmlPurifier();
         }
-        return $purifier;
+        return $__codex_htmlpurifier_instance;
     }
 
     /**
@@ -94,7 +91,7 @@ class CodeX_HTMLPurifier {
      */
     function getLightConfig() {
         $config = $this->getCodeXConfig();
-        
+
         $eParagraph       = array('p', 'br');
         $eLinks           = array('a[href]');
         $eList            = array('ul', 'ol', 'li');
@@ -139,6 +136,13 @@ class CodeX_HTMLPurifier {
     }
 
     /**
+     * Wrap call to util_make_links (for testing purpose).
+     */
+    function _makeLinks($str, $groupId) {
+        return util_make_links($str, $groupId);
+    }
+
+    /**
      * Perform HTML purification depending of level purification required.
      *
      * There are 5 level of purification, from the most restrictive to most
@@ -178,7 +182,7 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_LIGHT:
-            $html = nl2br(util_make_links($html, $groupId));
+            $html = nl2br($this->_makeLinks($html, $groupId));
         case CODEX_PURIFIER_STRIP_HTML:
         case CODEX_PURIFIER_FULL:
             $hp =& HTMLPurifier::getInstance();
@@ -189,7 +193,7 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_BASIC:
-            $clean = nl2br(util_make_links(htmlentities($html, ENT_QUOTES), $groupId));
+            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES), $groupId));
             break;
 
         case CODEX_PURIFIER_CONVERT_HTML:

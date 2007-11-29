@@ -24,6 +24,30 @@
 
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
+// Need a TestVersion to by pass '_makeLinks' method (call to utils_make_links
+// that perform DB calls).
+// Need to create this testversion by hand because with Mock object there is no
+// way to tell them "return the parameter as is".
+// This method to be used only when mandatory (when the is a utils_make_links call).
+class CodeX_HTMLPurifierTestVersion
+extends CodeX_HTMLPurifier {
+    function CodeX_HTMLPurifierTestVersion() {
+        parent::CodeX_HTMLPurifier();
+    }
+    // Need to redfine this method too because the parent one return a
+    // 'CodeX_HTMLPurifier' object.
+    function &instance() {
+        static $__codex_htmlpurifiertestversion_instance;
+        if(!$__codex_htmlpurifiertestversion_instance) {
+            $__codex_htmlpurifiertestversion_instance = new CodeX_HTMLPurifierTestVersion();
+        }
+        return $__codex_htmlpurifiertestversion_instance;
+    }
+    function _makeLinks($str, $gid) {
+        return $str;
+    }
+}
+
 /**
  * Tests the class CodeXHTMLPurifier
  */
@@ -34,16 +58,12 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function setUp() {
-        if(!function_exists('util_make_links')) {
-            // Fake  util_make_links method
-            function util_make_links($data, $gid=0) {
-                return $data;
-            }
-        }
     }
 
     function tearDown() {
     }
+
+
 
     function testPurifySimple() {
         $p =& CodeX_HTMLPurifier::instance();
@@ -51,7 +71,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightForibdden() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& CodeX_HTMLPurifierTestVersion::instance();
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Bolded', $p->purify('<b>Bolded</b>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODEX_PURIFIER_LIGHT));
@@ -59,7 +79,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function anchorJsInjection($level) {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& CodeX_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
@@ -75,7 +95,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightAllowed() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& CodeX_HTMLPurifierTestVersion::instance();
 
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br />', CODEX_PURIFIER_LIGHT));
@@ -86,7 +106,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightTidy() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& CodeX_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODEX_PURIFIER_LIGHT));
 
