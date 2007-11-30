@@ -71,35 +71,51 @@ class UserLogManager {
                       'http_referer' => -1);
     }
 
-    function displayLogs($offset, $day) {
+    function displayLogs($offset, $selectedDay=null) {
         $dao =& $this->getDao();
 
-        //
-        // Default dates
-        $start = mktime(0,0,0,date('n'),date('j'),date('Y'));
-        $end = mktime(23,59,59,date('n'),date('j'),date('Y'));
+        $year  = null;
+        $month = null;
+        $day   = null;
+        if($selectedDay !== null) {
+            if(preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $selectedDay, $match)) {
+                $year  = $match[1];
+                $month = $match[2];
+                $day   = $match[3];
+            }
+        }
+        if($year === null) {
+            //
+            // Default dates
+            $year  = date('Y');
+            $month = date('n');
+            $day   = date('j');
+        }
 
+        $start = mktime(0,0,0,$month,$day,$year);
+        $end   = mktime(23,59,59,$month,$day,$year);
         $count = 100;
-        $dar = $dao->search($start, $end, $offset, $count);
 
+        $dar = $dao->search($start, $end, $offset, $count);
         $foundRows = $dao->getFoundRows();
 
         //
         // Prepare Navigation bar
+        $hrefDay='day='.$year.'-'.$month.'-'.$day;
         $prevHref = '&lt;Previous';
         if($offset > 0) {
             $prevOffset = $offset - $count;
             if($prevOffset < 0) {
                 $prevOffset = 0;
             }
-            $prevHref = '<a href="?offset='.$prevOffset.'">'.$prevHref.'</a>';
+            $prevHref = '<a href="?'.$hrefDay.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
         }
         $nextHref = 'Next&gt;';
         $nextOffset = $offset + $count;
         if($nextOffset > $foundRows) {
             $nextOffset = null;
         } else {
-            $nextHref = '<a href="?offset='.$nextOffset.'">'.$nextHref.'</a>';
+            $nextHref = '<a href="?'.$hrefDay.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
         }
 
         //
@@ -110,6 +126,18 @@ class UserLogManager {
         //
         // Start display
         $GLOBALS['Response']->header(array('title' => 'userlog'));
+
+        echo '<form name="userlog_form" method="get" action="?">';
+        echo html_field_date('day',
+                             $year.'-'.$month.'-'.$day,
+                             false,
+                             '10',
+                             '10',
+                             'userlog_form');
+        echo ' ';
+        echo '<input type="submit" value="Submit">';
+        echo '</form>';
+
 
         echo $prevHref." - (".$foundRows." results found)  - ".$nextHref."<br>";
 

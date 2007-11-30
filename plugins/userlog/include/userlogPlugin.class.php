@@ -31,6 +31,7 @@ class userlogPlugin extends Plugin {
 		$this->Plugin($id);
         //$this->_addHook('hook_name');
         $this->_addHook('cssfile',               'cssFile', false);
+        $this->_addHook('javascript_file',       'jsFile',  false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
 	}
 
@@ -47,6 +48,14 @@ class userlogPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />'."\n";
+        }
+    }
+
+    function jsFile($params) {
+        // Only show the stylesheet if we're actually in the Docman pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>'."\n";
         }
     }
 
@@ -81,10 +90,10 @@ class userlogPlugin extends Plugin {
         $request = new HTTPRequest();
 
         $offset = intval($request->get('offset'));
-        //$day = intval($request->get('day'));
+        $day    = $request->get('day');
 
         $userLogManager = new UserLogManager();
-        $userLogManager->displayLogs($offset);
+        $userLogManager->displayLogs($offset, $day);
     }
 
 }
