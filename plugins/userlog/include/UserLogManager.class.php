@@ -48,12 +48,17 @@ class UserLogManager {
             } else {
                 $dis = $display;
             }
+            // Display treatment
+            if($dis == '') {
+                $dis = '&nbsp;';
+            } else {
+                $hp = CodeX_HTMLPurifier::instance();
+                $dis = $hp->purify($dis);
+            }
         } else {
             $dis = '-';
         }
-        if($dis == '') {
-            $dis = '&nbsp;';
-        }
+
         $pval[$key] = $row[$key];
         return $dis;
     }
