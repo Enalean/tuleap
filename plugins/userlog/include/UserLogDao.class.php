@@ -26,10 +26,16 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class UserLogDao extends DataAccessObject {
 
+    /**
+     *
+     */
     function UserLogDao(&$da) {
         DataAccessObject::DataAccessObject($da);
     }
 
+    /**
+     *
+     */
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
@@ -41,14 +47,25 @@ class UserLogDao extends DataAccessObject {
         }
     }
 
-    function search($offset, $count) {
+    /**
+     * @param int $start  Start date in search (timestamp).
+     * @param int $end    End date in search (timestamp).
+     * @param int $offset From where the result will be displayed.
+     * @param int $count  How many results are returned.
+     */
+    function search($start, $end, $offset, $count) {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS *'.
             ' FROM plugin_userlog_request'.
+            ' WHERE time >= '.$this->da->escapeInt($start).
+            ' AND time <= '.$this->da->escapeInt($end).
             ' ORDER BY time DESC'.
             ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($count);
         return $this->retrieve($sql);
     }
 
+    /**
+     *
+     */
     function addRequest($time, $gid, $uid, $sessionHash, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer) {
         $sql = 'INSERT INTO plugin_userlog_request'.
             '(time,group_id,user_id,session_hash,http_user_agent,http_request_method,http_request_uri,http_remote_addr,http_referer)'.
