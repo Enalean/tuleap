@@ -23,6 +23,7 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
+require_once('common/validator/Validator.class.php');
 require_once('UserLogManager.class.php');
 
 class userlogPlugin extends Plugin {
@@ -88,9 +89,27 @@ class userlogPlugin extends Plugin {
 
     function process() {
         $request = new HTTPRequest();
+        $vDate = new DateValidator();
+        $vInt  = new IntValidator();
+        $vInt->biggerOrEqualThan(0);
 
-        $offset = intval($request->get('offset'));
-        $day    = $request->get('day');
+        $offset = 0;
+        if($request->existAndNonEmpty('offset')) {
+            if($vInt->isValid($request->get('offset'))) {
+                $offset = intval($request->get('offset'));
+            } else {
+                $GLOBALS['Response']->addFeedback('warning', 'Invalid offset submitted. Force it to 0 (zero).');
+            }
+        }
+
+        $day = date('Y-n-j');
+        if($request->existAndNonEmpty('day')) {
+            if($vDate->isValid($request->get('day'))) {
+                $day = $request->get('day');
+            } else {
+                $GLOBALS['Response']->addFeedback('warning', 'Invalid date submitted. Force it to today.');
+            }
+        }
 
         $userLogManager = new UserLogManager();
         $userLogManager->displayLogs($offset, $day);
