@@ -88,14 +88,15 @@ class userlogPlugin extends Plugin {
     }
 
     function process() {
+        session_require(array('group'=>'1','admin_flags'=>'A'));
+
         $request = new HTTPRequest();
-        $vDate = new DateValidator();
-        $vInt  = new IntValidator();
-        $vInt->biggerOrEqualThan(0);
 
         $offset = 0;
         if($request->existAndNonEmpty('offset')) {
-            if($vInt->isValid($request->get('offset'))) {
+            $vOffset = new IntValidator();
+            $vOffset->biggerOrEqualThan(0);
+            if($vOffset->isValid($request->get('offset'))) {
                 $offset = intval($request->get('offset'));
             } else {
                 $GLOBALS['Response']->addFeedback('warning', 'Invalid offset submitted. Force it to 0 (zero).');
@@ -104,7 +105,8 @@ class userlogPlugin extends Plugin {
 
         $day = date('Y-n-j');
         if($request->existAndNonEmpty('day')) {
-            if($vDate->isValid($request->get('day'))) {
+            $vDay = new DateValidator();
+            if($vDay->isValid($request->get('day'))) {
                 $day = $request->get('day');
             } else {
                 $GLOBALS['Response']->addFeedback('warning', 'Invalid date submitted. Force it to today.');
