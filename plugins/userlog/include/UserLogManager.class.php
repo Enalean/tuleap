@@ -83,7 +83,7 @@ class UserLogManager {
         $month = null;
         $day   = null;
         if($selectedDay !== null) {
-            if(preg_match('/^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$/', $selectedDay, $match)) {
+            if(preg_match('/^([0-9]+)-([0-9]{1,2})-([0-9]{1,2})$/', $selectedDay, $match)) {
                 $year  = $match[1];
                 $month = $match[2];
                 $day   = $match[3];
