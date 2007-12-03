@@ -31,85 +31,97 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testIsInteger() {
+        $v = new BigIntValidator();
+
         $input = '123';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
         $input = '+123';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
         $input = '-123';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
         $input = '+0';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
         $input = '-0';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
         $input = '0';
-        $this->assertTrue(BigIntValidator::isValid($input));
+        $this->assertTrue($v->isValid($input));
 
     }
 
     function testFloatingPoint() {
+        $v = new BigIntValidator();
+
         $input = '123.3';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '123,3';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
     }
 
     function testStrings() {
+        $v = new BigIntValidator();
+
         $input = '123a';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '1-23';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '123-';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = 'a123';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '123+';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = 'abc';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
     }
 
     function testHexadecimal() {
+        $v = new BigIntValidator();
+
         $input = '0x12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '0X12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '+0x12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '+0X12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '-0x12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '-0X12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '0x12Y';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         // start with a '0' (letter) not a zero (figure)
         $input = '0x12A';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
     }
 
     function testOctal() {
+        $v = new BigIntValidator();
+
         $input = '0123';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '+0123';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
         $input = '-0123';
-        $this->assertFalse(BigIntValidator::isValid($input));
+        $this->assertFalse($v->isValid($input));
     }
 
     function testIsBigInt() {
+        $v = new BigIntValidator();
+
         // 2^31-1
-        $this->assertTrue(BigIntValidator::isValid('2147483647'));
-        $this->assertTrue(BigIntValidator::isValid('2147483648'));
+        $this->assertTrue($v->isValid('2147483647'));
+        $this->assertTrue($v->isValid('2147483648'));
 
         // -2^31
-        $this->assertTrue(BigIntValidator::isValid('-2147483648'));
-        $this->assertTrue(BigIntValidator::isValid('-2147483649'));
+        $this->assertTrue($v->isValid('-2147483648'));
+        $this->assertTrue($v->isValid('-2147483649'));
     }
 }
 ?>

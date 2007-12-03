@@ -93,27 +93,140 @@ extends Validator {
 }
 
 /**
- * Validate decimal integer values bigger than 2^31-1 or lesser than -2^31.
+ * Contains mathematical constraints shared by all numeric validators.
  *
- * Php has a limitation with integer handeling. On most platform integers are
- * coded on 32 bits so the valid range of int values is (-2^31;2^31-1).
- * This class validate any kind of integers.
- *
+ * By default, the principle of much restrictive applies. If lower bound is 0
+ * and allowed values are ('-1', '2'). Only '2' will be a valid number.
  */
-class BigIntValidator
+class NumericalValidator
 extends Validator {
+    var $minStrict;
+    var $maxStrict;
+    var $minEqual;
+    var $maxEqual;
+    var $allowedValues;
+
+    function NumericValidator() {
+        $this->minStrict     = null;
+        $this->maxStrict     = null;
+        $this->minEqual      = null;
+        $this->maxEqual      = null;
+        $this->allowedValues = null;
+        parent::validator();
+    }
+
     /**
-     * Check is $val is a valid integer or not.
-     *
-     * @param string $val Value to validate
-     * @return boolean Whether the value is a valid integer or not
+     * Define the lower bound for strict value comparison.
+     */
+    function biggerThan($min) {
+        $this->minStrict = $min;
+    }
+
+    /**
+     * Define the lower bound for strict value comparison.
+     */
+    function biggerOrEqualThan($min) {
+        $this->minEqual = $min;
+    }
+
+
+    /**
+     * Define the upper bound for strict value comparison.
+     */
+    function lesserThan($max) {
+        $this->maxStrict = $max;
+    }
+
+    /**
+     * Define the upper bound for strict value comparison.
+     */
+    function lesserOrEqualThan($max) {
+        $this->maxEqual = $max;
+    }
+
+    /**
+     * Define a list of allowed value.
+     */
+    function allowedValues($v) {
+        $this->allowedValues = $v;
+    }
+
+    /**
+     * @access protected
+     */
+    function checkMinEqual($val) {
+         if($this->minEqual !== null) {
+             if($val >= $this->minEqual) {
+                 return true;
+             } else {
+                 return false;
+             }
+         }
+         return true;
+    }
+
+    /**
+     * @access protected
+     */
+    function checkMaxEqual($val) {
+         if($this->maxEqual !== null) {
+             if($val <= $this->maxEqual) {
+                 return true;
+             } else {
+                 return false;
+             }
+         }
+         return true;
+    }
+
+    /**
+     * @access protected
+     */
+    function checkMinStrict($val) {
+        if($this->minStrict !== null) {
+            if($val <= $this->minStrict) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @access protected
+     */
+    function checkMaxStrict($val) {
+        if($this->maxStrict !== null) {
+            if($val >= $this->maxStrict) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @access protected
+     */
+    function checkAllowedValues($val) {
+        if(is_array($this->allowedValues)
+           && count($this->allowedValues) > 0) {
+            if(!in_array($val, $this->allowedValues)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check that $val respect all the constraints.
      */
     function isValid($val) {
-        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
-            return true;
-        } else {
-            return false;
-        }
+        $isValid = true;
+        $isValid = $isValid && $this->checkMinEqual($val);
+        $isValid = $isValid && $this->checkMaxEqual($val);
+        $isValid = $isValid && $this->checkMinStrict($val);
+        $isValid = $isValid && $this->checkMaxStrict($val);
+        $isValid = $isValid && $this->checkAllowedValues($val);
+        return $isValid;
     }
 
 }
@@ -124,7 +237,19 @@ extends Validator {
  * @see BigIntValidator
  */
 class IntValidator
-extends Validator {
+extends NumericalValidator {
+    /**
+     * Check the format according to PHP definition of a decimal integer.
+     * @see http://php.net/int
+     */
+    function checkFormat($val) {
+        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Check is $val is a valid integer or not.
      *
@@ -134,10 +259,14 @@ extends Validator {
     function isValid($val) {
         // Need to check with the regexp because of octal form '0123' that is
         // equal to '123' with string '==' comparison.
-        if(BigIntValidator::isValid($val)) {
+        if($this->checkFormat($val)) {
             // Check (-2^31;2^31-1) range
             if(strval(intval($val)) == $val) {
-                return true;
+                if(parent::isValid($val)) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -146,6 +275,55 @@ extends Validator {
         }
     }
 
+}
+
+/**
+ * Validate decimal integer values bigger than 2^31-1 or lesser than -2^31.
+ *
+ * Php has a limitation with integer handeling. On most platform integers are
+ * coded on 32 bits so the valid range of int values is (-2^31;2^31-1).
+ * This class validate any kind of integers.
+ *
+ * However, as those number are not well handled by PHP, we cannot make any
+ * mathematical operations safly on them. This is why comparators are disabled.
+ *
+ */
+class BigIntValidator
+extends IntValidator {
+    /**
+     * Disabled
+     */
+    function biggerThan($min) {
+        trigger_error(get_class($this).'::biggerThan() => Not possible with BigIntegers', E_USER_ERROR);
+    }
+
+    /**
+     * Disabled
+     */
+    function lesserThan($max) {
+        trigger_error(get_class($this).'::lesserThan() => Not possible with BigIntegers', E_USER_ERROR);
+    }
+
+    /**
+     * Disabled
+     */
+    function allowedValues($v) {
+        trigger_error(get_class($this).'::allowedValues() => Not possible with BigIntegers', E_USER_ERROR);
+    }
+
+    /**
+     * Check is $val is a valid integer or not.
+     *
+     * @param string $val Value to validate
+     * @return boolean Whether the value is a valid integer or not
+     */
+    function isValid($val) {
+        if($this->checkFormat($val)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>
