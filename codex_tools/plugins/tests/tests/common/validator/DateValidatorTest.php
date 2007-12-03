@@ -59,7 +59,5 @@ class DateValidatorTest extends UnitTestCase {
         $this->assertTrue($v->isValid('2004-2-29'));
     }
 
-
-
 }
 ?>

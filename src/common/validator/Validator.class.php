@@ -49,9 +49,9 @@ class Validator {
         return $this->_errors;
     }
 
-   /**
-    *
-    */
+    /**
+     *
+     */
     function isValid() {
         trigger_error(get_class($this).'::isValid() => Not yet implemented', E_USER_ERROR);
     }
@@ -76,16 +76,12 @@ class Validator {
  */
 class DateValidator
 extends Validator {
-   /**
-    *
-    */
-    function DateValidator() {
-        parent::Validator();
-    }
-
-   /**
-    *
-    */
+    /**
+     * Check if $val is a valid date or not.
+     *
+     * @param string $val Value to validate
+     * @return boolean Whether the date is valid or not
+     */
     function isValid($val) {
         if(preg_match('/^([0-9]+)-([1-9][0-2]?)-([1-9][0-9]?)$/', $val, $m)) {
             return checkdate($m[2], $m[3], $m[1]);
@@ -97,9 +93,58 @@ extends Validator {
 }
 
 /**
+ * Validate decimal integer values bigger than 2^31-1 or lesser than -2^31.
+ *
+ * Php has a limitation with integer handeling. On most platform integers are
+ * coded on 32 bits so the valid range of int values is (-2^31;2^31-1).
+ * This class validate any kind of integers.
  *
  */
-class IntValidator {
+class BigIntValidator
+extends Validator {
+    /**
+     * Check is $val is a valid integer or not.
+     *
+     * @param string $val Value to validate
+     * @return boolean Whether the value is a valid integer or not
+     */
+    function isValid($val) {
+        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+/**
+ * Validate decimal integer value between (-2^31;2^31-1).
+ *
+ * @see BigIntValidator
+ */
+class IntValidator
+extends Validator {
+    /**
+     * Check is $val is a valid integer or not.
+     *
+     * @param string $val Value to validate
+     * @return boolean Whether the value is a valid integer or not
+     */
+    function isValid($val) {
+        // Need to check with the regexp because of octal form '0123' that is
+        // equal to '123' with string '==' comparison.
+        if(BigIntValidator::isValid($val)) {
+            // Check (-2^31;2^31-1) range
+            if(strval(intval($val)) == $val) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
 }
 
