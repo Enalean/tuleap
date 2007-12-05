@@ -48,8 +48,9 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
 	return 0;
     }
-    if (db_numrows(db_query("SELECT user_id FROM user WHERE "
-			    . "user_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) {
+    if ( (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) 
+         || (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$HTTP_POST_VARS[form_loginname]'")) > 0) ) {
+        // also avoid name/group conflict (see SR #1001)
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
 	return 0;
     }
