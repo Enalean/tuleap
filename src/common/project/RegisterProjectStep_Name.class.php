@@ -41,8 +41,10 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['register_error']);
             } else {
-                if (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','g_name_exist'));
+                if ((db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) 
+                    || (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '$form_unix_name'")) > 0)) {
+                  // also avoid name/group conflict (see SR #1001)
+                  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','g_name_exist'));
                 } else {
                     $is_valid = true;
                 }
