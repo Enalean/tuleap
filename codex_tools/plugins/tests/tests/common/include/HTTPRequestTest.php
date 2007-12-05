@@ -1,6 +1,6 @@
 <?php
 require_once('common/include/HTTPRequest.class.php');
-
+Mock::generate('Validator');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -29,6 +29,7 @@ class HTTPRequestTest extends UnitTestCase {
             $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
             $_SERVER['server_quote'] = "l\'avion du server";
         }
+        $_REQUEST['testkey'] = 'testvalue';
     }
     
     function tearDown() {
@@ -37,6 +38,7 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_REQUEST['exists_empty']);
         unset($_SERVER['server_exists']);
         unset($_SERVER['server_quote']);
+        unset($_REQUEST['testkey']);
     }
     
     function testGet() {
@@ -84,6 +86,28 @@ class HTTPRequestTest extends UnitTestCase {
     function testArray() {
         $r =& new HTTPRequest();
         $this->assertIdentical($r->get('array'), array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau")));
+    }
+
+    function testValidTrue() {
+        $v =& new MockValidator();
+        $v->setReturnValue('isValid', true);
+        $r =& new HTTPRequest();
+        $this->assertTrue($r->valid('testkey', $v));
+    }
+
+    function testValidFalse() {
+        $v =& new MockValidator();
+        $v->setReturnValue('isValid', false);
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->valid('testkey', $v));
+    }
+
+    function testValidScalar() {
+        $v =& new MockValidator();
+        $v->expectOnce('isValid', array('testvalue'));
+        $r =& new HTTPRequest();
+        $r->valid('testkey', $v);
+        $v->tally();
     }
 
 }

@@ -10,6 +10,7 @@
 
 require_once('browser.php');
 require_once('common/include/CodeX_Request.class.php');
+require_once('common/validator/Validator.class.php');
 
 /**
  * @package CodeX
@@ -80,6 +81,17 @@ class HTTPRequest extends CodeX_Request {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Apply validator on submitted user value.
+     *
+     * @param string $key       Variable name
+     * @param Valid  $validator Validator to apply
+     * @return boolean
+     */
+    function valid($key, &$validator) {
+        return $validator->isValid($this->get($key));
     }
 
     /**
