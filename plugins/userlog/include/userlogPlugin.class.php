@@ -96,7 +96,7 @@ class userlogPlugin extends Plugin {
         if($request->existAndNonEmpty('offset')) {
             $vOffset = new IntValidator();
             $vOffset->biggerOrEqualThan(0);
-            if($vOffset->isValid($request->get('offset'))) {
+            if($request->valid('offset', $vOffset)) {
                 $offset = intval($request->get('offset'));
             } else {
                 $GLOBALS['Response']->addFeedback('warning', 'Invalid offset submitted. Force it to 0 (zero).');
@@ -106,7 +106,7 @@ class userlogPlugin extends Plugin {
         $day = date('Y-n-j');
         if($request->existAndNonEmpty('day')) {
             $vDay = new DateValidator();
-            if($vDay->isValid($request->get('day'))) {
+            if($request->valid('day', $vDay)) {
                 $day = $request->get('day');
             } else {
                 $GLOBALS['Response']->addFeedback('warning', 'Invalid date submitted. Force it to today.');
