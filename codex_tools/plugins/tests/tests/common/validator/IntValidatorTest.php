@@ -24,14 +24,14 @@
 
 require_once('common/validator/Validator.class.php');
 
-class IntValidatorTest extends UnitTestCase {
+class Valid_IntTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'IntValidator test') {
+    function UnitTestCase($name = 'Valid_Int test') {
         $this->UnitTestCase($name);
     }
 
     function testIsInteger() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         $input = '123';
         $this->assertTrue($v->isValid($input));
@@ -54,7 +54,7 @@ class IntValidatorTest extends UnitTestCase {
     }
 
     function testFloatingPoint() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         $input = '123.3';
         $this->assertFalse($v->isValid($input));
@@ -63,7 +63,7 @@ class IntValidatorTest extends UnitTestCase {
     }
 
     function testStrings() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         $input = '123a';
         $this->assertFalse($v->isValid($input));
@@ -80,7 +80,7 @@ class IntValidatorTest extends UnitTestCase {
     }
 
     function testHexadecimal() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         $input = '0x12A';
         $this->assertFalse($v->isValid($input));
@@ -102,7 +102,7 @@ class IntValidatorTest extends UnitTestCase {
     }
 
     function testOctal() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         $input = '0123';
         $this->assertFalse($v->isValid($input));
@@ -113,7 +113,7 @@ class IntValidatorTest extends UnitTestCase {
     }
 
     function testIsBigInt() {
-        $v = new IntValidator();
+        $v = new Valid_Int();
 
         // 2^31-1
         $this->assertTrue($v->isValid('2147483647'));

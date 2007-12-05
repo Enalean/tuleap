@@ -24,14 +24,14 @@
 
 require_once('common/validator/Validator.class.php');
 
-class BigIntValidatorTest extends UnitTestCase {
+class Valid_BigIntTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'BigIntValidator test') {
+    function UnitTestCase($name = 'Valid_BigInt test') {
         $this->UnitTestCase($name);
     }
 
     function testIsInteger() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         $input = '123';
         $this->assertTrue($v->isValid($input));
@@ -54,7 +54,7 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testFloatingPoint() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         $input = '123.3';
         $this->assertFalse($v->isValid($input));
@@ -63,7 +63,7 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testStrings() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         $input = '123a';
         $this->assertFalse($v->isValid($input));
@@ -80,7 +80,7 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testHexadecimal() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         $input = '0x12A';
         $this->assertFalse($v->isValid($input));
@@ -102,7 +102,7 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testOctal() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         $input = '0123';
         $this->assertFalse($v->isValid($input));
@@ -113,7 +113,7 @@ class BigIntValidatorTest extends UnitTestCase {
     }
 
     function testIsBigInt() {
-        $v = new BigIntValidator();
+        $v = new Valid_BigInt();
 
         // 2^31-1
         $this->assertTrue($v->isValid('2147483647'));

@@ -24,20 +24,20 @@
 
 require_once('common/validator/Validator.class.php');
 
-class DateValidatorTest extends UnitTestCase {
+class Valid_DateTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'DateValidator test') {
+    function UnitTestCase($name = 'Valid_Date test') {
         $this->UnitTestCase($name);
     }
 
     function testBadDate() {
-        $v = new DateValidator();
+        $v = new Valid_Date();
         $this->assertFalse($v->isValid('2007-13-5'));
         $this->assertFalse($v->isValid('2007-12-32'));
     }
 
     function testBadFormat() {
-        $v = new DateValidator();
+        $v = new Valid_Date();
         $this->assertFalse($v->isValid('2007-12'));
         $this->assertFalse($v->isValid('toto'));
         $this->assertFalse($v->isValid('2007-01-01'));
@@ -46,7 +46,7 @@ class DateValidatorTest extends UnitTestCase {
     }
 
     function testGoodDate() {
-        $v = new DateValidator();
+        $v = new Valid_Date();
         $this->assertTrue($v->isValid('2007-11-30'));
         $this->assertTrue($v->isValid('2007-12-31'));
         $this->assertTrue($v->isValid('2007-1-1'));
@@ -54,7 +54,7 @@ class DateValidatorTest extends UnitTestCase {
     }
 
     function testLeapYear() {
-        $v = new DateValidator();
+        $v = new Valid_Date();
         $this->assertFalse($v->isValid('2001-2-29'));
         $this->assertTrue($v->isValid('2004-2-29'));
     }

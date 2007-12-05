@@ -24,14 +24,14 @@
 
 require_once('common/validator/Validator.class.php');
 
-class NumericalValidatorTest extends UnitTestCase {
+class Valid_NumericalTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'NumericalValidator test') {
+    function UnitTestCase($name = 'Valid_Numerical test') {
         $this->UnitTestCase($name);
     }
 
     function testBiggerThan() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->biggerThan(0);
 
         $this->assertTrue($v->isValid('1'));
@@ -41,7 +41,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testBiggerOrEqualThan() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->biggerOrEqual(0);
 
         $this->assertTrue($v->isValid('1'));
@@ -51,7 +51,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testLesserThan() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->lesserThan(10);
 
         $this->assertTrue($v->isValid('1'));
@@ -63,7 +63,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testLesserOrEqualThan() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->lesserOrEqual(10);
 
         $this->assertTrue($v->isValid('1'));
@@ -75,7 +75,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testAllowedValues() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->allowedValues(array('-1', '5', '42'));
 
         $this->assertTrue($v->isValid('-1'));
@@ -87,7 +87,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testRange() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->biggerThan(-1);
         $v->lesserThan(3);
 
@@ -99,7 +99,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testMostRestrictive() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->allowedValues(array('-1', '5', '42'));
         $v->biggerThan(-1);
         $v->lesserThan(6);
@@ -110,7 +110,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testMinStrictAndMinEqual() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->biggerOrEqual(0);
         $v->biggerThan(0);
 
@@ -121,7 +121,7 @@ class NumericalValidatorTest extends UnitTestCase {
     }
 
     function testMaxStrictAndMaxEqualThan() {
-        $v = new NumericalValidator();
+        $v = new Valid_Numerical();
         $v->lesserThan(10);
         $v->lesserOrEqual(10);
 

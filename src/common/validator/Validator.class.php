@@ -25,13 +25,13 @@
 /**
  *
  */
-class Validator {
+class Valid {
     var $_errors;
 
     /**
      *
      */
-    function Validator() {
+    function Valid() {
         $this->_errors = array();
     }
 
@@ -74,8 +74,8 @@ class Validator {
  * </pre>
  *
  */
-class DateValidator
-extends Validator {
+class Valid_Date
+extends Valid {
     /**
      * Check if $val is a valid date or not.
      *
@@ -98,21 +98,21 @@ extends Validator {
  * By default, the principle of much restrictive applies. If lower bound is 0
  * and allowed values are ('-1', '2'). Only '2' will be a valid number.
  */
-class NumericalValidator
-extends Validator {
+class Valid_Numerical
+extends Valid {
     var $minStrict;
     var $maxStrict;
     var $minEqual;
     var $maxEqual;
     var $allowedValues;
 
-    function NumericValidator() {
+    function Valid_Numerical() {
         $this->minStrict     = null;
         $this->maxStrict     = null;
         $this->minEqual      = null;
         $this->maxEqual      = null;
         $this->allowedValues = null;
-        parent::validator();
+        parent::valid();
     }
 
     /**
@@ -236,8 +236,8 @@ extends Validator {
  *
  * @see BigIntValidator
  */
-class IntValidator
-extends NumericalValidator {
+class Valid_Int
+extends Valid_Numerical {
     /**
      * Check the format according to PHP definition of a decimal integer.
      * @see http://php.net/int
@@ -288,8 +288,8 @@ extends NumericalValidator {
  * mathematical operations safly on them. This is why comparators are disabled.
  *
  */
-class BigIntValidator
-extends IntValidator {
+class Valid_BigInt
+extends Valid_Int {
     /**
      * Disabled
      */
