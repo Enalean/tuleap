@@ -10,7 +10,7 @@
 
 require_once('browser.php');
 require_once('common/include/CodeX_Request.class.php');
-require_once('common/validator/Validator.class.php');
+require_once('common/valid/Valid.class.php');
 
 /**
  * @package CodeX

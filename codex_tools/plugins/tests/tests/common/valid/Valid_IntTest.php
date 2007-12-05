@@ -22,7 +22,7 @@
  *
  */
 
-require_once('common/validator/Validator.class.php');
+require_once('common/valid/Valid.class.php');
 
 class Valid_IntTest extends UnitTestCase {
 
