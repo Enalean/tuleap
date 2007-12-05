@@ -125,7 +125,7 @@ extends Validator {
     /**
      * Define the lower bound for strict value comparison.
      */
-    function biggerOrEqualThan($min) {
+    function biggerOrEqual($min) {
         $this->minEqual = $min;
     }
 
@@ -140,7 +140,7 @@ extends Validator {
     /**
      * Define the upper bound for strict value comparison.
      */
-    function lesserOrEqualThan($max) {
+    function lesserOrEqual($max) {
         $this->maxEqual = $max;
     }
 

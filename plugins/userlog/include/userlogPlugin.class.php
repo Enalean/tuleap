@@ -95,7 +95,7 @@ class userlogPlugin extends Plugin {
         $offset = 0;
         if($request->existAndNonEmpty('offset')) {
             $vOffset = new IntValidator();
-            $vOffset->biggerOrEqualThan(0);
+            $vOffset->biggerOrEqual(0);
             if($request->valid('offset', $vOffset)) {
                 $offset = intval($request->get('offset'));
             } else {
