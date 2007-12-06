@@ -86,8 +86,8 @@ class HTTPRequest extends CodeX_Request {
     /**
      * Apply validator on submitted user value.
      *
-     * @param string $key       Variable name
-     * @param Valid  $validator Validator to apply
+     * @param string Variable name
+     * @param Valid  Validator to apply
      * @return boolean
      */
     function valid($key, &$validator) {

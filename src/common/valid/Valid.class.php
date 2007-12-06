@@ -20,12 +20,16 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * @package CodeX
  */
 
 /**
- *
+ * @package CodeX
  */
 class Valid {
+    /**
+     * @access private
+     */
     var $_errors;
 
     /**
@@ -100,10 +104,29 @@ extends Valid {
  */
 class Valid_Numerical
 extends Valid {
+    /**
+     * @access private
+     */
     var $minStrict;
+
+    /**
+     * @access private
+     */
     var $maxStrict;
+
+    /**
+     * @access private
+     */
     var $minEqual;
+
+    /**
+     * @access private
+     */
     var $maxEqual;
+
+    /**
+     * @access private
+     */
     var $allowedValues;
 
     function Valid_Numerical() {
@@ -152,7 +175,7 @@ extends Valid {
     }
 
     /**
-     * @access protected
+     * @access private
      */
     function checkMinEqual($val) {
          if($this->minEqual !== null) {
@@ -166,7 +189,7 @@ extends Valid {
     }
 
     /**
-     * @access protected
+     * @access private
      */
     function checkMaxEqual($val) {
          if($this->maxEqual !== null) {
@@ -180,7 +203,7 @@ extends Valid {
     }
 
     /**
-     * @access protected
+     * @access private
      */
     function checkMinStrict($val) {
         if($this->minStrict !== null) {
@@ -192,7 +215,7 @@ extends Valid {
     }
 
     /**
-     * @access protected
+     * @access private
      */
     function checkMaxStrict($val) {
         if($this->maxStrict !== null) {
@@ -204,7 +227,7 @@ extends Valid {
     }
 
     /**
-     * @access protected
+     * @access private
      */
     function checkAllowedValues($val) {
         if(is_array($this->allowedValues)
@@ -241,6 +264,7 @@ extends Valid_Numerical {
     /**
      * Check the format according to PHP definition of a decimal integer.
      * @see http://php.net/int
+     * @access private
      */
     function checkFormat($val) {
         if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
