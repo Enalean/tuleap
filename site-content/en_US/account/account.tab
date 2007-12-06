@@ -51,6 +51,12 @@ account_options	codex_login_and_name	Login name (Real Name)
 account_options	codex_name_and_login	Real Name (login name)
 account_options	codex_login	Login Name
 account_options	realname	Real Name
+account_options	auth_attempt_title	Authentication details
+account_options	auth_attempt_last_success	Last successful login:
+account_options	auth_attempt_prev_success	Previous successful login:
+account_options	auth_attempt_last_failure	Last login failure:
+account_options	auth_attempt_nb_failure	Number of login failure:
+account_options	auth_attempt_sessions	Open sessions:
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

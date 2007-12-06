@@ -152,5 +152,32 @@ if ($row_user['unix_status'] == 'A') {
 	echo '</fieldset>';
 } 
 
+// Authentication attempts
+
+echo '<fieldset><legend>'. $Language->getText('account_options', 'auth_attempt_title').'</legend>';
+echo '<table>';
+echo '<tr>';
+echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_success').'</td>';
+echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['last_auth_success']).'</td>';
+echo '</tr>';
+
+echo '<tr>';
+echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_failure').'</td>';
+echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['last_auth_failure']).'</td>';
+echo '</tr>';
+
+echo '<tr>';
+echo '<td>'.$Language->getText('account_options', 'auth_attempt_nb_failure').'</td>';
+echo '<td>'.$row_user['nb_auth_failure'].'</td>';
+echo '</tr>';
+
+echo '<tr>';
+echo '<td>'.$Language->getText('account_options', 'auth_attempt_prev_success').'</td>';
+echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['prev_auth_success']).'</td>';
+echo '</tr>';
+
+echo '</table>';
+echo '</fieldset>';
+
 $HTML->footer(array());
 ?>

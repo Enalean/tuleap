@@ -52,7 +52,9 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
             } else {
                 //create a new session
                 session_set_new($auth_user_id);
-                
+
+                session_store_login_success();
+
                 return array(true, '');
             }
         }
@@ -61,6 +63,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
         }
     }
     else {
+        session_store_login_failure($form_loginname);
         return array(false, '');
     }
 }
@@ -357,6 +360,42 @@ function session_store_access() {
     }
 }
 
+/**
+ * Store login success.
+ *
+ * Store last log-on success timestamp in 'last_auth_success' field and backup
+ * the previous value in 'prev_auth_success'. In order to keep the failure
+ * counter coherent, if the 'last_auth_success' is newer than the
+ * 'last_auth_failure' it means that there was no bad attempts since the last
+ * log-on and 'nb_auth_failure' can be reset to zero.
+ *
+ * @todo: define a global time object that would give the same time to all
+ * actions on an execution.
+ */
+function session_store_login_success() {
+    $time = time();
+    $sql = 'UPDATE user '.
+        ' SET nb_auth_failure = IF(last_auth_success>=last_auth_failure,0,nb_auth_failure),'.
+        ' prev_auth_success = last_auth_success,'.
+        ' last_auth_success = '.db_ei($time).
+        ' WHERE user_id='.db_ei(user_getid());
+    db_query($sql);
+}
 
+/**
+ * Store login failure.
+ *
+ * Store last log-on failure and increment the number of failure. If the there
+ * was no bad attemps since the last successful login (ie. 'last_auth_success'
+ * newer than 'last_auth_failure') the counter is reset to 1.
+ */
+function session_store_login_failure($login) {
+    $time = time();
+    $sql = 'UPDATE user'.
+        ' SET nb_auth_failure = IF(last_auth_success>=last_auth_failure,1,nb_auth_failure+1),'.
+        ' last_auth_failure = '.db_ei($time).
+        ' WHERE user_name="'.db_es($login).'"';
+    db_query($sql);
+}
 
 ?>
