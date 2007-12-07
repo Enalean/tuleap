@@ -135,7 +135,7 @@ class FRSReleaseDao extends DataAccessObject {
 
         if ($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name);
+            $values[] = $this->da->quoteSmart($name, array('force_string'=>true));
         }
 
         if ($notes !== null) {
@@ -194,8 +194,15 @@ class FRSReleaseDao extends DataAccessObject {
                 if ($key == 'release_date') {
                     $is_date = true;
                 }
-                $arg[] = $key;
-                $values[] = $this->da->quoteSmart($value);
+                if($key == 'name'){
+                    $arg[] = $key;
+                    $values[] = $this->da->quoteSmart($value, array('force_string'=>true));
+                }else{
+                    $arg[] = $key;
+                    $values[] = $this->da->quoteSmart($value);
+                }
+                
+                
             }
         }
 
@@ -224,6 +231,7 @@ class FRSReleaseDao extends DataAccessObject {
 
     function _createAndReturnId($sql) {
         $inserted = $this->update($sql);
+       
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {

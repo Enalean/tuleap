@@ -121,7 +121,7 @@ class FRSPackageDao extends DataAccessObject {
 
         if($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name);
+            $values[] = $this->da->quoteSmart($name, array('force_string'=>true));
         }
 
         if($status_id !== null) {
@@ -154,9 +154,15 @@ class FRSPackageDao extends DataAccessObject {
                 $value = $this->prepareRanking(0, $data_array['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
             }
             if (in_array($key, $cols)) {
-                $arg[]    = $key;
-                $values[] = $this->da->quoteSmart($value);
+                if($key == 'name'){
+                    $arg[] = $key;
+                    $values[] = $this->da->quoteSmart($value, array('force_string'=>true));
+                }else{
+                    $arg[] = $key;
+                    $values[] = $this->da->quoteSmart($value);
+                }
             }
+                
         }
         if (count($arg)) {
             $sql = 'INSERT INTO frs_package '
