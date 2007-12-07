@@ -64,7 +64,8 @@ DIFF='/usr/bin/diff'
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
 SELINUX_ENABLED=1
-if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `grep -i -q '^SELINUX=disabled' /etc/selinux/config`; then
+$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
+if [ $? -eq 0 ] || [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] ; then
    # SELinux not installed
    SELINUX_ENABLED=0
 fi
