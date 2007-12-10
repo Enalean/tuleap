@@ -22,7 +22,7 @@
  *
  */
 
-require_once('common/valid/Valid.class.php');
+require_once('common/valid/Rule.class.php');
 
 class Valid_DateTest extends UnitTestCase {
 
@@ -31,32 +31,32 @@ class Valid_DateTest extends UnitTestCase {
     }
 
     function testBadDate() {
-        $v = new Valid_Date();
-        $this->assertFalse($v->isValid('2007-13-5'));
-        $this->assertFalse($v->isValid('2007-12-32'));
+        $r = new Rule_Date();
+        $this->assertFalse($r->isValid('2007-13-5'));
+        $this->assertFalse($r->isValid('2007-12-32'));
     }
 
     function testBadFormat() {
-        $v = new Valid_Date();
-        $this->assertFalse($v->isValid('2007-12'));
-        $this->assertFalse($v->isValid('toto'));
-        $this->assertFalse($v->isValid('2007-01-01'));
-        $this->assertFalse($v->isValid('2007-01-1'));
-        $this->assertFalse($v->isValid('2007-1-01'));
+        $r = new Rule_Date();
+        $this->assertFalse($r->isValid('2007-12'));
+        $this->assertFalse($r->isValid('toto'));
+        $this->assertFalse($r->isValid('2007-01-01'));
+        $this->assertFalse($r->isValid('2007-01-1'));
+        $this->assertFalse($r->isValid('2007-1-01'));
     }
 
     function testGoodDate() {
-        $v = new Valid_Date();
-        $this->assertTrue($v->isValid('2007-11-30'));
-        $this->assertTrue($v->isValid('2007-12-31'));
-        $this->assertTrue($v->isValid('2007-1-1'));
-        $this->assertTrue($v->isValid('200-1-5'));
+        $r = new Rule_Date();
+        $this->assertTrue($r->isValid('2007-11-30'));
+        $this->assertTrue($r->isValid('2007-12-31'));
+        $this->assertTrue($r->isValid('2007-1-1'));
+        $this->assertTrue($r->isValid('200-1-5'));
     }
 
     function testLeapYear() {
-        $v = new Valid_Date();
-        $this->assertFalse($v->isValid('2001-2-29'));
-        $this->assertTrue($v->isValid('2004-2-29'));
+        $r = new Rule_Date();
+        $this->assertFalse($r->isValid('2001-2-29'));
+        $this->assertTrue($r->isValid('2004-2-29'));
     }
 
 }

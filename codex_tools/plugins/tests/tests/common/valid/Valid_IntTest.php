@@ -22,7 +22,7 @@
  *
  */
 
-require_once('common/valid/Valid.class.php');
+require_once('common/valid/Rule.class.php');
 
 class Valid_IntTest extends UnitTestCase {
 
@@ -31,97 +31,97 @@ class Valid_IntTest extends UnitTestCase {
     }
 
     function testIsInteger() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         $input = '123';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
         $input = '+123';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
         $input = '-123';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
         $input = '+0';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
         $input = '-0';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
         $input = '0';
-        $this->assertTrue($v->isValid($input));
+        $this->assertTrue($r->isValid($input));
 
     }
 
     function testFloatingPoint() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         $input = '123.3';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '123,3';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
     }
 
     function testStrings() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         $input = '123a';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '1-23';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '123-';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = 'a123';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '123+';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = 'abc';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
     }
 
     function testHexadecimal() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         $input = '0x12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '0X12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '+0x12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '+0X12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '-0x12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '-0X12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '0x12Y';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         // start with a '0' (letter) not a zero (figure)
         $input = '0x12A';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
     }
 
     function testOctal() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         $input = '0123';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '+0123';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
         $input = '-0123';
-        $this->assertFalse($v->isValid($input));
+        $this->assertFalse($r->isValid($input));
     }
 
     function testIsBigInt() {
-        $v = new Valid_Int();
+        $r = new Rule_Int();
 
         // 2^31-1
-        $this->assertTrue($v->isValid('2147483647'));
-        $this->assertFalse($v->isValid('2147483648'));
+        $this->assertTrue($r->isValid('2147483647'));
+        $this->assertFalse($r->isValid('2147483648'));
 
         // -2^31
-        $this->assertTrue($v->isValid('-2147483648'));
-        $this->assertFalse($v->isValid('-2147483649'));
+        $this->assertTrue($r->isValid('-2147483648'));
+        $this->assertFalse($r->isValid('-2147483649'));
     }
 
 }

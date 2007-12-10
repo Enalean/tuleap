@@ -86,12 +86,24 @@ class HTTPRequest extends CodeX_Request {
     /**
      * Apply validator on submitted user value.
      *
-     * @param string Variable name
      * @param Valid  Validator to apply
      * @return boolean
      */
-    function valid($key, &$validator) {
-        return $validator->isValid($this->get($key));
+    function valid(&$validator) {
+        $GLOBALS['validated_input'][$key] = true;
+        return $validator->validate($this->get($validator->getKey()));
+    }
+
+    /**
+     * Apply validator on submitted user value.
+     *
+     * @param string Variable name
+     * @param Rule  Validator to apply
+     * @return boolean
+     */
+    function validKey($key, &$rule) {
+        $GLOBALS['validated_input'][$key] = true;
+        return $rule->isValid($this->get($key));
     }
 
     /**
