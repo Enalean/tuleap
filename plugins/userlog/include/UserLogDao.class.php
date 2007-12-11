@@ -74,12 +74,12 @@ class UserLogDao extends DataAccessObject {
             $this->da->escapeInt($time).','.
             $this->da->escapeInt($gid).','.
             $this->da->escapeInt($uid).','.
-            '"'.$this->da->escapeString($sessionHash).'",'.
-            '"'.$this->da->escapeString($userAgent).'",'.
-            '"'.$this->da->escapeString($requestMethod).'",'.
-            '"'.$this->da->escapeString($requestUri).'",'.
-            '"'.$this->da->escapeString($remoteAddr).'",'.
-            '"'.$this->da->escapeString($httpReferer).'"'.
+            $this->da->quoteSmart($sessionHash).','.
+            $this->da->quoteSmart($userAgent).','.
+            $this->da->quoteSmart($requestMethod).','.
+            $this->da->quoteSmart($requestUri).','.
+            $this->da->quoteSmart($remoteAddr).','.
+            $this->da->quoteSmart($httpReferer).
             ')';
         return $this->update($sql);
     }
