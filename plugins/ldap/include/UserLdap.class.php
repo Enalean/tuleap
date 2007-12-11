@@ -30,7 +30,7 @@ class UserLdap {
     function getUserResultSet($ldapId) {        		
         global $USER_RES;
         
-        $res = db_query("SELECT * FROM user WHERE ldap_id='".$ldapId."'");
+        $res = db_query("SELECT * FROM user WHERE ldap_id='".db_es($ldapId)."'");
         $user_id = db_result($res,0,'user_id');
         $USER_RES["_".$user_id."_"] = $res;
         return $USER_RES["_".$user_id."_"];
@@ -39,7 +39,7 @@ class UserLdap {
     function isLdapUser($user_id) {
         $sql = 'SELECT user_id'
             .' FROM user'
-            .' WHERE user_id='.((int)$user_id)
+            .' WHERE user_id='.db_ei($user_id)
             .' AND ldap_id != ""'
             .' AND ldap_id IS NOT NULL';
         $res = db_query($sql);
@@ -60,17 +60,14 @@ class UserLdap {
     function synchronizeUserWithLdap($userId, &$lr, $password) {
         $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
 
-        $pwd = rtrim(stripslashes($password));
-        
         if($lr !== null) {
-                        
             // {{ This part should be tranfered in a dedicated code
             //    User class or function in user.php
-            $qry1 = "UPDATE user SET user_pw='" . md5($pwd) . "'"
-                . ", unix_pw='" . account_genunixpw($pwd) . "'"
-                . ", windows_pw='" . account_genwinpw($pwd) . "'"
-                . ", realname='".addslashes($lr->getCommonName())."'"
-                . ", email='".addslashes($lr->getEmail())."'"
+            $qry1 = "UPDATE user SET user_pw='" . md5($password) . "'"
+                . ", unix_pw='" . account_genunixpw($password) . "'"
+                . ", windows_pw='" . account_genwinpw($password) . "'"
+                . ", realname='".db_es($lr->getCommonName())."'"
+                . ", email='".db_es($lr->getEmail())."'"
                 . " WHERE user_id=" . $userId;
             $res1 = db_query($qry1);
             if ($res1 && db_affected_rows($res1) === 1) {
@@ -96,7 +93,7 @@ class UserLdap {
         if($new_userid = account_create($form_loginname
                                         ,$password
                                         ,$lr->getEdUid()
-                                        ,addslashes($lr->getCommonName())
+                                        ,$lr->getCommonName()
                                         ,'LDAP'
                                         ,$lr->getEmail()
                                         ,'A'
