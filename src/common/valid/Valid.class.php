@@ -55,6 +55,16 @@ class Valid {
     var $useFeedback;
 
     /**
+     * @access private
+     */
+    var $globalErrorMessage;
+
+    /**
+     *
+     */
+    var $isValid;
+
+    /**
      *
      */
     function Valid($key = null) {
@@ -63,6 +73,8 @@ class Valid {
         $this->rules = array();
         $this->isRequired = false;
         $this->useFeedback = true;
+        $this->globalErrorMessage = null;
+        $this->isValid;
     }
 
     /**
@@ -80,6 +92,9 @@ class Valid {
         $this->errors[] = $message;
     }
 
+    /**
+     *
+     */
     function addRule($r, $message=false) {
         $this->addRuleRef($r, $message);
     }
@@ -101,6 +116,13 @@ class Valid {
     /**
      *
      */
+    function setErrorMessage($msg) {
+        $this->globalErrorMessage = $msg;
+    }
+
+    /**
+     *
+     */
     function addFeedback($level, $error) {
         $GLOBALS['Response']->addFeedback($level, $error);
     }
@@ -109,14 +131,19 @@ class Valid {
      *
      */
     function populateFeedback() {
-        if($$this->useFeedback) {
+        if($this->useFeedback) {
             $level = 'warning';
             if($this->isRequired) {
                 $level = 'error';
             }
-            foreach($this->errors as $error) {
-                if($error != '') {
-                    $this->addFeedback($level, $error);
+            if($this->globalErrorMessage !== null &&
+               !$this->isValid) {
+                $this->addFeedback($level, $this->globalErrorMessage);
+            } else {
+                foreach($this->errors as $error) {
+                    if($error != '') {
+                        $this->addFeedback($level, $error);
+                    }
                 }
             }
         }
@@ -146,7 +173,8 @@ class Valid {
             $this->errorMessage($i, $valid);
             $isValid = $isValid && $valid;
         }
-        return $isValid;
+        $this->isValid = $isValid;
+        $this->populateFeedback();
     }
 
     /**
@@ -155,7 +183,8 @@ class Valid {
     function validate($value) {
         if($this->isRequired
            || (!$this->isRequired && $value != '' && $value !== false && $value !== null)) {
-            return $this->checkEachRules($value);
+            $this->checkEachRules($value);
+            return $this->isValid;
         }
         return true;
     }

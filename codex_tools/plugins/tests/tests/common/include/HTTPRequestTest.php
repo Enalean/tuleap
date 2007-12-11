@@ -1,6 +1,7 @@
 <?php
 require_once('common/include/HTTPRequest.class.php');
-Mock::generate('Validator');
+Mock::generate('Valid');
+Mock::generate('Rule');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -88,25 +89,61 @@ class HTTPRequestTest extends UnitTestCase {
         $this->assertIdentical($r->get('array'), array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau")));
     }
 
-    function testValidTrue() {
-        $v =& new MockValidator();
+    function testValidKeyTrue() {
+        $v =& new MockRule($this);
         $v->setReturnValue('isValid', true);
         $r =& new HTTPRequest();
-        $this->assertTrue($r->valid('testkey', $v));
+        $this->assertTrue($r->validKey('testkey', $v));
+    }
+
+    function testValidKeyFalse() {
+        $v =& new MockRule($this);
+        $v->setReturnValue('isValid', false);
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validKey('testkey', $v));
+    }
+
+    function testValidKeyScalar() {
+        $v =& new MockRule($this);
+        $v->expectOnce('isValid', array('testvalue'));
+        $r =& new HTTPRequest();
+        $r->validKey('testkey', $v);
+        $v->tally();
+    }
+
+    function testValid() {
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', true);
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $r->validRef($v);
+        $v->tally();
+    }
+
+    function testValidTrue() {
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', true);
+        $r =& new HTTPRequest();
+        $this->assertTrue($r->validRef($v));
     }
 
     function testValidFalse() {
-        $v =& new MockValidator();
-        $v->setReturnValue('isValid', false);
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', false);
         $r =& new HTTPRequest();
-        $this->assertFalse($r->valid('testkey', $v));
+        $this->assertFalse($r->validRef($v));
     }
 
     function testValidScalar() {
-        $v =& new MockValidator();
-        $v->expectOnce('isValid', array('testvalue'));
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->expectAtLeastOnce('getKey');
+        $v->expectOnce('validate', array('testvalue'));
         $r =& new HTTPRequest();
-        $r->valid('testkey', $v);
+        $r->validRef($v);
         $v->tally();
     }
 

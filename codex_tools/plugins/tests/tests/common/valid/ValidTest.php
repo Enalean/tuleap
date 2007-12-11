@@ -188,7 +188,89 @@ class ValidTest extends UnitTestCase {
     }
 
     function testFeedback() {
+        $v =& new ValidTestVersion($this);
+        // Need to call the constructore manually
+        $v->Valid();
+        $v->expectOnce('addFeedback');
 
+        $r =& new MockRule($this);
+        $r->setReturnValue('isValid', false);
+        $r->setReturnValue('getErrorMessage', 'error');
+        $v->addRule($r);
+
+        $v->validate('value');
+        $v->tally();
+    }
+
+    function testFeedbackErrorWhenRequired() {
+        $v =& new ValidTestVersion($this);
+        // Need to call the constructore manually
+        $v->Valid();
+        $v->required();
+        $v->expectOnce('addFeedback', array('error', 'error message'));
+
+        $r =& new MockRule($this);
+        $r->setReturnValue('isValid', false);
+        $r->setReturnValue('getErrorMessage', 'error message');
+        $v->addRule($r);
+
+        $v->validate('value');
+        $v->tally();
+    }
+
+    function testFeedbackWarning() {
+        $v =& new ValidTestVersion($this);
+        // Need to call the constructore manually
+        $v->Valid();
+        $v->expectOnce('addFeedback', array('warning', 'error message'));
+
+        $r =& new MockRule($this);
+        $r->setReturnValue('isValid', false);
+        $r->setReturnValue('getErrorMessage', 'error message');
+        $v->addRule($r);
+
+        $v->validate('value');
+        $v->tally();
+    }
+
+    function testFeedbackGlobal() {
+        $v =& new ValidTestVersion($this);
+        // Need to call the constructore manually
+        $v->Valid();
+        $v->expectOnce('addFeedback', array('warning', 'custom message'));
+
+        $v->setErrorMessage('custom message');
+
+        // Built-in message
+        $r1 =& new MockRule($this);
+        $r1->setReturnValue('isValid', false);
+        $r1->setReturnValue('getErrorMessage', 'built-in error message');
+        $v->addRule($r1);
+
+        // Developer message
+        $r2 =& new MockRule($this);
+        $r2->setReturnValue('isValid', false);
+        $v->addRule($r2, 'Just in time message');
+
+        $v->validate('value');
+        $v->tally();
+    }
+
+    function testFeedbackGlobalWithoutErrors() {
+        $v =& new ValidTestVersion($this);
+        // Need to call the constructore manually
+        $v->Valid();
+        $v->expectNever('addFeedback');
+
+        $v->setErrorMessage('custom message');
+
+        // Built-in message
+        $r1 =& new MockRule($this);
+        $r1->setReturnValue('isValid', true);
+        $r1->setReturnValue('getErrorMessage', 'built-in error message');
+        $v->addRule($r1);
+
+        $v->validate('value');
     }
 
 }
