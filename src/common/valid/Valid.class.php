@@ -60,12 +60,12 @@ class Valid {
     var $globalErrorMessage;
 
     /**
-     *
+     * @access private
      */
     var $isValid;
 
     /**
-     *
+     * Constructor
      */
     function Valid($key = null) {
         $this->key = $key;
@@ -78,14 +78,22 @@ class Valid {
     }
 
     /**
+     * Return the variable name on which rules must applies.
      *
+     * @access private
      */
     function getKey() {
         return $this->key;
     }
 
     /**
+     * Add a new reference on rule $r.
      *
+     * This method is mainly used for testing purpose (need to pass references
+     * to make Mock works).
+     * @access private
+     * @param Rule   Reference on rule.
+     * @param String Error message.
      */
     function addRuleRef(&$r, $message=false) {
         $this->rules[] =& $r;
@@ -93,42 +101,60 @@ class Valid {
     }
 
     /**
+     * Add a new rule in this validation.
      *
+     * You can add a custom error message that will bypass the default one that
+     * comes with the rule.
+     * @param Rule   Reference on rule.
+     * @param String Error message.
      */
     function addRule($r, $message=false) {
         $this->addRuleRef($r, $message);
     }
 
     /**
+     * The value is required.
      *
+     * All rules must succeed (as usual). Empty / null values are forbidden
+     * (raise an error). And all failure generate an error (instead of a
+     * warning).
      */
     function required() {
         $this->isRequired = true;
     }
 
     /**
-     *
+     * Turn feedback off.
      */
     function disableFeedback() {
         $this->useFeedback = false;
     }
 
     /**
+     * Set a global error message that will replace all other messages.
      *
+     * Note: If no error, no message raised. The message is raised with either
+     * 'warning' or 'error' level according to required();
+     * @param String Error message
      */
     function setErrorMessage($msg) {
         $this->globalErrorMessage = $msg;
     }
 
     /**
-     *
+     * Append feebback in the global Response object.
+     * @access private
      */
     function addFeedback($level, $error) {
         $GLOBALS['Response']->addFeedback($level, $error);
     }
 
     /**
+     * Generate error message according to settings.
      *
+     * Takes in account user requirement 'required' and
+     * 'disableFeedback'. Empty error messages are disarded.
+     * @access private
      */
     function populateFeedback() {
         if($this->useFeedback) {
@@ -150,7 +176,13 @@ class Valid {
     }
 
     /**
+     * Prepare error message on Rule:isValid result.
      *
+     * If the test succeeded, the error message is cleared (either custom or
+     * built-in messages).
+     * @access private
+     * @param Integer Index of the Rule that was applied.
+     * @param Boolean Result of the test.
      */
     function errorMessage($i, $result) {
         if($result === true) {
@@ -163,7 +195,10 @@ class Valid {
     }
 
     /**
+     * Apply each rule on the given value and prepare feedback.
      *
+     * @access private
+     * @param mixed Value to test.
      */
     function checkEachRules($value) {
         $isValid = true;
@@ -178,7 +213,9 @@ class Valid {
     }
 
     /**
+     * Run validation on given value.
      *
+     * @param mixed Value to test.
      */
     function validate($value) {
         if($this->isRequired
@@ -189,6 +226,5 @@ class Valid {
         return true;
     }
 }
-
 
 ?>

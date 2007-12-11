@@ -23,11 +23,31 @@
  * @package CodeX
  */
 
+/**
+ *
+ */
 class Rule {
+    /**
+     * @access private
+     */
     var $error;
-    function isValid() {
+
+    /**
+     * Check if $val is a valid not.
+     *
+     * @param String $val Value to check.
+     * @return Boolean
+     */
+    function isValid($val) {
         trigger_error(get_class($this).'::isValid() => Not yet implemented', E_USER_ERROR);
     }
+
+    /**
+     * Default error message if rule is not apply on value.
+     *
+     * @param String $val Value to check.
+     * @return Boolean
+     */
     function getErrorMessage($key) {
         return $this->error;
     }
@@ -41,12 +61,6 @@ class Rule {
  */
 class Rule_Date
 extends Rule {
-    /**
-     * Check if $val is a valid date or not.
-     *
-     * @param string $val Value to validate
-     * @return boolean Whether the date is valid or not
-     */
     function isValid($val) {
         if(preg_match('/^([0-9]+)-([1-9][0-2]?)-([1-9][0-9]?)$/', $val, $m)) {
             return checkdate($m[2], $m[3], $m[1]);
@@ -54,21 +68,26 @@ extends Rule {
             return false;
         }
     }
-
-    function error() {
-
-    }
-
 }
 
+/**
+ * Abstract class that define left-hand operand for a comparison.
+ */
 class Rule_Comparator
 extends Rule {
+    /**
+     * @access private
+     */
     var $ref;
     function Rule_Comparator($ref) {
         $this->ref = $ref;
     }
 }
 
+/**
+ * Check that given value is strictly greater than the one defined in
+ * constructor.
+ */
 class Rule_GreaterThan
 extends Rule_Comparator {
     function isValid($val) {
@@ -79,6 +98,9 @@ extends Rule_Comparator {
     }
 }
 
+/**
+ * Check that given value is strictly less than the one defined in constructor.
+ */
 class Rule_LessThan
 extends Rule_Comparator {
     function isValid($val) {
@@ -89,6 +111,10 @@ extends Rule_Comparator {
     }
 }
 
+/**
+ * Check that given value is greater or equal to the one defined in
+ * constructor.
+ */
 class Rule_GreaterOrEqual
 extends Rule_Comparator {
     function isValid($val) {
@@ -99,6 +125,10 @@ extends Rule_Comparator {
     }
 }
 
+/**
+ * Check that given value is strictly less or equal to the one defined in
+ * constructor.
+ */
 class Rule_lessOrEqual
 extends Rule_Comparator {
     function isValid($val) {
@@ -109,6 +139,11 @@ extends Rule_Comparator {
     }
 }
 
+/**
+ * Check that given value belong to the array defined in constructor.
+ *
+ * There is no type check.
+ */
 class Rule_WhiteList
 extends Rule_Comparator {
     function isValid($val) {
@@ -121,6 +156,9 @@ extends Rule_Comparator {
     }
 }
 
+/**
+ * Check that given value is a valid signed 32 bits decimal integer.
+ */
 class Rule_Int
 extends Rule {
     /**
@@ -136,12 +174,6 @@ extends Rule {
         }
     }
 
-    /**
-     * Check is $val is a valid integer or not.
-     *
-     * @param string $val Value to validate
-     * @return boolean Whether the value is a valid integer or not
-     */
     function isValid($val) {
         // Need to check with the regexp because of octal form '0123' that is
         // equal to '123' with string '==' comparison.
