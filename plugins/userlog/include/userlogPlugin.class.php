@@ -89,27 +89,24 @@ class userlogPlugin extends Plugin {
     function process() {
         session_require(array('group'=>'1','admin_flags'=>'A'));
 
-        $request = new HTTPRequest();
+        $request =& HTTPRequest::instance();
 
-        $offset = 0;
-        if($request->existAndNonEmpty('offset')) {
-            $vOffset = new Valid_Int();
-            $vOffset->biggerOrEqual(0);
-            if($request->valid('offset', $vOffset)) {
-                $offset = intval($request->get('offset'));
-            } else {
-                $GLOBALS['Response']->addFeedback('warning', 'Invalid offset submitted. Force it to 0 (zero).');
-            }
+        $valid = new Valid('offset');
+        $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
+        $valid->addRule(new Rule_Int());
+        $valid->addRule(new Rule_GreaterOrEqual(0));
+        if($request->valid($valid)) {
+            $offset = $request->get('offset');
+        } else {
+            $offset = 0;
         }
 
-        $day = date('Y-n-j');
-        if($request->existAndNonEmpty('day')) {
-            $vDay = new Valid_Date();
-            if($request->valid('day', $vDay)) {
-                $day = $request->get('day');
-            } else {
-                $GLOBALS['Response']->addFeedback('warning', 'Invalid date submitted. Force it to today.');
-            }
+        $valid = new Valid('day');
+        $valid->addRule(new Rule_Date(), 'Invalid date submitted. Force it to today.');
+        if($request->valid($valid)) {
+            $day = $request->get('day');
+        } else {
+            $day = date('Y-n-j');
         }
 
         $userLogManager = new UserLogManager();
