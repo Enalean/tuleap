@@ -679,7 +679,7 @@ class Artifact extends Error {
                 $comment_lbl = "lbl_".$comment_id."_comment";    
             }
             //now add new comment entry
-            $this->addHistory($comment_lbl,$new_value,$comment_txt,false,false,$comment_id);
+            $this->addHistory($comment_lbl,db_escape_string($new_value),htmlspecialchars($comment_txt),false,false,$comment_id);
             $changes['comment']['del'] = stripslashes($new_value);
             $changes['comment']['add'] = stripslashes($comment_txt);
             return true;
