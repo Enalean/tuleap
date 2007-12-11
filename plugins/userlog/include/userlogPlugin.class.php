@@ -29,7 +29,8 @@ class userlogPlugin extends Plugin {
 
 	function userlogPlugin($id) {
 		$this->Plugin($id);
-        //$this->_addHook('hook_name');
+        $this->_addHook('site_admin_menu_hook',  'siteAdminHooks', true);
+        $this->_addHook('site_admin_option_hook','siteAdminHooks', true);
         $this->_addHook('cssfile',               'cssFile', false);
         $this->_addHook('javascript_file',       'jsFile',  false);
         $this->_addHook('logger_after_log_hook', 'logUser', false);
@@ -56,6 +57,26 @@ class userlogPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>'."\n";
+        }
+    }
+
+    /**
+     * $params['HTML']
+     */
+    function siteAdminHooks($hook, $params) {
+        $GLOBALS['Language']->loadLanguageMsg('userlog', 'userlog');
+        $site_url  = $this->_getPluginPath().'/';
+        $site_name = $GLOBALS['Language']->getText('plugin_userlog','descriptor_name');
+        switch ($hook) {
+            case 'site_admin_menu_hook':
+                $HTML =& $params['HTML'];
+                $HTML->menu_entry($site_url, $site_name);
+                break;
+            case 'site_admin_option_hook':
+                echo '<li><a href="'.$site_url.'">'.$site_name.'</a></li>';
+                break;
+            default:
+                break;
         }
     }
 
