@@ -65,5 +65,86 @@ class DataAccessTest extends UnitTestCase {
             $this->assertIdentical("'\\\\x1a'", $da->quoteSmart("\\x1a"));
         /*}*/
     }
+
+
+    function testIsInteger() {
+        $input = '123';
+        $this->assertEqual(DataAccess::escapeInt($input), 123);
+
+        $input = '+123';
+        $this->assertEqual(DataAccess::escapeInt($input), 123);
+
+        $input = '-123';
+        $this->assertEqual(DataAccess::escapeInt($input), -123);
+
+        $input = '+0';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+
+        $input = '-0';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+
+        $input = '0';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+
+    }
+
+    function testFloatingPoint() {
+        $input = '123.3';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '123,3';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+    }
+
+    function testStrings() {
+        $input = '123a';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '1-23';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '123-';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = 'a123';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '123+';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = 'abc';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+    }
+
+    function testHexadecimal() {
+        $input = '0x12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '0X12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '+0x12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '+0X12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '-0x12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '-0X12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '0x12Y';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        // start with a '0' (letter) not a zero (figure)
+        $input = '0x12A';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+    }
+
+    function testOctal() {
+        $input = '0123';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '+0123';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+        $input = '-0123';
+        $this->assertEqual(DataAccess::escapeInt($input), 0);
+    }
+
+    function testIsBigInt() {
+        $input = '2147483649';
+        $this->assertEqual(DataAccess::escapeInt($input), 2147483649);
+
+        $input = '-214748364790';
+        $this->assertEqual(DataAccess::escapeInt($input), -214748364790);
+    }
 }
 ?>

@@ -88,5 +88,14 @@ class DataAccess {
         }
         return $value;
     }
+
+    function escapeInt($v) {
+        $m = array();
+        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $v, $m)) {
+            return $m[1];
+        }
+        return '0';
+    }
+
 }
 ?>

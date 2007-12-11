@@ -131,6 +131,7 @@ function db_es($string,$qhandle=false) {
  * If input is not a valid decimal integer, return '0'.
  *
  * @see http://php.net/language.types.integer
+ * @see DataAccess::escapeInt for tests.
  * @param  mixed $val a value to escape
  * @return string Decimal integer encoded as a string
  */
