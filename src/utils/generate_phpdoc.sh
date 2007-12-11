@@ -47,7 +47,7 @@ if [ "${PREPARE_SVN}" == "1" ]; then
     cd ${CURRENTDIR}
 fi
 
-${BASESRCDIR}/src/utils/php-launcher -d output_buffering=1 ${PHPDOC} \
+${BASESRCDIR}/src/utils/php-launcher.sh -d output_buffering=1 ${PHPDOC} \
     --quiet on \
     --defaultpackagename "CodeX" \
     --title "CodeX Framework Documentation" \
