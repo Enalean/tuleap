@@ -227,4 +227,17 @@ class Valid {
     }
 }
 
+/**
+ * Check that value is a decimal integer greater or equal to zero.
+ */
+class Valid_UInt
+extends Valid {
+    function validate($value) {
+        $this->addRule(new Rule_Int());
+        $this->addRule(new Rule_GreaterOrEqual(0));
+        return parent::validate($value);
+    }
+
+}
+
 ?>
