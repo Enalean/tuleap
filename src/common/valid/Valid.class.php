@@ -87,29 +87,16 @@ class Valid {
     }
 
     /**
-     * Add a new reference on rule $r.
-     *
-     * This method is mainly used for testing purpose (need to pass references
-     * to make Mock works).
-     * @access private
-     * @param Rule   Reference on rule.
-     * @param String Error message.
-     */
-    function addRuleRef(&$r, $message=false) {
-        $this->rules[] =& $r;
-        $this->errors[] = $message;
-    }
-
-    /**
      * Add a new rule in this validation.
      *
-     * You can add a custom error message that will bypass the default one that
+     * ou can add a custom error message that will bypass the default one that
      * comes with the rule.
      * @param Rule   Reference on rule.
      * @param String Error message.
      */
-    function addRule($r, $message=false) {
-        $this->addRuleRef($r, $message);
+    function addRule(&$rule, $message=false) {
+        $this->rules[] =& $rule;
+        $this->errors[] = $message;
     }
 
     /**

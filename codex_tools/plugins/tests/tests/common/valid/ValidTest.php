@@ -38,7 +38,7 @@ class ValidTest extends UnitTestCase {
         $v->disableFeedback();
         $r =& new MockRule($this);
         $r->expectOnce('isValid', array('value'));
-        $v->addRuleRef($r);
+        $v->addRule($r);
         $v->validate('value');
         $r->tally();
     }
@@ -48,7 +48,7 @@ class ValidTest extends UnitTestCase {
         $v->disableFeedback();
         $r =& new MockRule($this);
         $r->setReturnValue('isValid', true);
-        $v->addRuleRef($r);
+        $v->addRule($r);
         $this->assertTrue($v->validate('value'));
     }
 
@@ -59,15 +59,15 @@ class ValidTest extends UnitTestCase {
 
         $r1 =& new MockRule($this);
         $r1->setReturnValue('isValid', true);
-        $v->addRuleRef($r1);
+        $v->addRule($r1);
 
         $r2 =& new MockRule($this);
         $r2->setReturnValue('isValid', false);
-        $v->addRuleRef($r2);
+        $v->addRule($r2);
 
         $r3 =& new MockRule($this);
         $r3->setReturnValue('isValid', true);
-        $v->addRuleRef($r3);
+        $v->addRule($r3);
 
         $this->assertFalse($v->validate('value'));
     }
@@ -80,17 +80,17 @@ class ValidTest extends UnitTestCase {
         $r1 =& new MockRule($this);
         $r1->setReturnValue('isValid', true);
         $r1->expectOnce('isValid');
-        $v->addRuleRef($r1);
+        $v->addRule($r1);
 
         $r2 =& new MockRule($this);
         $r2->setReturnValue('isValid', false);
         $r2->expectOnce('isValid');
-        $v->addRuleRef($r2);
+        $v->addRule($r2);
 
         $r3 =& new MockRule($this);
         $r3->setReturnValue('isValid', true);
         $r3->expectOnce('isValid');
-        $v->addRuleRef($r3);
+        $v->addRule($r3);
 
         $v->validate('value');
         $r1->tally();
@@ -106,7 +106,7 @@ class ValidTest extends UnitTestCase {
         $r =& new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->expectOnce('getErrorMessage');
-        $v->addRuleRef($r);
+        $v->addRule($r);
 
         $v->validate('value');
         $r->tally();
@@ -119,7 +119,7 @@ class ValidTest extends UnitTestCase {
         $r =& new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->expectNever('getErrorMessage');
-        $v->addRuleRef($r, 'warning', 'test');
+        $v->addRule($r, 'warning', 'test');
 
         $v->validate('value');
     }
@@ -129,19 +129,19 @@ class ValidTest extends UnitTestCase {
         $r1->expectNever('isValid');
         $v1 = new Valid();
         $v1->disableFeedback();
-        $v1->addRuleRef($r1);
+        $v1->addRule($r1);
         $v1->validate('');
 
         $r2 =& new MockRule($this);
         $r2->expectNever('isValid');
         $v2 = new Valid();
-        $v2->addRuleRef($r2);
+        $v2->addRule($r2);
         $v2->validate(false);
 
         $r3 =& new MockRule($this);
         $v3 = new Valid();
         $r3->expectNever('isValid');
-        $v3->addRuleRef($r3);
+        $v3->addRule($r3);
         $v3->validate(null);
     }
 
@@ -151,7 +151,7 @@ class ValidTest extends UnitTestCase {
         $v1 = new Valid();
         $v1->disableFeedback();
         $v1->required();
-        $v1->addRuleRef($r1);
+        $v1->addRule($r1);
         $v1->validate('');
 
         $r2 =& new MockRule($this);
@@ -159,7 +159,7 @@ class ValidTest extends UnitTestCase {
         $v2 = new Valid();
         $v2->disableFeedback();
         $v2->required();
-        $v2->addRuleRef($r2);
+        $v2->addRule($r2);
         $v2->validate(false);
 
         $r3 =& new MockRule($this);
@@ -167,7 +167,7 @@ class ValidTest extends UnitTestCase {
         $v3 = new Valid();
         $v3->disableFeedback();
         $v3->required();
-        $v3->addRuleRef($r3);
+        $v3->addRule($r3);
         $v3->validate(null);
 
         $r1->tally();

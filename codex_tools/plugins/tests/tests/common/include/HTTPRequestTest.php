@@ -117,7 +117,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('validate', true);
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
-        $r->validRef($v);
+        $r->valid($v);
         $v->tally();
     }
 
@@ -126,7 +126,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('getKey', 'testkey');
         $v->setReturnValue('validate', true);
         $r =& new HTTPRequest();
-        $this->assertTrue($r->validRef($v));
+        $this->assertTrue($r->valid($v));
     }
 
     function testValidFalse() {
@@ -134,7 +134,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->setReturnValue('getKey', 'testkey');
         $v->setReturnValue('validate', false);
         $r =& new HTTPRequest();
-        $this->assertFalse($r->validRef($v));
+        $this->assertFalse($r->valid($v));
     }
 
     function testValidScalar() {
@@ -143,7 +143,7 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectAtLeastOnce('getKey');
         $v->expectOnce('validate', array('testvalue'));
         $r =& new HTTPRequest();
-        $r->validRef($v);
+        $r->valid($v);
         $v->tally();
     }
 
