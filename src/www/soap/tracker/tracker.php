@@ -2005,9 +2005,15 @@ function artifact_report_to_soap($artifact, $report) {
     // We check if the user can view this artifact
     if ($artifact->userCanView(user_getid())) {
         $result_fields = $report->getResultFields();
+        $is_artifact_id_present = false;
+        $is_severity_present = false;
         while (list($key,$field) = each($result_fields) ) {
-            //echo $key;
-            //print_r($field);
+            if (!$is_artifact_id_present && $key == 'artifact_id') {
+                $is_artifact_id_present = true;
+            }
+            if (!$is_severity_present && $key == 'severity') {
+                $is_severity_present = true;
+            }
             $artifact_field_report = array();
             $artifact_field_report['field_name'] = $key;
             // Some fields needs to be html-decoded
@@ -2016,10 +2022,22 @@ function artifact_report_to_soap($artifact, $report) {
             } else {
                 $artifact_field_report['field_value'] = $artifact->getValue($key);
             }
-            
-            
             $return_fields[] = $artifact_field_report;
         }
+        // artifact ID and severity are required even if there are not in the report as result fields.
+        if (! $is_artifact_id_present) {
+            $artifact_field_report = array();
+            $artifact_field_report['field_name'] = 'artifact_id';
+            $artifact_field_report['field_value'] = $artifact->getID();
+            $return_fields[] = $artifact_field_report;
+        }
+        if (! $is_severity_present) {
+            $artifact_field_report = array();
+            $artifact_field_report['field_name'] = 'severity';
+            $artifact_field_report['field_value'] = $artifact->getSeverity();
+            $return_fields[] = $artifact_field_report;
+        }
+        
     }
     $return['fields'] = $return_fields;
     return $return;
