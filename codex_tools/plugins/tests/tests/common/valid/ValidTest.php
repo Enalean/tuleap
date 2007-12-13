@@ -175,6 +175,29 @@ class ValidTest extends UnitTestCase {
         $r3->tally();
     }
 
+    /**
+     * Need to throw an error if the value is required but the rule return true
+     * even with empty values
+     */
+    function testRequiredAndPermissive() {
+        $r =& new MockRule($this);
+        $r->setReturnValue('isValid', true);
+
+        $v = new Valid();
+        $v->disableFeedback();
+        $v->required();
+        $v->addRule($r);
+        $this->assertFalse($v->validate(''));
+    }
+
+    function testValueEmpty() {
+        $v = new Valid();
+        $this->assertTrue($v->isValueEmpty(''));
+        $this->assertTrue($v->isValueEmpty(false));
+        $this->assertTrue($v->isValueEmpty(null));
+        $this->assertFalse($v->isValueEmpty(' '));
+    }
+
     function testNoFeedback() {
         $v =& new ValidTestVersion($this);
         $v->disableFeedback();

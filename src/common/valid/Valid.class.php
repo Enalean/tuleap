@@ -129,6 +129,17 @@ class Valid {
     }
 
     /**
+     * Return true if given value is empty
+     *
+     * @access private
+     * @param mixed Value to test
+     * @return boolean
+     */
+    function isValueEmpty($value) {
+        return ($value === '' || $value === false || $value === null);
+    }
+
+    /**
      * Append feebback in the global Response object.
      * @access private
      */
@@ -195,7 +206,11 @@ class Valid {
             $this->errorMessage($i, $valid);
             $isValid = $isValid && $valid;
         }
-        $this->isValid = $isValid;
+        if($isValid && $this->isRequired && $this->isValueEmpty($value)) {
+            $this->isValid = false;
+        } else {
+            $this->isValid = $isValid;
+        }
         $this->populateFeedback();
     }
 
@@ -206,25 +221,12 @@ class Valid {
      */
     function validate($value) {
         if($this->isRequired
-           || (!$this->isRequired && $value != '' && $value !== false && $value !== null)) {
+           || (!$this->isRequired && !$this->isValueEmpty($value))) {
             $this->checkEachRules($value);
             return $this->isValid;
         }
         return true;
     }
-}
-
-/**
- * Check that value is a decimal integer greater or equal to zero.
- */
-class Valid_UInt
-extends Valid {
-    function validate($value) {
-        $this->addRule(new Rule_Int());
-        $this->addRule(new Rule_GreaterOrEqual(0));
-        return parent::validate($value);
-    }
-
 }
 
 ?>
