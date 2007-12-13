@@ -32,7 +32,11 @@ class CookieManager {
     }
     
     function getCookie($name) {
-        return $_COOKIE[$this->getInternalCookieName($name)];
+        if($this->isCookie($name)) {
+            return $_COOKIE[$this->getInternalCookieName($name)];
+        } else {
+            return '';
+        }
     }
     
     function isCookie($name) {
