@@ -190,5 +190,14 @@ extends Rule {
     }
 }
 
+/**
+ * Check that given value is a string.
+ */
+class Rule_String
+extends Rule {
+    function isValid($val) {
+        return is_string($val);
+    }
+}
 
 ?>
