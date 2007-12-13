@@ -22,12 +22,12 @@
  *
  */
 
-require_once('common/valid/Valid.class.php');
+require_once('common/valid/ValidFactory.class.php');
 
 
 class ValidHelperTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'ValidHelper test') {
+    function UnitTestCase($name = 'ValidFactory test') {
         $this->UnitTestCase($name);
     }
 
