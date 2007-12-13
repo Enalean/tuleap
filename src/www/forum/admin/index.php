@@ -11,22 +11,49 @@ require('../forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
 $is_admin_page='y';
+$request =& HTTPRequest::instance();
 
-if ($group_id && (user_ismember($group_id, 'F2'))) {
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'))) {
+    $group_id = $request->get('group_id');
 
-    if (isset($post_changes)) {
+    $vPostChanges = new Valid_WhiteList('post_changes', array('y'));
+    $vPostChanges->required();
+    if ($request->isPost() && $request->valid($vPostChanges)) {
         /*
          Update the DB to reflect the changes
         */
 
-        if (isset($delete)) {
+        //
+        // Prepare validators
+        //
+
+        // Forum Name
+        $vForumName = new Valid_String('forum_name');
+        $vForumName->setErrorMessage($Language->getText('forum_admin_index','params_missing'));
+        $vForumName->required();
+
+        // Description
+        $vDescription = new Valid_String('description');
+        $vDescription->setErrorMessage($Language->getText('forum_admin_index','params_missing'));
+        $vDescription->required();
+
+        // Is public
+        $vIsPublic = new Valid_WhiteList('is_public', array(0, 1, 9));
+        $vIsPublic->required();
+
+        if ($request->existAndNonEmpty('delete')) {
+            $vMsg = new Valid_Uint('msg_id');
+            $vMsg->required();
+            if($request->valid($vMsg)) {
                     /*
                      Deleting messages or threads
                     */
                     
                     // First, check if the message exists
                     $sql="SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list ".
-                        "WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id='$msg_id'";
+                        "WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id=".db_ei($msg_id);
 
                     $result=db_query($sql);
 
@@ -40,7 +67,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
                         if ($message_group_id == $GLOBALS['sys_news_group']) {
                             // This message belongs to a news item.
                             // Check that the news belongs to the same project
-                            $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'");
+                            $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($forum_id));
                             if (db_result($gr,0,'group_id')==$group_id) {
                                 // authorized to delete the message
                                 $authorized_to_delete_message=true;
@@ -58,37 +85,64 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
                     } else {
                         $feedback .= ' '.$Language->getText('forum_admin_index','msg_not_found').' ';
                     }
-        } else if (isset($add_forum)) {
+            }
+        } else if ($request->existAndNonEmpty('add_forum')) {
 			/*
 				Adding forums to this group
 			*/
-		        if (!$forum_name || $forum_name == '' || !$description || $description == '') {
-			  $feedback .= exit_error($Language->getText('global','error'),$Language->getText('forum_admin_index','params_missing'));
-		        } else {
-			    $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
-			    if ($is_monitored) {
-			       forum_add_monitor($fid, user_getid());
-			    }
-		        }
+            $vMonitored = new Valid_WhiteList('is_monitored', array(0, 1));
+            $vMonitored->required();
 
-        } else if (isset($change_status)) {
+            if($request->valid($vForumName) &&
+               $request->valid($vDescription) &&
+               $request->valid($vIsPublic) &&
+               $request->valid($vMonitored)) {
+
+                $forum_name   = $request->get('forum_name');
+                $is_public    = $request->get('is_public');
+                $description  = $request->get('description');
+                $is_monitored = $request->get('is_monitored');
+
+                $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+
+                if ($is_monitored) {
+                    forum_add_monitor($fid, user_getid());
+			    }
+            }
+
+        } else if ($request->existAndNonEmpty('change_status')) {
 			/*
 				Change a forum to public/private
 			*/
-			$sql="UPDATE forum_group_list SET is_public='$is_public',forum_name='". htmlspecialchars($forum_name) ."',".
-				"description='". htmlspecialchars($description) ."' ".
-				"WHERE group_forum_id='$group_forum_id' AND group_id='$group_id'";
+
+            $vGrpForum = new Valid_UInt('group_forum_id');
+            $vGrpForum->required();
+
+            if($request->valid($vForumName) &&
+               $request->valid($vDescription) &&
+               $request->valid($vIsPublic) &&
+               $request->valid($vGrpForum)) {
+
+                $forum_name     = $request->get('forum_name');
+                $is_public      = $request->get('is_public');
+                $description    = $request->get('description');
+                $group_forum_id = $request->get('group_forum_id');
+
+			$sql="UPDATE forum_group_list SET is_public=".db_ei($is_public).",forum_name='". db_es(htmlspecialchars($forum_name)) ."',".
+				"description='". db_es(htmlspecialchars($description)) ."' ".
+				"WHERE group_forum_id=".db_ei($group_forum_id)." AND group_id=".db_ei($group_id);
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {
 				$feedback .= ' '.$Language->getText('forum_admin_index','upd_err').' ';
 			} else {
 				$feedback .= ' '.$Language->getText('forum_admin_index','upd_success').' ';
 			}
+            }
 		}
 
-	} 
+	}
 
-    if (isset($delete)) {
+    if ($request->existAndNonEmpty('delete')) {
 		/*
 			Show page for deleting messages
 		*/
@@ -99,7 +153,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<H2>'.$Language->getText('forum_admin_index','del_a_msg').'</H2>
 
 			<h2><span class="highlight">'.$Language->getText('forum_admin_index','delete_warn').'</span></h2>
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="delete" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -110,14 +164,14 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 		forum_footer(array());
 
-    } else if (isset($add_forum)) {
+    } else if ($request->existAndNonEmpty('add_forum')) {
 		/*
 			Show the form for adding forums
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','add_a_forum'),
 				   'help' => 'WebForums.html'));
 
-		$sql="SELECT forum_name FROM forum_group_list WHERE group_id='$group_id'";
+		$sql="SELECT forum_name FROM forum_group_list WHERE group_id=".db_ei($group_id);
 		$result=db_query($sql);
 		ShowResultSet($result,$Language->getText('forum_admin_index','existing_forums'), false, $showheaders = false);
 
@@ -125,7 +179,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<P>
 			<H2>'.$Language->getText('forum_admin_index','add_a_forum').'</H2>
 
-			<FORM METHOD="POST" ACTION="'.$PHP_SELF.'">
+			<FORM METHOD="POST" ACTION="?">
 			<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="add_forum" VALUE="y">
 			<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -149,14 +203,14 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 
 		forum_footer(array());
 
-    } else if (isset($change_status)) {
+    } else if ($request->existAndNonEmpty('change_status')) {
 		/*
 			Change a forum to public/private
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','change_status'),
 				   'help' => 'WebForums.html'));
 
-		$sql="SELECT * FROM forum_group_list WHERE group_id='$group_id'";
+		$sql="SELECT * FROM forum_group_list WHERE group_id=".db_ei($group_id);
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 
@@ -182,7 +236,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 				echo '
 					<TR class="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
 				echo '
-					<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+					<FORM ACTION="?" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="change_status" VALUE="y">
 					<INPUT TYPE="HIDDEN" NAME="group_forum_id" VALUE="'.db_result($result,$i,'group_forum_id').'">
@@ -220,9 +274,9 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 		echo '
 			<H2>'.$Language->getText('forum_admin_index','forum_admin').'</H2>
 			<P>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&add_forum=1">'.$Language->getText('forum_admin_index','add_forum').'</A><BR>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&delete=1">'.$Language->getText('forum_admin_index','del_msg').'</A><BR>
-			<A HREF="'.$PHP_SELF.'?group_id='.$group_id.'&change_status=1">'.$Language->getText('forum_admin_index','update_forum_status').'</A>';
+			<A HREF="?group_id='.$group_id.'&add_forum=1">'.$Language->getText('forum_admin_index','add_forum').'</A><BR>
+			<A HREF="?group_id='.$group_id.'&delete=1">'.$Language->getText('forum_admin_index','del_msg').'</A><BR>
+			<A HREF="?group_id='.$group_id.'&change_status=1">'.$Language->getText('forum_admin_index','update_forum_status').'</A>';
 
 		forum_footer(array());
 	}
@@ -231,7 +285,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 	/*
 		Not logged in or insufficient privileges
 	*/
-	if (!$group_id) {
+	if (!$request->valid($vGroupId)) {
 		exit_no_group();
 	} else {
 		exit_permission_denied();

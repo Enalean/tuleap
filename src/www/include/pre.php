@@ -52,7 +52,6 @@ if ($g_pos === FALSE) {
 foreach(array(
         'group_id', 
         'atid', 
-        'forum_id',
         'pv',
     ) as $variable) {
     if (isset($_REQUEST[$variable])) {
@@ -109,6 +108,7 @@ $feedback=''; // Initialize global var
 //library to determine browser settings
 if(!IS_SCRIPT) {
     require_once('browser.php');
+    require_once('common/valid/ValidFactory.class.php');
 }
 
 //various html utilities

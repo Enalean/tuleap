@@ -10,9 +10,18 @@ require_once('pre.php');
 require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
+$request =& HTTPRequest::instance();
 
-if (!$group_id) {
-  exit_no_group();
+if(!$request->valid(new Valid_GroupId())) {
+    exit_no_group();
+} else {
+    $group_id = $request->get('group_id');
+}
+
+if($request->valid(new Valid_Pv())) {
+    $pv = $request->get('pv');
+} else {
+    $pv = 0;
 }
 
 

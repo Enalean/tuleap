@@ -10,13 +10,18 @@ require_once('pre.php');
 require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
+$request =& HTTPRequest::instance();
+
 if (user_isloggedin()) {
 	/*
 		User obviously has to be logged in to monitor
 		a thread
 	*/
 
-	if ($forum_id) {
+    $vForumId = new Valid_UInt('forum_id');
+    $vForumId->required();
+	if ($request->valid($vForumId)) {
+        $forum_id = $request->get('forum_id');
 
             // Check permissions
             if (!forum_utils_access_allowed($forum_id)) {
@@ -25,7 +30,7 @@ if (user_isloggedin()) {
 	    
 	    //If the forum is associated to a private news, non-allowed users shouldn't be able to monitor this forum
 	    // but they should be able to disable monitoring news that have been set from public to private
-	    $qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+	    $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 	    $res = db_query($qry);
 	    if (db_numrows($res) > 0) {
 	        if (!forum_utils_news_access($forum_id) && !forum_is_monitored($forum_id, user_getid())) {	    
@@ -45,7 +50,7 @@ if (user_isloggedin()) {
 		/*
 			Set up navigation vars
 		*/
-		$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+		$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
 		$group_id=db_result($result,0,'group_id');
 		$forum_name=db_result($result,0,'forum_name');

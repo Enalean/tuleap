@@ -32,7 +32,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 
 	if ($g_id == $GLOBALS['sys_news_group']) {
 	  $f_id =  db_result($result,$row,'group_forum_id');
-	  $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id='$f_id'");
+	  $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($f_id));
 	  $g_id = db_result($gr,0,'group_id');
 	}
 
@@ -63,7 +63,7 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
   global $total_rows,$sys_datefmt,$Language;
 
 	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-		"FROM forum,user,forum_group_list WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' AND forum_group_list.group_forum_id = forum.group_forum_id ".
+		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)."' AND forum_group_list.group_forum_id = forum.group_forum_id ".
 		"ORDER BY forum.date ASC;";
 
 	$result=db_query($sql);
@@ -102,7 +102,8 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
 
 $ret_val="";
 
-if ($forum_id) {
+if ($request->valid(new Valid_UInt('forum_id'))) {
+    $forum_id = $request->get('forum_id');
 	/*
 		if necessary, insert a new message into the forum
 	*/
@@ -117,10 +118,14 @@ if ($forum_id) {
 	    exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	}
 
-	if (isset($post_message)&&($post_message == 'y')) {
+    $vPostMsg = new Valid_WhiteList('post_message', array('y'));
+    $vPostMsg->required();
+	if ($request->isPost() && $request->valid($vPostMsg)) {
         //
         // MV: add management on "on post monitoring"
-        if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring'] == 1) {
+        $vMonitor = new Valid_WhiteList('enable_monitoring', array('1'));
+        $vMonitor->required();
+        if($request->valid($vMonitor)) {
             if(user_isloggedin()) {
                 if(!forum_is_monitored($forum_id, user_getid())) {
                     if (forum_add_monitor ($forum_id, user_getid()) ) {
@@ -131,23 +136,76 @@ if ($forum_id) {
                 }
             }
         }
-		post_message($thread_id, $is_followup_to, $subject, $body, $forum_id);
+
+        // Note: there is a 'msg_id' send but not used here.
+
+        $vThreadId = new Valid_UInt('thread_id');
+        $vThreadId->required();
+
+        $vFollowUp = new Valid_UInt('is_followup_to');
+        $vFollowUp->required();
+
+        $vSubject = new Valid_String('subject');
+        $vSubject->required();
+        $vSubject->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils','include_body_and_subject'));
+
+        $vBody = new Valid_String('body');
+        $vBody->required();
+        $vBody->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils','include_body_and_subject'));
+
+        if($request->valid($vThreadId)
+           && $request->valid($vFollowUp)
+           && $request->valid($vSubject)
+           && $request->valid($vBody)) {
+            post_message($request->get('thread_id'),
+                         $request->get('is_followup_to'),
+                         $request->get('subject'),
+                         $request->get('body'),
+                         $forum_id);
+        }
 	}
 
 	/*
 		set up some defaults if they aren't provided
 	*/
-	if ((!isset($offset)) || ($offset < 0)) {
-		$offset=0;
-	} 
-    $offset = (int)$offset;
-	if (!isset($style)) {
-		$style='nested';
-	}
+    // Offset
+    if($request->valid(new Valid_UInt('offset'))) {
+        $offset = $request->get('offset');
+    } else {
+        $offset=0;
+    }
 
-	if (!isset($max_rows) || $max_rows < 5) {
+    // Style
+    if($request->valid(new Valid_WhiteList('style', forum_utils_get_styles()))) {
+        $style = $request->get('style');
+    } else {
+        $style='nested';
+    }
+
+    // Max Rows
+    if($request->valid(new Valid_UInt('max_rows'))) {
+        $max_rows = $request->get('max_rows');
+    } else {
+        $max_rows = 0;
+    }
+
+	if ($max_rows < 5) {
 		$max_rows=25;
 	}
+
+    // Pv
+    if($request->valid(new Valid_Pv())) {
+        $pv = $request->get('pv');
+    } else {
+        $pv = 0;
+    }
+
+    // Set
+    if($request->valid(new Valid_WhiteList('set', array('custom')))) {
+        $set = $request->get('set');
+    } else {
+        $set = false;
+    }
 
 	/*
 		take care of setting up/saving prefs
@@ -188,7 +246,7 @@ if ($forum_id) {
 	/*
 		Set up navigation vars
 	*/
-	$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+	$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
 	$group_id=db_result($result,0,'group_id');
 	$forum_name=db_result($result,0,'forum_name');
@@ -218,8 +276,8 @@ if ($forum_id) {
 	}
 
 	$sql="SELECT user.user_name,user.realname,forum.has_followups,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-		"FROM forum,user,forum_group_list WHERE forum.group_forum_id='$forum_id' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
-		"ORDER BY forum.date DESC LIMIT $offset,".($max_rows+1);
+		"FROM forum,user,forum_group_list WHERE forum.group_forum_id='".db_ei($forum_id)."' AND user.user_id=forum.posted_by $threading_sql AND forum_group_list.group_forum_id = forum.group_forum_id ".
+		"ORDER BY forum.date DESC LIMIT ".db_ei($offset).",".($max_rows+1);
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
@@ -253,7 +311,7 @@ if ($forum_id) {
 		} else {
 			$res=db_query("SELECT group_forum_id,forum_name ".
 					"FROM forum_group_list ".
-					"WHERE group_id='$group_id' AND is_public IN ($public_flag)");
+					"WHERE group_id='".db_ei($group_id)."' AND is_public IN ($public_flag)");
 			$vals=util_result_column_to_array($res,0);
 			$texts=util_result_column_to_array($res,1);
 
@@ -261,7 +319,7 @@ if ($forum_id) {
 		}
 	//create a pop-up select box showing options for viewing threads
 
-		$vals=array('nested','flat','threaded','nocomments');
+		$vals=forum_utils_get_styles();
 		$texts=array($Language->getText('forum_forum','nested'),$Language->getText('forum_forum','flat'),$Language->getText('forum_forum','threaded'),$Language->getText('forum_forum','no_comments'));
 
 		$options_popup=html_build_select_box_from_arrays ($vals,$texts,'style',$style,false);

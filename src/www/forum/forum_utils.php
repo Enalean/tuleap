@@ -41,7 +41,7 @@ function forum_header($params) {
 			/*
 				Show this news item at the top of the page
 			*/
-			$sql="SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+			$sql="SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 			$result=db_query($sql);
 
 
@@ -146,7 +146,7 @@ function forum_footer($params) {
 }
 
 function forum_is_monitored ($forum_id, $user_id) {
-    $sql="SELECT * FROM forum_monitored_forums WHERE user_id='".$user_id."' AND forum_id='$forum_id';";
+    $sql="SELECT * FROM forum_monitored_forums WHERE user_id=".db_ei($user_id)." AND forum_id=".db_ei($forum_id);
     $result = db_query($sql);
     return ($result && db_numrows($result) >= 1);
 }
@@ -158,7 +158,7 @@ function forum_add_monitor ($forum_id, $user_id) {
 	$feedback .= $Language->getText('forum_forum_utils','forum_monitored');
     } else {
 	// Not already monitoring so add it.
-	$sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES ('$forum_id','".$user_id."')";
+	$sql="INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES (".db_ei($forum_id).",".db_ei($user_id).")";
 	$result = db_query($sql);
 
 	if (!$result) {
@@ -171,7 +171,7 @@ function forum_add_monitor ($forum_id, $user_id) {
 
 function forum_delete_monitor ($forum_id, $user_id) {
     global $feedback;
-    $sql="DELETE FROM forum_monitored_forums WHERE user_id='".$user_id."' AND forum_id='$forum_id';";
+    $sql="DELETE FROM forum_monitored_forums WHERE user_id=".db_ei($user_id)." AND forum_id=".db_ei($forum_id);
     $result = db_query($sql);
     return true;
 }
@@ -185,7 +185,7 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 		Adding forums to this group
 	*/
 	$sql="INSERT INTO forum_group_list (group_id,forum_name,is_public,description) ".
-		"VALUES ('$group_id','". htmlspecialchars($forum_name) ."','$is_public','". htmlspecialchars($description) ."')";
+		"VALUES (".db_ei($group_id).",'".db_es(htmlspecialchars($forum_name))."',".db_ei($is_public).",'".db_es(htmlspecialchars($description))."')";
 
 	$result=db_query($sql);
 	if (!$result) {
@@ -211,8 +211,8 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	    //set up a cheap default message
 	    $result2=db_query("INSERT INTO forum ".
 			      "(group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			      "VALUES ('$forum_id','100','".addslashes($Language->getText('forum_forum_utils','welcome_to', array($group_name)))." $forum_name',".
-			      "'".addslashes($Language->getText('forum_forum_utils','welcome_to', array($group_name)))." $forum_name','".time()."','0','".get_next_thread_id()."')");
+			      "VALUES (".db_ei($forum_id).",100,'".db_es($Language->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."',".
+			      "'".db_es($Language->getText('forum_forum_utils','welcome_to', array($group_name))." ".htmlspecialchars($forum_name))."','".time()."',0,'".get_next_thread_id()."')");
 	  }
 	  return $forum_id;
 	}
@@ -228,7 +228,7 @@ function get_forum_name($id) {
 	/*
 		Takes an ID and returns the corresponding forum name
 	*/
-	$sql="SELECT forum_name FROM forum_group_list WHERE group_forum_id='$id'";
+	$sql="SELECT forum_name FROM forum_group_list WHERE group_forum_id=".db_ei($id);
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
 		return $Language->getText('forum_forum_utils','not_found');
@@ -248,7 +248,7 @@ function show_thread($thread_id,$et=0) {
 	global $total_rows,$sys_datefmt,$is_followup_to,$subject,$forum_id,$current_message;
     $ret_val = '';
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
+		"FROM forum,user WHERE forum.thread_id='".db_ei($thread_id)."' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
 		"ORDER BY forum.msg_id DESC;";
 
 	$result=db_query($sql);
@@ -317,7 +317,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 	global $total_rows,$sys_datefmt,$forum_id,$current_message;
 
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
-		"FROM forum,user WHERE forum.thread_id='$thread_id' AND user.user_id=forum.posted_by AND forum.is_followup_to='$msg_id' ".
+		"FROM forum,user WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)." ".
 		"ORDER BY forum.msg_id ASC;";
 
 	$result=db_query($sql);
@@ -399,7 +399,7 @@ function get_forum_saved_date($forum_id) {
 	if ($forum_saved_date) {
 		return $forum_saved_date;
 	} else {
-		$sql="SELECT save_date FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id='$forum_id';";
+		$sql="SELECT save_date FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
 		$result = db_query($sql);
 		if ($result && db_numrows($result) > 0) {
 			$forum_saved_date=db_result($result,0,'save_date');
@@ -424,10 +424,10 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
 	//see if that message has been posted already for all the idiots that double-post
 		$res3=db_query("SELECT * FROM forum ".
-			"WHERE is_followup_to='$is_followup_to' ".
-			"AND subject='".  htmlspecialchars($subject) ."' ".
-			"AND group_forum_id='$group_forum_id' ".
-            "AND body='$body' ".
+			"WHERE is_followup_to=".db_ei($is_followup_to)." ".
+			"AND subject='".  db_es(htmlspecialchars($subject)) ."' ".
+			"AND group_forum_id=".db_ei($group_forum_id)." ".
+            "AND body='".db_es($body)."' ".
 			"AND posted_by='". user_getid() ."'");
 
 		if (db_numrows($res3) > 0) {
@@ -443,13 +443,13 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		} else {
 			if ($is_followup_to) {
 				//increment the parent's followup count if necessary
-				$res2=db_query("SELECT * FROM forum WHERE msg_id='$is_followup_to' AND thread_id='$thread_id' AND group_forum_id='$group_forum_id'");
+				$res2=db_query("SELECT * FROM forum WHERE msg_id=".db_ei($is_followup_to)." AND thread_id=".db_ei($thread_id)." AND group_forum_id=".db_ei($group_forum_id));
 				if (db_numrows($res2) > 0) {
 					if (db_result($res2,0,'has_followups') > 0) {
 						//parent already is marked with followups
 					} else {
 						//mark the parent with followups as an optimization later
-						db_query("UPDATE forum SET has_followups='1' WHERE msg_id='$is_followup_to' AND thread_id='$thread_id' AND group_forum_id='$group_forum_id'");
+						db_query("UPDATE forum SET has_followups='1' WHERE msg_id=".db_ei($is_followup_to)." AND thread_id=".db_ei($thread_id)." AND group_forum_id=".db_ei($group_forum_id));
 					}
 				} else {
 					exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','msg_not_exist'));
@@ -461,7 +461,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		}
 
 		$sql="INSERT INTO forum (group_forum_id,posted_by,subject,body,date,is_followup_to,thread_id) ".
-			"VALUES ('$group_forum_id', '".user_getid()."', '".htmlspecialchars($subject)."', '".htmlspecialchars($body)."', '".time()."','$is_followup_to','$thread_id')";
+			"VALUES (".db_ei($group_forum_id).", '".user_getid()."', '".db_es(htmlspecialchars($subject))."', '".db_es(htmlspecialchars($body))."', '".time()."',".db_ei($is_followup_to).",".db_ei($thread_id).")";
 
 		$result=db_query($sql);
 
@@ -557,14 +557,14 @@ function handle_monitoring($forum_id,$msg_id) {
 	$res=news_read_permissions($forum_id);
 	if ((db_numrows($res) < 1)) {
 	    $sql="SELECT user.email from forum_monitored_forums,user ".
-		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id='$forum_id' AND ( user.status='A' OR user.status='R' )";
+		"WHERE forum_monitored_forums.user_id=user.user_id AND forum_monitored_forums.forum_id=".db_ei($forum_id)." AND ( user.status='A' OR user.status='R' )";
 	} else {
 	    //we are dealing with private news, only project members are allowed to monitor
-	    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$forum_id'";
+	    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 	    $res1 = db_query($qry1);
 	    $gr_id = db_result($res1,0,'group_id');
 	    $sql = "SELECT user.email from forum_monitored_forums,user_group,user". 
-		    " WHERE forum_monitored_forums.forum_id='$forum_id' AND user_group.group_id='$gr_id'".
+		    " WHERE forum_monitored_forums.forum_id=".db_ei($forum_id)." AND user_group.group_id=".db_ei($gr_id).
 		    " AND forum_monitored_forums.user_id=user_group.user_id AND user_group.user_id=user.user_id";		    		    
 	}
 		
@@ -580,7 +580,7 @@ function handle_monitoring($forum_id,$msg_id) {
 			"WHERE user.user_id=forum.posted_by ".
 			"AND forum_group_list.group_forum_id=forum.group_forum_id ".
 			"AND groups.group_id=forum_group_list.group_id ".
-			"AND forum.msg_id='$msg_id'";
+			"AND forum.msg_id=".db_ei($msg_id);
 
 		$result = db_query ($sql);
 
@@ -627,7 +627,7 @@ function recursive_delete($msg_id,$forum_id) {
 		return 0;
 	}
 
-	$sql="SELECT msg_id FROM forum WHERE is_followup_to='$msg_id' AND group_forum_id='$forum_id'";
+	$sql="SELECT msg_id FROM forum WHERE is_followup_to=".db_ei($msg_id)." AND group_forum_id=".db_ei($forum_id);
 	$result=db_query($sql);
 	$rows=db_numrows($result);
 	$count=1;
@@ -635,7 +635,7 @@ function recursive_delete($msg_id,$forum_id) {
 	for ($i=0;$i<$rows;$i++) {
 		$count += recursive_delete(db_result($result,$i,'msg_id'),$forum_id);
 	}
-	$sql="DELETE FROM forum WHERE msg_id='$msg_id' AND group_forum_id='$forum_id'";
+	$sql="DELETE FROM forum WHERE msg_id=".db_ei($msg_id)." AND group_forum_id=".db_ei($forum_id);
 	$toss=db_query($sql);
 
 	return $count;
@@ -643,7 +643,7 @@ function recursive_delete($msg_id,$forum_id) {
 
 function forum_utils_access_allowed($forum_id) {
 
-    $result=db_query("SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+    $result=db_query("SELECT group_id,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
     if (db_result($result,0,'is_public') != '1') {
         $forum_group_id=db_result($result,0,'group_id');
@@ -660,10 +660,8 @@ function forum_utils_news_access($forum_id) {
 	Takes a forum_id (associated to a news) and checks if the user is allowed to access the corresponding forum   	 
          */
     
-    //cast input
-    $_forum_id = (int) $forum_id;
-    
-    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id='$_forum_id'";
+
+    $qry1 = "SELECT group_id FROM news_bytes WHERE forum_id=".db_ei($forum_id);
     $res1 = db_query($qry1);
     
     if ($res1 && db_numrows($res1) > 0) {
@@ -675,6 +673,10 @@ function forum_utils_news_access($forum_id) {
     }
     
     return true;
+}
+
+function forum_utils_get_styles() {
+    return array('nested','flat','threaded','nocomments');
 }
 
 ?>
