@@ -22,7 +22,7 @@ require_once('common/include/HTTPRequest.class.php');
 $GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 function forum_header($params) {
-  global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$REQUEST_URI,$sys_datefmt,$et,$et_cookie,$Language;
+  global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$sys_datefmt,$et,$et_cookie,$Language;
 
 	$params['group']=$group_id;
 	$params['toptab']='forum';
@@ -486,7 +486,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 }
 
 function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="") {
-  global $REQUEST_URI,$Language;
+  global $Language;
 
 	if (user_isloggedin()) {
 		if ($subject) {
@@ -541,7 +541,7 @@ else {
 
 	} else {
 		echo "<CENTER>";
-		echo "\n\n<H3>".$Language->getText('forum_forum_utils','log_to_post',"/account/login.php?return_to=".urlencode($REQUEST_URI)).'</H3>';
+		echo "\n\n<H3>".$Language->getText('forum_forum_utils','log_to_post',"/account/login.php?return_to=".urlencode($_SERVER['REQUEST_URI'])).'</H3>';
 		echo "</CENTER>";
 	}
 
@@ -669,7 +669,7 @@ function forum_utils_news_access($forum_id) {
         //if the forum is accessed from Summary page (Latest News section), the group_id variable is not set 
 	$g_id = db_result($res1,0,'group_id');    
         
-	return permission_is_authorized('NEWS_READ',$_forum_id, user_getid(), $g_id);
+	return permission_is_authorized('NEWS_READ',intval($forum_id), user_getid(), $g_id);
     }
     
     return true;
