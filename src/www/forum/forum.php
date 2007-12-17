@@ -334,7 +334,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 		$ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
                 if (!isset($pv)||(!$pv)) {
                     $ret_val .= '
-				<FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
+				<FORM ACTION="?" METHOD="POST">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
 				<TR><TD><FONT SIZE="-1">'. $forum_popup .
 					'</TD><TD><FONT SIZE="-1">'. $options_popup .
