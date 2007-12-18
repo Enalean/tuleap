@@ -172,7 +172,7 @@ function menu_loggedin($page_title) {
     if (!$GLOBALS['HTTP_POST_VARS']) {
 	$bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $page_title));
 	print '<P>';
-	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title,$Language->getText('include_menu','bookmark_this_page'));
+	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title,$Language->getText('include_menu','bookmark_this_page'));
     }
     $um =& UserManager::instance();
     $user =& $um->getCurrentUser();
