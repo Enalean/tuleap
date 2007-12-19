@@ -12,12 +12,25 @@ require('../forum/forum_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
-if (!isset($pv)) $pv=0;
-if (isset($group_id)) {
-  $title = $Language->getText('news_index','news_for',group_getname($group_id));
- } else {
-  $title = $Language->getText('news_index','news');
- }
+$request =& HTTPRequest::instance();
+
+if($request->valid(new Valid_GroupId())) {
+    $group_id = $request->get('group_id');
+} else {
+    $group_id = null;
+}
+
+if($request->valid(new Valid_Pv())) {
+    $pv = $request->get('pv');
+} else {
+    $pv = 0;
+}
+
+if ($group_id) {
+    $title = $Language->getText('news_index','news_for',group_getname($group_id));
+} else {
+    $title = $Language->getText('news_index','news');
+}
 $params=array('title'=>$title,
               'help'=>'NewsService.html',
               'pv'=>$pv);
@@ -31,7 +44,7 @@ if ($pv != 2) {
         echo "<TABLE width='100%'><TR><TD>";
         echo '<H3>'.$Language->getText('news_index','news').'</H3>';
         echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
         echo "</TR></TABLE>";    
     }
 
@@ -44,7 +57,7 @@ if ($pv != 2) {
 	Put the result set (list of forums for this group) into a column with folders
 */
 if ($group_id && ($group_id != $GLOBALS['sys_news_group'])) {
-	$sql="SELECT * FROM news_bytes WHERE group_id='$group_id' AND is_approved <> '4' ORDER BY date DESC";
+	$sql="SELECT * FROM news_bytes WHERE group_id=". db_ei($group_id) ." AND is_approved <> '4' ORDER BY date DESC";
 } else {
 	$sql="SELECT * FROM news_bytes WHERE is_approved='1' ORDER BY date DESC";
 }

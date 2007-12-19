@@ -14,82 +14,98 @@ require_once('www/project/admin/ugroup_utils.php');
 
 $Language->loadLanguageMsg('news/news');
 
+$request =& HTTPRequest::instance();
+
+if($request->valid(new Valid_GroupId())) {
+    $group_id = $request->get('group_id');
+} else {
+    $group_id = null;
+}
+
+if ($request->valid(new Valid_Uint('id'))) {
+    $id = $request->get('id');
+} else {
+    $id = null;
+}
+
 // admin pages can be reached by news admin (N2) or project admin (A) 
-if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id,'N2'))) {
-	/*
+if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id,'N2'))) {
+    /*
+        Per-project admin pages.
+        Shows their own news items so they can edit/update.
+        If their news is on the homepage, and they edit, it is removed from 
+            homepage.
+    */
+    if ($request->get('post_changes') && $request->get('approve')) {
+        
+        $validIsPrivate = new Valid_WhiteList('is_private', array(0, 1));
+        if ($request->valid($validIsPrivate)) {
+            $is_private = $request->get('is_private');
+        } else {
+            $is_private = 0;
+        }
+        $validStatus = new Valid_WhiteList('status', array(0, 4));
+        if ($request->valid($validStatus)) {
+            $status = $request->get('status');
+        } else {
+            $status = 0;
+        }
+        $validSummary = new Valid_String('summary');
+        $validSummary->setErrorMessage('Summary is required');
+        $validSummary->required();
+        
+        $validDetails = new Valid_String('details');
+        
+        if ($request->valid($validSummary) && $request->valid($validDetails)) {
+        
+            //foundry stuff - remove this news from the foundry so it has to be re-approved by the admin
+            db_query("DELETE FROM foundry_news WHERE news_id=". db_ei($id));
 
-		Per-project admin pages.
-
-		Shows their own news items so they can edit/update.
-
-		If their news is on the homepage, and they edit, it is removed from 
-			sf.net homepage.
-
-	*/
-	if (isset($post_changes) && $post_changes) {
-		if (isset($approve) && $approve) {
-			/*
-				Update the db so the item shows on the home page
-			*/
-			if ($status != 0 && $status != 4) {
-				//may have tampered with HTML to get their item on the home page
-				$status=0;
-			}
-
-			//foundry stuff - remove this news from the foundry so it has to be re-approved by the admin
-			db_query("DELETE FROM foundry_news WHERE news_id='$id'");
-
-			$sql="UPDATE news_bytes SET is_approved='$status', summary='".htmlspecialchars($summary)."', ".
-				"details='".htmlspecialchars($details)."' WHERE id='$id' AND group_id='$group_id'";
-			$result=db_query($sql);
-			
-			if (!$result) {
-				$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','group_update_err'));
-				
-			} else {
-				$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','project_newsbyte_updated'));
-				
-				// update/create  news permissions
-				$qry1="SELECT * FROM news_bytes WHERE id='$id'";
-				$res1=db_query($qry1);
-				$forum_id=db_result($res1,0,'forum_id');
-				$res2 = news_read_permissions($forum_id);
-				if (db_numrows($res2) > 0) {
-				    //permission on this news is already defined, have to be updated
-				    news_update_permissions($forum_id,$is_private,$group_id);
-				} else {
-				    //permission of this news not yet defined
-				    if ($is_private) {
-				      news_insert_permissions($forum_id,$group_id);
-				    }
-				}
-							
-			}	
-								
-			/*
-				Show the list_queue
-			*/
-			$approve='';
-			$list_queue='y';
-		}
-	}
+            $sql="UPDATE news_bytes SET is_approved=". db_ei($status) .", summary='".db_es(htmlspecialchars($request->get('summary')))."', ".
+                "details='".db_es(htmlspecialchars($request->get('details')))."' WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
+            $result=db_query($sql);
+            
+            if (!$result) {
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','group_update_err'));
+                
+            } else {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','project_newsbyte_updated'));
+                
+                // update/create  news permissions
+                $qry1="SELECT * FROM news_bytes WHERE id=". db_ei($id);
+                $res1=db_query($qry1);
+                $forum_id=db_result($res1,0,'forum_id');
+                $res2 = news_read_permissions($forum_id);
+                if (db_numrows($res2) > 0) {
+                    //permission on this news is already defined, have to be updated
+                    news_update_permissions($forum_id,$is_private,$group_id);
+                } else {
+                    //permission of this news not yet defined
+                    if ($is_private) {
+                      news_insert_permissions($forum_id,$group_id);
+                    }
+                }
+                            
+            }
+        }
+    }
 
 	news_header(array('title'=>$Language->getText('news_admin_index','title'),
 			  'help'=>'NewsService.html'));
     
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
     
-	if (isset($approve) && $approve) {
+	if (!$request->get('post_changes') && $request->get('approve')) {
 		/*
 			Show the submit form
 		*/
 
-		$sql="SELECT * FROM news_bytes WHERE id='$id' AND group_id='$group_id'";
+		$sql="SELECT * FROM news_bytes WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
 		$result=db_query($sql);
 		if (db_numrows($result) < 1) {
 			exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','not_found_err'));
 		}
-                $username=user_getname(db_result($result,0,'submitted_by'));
+        $username=user_getname(db_result($result,0,'submitted_by'));
 		$forum_id=db_result($result,0,'forum_id');
 		$res = news_read_permissions($forum_id);
 		// check on db_result($res,0,'ugroup_id') == $UGROUP_ANONYMOUS only to be consistent
@@ -105,13 +121,13 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 		echo '
 		<H3>'.$Language->getText('news_admin_index','approve_for',group_getname($group_id)).'</H3>
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.db_result($result,0,'group_id').'">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
 
 		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
-		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">
-		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="1">
+		<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
 
  		<B>'.$Language->getText('global','status').':</B><BR>
                 <INPUT TYPE="RADIO" NAME="status" VALUE="0" CHECKED> '.$Language->getText('news_admin_index','displayed').'<BR>
@@ -126,7 +142,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><P>
 		<B>'.$Language->getText('news_admin_index','if_edit_delete',$GLOBALS['sys_name']).'</B><BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
 	} else {
@@ -134,7 +150,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 			Show list of waiting news items
 		*/
 
-		$sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id='$group_id' ORDER BY date DESC";
+		$sql="SELECT * FROM news_bytes WHERE is_approved <> 4 AND group_id=". db_ei($group_id) ." ORDER BY date DESC";
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 		if ($rows < 1) {
@@ -171,7 +187,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 					Update the db so the item shows on the home page
 				*/
 				$sql="UPDATE news_bytes SET is_approved='1', date='".time()."', ".
-					"summary='".htmlspecialchars($summary)."', details='".htmlspecialchars($details)."' WHERE id='$id'";
+					"summary='".db_es(htmlspecialchars($summary))."', details='".db_es(htmlspecialchars($details))."' WHERE id=". db_ei($id);
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
 					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
@@ -182,7 +198,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 				/*
 					Move msg to deleted status
 				*/
-				$sql="UPDATE news_bytes SET is_approved='2' WHERE id='$id'";
+				$sql="UPDATE news_bytes SET is_approved='2' WHERE id=". db_ei($id);
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
 					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err').' '.db_error());
@@ -190,12 +206,6 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_deleted'));
 				}
 			}
-
-			/*
-				Show the list_queue
-			*/
-			$approve='';
-			$list_queue='y';
 		}
 	}
 
@@ -207,7 +217,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 		*/
 
 		$sql="SELECT groups.unix_group_name,news_bytes.* ".
-			"FROM news_bytes,groups WHERE id='$id' ".
+			"FROM news_bytes,groups WHERE id=". db_ei($id) ." ".
 			"AND news_bytes.group_id=groups.group_id ";
 		$result=db_query($sql);
 		if (db_numrows($result) < 1) {
@@ -220,7 +230,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 		echo '
 		<H3>'.$Language->getText('news_admin_index','approve').'</H3>
 		<P>
-		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
+		<FORM ACTION="" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="for_group" VALUE="'.db_result($result,0,'group_id').'">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
 		<B>'.$Language->getText('news_admin_index','submitted_for_group').':</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.group_getname(db_result($result,0,'group_id')).'</a><BR>
@@ -235,7 +245,7 @@ if (isset($group_id) && $group_id && $group_id != $GLOBALS['sys_news_group'] && 
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="'.db_result($result,0,'summary').'"><BR>
 		<B>'.$Language->getText('news_admin_index','details').':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">'.db_result($result,0,'details').'</TEXTAREA><BR>
-		<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
+		<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 		</FORM>';
 
 	} else {
