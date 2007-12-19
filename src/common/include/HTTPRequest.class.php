@@ -16,29 +16,17 @@ require_once('common/valid/Valid.class.php');
  * @package CodeX
  */
 class HTTPRequest extends CodeX_Request {
-    /**
-     * @var array
-     * @access private
-     */
-    var $clean;
 
+    /**
+     * Constructor
+     */
     function HTTPRequest() {
+        parent::CodeX_Request($_REQUEST);
     }
+    
 
     /**
-     * Get the value of $variable in $_REQUEST (user submitted values).
-     *
-     * @access private
-     * @param string $variable Name of the parameter to get.
-     * @return mixed If the variable exist, the value is returned (string)
-     * otherwise return false;
-     */
-    function get($variable) {
-        return $this->_get($variable, $_REQUEST);
-    }
-
-    /**
-     * Get the value of $variable in $_SERVER (server side values).
+     * Get the value of $variable in $this->params (server side values).
      *
      * @param string $variable Name of the parameter to get.
      * @return mixed If the variable exist, the value is returned (string)
@@ -46,26 +34,6 @@ class HTTPRequest extends CodeX_Request {
      */
     function getFromServer($variable) {
         return $this->_get($variable, $_SERVER);
-    }
-
-    /**
-     * Check if $variable exists in user submitted parameters.
-     *
-     * @param string $variable Name of the parameter.
-     * @return boolean
-     */
-    function exist($variable) {
-        return $this->_exist($variable, $_REQUEST);
-    }
-
-    /**
-     * Check if $variable exists and is not empty in user submitted parameters.
-     *
-     * @param string $variable Name of the parameter.
-     * @return boolean
-     */
-    function existAndNonEmpty($variable) {
-        return ($this->exist($variable) && trim($_REQUEST[$variable]) != '');
     }
 
     /**
@@ -84,42 +52,12 @@ class HTTPRequest extends CodeX_Request {
     }
 
     /**
-     * Apply validator on submitted user value.
-     *
-     * @param Valid  Validator to apply
-     * @return boolean
-     */
-    function valid(&$validator) {
-        $GLOBALS['validated_input'][$validator->getKey()] = true;
-        return $validator->validate($this->get($validator->getKey()));
-    }
-
-    /**
-     * Apply validator on submitted user value.
-     *
-     * @param string Variable name
-     * @param Rule  Validator to apply
-     * @return boolean
-     */
-    function validKey($key, &$rule) {
-        $GLOBALS['validated_input'][$key] = true;
-        return $rule->isValid($this->get($key));
-    }
-
-    /**
      * Return true if browser used to submit the request is netscape 4.
      *
      * @return boolean
      */
     function browserIsNetscape4() {
         return browser_is_netscape4();
-    }
-
-    /**
-     * For debug only
-     */
-    function dump() {
-        var_dump($_REQUEST);
     }
 
     /**
@@ -170,16 +108,6 @@ class HTTPRequest extends CodeX_Request {
         }
     }
 
-    /**
-     * Check if $variable exists in $array.
-     *
-     * @access private
-     * @param string $variable Name of the parameter.
-     * @return boolean
-     */
-    function _exist($variable, $array) {
-        return array_key_exists($variable, $array);
-    }
 }
 
 ?>
