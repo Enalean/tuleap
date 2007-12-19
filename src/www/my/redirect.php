@@ -36,7 +36,10 @@ if (isset($pv) && $pv == 2) {
 if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
     // if return_to URL start with a protocol name then take as is
     // otherwise prepend the proper http protocol
-    
+
+    // Re-serialize feedback to display it on the 'return_to' page.
+    $HTML->_serializeFeedback();
+
     $return_to = trim($_REQUEST['return_to']);
 
     $use_ssl = session_issecure() || $GLOBALS['sys_force_ssl'];

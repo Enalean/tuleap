@@ -174,16 +174,6 @@ function menu_loggedin($page_title) {
 	print '<P>';
 	$HTML->menu_entry('/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title,$Language->getText('include_menu','bookmark_this_page'));
     }
-    $um =& UserManager::instance();
-    $user =& $um->getCurrentUser();
-    $currentDate=time();
-    // Display last login info during 5 minutes
-    if(abs($currentDate - $user->getLastAuthSuccess()) < 300) {
-        echo '<P>';
-        echo $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').'<br>'.format_date($GLOBALS['sys_datefmt'], $user->getPreviousAuthSuccess()).'<br>';
-        echo $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').'<br>'.format_date($GLOBALS['sys_datefmt'], $user->getLastAuthFailure()).'<br>';
-        echo $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').'<br>'.$user->getNbAuthFailure().'<br>';
-    }
     print '<P>';
 	$em =& EventManager::instance();
     $params = array();

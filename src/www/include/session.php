@@ -54,6 +54,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
                 session_set_new($auth_user_id);
 
                 session_store_login_success();
+                session_login_feedback();
 
                 return array(true, '');
             }
@@ -396,6 +397,29 @@ function session_store_login_failure($login) {
         ' last_auth_failure = '.db_ei($time).
         ' WHERE user_name="'.db_es($login).'"';
     db_query($sql);
+}
+
+/**
+ * Populate response with details about login attempts.
+ *
+ * Always display the last succefull log-in. But if there was errors (number of
+ * bad attempts > 0) display the number of bad attempts and the last
+ * error. Moreover, in case of errors, messages are displayed as warning
+ * instead of info.
+ */
+function session_login_feedback() {
+    $um =& UserManager::instance();
+    $user =& $um->getCurrentUser();
+    $level = 'info';
+    if($user->getNbAuthFailure() > 0) {
+        $level = 'warning';
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['sys_datefmt'], $user->getLastAuthFailure()));
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$user->getNbAuthFailure());
+    }
+    // Display nothing if no previous record.
+    if($user->getPreviousAuthSuccess() > 0) {
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['sys_datefmt'], $user->getPreviousAuthSuccess()));
+    }
 }
 
 ?>

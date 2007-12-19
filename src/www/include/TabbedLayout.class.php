@@ -66,22 +66,7 @@ class TabbedLayout extends Layout {
             }
         
         }
-        $output .= '</ul>';
-        if (user_isloggedin()) {
-            $um =& UserManager::instance();
-            $user =& $um->getCurrentUser();
-            $currentDate=time();
-            // Display last login info during 5 minutes
-            if(abs($currentDate - $user->getLastAuthSuccess()) < 300) {
-                $output .= '
-                    <ul>
-                        <li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['sys_datefmt'], $user->getPreviousAuthSuccess()).'</li>
-                        <li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['sys_datefmt'], $user->getLastAuthFailure()).'</li>
-                        <li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$user->getNbAuthFailure().'</li>
-                    </ul>';
-            }
-        }
-        $output .= '
+        $output .= '</ul>
                 </td>
             </tr>
             <tr>
