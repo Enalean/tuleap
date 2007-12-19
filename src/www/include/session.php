@@ -65,6 +65,7 @@ function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     }
     else {
         session_store_login_failure($form_loginname);
+        session_login_delay($form_loginname);
         return array(false, '');
     }
 }
@@ -419,6 +420,22 @@ function session_login_feedback() {
     // Display nothing if no previous record.
     if($user->getPreviousAuthSuccess() > 0) {
         $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['sys_datefmt'], $user->getPreviousAuthSuccess()));
+    }
+}
+
+/**
+ * Add a delay when use login fail.
+ *
+ * The delay is 2 sec/nb of bad attempt.
+ */
+function session_login_delay($login) {
+    $sql = 'SELECT nb_auth_failure'.
+        ' FROM user'.
+        ' WHERE user_name="'.db_es($login).'"';
+    $res = db_query($sql);
+    if($res && !db_error() && db_numrows($res) == 1) {
+        $row = db_fetch_array($res);
+        sleep(2 * $row['nb_auth_failure']);
     }
 }
 
