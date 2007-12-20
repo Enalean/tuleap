@@ -42,9 +42,9 @@ print '
 
 
 print '<BR><BR>' . "\n";
-print '<IMG SRC="views_graph.png">' . "\n";
+print '<IMG SRC="views_graph.php">' . "\n";
 print '<BR><BR>' . "\n";
-print '<IMG SRC="users_graph.png">' . "\n";
+print '<IMG SRC="users_graph.php">' . "\n";
 print '<BR><BR>' . "\n";
 print '</DIV>' . "\n";
 
