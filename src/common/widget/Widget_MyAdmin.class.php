@@ -65,36 +65,55 @@ class Widget_MyAdmin extends Widget {
         $html_my_admin .= $this->_get_admin_row(
             $i++, 
             $GLOBALS['Language']->getText('admin_main', 'pending_user',array("/admin/approve_pending_users.php?page=pending")),
-            $pending_users
+            $pending_users,
+            $this->_get_color($pending_users)
         );
         
         if ($GLOBALS['sys_user_approval'] == 1) {
             $html_my_admin .= $this->_get_admin_row(
                 $i++, 
                 $GLOBALS['Language']->getText('admin_main', 'validated_user',array("/admin/approve_pending_users.php?page=validated")),
-                $validated_users
+                $validated_users,
+                $this->_get_color($validated_users)
             );
         }
         
         $html_my_admin .= $this->_get_admin_row(
             $i++, 
             $GLOBALS['Language']->getText('admin_main', 'pending_group',array("/admin/approve-pending.php")),
-            $pending_projects
+            $pending_projects,
+            $this->_get_color($pending_projects)
         );
         
         $html_my_admin .= $this->_get_admin_row(
             $i++, 
             '<a href="/news/admin">'. $GLOBALS['Language']->getText('admin_main', 'site_news_approval') .'</a>',
-            $pending_news
+            $pending_news,
+            $this->_get_color($pending_news)
         );
+        
+        $result = array();
+        $em =& EventManager::instance();
+        $em->processEvent('widget_myadmin', array('result' => &$result));
+        foreach($result as $entry) {
+            $html_my_admin .= $this->_get_admin_row(
+                $i++, 
+                $entry['text'],
+                $entry['value'],
+                $entry['bgcolor'],
+                isset($entry['textcolor']) ? $entry['textcolor'] : 'white'
+            );
+        }
         
         $html_my_admin .= '</table>';
         
         return $html_my_admin;
     }
-    function _get_admin_row($i, $text, $nb) {
-        $weight = $nb ? 'bold' : 'normal';
-        return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .' <span style="font-weight:'. $weight .'">('. $nb .')</span></td></tr>';
+    function _get_color($nb) {
+        return $nb == 0 ? 'green' : 'orange';
+    }
+    function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white') {
+        return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
     }
 }
 ?>

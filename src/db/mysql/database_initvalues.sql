@@ -2456,15 +2456,6 @@ FROM user_group
 WHERE group_id = 1
   AND admin_flags = 'A';
 
--- Add myserverupdate only to current admins
--- and only if serverupdate is installed
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT DISTINCT user_id, 'u', 1, 2, 'myserverupdate', -1
-FROM user_group, plugin
-WHERE group_id = 1
-  AND admin_flags = 'A'
-  AND plugin.name = 'serverupdate';
-
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 2, 'myartifacts', 0
 FROM user;

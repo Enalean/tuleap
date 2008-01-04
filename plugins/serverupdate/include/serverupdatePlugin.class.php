@@ -16,8 +16,7 @@ class ServerUpdatePlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', true);
         $this->_addHook('site_admin_menu_hook',   'siteAdminHooks', true);
         $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook('widget_instance', 'myPageBox', false);
-        $this->_addHook('widgets', 'widgets', false);
+        $this->_addHook('widget_myadmin', 'myPageBox', false);
     }
     
     function &getPluginInfo() {
@@ -54,17 +53,47 @@ class ServerUpdatePlugin extends Plugin {
     }
     
     function myPageBox($params) {
-        if (user_is_super_user() && $params['widget'] == 'myserverupdates') {
-            require_once('ServerUpdate_Widget_MyServerUpdates.class.php');
-            $params['instance'] = new ServerUpdate_Widget_MyServerUpdates($this->_getPluginPath());
-        }
-    }
-    
-    function widgets($params) {
-        require_once('common/widget/WidgetLayoutManager.class.php');
-        $lm = new WidgetLayoutManager();
-        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
-            $params['codex_widgets'][] = 'myserverupdates';
+        if (user_is_super_user()) {
+            require_once('ServerUpdate.class.php');
+            $um =& UserManager::instance();
+            $user =& $um->getCurrentUser();
+            
+            $serverupdate = new ServerUpdate(null);
+            $svnupdate = $serverupdate->getSVNUpdate();
+            if ($svnupdate->getRepository() != "") {
+                $commits = $svnupdate->getCommits();
+                
+                $nb_commits = count($commits);
+                if ($nb_commits > 0) {
+                    $nb_critical_updates = 0;
+                    $critical_updates = false;
+                    foreach($commits as $commit) {
+                        if ($commit->getLevel() == 'critical') {
+                            $critical_updates = true;
+                            $nb_critical_updates++;
+                        }
+                    }
+                    
+                    if ($critical_updates) {
+                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_critical_updates', $nb_critical_updates);
+                        $bgcolor = 'red';
+                    } else {
+                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_updates', $nb_commits);
+                        $bgcolor = 'orange';
+                    }
+                } else {
+                    $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date');
+                    $bgcolor = 'green';
+                }
+            } else {
+                $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
+                $bgcolor = 'black';
+            }
+            $params['result'][] = array(
+                'text'    => '<a href="/plugins/serverupdate/">'. $GLOBALS['Language']->getText('plugin_serverupdate', 'descriptor_name') .'</a>',
+                'value'   => $value,
+                'bgcolor' => $bgcolor
+            );
         }
     }
     
