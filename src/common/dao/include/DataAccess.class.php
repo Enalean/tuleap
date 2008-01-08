@@ -55,7 +55,7 @@ class DataAccess {
      *
      * @return int, or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
      */
-    function insertId() {
+    function lastInsertId() {
         if($this->db) {
             return mysql_insert_id($this->db);
         } else {
