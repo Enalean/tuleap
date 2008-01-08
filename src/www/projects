@@ -31,7 +31,9 @@ if (db_numrows($res_grp) < 1) {
 	//set up the group_id
 	$group_id=db_result($res_grp,0,'group_id');
     $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
-
+    $request =& HTTPRequest::instance();
+    $request->params['group_id'] = $_REQUEST['group_id'];
+    
 	$project=new Project($group_id);
 
 	//now show the project page
