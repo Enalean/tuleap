@@ -111,7 +111,7 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     }
     function destroy($id) {
     }
-    /* static */ function getInstance($widget_name) {
+    /* static */ function & getInstance($widget_name) {
         $o = null;
         switch($widget_name) {
             case 'mysurveys':
