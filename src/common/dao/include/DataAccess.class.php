@@ -51,6 +51,19 @@ class DataAccess {
     }
 
     /**
+     * Return ID generated from the previous INSERT operation.
+     *
+     * @return int, or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
+     */
+    function insertId() {
+        if($this->db) {
+            return mysql_insert_id($this->db);
+        } else {
+            return mysql_insert_id();
+        }
+    }
+
+    /**
      * Return number of rows affected by the last INSERT, UPDATE or DELETE.
      *
      * @return int
