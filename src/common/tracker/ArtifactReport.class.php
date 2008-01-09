@@ -685,7 +685,7 @@ class ArtifactReport extends Error {
 	  $arr = explode(',',$morder);
 	  while (list(,$attr) = each($arr)) {
           $key = substr($attr,0,(strlen($attr)-1));
-	    if (isset($this->fields[$key]) && $this->fields[$key]->isUsed() && $this->fields[$key]->isShowOnResult()) {
+	    if (isset($this->fields[$key]) && $this->fields[$key]->isUsed() && ('severity' == $key || $this->fields[$key]->isShowOnResult())) {
 	      preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
 	      list(,$mattr,$mdir) = $match;
 	      //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
@@ -1019,6 +1019,7 @@ class ArtifactReport extends Error {
 	  } else {
 	    $order_by = "";
 	  }
+      var_dump($order_by);
 	}
 	
 
