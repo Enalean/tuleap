@@ -1019,7 +1019,6 @@ class ArtifactReport extends Error {
 	  } else {
 	    $order_by = "";
 	  }
-      var_dump($order_by);
 	}
 	
 
