@@ -14,7 +14,7 @@ $Language->loadLanguageMsg('svn/svn');
 
 if (user_isloggedin()) {
 
-  $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".$root."'");
+  $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".db_es($root)."'");
   $row_grp = db_fetch_array($res_grp);
   $group_id = $row_grp['group_id'];
 

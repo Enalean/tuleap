@@ -705,7 +705,7 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
     global $SVNACCESS, $SVNGROUPS;
     $select = 'SELECT DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
     $from = "FROM svn_commits,user ";
-    $where = "WHERE svn_commits.group_id=". $project->getGroupId() ." AND user.user_id=svn_commits.whoid ";
+    $where = "WHERE svn_commits.group_id=". db_ei($project->getGroupId()) ." AND user.user_id=svn_commits.whoid ";
 
     //check user access rights
     $forbidden = svn_utils_get_forbidden_paths(user_getname(),$project->getUnixName(false));
@@ -718,14 +718,14 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
                 $_path = '';
             }
             $join= " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id "; 
-            $where_forbidden .= " AND svn_dirs.dir not like '%".substr($no_access,1)."%' ";
+            $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access,1))."%' ";
         }
         $where .= $join.$where_forbidden;
     }
 
     //if status selected, and more to where clause
     if ($_path != '') {
-        $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".$_path."%' ";
+        $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".db_es($_path)."%' ";
         if (!isset($forbidden) || empty($forbidden)) {
           $from .= ",svn_dirs,svn_checkins ";
         }
@@ -736,20 +736,20 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
 
     //if revision selected, and more to where clause
     if (isset($_rev_id) && $_rev_id != '') {
-        $commit_str=" AND svn_commits.revision='$_rev_id' ";
+        $commit_str=" AND svn_commits.revision='".db_ei($_rev_id)."' ";
     } else {
         $commit_str='';
     }
 
     if (isset($_commiter) && $_commiter && ($_commiter != 100)) {
-        $commiter_str=" AND user.user_name='$_commiter' ";
+        $commiter_str=" AND user.user_name='".db_es($_commiter)."' ";
     } else {
         //no assigned to was chosen, so don't add it to where clause
         $commiter_str='';
     }
 
     if (isset($_srch) && $_srch != '') {
-        $srch_str = "AND svn_commits.description like '%".$_srch."%' ";
+        $srch_str = "AND svn_commits.description like '%".db_es($_srch)."%' ";
     } else {
         $srch_str = "";
     }
@@ -757,8 +757,10 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
     $where .= $commiter_str.$commit_str.$srch_str.$path_str;
 
  
-    if (!isset($pv) || !$pv) { $limit = " LIMIT $offset,$chunksz";}
+    if (!isset($pv) || !$pv) { $limit = " LIMIT ".db_ei($offset).",".db_ei($chunksz);}
 
+    // SQLi Warning: no real possibility to escape $order_by here.
+    // We rely on a proper filtering of user input by calling methods.
     if (!isset($order_by) || $order_by == '') {
         $order_by = " ORDER BY revision desc ";
     }

@@ -17,25 +17,25 @@ function svn_data_get_technicians($projectname) {
     // including those who may have been removed from the project since then.
     $sql="SELECT DISTINCT user.user_name, user.user_name ".
         "FROM svn_commits, svn_repositories, user ".
-        "WHERE (svn_repositories.repository like '%/".$projectname."') AND (svn_repositories.id = svn_commits.repositoryid) AND (svn_commits.whoid=user.user_id) ".
+        "WHERE (svn_repositories.repository like '%/".db_es($projectname)."') AND (svn_repositories.id = svn_commits.repositoryid) AND (svn_commits.whoid=user.user_id) ".
         "ORDER BY user.user_name ASC";
     return db_query($sql);
 }
 
 function svn_data_update_general_settings($group_id,$svn_tracked,$svn_preamble) {
     
-    $query = "update groups set svn_tracker='".$svn_tracked.
-	"', svn_preamble='".htmlspecialchars($svn_preamble).
-	"' where group_id='".$group_id."'";
+    $query = "update groups set svn_tracker='".db_ei($svn_tracked).
+	"', svn_preamble='".db_es(htmlspecialchars($svn_preamble)).
+	"' where group_id='".db_ei($group_id)."'";
     $result = db_query($query);
     return ($result ? true : false);
 }
    
 function svn_data_update_notification($group_id,$svn_mailing_list,$svn_mailing_header) {
     
-    $query = "update groups set svn_events_mailing_list='".$svn_mailing_list.
-	"', svn_events_mailing_header='".$svn_mailing_header.
-	"' where group_id='".$group_id."'";
+    $query = "update groups set svn_events_mailing_list='".db_es($svn_mailing_list).
+	"', svn_events_mailing_header='".db_es($svn_mailing_header).
+	"' where group_id='".db_ei($group_id)."'";
     $result = db_query($query);
     return ($result ? true : false);
 }
@@ -48,11 +48,11 @@ function svn_data_get_svn_history($group_id, $period=false) {
     $date_clause = '';
     if ($period) {
 	// All times in svn tables are stored in UTC!!!
-	$date_clause = " AND date >= ".(gmdate('U')-$period)." ";
+	$date_clause = " AND date >= ".db_ei((gmdate('U')-$period))." ";
     }
     $query = "SELECT whoid, user.user_name, count(id) as commits ".
 	"FROM svn_commits, user ".
-	"WHERE svn_commits.whoid=user.user_id AND svn_commits.group_id=$group_id ".
+	"WHERE svn_commits.whoid=user.user_id AND svn_commits.group_id=".db_ei($group_id)." ".
 	$date_clause.
 	"GROUP BY whoid ORDER BY user_name";
     $result = db_query($query);
@@ -62,10 +62,13 @@ function svn_data_get_svn_history($group_id, $period=false) {
 function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='') {
     $order_str = "";
     if ($order) {
-	if ($order != 'filename')
+        if ($order != 'filename') {
+            // SQLi Warning: no real possibility to escape $order here.
+            // We rely on a proper filtering of user input by calling methods.
 	    $order_str = " ORDER BY ".$order;
-	else
+        } else {
 	    $order_str = " ORDER BY dir, file";
+        }
     }
 
     //check user access rights
@@ -77,7 +80,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
     if (!empty($forbidden)) {
       $where_forbidden = "";
       while (list($no_access,) = each($forbidden)) {
-        $where_forbidden .= " AND svn_dirs.dir not like '%".substr($no_access,1)."%' ";
+        $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access,1))."%' ";
       }
     }
 
@@ -91,8 +94,8 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 	"WHERE svn_checkins.fileid=svn_files.id ".
 	"AND svn_checkins.dirid=svn_dirs.id ".
 	"AND svn_checkins.commitid=svn_commits.id ".
-	"AND svn_commits.revision=$rev_id ".
-	"AND svn_commits.group_id=$group_id ".
+	"AND svn_commits.revision=".db_ei($rev_id)." ".
+	"AND svn_commits.group_id=".db_ei($group_id)." ".
 	$where_forbidden.$order_str;
     } else {
 
@@ -101,7 +104,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
 	"WHERE svn_checkins.fileid=svn_files.id ".
 	"AND svn_checkins.dirid=svn_dirs.id ".
 	"AND svn_checkins.commitid=svn_commits.id ".
-	"AND svn_commits.id=$commit_id ".
+	"AND svn_commits.id=".db_ei($commit_id)." ".
 	$where_forbidden.$order_str;
     }
 

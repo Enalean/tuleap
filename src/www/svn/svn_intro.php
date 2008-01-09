@@ -24,7 +24,7 @@ svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 
 // Get group properties
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=".db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 $p =& project_get_object($group_id);
 
