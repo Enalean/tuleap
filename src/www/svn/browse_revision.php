@@ -8,27 +8,57 @@
 
 $Language->loadLanguageMsg('svn/svn');
 
-if (!isset($group_id) || !$group_id) {
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if (!$request->valid($vGroupId)) {
     exit_no_group(); // need a group_id !!!
- }
+} else {
+    $group_id = $request->get('group_id');
 
     svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
                       'help' => 'SubversionBrowsingInterface.html'));
-    if (!isset($offset) || !$offset || $offset < 0) {
+
+    $vOffset = new Valid_UInt('offset');
+    $vOffset->required();
+    if ($request->valid($vOffset)) {
+        $offset = $request->get('offset');
+    } else {
         $offset=0;
     }
-    
-    if (!isset($chunksz) || !$chunksz) { $chunksz = 15; }
-    
-    if (!isset($msort) || ($msort != 0) && ($msort != 1)) { $msort = 0; }
-    if (!$msort) { $msort = 0; }
-    if (user_isloggedin() && !isset($morder)) {
-        $morder = user_get_preference('svn_commit_browse_order'.$group_id);
+
+    $vChunksz = new Valid_UInt('chunksz');
+    $vChunksz->required();
+    if($request->valid($vChunksz)) {
+        $chunksz = $request->get('chunksz');
+    } else {
+        $chunksz = 15;
     }
 
-    if (isset($order)) {
+    $vMsort = new Valid_WhiteList('msort', array(0, 1));
+    $vMsort->required();
+    if($request->valid($vMsort)) {
+        $msort = $request->get('msort');
+    } else {
+        $msort = 0;
+    }
 
-        if ($order != '') {
+    $vOrder = new Valid_WhiteList('order', array('revision', 'description', 'date', 'who'));
+
+    //
+    // Morder
+    //
+    if(user_isloggedin() && !$request->existAndNonEmpty('morder')) {
+        $morder = user_get_preference('svn_commit_browse_order'.$group_id);
+    } elseif($request->valid(new Valid_String('morder'))) {
+        $morder = $request->get('morder');
+    } else {
+        $morder = '';
+    }
+
+    if ($request->exist('order')) {
+        $vOrder->required();
+        if ($request->valid($vOrder)) {
+            $order = $request->get('order');
             // Add the criteria to the list of existing ones
             $morder = svn_utils_add_sort_criteria($morder, $order, $msort);
         } else {
@@ -37,6 +67,7 @@ if (!isset($group_id) || !$group_id) {
         }
     }
 
+    $order_by = '';
     if (isset($morder)) {
 
         if (user_isloggedin()) {
@@ -49,7 +80,8 @@ if (!isset($group_id) || !$group_id) {
         }
     }
 
-
+    // MV: it seems this is not mandatory since there is already a mecanism with morder
+/*
     //
     // Memorize order by field as a user preference if explicitly specified.
     // Automatically discard invalid field names.
@@ -68,9 +100,62 @@ if (!isset($group_id) || !$group_id) {
             $order = user_get_preference('commits_browse_order');
         }
     }
+*/
 
+    $vPath = new Valid_String('_path');
+    $vPath->required();
+    if($request->valid($vPath)) {
+        $_path = $request->get('_path');
+    } else {
+        $_path = '';
+    }
 
-    if (!isset($set) || !$set) {
+    // MV: This comes from src/www/svn/index.php, it seems that user can
+    // specify a rev_id here
+    $vRevId1 = new Valid_UInt('rev_id');
+    $vRevId1->required();
+    if($request->valid($vRevId1)) {
+        $_rev_id = $request->get('rev_id');
+    } else {
+        $vRevId2 = new Valid_UInt('_rev_id');
+        $vRevId2->required();
+        if($request->valid($vRevId2)) {
+            $_rev_id = $request->get('_rev_id');
+        } else {
+            $_rev_id = '';
+        }
+    }
+
+    $vCommiter = new Valid_String('_commiter');
+    $vCommiter->required();
+    if($request->valid($vCommiter)) {
+        $_commiter = $request->get('_commiter');
+    } else {
+        $_commiter = '';
+    }
+
+    $vSrch = new Valid_String('_srch');
+    $vSrch->required();
+    if($request->valid($vSrch)) {
+        $_srch = $request->get('_srch');
+    } else {
+        $_srch = '';
+    }
+
+    $vPv = new Valid_Pv();
+    $vPv->required();
+    if($request->valid($vPv)) {
+        $pv = $request->get('pv');
+    } else {
+        $pv = 0;
+    }
+
+    // No treatment
+    $request->valid(new Valid_String('SUBMIT'));
+
+    $vSet = new Valid_WhiteList('set', array('custom', 'my', 'any'));
+    $vSet->required();
+    if (!$request->valid($vSet)) {
         /*
          if no set is passed in, see if a preference was set
          if no preference or not logged in, use my set
@@ -79,7 +164,9 @@ if (!isset($group_id) || !$group_id) {
             $custom_pref=user_get_preference('svn_commits_browcust'.$group_id);
             if ($custom_pref) {
                 $pref_arr=explode('|',$custom_pref);
-                $_rev_id=$pref_arr[0];
+                if(!$_rev_id) {
+                    $_rev_id=$pref_arr[0];
+                }
                 $_commiter=$pref_arr[1];
                 $_path=$pref_arr[2];
                 $_srch=$pref_arr[3];
@@ -93,6 +180,8 @@ if (!isset($group_id) || !$group_id) {
             $_commiter=0;
             $set='custom';
         }
+    } else {
+        $set = $request->get('set');
     }
 
     if ($set=='my') {
@@ -113,12 +202,6 @@ if (!isset($group_id) || !$group_id) {
     /*
      Display commits based on the form post - by user or status or both
     */
-    $_path     = isset($_path) ? $_path : '';
-    $_rev_id   = isset($_rev_id) ? $_rev_id : ''; 
-    $_commiter = isset($_commiter) ? $_commiter : ''; 
-    $_srch     = isset($_srch) ? $_srch : '';
-    $order_by  = isset($order_by) ? $order_by : ''; 
-    $pv        = isset($pv) ? $pv : 0;
     $project = group_get_object($group_id); 
     $root = $project->getUnixName(false);
 
@@ -144,10 +227,10 @@ if (!isset($group_id) || !$group_id) {
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
         '</TR>'.
-        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.(isset($_rev_id)?$_rev_id:'').'></TD>'.
+        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$_rev_id.'></TD>'.
         '<TD><FONT SIZE="-1">'. $tech_box .'</TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.(isset($_path)?$_path:'').'></TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.(isset($_srch)?$_srch:'').'></TD>'.
+        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.$_path.'></TD>'.
+        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.'></TD>'.
         '</TR></TABLE>'.
 	
         '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
@@ -178,5 +261,5 @@ if (!isset($group_id) || !$group_id) {
         echo db_error();
     }
     svn_footer(array());
-
+}
 ?>

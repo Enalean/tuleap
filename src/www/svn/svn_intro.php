@@ -14,8 +14,13 @@ require_once('common/include/URL.class.php');
 
 $Language->loadLanguageMsg('svn/svn');
 
-if (!$group_id) {
+$vGroupId = new Valid_UInt('group_id');
+$vGroupId->required();
+
+if (!$request->valid($vGroupId)) {
     exit_no_group(); // need a group_id !!!
+} else {
+    $group_id = $request->get('group_id');
 }
 
 svn_header(array ('title'=>$Language->getText('svn_intro','info')));
