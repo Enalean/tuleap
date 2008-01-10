@@ -270,7 +270,6 @@ class Docman_Metadata {
 
     //}}}  Changable parameters
 
-    var $value;
     function setValue($v) {
         $this->value = $v;
     }

@@ -1,4 +1,6 @@
 <?php
+if (phpversion() < 5) {
+
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -44,5 +46,7 @@
     function valid() {
         trigger_error(get_class($this).'::valid => Not yet implemented', E_USER_ERROR);
     }
+}
+
 }
 ?>

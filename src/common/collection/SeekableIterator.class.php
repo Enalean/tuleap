@@ -1,4 +1,5 @@
 <?php
+if (phpversion() < 5) {
 
 require_once("Iterator.class.php");
 
@@ -28,5 +29,7 @@ require_once("Iterator.class.php");
             trigger_error(get_class($this).'::seek => OutOfBoundsException. Invalid seek position', E_USER_ERROR);
         }
     }
+}
+
 }
 ?>

@@ -43,6 +43,7 @@ class PluginManager {
                 $iter->next();
             }
             $available_plugins->next();
+            unset($plugin);
         }
         $this->plugins_loaded = true;
     }

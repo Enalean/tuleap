@@ -1,4 +1,5 @@
 <?php
+if (phpversion() < 5) {
 
 require_once("SeekableIterator.class.php");
 
@@ -47,4 +48,5 @@ class ArrayIterator extends SeekableIterator {
     }
 }
 
+}
 ?>
