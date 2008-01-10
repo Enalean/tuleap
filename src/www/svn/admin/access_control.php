@@ -18,18 +18,17 @@ $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vAccessFile = new Valid_String('form_accessfile');
+    $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
     if($request->valid($vAccessFile)) {
         $form_accessfile = $request->get('form_accessfile');
         $buffer = svn_utils_read_svn_access_file_defaults($gname);
         $buffer .= $form_accessfile;
         $ret = svn_utils_write_svn_access_file($gname,$buffer);
         if ($ret) {
-            $GLOBALS['feedback'] .= $Language->getText('svn_admin_access_control','upd_success');
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_access_control','upd_success'));
         } else {
-            $GLOBALS['feedback'] .= $Language->getText('svn_admin_access_control','upd_fail');
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_access_control','upd_fail'));
         }
-    } else {
-        $GLOBALS['feedback'] .= $Language->getText('svn_admin_access_control','upd_fail');
     }
 }
 
