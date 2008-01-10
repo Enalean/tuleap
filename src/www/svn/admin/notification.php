@@ -25,12 +25,12 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     if($request->valid($vML) && $request->valid($vHeader)) {
         $form_mailing_list = $request->get('form_mailing_list');
         $form_mailing_header = $request->get('form_mailing_header');
-    $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
-    if ($ret) {
-	$feedback = $Language->getText('svn_admin_notification','upd_success');
-    } else {
-	$feedback = $Language->getText('svn_admin_notification','upd_fail',db_error());
-    }
+        $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
+        if ($ret) {
+            $feedback = $Language->getText('svn_admin_notification','upd_success');
+        } else {
+            $feedback = $Language->getText('svn_admin_notification','upd_fail',db_error());
+        }
     } else {
         $feedback = $Language->getText('svn_admin_notification','upd_fail');
     }

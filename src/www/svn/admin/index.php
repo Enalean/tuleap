@@ -35,23 +35,17 @@ $vFunc->required();
 if($request->valid($vFunc)) {
     $func = $request->get('func');
 
-switch ($func) {
-
- case 'general_settings' : {
-   require('./general_settings.php');
-   break;
- }
-
- case 'access_control' : {
-   require('./access_control.php');
-   break;
- }
-
- case 'notification' : {
-   require('./notification.php');
-   break;
- }
-}
+    switch ($func) {
+    case 'general_settings' :
+        require('./general_settings.php');
+        break;
+    case 'access_control' :
+        require('./access_control.php');
+        break;
+    case 'notification' :
+        require('./notification.php');
+        break;
+    }
 } else {
    // get project object
    $project = project_get_object($group_id);

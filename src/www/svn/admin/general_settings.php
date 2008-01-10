@@ -28,14 +28,14 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         // group_id was validated in index.
         $form_tracked = $request->get('form_tracked');
         $form_preamble = $request->get('form_preamble');
-    $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble);
-    if ($ret) {
-	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_success');
+        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble);
+        if ($ret) {
+            $GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_success');
+        } else {
+            $GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail',db_error());
+        }
     } else {
-	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail',db_error());
-    }
-    } else {
-        	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail');
+        $GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail');
     }
 }
 
