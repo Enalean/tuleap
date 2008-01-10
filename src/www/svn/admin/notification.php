@@ -16,12 +16,23 @@ $Language->loadLanguageMsg('svn/svn');
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
 //
-if (isset($post_changes)) {
+$request->valid(new Valid_String('post_changes'));
+$request->valid(new Valid_String('SUBMIT'));
+if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
+    $vML = new Valid_Email('form_mailing_list');
+    $vHeader = new Valid_String('form_mailing_header');
+    $vHeader->addRule(new Rule_NoCr());
+    if($request->valid($vML) && $request->valid($vHeader)) {
+        $form_mailing_list = $request->get('form_mailing_list');
+        $form_mailing_header = $request->get('form_mailing_header');
     $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
     if ($ret) {
 	$feedback = $Language->getText('svn_admin_notification','upd_success');
     } else {
 	$feedback = $Language->getText('svn_admin_notification','upd_fail',db_error());
+    }
+    } else {
+        $feedback = $Language->getText('svn_admin_notification','upd_fail');
     }
 }
 
@@ -35,7 +46,7 @@ $svn_mailing_header = $project->getSVNMailingHeader();
 
 echo '
        <H2>'.$Language->getText('svn_admin_notification','email').'</H2>
-       <FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
+       <FORM ACTION="" METHOD="post">
        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
        <INPUT TYPE="HIDDEN" NAME="func" VALUE="notification">
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">

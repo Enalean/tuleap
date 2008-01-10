@@ -16,12 +16,26 @@ $Language->loadLanguageMsg('svn/svn');
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
 //
-if (isset($post_changes)) {
+$request->valid(new Valid_String('post_changes'));
+$request->valid(new Valid_String('SUBMIT'));
+if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
+    $vTracked = new Valid_WhiteList('form_tracked', array('0', '1'));
+    $vTracked->required();
+
+    $vPreamble = new Valid_String('form_preamble');
+
+    if($request->valid($vTracked) && $request->valid($vPreamble)) {
+        // group_id was validated in index.
+        $form_tracked = $request->get('form_tracked');
+        $form_preamble = $request->get('form_preamble');
     $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble);
     if ($ret) {
 	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_success');
     } else {
 	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail',db_error());
+    }
+    } else {
+        	$GLOBALS['feedback'] = $Language->getText('svn_admin_general_settings','upd_fail');
     }
 }
 
@@ -35,7 +49,7 @@ $svn_preamble = $project->getSVNPreamble();
 
 echo '
        <H2>'.$Language->getText('svn_admin_general_settings','gen_settings').'</H2>
-       <FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
+       <FORM ACTION="" METHOD="post">
        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
        <INPUT TYPE="HIDDEN" NAME="func" VALUE="general_settings">
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
