@@ -92,4 +92,19 @@ extends Valid {
     }
 }
 
+/**
+ * @todo Valid_Username
+ */
+
+/**
+ * @todo Valid_Email
+ */
+class Valid_Email
+extends Valid_String {
+     function validate($value) {
+        $this->addRule(new Rule_NoCr());
+        return parent::validate($value);
+    }
+}
+
 ?>
