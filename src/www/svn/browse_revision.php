@@ -51,7 +51,10 @@ if (!$request->valid($vGroupId)) {
     //
     if(user_isloggedin() && !$request->existAndNonEmpty('morder')) {
         $morder = user_get_preference('svn_commit_browse_order'.$group_id);
-    } elseif($request->valid(new Valid_String('morder'))) {
+    }
+    $vMorder = new Valid_String('morder');
+    $vMorder->required();
+    if($request->valid($vMorder)) {
         $morder = $request->get('morder');
     } else {
         $morder = '';
