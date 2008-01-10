@@ -704,7 +704,7 @@ function svn_utils_is_there_specific_permission($gname) {
 function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0) {
     global $_path;
     global $SVNACCESS, $SVNGROUPS;
-    $select = 'SELECT DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
+    $select = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
     $from = "FROM svn_commits,user ";
     $where = "WHERE svn_commits.group_id=". db_ei($project->getGroupId()) ." AND user.user_id=svn_commits.whoid ";
 
@@ -770,12 +770,14 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
 
     $result=db_query($sql);
 
-    /* expensive way to have total number of rows. Don't know of a cheaper one */
+    // Compute the number of rows.
+    $sql1 = 'SELECT FOUND_ROWS() as nb';
+    $result1 = db_query($sql1);
+    if($result1 && !db_error($result1)) {
+        $row1 = db_fetch_array($result1);
+        $totalrows = $row1['nb'];
+    }
 
-    $sql1=$select.$from.$where; 
-    $result1=db_query($sql1);
-    $totalrows = db_numrows($result1);
-    
     return array($result, $totalrows);
 }
 ?>
