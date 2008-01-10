@@ -11,12 +11,22 @@ require_once('viewvc_utils.php');
 require_once('www/svn/svn_utils.php');
 
 $Language->loadLanguageMsg('svn/svn');
-
 if (user_isloggedin()) {
+    $vRoot = new Valid_String('root');
+    $vRoot->required();
+    if(!$request->valid($vRoot)) {
+        exit_no_group();
+    }
+    $root = $request->get('root');
+    $group_id = group_getid_by_name($root);
+    if($group_id === false) {
+        exit_no_group();
+    }
 
-  $res_grp = db_query("SELECT * FROM groups WHERE unix_group_name='".db_es($root)."'");
-  $row_grp = db_fetch_array($res_grp);
-  $group_id = $row_grp['group_id'];
+    $vRootType = new Valid_WhiteList('roottype', array('svn'));
+    $vRootType->setErrorMessage($Language->getText('svn_viewvc','bad_roottype'));
+    $vRootType->required();
+    if($request->valid($vRootType)) {
 
   if (!svn_utils_check_access(user_getname(), $root, viewvc_utils_getfile("/svn/viewvc.php"))) {
     exit_error($Language->getText('svn_viewvc','access_denied'), 
@@ -36,7 +46,10 @@ if (user_isloggedin()) {
   if ($display_header_footer) {
     site_footer(array());
   }
-
+    } else {
+        svn_header(array ('title'=>$Language->getText('svn_utils','browse_tree')));
+        site_footer(array());
+    }
 } else {
   exit_not_logged_in();
 }
