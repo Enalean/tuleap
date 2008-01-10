@@ -23,6 +23,8 @@ if (!$request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 }
 
+$hp =& CodeX_HTMLPurifier::instance();
+
 svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 
 // Table for summary info
@@ -35,7 +37,7 @@ $p =& project_get_object($group_id);
 
 // Show CVS access information
 if ($row_grp['svn_preamble'] != '') {
-    echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
+    echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODEX_PURIFIER_FULL);
 } else {
     $host = $GLOBALS['sys_default_domain'];
     if ($p && $p->usesService('svn')) {

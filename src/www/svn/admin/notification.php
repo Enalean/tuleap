@@ -36,6 +36,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 }
 
+$hp =& CodeX_HTMLPurifier::instance();
+
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
@@ -52,10 +54,10 @@ echo '
        <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
        '.$Language->getText('svn_admin_notification','mail_comment').'
 
-       <P><b>'.$Language->getText('svn_admin_notification','mail_to').'</b></p><p><INPUT TYPE="TEXT" SIZE="70" NAME="form_mailing_list" VALUE="'.$svn_mailing_list.'"></p>
+       <P><b>'.$Language->getText('svn_admin_notification','mail_to').'</b></p><p><INPUT TYPE="TEXT" SIZE="70" NAME="form_mailing_list" VALUE="'.$hp->purify($svn_mailing_list).'"></p>
 
        <p><b>'.$Language->getText('svn_admin_notification','header').'</b></p>
-       <p><INPUT TYPE="TEXT" SIZE="20" NAME="form_mailing_header" VALUE="'.$svn_mailing_header.'"></p>
+       <p><INPUT TYPE="TEXT" SIZE="20" NAME="form_mailing_header" VALUE="'.$hp->purify($svn_mailing_header).'"></p>
 
         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
 

@@ -15,6 +15,8 @@ if (!$request->valid($vGroupId)) {
 } else {
     $group_id = $request->get('group_id');
 
+    $hp =& CodeX_HTMLPurifier::instance();
+
     svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
                       'help' => 'SubversionBrowsingInterface.html'));
 
@@ -220,22 +222,22 @@ if (!$request->valid($vGroupId)) {
      Show the new pop-up boxes to select assigned to and/or status
     */
     echo '<H3>'.$Language->getText('svn_browse_revision','browse_commit').'</H3>'; 
-    echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
+    echo '<FORM name="commit_form" ACTION="" METHOD="GET">
         <TABLE BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center"><TD><b>'.$Language->getText('svn_browse_revision','rev').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','commiter').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','path').'</b></TD><TD><b>'.$Language->getText('svn_browse_revision','search').'</b></TD>'.
         '</TR>'.
-        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$_rev_id.'></TD>'.
+        '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_rev_id VALUE='.$hp->purify($_rev_id).'></TD>'.
         '<TD><FONT SIZE="-1">'. $tech_box .'</TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.$_path.'></TD>'.
-        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.'></TD>'.
+        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_path value='.$hp->purify($_path).'></TD>'.
+        '<TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$hp->purify($_srch).'></TD>'.
         '</TR></TABLE>'.
 	
         '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'">'.
         ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-        'VALUE="'.$chunksz.'">'.$Language->getText('svn_browse_revision','commit_at_once').
+        'VALUE="'.$hp->purify($chunksz).'">'.$Language->getText('svn_browse_revision','commit_at_once').
         '</FORM>';
 
 
@@ -243,9 +245,9 @@ if (!$request->valid($vGroupId)) {
 
         //create a new $set string to be used for next/prev button
         if ($set=='custom') {
-            $set .= '&_commiter='.$_commiter.'&_srch='.$_srch.'&_path='.$_path.'&chunksz='.$chunksz;
+            $set .= '&_commiter='.urlencode($_commiter).'&_srch='.urlencode($_srch).'&_path='.urlencode($_path).'&chunksz='.urlencode($chunksz);
         } else if ($set=='any') {
-            $set .= '&_commiter=0&chunksz='.$chunksz;
+            $set .= '&_commiter=0&chunksz='.urlencode($chunksz);
         }
 
         svn_utils_show_revision_list($result,$offset,$totalrows,$set,$_commiter,$_path,$chunksz,$morder,$msort);

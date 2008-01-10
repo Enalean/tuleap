@@ -39,6 +39,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 }
 
+// Note: no need to purify the output since the svn preamble is stored
+// htmlcharized and displayed with the entities.
+
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionGeneralSettings'));
