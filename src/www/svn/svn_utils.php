@@ -245,6 +245,7 @@ function svn_utils_make_viewlink($group_name, $filename, $text, $view_params) {
 function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
 {
     //echo "<br>DBG \$criteria_list=$criteria_list,\$order=$order";
+    $found = false;
     if ($criteria_list) {
 	$arr = explode(',',$criteria_list);
 	$i = 0;
@@ -290,7 +291,7 @@ function svn_utils_criteria_list_to_query($criteria_list)
 function svn_utils_criteria_list_to_text($criteria_list, $url){
 
     if ($criteria_list) {
-
+    $morder = '';
 	$arr = explode(',',$criteria_list);
 
 	while (list(,$crit) = each($arr)) {
