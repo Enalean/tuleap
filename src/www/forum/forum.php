@@ -149,7 +149,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $vSubject->required();
         $vSubject->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils','include_body_and_subject'));
 
-        $vBody = new Valid_String('body');
+        $vBody = new Valid_Text('body');
         $vBody->required();
         $vBody->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils','include_body_and_subject'));
 

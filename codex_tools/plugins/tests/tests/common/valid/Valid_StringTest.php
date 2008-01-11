@@ -30,11 +30,13 @@ class Valid_StringTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
 
-    function testNoCr() {
+    function testCr() {
         $r = new Rule_NoCr();
         $this->assertTrue($r->isValid('1'));
         $this->assertTrue($r->isValid('abcd'));
         $this->assertTrue($r->isValid('abcd efg'));
+
+        $this->assertIdentical("\n", chr(10));
 
         // Unix
         $this->assertFalse($r->isValid("abcd\nfg"));
@@ -48,6 +50,14 @@ class Valid_StringTest extends UnitTestCase {
         $this->assertFalse($r->isValid("abcd\rfg"));
         $this->assertFalse($r->isValid("\rabcdfg"));
         $this->assertFalse($r->isValid("abcdfg\r"));
+    }
+
+    function testNull() {
+        $r = new Rule_NoCr();
+        $this->assertIdentical("\0", chr(0));
+        $this->assertFalse($r->isValid("abcd\0fg"));
+        $this->assertFalse($r->isValid("\0abcdfg"));
+        $this->assertFalse($r->isValid("abcdfg\0"));
     }
 
 }

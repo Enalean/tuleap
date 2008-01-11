@@ -30,7 +30,7 @@ if (user_isloggedin()) {
             $validSummary->setErrorMessage('Summary is required');
             $validSummary->required();
             
-            $validDetails = new Valid_String('details');
+            $validDetails = new Valid_Text('details');
             
             $validPrivateNews = new Valid_WhiteList('private_news', array('0', '1'));
             $validSummary->required();

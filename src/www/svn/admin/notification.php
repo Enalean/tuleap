@@ -21,7 +21,6 @@ $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vML = new Valid_Email('form_mailing_list');
     $vHeader = new Valid_String('form_mailing_header');
-    $vHeader->addRule(new Rule_NoCr());
     if($request->valid($vML) && $request->valid($vHeader)) {
         $form_mailing_list = $request->get('form_mailing_list');
         $form_mailing_header = $request->get('form_mailing_header');

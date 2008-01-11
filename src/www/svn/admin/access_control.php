@@ -17,7 +17,7 @@ $gname = $project->getUnixName(false);  // don't return a lower case group name
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
-    $vAccessFile = new Valid_String('form_accessfile');
+    $vAccessFile = new Valid_Text('form_accessfile');
     $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
     if($request->valid($vAccessFile)) {
         $form_accessfile = $request->get('form_accessfile');

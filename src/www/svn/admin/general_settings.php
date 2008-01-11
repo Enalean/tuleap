@@ -22,7 +22,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vTracked = new Valid_WhiteList('form_tracked', array('0', '1'));
     $vTracked->required();
 
-    $vPreamble = new Valid_String('form_preamble');
+    $vPreamble = new Valid_Text('form_preamble');
 
     if($request->valid($vTracked) && $request->valid($vPreamble)) {
         // group_id was validated in index.

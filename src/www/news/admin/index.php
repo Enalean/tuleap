@@ -54,7 +54,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         $validSummary->setErrorMessage('Summary is required');
         $validSummary->required();
         
-        $validDetails = new Valid_String('details');
+        $validDetails = new Valid_Text('details');
         
         if ($request->valid($validSummary) && $request->valid($validDetails)) {
         

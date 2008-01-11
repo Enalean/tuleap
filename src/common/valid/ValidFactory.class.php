@@ -71,12 +71,23 @@ extends Valid {
 }
 
 /**
- * Wrapper for 'String' rule
+ * Check that value is a string (should always be true).
  */
-class Valid_String
+class Valid_Text
 extends Valid {
     function validate($value) {
         $this->addRule(new Rule_String());
+        return parent::validate($value);
+    }
+}
+
+/**
+ * Check that value is a string with neither carrige return nor null char.
+ */
+class Valid_String
+extends Valid_Text {
+    function validate($value) {
+        $this->addRule(new Rule_NoCr());
         return parent::validate($value);
     }
 }
@@ -101,10 +112,6 @@ extends Valid {
  */
 class Valid_Email
 extends Valid_String {
-     function validate($value) {
-        $this->addRule(new Rule_NoCr());
-        return parent::validate($value);
-    }
 }
 
 ?>
