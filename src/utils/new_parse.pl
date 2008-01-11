@@ -605,7 +605,10 @@ while ($ln = pop(@groupdump_array)) {
 			my $ugroup_name = pop(@ugroupdef_array);
 			# and then join the line with the correct case.
 			# UgroupName = member1,member2,member3, ...
-			print SVNACCESS $ugroup_name," = ",lc(join(", ", split(",", $ugroup_members))),"\n";
+                        # actually, if there are no members, $ugroup_members contains the the group name 
+                        if (($ugroup_members ne '')&&($ugroup_name ne '')) {
+                         print SVNACCESS $ugroup_name," = ",lc(join(", ", split(",", $ugroup_members))),"\n";
+                       }
 		    }
 		    print SVNACCESS "\n";
 
