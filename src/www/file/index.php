@@ -11,5 +11,16 @@
 
 // Redirect to showfiles.php when no script name is given.
 // Avoid listing content of the directory!
-header ("Location: /file/showfiles.php?group_id=". (int)$_REQUEST['group_id']);
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/valid/ValidFactory.class.php');
+
+$request =& HTTPRequest::instance();
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+	$group_id = $request->get('group_id');
+    header ("Location: /file/showfiles.php?group_id=".$group_id);
+} else {
+    exit_no_group();
+}
 ?>
