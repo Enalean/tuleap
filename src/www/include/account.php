@@ -14,6 +14,7 @@ require_once('common/include/createntlm.inc');
 require_once('common/password/PasswordStrategy.class.php');
 require_once('common/password/PasswordRegexpValidator.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
+require_once('common/valid/Rule.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -140,38 +141,38 @@ function account_namevalid($name, $key = '') {
 		return 0;
 	}
 
+    $rule = new Rule_UserNameFormat();
+
 	// must have at least one character
-	if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
-		return 0;
-	}
+    // MV: not useful because we already have both 'min length' and
+    // 'valid chars' rules
+    //if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+    //	$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
+    //	return 0;
+    //}
 
 	// must contain all legal characters
-	//if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#\$%^&*()-_\\/{}[]<>+=|;:?.,`~")
-	if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
-		!= strlen($name)) {
+	if ($rule->containsIllegalChars($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
 		return 0;
 	}
 
 	// min and max length
-	if (strlen($name) < 3) {
+	if ($rule->lessThanMin($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
 		return 0;
 	}
-	if (strlen($name) > 30) {
+	if ($rule->greaterThanMax($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
 		return 0;
 	}
 
 	// illegal names
-	if (eregi("^((root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)"
-		. "|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)"
-		. "|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$",$name)) {
+	if ($rule->isNotLegalName($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','reserved');
 		return 0;
 	}
-	if (eregi("^(anoncvs_)",$name)) {
+	if ($rule->isCvsAccount($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','reserved_cvs');
 		return 0;
 	}

@@ -104,8 +104,18 @@ extends Valid {
 }
 
 /**
- * @todo Valid_Username
+ * Check that value match CodeX user short name format.
+ *
+ * This rule doesn't check that user actually exists.
  */
+class Valid_UserNameFormat
+extends Valid_String {
+    function validate($value) {
+        $this->addRule(new Rule_UserNameFormat());
+        return parent::validate($value);
+    }
+}
+
 
 /**
  * Check that submitted value is a simple string and a valid CodeX email.

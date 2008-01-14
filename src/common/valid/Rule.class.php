@@ -244,4 +244,43 @@ extends Rule {
     }
 }
 
+/**
+ * Check if value match CodeX user names format.
+ *
+ * This rule doesn't check that user actually exists.
+ */
+class Rule_UserNameFormat
+extends Rule {
+
+    function containsIllegalChars($val) {
+        return (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != strlen($val));
+    }
+
+    function isNotLegalName($val) {
+        return preg_match('/^((root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)'
+                          .'|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)'
+                          .'|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$/i', $val);
+    }
+
+    function isCvsAccount($val) {
+        return preg_match('/^anoncvs_/i', $val);
+    }
+
+    function lessThanMin($val) {
+        return (strlen($val) < 3);
+    }
+
+    function greaterThanMax($val) {
+        return (strlen($val) > 30);
+    }
+
+    function isValid($val) {
+        return !$this->isNotLegalName($val)
+            && !$this->isCvsAccount($val)
+            && !$this->lessThanMin($val)
+            && !$this->greaterThanMax($val)
+            && !$this->containsIllegalChars($val);
+    }
+}
+
 ?>
