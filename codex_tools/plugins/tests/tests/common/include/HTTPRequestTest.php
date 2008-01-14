@@ -31,6 +31,7 @@ class HTTPRequestTest extends UnitTestCase {
             $_SERVER['server_quote'] = "l\'avion du server";
         }
         $_REQUEST['testkey'] = 'testvalue';
+        $_REQUEST['testarray'] = array('key1' => 'valuekey1');
     }
     
     function tearDown() {
@@ -40,6 +41,7 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_SERVER['server_exists']);
         unset($_SERVER['server_quote']);
         unset($_REQUEST['testkey']);
+        unset($_REQUEST['testarray']);
     }
     
     function testGet() {
@@ -144,6 +146,16 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectOnce('validate', array('testvalue'));
         $r =& new HTTPRequest();
         $r->valid($v);
+        $v->tally();
+    }
+
+    function testValidInArray() {
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'key1');
+        $v->expectAtLeastOnce('getKey');
+        $v->expectOnce('validate', array('valuekey1'));
+        $r =& new HTTPRequest();
+        $r->validInArray('testarray', $v);
         $v->tally();
     }
 

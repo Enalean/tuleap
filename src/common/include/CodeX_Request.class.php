@@ -51,6 +51,21 @@
     }
 
     /**
+     * Returns from where the variable is accessed.
+     *
+     * @return string
+     */
+    function _getCallTrace() {
+        $backtrace = debug_backtrace();
+        $files = explode('/', $backtrace[0]['file']);
+        return $files[count($files) - 4] . '/'.
+            $files[count($files) - 3] . '/'.
+            $files[count($files) - 2] . '/'.
+            $files[count($files) - 1] . ' Line: '.
+            $backtrace[0]['line'];
+    }
+
+    /**
      * Get the value of $variable in $this->params (user submitted values).
      *
      * @param string $variable Name of the parameter to get.
@@ -58,15 +73,25 @@
      * otherwise return false;
      */
     function get($variable) {
-        $backtrace = debug_backtrace();
-        $files = explode('/', $backtrace[0]['file']);
-        $this->_last_access_to_input[$variable] = 
-            $files[count($files) - 4] . '/'.
-            $files[count($files) - 3] . '/'.
-            $files[count($files) - 2] . '/'.
-            $files[count($files) - 1] . ' Line: '.
-            $backtrace[0]['line'];
+        $this->_last_access_to_input[$variable] = $this->_getCallTrace();
         return $this->_get($variable, $this->params);
+    }
+
+    /**
+     * Get value of $idx[$variable] in $this->params (user submitted values).
+     *
+     * @param string The index of the variable array in $this->params.
+     * @param string Name of the parameter to get.
+     * @return mixed If the variable exist, the value is returned (string)
+     * otherwise return false;
+     */
+    function getInArray($idx, $variable) {
+        $this->_last_access_to_input[$idx][$variable] = $this->_getCallTrace();
+        if(is_array($this->params[$idx])) {
+            return $this->_get($variable, $this->params[$idx]);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -125,7 +150,19 @@
         $this->_validated_input[$validator->getKey()] = true;
         return $validator->validate($this->get($validator->getKey()));
     }
-    
+
+    /**
+     * Apply validator on submitted user array.
+     *
+     * @param string Index in the user submitted values where the array stands.
+     * @param Valid  Validator to apply
+     * @return boolean
+     */
+    function validInArray($index, &$validator) {
+        $this->_validated_input[$index][$validator->getKey()] = true;
+        return $validator->validate($this->getInArray($index, $validator->getKey()));
+    }
+
     /**
      * Apply validator on submitted user value.
      *
@@ -143,8 +180,16 @@
      */
     function checkThatAllVariablesAreValidated() {
         foreach($this->params as $key => $v) {
-            if(!isset($this->_validated_input[$key])) {
-                trigger_error("Variable: $key not validated. Last access @ ". (isset($this->_last_access_to_input[$key]) ? $this->_last_access_to_input[$key] : 'unknown'), E_USER_NOTICE);
+            if(is_array($v)) {
+                foreach($v as $subK => $subV) {
+                    if(!isset($this->_validated_input[$key][$subK])) {
+                        trigger_error('Variable: '.$key.'['.$subK.'] not validated. Last access @ '. (isset($this->_last_access_to_input[$key][$subK]) ? $this->_last_access_to_input[$key][$subK] : 'unknown'), E_USER_NOTICE);
+                    }
+                }
+            } else {
+                if(!isset($this->_validated_input[$key])) {
+                    trigger_error("Variable: $key not validated. Last access @ ". (isset($this->_last_access_to_input[$key]) ? $this->_last_access_to_input[$key] : 'unknown'), E_USER_NOTICE);
+                }
             }
         }
     }
