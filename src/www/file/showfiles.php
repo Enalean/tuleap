@@ -95,7 +95,7 @@ if ($pv) {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('FileReleaseJargon.html') . '</h3>';
     echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='" .$_SERVER['PHP_SELF']. "?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
+    echo "<TD align='left'> ( <A HREF='showfiles.php?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     echo "</TR></TABLE>";
 
     echo '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';
