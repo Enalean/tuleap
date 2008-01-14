@@ -214,4 +214,34 @@ extends Rule {
     }
 }
 
+/**
+ * Check if an email address is valid or not in CodeX context.
+ *
+ * This rule is influenced by a global variable 'sys_disable_subdomain'. If
+ * this variable is set (no subdomain for codex) and only in this case, emails
+ * like 'user@codex' are allowed.
+ */
+class Rule_Email
+extends Rule {
+
+    /**
+     * Check email validity
+     *
+     * Important note: this is very important to keep the 'D' regexp modifier
+     * as this is the only way not to be bothered by injections of \n into the
+     * email address.
+     */
+    function isValid($val) {
+        $valid_chars='-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
+        if (array_key_exists('sys_disable_subdomains', $GLOBALS)
+            && $GLOBALS['sys_disable_subdomains']) {
+            $valid_domain='['.$valid_chars.']+$';
+        } else {
+            $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+$';
+        }
+        $regexp = '/^['.$valid_chars.']+'.'@'.$valid_domain.'/D';
+        return preg_match($regexp, $val);
+    }
+}
+
 ?>

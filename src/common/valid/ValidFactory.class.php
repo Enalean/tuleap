@@ -108,10 +108,14 @@ extends Valid {
  */
 
 /**
- * @todo Valid_Email
+ * Check that submitted value is a simple string and a valid CodeX email.
  */
 class Valid_Email
 extends Valid_String {
+    function validate($value) {
+        $this->addRule(new Rule_Email());
+        return parent::validate($value);
+    }
 }
 
 ?>
