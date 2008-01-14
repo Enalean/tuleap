@@ -18,7 +18,7 @@ $request =& HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
-	$group_id = $request->get('group_id');
+    $group_id = $request->get('group_id');
     header ("Location: /file/showfiles.php?group_id=".$group_id);
 } else {
     exit_no_group();
