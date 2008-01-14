@@ -80,11 +80,14 @@ require_once('Widget.class.php');
     }
     function create(&$request) {
         $content_id = false;
-        $rss = $request->get('rss');
-        if (!isset($rss['url'])) {
-            $GLOBALS['Response']->addFeedback('error', "Can't add empty rss url");
-        } else {
-            if (!isset($rss['title'])) {
+        $vUrl = new Valid_String('url');
+        $vUrl->setErrorMessage("Can't add empty rss url");
+        $vUrl->required();
+        if($request->validInArray('rss', $vUrl)) {
+            $rss = $request->get('rss');
+            $vTitle = new Valid_String('title');
+            $vTitle->required();
+            if (!$request->validInArray('rss', $vTitle)) {
                 require_once('common/rss/libs/SimplePie/simplepie.inc');
                 if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
                     mkdir($GLOBALS['codex_cache_dir'] .'/rss');
@@ -101,9 +104,23 @@ require_once('Widget.class.php');
     }
     function updatePreferences(&$request) {
         $done = false;
-        if (($rss = $request->get('rss')) && $request->exist('content_id')) {
-            $title = isset($rss['title']) ? " title = '". db_escape_string($rss['title']) ."' " : '';
-            $url   = isset($rss['url'])   ? " url   = '". db_escape_string($rss['url'])   ."' " : '';
+        $vContentId = new Valid_UInt('content_id');
+        $vContentId->required();
+        if (($rss = $request->get('rss')) && $request->valid($vContentId)) {
+            $vUrl = new Valid_String('url');
+            if($request->validInArray('rss', $vUrl)) {
+                $url = " url   = '". db_escape_string($rss['url']) ."' ";
+            } else {
+                $url = '';
+            }
+
+            $vTitle = new Valid_String('title');
+            if($request->validInArray('rss', $vTitle)) {
+                $title = " title = '". db_escape_string($rss['title']) ."' ";
+            } else {
+                $title = '';
+            }
+
             if ($url || $title) {
                 $sql = "UPDATE widget_rss SET ". $title .", ". $url ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
                 $res = db_query($sql);
