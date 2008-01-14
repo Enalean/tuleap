@@ -18,6 +18,12 @@ if (!user_isloggedin()) {
     */
     exit_not_logged_in();
 }
+if($request->valid(new Valid_UInt('release_id'))) {
+    $release_id = $request->get('release_id');
+} else {
+	exit_error();
+}
+
 $frsrf = new FRSReleaseFactory();
 $release =& $frsrf->getFRSReleaseFromDb($release_id);
 
