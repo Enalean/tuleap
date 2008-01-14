@@ -30,7 +30,15 @@ $request = & HTTPRequest::instance();
  
  With much code horked from editreleases.php
  */
-$group_id = $request->get('group_id');
+
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
+
 if (!user_ismember($group_id, 'R2')) {
     exit_permission_denied();
 }
@@ -42,13 +50,17 @@ $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
+if (!$request->valid(new Valid_WhiteList('func',array('delete', 'add', 'create', 'edit', 'update')))) {
+    exit_error();
+}
 
-if ($request->exist('func')) {
+if ($request->valid(new Valid_UInt('package_id'))) {
     $package_id = $request->get('package_id');
     if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
         switch($request->get('func')) {
             case 'delete':
-                if ($release_id = $request->get('id')) {
+                if ($request->valid(new Valid_UInt('id'))) {
+                    $release_id = $request->get('id');
                     /*
                          Delete a release with all the files included
                          Delete the corresponding row from the database
@@ -79,6 +91,7 @@ if ($request->exist('func')) {
                 }
                 break;
             case 'edit':
+                if ($request->valid(new Valid_UInt('id'))) {
                 $release_id = $request->get('id');
                 if ($release =& $frsrf->getFRSReleaseFromDb($release_id, $group_id)) {
                     frs_display_release_form($is_update = true, $release, $group_id, $Language->getText('file_admin_editreleases', 'edit_release'), '?func=update&amp;postExpected=&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id='. $release_id);
@@ -86,18 +99,21 @@ if ($request->exist('func')) {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 }
+                }
                 break;
             case 'update':
                 if ($request->exist('cancel')) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editreleases', 'update_canceled'));
                     $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 } else {
-                    $release_id = $request->get('id');
+                    if ($request->valid(new Valid_UInt('id'))) {
+                	    $release_id = $request->get('id');
                     if ($release =& $frsrf->getFRSReleaseFromDb($release_id, $group_id)) {
                         frs_process_release_form($is_update = true, $request, $group_id, $Language->getText('file_admin_editreleases', 'release_new_file_version'), '?func=update&amp;postExpected=&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id='. $release_id);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+                    }
                     }
                 }
                 break;
