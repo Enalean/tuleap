@@ -36,9 +36,9 @@ $request =& HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
-	$group_id = $request->get('group_id');
+    $group_id = $request->get('group_id');
 } else {
-	exit_no_group();
+    exit_no_group();
 }
 if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
     $authorized_user = true;
