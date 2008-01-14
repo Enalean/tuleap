@@ -47,8 +47,22 @@ class Widget_MyBugs extends Widget {
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
         
-                $hide_item_id = $request->exist('hide_item_id') ? $request->get('hide_item_id') : null;
-                $hide_bug     = $request->exist('hide_bug')     ? $request->get('hide_bug')     : null;
+                $vItemId = new Valid_UInt('hide_item_id');
+                $vItemId->required();
+                if($request->valid($vItemId)) {
+                    $hide_item_id = $request->get('hide_item_id');
+                } else {
+                    $hide_item_id = null;
+                }
+
+                $vBug = new Valid_WhiteList('hide_bug', array(0, 1));
+                $vBug->required();
+                if($request->valid($vBug)) {
+                    $hide_bug = $request->get('hide_bug');
+                } else {
+                    $hide_bug = null;
+                }
+
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'">'.

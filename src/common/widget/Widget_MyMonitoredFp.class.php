@@ -48,9 +48,23 @@ class Widget_MyMonitoredFp extends Widget {
                     "AND filemodule_monitor.user_id='".user_getid()."'  LIMIT 100";
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
-        
-                $hide_item_id = $request->exist('hide_item_id') ? $request->get('hide_item_id') : null;
-                $hide_frs     = $request->exist('hide_frs')     ? $request->get('hide_frs')     : null;
+
+                $vItemId = new Valid_UInt('hide_item_id');
+                $vItemId->required();
+                if($request->valid($vItemId)) {
+                    $hide_item_id = $request->get('hide_item_id');
+                } else {
+                    $hide_item_id = null;
+                }
+
+                $vFrs = new Valid_WhiteList('hide_frs', array(0, 1));
+                $vFrs->required();
+                if($request->valid($vFrs)) {
+                    $hide_frs = $request->get('hide_frs');
+                } else {
+                    $hide_frs = null;
+                }
+
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
