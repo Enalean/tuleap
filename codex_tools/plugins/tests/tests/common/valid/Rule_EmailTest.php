@@ -26,7 +26,7 @@ require_once('common/valid/Rule.class.php');
 
 class Rule_EmailTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'Valid_String test') {
+    function UnitTestCase($name = 'Rule_Email test') {
         $this->UnitTestCase($name);
     }
 
