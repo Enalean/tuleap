@@ -33,7 +33,7 @@ Output:
 */
 function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
 
-    global $PHP_SELF, $Language;
+    global $Language;
 
     $pref_name = 'my_hide_'.$svc.$db_item_id;
     $old_hide = $old_count = $old_pref_value = user_get_preference($pref_name);
@@ -70,10 +70,10 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     }
 
     if ($hide) {
-		$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="'.$Language->getText('my_utils', 'collapse').'"></a>&nbsp;';
+		$hide_url= '<a href="?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="'.$Language->getText('my_utils', 'collapse').'"></a>&nbsp;';
 		$hide_now = true;
     } else {		
-		$hide_url= '<a href="'.$PHP_SELF.'?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="'.$Language->getText('my_utils', 'expand').'"></a>&nbsp;';
+		$hide_url= '<a href="?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="'.$Language->getText('my_utils', 'expand').'"></a>&nbsp;';
 		$hide_now = false;
     }
 
@@ -81,9 +81,6 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
 }
 
 function my_hide($svc, $db_item_id, $item_id, $hide) {
-
-    global $PHP_SELF;
-
     $pref_name = 'my_hide_'.$svc.$db_item_id;
     $old_pref_value = user_get_preference($pref_name);
     list($old_hide,$old_count) = explode('|', $old_pref_value);
