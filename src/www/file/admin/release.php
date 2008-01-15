@@ -50,8 +50,9 @@ $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
-if (!$request->valid(new Valid_WhiteList('func',array('delete', 'add', 'create', 'edit', 'update')))) {
-    exit_error();
+$vFunc = new Valid_WhiteList('func',array('delete', 'add', 'create', 'edit', 'update'));
+if (!$request->valid($vFunc)) {
+    $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
 }
 
 if ($request->valid(new Valid_UInt('package_id'))) {
@@ -99,6 +100,8 @@ if ($request->valid(new Valid_UInt('package_id'))) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                     }
+                } else {
+                    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);                	
                 }
                 break;
             case 'update':
@@ -114,6 +117,8 @@ if ($request->valid(new Valid_UInt('package_id'))) {
                             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editreleases', 'rel_id_not_found'));
                             $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                         }
+                    } else {
+                        $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                     }
                 }
                 break;
@@ -124,6 +129,8 @@ if ($request->valid(new Valid_UInt('package_id'))) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
     }
+} else {
+    $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
 }
 
 ?>
