@@ -26,7 +26,7 @@ print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>'
 
 $result=db_query("SELECT register_purpose,patents_ips,required_software,other_comments, license_other ".
 		"FROM groups ".
-		"WHERE group_id='$group_id'");
+		"WHERE group_id=".db_ei($group_id));
 
 if (!$result || db_numrows($result) < 1) {
 	echo db_error();

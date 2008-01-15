@@ -43,7 +43,7 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 	. "user.email AS email, "
 	. "user_group.admin_flags AS admin_flags "
 	. "FROM user,user_group "
-	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id "
+	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=".db_ei($group_id)." "
 	. "ORDER BY user.user_name";
 
 
