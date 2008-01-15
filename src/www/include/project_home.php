@@ -50,7 +50,7 @@ site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'
 // ########################################## top area, not in box 
 $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name "
 	. "FROM user,user_group "
-	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=$group_id AND "
+	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND "
 	. "user_group.admin_flags = 'A'");
 
 if ($project->getStatus() == 'H') {
@@ -99,7 +99,7 @@ if (! $project->hideMembers()) {
     echo '<SPAN CLASS="develtitle">'.$Language->getText('include_project_home','devels').':</SPAN><BR>';
     
     //count of developers on this project
-    $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+    $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id));
     print db_numrows($res_count);
 
 
