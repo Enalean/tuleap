@@ -39,4 +39,7 @@ if ($group_id === false) {
 
 }
 
+// Local Variables:
+// mode: php
+// End:
 ?>
