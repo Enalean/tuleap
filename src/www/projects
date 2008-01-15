@@ -8,7 +8,7 @@
 
 require_once('pre.php');    
 
-$expl_pathinfo = explode('/',$REQUEST_URI);
+$expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 
 //project name wasn't passed in the URL
 
@@ -17,19 +17,17 @@ if (!$expl_pathinfo[2]) {
 }
 
 //get the group_id based on the group_name in the URL
-
-$res_grp=db_query("SELECT * FROM groups WHERE unix_group_name='$expl_pathinfo[2]'");
+$group_id = group_getid_by_name($expl_pathinfo[2]);
 
 //group was not found
 
-if (db_numrows($res_grp) < 1) {
+if ($group_id === false) {
 	echo db_error();
 	exit_error("Invalid Group","That group does not exist.");
 
 } else {
 
 	//set up the group_id
-	$group_id=db_result($res_grp,0,'group_id');
     $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
     $request =& HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
