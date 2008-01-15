@@ -27,20 +27,25 @@ require('pre.php');
 
 $Language->loadLanguageMsg('my/my');
 
-if (isset($pv) && $pv == 2) {
+$vPv = new Valid_Pv();
+if ($request->valid($vPv) && $request->get('pv') == 2) {
+    $pv = 2;
     $HTML->pv_header(array());
 } else {
+    $pv = 0;
     site_header(array('title' => $Language->getText('my_redirect', 'page_title')));
 }
 
-if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
+$vReturnTo = new Valid_String('return_to');
+$vReturnTo->required();
+if($request->valid($vReturnTo)) {
     // if return_to URL start with a protocol name then take as is
     // otherwise prepend the proper http protocol
 
     // Re-serialize feedback to display it on the 'return_to' page.
     $HTML->_serializeFeedback();
 
-    $return_to = trim($_REQUEST['return_to']);
+    $return_to = trim($request->get('return_to'));
 
     $use_ssl = session_issecure() || $GLOBALS['sys_force_ssl'];
     
@@ -79,5 +84,5 @@ else {
 <p><big><?= $redirect; ?></big></p>
 
 <?
-(isset($pv) && $pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());
+($pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());
 ?>

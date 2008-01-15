@@ -12,14 +12,31 @@ $Language->loadLanguageMsg('my/my');
 
 $request =& HTTPRequest::instance();
 
-//@filtertodo: check bookmark as int.
-$bookmark_id    = (int) $request->get('bookmark_id');
-$bookmark_url   = $request->get('bookmark_url');
-$bookmark_title = $request->get('bookmark_title');
+$vId = new Valid_UInt('bookmark_id');
+$vId->setErrorMessage('bookmark_id is required');
+$vId->required();
+if(!$request->valid($vId)) {
+    $GLOBALS['Response']->redirect('/my');
+} else {
+    $bookmark_id = (int) $request->get('bookmark_id');
+}
 
-if ($request->exist('bookmark_url') && $request->exist('bookmark_title')) {
+$vUrl = new Valid_String('bookmark_url');
+$vUrl->setErrorMessage('Url is required');
+$vUrl->required();
+$vTitle = new Valid_String('bookmark_title');
+$vTitle->setErrorMessage('Title is required');
+$vTitle->required();
+
+if ($request->isPost() &&
+    $request->valid($vUrl) &&
+    $request->valid($vTitle)) {
+
+    $bookmark_url   = $request->get('bookmark_url');
+    $bookmark_title = $request->get('bookmark_title');
+
 	bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
-    header ("Location: /my/");
+    $GLOBALS['Response']->redirect('/my');
 }
 
 $purifier =& CodeX_HTMLPurifier::instance();

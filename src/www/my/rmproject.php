@@ -18,6 +18,14 @@ $Language->loadLanguageMsg('my/my');
 if (user_isloggedin()) {
 	$user_id = user_getid();
 
+    $vGroupId = new Valid_GroupId();
+    $vGroupId->required();
+    if($request->valid($vGroupId)) {
+        $group_id = $request->get('group_id');
+    } else {
+        exit_no_group();
+    }
+
 	// make sure that user is not an admin
 	$result=db_query("SELECT admin_flags FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
 	if (!$result || db_numrows($result) < 1) {

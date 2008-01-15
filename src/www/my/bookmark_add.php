@@ -15,8 +15,11 @@ $HTML->header(array("title"=>$Language->getText('bookmark_add', 'title')));
 print "<H3>".$Language->getText('bookmark_add', 'title')."</H3>";
 
 $request =& HTTPRequest::instance();
-
-if ($request->exist('bookmark_url')) {
+$vUrl = new Valid_String('bookmark_url');
+$vUrl->required();
+$vTitle = new Valid_String('bookmark_title');
+$vTitle->required();
+if ($request->valid($vUrl) && $request->valid($vTitle)) {
     $purifier =& CodeX_HTMLPurifier::instance();
 
     $bookmark_url = $request->get('bookmark_url');
