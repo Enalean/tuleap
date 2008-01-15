@@ -46,7 +46,7 @@ $HTML->header(array("title"=>$Language->getText('bookmark_edit', 'title')));
 print "<H3>".$Language->getText('bookmark_edit', 'title')."</H3>\n";
 
 $result = db_query("SELECT * from user_bookmarks where "
-	. "bookmark_id='".$bookmark_id."' and user_id='".user_getid()."'");
+                   . "bookmark_id=".db_ei($bookmark_id)." and user_id=".db_ei(user_getid()));
 if ($result) {
 	$bookmark_url = db_result($result,0,'bookmark_url');
 	$bookmark_title = db_result($result,0,'bookmark_title');

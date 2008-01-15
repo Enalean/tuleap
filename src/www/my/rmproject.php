@@ -27,7 +27,7 @@ if (user_isloggedin()) {
     }
 
 	// make sure that user is not an admin
-	$result=db_query("SELECT admin_flags FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
+	$result=db_query("SELECT admin_flags FROM user_group WHERE user_id=".db_ei($user_id)." AND group_id=".db_ei($group_id));
 	if (!$result || db_numrows($result) < 1) {
 	    exit_error($Language->getText('include_exit', 'error'),
 		       $Language->getText('bookmark_rmproject', 'err_notmember'));
@@ -39,14 +39,14 @@ if (user_isloggedin()) {
 			   $Language->getText('bookmark_rmproject', 'err_removing'));
 	} 
        
-	db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
+	db_query("DELETE FROM user_group WHERE user_id=".db_ei($user_id)." AND group_id=".db_ei($group_id));
 
         // Remove user from all ugroups attached to this project
         ugroup_delete_user_from_project_ugroups($group_id,$user_id);
 
 	/********* mail the changes so the admins know what happened *********/
 	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
-		. "WHERE user_group.user_id=user.user_id AND user_group.group_id=$group_id AND "
+		. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND "
 		. "user_group.admin_flags = 'A'");
     $to = '';
 	while ($row_admin = db_fetch_array($res_admin)) {
