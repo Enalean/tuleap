@@ -10,8 +10,19 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('project/project');
 
-if ((!$group_id) && $form_grp) 
-	$group_id=$form_grp;
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    $vFormGrp = new Valid_UInt('form_grp');
+    $vFormGrp->required();
+    if($request->valid($vFormGrp)) {
+        $group_id = $request->get('form_grp');
+    } else {
+        exit_no_group();
+    }
+}
 
 site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
