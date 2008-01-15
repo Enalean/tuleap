@@ -34,8 +34,14 @@ File release system rewrite, Tim Perdue, SourceForge, Aug, 2000
 	If you pass the group_id plus the package_id, you will get the list of 
 		releases with just the releases of that package shown
 */
-
-$group_id = $request->get('group_id');
+$Language->loadLanguageMsg('file/file');
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
 if (!user_ismember($group_id,'R2')) {
     exit_permission_denied();
 }
@@ -53,11 +59,14 @@ foreach($res as $p => $nop) {
         'rank' => $res[$p]->getRank(),
     );
 }
-
-if ($request->exist('func')) {
+$vFunc = new Valid_WhiteList('func',array('delete','add','create','edit','update'));
+$vFunc->required();
+if ($request->valid($vFunc)) {
     switch ($request->get('func')) {
         case 'delete': //Not yet
-            if ($package_id = $request->get('id')) {
+            $vPackageId = new Valid_UInt('id');
+            if ($request->valid($vPackageId)) {
+            	$package_id = $request->get('id');
                     /*
                          Delete the corresponding package only if it is empty
                     */
@@ -113,7 +122,13 @@ if ($request->exist('func')) {
             }
             break;
         case 'edit':
-            $package_id = $request->get('id');
+            $vPackageId = new Valid_UInt('id');
+            if ($request->valid($vPackageId)) {
+                $package_id = $request->get('id');
+            } else {
+                $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
+            }           
+            
             if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
                 frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'edit_package'), '?func=update&amp;group_id='. $group_id .'&amp;id='. $package_id, $existing_packages);
             } else {
@@ -126,7 +141,12 @@ if ($request->exist('func')) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','update_canceled'));
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             } else {
-                $package_id = $request->get('id');
+                $vPackageId = new Valid_UInt('id');
+                if ($request->valid($vPackageId)) {
+                    $package_id = $request->get('id');
+                } else {
+                    $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
+                }
                 if ($package =& $frspf->getFRSPackageFromDb($package_id, $group_id)) {
                     $package_data = $request->get('package');
                     // we check if the name already exist only if the name has changed
@@ -150,7 +170,13 @@ if ($request->exist('func')) {
                         $package_is_updated = $frspf->update($package);
                         
                         //Permissions
-                        list ($return_code, $feedback) = permission_process_selection_form($group_id, 'PACKAGE_READ', $package->getPackageID(), $request->get('ugroups'));
+                        $vUgroup = new Valid_UInt('ugroups');  
+                        if ($request->valid($vUgroups)) {
+                            $ugroups = $request->get('ugroups');
+                        } else {
+                            $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
+                        }
+                        list ($return_code, $feedback) = permission_process_selection_form($group_id, 'PACKAGE_READ', $package->getPackageID(), $ugroups);
                         if (!$return_code) {
                             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','perm_update_err'));
                             $GLOBALS['Response']->addFeedback('error', $feedback);
@@ -178,5 +204,7 @@ if ($request->exist('func')) {
         default:
             break;
     }
+} else {
+    $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
 }
 ?>
