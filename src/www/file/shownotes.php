@@ -21,7 +21,7 @@ if (!user_isloggedin()) {
 if($request->valid(new Valid_UInt('release_id'))) {
     $release_id = $request->get('release_id');
 } else {
-    exit_error();
+    exit_error($GLOBALS['Language']->getText('file_shownotes','not_found_err'),$GLOBALS['Language']->getText('file_shownotes','release_not_found'));
 }
 
 $frsrf = new FRSReleaseFactory();
