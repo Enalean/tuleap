@@ -26,43 +26,87 @@ require_once('pre.php');
 require_once('www/file/file_utils.php');
 
 $Language->loadLanguageMsg('file/file');
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
 
 if (!user_isloggedin() || !user_ismember($group_id,'R2')) {
     exit_permission_denied();
 }
 
-if (isset($mode) && $mode == "delete") {
+$vMode = new Valid_WhiteList('mode',array('delete')); 
+if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     # delete a processor from db
+    if ($request->valid(new Valid_UInt('proc_id'))) {
+        $proc_id = $request->get('proc_id');
     file_utils_delete_proc($proc_id);
+}
 }
 
 file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','manage_proclist'), 'help' => 'ManageProcessorsList.html'));
 
-if (array_key_exists('add', $_POST) && isset($_POST['add'])) {
+$vAdd      =  new Valid_WhiteList('add',array('Add'));
+$vProcName = new Valid_String('procname');
+$vProcName->setErrorMessage($Language->getText('file_admin_manageprocessors','name_error'));
+$vProcName->required();
+$vProcRank = new Valid_UInt('procrank');
+$vProcRank->setErrorMessage($Language->getText('file_admin_manageprocessors','rank_error'));
+$vProcRank->required();
+
+if ($request->isPost() && $request->existAndNonEmpty('add')) {
     # add a new processor to the database
-    if ($_POST['procrank'] == "")
+    if ($request->valid($vProcName) &&
+        $request->valid($vProcRank) && 
+        $request->valid($vAdd)) {
+        $procname = $request->get('procname');
+        $procrank = $request->get('procrank');
+        if ($procrank == "")
         $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
-    else if ($_POST['procname'] == "")
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	      
-    else if (!is_numeric($_POST['procrank']))     
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','rank_error');    	
+        else if ($procname == "")
+        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	         	
     else
-        file_utils_add_proc($procname,$procrank);	
+            file_utils_add_proc($procname,$procrank);
+    } else {
+        $feedback .= $Language->getText('file_file_utils','add_proc_fail');;
+    }
 }
 
-if (array_key_exists('update', $_POST) && isset($_POST['update'])) {
+$vProcId = new Valid_UInt('proc_id');
+$vProcId->required();
+$vUpdate = new Valid_WhiteList('update',array('Update'));
+$vProcessName = new Valid_String('processname');
+$vProcessName->setErrorMessage($Language->getText('file_admin_manageprocessors','name_error'));
+$vProcessName->required();
+$vProcessRank = new Valid_UInt('processrank');
+$vProcessRank->setErrorMessage($Language->getText('file_admin_manageprocessors','rank_error'));
+$vProcessRank->required();
+
+if ($request->isPost() && $request->existAndNonEmpty('update')) {
     # update a processor  
-    if ($_POST['processrank'] == "")
+    if ($request->valid($vProcessName) &&
+        $request->valid($vProcessRank) && 
+        $request->valid($vProcId)      &&
+        $request->valid($vUpdate)) {
+        $proc_id     = $request->get('proc_id');
+        $processname = $request->get('processname');
+        $processrank = $request->get('processrank');
+        if ($processrank == "")
         $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
-    else if ($_POST['processname'] == "")
+        else if ($processname == "")
         $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	      
-    else if (!is_numeric($_POST['processrank']))     
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','rank_error');    	
-    else
-        file_utils_update_proc($proc_id,$processname,$processrank);
+        else {
+            file_utils_update_proc($proc_id,$processname,$processrank);    
+        }
+    } else {
+        $feedback .= $Language->getText('file_file_utils','update_proc_fail');
+    }
 }
 
-$sql = "SELECT * FROM frs_processor WHERE group_id=".$group_id." OR group_id=100 ORDER BY rank";
+$sql = "SELECT * FROM frs_processor WHERE group_id=".db_ei($group_id)." OR group_id=100 ORDER BY rank";
 $result = db_query($sql);
 
 ?>
