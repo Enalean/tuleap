@@ -41,7 +41,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'R2')) {
 $vProcId = new Valid_UInt('proc_id');
 $vProcId->required(); 
 if ($request->valid($vProcId)) {
-	$proc_id = $request->get('proc_id');
+    $proc_id = $request->get('proc_id');
 } else {
     $GLOBALS['Response']->redirect('manageprocessors.php?group_id='.$group_id);
 }
