@@ -154,6 +154,49 @@ class HTTPRequestTest extends UnitTestCase {
         $v->tally();
     }
 
+    function testValidArray() {
+        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', true);
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $r->validArray($v);
+        $v->tally();
+    }
+
+    function testValidArrayTrue() {
+        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', true);
+        $r =& new HTTPRequest();
+        $this->assertTrue($r->validArray($v));
+    }
+
+    function testValidArrayFalse() {
+        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('validate', false);
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v));
+    }
+
+    function testValidArrayScalar() {
+        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->expectAtLeastOnce('getKey');
+        $v->expectAt(0,'validate', array('testvalue1'));
+        $v->expectAt(1,'validate', array('testvalue2'));
+        $v->expectAt(2,'validate', array('testvalue3'));
+        $v->expectCallCount('validate', 3);
+        $r =& new HTTPRequest();
+        $r->validArray($v);
+        $v->tally();
+    }
+
     function testValidInArray() {
         $v =& new MockValid($this);
         $v->setReturnValue('getKey', 'key1');

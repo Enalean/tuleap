@@ -152,6 +152,23 @@
     }
 
     /**
+     * Apply validator on submitted user Array.
+     *
+     * @param Valid  Validator to apply
+     * @return boolean
+     */
+    function validArray(&$validator) {
+        $this->_validated_input[$validator->getKey()] = true;
+        $isValid = true;
+        foreach ($this->get($validator->getKey()) as $key => $v) {
+            if (!$validator->validate($v)) {
+                $isValid = false;
+            }
+        }
+        return $isValid;
+    }
+
+    /**
      * Apply validator on submitted user array.
      *
      * @param string Index in the user submitted values where the array stands.
