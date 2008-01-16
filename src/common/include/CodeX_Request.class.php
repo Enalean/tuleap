@@ -152,7 +152,7 @@
     }
 
     /**
-     * Apply validator on submitted user Array.
+     * Apply validator on all values of a submitted user array.
      *
      * @param Valid  Validator to apply
      * @return boolean
@@ -160,10 +160,15 @@
     function validArray(&$validator) {
         $this->_validated_input[$validator->getKey()] = true;
         $isValid = true;
-        foreach ($this->get($validator->getKey()) as $key => $v) {
-            if (!$validator->validate($v)) {
-                $isValid = false;
+        $array = $this->get($validator->getKey());
+        if (is_array($array)) {
+            foreach ($array as $key => $v) {
+                if (!$validator->validate($v)) {
+                    $isValid = false;
+                }
             }
+        } else {
+            $isValid = false;
         }
         return $isValid;
     }
