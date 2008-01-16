@@ -128,4 +128,44 @@ extends Valid_String {
     }
 }
 
+/**
+ * Check uploaded file validity.
+ */
+class Valid_File
+extends Valid {
+
+    /**
+     * Is uploaded file empty or not.
+     *
+     * @param Array One entry of $_FILES
+     */
+    function isEmptyValue($file) {
+        if(!is_array($file)) {
+            return false;
+        } elseif(parent::isEmptyValue($file['name'])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Check rules on given file.
+     *
+     * @param  Array  $_FILES superarray.
+     * @param  String Index of file to check in $_FILES array.
+     * @return Boolean
+     */
+    function validate($files, $index) {
+        if(is_array($files) && isset($files[$index])) {
+            $this->addRule(new Rule_File());
+            return parent::validate($files[$index]);
+        } elseif($this->isRequired) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
 ?>

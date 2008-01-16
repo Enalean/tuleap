@@ -1,7 +1,10 @@
 <?php
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/valid/ValidFactory.class.php');
 Mock::generate('Valid');
 Mock::generate('Rule');
+Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'));
+
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
@@ -32,6 +35,7 @@ class HTTPRequestTest extends UnitTestCase {
         }
         $_REQUEST['testkey'] = 'testvalue';
         $_REQUEST['testarray'] = array('key1' => 'valuekey1');
+        $_FILES['file1'] = array('name' => 'Test file 1');
     }
     
     function tearDown() {
@@ -42,6 +46,7 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_SERVER['server_quote']);
         unset($_REQUEST['testkey']);
         unset($_REQUEST['testarray']);
+        unset($_FILES['file1']);
     }
     
     function testGet() {
@@ -159,5 +164,20 @@ class HTTPRequestTest extends UnitTestCase {
         $v->tally();
     }
 
+    function testValidFileNoFileValidator() {
+        $v =& new MockValid($this);
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validFile($v));
+    }
+
+    function testValidFileOk() {
+        $v =& new Valid_FileTest($this);
+        $v->setReturnValue('getKey', 'file1');
+        $v->expectAtLeastOnce('getKey');
+        $v->expectOnce('validate', array(array('file1' => array('name' => 'Test file 1')), 'file1'));
+        $r =& new HTTPRequest();
+        $r->validFile($v);
+        $v->tally();
+    }
 }
 ?>

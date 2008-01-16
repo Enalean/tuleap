@@ -74,6 +74,21 @@ class HTTPRequest extends CodeX_Request {
     }
 
     /**
+     * Validate file upload.
+     *
+     * @param  Valid_File Validator for files.
+     * @return Boolean
+     */
+    function validFile(&$validator) {
+        if(is_a($validator, 'Valid_File')) {
+            $this->_validated_input[$validator->getKey()] = true;
+            return $validator->validate($_FILES, $validator->getKey());
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Remove slashes in $value. If $value is an array, remove slashes for each
      * element.
      *
