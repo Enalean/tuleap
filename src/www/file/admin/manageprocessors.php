@@ -65,9 +65,9 @@ if ($request->isPost() && $request->existAndNonEmpty('add')) {
         $procname = $request->get('procname');
         $procrank = $request->get('procrank');
         if ($procrank == "") {
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
         } else if ($procname == "") {
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	         	
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	         	
         } else {
             file_utils_add_proc($procname,$procrank);
         }
@@ -96,9 +96,9 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');
         if ($processrank == "") {
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_rank'));    	  
         } else if ($processname == "") {
-        $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	      
+            $feedback .= " ".$Language->getText('file_admin_manageprocessors','proc_fill',$Language->getText('file_file_utils','proc_name'));    	      
         } else {
             file_utils_update_proc($proc_id,$processname,$processrank);    
         }
