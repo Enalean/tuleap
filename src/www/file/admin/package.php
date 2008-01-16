@@ -170,8 +170,8 @@ if ($request->valid($vFunc)) {
                         $package_is_updated = $frspf->update($package);
                         
                         //Permissions
-                        $vUgroup = new Valid_UInt('ugroups');  
-                        if ($request->valid($vUgroups)) {
+                        $vUgroups = new Valid_UInt('ugroups');  
+                        if ($request->validArray($vUgroups)) {
                             $ugroups = $request->get('ugroups');
                         } else {
                             $GLOBALS['Response']->redirect('../showfiles.php?group_id='.$group_id);
