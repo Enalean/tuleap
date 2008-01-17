@@ -11,6 +11,7 @@
 
 // Redirect to showfiles.php when no script name is given.
 // Avoid listing content of the directory!
+require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/valid/ValidFactory.class.php');
 
