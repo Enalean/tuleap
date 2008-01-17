@@ -162,10 +162,14 @@
         $isValid = true;
         $array = $this->get($validator->getKey());
         if (is_array($array)) {
-            foreach ($array as $key => $v) {
-                if (!$validator->validate($v)) {
-                    $isValid = false;
+            if (count($array)>0) {
+                foreach ($array as $key => $v) {
+                    if (!$validator->validate($v)) {
+                        $isValid = false;
+                    }
                 }
+            } else {
+                $isValid = $validator->validate(null); 
             }
         } else {
             $isValid = false;

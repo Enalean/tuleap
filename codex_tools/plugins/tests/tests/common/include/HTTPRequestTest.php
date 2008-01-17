@@ -35,6 +35,11 @@ class HTTPRequestTest extends UnitTestCase {
         }
         $_REQUEST['testkey'] = 'testvalue';
         $_REQUEST['testarray'] = array('key1' => 'valuekey1');
+        $_REQUEST['testkey_array'] = array('testvalue1', 'testvalue2', 'testvalue3');
+        $_REQUEST['testkey_array_empty'] = array();
+        $_REQUEST['testkey_array_mixed1'] = array('testvalue',1, 2);
+        $_REQUEST['testkey_array_mixed2'] = array(1, 'testvalue', 2);
+        $_REQUEST['testkey_array_mixed3'] = array(1, 2, 'testvalue');
         $_FILES['file1'] = array('name' => 'Test file 1');
     }
     
@@ -46,6 +51,11 @@ class HTTPRequestTest extends UnitTestCase {
         unset($_SERVER['server_quote']);
         unset($_REQUEST['testkey']);
         unset($_REQUEST['testarray']);
+        unset($_REQUEST['testkey_array']);
+        unset($_REQUEST['testkey_array_empty']);
+        unset($_REQUEST['testkey_array_mixed1']);
+        unset($_REQUEST['testkey_array_mixed2']);
+        unset($_REQUEST['testkey_array_mixed3']);
         unset($_FILES['file1']);
     }
     
@@ -155,9 +165,8 @@ class HTTPRequestTest extends UnitTestCase {
     }
 
     function testValidArray() {
-        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
         $v =& new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', true);
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
@@ -166,27 +175,24 @@ class HTTPRequestTest extends UnitTestCase {
     }
 
     function testValidArrayTrue() {
-        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
         $v =& new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', true);
         $r =& new HTTPRequest();
         $this->assertTrue($r->validArray($v));
     }
 
     function testValidArrayFalse() {
-        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
         $v =& new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('getKey', 'testkey_array');
         $v->setReturnValue('validate', false);
         $r =& new HTTPRequest();
         $this->assertFalse($r->validArray($v));
     }
 
     function testValidArrayScalar() {
-        $_REQUEST['testkey'] = array('testvalue1', 'testvalue2', 'testvalue3');
         $v =& new MockValid($this);
-        $v->setReturnValue('getKey', 'testkey');
+        $v->setReturnValue('getKey', 'testkey_array');
         $v->expectAtLeastOnce('getKey');
         $v->expectAt(0,'validate', array('testvalue1'));
         $v->expectAt(1,'validate', array('testvalue2'));
@@ -195,6 +201,83 @@ class HTTPRequestTest extends UnitTestCase {
         $r =& new HTTPRequest();
         $r->validArray($v);
         $v->tally();
+    }
+
+    function testValidArrayArgNotArray() {
+        $v =& new MockValid($this);
+        $v->setReturnValue('getKey', 'testkey');
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v));
+    }
+
+    function testValidArrayArgEmptyArrayRequired() {
+        $v =& new MockValid($this);
+        $v->required();
+        $v->expectAtLeastOnce('required');
+        $v->setReturnValue('getKey', 'testkey_array_empty');
+        $v->expectAtLeastOnce('getKey');
+        $v->setReturnValue('validate', false, array(null));
+        $v->expectAtLeastOnce('validate', array(null));
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v));    
+    }
+
+    function testValidArrayArgEmptyArrayNotRequired() {
+        $v =& new MockValid($this);
+        $v->expectNever('required');
+        $v->setReturnValue('getKey', 'testkey_array_empty');
+        $v->expectAtLeastOnce('getKey');
+        $v->setReturnValue('validate', true, array(null));
+        $v->expectAtLeastOnce('validate', array(null));
+        $r =& new HTTPRequest();
+        $this->assertTrue($r->validArray($v));    
+    }
+
+    function testValidArrayArgNotEmptyArrayRequired() {
+        $v =& new MockValid($this);
+        $v->expectAtLeastOnce('required');                
+        $v->required();
+        $v->setReturnValue('getKey', 'testkey_array');
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v));        
+    }
+
+    function testValidArrayFirstArgFalse() {
+        $v =& new MockValid($this);
+        $v->addRule(new Rule_Int());
+        $v->addRule(new Rule_GreaterOrEqual(0));
+        $v->required();
+        $v->expectAtLeastOnce('required');
+        $v->setReturnValue('getKey', 'testkey_array_mixed1');
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v)); 
+    }
+
+    function testValidArrayMiddleArgFalse() {
+        $v =& new MockValid($this);
+        $v->addRule(new Rule_Int());
+        $v->addRule(new Rule_GreaterOrEqual(0));
+        $v->required();
+        $v->expectAtLeastOnce('required');
+        $v->setReturnValue('getKey', 'testkey_array_mixed2');
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v)); 
+    }
+
+    function testValidArrayLastArgFalse() {
+        $v =& new MockValid($this);
+        $v->addRule(new Rule_Int());
+        $v->addRule(new Rule_GreaterOrEqual(0));
+        $v->required();
+        $v->expectAtLeastOnce('required');
+        $v->setReturnValue('getKey', 'testkey_array_mixed3');
+        $v->expectAtLeastOnce('getKey');
+        $r =& new HTTPRequest();
+        $this->assertFalse($r->validArray($v)); 
     }
 
     function testValidInArray() {
