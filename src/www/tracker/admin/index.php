@@ -196,6 +196,18 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_retrieved_report',$arh->getErrorMessage()));
 		}
 		if (isset($post_changes)) {
+            //Only project admin users can create 'P' scope reports
+            if (user_ismember($group_id,'A')) {
+                $validScope = new Valid_WhiteList('rep_scope' ,array('I', 'P'));
+            } else {
+                $validScope = new Valid_WhiteList('rep_scope' ,array('I'));
+            }
+            if ($request->valid($validScope)) {
+                $rep_scope = $request->get('rep_scope');
+            } else {
+                $rep_scope = 'I';
+            }
+            
 			// apply update or create in bd
                     if (isset($update_report)) {
 				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope);
