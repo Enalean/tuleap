@@ -51,10 +51,8 @@ file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageproc
 
 $vAdd      =  new Valid_WhiteList('add',array('Add'));
 $vProcName = new Valid_String('procname');
-$vProcName->setErrorMessage($Language->getText('file_admin_manageprocessors','name_error'));
 $vProcName->required();
 $vProcRank = new Valid_UInt('procrank');
-$vProcRank->setErrorMessage($Language->getText('file_admin_manageprocessors','rank_error'));
 $vProcRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('add')) {
@@ -80,10 +78,8 @@ $vProcId = new Valid_UInt('proc_id');
 $vProcId->required();
 $vUpdate = new Valid_WhiteList('update',array('Update'));
 $vProcessName = new Valid_String('processname');
-$vProcessName->setErrorMessage($Language->getText('file_admin_manageprocessors','name_error'));
 $vProcessName->required();
 $vProcessRank = new Valid_UInt('processrank');
-$vProcessRank->setErrorMessage($Language->getText('file_admin_manageprocessors','rank_error'));
 $vProcessRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('update')) {
