@@ -312,8 +312,8 @@ class ArtifactFactory extends Error {
                 
                 $fields = array();
                 foreach($art as $field_name => $field_value) {
+                    // fields are duplicated (one key is a number, the other key is the field_name)
                     if (!is_int($field_name)) {
-                        //echo $field_name . '=>' . $field_value . ' # ';
                         $fields[$field_name] = $field_value;
                     }
                 }
