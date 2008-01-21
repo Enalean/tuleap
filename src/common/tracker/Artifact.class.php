@@ -106,7 +106,7 @@ class Artifact extends Error {
         global $art_field_fact,$Language;
 
         // first fetch values of standard fields
-        $sql = "SELECT * FROM artifact WHERE artifact_id='$artifact_id' AND group_artifact_id='".$this->ArtifactType->getID()."'";
+        $sql = "SELECT * FROM artifact WHERE artifact_id='". db_ei($artifact_id) ."' AND group_artifact_id='". db_ei($this->ArtifactType->getID()) ."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
             $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','invalid_id'));
@@ -117,7 +117,7 @@ class Artifact extends Error {
             
 
         // now get the values for generic fields if any
-        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='$artifact_id'";
+        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='". db_ei($artifact_id) ."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
             // if no result then it is possible that there isn't any generic fields
@@ -175,7 +175,13 @@ class Artifact extends Error {
     function getMultiAssignedTo() {
         $aid=$this->getID();
         if (!$aid) return;
-        $sql="SELECT afv.valueInt FROM artifact_field_value afv, artifact a, artifact_field af WHERE a.artifact_id=$aid AND afv.artifact_id=$aid AND a.group_artifact_id=af.group_artifact_id AND afv.field_id=af.field_id AND af.field_name='multi_assigned_to'";
+        $sql="SELECT afv.valueInt 
+              FROM artifact_field_value afv, artifact a, artifact_field af 
+              WHERE a.artifact_id=". db_ei($aid) ." 
+                AND afv.artifact_id=". db_ei($aid) ." 
+                AND a.group_artifact_id=af.group_artifact_id 
+                AND afv.field_id=af.field_id 
+                AND af.field_name='multi_assigned_to'";
         $res=db_query($sql);
         $i=0;
         $return_val = array();
@@ -308,7 +314,7 @@ class Artifact extends Error {
         $fld_type = '';
         $val_type = '';
         if ($type) {
-            $fld_type = ',type'; $val_type = ",'$type'";
+            $fld_type = ',type'; $val_type = ",'". db_ei($type) ."'";
         } else {
             // No comment type specified for a followup comment
             // so force it to None (100)
@@ -319,7 +325,7 @@ class Artifact extends Error {
         }             
         
         $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date $fld_type) ".
-            "VALUES (".$this->getID().",'".$name."','$old_value','$new_value','$user','".$email."','".time()."' $val_type)";
+            "VALUES (". db_ei($this->getID()) .",'". db_es($name) ."','". db_es($old_value) ."','". db_es($new_value) ."','". db_ei($user) ."','". db_es($email) ."','".time()."' $val_type)";
         //echo $sql;
         return db_query($sql);
     }
@@ -407,7 +413,11 @@ class Artifact extends Error {
 	// first make sure this wasn't double-submitted
 	$field = $art_field_fact->getFieldFromName('summary');
 	if ( $field && $field->isUsed()) {
-	  $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$ath->getID()." AND submitted_by=$user AND summary='".htmlspecialchars($vfl['summary'])."'");
+	  $res=db_query("SELECT * 
+                     FROM artifact 
+                     WHERE group_artifact_id = ". db_ei($ath->getID()) ." 
+                       AND submitted_by=".  db_ei($user) ." 
+                       AND summary='". db_es(htmlspecialchars($vfl['summary'])) ."'");
 	  if ($res && db_numrows($res) > 0) {
 	    $this->setError($Language->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
 	    return false;           
@@ -441,7 +451,7 @@ class Artifact extends Error {
                     list($value,$ok) = util_date_to_unixtime($value);
                 }
 
-                $vfl_values .= ',\''.$value.'\'';
+                $vfl_values .= ',\''. db_es($value) .'\'';
                                                     
             }
                         
@@ -453,9 +463,9 @@ class Artifact extends Error {
 	if ($import) {
 		if (!$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
 		else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
-		$fixed_values = "'".$open_date."','".time()."','$group_artifact_id','$user'";
+		$fixed_values = "'". db_ei($open_date) ."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
 	} else {
-	        $fixed_values = "'".time()."','".time()."','$group_artifact_id','$user'";
+	        $fixed_values = "'".time()."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
         }  
 
 
@@ -585,7 +595,7 @@ class Artifact extends Error {
       global $art_field_fact,$Language;
       if ($canned_response && $canned_response != 100) {
 	
-	$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='".$canned_response."'";
+	$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($canned_response) ."'";
 	$res3=db_query($sql);
 	
 	if ($res3 && db_numrows($res3) > 0) {
@@ -638,7 +648,7 @@ class Artifact extends Error {
 	    }	
 
 	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-            		"VALUES (".$this->getID().",'comment','','".$arr['comment']."','$user_id','$email','".$arr['date']."','".$arr['type']."')";
+            		"VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
 	    //echo $sql."<br>\n";
 
             db_query($sql);
@@ -658,11 +668,10 @@ class Artifact extends Error {
     */
     function updateFollowupComment($comment_id,$comment_txt,&$changes) {
 
-        $sql = sprintf('SELECT field_name, new_value FROM artifact_history'
-            .' WHERE artifact_id=%d'
-            .' AND artifact_history_id=%d'
-            .' AND (field_name="%s" OR field_name LIKE "%s")',
-        $this->getID(),$comment_id,"comment","lbl_%_comment");
+        $sql = 'SELECT field_name, new_value FROM artifact_history'
+            .' WHERE artifact_id='. db_ei($this->getID()) 
+            .' AND artifact_history_id='. db_ei($comment_id) 
+            .' AND (field_name="comment" OR field_name LIKE "lbl_%_comment")';
         $qry = db_query($sql);
         $new_value = db_result($qry,0,'new_value');
 
@@ -896,7 +905,7 @@ class Artifact extends Error {
 		reset($HTTP_POST_VARS);
 		while ( list($key, $val) = each($HTTP_POST_VARS)) {
 			if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
-				$sql = "UPDATE artifact SET submitted_by=$val WHERE artifact_id = ".$this->getID();
+				$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
 				$res = db_query($sql);
 				$field = $art_field_fact->getFieldFromName('submitted_by');
 				if ($this->getSubmittedBy() != $val)
@@ -950,7 +959,7 @@ class Artifact extends Error {
                 $upd_list = substr($upd_list,0,-1);
                 
                 $sql="UPDATE artifact SET $upd_list ".
-                    " WHERE artifact_id=".$this->getID();
+                    " WHERE artifact_id=". db_ei($this->getID()) ;
                 
                 $res_upd=db_query($sql);
             }
@@ -975,7 +984,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function existCC($cc) {
-        $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=".$this->getID()." AND email='$cc'";
+        $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ." AND email='". db_es($cc) ."'";
         $res = db_query($sql);
         return (db_numrows($res) >= 1);
     }
@@ -992,7 +1001,7 @@ class Artifact extends Error {
      */
     function insertCC($cc,$added_by,$comment,$date) {
         $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
-            "VALUES (".$this->getID().",'$cc','$added_by','$comment','$date')";
+            "VALUES (". db_ei($this->getID()) .",'". db_es($cc) ."','". db_ei($added_by) ."','". db_es($comment) ."','". db_ei($date) ."')";
         $res = db_query($sql);
         return ($res);
         
@@ -1115,7 +1124,7 @@ class Artifact extends Error {
         
         // If both bug_id and bug_cc_id are given make sure the cc belongs 
         // to this bug (it's a bit paranoid but...)
-        $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='$artifact_cc_id'";
+        $sql = "SELECT artifact_id,email from artifact_cc WHERE artifact_cc_id='". db_ei($artifact_cc_id) ."'";
         $res1 = db_query($sql);
         if ((db_numrows($res1) <= 0) || (db_result($res1,0,'artifact_id') != $this->getID()) ) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_cc_id',$artifact_cc_id));
@@ -1126,7 +1135,7 @@ class Artifact extends Error {
 	$old_value=$this->getCCEmails();
         
 	// Now delete the CC address
-        $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='$artifact_cc_id'");
+        $res2 = db_query("DELETE FROM artifact_cc WHERE artifact_cc_id='". db_ei($artifact_cc_id) ."'");
         if (!$res2) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','err_del_cc',array($artifact_cc_id,db_error($res2))));
             return false;
@@ -1147,7 +1156,7 @@ class Artifact extends Error {
      * @return boolean
      */
     function existDependency($id) {
-        $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=".$this->getID()." AND is_dependent_on_artifact_id=$id";
+        $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ." AND is_dependent_on_artifact_id=". db_ei($id);
         //echo $sql;
         $res = db_query($sql);
         return (db_numrows($res) >= 1);
@@ -1162,7 +1171,7 @@ class Artifact extends Error {
      */
     function validArtifact($id) {
         $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
-            "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=".$id." AND ".
+            "a.group_artifact_id = agl.group_artifact_id AND a.artifact_id=". db_ei($id) ." AND ".
             "agl.status = 'A'";
         $res = db_query($sql);
         if ( db_numrows($res) >= 1 )
@@ -1181,7 +1190,7 @@ class Artifact extends Error {
      */
     function insertDependency($id) {
         $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
-            "VALUES (".$this->getID().",$id)";
+            "VALUES (". db_ei($this->getID()) .",". db_ei($id) .")";
         //echo $sql;
         $res = db_query($sql);
         return ($res);
@@ -1193,14 +1202,14 @@ class Artifact extends Error {
      * Delete all the CC Names of this Artifact
      */
     function deleteAllCC() {
-	$sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=".$this->getID();
+	$sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ;
 	$res = db_query($sql);
 	if (db_numrows($res) > 0) {
 		for ($i=0;$i<db_numrows($res);$i++) {
 			if ($i==0) $ccNames = db_result($res,$i,'artifact_cc_id');
 			else $ccNames .= ",".db_result($res,$i,'artifact_cc_id');
 		}
-		$sql = "DELETE FROM artifact_cc WHERE artifact_cc_id IN ($ccNames) AND artifact_id=".$this->getID();
+		$sql = "DELETE FROM artifact_cc WHERE artifact_cc_id IN (". db_es($ccNames) .") AND artifact_id=". db_ei($this->getID()) ;
 		$res_del = db_query($sql);
 		if (!$res_del) return false; 
 	}
@@ -1211,14 +1220,14 @@ class Artifact extends Error {
       * Delete all the dependencies of this Artifact
       */
      function deleteAllDependencies() {
-	$sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=".$this->getID();
+	$sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ;
 	$res = db_query($sql);
 	if (db_numrows($res) > 0) {
 		for ($i=0;$i<db_numrows($res);$i++) {
 			if ($i==0) $dependencies = db_result($res,$i,'is_dependent_on_artifact_id');
 			else $dependencies .= ",".db_result($res,$i,'is_dependent_on_artifact_id');
 		}
-		$sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id IN ($dependencies) AND artifact_id=".$this->getID();
+		$sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id IN (". db_es($dependencies) .") AND artifact_id=". db_ei($this->getID()) ;
 		$res_del = db_query($sql);
 		if (!$res_del) return false; 
 	}
@@ -1278,7 +1287,7 @@ class Artifact extends Error {
         global $Language;
         
         // Delete the dependency
-        $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=$dependent_on_artifact_id AND artifact_id=".$this->getID();
+        $sql = "DELETE FROM artifact_dependencies WHERE is_dependent_on_artifact_id=". db_ei($dependent_on_artifact_id) ." AND artifact_id=". db_ei($this->getID()) ;
         $res2 = db_query($sql);
         if (!$res2) {
             $GLOBALS['Response']->addFeedback('error', " - Error deleting dependency $dependent_on_artifact_id: ".db_error($res2));
@@ -1301,11 +1310,10 @@ class Artifact extends Error {
     function deleteFollowupComment($aid,$comment_id) {
 
     	//Delete the followup comment
-    	$sel = sprintf('SELECT field_name, new_value FROM artifact_history'
-			.' WHERE (field_name = "%s" OR field_name LIKE "%s")'
-			.' AND artifact_history_id = %d'
-			.' AND artifact_id = %d',
-    		"comment","lbl_%_comment",$comment_id,$aid);
+    	$sel = 'SELECT field_name, new_value FROM artifact_history'
+			.' WHERE (field_name = "comment" OR field_name LIKE "lbl_%_comment")'
+			.' AND artifact_history_id = '. db_ei($comment_id) 
+			.' AND artifact_id = '. db_ei($aid) ;
     	$res = db_query($sel);
     	$new_value = db_result($res,0,'new_value');
     	if ($res) {
@@ -1355,12 +1363,11 @@ class Artifact extends Error {
      */
     function getCommenter($comment_id) {
       
-        $sql = sprintf('SELECT mod_by FROM artifact_history'
-			.' WHERE artifact_id=%d'
-			.' AND field_name="%s"'
+        $sql = 'SELECT mod_by FROM artifact_history'
+			.' WHERE artifact_id='. db_ei($this->getID())
+			.' AND field_name="comment"'
 			.' AND mod_by != 100'
-			.' AND artifact_history_id=%d',
-			$this->getID(),"comment",$comment_id);
+			.' AND artifact_history_id='. db_ei($comment_id);
 	$res = db_query($sql);
 	return db_result($res,0,'mod_by');
       
@@ -1373,7 +1380,7 @@ class Artifact extends Error {
      */
     function getCommenters() {
         $sql="SELECT DISTINCT mod_by FROM artifact_history ".
-	  "WHERE artifact_id=".$this->getID()." ".
+	  "WHERE artifact_id=". db_ei($this->getID()) ." ".
             "AND field_name = 'comment' AND mod_by != 100";
         return db_query($sql);
     }
@@ -1385,7 +1392,7 @@ class Artifact extends Error {
      */
     function getAnonymousCommenters() {
         $sql="SELECT DISTINCT email FROM artifact_history ".
-	  "WHERE artifact_id=".$this->getID()." ".
+	  "WHERE artifact_id=". db_ei($this->getID()) ." ".
             "AND field_name = 'comment' ".
 	  "AND mod_by = 100";
         return db_query($sql);
@@ -1393,11 +1400,10 @@ class Artifact extends Error {
 
     function getFollowup($comment_id) {
     
-        $sql = sprintf('SELECT new_value FROM artifact_history'
-			.' WHERE (field_name="%s" OR field_name LIKE "%s")'
-			.' AND artifact_history_id=%d'
-			.' AND new_value <> ""',
-			"comment","lbl_%_comment",$comment_id);
+        $sql = 'SELECT new_value FROM artifact_history'
+			.' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
+			.' AND artifact_history_id='. db_ei($comment_id) 
+			.' AND new_value <> ""';
         $res = db_query($sql); 
 	$new_value = db_result($res,0,'new_value');
 	return $new_value;
@@ -1413,31 +1419,28 @@ class Artifact extends Error {
         global $art_field_fact;
 
     	$flup_array = array();
-    	$qry = sprintf('SELECT artifact_history_id, date FROM artifact_history'.
-    					' WHERE artifact_id = %d'.
-    					' AND field_name = "%s"',
-    	$this->getID(),"comment");
+    	$qry = 'SELECT artifact_history_id, date FROM artifact_history'.
+    			' WHERE artifact_id = '. db_ei($this->getID()) .
+    			' AND field_name = "comment"';
     	$res = db_query($qry);
     	while ($row = db_fetch_array($res)) {
     		$ahid = $row['artifact_history_id'];
     		$fname = "lbl_".$ahid."_comment";
-    		$sel = sprintf('SELECT NULL FROM artifact_history'.
-    						' WHERE field_name = "%s"'.
-    						' AND artifact_id = %d',
-    		$fname,$this->getID());
+    		$sel = 'SELECT NULL FROM artifact_history'.
+    						' WHERE field_name = "'. db_es($fname) .'"'. 
+    						' AND artifact_id = '. db_ei($this->getID()) ;
     		$result = db_query($sel);
     		if (db_numrows($result) < 1) {
     			//the followup comment was not edited/removed ==> add it to the list of comments to be displayed    			
     			$flup_array[$ahid] = $row['date'];
     		} else {
     			//pick the latest
-    			$latest = sprintf('SELECT artifact_history_id , new_value FROM artifact_history'.
-    								' WHERE field_name = "%s"'.
-    								' AND artifact_id = %d'.
+    			$latest = 'SELECT artifact_history_id , new_value FROM artifact_history'.
+    								' WHERE field_name = "'. db_es($fname) .'"'. 
+    								' AND artifact_id = '. db_ei($this->getID()) .
     								' AND date = (SELECT MAX(date) FROM artifact_history'.
-    								' WHERE field_name = "%s"'.
-    								' AND artifact_id = %d)',
-    			$fname,$this->getID(),$fname,$this->getID());
+    								'             WHERE field_name = "'. db_es($fname) .'"'. 
+    								'             AND artifact_id = '. db_ei($this->getID()) .')';
     			$res_latest = db_query($latest);
     			$new_value = db_result($res_latest,0,'new_value');
     			if ($new_value <> '') {
@@ -1455,16 +1458,16 @@ class Artifact extends Error {
     		// Look for project specific values first
     		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
     		"FROM artifact_history,artifact_field_value_list,artifact_field,user ".
-    		"WHERE artifact_history.artifact_id=".$this->getID()." ".
+    		"WHERE artifact_history.artifact_id=". db_ei($this->getID()) ." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
     		"AND artifact_history.mod_by=user.user_id ".
     		"AND artifact_history.type = artifact_field_value_list.value_id ".
-    		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
+    		"AND artifact_history.artifact_history_id IN (". db_es(implode(',',$comment_array)) .") ".
     		"AND artifact_field_value_list.field_id = artifact_field.field_id ".
     		"AND artifact_field_value_list.group_artifact_id = artifact_field.group_artifact_id ".
-    		"AND artifact_field.group_artifact_id =".$this->ArtifactType->getID()." ".
+    		"AND artifact_field.group_artifact_id =". db_ei($this->ArtifactType->getID()) ." ".
     		"AND artifact_field.field_name = 'comment_type_id' ".
-    		"ORDER BY FIELD(artifact_history_id, ".implode(',',$comment_array).")";    		    	
+    		"ORDER BY FIELD(artifact_history_id, ". db_es(implode(',',$comment_array)) .")";    		    	
     		$res_value = db_query($sql);
     		$rows=db_numrows($res_value);
 
@@ -1476,8 +1479,8 @@ class Artifact extends Error {
     		"WHERE artifact_history.artifact_id=".$this->getID()." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
     		"AND artifact_history.mod_by=user.user_id ".
-    		"AND artifact_history.artifact_history_id IN (".implode(',',$comment_array).") ".
-    		"ORDER BY FIELD(artifact_history_id, ".implode(',',$comment_array).")";    		
+    		"AND artifact_history.artifact_history_id IN (". db_es(implode(',',$comment_array)) .") ".
+    		"ORDER BY FIELD(artifact_history_id, ". db_es(implode(',',$comment_array)) .")";    		
     		$res_value = db_query($sql);
     		$rows=db_numrows($res_value);
 
@@ -1497,7 +1500,7 @@ class Artifact extends Error {
 		$sql="SELECT artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,artifact_history.type,user.user_name ".
             "FROM artifact_history,user ".
             "WHERE artifact_history.mod_by=user.user_id ".            
-            "AND artifact_id=".$this->getID().
+            "AND artifact_id=". db_ei($this->getID()) .
             " AND artifact_history.field_name <> 'comment' ".
 	    	"ORDER BY artifact_history.date DESC";
     	return db_query($sql);
@@ -1513,7 +1516,7 @@ class Artifact extends Error {
         $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
             "FROM artifact_cc,user ".
             "WHERE added_by=user.user_id ".
-            "AND artifact_id=".$this->getID()." ORDER BY date DESC";
+            "AND artifact_id=". db_ei($this->getID()) ." ORDER BY date DESC";
         return db_query($sql);
     }
 
@@ -1527,7 +1530,7 @@ class Artifact extends Error {
         $sql="SELECT u.user_id ".
 	  "FROM artifact_cc cc, user u ".
 	  "WHERE cc.email = u.user_name ".
-	  "AND cc.artifact_id=".$this->getID();
+	  "AND cc.artifact_id=".$ db_ei($his->getID()) ;
 	$res = db_query($sql);
 	
         return util_result_column_to_array($res);
@@ -1542,7 +1545,7 @@ class Artifact extends Error {
                 
         $sql="SELECT email ".
             "FROM artifact_cc ".
-            "WHERE artifact_id=".$this->getID()." ORDER BY date DESC";
+            "WHERE artifact_id=".$ db_ei($his->getID()) ." ORDER BY date DESC";
         $result = db_query($sql);
 	$rows=db_numrows($result);
         if ($rows <= 0) {
@@ -1568,7 +1571,7 @@ class Artifact extends Error {
                 
         $sql="SELECT artifact_cc_id,artifact_cc.email,artifact_cc.added_by,artifact_cc.comment,artifact_cc.date,user.user_name ".
             "FROM artifact_cc,user ".
-            "WHERE artifact_cc_id=".$artifact_cc_id." ".
+            "WHERE artifact_cc_id=". db_ei($artifact_cc_id) ." ".
             "AND added_by=user.user_id";
         $res = db_query($sql);
         return db_fetch_array($res);
@@ -1585,7 +1588,7 @@ class Artifact extends Error {
             "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
-            "d.artifact_id = ".$this->getID()." AND ".
+            "d.artifact_id = ". db_ei($this->getID()) ." AND ".
             "ag.group_id = g.group_id ORDER BY a.artifact_id";
         //echo "sql=$sql<br>";
         return db_query($sql);
@@ -1602,7 +1605,7 @@ class Artifact extends Error {
             "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
             "WHERE d.artifact_id = a.artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
-            "d.is_dependent_on_artifact_id = ".$this->getID()." AND ".
+            "d.is_dependent_on_artifact_id = ". db_ei($this->getID()) ." AND ".
             "ag.group_id = g.group_id ORDER BY a.artifact_id";
         //echo "sql=$sql<br>";
         return db_query($sql);
@@ -1616,7 +1619,7 @@ class Artifact extends Error {
     function getAttachedFileNames () {
         $sql="SELECT filename ".
             "FROM artifact_file ".
-            "WHERE artifact_id=".$this->getID()." ORDER BY adddate DESC";
+            "WHERE artifact_id=". db_ei($this->getID()) ." ORDER BY adddate DESC";
         $result = db_query($sql);
 	$rows=db_numrows($result);
         if ($rows <= 0) {
@@ -1640,7 +1643,7 @@ class Artifact extends Error {
         $sql="SELECT id,artifact_id,filename,filesize,filetype,description,bin_data,adddate,user.user_name ".
             "FROM artifact_file,user ".
             "WHERE submitted_by=user.user_id ".
-            "AND artifact_id=".$this->getID()." ORDER BY adddate DESC";
+            "AND artifact_id=". db_ei($this->getID()) ." ORDER BY adddate DESC";
         //echo "sql=$sql<br>";
         return db_query($sql);
     }
@@ -1656,7 +1659,7 @@ class Artifact extends Error {
         $sql="SELECT id,filename,filesize,description,adddate,user.user_name ".
             "FROM artifact_file,user ".
             "WHERE submitted_by=user.user_id ".
-            "AND id=".$id;
+            "AND id=". db_ei($id) ;
         //echo "sql=$sql<br>";
         $res = db_query($sql);
         return db_fetch_array($res);
@@ -1846,7 +1849,7 @@ class Artifact extends Error {
     	$extrafielddata = array();
 
     	// now get the values for generic fields if any
-        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='".$this->getID()."'";
+        $sql = "SELECT * FROM artifact_field_value WHERE artifact_id='". db_ei($this->getID()) ."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
             // if no result then it is possible that there isn't any generic fields
@@ -2078,20 +2081,19 @@ class Artifact extends Error {
      */
     function isFollowupCommentDeleted($comment_id) {
     	
-    	$sql = sprintf('SELECT artifact_id, new_value FROM artifact_history'
-						.' WHERE artifact_history_id = %d',
-    					$comment_id);
+    	$sql = 'SELECT artifact_id, new_value 
+                FROM artifact_history 
+                WHERE artifact_history_id = '. db_ei($comment_id) ;
     	$res = db_query($sql);
     	if (db_result($res,0,'new_value') == "") {
     		return true;				
     	}
     	$lbl = "lbl_".$comment_id."_comment";
     	$aid = db_result($res,0,'artifact_id');
-    	$qry = sprintf('SELECT NULL FROM artifact_history'
-						.' WHERE artifact_id = %d'
-						.' AND field_name = "%s"'
-						.' AND new_value = ""',
-    					$aid,$lbl);
+    	$qry = 'SELECT NULL FROM artifact_history'
+						.' WHERE artifact_id = '. db_ei($aid) 
+						.' AND field_name = "'. db_es($lbl) .'"'
+						.' AND new_value = ""';
     	$result = db_query($qry);
     	if (db_numrows($result) > 0) {
     		return true;				
@@ -2110,9 +2112,9 @@ class Artifact extends Error {
      */
     function getOriginalCommentSubmitter($comment_id) {
     	
-    	$sql = sprintf('SELECT field_name, mod_by, email FROM artifact_history'.
-    					' WHERE artifact_history_id = %d',
-    					$comment_id);
+    	$sql = 'SELECT field_name, mod_by, email 
+                FROM artifact_history
+                WHERE artifact_history_id = '. db_ei($comment_id) ;
     	$res = db_query($sql);
     	$field_name = db_result($res,0,'field_name');
     	if ($field_name == "comment") {
@@ -2120,10 +2122,10 @@ class Artifact extends Error {
     	} else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
     		// extract id of the original comment
     		$id = (int) substr($field_name,4,-8);
-    		$qry = sprintf('SELECT mod_by, email FROM artifact_history'.
-    						' WHERE artifact_history_id = %d'.
-    						' AND field_name = "%s"',
-    						$id,"comment");
+    		$qry = 'SELECT mod_by, email 
+                    FROM artifact_history
+                    WHERE artifact_history_id = '. db_ei($id) .'
+                    AND field_name = "comment"';
     		$result = db_query($qry);
     		return $result;				
     	}
@@ -2139,9 +2141,9 @@ class Artifact extends Error {
      */
     function getOriginalCommentDate($comment_id) {
         
-    	$sql = sprintf('SELECT field_name, date FROM artifact_history'.
-    					' WHERE artifact_history_id = %d',
-    					$comment_id);
+    	$sql = 'SELECT field_name, email 
+                FROM artifact_history
+                WHERE artifact_history_id = '. db_ei($comment_id) ;
     	$res = db_query($sql);
     	$field_name = db_result($res,0,'field_name');
     	if ($field_name == "comment") {
@@ -2149,10 +2151,10 @@ class Artifact extends Error {
     	} else if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
     		// extract id of the original comment 
     		$id = (int) substr($field_name,4,-8);
-    		$qry = sprintf('SELECT date FROM artifact_history'.
-    						' WHERE artifact_history_id = %d'.
-    						' AND field_name = "%s"',
-    						$id,"comment");
+    		$qry = 'SELECT date
+                    FROM artifact_history
+                    WHERE artifact_history_id = '. db_ei($id) .'
+                    AND field_name = "comment"';
     		$result = db_query($qry);
     		return $result;				    		
     	}    	
@@ -2793,7 +2795,7 @@ class Artifact extends Error {
                         if ($res_username && (db_numrows($res_username) == 1))
                             $href_cc = util_user_link($email);
                         else
-                            $href_cc = "<a href=\"mailto:".util_normalize_email($email)."\">".$email.'</a>';
+                            $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
                 
                         if ($ascii) {
                             $out .= sprintf($fmt, $email, db_result($result, $i, 'comment'));
@@ -2808,8 +2810,8 @@ class Artifact extends Error {
                                 (user_getname(user_getid()) == $email) ||  
                                 (user_getemail(user_getid()) == $email) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
-                                        $html_delete = "<a href=\"".$_SERVER['PHP_SELF']."?func=delete_cc&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&artifact_cc_id=$artifact_cc_id\" ".
-                                        " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','delete_cc')."')\">".
+                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_cc&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_cc_id='.$artifact_cc_id.'" '.
+                                        ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_cc').'\')">'.
                                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
@@ -2901,8 +2903,8 @@ class Artifact extends Error {
                         } else {
                 
                             if ( user_ismember($this->ArtifactType->getGroupID()) ) {
-                                        $html_delete = "<a href=\"".$_SERVER['PHP_SELF']."?func=delete_dependent&group_id=$group_id&aid=".$this->getID()."&atid=".$group_artifact_id."&dependent_on_artifact_id=$dependent_on_artifact_id\" ".
-                                        " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','del_dep')."')\">".
+                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_dependent&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&dependent_on_artifact_id='.$dependent_on_artifact_id.'" '.
+                                        ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','del_dep').'\')">'.
                                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
@@ -2910,7 +2912,7 @@ class Artifact extends Error {
                 
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            "<a href=\"/tracker/?func=gotoid&group_id=$group_id&aid=$dependent_on_artifact_id\">$dependent_on_artifact_id</a>",
+                                            '<a href="/tracker/?func=gotoid&group_id='.$group_id.'&aid='.$dependent_on_artifact_id.'">'.$dependent_on_artifact_id.'</a>',
                                             $summary,
                                             $tracker_label,
                                             $group_label,
@@ -3008,15 +3010,15 @@ class Artifact extends Error {
                             // (b) the current user is the person who added a gieven name in CC list
 			  if ( user_ismember($this->ArtifactType->getGroupID()) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
-                                        $html_delete = "<a href=\"".$_SERVER['PHP_SELF']."?func=delete_file&group_id=".$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id')."\" ".
-                                            " onClick=\"return confirm('".$Language->getText('tracker_include_artifact','delete_attachment')."')\">".
+                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&group_id='.$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id').'" '.
+                                            ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_attachment').'\')">'.
                                             '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
                                         $html_delete = '-';
                             }
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            "<a href=\"$href\">". db_result($result, $i, 'filename').'</a>',
+                                            '<a href="'.$href.'">'. db_result($result, $i, 'filename').'</a>',
                                             db_result($result, $i, 'description'),
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
@@ -3036,7 +3038,7 @@ class Artifact extends Error {
      */
     function update_last_update_date() {
         $sql="UPDATE artifact SET last_update_date=".time().
-            " WHERE artifact_id=".$this->getID();
+            " WHERE artifact_id=". db_ei($this->getID()) ;
                 
         return db_query($sql);        
     }

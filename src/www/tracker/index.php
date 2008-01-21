@@ -51,7 +51,7 @@ foreach($strings_to_sanitize as $str) {
 
 if (isset($aid) && !isset($atid)) {
     // We have the artifact id, but not the tracker id
-    $sql="SELECT group_artifact_id FROM artifact WHERE artifact_id=$aid";
+    $sql="SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($aid);
     $result = db_query($sql);
     if (db_numrows($result)>0) {
         $row = db_fetch_array($result);
@@ -61,7 +61,7 @@ if (isset($aid) && !isset($atid)) {
 		    
 if (isset($atid) && !isset($group_id)) {
     // We have the artifact group id, but not the group id
-    $sql="SELECT group_id FROM artifact_group_list WHERE group_artifact_id=$atid";
+    $sql="SELECT group_id FROM artifact_group_list WHERE group_artifact_id=". db_ei($atid);
     $result = db_query($sql);
     if (db_numrows($result)>0) {
         $row = db_fetch_array($result);

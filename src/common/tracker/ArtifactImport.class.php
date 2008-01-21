@@ -401,8 +401,8 @@ function getUsedFields() {
     
   
     if ( $summary_field && $summary_field->isUsed() ) {
-    $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ".$this->ath->getID().
-		  " AND submitted_by=$sub_user_id AND summary=\"$summary\"");
+    $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ". db_ei($this->ath->getID()) .
+		  " AND submitted_by=".  db_ei($sub_user_id) ." AND summary='".  db_es($summary) ."'");
     if ($res && db_numrows($res) > 0) {
       $this->setError($Language->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$data),$sub_user_name,$summary)));
       return false;           
@@ -603,7 +603,7 @@ function getUsedFields() {
 
     $comment = str_replace("'","\'",$arr['comment']);
 
-    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = $art_id AND field_name = 'comment' AND old_value = '$comment'");
+    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND old_value = '". db_es($comment) ."'");
 
     if ($res && db_numrows($res) > 0) {
       return true;

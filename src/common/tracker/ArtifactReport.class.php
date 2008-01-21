@@ -114,9 +114,11 @@ class ArtifactReport extends Error {
 		
 	
 		// first delete any report field entries for this report
-		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
 	
-		$res = db_query("UPDATE artifact_report SET name='$name', description='$description',scope='$scope' WHERE report_id=".$this->report_id);
+		$res = db_query("UPDATE artifact_report 
+                         SET name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."' 
+                         WHERE report_id=". db_ei($this->report_id) );
 	
 		$this->name = $name;
 		$this->description = $description;
@@ -134,10 +136,10 @@ class ArtifactReport extends Error {
 		global $ath;
 	
 		// first delete any report field entries for this report
-		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=".$this->report_id);
+		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
 	
 		// then delete the report entry item
-		$res = db_query("DELETE FROM artifact_report WHERE report_id=".$this->report_id);
+		$res = db_query("DELETE FROM artifact_report WHERE report_id=". db_ei($this->report_id) );
 	
 		$this->name = '';
 		$this->description = '';
@@ -171,8 +173,8 @@ class ArtifactReport extends Error {
 		$atid=$ath->getID();
 	
 		$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) '.
-				"VALUES ('".$atid."','".$user_id."','$name',".
-				"'$description','$scope')";
+				"VALUES ('". db_ei($atid) ."','". db_ei($user_id) ."','". db_es($name) ."',".
+				"'". db_es($description) ."','". db_es($scope) ."')";
 		//echo $sql;
 
 		$res = db_query($sql);
@@ -197,8 +199,8 @@ class ArtifactReport extends Error {
       $sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
 	'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
       
-      $sql .= "('$this->report_id','$field_name',$show_on_query,$show_on_result,".
-	"$place_query,$place_result,$col_width)";
+      $sql .= "('". db_ei($this->report_id) ."','". db_es($field_name) ."',". db_ei($show_on_query) .",". db_ei($show_on_result) .",".
+	 db_ei($place_query) .",". db_ei($place_result) .",". db_ei($col_width) .")";
       //echo $sql.'<br>';
       $res = db_query($sql);
       if ($res) {
@@ -219,7 +221,7 @@ class ArtifactReport extends Error {
 		
 		// Read the report infos
 		$sql = "SELECT * FROM artifact_report ".
-			   "WHERE report_id=".$report_id;
+			   "WHERE report_id=". db_ei($report_id) ;
 		//echo $sql.'<br>';
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {
@@ -234,7 +236,7 @@ class ArtifactReport extends Error {
 		
 		// Read the fields infos
 		$res=db_query("SELECT * FROM artifact_report_field ".
-			"WHERE report_id=".$report_id);
+			"WHERE report_id=". db_ei($report_id) );
 		if (!$res || db_numrows($res) < 1) {
 			$this->setError('ArtifactReport:fetchData');
 			return false;
@@ -269,10 +271,10 @@ class ArtifactReport extends Error {
 	    // else get personal reports in addition  project-wide and system wide.
 	    $sql = 'SELECT report_id,name,description,scope FROM artifact_report WHERE ';
 	    if (!$user_id || ($user_id == 100)) {
-			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
+			$sql .= "(group_artifact_id=". db_ei($group_artifact_id) ." AND scope='P') OR scope='S' ".
 			    'ORDER BY report_id';
 	    } else {
-			$sql .= "(group_artifact_id=$group_artifact_id AND (user_id=$user_id OR scope='P')) OR ".
+			$sql .= "(group_artifact_id=". db_ei($group_artifact_id) ." AND (user_id=". db_ei($user_id) ." OR scope='P')) OR ".
 			    "scope='S' ORDER BY scope,report_id";
 	    }
 	    //echo "DBG sql report = $sql";
@@ -414,7 +416,7 @@ class ArtifactReport extends Error {
                                $from." , ugroup_user uu ".
                                $where.
                                "  AND a.submitted_by = uu.user_id ".
-                               "  AND uu.ugroup_id IN (".implode(', ', $static_ugroups).") ".
+                               "  AND uu.ugroup_id IN (". db_es(implode(', ', $static_ugroups)).") ".
                                "";
                         $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
                     }
@@ -428,7 +430,7 @@ class ArtifactReport extends Error {
                                $from." , artifact_perm p ".
                                $where.
                                "  AND a.submitted_by = p.user_id ".
-                               "  AND p.group_artifact_id = ".$this->group_artifact_id." ".
+                               "  AND p.group_artifact_id = ". db_ei($this->group_artifact_id) ." ".
                                "  AND p.perm_level >= 2 ".
                                "";
                         $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
@@ -442,7 +444,7 @@ class ArtifactReport extends Error {
                                $from." , user_group ug ".
                                $where.
                                "  AND a.submitted_by = ug.user_id ".
-                               "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                               "  AND ug.group_id = ". db_ei($GLOBALS['group_id']) ." ".
                                "";
                         $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
                     }
@@ -455,7 +457,7 @@ class ArtifactReport extends Error {
                                $from." , user_group ug ".
                                $where.
                                "  AND a.submitted_by = ug.user_id ".
-                               "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                               "  AND ug.group_id = ". db_ei($GLOBALS['group_id']) ." ".
                                "  AND ug.admin_flags = 'A' ".
                                "";
                         $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
@@ -480,9 +482,9 @@ class ArtifactReport extends Error {
                                    $from." , artifact_field_value afv, ugroup_user uu ".
                                    $where.
                                    "  AND a.artifact_id = afv.artifact_id ".
-                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.field_id IN (". db_es(implode(', ', $assigned_to)) .") ".
                                    "  AND afv.valueInt = uu.user_id ".
-                                   "  AND uu.ugroup_id IN (".implode(', ', $static_ugroups).") ".
+                                   "  AND uu.ugroup_id IN (". db_es(implode(', ', $static_ugroups)) .") ".
                                    "";
                             $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
                         }
@@ -496,9 +498,9 @@ class ArtifactReport extends Error {
                                    $from." , artifact_field_value afv, artifact_perm p ".
                                    $where.
                                    "  AND a.artifact_id = afv.artifact_id ".
-                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.field_id IN (". db_es(implode(', ', $assigned_to)) .") ".
                                    "  AND afv.valueInt = p.user_id ".
-                                   "  AND p.group_artifact_id = ".$this->group_artifact_id." ".
+                                   "  AND p.group_artifact_id = ". db_ei($this->group_artifact_id) ." ".
                                    "  AND p.perm_level >= 2 ".
                                    "";
                             $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
@@ -512,9 +514,9 @@ class ArtifactReport extends Error {
                                    $from." , artifact_field_value afv, user_group ug ".
                                    $where.
                                    "  AND a.artifact_id = afv.artifact_id ".
-                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.field_id IN (". db_es(implode(', ', $assigned_to)) .") ".
                                    "  AND afv.valueInt = ug.user_id ".
-                                   "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                                   "  AND ug.group_id = ". db_ei($GLOBALS['group_id']) ." ".
                                    "";
                             $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
                         }
@@ -527,9 +529,9 @@ class ArtifactReport extends Error {
                                    $from." , artifact_field_value afv, user_group ug ".
                                    $where.
                                    "  AND a.artifact_id = afv.artifact_id ".
-                                   "  AND afv.field_id IN (".implode(', ', $assigned_to).") ".
+                                   "  AND afv.field_id IN (". db_es(implode(', ', $assigned_to)) .") ".
                                    "  AND afv.valueInt = ug.user_id ".
-                                   "  AND ug.group_id = ".$GLOBALS['group_id']." ".
+                                   "  AND ug.group_id = ". db_ei($GLOBALS['group_id']) ." ".
                                    "  AND ug.admin_flags = 'A' ".
                                    "";
                             $aids = array_merge($aids, $this->_ExecuteQueryForSelectReportItems($sql));
@@ -561,7 +563,7 @@ class ArtifactReport extends Error {
 		$this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
 		
 		// Final query
-		$limit = " LIMIT $offset,$chunksz";
+		$limit = " LIMIT ". db_ei($offset) .",". db_ei($chunksz) ;
 		
         //We need group by due to multi assign-to. However, the performances with big trackers are really bad.
         $sql = $select." ".$from." ".$where." GROUP BY artifact_id ".$order_by.$limit;
@@ -615,7 +617,7 @@ class ArtifactReport extends Error {
           if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()])) ) {
 	
 			// Only select box criteria to where clause if argument is not ANY
-			return " AND ".$field_name." IN (".implode(",",$prefs[$field->getName()]).") ";
+			return " AND ".$field_name." IN (". db_es(implode(",",$prefs[$field->getName()])). .") ";
 	
 	    } else if ( $field->isDateField() && (
             ((isset($prefs[$field->getName()]) && $prefs[$field->getName()][0]) || 
@@ -755,7 +757,7 @@ class ArtifactReport extends Error {
 
 	  
 	  $from = "FROM artifact a";
-	  $where = "WHERE a.group_artifact_id = ".$this->group_artifact_id;
+	  $where = "WHERE a.group_artifact_id = ". db_ei($this->group_artifact_id) ;
 	  
 	  
 	  
@@ -777,7 +779,7 @@ class ArtifactReport extends Error {
 		
 		if ($notany) {
 		  $from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		    " and v".$count.".field_id=".$field->getID().")";
+		    " and v".$count.".field_id=". db_ei($field->getID()) .")";
 		  
 		  $count++;
 		}
@@ -797,7 +799,7 @@ class ArtifactReport extends Error {
 	      
 	      if ($notany) {
 		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		  " and v".$count.".field_id=".$field->getID().")";
+		  " and v".$count.".field_id=". db_ei($field->getID()) .")";
 		
 		$count++;
 	      }
@@ -809,7 +811,7 @@ class ArtifactReport extends Error {
 	      
 	      if ($notany) {
 		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		  " and v".$count.".field_id=".$field->getID().")";
+		  " and v".$count.".field_id=". db_ei($field->getID()) .")";
 		
 		$count++;
 	      }
@@ -873,11 +875,11 @@ class ArtifactReport extends Error {
 	  
 	  $select = "SELECT a.severity as severity_id, a.artifact_id as artifact_id, ";
 	  $from = "FROM artifact a";
-	  $where = "WHERE a.group_artifact_id = ".$this->group_artifact_id;
+	  $where = "WHERE a.group_artifact_id = ". db_ei($this->group_artifact_id) ;
 	  
 	  //add directly the aids concerned by the query given in prefs
 	  if ($aids) {
-            $where .= " AND a.artifact_id IN (".implode(",",$aids).")";
+            $where .= " AND a.artifact_id IN (". db_es(implode(",",$aids)) .")";
 	  }
 	  
 	  $order_by = "ORDER BY ";
@@ -948,7 +950,7 @@ class ArtifactReport extends Error {
 	      if ($field->isShowOnResult() || 
 		  ($field->isShowOnQuery() && !$aids && $notany)) {
 		$from .= " JOIN artifact_field_value v".$count." ON (v".$count.".artifact_id=a.artifact_id".
-		  " and v".$count.".field_id=".$field->getID().")";
+		  " and v".$count.".field_id=". db_ei($field->getID()) .")";
 	      }
 	      
 	      if ( $field->isShowOnResult() ) {
@@ -966,8 +968,8 @@ class ArtifactReport extends Error {
 		} else if ($field->isSelectBox() || $field->isMultiSelectBox()) {
 		  $select .= " v".$count.".".$field->getValueFieldName()." as ".$field->getName();
 		  $from .= " LEFT JOIN artifact_field_value_list v".$count."_val"
-                ." ON (v".$count."_val.group_artifact_id=".$this->group_artifact_id
-                ." and v".$count."_val.field_id=".$field->getID()
+                ." ON (v".$count."_val.group_artifact_id=". db_ei($this->group_artifact_id) 
+                ." and v".$count."_val.field_id=". db_ei($field->getID()) 
                 ." and v".$count."_val.value_id=v".$count.".".$field->getValueFieldName()
                 .")";
 		} else {
