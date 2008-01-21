@@ -54,22 +54,22 @@ if ($action == 'permissions_frs_package') {
                 $package_id = $request->get('package_id');
                 $date       = $request->get('date');
                 $group_id   = $request->get('group_id');
-            $validator = new frsValidator();
-            $release = array (
+                $validator = new frsValidator();
+                $release = array (
                     'name' => $name,
                     'package_id' => $package_id,
                     'date' => $date
-            );
-            if ($validator->isValidForCreation($release, $group_id)) {
-                //frs valid
-                header("X-JSON: ({valid:true})");
-            } else {
-                //frs non valid
-                $errors = $validator->getErrors();
-                $feedback = new Feedback();
-                $feedback->log('error', $errors[0]);
-                header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
-            }
+                );
+                if ($validator->isValidForCreation($release, $group_id)) {
+                    //frs valid
+                    header("X-JSON: ({valid:true})");
+                } else {
+                    //frs non valid
+                    $errors = $validator->getErrors();
+                    $feedback = new Feedback();
+                    $feedback->log('error', $errors[0]);
+                    header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
+                }
             }
         } else {
             if ($action == 'validator_frs_update') {
@@ -93,23 +93,23 @@ if ($action == 'permissions_frs_package') {
                     $date       = $request->get('date');
                     $group_id   = $request->get('group_id');
                     $release_id = $request->get('release_id');
-                $validator = new frsValidator();
-                $release = array (
+                    $validator = new frsValidator();
+                    $release = array (
                         'name' => $name,
                         'release_id' => $release_id,
                         'package_id' => $package_id,
                         'date' => $date
-                );
-                if ($validator->isValidForUpdate($release, $group_id)) {
-                    //frs valid
-                    header("X-JSON: ({valid:true})");
-                } else {
-                    //frs non valid
-                    $errors = $validator->getErrors();
-                    $feedback = new Feedback();
-                    $feedback->log('error', $errors[0]);
-                    header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
-                }
+                    );
+                    if ($validator->isValidForUpdate($release, $group_id)) {
+                        //frs valid
+                        header("X-JSON: ({valid:true})");
+                    } else {
+                        //frs non valid
+                        $errors = $validator->getErrors();
+                        $feedback = new Feedback();
+                        $feedback->log('error', $errors[0]);
+                        header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
+                    }
                 }
             } else {
                 if ($action == 'refresh_file_list') {
