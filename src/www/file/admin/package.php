@@ -83,8 +83,8 @@ if ($request->valid($vFunc)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages','p_del'));
                         }
                     }
-                }
-                $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
+            }
+            $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             break;
         case 'add':
             $package =& new FRSPackage(array('group_id' => $group_id));
