@@ -1832,7 +1832,7 @@ function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $repor
         if ($af->isError()) {
             return new soap_fault(get_artifact_report_fault,'getArtifactsFromReport',$af->getErrorMessage(),'');
         }
-        return artifact_report_result_to_soap($artifacts, $total_artifacts, $report_id, $group_artifact_id); 
+        return artifact_report_result_to_soap($artifacts, $total_artifacts); 
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactsFromReport','Invalid Session ','');
     }
@@ -1999,51 +1999,45 @@ function artifact_query_result_to_soap($artifacts, $total_artifacts_number) {
  * @param Object{Artifact} $artifact the artifact to convert.
  * @return array the SOAPArtifactReport corresponding to the Artifact Object
  */
-function artifact_report_to_soap($artifact, $report) {
+function artifact_report_to_soap($artifact) {
     global $art_field_fact;
 
     $return = array();
     $return_fields = array();
-    // We check if the user can view this artifact
-    if ($artifact->userCanView(user_getid())) {
-        $result_fields = $report->getResultFields();
-        while (list($key,$field) = each($result_fields) ) {
-            $artifact_field_report = array();
-            $artifact_field_report['field_name'] = $key;
-            // Some fields needs to be html-decoded
-            if ($key == 'details' || $key == 'summary') {
-                $artifact_field_report['field_value'] = html_entity_decode($artifact->getValue($key));
-            } else {
-                $artifact_field_report['field_value'] = $artifact->getValue($key);
-            }
-            $return_fields[] = $artifact_field_report;
-        }
-        
-        $return['artifact_id'] = $artifact->getID();
-        $return['severity'] = $artifact->getSeverity();
-        
+    
+    $return['artifact_id'] = $artifact['artifact_id'];
+    $return['severity'] = $artifact['severity_id'];
+    
+    // we assume that the first field is 'severity_id'
+    $arr_keys = array_keys($artifact);
+    if ($arr_keys[0] == 'severity_id') {
+        // we remove the severity_id field (only used to color the line) -- if severity is used in the report, the field name is 'severity'
+        $severity_field = array_shift($artifact);
+    }
+    
+    foreach($artifact as $field_name => $field_value) {
+        $return_fields[] = array('field_name' =>$field_name, 'field_value' => $field_value);
     }
     $return['fields'] = $return_fields;
+    
     return $return;
 }
 
-function artifacts_report_to_soap($at_arr, $report_id, $group_artifact_id) {
-    // retrieve the report
-    $report = new ArtifactReport($report_id, $group_artifact_id);
+function artifacts_report_to_soap($at_arr) {
     $return = array();
     foreach ($at_arr as $atid => $artifact) {
-        $return[] = artifact_report_to_soap($artifact, $report);
+        $return[] = artifact_report_to_soap($artifact);
     }
     return $return;
 }
 
-function artifact_report_result_to_soap($artifacts, $total_artifacts_number, $report_id, $group_artifact_id) {
+function artifact_report_result_to_soap($artifacts, $total_artifacts_number) {
     $return = array();
     $return['total_artifacts_number'] = $total_artifacts_number;
     if ($total_artifacts_number == 0 && $artifacts == false) {
         $return['artifacts'] = null;
     } else {
-        $return['artifacts'] = artifacts_report_to_soap($artifacts, $report_id, $group_artifact_id);
+        $return['artifacts'] = artifacts_report_to_soap($artifacts);
     }
     return $return;
 }

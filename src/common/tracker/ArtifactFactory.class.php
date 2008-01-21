@@ -301,22 +301,27 @@ class ArtifactFactory extends Error {
         // get the SQL query corresponding to the query
         $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
         
+        $result = $artifact_report->getResultQueryReport($sql);
+        
         $artifacts = array();
-        $result=db_query($sql);
-        $rows = db_numrows($result);
-		$this->fetched_rows=$rows;
-        if (db_error()) {
-			$this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
-			return false;
-		} else {
-			while ($arr = db_fetch_array($result)) {
-				$artifact = new Artifact($this->ArtifactType, $arr['artifact_id'], true);
-                // artifact is not added if the user can't view it
-                if ($artifact->userCanView()) {
-                    $artifacts[$arr['artifact_id']] = $artifact;
+        foreach($result as $art) {
+            $artifact_id = $art['artifact_id'];
+            
+            $artifact = new Artifact($this->ArtifactType, $art['artifact_id'], true);
+            if ($artifact->userCanView()) {
+                
+                $fields = array();
+                foreach($art as $field_name => $field_value) {
+                    if (!is_int($field_name)) {
+                        //echo $field_name . '=>' . $field_value . ' # ';
+                        $fields[$field_name] = $field_value;
+                    }
                 }
-			}
-		}
+                $artifacts[$artifact_id] = $fields;
+            }
+            
+        }
+        
 		return $artifacts;
     }
 
