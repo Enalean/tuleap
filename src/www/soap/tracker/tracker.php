@@ -1579,7 +1579,7 @@ function artifacttype_to_soap($at) {
                     
                 if ($field->userCanRead($group_id,$group_artifact_id,$user_id)) {
                     $availablevalues = array();
-                    $result = $field->getFieldPredefinedValues($at->getID());
+                    $result = $field->getFieldPredefinedValues($at->getID(), false, false, false, false);
                     $rows=db_numrows($result);
                     $cols=db_numfields($result);
                     for ($j=0; $j<$rows; $j++) {     
