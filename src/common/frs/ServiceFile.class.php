@@ -101,8 +101,8 @@ class ServiceFile extends Service {
         $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
         "FROM frs_package,frs_release ".
         "WHERE frs_package.package_id=frs_release.package_id ".
-        "AND frs_package.group_id='". $this->getGroupId() ."' ".
-        "AND frs_release.status_id=' ".$frspf->STATUS_ACTIVE."' ".
+        "AND frs_package.group_id='". db_ei($this->getGroupId()) ."' ".
+        "AND frs_release.status_id=' ".db_ei($frspf->STATUS_ACTIVE)."' ".
         "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
         $res_files = db_query($sql);
         $rows_files = db_numrows($res_files);
