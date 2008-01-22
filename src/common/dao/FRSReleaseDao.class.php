@@ -42,13 +42,13 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function searchById($id) {
         $_id = (int) $id;
-        return $this->_search(' r.release_id = ' . $_id, '', ' ORDER BY release_date DESC LIMIT 1');
+        return $this->_search(' r.release_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC LIMIT 1');
     }
 
     function searchInGroupById($id, $group_id) {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        return $this->_search(' p.group_id=' . $_group_id . ' AND r.release_id=' . $_id . ' AND r.package_id=p.package_id AND p.status_id!=' . $this->STATUS_DELETED, '', ' ORDER BY release_date DESC LIMIT 1', array (
+        return $this->_search(' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) . ' AND r.package_id=p.package_id AND p.status_id!=' . db_ei($this->STATUS_DELETED), '', ' ORDER BY release_date DESC LIMIT 1', array (
             'frs_package AS p'
         ));
     }
@@ -58,8 +58,8 @@ class FRSReleaseDao extends DataAccessObject {
         $_group_id = (int) $group_id;
         $_package_id = (int) $package_id;
 
-        return $this->_search(' p.package_id=' . $_package_id . ' AND p.group_id=' . $_group_id . ' AND r.release_id=' . $_id .
-        ' AND r.package_id=p.package_id AND p.status_id!=' . $this->STATUS_DELETED, '', 'ORDER BY release_date DESC LIMIT 1', array (
+        return $this->_search(' p.package_id=' . $this->da->escapeInt($_package_id) . ' AND p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) .
+        ' AND r.package_id=p.package_id AND p.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED), '', 'ORDER BY release_date DESC LIMIT 1', array (
             'frs_package AS p'
         ));
     }
@@ -74,7 +74,7 @@ class FRSReleaseDao extends DataAccessObject {
         $sql = sprintf("SELECT r.release_id, p.name AS package_name, p.package_id, r.name AS release_name, " .
         "r.status_id " .
         "FROM frs_release AS r, frs_package AS p " .
-        "WHERE p.status_id != ".$this->STATUS_DELETED." AND r.status_id != ".$this->STATUS_DELETED." AND p.group_id= %s " .
+        "WHERE p.status_id != ". $this->da->escapeInt($this->STATUS_DELETED) ." AND r.status_id != ". $this->da->escapeInt($this->STATUS_DELETED) ." AND p.group_id= %s " .
         "AND r.package_id = p.package_id " .
          ($package_id ? "AND p.package_id = %s " : ""), $this->da->quoteSmart($_group_id), $this->da->quoteSmart($_package_id));
         return $this->retrieve($sql);
@@ -94,14 +94,14 @@ class FRSReleaseDao extends DataAccessObject {
      */
     function searchByPackageId($id) {
         $_id = (int) $id;
-        return $this->_search(' package_id=' . $_id, '', ' ORDER BY release_date DESC, release_id DESC ');
+        return $this->_search(' package_id=' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC, release_id DESC ');
     }
 
     function _search($where, $group = '', $order = '', $from = array ()) {
         $sql = 'SELECT r.* ' .
         ' FROM frs_release AS r ' .
          (count($from) > 0 ? ', ' . implode(', ', $from) : '') .
-         (trim($where) != '' ? ' WHERE ' . $where . ' AND r.status_id!= ' . $this->STATUS_DELETED . ' ' : '') .
+         (trim($where) != '' ? ' WHERE ' . $where . ' AND r.status_id!= ' . $this->da->escapeInt($this->STATUS_DELETED) . ' ' : '') .
         $group .
         $order;
         return $this->retrieve($sql);
@@ -150,20 +150,20 @@ class FRSReleaseDao extends DataAccessObject {
 
         if ($status_id !== null) {
             $arg[] = 'status_id';
-            $values[] = ((int) $status_id);
+            $values[] = ($this->da->escapeInt($status_id));
         }
 
         if ($preformatted !== null) {
             $arg[] = 'preformatted';
-            $values[] = ((int) $preformatted);
+            $values[] = ($this->da->escapeInt($preformatted));
         }
 
         if ($release_date !== null) {
             $arg[] = 'release_date';
-            $values[] = ((int) $release_date);
+            $values[] = ($this->da->escapeInt($release_date));
         } else {
             $arg[] = 'release_date';
-            $values[] = ((int) time());
+            $values[] = ($this->da->escapeInt(time()));
         }
 
         $um = & UserManager :: instance();
@@ -244,7 +244,7 @@ class FRSReleaseDao extends DataAccessObject {
         $argArray = array ();
 
         if ($package_id !== null) {
-            $argArray[] = 'package_id=' . ((int) $package_id);
+            $argArray[] = 'package_id=' . ($this->da->escapeInt($package_id));
         }
 
         if ($name !== null) {
@@ -260,20 +260,20 @@ class FRSReleaseDao extends DataAccessObject {
         }
 
         if ($status_id !== null) {
-            $argArray[] = 'status_id=' . ((int) $status_id);
+            $argArray[] = 'status_id=' . ($this->da->escapeInt($status_id));
         }
 
         if ($preformatted !== null) {
-            $argArray[] = 'preformatted=' . ((int) $preformatted);
+            $argArray[] = 'preformatted=' . ($this->da->escapeInt($preformatted));
         }
 
         if ($release_date !== null) {
-            $argArray[] = 'release_date=' . ((int) $release_date);
+            $argArray[] = 'release_date=' . ($this->da->escapeInt($release_date));
         }
 
         $sql = 'UPDATE frs_release' .
         ' SET ' . implode(', ', $argArray) .
-        ' WHERE status_id != ' . $this->STATUS_DELETED . ' AND release_id=' . ((int) $release_id);
+        ' WHERE status_id != ' . $this->da->escapeInt($this->STATUS_DELETED) . ' AND release_id=' . ($this->da->escapeInt($release_id));
 
         $inserted = $this->update($sql);
         return $inserted;
@@ -316,7 +316,7 @@ class FRSReleaseDao extends DataAccessObject {
      * @return true if there is no error
      */
     function delete($release_id, $status_deleted) {
-        $sql = sprintf("UPDATE frs_release SET status_id = " . $status_deleted . " WHERE release_id=%d", $release_id);
+        $sql = sprintf("UPDATE frs_release SET status_id = " . $this->da->escapeInt($status_deleted) . " WHERE release_id=%d", $this->da->escapeInt($release_id));
 
         $deleted = $this->update($sql);
         return $deleted;
