@@ -308,36 +308,65 @@ Array
 [mnazaria@linux codex cli ]$ ./codex.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
 Array
 (
-    [0] => Array
-            (
-                [artifact_id] => 7173
-                [group_artifact_id] => 113
-                [status_id] => 0
-                [submitted_by] => 102
-                [open_date] => 1115311786
-                [close_date ] => 1125064392
-                [summary] => New bug
-                [details] => small bug
-                [severity] => 3
-                [extra_fields] => Array
-                                    (
-                                        [0] => Array
-                                                (
-                                                    [field_id] => 128
-                                                    [field_value] => 142
-                                                )
-                                        [1] => Array
-                                                (
-                                                    [field_id] => 129
-                                                    [field_value] => 41
-                                                )
-                                        [2] => Array
-                                                (
-                                                    [field_id] => 130
-                                                    [field_value] => 42
-                                                )
-                                    )
-            )
+    [total_artifacts_number] => 12
+    [artifacts] => Array ( 
+                    [0] => Array (
+                            [artifact_id] => 1304
+                            [severity] => 5
+                            [fields] => Array (
+                                        [0] => Array (
+                                                [field_name] => artifact_id
+                                                [feidl_value] => 1304
+                                               )
+                                        [1] => Array (
+                                                [field_name] => submitted_by
+                                                [field_value] => mnazaria
+                                               )
+                                        [2] => Array (
+                                                [field_name] => summary
+                                                [field_value] => New bug
+                                               )
+                                        [3] => Array (
+                                                [field_name] => field_31
+                                                [field_value] => USA, France
+                                               )
+                                        [4] => Array (
+                                                [field_name] => field_32
+                                                [field_value] => mnazaria, jsmith
+                                               )
+                                       )
+                           )
+                   )
+                   [1] => Array (
+                            [artifact_id] => 1305
+                            [severity] => 8
+                            [fields] => Array (
+                                        [0] => Array (
+                                                [field_name] => artifact_id
+                                                [feidl_value] => 1305
+                                               )
+                                        [1] => Array (
+                                                [field_name] => submitted_by
+                                                [field_value] => jsmith
+                                               )
+                                        [2] => Array (
+                                                [field_name] => summary
+                                                [field_value] => New bug 2
+                                               )
+                                        [3] => Array (
+                                                [field_name] => field_31
+                                                [field_value] => Asia
+                                               )
+                                        [4] => Array (
+                                                [field_name] => field_32
+                                                [field_value] => None
+                                               )
+                                       )
+                           )
+                   )
+                   
+                   [...]
+                   
 )
                     </programlisting>
                 </example>
