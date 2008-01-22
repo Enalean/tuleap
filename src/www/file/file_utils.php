@@ -143,7 +143,7 @@ function frs_show_processor_popup ($group_id, $name='processor_id', $checked_val
 	*/
 	global $FRS_PROCESSOR_RES,$Language;
 	if (!isset($FRS_PROCESSOR_RES)) {
-		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=$group_id ORDER BY rank");
+		$FRS_PROCESSOR_RES=db_query("SELECT * FROM frs_processor WHERE group_id=100 OR group_id=".db_ei($group_id)." ORDER BY rank");
 	}
 	return html_build_select_box ($FRS_PROCESSOR_RES,$name,$checked_val,true,$Language->getText('file_file_utils','must_choose_one'));
 }
@@ -284,7 +284,7 @@ function file_utils_add_proc ($pname,$prank) {
 		   ' (name,group_id,rank)'.
 		   ' VALUES'.
 		   '("%s",%d,%d)',
-		   $pname, $group_id, $prank);
+		   db_es(htmlspecialchars($pname)), db_ei($group_id), db_ei($prank));
     $result = db_query($sql);
     
     if ($result) {
@@ -303,7 +303,7 @@ function file_utils_update_proc ($pid,$pname,$prank) {
 		   ' SET name = "%s",rank = %d'.
 		   ' WHERE processor_id=%d'.
 		   ' AND group_id=%d',
-		   $pname, $prank, $pid, $group_id);
+		   db_es(htmlspecialchars($pname)), db_ei($prank), db_ei($pid), db_ei($group_id));
     $result = db_query($sql);
     
     if ($result) {
@@ -321,7 +321,7 @@ function file_utils_delete_proc ($pid) {
     $sql = sprintf('DELETE FROM frs_processor'.
 		   ' WHERE group_id=%d'.
 		   ' AND processor_id=%d',
-		   $group_id, $pid);
+		   db_ei($group_id), db_ei($pid));
     $result = db_query($sql);
 
     if ($result) {
@@ -401,7 +401,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         'release_new_file_version'
     ), 'help' => 'QuickFileRelease.html'));
     echo '<H3>'.$title.'</H3>';
-    $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".$group_id.") ORDER BY rank";
+    $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".db_ei($group_id).") ORDER BY rank";
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     $processor_name = util_result_column_to_array($result, 1);
@@ -847,7 +847,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 $new_id = forum_create_forum($GLOBALS['sys_news_group'], $release_news_subject, 1, 0);
                 $sql = sprintf('INSERT INTO news_bytes' .
                 '(group_id,submitted_by,is_approved,date,forum_id,summary,details)' .
-                'VALUES (%d, %d, %d, %d, %d, "%s", "%s")', $group_id, user_getid(), 0, time(), $new_id, htmlspecialchars($release_news_subject), htmlspecialchars($release_news_details));
+                'VALUES (%d, %d, %d, %d, %d, "%s", "%s")', db_ei($group_id), user_getid(), 0, time(), db_ei($new_id), db_es(htmlspecialchars($release_news_subject)), db_es(htmlspecialchars($release_news_details)));
                 $result = db_query($sql);
 
                 if (!$result) {
