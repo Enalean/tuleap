@@ -202,6 +202,27 @@
     }
     
     /**
+     * Apply validator on submitted user value and return the value if valid
+     * Else return default value
+     * @param string $variable Name of the parameter to get.
+     * @param mixed $validator Name of the validator (string, uint, email) or an instance of a validator
+     * @param mixed $default_value Value return if the validator is not valid
+     */
+    function getValidated($variable, $validator, $default_value = null) {
+        $is_valid = false;
+        if (is_object($validator) && method_exists($validator, 'valid')) {
+            $is_valid = $this->valid($validator);
+        } else if(is_string($validator) && class_exists('Valid_'.$validator)) {
+            $validator_classname = 'Valid_'.$validator;
+            $v = new $validator_classname($variable);
+            $is_valid = $this->valid($v);
+        } else {
+            trigger_error('Validator '. $validator .' is not found', E_USER_ERROR);
+        }
+        return $is_valid ? $this->get($variable) : $default_value;
+    }
+    
+    /**
      * Check that all submitted value has been validated
      */
     function checkThatAllVariablesAreValidated() {

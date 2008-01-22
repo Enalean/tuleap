@@ -305,5 +305,41 @@ class HTTPRequestTest extends UnitTestCase {
         $r->validFile($v);
         $v->tally();
     }
+    
+    function testGetValidated() {
+        $v1 =& new MockValid($this);
+        $v1->setReturnValue('getKey', 'testkey');
+        $v1->setReturnValue('validate', true);
+        
+        $v2 =& new MockValid($this);
+        $v2->setReturnValue('getKey', 'testkey');
+        $v2->setReturnValue('validate', false);
+        
+        $v3 =& new MockValid($this);
+        $v3->setReturnValue('getKey', 'does_not_exist');
+        $v3->setReturnValue('validate', false);
+        
+        $v4 =& new MockValid($this);
+        $v4->setReturnValue('getKey', 'does_not_exist');
+        $v4->setReturnValue('validate', true);
+        
+        $r =& new HTTPRequest();
+        //If valid, should return the submitted value...
+        $this->assertEqual($r->getValidated('testkey', $v1), 'testvalue');
+        //...even if there is a defult value!
+        $this->assertEqual($r->getValidated('testkey', $v1, 'default value'), 'testvalue');
+        //If not valid, should return the default value...
+        $this->assertEqual($r->getValidated('testkey', $v2, 'default value'), 'default value');
+        //...or null if there is no default value!
+        $this->assertNull($r->getValidated('testkey', $v2));
+        //If the variable is not submitted, there is no incidence, the result depends on the validator...
+        $this->assertEqual($r->getValidated('does_not_exist', $v3, 'default value'), 'default value');
+        $this->assertEqual($r->getValidated('does_not_exist', $v4, 'default value'), false);
+        
+        //Not really in the "unit" test spirit 
+        //(create dynamically a new instance of a validator inside the function. Should be mocked)
+        $this->assertEqual($r->getValidated('testkey', 'string', 'default value'), 'testvalue');
+        $this->assertEqual($r->getValidated('testkey', 'uint', 'default value'), 'default value');
+    }
 }
 ?>
