@@ -207,7 +207,7 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-                                if ($ath->getToggleNotification()) {
+                                if ($ath->getStopNotification()) {
                                 	$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
                                 }	
                             $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
@@ -290,7 +290,7 @@ if ( $func == 'gotoid' ) {
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-								if ($ath->getToggleNotification()) {
+								if ($ath->getStopNotification()) {
 									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
 								}                            
                             $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
@@ -520,7 +520,7 @@ if ( $func == 'gotoid' ) {
                         //
                         if (!isset($was_error) || !$was_error) {
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
-                            	if ($ah->ArtifactType->getToggleNotification()) {
+                            	if ($ah->ArtifactType->getStopNotification()) {
                         			$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
                         		}                                                            
                         }
@@ -652,7 +652,7 @@ if ( $func == 'gotoid' ) {
 		//
 		if (!$was_error) {
 		    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
-			if ($ath->getToggleNotification()) {
+			if ($ath->getStopNotification()) {
                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
             }		  
 		}
