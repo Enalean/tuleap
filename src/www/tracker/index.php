@@ -207,6 +207,9 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
+                                if ($ath->getToggleNotification()) {
+                                	$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                                }	
                             $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                         }
                 }
@@ -287,6 +290,9 @@ if ( $func == 'gotoid' ) {
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
+								if ($ath->getToggleNotification()) {
+									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+								}                            
                             $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                         }
                 }
@@ -514,6 +520,9 @@ if ( $func == 'gotoid' ) {
                         //
                         if (!isset($was_error) || !$was_error) {
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
+                            	if ($ah->ArtifactType->getToggleNotification()) {
+                        			$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                        		}                                                            
                         }
                         $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                 }
@@ -642,7 +651,10 @@ if ( $func == 'gotoid' ) {
 		//      Show just one feedback entry if no errors
 		//
 		if (!$was_error) {
-		  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
+		    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
+			if ($ath->getToggleNotification()) {
+                $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+            }		  
 		}
 		require('./browse.php');
                 break;
