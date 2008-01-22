@@ -87,7 +87,12 @@ function db_fetch_array($qhandle = 0) {
 }
 	
 function db_insertid($qhandle) {
-	return @mysql_insert_id();
+	global $conn;
+    if (isset($conn) && $conn) {
+        return @mysql_insert_id($conn);
+    } else {
+        return @mysql_insert_id();
+    }
 }
 
 function db_error() {
