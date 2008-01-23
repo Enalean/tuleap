@@ -144,6 +144,71 @@ class Docman_ItemFactory {
         return $type;
     }
 
+    /**
+     * This method checks if the item is a wiki page. if true it return its id in wiki, else, it returns null.
+     *
+     * @param int $group_id project id
+     * @param int $item_id  docman item id
+     *
+     * @return wiki page id or null if the page is not yet created in wiki.
+     */
+    function isItAWikiPage($group_id, $item_id){
+        $item =& $this->getItemFromDb($item_id);
+        $item_type = $this->getItemTypeForItem(&$item);
+        // Is it a wiki page ?
+        if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            // Get item pagename
+            $wiki_page_name = $this->getWikiPageName($item_id);
+            // Get wiki id of the pagename 
+            $dao =& $this->_getItemDao();
+            $id_in_wiki = $dao->retreiveWikiPageId($wiki_page_name, $group_id); 
+            if ($id_in_wiki != null){
+                return $id_in_wiki;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            // Wiki page not created yet. Just return nothing
+            return null;
+        }
+    }
+	
+    /**
+     * Looks for pagename attribute for item with $id. Only used for wiki pages docman items
+     *
+     * @param int $id
+     * 
+     * @return string $pagename
+     */
+    function getWikiPageName($id) {
+        $pagename = null;
+        $dao =& $this->_getItemDao();
+
+        $dar = $dao->searchById($id);
+
+        if($dar && !$dar->isError() && $dar->rowCount() == 1 ){
+            $row =& $dar->current();
+            $pagename = $row['wiki_page'];
+        }
+        return $pagename;
+    }
+	
+    /**
+     * Looks for wiki page id using the pagename and the group_id attributes
+     *
+     * @param string $pagename
+     * @param int group_id
+     *
+     * @return int $id or null if the page doesn't exist.
+     */
+    function getIdInWiki($pagename, $group_id) {
+        $dao =& $this->_getItemDao();
+        $id = $dao->retreiveWikiPageId($pagename, $group_id);
+        return $id;
+    }
+
     function &getItemFromDb($id, $params = array()) {
         $_id = (int) $id;
         $dao =& $this->_getItemDao();
