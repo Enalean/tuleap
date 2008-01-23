@@ -770,12 +770,16 @@ class DocmanActions extends Actions {
                         if ($permission != $permission_definition[$wanted_permissions[$ugroup_id]]['type']) {
                             //The permission has been changed
                             permission_clear_ugroup_object($group_id, $permission, $ugroup_id, $item_id);
+                            $this->wikiPermissions($group_id, $permission, $item_id, $ugroup_id, $force, true);
                             $history[$permission] = true;
                             $perms_cleared = true;
                             $done_permissions[$ugroup_id] = 100;
                         } else {
                             //keep the old permission
                             $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
+                            //propagate it to wiki too. It might not be set at wiki side.
+                            $this->wikiPermissions($group_id, $permission, $item_id, $ugroup_id, $force, false);
+
                         }
                     }
                 }
@@ -784,7 +788,8 @@ class DocmanActions extends Actions {
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id, $force);
+                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
+                    $this->wikiPermissions($group_id, $permission, $item_id, $ugroup_id, $force, false);
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {
@@ -795,6 +800,22 @@ class DocmanActions extends Actions {
         }
     }
     
+    /**
+     * This method was added in order to propagate permissions set on wiki pages docman items to wiki service. 
+     *
+     * @param int $group_id project id
+     * @param string $permission permission to be applied on docman item
+     * @param int $item_id  docman item id
+     * @param int $ugroup_id  id of user group that will benefit from the permissions to be set on the docman item
+     * @param int $force flag to force permission write.
+     * @param boolean $just_clean when set to true, the method just cleans perms already granted on an object to a user group
+     */
+    function wikiPermissions($group_id, $permission, $item_id, $ugroup_id, $force, $just_clean) {
+        require_once('Docman_PermissionsManager.class.php');
+        $dPM =& Docman_PermissionsManager::instance($group_id);
+        $dPM->propagatePermissionToWiki($group_id, $permission, $item_id, $ugroup_id, $force, $just_clean);
+    }
+
     /**
     * Return the parent (or grand parent) of ugroup $parent which has a bigger permission
     * @return integer the ugroup id which has been found or false
