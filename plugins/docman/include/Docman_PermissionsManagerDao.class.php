@@ -43,6 +43,14 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function retrievePermissionsForItem($item_id, $perms) {
+        $sql = 'SELECT *'.
+            ' FROM permissions'.
+            ' WHERE object_id = '.db_ei($item_id).
+            ' AND permission_type IN ('.implode(',', $perms).')';
+        return $this->retrieve($sql);
+    }
+
     function setDefaultPermissions($objectId, $perm, $force=false) {
         $res = permission_db_get_defaults($perm);
         while($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
