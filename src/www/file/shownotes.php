@@ -44,22 +44,23 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 /*
 	Show preformatted or plain notes/changes
 */
+    $hp =& CodeX_HTMLPurifier::instance();
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-             .htmlentities($release->getNotes()).
+             .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .htmlentities($release->getChanges());
+            .$hp->purify($release->getChanges());
         echo '</PRE>';
     }else{
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-            .$release->getNotes().
+            .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .$release->getChanges();
+            .$hp->purify($release->getChanges());
     }
     
 
