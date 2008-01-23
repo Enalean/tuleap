@@ -390,7 +390,7 @@ SHOW COLUMNS FROM artifact LIKE 'last_update_date';
 EOF
 if [ $? -ne 0 ]; then
   $CAT <<EOF | $MYSQL $pass_opt codex
-ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date
+ALTER TABLE artifact ADD COLUMN last_update_date INT(11) UNSIGNED NOT NULL default '0' AFTER close_date;
 EOF
 fi
 
@@ -403,8 +403,8 @@ EOF
 if [ $? -ne 0 ]; then
   timestamp=`date +%s`
   $CAT <<EOF | $MYSQL $pass_opt codex
-ALTER TABLE user ADD COLUMN last_pwd_update INT(11) UNSIGNED NOT NULL default '0'
-UPDATE user SET last_pwd_update = $timestamp
+ALTER TABLE user ADD COLUMN last_pwd_update INT(11) UNSIGNED NOT NULL default '0';
+UPDATE user SET last_pwd_update = $timestamp;
 EOF
 fi
 $CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_access_date
@@ -412,7 +412,7 @@ SHOW COLUMNS FROM user LIKE 'last_access_date';
 EOF
 if [ $? -ne 0 ]; then
   $CAT <<EOF | $MYSQL $pass_opt codex
-ALTER TABLE user ADD COLUMN last_access_date INT(11) UNSIGNED NOT NULL default '0'
+ALTER TABLE user ADD COLUMN last_access_date INT(11) UNSIGNED NOT NULL default '0';
 EOF
 fi
 
