@@ -479,6 +479,15 @@ class DocmanActions extends Actions {
         }
         return $this->version_factory;
     }
+
+    var $permissions_manager;
+    function &_getPermissionsManagerInstance(){
+        if(!$this->permissions_manager){
+	    $this->permissions_manager =& PermissionsManager::instance(); 
+        }
+        return $this->permissions_manager;
+    }
+
     function sanitizeItemData($data) {
         $sanitized_data = $data;
         
