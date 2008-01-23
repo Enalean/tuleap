@@ -234,7 +234,7 @@ function frs_show_package_popup ($group_id, $name='package_id', $checked_val="xz
 
 function file_utils_show_processors ($result) {
     global $group_id,$Language;
-
+    $hp =& CodeX_HTMLPurifier::instance();
     $rows  =  db_numrows($result);
 
     $title_arr=array();
@@ -254,9 +254,9 @@ function file_utils_show_processors ($result) {
 	echo '<tr class="'. html_get_alt_row_color($j) .'">'. "\n";
 	
     if ($gr_id == "100") {
-        echo '<td>'.$proc_name.'</td>';
+        echo '<td>'.$hp->purify($proc_name, CODEX_PURIFIER_LIGHT).'</td>';
     } else {
-	    echo '<td><A HREF="/file/admin/editproc.php?group_id='.$group_id.'&proc_id='.$proc_id.'" title="'.$proc_id.' - '.$proc_name.'">'.$proc_name.'</td>';
+	    echo '<td><A HREF="/file/admin/editproc.php?group_id='.$group_id.'&proc_id='.$proc_id.'" title="'.$hp->purify($proc_id.' - '.$proc_name, CODEX_PURIFIER_LIGHT).'">'.$hp->purify($proc_name, CODEX_PURIFIER_LIGHT).'</td>';
     }
     
     echo '<td>'.$proc_rank."</td>\n";     
@@ -347,13 +347,14 @@ function file_utils_convert_bytes_to_kbytes($size_in_bytes, $decimals_precision 
 }
 
 function frs_display_package_form(&$package, $title, $url, $siblings) {
+	$hp =& CodeX_HTMLPurifier::instance();
     $group_id = $package->getGroupId();
     file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'FileReleaseDelivery.html'));
-    echo '<h3>'. $title .'</h3>
+    echo '<h3>'. $hp->purify($title, CODEX_PURIFIER_LIGHT) .'</h3>
     <P>
     <form action="'. $url .'" method="post">
     <table>
-    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $package->getName() .'">';
+    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $hp->purify($package->getName(), CODEX_PURIFIER_LIGHT) .'">';
     //{{{ Rank
     $nb_siblings = count($siblings);
     if ($nb_siblings && ($nb_siblings > 1 || $siblings[0] != $package->getPackageId())) {
@@ -389,7 +390,7 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
 
 function frs_display_release_form($is_update, &$release, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
-    
+    $hp =& CodeX_HTMLPurifier::instance();
     if (is_array($release)) {
         if (isset($release['date'])) {
             $release_date = $release['date'];
@@ -400,7 +401,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
     ), 'help' => 'QuickFileRelease.html'));
-    echo '<H3>'.$title.'</H3>';
+    echo '<H3>'.$hp->purify($title, CODEX_PURIFIER_LIGHT).'</H3>';
     $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".db_ei($group_id).") ORDER BY rank";
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
@@ -471,7 +472,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         for ($i = 0; $i < $rows; $i++) {
             echo '<OPTION VALUE="' . $res[$i]->getPackageID() . '"';
             if($res[$i]->getPackageID() == $release->getPackageId()) echo ' selected';
-            echo '>' . $res[$i]->getName() . '</OPTION>';
+            echo '>' . $hp->purify($res[$i]->getName(), CODEX_PURIFIER_LIGHT) . '</OPTION>';
         }
         echo '</SELECT>';
     }
@@ -481,7 +482,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>
                 </TD>
                 <TD>
-                    <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $release->getName(); ?>">
+                    <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $hp->purify($release->getName(), CODEX_PURIFIER_LIGHT); ?>">
                 </TD>
             </TR>
             <TR>
@@ -529,7 +530,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             $fname = $list[sizeof($list) - 1];
             echo '<TR>';
             echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
-            echo '<TD>' . $fname . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
+            echo '<TD>' . $hp->purify($fname, CODEX_PURIFIER_LIGHT) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
@@ -549,7 +550,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     //iterate and show the files in the upload directory
     $file_list = $frsff->getUploadedFileNames();
     foreach ($file_list as $file) {
-        echo '<option value="' . $file . '">' . $file . '</option>';
+        echo '<option value="' . $file . '">' . $hp->purify($file, CODEX_PURIFIER_LIGHT) . '</option>';
     }
     echo '<script type="text/javascript">';
     echo "var available_ftp_files = ['" . implode("', '", $file_list) . "'];";
@@ -593,7 +594,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <TR id="release_notes_area">
                 <TD width="100%">
-                    <TEXTAREA NAME="release[release_notes]" rows="7" cols="70"><?php echo htmlspecialchars($release->getNotes());?></TEXTAREA>
+                    <TEXTAREA NAME="release[release_notes]" rows="7" cols="70"><?php echo $hp->purify(htmlspecialchars($release->getNotes()), CODEX_PURIFIER_LIGHT);?></TEXTAREA>
                 </TD>
             </TR>
             <TR id="change_log_title">
@@ -608,7 +609,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <TR id="change_log_area">
                 <TD width="40%">
-                    <TEXTAREA ID="text_area_change_log" NAME="release[change_log]" ROWS="7" COLS="70"><?php echo htmlspecialchars($release->getChanges());?></TEXTAREA>
+                    <TEXTAREA ID="text_area_change_log" NAME="release[change_log]" ROWS="7" COLS="70"><?php echo $hp->purify(htmlspecialchars($release->getChanges()), CODEX_PURIFIER_LIGHT);?></TEXTAREA>
                 </TD>
             </TR>
             </TABLE></FIELDSET>
