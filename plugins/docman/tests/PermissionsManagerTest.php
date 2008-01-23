@@ -26,8 +26,13 @@ require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php'
 require_once('common/include/User.class.php');
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin'));
+
+Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestPropagation', array('applyPermissionForWikiPage', 'getIdInWiki', 'cleanUgroupOldPermsInWiki'));
+Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestPropagationAfterPagenameUpdate', array('retreivePermissionsOfItem', 'getIdInWiki', 'getNewWikiPageId',  'propagatePermsToNewWikiPage'));
+
 Mock::generate('User');
 Mock::generate('PermissionsManager');
+Mock::generate('DataAccessResult');
 
 class PermissionsManagerTest extends UnitTestCase {
     var $user;
@@ -419,6 +424,59 @@ class PermissionsManagerTest extends UnitTestCase {
         $pm6->expectNever('userHasPermission');        
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
         $pm6->tally();
+    }
+	
+    // Test if propagation method is properly called.
+    function testPermissionsPropagationToWikiAfterPermsUpdate() {
+        // Test if propagation function is called.
+        $docmanPm =& new Docman_PermissionsManagerTestPropagation($this);
+        $docmanPm->setReturnValue('getIdInWiki', '55');
+        $docmanPm->expectOnce('cleanUgroupOldPermsInWiki');
+        $docmanPm->expectOnce('applyPermissionForWikiPage');
+
+        // test if params passed to propagation method are correct.
+        $params = array('101', '3', '55');
+        $docmanPm->expectArguments('cleanUgroupOldPermsInWiki', $params);
+        $params1 = array('101', 'PLUGIN_DOCMAN_READ', '55', '3', '1');
+        $docmanPm->expectArguments('applyPermissionForWikiPage', $params1);
+        
+        $docmanPm->propagatePermissionToWiki('101', 'PLUGIN_DOCMAN_READ', '52', '3', '1', false);
+        $docmanPm->tally();
+
+        // test if propagation function is not called in a cleaning operation.
+        $docmanPm1 =& new Docman_PermissionsManagerTestPropagation($this);
+        $docmanPm1->setReturnValue('getIdInWiki', '55');
+        $docmanPm1->expectOnce('cleanUgroupOldPermsInWiki');
+        $docmanPm1->expectNever('applyPermissionForWikiPage');
+        $docmanPm1->propagatePermissionToWiki('101', 'PLUGIN_DOCMAN_READ', '52', '3', '1', true);
+        $docmanPm1->tally();
+    }
+
+    function testPermissionsPropagationToWikiAfterPagenameUpdate() {
+        $docmanPm =& new Docman_PermissionsManagerTestPropagationAfterPagenameUpdate($this);
+        $docmanPm->setReturnValue('getIdInWiki', '50');
+        $docmanPm->setReturnValue('getNewWikiPageId', '55');
+        
+        // Construct a data access result for test
+        $dar =& new MockDataAccessResult($this);
+        
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', true);
+        $dar->setReturnValueAt(0, 'current', array('permission_type' => 'PLUGIN_DOCMAN_READ', 'object_id' => '50', 'ugroup_id' => '2'));
+        $dar->setReturnValueAt(1, 'current', array('permission_type' => 'PLUGIN_DOCMAN_WRITE', 'object_id' => '51', 'ugroup_id' => '3'));
+
+        $docmanPm->setReturnReference('retreivePermissionsOfItem',$dar);
+        $docmanPm->expectCallCount('propagatePermsToNewWikiPage', 2);
+        
+        // Add here expectations for arguments of propagatePermsToNewWikiPage
+        $params = array('101', 'PLUGIN_DOCMAN_READ', '55', '2', true, false);
+        $docmanPm->expectArgumentsAt(0, 'propagatePermsToNewWikiPage', $params);
+        $params1 = array('101', 'PLUGIN_DOCMAN_WRITE', '55', '3', true, false);
+        $docmanPm->expectArgumentsAt(1, 'propagatePermsToNewWikiPage', $params1);
+        
+        $docmanPm->propagatePermsAfterPagenameUpdate('nothing', '101', '50');
+
+        $docmanPm->tally();
     }
 }
 ?>
