@@ -673,12 +673,25 @@ class DocmanActions extends Actions {
      */
     function recursivePermissions($data, $params) {
         if ($this->_controler->userCanManage($data["item_id"])) {
-            $pm =& PermissionsManager::instance();
+            $pm =& $this->_getPermissionsManagerInstance();
             $pm->clonePermissions($params['id'], $data["item_id"], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+            if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+                $wiki_item_id = $this->getIdInWiki($data['group_id'], $data['item_id']);
+                if($wiki_item_id != null) {
+                    $pm->recursivePermsPropagationToWiki($params['id'], $wiki_item_id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'WIKIPAGE_READ'));
+                }
+            }
         } else {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
+
+    function getIdInWiki($group_id, $item_id){
+        $dIF =& $this->_getItemFactory($group_id);
+        $id_in_wiki = $dIF->isItAWikiPage($group_id, $item_id);
+		return $id_in_wiki;
+	}
+
     /**
     * Set the permission for a ugroup on an item.
     * 
