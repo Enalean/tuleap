@@ -617,7 +617,7 @@ class ArtifactReport extends Error {
           if (($field->isSelectBox()||$field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()])) ) {
 	
 			// Only select box criteria to where clause if argument is not ANY
-			return " AND ".$field_name." IN (". db_es(implode(",",$prefs[$field->getName()])). .") ";
+			return " AND ".$field_name." IN (". db_es(implode(",",$prefs[$field->getName()])) .") ";
 	
 	    } else if ( $field->isDateField() && (
             ((isset($prefs[$field->getName()]) && $prefs[$field->getName()][0]) || 

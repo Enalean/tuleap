@@ -1530,7 +1530,7 @@ class Artifact extends Error {
         $sql="SELECT u.user_id ".
 	  "FROM artifact_cc cc, user u ".
 	  "WHERE cc.email = u.user_name ".
-	  "AND cc.artifact_id=".$ db_ei($his->getID()) ;
+	  "AND cc.artifact_id=". db_ei($his->getID()) ;
 	$res = db_query($sql);
 	
         return util_result_column_to_array($res);
@@ -1545,7 +1545,7 @@ class Artifact extends Error {
                 
         $sql="SELECT email ".
             "FROM artifact_cc ".
-            "WHERE artifact_id=".$ db_ei($his->getID()) ." ORDER BY date DESC";
+            "WHERE artifact_id=". db_ei($his->getID()) ." ORDER BY date DESC";
         $result = db_query($sql);
 	$rows=db_numrows($result);
         if ($rows <= 0) {
