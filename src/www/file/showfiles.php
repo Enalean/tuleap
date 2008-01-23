@@ -80,6 +80,7 @@ $params = array (
 )), 'pv' => $pv);
 
 file_utils_header($params);
+$hp =& CodeX_HTMLPurifier::instance();
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if (user_ismember($group_id,'R2')) {
@@ -255,7 +256,7 @@ while (list ($package_id, $package) = each($packages)) {
                     if (!$pv) {
                         print '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
                     }
-                    print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
+                    print "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
                         if (user_ismember($group_id,'R2')) {
                             print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">'
@@ -337,10 +338,10 @@ while (list ($package_id, $package) = each($packages)) {
                             
                             if (($package->getApproveLicense() == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
                                 // Allow direct download
-                                print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $file_release['filename'] . '" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                                print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             } else {
                                 // Display popup
-                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $hp->purify($file_release['filename']) . '\')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             }
                             $size_precision = 0;
                             if ($file_release['file_size'] < 1024) {
