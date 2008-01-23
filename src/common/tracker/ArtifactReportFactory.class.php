@@ -10,7 +10,7 @@
 require_once('common/include/Error.class.php');
 require_once('common/tracker/ArtifactReport.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
+$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactReportFactory extends Error {
 
