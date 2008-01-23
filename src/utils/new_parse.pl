@@ -215,7 +215,17 @@ while ($ln = pop(@userdump_array)) {
 
 	$username =~ tr/A-Z/a-z/;
 	
-	$user_exists = getpwnam($username);
+        # check if user already exists in /etc/passwd and /etc/shadow
+	#$user_exists = getpwnam($username); # takes too long...
+	$user_exists = 0;
+        if ((defined $shadow_hash{$username})&&(defined $passwd_hash{$uid})) {
+          my ($p_username, $p_other) = split(":", $passwd_array[$passwd_hash{$uid}]);
+          my ($s_username, $s_other) = split(":", $shadow_array[$shadow_hash{$username}]);
+          if (($p_username eq $username)&&($s_username eq $username)) {
+            $user_exists=1;
+          } else { print "ERROR in passwd/shadow file: user '$username' does not seem properly declared\n";}
+        }
+
 	$user_active=0;
         if ($status eq 'A' || $status eq 'R') {$user_active=1;}
 	if ($unix_status eq 'A' && $user_exists && $user_active) {
@@ -232,7 +242,6 @@ while ($ln = pop(@userdump_array)) {
 		++$new_user;
 	
 	} elsif ($unix_status eq 'D') {
-
                 # delete the user if it exists. Otherwise it means it has
 	        # already been deleted so do nothing
 	        if ($user_exists) {
