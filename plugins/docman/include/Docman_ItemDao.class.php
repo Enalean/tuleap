@@ -609,7 +609,38 @@ class Docman_ItemDao extends DataAccessObject {
         }
         return $version;
     }
-
+	
+    /**
+     * This function retreives an id from wiki_page table using the pagename attribute 
+     *
+     * @param string $pagename
+     * @param int $group_id
+     * @return int $id id in wiki of a wiki page.
+     */
+    function retreiveWikiPageId($pagename, $group_id){
+        $sql = sprintf('SELECT id'.
+            ' FROM wiki_page'.
+            ' WHERE pagename = \'%s\''.
+            ' AND group_id = %d'
+            , db_es($pagename), db_ei($group_id)
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError() && $res->rowCount() == 1) {
+            $res->rewind();
+            if($res->valid()) {
+                $row = $res->current();
+                $id = $row['id'];
+                return $id;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+	
     /*
      * Return obsolete documents between the $tsStart and $tsEnd timestamps. It
      * only concerns Active projects and non deleted documents. 
