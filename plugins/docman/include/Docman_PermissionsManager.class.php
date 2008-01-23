@@ -289,6 +289,141 @@ class Docman_PermissionsManager {
         $pm =& $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
+	
+    /**
+     * Propagate permission of a docman item wiki page to wiki service.
+     *
+     * Can clean perms already set on wiki page at wiki service level.
+     *
+     * @param int $group_id project id.
+     * @param string $permission permission granted to auser group on a docman item wiki page.
+     * @param int $item_id  docman item id.
+     * @param int $ugroup_id  id of user group that will benefit from the permissions to be set on the docman item.
+     * @param int $force flag to force permission write.
+     * @param boolean $just_clean when set to true, the method just cleans perms already granted on an object to a user group.
+     */
+    function propagatePermissionToWiki($group_id, $permission, $item_id, $ugroup_id, $force, $just_clean = false){
+        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
+        if($id_in_wiki != null) {
+            $this->cleanUgroupOldPermsInWiki($group_id, $ugroup_id, $id_in_wiki);
+            if (!$just_clean) {
+                $this->applyPermissionForWikiPage($group_id, $permission, $id_in_wiki, $ugroup_id, $force);
+            }
+        }
+    }
+
+    /**
+     * This functuion will prpagate perms to a wiki page at wiki service level. It is used if there is a docman item wiki page name update. 
+     *
+     * @param int $group_id project id.
+     * @param string $permission permission granted to auser group on a docman item wiki page.
+     * @param int $item_id  docman item id.
+     * @param int $ugroup_id  id of user group that will benefit from the permissions to be set on the docman item.
+     * @param int $force flag to force permission write.
+     * @param boolean $just_clean when set to true, the method just cleans perms already granted on an object to a user group.
+     *
+     */
+    function propagatePermsToNewWikiPage($group_id, $permission, $id_in_wiki, $ugroup_id, $force, $just_clean = false) {
+        $this->cleanUgroupOldPermsInWiki($group_id, $ugroup_id, $id_in_wiki);
+        if (!$just_clean) {
+            $this->applyPermissionForWikiPage($group_id, $permission, $id_in_wiki, $ugroup_id, $force);
+        }
+    }
+
+    /**
+     * Called when a wiki page name is updated. It propagates the docman item perms to wiki service by creating new perms for the new pagename.
+     * If old perms exists -either setted from wiki or propagated from docman - they will be removed.
+     *
+     * @param string $wiki_page wiki page name.
+     * @param int $group_id project id.
+     * @param int $item_id id of docman item.
+     *
+     */
+    function propagatePermsAfterPagenameUpdate($wiki_page, $group_id, $item_id) {
+        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
+        if ($id_in_wiki != null){
+            // get id in wiki of the new wiki page that docman item will point to.
+            $new_id = $this->getNewWikiPageId($wiki_page, $group_id);
+            
+            // Propagate perms only if the new wiki page exists in wiki !
+            if ($new_id != null) {
+                // Retrieve propagable perms set on docman item.
+                $dar = $this->retreivePermissionsOfItem($item_id);
+                
+                // Start propagation to wiki.
+                $dar->rewind();
+                while($dar->valid()) {
+                    $row = $dar->current();
+                    // Propagate perms to wiki.
+                    $this->propagatePermsToNewWikiPage($group_id, $row['permission_type'], $new_id, $row['ugroup_id'], true, false);
+                    $dar->next();
+                }
+            }
+        }
+    }
+	
+    /**
+     *  This function applys 'WIKIPAGE_READ' permission instead of 'DOCUMENT_READER' or 'DOCUMENT_WRITER'.
+     *
+     * @param int $groupid : project id.
+     * @param string $permission : 'DOCUMENT_READER' or 'DOCUMENT_WRITER' or 'DOCUMENT_MANAGER'. The latter is ignored.
+     * @param int $wiki_item_id : identifier used by wiki service to identify the page.
+     * @param int $ugroup_id : user group that will benefit from 'WIKIPAGE_READ' permission on the page.
+     * @param int $force flag to force permission write.
+    */
+    function applyPermissionForWikiPage($group_id, $permission, $wiki_item_id, $ugroup_id, $force) {
+        switch($permission) {
+            // Only propagate read and write docman perms.
+            case 'PLUGIN_DOCMAN_READ':
+            case 'PLUGIN_DOCMAN_WRITE':
+                permission_add_ugroup($group_id, 'WIKIPAGE_READ', $wiki_item_id, $ugroup_id, $force);
+                break;
+            case 'PLUGIN_DOCMAN_MANAGE':
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Removes a permission set on an object_id for a user group before setting new one.
+     *
+     * @param int $group_d project id.
+     * @param int $item_id id in wiki of the wiki page.
+     * @param int $ugroup_id : user group that will benefit from 'WIKIPAGE_READ' permission on the page.
+     */
+    function cleanUgroupOldPermsInWiki($group_id, $ugroup_id, $item_id) {
+        permission_clear_ugroup_object($group_id, 'WIKIPAGE_READ', $ugroup_id, $item_id);
+    }
+
+    /**
+     *
+     * Checks if item with $item_id is a wiki page. It is made by Docman_ItemFactory::isItAWikiPage() method.
+     *
+     * @param int $group_id project id
+     * @param int $item_id docman item id.
+     *
+     * @return wiki page id in wiki or null if the page do not exist in wiki.
+     */
+    function getIdInWiki($group_id, $item_id) {
+        $dIF =& $this->_getItemFactory($group_id);
+        return $dIF->isItAWikiPage($group_id, $item_id);
+    }
+
+    /**
+     *
+     * Looks for id in wiki of the wiki page identified by these params:
+     *
+     * @param string $pagename wiki page name
+     * @param int $group_id project id
+     *
+     * @return int $id_in_wiki or null if the page don't exist in wiki service. 
+     */
+    function getNewWikiPageId($pagename, $group_id){
+        $dIF =& $this->_getItemFactory($group_id);
+        $id = $dIF->getIdInWiki($pagename, $group_id);
+        return $id;
+    }
 
     function setDefaultItemPermissions($itemId, $force=false) {
         $dao =& $this->getDao();
@@ -342,6 +477,23 @@ class Docman_PermissionsManager {
                 $dar->next();
             }
         }
+    }
+
+    /**
+     * This looks for prpagable perms set on docman item wiki pages.
+     *
+     * @param int $item_id docman item identifier.
+     *
+     * @return data access object.
+     *
+     */
+    function retreivePermissionsOfItem($item_id) {
+        // permissions we're looking for
+        $perms = array("'PLUGIN_DOCMAN_READ'", "'PLUGIN_DOCMAN_WRITE'");
+
+        // Get instance of PermissionsManagerDao.
+        $dao =& $this->getDao();
+        return $dao->retrievePermissionsForItem($item_id, $perms);
     }
 
     function oneFolderIsWritable($user) {
