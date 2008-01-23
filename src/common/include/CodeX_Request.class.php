@@ -206,7 +206,7 @@
      * Else return default value
      * @param string $variable Name of the parameter to get.
      * @param mixed $validator Name of the validator (string, uint, email) or an instance of a validator
-     * @param mixed $default_value Value return if the validator is not valid
+     * @param mixed $default_value Value return if the validator is not valid. Optional, default is null.
      */
     function getValidated($variable, $validator, $default_value = null) {
         $is_valid = false;
