@@ -576,7 +576,16 @@ class DocmanActions extends Actions {
     * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
     *           Pretty difficult to know if a user can update the permissions which does not exist for a new item...
     * 
-    * The asked permissions are given in the request, in the param 'permissions' as an array(ugroup => permission)
+    * The asked permissions are given in the request, in the param 'permissions' as an array (ugroup => permission)
+    *
+    * Once the permissions on the top item are set (thanks to
+    * DocmanActions::_setPermissions) we can assume that those permissions are
+    * correct so the algorithm to apply them recursively is just a clone. This
+    * is done thanks to a callback.
+    *
+    * Docman_ItemFactory::breathFirst allows to navigate in children of
+    * top item. And for each child node, there is a callback to
+    * DocmanActions::recursivePermission (see each method for details).
     */
     function permissions($params) {
         $request =& HTTPRequest::instance();
@@ -634,14 +643,34 @@ class DocmanActions extends Actions {
                     }
                 }
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+                
+                // If requested by user, apply permissions recursively on sub items
                 if ($this->_controler->request->get('recursive')) {
                     //clone permissions for sub items
+                    // Recursive application via a callback of DocmanActions::recursivePermissions in
+                    // Docman_ItemFactory::breathFirst
                     $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
                 }
             }
         }
     }
+
+    /**
+     * Apply permissions of the reference item on the target item.
+     *
+     * This method is used as a callback by Docman_ItemFactory::breathFirst. It
+     * aims to clone the permissions set on the reference item ($params['id'])
+     * on a given item ($data['item_id']).
+     *
+     * Current user must have 'manage' permissions on the item to update its permissions. 
+     * If the target is a wiki page, then we propagate the new perms to wiki service too.
+     *
+     * @see Docman_ItemFactory::breathFirst
+     *
+     * $params['id']    Reference item id.
+     * $data['item_id'] Item id on which permissions applies.
+     */
     function recursivePermissions($data, $params) {
         if ($this->_controler->userCanManage($data["item_id"])) {
             $pm =& PermissionsManager::instance();
