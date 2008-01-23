@@ -210,7 +210,7 @@
      */
     function getValidated($variable, $validator, $default_value = null) {
         $is_valid = false;
-        if (is_object($validator) && method_exists($validator, 'validate')) {
+        if (is_a($validator, 'Valid')) {
             $is_valid = $this->valid($validator);
         } else if(is_string($validator) && class_exists('Valid_'.$validator)) {
             $validator_classname = 'Valid_'.$validator;
