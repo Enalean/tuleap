@@ -823,7 +823,23 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         return $item && $this->isMoveable($item) && $dao->setNewParent($item_id, $new_parent_id, $ordering);
     }
-    
+
+    /**
+    * Walk through a item hierarchy and for each subitem apply callback method
+    * in parameter.
+    *
+    * The callback method (or function) will be applied for each sub-item of
+    * $item_id with following paramters:
+    * - A plugin_docman_item table row that correspond to the child node.
+    * - $params
+    *
+    * @see call_user_func_array for details on $callback forms.
+    *
+    * @param int   $item_id  Id of the parent item.
+    * @param mixed $callback Callback function or method.
+    * @param array $params   Parameters for the callback function
+    * @return void
+    */
     function breathFirst($item_id, $callback, $params) {
         $dao =& $this->_getItemDao();
         $parents = array($item_id);
