@@ -787,7 +787,7 @@ class ArtifactType extends Error {
 				$sql="select perm_level
 				FROM artifact_perm
 				WHERE group_artifact_id='".  db_ei($this->getID())  ."'
-				AND user_id='" db_ei(user_getid()) ."'";
+				AND user_id='". db_ei(user_getid()) ."'";
 				//echo $sql;
 				$this->current_user_perm=db_result(db_query($sql),0,0);
 			}
