@@ -200,6 +200,21 @@ class PermissionsManager {
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
+
+    /**
+     * Calls the propagation of wiki pages perms set on the reference items.
+     *
+     * 'Document Reader' and 'Document Writer' permissions just become 'WIKIPAGE_READ'.
+     * 'Document Manager' is not propagated.
+     *
+     * @param int $source id of the source item.
+     * @param int $target id of the target item.
+     * @param string $perms string of permissions set that can be applied on the target item.
+     * @param int $toGroupId id of the user group that will benefit from the permission.
+     */
+    function recursivePermsPropagationToWiki($source, $target, $perms, $toGroupId=0) {
+        return $this->_permission_dao->propagatePermissionsToWiki($source, $target, $perms, $toGroupId);
+    }
     
     function isPermissionExist($object_id, $ptype){    	
     	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));

@@ -121,6 +121,44 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
     
+    /**
+     * Propagate permissions to wiki service. It is called after recursive clone of permissions set on Docman folders.
+     *
+     * It do nearly the same thing as clonePermissions method exept that it handles different targets wich are wiki pages 
+     * identified by their ids in wiki service. The perms string contain wiki permission 'WIKIPAGE_READ'. It also don't
+     * contain 'Document Manager' permission.
+     *
+     * @param int $source id of the source item. 
+     * @param int $target id of the target item.
+     * @param string $perms a set of permissions that can be applied on the target item.
+     * @param int $toGroupId id of the user group that will benefit from the permission.
+     *
+     * @return data access result. 
+     */
+    function propagatePermissionsToWiki ($source, $target, $perms, $toGroupId=0) {
+        foreach($perms as $key => $value) {
+            $perms[$key] = $this->da->quoteSmart($value);
+        }
+        $sql = sprintf("DELETE FROM permissions ".
+                      " WHERE object_id = '%s' ".
+                      "   AND permission_type IN (%s) ",
+                      $this->da->quoteSmart($target),
+                      implode(', ', $perms)
+             );
+        $this->update($sql);
+        $sql = sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id) ".
+                      " SELECT %s, 'WIKIPAGE_READ', IFNULL(dst_ugroup_id, permissions.ugroup_id) AS ugid ".
+                      " FROM permissions LEFT JOIN ugroup_mapping ON (to_group_id=%d  and src_ugroup_id = permissions.ugroup_id)".
+                      " WHERE object_id = '%s' ".
+                      "   AND permission_type IN (%s) ",
+                      $this->da->quoteSmart($target),
+                      $toGroupId,
+                      $this->da->quoteSmart($source),
+                      implode(', ', $perms)
+             );
+        return $this->update($sql);
+    }
+
     function addPermission($permission_type, $object_id, $ugroup_id){
         $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
                      " VALUES ('%s', '%s', '%s')", 
