@@ -386,6 +386,11 @@ class Docman_ItemDao extends DataAccessObject {
                     if ($key != 'id' && $value != $current[$key]) {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
+                    if ($key == 'wiki_page' && $value != $current[$key]) {
+                        require_once('Docman_PermissionsManager.class.php');
+                        $dPM =& Docman_PermissionsManager::instance($group_id);
+                        $dPM->propagatePermsAfterPagenameUpdate($value, $current['group_id'], $id);
+                    }
                 }
                 $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
                 $sql = 'UPDATE plugin_docman_item'
