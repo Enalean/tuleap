@@ -722,7 +722,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     $release = $request->get('release');
     
     if($request->valid(new Valid_String('js'))) {
-    $js = $request->get('js');
+        $js = $request->get('js');
     } else {
         $js = "";
     }
@@ -734,104 +734,104 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     }
     
     if($request->validArray(new Valid_UInt('file_processor'))) {
-    $file_processor = $request->get('file_processor');
+        $file_processor = $request->get('file_processor');
     } else {
         $file_processor = array();
     }
     
     if($request->validArray(new Valid_UInt('file_type'))) {
-    $file_type = $request->get('file_type');
+        $file_type = $request->get('file_type');
     } else {
         $file_type = array();
     }
     
     if($request->validArray(new Valid_UInt('ftp_file_processor'))) {
-    $ftp_file_processor = $request->get('ftp_file_processor');
+        $ftp_file_processor = $request->get('ftp_file_processor');
     } else {
         $ftp_file_processor = array();
     }
     
     if($request->validArray(new Valid_UInt('ftp_file_type'))) {
-    $ftp_file_type = $request->get('ftp_file_type');
+        $ftp_file_type = $request->get('ftp_file_type');
     } else {
         $ftp_file_type = array();
     }
     
     if($request->valid(new Valid_String('release_news_subject'))) {
-    $release_news_subject = $request->get('release_news_subject');
+        $release_news_subject = $request->get('release_news_subject');
     } else {
         $release_news_subject = "";
     }
     
     if($request->valid(new Valid_String('release_news_details'))) {
-    $release_news_details = $request->get('release_news_details');
+        $release_news_details = $request->get('release_news_details');
     } else {
         $release_news_details = "";
     }
     
     if($request->valid(new Valid_WhiteList('private_news',array(0,1)))) {
-    $private_news = $request->get('private_news');
+        $private_news = $request->get('private_news');
     } else {
         $private_news = 0;
     }
     
     if($request->validArray(new Valid_UInt('ugroups'))) {
-    $ugroups = $request->get('ugroups');
+        $ugroups = $request->get('ugroups');
     } else {
         $ugroups = array();
     }
     
     if($request->valid(new Valid_WhiteList('release_submit_news',array(0,1)))) {
-    $release_submit_news = (int) $request->get('release_submit_news');
+        $release_submit_news = (int) $request->get('release_submit_news');
     } else {
         $release_submit_news = 0;
     }
     
     if($request->valid(new Valid_WhiteList('notification',array(0,1)))) {
-    $notification = $request->get('notification');
+        $notification = $request->get('notification');
     } else {
         $notification = 0;
     }
     
     if ($is_update) {
         if($request->validArray(new Valid_UInt('release_files_to_delete'))) {
-        $release_files_to_delete = $request->get('release_files_to_delete');
+            $release_files_to_delete = $request->get('release_files_to_delete');
         } else {
             $release_files_to_delete = array();
         }
         
         if($request->validArray(new Valid_UInt('release_files'))) { 
-        $release_files = $request->get('release_files');
+            $release_files = $request->get('release_files');
         } else {
             $release_files = array();
         }
         
         if($request->validArray(new Valid_UInt('release_file_processor'))) {
-        $release_file_processor = $request->get('release_file_processor');
+            $release_file_processor = $request->get('release_file_processor');
         } else {
             $release_file_processor = array();
         }
         
         if($request->validArray(new Valid_UInt('release_file_type'))) {
-        $release_file_type = $request->get('release_file_type');
+            $release_file_type = $request->get('release_file_type');
         } else {
             $release_file_type = array();
         }
         
         if($request->validArray(new Valid_UInt('new_release_id'))) {
-        $new_release_id = $request->get('new_release_id');
+            $new_release_id = $request->get('new_release_id');
         } else {
             $new_release_id = array();
         }
         
         if($request->validArray(new Valid_String('release_time'))) {
-        $release_time = $request->get('release_time');
+            $release_time = $request->get('release_time');
         } else {
             $release_time = array();
         }
         
         if($request->valid(new Valid_UInt('id'))) {
-        $release['release_id'] = $request->get('id');
+            $release['release_id'] = $request->get('id');
         } else {
             exit;
         }
