@@ -255,7 +255,7 @@ class LDAP extends Error {
      * @return LDAPResultIterator
      */  
     function &searchEdUid($name) {
-        if ($GLOBALS['sys_ldap_auth_filter']) {
+        if ($GLOBALS['sys_ldap_eduid_filter']) {
             $ldap_filter = $GLOBALS['sys_ldap_eduid_filter'];
         } else {
             $ldap_filter = "eduid=%eduid%";
