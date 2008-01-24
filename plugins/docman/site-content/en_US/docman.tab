@@ -315,6 +315,7 @@ plugin_docman	details_update_recursion_warning	<h3>Confirm recursive application
 
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
+plugin_docman	docman_wiki_perms_notice	<strong>Warning: </strong>For wiki pages, a 'Document Reader' can update the page.
 plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
 plugin_docman	error_create_initversion	Error while creating initial version.

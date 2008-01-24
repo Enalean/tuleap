@@ -22,7 +22,9 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
     
     function getField() {
-        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
+	    // Commented to remove notice next to wiki page name field that warns about non propagation of permissions to wiki service.
+        //return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
+        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" /> ';
     }
 
     function &getValidator() {

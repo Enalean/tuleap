@@ -46,6 +46,13 @@ class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Vis
                 $html .= '</tr>';
             }
             $html .= '</table>';
+		
+            // We display a notice that warn users that 'DOCUMENT_READER' permission on wiki pages means edit possibility.
+            $html .= '<div class="docman_wiki_perms_notice">';
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_notice');
+            $html .= '</div>';
+            // wiki msg end.
+
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_docman','new_same_perms_as_parent'); // Will be created with the same permissions than its parent.
             $html .= $GLOBALS['Language']->getText('plugin_docman','new_need_to_be_manager'); // <br />You need Manage permission to define permissions.
