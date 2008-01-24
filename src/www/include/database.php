@@ -10,7 +10,11 @@
 
 function db_connect() {
     global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
-    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+    $conn_opt = '';
+    if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
+      $conn_opt = MYSQL_CLIENT_SSL;
+    }
+    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd, false, $conn_opt);
     unset($sys_dbpasswd);
     if (!$conn) {
         die('Database Error - Could not connect. ' . mysql_error());

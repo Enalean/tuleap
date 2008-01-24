@@ -19,9 +19,9 @@ class DataAccess {
     * @param $pass string dbserver user password
     * @param $db string database name
     */
-    function DataAccess($host,$user,$pass,$db) {
+    function DataAccess($host,$user,$pass,$db,$opt='') {
         $this->store = array();
-        $this->db = mysql_connect($host,$user,$pass) or die('Unable to access the CodeX database. Please contact your administrator.');
+        $this->db = mysql_connect($host,$user,$pass, false, $opt) or die('Unable to access the CodeX database. Please contact your administrator.');
         if ($this->db) {
             mysql_select_db($db,$this->db);
         }
