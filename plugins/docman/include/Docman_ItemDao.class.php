@@ -638,11 +638,12 @@ class Docman_ItemDao extends DataAccessObject {
      * @return boolean.
      */
     function isWikiPageReferenced($wikipage, $group_id) {
+        $_gid = (int) $group_id;
         $sql = sprintf('SELECT item_id'.
             ' FROM plugin_docman_item'.
             ' WHERE wiki_page = \'%s\''.
             ' AND group_id = %d'
-            , db_escape_string($pagename), $group_id
+            , db_escape_string($pagename), $_gid
         );
         $res = $this->retrieve($sql);
         if($res && !$res->isError()) {
