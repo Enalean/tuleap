@@ -243,6 +243,28 @@ function & searchByID ($id) {
 							</listitem>
 						</itemizedlist>
 					</section>
+                    <section>
+						<title>register_project_creation</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when a project is created</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+                    <section>
+						<title>project_admin_edition</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when public info of a project are updated (name, description, etc.)</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+                    <section>
+						<title>project_admin_add_user</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when a user is added as member of a project</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+
 				</section>
 			</section>
 			<section>
