@@ -628,6 +628,30 @@ class Docman_ItemDao extends DataAccessObject {
                        $tsEnd);
         return $this->retrieve($sql);
     }
+
+    /**
+     * Checks if a wiki page is referenced in docman.
+     *
+     * @param string $pagename wiki page name.
+     * @param int $group_id project id.
+     *
+     * @return boolean.
+     */
+    function isWikiPageReferenced($wikipage, $group_id) {
+        $sql = sprintf('SELECT item_id'.
+            ' FROM plugin_docman_item'.
+            ' WHERE wiki_page = \'%s\''.
+            ' AND group_id = %d'
+            , db_escape_string($pagename), $group_id
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError()) {
+	    return true;
+        }
+        else {
+	  return false;
+        }
+    }
 }
 
 ?>
