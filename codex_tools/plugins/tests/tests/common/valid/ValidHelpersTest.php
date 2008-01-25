@@ -98,6 +98,23 @@ class ValidHelperTest extends UnitTestCase {
         $this->assertFalse($v->validate(array(array(1, 2, 3))));
     }
     
+    function testMultidimensionalArrayAssociative() {
+        $v1 = new MockValid();
+        $v1->setReturnValue('validate', true);
+        $v1->expectOnce('validate', array(2));
+        $v2 = new MockValid();
+        $v2->setReturnValue('validate', false);
+        $v2->expectOnce('validate', array(3));
+        $v3 = new MockValid();
+        $v3->setReturnValue('validate', true);
+        $v3->expectOnce('validate', array(1));
+        
+        $v = new Valid_MultidimensionalArray('', array('Toto' => $v1, 'Titi' => $v2, 'Tutu' => $v3));
+        $v->disableFeedback();
+        
+        $this->assertFalse($v->validate(array(array('Tutu' => 1, 'Toto' => 2, 'Titi' => 3))));
+    }
+    
     function testValidFactory() {
         $v = new MockValid();
         
