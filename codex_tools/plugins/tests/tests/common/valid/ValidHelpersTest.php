@@ -97,6 +97,22 @@ class ValidHelperTest extends UnitTestCase {
         
         $this->assertFalse($v->validate(array(array(1, 2, 3))));
     }
+    
+    function testValidFactory() {
+        $v = new MockValid();
+        
+        //Does not work in php4 :(
+        //$this->assertReference(ValidFactory::getInstance($v), $v);
+        $this->assertIsA(ValidFactory::getInstance($v), 'MockValid');
+        
+        $this->assertIsA(ValidFactory::getInstance('string'), 'Valid_String');
+        $this->assertIsA(ValidFactory::getInstance('uint'), 'Valid_UInt');
+        $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
+        
+        $key = md5(uniqid(rand(), true));
+        $w = ValidFactory::getInstance('string', $key);
+        $this->assertEqual($w->getKey(), $key);
+    }
 }
 
 ?>

@@ -212,4 +212,23 @@ class Valid_MultidimensionalArray extends Valid {
         return $is_valid;
     }
 }
+
+class ValidFactory {
+    /**
+     * If $validator is an instance of a Validator, do nothing and returns it
+     * If $validator is a string and a validator exists (Valid_String for 'string', Valid_UInt for 'uint', ...) then creates an instance and returns it
+     * Else returns null
+     */
+    /* public static */ function getInstance($validator, $key = null) {
+        if (is_a($validator, 'Valid')) {
+            return $validator;
+        } else if(is_string($validator) && class_exists('Valid_'.$validator)) {
+            $validator_classname = 'Valid_'.$validator;
+            $v = new $validator_classname($key);
+            return $v;
+        } else {
+            return null;
+        }
+    }
+}
 ?>
