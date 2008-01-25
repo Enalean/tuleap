@@ -210,11 +210,7 @@
      */
     function getValidated($variable, $validator, $default_value = null) {
         $is_valid = false;
-        if (is_a($validator, 'Valid')) {
-            $is_valid = $this->valid($validator);
-        } else if(is_string($validator) && class_exists('Valid_'.$validator)) {
-            $validator_classname = 'Valid_'.$validator;
-            $v = new $validator_classname($variable);
+        if ($v = ValidFactory::getInstance($validator, $variable)) {
             $is_valid = $this->valid($v);
         } else {
             trigger_error('Validator '. $validator .' is not found', E_USER_ERROR);

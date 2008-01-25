@@ -184,6 +184,9 @@ class Valid_MultidimensionalArray extends Valid {
     function Valid_MultidimensionalArray($key, $validators) {
         parent::Valid($key);
         $this->validators = $validators;
+        foreach($this->validators as $key => $v) {
+            $this->validators[$key] = ValidFactory::getInstance($v);
+        }
     }
     
     function validate($array) {
