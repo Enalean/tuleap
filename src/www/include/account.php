@@ -14,6 +14,7 @@ require_once('common/include/createntlm.inc');
 require_once('common/password/PasswordStrategy.class.php');
 require_once('common/password/PasswordRegexpValidator.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('include/include');
 
@@ -70,6 +71,14 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
 				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=$form_newuid");
 			}
+            
+            // Raise an event
+            $em =& EventManager::instance();
+            $em->processEvent('project_admin_add_user', array(
+                'group_id' => $group_id,
+                'user_id' => $form_newuid
+            ));
+            
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));
             account_send_add_user_to_group_email($group_id,$form_newuid);
 			$ret = true;
