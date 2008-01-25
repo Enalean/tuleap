@@ -152,6 +152,28 @@ extends WikiDB_backend
     }
 
     /**
+     * Checks if a wiki page is referenced in docman.
+     *
+     * @param string $pagename wiki page name.
+     *
+     * @param int $group_id project id
+     *
+     * @return boolean
+     */
+    function isPageReferencedInDocman($pagename, $group_id) {
+        $dbh = &$this->_dbh;
+        $result = $dbh->getRow(sprintf("SELECT * FROM plugin_docman_item ".
+                                       "WHERE wiki_page='%s' AND group_id=%d AND delete_date IS NULL",
+                                       db_es($pagename), db_ei($group_id)));
+        if($result) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
      * Read page information from database.
      */
     function get_pagedata($pagename) {
