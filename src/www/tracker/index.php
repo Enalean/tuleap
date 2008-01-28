@@ -777,7 +777,7 @@ if ( $func == 'gotoid' ) {
                 if ($ah->updateFollowupComment($_REQUEST['artifact_history_id'],$_REQUEST['followup_update'],$changes)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
                     $agnf =& new ArtifactGlobalNotificationFactory();
-                    $addresses = $agnf->getAllAddresses($ath->getID());
+                    $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $ah->mailFollowupWithPermissions($addresses,$changes);
                 } else {
                     $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
