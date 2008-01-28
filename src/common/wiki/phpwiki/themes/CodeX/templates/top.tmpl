@@ -16,3 +16,8 @@ if (!$HIDE_TOOLBARS && !$HIDE_NAVBAR) {
 
 <!-- Page title -->
 <h1><?= $HEADER ?></h1>
+
+<!-- Docman item metadata -->
+<?php if($DOCMAN_METADATA) { ?>
+<?= $DOCMAN_METADATA ?>
+<?php } ?>

@@ -145,6 +145,13 @@ function getDocmanItemDao() {
     return $item_dao;
 }
 
+function getDocmanItem($item_id, $group_id) {
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemFactory.class.php');
+    $dIF =& Docman_ItemFactory::instance($group_id);
+    $item =& $dIF->getItemFromDb($item_id);
+    return $item;
+}
+
 function getDocmanPermissionsManager($group_id) {
     require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_PermissionsManager.class.php');
     $dPM =& Docman_PermissionsManager::instance($group_id);
@@ -181,6 +188,7 @@ function getNotificationsManager($group_id, $url) {
 
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
+    $group_id = $request->getArg('group_id');
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
     $page = $request->getPage();
@@ -235,6 +243,28 @@ function displayPage(&$request, $template=false) {
 	}
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
+    }
+
+    if(isDocmanAvailable()) {
+        if(isPageReferencedInDocman($pagename, $group_id)){ 
+
+            // Get docman Item Dao
+            $dao =& getDocmanItemDao();
+            
+            $docman_item_id = $dao->getItemId($pagename, $group_id); // TODO treat the case where the page have more than one reference in docman.
+            
+            // Create the docman item object
+            $item =& getDocmanItem($docman_item_id, $group_id);
+
+            // Expand/Collapse icon
+            //$on_click_behaviour = "javascript:toggle_md_section(\'md_'.$package_id.'\'); return false;";
+            
+            // Add item details section legend.
+            $legend = HTML::legend('Docman Metadata of ', HTML::strong($pagename));
+
+            $docman_md = HTML::br();
+            $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'),$legend));
+        }
     }
 
     $pagetitle = SplitPagename($pagename);
@@ -317,6 +347,7 @@ function displayPage(&$request, $template=false) {
     
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
+    $toks['DOCMAN_METADATA'] = $docman_md;
     $toks['revision'] = $revision;
     if (!empty($redirect_message))
         $toks['redirected'] = $redirect_message;
