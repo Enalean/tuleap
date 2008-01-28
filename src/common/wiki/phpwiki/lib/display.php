@@ -81,6 +81,29 @@ function actionPage(&$request, $action) {
     flush();
 }
 
+function isPageReferencedInDocman($pagename, $group_id) {
+    $item_dao =& getDocmanItemDao();
+    $exist = $item_dao->isWikiPageReferenced($pagename, $group_id);
+    if($exist) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function getDocmanItemId($pagename, $group_id) {
+    $item_dao =& getDocmanItemDao();
+    $id = $item_dao->getItemId($pagename, $group_id);
+    return $id;
+}
+
+function getDocmanItemDao() {
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemDao.class.php');
+    $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
+    return $item_dao;
+}
+
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
