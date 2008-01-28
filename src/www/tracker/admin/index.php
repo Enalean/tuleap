@@ -372,7 +372,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 		if (isset($submit)) {
 		  $ok = true;
 		  if ($ath->userIsAdmin()) {
-              $ok = $ath->updateNotificationSettings(user_getid(), $watchees, $stop_notification, $feedb);
+              $ok = $ath->updateNotificationSettings(user_getid(), $watchees, (isset($stop_notification) ? $stop_notification : false), $feedb);
               //{{{ Global Notifications
               if ($submitted_notifications = $request->get('global_notification')) {
                   $agnf =& new ArtifactGlobalNotificationFactory();
@@ -399,7 +399,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 					$event_id = $ath->arr_events[$j]['event_id'];
 					$cbox_name = 'cb_'.$role_id.'_'.$event_id;
 					//echo "DBG $cbox_name -> '".$$cbox_name."'<br>";
-					$arr_notif[$role_id][$event_id] = ( $$cbox_name ? 1 : 0);
+					$arr_notif[$role_id][$event_id] = ( (isset($$cbox_name) && $$cbox_name)  ? 1 : 0);
 				}
 			}
 
