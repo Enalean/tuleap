@@ -646,7 +646,7 @@ class Docman_ItemDao extends DataAccessObject {
             ' AND group_id = %d'.
             ' AND delete_date IS NULL'.
             ' AND obsolescence_date > %d OR obsolescence_date=0'
-            , db_escape_string($pagename), $_gid, $obsoleteToday()
+            , db_escape_string($wikipage), $_gid, $obsoleteToday
         );
         $res = $this->retrieve($sql);
         if($res && !$res->isError()) {
@@ -671,15 +671,15 @@ class Docman_ItemDao extends DataAccessObject {
         $sql = sprintf('SELECT item_id'.
             ' FROM plugin_docman_item'.
             ' WHERE wiki_page = \'%s\''.
-            ' AND group_id = %d'.
-            , db_escape_string($pagename), $_gid 
+            ' AND group_id = %d'
+            , db_escape_string($wikipage), $_gid 
         );
         $res = $this->retrieve($sql);
         if($res && !$res->isError()) {
-	    if($res->rowCount() > 1) {
+	        if($res->rowCount() > 1) {
                 $res->rewind();
                 while($res->valid()) {
-		    $row = $res->current();
+		            $row = $res->current();
                     $ids[] = $row['item_id'];
                     $res->next();
                 }
@@ -690,8 +690,8 @@ class Docman_ItemDao extends DataAccessObject {
                 if($res->valid()) {
                     $row = $res->current();
                     $id = $row['item_id'];
+                    return $id;
                 }
-                return $id;
             }
         }
         else {
