@@ -186,6 +186,103 @@ function getNotificationsManager($group_id, $url) {
     return $nM;
 }
 
+function buildDocmanDetailsSections(&$docman_item, $group_id) {
+    $default_url = "/plugins/docman/?group_id=". $group_id;
+    $theme_path = "/plugins/docman/themes/default";
+
+    // Docman item factory
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemFactory.class.php');
+    $item_factory =& Docman_ItemFactory::instance($group_id);
+
+    // Docman View Item Details
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetails.class.php');
+    $details = new Docman_View_ItemDetails(&$item, $default_url);
+    
+    // sections initialisation
+    $sections = array();
+
+
+    // fetch current user perms on the item
+    $user_can_read = userCanReadDocmanItem($docman_item->getId(), $group_id);
+    $user_can_write = userCanWriteDocmanItem($docman_item->getId(), $group_id);
+    $user_can_manage = userCanManageDocmanItem($docman_item->getId(), $group_id);
+    $user_can_admin = userCanAdminDocman($group_id);
+
+    // Restrict access to obselete items details to docman admin
+    if($docman_item->isObsolete()) {
+        if(!userCanAdminDocman()) {
+            $user_can_manage = false;
+            $user_can_write  = false;
+            // Save read value to let user (according to their rights) to see
+            // the properties.
+            $user_can_read_obsolete = $user_can_read;
+            $user_can_read = false;
+        }
+    }
+
+    // Properties details section
+    if($user_can_read || $user_can_read_obsolete) {
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetailsSectionProperties.class.php');
+        $props =& new Docman_View_ItemDetailsSectionProperties($docman_item, $default_url, $theme_path, $user_can_write, 1);
+        $sections['properties'] = true;
+        $details->addSection($props);
+    }
+
+    // permissions details section
+    if($user_can_manage) {
+        $sections['permissions'] = true;
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetailsSectionPermissions.class.php');
+        $details->addSection(new Docman_View_ItemDetailsSectionPermissions($docman_item, $default_url, 1));
+    }
+
+    // Notification details section
+    if($user_can_read) {
+        $sections['notifications'] = true;
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetailsSectionNotifications.class.php');
+        $details->addSection(new Docman_View_ItemDetailsSectionNotifications($docman_item, $default_url, getNotificationsManager($group_id, $default_url), 1));
+    }
+
+    // Approval details section
+    /*if($user_can_read) {
+        $sections['approval'] = true;
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetailsSectionApproval.class.php');
+        $details->addSection(new Docman_View_ItemDetailsSectionApproval($docman_item, $default_url, $theme_path, getNotificationsManager($group_id, $default_url)));
+    }*/
+
+    if($user_can_read) {
+        // History details section
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_Log.class.php');
+        $logger =& new Docman_Log();
+        $sections['history'] = true;
+        require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/view/Docman_View_ItemDetailsSectionHistory.class.php');
+        $details->addSection(new Docman_View_ItemDetailsSectionHistory($docman_item, $default_url, $user_can_manage, $logger));
+    }
+    // Set Properties section as current section
+    $details->setCurrentSection('properties');
+    $details->current_section = 'properties';
+
+    $html = '';
+    $html = HTML::br();
+    if (count($details->sections)) {
+        $secs = HTML();
+        foreach($details->sections as $section) {
+            if ($section->getId() == $details->current_section) {
+                $class = 'docman_properties_navlist_current';
+            }
+            else {
+                $class = '';
+            }
+            $secs->pushContent(HTML::li(HTML::a(array('href' => $default_url .'&amp;action=details&amp;id='. $docman_item->getId() .'&amp;section='. $section->getId(), 'class' => $class), $section->getTitle())));
+        }
+        // Content
+        $content_div = HTML::div(array('class' => 'docman_properties_content'), $details->sections[$details->current_section]->getContent());
+        $html->pushContent(HTML::ul(array('class' => 'docman_properties_navlist'), $secs));
+        $html->pushContent($content_div);
+    }
+    return $html;
+    
+}
+
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
     $group_id = $request->getArg('group_id');
@@ -261,9 +358,16 @@ function displayPage(&$request, $template=false) {
             
             // Add item details section legend.
             $legend = HTML::legend('Docman Metadata of ', HTML::strong($pagename));
+            
+
+            $details = buildDocmanDetailsSections(&$item, $group_id);
 
             $docman_md = HTML::br();
-            $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'),$legend));
+            $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'),$legend, $details));
+            
+            // build sections into docman details view
+            //$docman_md->pushContent(buildDocmanDetailsSections(&$item, $group_id));
+
         }
     }
 
