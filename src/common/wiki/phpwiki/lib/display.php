@@ -85,7 +85,7 @@ function isDocmanAvailable() {
     $plugin_manager =& getPluginManager();
     $p =& $plugin_manager->getPluginByName('docman');
     if($p && $plugin_manager->isPluginAvailable($p)) {
-		return true;
+        return true;
     }
     else {
         return false;
@@ -109,6 +109,12 @@ function getDocmanItemId($pagename, $group_id) {
     return $id;
 }
 
+function &getUser() {
+    $uM =& getUserManager();
+    $user = $uM->getCurrentUser();
+    return $user;
+}
+
 function getDocmanItemDao() {
     require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemDao.class.php');
     $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
@@ -119,6 +125,12 @@ function getPluginManager() {
     require_once('common/plugin/PluginManager.class.php');
     $plugin_manager =& PluginManager::instance();
     return $plugin_manager;
+}
+
+function getUserManager() {
+    require_once('common/include/UserManager.class.php');
+    $uM =& UserManager::instance();
+    return $uM;
 }
 
 function displayPage(&$request, $template=false) {
