@@ -242,6 +242,19 @@ table.release tr td img {
 .files_table {
     margin-bottom: 20px;
 }
+/********** Docman metadata inside wiki ************/
+
+fieldset.docman_md_frame {
+    margin-bottom: 20px;
+}
+
+fieldset.docman_md_frame legend {
+    font-size: larger;
+    padding-right: 10px;
+}
+
+/***************************************************/
+
 /* }}} */
 
 
