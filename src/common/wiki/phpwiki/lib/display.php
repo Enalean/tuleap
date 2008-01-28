@@ -109,6 +109,30 @@ function getDocmanItemId($pagename, $group_id) {
     return $id;
 }
 
+function userCanReadDocmanItem($item_id, $group_id) {
+    $dPM =& getDocmanPermissionsManager($group_id);
+    $user =& getUser();
+    return $dPM->userCanRead($user, $item_id);
+}
+
+function userCanWriteDocmanItem($item_id, $group_id) {
+    $dPM =& getDocmanPermissionsManager($group_id);
+    $user =& getUser();
+    return $dPM->userCanWrite($user, $item_id);
+}
+
+function userCanManageDocmanItem($item_id, $group_id) {
+    $dPM =& getDocmanPermissionsManager($group_id);
+    $user =& getUser();
+    return $dPM->userCanManage($user, $item_id);
+}
+
+function userCanAdminDocman($group_id) {
+    $dPM =& getDocmanPermissionsManager($group_id);
+    $user =& getUser();
+    return $dPM->userCanAdmin($user);
+}
+
 function &getUser() {
     $uM =& getUserManager();
     $user = $uM->getCurrentUser();
@@ -119,6 +143,12 @@ function getDocmanItemDao() {
     require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemDao.class.php');
     $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
     return $item_dao;
+}
+
+function getDocmanPermissionsManager($group_id) {
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_PermissionsManager.class.php');
+    $dPM =& Docman_PermissionsManager::instance($group_id);
+    return $dPM;
 }
 
 function getPluginManager() {
