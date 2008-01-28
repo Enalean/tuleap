@@ -163,6 +163,22 @@ function getUserManager() {
     return $uM;
 }
 
+function getNotificationsManager($group_id, $url) {
+    // Create feedback object
+    $flash = user_get_preference('plugin_docman_flash');
+    if ($flash) {
+        user_del_preference('plugin_docman_flash');
+        $feedback = @unserialize($flash);
+    } else {
+        $feedback =& $GLOBALS['Response']->_feedback;
+    }
+
+    // Instanciate NotificationsManager
+    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_NotificationsManager.class.php');
+    $nM =& new Docman_NotificationsManager($group_id, get_server_url().$url, &$feedback);
+    return $nM;
+}
+
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
