@@ -49,7 +49,10 @@ class ArtifactGlobalNotificationFactory {
         }
         return false;
     }
-    function getAllAddresses($tracker_id, $update = true) {
+    /**
+     * @param boolean $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
+     */
+    function getAllAddresses($tracker_id, $update = false) {
         $addresses = array();
         $notifs = $this->getGlobalNotificationsForTracker($tracker_id);
         foreach($notifs as $key => $nop) {
