@@ -1297,7 +1297,7 @@ class ArtifactType extends Error {
 	
 	    $send = false;
 	    $arr_notif = $this->buildNotificationMatrix($user_id);
-	    if (!$arr_notif || (count($arr_notif == 0))) { return true; }
+	    if (!$arr_notif || (count($arr_notif) == 0)) { return true; }
 	
 	    // echo "==== DBG Checking Notif. for $user_id (role=$role)<br>";
 	    $user_name = user_getname($user_id);
@@ -1320,7 +1320,7 @@ class ArtifactType extends Error {
 	    // Check this one first because if the user said no she doesn't want to be 
 	    // aware of any of her change in this role and we can return immediately.
 	    if (($user_id == user_getid()) && !$arr_notif[$role]['I_MADE_IT']) {
-			// echo "DBG Dont want to receive my own changes<br>";
+			 //echo "DBG Dont want to receive my own changes<br>";
 			return false;
 	    }
 	    
