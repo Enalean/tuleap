@@ -21,7 +21,7 @@ plugin_docman	approval_review_state_3	Commentaire seulement
 plugin_docman	approval_review_state_4	Pas d'avis
 plugin_docman	approval_notif_mail_subject	[$1] Merci d'approuver '$2'
 plugin_docman	approval_notif_mail_body	Vous êtes convié à approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou réprouver le document :\n<$7>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
-plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuver/réprouver pas le document.\n
+plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuvez/réprouvez pas le document.\n
 plugin_docman	approval_notif_mail_notif_all	Tous d'un coup\n
 plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n$1\n\n
 plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a été réprouvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
@@ -220,7 +220,7 @@ plugin_docman	details_approval_notif_2	Sequentiellement
 plugin_docman	details_approval_notif_email	Email de notification
 plugin_docman	details_approval_notif_email_act	Voir l'email de notification
 plugin_docman	details_approval_notif_relaunch	Relancer la notification :
-plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuver/réprouver.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuver/réprouver) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>
+plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuvé/réprouvé.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuvé/réprouvé) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>
 plugin_docman	details_approval_notif_reviewers_submit	Notifier les personnes sélectionnées
 plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personnes sélectionnées
 plugin_docman	details_approval_notif_title	Notification
