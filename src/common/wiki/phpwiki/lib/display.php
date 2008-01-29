@@ -4,6 +4,9 @@ rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 
 require_once('lib/Template.php');
 
+define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
+define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
+
 /**
  * Extract keywords from Category* links on page. 
  */
@@ -274,9 +277,13 @@ function buildDocmanDetailsSections(&$docman_item, $group_id) {
             }
             $secs->pushContent(HTML::li(HTML::a(array('href' => $default_url .'&amp;action=details&amp;id='. $docman_item->getId() .'&amp;section='. $section->getId(), 'class' => $class), $section->getTitle())));
         }
+
+
+        // sections headings
+        $html->pushContent(HTML::ul(array('id' => 'md', 'class' => 'docman_properties_navlist'), $secs));
+
         // Content
         $content_div = HTML::div(array('class' => 'docman_properties_content'), $details->sections[$details->current_section]->getContent());
-        $html->pushContent(HTML::ul(array('class' => 'docman_properties_navlist'), $secs));
         $html->pushContent($content_div);
     }
     return $html;
@@ -344,30 +351,42 @@ function displayPage(&$request, $template=false) {
 
     if(isDocmanAvailable()) {
         if(isPageReferencedInDocman($pagename, $group_id)){ 
-
             // Get docman Item Dao
             $dao =& getDocmanItemDao();
             
             $docman_item_id = $dao->getItemId($pagename, $group_id); // TODO treat the case where the page have more than one reference in docman.
-            
-            // Create the docman item object
-            $item =& getDocmanItem($docman_item_id, $group_id);
 
-            // Expand/Collapse icon
-            //$on_click_behaviour = "javascript:toggle_md_section(\'md_'.$package_id.'\'); return false;";
-            
-            // Add item details section legend.
-            $legend = HTML::legend('Docman Metadata of ', HTML::strong($pagename));
-            
+            // Wiki page could have many references in docman.
+            if(is_array($docman_item_id)) {
+                $docman_md = HTML();
+                foreach($docman_item_id as $index => $value) {
+                    // Create the docman item object
+                    $item =& getDocmanItem($value, $group_id);
+                    // Expand collapse icon
+                    $icon = HTML::img(array('src' => FRS_COLLAPSED_ICON));
+                    $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toogle_md('md_". $value ."')"), $icon);
+                    // Add item details section legend.
+                    $legend = HTML::legend($linked_icon,'Docman Metadata of ', HTML::strong($pagename));
+                    $details = buildDocmanDetailsSections(&$item, $group_id);
+                    $docman_md->pushContent(HTML::br());
+                    $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $details));
+                }
+            }
+            else {
+                // Create the docman item object
+                $item =& getDocmanItem($docman_item_id, $group_id);
 
-            $details = buildDocmanDetailsSections(&$item, $group_id);
+                // Expand collapse icon
+                $icon = HTML::img(array('src' => FRS_COLLAPSED_ICON));
+                $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toogle_md('md')"), $icon);
 
-            $docman_md = HTML::br();
-            $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'),$legend, $details));
-            
-            // build sections into docman details view
-            //$docman_md->pushContent(buildDocmanDetailsSections(&$item, $group_id));
+                // Add item details section legend.
+                $legend = HTML::legend($linked_icon,'Docman Metadata of ', HTML::strong($pagename));
+                $details = buildDocmanDetailsSections(&$item, $group_id);
 
+                $docman_md = HTML::br();
+                $docman_md->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $details));
+            }
         }
     }
 
