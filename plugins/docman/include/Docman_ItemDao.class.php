@@ -667,7 +667,7 @@ class Docman_ItemDao extends DataAccessObject {
      */
     function getItemId($wikipage, $group_id) {
         $_gid = (int) $group_id;
-        $ids[] = array();
+        $ids = array();
         $sql = sprintf('SELECT item_id'.
             ' FROM plugin_docman_item'.
             ' WHERE wiki_page = \'%s\''.
