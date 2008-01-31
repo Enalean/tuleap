@@ -349,6 +349,14 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         }
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','u_added',$countuser));
     }
+    
+    // raise an event for ugroup creation
+    $em =& EventManager::instance();
+    $em->processEvent('project_admin_ugroup_creation', array(
+        'group_id'  => $group_id,
+        'ugroup_id' => $ugroup_id
+    ));
+    
     return $ugroup_id;
 }
 
