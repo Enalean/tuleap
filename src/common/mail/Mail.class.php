@@ -56,7 +56,7 @@ class Mail {
      * Copyright......: 2001, 2002 Richard Heyes
      */
     function _encodeHeader($input, $charset) {
-		preg_match_all('/(\w*[\x80-\xFF]+\w*)/', $input, $matches);
+		preg_match_all('/(\s?\w*[\x80-\xFF]+\w*\s?)/', $input, $matches);
 		foreach ($matches[1] as $value) {
 			$replacement = preg_replace('/([\x80-\xFF])/e', '"=" . strtoupper(dechex(ord("\1")))', $value);
 			$input = str_replace($value, '=?' . $charset . '?Q?' . $replacement . '?=', $input);

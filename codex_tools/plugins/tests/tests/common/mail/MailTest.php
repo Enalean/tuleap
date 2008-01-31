@@ -30,6 +30,9 @@ class MailTest extends UnitTestCase {
         $this->assertNoUnwantedPattern("/Ã©/", $mail->getEncodedSubject());
         
         $this->assertEqual($mail->getSubject(), $mail->_decodeHeader($mail->getEncodedSubject()));
+        
+        $mail->setSubject("è é"); //SR #1167
+        $this->assertEqual($mail->getSubject(), $mail->_decodeHeader($mail->getEncodedSubject()));
     }
     
     function testValidateRecipient() {
