@@ -35,29 +35,27 @@ $_rVar = array();
 $request =& HTTPRequest::instance();
 
 $_rVar['form_loginname'] = null;
-if($request->exist('form_loginname')) {
+if($request->valid(new Valid_String('form_loginname'))) {
     $_rVar['form_loginname'] = $request->get('form_loginname');
 }
 
 $_rVar['form_pw'] = null;
-if($request->exist('form_pw')) {
+if($request->valid(new Valid_String('form_pw'))) {
     $_rVar['form_pw'] = $request->get('form_pw');
 }
 
-// Should test if numeric and in (0,1,2)
 $_cVar['pv'] = null;
-if($request->exist('pv')) {
+if($request->valid(new Valid_Pv())) {
     $_cVar['pv'] = (int) $request->get('pv');
 }
 
 $_rVar['return_to'] = null;
-if($request->exist('return_to')) {
+if($request->valid(new Valid_String('return_to'))) {
     $_rVar['return_to'] = $request->get('return_to');
 }
 
-// Should test if numeric and in (0,1)
 $_cVar['stay_in_ssl'] = null;
-if($request->exist('stay_in_ssl')) {
+if($request->valid(new Valid_WhiteList('stay_in_ssl', array(0,1)))) {
     $_cVar['stay_in_ssl'] = (int) $request->get('stay_in_ssl');
 }
 
@@ -176,10 +174,12 @@ if($userStatusBox != '') {
 if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 && $GLOBALS['sys_stay_in_ssl'] == 1 ) {
     $checked = '';
     $ieMsg = '';
-    if((browser_is_ie() && browser_get_version() < '5.1') ||
-       !session_issecure()) {
+    if(session_issecure()) {
         $checked = ' checked="checked"';
-        $ieMsg = $GLOBALS['Language']->getText('account_login', 'msie_pb');
+        if((browser_is_ie() && browser_get_version() < '5.1')) {
+            $checked = '';
+            $ieMsg = $GLOBALS['Language']->getText('account_login', 'msie_pb');
+        }
     }
 
     echo '<p>';
