@@ -409,7 +409,17 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($pickList[$i],db_error())));
         }
     }
-
+    
+    // raise an event for ugroup edition
+    $em =& EventManager::instance();
+    $em->processEvent('project_admin_ugroup_edition', array(
+        'group_id'  => $group_id,
+        'ugroup_id' => $ugroup_id,
+        'ugroup_name' => $ugroup_name,
+        'ugroup_desc' => $ugroup_description,
+        'pick_list' => $pickList
+    ));
+    
     // Now log in project history
     group_add_history('upd_ug','',$group_id,array($ugroup_name));
 
