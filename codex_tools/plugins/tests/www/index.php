@@ -53,6 +53,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
 ?>
 <html>
     <head>
+        <title>Codex Unit Tests</title>
         <style type="text/css">
         body {
             margin:0;
