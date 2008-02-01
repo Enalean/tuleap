@@ -196,7 +196,7 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function multipleFieldDate($date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
+	function multipleFieldDate($date_begin='',$fieldname_begin,$date_end='',$fieldname_end,$size=0,$maxlength=0,$ro=false) {
 	  global $Language;
 
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
@@ -204,7 +204,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 	    if ($ro)
 			if ($date_begin || $date_end) {
-			    $html = $Language->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field','end')."&nbsp;$date_end";
+			    $html = $Language->getText('tracker_include_field','start')."&nbsp;".stripslashes($date_begin)."<br>".$Language->getText('tracker_include_field','end')."&nbsp;".stripslashes($date_end)."";
 			} else {
 			    $html = $Language->getText('tracker_include_field','any_time');
 		    } else {
@@ -212,12 +212,12 @@ class ArtifactFieldHtml extends ArtifactField {
 				    list($size, $maxlength) = $this->getGlobalDisplaySize();
 		
 				$html = $Language->getText('tracker_include_field','start').'<INPUT TYPE="text" name="'.$this->getName().
-				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.stripslashes($date_begin).'"><input type="hidden" name="'.$this->getName().'_fieldname" value="'.stripslashes($fieldname_begin).'">'.
+				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',document.datefields);">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
 				$Language->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'.$this->getName().'_end'.
-				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.stripslashes($date_end).'"><input type="hidden" name="'.$this->getName().'_end_fieldname" value="'.stripslashes($fieldname_end).'">'.
+				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',document.datefields);">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 		    }
 	
@@ -261,17 +261,17 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
+	function fieldDate($value='',$fieldname,$ro=false,$size='10',$maxlength='255',$form_name='artifact_form',$today=false) {
 	  global $Language;
 
 	    if ($ro)
-			$html = $value;
+			$html = stripslashes($value);
 	    else {
 		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	
 		$html = '<INPUT TYPE="text" name="'.$this->field_name.
-		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.stripslashes($value).'"><input type="hidden" name="'.$this->getName().'_fieldname" value="'.stripslashes($fieldname).'">'.
+		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\',document.datefields);">'.
 		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 	    }
 	    return($html);

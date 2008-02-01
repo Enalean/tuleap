@@ -522,9 +522,15 @@ class ArtifactReportHtml extends ArtifactReport {
         function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false) {
                 
 	  global $ath,$art_field_fact,$Language;
-                
-	  $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
-
+	  $html_result = '<script type="text/javascript" src="/scripts/calendar_datefield_js.php"></script>';
+      $datefields = array();
+	  $fields = $this->getQueryFields();
+	  while(list($key,$field) = each($fields)) {
+          if ($field->isDateField()) {
+              $datefields[count($datefields)] = '"'.addslashes($field->getName()).'":"'.addslashes($field->getLabel()).'"';
+          }
+	  }
+      $html_result .= "<script type=\"text/javascript\">document.datefields = {".implode($datefields, ",")."};</script>";
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() && $pv == 0) {
                         $html_result .= $ath->getBrowseInstructions();
