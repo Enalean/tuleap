@@ -31,14 +31,14 @@ define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
  * URL of your server's WSDL
  */
 if (array_key_exists("CODEX_WSDL", $_ENV)) {
-	define("WSDL_URL", $_ENV["CODEX_WSDL"]);
+	$host = $_ENV["CODEX_WSDL"];
 } else {
-	define("WSDL_URL", "%wsdl_domain%/soap/index.php?wsdl");
+	$host = "%wsdl_domain%/soap/index.php?wsdl";
 }
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.4.0";
+$CLI_VERSION = "0.4.1";
 
 error_reporting(E_ALL);
 
@@ -59,24 +59,23 @@ if (! defined("STDIN") || ! defined("STDOUT") || ! defined("STDERR")) {
 }
 
 // Global logging object
-$LOG = new Log();
-$soap = new CodeXSOAP();
-$modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
 
 $function_index = 0;		// Points to the position where the information about which function to execute begins
 
 /* Parse the parameters and options passed to the main script */
+$log_level = 0;
+$display_help = false;
+
 for ($i = 1; $i <= $argc-1; $i++) {
 	// Show user the help screen
 	if ($argv[$i] == "--help" || $argv[$i] == "-h") {
-		display_help($modules);
-		exit(0);
+		$display_help = true;
 	}
 
 	// Verbose
 	else if ($argv[$i] == "--verbose" || $argv[$i] == "-v") {
 		// Increase verbose level
-		$LOG->setLevel(1);
+        $log_level = 1;
 	}
     
     // Version
@@ -98,16 +97,31 @@ for ($i = 1; $i <= $argc-1; $i++) {
 		break;
 	}
 	
+    else if ($argv[$i] == "--host") {
+        $i++;
+        if (isset($argv[$i]) && !preg_match("/^-/", $argv[$i])) {
+            $host = $argv[$i];
+        } else {
+            echo "You should give a valid url for host.\n";
+            $display_help = true;
+        }
+    }
 	// Unknown parameter
 	else {
-		exit_error("Unknown parameter: \"".$argv[$i]."\"");
+		exit_error('Unknown parameter: "'.$argv[$i].'"');
 	}
 }
 
-if (!$function_index) {		// No function was specified. Show the help.
+define("WSDL_URL", $host);
+$LOG = new Log();
+$soap = new CodeXSOAP();
+$modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
+
+if ($display_help || !$function_index) {		// No function was specified. Show the help.
 	display_help($modules);
 	exit(0);
 }
+$LOG->setLevel($log_level);
 
 // Get the name of the module or the function to execute
 $name = trim($argv[$function_index]);
@@ -155,6 +169,7 @@ codex [options] [module name] [function] [parameters]
     -h or --help    Display this screen
     --version       Display the software version
     -v              Verbose
+    --host          URL of your server's WSDL
 
 
 EOT;
