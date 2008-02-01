@@ -455,8 +455,16 @@ function ugroup_delete($group_id, $ugroup_id) {
     if (!$result) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','cant_remove_u',db_error()));
         return false;
-    } 
+    }
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','all_u_removed'));
+    
+    // raise an event for ugroup deletion
+    $em =& EventManager::instance();
+    $em->processEvent('project_admin_ugroup_deletion', array(
+        'group_id'  => $group_id,
+        'ugroup_id' => $ugroup_id
+    ));
+    
     // Last, remove permissions for this group
     $perm_cleared=permission_clear_ugroup($group_id, $ugroup_id); 
     if (!($perm_cleared)) {
