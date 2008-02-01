@@ -20,6 +20,7 @@ define ('invalid_field_fault', '3017');
 define ('delete_cc_fault', '3018');
 define ('get_service_fault', '3020');
 define ('get_artifact_report_fault', '3021');
+define('update_artifact_followup_fault','3022');
 
 require_once ('nusoap.php');
 require_once ('pre.php');
@@ -407,12 +408,16 @@ $server->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'artifact_id'          => array('name'=>'artifact_id', 'type' => 'xsd:int'),        
+        'artifact_id'          => array('name'=>'artifact_id', 'type' => 'xsd:int'),       
+        'follow_up_id'          => array('name'=>'follow_up_id', 'type' => 'xsd:int'), 
         'comment'           => array('name'=>'comment', 'type' => 'xsd:string'),
         'date'                     => array('name'=>'date', 'type' => 'xsd:int'),
+        'original_date'                     => array('name'=>'original_date', 'type' => 'xsd:int'),
         'by'               => array('name'=>'by', 'type' => 'xsd:string'),
+        'original_by'               => array('name'=>'original_by', 'type' => 'xsd:string'),
         'comment_type_id'     => array('name'=>'comment_type_id', 'type' => 'xsd:int'),
-        'comment_type'     => array('name'=>'comment_type', 'type' => 'xsd:string')
+        'comment_type'     => array('name'=>'comment_type', 'type' => 'xsd:string'),
+        'field_name'     => array('name'=>'field_name', 'type' => 'xsd:string')
     )
 );
 
@@ -1240,6 +1245,26 @@ $server->register(
     'rpc',
     'encoded',
     'Deprecated. Please use addArtifactFollowup'
+);
+
+$server->register(
+    'updateArtifactFollowUp',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'group_artifact_id'=>'xsd:int',
+        'artifact_id'=>'xsd:int',
+        'artifact_history_id'=>'xsd:int', 
+        'comment'=>'xsd:string', 
+    ),
+    array('return'=>'xsd:boolean'),
+    $uri,
+    $uri.'#updateArtifact',
+    'rpc',
+    'encoded',
+    'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.
+     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -2515,26 +2540,30 @@ function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $arti
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault, 'getArtifactFollowups', $a->getErrorMessage(), '');
         }
-        $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id);
+        $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id, $a);
         return new soapval('return', 'tns:ArrayOfArtifactFollowup', $return);        
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactFollowups','Invalid Session ','');
     }
 }
 
-function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id) {
+function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id, $artifact) {
     $return = array();
     $rows = db_numrows($followups_res);
     for ($i=0; $i < $rows; $i++) {
         $comment = util_make_links(db_result($followups_res, $i, 'new_value'),$group_id,$group_artifact_id);
-    
+        $id = db_result($followups_res, $i, 'artifact_history_id');
         $return[] = array (
-            'artifact_id'          => db_result($followups_res, $i, 'artifact_id'),    
-            'comment'               => html_entity_decode($comment), //db_result($followups_res, $i, 'new_value'),
-            'date'                     => db_result($followups_res, $i, 'date'),
-            'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
+            'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),    
+            'follow_up_id'        => $id,   
+            'comment'             => html_entity_decode($comment), //db_result($followups_res, $i, 'new_value'),
+            'date'                => db_result($followups_res, $i, 'date'),
+            'original_date'       => db_result($artifact->getOriginalCommentDate($id), 0, 'date'),  
+            'by'                  => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
+            'original_by'         => (db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by')==100?db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email'):user_getname(db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by'))),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
-            'comment_type'        => db_result($followups_res, $i, 'comment_type')
+            'comment_type'        => db_result($followups_res, $i, 'comment_type'),
+            'field_name'          => db_result($followups_res, $i, 'field_name')  
         );
     }
     return $return;
@@ -3264,6 +3293,81 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
 }
 
 /**
+ * updateArtifactFollowUp - update the artifact follow up $artifact_history_id in tracker $group_artifact_id of the project $group_id for the artifact $artifact_id with given comment
+ *
+ * NOTE : the mail notification system is implemented.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to update the comment
+ * @param int $group_artifact_id the ID of the tracker we want to update the comment
+ * @param int $artifact_id the ID of the artifact we want to update the comment
+ * @param int $artifact_history_id the ID of the artifact comment we want to update
+ * @param string $comment the new comment
+ * @return int the ID of the comment, 
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker,
+ *              - artifact_id does not match with a valid artifact,
+ *              - artifact_history_id does not match with a valid comment,
+ *              - the comment modification failed.
+ */
+function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id, $comment) {
+    global $art_field_fact, $changes; 
+    if (session_continue($sessionKey)){
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'updateArtifactFollowUp','Could Not Get Group','');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'updateArtifactFollowUp',$grp->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'updateArtifactFollowUp','Could Not Get ArtifactType','');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'updateArtifactFollowUp',$at->getErrorMessage(),'');
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', 'Could Not Get ArtifactFieldFactory','');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', $art_field_fact->getErrorMessage(),'');
+        }
+
+        $a = new Artifact($at, $artifact_id);
+        
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault, 'updateArtifactFollowUp', 'Could Not Get Artifact', '');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault, 'updateArtifactFollowUp', $a->getErrorMessage(), '');
+        }
+        
+
+        
+         if(!$a->updateFollowupComment($artifact_history_id, $comment, $changes)){
+            return new soap_fault(update_artifact_followup_fault, 'updateArtifactFollowUp', $a->getErrorMessage(), '');
+        }else{
+            
+            // Send the notification
+            if ($changes) {
+                $agnf =& new ArtifactGlobalNotificationFactory();
+                $addresses = $agnf->getAllAddresses($at->getID(), true);
+                $a->mailFollowupWithPermissions($addresses, $changes);
+            }
+            
+            return new soapval('return', 'xsd:boolean', true);
+        }
+        
+    } else {
+        return new soap_fault(invalid_session_fault,'updateArtifactFollowUp','Invalid Session ','');
+    }
+}
+
+/**
  * @deprecated Please use addArtifactDependencies
  */
 function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id) {
@@ -3411,6 +3515,8 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
 function addFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body) {
     return addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body);
 }
+
+
 
 /**
  * existArtifactSummary - check if the tracker $group_artifact_id already contains an artifact with the summary $summary
