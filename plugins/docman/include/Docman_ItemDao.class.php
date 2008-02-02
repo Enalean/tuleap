@@ -645,11 +645,11 @@ class Docman_ItemDao extends DataAccessObject {
             ' WHERE wiki_page = \'%s\''.
             ' AND group_id = %d'.
             ' AND delete_date IS NULL'.
-            ' AND obsolescence_date > %d OR obsolescence_date=0'
+            ' AND (obsolescence_date > %d OR obsolescence_date=0)'
             , db_escape_string($wikipage), $_gid, $obsoleteToday
         );
         $res = $this->retrieve($sql);
-        if($res && !$res->isError()) {
+        if($res && !$res->isError() && $res->rowCount() >= 1) {
             return true;
         }
         else {
