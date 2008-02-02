@@ -664,6 +664,76 @@ class Docman_ItemDao extends DataAccessObject {
                        $tsEnd);
         return $this->retrieve($sql);
     }
+
+    /**
+     * Checks if a wiki page is referenced in docman. Referencing docman items shouldn't be obsolete or deleted.
+     *
+     * @param string $wikipage wiki page name.
+     * @param int $group_id project id.
+     *
+     * @return boolean.
+     */
+    function isWikiPageReferenced($wikipage, $group_id) {
+        $_gid = (int) $group_id;
+        $obsoleteToday = $this->getObsoleteToday();
+        $sql = sprintf('SELECT item_id'.
+            ' FROM plugin_docman_item'.
+            ' WHERE wiki_page = \'%s\''.
+            ' AND group_id = %d'.
+            ' AND delete_date IS NULL'.
+            ' AND (obsolescence_date > %d OR obsolescence_date=0)'
+            , db_escape_string($wikipage), $_gid, $obsoleteToday
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError() && $res->rowCount() >= 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * This returns ids of docman items that refrence a wiki page in a project.
+     *
+     * @param string $wikipage wiki page name
+     * @param int $group_id project id.
+     *
+     * @return array $ids ids of docman items that reference the wiki page.
+     */
+    function getItemId($wikipage, $group_id) {
+        $_gid = (int) $group_id;
+        $ids = array();
+        $sql = sprintf('SELECT item_id'.
+            ' FROM plugin_docman_item'.
+            ' WHERE wiki_page = \'%s\''.
+            ' AND group_id = %d'
+            , db_escape_string($wikipage), $_gid 
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError()) {
+	        if($res->rowCount() > 1) {
+                $res->rewind();
+                while($res->valid()) {
+		            $row = $res->current();
+                    $ids[] = $row['item_id'];
+                    $res->next();
+                }
+                return $ids;
+            }
+            else {
+                $res->rewind();
+                if($res->valid()) {
+                    $row = $res->current();
+                    $id = $row['item_id'];
+                    return $id;
+                }
+            }
+        }
+        else {
+            return null;
+        }
+    }
 }
 
 ?>
