@@ -267,6 +267,23 @@ class PageEditor
                                      : $this->_currentVersion + 1, 
                                    // force new?
         			   $meta);
+
+        // Check if this page was created from docman in order to get docman item perms. 
+        // Only applies on new wiki pages (revision == 0)
+        if ($this->version == 0){
+            require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_ItemDao.class.php');
+            $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
+            // following called functions are part of perms propagation contrib. It's a dependency.
+            if($item_dao->isWikiPageReferenced($page->getName(), GROUP_ID)) {
+                $docman_item_id = $item_dao->getItemId($page->getName(), GROUP_ID);
+                if(isset($docman_item_id) && $docman_item_id) {
+                    require_once(dirname(__FILE__).'/../../../../../plugins/docman/include/Docman_PermissionsManager.class.php');
+                    $dPM =& Docman_PermissionsManager::instance(GROUP_ID);
+                    $dPM->propagatePermsForNewWikiPages($page->getName(), GROUP_ID, $docman_item_id);
+                }
+            }
+        }
+
         if (!isa($newrevision, 'WikiDB_PageRevision')) {
             // Save failed.  (Concurrent updates).
             return false;
