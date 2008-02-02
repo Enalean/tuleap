@@ -20,7 +20,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ * $Id$
  */
 require_once('DocmanConstants.class.php');
 require_once('common/dao/include/DataAccessObject.class.php');
@@ -41,7 +41,7 @@ class Docman_ItemDao extends DataAccessObject {
         $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
         return $time;
     }
-
+		
     /**
      * Return the row that match given id.
      *
@@ -309,7 +309,7 @@ class Docman_ItemDao extends DataAccessObject {
                     $wiki_page=null, $file_is_embedded=null) {       
        
         $argArray = array();
-
+		
         if($parent_id !== null) {
             $argArray[] = 'parent_id='.((int) $parent_id);
         }
@@ -389,7 +389,7 @@ class Docman_ItemDao extends DataAccessObject {
                     if ($key == 'wiki_page' && $value != $current[$key]) {
                         require_once('Docman_PermissionsManager.class.php');
                         $dPM =& Docman_PermissionsManager::instance($group_id);
-                        $dPM->propagatePermsAfterPagenameUpdate($value, $current['group_id'], $id);
+                        $dPM->propagatePermsForNewWikiPages($value, $current['group_id'], $id);
                     }
                 }
                 $set_array[] = 'update_date = '. $this->da->quoteSmart(time());

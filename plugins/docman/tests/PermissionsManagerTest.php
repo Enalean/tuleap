@@ -474,7 +474,7 @@ class PermissionsManagerTest extends UnitTestCase {
         $params1 = array('101', 'PLUGIN_DOCMAN_WRITE', '55', '3', true, false);
         $docmanPm->expectArgumentsAt(1, 'propagatePermsToNewWikiPage', $params1);
         
-        $docmanPm->propagatePermsAfterPagenameUpdate('nothing', '101', '50');
+        $docmanPm->propagatePermsForNewWikiPages('nothing', '101', '50');
 
         $docmanPm->tally();
     }

@@ -20,7 +20,7 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ * $Id$
  */
 
 require_once('Docman_PermissionsManagerDao.class.php');
@@ -79,6 +79,7 @@ class Docman_PermissionsManager {
 
     function &_getItemFactory($groupId=0) {
         if (!isset($this->item_factory[$groupId])) {
+            require_once('Docman_ItemFactory.class.php');
             $this->item_factory[$groupId] =& new Docman_ItemFactory($groupId);
         }
         return $this->item_factory[$groupId];
@@ -313,7 +314,7 @@ class Docman_PermissionsManager {
     }
 
     /**
-     * This functuion will prpagate perms to a wiki page at wiki service level. It is used if there is a docman item wiki page name update. 
+     * This functuion will prpagate perms to a wiki page at wiki service level. It is used if there is a docman item wiki page name update or when a new wiki page is being created in wiki.
      *
      * @param int $group_id project id.
      * @param string $permission permission granted to auser group on a docman item wiki page.
@@ -331,7 +332,9 @@ class Docman_PermissionsManager {
     }
 
     /**
-     * Called when a wiki page name is updated. It propagates the docman item perms to wiki service by creating new perms for the new pagename.
+     * Called when a wiki page name is updated or a new wiki page is created in wiki service. It propagates the docman item perms to wiki 
+     * service by creating new perms for the new pagename or the new wiki page.
+     *
      * If old perms exists -either setted from wiki or propagated from docman - they will be removed.
      *
      * @param string $wiki_page wiki page name.
@@ -339,7 +342,7 @@ class Docman_PermissionsManager {
      * @param int $item_id id of docman item.
      *
      */
-    function propagatePermsAfterPagenameUpdate($wiki_page, $group_id, $item_id) {
+    function propagatePermsForNewWikiPages($wiki_page, $group_id, $item_id) {
         $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
         if ($id_in_wiki != null){
             // get id in wiki of the new wiki page that docman item will point to.
@@ -424,7 +427,7 @@ class Docman_PermissionsManager {
         $id = $dIF->getIdInWiki($pagename, $group_id);
         return $id;
     }
-
+	
     function setDefaultItemPermissions($itemId, $force=false) {
         $dao =& $this->getDao();
 
@@ -495,7 +498,7 @@ class Docman_PermissionsManager {
         $dao =& $this->getDao();
         return $dao->retrievePermissionsForItem($item_id, $perms);
     }
-
+	
     function oneFolderIsWritable($user) {
         $oneWritable = false;
 
