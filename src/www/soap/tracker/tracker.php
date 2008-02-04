@@ -417,7 +417,8 @@ $server->wsdl->addComplexType(
         'original_by'               => array('name'=>'original_by', 'type' => 'xsd:string'),
         'comment_type_id'     => array('name'=>'comment_type_id', 'type' => 'xsd:int'),
         'comment_type'     => array('name'=>'comment_type', 'type' => 'xsd:string'),
-        'field_name'     => array('name'=>'field_name', 'type' => 'xsd:string')
+        'field_name'     => array('name'=>'field_name', 'type' => 'xsd:string'),
+        'user_can_edit'  => array('name'=>'user_can_edit', 'type' => 'xsd:int')
     )
 );
 
@@ -2540,6 +2541,7 @@ function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $arti
         } elseif ($a->isError()) {
             return new soap_fault(get_artifact_fault, 'getArtifactFollowups', $a->getErrorMessage(), '');
         }
+
         $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id, $a);
         return new soapval('return', 'tns:ArrayOfArtifactFollowup', $return);        
     } else {
@@ -2563,7 +2565,8 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
             'original_by'         => (db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by')==100?db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email'):user_getname(db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by'))),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
             'comment_type'        => db_result($followups_res, $i, 'comment_type'),
-            'field_name'          => db_result($followups_res, $i, 'field_name')  
+            'field_name'          => db_result($followups_res, $i, 'field_name'),
+            'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0 
         );
     }
     return $return;
