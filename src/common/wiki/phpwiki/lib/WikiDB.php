@@ -1019,6 +1019,7 @@ class WikiDB_Page
         if (!isset($meta['mtime'])) $meta['mtime'] = time();
         if ($previous) {
             $difflink = WikiURL($this->_pagename, array('action'=>'diff'), true);
+            $difflink .= "&versions%5b%5d=" . $previous . "&versions%5b%5d=" . $version;
             $cache = &$this->_wikidb->_cache;
             //$cache = &$request->_dbi->_cache;
             $this_content = explode("\n", $wikitext);
