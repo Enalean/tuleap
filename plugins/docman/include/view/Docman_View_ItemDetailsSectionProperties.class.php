@@ -141,7 +141,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html = '';
 
         if ($this->user_can_write) {
-            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman','details_properties_edit') .'</p>';
+            $html .= '<p><a href="'. $this->url .'&amp;action=edit&amp;id='. $this->item->getid() .'">'. $GLOBALS['Language']->getText('plugin_docman','details_properties_edit') .'</a></p>';
         }
         return $html;
     }
