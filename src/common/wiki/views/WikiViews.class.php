@@ -72,11 +72,11 @@ function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
 
   if ($hide == 2 || ($noPref && $defaultHide)) {
     $hide_url = 'hide_'.$svc.'=1&hide_item_id='.$db_item_id;
-    $hide_img = '<img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Collapse">';
+    $hide_img = '<img src="'.util_get_image_theme("pointer_right.png").'" align="middle" border="0" alt="Expand">';
     $hide_now = true;
   } else {		
     $hide_url = 'hide_'.$svc.'=2&hide_item_id='.$db_item_id;
-    $hide_img = '<img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Expand">';
+    $hide_img = '<img src="'.util_get_image_theme("pointer_down.png").'" align="middle" border="0" alt="Collapse">';
     $hide_now = false;
   }
   
