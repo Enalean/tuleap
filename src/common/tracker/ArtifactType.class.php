@@ -891,7 +891,7 @@ class ArtifactType extends Error {
 	 *  @param	string	the list of watching users
 	 *  @return true on success, false on failure.
 	 */
-	function updateNotificationSettings($user_id, $watchees, $stop_notification, &$feedback) {
+	function updateNotificationSettings($user_id, $watchees, $stop_notification) {
 	    $this->setStopNotification($stop_notification);
 		$this->setWatchees($user_id, $watchees);
         $this->fetchData($this->getID());

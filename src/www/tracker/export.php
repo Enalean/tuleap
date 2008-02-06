@@ -21,7 +21,9 @@ if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
 }
 
-$constraint = "AND a.artifact_id IN ($export_aids)";
+$export_aids = $request->get('export_aids');
+$constraint = 'AND a.artifact_id IN ('. db_es($export_aids) .')';
+
 $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_select,$export_from,$export_where,$multiple_queries,$all_queries,$constraint);
 
 // Normally these two fields should be part of the artifact_fields.
@@ -59,7 +61,7 @@ $eol = "\n";
 // The export is based on the arrays col_list and lbl_list, that contain the fields to export.
 // Basically, these arrays contain all the fields of the tracker,
 // so we simply remove the non-displayed fields from these arrays.
-if (isset($only_displayed_fields) && $only_displayed_fields == 'on') {
+if ($request->get('only_displayed_fields') == 'on') {
     $artifact_report = new ArtifactReport($report_id, $atid);
     $displayed_fields = $artifact_report->getResultFields();
     // array_intersect_key is a PHP 5 function (implemented here in src/www/include/utils.php)
@@ -120,7 +122,7 @@ if ($result && $rows > 0) {
   $params['title']=$Language->getText('tracker_index','trackers_for');
   $params['sectionvals']=array($group->getPublicName());
   $params['help']='TrackerService.html';
-  $params['pv']  = isset($pv)?$pv:'';
+  $params['pv']  = $request->exist('pv') ? $request->get('pv') : '';
   site_project_header($params);
   
   echo '<h3>'.$Language->getText('project_export_artifact_export','art_export').'</h3>';

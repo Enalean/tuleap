@@ -28,10 +28,11 @@ $art_field_fact = new ArtifactFieldFactory($ath);
 $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 // Printer version ?
-if ( !isset($pv) ) {
+if ( !$request->exist('pv') ) {
 	$pv = false;
 	$ro = !user_isloggedin();
 } else {
+    $pv = $request->get('pv');
 	if ( $pv ) $ro = true;
 }
 

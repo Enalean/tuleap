@@ -42,10 +42,10 @@ class ArtifactCannedHtml extends ArtifactCanned {
      echo '<P>';
      echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
      echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
-     echo '<INPUT TYPE="HIDDEN" NAME="create_canned" VALUE="y">';
+     echo '<INPUT TYPE="HIDDEN" NAME="create_canned" VALUE="1">';
      echo '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
      echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
-     echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
+     echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">';
      echo '<B>'.$Language->getText('tracker_include_canned','title').':</B><BR>';
      echo '<INPUT TYPE="TEXT" NAME="title" VALUE="" SIZE="50" MAXLENGTH="50">';
      echo '<P>';
@@ -75,11 +75,11 @@ class ArtifactCannedHtml extends ArtifactCanned {
       echo '<P>';
       echo '<FORM ACTION="/tracker/admin/" METHOD="POST">';
       echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="canned">';
-      echo '<INPUT TYPE="HIDDEN" NAME="update_canned" VALUE="y">';
+      echo '<INPUT TYPE="HIDDEN" NAME="update_canned" VALUE="1">';
       echo '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">';
       echo '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">';
       echo '<INPUT TYPE="HIDDEN" NAME="artifact_canned_id" VALUE="'.$id.'">';
-      echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">';
+      echo '<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">';
       echo '<B>'.$Language->getText('tracker_include_canned','title').':</B><BR>';
       echo '<INPUT TYPE="TEXT" NAME="title" VALUE="'.$this->getTitle().'" SIZE="50" MAXLENGTH="50">';
       echo '<P>';

@@ -12,7 +12,9 @@
 require_once('pre.php');
 $Language->loadLanguageMsg('tracker/tracker');
 
-$sql="SELECT description,bin_data,filename,filesize,filetype FROM artifact_file WHERE id='". deb_ei($id) ."' AND artifact_id ='". db_ei($artifact_id) ."'";
+$id          = $request->get('id');
+$artifact_id = $request->get('artifact_id');
+$sql="SELECT description,bin_data,filename,filesize,filetype FROM artifact_file WHERE id='". db_ei($id) ."' AND artifact_id ='". db_ei($artifact_id) ."'";
 //echo $sql;
 $result=db_query($sql);
 

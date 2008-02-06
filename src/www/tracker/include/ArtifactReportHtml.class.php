@@ -800,7 +800,7 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">
                    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
                    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
-                   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+                   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
                    <B>'.$Language->getText('tracker_include_artifact','name').':</B>
                    <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" CLASS="textfield_small" MAXLENGTH="80">
                    &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';
@@ -898,7 +898,7 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$atid.'">
                    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
                    <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.$this->report_id.'">
-                   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+                   <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
                    <B>'.$Language->getText('tracker_include_artifact','name').': </B>
                    <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$this->name.'" CLASS="textfield_small" MAXLENGTH="80">
                          &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';

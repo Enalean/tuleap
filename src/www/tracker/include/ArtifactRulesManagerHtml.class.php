@@ -148,6 +148,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function saveFromRequest(&$request) {
+        //TODO: Valid the request
         switch ($request->get('direction_type')) {
             case 'source': // 1 source -> n targets
                 $this->deleteRuleValueBySource($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'));

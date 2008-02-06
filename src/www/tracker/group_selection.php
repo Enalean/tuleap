@@ -24,7 +24,7 @@ $gf = new GroupFactory();
 
 function doSelection(form) {
 	if ( form.group_id.value != "" ) {
-		window.opener.document.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form.group_id.value;
+		window.opener.document.<? echo $request->get('opener_form'); ?>.<? echo $request->get('opener_field'); ?>.value = form.group_id.value;
 	}
 	close();
 }
@@ -47,6 +47,7 @@ function onChangeAllFilter() {
     <td colspan="2" align="center">
 <select name="group_id" size="8">
 <?
+    $filter = $request->get('filter');
 	if ( $filter == "member" ) {
 		$results = $gf->getMemberGroups();
 	} else {

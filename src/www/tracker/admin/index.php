@@ -34,7 +34,12 @@ $sanitizer =& new SimpleSanitizer();
 
 $Language->loadLanguageMsg('tracker/tracker');
 
-if ($group_id && (!isset($atid) || !$atid)) {
+$request =& HTTPRequest::instance();
+
+$group_id = $request->getValidated('group_id', 'GroupId');
+$atid     = $request->getValidated('atid', 'uint');
+
+if ($group_id && !$atid) {
 	//
 	// Manage trackers: create and delete
 	
@@ -58,11 +63,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 
 	$atf = new ArtifactTypeFactory($group);
     
-    if (isset($_REQUEST['func'])) {
-        $func = $_REQUEST['func'];
-    } else {
-        $func = '';
-    }
+    $func = $request->getValidated('func', 'string', '');
+    
 	switch ( $func ) {
 	case 'create':
 		if ( !user_isloggedin() ) {
@@ -79,21 +81,20 @@ if ($group_id && (!isset($atid) || !$atid)) {
             exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
             return;
         }
-        if (isset($_REQUEST['feedback'])) {
-            $GLOBALS['feedback'] .= htmlspecialchars($_REQUEST['feedback']);
+        
+        if($request->exist('feedback')) {
+            $GLOBALS['feedback'] .= htmlspecialchars($request->get('feedback'));
         }
-        //{{{ define undefined variables
-        $vars = array('codex_template', 'group_id_template', 'atid_template', 'name', 'description', 'itemname');
-        foreach($vars as $var_name) {
-            if (isset($_REQUEST[$var_name])) {
-                $$var_name = $_REQUEST[$var_name];
-            } else {
-                $$var_name = '';
-            }
-        }
-        //}}}
+
+        $codex_template    = $request->getValidated('codex_template', 'uint', 0);
+        $group_id_template = $request->getValidated('group_id_template', 'uint', 0);
+        $atid_template     = $request->getValidated('atid_template', 'uint', 0);
+        $name              = $request->getValidated('name', 'string', '');
+        $description       = $request->getValidated('description', 'text', '');
+        $itemname          = $request->getValidated('itemname', 'string', '');
+
 		$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
-		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback);
+		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname);
 		$ath->footer(array());
 		break;
 		
@@ -108,8 +109,13 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_permission_denied();
 			return;
 		}
-            $name        = $sanitizer->sanitize($name);
-            $description = $sanitizer->sanitize($description);
+        
+        $group_id_chosen = $request->getValidated('group_id_chosen', 'uint', 0);
+        $atid_chosen     = $request->getValidated('atid_chosen', 'uint', 0);
+        $name            = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
+        $description     = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+        $itemname        = $request->getValidated('itemname', 'string', '');
+        
 		if ( !$atf->create($group_id,$group_id_chosen,$atid_chosen,$name,$description,$itemname) ) {
             exit_error($Language->getText('global','error'),$atf->getErrorMessage());
 		} else {
@@ -181,35 +187,35 @@ if ($group_id && (!isset($atid) || !$atid)) {
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($ath);
 
-        if (!isset($func)) {
-            $func = '';
-        }
-	switch ( $func ) {
+    $func = $request->getValidated('func', 'string', '');
+    switch ( $func ) {
 	case 'report':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
 			return;
 		}
+        
+        $report_id = $request->getValidated('report_id', 'uint', 0);
+        
 		$rid = isset($report_id) ? $report_id : 0;
 		$arh = new ArtifactReportHtml($rid, $atid);
 		if (!$arh) {
 			exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_retrieved_report',$arh->getErrorMessage()));
 		}
-		if (isset($post_changes)) {
+        
+        if ($request->getValidated('post_changes')) {
             //Only project admin users can create 'P' scope reports
             if (user_ismember($group_id,'A')) {
                 $validScope = new Valid_WhiteList('rep_scope' ,array('I', 'P'));
             } else {
                 $validScope = new Valid_WhiteList('rep_scope' ,array('I'));
             }
-            if ($request->valid($validScope)) {
-                $rep_scope = $request->get('rep_scope');
-            } else {
-                $rep_scope = 'I';
-            }
+            $rep_scope = $request->getValidated('rep_scope', $validScope, 'I');
             
 			// apply update or create in bd
-                    if (isset($update_report)) {
+                    $rep_name = $request->getValidated('rep_name', 'string', '');
+                    $rep_desc = $request->getValidated('rep_desc', 'text', '');
+                    if ($request->get('update_report')) {
 				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope);
 				if (!$updated) {
 					if ($arh->isError())
@@ -237,21 +243,25 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				$tf_report = 'TFREP_'.$field->getName();
 				$tf_colwidth = 'TFCW_'.$field->getName();
 				
-				$value = $$tf_report;
-				//echo "$tf_report : $value <br>";
-				
-				if ($$cb_search || $$cb_report || $$tf_search || $$tf_report) {
-					$cb_search_val = ($$cb_search ? '1':'0');
-					$cb_report_val = ($$cb_report ? '1':'0');
-					$tf_search_val = ($$tf_search ? '\''.$$tf_search.'\'' : 'NULL');
-					$tf_report_val = ($$tf_report ? '\''.$$tf_report.'\'' : 'NULL');
-					$tf_colwidth_val = ($$tf_colwidth? '\''.$$tf_colwidth.'\'' : 'NULL');
+                $cb_search_val = ($request->getValidated($cb_search) ? '1':'0');
+                $cb_report_val = ($request->getValidated($cb_report) ? '1':'0');
+                
+                $tf_search_val = $request->getValidated($tf_search);
+                $tf_search_val = ($tf_search_val ? "'".$tf_search_val ."'" : 'NULL');
+                
+                $tf_report_val = $request->getValidated($tf_report);
+                $tf_report_val = ($tf_report_val ? "'".$tf_report_val."'" : 'NULL');
+                
+                $tf_colwidth_val = $request->getValidated($tf_colwidth);
+                $tf_colwidth_val = ($$tf_colwidth_val? "'".$tf_colwidth_val."'" : 'NULL');
+                
+                if ($cb_search_val || $cb_report_val || $tf_search_val || $tf_report_val) {
 					$arh->add_report_field($field->getName(),$cb_search_val,$cb_report_val,$tf_search_val,$tf_report_val,$tf_colwidth_val);
 				}
 			}
 			$arh->fetchData($report_id);
 		
-		} else if (isset($delete_report)) {
+		} else if ($request->getValidated('delete_report')) {
 			if ( ($arh->scope == 'P') && 
 			     !$ath->userIsAdmin() ) {
 				exit_permission_denied();
@@ -260,10 +270,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','report_deleted'));
 		}
 		
-		if (isset($new_report)) {
+		if ($request->getValidated('new_report')) {
 		
 			$arh->createReportForm();
-		} else if (isset($show_report)) {
+		} else if ($request->getValidated('show_report')) {
 			if ( ($arh->scope == 'P') && 
 			     !$ath->userIsAdmin() ) {
 				exit_permission_denied();
@@ -291,14 +301,17 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_permission_denied();
 			return;
 		}
-		
-	    if (isset($post_changes)) {
-                if (isset($create_canned)) {
+        
+		$artifact_canned_id = $request->getValidated('artifact_canned_id', 'uint', 0);
+	    if ($request->getValidated('post_changes')) {
+            $title = $request->getValidated('title', 'string', '');
+            $body = $request->getValidated('body', 'text', '');
+            if ($request->getValidated('create_canned')) {
 				$aci = $ach->create($title, $body);
 				if (!$aci) {
 					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_create_canneditem'));
 				} 
-                } else if (isset($update_canned)) {
+            } else if ($request->getValidated('update_canned')) {
 				$aci = $ach->fetchData($artifact_canned_id);
 				if (!$aci) {
 					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
@@ -312,7 +325,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','updated_cannedresponse'));
 			
 			}
-            } else if (isset($delete_canned)) {
+        } else if ($request->getValidated('delete_canned')) {
 		    if (!$ach->delete($artifact_canned_id)) {
 		      exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_delete_canneditem',$artifact_canned_id));
 		    }
@@ -323,7 +336,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 
 		} // End of post_changes
 		// Display the UI Form
-            if (isset($update_canned) && !isset($post_changes)) {
+            if ($request->getValidated('update_canned') && !$request->getValidated('post_changes')) {
 		  $ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','modify_cannedresponse'),
 					   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
@@ -346,11 +359,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_not_logged_in();
 			return;
 		}
-        $request =& HTTPRequest::instance();
-        switch($request->get('action')) {
+        switch($request->getValidated('action')) {
           case 'remove_global':
               $ok = false;
-              $global_notification_id = $request->get('global_notification_id');
+              $global_notification_id = $request->getValidated('global_notification_id', 'uint');
               if ($global_notification_id) {
                   $agnf =& new ArtifactGlobalNotificationFactory();
                   if ($agnf->removeGlobalNotificationForTracker($global_notification_id, $atid)) {
@@ -381,12 +393,26 @@ if ($group_id && (!isset($atid) || !$atid)) {
               break;
         }
 
-		if (isset($submit)) {
+		if ($request->getValidated('submit')) {
 		  $ok = true;
 		  if ($ath->userIsAdmin()) {
-              $ok = $ath->updateNotificationSettings(user_getid(), $watchees, $stop_notification, $feedb);
+              $ok = $ath->updateNotificationSettings(user_getid(), 
+                                                     $request->getValidated('watchees', 'string', ''),
+                                                     $request->getValidated('stop_notification', new Valid_WhiteList('stop_notification', array('1')), 0)
+              );
               //{{{ Global Notifications
-              if ($submitted_notifications = $request->get('global_notification')) {
+              $submitted_notifications = $request->getValidated(
+                  'global_notification', 
+                  new Valid_MultidimensionalArray(
+                      'global_notification', 
+                      array(
+                        'addresses'         => 'string', 
+                        'all_updates'       => new Valid_WhiteList('', array(0, 1)),
+                        'check_permissions' => new Valid_WhiteList('', array(0, 1))
+                      )
+                  )
+              );
+              if ($submitted_notifications) {
                   $agnf =& new ArtifactGlobalNotificationFactory();
                   $notifs = $agnf->getGlobalNotificationsForTracker($atid);
                   foreach($notifs as $id => $nop) {
@@ -411,7 +437,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 					$event_id = $ath->arr_events[$j]['event_id'];
 					$cbox_name = 'cb_'.$role_id.'_'.$event_id;
 					//echo "DBG $cbox_name -> '".$$cbox_name."'<br>";
-					$arr_notif[$role_id][$event_id] = ( $$cbox_name ? 1 : 0);
+					$arr_notif[$role_id][$event_id] = ( $request->getValidated($cbox_name) ? 1 : 0);
 				}
 			}
 
@@ -422,11 +448,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			if ($res_notif && $ok) {
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','update_success'));
 			} else {
-			  if (!$ok && $feedb) {
-			    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','update_failed',$feedb));
-			  } else {
-			    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','update_failed',$ath->getErrorMessage()));
-			  }
+			  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','update_failed',$ath->getErrorMessage()));
 			}
 			$ath->fetchData($ath->getID());
 		
@@ -449,20 +471,23 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
-            if ( isset($update) ) {
-                    $name        = $sanitizer->sanitize($name);
-                    $description = $sanitizer->sanitize($description);
+            if ($request->getValidated('update')) {
+                $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
+                $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+                $itemname = $request->getValidated('itemname', 'string', '');
+                $allow_copy = $request->getValidated('allow_copy') ? 1 : 0;
+                $submit_instructions = $request->getValidated('submit_instructions', 'text', '');
+                $browse_instructions = $request->getValidated('browse_instructions', 'text', '');
+                $instantiate_for_new_projects = $ath->Group->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
+
 		    if ( !$ath->update($name,$description,$itemname,$allow_copy,
                                            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) ) {
 				exit_error($Language->getText('global','error'),$ath->getErrorMessage());
 			} else {
-				$succeed = true;
+				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','update_success_title'));
 			}
 		}
         
-		if ( isset($succeed) ) {
-			$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','update_success_title'));
-		}
 		$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','options'),'help' => 'TrackerAdministration.html#TrackerGeneralSettings'));
 		$ath->displayOptions($group_id,$atid);
 		$ath->footer(array());
@@ -484,9 +509,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
-		if ( $field ) {
-			if ( !$field->updateValueFunction($atid,$value_function) ) {
+		if ( $field && $request->valid(new Valid_String('value_function'))) {
+			if ( !$field->updateValueFunction($atid, $request->get('value_function')) ) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
                 require_once('common/tracker/ArtifactRulesManager.class.php');
@@ -508,20 +534,24 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_permission_denied();
 			return;
 		}
-		
+		$field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
             // For date fields, it is possible to give a computed default value (current date)
-            if ($field->isDateField() && $default_date_type=='current_date') {
+            if ($field->isDateField() && $request->getValidated('default_date_type', new Valid_WhiteList('current_date'))) {
                 $computed_value = 'current_date';
             } else {
                 $computed_value = false;
             }
-            if ( !$field->updateDefaultValue($atid,$default_value, $computed_value) ) {
-				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
-			} else {
-				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','values_updated'));
-			}
+            if ( (!$field->isDateField() && $request->valid(new Valid_String('default_value'))) 
+                || $request->valid(new Valid_Date('default_value'))) {
+            
+                if ( !$field->updateDefaultValue($atid, $request->get('default_value'), $computed_value) ) {
+                    exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
+                } else {
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','values_updated'));
+                }
+            }
 		}
 		require('./field_values.php');
 		break;
@@ -537,6 +567,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 		    require('./field_values_details.php');
@@ -554,16 +585,17 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').
 						$Language->getText('tracker_admin_field_values_details','values_admin'),
 						'help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>'".
+			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>'".
 			  $Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."'</H2>";
 
-			$value_array = $field->getFieldValue($atid,$value_id);
+			$value_array = $field->getFieldValue($atid, $request->getValidated('value_id', 'uint'));
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);
 			$ath->footer(array());
 		}
@@ -580,10 +612,12 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-                    $value       = $sanitizer->sanitize($value);
-                    $description = $sanitizer->sanitize($description);
+                $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
+                $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+                $order_id    = $request->getValidated('description', 'uint');
 			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -604,10 +638,14 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
-		if ( $field ) {
-                    $value       = $sanitizer->sanitize($value);
-                    $description = $sanitizer->sanitize($description);
+		if ( $field && $request->valid(new Valid_WhiteList('status', array('A', 'H', 'P')))) {
+                $value_id    = $request->getValidated('value_id', 'uint');
+                $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
+                $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+                $order_id    = $request->getValidated('description', 'uint');
+                $status      = $request->get('status');
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -633,8 +671,10 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
+            $value_id    = $request->getValidated('value_id', 'uint');
 			if ( !$field->deleteValueList($atid,$value_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -661,8 +701,23 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_permission_denied();
 			return;
 		}
-		$label       = $sanitizer->sanitize($label);
-                $description = $sanitizer->sanitize($description);
+        
+                
+                if (   $request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
+                    && $request->valid(new Valid_WhiteList('display_type', array('SB','MB','TF','TA','DF')))
+                ) { 
+                    $label          = $sanitizer->sanitize($request->getValidated('label', 'string'));
+                    $description    = $sanitizer->sanitize($request->getValidated('description', 'text'));
+                    $data_type      = $request->get('data_type');
+                    $display_type   = $request->get('display_type');
+                    $display_size   = $request->getValidated('display_size', 'string', '');
+                    $rank_on_screen = $request->getValidated('rank_on_screen', 'uint', 0);
+                    $empty_ok       = $request->getValidated('empty_ok', new Valid_WhiteList('', array(1)), 0);
+                    $keep_history   = $request->getValidated('keep_history', new Valid_WhiteList('', array(1)), 0);
+                    $special        = $request->getValidated('special', new Valid_WhiteList('', array(1)), 0);
+                    $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
+                    $field_set_id = $request->getValidated('field_set_id', 'uint');
+                    
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
 						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
@@ -674,6 +729,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
             $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','field_created'));
 		}
+                }
 		require('./field_usage.php');
 		break;
 
@@ -688,10 +744,25 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-                     $label       = $sanitizer->sanitize($label);
-                     $description = $sanitizer->sanitize($description);
+                if (   $request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
+                    && $request->valid(new Valid_WhiteList('display_type', array('SB','MB','TF','TA','DF')))
+                    && $request->valid(new Valid_String('field_name'))
+                ) { 
+                    $field_name     = $request->get('field_name');
+                    $label          = $sanitizer->sanitize($request->getValidated('label', 'string'));
+                    $description    = $sanitizer->sanitize($request->getValidated('description', 'text'));
+                    $data_type      = $request->get('data_type');
+                    $display_type   = $request->get('display_type');
+                    $display_size   = $request->getValidated('display_size', 'string', '');
+                    $rank_on_screen = $request->getValidated('rank_on_screen', 'uint', 0);
+                    $empty_ok       = $request->getValidated('empty_ok', new Valid_WhiteList('', array(1)), 0);
+                    $keep_history   = $request->getValidated('keep_history', new Valid_WhiteList('', array(1)), 0);
+                    $special        = $request->getValidated('special', new Valid_WhiteList('', array(1)), 0);
+                    $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
+                    $field_set_id = $request->getValidated('field_set_id', 'uint');
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
 							 $empty_ok,$keep_history,$special,$use_it,$field_set_id) ) {
@@ -709,6 +780,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
                 
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','field_updated'));
 			}
+                }
 		}
 		require('./field_usage.php');
 		break;
@@ -724,6 +796,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
             
@@ -759,12 +832,13 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
 			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','modify_usage'),
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
+			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>' ".
 			  $Language->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
@@ -824,9 +898,8 @@ if ($group_id && (!isset($atid) || !$atid)) {
 	
 	    require_once('../include/ArtifactRulesManagerHtml.class.php');
         $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=field_dependencies');
-        $request =& HTTPRequest::instance();
-        if ($request->get('save') === 'save' ) {
-            if (is_numeric($request->get('source_field')) && is_numeric($request->get('target_field'))) {
+        if ($request->getValidated('save') === 'save') {
+            if ($request->valid(new Valid_UInt('source_field')) && $request->valid(new Valid_UInt('target_field'))) {
                 $armh->saveFromRequest($request);
             } else {
                 $armh->badRequest();
@@ -848,8 +921,9 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			exit_permission_denied();
 			return;
 		}
-		$name = $sanitizer->sanitize($name);
-        $description = $sanitizer->sanitize($description);
+        $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
+        $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+        $rank        = $request->getValidated('rank', 'uint', 0);
 		if ( !$art_fieldset_fact->createFieldSet($name, $description, $rank) ) {
 			exit_error($Language->getText('global','error'),$art_fieldset_fact->getErrorMessage());
 		} else {
@@ -868,13 +942,14 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
 		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
         
 		if ( $fieldset ) {
 			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_fieldset','tracker_admin').$Language->getText('tracker_admin_index','modify_fieldset'),
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerFieldSet'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  " '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>' ".
+			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>' ".
 			  $Language->getText('tracker_admin_index','modify_fieldset_for',$fieldset->getLabel())."</H2>";
 			$ath->displayFieldSetCreateForm("fieldset_update",$fieldset->getID(),
 						    $fieldset->getLabel(),$fieldset->getDescriptionText(),$fieldset->getRank());
@@ -892,10 +967,12 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
 		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
 		if ( $fieldset ) {
-            $name = $sanitizer->sanitize($name);
-            $description = $sanitizer->sanitize($description);
+            $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
+            $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
+            $rank        = $request->getValidated('rank', 'uint', 0);
             
             // We check if there is a change with the name and description
             // If there is no changes, we keep the internationalized key, because in the interface, 
@@ -931,6 +1008,7 @@ if ($group_id && (!isset($atid) || !$atid)) {
 			return;
 		}
 		
+        $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
 		$fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
 		if ( $fieldset ) {
             

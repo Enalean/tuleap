@@ -904,11 +904,10 @@ EOS;
 	 *  @param name: the name chosen
 	 *  @param description: the description chosen
 	 *  @param itemname: the short name chosen
-	 *  @param feedback: the error or info message
 	 *
 	 *  @return void
 	 */
-	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname,$feedback) {
+	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname) {
 	  global $Language;
 
 		echo '<script language="JavaScript">

@@ -16,6 +16,8 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
+$group_id = $request->getValidated('group_id', 'GroupId');
+$mode = $request->get('mode');
 if ($group_id && $mode == "admin") {
 
 

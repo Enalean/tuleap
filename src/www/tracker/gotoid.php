@@ -79,14 +79,11 @@ $location = "Location: ".get_server_url();
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'
-if (isset($atn)) {
-    $atn=strtolower($atn);
-} else {
-    $atn = '';
-}
+$atn = strtolower($request->get('atn'));
 
 // If group_name given as argument then infer group_id first
-if (isset($group_name) && $group_name && !$group_id) {
+$group_name = $request->get('group_name');
+if ($group_name && !$group_id) {
     $grp = group_get_object_by_name($group_name);
     $group_id = $grp->getGroupId();
 }
@@ -102,6 +99,7 @@ if (($atn == 'rev') || ($atn == 'revision')) {
 if ($atn == 'commit') {
     // when commit is used see if it revision exists in SVN else redirect to CVS
     $res = svn_data_get_revision_detail($group_id, 0, $aid);
+    $feed = '';
     if ($res && db_numrows($res) > 0) {
 	$location .= $svn_loc.$feed;
     } else {
@@ -129,6 +127,8 @@ if ($atn == 'doc') {
 // Should we remove this one?
 if (!$group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
+    $art_group_id = $request->get('art_group_id');
+    $art_name     = $request->get('art_name');
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
         exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
@@ -139,6 +139,8 @@ if (!$group_id) {
 // Now check ambiguous cases...
 if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     // Ambiguous: legacy or generic tracker?
+    $art_group_id = $request->get('art_group_id');
+    $art_name     = $request->get('art_name');
 
     // Get artifact group_id and tracker id (atid)
     $artifact_exists=util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name);

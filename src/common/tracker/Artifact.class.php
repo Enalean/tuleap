@@ -589,9 +589,8 @@ class Artifact extends Error {
      *
      * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
-     * @param feedback (OUT) : report if something went wrong or not
      */
-    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,&$feedback) {
+    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes) {
       global $art_field_fact,$Language;
       if ($canned_response && $canned_response != 100) {
 	
@@ -922,7 +921,7 @@ class Artifact extends Error {
             $comment = array_key_exists('comment', $HTTP_POST_VARS)?$HTTP_POST_VARS['comment']:'';
             $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
 
-	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$feedback);
+	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes);
             
             
             //

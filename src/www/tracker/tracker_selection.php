@@ -22,7 +22,7 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 function doSelection(form) {
 	if ( form.artifact_type_id.value != "" ) {
-		window.opener.document.<? echo $opener_form; ?>.<? echo $opener_field; ?>.value = form.artifact_type_id.value;
+		window.opener.document.<? echo $request->get('opener_form'); ?>.<? echo $request->get('opener_field'); ?>.value = form.artifact_type_id.value;
 	}
 	close();
 }
@@ -39,6 +39,7 @@ function doSelection(form) {
 	//
 	//	get the Group object
 	//
+    $group_id = $request->getValidated('group_id', 'GroupId');
 	$group = group_get_object($group_id);
 	if (!$group || !is_object($group) || $group->isError()) {
 		exit_no_group();
