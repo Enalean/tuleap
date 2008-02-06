@@ -25,7 +25,7 @@ include_account	user_not_exist	L'utilisateur n'existe pas
 include_account	welcome	$1 - Bienvenue sur le projet $2
 include_account	login_err	Les espaces sont interdits dans le nom de login.
 include_account	project_spaces	Les espaces sont interdits dans le nom court.
-include_account	char_err	Il doit y avoir au moins un caractère.
+include_account	char_err	Le nom doit commencer par une lettre.
 include_account	illegal_char	Caractère non autorisé dans le nom.
 include_account	name_too_short	Le nom est trop court. Il doit comporter au moins 3 caractères.
 include_account	name_too_long	Le nom est trop long. Il doit comporter au plus 30 caractères.
