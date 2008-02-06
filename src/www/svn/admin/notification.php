@@ -9,6 +9,8 @@
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
+require_once('common/include/CodeX_HTMLPurifier.class.php');
+
 $Language->loadLanguageMsg('svn/svn');
 
 // CAUTION!!
@@ -59,39 +61,39 @@ if (isset($post_changes)) {
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
 
-?>
+echo '
  	  	 
-<script type="text/javascript">
-<!--
+	<script type="text/javascript">
+	<!--
  	  	 
-function addEvent(subdir,user)
-{
-  var ni = document.getElementById('svn_notif');
-  var numi = document.getElementById('svn_val');
-  var num = (document.getElementById("svn_val").value -1)+ 2;
-  numi.value = num;
-  var divIdName = "svn_notif_"+num+"_div";
-  var newdiv = document.createElement('div');
+	function addEvent(subdir,user)
+	{
+  		var ni = document.getElementById(\'svn_notif\');
+  		var numi = document.getElementById(\'svn_val\');
+  		var num = (document.getElementById("svn_val").value -1)+ 2;
+  		numi.value = num;
+  		var divIdName = "svn_notif_"+num+"_div";
+  		var newdiv = document.createElement(\'div\');
  	  	 
-  newdiv.setAttribute("id",divIdName);
-  newdiv.innerHTML += "<table><tr><td align=center width=328><input name='subdirs["+num+"]' type='text' value='"+subdir+"' size=42 /></td><td align=center width=328><input name='users["+num+"]'' type='text' value='"+user+"' size=42 /></td><td align=center><a href=\"javascript:;\" onclick=\"removeEvent(\'"+divIdName+"\')\"><img src=\"<?php echo util_get_image_theme("ic/trash.png")?>\"></a></td></tr></table>";
-  ni.appendChild(newdiv);
-}
+  		newdiv.setAttribute("id",divIdName);
+  		newdiv.innerHTML += "<table><tr><td align=center width=328><input name=\'subdirs["+num+"]\' type=\'text\' value=\'"+subdir+"\' size=42 /></td><td align=center width=328><input name=\'users["+num+"]\' type=\'text\' value=\'"+user+"\' size=42 /></td><td align=center><a href=\"javascript:;\" onclick=\"removeEvent(\'"+divIdName+"\')\"><img src=\"'.util_get_image_theme("ic/trash.png").'\"></a></td></tr></table>";
+  		ni.appendChild(newdiv);
+	}
  	  	 
-function removeEvent(divNum)
-{
-  var d = document.getElementById('svn_notif');
-  var olddiv = document.getElementById(divNum);
-  d.removeChild(olddiv);
-}
+	function removeEvent(divNum)
+	{
+  		var d = document.getElementById(\'svn_notif\');
+  		var olddiv = document.getElementById(divNum);
+  		d.removeChild(olddiv);
+	}
  	  	 
-//-->
-</script>
- 	  	 
-<?php
+	//-->
+	</script>'; 	  	 
+
 $project=project_get_object($group_id);
 $svn_mailing_list = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
+$hp =& CodeX_HTMLPurifier::instance();
 
 echo '
        <H2>'.$Language->getText('svn_admin_notification','email').'</H2>
@@ -119,7 +121,7 @@ if (db_numrows($result) > 0) {
     while ($rows = db_fetch_array($result)) {
       $dirs = $rows['svn_dir'];
       $user = $rows['svn_user'];
-      echo '<script langauge="javascript">addEvent("'.$dirs.'","'.$user.'");</script>';
+      echo '<script langauge="javascript">addEvent("'.$hp->purify($dirs,CODEX_PURIFIER_FULL).'","'.$hp->purify($user,CODEX_PURIFIER_FULL).'");</script>';
     }
 }
 	  	 

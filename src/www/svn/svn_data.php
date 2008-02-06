@@ -58,7 +58,7 @@ function svn_data_update_advanced_notif($group_id,$subdirs,$users) {
     //delete conditional notification settings, for this project, then insert new ones
     $del = sprintf('DELETE FROM svn_notification'.
 				   ' WHERE group_id=%d',
-				   $group_id);
+				   db_escape_int($group_id));
 	$res_del = db_query($del);
 	if (count($subdirs) > 0) {
 	  $keys = array_keys($subdirs);
@@ -67,14 +67,18 @@ function svn_data_update_advanced_notif($group_id,$subdirs,$users) {
 					   ' WHERE group_id=%d'.
 					   ' AND svn_dir="%s"'.
 					   ' AND svn_user="%s"',
-		$group_id,$subdirs[$keys[$i]],util_normalize_emails($users[$keys[$i]]));
+						db_escape_int($group_id),
+						db_escape_string($subdirs[$keys[$i]]),
+						db_escape_string(util_normalize_emails($users[$keys[$i]])));
 		$res_sel = db_query($sel);
 		//not insert duplicate entries
 		if (db_numrows($res_sel) < 1) {
 		  $query = sprintf('INSERT INTO svn_notification'.
 						   ' (group_id,svn_dir,svn_user)'.
 						   ' VALUES (%d,"%s","%s")',
-		  $group_id,$subdirs[$keys[$i]],util_normalize_emails($users[$keys[$i]]));
+		 					 db_escape_int($group_id),
+		 					 db_escape_string($subdirs[$keys[$i]]),
+		 					 db_escape_string(util_normalize_emails($users[$keys[$i]])));
 		  $result = db_query($query);
 		}
 	  }
@@ -86,7 +90,7 @@ function svn_data_get_advanced_notif($group_id) {
 	$sql = sprintf('SELECT svn_dir, svn_user FROM svn_notification'
 				  .' WHERE group_id=%d'
 				  .' ORDER BY svn_dir',
-				  $group_id);
+				  db_escape_int($group_id));
 	$res = db_query($sql);
 	return $res;
 
