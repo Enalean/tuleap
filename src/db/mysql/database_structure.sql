@@ -2512,6 +2512,11 @@ CREATE TABLE svn_repositories (
   UNIQUE uniq_repository_idx (repository)
 );
 
+CREATE TABLE svn_notification (
+  svn_dir varchar(255) not null default '',
+  svn_user varchar(255) not null default '',
+  group_id int(11) not null default '0'
+) TYPE=MyISAM;
 
 #
 # Generic trackers tables
