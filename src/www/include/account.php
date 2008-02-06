@@ -16,7 +16,7 @@ require_once('common/password/PasswordRegexpValidator.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/event/EventManager.class.php');
 
-$Language->loadLanguageMsg('include/include');
+$GLOBALS['Language']->loadLanguageMsg('include/include');
 
 // ***** function account_pwvalid()
 // ***** check for valid password
