@@ -365,6 +365,9 @@ tracker_include_report	no_match	No Matching Artifact Found
 tracker_include_report	report_mgmt	Tracker Administration - Tracker Report Management
 tracker_include_report	report_admin	  - Reports Administration
 tracker_include_report	scope	Scope
+tracker_include_report	default	Default
+tracker_include_report	set_default	[Set As Default]
+tracker_include_report	is_default	[Default]
 tracker_include_report	report_name	Report name
 tracker_include_report	id	ID
 tracker_include_report	mod	(Click to modify)

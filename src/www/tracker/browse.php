@@ -57,7 +57,11 @@ if (user_isloggedin()) {
 		$report_id = user_get_preference('artifact_browse_report'.$atid);
 	    if ($report_id == "") {
 	    	// Default value
-	    	$report_id = 100;
+            $arf = new ArtifactReportFactory();
+            $report_id = $arf->getDefaultReport($atid);
+            if ($report_id == null) {
+	    	    $report_id = 100;
+            }
 	    }
     } else {
 		if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
@@ -95,7 +99,12 @@ if (user_isloggedin()) {
 }
 
 // If still not defined then force it to system 'Default' report
-if (!$report_id) { $report_id=100; }
+if (!$report_id) {
+    $report_id = $report_fact->getDefaultReport($atid);
+    if ($report_id == null) {
+        $report_id = 100;
+    }
+}
 
 
 // Create factories

@@ -175,7 +175,7 @@ class ArtifactReportFactory extends Error {
 	function getReports($group_artifact_id, $user_id) {
 	
 	    $artifactreports = array();
-	    $sql = 'SELECT report_id,name,description,scope FROM artifact_report WHERE ';
+	    $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
 	    if (!$user_id || ($user_id == 100)) {
 			$sql .= "(group_artifact_id=$group_artifact_id AND scope='P') OR scope='S' ".
 			    'ORDER BY report_id';
@@ -197,6 +197,22 @@ class ArtifactReportFactory extends Error {
 	    return $artifactreports;
 	    
 	}
+		 
+    /**
+     *  getDefaultReport - get report_id of the default report
+     *
+     *  @param group_artifact_id : the tracker id
+     *  @return int     report_id
+     */
+
+    function getDefaultReport($group_artifact_id) {
+        $sql = "SELECT report_id FROM artifact_report WHERE group_artifact_id=$group_artifact_id AND is_default = 1";
+        $result = db_query($sql);
+        while ($arr = db_fetch_array($result)) {
+            $report_id = $arr['report_id'];
+        }
+        return $report_id;
+    }
 }
 
 ?>
