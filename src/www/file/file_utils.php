@@ -406,6 +406,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $result = db_query($sql);
     $processor_id = util_result_column_to_array($result, 0);
     $processor_name = util_result_column_to_array($result, 1);
+    foreach ($processor_name as $key => $value) {
+        $processor_name[$key] = addslashes($value);
+    }
     $sql = "SELECT * FROM frs_filetype ORDER BY type_id";
     $result1 = db_query($sql);
     $type_id = util_result_column_to_array($result1, 0);
@@ -482,7 +485,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_name'); ?>: <span class="highlight"><strong>*</strong></span></B>
                 </TD>
                 <TD>
-                    <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $hp->purify($release->getName(), CODEX_PURIFIER_LIGHT); ?>">
+                    <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $hp->purify($release->getName()); ?>">
                 </TD>
             </TR>
             <TR>
@@ -490,7 +493,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <B><?php echo $GLOBALS['Language']->getText('file_admin_editreleases','release_date'); ?>:</B>
                 </TD>
                 <TD>
-                <INPUT TYPE="TEXT" id="release_date" NAME="release[date]" VALUE="<?php echo isset($release_date) ? $release_date : format_date('Y-m-d',$release->getReleaseDate());?>" SIZE="10" MAXLENGTH="10">
+                <INPUT TYPE="TEXT" id="release_date" NAME="release[date]" VALUE="<?php echo isset($release_date) ? $hp->purify($release_date) : format_date('Y-m-d',$release->getReleaseDate());?>" SIZE="10" MAXLENGTH="10">
                     <a href="<?php echo 'javascript:show_calendar(\'document.frsRelease.release_date\', $(\'release_date\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
                     '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
                 </TD><td></td>
@@ -719,9 +722,44 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 function frs_process_release_form($is_update, $request, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
 
-    //get all inputs from $request
-    $release = $request->get('release');
+    //get and filter all inputs from $request
+    $release = array();
+    $res = $request->get('release');
+    $vName = new Valid_String();
+    $vPackage_id = new Valid_UInt();
+    $vStatus_id =  new Valid_UInt();
+    if ($vName->validate($res['name']) &&
+        $vPackage_id->validate($res['package_id']) && 
+        $vStatus_id->validate($res['status_id'])) {
+        $release['status_id'] = $res['status_id'];
+        $release['name'] = $res['name'];
+        $release['package_id'] = $res['package_id'];
+    } else {
+        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
+        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);        
+    }
     
+    $vDate = new Valid_String();
+    if ($vDate->validate($res['date'])) {
+        $release['date'] = $res['date'];     	
+    } else {
+        $release['date'] = "";
+    }
+    
+    $vRelease_notes = new Valid_Text();
+    if ($vRelease_notes->validate($res['release_notes'])) {
+        $release['release_notes'] = $res['release_notes'];
+    } else {
+        $release['release_notes'] = "";
+    }
+  
+    $vChange_log = new Valid_Text();
+    if ($vChange_log->validate($res['change_log'])) {
+        $release['change_log'] = $res['change_log'];     	
+    } else {
+        $release['change_log'] = "";
+    }
+     
     if($request->valid(new Valid_String('js'))) {
         $js = $request->get('js');
     } else {
