@@ -51,7 +51,9 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
                         }
 
                         if ($authorized_to_delete_message) {
-			  $feedback .= $Language->getText('forum_admin_index','msgs_del',recursive_delete($msg_id,$forum_id));
+							//delete monitor settings on the corresponding thread, before deleting the message
+							forum_thread_delete_monitor($forum_id,$msg_id);			  
+			  				$feedback .= $Language->getText('forum_admin_index','msgs_del',recursive_delete($msg_id,$forum_id));
                         } else {
                             $feedback .= ' '.$Language->getText('forum_admin_index','msg_not_in_group').' ';
                         }
@@ -136,7 +138,6 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 			<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> '.$Language->getText('global','no').'<P>
-			<P>
 			<P><B>'.$Language->getText('forum_admin_index','monitor').'</B><BR>
                                                       '.$Language->getText('forum_admin_index','monitor_recommendation').' <br>
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
@@ -197,7 +198,7 @@ if ($group_id && (user_ismember($group_id, 'F2'))) {
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 					</TD></TR>
-					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
+					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
 						<B>'.$Language->getText('forum_admin_index','forum_name').':</B><BR>
 						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="30" MAXLENGTH="50"><BR>
 						<B>'.$Language->getText('forum_admin_index','description').':</B><BR>
