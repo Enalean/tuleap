@@ -1318,9 +1318,11 @@ class Artifact extends Error {
     		//now add a new history entry
     		$this->addHistory($comment_lbl,$new_value,'',false,false,$comment_id);
     		$GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','comment_removed'));
-    	} else {
+    	    return true;
+        } else {
     		$GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment',array($comment_id,db_error($res))));
-    	}
+    	    return false;
+        }
 
     }
     
