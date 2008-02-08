@@ -40,6 +40,13 @@ class CodeX_HTTPPurifierTest extends UnitTestCase {
         $this->assertEqual('a', $p->purify("a\nb"));
         $this->assertEqual('a', $p->purify("a\r"));
         $this->assertEqual('a', $p->purify("a\rb"));
+        $this->assertEqual('a', $p->purify("a\r\nb"));
+        $this->assertEqual('a', $p->purify("a\0b"));
+        $this->assertEqual('', $p->purify("\rabc"));
+        $this->assertEqual('', $p->purify("\nabc"));
+        $this->assertEqual('', $p->purify("\r\nabc"));
+        $this->assertEqual('', $p->purify("\0abc"));
+        
     }
 }
 ?>

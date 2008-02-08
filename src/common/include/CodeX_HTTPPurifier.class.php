@@ -41,8 +41,7 @@ class CodeX_HTTPPurifier {
     }
     
     function purify($s) {
-        $elements = split("[\n|\r]", $s);
-        $clean = $elements[0];
+        $clean = preg_replace('/(\n|\r|\0).*/', '', $s);
         return $clean;
     }
 }
