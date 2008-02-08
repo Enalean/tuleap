@@ -21,6 +21,7 @@ define ('delete_cc_fault', '3018');
 define ('get_service_fault', '3020');
 define ('get_artifact_report_fault', '3021');
 define('update_artifact_followup_fault','3022');
+define('delete_artifact_followup_fault',3023);
 
 require_once ('nusoap.php');
 require_once ('pre.php');
@@ -1265,6 +1266,25 @@ $server->register(
     'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.
+     NOTE : the mail notification system is implemented.'
+);
+
+$server->register(
+    'deleteArtifactFollowUp',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'group_artifact_id'=>'xsd:int',
+        'artifact_id'=>'xsd:int',
+        'artifact_history_id'=>'xsd:int'
+    ),
+    array('return'=>'xsd:boolean'),
+    $uri,
+    $uri.'#updateArtifact',
+    'rpc',
+    'encoded',
+    'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
+     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.
      NOTE : the mail notification system is implemented.'
 );
 
@@ -3306,7 +3326,7 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
  * @param int $artifact_id the ID of the artifact we want to update the comment
  * @param int $artifact_history_id the ID of the artifact comment we want to update
  * @param string $comment the new comment
- * @return int the ID of the comment, 
+ * @return int the 0 if the update failed and one otherwise, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker,
@@ -3367,6 +3387,73 @@ function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
         
     } else {
         return new soap_fault(invalid_session_fault,'updateArtifactFollowUp','Invalid Session ','');
+    }
+}
+
+/**
+ * deleteArtifactFollowUp- delete the artifact follow up $artifact_history_id in tracker $group_artifact_id of the project $group_id for the artifact $artifact_id
+ *
+ * NOTE : the mail notification system is implemented.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to delete the comment
+ * @param int $group_artifact_id the ID of the tracker we want to delete the comment
+ * @param int $artifact_id the ID of the artifact we want to delete the comment
+ * @param int $artifact_history_id the ID of the artifact comment we want to delete
+ * @return int the 0 if the deletion failed and 1 otherwise, 
+ *              or a soap fault if :
+ *              - group_id does not match with a valid project, 
+ *              - group_artifact_id does not match with a valid tracker,
+ *              - artifact_id does not match with a valid artifact,
+ *              - artifact_history_id does not match with a valid comment,
+ *              - the comment deletion failed.
+ */
+
+function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id) {
+    global $art_field_fact, $changes; 
+    if (session_continue($sessionKey)){
+        $grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'deleteArtifactFollowUp','Could Not Get Group','');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'deleteArtifactFollowUp',$grp->getErrorMessage(),'');
+        }
+        
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
+        }
+
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactFollowUp','Could Not Get ArtifactType','');
+        } elseif ($at->isError()) {
+            return new soap_fault(get_artifact_type_fault,'deleteArtifactFollowUp',$at->getErrorMessage(),'');
+        }
+        
+        $art_field_fact = new ArtifactFieldFactory($at);
+        if (!$art_field_fact || !is_object($art_field_fact)) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', 'Could Not Get ArtifactFieldFactory','');
+        } elseif ($art_field_fact->isError()) {
+            return new soap_fault(get_artifact_field_factory_fault, 'getArtifactById', $art_field_fact->getErrorMessage(),'');
+        }
+
+        $a = new Artifact($at, $artifact_id);
+        
+        if (!$a || !is_object($a)) {
+            return new soap_fault(get_artifact_fault, 'deleteArtifactFollowUp', 'Could Not Get Artifact', '');
+        } elseif ($a->isError()) {
+            return new soap_fault(get_artifact_fault, 'deleteArtifactFollowUp', $a->getErrorMessage(), '');
+        }
+        
+         if(!$a->deleteFollowupComment($artifact_id, $artifact_history_id)){
+            return new soap_fault(delete_artifact_followup_fault, 'deleteArtifactFollowUp', $a->getErrorMessage(), '');
+        }else{
+
+           return new soapval('return', 'xsd:boolean', true); 
+        }
+        
+    } else {
+        return new soap_fault(invalid_session_fault,'deleteArtifactFollowUp','Invalid Session ','');
     }
 }
 
