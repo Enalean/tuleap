@@ -7,7 +7,7 @@
  *
  * Tests the class String
  */
-require('BaseLanguage.class.php');
+require_once('BaseLanguage.class.php');
 $GLOBALS['Language'] = new BaseLanguage();
 $GLOBALS['Language']->loadLanguage('en_US');
 
@@ -29,6 +29,7 @@ class AccountTest extends UnitTestCase {
         $this->assertTrue(account_namevalid("abc456789012345678901234567890"));
         $this->assertTrue(account_namevalid("abc-def_"));
 
+        $this->assertFalse(account_namevalid("abc4567890123456789012345678901"));
         $this->assertFalse(account_namevalid("abc def"));
         $this->assertFalse(account_namevalid("abc/def"));
         $this->assertFalse(account_namevalid("abc=def"));
