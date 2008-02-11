@@ -156,7 +156,6 @@ function account_namevalid($name, $key = '') {
 	}
 
 	// must contain all legal characters
-	//if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#\$%^&*()-_\\/{}[]<>+=|;:?.,`~")
 	if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
 		!= strlen($name)) {
 		$GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
