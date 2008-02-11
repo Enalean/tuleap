@@ -302,6 +302,18 @@ class ReferenceManager {
     }
 
     /**
+     * Extract all possible references from input text 
+     *
+     * @param input text $html
+     * @return array of matches
+     */
+    function _extractAllMatches($html) {
+		$count=preg_match_all('/(\w+) #([\w-_]+:)?([\w\/&]+)+/', $html, $matches,PREG_SET_ORDER);
+    	return $matches;
+    }
+    
+    
+    /**
      * extract references from text $html
      * @param $html the text to be extracted
      * @param $group_id the group_id of the project
@@ -310,7 +322,7 @@ class ReferenceManager {
     function extractReferences($html,$group_id) {
 
         $referencesInstances=array();
-        $count=preg_match_all('/(\w+) #(\w+:)?([\w\/&]+)+/', $html, $matches,PREG_SET_ORDER);
+        $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
             if (!$ref_instance) continue;
