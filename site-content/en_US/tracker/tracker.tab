@@ -594,7 +594,8 @@ tracker_common_artifact	def_err	 Artifact created, but failed to insert the defa
 tracker_common_artifact	enter_email	 You need to enter an email!
 tracker_common_artifact	add_comment	 Comment added to artifact 
 tracker_common_artifact	comment_removed	Follow-up Comment removed
-tracker_common_artifact	err_del_comment	Error deleting Follow-up Comment ID $1: $2 
+tracker_common_artifact	err_del_comment	Error deleting Follow-up Comment ID $1: $2
+tracker_common_artifact	err_upd_comment	Error editing Follow-up Comment ID $1: $2
 tracker_common_artifact	field_upd_fail	Failed to update the field value $1
 tracker_common_artifact	canned_used	 Canned Response Used 
 tracker_common_artifact	unable_canned	 Unable to use Canned Response 

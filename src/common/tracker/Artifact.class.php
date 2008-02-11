@@ -657,33 +657,38 @@ class Artifact extends Error {
     * @return boolean
     */
     function updateFollowupComment($comment_id,$comment_txt,&$changes) {
-
-        $sql = sprintf('SELECT field_name, new_value FROM artifact_history'
-            .' WHERE artifact_id=%d'
-            .' AND artifact_history_id=%d'
-            .' AND (field_name="%s" OR field_name LIKE "%s")',
-        $this->getID(),$comment_id,"comment","lbl_%_comment");
-        $qry = db_query($sql);
-        $new_value = db_result($qry,0,'new_value');
-
-        if ($new_value == $comment_txt) {
-            //comment doesn't change
-            return false;
-        }
-
-        if ($qry) {
-            $fname = db_result($qry,0,'field_name');
-            if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
-                $comment_lbl = $fname;
-            } else {
-                $comment_lbl = "lbl_".$comment_id."_comment";    
+        if ($this->userCanEditFollowupComment($comment_id)) {
+            $sql = sprintf('SELECT field_name, new_value FROM artifact_history'
+                .' WHERE artifact_id=%d'
+                .' AND artifact_history_id=%d'
+                .' AND (field_name="%s" OR field_name LIKE "%s")',
+            $this->getID(),$comment_id,"comment","lbl_%_comment");
+            $qry = db_query($sql);
+            $new_value = db_result($qry,0,'new_value');
+    
+            if ($new_value == $comment_txt) {
+                //comment doesn't change
+                return false;
             }
-            //now add new comment entry
-            $this->addHistory($comment_lbl,db_escape_string($new_value),htmlspecialchars($comment_txt),false,false,$comment_id);
-            $changes['comment']['del'] = stripslashes($new_value);
-            $changes['comment']['add'] = stripslashes($comment_txt);
-            return true;
+    
+            if ($qry) {
+                $fname = db_result($qry,0,'field_name');
+                if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+                    $comment_lbl = $fname;
+                } else {
+                    $comment_lbl = "lbl_".$comment_id."_comment";    
+                }
+                //now add new comment entry
+                $this->addHistory($comment_lbl,db_escape_string($new_value),htmlspecialchars($comment_txt),false,false,$comment_id);
+                $changes['comment']['del'] = stripslashes($new_value);
+                $changes['comment']['add'] = stripslashes($comment_txt);
+                return true;
+            } else {
+                return false;
+            }
         } else {
+            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact','err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
+            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_upd_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
             return false;
         }
 
@@ -1299,29 +1304,34 @@ class Artifact extends Error {
      * @return boolean
      */    
     function deleteFollowupComment($aid,$comment_id) {
-
-    	//Delete the followup comment
-    	$sel = sprintf('SELECT field_name, new_value FROM artifact_history'
-			.' WHERE (field_name = "%s" OR field_name LIKE "%s")'
-			.' AND artifact_history_id = %d'
-			.' AND artifact_id = %d',
-    		"comment","lbl_%_comment",$comment_id,$aid);
-    	$res = db_query($sel);
-    	$new_value = db_result($res,0,'new_value');
-    	if ($res) {
-			$fname = db_result($res,0,'field_name');
-			if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
-    		    $comment_lbl = $fname;
-			} else {
-				$comment_lbl = "lbl_".$comment_id."_comment";    
-			}    		
-    		//now add a new history entry
-    		$this->addHistory($comment_lbl,$new_value,'',false,false,$comment_id);
-    		$GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','comment_removed'));
-    	    return true;
+        if ($this->userCanEditFollowupComment($comment_id)) {
+            //Delete the followup comment
+            $sel = sprintf('SELECT field_name, new_value FROM artifact_history'
+                .' WHERE (field_name = "%s" OR field_name LIKE "%s")'
+                .' AND artifact_history_id = %d'
+                .' AND artifact_id = %d',
+                "comment","lbl_%_comment",$comment_id,$aid);
+            $res = db_query($sel);
+            $new_value = db_result($res,0,'new_value');
+            if ($res) {
+                $fname = db_result($res,0,'field_name');
+                if (preg_match("/^(lbl_)/",$fname) && preg_match("/(_comment)$/",$fname)) {
+                    $comment_lbl = $fname;
+                } else {
+                    $comment_lbl = "lbl_".$comment_id."_comment";    
+                }    		
+                //now add a new history entry
+                $this->addHistory($comment_lbl,$new_value,'',false,false,$comment_id);
+                $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','comment_removed'));
+                return true;
+            } else {
+                $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment',array($comment_id,db_error($res))));
+                return false;
+            }
         } else {
-    		$GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment',array($comment_id,db_error($res))));
-    	    return false;
+            $this->setError($GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
+            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','err_del_comment', array($comment_id, $GLOBALS['Language']->getText('include_exit','perm_denied'))));
+            return false;
         }
 
     }

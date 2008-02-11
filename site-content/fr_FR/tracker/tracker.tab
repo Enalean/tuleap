@@ -599,7 +599,8 @@ tracker_common_artifact	def_err	  Artefact créé, mais l'insertion de la valeur d
 tracker_common_artifact	enter_email	 Vous devez fournir une adresse e-mail !
 tracker_common_artifact	add_comment	 Commentaire ajouté à l'artefact 
 tracker_common_artifact	comment_removed	Commentaire supprimé
-tracker_common_artifact	err_del_comment	Erreur lors de la suppression du commentaire $1: $2 
+tracker_common_artifact	err_del_comment	Erreur lors de la suppression du commentaire $1: $2
+tracker_common_artifact	err_upd_comment	Erreur lors de la modification du commentaire $1: $2
 tracker_common_artifact	field_upd_fail	La mise à jour de la valeur de champ $1 a échoué
 tracker_common_artifact	canned_used	 Réponse type utilisée 
 tracker_common_artifact	unable_canned	 Impossibilité d'utiliser la réponse type 

@@ -1279,7 +1279,7 @@ $server->register(
     ),
     array('return'=>'xsd:boolean'),
     $uri,
-    $uri.'#updateArtifact',
+    $uri.'#deleteArtifact',
     'rpc',
     'encoded',
     'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
@@ -3445,7 +3445,7 @@ function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
             return new soap_fault(get_artifact_fault, 'deleteArtifactFollowUp', $a->getErrorMessage(), '');
         }
         
-         if(!$a->deleteFollowupComment($artifact_id, $artifact_history_id)){
+        if (!$a->deleteFollowupComment($artifact_id, $artifact_history_id)){
             return new soap_fault(delete_artifact_followup_fault, 'deleteArtifactFollowUp', $a->getErrorMessage(), '');
         }else{
 
