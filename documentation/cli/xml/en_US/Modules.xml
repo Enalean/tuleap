@@ -644,6 +644,35 @@ Array
                 </para>
             </para>
         </section>
+        
+        <section id="TrackerFunctionDeleteComment">
+            <title>deleteComment</title>
+            <para>
+                deleteComment: Delete an existing follow-up comment in an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: Tracker ID the artifact belongs to.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--artifact_id*: Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--comment_id*: The Follow-up ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>deleteComment command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker deleteComment --tracker_id=371 --artifact_id=7374 --comment_id=5478
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
 
         <section id="TrackerFunctionCCList">
             <title>CCList</title>

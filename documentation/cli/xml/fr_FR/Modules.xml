@@ -677,6 +677,38 @@ Array
             </para>
         </section>
         
+        <section id="TrackerFunctionDeleteComment">
+            <title>deleteComment</title>
+            <para>
+                deleteComment: Supprime le commentaire existant d'un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: ID du tracker auquel appartient l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--artifact_id*: ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--comment_id*: ID du commentaire à supprimer.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>commande deleteComment</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[mnazaria@linux codex cli ]$ ./codex.php tracker deleteComment --tracker_id=371 --artifact_id=7374 --comment_id=5478
+                    </programlisting>
+                </example>
+                </para>
+            </para>
+        </section>
+        
         <section id="TrackerFunctionCCList">
             <title>CCList</title>
             <para>

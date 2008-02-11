@@ -20,6 +20,7 @@ require_once('CLI_Action_Tracker_Update.class.php');
 require_once('CLI_Action_Tracker_Comments.class.php');
 require_once('CLI_Action_Tracker_AddComment.class.php');
 require_once('CLI_Action_Tracker_UpdateComment.class.php');
+require_once('CLI_Action_Tracker_DeleteComment.class.php');
 require_once('CLI_Action_Tracker_CCList.class.php');
 require_once('CLI_Action_Tracker_AddCC.class.php');
 require_once('CLI_Action_Tracker_DeleteCC.class.php');
@@ -53,6 +54,7 @@ class CLI_Module_Tracker extends CLI_Module {
         $this->addAction(new CLI_Action_Tracker_Comments());
         $this->addAction(new CLI_Action_Tracker_AddComment());
         $this->addAction(new CLI_Action_Tracker_UpdateComment());
+        $this->addAction(new CLI_Action_Tracker_DeleteComment());
         $this->addAction(new CLI_Action_Tracker_CCList());
         $this->addAction(new CLI_Action_Tracker_AddCC());
         $this->addAction(new CLI_Action_Tracker_DeleteCC());
