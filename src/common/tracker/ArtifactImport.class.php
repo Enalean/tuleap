@@ -802,7 +802,6 @@ function getUsedFields() {
       // By:
       $by_position = strpos($comment,$Language->getText('global','by').": ");
       if ($by_position === false) {
-	echo "coucou3";
 	$this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
 	return false;
       }

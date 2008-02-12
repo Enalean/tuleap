@@ -276,7 +276,7 @@ if ($set=='my') {
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
             if (!is_array($value_id)) {
-                $pref_stg .= '&'.$field.'='.urlencode(stripslashes($value_id));
+                $pref_stg .= '&'.$field.'='.urlencode($value_id);
             } else {
                 $pref_stg .= '&'.$field.'[]='.$value_id;
             }
@@ -291,8 +291,8 @@ if ($set=='my') {
     }
     $pref_stg .= '&advsrch='.($advsrch ? 1 : 0);
     $pref_stg .= '&msort='.($msort ? 1 : 0);
-    $pref_stg .= '&chunksz='.$chunksz;
-    $pref_stg .= '&report_id='.$report_id;
+    $pref_stg .= '&chunksz='.(int)$chunksz;
+    $pref_stg .= '&report_id='.(int)$report_id;
     
     if ($pref_stg != user_get_preference('artifact_brow_cust'.$atid)) {
 		//echo "<br> DBG setting pref = $pref_stg";

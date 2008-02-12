@@ -202,7 +202,7 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-                            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
+                            $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                         }
                 }
                 break;
@@ -323,7 +323,7 @@ if ( $func == 'gotoid' ) {
                                     $ah->mailFollowupWithPermissions($addresses, $changes);
                                 }
         
-                                $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                                $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
                         
                         } else {
                                 // Invalid permission
@@ -355,7 +355,7 @@ if ( $func == 'gotoid' ) {
                     $artifact_history_id = $request->get('artifact_history_id');
                     if ($ah->userCanEditFollowupComment($artifact_history_id)) {    
                         $ah->deleteFollowupComment($aid,$artifact_history_id);
-                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
                     } else {
                         // Invalid permission
                         exit_permission_denied();
@@ -391,7 +391,7 @@ if ( $func == 'gotoid' ) {
                             $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
 
-                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
                 }
                 break;
         }
@@ -413,7 +413,7 @@ if ( $func == 'gotoid' ) {
                         if (!$afh || !is_object($afh)) {
                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file_obj',$afh->getName()));
                         } elseif ($afh->isError()) {
-                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'.$afh->getName());
+                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODEX_PURIFIER_BASIC));
                         } else {
                                 if (!$afh->delete()) {
                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_delete',$afh->getErrorMessage()));
@@ -421,7 +421,7 @@ if ( $func == 'gotoid' ) {
                                         $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','file_delete_success'));
                                 }
                         }
-                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $aid .'&func=detail');
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
 
                 } else {
                         // Invalid permission
@@ -481,7 +481,7 @@ if ( $func == 'gotoid' ) {
                         $canned_response = $request->get('canned_response');
                         $changed = $ah->handleUpdate($request->get('artifact_id_dependent'),$canned_response,$changes);
                         if (!$changed) {
-                                $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
+                                $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                                 exit();
                         }
                 
@@ -527,7 +527,7 @@ if ( $func == 'gotoid' ) {
                         if (!isset($was_error) || !$was_error) {
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
                         }
-                        $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                 }
                 break;
         }
@@ -600,7 +600,7 @@ if ( $func == 'gotoid' ) {
 		    if ($changed) {
 		      if ($i > 0) $feedback .= ",";
 		      if ($i == 0) $feedback .= $Language->getText('tracker_index','updated_aid');
-		      $feedback .= " $aid";
+		      $feedback .= " ". (int)$aid;
 				    
 		    }
 		    //
@@ -728,7 +728,7 @@ if ( $func == 'gotoid' ) {
             $agnf =& new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $ah->mailFollowupWithPermissions($addresses, $changes);
-            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
+            $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
             break;
         }
 
@@ -802,9 +802,9 @@ if ( $func == 'gotoid' ) {
                 break;
         }
         case 'updatecomment':
+            $artifact_id = $request->get('artifact_id');
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
-                $artifact_id     = $request->get('artifact_id');
                 $ah = new ArtifactHtml($ath,$artifact_id);
                 if ($ah->updateFollowupComment($artifact_id,$followup_update,$changes)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
@@ -815,7 +815,7 @@ if ( $func == 'gotoid' ) {
                     $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
                 }
             }
-            $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&aid='. $_REQUEST['artifact_id'] .'&func=detail');
+            $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$artifact_id .'&func=detail');
         break;
         case 'browse' : {
                 $masschange = false;
@@ -960,8 +960,8 @@ if ( $func == 'gotoid' ) {
         echo '<strong>';
         // Admin link and create link are only displayed if the user is a project administrator
         if (user_ismember($group_id, 'A')) {
-            echo '<a href="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
-            echo ' | <a href="/tracker/admin/?group_id='.$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
+            echo '<a href="/tracker/admin/?group_id='. (int)$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
+            echo ' | <a href="/tracker/admin/?group_id='. (int)$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
             if ($params['help']) {
                 echo ' | ';
             }
@@ -977,7 +977,7 @@ if ( $func == 'gotoid' ) {
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
             if (!$pv) {
-                echo " ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
+                echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
             }
             echo "<p>";
 
@@ -987,16 +987,16 @@ if ( $func == 'gotoid' ) {
             for ($j = 0; $j < count($at_arr); $j++) {
                 if ($at_arr[$j]->userCanView()) {
                     echo '
-                        <a href="/tracker/?atid='. $at_arr[$j]->getID() .
-                        '&group_id='.$group_id.'&func=browse">' .
+                        <a href="/tracker/?atid='. (int)($at_arr[$j]->getID()) .
+                        '&group_id='. (int)$group_id.'&func=browse">' .
                         html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
                         '&nbsp;'.
-                        $at_arr[$j]->getName() .'</a> ';
+                         $hp->purify($at_arr[$j]->getName(), CODEX_PURIFIER_BASIC)  .'</a> ';
                     // Only show number of artifacts if the user has full access on the tracker.
                     if ($at_arr[$j]->userHasFullAccess()) {
-                        echo '( <strong>'. $at_arr[$j]->getOpenCount() .' '.$Language->getText('tracker_index','open').' / '. $at_arr[$j]->getTotalCount() .' '.$Language->getText('tracker_index','total').'</strong> )';
+                        echo '( <strong>'. (int)($at_arr[$j]->getOpenCount()) .' '.$Language->getText('tracker_index','open').' / '. (int)($at_arr[$j]->getTotalCount()) .' '.$Language->getText('tracker_index','total').'</strong> )';
                     }
-                    echo '<br />'.$at_arr[$j]->getDescription() .'<p>';
+                    echo '<br />'. $hp->purify($at_arr[$j]->getDescription(), CODEX_PURIFIER_BASIC)  .'<p>';
                 }
             }
         }

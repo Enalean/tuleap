@@ -62,11 +62,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) > 1) {
-                        echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getName()."', '".addslashes($field->getLabel())."');\n";
+                        echo "fields['".(int)$field->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$field->getID()."', '".(int)$field->getName()."', '".addslashes($field->getLabel())."');\n";
                         $default_value = $field->getDefaultValue();
-                        echo "options['".$field->getID()."'] = {};\n";
+                        echo "options['".(int)$field->getID()."'] = {};\n";
                         while ($row = db_fetch_array($values)) {
-                            echo "options['". $field->getID() ."']['". $row[0] ."'] = {option:new Option('". addslashes($row[1]) ."', '". $row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
+                            echo "options['". (int)$field->getID() ."']['". (int)$row[0] ."'] = {option:new Option('". addslashes($row[1]) ."', '". (int)$row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
                         }
                     }
                 }
@@ -81,7 +81,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $html =& new ArtifactRuleValueJavascript($rules[$key]);
-                echo 'rules_definitions['. $rules[$key]->id .'] = ';
+                echo 'rules_definitions['. (int)($rules[$key]->id) .'] = ';
                 $html->display();
                 echo ";\n";
             }

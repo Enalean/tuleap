@@ -85,9 +85,10 @@ if ($multiple_queries) {
 
 // Send the result in CSV format
 if ($result && $rows > 0) {
+    $http = CodeXHTTPPurifier::instance();
   $file_name = str_replace(' ','_','artifact_'.$ath->getItemName());
   header ('Content-Type: text/csv');
-  header ('Content-Disposition: filename='.$file_name.'_'.$ath->Group->getUnixName().'.csv');
+  header ('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
   
   echo build_csv_header($col_list, $lbl_list).$eol;
   

@@ -83,7 +83,7 @@ function showErrors() {
  * @param $artifacts_data: array containing the records for each artifact to be imported
  */
   function showParseResults($parsed_labels,$artifacts_data) {
-    global $PHP_SELF,$sys_datefmt,$Language;
+    global $sys_datefmt,$Language;
 
     $this->getImportUser($sub_user_id,$sub_user_name);
     $sub_on = format_date("Y-m-d",time());
@@ -105,7 +105,7 @@ function showErrors() {
     }
     
     echo '
-        <FORM NAME="acceptimportdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
+        <FORM NAME="acceptimportdata" action="" method="POST" enctype="multipart/form-data">
         <p align="left"><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_import_admin','import').'"></p>';
     
     
@@ -134,12 +134,12 @@ function showErrors() {
 	  //if insert show default value
 	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
-	      echo "<TD $width valign=\"top\"><I>$sub_on</I></TD>\n";
+	      echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODEX_PURIFIER_BASIC) .'</I></TD>';
 	    } else {
-	      echo "<TD $width valign=\"top\">$value</TD>\n";
+	      echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODEX_PURIFIER_BASIC) .'</TD>';
 	    }
 	  } else {
-	    echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
+	    echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global','unchanged')."</I></TD>\n";
 	  }
 	  continue;
 	  
@@ -147,12 +147,12 @@ function showErrors() {
 	} else if ($parsed_labels[$c] == $submitted_by_field->getLabel()) {
 	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
-	      echo "<TD $width valign=\"top\"><I>$sub_user_name</I></TD>\n";
+	      echo '<TD '. $width .' valign="top"><I>'. $sub_user_name ."</I></TD>\n";
 	    } else {
-	      echo "<TD $width valign=\"top\">$value</TD>\n";
+	      echo '<TD '. $width .' valign="top">'. $value ."</TD>\n";
 	    }
 	  } else {
-	    echo "<TD $width valign=\"top\"><I>".$Language->getText('global','unchanged')."</I></TD>\n";
+	    echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global','unchanged')."</I></TD>\n";
 	  }
 	  continue;
 	}
@@ -168,36 +168,39 @@ function showErrors() {
 	    $art_id = (($this->aid_column != -1 && $aid != "") ? $aid : "0");
 	    if ($this->parseFollowUpComments($data[$c],$parsed_comments,$art_id,true)) {
 	      if (count($parsed_comments) > 0) {
-		echo '<TD $width valign="top"><TABLE>';
+		echo '<TD '. $width .' valign="top"><TABLE>';
 		echo '<TR class ="boxtable"><TD class="boxtitle">'.$Language->getText('tracker_import_utils','date').'</TD><TD class="boxtitle">'.$Language->getText('global','by').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','type').'</TD><TD class="boxtitle">'.$Language->getText('tracker_import_utils','comment').'</TD></TR>';
 		for ($d=0; $d < count($parsed_comments); $d++) {
 		  $arr = $parsed_comments[$d];
 		  echo '<TR class="'.util_get_alt_row_color($d).'">';
-		  echo "<TD $width>".$arr['date']."</TD><TD $width>".$arr['by']."</TD><TD $width>".$arr['type']."</TD><TD $width>".$arr['comment']."</TD>";
+		  echo "<TD $width>". $hp->purify($arr['date'], CODEX_PURIFIER_BASIC) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['by'], CODEX_PURIFIER_BASIC) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['type'], CODEX_PURIFIER_BASIC) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['comment'], CODEX_PURIFIER_BASIC) ."</TD>";
 		  echo "</TR>\n";
 		}
 		echo "</TABLE></TD>";
 	      } else {
-		echo "<TD $width align=\"center\">-</TD>\n";
+		echo '<TD '. $width .' align="center">-</TD>';
 	      }
 	    } else {
-	      echo "<TD $width><I>".$Language->getText('tracker_import_utils','comment_parse_error',$this->getErrorMessage())."</I></TD>\n";
+	      echo '<TD '. $width ."><I>".$Language->getText('tracker_import_utils','comment_parse_error',$this->getErrorMessage())."</I></TD>\n";
 	    }
 	    
 	    //DEFAULT
 	  } else {
-	    echo "<TD $width valign=\"top\">$value</TD>\n";
+	    echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODEX_PURIFIER_BASIC) ."</TD>\n";
 	  }
 	  
 	  
 	} else {
 	  
 	  if ($parsed_labels[$c] == $aid_field->getLabel()) {
-	    echo "<TD $width valign=\"top\"><I>".$Language->getText('tracker_import_utils','new')."</I></TD>\n";
+	    echo '<TD '. $width .' valign="top"><I>'.$Language->getText('tracker_import_utils','new')."</I></TD>\n";
 	    
 	    //DEFAULT
 	  } else {
-	    echo "<TD $width  valign=\"top\" align=\"center\">-</TD>\n";
+	    echo '<TD '. $width .' valign="top" align="center">-</TD>';
 	  }
 	}
       }
@@ -207,16 +210,16 @@ function showErrors() {
     echo "</TABLE>\n";
     
     echo '
-        <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$this->ath->getID().'">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->group->group_id.'">
+        <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->ath->getID().'">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$this->group->group_id.'">
         <INPUT TYPE="HIDDEN" NAME="func" VALUE="import">
         <INPUT TYPE="HIDDEN" NAME="mode" VALUE="import">
-        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.$this->aid_column.'">
+        <INPUT TYPE="HIDDEN" NAME="aid_column" VALUE="'.(int)$this->aid_column.'">
         <INPUT TYPE="HIDDEN" NAME="count_artifacts" VALUE="'.count($artifacts_data).'">';
     
     while (list(,$label) = each($parsed_labels)) {
       echo '
-        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'.$label.'">';
+        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'. $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) .'">';
     }
     
     
@@ -224,7 +227,7 @@ function showErrors() {
       $data = $artifacts_data[$i];
       for ($c=0; $c < count($data); $c++) {
 	echo '
-        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'.htmlspecialchars($data[$c]).'">';
+        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'. $hp->purify($data[$c], CODEX_PURIFIER_CONVERT_HTML) .'">';
       }
     }
     
@@ -322,14 +325,14 @@ function showErrors() {
    *     
    */
   function displayCSVInput($atid,$user_id) {
-    global $PHP_SELF,$Language,$sys_max_size_upload;
+    global $Language,$sys_max_size_upload;
     
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
     
     echo '<h3>'.$Language->getText('tracker_import','import_new_hdr', array(help_button('ArtifactImport.html'))).'</h3>';
-    echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.$this->group->group_id.'&atid='.$atid.'&user_id='.$user_id.'&mode=showformat&func=import')).'</p>';
+    echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.(int)$this->group->group_id.'&atid='.(int)$atid.'&user_id='.(int)$user_id.'&mode=showformat&func=import')).'</p>';
     
     $_pref_notify  = user_get_preference('tracker_import_notify_'.$atid);
     $notifychecked = '';
@@ -338,9 +341,9 @@ function showErrors() {
     }
 
     echo '
-	    <FORM NAME="importdata" action="'.$PHP_SELF.'" method="POST" enctype="multipart/form-data">
-            <INPUT TYPE="hidden" name="group_id" value="'.$this->group->group_id.'">            
-            <INPUT TYPE="hidden" name="atid" value="'.$atid.'">            
+	    <FORM NAME="importdata" action="" method="POST" enctype="multipart/form-data">
+            <INPUT TYPE="hidden" name="group_id" value="'.(int)$this->group->group_id.'">            
+            <INPUT TYPE="hidden" name="atid" value="'.(int)$atid.'">            
             <INPUT TYPE="hidden" name="func" value="import">
             <INPUT TYPE="hidden" name="mode" value="parse">
 

@@ -27,10 +27,12 @@ if ($result && db_numrows($result) > 0) {
     } else {
 	
 	// Download the patch with the correct filetype
-	header('Content-Type: '.db_result($result,0,'filetype'));
-	header('Content-Length: '.db_result($result,0,'filesize'));
-	header('Content-Disposition: filename="'.db_result($result,0,'filename').'"');
-	header('Content-Description: '. db_result($result,0,'description'));
+    require_once('common/include/CodeX_HTTPPurifier.class.php');
+    $http = CodeX_HTTPPurifier::instance();
+	header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));
+	header('Content-Length: '.$http->purify(db_result($result,0,'filesize')));
+	header('Content-Disposition: filename="'.$http->purify(db_result($result,0,'filename')).'"');
+	header('Content-Description: '. $http->purify(db_result($result,0,'description')));
 
 	echo db_result($result,0,'bin_data');
 

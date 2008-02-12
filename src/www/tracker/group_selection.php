@@ -24,7 +24,7 @@ $gf = new GroupFactory();
 
 function doSelection(form) {
 	if ( form.group_id.value != "" ) {
-		window.opener.document.<? echo $request->get('opener_form'); ?>.<? echo $request->get('opener_field'); ?>.value = form.group_id.value;
+		window.opener.document.<? echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_form')); ?>.<? echo preg_replace('/[^a-z0-9\$_]/', '', $request->get('opener_field')); ?>.value = form.group_id.value;
 	}
 	close();
 }
@@ -53,8 +53,9 @@ function onChangeAllFilter() {
 	} else {
 		$results = $gf->getAllGroups();
 	}
+    $hp = CodeXHTMLPurifier::instance();
     while ($groups_array = db_fetch_array($results)) {
-    	echo '<option value="'.$groups_array["group_id"].'">'.$groups_array["group_name"].'</option>';
+    	echo '<option value="'.(int)$groups_array["group_id"].'">'. $hp->purify($groups_array["group_name"]) .'</option>';
     }
 
 ?>

@@ -39,6 +39,8 @@ $request =& HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId');
 $atid     = $request->getValidated('atid', 'uint');
 
+$hp = CodeX_HTMLPurifier::instance();
+
 if ($group_id && !$atid) {
 	//
 	// Manage trackers: create and delete
@@ -314,10 +316,10 @@ if ($group_id && !$atid) {
             } else if ($request->getValidated('update_canned')) {
 				$aci = $ach->fetchData($artifact_canned_id);
 				if (!$aci) {
-					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',(int)$artifact_canned_id));
 				}
 				if (!$ach->update($title, $body)) {
-					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_update_canneditem',$artifact_canned_id));
+					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_update_canneditem',(int)$artifact_canned_id));
 				}
 				if ($ach->isError()) {
 					exit_error($Language->getText('global','error'), $ach->getErrorMessage());
@@ -327,7 +329,7 @@ if ($group_id && !$atid) {
 			}
         } else if ($request->getValidated('delete_canned')) {
 		    if (!$ach->delete($artifact_canned_id)) {
-		      exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_delete_canneditem',$artifact_canned_id));
+		      exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_delete_canneditem',(int)$artifact_canned_id));
 		    }
 		    if ($ach->isError()) {
 		       exit_error($Language->getText('global','error'), $ach->getErrorMessage());
@@ -341,7 +343,7 @@ if ($group_id && !$atid) {
 					   'help' => 'TrackerAdministration.html#TrackerCannedResponses'));
 			$aci = $ach->fetchData($artifact_canned_id);
 			if (!$aci) {
-			  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',$artifact_canned_id));
+			  exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_found_canneditem',(int)$artifact_canned_id));
 			}
 			$ach->displayUpdateForm();
 		} else {
@@ -592,8 +594,8 @@ if ($group_id && !$atid) {
 						$Language->getText('tracker_admin_field_values_details','values_admin'),
 						'help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>'".
-			  $Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."'</H2>";
+			  ' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ."</a>'".
+			  $Language->getText('tracker_admin_field_values_details','manage_for', $hp->purify($field->getLabel()), CODEX_PURIFIER_BASIC) ."'</H2>";
 
 			$value_array = $field->getFieldValue($atid, $request->getValidated('value_id', 'uint'));
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);
@@ -838,7 +840,7 @@ if ($group_id && !$atid) {
 			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','modify_usage'),
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerField'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>' ".
+			  ' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ."</a>' ".
 			  $Language->getText('tracker_admin_index','modify_usage_for',$field->getLabel())."</H2>";
 			$ath->displayFieldUsageForm("field_update",$field->getID(),
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
@@ -863,10 +865,10 @@ if ($group_id && !$atid) {
 		$ath->adminTrackersHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),
 					'help' => 'TrackerAdministration.html'));
 		if (!$ath->preDelete()) {
-		  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','deletion_failed',$ath->getName()));
+		  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index','deletion_failed', $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ));
 		} else {
-		  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','delete_success',$ath->getName()));
-		  echo $Language->getText('tracker_admin_index','tracker_deleted',array($ath->getName(),$GLOBALS['sys_email_admin']));
+		  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','delete_success', $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ));
+		  echo $Language->getText('tracker_admin_index','tracker_deleted',array( $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC), $GLOBALS['sys_email_admin']));
                 require_once('common/tracker/ArtifactRulesManager.class.php');
                 $arm =& new ArtifactRulesManager();
                 $arm->deleteRulesByArtifactType($atid);
@@ -897,7 +899,7 @@ if ($group_id && !$atid) {
 		}
 	
 	    require_once('../include/ArtifactRulesManagerHtml.class.php');
-        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. $ath->getGroupID() .'&atid='. $ath->getID() .'&func=field_dependencies');
+        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. (int)($ath->getGroupID()) .'&atid='. (int)($ath->getID()) .'&func=field_dependencies');
         if ($request->getValidated('save') === 'save') {
             if ($request->valid(new Valid_UInt('source_field')) && $request->valid(new Valid_UInt('target_field'))) {
                 $armh->saveFromRequest($request);
@@ -949,8 +951,8 @@ if ($group_id && !$atid) {
 			$ath->adminHeader(array('title'=>$Language->getText('tracker_admin_fieldset','tracker_admin').$Language->getText('tracker_admin_index','modify_fieldset'),
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerFieldSet'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
-			  ' \'<a href="/tracker/admin/?group_id='.$group_id."&atid=".$atid.'">'.$ath->getName()."</a>' ".
-			  $Language->getText('tracker_admin_index','modify_fieldset_for',$fieldset->getLabel())."</H2>";
+			  ' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ."</a>' ".
+			  $Language->getText('tracker_admin_index','modify_fieldset_for', $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) )."</H2>";
 			$ath->displayFieldSetCreateForm("fieldset_update",$fieldset->getID(),
 						    $fieldset->getLabel(),$fieldset->getDescriptionText(),$fieldset->getRank());
 			$ath->footer(array());

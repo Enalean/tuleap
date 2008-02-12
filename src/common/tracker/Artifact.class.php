@@ -1529,7 +1529,7 @@ class Artifact extends Error {
         $sql="SELECT u.user_id ".
 	  "FROM artifact_cc cc, user u ".
 	  "WHERE cc.email = u.user_name ".
-	  "AND cc.artifact_id=". db_ei($his->getID()) ;
+	  "AND cc.artifact_id=". db_ei($this->getID()) ;
 	$res = db_query($sql);
 	
         return util_result_column_to_array($res);
@@ -1544,7 +1544,7 @@ class Artifact extends Error {
                 
         $sql="SELECT email ".
             "FROM artifact_cc ".
-            "WHERE artifact_id=". db_ei($his->getID()) ." ORDER BY date DESC";
+            "WHERE artifact_id=". db_ei($this->getID()) ." ORDER BY date DESC";
         $result = db_query($sql);
 	$rows=db_numrows($result);
         if ($rows <= 0) {
@@ -2530,7 +2530,7 @@ class Artifact extends Error {
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
         function showFollowUpComments($group_id, $pv, $ascii=false) {
-
+            $hp = CodeX_HTMLPurifier::instance();
             //
             //  Format the comment rows from artifact_history
             //  
@@ -2618,16 +2618,16 @@ class Artifact extends Error {
                     $out .= $GLOBALS['HTML']->getImage(
                         $toggle, 
                         array(
-                            'id' => 'comment_'. $comment_id .'_toggle', 
+                            'id' => 'comment_'. (int)$comment_id .'_toggle', 
                             'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
                             'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
                         )
                     );
                     $out .= '</span>\');</script>';
                     $out .= '<script type="text/javascript">';
-                    $out .= "tracker_comment_togglers[$comment_id] = function (evt, force, expand) {
-                        var toggle = $('comment_". $comment_id ."_toggle');
-                        var element = $('comment_". $comment_id ."_content');
+                    $out .= "tracker_comment_togglers[". (int)$comment_id ."] = function (evt, force, expand) {
+                        var toggle = $('comment_". (int)$comment_id ."_toggle');
+                        var element = $('comment_". (int)$comment_id ."_content');
                         if (element) {
                             if (!force || (expand && !element.visible()) || (!expand && element.visible())) {
                                 Element.toggle(element);
@@ -2647,20 +2647,20 @@ class Artifact extends Error {
                         }
                         return false;
                     };
-                    Event.observe($('comment_". $comment_id ."_toggle'), 'click', tracker_comment_togglers[$comment_id]);";
+                    Event.observe($('comment_". (int)$comment_id ."_toggle'), 'click', tracker_comment_togglers[". (int)$comment_id ."]);";
                     $out .= '</script>';
-                    $out .= '<span><a href="#comment_'. $comment_id .'" title="Link to this comment - #'. $comment_id .'" onclick="tracker_comment_togglers['. $comment_id .'](null, true, true);">';
-                    $out .= $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle', 'title' => 'Link to this comment - #'. $comment_id));
+                    $out .= '<span><a href="#comment_'. (int)$comment_id .'" title="Link to this comment - #'. (int)$comment_id .'" onclick="tracker_comment_togglers['. (int)$comment_id .'](null, true, true);">';
+                    $out .= $GLOBALS['HTML']->getImage('ic/comment.png', array('border' => 0, 'style' => 'vertical-align:middle', 'title' => 'Link to this comment - #'. (int)$comment_id));
                     $out .= '</a> </span>';
                     $out .= '<span class="followup_comment_title_user">';
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $out .= db_result($orig_subm, 0, 'email');
                     } else {
-                        $out .= '<a href="/users/'.user_getname(db_result($orig_subm, 0, 'mod_by')).'">'.user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')).'</a>';
+                        $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify(user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')), CODEX_PURIFIER_BASIC) .'</a>';
                     }
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($sys_datefmt,db_result($orig_date, 0, 'date')) .'">'. util_time_ago_in_words(db_result($orig_date, 0, 'date')) .'</span>';
+                    $out .= '<span title="'. format_date($sys_datefmt,db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2668,11 +2668,11 @@ class Artifact extends Error {
                         if (db_result($result, $i, 'mod_by')==100) {
                             $out .= db_result($result, $i, 'email');
                         } else {
-                            $out .= '<a href="/users/'.user_getname(db_result($result, $i, 'mod_by')).'">'.user_getname(db_result($result, $i, 'mod_by')).'</a>';
+                            $out .= '<a href="/users/'.urlencode(user_getname(db_result($result, $i, 'mod_by'))).'">'. $hp->purify(user_getname(db_result($result, $i, 'mod_by')), CODEX_PURIFIER_BASIC) .'</a>';
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'">'. util_time_ago_in_words(db_result($result, $i, 'date')) .'</span>';
+                        $out .= '<span title="'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
                         $out .= '</span>'.")";
                     }
                     $out .= '</div>';
@@ -2684,31 +2684,31 @@ class Artifact extends Error {
                     }
                     $user_quoted = addslashes(addslashes($user_quoted));
                     if ($pv == 0) {
-                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. $comment_id .'_content\\\')); return false;" title="quote">';
+                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. (int)$comment_id .'_content\\\')); return false;" title="quote">';
                         $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
                         $out .= '</a>\');</script>';
                     }
                     if ($this->userCanEditFollowupComment($comment_id) && !$pv) {
-                        $out .= '<a href="/tracker/?func=editcomment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
+                        $out .= '<a href="/tracker/?func=editcomment&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_history_id='.(int)$comment_id.'" title="'. $GLOBALS['Language']->getText('tracker_fieldeditor','edit').'">';
                         $out .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_fieldeditor','edit')));
                         $out .= '</a>';
-                        $out .= '<a href="/tracker/?func=delete_comment&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_history_id='.$comment_id.'" ';
+                        $out .= '<a href="/tracker/?func=delete_comment&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_history_id='.(int)$comment_id.'" ';
                         $out .= ' onClick="return confirm(\''. $GLOBALS['Language']->getText('tracker_include_artifact','delete_comment') .'\')" title="'. $GLOBALS['Language']->getText('tracker_include_artifact','del') .'">';
                         $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
                         $out .= '</a>';
                     }
                     $out .= '</div>';
                     $out .= '<div style="clear:both;"></div>';
-                    $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. $comment_id .'_content">';
+                    $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. (int)$comment_id .'_content">';
                     if ($comment_type != "") {
-                        $out .= '<div class="followup_comment_content_type"><b>'. $comment_type .'</b></div>';
+                        $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODEX_PURIFIER_BASIC)  .'</b></div>';
                     }
-                    $out .= util_make_links(nl2br(db_result($result, $i, 'new_value')),$group_id,$group_artifact_id);
+                    $out .=  $hp->purify(db_result($result, $i, 'new_value'), CODEX_PURIFIER_LIGHT, $group_id);
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">
-                    if (linked_comment_id == '. $comment_id .') {
-                        tracker_comment_togglers['. $comment_id .'](null, true, true);
+                    if (linked_comment_id == '. (int)$comment_id .') {
+                        tracker_comment_togglers['. (int)$comment_id .'](null, true, true);
                     }
                     </script>';
                 }
@@ -2737,7 +2737,7 @@ class Artifact extends Error {
          * @return void
          */
         function showCCList ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
-        
+            $hp = CodeX_HTMLPurifier::instance();
             global $sys_datefmt,$sys_lf,$Language;
         
             //
@@ -2809,7 +2809,7 @@ class Artifact extends Error {
                                 (user_getname(user_getid()) == $email) ||  
                                 (user_getemail(user_getid()) == $email) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
-                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_cc&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&artifact_cc_id='.$artifact_cc_id.'" '.
+                                        $html_delete = '<a href="?func=delete_cc&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&artifact_cc_id='.(int)$artifact_cc_id.'" '.
                                         ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_cc').'\')">'.
                                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
@@ -2819,7 +2819,7 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             $href_cc,
-                                            db_result($result, $i, 'comment'),
+                                             $hp->purify(db_result($result, $i, 'comment'), CODEX_PURIFIER_BASIC) ,
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($sys_datefmt,db_result($result, $i, 'date')),
                                             $html_delete);
@@ -2844,7 +2844,7 @@ class Artifact extends Error {
          * @return void
          */
         function showDependencies ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
-        
+            $hp = CodeX_HTMLPurifier::instance();
             global $sys_datefmt,$sys_lf,$Language;
         
             //
@@ -2902,7 +2902,7 @@ class Artifact extends Error {
                         } else {
                 
                             if ( user_ismember($this->ArtifactType->getGroupID()) ) {
-                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_dependent&group_id='.$group_id.'&aid='.$this->getID().'&atid='.$group_artifact_id.'&dependent_on_artifact_id='.$dependent_on_artifact_id.'" '.
+                                        $html_delete = '<a href="?func=delete_dependent&group_id='.(int)$group_id.'&aid='.(int)$this->getID().'&atid='.(int)$group_artifact_id.'&dependent_on_artifact_id='.(int)$dependent_on_artifact_id.'" '.
                                         ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','del_dep').'\')">'.
                                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
@@ -2911,10 +2911,10 @@ class Artifact extends Error {
                 
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            '<a href="/tracker/?func=gotoid&group_id='.$group_id.'&aid='.$dependent_on_artifact_id.'">'.$dependent_on_artifact_id.'</a>',
-                                            $summary,
-                                            $tracker_label,
-                                            $group_label,
+                                            '<a href="/tracker/?func=gotoid&group_id='.(int)$group_id.'&aid='.(int)$dependent_on_artifact_id.'">'.(int)$dependent_on_artifact_id.'</a>',
+                                            $hp->purify($summary, CODEX_PURIFIER_BASIC) ,
+                                            $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
+                                            $hp->purify($group_label, CODEX_PURIFIER_BASIC) ,
                                             $html_delete);
                         
                         } // for
@@ -2939,7 +2939,7 @@ class Artifact extends Error {
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
             global $sys_datefmt,$sys_lf,$Language;
-        
+            $hp = CodeX_HTMLPurifier::instance();
             //
             //  show the files attached to this artifact
             //   
@@ -2993,15 +2993,15 @@ class Artifact extends Error {
             for ($i=0; $i < $rows; $i++) {
         
                         $artifact_file_id = db_result($result, $i, 'id');
-                        $href = "/tracker/download.php?artifact_id=".$this->getID()."&id=".$artifact_file_id;
+                        $href = "/tracker/download.php?artifact_id=".(int)$this->getID()."&id=".(int)$artifact_file_id;
                 
                         if ($ascii) {
                             $out .= sprintf($fmt,
                                             format_date($sys_datefmt,db_result($result, $i, 'adddate')),
-                                            db_result($result, $i, 'filename'),
+                                             $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
-                                            db_result($result, $i, 'user_name'),
-                                            db_result($result, $i, 'description'),
+                                             $hp->purify(db_result($result, $i, 'user_name'), CODEX_PURIFIER_BASIC) ,
+                                             $hp->purify(db_result($result, $i, 'description'), CODEX_PURIFIER_BASIC) ,
                                             $server.$href);
                         } else {
                             // show CC delete icon if one of the condition is met:
@@ -3009,7 +3009,7 @@ class Artifact extends Error {
                             // (b) the current user is the person who added a gieven name in CC list
 			  if ( user_ismember($this->ArtifactType->getGroupID()) ||
                                 (user_getname(user_getid()) == db_result($result, $i, 'user_name') )) {
-                                        $html_delete = '<a href="'.$_SERVER['PHP_SELF'].'?func=delete_file&group_id='.$group_id."&atid=".$group_artifact_id."&aid=".$this->getID()."&id=".db_result($result, $i, 'id').'" '.
+                                        $html_delete = '<a href="?func=delete_file&group_id='.(int)$group_id."&atid=".(int)$group_artifact_id."&aid=".(int)$this->getID()."&id=".(int)db_result($result, $i, 'id').'" '.
                                             ' onClick="return confirm(\''.$Language->getText('tracker_include_artifact','delete_attachment').'\')">'.
                                             '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="'.$Language->getText('global','btn_delete').'"></A>';
                             } else {
@@ -3017,8 +3017,8 @@ class Artifact extends Error {
                             }
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            '<a href="'.$href.'">'. db_result($result, $i, 'filename').'</a>',
-                                            db_result($result, $i, 'description'),
+                                            '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) .'</a>',
+                                             $hp->purify(db_result($result, $i, 'description'), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($sys_datefmt,db_result($result, $i, 'adddate')),
