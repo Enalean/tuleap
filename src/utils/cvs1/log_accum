@@ -672,6 +672,12 @@ $codexdb = 1;
 
 # parse command line arguments (file list is seen as one arg)
 #
+if ($debug) {
+    print STDERR "Log accum ARGV:\n";
+    print STDERR @ARGV;
+    print STDERR "\n---\n";
+}
+
 while (@ARGV) {
     $arg = shift @ARGV;
 
@@ -714,7 +720,30 @@ while (@ARGV) {
     } else {
 	($donefiles) && die("Too many arguments!  Check usage.", $arg, "\n");
 	$donefiles = 1;
-	@files = split(/ /, $arg);
+        # @files = split(/ /, $arg);
+	# There is a problem with filenames containing a space.
+        # example of input: 'module1/module1 test 2.zip,1.8,1.9 test3.zip,1.8,1.9 test 4 or 5.zip,1.8,1.9'
+        # we can't just split on blank chars, so we'll rearrange the list like this:
+	# module1/module1
+	# test 2.zip,1.8,1.9
+	# test3.zip,1.8,1.9
+	# test 4 ou 5.zip,1.8,1.9
+        ($mod,$filelist) = split(/ /, $arg,2);
+         $arglist="$mod\n";
+         $line=0;
+        foreach $f (split(/,/,$filelist)) {
+            if ($line && (($line+1)%2) ) {
+                ($v,$f2)=split(/ /,$f,2);
+                if ($f2) {$arglist.="$v\n$f2,";}
+                else {$arglist.="$v";}
+            } else {
+                $arglist.=$f.",";
+            }
+            $line++;
+        }
+        chomp($arglist);
+
+	@files = split(/\n/, $arglist);
 	if ($debug) {
 	  foreach $f (@files) {
 	    print STDERR $f, ", ";
