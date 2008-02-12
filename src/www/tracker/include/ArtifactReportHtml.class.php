@@ -108,8 +108,7 @@ class ArtifactReportHtml extends ArtifactReport {
         
             if (!$found) {
                         if (!$msort) { unset($arr); }
-                        $field_order = $this->USAGE_BY_NAME[$order];
-                        if ( ($order == 'severity') || ($order == 'hours') || (($field_order)&&($field_order->isDateField())) ) {
+                        if ( ($order == 'severity') || ($order == 'hours') ) {
                             // severity, effort and dates sorted in descending order by default
                             $arr[] = $order.'<';
                         } else {
