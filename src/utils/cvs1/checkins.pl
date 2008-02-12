@@ -52,22 +52,23 @@ sub db_get_field {
 
 sub db_get_index {
   local ($table, $fieldname, $value) = @_;
+  if (!$value) { $value=""; }
   my ($query, $res);
   $debug = 0;
-  $query = "SELECT id  FROM $table WHERE $fieldname=\"$value\"";
+  $query = "SELECT id  FROM $table WHERE $fieldname = ?";
   if ($debug) {
     print STDERR $query, "\n";
   }
   $sth = $dbh->prepare($query);
-  $res = $sth->execute();
+  $res = $sth->execute($value);
   if ($sth->rows >= 1) {
     $hash_ref = $sth->fetchrow_hashref;
     $res = $hash_ref->{'id'};
   } else {
     ## new repository to create
-    $query = "INSERT INTO $table (id, $fieldname) VALUES ('', '$value')";
+    $query = "INSERT INTO $table (id, $fieldname) VALUES ('', ?)";
     $sth = $dbh->prepare($query);
-    $res = $sth->execute();
+    $res = $sth->execute($value);
     if (!$res) {
       $res = 0;
     } else {
