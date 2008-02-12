@@ -297,7 +297,7 @@ sub db_checkins_add {
   @checkins = &read_logfile("$DB_FILE.$index.$id", "");
 
   if ($debug) {
-    print STDERR "treating for DB_FILE.$index.$id \n";
+    print STDERR "treating for $DB_FILE.$index.$id \n";
 
 
   }
