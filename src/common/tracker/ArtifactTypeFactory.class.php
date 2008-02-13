@@ -69,7 +69,7 @@ class ArtifactTypeFactory extends Error {
 	 */
 	function getStatusIdCount($group_artifact_id) {
 		$count_array=array();
-		$sql="select status_id,count(*) from artifact where group_artifact_id = ".$group_artifact_id.
+		$sql="select status_id,count(*) from artifact where group_artifact_id = ". db_ei($group_artifact_id).
 			 " group by status_id";
 		$result = db_query ($sql);
 
@@ -103,7 +103,7 @@ class ArtifactTypeFactory extends Error {
 		}
 
 		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
-			WHERE group_id='". $this->Group->getID() ."'
+			WHERE group_id='". db_ei($this->Group->getID()) ."'
 			AND status != 'D'
 			ORDER BY name ASC";
 
@@ -142,7 +142,7 @@ class ArtifactTypeFactory extends Error {
 	  global $Language;
 
           $sql="SELECT group_artifact_id FROM artifact_group_list
-			WHERE group_id='". $group_id ."'
+			WHERE group_id='". db_ei($group_id) ."'
 			AND status!='D'
 			ORDER BY group_artifact_id ASC";
 		
@@ -203,27 +203,27 @@ class ArtifactTypeFactory extends Error {
 		
 		// Delete artifact_canned_responses 
 		$sql = "DELETE FROM artifact_canned_responses 
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
 
 		// Delete artifact_notification  
 		$sql = "DELETE FROM artifact_notification  
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
 
 		// Delete artifact_notification_event   
 		$sql = "DELETE FROM artifact_notification_event   
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
 		
 		// Delete artifact_notification_role   
 		$sql = "DELETE FROM artifact_notification_role   
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
 
 		// Delete artifact_perm   
 		$sql = "DELETE FROM artifact_perm   
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
 		
         
@@ -248,14 +248,14 @@ class ArtifactTypeFactory extends Error {
         
         // Delete artifact_watcher (be carefull, the column is named artifact_group_id)
         $sql = "DELETE FROM artifact_watcher   
-			    WHERE artifact_group_id=". $atid;
+			    WHERE artifact_group_id=". db_ei($atid);
 		db_query ($sql);
         
         
 		// Delete all records linked to artifact_id
 	    $sql_artifacts='SELECT artifact_id '.
 		'FROM artifact '.
-		'WHERE group_artifact_id='. $atid;
+		'WHERE group_artifact_id='. db_ei($atid);
 		
 		//echo $sql_artifacts;
 		
@@ -265,34 +265,34 @@ class ArtifactTypeFactory extends Error {
 			$id = $artifacts_array["artifact_id"];
 
 			// Delete artifact_cc records	    	
-	    	$sql = "DELETE FROM artifact_cc WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact_cc WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 	    	
 			// Delete artifact_dependencies records	    	
-	    	$sql = "DELETE FROM artifact_dependencies WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact_dependencies WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 
 			// Delete artifact_field_value records	    	
-	    	$sql = "DELETE FROM artifact_field_value WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact_field_value WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 	    	
 			// Delete artifact_file records	    	
-	    	$sql = "DELETE FROM artifact_file WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact_file WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 
 			// Delete artifact_history records	    	
-	    	$sql = "DELETE FROM artifact_history WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact_history WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 
 			// Delete artifact records	    	
-	    	$sql = "DELETE FROM artifact WHERE artifact_id = ".$id;
+	    	$sql = "DELETE FROM artifact WHERE artifact_id = ".db_ei($id);
 	    	db_query($sql);
 
 		} // while        
 
 		// Delete artifact_group_list
 		$sql = "DELETE FROM artifact_group_list
-			    WHERE group_artifact_id=". $atid;
+			    WHERE group_artifact_id=". db_ei($atid);
 		//echo $sql;
 		
 		$result = db_query ($sql);
@@ -334,30 +334,27 @@ class ArtifactTypeFactory extends Error {
         $finalSql = '';
         
         // Only artifacts from active projects are returned.
-        $sql = sprintf('SELECT agl.group_artifact_id,agl.name,agl.group_id,g.group_name,a.summary, a.artifact_id, a.severity,'.
-                       '(a.submitted_by=%d) as submitter,'.
-                       'MAX(afv.valueInt=%d) as assignee'.
-                       ' FROM artifact a,artifact_group_list agl,artifact_field af,artifact_field_value afv,groups g'.
-                       ' WHERE agl.group_id = g.group_id'.
-                       ' AND af.group_artifact_id = agl.group_artifact_id'.
-                       ' AND agl.status = "A"'.
-                       ' AND g.status = "A"'.
-                       ' AND (af.field_name = "assigned_to"'.
-                       '  OR af.field_name = "multi_assigned_to")'.
-                       ' AND af.field_id = afv.field_id'.
-                       ' AND a.group_artifact_id = agl.group_artifact_id'.
-                       ' AND a.artifact_id = afv.artifact_id'.
-                       ' AND a.status_id <> 3',
-                       $user_id,
-                       $user_id);
+        $sql = 'SELECT agl.group_artifact_id,agl.name,agl.group_id,g.group_name,a.summary, a.artifact_id, a.severity,'.
+               '(a.submitted_by='. db_ei($user_id) .') as submitter,'.
+               'MAX(afv.valueInt='. db_ei($user_id) .') as assignee'.
+               ' FROM artifact a,artifact_group_list agl,artifact_field af,artifact_field_value afv,groups g'.
+               ' WHERE agl.group_id = g.group_id'.
+               ' AND af.group_artifact_id = agl.group_artifact_id'.
+               ' AND agl.status = "A"'.
+               ' AND g.status = "A"'.
+               ' AND (af.field_name = "assigned_to"'.
+               '  OR af.field_name = "multi_assigned_to")'.
+               ' AND af.field_id = afv.field_id'.
+               ' AND a.group_artifact_id = agl.group_artifact_id'.
+               ' AND a.artifact_id = afv.artifact_id'.
+               ' AND a.status_id <> 3';
 
         $assigneeSql  = '';
         $submitterSql = '';
         if($assignee) {
-            $assigneeSql = sprintf($sql.
-                                   ' AND afv.valueInt=%d'.
-                                   ' GROUP BY a.artifact_id',
-                                   $user_id);
+            $assigneeSql = $sql.
+                           ' AND afv.valueInt='. db_ei($user_id).
+                           ' GROUP BY a.artifact_id';
             $finalSql = $assigneeSql;
             if(!$submitter) {
                 $finalSql .= ' ORDER BY group_name, name, artifact_id';
@@ -365,10 +362,9 @@ class ArtifactTypeFactory extends Error {
         }
         
         if($submitter) {
-            $submitterSql = sprintf($sql.
-                                    ' AND a.submitted_by=%d'.
-                                    ' GROUP BY a.artifact_id',
-                                    $user_id);
+            $submitterSql = $sql.
+                            ' AND a.submitted_by='. db_ei($user_id).
+                            ' GROUP BY a.artifact_id';
             if($assignee) {
                 $finalSql = '('.$assigneeSql.') UNION ALL ('.$submitterSql.') ORDER BY group_name, name, artifact_id';
             }
@@ -394,8 +390,8 @@ class ArtifactTypeFactory extends Error {
 
         $sql = "SELECT group_artifact_id 
                 FROM artifact_group_list 
-                WHERE group_id='". $group_id ."' AND 
-                      item_name='".$tracker_name."' AND 
+                WHERE group_id='". db_ei($group_id) ."' AND 
+                      item_name='". db_es($tracker_name) ."' AND 
                       status!='D'";
         
         $result = db_query($sql);
@@ -422,7 +418,7 @@ class ArtifactTypeFactory extends Error {
 	 *  @return query result.
 	 */
 	function getTrackerTemplatesForNewProjects() {
-	  $sql = "SELECT group_artifact_id FROM artifact_group_list WHERE group_id=".$this->Group->getGroupId()." AND instantiate_for_new_projects=1 AND status = 'A'";
+	  $sql = "SELECT group_artifact_id FROM artifact_group_list WHERE group_id=".db_ei($this->Group->getGroupId()) ." AND instantiate_for_new_projects=1 AND status = 'A'";
 	    return db_query($sql);
 	}
 
@@ -476,13 +472,13 @@ class ArtifactTypeFactory extends Error {
                          submit_instructions,browse_instructions,instantiate_for_new_projects,stop_notification
                          ) 
 			VALUES 
-			('". $group_id ."',
-			'". $name ."',
-			'". $description ."',
-			'". $itemname."',
-                        '". $at_template->allowsCopy()."',
-                        '". db_escape_string($at_template->getSubmitInstructions())."',
-                        '". db_escape_string($at_template->getBrowseInstructions())."',1,0)";
+			('". db_ei($group_id) ."',
+			'". db_es($name) ."',
+			'". db_es($description) ."',
+			'". db_es($itemname) ."',
+                        '". db_ei($at_template->allowsCopy()) ."',
+                        '". db_ei($at_template->getSubmitInstructions())."',
+                        '". db_ei($at_template->getBrowseInstructions())."',1,0)";
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
@@ -498,9 +494,9 @@ class ArtifactTypeFactory extends Error {
                 
                 //create global notifications
                 $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
-                SELECT $id, addresses, all_updates, check_permissions
+                SELECT ". db_ei($id) .", addresses, all_updates, check_permissions
                 FROM artifact_global_notification
-                WHERE tracker_id = $atid_template";
+                WHERE tracker_id = ". db_ei($atid_template);
                 $res = db_query($sql);
                 if (!$res || db_affected_rows($res) <= 0) {
                     $this->setError('ArtifactTypeFactory: '.db_error());

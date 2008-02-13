@@ -29,12 +29,14 @@
     var $title;
     var $item;
     var $url;
-    
+    var $hp;
+
     function Docman_View_ItemDetailsSection(&$item, $url, $id, $title) {
         $this->id     =  $id;
         $this->title  =  $title;
         $this->item   =& $item;
         $this->url    =  $url;
+        $this->hp     =& CodeX_HTMLPurifier::instance();
     }
     
     function getId() {

@@ -105,8 +105,8 @@ class ArtifactFile extends Error {
 		$res=db_query("INSERT INTO artifact_file
 			(artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by)
 			VALUES 
-			('".$this->Artifact->getID()."','$description','". $bin_data ."','$filename',
-			'$filesize','$filetype','". time() ."','$userid')"); 
+			('". db_ei($this->Artifact->getID()) ."','". db_es($description) ."','".  db_es($bin_data)  ."','". db_es($filename) ."',
+			'".  db_ei($filesize)  ."','".  db_es($filetype)  ."','". time() ."','".  db_ei($userid)  ."')"); 
 
 		$id=db_insertid($res,'artifact_file','id');
 
@@ -143,7 +143,7 @@ class ArtifactFile extends Error {
 	  global $Language;
  
 		$old_value = $this->Artifact->getAttachedFileNames();
-		$sql = "DELETE FROM artifact_file WHERE id=".$this->getID();
+		$sql = "DELETE FROM artifact_file WHERE id=". db_ei($this->getID()) ;
 		//echo "sql=$sql<br>";
 		$res=db_query($sql);
 		if (!$res || db_affected_rows($res) < 1) {
@@ -165,7 +165,9 @@ class ArtifactFile extends Error {
 	function fetchData($id) {
 	  global $Language;
 
-		$sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname FROM artifact_file af, user WHERE (af.submitted_by = user.user_id) and af.id=$id";
+		$sql = "SELECT af.id, af.artifact_id, af.description, af.bin_data, af.filename, af.filesize, af.filetype, af.adddate, af.submitted_by, user.user_name, user.realname 
+                FROM artifact_file af, user 
+                WHERE (af.submitted_by = user.user_id) and af.id=". db_ei($id);
 		//echo $sql;
 		$res=db_query($sql);
 		if (!$res || db_numrows($res) < 1) {

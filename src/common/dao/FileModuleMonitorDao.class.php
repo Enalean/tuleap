@@ -51,7 +51,7 @@ class FileModuleMonitorDao extends DataAccessObject {
     
     function searchById($id) {
         $_id = (int) $id;
-        return $this->_search(' fm.filemodule_id = '.$_id, '', ' ORDER BY filemodule_id DESC');
+        return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');
     }
     
 
@@ -61,7 +61,7 @@ class FileModuleMonitorDao extends DataAccessObject {
         $user =& $um->getCurrentUser();
         $arg[] = 'released_by';
         $_user_id = $user->getID();
-		return $this->_search(' fm.filemodule_id = '.$_package_id.' AND fm.user_id ='.$_user_id, '', ' ORDER BY filemodule_id DESC');
+		return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id), '', ' ORDER BY filemodule_id DESC');
 	}
     
     function _search($where, $group = '', $order = '', $from = array()) {
@@ -85,7 +85,7 @@ class FileModuleMonitorDao extends DataAccessObject {
         $values = array();
 
         $arg[] = 'filemodule_id';
-        $values[] = ((int) $filemodule_id);
+        $values[] = ($this->da->escapeInt($filemodule_id));
         
 		$um =& UserManager::instance();
         $user =& $um->getCurrentUser();
@@ -109,7 +109,7 @@ class FileModuleMonitorDao extends DataAccessObject {
     	$um =& UserManager::instance();
         $user =& $um->getCurrentUser();
         $sql = sprintf("DELETE FROM filemodule_monitor WHERE filemodule_id=%d AND user_id=%d",
-                       $filemodule_id, $user->getID());
+                       $this->da->escapeInt($filemodule_id), $this->da->escapeInt($user->getID()));
 
         $deleted = $this->update($sql);
         return $deleted;

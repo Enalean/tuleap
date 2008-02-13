@@ -49,9 +49,23 @@ class Widget_MyMonitoredForums extends Widget {
         
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
-                
-                $hide_item_id = $request->exist('hide_item_id') ? $request->get('hide_item_id') : null;
-                $hide_forum   = $request->exist('hide_forum')   ? $request->get('hide_forum')   : null;
+
+                $vItemId = new Valid_UInt('hide_item_id');
+                $vItemId->required();
+                if($request->valid($vItemId)) {
+                    $hide_item_id = $request->get('hide_item_id');
+                } else {
+                    $hide_item_id = null;
+                }
+
+                $vForum = new Valid_WhiteList('hide_forum', array(0, 1));
+                $vForum->required();
+                if($request->valid($vForum)) {
+                    $hide_forum = $request->get('hide_forum');
+                } else {
+                    $hide_forum = null;
+                }
+
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum);
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').

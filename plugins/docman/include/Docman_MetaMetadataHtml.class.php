@@ -27,10 +27,12 @@ class Docman_MetaMetadataHtml {
     var $md;
     var $str_yes;
     var $str_no;
+    var $hp;
 
     function Docman_MetaMetadataHtml(&$md) {
         $this->md =& $md;
-        
+        $this->hp =& CodeX_HTMLPurifier::instance();
+
         $this->str_yes = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_yes');
         $this->str_no = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');
     }
@@ -42,10 +44,10 @@ class Docman_MetaMetadataHtml {
         $mdContent .= '<td>';
         if($this->md->canChangeName()) {
             $sthCanChange = true;
-            $mdContent .= '<input type="text" name="name" value="'.$this->md->getName().'" class="text_field" />';
+            $mdContent .= '<input type="text" name="name" value="'.$this->hp->purify($this->md->getName()).'" class="text_field" />';
         }
         else {
-            $mdContent .= $this->md->getName();
+            $mdContent .= $this->hp->purify($this->md->getName());
         }
         $mdContent .= '</td>';
         $mdContent .= '</tr>';
@@ -60,10 +62,10 @@ class Docman_MetaMetadataHtml {
         $mdContent .= '<td>';
         if($this->md->canChangeDescription()) {
             $sthCanChange = true;
-            $mdContent .= '<textarea name="descr">'.$this->md->getDescription().'</textarea>';
+            $mdContent .= '<textarea name="descr">'.$this->hp->purify($this->md->getDescription()).'</textarea>';
         }
         else {
-            $mdContent .= $this->md->getDescription();
+            $mdContent .= $this->hp->purify($this->md->getDescription());
         }
         $mdContent .= '</td>';
         $mdContent .= '</tr>';

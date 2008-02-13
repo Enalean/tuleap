@@ -117,7 +117,7 @@ class BaseLanguage {
 	}
 
 	function loadLanguageID($language_id) {
-		$res=db_query("SELECT * FROM supported_languages WHERE language_id='$language_id'");
+		$res=db_query("SELECT * FROM supported_languages WHERE language_id='".db_es($language_id)."'");
 		$this->loadLanguage(db_result($res,0,'language_code'));
 	}
 
@@ -224,7 +224,7 @@ class BaseLanguage {
 
 	function getLanguageId() {
 		if (!$this->id) {
-			$this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".$this->lang."'"), 0, 0) ;
+			$this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".db_es($this->lang)."'"), 0, 0) ;
 		}
 		return $this->id ;
 	}
@@ -232,7 +232,7 @@ class BaseLanguage {
 	function getLanguageName() {
 		if (!$this->name) {
 			$id = $this->getLanguageId () ;
-			$this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='$id'"), 0, 0) ;
+			$this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
 		}
 		return $this->name ;
 	}
@@ -240,7 +240,7 @@ class BaseLanguage {
 	function getLanguageCode() {
 		if (!$this->code) {
 			$id = $this->getLanguageId () ;
-			$this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='$id'"), 0, 0) ;
+			$this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
 		}
 		return $this->code ;
 	}
@@ -281,7 +281,7 @@ function language_code_to_result($alang) {
 
 	if ($cookie_language_id) {
 		$lang=$cookie_language_id;
-		$res=db_query("select * from supported_languages where language_id='$lang'");
+		$res=db_query("select * from supported_languages where language_id='".db_es($lang)."'");
 		if (!$res || db_numrows($res) < 1) {
 			return db_query("select * from supported_languages where language_id='1'"); // default to english
 		} else {
@@ -291,7 +291,7 @@ function language_code_to_result($alang) {
 		$ary = explode(',', str_replace(' ', '', $alang)); // delete space and split
 		for( $i=0; $i<sizeof($ary); $i++){
 			$lang_code = ereg_replace(';.*', '', $ary[$i]); // remove ;q=0.x
-			$res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			$res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
 			if (db_numrows($res) > 0) {
 			    return $res;
 			}
@@ -303,13 +303,13 @@ function language_code_to_result($alang) {
 			// If so, try to strip it and look for main language only
 			if (strstr($lang_code, '-')) {
 			    $lang_code = str_replace('-','_',$lang_code);
-			    $res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			    $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
 			    if (db_numrows($res) > 0) {
 				return $res;
 			    }
 			    
 			    $lang_code = substr($lang_code, 0, 2);
-			    $res = db_query("select * from supported_languages where language_code = '$lang_code'");
+			    $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
 			    if (db_numrows($res) > 0) {
 				return $res;
 			    }
@@ -319,18 +319,18 @@ function language_code_to_result($alang) {
 			// Test only the two first letter of the browser language
 			// as the database uses en_US and not en alone as Mozilla and IE can do
 			$lang_code = substr($lang_code, 0, 2);
-			$res = db_query("select * from supported_languages where SUBSTRING(language_code, 1, 2) = '$lang_code'");
+			$res = db_query("select * from supported_languages where SUBSTRING(language_code, 1, 2) = '".db_es($lang_code)."'");
 			if (db_numrows($res) > 0) {
 			    return $res;
 			}
 		}
-		return db_query("select * from supported_languages where language_code='".$GLOBALS['sys_lang']."'"); // default to system default
+		return db_query("select * from supported_languages where language_code='".db_es($GLOBALS['sys_lang'])."'"); // default to system default
 	}
 }
 
 /* Return language code (e.g. 'en_US') corresponding to the language ID (e.g. '1'). */
 function language_id_to_language_code($language_id=1) {
-    $res=db_query("select language_code from supported_languages where language_id='".$language_id."'");
+    $res=db_query("select language_code from supported_languages where language_id='".db_es($language_id)."'");
     return db_result($res,0,'language_code');
 }
 

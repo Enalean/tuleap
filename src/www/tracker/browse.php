@@ -53,13 +53,14 @@ if ( !$ath->isValid() ) {
 //  artifact report structures.
 //
 if (user_isloggedin()) {
-    if (!isset($report_id)) {
+    if (!$request->exist('report_id')) {
 		$report_id = user_get_preference('artifact_browse_report'.$atid);
 	    if ($report_id == "") {
 	    	// Default value
 	    	$report_id = 100;
 	    }
     } else {
+        $report_id = $request->get('report_id');
 		if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
 	    	user_set_preference('artifact_browse_report'.$atid, $report_id);
             user_del_preference('artifact_browse_order'.$atid);
@@ -71,14 +72,19 @@ if (user_isloggedin()) {
 
 // Number of artifacts displayed on screen in one chunk.
 // Default 50
-if (!isset($chunksz) || !$chunksz) { $chunksz = 50; }
+$chunksz = $request->get('chunksz');
+if (!$chunksz) { $chunksz = 50; }
 
 // Make sure offset values, search and multisort flags are defined
 // and have a correct value
-if (!isset($offset) || !$offset || $offset < 0) { $offset=0; }
-if (!isset($advsrch)||($advsrch != 1)) { $advsrch = 0; }
-if (!isset($msort)||($msort != 1)) { $msort = 0; }
-if (!isset($pv)) { $pv = 0; }
+$offset = $request->get('offset');
+if (!$offset || $offset < 0) { $offset=0; }
+$advsrch = $request->get('advsrch');
+if ($advsrch != 1) { $advsrch = 0; }
+$msort = $request->get('msort');
+if ($msort != 1) { $msort = 0; }
+$pv = $request->get('pv');
+if (!$pv) { $pv = 0; }
 
 /* ==================================================
   If the report type is not defined then get it from the user preferences.
@@ -95,7 +101,7 @@ if (user_isloggedin()) {
 }
 
 // If still not defined then force it to system 'Default' report
-if (!$report_id) { $report_id=100; }
+if (!isset($report_id) || !$report_id) { $report_id=100; }
 
 
 // Create factories
@@ -137,18 +143,18 @@ while (list($field,$value_id) = each($prefs)) {
     if ( ($field_object)&&($field_object->isDateField()) ) {
 		if ($advsrch) {
 		    $field_end = $field.'_end';
-            if (!is_array($$field_end)) {
-                $all_prefs[$field_end] = array($$field_end);
+            if (!is_array($request->get($field_end))) {
+                $all_prefs[$field_end] = array($request->get($field_end));
             } else {
-                $all_prefs[$field_end] = $$field_end;
+                $all_prefs[$field_end] = $request->get($field_end);
             }
 		    //echo 'DBG Setting $prefs['.$field.'_end]= '.$prefs[$field.'_end'].'<br>';
 		} else {
 		    $field_op = $field.'_op';
-            if (!$$field_op) {
+            if (!$request->get($field_op)) {
                 $all_prefs[$field_op] = array('>');
             } else {
-                $all_prefs[$field_op] = array($$field_op);
+                $all_prefs[$field_op] = array($request->get($field_op));
             }
 		    //echo 'DBG Setting $prefs['.$field.'_op]= '.$prefs[$field.'_op'].'<br>';
 		}
@@ -165,12 +171,16 @@ $prefs = $all_prefs;
   ================================================== */
 //echo "<br>DBG \$morder at top: [$morder ]";
 //   if morder not defined then reuse the one in preferences
-if (user_isloggedin() && !isset($morder)) {
-    $morder = user_get_preference('artifact_browse_order'.$atid);
+if (user_isloggedin()) {
+    if (!$request->exist('morder')) {
+        $morder = user_get_preference('artifact_browse_order'.$atid);
+    } else {
+        $morder = $request->get('morder');
+    }
 }
 
-if (isset($order)) {
-
+if ($request->exist('order')) {
+    $order = $request->get('order');
     if ($order != '') {
 		// Add the criteria to the list of existing ones
 		$morder = $art_report_html->addSortCriteria($morder, $order, $msort);
@@ -187,6 +197,8 @@ if (isset($morder)) {
 		    user_set_preference('artifact_browse_order'.$atid, $morder);
 		}
     }
+} else {
+    $morder = '';
 }
 
 //echo "<BR> DBG Order by = $morder";
@@ -201,7 +213,7 @@ if (isset($morder)) {
     - if no preference and not logged in the use 'open' set
      (Prefs is a string of the form  &field1[]=value_id1&field2[]=value_id2&.... )
   ================================================== */
-if (!isset($set)) {
+if (!$request->exist('set')) {
 
     if (user_isloggedin()) {
 
@@ -236,6 +248,8 @@ if (!isset($set)) {
     } else {
 		$set='open';
     }
+} else {
+    $set = $request->get('set');
 }
 
 if ($set=='my') {
@@ -266,7 +280,7 @@ if ($set=='my') {
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
             if (!is_array($value_id)) {
-                $pref_stg .= '&'.$field.'[]='.urlencode(stripslashes($value_id));
+                $pref_stg .= '&'.$field.'='.urlencode($value_id);
             } else {
                 $pref_stg .= '&'.$field.'[]='.$value_id;
             }
@@ -281,8 +295,8 @@ if ($set=='my') {
     }
     $pref_stg .= '&advsrch='.($advsrch ? 1 : 0);
     $pref_stg .= '&msort='.($msort ? 1 : 0);
-    $pref_stg .= '&chunksz='.$chunksz;
-    $pref_stg .= '&report_id='.$report_id;
+    $pref_stg .= '&chunksz='.(int)$chunksz;
+    $pref_stg .= '&report_id='.(int)$report_id;
     
     if ($pref_stg != user_get_preference('artifact_brow_cust'.$atid)) {
 		//echo "<br> DBG setting pref = $pref_stg";
@@ -310,14 +324,14 @@ if ($set=='my') {
    If not defined then defaults to ANY (0)
   ================================================== */
 $_title = $group->getPublicName().': \''.$ath->getName().'\' ';
+$masschange = isset($masschange) && $masschange;
 if ($pv != 2) {
-    if (isset($masschange) && $masschange === true) {
+    if ($masschange) {
         $_title .=  $Language->getText('tracker_masschange','mass_change_report');
         $_help = 'ArtifactMassChange.html';
     } else {
         $_title .= $Language->getText('tracker_browse', 'search_report');
-        $_help = 'ArtifactBrowsing.html';
-        $masschange = false;    
+        $_help = 'ArtifactBrowsing.html';   
     }
 } else {
     $_help = ''; // printer version without help
@@ -328,7 +342,7 @@ $params=array('title'=>$_title,
               'pagename'=>'tracker_browse',
               'atid'=>$ath->getID(),
               'sectionvals'=>array($group->getPublicName()),
-              'pv'=>isset($pv)?$pv:0,
+              'pv'=> $pv,
               'help' => $_help);
 
 
@@ -336,7 +350,7 @@ $params=array('title'=>$_title,
 $ath->header($params);
 
 // Display the artifact items according to all the parameters
-$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,(isset($pv)?$pv:0),$masschange);
+$art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,$pv,$masschange);
 
 $em =& EventManager::instance();
 $em->processEvent('tracker_after_report',null);

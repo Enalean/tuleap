@@ -10,15 +10,26 @@ require_once('pre.php');
 require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
+$request =& HTTPRequest::instance();
 
+$params = array();
 
-if ($msg_id) {
- 
+$vMsg = new Valid_Uint('msg_id');
+$vMsg->required();
+if ($request->valid($vMsg)) {
+    $msg_id = $request->get('msg_id');
+
+    if($request->valid(new Valid_Pv())) {
+        $pv = $request->get('pv');
+    } else {
+        $pv = 0;
+    }
+
 	/*
 		Figure out which group this message is in, for the sake of the admin links
 	*/
 	$result=db_query("SELECT forum_group_list.group_id,forum_group_list.forum_name,forum.group_forum_id,forum.thread_id ".
-		"FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id='$msg_id'");
+		"FROM forum_group_list,forum WHERE forum_group_list.group_forum_id=forum.group_forum_id AND forum.msg_id=".db_ei($msg_id));
 
 	$group_id=db_result($result,0,'group_id');
 	$forum_id=db_result($result,0,'group_forum_id');
@@ -31,7 +42,7 @@ if ($msg_id) {
         }
 	
 	//check if the message is a comment on a piece of news.  If so, check permissions on this news
-	$qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+	$qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 	$res = db_query($qry);
 	if (db_numrows($res) > 0) {
 	    if (!forum_utils_news_access($forum_id)) {	    
@@ -46,7 +57,7 @@ if ($msg_id) {
 	echo "<P>";
 
 	$sql="SELECT user.user_name,forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
-		"FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id='$msg_id';";
+		"FROM forum,user WHERE user.user_id=forum.posted_by AND forum.msg_id=".db_ei($msg_id);
 
 	$result = db_query ($sql);
 
@@ -69,7 +80,7 @@ if ($msg_id) {
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
 	echo "</TD></TR></TABLE>";
 
-	if (!isset($pv)) {
+	if ($pv == 0) {
 	/*
 		Show entire thread
 	*/

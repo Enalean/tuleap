@@ -71,7 +71,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
        */
 
     if ($group_id != $sys_news_group) {
-	$wclause="news_bytes.group_id='$group_id' AND news_bytes.is_approved <> '4'";
+	$wclause="news_bytes.group_id=". db_ei($group_id) ." AND news_bytes.is_approved <> '4'";
     } else {
 	$wclause='news_bytes.is_approved=1';
     }
@@ -81,7 +81,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	"WHERE $wclause ".
 	"AND user.user_id=news_bytes.submitted_by ".
 	"AND news_bytes.group_id=groups.group_id ".
-	'ORDER BY date DESC LIMIT '.($limit+$tail_headlines);
+	'ORDER BY date DESC LIMIT '.db_ei($limit+$tail_headlines);
 
     $result=db_query($sql);
     $rows=db_numrows($result);
@@ -202,12 +202,12 @@ function news_foundry_latest($group_id=0,$limit=5,$show_summaries=true) {
 
 	$sql="SELECT groups.group_name,groups.unix_group_name,user.user_name,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details ".
 		"FROM user,news_bytes,groups,foundry_news ".
-		"WHERE foundry_news.foundry_id='$group_id' ".
+		"WHERE foundry_news.foundry_id=". db_ei($group_id) ." ".
 		"AND user.user_id=news_bytes.submitted_by ".
 		"AND foundry_news.news_id=news_bytes.id ".
 		"AND news_bytes.group_id=groups.group_id ".
 		"AND foundry_news.is_approved=1 ".
-		"ORDER BY news_bytes.date DESC LIMIT $limit";
+		"ORDER BY news_bytes.date DESC LIMIT ". db_ei($limit);
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
@@ -246,7 +246,7 @@ function get_news_name($id) {
 	/*
 		Takes an ID and returns the corresponding forum name
 	*/
-	$sql="SELECT summary FROM news_bytes WHERE id='$id'";
+	$sql="SELECT summary FROM news_bytes WHERE id=". db_ei($id);
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
 		return "Not Found";
@@ -259,7 +259,7 @@ function get_news_name_from_forum_id($id) {
 	/*
 		Takes an ID and returns the corresponding forum name
 	*/
-	$sql="SELECT summary FROM news_bytes WHERE forum_id='$id'";
+	$sql="SELECT summary FROM news_bytes WHERE forum_id=". db_ei($id);
 	$result=db_query($sql);
 	if (!$result || db_numrows($result) < 1) {
 		return "Not Found";
@@ -275,8 +275,9 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news = 
 	*/
     
 	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0, '', $need_feedback = false);
-    $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) ".
-             " VALUES ('$group_id','".user_getid()."','$promote_news','".time()."','$new_id','".htmlspecialchars($summary)."','".htmlspecialchars($details)."')";
+    $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) 
+          VALUES (". db_ei($group_id) .", '". user_getid() ."', ". db_ei($promote_news) .", '".time()."',
+                 '$new_id', '". db_es(htmlspecialchars($summary)) ."', '". db_es(htmlspecialchars($details)) ."')";
     $result=db_query($sql);
     
 	if (!$result) {
@@ -302,12 +303,10 @@ function news_check_permission($forum_id,$group_id) {
 	*/
 	
 	//cast  input
-	$_forum_id = (int) $forum_id;
-	$_group_id = (int) $group_id;
 	
-    if ($_group_id == $GLOBALS['sys_news_group']) {
+    if ($group_id == $GLOBALS['sys_news_group']) {
         //search for the real group_id of the news
-        $sql = "SELECT g.is_public AS continue FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". $_forum_id;
+        $sql = "SELECT g.is_public AS continue FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". db_ei($forum_id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $row = db_fetch_array($res);
@@ -317,7 +316,7 @@ function news_check_permission($forum_id,$group_id) {
             }
         }
     }
-	if (((permission_exist('NEWS_READ', $_forum_id)) && (permission_is_authorized('NEWS_READ',$_forum_id,user_getid(),$_group_id))) || (!permission_exist('NEWS_READ', $_forum_id))) {
+	if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,user_getid(),$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
 	    return true;
         } else {
 	    return false;
@@ -331,14 +330,10 @@ function news_insert_permissions($forum_id,$group_id) {
 	
   global $Language,$UGROUP_PROJECT_MEMBERS;
 	
-	
-	// cast  inputs
-	$_forum_id = (int) $forum_id;
-	
     //We force permission if user is project admin... beurk
     $force = user_ismember($group_id, 'A');
     
-	if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS, $force)) {
+	if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS, $force)) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_create_success'));
 	} else {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_submit','insert_err'));
@@ -353,19 +348,15 @@ function news_update_permissions($forum_id,$is_private,$group_id) {
 		Takes forum_id and permission, and updates the permission of the corresponding entry in 'permissions' table
 	*/
 	
-	// cast inputs
-	$_forum_id = (int) $forum_id;
-	$_is_private = (int) $is_private;
-	
-	if ($_is_private == 3) {
-	  permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false);
-	  if (permission_add_ugroup($group_id,'NEWS_READ',$_forum_id,$UGROUP_PROJECT_MEMBERS)) {
+	if ($is_private == 3) {
+	  permission_clear_all($group_id, 'NEWS_READ', $forum_id, false);
+	  if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS)) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
 	  } else {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
 	  }
 	} else {
-	  if (permission_clear_all($group_id, 'NEWS_READ', $_forum_id, false)) {
+	  if (permission_clear_all($group_id, 'NEWS_READ', $forum_id, false)) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
 	  } else {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
@@ -379,11 +370,8 @@ function news_read_permissions($forum_id) {
 	/*
 		Takes forum_id and reads the permission of the corresponding news. Returns a result set.
 	*/
-	
-	// cast inputs
-	$_forum_id = (int) $forum_id;
 
-	return permission_db_authorized_ugroups('NEWS_READ',$_forum_id);
+	return permission_db_authorized_ugroups('NEWS_READ',$forum_id);
 }
 
 function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details) {

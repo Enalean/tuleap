@@ -22,33 +22,15 @@ if ( !$ath->userIsAdmin() ) {
 }
 
 //{{{ We check variables submitted by user
-if (!isset($_REQUEST['perm_type']) || 
-    !($_REQUEST['perm_type'] === 'tracker' || $_REQUEST['perm_type'] === 'fields')
-    ) {
-    $perm_type = '';
- }else {
-    $perm_type = $_REQUEST['perm_type'];
- }
+$perm_type = $request->getValidated('perm_type', new Valid_WhiteList('tracker', 'fields'), '');
 //We aren't going to update, unless the user's asked to
-$update = false;
-if (isset($_REQUEST['update'])) {
-    $update = true;
- }
+$update = $request->getValidated('update', 'string') ? true : false;
 //We aren't going to reset, unless the user's asked to
-$reset = false;
-if (isset($_REQUEST['reset'])) {
-    $reset = true;
- }
+$reset = $request->getValidated('reset', 'string') ? true : false;
 //We display by group, unless the user's asked to not
-$group_first = true;
-if (isset($_REQUEST['group_first']) && $_REQUEST['group_first'] === "0") {
-    $group_first = false;
- }
+$group_first = $request->getValidated('group_first', 'string') ? true : false;
 //We show the first group or the first field, unless the user's asked to show a specific
-$selected_id = false;
-if (isset($_REQUEST['selected_id']) && is_numeric($_REQUEST['selected_id'])) {
-    $selected_id = $_REQUEST['selected_id'];
- }
+$selected_id = $request->getValidated('selected_id', 'uint', false);
 //}}}
 switch ($perm_type) {
  case 'tracker':

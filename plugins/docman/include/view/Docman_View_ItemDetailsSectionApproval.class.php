@@ -60,7 +60,7 @@ extends Docman_View_ItemDetailsSection {
                                                             'id'     => $this->item->getId(),
                                                             'version_number' => $v->getNumber()));
                     if($v->getLabel()) {
-                        $title .= $v->getLabel().' - ';
+                        $title .= $this->hp->purify($v->getLabel()).' - ';
                     }
                 }
             }
@@ -71,16 +71,6 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<a href="'.$url.'">'.$title.'</a>';
         }
         return $html;
-    }
-
-    function comment2Html($txt, $groupId=null) {
-        if($groupId === null) {
-            $groupId = $this->item->getGroupId();
-        }
-        $sComment = htmlentities($txt);
-        $comment = util_make_links($sComment, $groupId);
-        $comment = nl2br($comment);
-        return $comment;
     }
 
     function getReviewerTable($forceReadOnly = false) {
@@ -128,7 +118,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
             $html .= '<td>';
-            $html .= $this->comment2Html($this->table->getDescription());
+            $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
             $html .= '</td>';
             $html .= '</tr>';
 
@@ -166,7 +156,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<td'.$_trClass.'>'.$_reviewHtml.'</td>';
 
                 // Comment
-                $html .= '<td'.$_trClass.'>'.$this->comment2Html($reviewer->getComment()).'</td>';
+                $html .= '<td'.$_trClass.'>'.$this->hp->purify($reviewer->getComment(), CODEX_PURIFIER_BASIC, $this->item->getGroupId()).'</td>';
 
                 // Date
                 $date = $reviewer->getReviewDate();
@@ -279,7 +269,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
         $html .= '<td>';
-        $html .= $this->comment2Html($this->table->getDescription());
+        $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
         $html .= '</td>';
         $html .= '</tr>';
         
@@ -359,7 +349,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.Docman::txt('details_approval_review_comment').'</td>';
         $html .= '<td>';
-        $html .= '<textarea name="comment">'.$reviewer->getComment().'</textarea>';
+        $html .= '<textarea name="comment">'.$this->hp->purify($reviewer->getComment()).'</textarea>';
         $html .= '</td>';
         $html .= '</tr>';
 

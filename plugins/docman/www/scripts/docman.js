@@ -525,6 +525,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 	    form.submit();
 	}
     },
+    // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
+    // But I think this kind of attack cannot be used against codex.
     reportSaveOptionsChange: function(form) {
 	var select = form['save_report'];
 	if(($F(select) == 'newp') || ($F(select) == 'newi')) {

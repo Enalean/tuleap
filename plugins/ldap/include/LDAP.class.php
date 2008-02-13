@@ -110,7 +110,7 @@ class LDAP extends Error {
             return false;
         }
 
-        if ($bind_result = @ldap_bind($this->ds, $binddn, stripslashes($bindpw))) {
+        if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
             return true;
         } else {
             $this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));

@@ -11,12 +11,15 @@ require_once('common/frs/FRSFileFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
-
-  list(,$group_id, $file_id) = explode('/', $PATH_INFO);
+  list(,$group_id, $file_id) = explode('/', $_SERVER['PATH_INFO']);
 
   // Must have a group_id and file_id otherwise
   // we cannot do much
-  if (!$file_id || !$group_id) {
+  $vGroupId = new Valid_groupId();
+  $vGroupId->required();
+  $vFileId  = new Valid_UInt();
+  $vFileId->required();
+  if (!$vFileId->validate($file_id) || !$vGroupId->validate($group_id)) {
     exit_missing_param();
   }
 

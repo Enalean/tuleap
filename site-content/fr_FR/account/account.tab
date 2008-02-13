@@ -56,6 +56,12 @@ account_options	codex_login_and_name	Login (nom complet)
 account_options	codex_name_and_login	Nom complet (login)
 account_options	codex_login	Login
 account_options	realname	Nom complet
+account_options	auth_attempt_title	Détails d'authentification
+account_options	auth_attempt_last_success	Dernière connexion:
+account_options	auth_attempt_prev_success	Connexion précédente:
+account_options	auth_attempt_last_failure	Dernier echec de connexion:
+account_options	auth_attempt_nb_failure	Nombre de connexions échouées:
+account_options	auth_attempt_sessions	Sessions ouvertes:
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

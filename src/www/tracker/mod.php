@@ -27,10 +27,11 @@ if ( !$ath->isValid() ) {
 $art_field_fact = new ArtifactFieldFactory($ath);
 
 // Printer version ?
-if ( !isset($pv) ) {
+if ( !$request->exist('pv') ) {
 	$pv = false;
 	$ro = false;
 } else {
+    $pv = $request->get('pv');
 	if ( $pv ) $ro = true;
 }
 
@@ -61,7 +62,7 @@ echo "Event.observe(window, 'load', function() {
                 edit:    '". addslashes($Language->getText('tracker_fieldeditor','edit')) ."',
                 preview: '". addslashes($Language->getText('tracker_fieldeditor','preview')) ."',
                 warning: '". addslashes($Language->getText('tracker_fieldeditor','warning')) ."',
-                group_id:". $ath->getGroupId(). "
+                group_id:". (int)$ath->getGroupId(). "
             });
         }
 });";

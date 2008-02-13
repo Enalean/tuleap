@@ -31,6 +31,15 @@ if (!user_isloggedin()) {
 }
 
 $authorized_user = false;
+
+$request =& HTTPRequest::instance();
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
 if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
     $authorized_user = true;
 }
@@ -45,18 +54,25 @@ $res = $frspf->getFRSPackagesFromDb($group_id);
 
 foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), user_getid())) {
-        if (isset ($release_id)) {
-            $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
+        if ($request->existAndNonEmpty('release_id')) {
+            if($request->valid(new Valid_UInt('release_id'))) {
+        	    $release_id = $request->get('release_id');
+                $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
+            }             	
         }
-    
-        if (!isset ($release_id) || $row3->getPackageID() == $package->getPackageID()) {
+        if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
             $packages[$package->getPackageID()] = $package;
             $num_packages++;
         }
     }
 }
 
-$pv = isset ($pv) ? $pv : false;
+if ($request->valid(new Valid_Pv('pv'))) {
+    $pv = $request->get('pv');
+} else {
+    $pv = false;
+}
+    
 $params = array (
     'title' => $Language->getText('file_showfiles',
     'file_p_for',
@@ -64,6 +80,7 @@ $params = array (
 )), 'pv' => $pv);
 
 file_utils_header($params);
+$hp =& CodeX_HTMLPurifier::instance();
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if (user_ismember($group_id,'R2')) {
@@ -79,7 +96,7 @@ if ($pv) {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<h3>' . $Language->getText('file_showfiles', 'p_releases') . ' ' . help_button('FileReleaseJargon.html') . '</h3>';
     echo "</TD>";
-    echo "<TD align='left'> ( <A HREF='" . $PHP_SELF . "?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
+    echo "<TD align='left'> ( <A HREF='showfiles.php?group_id=$group_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> ) </TD>";
     echo "</TR></TABLE>";
 
     echo '<p>' . $Language->getText('file_showfiles', 'select_release') . '</p>';
@@ -221,8 +238,15 @@ while (list ($package_id, $package) = each($packages)) {
                     $permission_exists = $pm->isPermissionExist($package_release->getReleaseID(), 'RELEASE_READ');
                     
                     // Highlight the release if one was chosen
-                    if (isset ($release_id) && ($release_id == $package_release->getReleaseID())) {
-                        $bgcolor = 'boxitemalt';
+                    if ($request->existAndNonEmpty('release_id')) {
+                        if($request->valid(new Valid_UInt('release_id'))) {
+            	            $release_id = $request->get('release_id');
+            	            if ($release_id == $package_release->getReleaseID()) {
+            	            	$bgcolor = 'boxitemalt';
+            	            }
+                        } else {
+                            $bgcolor = 'boxitem';
+                        }
                     } else {
                         $bgcolor = 'boxitem';
                     }
@@ -232,7 +256,7 @@ while (list ($package_id, $package) = each($packages)) {
                     if (!$pv) {
                         print '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
                     }
-                    print "     <$emphasis>". $package_release->getName() . "</$emphasis>";
+                    print "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
                         if (user_ismember($group_id,'R2')) {
                             print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">'
@@ -314,10 +338,10 @@ while (list ($package_id, $package) = each($packages)) {
                             
                             if (($package->getApproveLicense() == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
                                 // Allow direct download
-                                print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $file_release['filename'] . '" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                                print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             } else {
                                 // Display popup
-                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $file_release['filename'] . '\')" title="' . $file_release['file_id'] . " - " . $fname . '">' . $fname . '</A>';
+                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $hp->purify($file_release['filename']) . '\')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             }
                             $size_precision = 0;
                             if ($file_release['file_size'] < 1024) {

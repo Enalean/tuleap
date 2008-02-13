@@ -7,22 +7,23 @@
 // 
 
 require_once('pre.php');
-    
+
 $Language->loadLanguageMsg('project/project');
 
-/*
-	Project Summary Page
-	Written by dtype Oct. 1999
-*/
-
-if ((!$group_id) && $form_grp) {
-	$group_id=$form_grp;
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    $vFormGrp = new Valid_UInt('form_grp');
+    $vFormGrp->required();
+    if($request->valid($vFormGrp)) {
+        $group_id = $request->get('form_grp');
+    } else {
+        exit_no_group();
+    }
 }
 
-if (!$group_id) {
-	exit_error($Language->getText('project_index','g_missed'),$Language->getText('project_index','must_spec_g'));
-}
-
-header ("Location: /projects/". group_getunixname($group_id) ."/");
+$GLOBALS['Response']->redirect('/projects/'.group_getunixname($group_id));
 
 ?>

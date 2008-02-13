@@ -377,5 +377,9 @@ $sys_max_size_attachment = 16777216;
 //Proxy used to access to Internet. "host:port"
 $sys_proxy = "";
 
+// Enable 'user skills' facility.
+// (1 to enable, 0 to disable)
+$sys_enable_user_skills = 1;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

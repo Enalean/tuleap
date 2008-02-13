@@ -18,6 +18,12 @@ if (!user_isloggedin()) {
     */
     exit_not_logged_in();
 }
+if($request->valid(new Valid_UInt('release_id'))) {
+    $release_id = $request->get('release_id');
+} else {
+    exit_error($GLOBALS['Language']->getText('file_shownotes','not_found_err'),$GLOBALS['Language']->getText('file_shownotes','release_not_found'));
+}
+
 $frsrf = new FRSReleaseFactory();
 $release =& $frsrf->getFRSReleaseFromDb($release_id);
 
@@ -38,22 +44,23 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 /*
 	Show preformatted or plain notes/changes
 */
+    $hp =& CodeX_HTMLPurifier::instance();
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-             .htmlentities($release->getNotes()).
+             .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .htmlentities($release->getChanges());
+            .$hp->purify($release->getChanges());
         echo '</PRE>';
     }else{
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-            .$release->getNotes().
+            .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .$release->getChanges();
+            .$hp->purify($release->getChanges());
     }
     
 

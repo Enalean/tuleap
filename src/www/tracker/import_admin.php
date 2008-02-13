@@ -16,9 +16,11 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
+$group_id = $request->getValidated('group_id', 'GroupId');
+$mode = $request->get('mode');
 if ($group_id && $mode == "admin") {
 
-
+    $hp = CodeX_HTMLPurifier::instance();
   //   the welcome screen when entering the import facility from admin page
   
   session_require(array('group'=>$group_id,'admin_flags'=>'A'));
@@ -71,12 +73,12 @@ if ($group_id && $mode == "admin") {
     for ($j = 0; $j < count($at_arr); $j++) {
       echo '
 		  <tr class="'.util_get_alt_row_color($j).'"> 
-		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '.$at_arr[$j]->getName().'</b></td>
+		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '. $hp->purify($at_arr[$j]->getName(), CODEX_PURIFIER_BASIC) .'</b></td>
 		    <td align="center">
-                      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&func=import">'.$Language->getText('tracker_import_admin','import').'</a>
+                      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&func=import">'.$Language->getText('tracker_import_admin','import').'</a>
 		    </td>
 		    <td align="center"> 
-		      <a href="/tracker/index.php?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&user_id='.user_getid().'&mode=showformat&func=import">'.$Language->getText('tracker_import_admin','show_format').'</a>
+		      <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&mode=showformat&func=import">'.$Language->getText('tracker_import_admin','show_format').'</a>
 		    </td>
 		  </tr>';
     }

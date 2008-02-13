@@ -16,19 +16,21 @@ $em->processEvent('before_change_timezone', array());
 
 $Language->loadLanguageMsg('account/account');
 
+$request =& HTTPRequest::instance();
+
 if (!user_isloggedin()) {
 	exit_not_logged_in();
 }
 
-if (isset($submit) && $submit) {	
-	if (!$timezone) {
+if ($request->isPost()) {
+	if (!$request->existAndNonEmpty('timezone')) {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'no_update'));
-	} else if ($timezone == 'None') {
+	} else if (!is_valid_timezone($request->get('timezone')) ||
+               $request->get('timezone') == 'None') {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'choose_tz'));
-	  
 	} else {
 		// if we got this far, it must be good
-		db_query("UPDATE user SET timezone='$timezone' WHERE user_id=" . user_getid());
+		db_query("UPDATE user SET timezone='".db_es($request->get('timezone'))."' WHERE user_id=" . user_getid());
 		session_redirect("/account/");
 	}
 }
@@ -40,7 +42,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'titl
 <P>
 <?php echo $Language->getText('account_change_timezone', 'message', array($GLOBALS['sys_name'])); ?>
 <P>
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<form action="change_timezone.php" method="post">
 <?php
 
 echo html_get_timezone_popup ('timezone',user_get_timezone());

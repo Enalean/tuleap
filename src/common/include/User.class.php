@@ -415,7 +415,32 @@ class User {
     function getLanguageID() {
         return $this->data_array['language_id'];
     }
-    
+    /**
+     * @return int Timestamp of the last authentication success.
+     */
+    function getLastAuthSuccess() {
+        return $this->data_array['last_auth_success'];
+    }
+    /**
+     * Return the previous authentication success (the one before last auth
+     * success).
+     * @return int Timestamp of the previous authentication success.
+     */
+    function getPreviousAuthSuccess() {
+        return $this->data_array['prev_auth_success'];
+    }
+    /**
+     * @return int Timestamp of the last unsuccessful authencation attempt
+     */
+    function getLastAuthFailure() {
+        return $this->data_array['last_auth_failure'];
+    }
+    /**
+     * @return int Number of authentication failure since the last success.
+     */
+    function getNbAuthFailure() {
+        return $this->data_array['nb_auth_failure'];
+    }
     /**
      * isActive - test if the user is active or not
      * 

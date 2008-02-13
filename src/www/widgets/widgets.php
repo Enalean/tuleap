@@ -2,6 +2,7 @@
 require_once('pre.php');
 require_once('www/my/my_utils.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
+require_once('common/widget/Valid_Widget.class.php');
 
 if (user_isloggedin()) {
 
@@ -10,10 +11,15 @@ if (user_isloggedin()) {
     
     $request =& HTTPRequest::instance();
     $lm =& new WidgetLayoutManager();
-    $layout_id = $request->get('layout_id');
-    if ($layout_id) {
-        $owner = $request->get('owner');
-        if ($owner) {
+    $vLayoutId = new Valid_UInt('layout_id');
+    $vLayoutId->required();
+    if ($request->valid($vLayoutId)) {
+        $layout_id = $request->get('layout_id');
+
+        $vOwner = new Valid_Widget_Owner('owner');
+        $vOwner->required();
+        if ($request->valid($vOwner)) {
+            $owner = $request->get('owner');
             $owner_id   = (int)substr($owner, 1);
             $owner_type = substr($owner, 0, 1);
             switch($owner_type) {

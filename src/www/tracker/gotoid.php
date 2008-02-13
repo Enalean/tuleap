@@ -24,22 +24,22 @@ $Language->loadLanguageMsg('tracker/tracker');
 // Redirect function for legacy trackers (bug, task and SR)
 function legacy_redirect($location,$aid, $group_id, $atn) {
     if ($atn == 'bug') {
-        $location .= "/bugs/?func=detailbug&bug_id=$aid&group_id=$group_id";
+        $location .= "/bugs/?func=detailbug&bug_id=". (int)$aid ."&group_id=". (int)$group_id;
         header($location);
         exit;
     }
     if ($atn == 'task') {
-        $location .= "/pm/task.php?func=detailtask&project_task_id=$aid&group_id=$group_id";
+        $location .= "/pm/task.php?func=detailtask&project_task_id=". (int)$aid ."&group_id=". (int)$group_id;
         header($location);
         exit;
     }
     if ($atn == 'sr') {
-        $location .= "/support/index.php?func=detailsupport&support_id=$aid&group_id=$group_id";
+        $location .= "/support/index.php?func=detailsupport&support_id=". (int)$aid ."&group_id=". (int)$group_id;
         header($location);
         exit;
     }
     if ($atn == 'patch') {
-      $location .= "/patch/?func=detailpatch&patch_id=$aid&group_id=$group_id";
+      $location .= "/patch/?func=detailpatch&patch_id=". (int)$aid ."&group_id=". (int)$group_id;
       header($location);
       exit;
     }
@@ -58,15 +58,15 @@ function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art
     if (($group_id)&&($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name=util_get_group_name_from_id($art_group_id);
-        $feed="&feedback=".$Language->getText('tracker_gotoid','art_belongs_to',$group_name);
+        $feed="&feedback=".urlencode($Language->getText('tracker_gotoid','art_belongs_to',$group_name));
     }
     if (($atn)&&(strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn)!="art")&&(strtolower($atn)!="artifact")) {
-            $feed.=$Language->getText('tracker_gotoid','art_is_a',array($art_name,$atn));
+            $feed.=urlencode($Language->getText('tracker_gotoid','art_is_a',array($art_name,$atn)));
         }
     }
 
-    $location .= "/tracker/?func=detail&aid=".$aid."&group_id=".$art_group_id."&atid=".$atid.$feed;
+    $location .= "/tracker/?func=detail&aid=".(int)$aid."&group_id=".(int)$art_group_id."&atid=".((int)$atid).$feed;
     header($location);
     exit;
 
@@ -79,21 +79,18 @@ $location = "Location: ".get_server_url();
 
 // $atn is the "artifact type name" i.e. the tracker short name detected in the text
 // Detected: 'xxx #nnn', transformed to  '$atn #$aid'
-if (isset($atn)) {
-    $atn=strtolower($atn);
-} else {
-    $atn = '';
-}
+$atn = strtolower($request->get('atn'));
 
 // If group_name given as argument then infer group_id first
-if (isset($group_name) && $group_name && !$group_id) {
+$group_name = $request->get('group_name');
+if ($group_name && !$group_id) {
     $grp = group_get_object_by_name($group_name);
     $group_id = $grp->getGroupId();
 }
 
 // Commit and patch are not ambiguous (not trackers)
-$svn_loc = "/svn/?func=detailrevision&rev_id=$aid&group_id=$group_id";
-$cvs_loc = "/cvs/?func=detailcommit&commit_id=$aid&group_id=$group_id";
+$svn_loc = "/svn/?func=detailrevision&rev_id=". (int)$aid ."&group_id=". (int)$group_id;
+$cvs_loc = "/cvs/?func=detailcommit&commit_id=". (int)$aid ."&group_id=". (int)$group_id;
 if (($atn == 'rev') || ($atn == 'revision')) {
     $location .= $svn_loc;
     header($location);
@@ -102,6 +99,7 @@ if (($atn == 'rev') || ($atn == 'revision')) {
 if ($atn == 'commit') {
     // when commit is used see if it revision exists in SVN else redirect to CVS
     $res = svn_data_get_revision_detail($group_id, 0, $aid);
+    $feed = '';
     if ($res && db_numrows($res) > 0) {
 	$location .= $svn_loc.$feed;
     } else {
@@ -110,7 +108,7 @@ if ($atn == 'commit') {
         if (($commit_group_id)&&($group_id != $commit_group_id)) {
             // The link is coming from another project, add a warning msg
             $group_name=util_get_group_name_from_id($commit_group_id);
-            $feed="&feedback".$Language->getText('tracker_gotoid','commit_belongs_to',$group_name);
+            $feed="&feedback".urlencode($Language->getText('tracker_gotoid','commit_belongs_to',$group_name));
         }
 	$location .= $cvs_loc.$feed;
     }
@@ -120,7 +118,7 @@ if ($atn == 'commit') {
 
 // Document link
 if ($atn == 'doc') {
-    $location .= "/docman/display_doc.php?docid=".$aid."&group_id=".$group_id;
+    $location .= "/docman/display_doc.php?docid=". (int)$aid ."&group_id=". (int)$group_id;
     header($location);
     exit;
 }
@@ -129,6 +127,8 @@ if ($atn == 'doc') {
 // Should we remove this one?
 if (!$group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
+    $art_group_id = $request->get('art_group_id');
+    $art_name     = $request->get('art_name');
     if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
         exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
@@ -139,6 +139,8 @@ if (!$group_id) {
 // Now check ambiguous cases...
 if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     // Ambiguous: legacy or generic tracker?
+    $art_group_id = $request->get('art_group_id');
+    $art_name     = $request->get('art_name');
 
     // Get artifact group_id and tracker id (atid)
     $artifact_exists=util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name);

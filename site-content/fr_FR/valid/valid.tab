@@ -1,0 +1,5 @@
+rule_file	error_upload	Erreur de chargement de fichier.
+rule_file	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
+rule_file	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+rule_file	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
+rule_file	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.

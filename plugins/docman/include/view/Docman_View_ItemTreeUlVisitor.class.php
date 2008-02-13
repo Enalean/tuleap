@@ -34,7 +34,8 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     var $defaultUrl;
     var $get_action_on_title;
     var $get_class_for_link;
-    
+    var $hp;
+
     function Docman_View_ItemTreeUlVisitor($view, $params = null) {
         $this->view                =& $view;
         $this->get_action_on_icon =& new Docman_View_GetActionOnIconVisitor();
@@ -42,6 +43,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         $this->html                = '';
         $this->stripFirstNode      = true;
         $this->firstNodeStripped   = false;
+        $this->hp                  =& CodeX_HTMLPurifier::instance();
         $this->params              = $params;
         if (!isset($this->params['default_url'])) {
             $this->params['default_url'] = null;
@@ -165,7 +167,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .= '</div>';
                 
                 if (trim($item->getDescription()) != '') {
-                    $this->html .= '<div class="docman_item_description">'. nl2br(util_make_links(htmlentities($item->getDescription()), $item->getGroupId())) .'</div>';
+                    $this->html .= '<div class="docman_item_description">'. $this->hp->purify($item->getDescription(), CODEX_PURIFIER_BASIC, $item->getGroupId()) .'</div>';
             }
                 $li_displayed = true;
             }

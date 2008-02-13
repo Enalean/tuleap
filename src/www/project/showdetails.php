@@ -10,8 +10,12 @@ require_once('pre.php');
 $Language->loadLanguageMsg('project/project');
 
 // Check if group_id is valid
-if (!$group_id) {
-	exit_error($Language->getText('project_index','g_missed'),$Language->getText('project_index','must_spec_g'));
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
 }
 
 site_project_header(array('title'=>$Language->getText('project_showdetails','proj_details'),'group'=>$group_id,'toptab'=>'summary'));
@@ -22,7 +26,7 @@ print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>'
 
 $result=db_query("SELECT register_purpose,patents_ips,required_software,other_comments, license_other ".
 		"FROM groups ".
-		"WHERE group_id='$group_id'");
+		"WHERE group_id=".db_ei($group_id));
 
 if (!$result || db_numrows($result) < 1) {
 	echo db_error();
