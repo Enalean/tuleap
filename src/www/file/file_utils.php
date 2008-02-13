@@ -185,6 +185,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
 	if (!$group_id) {
 		return $GLOBALS['Language']->getText('file_file_utils','g_id_err');
 	} else {
+        $hp =& CodeX_HTMLPurifier::instance();
         $res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
         $p = array();
         foreach($res as $release){
@@ -195,7 +196,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
         foreach($p as $package_name => $releases) {
             $select .= '<optgroup label="'. $package_name .'">';
             foreach($releases as $id => $name) {
-                $select .= '<option value="'. $id .'" '. ($id == $checked_val ? 'selected="selected"' : '') .'>'. $name .'</option>';
+                $select .= '<option value="'. $id .'" '. ($id == $checked_val ? 'selected="selected"' : '') .'>'. $hp->purify($name) .'</option>';
             }
             $select .= '</optgroup>';
         }
