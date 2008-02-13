@@ -59,6 +59,7 @@ class UserLdap {
 
     function synchronizeUserWithLdap($userId, &$lr, $password) {
         $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
+	require_once('account.php');
 
         $pwd = rtrim(stripslashes($password));
         
