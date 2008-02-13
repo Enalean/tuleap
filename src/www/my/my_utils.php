@@ -9,8 +9,8 @@
 //	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
 //
 
-$Language->loadLanguageMsg('my/my');
-$Language->loadLanguageMsg('account/account');
+$GLOBALS['Language']->loadLanguageMsg('my/my');
+$GLOBALS['Language']->loadLanguageMsg('account/account');
 
 /*
   Function that generates hide/show urls to expand/collapse
