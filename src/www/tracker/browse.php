@@ -72,7 +72,7 @@ if (user_isloggedin()) {
 
 // Number of artifacts displayed on screen in one chunk.
 // Default 50
-$chunkz = $request->get('chunkz');
+$chunksz = $request->get('chunksz');
 if (!$chunksz) { $chunksz = 50; }
 
 // Make sure offset values, search and multisort flags are defined
@@ -197,6 +197,8 @@ if (isset($morder)) {
 		    user_set_preference('artifact_browse_order'.$atid, $morder);
 		}
     }
+} else {
+    $morder = '';
 }
 
 //echo "<BR> DBG Order by = $morder";
@@ -211,7 +213,7 @@ if (isset($morder)) {
     - if no preference and not logged in the use 'open' set
      (Prefs is a string of the form  &field1[]=value_id1&field2[]=value_id2&.... )
   ================================================== */
-if (!$request->get('set')) {
+if (!$request->exist('set')) {
 
     if (user_isloggedin()) {
 
@@ -246,6 +248,8 @@ if (!$request->get('set')) {
     } else {
 		$set='open';
     }
+} else {
+    $set = $request->get('set');
 }
 
 if ($set=='my') {

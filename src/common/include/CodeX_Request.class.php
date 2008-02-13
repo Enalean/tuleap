@@ -57,12 +57,12 @@
      */
     function _getCallTrace() {
         $backtrace = debug_backtrace();
-        $files = explode('/', $backtrace[0]['file']);
+        $files = explode('/', $backtrace[1]['file']);
         return $files[count($files) - 4] . '/'.
             $files[count($files) - 3] . '/'.
             $files[count($files) - 2] . '/'.
             $files[count($files) - 1] . ' Line: '.
-            $backtrace[0]['line'];
+            $backtrace[1]['line'];
     }
 
     /**

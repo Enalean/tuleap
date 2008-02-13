@@ -125,14 +125,14 @@ class ArtifactHtml extends Artifact {
                             // Details field must be on one row
                             if ($sz > $max_size || $field->getName()=='details') {
                                 $fieldset_html .= "\n<TR>".
-                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $hp->purify($field_html['label'], CODEX_PURIFIER_BASIC) .'</td>'.
-                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $hp->purify($field_html['value'], CODEX_PURIFIER_BASIC) .'</TD>'.                     
+                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.                     
                                   "\n</TR>";
                                 $i=0;
                             } else {
                                 $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                                $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $hp->purify($field_html['label'], CODEX_PURIFIER_BASIC) .'</td>'.
-                                '<TD width="38%" valign="top">'. $hp->purify($field_html['value'], CODEX_PURIFIER_BASIC) .'</TD>';
+                                $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
                                 $i++;
                                 // if the line is not full, we add a additional column to give more space
                                 $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer" width="4%">&nbsp;</td>':"\n</TR>";
@@ -787,7 +787,9 @@ class ArtifactHtml extends Artifact {
         
             $result=$this->getInverseDependencies();
             $rows=db_numrows($result);
-        
+            
+            $out = '';
+            
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)

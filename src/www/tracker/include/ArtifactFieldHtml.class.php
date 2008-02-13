@@ -52,11 +52,11 @@ class ArtifactFieldHtml extends ArtifactField {
 	function labelDisplay($break=false,$ascii=false,$tooltip=false) {
 	    $output = $this->getLabel().': ';
         $hp = CodeX_HTMLPurifier::instance();
-	    if (!$ascii) {
+        if (!$ascii) {
                 if ($tooltip) {
-                    $output = '<a class="tooltip" href="#" title="'. $hp->purify($this->description, CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($output, CODEX_PURIFIER_BASIC) .'</a>';
+                    $output = '<a class="tooltip" href="#" title="'. $hp->purify($this->description, CODEX_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
                 }
-                $output = '<B>'. $hp->purify($output, CODEX_PURIFIER_BASIC) .'</B>';
+                $output = '<B>'. $output .'</B>';
             }
 	    if ($break) 
 			$output .= ($ascii?"\n":'<BR>');

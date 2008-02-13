@@ -631,8 +631,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         }
                     
                         $html_result .= '<A name="results"></A>';
-			$html_result .= '<h3>'.(int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '.
-                         $hp->purify($order_statement, CODEX_PURIFIER_BASIC) .'</h3>';
+			$html_result .= '<h3>'.(int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</h3>';
                 
                         if ($pv == 0) {
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
