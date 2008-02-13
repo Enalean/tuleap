@@ -330,6 +330,8 @@ include_project_home	anon_ftp_space	Espace FTP anonyme
 include_project_home	latest_news	Dernières annonces
 include_project_home	start_monitoring	Surveiller ce paquet
 include_project_home	stop_monitoring	Arrêter de surveiller ce paquet
+include_project_home	latest_svn_commit	Derniers commits SVN
+include_project_home	latest_cvs_commit	Derniers commits CVS
 
 #
 #-----------------------------------------------

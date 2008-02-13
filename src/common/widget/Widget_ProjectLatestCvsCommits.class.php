@@ -15,10 +15,10 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
         $this->Widget_ProjectLatestCommits('projectlatestcvscommits', 'cvs_get_revisions');
     }
     function getTitle() {
-        return 'Latest CVS Commits';
+        return $GLOBALS['Language']->getText('include_project_home','latest_cvs_commit');
     }
     function _getLinkToCommit($data) {
-        return '/cvs/index.php?func=detailcommit&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id'];
+        return '/cvs/index.php?func=detailcommit&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['id'];
     }
     function _getLinkToMore() {
         return '/cvs/?func=browse&group_id='.$this->group_id;

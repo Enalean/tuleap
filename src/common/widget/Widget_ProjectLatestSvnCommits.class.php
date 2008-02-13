@@ -15,7 +15,7 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
         $this->Widget_ProjectLatestCommits('projectlatestsvncommits', 'svn_get_revisions');
     }
     function getTitle() {
-        return 'Latest SVN Commits';
+        return $GLOBALS['Language']->getText('include_project_home','latest_svn_commit');
     }
     function _getLinkToCommit($data) {
         return '/svn/?func=detailrevision&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id'];
