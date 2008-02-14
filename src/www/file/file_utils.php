@@ -408,7 +408,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $processor_id = util_result_column_to_array($result, 0);
     $processor_name = util_result_column_to_array($result, 1);
     foreach ($processor_name as $key => $value) {
-        $processor_name[$key] = addslashes($value);
+        $processor_name[$key] = $hp->purify($value, CODEX_PURIFIER_JS_QUOTE);
     }
     $sql = "SELECT * FROM frs_filetype ORDER BY type_id";
     $result1 = db_query($sql);
