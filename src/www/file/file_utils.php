@@ -285,7 +285,7 @@ function file_utils_add_proc ($pname,$prank) {
 		   ' (name,group_id,rank)'.
 		   ' VALUES'.
 		   '("%s",%d,%d)',
-		   db_es(htmlspecialchars($pname)), db_ei($group_id), db_ei($prank));
+		   db_es($pname), db_ei($group_id), db_ei($prank));
     $result = db_query($sql);
     
     if ($result) {
@@ -304,7 +304,7 @@ function file_utils_update_proc ($pid,$pname,$prank) {
 		   ' SET name = "%s",rank = %d'.
 		   ' WHERE processor_id=%d'.
 		   ' AND group_id=%d',
-		   db_es(htmlspecialchars($pname)), db_ei($prank), db_ei($pid), db_ei($group_id));
+		   db_es($pname), db_ei($prank), db_ei($pid), db_ei($group_id));
     $result = db_query($sql);
     
     if ($result) {
