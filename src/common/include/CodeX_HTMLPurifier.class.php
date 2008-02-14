@@ -33,7 +33,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * <pre>
  * require_once('pre.php');
  * require_once('common/include/CodeX_HTMLPurifier.class.php');
- * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
+ * $crapy = '<a href="" onmouseover="alert(1);">testï¿½</a>';
  * $hp =& CodeX_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
@@ -44,6 +44,8 @@ define('CODEX_PURIFIER_STRIP_HTML', 1);
 define('CODEX_PURIFIER_BASIC',      5);
 define('CODEX_PURIFIER_LIGHT',     10);
 define('CODEX_PURIFIER_FULL',      15);
+define('CODEX_PURIFIER_JS_QUOTE', 20);
+define('CODEX_PURIFIER_JS_DQUOTE', 25);
 define('CODEX_PURIFIER_DISABLED', 100);
 
 class CodeX_HTMLPurifier {
@@ -196,6 +198,12 @@ class CodeX_HTMLPurifier {
             $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES), $groupId));
             break;
 
+        case CODEX_PURIFIER_JS_QUOTE:
+            $clean = preg_replace('</script>', "</'+'script>", addslashes($html));
+            break;
+        case CODEX_PURIFIER_JS_DQUOTE:
+            $clean = preg_replace("</script>", '</"+"script>', addslashes($html));
+            break;
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
             $clean = htmlentities($html, ENT_QUOTES);
