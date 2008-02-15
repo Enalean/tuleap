@@ -71,7 +71,7 @@ $return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id='.$gro
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
     <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="'.$proc_id.'">
     <TR><TD>'.$Language->getText('file_file_utils','proc_name').': <font color=red>*</font> </TD>
-    <TD><INPUT TYPE="TEXT" NAME="processname" VALUE="'.$hp->purify($name, CODEX_PURIFIER_LIGHT).'" SIZE=30></TD></TR>
+    <TD><INPUT TYPE="TEXT" NAME="processname" VALUE="'.$hp->purify($name).'" SIZE=30></TD></TR>
     <TR><TD>'.$Language->getText('file_file_utils','proc_rank').': <font color=red>*</font> </TD>
     <TD><INPUT TYPE="TEXT" NAME="processrank" VALUE="'.$rank.'" SIZE=10></TD></TR></TABLE>    
     <p><INPUT TYPE="SUBMIT" NAME="update" VALUE="'.$Language->getText('file_file_utils','update_proc').'"></p></FORM>

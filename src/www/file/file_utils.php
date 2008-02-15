@@ -255,9 +255,9 @@ function file_utils_show_processors ($result) {
 	echo '<tr class="'. html_get_alt_row_color($j) .'">'. "\n";
 	
     if ($gr_id == "100") {
-        echo '<td>'.$hp->purify($proc_name, CODEX_PURIFIER_LIGHT).'</td>';
+        echo '<td>'.$hp->purify($proc_name).'</td>';
     } else {
-	    echo '<td><A HREF="/file/admin/editproc.php?group_id='.$group_id.'&proc_id='.$proc_id.'" title="'.$hp->purify($proc_id.' - '.$proc_name, CODEX_PURIFIER_LIGHT).'">'.$hp->purify($proc_name, CODEX_PURIFIER_LIGHT).'</td>';
+	    echo '<td><A HREF="/file/admin/editproc.php?group_id='.$group_id.'&proc_id='.$proc_id.'" title="'.$hp->purify($proc_id.' - '.$proc_name).'">'.$hp->purify($proc_name).'</td>';
     }
     
     echo '<td>'.$proc_rank."</td>\n";     
