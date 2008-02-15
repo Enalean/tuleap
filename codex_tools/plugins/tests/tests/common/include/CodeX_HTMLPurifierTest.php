@@ -135,5 +135,15 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
         $this->assertIsA($p1, 'CodeX_HTMLPurifier');
     }
 
+    function testPurifyJsQuoteAndDQuote() {
+        $p =& CodeX_HTMLPurifier::instance();
+        $this->assertEqual('</"+"script>', $p->purify('</script>', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\"a', $p->purify('a"a', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\"a', $p->purify('"a', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\"', $p->purify('a"', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\"', $p->purify('"', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('</"+"script>'."\n".'bla bla'."\n".'</"+"script>'."\n".'bla bla'."\n".'</"+"script>', $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODEX_PURIFIER_JS_DQUOTE));
+        $this->assertEqual("</'+'script>", $p->purify('</script>', CODEX_PURIFIER_JS_QUOTE));
+    }
 }
 ?>

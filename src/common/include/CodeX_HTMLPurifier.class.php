@@ -199,10 +199,12 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_JS_QUOTE:
-            $clean = preg_replace('</script>', "</'+'script>", addslashes($html));
+            $clean = preg_replace('/\<\/script\>/umsi', "</'+'script>", addslashes(preg_replace('/\\\n/ums', "
+", $html)));
             break;
         case CODEX_PURIFIER_JS_DQUOTE:
-            $clean = preg_replace("</script>", '</"+"script>', addslashes($html));
+            $clean = preg_replace('/\<\/script\>/umsi', '</"+"script>', addslashes(preg_replace('/\\\n/ums', '
+', $html)));
             break;
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
