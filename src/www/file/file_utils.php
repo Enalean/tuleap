@@ -736,7 +736,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $release['name'] = $res['name'];
         $release['package_id'] = $res['package_id'];
     } else {
-        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
+        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
         $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);        
     }
     
@@ -818,7 +818,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     if($request->validArray(new Valid_UInt('ugroups'))) {
         $ugroups = $request->get('ugroups');
     } else {
-        $ugroups = array();
+        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases', 'rel_update_failed'));
+        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);
     }
     
     if($request->valid(new Valid_WhiteList('release_submit_news',array(0,1)))) {
