@@ -668,6 +668,7 @@ class Artifact extends Error {
     
             if ($new_value == $comment_txt) {
                 //comment doesn't change
+                $this->setError($GLOBALS['Language']->getText('tracker_include_artifact','upd_followup_nochange'));
                 return false;
             }
     

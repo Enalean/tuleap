@@ -324,6 +324,7 @@ tracker_include_artifact	anon_user	Utilisateur anonyme
 tracker_include_artifact	add_flup_comment	Commentaire additionnel
 tracker_include_artifact	rem_followup	Commentaire supprimé
 tracker_include_artifact	add_followup	Commentaire ajouté
+tracker_include_artifact	upd_followup_nochange	Le commentaire n'a pas changé
 tracker_include_artifact	add_attachment	Fichiers attachés additionnels
 tracker_include_artifact	file_name	Nom du fichier&nbsp;:
 tracker_include_artifact	what	Champ

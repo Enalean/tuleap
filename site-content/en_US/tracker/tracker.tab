@@ -319,6 +319,7 @@ tracker_include_artifact	anon_user	Anonymous user
 tracker_include_artifact	add_flup_comment	Additional Follow-up Comments
 tracker_include_artifact	rem_followup	Removed Follow-up Comment
 tracker_include_artifact	add_followup	Added Follow-up Comment
+tracker_include_artifact	upd_followup_nochange	Follow-up Comment did not change
 tracker_include_artifact	add_attachment	Additional Artifact Attachment
 tracker_include_artifact	file_name	File name:
 tracker_include_artifact	what	What
