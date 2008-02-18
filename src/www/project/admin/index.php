@@ -63,6 +63,13 @@ if (isset($func)) {
             $feedback .= ' '.$Language->getText('project_admin_index','user_not_removed').' ';
         } else {
             
+            // Raise an event
+            $em =& EventManager::instance();
+            $em->processEvent('project_admin_remove_user', array(
+                'group_id' => $group_id,
+                'user_id' => $rm_id
+            ));
+            
             //	  
             //  get the Group object
             //	  
