@@ -21,7 +21,7 @@ define ('delete_cc_fault', '3018');
 define ('get_service_fault', '3020');
 define ('get_artifact_report_fault', '3021');
 define('update_artifact_followup_fault','3022');
-define('delete_artifact_followup_fault',3023);
+define('delete_artifact_followup_fault','3023');
 
 require_once ('nusoap.php');
 require_once ('pre.php');
