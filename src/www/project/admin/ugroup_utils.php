@@ -265,6 +265,15 @@ function ugroup_delete_user_from_project_ugroups($group_id,$user_id) {
     }
     // Then delete membership
     db_query("DELETE FROM ugroup_user WHERE user_id=$user_id AND ugroup_id IN (".$ugroups_list.")");
+    
+    // Raise an event
+    $em =& EventManager::instance();
+    $em->processEvent('project_admin_remove_user_from_project_ugroups', array(
+        'group_id' => $group_id,
+        'user_id' => $user_id,
+        'ugroups' => explode(' ,', $ugroups_list)
+    ));
+    
     return true;
 }
 
