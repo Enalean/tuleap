@@ -10,6 +10,10 @@
 	redirect to proper hostname to get around certificate problem on IE 5
 */
 
+// Debug mode: display debug data in page footer.
+// Only displayed for site-admins
+$GLOBALS['DEBUG_MODE']=0;
+
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);

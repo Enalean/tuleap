@@ -335,12 +335,15 @@ class Layout extends Response {
 
 	function generic_footer($params) {
 
-        global $IS_DEBUG,$QUERY_COUNT,$Language;
-        if ($IS_DEBUG && user_ismember(1,'A')) {
-                echo "<CENTER><B><span class=\"highlight\">'.$Language->getText('include_layout','query_count').': $QUERY_COUNT</span></B></CENTER>";
-                echo "<P>$GLOBALS[G_DEBUGQUERY]";
-        }
+        global $Language;
         include($Language->getContent('layout/footer'));
+        	
+        if ( user_ismember(1,'A') && $GLOBALS['DEBUG_MODE'] ) {
+                echo "<CENTER><B><span class=\"highlight\">".$Language->getText('include_layout','query_count').": ".
+                ($GLOBALS[DEBUG_DBPHP_QUERY_COUNT]+$GLOBALS[DEBUG_DAO_QUERY_COUNT]).
+                " (".$GLOBALS[DEBUG_DBPHP_QUERY_COUNT]." + ".$GLOBALS[DEBUG_DAO_QUERY_COUNT].") </span></B></CENTER>";
+        }
+          
         echo '</body>';
         echo '</html>';
 	}

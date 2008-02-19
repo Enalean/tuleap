@@ -34,6 +34,7 @@ class DataAccess {
     * @return object DataAccessResult
     */
     function &fetch($sql) {
+        $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
         /*$nb = isset($this->store[md5($sql)]) ? ($this->store[md5($sql)]['nb']+1) : 1;
         $this->store[md5($sql)] = array('sql' => $sql, 'nb' => $nb);
         if ($this->store[md5($sql)]['nb'] > 1) {
