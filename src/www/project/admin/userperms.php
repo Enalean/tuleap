@@ -122,6 +122,27 @@ if (isset($submit)) {
 		if (!$res || $tracker_error) {
 			$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
 		}
+        
+        // Raise an event
+        $em =& EventManager::instance();
+        $em->processEvent('project_admin_change_user_permissions', array(
+            'group_id' => $group_id,
+            'user_id' => $row_dev['user_id'],
+            'user_permissions' => array(
+                    'admin_flags'   => $$admin_flags,
+                    'bug_flags'     => $$bug_flags,
+                    'forum_flags'   => $$forum_flags,
+                    'project_flags' => $$project_flags,
+                    'doc_flags'     => $$doc_flags,
+                    'file_flags'    => $$file_flags,
+                    'patch_flags'   => $$patch_flags,
+                    'wiki_flags'    => $$wiki_flags,
+                    'news_flags'    => $$news_flags,
+                    'support_flags' => $$support_flags,
+                    'svn_flags'     => $$svn_flags
+                )
+        ));
+        
 	}
 
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
