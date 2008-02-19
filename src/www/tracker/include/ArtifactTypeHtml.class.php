@@ -58,7 +58,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
                 if (!isset($params['pv']) || $params['pv'] == 0) {
-                    echo '<h3>'.$Language->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_BASIC) .'</a></h3><p>';
+                    echo '<h3>'.$Language->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a></h3><p>';
 
                     echo '<strong><a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_BASIC) ).'</a>';
                     echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_BASIC) ).'s </a>';
@@ -206,7 +206,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    util_get_alt_row_color($i),
 					    $hp->purify($arr['group_artifact_id'], CODEX_PURIFIER_BASIC) ,
 					    $hp->purify($arr['project_name'], CODEX_PURIFIER_BASIC) ,
-					    $hp->purify($arr['name'], CODEX_PURIFIER_BASIC) ,
+					    $hp->purify($arr['name'], CODEX_PURIFIER_DISABLED) ,
 					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
 					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','delay_deletion').'\')"></a>',
 					    '<a href="/tracker/admin/restore.php?func=restore&group_id='.(int)$arr['group_id']."&atid=".(int)$arr['group_artifact_id'].'"><img src="'.util_get_image_theme("ic/convert.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','restore_tracker').'\')"></a>',
@@ -262,8 +262,8 @@ class ArtifactTypeHtml extends ArtifactType {
 			       echo sprintf($fmt,
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_BASIC) ."</a>",
-					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_BASIC) ,
-					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_BASIC) .'&nbsp;',
+					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_DISABLED) ,
+					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_DISABLED) .'&nbsp;',
                                             ($at_arr[$i]->isInstantiatedForNewProjects()?'Yes':'No'),
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
 
@@ -271,8 +271,8 @@ class ArtifactTypeHtml extends ArtifactType {
                                 echo sprintf($fmt,
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_BASIC) ."</a>",
-					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_BASIC) ,
-					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_BASIC) .'&nbsp;',
+					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_DISABLED) ,
+					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_DISABLED) .'&nbsp;',
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
                             }
 			}
@@ -288,7 +288,8 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 	  global $Language;
-	    echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$atid.'&func=browse">'.$this->getName().'</a>\''.$Language->getText('tracker_include_type','administration').'</H2>';
+      $hp = CodeX_HTMLPurifier::instance();
+	    echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$atid.'&func=browse">'.$hp->purify($this->getName(), CODEX_PURIFIER_DISABLED).'</a>\''.$Language->getText('tracker_include_type','administration').'</H2>';
 
 	    if ( $this->userIsAdmin() ) {
 			echo '<H3><a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'&func=editoptions">'.$Language->getText('tracker_include_type','settings').'</a></H3>';
@@ -345,7 +346,7 @@ class ArtifactTypeHtml extends ArtifactType {
             echo '<H2>',
                 $GLOBALS['Language']->getText('tracker_import_admin','tracker'),
                 ' \'<a href="/tracker/admin/?group_id=',(int)$this->getGroupID(),'&atid=',(int)$this->getID(),'">',
-                 $hp->purify($this->getName(), CODEX_PURIFIER_BASIC) ,
+                 $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) ,
                 '</a>\'',
                 $title,
                 '</H2>';
@@ -807,7 +808,7 @@ EOS;
         $hp = CodeX_HTMLPurifier::instance();
 	  global $Language;
 
-		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($this->getName(), CODEX_PURIFIER_BASIC) .'</a>\' - '.$Language->getText('tracker_include_type','settings').'</H2>';
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\' - '.$Language->getText('tracker_include_type','settings').'</H2>';
 		echo '<form name="form1" >
 		  <input type="hidden" name="update" value="1">
 		  <input type="hidden" name="group_id" value="'.(int)$group_id.'">
@@ -890,12 +891,13 @@ EOS;
 	 */
 	function trackersSelectBox ($group_id,$name,$checked='xzxz') {
 		global $atf;
+        $hp = CodeX_HTMLPurifier::instance();
                 $tracker_names = array();
                 $tracker_ids   = array();
                 $trackers_array = $atf->getArtifactTypesFromId($group_id);
                 if ( $trackers_array !== false) {                    
                     foreach($trackers_array as $tracker) {
-                        $tracker_names[] = $tracker->getName();
+                        $tracker_names[] =  $hp->purify($tracker->getName(), CODEX_PURIFIER_DISABLED) ;
                         $tracker_ids[] = $tracker->getId();
                     }
                 }
@@ -1978,7 +1980,7 @@ EOS;
 		$group_artifact_id = $this->getID();
 		$group_id = $group->getGroupId();
 
-		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.$group_artifact_id.'">'.$this->getName().'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.$group_artifact_id.'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';
 		// Build Wachees UI
 		$res = $this->getWatchees($user_id);
 		$arr_watchees = array();
@@ -2257,7 +2259,7 @@ EOS;
         $hp = CodeX_HTMLPurifier::instance();
 		global $art_field_fact,$Language;
 	
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$Language->getText('tracker_include_type','report_system'),
+		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) ."' - ".$Language->getText('tracker_include_type','report_system'),
 				  'help' => 'TrackerReporting.html'));
 	
 		echo '<H2>'.$Language->getText('tracker_include_type','tracker_report_syst').'</H2>';
@@ -2287,7 +2289,7 @@ EOS;
 	function reportingByAge() {
 		global $Language;
         $hp = CodeX_HTMLPurifier::instance();
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$Language->getText('tracker_include_type','aging_rep'),
+		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) ."' - ".$Language->getText('tracker_include_type','aging_rep'),
 				  'help' => 'TrackerReporting.html'));
 	
 		
@@ -2315,7 +2317,7 @@ EOS;
         $hp = CodeX_HTMLPurifier::instance();
 		$field = $art_field_fact->getFieldFromId($field_id);
 	
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '".$this->getName()."' - ".$Language->getText('tracker_include_type','rep_field')." '".$field->getLabel()."'",
+		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) ."' - ".$Language->getText('tracker_include_type','rep_field')." '".$field->getLabel()."'",
 				  'help' => 'TrackerReporting.html'));
 	
 		if ($field->isStandardField()) {
@@ -2326,10 +2328,10 @@ EOS;
 			$allItems = $this->getArtifactsByField($field);
 		}
 	
-		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_BASIC) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
+		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
 	
 		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )));
-		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_BASIC) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
+		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
 	
 		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )));
 		$this->footer(array());
@@ -2582,6 +2584,7 @@ EOS;
 	* @param change_ids: all the ids of the artifacts affected
 	*/
 	function showCCList($change_ids) {
+        $hp = CodeX_HTMLPurifier::instance();
 	  global $Language;
 		$out = "";
 			
@@ -2929,6 +2932,7 @@ EOS;
      * @param int $selected_field_set_id the id of the fieldset that must be selected, or false if no default fieldset is selected
      */
     function displayFieldSetDropDownList($artifact_group_id, $selected_fieldset_id = false) {
+        $hp = CodeX_HTMLPurifier::instance();
         global $ath,$art_fieldset_fact;
         
         $fieldsets = $art_fieldset_fact->getArtifactFieldSetsFromId($artifact_group_id);
