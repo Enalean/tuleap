@@ -213,7 +213,7 @@ class ArtifactReportHtml extends ArtifactReport {
     
     				// Check for advanced search if you have the field in the $prefs (HTTP parameters)
     				if ( $advsrch ) {
-    					if ( $prefs[$field->getName()] ) {
+    					if ( isset($prefs[$field->getName()]) && $prefs[$field->getName()] ) {
     						if ( is_array($prefs[$field->getName()]) ) {
     							$values = $prefs[$field->getName()];
     						} else {

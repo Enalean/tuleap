@@ -541,7 +541,11 @@ class ArtifactField extends Error {
 	    } else {
 			$val = $this->getDisplaySize();
 	    }
-	    return(explode('/',$val));
+        $t = explode('/',$val);
+        if (!isset($t[1])) {
+            $t[1] = 0;
+        }
+	    return $t;
 	}
 	
 	/**
@@ -650,7 +654,7 @@ class ArtifactField extends Error {
 			// If only active field
             $status_cond = "";
 			if ($active_only) {
-			    if ($checked) {
+			    if ($checked && !is_array($checked)) { //TODO: investigate why $checked may be an array
 					$status_cond = "AND  (status IN ('A','P') OR value_id='". db_ei($checked) ."') ";
 			    } else {
 					$status_cond = "AND  status IN ('A','P') ";
