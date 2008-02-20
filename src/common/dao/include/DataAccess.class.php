@@ -2,6 +2,8 @@
 
 require_once('DataAccessResult.class.php');
 
+$GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
+
 /**
  *  A simple class for querying MySQL
  */

@@ -7,7 +7,7 @@
 // 
 //
 //
-
+$GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
 function db_connect() {
     global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
     $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
