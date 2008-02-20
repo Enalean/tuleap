@@ -813,7 +813,7 @@ class ArtifactField extends Error {
 		$sql = "update artifact_field_value set ";
 		switch ( $this->getDataType() ) {
 		case $this->DATATYPE_TEXT:
-			$sql .= "valueText='$value'";
+			$sql .= "valueText='". db_es($value) ."'";
 			break;
 			
 		case $this->DATATYPE_INT:

@@ -861,7 +861,7 @@ class Artifact extends Error {
                                 
                                 if ($is_text) {
                                     if ( $field->isStandardField() ) {
-                                        $upd_list .= "$field_name='".htmlspecialchars($value)."',";                                                 
+                                        $upd_list .= "$field_name='".db_es(htmlspecialchars($value))."',";                                                 
                                     } else {
                                         $update_value = htmlspecialchars($value);
                                     }
@@ -870,7 +870,7 @@ class Artifact extends Error {
                                     $value = stripslashes($value);
                                 } else {
                                     if ( $field->isStandardField() ) {
-                                        $upd_list .= "$field_name='$value',";
+                                        $upd_list .= "$field_name='". db_es($value) ."',";
                                     } else {
                                         $update_value = $value;
                                     }
@@ -2506,12 +2506,18 @@ class Artifact extends Error {
 	      $field = $art_field_fact->getFieldFromName($field_name);
 	      if ( $field ) {
 		$label = $field->getLabel();
+        if (isset($h['del'])) {
+            $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+        }
+        if (isset($h['add'])) {
+            $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+        }
 	      }
-	      $out .= sprintf($fmt, $label, isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
+	      $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
 	    } // while
 	    
 	    if ($out) {
-	      $out = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
+	      $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
 		"------------------------------------------------------------------". $GLOBALS['sys_lf'] . $out;
             }
 	    
