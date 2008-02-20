@@ -31,5 +31,11 @@ class SimpleSanitizer extends Sanitizer {
         $replacement = array('&lt;', '&gt;');
         return preg_replace($pattern, $replacement, $html);
     }
+    
+    function unsanitize($html) {
+        $pattern = array('@&lt;@', '@&gt;@');
+        $replacement = array('<', '>');
+        return preg_replace($pattern, $replacement, $html);
+    }
 }
 ?>
