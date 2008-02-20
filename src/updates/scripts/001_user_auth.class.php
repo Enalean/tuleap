@@ -32,45 +32,45 @@ class Update_001 extends CodeXUpgrade {
 
         if(!$this->fieldExists('user', 'prev_auth_success')) {
             $sql = 'ALTER TABLE user ADD COLUMN prev_auth_success INT(11) NOT NULL DEFAULT 0 AFTER last_access_date';
-            $res = db_query($sql);
-            if($res && !db_error()) {
+            $this->update($sql);
+            if(!$this->da->isError()) {
                 echo "Field 'prev_auth_success' added to 'user' table";
                 echo $this->getLineSeparator();
             } else {
-                $this->addUpgradeError("An error happened while attempting to create field 'prev_auth_success' in 'user' table: ".db_error());
+                $this->addUpgradeError("An error happened while attempting to create field 'prev_auth_success' in 'user' table: ".$this->da->isError());
             }
         }
 
         if(!$this->fieldExists('user', 'last_auth_success')) {
             $sql = 'ALTER TABLE user ADD COLUMN last_auth_success INT(11) NOT NULL DEFAULT 0 AFTER prev_auth_success';
-            $res = db_query($sql);
-            if($res && !db_error()) {
+            $this->update($sql);
+            if(!$this->da->isError()) {
                 echo "Field 'last_auth_success' added to 'user' table";
                 echo $this->getLineSeparator();
             } else {
-                $this->addUpgradeError("An error happened while attempting to create field 'last_auth_success' in 'user' table: ".db_error());
+                $this->addUpgradeError("An error happened while attempting to create field 'last_auth_success' in 'user' table: ".$this->da->isError());
             }
         }
 
         if(!$this->fieldExists('user', 'last_auth_failure')) {
             $sql = 'ALTER TABLE user ADD COLUMN last_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_success';
-            $res = db_query($sql);
-            if($res && !db_error()) {
+            $this->update($sql);
+            if(!$this->da->isError()) {
                 echo "Field 'last_auth_failure' added to 'user' table";
                 echo $this->getLineSeparator();
             } else {
-                $this->addUpgradeError("An error happened while attempting to create field 'last_auth_failure' in 'user' table: ".db_error());
+                $this->addUpgradeError("An error happened while attempting to create field 'last_auth_failure' in 'user' table: ".$this->da->isError());
             }
         }
 
         if(!$this->fieldExists('user', 'nb_auth_failure')) {
             $sql = 'ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_failure';
-            $res = db_query($sql);
-            if($res && !db_error()) {
+            $this->update($sql);
+            if(!$this->da->isError()) {
                 echo "Field 'nb_auth_failure' added to 'user' table";
                 echo $this->getLineSeparator();
             } else {
-                $this->addUpgradeError("An error happened while attempting to create field 'nb_auth_failure' in 'user' table: ".db_error());
+                $this->addUpgradeError("An error happened while attempting to create field 'nb_auth_failure' in 'user' table: ".$this->da->isError());
             }
         }
 
