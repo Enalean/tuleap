@@ -818,13 +818,13 @@ EOS;
 		    <tr> 
 		      <td width="21%"><b>'.$Language->getText('tracker_include_artifact','name').'</b> <font color="red">*</font>:</td>
 		      <td width="79%"> 
-		        <input type="text" name="name" value="'. $hp->purify($this->getName(), CODEX_PURIFIER_CONVERT_HTML) .'">
+              <input type="text" name="name" value="'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'">
 		      </td>
 		    </tr>
 		    <tr> 
 		      <td width="21%"><b>'.$Language->getText('tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
 		      <td width="79%"> 
-		        <textarea name="description" rows="3" cols="50">'. $hp->purify($this->getDescription(), CODEX_PURIFIER_CONVERT_HTML) .'</textarea>
+		        <textarea name="description" rows="3" cols="50">'. $hp->purify(SimpleSanitizer::unsanitize($this->getDescription()), CODEX_PURIFIER_CONVERT_HTML) .'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
