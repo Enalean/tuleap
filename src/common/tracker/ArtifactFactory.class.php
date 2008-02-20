@@ -302,25 +302,29 @@ class ArtifactFactory extends Error {
         $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);
         
         $result = $artifact_report->getResultQueryReport($sql);
+        $result_fields = $artifact_report->getResultFields();
         
+        //we get from result only fields that we need to display in the report (we add at the begining id and severity only to identify the artifact and for the severity color)
         $artifacts = array();
+        $i = 0;
         foreach($result as $art) {
             $artifact_id = $art['artifact_id'];
-            
+            $severity_id = $art['severity_id'];
             $artifact = new Artifact($this->ArtifactType, $art['artifact_id'], true);
             if ($artifact->userCanView()) {
-                
                 $fields = array();
-                foreach($art as $field_name => $field_value) {
-                    // fields are duplicated (one key is a number, the other key is the field_name)
-                    if (!is_int($field_name)) {
-                        $fields[$field_name] = $field_value;
-                    }
+                reset($result_fields);  
+                $fields['severity_id'] = $severity_id;
+                $fields['id'] = $artifact_id;
+                while (list($key,$field) = each($result_fields) ) {
+                    $value = $result[$i][$key];
+                    $fields[$key] = $value;
                 }
                 $artifacts[$artifact_id] = $fields;
             }
-            
+            $i++;
         }
+        
         
 		return $artifacts;
     }
