@@ -29,7 +29,7 @@ $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage',
 			'help' => 'TrackerAdministration.html#TrackerBrowsingTrackerFieldValues'));
 
 $hp = CodeX_HTMLPurifier::instance();
-echo "<H2>".$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'.$hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) ."</a>'".
+echo "<H2>".$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'.$hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED) ."</a>'".
 $Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."</H2>";
 
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {

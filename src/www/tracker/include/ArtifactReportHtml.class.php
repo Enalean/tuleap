@@ -717,7 +717,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $trackerName = $ath->getName();
         
                 echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">';
-                echo $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC);
+                echo $hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED);
                 echo '</a>\''.$Language->getText('tracker_include_report','report_admin').'</H2>';
                 
                  if ($reports) {

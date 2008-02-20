@@ -28,7 +28,7 @@ if ( !$ath->isValid() ) {
 $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_values_details','values_admin'),'help' => 'TrackerAdministration.html#TrackerFieldValuesManagement'));
 
 $hp = Codex_HTMLPurifier::instance();
-echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) .'</a>\' '.$Language->getText('tracker_admin_field_values_details','values_admin').'</H2>';
+echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED) .'</a>\' '.$Language->getText('tracker_admin_field_values_details','values_admin').'</H2>';
 $ath->displayFieldValuesEditList();
 
 $ath->footer(array());
