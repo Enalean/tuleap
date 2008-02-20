@@ -817,7 +817,7 @@ if ( $func == 'gotoid' ) {
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
                 $ah = new ArtifactHtml($ath,$artifact_id);
-                if ($ah->updateFollowupComment($artifact_id,$followup_update,$changes)) {  
+                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
                     $agnf =& new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);

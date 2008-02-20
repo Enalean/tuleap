@@ -720,45 +720,44 @@ class ArtifactHtml extends Artifact {
 			          $value_id_old =  db_result($result, $i, 'old_value');
                 //}
                             
-                                $field = $art_field_fact->getFieldFromName($field_name);
-                                if ( $field ) {
-				  if ($field->userCanRead($group_id,$group_artifact_id)) {
+                            $field = $art_field_fact->getFieldFromName($field_name);
+                            if ( $field ) {
+                                if ($field->userCanRead($group_id,$group_artifact_id)) {
                                     $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
                                         '"><TD>'. $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</TD><TD>';
                         
                                     if ($field->isSelectBox()) {
-                                                // It's a select box look for value in clear
-                                                $html .= $field->getValue($group_artifact_id, $value_id_old).'</TD><TD>';
-						$html .= $field->getValue($group_artifact_id, $value_id_new);
-				    } else if ($field->isDateField()) {
-                                                // For date fields do some special processing
-                                                $html .= format_date("Y-m-j",$value_id_old).'</TD><TD>';
-						
-						$html .= format_date("Y-m-j",$value_id_new);
+                                        // It's a select box look for value in clear
+                                        $html .= $field->getValue($group_artifact_id, $value_id_old).'</TD><TD>';
+                                        $html .= $field->getValue($group_artifact_id, $value_id_new);
+                                    } else if ($field->isDateField()) {
+                                        // For date fields do some special processing
+                                        $html .= format_date("Y-m-j",$value_id_old).'</TD><TD>';
+                                        
+                                        $html .= format_date("Y-m-j",$value_id_new);
 
                                     } else if ($field->isFloat() ) {
-                                        	$html .= number_format($value_id_old,2).'</TD><TD>';
-						$html .= number_format($value_id_new,2);
+                                        $html .= number_format($value_id_old,2).'</TD><TD>';
+                                        $html .= number_format($value_id_new,2);
                                     } else {
-                                                // It's a text zone then display directly
-                                                $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
-                                                $html .= $hp->purify($value_id_new, CODEX_PURIFIER_BASIC);
+                                        // It's a text zone then display directly
+                                        $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
+                                        $html .= $hp->purify($value_id_new, CODEX_PURIFIER_BASIC);
                                     }
                         
                                     $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
-				  }
-                                } else {
-				    $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment&nbsp;#".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_BASIC) .'</TD><TD>';
-				    $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_BASIC) .'</TD><TD>';
-				    $html .=  $hp->purify($value_id_new, CODEX_PURIFIER_BASIC) ;
-				    $html .= '</TD>'.
+                                }
+                            } else {
+                                $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
+                                                    '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_BASIC) .'</TD><TD>';
+                                $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
+                                $html .=  $hp->purify($value_id_new, CODEX_PURIFIER_DISABLED) ;
+                                $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
-				}
-
+                            }
                         }
                 $html .= '</TABLE>';
             
@@ -1017,7 +1016,7 @@ class ArtifactHtml extends Artifact {
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
-        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($this->getFollowup($comment_id), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($this->getFollowup($comment_id), CODEX_PURIFIER_DISABLED) .'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
     }

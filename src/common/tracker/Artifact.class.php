@@ -2139,8 +2139,7 @@ class Artifact extends Error {
      * @return result set 
      */
     function getOriginalCommentDate($comment_id) {
-        
-    	$sql = 'SELECT field_name, email 
+    	$sql = 'SELECT field_name, date
                 FROM artifact_history
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
     	$res = db_query($sql);
@@ -2169,7 +2168,7 @@ class Artifact extends Error {
     * @return void
     */
     function mailFollowupWithPermissions($more_addresses=false,$changes=false) {
-      global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
+      global $art_field_fact,$Language;
         
       // check if notification is temporarily stopped in this tracker
       if (!$this->ArtifactType->getStopNotification()) {
@@ -2283,7 +2282,7 @@ class Artifact extends Error {
 	 * create the mail body containing only fields that they have the permission to read
 	 */
 	function createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
-	  global $art_field_fact,$art_fieldset_fact,$Language,$sys_lf,$sys_datefmt;
+	  global $art_field_fact,$art_fieldset_fact,$Language;
 
 	  $fmt_len = 40;
 	  $fmt_left = sprintf("%%-%ds ", $fmt_len-1);
@@ -2316,9 +2315,9 @@ class Artifact extends Error {
 	    // Generate the message preamble with all required
 	    // artifact fields - Changes first if there are some.
 	    if ($changes) {
-		$body = "$sys_lf=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============$sys_lf".$artifact_href."$sys_lf$sys_lf".
-		  $this->formatChanges($changes,$field_perm,$visible_change)."$sys_lf$sys_lf$sys_lf$sys_lf";
+		$body = $GLOBALS['sys_lf']."=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . 
+		  $this->formatChanges($changes,$field_perm,$visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
 
 		if (!$visible_change) return;
 	    }
@@ -2330,7 +2329,7 @@ class Artifact extends Error {
 	    $full_snapshot = "";
 
         // We write the name of the project
-        $full_snapshot .= sprintf($fmt_left."$sys_lf",$Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
+        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
         
 	    // Write all the fields, grouped by fieldsetset and ordered by rank.
 	    $left = 1;
@@ -2364,16 +2363,16 @@ class Artifact extends Error {
                     $item = sprintf(($left? $fmt_left : $fmt_right), $display);
                     if (strlen($item) > $fmt_len) {
                         if (! $left) {
-                          $fieldset_snapshot .= "$sys_lf";
+                          $fieldset_snapshot .= "". $GLOBALS['sys_lf'] ."";
                         }
                         $fieldset_snapshot .= sprintf($fmt_right, $display);
-                        $fieldset_snapshot .= "$sys_lf";
+                        $fieldset_snapshot .= "". $GLOBALS['sys_lf'] ."";
                         $left = 1;
                     } else {
                         $fieldset_snapshot .= $item;
                         $left = ! $left;
                         if ($left) {
-                          $fieldset_snapshot .= "$sys_lf";
+                          $fieldset_snapshot .= "". $GLOBALS['sys_lf'] ."";
                         }
                     }
               }
@@ -2381,23 +2380,23 @@ class Artifact extends Error {
             } // while
             
             if ($visible_fieldset) {
-                $full_snapshot .= "$sys_lf";
-                $full_snapshot .= ($left?"":"$sys_lf");
+                $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
+                $full_snapshot .= ($left?"":"". $GLOBALS['sys_lf'] ."");
                 $full_snapshot .= '--- '.$fieldset->getLabel().' ---';
-                $full_snapshot .= "$sys_lf";
+                $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
                 $full_snapshot .= $fieldset_snapshot;
             }
         }
 
-	    if ($visible_snapshot) $full_snapshot .= "$sys_lf";
+	    if ($visible_snapshot) $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
 
 	    $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
-		": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============$sys_lf".
-		($changes ? '':$artifact_href)."$sys_lf$sys_lf".$full_snapshot;
+		": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============". $GLOBALS['sys_lf'] . 
+		($changes ? '':$artifact_href) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $full_snapshot;
 
 
 	    if (! $left) {
-	      $body .= "$sys_lf";
+	      $body .= "". $GLOBALS['sys_lf'] ."";
 	    }
 	    
 	    // Now display other special fields
@@ -2406,31 +2405,31 @@ class Artifact extends Error {
 	    $body .= $this->showFollowUpComments($group_id, 0, true);
 	    
 	    // Then output the CC list
-	    $body .= "$sys_lf$sys_lf".$this->showCCList($group_id, $group_artifact_id, true);
+	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
 	    
 	    // Then output the dependencies
-	    $body .= "$sys_lf$sys_lf".$this->showDependencies($group_id,$group_artifact_id,true);
+	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showDependencies($group_id,$group_artifact_id,true);
 	    
 	    // Then output the history of attached files from newest to oldest
-	    $body .= "$sys_lf$sys_lf".$this->showAttachedFiles($group_id,$group_artifact_id,true);
+	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showAttachedFiles($group_id,$group_artifact_id,true);
 	    
         // Extract references from the message
         $referenceManager =& ReferenceManager::instance();
         $ref_array = $referenceManager->extractReferencesGrouped($body, $group_id);
         if (count($ref_array) > 0) {
-            $body .= $sys_lf.$sys_lf.$Language->getText('tracker_include_artifact','references').$sys_lf;
+            $body .= $GLOBALS['sys_lf'].$GLOBALS['sys_lf'].$Language->getText('tracker_include_artifact','references').$GLOBALS['sys_lf'];
         }
         foreach ($ref_array as $description => $match_array) {
-            $body .= $sys_lf.$description.":".$sys_lf;
+            $body .= $GLOBALS['sys_lf'].$description.":".$GLOBALS['sys_lf'];
             foreach ($match_array as $match => $ref_instance) {
                 $reference =& $ref_instance->getReference();
-                $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$sys_lf;
+                $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$GLOBALS['sys_lf'];
             }
         }
         
 	    // Finally output the message trailer
-	    $body .= "$sys_lf$sys_lf".$Language->getText('tracker_include_artifact','follow_link');
-	    $body .= "$sys_lf".$artifact_href;
+	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
+	    $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
 
 	    return $body;
 	}
@@ -2448,14 +2447,14 @@ class Artifact extends Error {
          */
         function formatChanges($changes,$field_perm,&$visible_change) {
         
-            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
+            global $art_field_fact,$Language;
 	    $visible_change = false;
             $out_hdr = '';
             $out = '';
             $out_com = '';
             $out_att = '';
             reset($changes);
-            $fmt = "%20s | %-25s | %s$sys_lf";
+            $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
         
 
 	    if (!$field_perm || ( 
@@ -2464,19 +2463,19 @@ class Artifact extends Error {
          (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))))) {
 	      if (user_isloggedin()) {
 		$user_id = user_getid();
-		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">$sys_lf";
-		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
+		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['sys_datefmt'],time()).' ('.user_get_timezone().')';
 	      } else {
-		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($sys_datefmt,time());
+		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['sys_datefmt'],time());
 	      }
 	    }
             //Process special cases first: follow-up comment
 	    if (array_key_exists('comment', $changes) && $changes['comment']) {
 	      $visible_change = true;
-	      $out_com = "$sys_lf$sys_lf---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------$sys_lf";
+	      $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
 	    
 	      if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
-		$out_com .= "[".$changes['comment']['type']."]$sys_lf";
+		$out_com .= "[".$changes['comment']['type']."]".$GLOBALS['sys_lf'];
 	      }
 	      $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
 	      unset($changes['comment']);
@@ -2485,10 +2484,10 @@ class Artifact extends Error {
             //Process special cases first: file attachment
 	    if (array_key_exists('attach', $changes) && $changes['attach']) {
 	      $visible_change = true;
-	      $out_att = "$sys_lf$sys_lf---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------$sys_lf";
-	      $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB$sys_lf",$changes['attach']['name'],
+	      $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
+	      $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB". $GLOBALS['sys_lf'] ."",$changes['attach']['name'],
 				  intval($changes['attach']['size']/1024) );
-	      $out_att .= $changes['attach']['description']."$sys_lf".$changes['attach']['href'];
+	      $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
 	      unset($changes['attach']);
 	    }
         
@@ -2512,8 +2511,8 @@ class Artifact extends Error {
 	    } // while
 	    
 	    if ($out) {
-	      $out = "$sys_lf$sys_lf".sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
-		"------------------------------------------------------------------$sys_lf".$out;
+	      $out = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
+		"------------------------------------------------------------------". $GLOBALS['sys_lf'] . $out;
             }
 	    
             return($out_hdr.$out.$out_com.$out_att);
@@ -2534,7 +2533,7 @@ class Artifact extends Error {
             //
             //  Format the comment rows from artifact_history
             //  
-            global $sys_datefmt,$sys_lf,$Language;
+            global $Language;
             
                 $group = $this->ArtifactType->getGroup();
                 $group_artifact_id = $this->ArtifactType->getID();
@@ -2546,7 +2545,7 @@ class Artifact extends Error {
             // No followup comment -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = "$sys_lf$sys_lf ".$Language->getText('tracker_import_utils','no_followups')."$sys_lf";
+                            $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils','no_followups').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
                         return $out;
@@ -2556,7 +2555,7 @@ class Artifact extends Error {
             
             // Header first
             if ($ascii) {
-                $out .= $Language->getText('tracker_include_artifact','follow_ups').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
+                $out .= $Language->getText('tracker_include_artifact','follow_ups').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
                 if ($rows > 0) {
                     $out .= '<div style="text-align:right">';
@@ -2596,13 +2595,13 @@ class Artifact extends Error {
                 }
                 
                 if ($ascii) {
-                    $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
-                        $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s$sys_lf%s";
+                    $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
+                        $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
                     $out .= sprintf($fmt,
-                                    format_date($sys_datefmt,db_result($orig_date, 0, 'date')),
+                                    format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
-                                    ($comment_type != '' ? $comment_type.$sys_lf : '') . $comment_txt
+                                    ($comment_type != '' ? $comment_type.$GLOBALS['sys_lf'] : '') . $comment_txt
                                     );
                 } else {
                     $style = '';
@@ -2658,9 +2657,10 @@ class Artifact extends Error {
                     } else {
                         $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify(user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')), CODEX_PURIFIER_BASIC) .'</a>';
                     }
+                    
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($sys_datefmt,db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
+                    $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2672,7 +2672,7 @@ class Artifact extends Error {
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
+                        $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
                         $out .= '</span>'.")";
                     }
                     $out .= '</div>';
@@ -2721,7 +2721,7 @@ class Artifact extends Error {
             }
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "");
+            $out .= ($ascii ? $GLOBALS['sys_lf'] : "");
         
             return($out);
                 
@@ -2738,7 +2738,7 @@ class Artifact extends Error {
          */
         function showCCList ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
             $hp = CodeX_HTMLPurifier::instance();
-            global $sys_datefmt,$sys_lf,$Language;
+            global $Language;
         
             //
             //      format the CC list for this artifact
@@ -2751,7 +2751,7 @@ class Artifact extends Error {
             // Nobody in the CC list -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $Language->getText('tracker_include_artifact','cc_empty')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','cc_empty').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_include_artifact','cc_empty').'</H4>';
                         return $out;
@@ -2760,10 +2760,10 @@ class Artifact extends Error {
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-		$out .= $Language->getText('tracker_include_artifact','cc_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','cc_list'))).$sys_lf.$sys_lf;
-                        $fmt = "%-35s | %s$sys_lf";
+		$out .= $Language->getText('tracker_include_artifact','cc_list').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','cc_list'))).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+                        $fmt = "%-35s | %s".$GLOBALS['sys_lf'];
                         $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','cc_address'), $Language->getText('tracker_include_artifact','fill_cc_list_cmt'));
-                        $out .= "------------------------------------------------------------------$sys_lf";
+                        $out .= "------------------------------------------------------------------". $GLOBALS['sys_lf'];
             } else {    
         
                         $title_arr=array();
@@ -2821,14 +2821,14 @@ class Artifact extends Error {
                                             $href_cc,
                                              $hp->purify(db_result($result, $i, 'comment'), CODEX_PURIFIER_BASIC) ,
                                             util_user_link(db_result($result, $i, 'user_name')),
-                                            format_date($sys_datefmt,db_result($result, $i, 'date')),
+                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')),
                                             $html_delete);
                         
                         } // for
             }
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+            $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
         
             return($out);
         
@@ -2845,7 +2845,7 @@ class Artifact extends Error {
          */
         function showDependencies ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
             $hp = CodeX_HTMLPurifier::instance();
-            global $sys_datefmt,$sys_lf,$Language;
+            global $Language;
         
             //
             //      format the dependencies list for this artifact
@@ -2857,7 +2857,7 @@ class Artifact extends Error {
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $Language->getText('tracker_include_artifact','dep_list_empty')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','dep_list_empty').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_include_artifact','dep_list_empty').'</H4>';
                         return $out;
@@ -2866,10 +2866,10 @@ class Artifact extends Error {
             // Header first an determine what the print out format is
             // based on output type (Ascii, HTML)
             if ($ascii) {
-		$out .= $Language->getText('tracker_include_artifact','dep_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list')))."$sys_lf$sys_lf";
-                        $fmt = "%-15s | %s$sys_lf";
+		$out .= $Language->getText('tracker_include_artifact','dep_list').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list'))). $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
+                        $fmt = "%-15s | %s". $GLOBALS['sys_lf'];
                         $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
-                        $out .= "------------------------------------------------------------------$sys_lf";
+                        $out .= "------------------------------------------------------------------". $GLOBALS['sys_lf'];
             } else {    
         
                         $title_arr=array();
@@ -2921,7 +2921,7 @@ class Artifact extends Error {
             }
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+            $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
         
             return($out);
         
@@ -2938,7 +2938,7 @@ class Artifact extends Error {
          */
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
-            global $sys_datefmt,$sys_lf,$Language;
+            global $Language;
             $hp = CodeX_HTMLPurifier::instance();
             //
             //  show the files attached to this artifact
@@ -2950,7 +2950,7 @@ class Artifact extends Error {
             // No file attached -> return now
             if ($rows <= 0) {
                         if ($ascii)
-                            $out = $Language->getText('tracker_include_artifact','no_file_attached')."$sys_lf";
+                            $out = $Language->getText('tracker_include_artifact','no_file_attached').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_include_artifact','no_file_attached').'</H4>';
                         return $out;
@@ -2958,7 +2958,7 @@ class Artifact extends Error {
                 
             // Header first
             if ($ascii) {
-		$out = $Language->getText('tracker_include_artifact','file_attachment').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','file_attachment')));
+		$out = $Language->getText('tracker_include_artifact','file_attachment').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','file_attachment')));
             } else {    
                 
                 $title_arr=array();
@@ -2976,10 +2976,10 @@ class Artifact extends Error {
         
             // Determine what the print out format is based on output type (Ascii, HTML)
             if ($ascii) {
-                        $fmt = "$sys_lf$sys_lf------------------------------------------------------------------$sys_lf".
-                            $Language->getText('tracker_import_utils','date').": %s  ".$Language->getText('tracker_include_artifact','name').": %s  ".$Language->getText('tracker_include_artifact','size').": %dKB   ".$Language->getText('global','by').": %s$sys_lf%s$sys_lf%s";
+                        $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
+                            $Language->getText('tracker_import_utils','date').": %s  ".$Language->getText('tracker_include_artifact','name').": %s  ".$Language->getText('tracker_include_artifact','size').": %dKB   ".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s". $GLOBALS['sys_lf'] ."%s";
             } else {
-                        $fmt = "$sys_lf".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
+                        $fmt = "". $GLOBALS['sys_lf'] . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
                         if ($pv == 0) {
                             $fmt .= '<td align="center">%s</td>';
                         }
@@ -2997,7 +2997,7 @@ class Artifact extends Error {
                 
                         if ($ascii) {
                             $out .= sprintf($fmt,
-                                            format_date($sys_datefmt,db_result($result, $i, 'adddate')),
+                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
                                              $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                              $hp->purify(db_result($result, $i, 'user_name'), CODEX_PURIFIER_BASIC) ,
@@ -3021,13 +3021,13 @@ class Artifact extends Error {
                                              $hp->purify(db_result($result, $i, 'description'), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
-                                            format_date($sys_datefmt,db_result($result, $i, 'adddate')),
+                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
                                             $html_delete);
                         }
         } // for
         
             // final touch...
-            $out .= ($ascii ? "$sys_lf" : "</TABLE>");
+            $out .= ($ascii ? "". $GLOBALS['sys_lf'] ."" : "</TABLE>");
         
             return($out);
         
