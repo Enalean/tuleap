@@ -1092,7 +1092,7 @@ EOS;
         while (list($fieldset_id, $fieldset) = each($fieldsets_with_used_fields)) {
             $used_fields_in_fieldset = $fieldset->getAllUsedFields();
             // separation between fieldsets
-            $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td></tr>';
             while (list($key, $field) = each($used_fields_in_fieldset) ) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
@@ -1102,7 +1102,7 @@ EOS;
                  $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) .'</A></td>'.
                 "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
                 if ( $field->isStandardField() ) {
@@ -1129,7 +1129,7 @@ EOS;
         while (list($fieldset_id, $fieldset) = each($fieldsets_with_unused_fields)) {
             $unused_fields_in_fieldset = $fieldset->getAllUnusedFields();
             // separation between fieldsets
-            $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td></tr>';
             while (list($key, $field) = each($unused_fields_in_fieldset) ) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
@@ -1139,7 +1139,7 @@ EOS;
                  $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) .'</A></td>'.
                 "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
                 if ( $field->isStandardField() ) {
@@ -1538,7 +1538,7 @@ EOS;
 		$html = "";
 		while (list($fieldset_id, $fieldset) = each($fieldsets)) {
             
-            $html .= '<tr class="fieldset_separator"><td colspan="3">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td></tr>';
+            $html .= '<tr class="fieldset_separator"><td colspan="3">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td></tr>';
             
             $fields = $fieldset->getAllUsedFields();
             while (list($field_name,$field) = each($fields)) {
@@ -1557,7 +1557,7 @@ EOS;
                 $field->getLabel().'</A></td>'.
                 "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>';
                 
-                $html .= '<td>'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</td>';
+                $html .= '<td>'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>';
             
                 $html .= "<TR>";
     
@@ -2828,11 +2828,11 @@ EOS;
         echo '<legend>'.$Language->getText('tracker_include_type','fieldset_ident').'</legend>';
         echo '<p>';
         echo '<label for="name">'.$Language->getText('tracker_include_type','fieldset_name').': <font color="red">*</font></label> ';
-        echo '<input type="text" name="name" id="name" value="'. $hp->purify(($fieldset_name?$fieldset_name:""), CODEX_PURIFIER_CONVERT_HTML) .'" size="30" maxlength="40" />';
+        echo '<input type="text" name="name" id="name" value="'. $hp->purify(SimpleSanitizer::unsanitize($fieldset_name?$fieldset_name:""), CODEX_PURIFIER_CONVERT_HTML) .'" size="30" maxlength="40" />';
         echo '</p>';
         echo '<p>';
         echo '<label for="description">'.$Language->getText('tracker_include_type','fieldset_desc').':</label>';
-        echo '<input type="text" name="description" id="description" value="'. $hp->purify(($description?$description:""), CODEX_PURIFIER_CONVERT_HTML) .'" size="70" maxlength="255" />';
+        echo '<input type="text" name="description" id="description" value="'. $hp->purify(SimpleSanitizer::unsanitize($description?$description:""), CODEX_PURIFIER_CONVERT_HTML) .'" size="70" maxlength="255" />';
         echo '</p>';
         echo '</fieldset>';
         echo '<fieldset>';
@@ -2887,8 +2887,8 @@ EOS;
             $rank = ($fieldset->getRank())?$fieldset->getRank():"-";
             
             $html .= '<tr class="'.util_get_alt_row_color($iu) .'">';
-            $html .= '<td><a href="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().'&func=display_fieldset_update&fieldset_id='.(int)$fieldset->getID().'">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</A></td>';
-            $html .= '<td>'. $hp->purify($fieldset->getDescriptionText(), CODEX_PURIFIER_BASIC) .'</td>';
+            $html .= '<td><a href="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().'&func=display_fieldset_update&fieldset_id='.(int)$fieldset->getID().'">'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</A></td>';
+            $html .= '<td>'. $hp->purify($fieldset->getDescriptionText(), CODEX_PURIFIER_DISABLED) .'</td>';
             $html .= '<td>';
             $fields_contained = $fieldset->getArtifactFields();
             if (count($fields_contained) > 0) {
@@ -2943,7 +2943,7 @@ EOS;
             if ($fieldset->getID() === $selected_fieldset_id) {
                 $html .= ' selected="selected"';
             }
-            $html .= '>'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</option>';
+            $html .= '>'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</option>';
         }
         
         $html .= '</select>';

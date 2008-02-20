@@ -952,7 +952,7 @@ if ($group_id && !$atid) {
 						'help' => 'TrackerAdministration.html#CreationandModificationofaTrackerFieldSet'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  ' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED) ."</a>' ".
-			  $Language->getText('tracker_admin_index','modify_fieldset_for', $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_BASIC) )."</H2>";
+			  $Language->getText('tracker_admin_index','modify_fieldset_for', $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) )."</H2>";
 			$ath->displayFieldSetCreateForm("fieldset_update",$fieldset->getID(),
 						    $fieldset->getLabel(),$fieldset->getDescriptionText(),$fieldset->getRank());
 			$ath->footer(array());
