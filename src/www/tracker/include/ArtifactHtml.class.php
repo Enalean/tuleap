@@ -144,7 +144,7 @@ class ArtifactHtml extends Artifact {
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
                     $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify($result_fieldset->getDescriptionText(), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</span></TD></TR>';
+                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
 
@@ -558,7 +558,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 $html .= '<TR><TD COLSPAN="'. (int)$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'. (int)$columns_number.'">&nbsp;<span title="'. $hp->purify($result_fieldset->getDescriptionText(), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</span></TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'. (int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
@@ -940,7 +940,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify($result_fieldset->getDescriptionText(), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_BASIC) .'</span></TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
