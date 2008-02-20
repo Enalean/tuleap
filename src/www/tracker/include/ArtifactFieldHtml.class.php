@@ -50,11 +50,11 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function labelDisplay($break=false,$ascii=false,$tooltip=false) {
-	    $output = $this->getLabel().': ';
-        $hp = CodeX_HTMLPurifier::instance();
+	    $hp = CodeX_HTMLPurifier::instance();
+        $output =  $hp->purify($this->getLabel().': ', CODEX_PURIFIER_DISABLED) ;
         if (!$ascii) {
                 if ($tooltip) {
-                    $output = '<a class="tooltip" href="#" title="'. $hp->purify($this->description, CODEX_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
+                    $output = '<a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODEX_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
                 }
                 $output = '<B>'. $output .'</B>';
             }
@@ -308,7 +308,7 @@ class ArtifactFieldHtml extends ArtifactField {
 
 	    $html = '<input type="text"'
             .' name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .'"'
-            .' value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'"'
+            .' value="'. $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_CONVERT_HTML) .'"'
             .$sizearg
             .$maxlengtharg
             .'>';
@@ -333,7 +333,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			list($cols, $rows) = $this->getGlobalDisplaySize();
 	
 	    $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
-		'" id="tracker_'. $hp->purify( $this->field_name, CODEX_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+		'" id="tracker_'. $hp->purify( $this->field_name, CODEX_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify($value, CODEX_PURIFIER_DISABLED) .'</TEXTAREA>';
 	
 	    return($html);
 	

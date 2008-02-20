@@ -73,7 +73,7 @@ if ($group_id && $mode == "admin") {
     for ($j = 0; $j < count($at_arr); $j++) {
       echo '
 		  <tr class="'.util_get_alt_row_color($j).'"> 
-		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '. $hp->purify($at_arr[$j]->getName(), CODEX_PURIFIER_BASIC) .'</b></td>
+		    <td><b>'.$Language->getText('tracker_import_admin','tracker').': '. $hp->purify($at_arr[$j]->getName(), CODEX_PURIFIER_DISABLED) .'</b></td>
 		    <td align="center">
                       <a href="/tracker/index.php?group_id='.(int)$group_id.'&atid='.(int)($at_arr[$j]->getID()).'&user_id='.(int)user_getid().'&func=import">'.$Language->getText('tracker_import_admin','import').'</a>
 		    </td>

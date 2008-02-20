@@ -85,7 +85,7 @@ class ArtifactHtml extends Artifact {
             if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
                 echo " #". $hp->purify($this->getID(), CODEX_PURIFIER_BASIC) ;
             }
-            echo " ] ". $hp->purify($summary, CODEX_PURIFIER_BASIC) ."</H2>";
+            echo " ] ". $hp->purify($summary, CODEX_PURIFIER_DISABLED) ."</H2>";
             echo "</TD>";
             
             if ( $pv == 0) {
@@ -724,7 +724,7 @@ class ArtifactHtml extends Artifact {
                                 if ( $field ) {
 				  if ($field->userCanRead($group_id,$group_artifact_id)) {
                                     $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'. $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) .'</TD><TD>';
+                                        '"><TD>'. $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</TD><TD>';
                         
                                     if ($field->isSelectBox()) {
                                                 // It's a select box look for value in clear
@@ -741,8 +741,8 @@ class ArtifactHtml extends Artifact {
 						$html .= number_format($value_id_new,2);
                                     } else {
                                                 // It's a text zone then display directly
-                                                $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_BASIC) .'</TD><TD>';
-						$html .= $value_id_new;
+                                                $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
+                                                $html .= $hp->purify($value_id_new, CODEX_PURIFIER_BASIC);
                                     }
                         
                                     $html .= '</TD>'.
@@ -921,14 +921,14 @@ class ArtifactHtml extends Artifact {
     
                         if ( ($sz > $max_size) || ($field->getName()=='details') ) {
                             $fieldset_html .= "\n<TR>".
-                                '<TD valign="top"><a class="tooltip" href="#" title="'. $hp->purify($field->getDescription(), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
+                            '<TD valign="top"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                 '<TD valign="middle" colspan="'.($columns_number-1).'">'.
                                 $value.'</TD>'.                   
                                 "\n</TR>";
                             $i=0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                            $fieldset_html .= '<TD valign="middle"><a class="tooltip" href="#" title="'. $hp->purify($field->getDescription(), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
+                            $fieldset_html .= '<TD valign="middle"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                   '<TD valign="middle">'.$value.'</TD>';
                             $i++;
                             $fieldset_html .= ($i % $fields_per_line ? '<td class="artifact_spacer">&nbsp;</td>':"\n</TR>");

@@ -62,7 +62,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) > 1) {
-                        echo "fields['".(int)$field->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$field->getID()."', '".(int)$field->getName()."', '".addslashes($field->getLabel())."');\n";
+                        echo "fields['".(int)$field->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$field->getID()."', '".(int)$field->getName()."', '".addslashes(SimpleSanitizer::unsanitize($field->getLabel()))."');\n";
                         $default_value = $field->getDefaultValue();
                         echo "options['".(int)$field->getID()."'] = {};\n";
                         while ($row = db_fetch_array($values)) {

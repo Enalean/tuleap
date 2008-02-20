@@ -557,7 +557,7 @@ EOS;
                     $html .= '<td>';
                     
                     $name = "<a href='".$url_action_without_group_first."&selected_id=".(int)$second_part['id']."&group_first=".($group_first?0:1)."'>";
-                    $name .=  $hp->purify($second_part['name'], CODEX_PURIFIER_BASIC) ;
+                    $name .=  $hp->purify($second_part['name'], $group_first ? CODEX_PURIFIER_DISABLED : CODEX_PURIFIER_BASIC ) ;
                     $name .= "</a>";
                     if (!$group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
                         $name = "<span >".$name." *</span>"; //TODO css
@@ -1099,9 +1099,9 @@ EOS;
                 
                 $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
                 $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.(int)$field->getID().'">'.
-                 $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) .'</A></td>'.
+                 $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</A></td>'.
                 "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
@@ -1136,9 +1136,9 @@ EOS;
                 
                 $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
                 $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.(int)$field->getID().'">'.
-                 $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) .'</A></td>'.
+                 $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</A></td>'.
                 "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
                 "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
@@ -1344,13 +1344,13 @@ EOS;
 			  <input type="hidden" name="group_id" value="'.(int)$this->Group->getID().'">
 			  <input type="hidden" name="atid" value="'.(int)$this->getID().'">
 			  <input type="hidden" name="field_id" value="'.(int)$field_id.'">
-			  <input type="hidden" name="field_name" value="'. $hp->purify($field_name, CODEX_PURIFIER_CONVERT_HTML) .'">
+			  <input type="hidden" name="field_name" value="'. $hp->purify(SimpleSanitizer::unsanitize($field_name), CODEX_PURIFIER_CONVERT_HTML) .'">
 			  <input type="hidden" name="data_type" value="'. $hp->purify($data_type, CODEX_PURIFIER_CONVERT_HTML) .'">
 			  <input type="hidden" name="display_type" value="'. $hp->purify($display_type, CODEX_PURIFIER_CONVERT_HTML) .'">';
 		}
 		
 		if ( $field && $field->isStandardField() ) {
-			echo '<p><i>'.$Language->getText('tracker_include_type','imp_note', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) ).'</i></p>';
+			echo '<p><i>'.$Language->getText('tracker_include_type','imp_note', $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) ).'</i></p>';
 		}
 	
 		echo '
@@ -1360,14 +1360,14 @@ EOS;
                               <p>'.$Language->getText('tracker_include_report','field_label').': <font color="red">*</font> ';
 		      
 		if ( $label ) {
-			echo '<input type="text" name="label" size="30" maxlength="40" value="'. $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) .'">';
+			echo '<input type="text" name="label" size="30" maxlength="40" value="'. $hp->purify(SimpleSanitizer::unsanitize($label), CODEX_PURIFIER_CONVERT_HTML) .'">';
 		} else {
 			echo '<input type="text" name="label" size="30" maxlength="40">';
 		}
 		
 		echo '<p>'.$Language->getText('tracker_include_artifact','desc').': ';
 		            
-		echo '<input type=text name="description" size="70" maxlength="255" value="'. $hp->purify($description, CODEX_PURIFIER_CONVERT_HTML) .'">';
+		echo '<input type=text name="description" size="70" maxlength="255" value="'. $hp->purify(SimpleSanitizer::unsanitize($description), CODEX_PURIFIER_CONVERT_HTML) .'">';
 
 		
 		echo '
@@ -1554,8 +1554,8 @@ EOS;
             
                 $html .= '<TD><A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
                 '&func=display_field_values&field_id='.(int)$field->getID().'">'.
-                $field->getLabel().'</A></td>'.
-                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_BASIC) .'</td>';
+                $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED).'</A></td>'.
+                "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_DISABLED) .'</td>';
                 
                 $html .= '<td>'. $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>';
             
@@ -2273,7 +2273,7 @@ EOS;
 	
 		    if ($field->isSelectBox()) {
 	
-			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=".(int)$field->getID()."\"> ". $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) ."s by '". $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) ."'</A><BR>";
+			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=".(int)$field->getID()."\"> ". $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) ."s by '". $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) ."'</A><BR>";
 		    }
 		}
 	
@@ -2328,12 +2328,12 @@ EOS;
 			$allItems = $this->getArtifactsByField($field);
 		}
 	
-		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
+		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )).'</H3>';
 	
-		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )));
-		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )).'</H3>';
+		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
+		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )).'</H3>';
 	
-		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_BASIC) )));
+		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
 		$this->footer(array());
 	
 	}
@@ -2820,8 +2820,8 @@ EOS;
               <input type="hidden" name="group_id" value="'.$this->Group->getID().'">
               <input type="hidden" name="atid" value="'.(int)$this->getID().'">
               <input type="hidden" name="fieldset_id" value="'.(int)$fieldset_id.'">
-              <input type="hidden" name="fieldset_name" value="'. $hp->purify($fieldset_name, CODEX_PURIFIER_CONVERT_HTML) .'">
-              <input type="hidden" name="description" value="'. $hp->purify($description, CODEX_PURIFIER_CONVERT_HTML) .'">
+              <input type="hidden" name="fieldset_name" value="'. $hp->purify(SimpleSanitizer::unsanitize($fieldset_name), CODEX_PURIFIER_CONVERT_HTML) .'">
+              <input type="hidden" name="description" value="'. $hp->purify(SimpleSanitizer::unsanitize($description), CODEX_PURIFIER_CONVERT_HTML) .'">
               <input type="hidden" name="rank" value="'. $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'">';
         }
         echo '<fieldset>';
