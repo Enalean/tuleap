@@ -2051,13 +2051,19 @@ function artifact_report_to_soap($artifact) {
     $return = array();
     $return_fields = array();
     
-    $return['artifact_id'] = $artifact['artifact_id'];
+    $return['artifact_id'] = $artifact['id'];
     $return['severity'] = $artifact['severity_id'];
     
     // we assume that the first field is 'severity_id'
     $arr_keys = array_keys($artifact);
     if ($arr_keys[0] == 'severity_id') {
         // we remove the severity_id field (only used to color the line) -- if severity is used in the report, the field name is 'severity'
+        $severity_field = array_shift($artifact);
+    }
+    // we assume that now the first field is 'id'
+    $arr_keys = array_keys($artifact);
+    if ($arr_keys[0] == 'id') {
+        // we remove the id field (only used to identify the artifact) -- if artifact_id is used in the report, the field name is 'artifact_id'
         $severity_field = array_shift($artifact);
     }
     
