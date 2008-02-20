@@ -7,7 +7,7 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-//require_once('common/include/Error.class.php');
+require_once('common/include/Error.class.php');
   //require_once('www/project/admin/permissions.php');
 
 $GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
