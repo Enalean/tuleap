@@ -598,7 +598,7 @@ class Artifact extends Error {
 	$res3=db_query($sql);
 	
 	if ($res3 && db_numrows($res3) > 0) {
-	  $comment = addslashes(util_unconvert_htmlspecialchars(db_result($res3,0,'body')));
+	  $comment = util_unconvert_htmlspecialchars(db_result($res3,0,'body'));
 	  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','canned_used'));
 	} else {
 	  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','unable_canned'));

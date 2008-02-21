@@ -129,8 +129,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	      echo '<TR class="'. util_get_alt_row_color($i) .'">'.
 	      '<TD><A HREF="/tracker/admin?func=canned&update_canned=1&artifact_canned_id='.
 	      (int)(db_result($result, $i, 'artifact_canned_id')).'&atid='.(int)$atid.'&group_id='.(int)$group_id.'">'.
-	       $hp->purify(db_result($result, $i, 'title'), CODEX_PURIFIER_BASIC) .'</A></TD>'.
-	      '<TD>'. $hp->purify(substr(db_result($result, $i, 'body'),0,160), CODEX_PURIFIER_BASIC) .
+	       $hp->purify(db_result($result, $i, 'title'), CODEX_PURIFIER_DISABLED) .'</A></TD>'.
+	      '<TD>'. $hp->purify(substr(db_result($result, $i, 'body'),0,160), CODEX_PURIFIER_DISABLED) .
 	      '<b>...</b></TD>'.
 	      '<td align="center"><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id='.
 	      (int)(db_result($result, $i, 'artifact_canned_id')).'&atid='.(int)$atid.'&group_id='.(int)$group_id.
