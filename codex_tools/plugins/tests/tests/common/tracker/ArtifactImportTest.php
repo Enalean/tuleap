@@ -23,24 +23,25 @@ class ArtifactImportTest_ArtifactField {
 }
 Mock::generate('ArtifactImportTest_ArtifactField','ArtifactFieldImportVersion');
 
-//require_once('common/tracker/ArtifactFieldFactory.class.php');
-//Mock::generatePartial('ArtifactFieldFactory','ArtifactFieldFactoryTestVersion',array('getFieldFromName','getAllUsedFields'));
-class ArtifactImportTest_ArtifactFieldFactory {
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+Mock::generate('ArtifactFieldFactory');
+/*class ArtifactImportTest_ArtifactFieldFactory {
   function getFieldFromName() {}
   function getAllUsedFields() {}
 }
 Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
+*/
 
-//require_once('common/tracker/ArtifactType.class.php');
-//Mock::generatePartial('ArtifactType','ArtifactTypeTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
-class ArtifactType {
+require_once('common/tracker/ArtifactType.class.php');
+Mock::generatePartial('ArtifactType','ArtifactTypeTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
+/*class ArtifactType {
   function getName() {}
   function allowsAnon() {}
   function getID() {}
   function userIsAdmin() {}
 }
 Mock::generate('ArtifactType');
-
+*/
 
 
 /**
@@ -71,7 +72,7 @@ class ArtifactImportTest extends UnitTestCase {
       /***************** var setup ***********************
        */
       
-      $at = new MockArtifactType($this);
+      $at = new ArtifactTypeTestVersion($this);
       $at->setReturnValue('getName','TestTracker');
       $at->setReturnValue('allowsAnon',false);
       $at->setReturnValue('getID','123');
@@ -133,7 +134,7 @@ class ArtifactImportTest extends UnitTestCase {
       $orig_subm->setReturnValue('isMultiSelectBox',false);
 
       
-      $atf = new ArtifactFieldFactory($this);
+      $atf = new MockArtifactFieldFactory($at);
       $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
       $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
       $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
@@ -205,7 +206,7 @@ class ArtifactImportTest extends UnitTestCase {
       $sbox_field->setReturnValue('isMultiSelectBox',false);
 
 
-      $atf = new ArtifactFieldFactory($this);
+      $atf = new MockArtifactFieldFactory($this);
       $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
       $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
       $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
@@ -279,12 +280,12 @@ class ArtifactImportTest extends UnitTestCase {
        */
 
       
-      $atf = new ArtifactFieldFactory($this);
-      $atf->setReturnValue('getAllUsedFields',array());
-      $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
-      $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+      $aff = new MockArtifactFieldFactory($this);
+      $aff->setReturnValue('getAllUsedFields',array());
+      $aff->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
+      $aff->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
 
-      $test = new ArtifactImport($at,$atf,'group');
+      $test = new ArtifactImport($at,$aff,'group');
       $test->parseFieldNames(array('Follow-up Comments'));
       $parsed_comments = array();
       $art_id = '1149';

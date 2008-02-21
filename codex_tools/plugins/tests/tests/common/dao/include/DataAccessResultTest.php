@@ -17,11 +17,6 @@ class DataAccessResultTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
 
-    function testDAR() {
-        $dar =& new DataAccessResultTestVersion($this);
-        $this->assertIsA($dar, 'Iterator');
-    }
-    
     function testGetRow() {
         $dar =& new DataAccessResultTestVersion($this);
         $dar->expectOnce('current');

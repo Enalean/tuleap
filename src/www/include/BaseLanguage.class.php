@@ -146,22 +146,25 @@ class BaseLanguage {
 			args is an array which will replace the $1, $2, etc
 			in the text_array string before it is returned
 		*/
-		if ($args || $args == 0) {
-		    //$tstring = sprintf($this->text_array[$pagename][$category],$args);
-			for ($i=1; $i<=sizeof($args)+1; $i++) {
-				$patterns[] = '/\$'.$i.'/';
-			}
-			$tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
-		} else {
-                    // Remove $1, $2 etc. even if the given arguments are empty
-                    $pattern = '/\$\d+/';
-                    $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
-                    //$tstring = $this->text_array[$pagename][$category];
-		}
+        $tstring = '';
+        if (isset($this->text_array[$pagename][$category])) {
+            if ($args || $args == 0) {
+                //$tstring = sprintf($this->text_array[$pagename][$category],$args);
+                for ($i=1; $i<=sizeof($args)+1; $i++) {
+                    $patterns[] = '/\$'.$i.'/';
+                }
+                $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
+            } else {
+                // Remove $1, $2 etc. even if the given arguments are empty
+                $pattern = '/\$\d+/';
+                $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
+                //$tstring = $this->text_array[$pagename][$category];
+            }
+        }
 		if (!$tstring) {
 		    $tstring = "*** Unkown msg $pagename - $category ***";
 		}
-		return "$tstring";
+		return $tstring;
 	}
     
     function hasText($pagename, $category) {
