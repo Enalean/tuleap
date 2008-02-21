@@ -526,7 +526,7 @@ class ArtifactReportHtml extends ArtifactReport {
 
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() && $pv == 0) {
-                        $html_result .= $ath->getBrowseInstructions();
+                        $html_result .=  $hp->purify($ath->getBrowseInstructions(), CODEX_PURIFIER_FULL) ;
                 }
                 
                 $html_result .= '

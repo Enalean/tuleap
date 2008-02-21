@@ -470,7 +470,7 @@ class ArtifactHtml extends Artifact {
         
         // Display submit informations if any
         if ( $this->ArtifactType->getSubmitInstructions() ) {
-            echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODEX_PURIFIER_FULL) ;
         }
         
         // Beginning of the submission form with fixed fields
@@ -866,7 +866,7 @@ class ArtifactHtml extends Artifact {
         
         // Display submit informations if any
         if ( $this->ArtifactType->getSubmitInstructions() ) {
-            echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODEX_PURIFIER_FULL) ;
         }
         
         // Beginning of the submission form with fixed fields
