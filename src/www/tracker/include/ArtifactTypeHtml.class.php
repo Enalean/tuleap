@@ -1831,7 +1831,7 @@ EOS;
 			return;
 		}
 
-		$values = $field->getFieldValues ($this->getID(),"'A','P'");
+		$values = $field->getFieldValues ($this->getID(), array('A','P'));
 		$rows = db_numrows($values);
 		
 		if (!$values || ($rows == 0)) {
@@ -1874,8 +1874,8 @@ EOS;
 			}
 		    $html .= '<TD><A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
 			'&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">'.
-			$row['value'].'</A></td>'.
-			"\n<td>". $hp->purify($row['description'], CODEX_PURIFIER_BASIC) .'</td>'.
+			$hp->purify($row['value'], CODEX_PURIFIER_DISABLED).'</A></td>'.
+			"\n<td>". $hp->purify($row['description'], CODEX_PURIFIER_DISABLED) .'</td>'.
 			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
 			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
 			
@@ -1901,7 +1901,7 @@ EOS;
 
 		// Build HTML ouput for Unused fields
 		$iu=0;
-		$values = $field->getFieldValues ($this->getID(),"'H'");
+		$values = $field->getFieldValues ($this->getID(), array('H'));
 		$html = "";
 		
 		while ($row = db_fetch_array($values)) {
@@ -2164,7 +2164,7 @@ EOS;
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo $Language->getText('tracker_include_type','val').': ';
-			echo html_build_select_box ($field->getFieldValues($this->getID(),"'A','P'"),"default_value",$default_value);
+			echo html_build_select_box ($field->getFieldValues($this->getID(),array('A','P')),"default_value",$default_value);
 		} else if ( $field->isDateField() ) {
             echo '<input type="radio" name="default_date_type" value="current_date"'.($default_value==""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','current_date').'</input><br />';
             echo '<input type="radio" name="default_date_type" value="selected_date"'.($default_value!=""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','date_value').'</input> ';

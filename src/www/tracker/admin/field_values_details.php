@@ -36,7 +36,7 @@ if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
         $val_func = $field->getValueFunction();	
-	if ( $val_func[0] ) {	  
+	if ( isset($val_func[0]) && $val_func[0] ) {	  
 	  $ath->displayValueFunctionForm($field_id,$val_func);
 	  $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$val_func);
 	} else {

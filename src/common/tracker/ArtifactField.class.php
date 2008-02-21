@@ -723,12 +723,15 @@ class ArtifactField extends Error {
 	function getFieldValues ($group_artifact_id,$status) {
         $res_value = false;
 	$gvf = $this->getGlobalValueFunction();
-	    if (!$gvf[0]) {
-
+	    if (!isset($gvf[0]) || !$gvf[0]) {
+            $status_in = array();
+            foreach($status as $s) {
+                $status_in[] = "'". db_es($s) ."'";
+            }
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
 			    "FROM artifact_field_value_list ".
 			    "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id= ". db_ei($this->field_id) ." ".
-			    "AND status IN (". db_es($status) .") ".
+			    "AND status IN (". implode(',', $status_in) .") ".
 			    "ORDER BY order_id ASC";
 			$res_value = db_query($sql);
 	    }
