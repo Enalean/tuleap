@@ -2496,7 +2496,7 @@ class Artifact extends Error {
             while ( list($field_name,$h) = each($changes)) {
 	      
 	      // If both removed and added items are empty skip - Sanity check
-	      if (!$h['del'] && !$h['add'] ||
+	      if (((!isset($h['del']) || !$h['del']) && (!isset($h['add']) || !$h['add'])) ||
 		  $field_perm && (
           !isset($field_perm[$field_name]) ||
 		  !$field_perm[$field_name] || 
