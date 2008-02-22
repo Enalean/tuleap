@@ -3005,10 +3005,10 @@ class Artifact extends Error {
                         if ($ascii) {
                             $out .= sprintf($fmt,
                                             format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
-                                             $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) ,
+                                             db_result($result, $i, 'filename') ,
                                             intval(db_result($result, $i, 'filesize')/1024),
-                                             $hp->purify(db_result($result, $i, 'user_name'), CODEX_PURIFIER_BASIC) ,
-                                             $hp->purify(db_result($result, $i, 'description'), CODEX_PURIFIER_BASIC) ,
+                                             db_result($result, $i, 'user_name'),
+                                             SimpleSanitizer::unsanitize(db_result($result, $i, 'description')),
                                             $server.$href);
                         } else {
                             // show CC delete icon if one of the condition is met:
@@ -3025,7 +3025,7 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) .'</a>',
-                                             $hp->purify(db_result($result, $i, 'description'), CODEX_PURIFIER_BASIC) ,
+                                             $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
