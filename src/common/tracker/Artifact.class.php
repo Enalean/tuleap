@@ -2382,7 +2382,7 @@ class Artifact extends Error {
             if ($visible_fieldset) {
                 $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
                 $full_snapshot .= ($left?"":"". $GLOBALS['sys_lf'] ."");
-                $full_snapshot .= '--- '.$fieldset->getLabel().' ---';
+                $full_snapshot .= '--- '.SimpleSanitizer::unsanitize($fieldset->getLabel()).' ---';
                 $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
                 $full_snapshot .= $fieldset_snapshot;
             }
