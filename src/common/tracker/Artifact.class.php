@@ -2803,7 +2803,7 @@ class Artifact extends Error {
                             $href_cc = '<a href="mailto:'.util_normalize_email($email).'">'.$email.'</a>';
                 
                         if ($ascii) {
-                            $out .= sprintf($fmt, $email, db_result($result, $i, 'comment'));
+                            $out .= sprintf($fmt, $email, SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')));
                         } else {
                 
                             // show CC delete icon if one of the condition is met:
@@ -2825,7 +2825,7 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             $href_cc,
-                                             $hp->purify(db_result($result, $i, 'comment'), CODEX_PURIFIER_BASIC) ,
+                                            $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODEX_PURIFIER_BASIC) ,
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')),
                                             $html_delete);
