@@ -162,10 +162,11 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
+function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODEX_PURIFIER_DISABLED) {
         global $Language;
         $return = '';
         $isAValueSelected = false;
+        $hp =& CodeX_HTMLPurifier::instance();
         
 	/*
 
@@ -214,7 +215,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 		Put in the Unchanged box
 	*/
 	if ($show_unchanged) {
-	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$text_unchanged.'</OPTION>';
+	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
       $isAValueSelected = true;
 	}
 
@@ -233,7 +234,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
                 $isAValueSelected = true;
             }
 	    }
-	    $return .= "\n<OPTION VALUE=\"0\" $selected>$text_any </OPTION>";
+	    $return .= "\n<OPTION VALUE=\"0\" $selected>".$hp->purify($text_any, $purify_level)."</OPTION>";
 	}
 
 	//we don't always want the default 100 row shown
@@ -251,7 +252,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
                 $isAValueSelected = true;
             }
 		}
-	    $return .= "\n<OPTION VALUE=\"100\" $selected>$text_100 </OPTION>";
+	    $return .= "\n<OPTION VALUE=\"100\" $selected>".$hp->purify($text_100,$purify_level)."</OPTION>";
 	}
 
 	$rows=count($vals);
@@ -278,18 +279,18 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
                     $isAValueSelected = true;
 				}
 			}
-			$return .= '>'.$texts[$i].'</OPTION>';
+			$return .= '>'.$hp->purify($texts[$i],$purify_level).'</OPTION>';
 		}
 	}
     if ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected) {
-        $return .= '<OPTION VALUE="'.$checked_val.'" SELECTED>'.$Language->getText('include_html','unknown_value').'</OPTION>';
+        $return .= '<OPTION VALUE="'.$checked_val.'" SELECTED>'.$hp->purify($Language->getText('include_html','unknown_value'),$purify_level).'</OPTION>';
     }
     $return .= '
 		</SELECT>';
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='') {
+function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODEX_PURIFIER_DISABLED) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
@@ -309,7 +310,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
         if ($text_any == '') { $text_any = $Language->getText('global','any'); }
         if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
-	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged);
+	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged, $purify_level);
 }
 
 function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true) {
