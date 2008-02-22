@@ -273,7 +273,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	
 		$html = '<INPUT TYPE="text" name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
-		'" size="'.(int)$size.'" MAXLENGTH="'.(int)$maxlength.'" VALUE="'.$value.'">'.
+		'" size="'.(int)$size.'" MAXLENGTH="'.(int)$maxlength.'" VALUE="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'">'.
 		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 	    }
