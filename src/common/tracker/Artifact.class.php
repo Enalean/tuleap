@@ -2597,7 +2597,7 @@ class Artifact extends Error {
                 if ( ($comment_type_id == 100) ||($comment_type == "") ) {
                     $comment_type = '';
                 } else {
-                    $comment_type = '['.$comment_type.']';
+                    $comment_type = '['.SimpleSanitizer::unsanitize($comment_type).']';
                 }
                 
                 if ($ascii) {
