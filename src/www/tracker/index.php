@@ -161,7 +161,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 			}
 			// Files
-                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
                         
@@ -244,7 +244,7 @@ if ( $func == 'gotoid' ) {
 
 			// Files
 			// 
-                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
@@ -473,7 +473,7 @@ if ( $func == 'gotoid' ) {
                         exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
                     }
                     // Files
-                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
+                        if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
 
@@ -565,7 +565,7 @@ if ( $func == 'gotoid' ) {
 		  exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
 		}
 		// Files
-                if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($input_file)) {
+                if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
 		  exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                 }
                 $report_id = $request->get('report_id');
@@ -717,7 +717,7 @@ if ( $func == 'gotoid' ) {
             //
             if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                 
-                if (!util_check_fileupload($input_file)) {
+                if (!util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                     exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename_attach'));
                 }
                 
