@@ -36,6 +36,8 @@ require_once('common/include/SimpleSanitizer.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
+$sanitizer = new SimpleSanitizer();
+
 $aid      = $request->getValidated('aid', 'uint', 0);
 $atid     = $request->getValidated('atid', 'uint', 0);
 $group_id = $request->getValidated('group_id', 'GroupId', 0);

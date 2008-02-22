@@ -495,7 +495,7 @@ class Artifact extends Error {
                     continue; 
                 }
                                 
-                if ( array_key_exists($field_name, $vfl) && $vfl[$field_name] ) {
+                if ( array_key_exists($field_name, $vfl) && isset($vfl[$field_name]) && $vfl[$field_name] ) {
                     // The field has a value from the user input
 
                     $value = $vfl[$field_name];
@@ -2345,7 +2345,7 @@ class Artifact extends Error {
 
                 $field_name = $field->getName();
 
-                if (!$field_perm || ($field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
+                if (!$field_perm || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
             
                     $field_html = new ArtifactFieldHtml($field);
                     
@@ -2498,6 +2498,7 @@ class Artifact extends Error {
 	      // If both removed and added items are empty skip - Sanity check
 	      if (!$h['del'] && !$h['add'] ||
 		  $field_perm && (
+          !isset($field_perm[$field_name]) ||
 		  !$field_perm[$field_name] || 
 		  !permission_can_read_field($field_perm[$field_name]))) { continue; }
 	      
