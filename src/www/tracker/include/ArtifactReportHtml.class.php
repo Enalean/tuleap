@@ -744,10 +744,10 @@ class ArtifactReportHtml extends ArtifactReport {
                              $hp->purify($arr['report_id'], CODEX_PURIFIER_BASIC) .'</A>';
                     }
 
-                    echo "</td>\n<td>". $hp->purify($arr['name'], CODEX_PURIFIER_BASIC) .'</td>'.
-                        "\n<td>". $hp->purify($arr['description'], CODEX_PURIFIER_BASIC) .'</td>'.
-                        '\n<td align="center">'. $hp->purify($this->getScopeLabel($arr['scope']), CODEX_PURIFIER_BASIC) .'</td>'.
-                        '\n<td align="center">';
+                    echo "</td><td>". $hp->purify($arr['name'], CODEX_PURIFIER_BASIC) .'</td>'.
+                        "<td>". $hp->purify($arr['description'], CODEX_PURIFIER_BASIC) .'</td>'.
+                        '<td align="center">'. $hp->purify($this->getScopeLabel($arr['scope']), CODEX_PURIFIER_BASIC) .'</td>'.
+                        '<td align="center">';
                     
                         $name = $arr['name'];
         
