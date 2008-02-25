@@ -417,6 +417,13 @@ class User {
     }
     
     /**
+     * @return string md5 of user pwd
+     */
+    function getUserPw() {
+        return $this->data_array['user_pw'];
+    }
+    
+    /**
      * isActive - test if the user is active or not
      * 
      * @return boolean true if the user is active, false otherwise
