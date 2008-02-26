@@ -26,7 +26,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
         } else {
             $url = '/';
         }
-        user_set_preference('plugin_docman_flash', addslashes(serialize($this->_controller->feedback)));
+        user_set_preference('plugin_docman_flash', serialize($this->_controller->feedback));
         header('Location: '. $url);
     }
     function visitFolder(&$item, $params = array()) {
