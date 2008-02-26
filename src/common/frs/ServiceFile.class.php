@@ -33,6 +33,7 @@ class ServiceFile extends Service {
     * @return arr[title], arr[content]
     */
     function getSummaryPageContent() {
+        $hp = CodeX_HTMLPurifier::instance();
         $ret = array(
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''
@@ -66,13 +67,13 @@ class ServiceFile extends Service {
                 $ret['content'] .= '
                   <TR class="boxitem">
                   <TD>
-                    <B>' . $package['package_name']. '</B>&nbsp;
+                    <B>' .  $hp->purify($package['package_name'], CODEX_PURIFIER_DISABLED)  . '</B>&nbsp;
                     <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '">'.
                         $monitor_img . '     
                     </a>
                   </TD>';
                 // Releases to display
-                $ret['content'] .= '<TD>'. $package['release_name'] .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
+                $ret['content'] .= '<TD>'.  $hp->purify($package['release_name'], CODEX_PURIFIER_BASIC)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
                     $GLOBALS['HTML']->getImage("ic/text.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes'), 'title'=>$GLOBALS['Language']->getText('include_project_home','release_notes'))) . ' 
                   </TD>
                   <TD><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';
