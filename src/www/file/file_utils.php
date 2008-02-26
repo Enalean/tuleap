@@ -1280,7 +1280,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             $array = array (
                                                 'filename' => $frsff->getUploadSubDirectory($release_id
                                             ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
-                                            $res = & $frsff->create($array);
+                                            $res = $frsff->create($array);
         
                                             if (!$res) {
                                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
