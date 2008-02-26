@@ -90,25 +90,23 @@ class FRSReleaseFactory {
 			return;
 		}
 
-		if (!$dar->valid()) {
-			return;
-		}
-		
-		$um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
 		$releases = array ();
-		while ($dar->valid()) {
-			$data_array = & $dar->current();
-			if($status_id && $group_id){			
-				if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
-					$releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
-				}
-			}else{
-				$releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
-			}
-			$dar->next();
-		}
-
+		if ($dar->valid()) {		
+            $um =& UserManager::instance();
+            $user =& $um->getCurrentUser();
+            while ($dar->valid()) {
+                $data_array = & $dar->current();
+                if($status_id && $group_id){			
+                    if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
+                        $releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+                    }
+                }else{
+                    $releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+                }
+                $dar->next();
+            }
+        }
+        
 		return $releases;
 	}
 	
