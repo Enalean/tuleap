@@ -9,6 +9,8 @@
 
 $Language->loadLanguageMsg('tracker/tracker');
 
+require_once('common/include/CodeX_HTTPPurifier.class.php');
+
 //
 //  make sure this person has permission to view artifacts
 //
@@ -62,7 +64,7 @@ $eol = "\n";
 // Basically, these arrays contain all the fields of the tracker,
 // so we simply remove the non-displayed fields from these arrays.
 if ($request->get('only_displayed_fields') == 'on') {
-    $artifact_report = new ArtifactReport($report_id, $atid);
+    $artifact_report = new ArtifactReport($request->get('report_id'), $atid);
     $displayed_fields = $artifact_report->getResultFields();
     // array_intersect_key is a PHP 5 function (implemented here in src/www/include/utils.php)
     $col_list = array_intersect_key($col_list, $displayed_fields);
@@ -85,7 +87,7 @@ if ($multiple_queries) {
 
 // Send the result in CSV format
 if ($result && $rows > 0) {
-    $http = CodeXHTTPPurifier::instance();
+    $http = CodeX_HTTPPurifier::instance();
   $file_name = str_replace(' ','_','artifact_'.$ath->getItemName());
   header ('Content-Type: text/csv');
   header ('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
