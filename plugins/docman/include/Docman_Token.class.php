@@ -72,7 +72,8 @@ class Docman_Token {
         return $this->tok;
     }
     function &_getDao() {
-        return new Docman_TokenDao(CodexDataAccess::instance());
+        $d = new Docman_TokenDao(CodexDataAccess::instance());
+        return $d;
     }
     function _getReferer() {
         return isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';

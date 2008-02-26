@@ -67,7 +67,8 @@ class Docman_NotificationsManager extends NotificationsManager {
         return Docman_PermissionsManager::instance($this->_group_id);
     }
     function &_getDocmanPath() {
-        return new Docman_Path();
+        $p = new Docman_Path();
+        return $p;
     }
     function somethingHappen($event, $params) {
         $um =& $this->_getUserManager();

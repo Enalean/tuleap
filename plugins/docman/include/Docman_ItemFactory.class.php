@@ -829,7 +829,7 @@ class Docman_ItemFactory {
     
     function preferrencesExist($group_id, $user_id) {
         $dao =& $this->_getItemDao();
-        $dar =& $dao->searchExpandedUserPrefs($group_id, $user_id);
+        $dar = $dao->searchExpandedUserPrefs($group_id, $user_id);
         return $dar->valid();
     }
 
