@@ -249,7 +249,12 @@ class ArtifactFieldFactory extends Error {
 	    }
 	
 	    if (count($bad_fields) > 0) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
+            $hp = CodeX_HTMLPurifier::instance();
+            $bad_fields_escaped = array();
+            foreach($bad_fields as $f) {
+                $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODEX_PURIFIER_BASIC);
+            }
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields_escaped)), CODEX_PURIFIER_DISABLED);
             $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
 			return false;
 	    } else {
