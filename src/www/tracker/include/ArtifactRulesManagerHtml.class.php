@@ -154,14 +154,14 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 $this->deleteRuleValueBySource($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'));
                 //get target values
                 $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
-                $target_field   =& $art_field_fact->getFieldFromId($request->get('target_field'));
+                $target_field   = $art_field_fact->getFieldFromId($request->get('target_field'));
                 $target_values  = $target_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($target_values)) {
                     if ($request->exist('target_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row[0] .'_chk')) {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -179,7 +179,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),

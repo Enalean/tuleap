@@ -1120,9 +1120,7 @@ var admin_feedback_field_dependencies = [];
 var admin_feedback_field_dependencies_effect_done = false;
 function admin_removeFeedback() {
     if (admin_feedback_field_dependencies.length > 0) {
-        admin_feedback_field_dependencies.each(function (el) {
-                Element.setStyle(el, {visibility:'hidden'});
-        });
+        admin_feedback_field_dependencies[0].parentNode.parentNode.parentNode.removeChild(admin_feedback_field_dependencies[0].parentNode.parentNode);
         admin_feedback_field_dependencies_effect_done = true;
         admin_feedback_field_dependencies             = [];
     }
