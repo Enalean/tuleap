@@ -543,6 +543,7 @@ if ( $func == 'gotoid' ) {
         }
 
 	case 'postmasschange' : {
+            $was_error = false;
                 //
                 //      Modify several Artifacts
                 //

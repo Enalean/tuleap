@@ -756,7 +756,7 @@ class ArtifactReportHtml extends ArtifactReport {
         			} else {
 	                    echo '<A HREF="/tracker/admin/?func=report&group_id='.(int)$group_id.
 	                        '&atid='.(int)$atid.'&delete_report=1&report_id='.(int)$arr['report_id'].
-	                        '" onClick="return confirm(\''.$Language->getText('tracker_include_report','delete_report',addslashes($name)).'\')">'.
+	                        '" onClick="return confirm(\''.$Language->getText('tracker_include_report','delete_report', $hp->purify(addslashes($name), CODEX_PURIFIER_CONVERT_HTML)).'\');">'.
 	                            '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
 					}
 					        
@@ -787,7 +787,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report','create_rep'),
                                     'help' => 'TrackerAdministration.html#TrackerReportSetting'));
 
-		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_BASIC) .'</a>\'  - '.$Language->getText('tracker_include_report','create_rep').' </H2>';
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'  - '.$Language->getText('tracker_include_report','create_rep').' </H2>';
     
             // display the table of all fields that can be included in the report
             $title_arr=array();
