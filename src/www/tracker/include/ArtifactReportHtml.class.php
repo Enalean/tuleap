@@ -554,9 +554,9 @@ class ArtifactReportHtml extends ArtifactReport {
                     $res_report = $this->getReports($this->group_artifact_id,user_getid());
                     $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
 
-                        $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report').
-                                html_build_select_box($res_report,$box_name,$report_id,false).
-                                '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
+                        $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report');
+                        $html_result .= html_build_select_box($res_report,$box_name,$report_id,false,'',false,'',false,'', CODEX_PURIFIER_BASIC);
+                        $html_result .= '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
                 }
                 
                 // Start building the URL that we use to for hyperlink in the form
