@@ -619,7 +619,7 @@ if ($group_id && !$atid) {
 		if ( $field ) {
                 $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
-                $order_id    = $request->getValidated('description', 'uint');
+                $order_id    = $request->getValidated('order_id', 'uint');
 			if ( !$field->createValueList($atid,$value,$description,$order_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
@@ -646,7 +646,7 @@ if ($group_id && !$atid) {
                 $value_id    = $request->getValidated('value_id', 'uint');
                 $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
-                $order_id    = $request->getValidated('description', 'uint');
+                $order_id    = $request->getValidated('order_id', 'uint');
                 $status      = $request->get('status');
 			if ( !$field->updateValueList($atid,$value_id,$value,$description,$order_id,$status) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());

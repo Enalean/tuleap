@@ -2390,7 +2390,7 @@ class Artifact extends Error {
 
 	    if ($visible_snapshot) $full_snapshot .= "". $GLOBALS['sys_lf'] ."";
 
-	    $body .= "=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+	    $body .= "=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
 		": ".$Language->getText('tracker_include_artifact','full_snapshot')."   =============". $GLOBALS['sys_lf'] . 
 		($changes ? '':$artifact_href) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $full_snapshot;
 
@@ -3024,7 +3024,7 @@ class Artifact extends Error {
                             }
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_BASIC) .'</a>',
+                                            '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_CONVERT_HTML) .'</a>',
                                              $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODEX_PURIFIER_BASIC) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),

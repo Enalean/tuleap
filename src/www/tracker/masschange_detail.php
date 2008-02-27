@@ -41,7 +41,7 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
   if (!$mass_change_ids) {
     $feedback = $Language->getText('tracker_masschange_detail','no_items_selected');
   } else {
-    $ath->displayMassChange($mass_change_ids);
+    $ath->displayMassChange($ro, $mass_change_ids);
   }
 } else {
   // If still not defined then force it to system 'Default' report
@@ -52,7 +52,7 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
   // Create the HTML report object
   $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
   $query = $art_field_fact->extractFieldList();
-  $ath->displayMassChange(null,$query,$art_report_html);
+  $ath->displayMassChange($ro, null,$query,$art_report_html);
 }
 // Display footer page
 $ath->footer($params);

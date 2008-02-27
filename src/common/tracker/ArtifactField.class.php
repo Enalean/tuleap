@@ -749,18 +749,19 @@ class ArtifactField extends Error {
 	 * @return array
 	 */
 	function getFieldValue ($group_artifact_id,$value_id) {
-	
+        $res = null;
 	    $gvf = $this->getGlobalValueFunction();	
-	    if (!$gvf[0]) {
+	    if (!isset($gvf[0]) || !$gvf[0]) {
 
 			$sql="SELECT value_id,value,field_id,group_artifact_id,description,order_id,status ".
 			    "FROM artifact_field_value_list ".
 			    "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id= ". db_ei($this->field_id) ." ".
 			    "AND value_id ='". db_ei($value_id) ."'";
 			$res_value = db_query($sql);
+            $res = db_fetch_array($res_value);
 	    }
 	
-	    return(db_fetch_array($res_value));
+	    return $res;
 	
 	}
 

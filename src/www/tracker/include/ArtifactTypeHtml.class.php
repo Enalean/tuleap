@@ -2350,7 +2350,7 @@ EOS;
          *
          * @return void
          */
-        function displayMassChange($mass_change_ids=null,$query=null,$art_report_html=null) {
+        function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null) {
             global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
             $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
@@ -2717,7 +2717,7 @@ EOS;
             $hp = CodeX_HTMLPurifier::instance();
             $result=$this->getDependencies($change_ids);
             $rows=db_numrows($result);
-        
+            $out = '';
             // Nobody in the dependencies list -> return now
             if ($rows > 0) {
             	$title_arr=array();
@@ -2744,7 +2744,7 @@ EOS;
 					$out .= sprintf($fmt,
                                             	util_get_alt_row_color($row_color),
                                             	'<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_BASIC)  ."</a>",
-                                            	 $hp->purify($summary, CODEX_PURIFIER_BASIC) ,
+                                            	 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
                                             	 $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
                                             	 $hp->purify($group_label, CODEX_PURIFIER_BASIC) ,
 						$occ,
@@ -2752,11 +2752,13 @@ EOS;
 					$row_color++;
 					$occ = 0;	
 				}
-				$dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
-                        	$summary = db_result($result, $i, 'summary');
-                        	$tracker_label = db_result($result, $i, 'name');
-                        	$group_label = db_result($result, $i, 'group_name');
-				$depend_ids = db_result($result, $i, 'artifact_depend_id');
+                new dBug($result);
+                $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
+                $summary                  = db_result($result, $i, 'summary');
+                $tracker_label            = db_result($result, $i, 'name');
+                $group_label              = db_result($result, $i, 'group_name');
+                $group_id                 = db_result($result, $i, 'group_id');
+				$depend_ids               = db_result($result, $i, 'artifact_depend_id');
 			} else {
 				$depend_ids .= ",".db_result($result, $i, 'artifact_depend_id');
 			}
@@ -2767,7 +2769,7 @@ EOS;
 		$out .= sprintf($fmt,
                                 util_get_alt_row_color($row_color),
                                 '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_BASIC)  ."</a>",
-                                 $hp->purify($summary, CODEX_PURIFIER_BASIC) ,
+                                 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
                                  $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
                                  $hp->purify($group_label, CODEX_PURIFIER_BASIC) ,
 				$occ,

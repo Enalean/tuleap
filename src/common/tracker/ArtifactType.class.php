@@ -1816,7 +1816,7 @@ class ArtifactType extends Error {
 	 * @param change_ids: the list of artifact_ids for which we search the attached files
 	*/
 	function getDependencies($change_ids) {
-		$sql = "select d.artifact_depend_id,d.is_dependent_on_artifact_id,a.summary,ag.name,g.group_name ".
+		$sql = "select d.artifact_depend_id,d.is_dependent_on_artifact_id,a.summary,ag.name,g.group_name, g.group_id ".
 			"from artifact_dependencies as d, artifact_group_list ag, groups g, artifact a ".
 			"where d.artifact_id in (". db_es(implode(",",$change_ids)) .") AND ".
 			"d.is_dependent_on_artifact_id = a.artifact_id AND ".
