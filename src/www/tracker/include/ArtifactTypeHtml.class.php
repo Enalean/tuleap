@@ -2752,7 +2752,6 @@ EOS;
 					$row_color++;
 					$occ = 0;	
 				}
-                new dBug($result);
                 $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
                 $summary                  = db_result($result, $i, 'summary');
                 $tracker_label            = db_result($result, $i, 'name');
