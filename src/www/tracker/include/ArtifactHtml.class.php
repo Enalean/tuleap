@@ -237,7 +237,7 @@ class ArtifactHtml extends Artifact {
             $title .= '</script>';
             $title .= ' <a href="/tracker/?func=rss&aid='. (int)$this->getId() .'&atid='. (int)$this->ArtifactType->getID() .'&group_id='. (int)$this->ArtifactType->getGroupId() .'" ';
             $hp =& CodeX_HTMLPurifier::instance();
-            $title .= ' title="'. $hp->purify($group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. html_entity_decode($this->getValue('summary'), ENT_QUOTES)) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
+            $title .= ' title="'. $hp->purify(util_unconvert_htmlspecialchars($group->getPublicName()).' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODEX_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
             $title .= '[xml]</a> ';
             if ($pv == 0) {
                 $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
