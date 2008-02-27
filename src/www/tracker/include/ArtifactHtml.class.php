@@ -833,9 +833,9 @@ class ArtifactHtml extends Artifact {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'. (int)$dependent_on_artifact_id .'</a>',
-                                             $hp->purify($summary, CODEX_PURIFIER_BASIC) ,
-                                             $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
-                                             $hp->purify($group_label, CODEX_PURIFIER_BASIC) );
+                                             $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
+                                             $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_BASIC) ,
+                                             $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_BASIC) );
                         
                         } // for
             }
