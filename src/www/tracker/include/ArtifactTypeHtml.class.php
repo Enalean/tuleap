@@ -1726,7 +1726,7 @@ EOS;
 		      <td width="45%">Value: <font color="red">*</font>&nbsp;';
 
 	    if ( $value ) {
-	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'" SIZE="30" MAXLENGTH="60">';
+	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="'. $hp->purify(SimpleSanitizer::unsanitize($value), CODEX_PURIFIER_CONVERT_HTML) .'" SIZE="30" MAXLENGTH="60">';
 	    } else {
 	      	echo '<INPUT TYPE="TEXT" NAME="value" VALUE="" SIZE="30" MAXLENGTH="60">';
 	    }
@@ -1793,7 +1793,7 @@ EOS;
 		     <td colspan="4">'.$Language->getText('tracker_include_artifact','desc').':<BR>';
 	     
 	    if ( $description ) {
-	    	echo '<textarea name="description" rows="2" cols="65">'. $hp->purify($description, CODEX_PURIFIER_CONVERT_HTML) .'</textarea>';
+	    	echo '<textarea name="description" rows="2" cols="65">'. $hp->purify(SimpleSanitizer::unsanitize($description), CODEX_PURIFIER_CONVERT_HTML) .'</textarea>';
 	   	} else {
 	    	echo '<textarea name="description" rows="2" cols="65"></textarea>';
 		}
