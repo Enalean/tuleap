@@ -224,7 +224,7 @@ class Docman_MetadataHtml {
 class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 
     function getValue() {
-        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFY_BASIC, $this->md->getGroupId());
+        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFIER_BASIC, $this->md->getGroupId());
         return $value;
     }
 
@@ -246,7 +246,7 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml {
 class Docman_MetadataHtmlString extends Docman_MetadataHtml {
 
     function getValue() {
-        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFY_BASIC, $this->md->getGroupId());
+        $value = $this->hp->purify($this->md->getValue(), CODEX_PURIFIER_BASIC, $this->md->getGroupId());
         return $value;
     }
 
