@@ -854,7 +854,13 @@ class ArtifactType extends Error {
 			$this->setError('ArtifactType: '.$Language->getText('tracker_common_type','name_requ'));
 			return false;
 		}
-		
+        
+        if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+            $hp = CodeX_HTMLPurifier::instance();
+            $this->setError($Language->getText('tracker_common_type','invalid_shortname', $hp->purify($itemname, CODEX_PURIFIER_BASIC) ));
+            return false;
+        }
+        
 		$allow_copy = ((!$allow_copy) ? 0 : $allow_copy);
                 $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
 
