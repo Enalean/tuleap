@@ -369,7 +369,7 @@ class DocmanActions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            $item_factory->update($this->sanitizeItemData($data));
+            $item_factory->update($data);
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
                     'group_id' => $request->get('group_id'),
@@ -479,17 +479,7 @@ class DocmanActions extends Actions {
         }
         return $this->version_factory;
     }
-    function sanitizeItemData($data) {
-        $sanitized_data = $data;
-        
-        $must_be_stripped = array('title', 'wiki_page', 'link_url', 'description');
-        foreach($must_be_stripped as $property) {
-            if (isset($sanitized_data[$property])) {
-                $sanitized_data[$property] = strip_tags($sanitized_data[$property]);
-            }
-        }
-        return $sanitized_data;
-    }
+
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {

@@ -27,7 +27,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
             $url = '/';
         }
         user_set_preference('plugin_docman_flash', serialize($this->_controller->feedback));
-        header('Location: '. $url);
+        $GLOBALS['Response']->redirect($url);
     }
     function visitFolder(&$item, $params = array()) {
         trigger_error('Redirect view cannot be applied to Folders');
