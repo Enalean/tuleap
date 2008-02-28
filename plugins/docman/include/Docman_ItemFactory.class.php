@@ -149,17 +149,12 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         $dar = $dao->searchById($id, $params);
 
-        if($dar->isError()){
-            return;
+        $item = null;
+        if(!$dar->isError() && $dar->valid()) {
+            $row =& $dar->current();
+            $item =& Docman_ItemFactory::getItemFromRow($row);
         }
-        
-        if(!$dar->valid()) {
-            return;
-        }
-
-        $row =& $dar->current();
-
-        return(Docman_ItemFactory::getItemFromRow($row));
+        return $item;
     }
 
     function &getChildrenFromParent($item) {
