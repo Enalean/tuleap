@@ -156,7 +156,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                             isset($params['popup_doc']) ? true : false);
                     $this->html .= '<a href="'.$url.'">';
                 }
-                $this->html .=  $item->getTitle();
+                $this->html .=   $this->hp->purify($item->getTitle(), CODEX_PURIFIER_BASIC) ;
                 if ($action) {
                     $this->html .= '</a>';
                 }
