@@ -16,7 +16,8 @@ class Docman_View_Edit extends Docman_View_Details {
     
     
     /* protected */ function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_edit_title', $params['item']->getTitle());
+        $hp = CodeX_HTMLPurifier::instance();
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_edit_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
     
     /* protected */ function _content($params) {
