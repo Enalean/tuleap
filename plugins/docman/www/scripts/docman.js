@@ -532,16 +532,16 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 	if(($F(select) == 'newp') || ($F(select) == 'newi')) {
 	    var name = window.prompt(this.options.language.report_name_new, '');
 	    if(name != null && name.strip() != '') {
-		new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name+'" />');
+		new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
 		form.submit();
 	    }
 	}
 	else {
 	    var selectedValue = parseInt($F(select))
 	    if(selectedValue > 0) {
-		var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML);
+		var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
 		if(name != null && name.strip() != '') {
-		    new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name+'" />');
+		    new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
 		    form.submit();
 		}
 	    }
