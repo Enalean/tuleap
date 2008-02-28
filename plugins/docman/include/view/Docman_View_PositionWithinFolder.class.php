@@ -25,8 +25,9 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
         echo '</select>';
     }
     function _displayItem($item, $params) {
+        $hp = CodeX_HTMLPurifier::instance();
         if (!$params['exclude'] || $params['exclude'] != $item->getId()) {
-            echo '<option value="'. ($item->getRank()+1) .'" '. ($params['force_ordering'] === ("".($item->getRank()+1)) ? 'selected="selected"' : '') .'>After '. $item->getTitle() .'</option>';
+            echo '<option value="'. ($item->getRank()+1) .'" '. ($params['force_ordering'] === ("".($item->getRank()+1)) ? 'selected="selected"' : '') .'>After '.  $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML)  .'</option>';
         }
     }
     function visitFolder(&$item, $params = array()) {

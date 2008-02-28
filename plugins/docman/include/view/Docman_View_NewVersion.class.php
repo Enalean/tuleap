@@ -16,7 +16,7 @@ class Docman_View_NewVersion extends Docman_View_Details {
     
     
     /* protected */ function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_newversion_title', $params['item']->getTitle());
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_newversion_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
     
     /* protected */ function _content($params) {

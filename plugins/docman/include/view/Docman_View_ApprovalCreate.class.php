@@ -29,7 +29,8 @@ require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
 class Docman_View_ApprovalCreate extends Docman_View_Details {
 
     function _getTitle($params) {
-        return Docman::txt('details_approval_create_title', $params['item']->getTitle());
+        $hp = CodeX_HTMLPurifier::instance();
+        return Docman::txt('details_approval_create_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
 
     function _content($params) {

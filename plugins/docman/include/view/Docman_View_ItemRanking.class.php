@@ -60,12 +60,13 @@ class Docman_View_ItemRanking {
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
 
+        $hp = CodeX_HTMLPurifier::instance();
         $brotherIter->rewind();
         while($brotherIter->valid()) {
             $item = $brotherIter->current();
             if ($pm->userCanWrite($user, $item->getId())) {
                 $vals[$i]  = $item->getRank()+1;
-                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_after').' '.$item->getTitle();
+                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_after').' '. $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
                 $i++;
             }
             $brotherIter->next();

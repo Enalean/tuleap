@@ -104,7 +104,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 $content .= '</dd>';
                 $content .= '<dt>'.Docman::txt('details_actions_paste').'</dt><dd>';
                 $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
-                $content .= Docman::txt('details_actions_paste_canpaste', array($copyurl, $copiedItem->getTitle()));
+                $content .= Docman::txt('details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ));
             }
             //}}}
         }

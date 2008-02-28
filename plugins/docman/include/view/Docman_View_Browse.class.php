@@ -99,7 +99,7 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
         }
 
         $html .= "<!-- Filters -->\n";
-        $html .= "<div class=\"docman_filters\">\n";
+        $html .= '<div class="docman_filters">';
         if(isset($params['filter']) && $params['filter'] !== null) {
             $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);
             $html .= $htmlReport->toHtml($params);

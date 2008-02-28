@@ -213,7 +213,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.Docman::txt('details_approval_doc_review_name').'</td>';
         $html .= '<td>';
-        $html .= $this->item->getTitle();
+        $html .=  $this->hp->purify($this->item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
         if($itemCurrentVersion == null) {
             $url = Docman_View_View::buildUrl($this->url, 
                                               array('action' => 'show',

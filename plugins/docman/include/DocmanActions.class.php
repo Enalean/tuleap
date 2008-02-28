@@ -519,13 +519,14 @@ class DocmanActions extends Actions {
                         'parent'  => &$new_parent,
                         'user'    => &$user)
                     );
+                    $hp = CodeX_HTMLPurifier::instance();
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                         $item->getGroupId(),
                         $old_parent->getId(), 
-                        $old_parent->getTitle(),
+                         $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
                         $new_parent->getId(), 
-                        $new_parent->getTitle()
-                    )));
+                         $hp->purify($new_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) 
+                    )), CODEX_PURIFIER_DISABLED);
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
                 }
