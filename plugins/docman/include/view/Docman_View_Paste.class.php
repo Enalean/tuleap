@@ -29,7 +29,11 @@ require_once('Docman_View_ItemDetailsSectionPaste.class.php');
 class Docman_View_Paste extends Docman_View_Details {
     
     function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_title', array($params['itemToPaste']->getTitle(), $params['item']->getTitle()));
+        $hp = CodeX_HTMLPurifier::instance();
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_title', array( 
+            $hp->purify($params['itemToPaste']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) , 
+            $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) 
+        ));
     }
     
     function _content($params) {

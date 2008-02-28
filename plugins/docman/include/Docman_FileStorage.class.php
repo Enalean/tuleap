@@ -99,7 +99,7 @@ class Docman_FileStorage {
     }
     
     function _getGroupName($id) {
-        $group =& group_get_object($id);
+        $group = group_get_object($id);
         return $group->getUnixName();
     }
 }

@@ -16,6 +16,7 @@ class Docman_View_NewVersion extends Docman_View_Details {
     
     
     /* protected */ function _getTitle($params) {
+        $hp = CodeX_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_newversion_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
     
