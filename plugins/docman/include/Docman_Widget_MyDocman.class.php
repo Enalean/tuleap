@@ -47,6 +47,7 @@ class Docman_Widget_MyDocman extends Widget {
         return $html;
     }
     function _getReviews($reviewer = true) {
+        $hp = CodeX_HTMLPurifier::instance();
         require_once('www/my/my_utils.php');
         $html = '';
         
@@ -109,7 +110,7 @@ class Docman_Widget_MyDocman extends Widget {
                     $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
                     // Document
                     $html .= '<td align="left">';
-                    $html .= '<a href="'.$review['url'].'">'.$review['title'].'</a>';
+                    $html .= '<a href="'.$review['url'].'">'. $hp->purify($review['title'], CODEX_PURIFIER_CONVERT_HTML) .'</a>';
                     $html .= '</td>';
                 
                     // Date
