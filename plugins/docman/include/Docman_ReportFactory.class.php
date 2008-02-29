@@ -347,7 +347,7 @@ class Docman_ReportFactory {
             $dstReport->setId($rId);
         
             // Copy filters
-            $srcFilterFactory->clone($srcReport, $dstReport, $metadataMapping);
+            $srcFilterFactory->copy($srcReport, $dstReport, $metadataMapping);
             return true;
         } else {
             return false;
@@ -357,7 +357,7 @@ class Docman_ReportFactory {
     /**
      * Clone reports from a project to another one
      */
-    function clone($dstGroupId, $metadataMapping, $user, $forceScope = false) {
+    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false) {
         $ri = $this->getProjectReportsForGroup();
         $ri->rewind();
         while($ri->valid()) {

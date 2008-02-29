@@ -53,7 +53,7 @@ class Docman_FileStorage {
         }
     }
     
-    function clone($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {
+    function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {
         $dstPath = $this->_getPath($dst_name, $dst_group_id, $dst_item_id, $dst_version_number);
         
         if(copy($srcPath, $dstPath)) {

@@ -227,7 +227,7 @@ class Docman_FilterFactory {
      * and create in the $dstReport all the matching possibilities (either
      * metadata or values).
      */
-    function clone($srcReport, $dstReport, $metadataMapping) {
+    function copy($srcReport, $dstReport, $metadataMapping) {
         $this->addFiltersToReport($srcReport);
 
         $fi =& $srcReport->getFilterIterator();

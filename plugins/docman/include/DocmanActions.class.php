@@ -1533,7 +1533,7 @@ class DocmanActions extends Actions {
                 }
             } else {
                 // Import all personal and project reports from the given project.
-                $srcReportFactory->clone($groupId, $mdMap, $user, $forceScope);
+                $srcReportFactory->copy($groupId, $mdMap, $user, $forceScope);
                 $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
             }
         } else {

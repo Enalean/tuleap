@@ -155,7 +155,7 @@ class DocmanController extends Controler {
 
         // Clone reports
         $reportFactory = new Docman_ReportFactory($srcGroupId);
-        $reportFactory->clone($dstGroupId, $metadataMapping, $user);
+        $reportFactory->copy($dstGroupId, $metadataMapping, $user);
 
         // Clone Items, Item's permissions and metadata values
         $itemFactory = $this->_getItemFactory();
