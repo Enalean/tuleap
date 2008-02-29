@@ -24,9 +24,9 @@ réutiliser, de les adapter et d'améliorer leur productivité en
 capitalisant sur les connaissances de <?php print
 $GLOBALS['sys_org_name']; ?>.</p>
 
-<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/docman/display_doc.php?docid=16&group_id=1">Politique d'échange de code de <?php print
+<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/plugins/docman/?group_id=1">Politique d'échange de code de <?php print
 $GLOBALS['sys_org_name']; ?></a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
-href="/docman/display_doc.php?docid=16&group_id=1">la lire</a>. <P>
+href="/plugins/docman/?group_id=1">la lire</a>. <P>
 
 <p>Nous vous remercions pour votre soutien !</P>
 

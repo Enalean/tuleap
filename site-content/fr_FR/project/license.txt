@@ -15,7 +15,7 @@ la recherche de composants logiciels réutilisables.
 
 <p>Pour rendre les choses plus faciles, <?php print
 $GLOBALS['sys_org_name']; ?> a mis en place la <a
-href="/docman/display_doc.php?docid=16&group_id=1"
+href="/plugins/docman/?group_id=1"
 target="side_window"> Politique d'échange générale</a> des logiciels
 qui définit les conditions générales sous lesquels vous pouvez
 réutiliser des composants logiciels au sein de <?php print
@@ -30,7 +30,7 @@ une autre.
 
 <P>Choisir votre propre politique d'échange est une décision
 importante. Veuillez donc vous assurer d'avoir bien lu la <a
-href="/docman/display_doc.php?docid=16&group_id=1"
+href="/plugins/docman/?group_id=1"
 target="side_window">Politique d'échange générale de <?php echo
 $GLOBALS['sys_name']; ?> </a> avant de prendre une décision pour votre
 projet.
