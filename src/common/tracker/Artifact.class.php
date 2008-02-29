@@ -461,7 +461,7 @@ class Artifact extends Error {
         // Add all special fields that were not handled in the previous block
         $fixed_cols = 'open_date,last_update_date,group_artifact_id,submitted_by';
 	if ($import) {
-		if (!$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
+		if (!isset($vfl['open_date']) || !$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
 		else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
 		$fixed_values = "'". db_ei($open_date) ."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
 	} else {

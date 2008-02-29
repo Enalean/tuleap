@@ -84,7 +84,7 @@ function showErrors() {
  */
   function showParseResults($parsed_labels,$artifacts_data) {
     global $sys_datefmt,$Language;
-
+    $hp = CodeX_HTMLPurifier::instance();
     $this->getImportUser($sub_user_id,$sub_user_name);
     $sub_on = format_date("Y-m-d",time());
     
@@ -306,10 +306,18 @@ function showErrors() {
     } else {
       $record = $this->ath->buildDefaultRecord();
     }
-    prepare_artifact_record($at,$fields,$atid,$record);
+    prepare_artifact_record($at,$fields,$this->ath->getId(),$record);
+    
+    $hp = CodeX_HTMLPurifier::instance();
+    foreach($record as $k => $v) {
+        //We should know the type of each field because some are sanitized, others htmlspecialcharized...
+        $record[$k] =  $hp->purify($v, CODEX_PURIFIER_CONVERT_HTML);
+    }
+    
     display_exported_fields($col_list,$this->lbl_list,$this->dsc_list,$record,$mand_list);
     
     echo '<br><br><h4>'.$Language->getText('tracker_import','sample_cvs_file').'</h4>';
+    
     echo build_csv_header($col_list,$this->lbl_list);
     echo '<br>';
     echo build_csv_record($col_list,$record);

@@ -92,6 +92,9 @@ if ($result && $rows > 0) {
   header ('Content-Type: text/csv');
   header ('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
   
+  foreach($lbl_list as $k => $v) {
+      $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
+  }
   echo build_csv_header($col_list, $lbl_list).$eol;
   
   if ($multiple_queries) {

@@ -177,7 +177,7 @@ function getUsedFields() {
     $this->num_columns = count($data);
 
     for ($c=0; $c < $this->num_columns; $c++) {
-      $field_label = $data[$c];
+        $field_label = SimpleSanitizer::sanitize($data[$c]);
       if (!array_key_exists($field_label,$this->used_fields)) {
 	$this->setError($Language->getText('tracker_import_utils','field_not_known',array($field_label,$this->ath->getName())));
 	return false;
@@ -404,7 +404,12 @@ function getUsedFields() {
     $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ". db_ei($this->ath->getID()) .
 		  " AND submitted_by=".  db_ei($sub_user_id) ." AND summary='".  db_es($summary) ."'");
     if ($res && db_numrows($res) > 0) {
-      $this->setError($Language->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$data),$sub_user_name,$summary)));
+        $escaped_data = $data;
+        $hp = CodeX_HTMLPurifier::instance();
+        foreach($escaped_data as $k => $v) {
+            $escaped_data[$k] =  $hp->purify($v, CODEX_PURIFIER_CONVERT_HTML);
+        }
+      $this->setError($Language->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$escaped_data),$sub_user_name,$summary)));
       return false;           
     }
   }
