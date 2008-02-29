@@ -113,7 +113,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     reset($col_list);
     $cnt = 0;
     while (list(,$col) = each($col_list)) {
-      $star = (($mand_list && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
+      $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
       echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
 	'<td><b>'.$lbl_list[$col].'</b>'.$star.
 	'</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
