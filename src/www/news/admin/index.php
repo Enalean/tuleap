@@ -180,14 +180,26 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
                 can edit/change/approve news items
 
 	*/
-	if (isset($post_changes) && $post_changes) {
-		if (isset($approve) && $approve) {
+	if ($request->get('post_changes') && $request->get('approve')) {
+        $validStatus = new Valid_WhiteList('status', array(0, 1, 2));
+        if ($request->valid($validStatus)) {
+            $status = $request->get('status');
+        } else {
+            $status = 0;
+        }
+        $validSummary = new Valid_String('summary');
+        $validSummary->setErrorMessage('Summary is required');
+        $validSummary->required();
+        
+        $validDetails = new Valid_Text('details');
+        
+        if ($request->valid($validSummary) && $request->valid($validDetails)) {
 			if ($status==1) {
 				/*
 					Update the db so the item shows on the home page
 				*/
 				$sql="UPDATE news_bytes SET is_approved='1', date='".time()."', ".
-					"summary='".db_es(htmlspecialchars($summary))."', details='".db_es(htmlspecialchars($details))."' WHERE id=". db_ei($id);
+					"summary='".db_es(htmlspecialchars($request->get('summary')))."', details='".db_es(htmlspecialchars($request->get('details')))."' WHERE id=". db_ei($id);
 				$result=db_query($sql);
 				if (!$result || db_affected_rows($result) < 1) {
 					$GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
@@ -206,12 +218,12 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_deleted'));
 				}
 			}
-		}
+        }
 	}
 
 	news_header(array('title'=>$Language->getText('news_admin_index','title')));
 
-	if (isset($approve) && $approve) {
+	if ($request->get('approve')) {
 		/*
 			Show the submit form
 		*/
@@ -253,7 +265,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 			Show list of waiting news items
 		*/
 
-		if (isset($approve_all) && $approve_all) {
+		if ($request->get('approve_all')) {
 		    $sql="UPDATE news_bytes SET is_approved='1' WHERE is_approved='3'";
 		    $res=db_query($sql);
 		    if (!$res) {
