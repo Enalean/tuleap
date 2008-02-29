@@ -372,7 +372,7 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
         $approve_license = $package->getApproveLicense();
         echo '<tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','license').':</th>  <td><SELECT name="package[approve_license]">
                         <OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$GLOBALS['Language']->getText('global','yes').'</OPTION>
-                        <OPTION VALUE="0"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$GLOBALS['Language']->getText('global','no').'</OPTION></SELECT></td></tr>';
+                        <OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$GLOBALS['Language']->getText('global','no').'</OPTION></SELECT></td></tr>';
      } else {
         echo '<INPUT TYPE="HIDDEN" NAME="package[approve_license]" VALUE="1">';
      }

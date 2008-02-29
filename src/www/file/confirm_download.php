@@ -109,7 +109,7 @@ if (user_isloggedin()) {
 <!--
 
 function download_local(group_id,file_id,filename) {
-    url = "http://cxtst.xrce.xerox.com/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     self.location = url;
     //history.back();
 }
