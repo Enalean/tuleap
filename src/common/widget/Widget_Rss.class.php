@@ -19,7 +19,8 @@ require_once('Widget.class.php');
         $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {
-        return $this->rss_title ? $this->rss_title : 'RSS Reader';
+        $hp = CodeX_HTMLPurifier::instance();
+        return $this->rss_title ?  $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML)  : 'RSS Reader';
     }
     function getContent() {
         $content = '';
