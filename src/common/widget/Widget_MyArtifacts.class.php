@@ -147,15 +147,15 @@ class Widget_MyArtifacts extends Widget {
                     }
                     $aff =& $artifact_types[$group_id][$atid]['aff'];
                     //Retrieve artifact_id field
-                    $field =& $aff->getFieldFromName('artifact_id');
+                    $field = $aff->getFieldFromName('artifact_id');
                     //Check if user can read it
                     $user_can_view_aid = $field->userCanRead($group_id, $atid);
                     //Retrieve percent_complete field
-                    $field =& $aff->getFieldFromName('percent_complete');
+                    $field = $aff->getFieldFromName('percent_complete');
                     //Check if user can read it
                     $user_can_view_percent_complete = $field && $field->userCanRead($group_id, $atid);
                     //Retriebe summary field
-                    $field =& $aff->getFieldFromName('summary');
+                    $field = $aff->getFieldFromName('summary');
                     //Check if user can read it
                     $user_can_view_summary = $field->userCanRead($group_id, $atid);
                     $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = $user_can_view_aid || $user_can_view_summary;
