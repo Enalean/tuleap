@@ -403,9 +403,9 @@ if ($group_id && !$atid) {
                                                      $request->getValidated('stop_notification', new Valid_WhiteList('stop_notification', array('1')), 0)
               );
               //{{{ Global Notifications
-              $submitted_notifications = $request->getValidated(
-                  'global_notification', 
-                  new Valid_MultidimensionalArray(
+              $submitted_notifications = $request->get('global_notification');
+              /*
+              new Valid_MultidimensionalArray(
                       'global_notification', 
                       array(
                         'addresses'         => 'string', 
@@ -414,6 +414,7 @@ if ($group_id && !$atid) {
                       )
                   )
               );
+              */
               if ($submitted_notifications) {
                   $agnf =& new ArtifactGlobalNotificationFactory();
                   $notifs = $agnf->getGlobalNotificationsForTracker($atid);

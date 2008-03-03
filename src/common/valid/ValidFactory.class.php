@@ -169,53 +169,6 @@ extends Valid {
 }
 
 
-/**
- * Check that submitted value is a multi-dimensional array
- */
-class Valid_MultidimensionalArray extends Valid {
-    
-    var $validators;
-    
-    /**
-     * Constructor
-     * @param string the variable name on which rules must applies.
-     * @param array  the validators which must be applied on each sub elements
-     */
-    function Valid_MultidimensionalArray($key, $validators) {
-        parent::Valid($key);
-        $this->validators = $validators;
-        foreach($this->validators as $key => $v) {
-            $this->validators[$key] = ValidFactory::getInstance($v);
-        }
-    }
-    
-    function validate($array) {
-        $is_valid = false;
-        if (is_array($array)) {
-            if (count($array)) {
-                $is_valid = true;
-                reset($array);
-                while((list($k,$v) = each($array)) && is_array($v)) {
-                    //Apply inner validators
-                    foreach($v as $key => $value) {
-                        if (isset($this->validators[$key])) {
-                            $is_valid = $this->validators[$key]->validate($value) && $is_valid;
-                        } else {
-                            $is_valid = $is_valid && true;
-                        }
-                    }
-                }
-                if (current($array) !== FALSE) {
-                    $is_valid = false;
-                }
-            } else {
-                $is_valid = true;
-            }
-        }
-        return $is_valid;
-    }
-}
-
 class ValidFactory {
     /**
      * If $validator is an instance of a Validator, do nothing and returns it
