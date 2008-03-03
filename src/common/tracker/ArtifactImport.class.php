@@ -13,6 +13,7 @@
   //$Language->loadLanguageMsg('include/include');
 require_once('common/include/Error.class.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
+require_once('common/include/SimpleSanitizer.class.php');
 
 class ArtifactImport extends Error {
 

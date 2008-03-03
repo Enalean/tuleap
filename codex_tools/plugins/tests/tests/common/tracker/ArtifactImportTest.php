@@ -398,5 +398,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 function user_getname() {return 'schneide2';}
 
 function db_query($string) {return false;}
+function db_ei($string) {return false;}
+function db_es($string) {return false;}
 
 ?>

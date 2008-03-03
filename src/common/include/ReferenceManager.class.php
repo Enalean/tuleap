@@ -282,8 +282,9 @@ class ReferenceManager {
     function &_buildReference($row) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
-        return new Reference($refid,$row['keyword'],$row['description'],$row['link'],
+        $r = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['is_active'],$row['group_id']);
+        return $r;
     }
 
 
@@ -414,9 +415,11 @@ class ReferenceManager {
         if ($ref_gid=="") $ref_gid=100; // use system references only
         $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
         $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
-        if (!$ref) return null;
-        $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
-        $refInstance->computeGotoLink($key,$match[3],$ref_gid);
+        $refInstance = null;
+        if ($ref) {
+            $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
+            $refInstance->computeGotoLink($key,$match[3],$ref_gid);
+        }
         return $refInstance;
     }
 
@@ -427,7 +430,8 @@ class ReferenceManager {
         if (isset($refs["$keyword"]))
             if (isset($refs["$keyword"][$num_args]))
                 return $refs["$keyword"][$num_args];
-        return null;
+        $r = null;
+        return $r;
     }
 
     /**

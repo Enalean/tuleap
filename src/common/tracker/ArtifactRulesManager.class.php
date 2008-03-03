@@ -101,7 +101,7 @@ class ArtifactRulesManager {
         $values = array();
         reset($value_field_list);
         while (list($field_name,$value) = each($value_field_list)) {
-            $field = $art_field_fact->getFieldFromName($field_name);
+            $field =& $art_field_fact->getFieldFromName($field_name);
             $values[$field->getID()] = array('field' => &$field, 'values' => is_array($value)?$value:array($value));
         }
         

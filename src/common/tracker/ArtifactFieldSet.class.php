@@ -6,7 +6,7 @@
 //
 //  Written for CodeX by Marc Nazarian
 //
-
+require_once('common/include/Error.class.php');
 $GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFieldSet extends Error {

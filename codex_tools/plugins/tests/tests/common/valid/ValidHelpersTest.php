@@ -23,7 +23,7 @@
  */
 
 require_once('common/valid/ValidFactory.class.php');
-Mock::generatePartial('Valid', 'MockValid', array());
+Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
 
 class ValidHelperTest extends UnitTestCase {
 
@@ -48,11 +48,11 @@ class ValidHelperTest extends UnitTestCase {
     }
     
     function testValidFactory() {
-        $v = new MockValid();
+        $v = new Valid_For_Inheritance($this);
         
         //Does not work in php4 :(
         //$this->assertReference(ValidFactory::getInstance($v), $v);
-        $this->assertIsA(ValidFactory::getInstance($v), 'MockValid');
+        $this->assertIsA(ValidFactory::getInstance($v), 'Valid_For_Inheritance');
         
         $this->assertIsA(ValidFactory::getInstance('string'), 'Valid_String');
         $this->assertIsA(ValidFactory::getInstance('uint'), 'Valid_UInt');
