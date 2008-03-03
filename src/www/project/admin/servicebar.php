@@ -275,7 +275,7 @@ if ($func=='do_update') {
         
         //... and let plugins do what they have to do.
         $em =& EventManager::instance();
-        $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false));
+        $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false, 'group_id' => $group_id));
     }
 }
 
