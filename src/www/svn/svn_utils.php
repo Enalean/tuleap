@@ -750,7 +750,7 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
     }
 
     if (isset($_srch) && $_srch != '') {
-        $srch_str = "AND svn_commits.description like '%".db_es($_srch)."%' ";
+        $srch_str = "AND svn_commits.description like '%".db_es(htmlspecialchars($_srch))."%' ";
     } else {
         $srch_str = "";
     }
