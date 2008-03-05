@@ -2,6 +2,9 @@
 
 require_once('DataAccessResult.class.php');
 
+if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
+if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
+
 /**
  *  A simple class for querying MySQL
  */
@@ -89,8 +92,11 @@ class DataAccess {
         return $value;
     }
 
-    function escapeInt($v) {
+    function escapeInt($v, $null = CODEX_DB_NOT_NULL) {
         $m = array();
+        if($null === CODEX_DB_NULL && $v === '') {
+            return 'NULL';
+        }
         if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $v, $m)) {
             return $m[1];
         }

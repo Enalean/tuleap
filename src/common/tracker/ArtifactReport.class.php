@@ -199,8 +199,8 @@ class ArtifactReport extends Error {
       $sql = 'INSERT INTO artifact_report_field (report_id, field_name,'.
 	'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
       
-      $sql .= "('". db_ei($this->report_id) ."','". db_es($field_name) ."',". db_ei($show_on_query) .",". db_ei($show_on_result) .",".
-	 db_ei($place_query) .",". db_ei($place_result) .",". db_ei($col_width) .")";
+      $sql .= "(". db_ei($this->report_id) .",'". db_es($field_name) ."',". db_ei($show_on_query) .",". db_ei($show_on_result) .",".
+	 db_ei($place_query, CODEX_DB_NULL) .",". db_ei($place_result, CODEX_DB_NULL) .",". db_ei($col_width, CODEX_DB_NULL) .")";
       //echo $sql.'<br>';
       $res = db_query($sql);
       if ($res) {

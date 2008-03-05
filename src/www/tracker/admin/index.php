@@ -249,13 +249,8 @@ if ($group_id && !$atid) {
                 $cb_report_val = ($request->getValidated($cb_report) ? '1':'0');
                 
                 $tf_search_val = $request->getValidated($tf_search);
-                $tf_search_val = ($tf_search_val ? "'".$tf_search_val ."'" : 'NULL');
-                
                 $tf_report_val = $request->getValidated($tf_report);
-                $tf_report_val = ($tf_report_val ? "'".$tf_report_val."'" : 'NULL');
-                
                 $tf_colwidth_val = $request->getValidated($tf_colwidth);
-                $tf_colwidth_val = ($$tf_colwidth_val? "'".$tf_colwidth_val."'" : 'NULL');
                 
                 if ($cb_search_val || $cb_report_val || $tf_search_val || $tf_report_val) {
 					$arh->add_report_field($field->getName(),$cb_search_val,$cb_report_val,$tf_search_val,$tf_report_val,$tf_colwidth_val);

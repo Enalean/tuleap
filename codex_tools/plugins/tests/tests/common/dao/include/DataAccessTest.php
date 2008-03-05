@@ -146,5 +146,16 @@ class DataAccessTest extends UnitTestCase {
         $input = '-214748364790';
         $this->assertEqual(DataAccess::escapeInt($input), -214748364790);
     }
+
+    function testNull() {
+        $this->assertEqual(DataAccess::escapeInt(''), '0');
+        $this->assertEqual(DataAccess::escapeInt('', CODEX_DB_NOT_NULL), '0');
+        $this->assertEqual(DataAccess::escapeInt('', CODEX_DB_NULL), 'NULL');
+
+        $this->assertEqual(DataAccess::escapeInt('0', CODEX_DB_NULL), '0');
+        $this->assertEqual(DataAccess::escapeInt(null, CODEX_DB_NULL), '0');
+        $this->assertEqual(DataAccess::escapeInt('123', CODEX_DB_NULL), '123');
+        $this->assertEqual(DataAccess::escapeInt('abc', CODEX_DB_NULL), '0');
+    }
 }
 ?>
