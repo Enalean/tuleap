@@ -654,8 +654,8 @@ if ($group_id && !$atid) {
                 }
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','value_updated'));
 			}
-			require('./field_values_details.php');
 		}
+		require('./field_values_details.php');
 		break;
 
 	case 'value_delete':
