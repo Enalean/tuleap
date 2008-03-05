@@ -224,7 +224,7 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
         return (user_ismember($group_id,'W2'));
     } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
         $group = group_get_object($group_id);	
-        $at = new ArtifactType($group, $object_id);
+        $at = new ArtifactType($group, (int)$object_id);
         return $at->userIsAdmin();
     } else {
         $em =& EventManager::instance();
