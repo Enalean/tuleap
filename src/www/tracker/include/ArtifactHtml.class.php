@@ -99,7 +99,7 @@ class ArtifactHtml extends Artifact {
         
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(group_getname($group_id), CODEX_PURIFIER_BASIC) .'</TD>';
+            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
