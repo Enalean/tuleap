@@ -97,7 +97,11 @@ if ( $func == 'gotoid' ) {
         if ( !$ath->isValid() ) {
                 exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
         }
-
+        //Check if the user can view the artifact
+        if (!$ath->userCanView()) {
+            exit_permission_denied();
+        }
+        
         // Create field factory
         $art_field_fact = new ArtifactFieldFactory($ath);
         $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
