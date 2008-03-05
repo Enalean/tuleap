@@ -50,9 +50,9 @@ switch ($perm_type) {
      break;
  case 'fields':
      if ($update) {
-         if (isset($_REQUEST['permissions']) && is_array($_REQUEST['permissions'])) {
+         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
              $fields = $art_field_fact->getAllUsedFields();
-             permission_process_update_fields_permissions($group_id, $atid, $fields, $_REQUEST['permissions']);
+             permission_process_update_fields_permissions($group_id, $atid, $fields, $request->get('permissions'));
          }
      }
      //display
