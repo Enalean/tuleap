@@ -491,7 +491,7 @@ class ArtifactHtml extends Artifact {
         $html = '';
         $html .= '
             <table width="100%">
-              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(group_getname($group_id), CODEX_PURIFIER_BASIC) .'</TD></tr>';
+              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD></tr>';
         
         // Now display the variable part of the field list (depend on the project)
         
@@ -881,7 +881,7 @@ class ArtifactHtml extends Artifact {
         $html = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="'.($columns_number).'">
-                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(group_getname($group_id), CODEX_PURIFIER_BASIC) .'</TD></TR>';
+                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD></TR>';
         
                          
                          
