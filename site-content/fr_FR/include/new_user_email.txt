@@ -7,11 +7,21 @@
 // 
 //
 
-
+if(!$admin_creation){
 $message = "Merci d'avoir créé votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
 . "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+. "Votre login est : ".$username."\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
 . " -- L'équipe ".$GLOBALS['sys_name']."\n";
-
+}else {
+$message = "Vous avez été enregistré sur le site ".$GLOBALS['sys_name']." par l'administrateur. Pour\n"
+. "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
+. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
+. "Votre login est : ".$username."\n"
+. "Et votre mot de passe est : ".$password."\n"
+. "Pensez à changer votre mot de passe après votre première connexion sur le site.\n\n"
+. "Vous pouvez maintenant profiter du site.\n\n"
+. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+}}
 ?>

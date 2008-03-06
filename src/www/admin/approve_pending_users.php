@@ -82,11 +82,11 @@ if (($action_select=='activate')) {
           WHERE user_id IN ($list_of_users)");
 
     // Now send the user verification emails
-    $res_user = db_query("SELECT email, confirm_hash FROM user "
+    $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
              . " WHERE user_id IN ($list_of_users)");
     
     while ($row_user = db_fetch_array($res_user)) {
-        if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'])) {
+        if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'], $row_user['user_name'])) {
                 $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
         }
         usleep(250000);

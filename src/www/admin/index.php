@@ -75,6 +75,7 @@ echo ")</b>";
 </li>
 </ul>
 <li><a href="/people/admin"><?php echo $Language->getText('admin_main', 'skills'); ?></a></li>
+<li><a href="register_admin.php?page=admin_creation"><?php echo $Language->getText('admin_main', 'new_user'); ?></a></li>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_group'); ?></h3>
