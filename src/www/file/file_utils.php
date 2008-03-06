@@ -205,34 +205,6 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
 	}
 }
 
-/*
-
-	pop-up box of packages for this group
-
-*/
-
-function frs_show_package_popup ($group_id, $name='package_id', $checked_val="xzxz") {
-	/*
-		return a pop-up select box of packages for this project
-	*/
-	global $FRS_PACKAGE_RES,$FRS_PACKAGE_NAME_RES,$Language;
-	$frspf = new FRSPackageFactory();
-	if (!$group_id) {
-		return $Language->getText('file_file_utils','g_id_err');
-	} else {
-		if (!isset($FRS_PACKAGE_RES)) {
-			$res =& $frspf->getFRSPackagesFromDb($group_id);
-			$FRS_PACKAGE_ID_RES = array();
-			$FRS_PACKAGE_NAME_RES = array();
-			foreach($res as $package){
-				$FRS_PACKAGE_ID_RES[] = $package->getPackageID();
-				$FRS_PACKAGE_NAME_RES[] = $package->getName();
-			}			
-		}
-		return html_build_select_box_from_arrays($FRS_PACKAGE_ID_RES, $FRS_PACKAGE_NAME_RES, $name,$checked_val,false);
-	}
-}
-
 function file_utils_show_processors ($result) {
     global $group_id,$Language;
     $hp =& CodeX_HTMLPurifier::instance();
@@ -476,7 +448,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         for ($i = 0; $i < $rows; $i++) {
             echo '<OPTION VALUE="' . $res[$i]->getPackageID() . '"';
             if($res[$i]->getPackageID() == $release->getPackageId()) echo ' selected';
-            echo '>' . $hp->purify($res[$i]->getName(), CODEX_PURIFIER_CONVERT_HTML) . '</OPTION>';
+            echo '>' . $hp->purify(util_unconvert_htmlspecialchars($res[$i]->getName()), CODEX_PURIFIER_CONVERT_HTML) . '</OPTION>';
         }
         echo '</SELECT>';
     }
