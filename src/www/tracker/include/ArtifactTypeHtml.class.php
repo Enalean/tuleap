@@ -865,13 +865,13 @@ EOS;
 		    <tr> 
 		      <td width="21%">'.$Language->getText('tracker_include_type','submit_instr').'</td>
 		      <td width="79%"> 
-		        <textarea name="submit_instructions" rows="3" cols="50">'. $hp->purify($this->getSubmitInstructions(), CODEX_PURIFIER_BASIC) .'</textarea>
+		        <textarea name="submit_instructions" rows="3" cols="50">'. $hp->purify($this->getSubmitInstructions(), CODEX_PURIFIER_CONVERT_HTML) .'</textarea>
 		      </td>
 		    </tr>
 		    <tr> 
 		      <td width="21%">'.$Language->getText('tracker_include_type','browse_instr').'</td>
 		      <td width="79%"> 
-		        <textarea name="browse_instructions" rows="3" cols="50">'. $hp->purify($this->getBrowseInstructions(), CODEX_PURIFIER_BASIC) .'</textarea>
+		        <textarea name="browse_instructions" rows="3" cols="50">'. $hp->purify($this->getBrowseInstructions(), CODEX_PURIFIER_CONVERT_HTML) .'</textarea>
 		      </td>
 		    </tr>
 		  </table>
