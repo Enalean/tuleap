@@ -1009,12 +1009,12 @@ if ( $func == 'gotoid' ) {
                         '&group_id='. (int)$group_id.'&func=browse">' .
                         html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
                         '&nbsp;'.
-                         $hp->purify($at_arr[$j]->getName(), CODEX_PURIFIER_DISABLED)  .'</a> ';
+                         $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODEX_PURIFIER_CONVERT_HTML)  .'</a> ';
                     // Only show number of artifacts if the user has full access on the tracker.
                     if ($at_arr[$j]->userHasFullAccess()) {
                         echo '( <strong>'. (int)($at_arr[$j]->getOpenCount()) .' '.$Language->getText('tracker_index','open').' / '. (int)($at_arr[$j]->getTotalCount()) .' '.$Language->getText('tracker_index','total').'</strong> )';
                     }
-                    echo '<br />'. $hp->purify($at_arr[$j]->getDescription(), CODEX_PURIFIER_DISABLED)  .'<p>';
+                    echo '<br />'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getDescription()), CODEX_PURIFIER_BASIC, $group_id)  .'<p>';
                 }
             }
         }

@@ -85,7 +85,7 @@ class ArtifactHtml extends Artifact {
             if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
                 echo " #". $hp->purify($this->getID(), CODEX_PURIFIER_CONVERT_HTML) ;
             }
-            echo " ] ". $hp->purify($summary, CODEX_PURIFIER_DISABLED) ."</H2>";
+            echo " ] ". $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ."</H2>";
             echo "</TD>";
             
             if ( $pv == 0) {
@@ -144,7 +144,7 @@ class ArtifactHtml extends Artifact {
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
                     $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
+                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
 
@@ -558,7 +558,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 $html .= '<TR><TD COLSPAN="'. (int)$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'. (int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'. (int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
@@ -724,7 +724,7 @@ class ArtifactHtml extends Artifact {
                             if ( $field ) {
                                 if ($field->userCanRead($group_id,$group_artifact_id)) {
                                     $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'. $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</TD><TD>';
+                                        '"><TD>'. $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                         
                                     if ($field->isSelectBox()) {
                                         // It's a select box look for value in clear
@@ -741,7 +741,7 @@ class ArtifactHtml extends Artifact {
                                         $html .= number_format($value_id_new,2);
                                     } else {
                                         // It's a text zone then display directly
-                                        $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
+                                        $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                         $html .= $hp->purify($value_id_new, CODEX_PURIFIER_CONVERT_HTML);
                                     }
                         
@@ -752,8 +752,8 @@ class ArtifactHtml extends Artifact {
                             } else {
                                 $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
                                                     '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
-                                $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
-                                $html .=  $hp->purify($value_id_new, CODEX_PURIFIER_DISABLED) ;
+                                $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
+                                $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_new), CODEX_PURIFIER_CONVERT_HTML) ;
                                 $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
@@ -939,7 +939,7 @@ class ArtifactHtml extends Artifact {
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
                 $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify($result_fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</span></TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
@@ -1016,7 +1016,7 @@ class ArtifactHtml extends Artifact {
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
-        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($this->getFollowup($comment_id), CODEX_PURIFIER_DISABLED) .'</TEXTAREA>
+        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($this->getFollowup($comment_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
     }

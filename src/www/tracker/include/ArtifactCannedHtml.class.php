@@ -104,7 +104,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	$atid = $this->ArtifactType->getID();
     $hp = CodeX_HTMLPurifier::instance();
 	  echo '<H2>'.$Language->getText('tracker_import_admin','tracker').
-	    ' \'<a href="/tracker?group_id='. (int)$group_id.'&atid='. (int)$atid.'">'. $hp->purify($this->ArtifactType->getName(), CODEX_PURIFIER_DISABLED) .'</a>\' - '.
+      ' \'<a href="/tracker?group_id='. (int)$group_id.'&atid='. (int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' - '.
 	    $Language->getText('tracker_admin_index','create_modify_cannedresponse').'</a></H2>';
 	  $result = $this->ArtifactType->getCannedResponses();
 	  $rows=db_numrows($result);
@@ -129,8 +129,8 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	      echo '<TR class="'. util_get_alt_row_color($i) .'">'.
 	      '<TD><A HREF="/tracker/admin?func=canned&update_canned=1&artifact_canned_id='.
 	      (int)(db_result($result, $i, 'artifact_canned_id')).'&atid='.(int)$atid.'&group_id='.(int)$group_id.'">'.
-	       $hp->purify(db_result($result, $i, 'title'), CODEX_PURIFIER_DISABLED) .'</A></TD>'.
-	      '<TD>'. $hp->purify(substr(db_result($result, $i, 'body'),0,160), CODEX_PURIFIER_DISABLED) .
+	       $hp->purify(util_unconvert_htmlspecialchars(db_result($result, $i, 'title')), CODEX_PURIFIER_CONVERT_HTML) .'</A></TD>'.
+	      '<TD>'. $hp->purify(util_unconvert_htmlspecialchars(substr(db_result($result, $i, 'body'),0,160)), CODEX_PURIFIER_CONVERT_HTML) .
 	      '<b>...</b></TD>'.
 	      '<td align="center"><A HREF="/tracker/admin/?func=canned&delete_canned=1&artifact_canned_id='.
 	      (int)(db_result($result, $i, 'artifact_canned_id')).'&atid='.(int)$atid.'&group_id='.(int)$group_id.
