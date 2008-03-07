@@ -33,7 +33,9 @@
         $this->params                = $params;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
-        register_shutdown_function(create_function('', '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();'));
+        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
+            register_shutdown_function(create_function('', '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();'));
+        }
     }
     
     function getCookie($name) {
