@@ -72,7 +72,7 @@ if (user_isloggedin()) {
 
 // Number of artifacts displayed on screen in one chunk.
 // Default 50
-$chunksz = $request->get('chunksz');
+$chunksz = (int)$request->get('chunksz');
 if (!$chunksz) { $chunksz = 50; }
 
 // Make sure offset values, search and multisort flags are defined
