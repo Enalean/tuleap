@@ -60,9 +60,9 @@ class ArtifactTypeHtml extends ArtifactType {
                 if (!isset($params['pv']) || $params['pv'] == 0) {
                     echo '<h3>'.$Language->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a></h3><p>';
 
-                    echo '<strong><a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_BASIC) ).'</a>';
-                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_BASIC) ).'s </a>';
-                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','open', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_BASIC) ).'s </a>';
+                    echo '<strong><a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_CONVERT_HTML) ).'</a>';
+                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_CONVERT_HTML) ).'s </a>';
+                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','open', $hp->purify($this->getCapsItemName(), CODEX_PURIFIER_CONVERT_HTML) ).'s </a>';
                     if ($this->userIsAdmin()) {
 			echo ' | <a href="/tracker/?func=masschange&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_index','mass_change').' </a>';
 			echo ' | <a href="/tracker/?func=import&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_import_admin','import').' </a>';
@@ -204,8 +204,8 @@ class ArtifactTypeHtml extends ArtifactType {
 			while ($arr = db_fetch_array($at_arr)) {
 			    echo sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    $hp->purify($arr['group_artifact_id'], CODEX_PURIFIER_BASIC) ,
-					    $hp->purify($arr['project_name'], CODEX_PURIFIER_BASIC) ,
+					    $hp->purify($arr['group_artifact_id'], CODEX_PURIFIER_CONVERT_HTML) ,
+					    $hp->purify($arr['project_name'], CODEX_PURIFIER_CONVERT_HTML) ,
 					    $hp->purify($arr['name'], CODEX_PURIFIER_DISABLED) ,
 					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
 					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','delay_deletion').'\')"></a>',
@@ -261,7 +261,7 @@ class ArtifactTypeHtml extends ArtifactType {
                             if ($this->Group->isTemplate()) {
 			       echo sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_BASIC) ."</a>",
+					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_CONVERT_HTML) ."</a>",
 					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_DISABLED) ,
 					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_DISABLED) .'&nbsp;',
                                             ($at_arr[$i]->isInstantiatedForNewProjects()?'Yes':'No'),
@@ -270,7 +270,7 @@ class ArtifactTypeHtml extends ArtifactType {
 			    } else {
                                 echo sprintf($fmt,
 					    util_get_alt_row_color($i),
-					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_BASIC) ."</a>",
+					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_CONVERT_HTML) ."</a>",
 					    $hp->purify($at_arr[$i]->getName(), CODEX_PURIFIER_DISABLED) ,
 					    $hp->purify($at_arr[$i]->getDescription(), CODEX_PURIFIER_DISABLED) .'&nbsp;',
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
@@ -364,7 +364,7 @@ class ArtifactTypeHtml extends ArtifactType {
             foreach($items as $item) {
                 if (isset($item['name'])) {
                     $html .= '<H3>';
-                    $name =  $hp->purify($item['name'], CODEX_PURIFIER_BASIC) ;
+                    $name =  $hp->purify($item['name'], CODEX_PURIFIER_CONVERT_HTML) ;
                     if (isset($item['link'])) {
                         $html .= '<a href="'.$item['link'].'">';
                         $html .= $name;
@@ -374,7 +374,7 @@ class ArtifactTypeHtml extends ArtifactType {
                     }
                     $html .= '</h3>';
                     if (isset($item['desc'])) {
-                        $html .=  $hp->purify($item['desc'], CODEX_PURIFIER_BASIC) ;
+                        $html .=  $hp->purify($item['desc'], CODEX_PURIFIER_BASIC, $this->getGroupId()) ;
                     }
                 }
             }
@@ -676,7 +676,7 @@ EOS;
                 
                 $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
                 $html .= '<td>';
-                $name  =  $hp->purify($ugroup['name'], CODEX_PURIFIER_BASIC) ;
+                $name  =  $hp->purify($ugroup['name'], CODEX_PURIFIER_CONVERT_HTML) ;
                 if (isset($ugroup['link'])) {
                     $html .= "<a href='".$ugroup['link']."'>";
                     $html .= $name;
@@ -793,7 +793,7 @@ EOS;
 		for ($i=0; $i < $rows; $i++) {
 			$user_id = db_result($result, $i, 'user_id');
 		    $user_name = db_result($result, $i, 'user_name');
-			echo '<OPTION value="'.(int)$user_id.'">'. $hp->purify($user_name, CODEX_PURIFIER_BASIC) .'</OPTION>';
+			echo '<OPTION value="'.(int)$user_id.'">'. $hp->purify($user_name, CODEX_PURIFIER_CONVERT_HTML) .'</OPTION>';
 		}
 		echo '</SELECT>';
 
@@ -1100,11 +1100,11 @@ EOS;
                 $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
                 $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.(int)$field->getID().'">'.
                  $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</A></td>'.
-                "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
                 "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
-                "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
+                "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
+                "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
                 if ( $field->isStandardField() ) {
                     // For standard, we can't delete them - Only unused them
                     $html .= "\n<td align =\"center\">-</td>";
@@ -1137,11 +1137,11 @@ EOS;
                 $html .= '<TR class="'.util_get_alt_row_color($iu) .'">';
                 $html .= '<TD><A HREF="'.$tracker_url.'&func=display_field_update&field_id='.(int)$field->getID().'">'.
                  $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) .'</A></td>'.
-                "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_BASIC) .'</td>'.
+                "\n<td>". $hp->purify($field->getLabelFieldType(), CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
                 "\n<td>". $hp->purify($field->getDescription(), CODEX_PURIFIER_DISABLED) .'</td>'.
                 "\n<td><a href=\"".$tracker_url."&func=display_fieldset_update&fieldset_id=".(int)$fieldset->getID()."\">". $hp->purify($fieldset->getLabel(), CODEX_PURIFIER_DISABLED) .'</td>'.
-                "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
-                "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
+                "\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
+                "\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
                 if ( $field->isStandardField() ) {
                     // For standard, we can't delete them - Only unused them
                     $html .= "\n<td align =\"center\">-</td>";
@@ -1589,7 +1589,7 @@ EOS;
         $hp = CodeX_HTMLPurifier::instance();
 	  global $Language;
 	    if ( $or_label ) {
-	    	echo '<h3>'. $hp->purify($or_label, CODEX_PURIFIER_BASIC) .' '.$Language->getText('tracker_include_type','bind_to_list').' ';
+	    	echo '<h3>'. $hp->purify($or_label, CODEX_PURIFIER_CONVERT_HTML) .' '.$Language->getText('tracker_include_type','bind_to_list').' ';
 	    } else {
 	    	echo '<h3>'.$Language->getText('tracker_include_type','bind_to_list').' ';
 	    }
@@ -1619,7 +1619,7 @@ EOS;
 	    if ( $value_function && in_array("group_members",$value_function)) {
 	      $selected = " selected";
 	    }
-	    echo '<option value="group_members"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_BASIC) .'</option>';
+	    echo '<option value="group_members"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'</option>';
 	    
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
@@ -1627,7 +1627,7 @@ EOS;
 	    if ( $value_function && in_array("group_admins",$value_function)) {
 	      $selected = " selected";
 	    }
-	    echo '<option value="group_admins"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_BASIC) .'</option>';
+	    echo '<option value="group_admins"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'</option>';
 	    
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
@@ -1635,7 +1635,7 @@ EOS;
 	    if ( $value_function && in_array("tracker_admins",$value_function)) {
 	      $selected = " selected";
 	    }
-	    echo '<option value="tracker_admins"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_BASIC) .'</option>';
+	    echo '<option value="tracker_admins"'.$selected.'>'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'</option>';
 	    
 	    
 	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
@@ -1653,7 +1653,7 @@ EOS;
 	      if ( $value_function && in_array($ugr,$value_function)) {
 		$selected = " selected";
 	      }
-	      echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODEX_PURIFIER_BASIC) .'</option>';	      
+	      echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODEX_PURIFIER_CONVERT_HTML) .'</option>';	      
 	    }
 	    
 	    if ($this->Group->getID() != 100) {
@@ -1666,7 +1666,7 @@ EOS;
 	        if ( $value_function && in_array($ugr,$value_function)) {
 		    $selected = " selected";
 	        }
-		echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODEX_PURIFIER_BASIC) .'</option>';
+		echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODEX_PURIFIER_CONVERT_HTML) .'</option>';
 	      }
 	    }
 	    echo '
@@ -1701,7 +1701,7 @@ EOS;
 					
 		echo '
 	      <FORM ACTION="" METHOD="POST">
-	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="'. $hp->purify($func, CODEX_PURIFIER_BASIC) .'">
+	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="'. $hp->purify($func, CODEX_PURIFIER_CONVERT_HTML) .'">
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.(int)$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$this->Group->getID().'">
 	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->getID().'">';
@@ -1870,14 +1870,14 @@ EOS;
 			    util_get_alt_row_color($iu) .'">';
 		
 			if ( $field->getName() == "severity" ) {
-				$html .= '<TD align="center">'. $hp->purify($row['value_id'], CODEX_PURIFIER_BASIC) .'</TD>';
+				$html .= '<TD align="center">'. $hp->purify($row['value_id'], CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
 			}
 		    $html .= '<TD><A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
 			'&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">'.
 			$hp->purify($row['value'], CODEX_PURIFIER_DISABLED).'</A></td>'.
 			"\n<td>". $hp->purify($row['description'], CODEX_PURIFIER_DISABLED) .'</td>'.
-			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
-			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
+			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
+			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
 			
 			if (( $row['status'] == "P" || $field->getName() == "severity" )
                             &&(!user_is_super_user())){
@@ -1919,9 +1919,9 @@ EOS;
 		    $html .= '<TD><A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
 			'&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">'.
 			$row['value'].'</A></td>'.
-			"\n<td>". $hp->purify($row['description'], CODEX_PURIFIER_BASIC) .'</td>'.
-			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>'.
-			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_BASIC) .'</td>';
+			"\n<td>". $hp->purify($row['description'], CODEX_PURIFIER_BASIC, $this->getGroupId()) .'</td>'.
+			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
+			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
 
 			if ( $row['status'] == "P" || $field->getName() == "severity" ) {
 				// Unable to delete Permanent values
@@ -2073,12 +2073,12 @@ EOS;
 		    $watchers="";
                     while ($row_watcher = db_fetch_array($res)) {
 				$watcher_name = user_getname($row_watcher['user_id']);
-				$watchers .= '<a href="/users/'.urlencode($watcher_name).'">'. $hp->purify($watcher_name, CODEX_PURIFIER_BASIC) .'</a>,';
+				$watchers .= '<a href="/users/'.urlencode($watcher_name).'">'. $hp->purify($watcher_name, CODEX_PURIFIER_CONVERT_HTML) .'</a>,';
 		    }
 		    $watchers = substr($watchers,0,-1); // remove extra comma at the end
 		    
 		    if ($watchers) {
-				echo "<p>".$Language->getText('tracker_include_type','watchers', $hp->purify($watchers, CODEX_PURIFIER_BASIC) );
+				echo "<p>".$Language->getText('tracker_include_type','watchers', $hp->purify($watchers, CODEX_PURIFIER_CONVERT_HTML) );
 		    } else {
 				echo "<p>".$Language->getText('tracker_include_type','no_watcher');
 		    }
@@ -2273,7 +2273,7 @@ EOS;
 	
 		    if ($field->isSelectBox()) {
 	
-			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=".(int)$field->getID()."\"> ". $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) ."s by '". $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) ."'</A><BR>";
+			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=".(int)$field->getID()."\"> ". $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s by '". $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) ."'</A><BR>";
 		    }
 		}
 	
@@ -2298,12 +2298,12 @@ EOS;
 	
 		echo '<H2>'.$Language->getText('tracker_include_type','tracker_aging_rep').'</H2>';
 	
-		GraphIt($closedItems['names'], $closedItems['values'],$Language->getText('tracker_include_type','avg_time', $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) ."s"));
+		GraphIt($closedItems['names'], $closedItems['values'],$Language->getText('tracker_include_type','avg_time', $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s"));
 		echo "<P>";
 	
 		$openItems = $this->getOpenArtifactsByAge();
 		
-		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','nb_open', $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) ."s"));
+		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','nb_open', $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s"));
 		$this->footer(array());
 	}
 	
@@ -2330,10 +2330,10 @@ EOS;
 	
 		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )).'</H3>';
 	
-		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
+		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
 		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify($this->getName(), CODEX_PURIFIER_DISABLED) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )).'</H3>';
 	
-		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
+		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify($field->getLabel(), CODEX_PURIFIER_DISABLED) )));
 		$this->footer(array());
 	
 	}
@@ -2374,7 +2374,7 @@ EOS;
 		reset($mass_change_ids);
 		while ( list($key, $val) = each($mass_change_ids)) {
             $url = '/tracker/?func=detail&group_id='. (int)$group_id .'&aid='. (int)$val .'&atid='. (int)$atid;
-			if ($key == 0) echo '<a href="'. $url .'">'. $hp->purify($this->getItemName(), CODEX_PURIFIER_BASIC) .' #'. (int)$val .'</a>';
+			if ($key == 0) echo '<a href="'. $url .'">'. $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) .' #'. (int)$val .'</a>';
 			if ($key > 0) echo ', <a href="'. $url .'"> #'. (int)$val .'</a>';
 			if ($key == 100) {echo ", .."; break;}
 		}
@@ -2622,7 +2622,7 @@ EOS;
                         		if ($res_username && (db_numrows($res_username) == 1))
                             			$href_cc = util_user_link($email);
                         		else
-                            			$href_cc = "<a href=\"mailto:".util_normalize_email($email)."\">". $hp->purify($email, CODEX_PURIFIER_BASIC) .'</a>';
+                            			$href_cc = "<a href=\"mailto:".util_normalize_email($email)."\">". $hp->purify($email, CODEX_PURIFIER_CONVERT_HTML) .'</a>';
 					$delete_ids = $row['artifact_cc_id'];
 				} else {
 					$delete_ids .= ",".$row['artifact_cc_id'];
@@ -2677,7 +2677,7 @@ EOS;
 	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="'. $hp->purify($delete_ids, CODEX_PURIFIER_CONVERT_HTML) .'">';
 						$out .= sprintf($fmt,
                                             		util_get_alt_row_color($rowcolor),
-                                            		 $hp->purify($filename, CODEX_PURIFIER_BASIC) ,
+                                            		 $hp->purify($filename, CODEX_PURIFIER_CONVERT_HTML) ,
                                             		intval($filesize/1024),
 							$i,
                                             		$html_delete);
@@ -2696,7 +2696,7 @@ EOS;
 	<INPUT TYPE="CHECKBOX" NAME="delete_attached[]" VALUE="'. $hp->purify($delete_ids, CODEX_PURIFIER_CONVERT_HTML) .'">';
 			$out .= sprintf($fmt,
                                         util_get_alt_row_color($rowcolor),
-                                         $hp->purify($filename, CODEX_PURIFIER_BASIC) ,
+                                         $hp->purify($filename, CODEX_PURIFIER_CONVERT_HTML) ,
                                         intval($filesize/1024),
 					$i,
                                         $html_delete);	
@@ -2743,10 +2743,10 @@ EOS;
 	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="'. $hp->purify($depend_ids, CODEX_PURIFIER_CONVERT_HTML) .'">';
 					$out .= sprintf($fmt,
                                             	util_get_alt_row_color($row_color),
-                                            	'<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_BASIC)  ."</a>",
-                                            	 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
-                                            	 $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
-                                            	 $hp->purify($group_label, CODEX_PURIFIER_BASIC) ,
+                                            	'<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_CONVERT_HTML)  ."</a>",
+                                            	 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC, $this->getGroupId()) ,
+                                            	 $hp->purify($tracker_label, CODEX_PURIFIER_CONVERT_HTML) ,
+                                            	 $hp->purify($group_label, CODEX_PURIFIER_CONVERT_HTML) ,
 						$occ,
                                             	$html_delete);
 					$row_color++;
@@ -2767,10 +2767,10 @@ EOS;
 	<INPUT TYPE="CHECKBOX" NAME="delete_depend[]" VALUE="'.$depend_ids.'">';
 		$out .= sprintf($fmt,
                                 util_get_alt_row_color($row_color),
-                                '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_BASIC)  ."</a>",
-                                 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
-                                 $hp->purify($tracker_label, CODEX_PURIFIER_BASIC) ,
-                                 $hp->purify($group_label, CODEX_PURIFIER_BASIC) ,
+                                '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'.  $hp->purify($dependent_on_artifact_id, CODEX_PURIFIER_CONVERT_HTML)  ."</a>",
+                                 $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC, $this->getGroupId()) ,
+                                 $hp->purify($tracker_label, CODEX_PURIFIER_CONVERT_HTML) ,
+                                 $hp->purify($group_label, CODEX_PURIFIER_CONVERT_HTML) ,
 				$occ,
                                 $html_delete);
         
@@ -2898,9 +2898,9 @@ EOS;
                     $link_field_usage = '/tracker/admin/?func=display_field_update&group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'&field_id='.(int)$field_contained->getID();
                     $html .= '<li>';
                     if ($field_contained->getUseIt()) {
-                        $html .= '<strong><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_BASIC) .'</a></strong>';
+                        $html .= '<strong><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_CONVERT_HTML) .'</a></strong>';
                     } else {
-                        $html .= '<em><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_BASIC) .'</a></em>';
+                        $html .= '<em><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_CONVERT_HTML) .'</a></em>';
                     }
                     $html .= '</li>';
                 }
@@ -2909,7 +2909,7 @@ EOS;
                 $html .= '- - -'; // $Language-> getText('tracker_include_type','empty_fieldset');
             }
             $html .= '</td>';
-            $html .= '<td align="center">'. $hp->purify($rank, CODEX_PURIFIER_BASIC) .'</td>';
+            $html .= '<td align="center">'. $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
             $html .= '<td align="center">';
             // Only possible to delete empty field sets (containing no fields inside)
             if (count($fields_contained) <= 0) {

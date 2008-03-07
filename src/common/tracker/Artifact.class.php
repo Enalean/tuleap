@@ -2662,12 +2662,12 @@ class Artifact extends Error {
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $out .= db_result($orig_subm, 0, 'email');
                     } else {
-                        $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify(user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')), CODEX_PURIFIER_BASIC) .'</a>';
+                        $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify(user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')), CODEX_PURIFIER_CONVERT_HTML) .'</a>';
                     }
                     
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
+                    $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2675,11 +2675,11 @@ class Artifact extends Error {
                         if (db_result($result, $i, 'mod_by')==100) {
                             $out .= db_result($result, $i, 'email');
                         } else {
-                            $out .= '<a href="/users/'.urlencode(user_getname(db_result($result, $i, 'mod_by'))).'">'. $hp->purify(user_getname(db_result($result, $i, 'mod_by')), CODEX_PURIFIER_BASIC) .'</a>';
+                            $out .= '<a href="/users/'.urlencode(user_getname(db_result($result, $i, 'mod_by'))).'">'. $hp->purify(user_getname(db_result($result, $i, 'mod_by')), CODEX_PURIFIER_CONVERT_HTML) .'</a>';
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_BASIC)  .'</span>';
+                        $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
                         $out .= '</span>'.")";
                     }
                     $out .= '</div>';
@@ -2708,7 +2708,7 @@ class Artifact extends Error {
                     $out .= '<div style="clear:both;"></div>';
                     $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. (int)$comment_id .'_content">';
                     if ($comment_type != "") {
-                        $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODEX_PURIFIER_BASIC)  .'</b></div>';
+                        $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODEX_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
                     $out .=  $hp->purify(db_result($result, $i, 'new_value'), CODEX_PURIFIER_LIGHT, $group_id);
                     $out .= '</div>';
@@ -2826,7 +2826,7 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             $href_cc,
-                                            $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODEX_PURIFIER_BASIC) ,
+                                            $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODEX_PURIFIER_BASIC, $this->ArtifactType->getGroupId()) ,
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')),
                                             $html_delete);
@@ -2919,9 +2919,9 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="/tracker/?func=gotoid&group_id='.(int)$group_id.'&aid='.(int)$dependent_on_artifact_id.'">'.(int)$dependent_on_artifact_id.'</a>',
-                                            $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
-                                            $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_BASIC) ,
-                                            $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_BASIC) ,
+                                            $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ,
+                                            $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_CONVERT_HTML) ,
+                                            $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_CONVERT_HTML) ,
                                             $html_delete);
                         
                         } // for
@@ -3025,7 +3025,7 @@ class Artifact extends Error {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="'.$href.'">'.  $hp->purify(db_result($result, $i, 'filename'), CODEX_PURIFIER_CONVERT_HTML) .'</a>',
-                                             $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODEX_PURIFIER_BASIC) ,
+                                             $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODEX_PURIFIER_BASIC, $group_id) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
                                             format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),

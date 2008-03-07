@@ -80,10 +80,10 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="aid" VALUE="'.(int)$this->getID().'">';
             echo '<TABLE><TR><TD class="artifact">';
             
-            echo '<table width="100%"><tr><td><H2>[ '. $hp->purify($this->ArtifactType->getItemName(), CODEX_PURIFIER_BASIC) ;
+            echo '<table width="100%"><tr><td><H2>[ '. $hp->purify($this->ArtifactType->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ;
             $field_artifact_id = $result_fields['artifact_id'];
             if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
-                echo " #". $hp->purify($this->getID(), CODEX_PURIFIER_BASIC) ;
+                echo " #". $hp->purify($this->getID(), CODEX_PURIFIER_CONVERT_HTML) ;
             }
             echo " ] ". $hp->purify($summary, CODEX_PURIFIER_DISABLED) ."</H2>";
             echo "</TD>";
@@ -99,7 +99,7 @@ class ArtifactHtml extends Artifact {
         
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD>';
+            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -485,13 +485,13 @@ class ArtifactHtml extends Artifact {
         $summary = $this->getValue('summary');
           
         echo "<TABLE width='100%'><TR><TD>";
-        echo "<H2>[ ". $hp->purify($Language->getText('tracker_include_artifact','copy_of',$this->ArtifactType->getItemName()." #".$this->getID())." ] ".$summary, CODEX_PURIFIER_BASIC) ."</H2>";
+        echo "<H2>[ ". $hp->purify($Language->getText('tracker_include_artifact','copy_of',$this->ArtifactType->getItemName()." #".$this->getID())." ] ".$summary, CODEX_PURIFIER_CONVERT_HTML) ."</H2>";
         echo "</TD></TR></TABLE>";
           
         $html = '';
         $html .= '
             <table width="100%">
-              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD></tr>';
+              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD></tr>';
         
         // Now display the variable part of the field list (depend on the project)
         
@@ -742,7 +742,7 @@ class ArtifactHtml extends Artifact {
                                     } else {
                                         // It's a text zone then display directly
                                         $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
-                                        $html .= $hp->purify($value_id_new, CODEX_PURIFIER_BASIC);
+                                        $html .= $hp->purify($value_id_new, CODEX_PURIFIER_CONVERT_HTML);
                                     }
                         
                                     $html .= '</TD>'.
@@ -751,7 +751,7 @@ class ArtifactHtml extends Artifact {
                                 }
                             } else {
                                 $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                                    '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_BASIC) .'</TD><TD>';
+                                                    '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                 $html .=  $hp->purify($value_id_old, CODEX_PURIFIER_DISABLED) .'</TD><TD>';
                                 $html .=  $hp->purify($value_id_new, CODEX_PURIFIER_DISABLED) ;
                                 $html .= '</TD>'.
@@ -833,9 +833,9 @@ class ArtifactHtml extends Artifact {
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'. (int)$dependent_on_artifact_id .'</a>',
-                                             $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_BASIC) ,
-                                             $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_BASIC) ,
-                                             $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_BASIC) );
+                                             $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ,
+                                             $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_CONVERT_HTML) ,
+                                             $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_CONVERT_HTML) );
                         
                         } // for
             }
@@ -881,7 +881,7 @@ class ArtifactHtml extends Artifact {
         $html = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="'.($columns_number).'">
-                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_BASIC) .'</TD></TR>';
+                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD></TR>';
         
                          
                          

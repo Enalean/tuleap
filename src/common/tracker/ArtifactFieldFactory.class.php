@@ -252,7 +252,7 @@ class ArtifactFieldFactory extends Error {
             $hp = CodeX_HTMLPurifier::instance();
             $bad_fields_escaped = array();
             foreach($bad_fields as $f) {
-                $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODEX_PURIFIER_BASIC);
+                $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODEX_PURIFIER_CONVERT_HTML);
             }
             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields_escaped)), CODEX_PURIFIER_DISABLED);
             $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));

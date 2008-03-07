@@ -591,7 +591,7 @@ if ($group_id && !$atid) {
 						'help' => 'TrackerAdministration.html#TrackerUpdatingaTrackerFieldValue'));
 			echo "<H2>".$Language->getText('tracker_import_admin','tracker').
 			  ' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_DISABLED) ."</a>'".
-			  $Language->getText('tracker_admin_field_values_details','manage_for', $hp->purify($field->getLabel()), CODEX_PURIFIER_BASIC) ."'</H2>";
+			  $Language->getText('tracker_admin_field_values_details','manage_for', $hp->purify($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ."'</H2>";
 
 			$value_array = $field->getFieldValue($atid, $request->getValidated('value_id', 'uint'));
 			$ath->displayFieldValueForm("value_update",$field_id,$value_array['value_id'],$value_array['value'],$value_array['order_id'],$value_array['status'],$value_array['description']);

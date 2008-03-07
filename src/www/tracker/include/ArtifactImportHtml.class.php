@@ -134,9 +134,9 @@ function showErrors() {
 	  //if insert show default value
 	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
-	      echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODEX_PURIFIER_BASIC) .'</I></TD>';
+	      echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODEX_PURIFIER_CONVERT_HTML) .'</I></TD>';
 	    } else {
-	      echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODEX_PURIFIER_BASIC) .'</TD>';
+	      echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
 	    }
 	  } else {
 	    echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global','unchanged')."</I></TD>\n";
@@ -173,10 +173,10 @@ function showErrors() {
 		for ($d=0; $d < count($parsed_comments); $d++) {
 		  $arr = $parsed_comments[$d];
 		  echo '<TR class="'.util_get_alt_row_color($d).'">';
-		  echo "<TD $width>". $hp->purify($arr['date'], CODEX_PURIFIER_BASIC) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['by'], CODEX_PURIFIER_BASIC) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['type'], CODEX_PURIFIER_BASIC) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['comment'], CODEX_PURIFIER_BASIC) ."</TD>";
+		  echo "<TD $width>". $hp->purify($arr['date'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['by'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['type'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['comment'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
 		  echo "</TR>\n";
 		}
 		echo "</TABLE></TD>";
@@ -189,7 +189,7 @@ function showErrors() {
 	    
 	    //DEFAULT
 	  } else {
-	    echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODEX_PURIFIER_BASIC) ."</TD>\n";
+	    echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
 	  }
 	  
 	  

@@ -399,7 +399,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
 				else 
-				    $arr[$i] =  $hp->purify($this->getValue($group_artifact_id,$arr[$i]), CODEX_PURIFIER_BASIC) ;
+				    $arr[$i] =  $hp->purify($this->getValue($group_artifact_id,$arr[$i]), CODEX_PURIFIER_CONVERT_HTML) ;
 		    }
 	
 		    $output .= join('<br>', $arr);
@@ -435,7 +435,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
 				else 
-				    $arr[$i] =  $hp->purify($this->getValue($group_artifact_id,$arr[$i]), CODEX_PURIFIER_BASIC) ;
+				    $arr[$i] =  $hp->purify($this->getValue($group_artifact_id,$arr[$i]), CODEX_PURIFIER_CONVERT_HTML) ;
 		    }
 	
 		    $output .= join(', ', $arr);

@@ -430,9 +430,9 @@ function util_user_link ($username) {
     global $Language;
     $hp = CodeX_HTMLPurifier::instance();
     if ( $username == $Language->getText('global','none') || empty($username)) { 
-        return  $hp->purify($username, CODEX_PURIFIER_BASIC) ; 
+        return  $hp->purify($username, CODEX_PURIFIER_CONVERT_HTML) ; 
     }
-    return '<a href="/users/'.urlencode($username).'">'. $hp->purify(user_get_name_display_from_unix($username), CODEX_PURIFIER_BASIC) .'</a>';
+    return '<a href="/users/'.urlencode($username).'">'. $hp->purify(user_get_name_display_from_unix($username), CODEX_PURIFIER_CONVERT_HTML) .'</a>';
 }
 
 function util_multi_user_link ($usernames) {

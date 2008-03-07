@@ -73,7 +73,7 @@ class ServiceFile extends Service {
                     </a>
                   </TD>';
                 // Releases to display
-                $ret['content'] .= '<TD>'.  $hp->purify($package['release_name'], CODEX_PURIFIER_BASIC)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
+                $ret['content'] .= '<TD>'.  $hp->purify($package['release_name'], CODEX_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
                     $GLOBALS['HTML']->getImage("ic/text.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes'), 'title'=>$GLOBALS['Language']->getText('include_project_home','release_notes'))) . ' 
                   </TD>
                   <TD><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';

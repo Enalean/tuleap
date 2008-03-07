@@ -424,7 +424,7 @@ if ( $func == 'gotoid' ) {
                         if (!$afh || !is_object($afh)) {
                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file_obj',$afh->getName()));
                         } elseif ($afh->isError()) {
-                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODEX_PURIFIER_BASIC));
+                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODEX_PURIFIER_CONVERT_HTML));
                         } else {
                                 if (!$afh->delete()) {
                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_delete',$afh->getErrorMessage()));
