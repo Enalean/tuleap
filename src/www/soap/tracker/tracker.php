@@ -1737,7 +1737,7 @@ function artifact_to_soap($artifact) {
                     $extrafieldvalues[] = array (    
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
-                        'field_value' => html_entity_decode($value)  //html_unconvert_htmlspecialchars ?
+                        'field_value' => html_entity_decode($value)  //util_unconvert_htmlspecialchars ?
                     );
                 }
             }
