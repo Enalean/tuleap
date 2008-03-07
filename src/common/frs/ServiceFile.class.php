@@ -67,7 +67,7 @@ class ServiceFile extends Service {
                 $ret['content'] .= '
                   <TR class="boxitem">
                   <TD>
-                    <B>' .  $hp->purify(html_unconvert_htmlspecialchars($package['package_name']), CODEX_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
+                    <B>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODEX_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
                     <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '">'.
                         $monitor_img . '     
                     </a>
