@@ -82,6 +82,16 @@ class CodeX_HTMLPurifier {
     /**
      * Allow basic formatting markups.
      *
+     */
+    function getLightConfig() {
+        $config = $this->getCodeXConfig();
+        $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
+        return $config;
+    }
+    
+    /**
+     * Get allowed markups for light config
+     *
      * This function defines the markups allowed for a light
      * formatting. This includes markups for lists, for paragraphs, hypertext
      * links, and content-based text.
@@ -89,22 +99,19 @@ class CodeX_HTMLPurifier {
      * - 'p', 'br'
      * - 'a[href]'
      * - 'ul', 'ol', 'li'
-     * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre'
+     * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
-    function getLightConfig() {
-        $config = $this->getCodeXConfig();
-
+    function getLightConfigMarkups() {
         $eParagraph       = array('p', 'br');
         $eLinks           = array('a[href]');
         $eList            = array('ul', 'ol', 'li');
         $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
-                                  'pre');
+                                  'pre', 'b', 'i');
         
         $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt);
         $allowed = implode(',', $aa);
-
-        $config->set('HTML', 'Allowed', $allowed);
-        return $config;
+        
+        return $allowed;
     }
 
     /**
