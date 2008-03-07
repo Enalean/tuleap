@@ -170,7 +170,7 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function displayQueryFields($prefs,$advsrch,$pv) {
             global $ath,$Language;
-
+            $hp = CodeX_HTMLPurifier::instance();
             //
             // Loop through the list of used fields to define label and fields/boxes
             // used as search criteria
@@ -203,7 +203,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 // Concatenate 3 args in one string
                 $group_id = $ath->Group->getID();
                 $help_args = $group_id.'|'.$this->group_artifact_id.'|'.$field->getName();
-                $labels .= '<td class="small"><b>'.$field->getLabel().'&nbsp;'.
+                $labels .= '<td class="small"><b>'. $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'&nbsp;'.
                     help_button('browse_tracker_query_field',$help_args).
                     '</b></td>';
             
@@ -318,7 +318,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		} else {
 		    $links_arr[] = $url.'&order='.urlencode($field->getName()).'#results';
 		}	
-                $title_arr[] = $field->getLabel();
+                $title_arr[] =  $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ;
                 $width_arr[$field->getName()] = $field->getColWidth();
             }
 
