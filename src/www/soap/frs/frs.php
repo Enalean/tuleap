@@ -337,7 +337,7 @@ function package_to_soap($package) {
             $return=array(
                 'package_id' => $package->getPackageID(),
                 'group_id' => $package->getGroupID(),
-                'name' => $package->getName(),
+                'name' => util_unconvert_htmlspecialchars($package->getName()),
                 'status_id' => $package->getStatusID(),
                 'rank' => $package->getRank(),
                 'approve_license' => $package->getApproveLicense()
