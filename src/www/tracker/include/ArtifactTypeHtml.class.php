@@ -2317,7 +2317,7 @@ EOS;
         $hp = CodeX_HTMLPurifier::instance();
 		$field = $art_field_fact->getFieldFromId($field_id);
 	
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) ."' - ".$Language->getText('tracker_include_type','rep_field')." '".$field->getLabel()."'",
+		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) ."' - ".$Language->getText('tracker_include_type','rep_field')." '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ."'",
 				  'help' => 'TrackerReporting.html'));
 	
 		if ($field->isStandardField()) {
@@ -2328,10 +2328,10 @@ EOS;
 			$allItems = $this->getArtifactsByField($field);
 		}
 	
-		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
+		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
 	
 		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )));
-		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify($field->getLabel(), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
+		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
 	
 		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )));
 		$this->footer(array());
