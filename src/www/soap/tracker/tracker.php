@@ -1315,8 +1315,8 @@ function trackerlist_to_soap($at_arr) {
                 $return[]=array(
                     'group_artifact_id'=>$at_arr[$i]->data_array['group_artifact_id'],
                     'group_id'=>$at_arr[$i]->data_array['group_id'],
-                    'name'=>$at_arr[$i]->data_array['name'],
-                    'description'=>$at_arr[$i]->data_array['description'],
+                    'name'=>SimpleSanitizer::unsanitize($at_arr[$i]->data_array['name']),
+                    'description'=>SimpleSanitizer::unsanitize($at_arr[$i]->data_array['description']),
                     'item_name'=>$at_arr[$i]->data_array['item_name'],
                     'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():-1),
                     'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():-1),
@@ -1479,8 +1479,8 @@ function artifacttype_to_soap($at) {
                             'field_id' => $field->getID(),
                             'group_artifact_id' => $at->getID(),
                             'value_id' => db_result($result,$j,0),
-                            'value' => db_result($result,$j,1),
-                            'description' => ($cols > 2) ? db_result($result,$j,4) : '',
+                            'value' => SimpleSanitizer::unsanitize(db_result($result,$j,1)),
+                            'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result,$j,4) : ''),
                             'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
                             'status' => ($cols > 2) ? db_result($result,$j,6) : ''
                         );
@@ -1506,12 +1506,12 @@ function artifacttype_to_soap($at) {
                         'field_id' => $field->getID(),
                         'group_artifact_id' => $at->getID(),
                         'field_set_id' => $field->getFieldSetID(), 
-                        'field_name' => $field->getName(),
+                        'field_name' => SimpleSanitizer::unsanitize($field->getName()),
                         'data_type' => $field->getDataType(),
                         'display_type' => $field->getDisplayType(),
                         'display_size' => $field->getDisplaySize(),
                         'label'    => $field->getLabel(),
-                        'description' => $field->getDescription(),
+                        'description' => SimpleSanitizer::unsanitize($field->getDescription()),
                         'scope' => $field->getScope(),
                         'required' => $field->getRequired(),
                         'empty_ok' => $field->getEmptyOk(),
@@ -1531,9 +1531,9 @@ function artifacttype_to_soap($at) {
                 'field_set_id'=>$result_fieldset->getID(),
                 'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
                 'name'=>$result_fieldset->getName(),
-                'label'=>$result_fieldset->getLabel(),
-                'description'=>$result_fieldset->getDescription(),
-                'description_text'=>$result_fieldset->getDescriptionText(),
+                'label'=>SimpleSanitizer::unsanitize($result_fieldset->getLabel()),
+                'description'=>SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
+                'description_text'=>SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
                 'rank'=>$result_fieldset->getRank(),
                 'fields'=>$fields
             );
@@ -1551,8 +1551,8 @@ function artifacttype_to_soap($at) {
         $return=array(
             'group_artifact_id'=>$at->data_array['group_artifact_id'],
             'group_id'=>$at->data_array['group_id'],
-            'name'=>$at->data_array['name'],
-            'description'=>$at->data_array['description'],
+            'name'=>SimpleSanitizer::unsanitize($at->data_array['name']),
+            'description'=>SimpleSanitizer::unsanitize($at->data_array['description']),
             'item_name'=>$at->data_array['item_name'],
             'open_count' => ($at->userHasFullAccess()?$open_count:-1),
             'total_count' => ($at->userHasFullAccess()?$count:-1),
@@ -1737,7 +1737,7 @@ function artifact_to_soap($artifact) {
                     $extrafieldvalues[] = array (    
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
-                        'field_value' => html_entity_decode($value)
+                        'field_value' => html_entity_decode($value)  //html_unconvert_htmlspecialchars ?
                     );
                 }
             }
@@ -1774,12 +1774,12 @@ function artifact_to_soap($artifact) {
         // summary
         $field_summary = $art_field_fact->getFieldFromName('summary');
         if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['summary'] = html_entity_decode($artifact->getSummary());
+                $return['summary'] = util_unconvert_htmlspecialchars($artifact->getSummary());
         }
         // details
         $field_details = $art_field_fact->getFieldFromName('details');
         if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['details'] = html_entity_decode($artifact->getDetails());
+                $return['details'] = util_unconvert_htmlspecialchars($artifact->getDetails());
         }
         // severity
         $field_severity = $art_field_fact->getFieldFromName('severity');
@@ -2299,7 +2299,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
     
         $return[] = array (
             'artifact_id'          => db_result($followups_res, $i, 'artifact_id'),    
-            'comment'               => html_entity_decode($comment), //db_result($followups_res, $i, 'new_value'),
+            'comment'               => util_unconvert_htmlspecialchars($comment), //db_result($followups_res, $i, 'new_value'),
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
@@ -2683,11 +2683,11 @@ function dependencies_to_soap($artifact_type, $dependencies) {
                 'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
                 'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
-                'summary' => html_entity_decode(db_result($dependencies, $i, 'summary')),
+                'summary' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'summary')),
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => db_result($dependencies, $i, 'name'),
+                'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => db_result($dependencies, $i, 'group_name')
+                'group_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'group_name'))
             );
         }
     }
@@ -2764,11 +2764,11 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
             $return[]=array(
                 'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => $artifact_id,
-                'summary' => db_result($inverse_dependencies, $i, 'summary'),
+                'summary' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'summary')),
                 'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => db_result($inverse_dependencies, $i, 'name'),
+                'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
                 'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => db_result($inverse_dependencies, $i, 'group_name')
+                'group_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'group_name'))
             );
         }
     }
