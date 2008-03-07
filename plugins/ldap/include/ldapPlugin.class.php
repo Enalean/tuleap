@@ -33,17 +33,17 @@ class LdapPlugin extends Plugin {
 
         // User account
         $this->_addHook('account_pi_entry', 'accountPiEntry', false);
-        $this->_addHook('before_change_email-complete', 'cancelChange', false);
-        $this->_addHook('before_change_email-confirm', 'cancelChange', false);
-        $this->_addHook('before_change_email', 'cancelChange', false);
-        $this->_addHook('before_change_pw', 'cancelChange', false);
-        $this->_addHook('before_change_realname', 'cancelChange', false);
+        $this->_addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
+        $this->_addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
+        $this->_addHook('before_change_email', 'cancelChangeAndUserLdap', false);
+        $this->_addHook('before_change_pw', 'cancelChangeAndUserLdap', false);
+        $this->_addHook('before_change_realname', 'cancelChangeAndUserLdap', false);
         $this->_addHook('before_lostpw-confirm', 'cancelChange', false);
         $this->_addHook('before_lostpw', 'cancelChange', false);
-        $this->_addHook('display_change_password', 'forbidIfLdapAuth', false);
-        $this->_addHook('display_change_email', 'forbidIfLdapAuth', false);
+        $this->_addHook('display_change_password', 'forbidIfLdapAuthAndUserLdap', false);
+        $this->_addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
         // Comment if want to allow real name change in LDAP mode
-        $this->_addHook('display_change_realname', 'forbidIfLdapAuth', false);
+        $this->_addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);
 
         // Site Admin
         $this->_addHook('before_admin_change_pw', 'warnNoPwChange', false);
@@ -421,6 +421,19 @@ class LdapPlugin extends Plugin {
             exit_permission_denied();
         }
     }
+    
+    /**
+     * Hook
+     */
+    function cancelChangeAndUserLdap($params) {
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $user_info = $user->data_array;
+        if($GLOBALS['sys_auth_type'] == 'ldap' && $user_info['ldap_id']!='') {
+            exit_permission_denied();
+        }
+    }
+    
 
     function redirectToLogin($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
@@ -469,6 +482,16 @@ class LdapPlugin extends Plugin {
     function forbidIfLdapAuth($params) {
         //$params['allow']
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $params['allow']=false;
+        }
+    }
+    
+    function forbidIfLdapAuthAndUserLdap($params) {
+        //OUT $params['allow']
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $user_info = $user->data_array;
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $user_info['ldap_id'] != '') {
             $params['allow']=false;
         }
     }

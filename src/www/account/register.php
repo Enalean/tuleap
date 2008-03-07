@@ -16,9 +16,10 @@ require_once('common/include/HTTPRequest.class.php');
 
 $Language->loadLanguageMsg('account/account');
 $request =& HTTPRequest:: instance();
+$page = $request->get('page');
 // ###### function register_valid()
 // ###### checks for valid register from form post
-if($request->get('page') == "admin_creation"){
+if($page == "admin_creation"){
    session_require(array('group'=>'1','admin_flags'=>'A')); 
 }
 
@@ -183,7 +184,7 @@ else print "Validate Registration"?>">
 if (isset($Register)) {
 
     $request =& HTTPRequest:: instance();
-
+    $page = $request->get('page');
     $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash)) {
@@ -192,7 +193,7 @@ if (isset($Register)) {
         $content = '';
         $admin_creation = false;
         $password='';
-        if($request->get('page') == 'admin_creation'){
+        if($page == 'admin_creation'){
             $admin_creation = true;
             $password = $request->get('form_pw');
         }
@@ -238,9 +239,12 @@ if (isset($Register)) {
     }
 }
 
-require_once('common/event/EventManager.class.php');
-$em =& EventManager::instance();
-$em->processEvent('before_register', array());
+if($page != 'admin_creation'){
+   require_once('common/event/EventManager.class.php');
+    $em =& EventManager::instance();
+    $em->processEvent('before_register', array()); 
+}
+
 
 //
 // not valid registration, or first time to page
