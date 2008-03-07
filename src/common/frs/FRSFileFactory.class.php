@@ -29,7 +29,7 @@ require_once('common/dao/FRSFileDao.class.php');
 /**
  * 
  */
-class FRSFileFactory {
+class FRSFileFactory extends Error {
 
     function FRSFileFactory() {
         
@@ -193,6 +193,14 @@ class FRSFileFactory {
      */
     function createFromIncomingFile($name=null, $release_id=null, 
                                $type_id=null, $processor_id=null) {
+        
+        // check if the file exists
+        $uploaded_files = $this->getUploadedFileNames();
+        if (! in_array($name, $uploaded_files)) {
+            $this->setError('File not found: '.$name);
+            return false;
+        }
+        
         $file = new FRSFile();
         $file->setFileName($name);
         $file->setFileSize(filesize($GLOBALS['ftp_incoming_dir'] . '/' . $name));
