@@ -86,9 +86,9 @@ $server->register(
 function group_to_soap($group) {
     $soap_group = array(
         'group_id' => $group->getGroupId(),
-        'group_name' => $group->getPublicName(),
+        'group_name' => util_unconvert_htmlspecialchars($group->getPublicName()),
         'unix_group_name' => $group->getUnixName(),
-        'description' => $group->getDescription()
+        'description' => util_unconvert_htmlspecialchars($group->getDescription())
     );
     return $soap_group;
 }
