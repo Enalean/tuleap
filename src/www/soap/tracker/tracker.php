@@ -36,7 +36,7 @@ require_once ('common/tracker/ArtifactReportFactory.class.php');
 require_once ('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once ('common/tracker/ArtifactRulesManager.class.php');
 require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
-
+require_once ('common/include/SimpleSanitizer.class.php');
 
 //
 // Type definition
@@ -1237,9 +1237,9 @@ $server->register(
  * @param int $group_id the ID of the group we want to retrieve the list of trackers
  * @return array the array of SOAPTrackerDesc that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-function &getTrackerList($sessionKey, $group_id) {
+function getTrackerList($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getTrackerList','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1359,7 +1359,7 @@ function &artifactreportsdesc_to_soap($artifactreportsdesc) {
  */
 function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getArtifactType','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1391,7 +1391,7 @@ function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
  */
 function &getArtifactTypes($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getArtifactTypes','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1620,7 +1620,7 @@ function artifactrules_to_soap($artifact_type) {
 function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows) {
     global $art_field_fact;
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifacts','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -1673,7 +1673,7 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
 function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id) {    
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactById','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -1872,7 +1872,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2014,7 +2014,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2091,7 +2091,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'updateArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2188,7 +2188,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
     global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2254,7 +2254,7 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
 function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactFollowups','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2322,7 +2322,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
  */
 function &getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactCannedResponses','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2373,7 +2373,7 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
     // Deprecated param. DO NOT USE ANYMORE
     $user_id = user_getid();
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactReports','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2457,7 +2457,7 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
     global $art_field_fact;
     
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactAttachedFiles','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2521,7 +2521,7 @@ function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id
 function &getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactAttachedFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2626,7 +2626,7 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
 function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2712,7 +2712,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
 function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactInverseDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2820,7 +2820,7 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
 function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2922,7 +2922,7 @@ function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_i
 function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2989,7 +2989,7 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
 function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids){
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3059,7 +3059,7 @@ function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_i
 function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactDependency','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3126,7 +3126,7 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
 function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3229,7 +3229,7 @@ function existSummary($sessionKey, $group_artifact_id, $summary) {
 function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactCCList','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3298,7 +3298,7 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
 function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3349,7 +3349,7 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
     global $art_field_fact; 
 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3403,7 +3403,7 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
 function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactHistory','Could Not Get Group','');
         } elseif ($grp->isError()) {
