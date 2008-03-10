@@ -218,6 +218,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 					$GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index','newsbyte_deleted'));
 				}
 			}
+            $GLOBALS['Response']->redirect('/news/admin');
         }
 	}
 
