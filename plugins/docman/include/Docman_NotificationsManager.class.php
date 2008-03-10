@@ -163,7 +163,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         $md5 = md5($msg);
         if (!isset($this->_messages[$md5])) {
             $this->_messages[$md5] = array(
-                'title'   => '['. $this->_group_name .' - Documents] '. $subject,
+                'title'   => '['. util_unconvert_htmlspecialchars($this->_group_name) .' - Documents] '. $subject,
                 'content' => $msg,
                 'to'      => array()
             );
@@ -175,7 +175,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         switch($message_type) {
             case $this->MESSAGE_MODIFIED:
             case $this->MESSAGE_NEWVERSION:
-                $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
+                $msg .= $params['path']->get($params['item']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
                 break;
             default:
                 $msg .= 'Something happen !';

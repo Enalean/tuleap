@@ -111,13 +111,13 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
         $msg = '';
         switch($message_type) {
             case $this->MESSAGE_REMOVED:
-                $msg .= $params['path']->get($params['item']) .' has been removed by '. $user->getRealName() .'.';
+                $msg .= $params['path']->get($params['item']) .' has been removed by '. util_unconvert_htmlspecialchars($user->getRealName()) .'.';
                 $msg .= "\n\n---------------------------------------------------------------------\n";
                 $msg .= "You are receiving this message because you were monitoring this item.\n";
                 $msg .= $this->_url;
                 break;
             case $this->MESSAGE_REMOVED_FROM:
-                $msg .= $params['path']->get($params['parent']) .' has been modified by '. $user->getRealName() .".\n";
+                $msg .= $params['path']->get($params['parent']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
                 $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
                 $msg .= "\nRemoved:";
                 $msg .= "\n   ". $params['item']->getTitle();
