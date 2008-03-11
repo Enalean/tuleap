@@ -20,6 +20,7 @@ function tocsv($string) {
     // a space or the user separator in the string
     if (strchr($string,' ') || strchr($string,',') ||
         strchr($string, get_csv_separator()) ||
+	strchr($string,'"') ||
 	strchr($string,"\n") ||
 	strchr($string,"\t") ||
 	strchr($string,"\r") ||
@@ -214,7 +215,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 				$values = $field->getValues($record['artifact_id']);
 			}
 			$label_values = $field->getLabelValues($group_artifact_id,$values);
-			$record[$field->getName()] = join(",",$label_values);
+			$record[$field->getName()] = SimpleSanitizer::unsanitize(join(",",$label_values));
 			
 		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
 		    // all text fields converted from HTML to ASCII
