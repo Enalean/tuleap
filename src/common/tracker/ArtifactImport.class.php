@@ -243,12 +243,17 @@ function getUsedFields() {
    */
   function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data) {
     global $Language;
-
+    $hp = CodeX_HTMLPurifier::instance();
     if ($field->getDisplayType() == "MB") {
       $val_arr = explode(",",$val);
       while (list(,$name) = each($val_arr)) {
 	if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$name,$label,implode(",",array_keys($predef_vals)))));
+	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+          $row+1,
+          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
+          $name,
+          $label,
+          $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
       }
@@ -264,7 +269,12 @@ function getUsedFields() {
 		    user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
 	  //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array($row+1,implode(",",$data),$val,$label,implode(",",array_keys($predef_vals)))));
+	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+          $row+1,
+          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
+          $val,
+          $label,
+          $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
       }
@@ -584,7 +594,7 @@ function getUsedFields() {
 	$predef_val = $field->getFieldPredefinedValues($this->ath->getID());
 	$count = db_numrows($predef_val);
 	for ($i=0;$i<$count;$i++) {
-	  $values[db_result($predef_val,$i,1)] = db_result($predef_val,$i,0);
+        $values[SimpleSanitizer::unsanitize(db_result($predef_val,$i,1))] = db_result($predef_val,$i,0);
 	}
 	$this->predefined_values[$column_number] = $values;
       }
