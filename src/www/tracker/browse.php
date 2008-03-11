@@ -130,16 +130,16 @@ if (!$art_report_html) {
  ================================================== */
 $all_prefs = array();
 while (list($field,$value_id) = each($prefs)) {
+	$field_object = $art_field_fact->getFieldFromName($field);
     if (!is_array($value_id)) {
 		unset($prefs[$field]);
-		$all_prefs[$field][] = htmlspecialchars($value_id);
+		$all_prefs[$field][] = ($field_object && $field_object->isDateField()) ? $value_id : htmlspecialchars($value_id);
 		//echo '<br> DBG Setting $prefs['.$field.'] [] = '.$value_id;
     } else {
         $all_prefs[$field] = $value_id;
 		//echo '<br> DBG $prefs['.$field.'] = ('.implode(',',$value_id).')';
     }
 
-	$field_object = $art_field_fact->getFieldFromName($field);
     if ( ($field_object)&&($field_object->isDateField()) ) {
 		if ($advsrch) {
 		    $field_end = $field.'_end';
