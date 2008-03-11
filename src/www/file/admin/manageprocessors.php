@@ -49,7 +49,7 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 
 file_utils_admin_header(array('title'=>$Language->getText('file_admin_manageprocessors','manage_proclist'), 'help' => 'ManageProcessorsList.html'));
 
-$vAdd      =  new Valid_WhiteList('add',array('Add'));
+$vAdd      = new Valid_String('add');
 $vProcName = new Valid_String('procname');
 $vProcName->required();
 $vProcRank = new Valid_UInt('procrank');
@@ -76,7 +76,7 @@ if ($request->isPost() && $request->existAndNonEmpty('add')) {
 
 $vProcId = new Valid_UInt('proc_id');
 $vProcId->required();
-$vUpdate = new Valid_WhiteList('update',array('Update'));
+$vUpdate = new Valid_String('update');
 $vProcessName = new Valid_String('processname');
 $vProcessName->required();
 $vProcessRank = new Valid_UInt('processrank');
