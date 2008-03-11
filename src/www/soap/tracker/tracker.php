@@ -1329,7 +1329,7 @@ function trackerlist_to_soap($at_arr) {
     return $return;
 }
 
-function &artifactreportsdesc_to_soap($artifactreportsdesc) {
+function artifactreportsdesc_to_soap($artifactreportsdesc) {
     $return = array();
     if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
         foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
@@ -1357,7 +1357,7 @@ function &artifactreportsdesc_to_soap($artifactreportsdesc) {
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the structure
  * @return the SOAPArtifactType of the tracker $group_artifact_id that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project or if $group_artifact_id doesn't exist is not a tracker of the project.
  */
-function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
+function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -1389,7 +1389,7 @@ function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
  * @param int $group_id the ID of the group we want to retrieve the array of trackers
  * @return array the array of SOAPArtifactType that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-function &getArtifactTypes($sessionKey, $group_id) {
+function getArtifactTypes($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -1510,7 +1510,7 @@ function artifacttype_to_soap($at) {
                         'data_type' => $field->getDataType(),
                         'display_type' => $field->getDisplayType(),
                         'display_size' => $field->getDisplaySize(),
-                        'label'    => $field->getLabel(),
+                        'label'    => SimpleSanitizer::unsanitize($field->getLabel()),
                         'description' => SimpleSanitizer::unsanitize($field->getDescription()),
                         'scope' => $field->getScope(),
                         'required' => $field->getRequired(),
@@ -2251,7 +2251,7 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
  *              - group_artifact_id does not match with a valid tracker,
  *              - the artifact_id does not match with a valid artifact
  */
-function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
+function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)){
         $grp = group_get_object($group_id);
@@ -2320,7 +2320,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  */
-function &getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
+function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
@@ -2369,7 +2369,7 @@ function artifactcannedresponses_to_soap($cannedresponses_res) {
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  */
-function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id) {
+function getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id) {
     // Deprecated param. DO NOT USE ANYMORE
     $user_id = user_getid();
     if (session_continue($sessionKey)) {
@@ -2402,7 +2402,7 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
     }
 }
 
-function &artifactreports_to_soap($artifactreports) {
+function artifactreports_to_soap($artifactreports) {
     $return = array();
     if (is_array($artifactreports) && count($artifactreports)) {
         foreach ($artifactreports as $arid => $artifactreport){
@@ -2453,7 +2453,7 @@ function &artifactreports_to_soap($artifactreports) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
+function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
     global $art_field_fact;
     
     if (session_continue($sessionKey)) {
@@ -2499,7 +2499,7 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
 /**
  * @deprecated please use getArtifactAttachedFiles.
  */
-function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+function getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     return getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
 
@@ -2518,7 +2518,7 @@ function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id
  *              - artifact_id does not match with a valid artifact
  *              - file_id does not match with the given artifact_id
  */
-function &getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
+function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
