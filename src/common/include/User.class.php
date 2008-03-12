@@ -23,7 +23,7 @@
 
 
 class User {
-
+    
 	var $id;
 
 	//associative array of data from db
@@ -40,25 +40,39 @@ class User {
     // Keep super user info
     var $isSuperUser;
 
+    var $locale;
+    
 	function User($id) {
-	  global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
-
-      $this->isSuperUser = null;
-	  $this->id = $id;
-	  if (isset($ALL_USERS_DATA["user_$id"])) {
-	    $this->data_array = $ALL_USERS_DATA["user_$id"];
-	    $this->group_data = $ALL_USERS_GROUPS["user_$id"];
-	    $this->tracker_data = $ALL_USERS_TRACKERS["user_$id"];
-	    return;
-	  }
+        global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
         
-        if (!$this->fetchData($id)) { //Passage en anonymous
+        $this->isSuperUser = null;
+        $this->id = $id;
+        $this->locale = '';
+        
+        if (isset($ALL_USERS_DATA["user_$id"])) {
+            $is_anonymous = ($id == 0);
+            $this->data_array = $ALL_USERS_DATA["user_$id"];
+            $this->group_data = $ALL_USERS_GROUPS["user_$id"];
+            $this->tracker_data = $ALL_USERS_TRACKERS["user_$id"];
+        } else if ($this->fetchData($id)) { 
+            $is_anonymous = false;
+        } else { //Passage en anonymous
             $this->id           = 0;
             $this->data_array   = array('user_id' => 0);
             $this->group_data   = array();
             $this->tracker_data = array();
-            return false;
+            $this->setLocale(language_id_to_language_code($this->data_array['language_id']));
+            $is_anonymous = true;
         }
+        
+        //set the locale
+        if ($is_anonymous) {
+            $locale = language_id_to_language_code();
+        } else {
+            $locale = language_id_to_language_code($this->data_array['language_id']);
+        }
+        $this->setLocale($locale);
+        return true;
 	}
 
 
@@ -99,6 +113,7 @@ class User {
 	    }
 	  }
 	  $ALL_USERS_TRACKERS["user_$id"] = $this->tracker_data;
+      
       return true;
 	} 
 
@@ -421,6 +436,13 @@ class User {
      */
     function getUserPw() {
         return $this->data_array['user_pw'];
+    }
+    
+    function getLocale() {
+        return $this->locale;
+    }
+    function setLocale($locale) {
+        $this->locale = $locale;
     }
     
     /**
