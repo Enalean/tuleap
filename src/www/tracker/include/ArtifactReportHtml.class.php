@@ -884,7 +884,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $ath->adminHeader(array ('title'=>$Language->getText('tracker_include_report','modify_report'),
                                     'help' => 'TrackerAdministration.html#TrackerReportSetting'));
                   
-		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify($ath->getName(), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' -  '.$Language->getText('tracker_include_report','modify_report').' \''.$this->name.'\'</H2>';
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' -  '.$Language->getText('tracker_include_report','modify_report').' \''. $hp->purify($this->name, CODEX_PURIFIER_CONVERT_HTML) .'\'</H2>';
         
                     
             // display the table of all fields that can be included in the report
