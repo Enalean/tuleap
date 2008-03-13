@@ -2687,7 +2687,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'group_name'))
+                'group_name' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'group_name'))
             );
         }
     }
@@ -2768,7 +2768,7 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
                 'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
                 'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
                 'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'group_name'))
+                'group_name' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'group_name'))
             );
         }
     }
