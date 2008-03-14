@@ -313,7 +313,7 @@ class ArtifactReport extends Error {
 	function getResultFields() {
 		$result_fields = array();
 
-		if ( count($this->fields) == 0 ) return $query_fields;
+		if ( count($this->fields) == 0 ) return $result_fields;
 
 		reset($this->fields);
 	
@@ -338,7 +338,7 @@ class ArtifactReport extends Error {
 	  global $group;
 		$result_fields = array();
 
-		if ( count($this->fields) == 0 ) return $query_fields;
+		if ( count($this->fields) == 0 ) return $result_fields;
 
 		reset($this->fields);
 	
@@ -360,7 +360,7 @@ class ArtifactReport extends Error {
 	function getSingleMultiBoxFields() {
 		$result_fields = array();
 
-		if ( count($this->fields) == 0 ) return $query_fields;
+		if ( count($this->fields) == 0 ) return $result_fields;
 
 		reset($this->fields);
 	
