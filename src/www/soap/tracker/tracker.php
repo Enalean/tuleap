@@ -1536,7 +1536,7 @@ function artifacttype_to_soap($at) {
             $field_sets[] = array(
                 'field_set_id'=>$result_fieldset->getID(),
                 'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
-                'name'=>$result_fieldset->getName(),
+                'name'=>SimpleSanitizer::unsanitize($result_fieldset->getName()),
                 'label'=>SimpleSanitizer::unsanitize($result_fieldset->getLabel()),
                 'description'=>SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
                 'description_text'=>SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
