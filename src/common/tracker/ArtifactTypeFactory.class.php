@@ -477,8 +477,8 @@ class ArtifactTypeFactory extends Error {
 			'". db_es($description) ."',
 			'". db_es($itemname) ."',
                         '". db_ei($at_template->allowsCopy()) ."',
-                        '". db_ei($at_template->getSubmitInstructions())."',
-                        '". db_ei($at_template->getBrowseInstructions())."',1,0)";
+                        '". db_es($at_template->getSubmitInstructions())."',
+                        '". db_es($at_template->getBrowseInstructions())."',1,0)";
 		//echo $sql;
 		$res = db_query($sql);
 		if (!$res || db_affected_rows($res) <= 0) {
