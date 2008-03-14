@@ -263,7 +263,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_CONVERT_HTML) ."</a>",
 					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getName()), CODEX_PURIFIER_CONVERT_HTML) ,
-					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getDescription()), CODEX_BASIC, $at_arr[$i]->getGroupId()) .'&nbsp;',
+					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getDescription()), CODEX_PURIFIER_BASIC, $at_arr[$i]->getGroupId()) .'&nbsp;',
                                             ($at_arr[$i]->isInstantiatedForNewProjects()?'Yes':'No'),
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
 
@@ -272,7 +272,7 @@ class ArtifactTypeHtml extends ArtifactType {
 					    util_get_alt_row_color($i),
 					    "<a href=\"/tracker/admin/?group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\">". $hp->purify($at_arr[$i]->getID(), CODEX_PURIFIER_CONVERT_HTML) ."</a>",
 					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getName()), CODEX_PURIFIER_CONVERT_HTML) ,
-					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getDescription()), CODEX_BASIC, $at_arr[$i]->getGroupId()) .'&nbsp;',
+					    $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getDescription()), CODEX_PURIFIER_BASIC, $at_arr[$i]->getGroupId()) .'&nbsp;',
 					    "<a href=\"/tracker/admin/?func=delete_tracker&group_id=".(int)$this->Group->getID()."&atid=".(int)$at_arr[$i]->getID()."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','warning')."')\"></a>" );
                             }
 			}
