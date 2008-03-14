@@ -2395,6 +2395,9 @@ function getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id
         } elseif ($at->isError()) {
             return new soap_fault(get_artifact_type_fault,'getArtifactReports',$at->getErrorMessage(),'');
         }
+        if (! $at->userCanView($user_id)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactReports', 'Permissions denied.','');
+        }
         
         $report_fact = new ArtifactReportFactory();
         if (!$report_fact || !is_object($report_fact)) {
