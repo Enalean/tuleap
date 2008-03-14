@@ -438,9 +438,9 @@ class DocmanController extends Controler {
                     if ($item->getGroupId() != $this->request->get('group_id')) {
                         $g =& group_get_object($this->request->get('group_id'));
                         $g2 =& group_get_object($item->getGroupId());
-                        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getTitle(), $g->getPublicName(), $g2->getPublicName())));
+                        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getTitle(), util_unconvert_htmlspecialchars($g->getPublicName()), util_unconvert_htmlspecialchars($g2->getPublicName()))));
                         $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
-                        $this->view = 'Redirect';
+                        $this->_set_doesnot_belong_to_project_error();
                     } else {
                         $user = $this->getUser();
                         $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
