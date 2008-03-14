@@ -47,7 +47,7 @@ require_once('common/include/TemplateSingleton.class.php');
  *  @param		int		Result set handle ("SELECT * FROM groups WHERE group_id=xx")
  *  @return a group object or false on failure
  */
-function group_get_object($group_id,$res=false,$force_update=false) {
+function &group_get_object($group_id,$res=false,$force_update=false) {
 	//create a common set of group objects
 	//saves a little wear on the database
 
