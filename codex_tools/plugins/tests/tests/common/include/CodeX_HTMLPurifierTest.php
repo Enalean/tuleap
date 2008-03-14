@@ -73,7 +73,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     function testStripLightForibdden() {
         $p =& CodeX_HTMLPurifierTestVersion::instance();
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODEX_PURIFIER_LIGHT));
-        $this->assertEqual('Bolded', $p->purify('<b>Bolded</b>', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODEX_PURIFIER_LIGHT));
         $this->anchorJsInjection(CODEX_PURIFIER_LIGHT);
     }
