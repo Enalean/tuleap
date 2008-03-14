@@ -164,7 +164,7 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
 <p>
 <?php print $Language->getText('account_register', 'mandatory', $star); ?>
 </p>
-<?php if($page == "admin_creation"){
+<?php if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users']){
 ?>    
 <P><INPUT type="checkbox" name="form_restricted" value="1" checked>
 <?php print $Language->getText('account_register', 'restricted_user'); }?>
@@ -255,8 +255,11 @@ $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 ?>
     
 
-<h2><?php print $Language->getText('account_register', 'title').' '.help_button('UserRegistration.html');?></h2>
-
+<h2><?php print $Language->getText('account_register', 'title').' ';
+if($page != 'admin_creation'){
+    print help_button('UserRegistration.html');
+}
+?></h2>
 <?php 
 
 $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
