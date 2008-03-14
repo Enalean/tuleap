@@ -3192,14 +3192,34 @@ function addFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body
  */
 function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
     if (session_continue($sessionKey)) {
-        $user = session_get_userid();
-        $res=db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
-                  " AND submitted_by=".$user. 
-                  " AND summary=\"".$summary."\"");
+    $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".$group_artifact_id);
         if ($res && db_numrows($res) > 0) {
-            return new soapval('return', 'xsd:int', db_result($res, 0, 0));
+            $group_id = db_result($res, 0, 'group_id');
         } else {
-            return new soapval('return', 'xsd:int', -1);
+            return new soap_fault(get_artifact_type_fault, 'existArtifactSummary', 'Tracker not found.');
+        }
+        
+    	$grp =& group_get_object($group_id);
+        if (!$grp || !is_object($grp)) {
+            return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','');
+        } elseif ($grp->isError()) {
+            return new soap_fault(get_group_fault,'addArtifactFollowup',$grp->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($grp)) {
+            return new soap_fault(get_group_fault, 'getArtifactTypes', 'Restricted user: permission denied.', '');
+        }
+        
+        $at = new ArtifactType($grp, $group_artifact_id);
+        if ($at->userCanView()) {
+	    	$res=db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
+	                  " AND summary=\"".$summary."\"");
+	        if ($res && db_numrows($res) > 0) {
+	            return new soapval('return', 'xsd:int', db_result($res, 0, 0));
+	        } else {
+	            return new soapval('return', 'xsd:int', -1);
+	        }
+        } else {
+        	return new soap_fault(get_artifact_type_fault, 'existArtifactSummary', 'Permission denied.');
         }
     } else {
         return new soap_fault(invalid_session_fault, 'existArtifactSummary', 'Invalid Session', '');
