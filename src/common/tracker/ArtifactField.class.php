@@ -543,7 +543,7 @@ class ArtifactField extends Error {
 	    }
         $t = explode('/',$val);
         if (!isset($t[1])) {
-            $t[1] = 0;
+            $t[1] = '';
         }
 	    return $t;
 	}
