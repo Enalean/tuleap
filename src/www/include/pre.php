@@ -30,27 +30,30 @@ if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
 while(count($_REQUEST)) {
     array_pop($_REQUEST);
 }
-$g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
-$p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
-if ($g_pos === FALSE) {
-    if ($p_pos !== FALSE) {
-        $_REQUEST = $_POST;
-    }
+if (!ini_get('variables_order')) {
+        $_REQUEST = array_merge($_GET, $_POST);
 } else {
-    if ($p_pos === FALSE) {
-        $_REQUEST = $_GET;
-    } else {
-        if ($g_pos < $p_pos) {
-            $first = '_GET';
-            $second = '_POST';
-        } else {
-            $first = '_POST';
-            $second = '_GET';
+    $g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
+    $p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
+    if ($g_pos === FALSE) {
+        if ($p_pos !== FALSE) {
+            $_REQUEST = $_POST;
         }
-        $_REQUEST = array_merge($$first, $$second);
+    } else {
+        if ($p_pos === FALSE) {
+            $_REQUEST = $_GET;
+        } else {
+            if ($g_pos < $p_pos) {
+                $first = '_GET';
+                $second = '_POST';
+            } else {
+                $first = '_POST';
+                $second = '_GET';
+            }
+            $_REQUEST = array_merge($$first, $$second);
+        }
     }
 }
-
 //Cast group_id as int.
 foreach(array(
         'group_id', 
