@@ -251,8 +251,8 @@ function getUsedFields() {
 	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
-          $name,
-          $label,
+          $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) ,
+          $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
           $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
@@ -272,8 +272,8 @@ function getUsedFields() {
 	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
-          $val,
-          $label,
+          $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) ,
+          $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
           $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
@@ -293,6 +293,7 @@ function getUsedFields() {
    */
   function checkValues($row,&$data,$insert,$from_update=false) {
     global $Language;
+    $hp = CodeX_HTMLPurifier::instance();
     for ($c=0; $c < count($this->parsed_labels); $c++) {
       $label = $this->parsed_labels[$c];
       $val = $data[$c];
@@ -320,7 +321,12 @@ function getUsedFields() {
 	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
 
 	  if ($is_empty) {
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_current',array($row+1,implode(",",$data),$label,$this->ath->getName(),$val)));
+	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_current',array(
+            $row+1,
+            $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
+            $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
+            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) ,
+            $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) )));
 	    return false;
 	  }
 	}
@@ -338,7 +344,10 @@ function getUsedFields() {
 	  } else {
 	    list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
 	    if (!$ok) {
-	      $this->setError($Language->getText('tracker_import_utils','incorrect_date',array($row+1,implode(",",$data),$val)));
+	      $this->setError($Language->getText('tracker_import_utils','incorrect_date',array(
+              $row+1,
+              $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+              $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) )));
 	      return false;
 	    }
 	    $date = format_date("Y-m-d",$unix_time);
@@ -372,7 +381,11 @@ function getUsedFields() {
               $label != $this->lbl_list['cc_comment'] &&
               !$field->isEmptyOk() && !in_array($label,$this->parsed_labels)) {
 	    
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_line',array($row+1,implode(",",$data),$label,$this->ath->getName())));
+	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_line',array(
+            $row+1,
+            $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+            $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
+            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) )));
 	    return false;
           }
 	}
@@ -391,6 +404,7 @@ function getUsedFields() {
    */
   function checkInsertArtifact($row,&$data,$from_update=false) {
     global $Language;
+    $hp = CodeX_HTMLPurifier::instance();
     // first make sure this isn't double-submitted
     
     //$field = $used_fields["Summary"];
@@ -415,12 +429,11 @@ function getUsedFields() {
     $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ". db_ei($this->ath->getID()) .
 		  " AND submitted_by=".  db_ei($sub_user_id) ." AND summary='".  db_es($summary) ."'");
     if ($res && db_numrows($res) > 0) {
-        $escaped_data = $data;
-        $hp = CodeX_HTMLPurifier::instance();
-        foreach($escaped_data as $k => $v) {
-            $escaped_data[$k] =  $hp->purify($v, CODEX_PURIFIER_CONVERT_HTML);
-        }
-      $this->setError($Language->getText('tracker_import_utils','already_submitted',array($row+1,implode(",",$escaped_data),$sub_user_name,$summary)));
+      $this->setError($Language->getText('tracker_import_utils','already_submitted',array(
+          $row+1,
+          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+          $sub_user_name,
+          $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) )));
       return false;           
     }
   }
@@ -433,11 +446,15 @@ function getUsedFields() {
   /** check if all the values correspond to predefined values of the corresponding fields */
   function checkUpdateArtifact($row,&$data,$aid) {
     global $Language;
-    
+    $hp = CodeX_HTMLPurifier::instance();
     $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = ".$this->ath->getID();
     $result = db_query($sql);
     if (db_numrows($result) == 0) {
-      $this->setError($Language->getText('tracker_import_utils','art_not_exists',array($row+1,implode(",",$data),$aid,$this->ath->getName())));
+      $this->setError($Language->getText('tracker_import_utils','art_not_exists',array(
+          $row+1,
+          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+          $aid,
+          $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) )));
       return false;
     }
     
@@ -457,6 +474,7 @@ function getUsedFields() {
 		 &$artifacts_data,
 		 &$number_inserts,&$number_updates) {
     global $Language;
+    $hp = CodeX_HTMLPurifier::instance();
     
     $number_inserts = 0;
     $number_updates = 0;
@@ -502,7 +520,11 @@ function getUsedFields() {
 	  $data_details .= "[".$this->parsed_labels[$key]."] => $value";
 	}
 	reset($data);
-	$this->setError($Language->getText('tracker_import_utils','column_mismatch',array($row+1,$data_details,$num,$this->num_columns)));
+	$this->setError($Language->getText('tracker_import_utils','column_mismatch',array(
+        $row+1,
+        $hp->purify($data_details, CODEX_PURIFIER_CONVERT_HTML) ,
+        $num,
+        $this->num_columns)));
 	return FALSE;
       }
       
