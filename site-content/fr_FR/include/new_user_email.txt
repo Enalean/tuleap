@@ -23,5 +23,5 @@ $message = "Vous avez été enregistré sur le site ".$GLOBALS['sys_name']." par l'
 . "Pensez à changer votre mot de passe après votre première connexion sur le site.\n\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
 . " -- L'équipe ".$GLOBALS['sys_name']."\n";
-}}
+}
 ?>
