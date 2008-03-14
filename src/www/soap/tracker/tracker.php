@@ -1375,8 +1375,14 @@ function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
         } elseif ($at->isError()) {
             return new soap_fault(get_artifact_type_factory_fault, 'getArtifactType', $at->getErrorMessage(), '');
         }
-        // The function getArtifactTypes returns only the trackers the user is allowed to view
-        return artifacttype_to_soap($at);
+        
+    	if ($at->userCanView(session_get_userid())) {
+        	// The function getArtifactTypes returns only the trackers the user is allowed to view
+        	return artifacttype_to_soap($at);
+        } else {
+        	return new soap_fault(get_artifact_type_fault, 'getArtifactType', 'Permission denied.');
+        }
+        
     } else {
         return new soap_fault(invalid_session_fault,'getArtifactType','Invalid Session','');
     }
