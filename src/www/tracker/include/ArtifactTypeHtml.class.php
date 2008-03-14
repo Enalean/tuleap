@@ -2898,9 +2898,9 @@ EOS;
                     $link_field_usage = '/tracker/admin/?func=display_field_update&group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'&field_id='.(int)$field_contained->getID();
                     $html .= '<li>';
                     if ($field_contained->getUseIt()) {
-                        $html .= '<strong><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_CONVERT_HTML) .'</a></strong>';
+                        $html .= '<strong><a href="'.$link_field_usage.'">'. $hp->purify(SimpleSanitizer::unsanitize($field_contained->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</a></strong>';
                     } else {
-                        $html .= '<em><a href="'.$link_field_usage.'">'. $hp->purify($field_contained->getLabel(), CODEX_PURIFIER_CONVERT_HTML) .'</a></em>';
+                        $html .= '<em><a href="'.$link_field_usage.'">'. $hp->purify(SimpleSanitizer::unsanitize($field_contained->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</a></em>';
                     }
                     $html .= '</li>';
                 }
