@@ -366,13 +366,13 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
 	if ($filename) {
 	    // It' a file
-	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'&view=log');
-	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&revision=$revision&view=markup");
+	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,"&pathrev=$revision&view=log");
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&revision=$revision&pathrev=$revision&view=markup");
 
 	} else {
 	    // It' a directory
-	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,'');
-	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&view=log");
+	    $viewfile_url = svn_utils_make_viewlink($group_name, $fullpath, $fullpath,"&pathrev=$revision");
+	    $viewrev_url = svn_utils_make_viewlink($group_name, $fullpath, $revision, "&pathrev=$revision&view=log");
 	}
 
 	if ($type == 'Change') {	    
