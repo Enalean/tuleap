@@ -379,7 +379,7 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 
 	    $viewtype_url = svn_utils_make_viewlink($group_name, $fullpath, 
                             $Language->getText('svn_utils','change'),
-			   "&r1=$revision&r2=".($revision-1)."&diff_format=h");
+			   "&r1=".($revision-1)."&r2=$revision&diff_format=h&pathrev=$revision");
 
 	} else if ($type == 'Add') {
 	    $viewtype_url = $Language->getText('svn_utils','add');
