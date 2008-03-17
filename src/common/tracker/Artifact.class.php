@@ -687,9 +687,9 @@ class Artifact extends Error {
                 $comment_lbl = "lbl_".$comment_id."_comment";    
             }
             //now add new comment entry
-            $this->addHistory($comment_lbl,db_escape_string($new_value),htmlspecialchars($comment_txt),false,false,$comment_id);
-            $changes['comment']['del'] = stripslashes($new_value);
-            $changes['comment']['add'] = stripslashes($comment_txt);
+            $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt),false,false,$comment_id);
+            $changes['comment']['del'] = $new_value;
+            $changes['comment']['add'] = $comment_txt;
             return true;
         } else {
             return false;
@@ -866,7 +866,7 @@ class Artifact extends Error {
                                         $update_value = htmlspecialchars($value);
                                     }
                                                     
-                                    $this->addHistory($field,addslashes($old_value),$value);
+                                    $this->addHistory($field,$old_value,$value);
                                     $value = stripslashes($value);
                                 } else {
                                     if ( $field->isStandardField() ) {
@@ -2315,7 +2315,7 @@ class Artifact extends Error {
 	    // Generate the message preamble with all required
 	    // artifact fields - Changes first if there are some.
 	    if ($changes) {
-		$body = $GLOBALS['sys_lf']."=============   ".strtoupper($this->ArtifactType->getName())." #".$this->getID().
+		$body = $GLOBALS['sys_lf']."=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
 		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . 
 		  $this->formatChanges($changes,$field_perm,$visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
 
@@ -2329,7 +2329,7 @@ class Artifact extends Error {
 	    $full_snapshot = "";
 
         // We write the name of the project
-        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.group_getname($group_id) );
+        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.util_unconvert_htmlspecialchars(group_getname($group_id) ));
         
 	    // Write all the fields, grouped by fieldsetset and ordered by rank.
 	    $left = 1;
@@ -2905,7 +2905,7 @@ class Artifact extends Error {
                         $group_label = db_result($result, $i, 'group_name');
                 
                         if ($ascii) {
-                            $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
+                            $out .= sprintf($fmt, $dependent_on_artifact_id, util_unconvert_htmlspecialchars($summary));
                         } else {
                 
                             if ( user_ismember($this->ArtifactType->getGroupID()) ) {
