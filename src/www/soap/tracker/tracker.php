@@ -2583,7 +2583,7 @@ function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
             'id' => db_result($attachedfiles_arr, $i, 'id'),
             'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
             'filename' => db_result($attachedfiles_arr, $i, 'filename'),
-            'description' => db_result($attachedfiles_arr, $i, 'description'),
+            'description' => SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description')),
             'bin_data' => ($set_bin_data?$encoded_data:null),
             'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
             'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
@@ -2602,7 +2602,7 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
         $file['id'] = db_result($attachedfiles_arr, $i, 'id');
         $file['artifact_id'] = db_result($attachedfiles_arr, $i, 'artifact_id');
         $file['filename'] = db_result($attachedfiles_arr, $i, 'filename');
-        $file['description'] = db_result($attachedfiles_arr, $i, 'description');
+        $file['description'] = SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'));
         if ($set_bin_data) {
             $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
             $encoded_data = base64_encode($bin_data);
