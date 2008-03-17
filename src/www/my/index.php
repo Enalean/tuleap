@@ -15,17 +15,6 @@ $Language->loadLanguageMsg('my/my');
 $em =& EventManager::instance();
 $em->processEvent('plugin_load_language_file', null);
 
-// define undefined vars
-if (!isset($hide_item_id)) {
-    $hide_item_id = '';
-}
-if (!isset($hide_forum)) {
-    $hide_forum = '';
-}
-if (!isset($hide_bug)) {
-    $hide_bug = '';
-}
-//
 if (user_isloggedin()) {
 
     // If it's super user and license terms have not yet been agreed then redirect

@@ -75,7 +75,10 @@ class Docman extends DocmanController {
             $this->view = 'NewDocument';
         }
     }
-
+    /* protected */ function _set_doesnot_belong_to_project_error() {
+        $this->view = 'Redirect';
+    }
+    
     /**
      * Get the list of all futur obsolete documents and warn document owner
      * about this obsolescence.

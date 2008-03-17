@@ -199,6 +199,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                     <fieldset>
                         <legend>Results</legend>
                         <?php
+                        flush();
                         if (isset($_REQUEST['tests_to_run'])) {
                             function add_test_to_group($test, $categ, $params) {
                                 if ($categ != '_do_all') {

@@ -33,7 +33,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * <pre>
  * require_once('pre.php');
  * require_once('common/include/CodeX_HTMLPurifier.class.php');
- * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
+ * $crapy = '<a href="" onmouseover="alert(1);">testï¿½</a>';
  * $hp =& CodeX_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
@@ -44,16 +44,15 @@ define('CODEX_PURIFIER_STRIP_HTML', 1);
 define('CODEX_PURIFIER_BASIC',      5);
 define('CODEX_PURIFIER_LIGHT',     10);
 define('CODEX_PURIFIER_FULL',      15);
+define('CODEX_PURIFIER_JS_QUOTE', 20);
+define('CODEX_PURIFIER_JS_DQUOTE', 25);
 define('CODEX_PURIFIER_DISABLED', 100);
 
 class CodeX_HTMLPurifier {
-    var $hpInstance;
-
     /**
      * Constructor
      */
     function CodeX_HTMLPurifier() {
-        $this->hpInstance = null;
     }
 
     /**
@@ -62,11 +61,11 @@ class CodeX_HTMLPurifier {
      * @access: static
      */
     function &instance() {
-        static $purifier;
-        if(!$purifier) {
-            $purifier = new CodeX_HtmlPurifier();
+        static $__codex_htmlpurifier_instance;
+        if(!$__codex_htmlpurifier_instance) {
+            $__codex_htmlpurifier_instance = new CodeX_HtmlPurifier();
         }
-        return $purifier;
+        return $__codex_htmlpurifier_instance;
     }
 
     /**
@@ -83,6 +82,16 @@ class CodeX_HTMLPurifier {
     /**
      * Allow basic formatting markups.
      *
+     */
+    function getLightConfig() {
+        $config = $this->getCodeXConfig();
+        $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
+        return $config;
+    }
+    
+    /**
+     * Get allowed markups for light config
+     *
      * This function defines the markups allowed for a light
      * formatting. This includes markups for lists, for paragraphs, hypertext
      * links, and content-based text.
@@ -90,22 +99,19 @@ class CodeX_HTMLPurifier {
      * - 'p', 'br'
      * - 'a[href]'
      * - 'ul', 'ol', 'li'
-     * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre'
+     * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
-    function getLightConfig() {
-        $config = $this->getCodeXConfig();
-        
+    function getLightConfigMarkups() {
         $eParagraph       = array('p', 'br');
         $eLinks           = array('a[href]');
         $eList            = array('ul', 'ol', 'li');
         $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
-                                  'pre');
+                                  'pre', 'b', 'i');
         
         $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt);
         $allowed = implode(',', $aa);
-
-        $config->set('HTML', 'Allowed', $allowed);
-        return $config;
+        
+        return $allowed;
     }
 
     /**
@@ -136,6 +142,13 @@ class CodeX_HTMLPurifier {
             break;
         }
         return $config;
+    }
+
+    /**
+     * Wrap call to util_make_links (for testing purpose).
+     */
+    function _makeLinks($str, $groupId) {
+        return util_make_links($str, $groupId);
     }
 
     /**
@@ -178,7 +191,7 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_LIGHT:
-            $html = nl2br(util_make_links($html, $groupId));
+            $html = nl2br($this->_makeLinks($html, $groupId));
         case CODEX_PURIFIER_STRIP_HTML:
         case CODEX_PURIFIER_FULL:
             $hp =& HTMLPurifier::getInstance();
@@ -189,15 +202,27 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_BASIC:
-            $clean = nl2br(util_make_links(htmlentities($html, ENT_QUOTES), $groupId));
+            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES), $groupId));
             break;
 
+        case CODEX_PURIFIER_JS_QUOTE:
+            $clean = preg_replace('/\<\/script\>/umsi', "</'+'script>", addslashes(preg_replace('/\\\n/ums', "
+", $html)));
+            break;
+        case CODEX_PURIFIER_JS_DQUOTE:
+            $clean = preg_replace('/\<\/script\>/umsi', '</"+"script>', addslashes(preg_replace('/\\\n/ums', '
+', $html)));
+            break;
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
             $clean = htmlentities($html, ENT_QUOTES);
             break;
         }
         return $clean;
+    }
+
+    function purifyMap($array, $level=0, $groupId=0) {
+        return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
     }
 
 }

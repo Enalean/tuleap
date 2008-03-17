@@ -41,6 +41,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         return $html;
     }
     function fetchFolder($folder, $params) {
+        $hp = CodeX_HTMLPurifier::instance();
         $selected = '';
         if (!isset($params['selected']) || !$params['selected']) {
             if ($this->docman->userCanWrite($folder['id']) && (!$params['select'] || $params['select'] == $folder['id'])) {
@@ -55,8 +56,8 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         $h .= '<label for="item_parent_id_'. $folder['id'] .'" class="'. $label_classes .'" >';
         $h .= '<input type="radio" '. $selected .' name="'. $params['input_name'] .'" value="'. $folder['id'] .'" id="item_parent_id_'. $folder['id'] .'" '. $disabled .' />';
         $h .= '<img src="'. $folder['icon_src'] .'" class="docman_item_icon" />';
-        $h .= $folder['title'] .'</label>';
-        $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem('. $folder['id'] .', '. $folder['parent_id'] .", '". addslashes($folder['title']) ."');</script>\n";
+        $h .=  $hp->purify($folder['title'], CODEX_PURIFIER_CONVERT_HTML)  .'</label>';
+        $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem('. $folder['id'] .', '. $folder['parent_id'] .", '".  $hp->purify(addslashes($folder['title']), CODEX_PURIFIER_CONVERT_HTML) ."');</script>\n";
         $h .= '<ul class="docman_items">';
         
         $params['is_last'] = false;

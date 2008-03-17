@@ -113,9 +113,10 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     }
     
     function _displayProject($group_id, $group_name, $register_time, $unix_group_name, $short_description) {
+        $hp = CodeX_HTMLPurifier::instance();
         print '<TR>';
         $check = "";
-        $title = '<B>'. $group_name .
+        $title = '<B>'.  $hp->purify(util_unconvert_htmlspecialchars($group_name), CODEX_PURIFIER_CONVERT_HTML)  .
         '</B> (' . date($GLOBALS['sys_datefmt_short'], $register_time) . ')';
         if ($group_id == '100') {
             $check = "checked";
@@ -126,7 +127,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         print '
         <TD><input type="radio" name="built_from_template" value="'.$group_id.'" '.$check.'></TD>
         <TD>'.$title.'</td>
-        <TD rowspan="2" align="left" valign="top"><I>'. htmlentities($short_description, ENT_QUOTES) .'</I></TD>
+        <TD rowspan="2" align="left" valign="top"><I>'.  $hp->purify(util_unconvert_htmlspecialchars($short_description), CODEX_PURIFIER_LIGHT, $group_id)  .'</I></TD>
         </TR>
         ';
         

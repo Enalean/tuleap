@@ -21,7 +21,7 @@ if ($type_of_search !== "tracker" &&
     echo "<P><CENTER>";
     $HTML->searchBox();
 }
-
+$hp = CodeX_HTMLPurifier::instance();
 /*
 	Force them to enter at least three characters
 */
@@ -101,7 +101,7 @@ if ($type_of_search == "soft") {
 		for ( $i = 0; $i < $rows; $i++ ) {
 			print	"<TR class=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/projects/".db_result($result, $i, 'unix_group_name')."/\">"
 				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'group_name')."</A></TD>"
-				. "<TD>".htmlentities(db_result($result,$i,'short_description'), ENT_QUOTES)."</TD></TR>\n";
+				. "<TD>". $hp->purify(util_unconvert_htmlspecialchars(db_result($result,$i,'short_description')), CODEX_PURIFIER_LIGHT) ."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}

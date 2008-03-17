@@ -43,9 +43,9 @@ if (isset($Update)) {
     //echo $sql;
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
-        $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' ));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
-        $feedback .= ' '.$Language->getText('project_admin_editgroupinfo','upd_success').' ';
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
 	group_add_history('changed_public_info','',$group_id);
     }
 }
@@ -62,32 +62,33 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editgroupi
 
 print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 
+$hp = CodeX_HTMLPurifier::instance();
 print '
 <P>
 <FORM action="'.$PHP_SELF.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'
-<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'.$row_grp['group_name'].'">
+<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
-'.$row_grp['short_description'].'</TEXTAREA>
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
 <P>'.$Language->getText('project_admin_editgroupinfo','long_desc').'
 <BR><TEXTAREA cols="70" rows="10" wrap="virtual" name="form_purpose">
-'.$row_grp['register_purpose'].'</TEXTAREA>
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['register_purpose']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
 <P>'.$Language->getText('project_admin_editgroupinfo','patents').'
 <BR><TEXTAREA cols="70" rows="6" wrap="virtual" name="form_patents">
-'.$row_grp['patents_ips'].'</TEXTAREA>
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['patents_ips']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
 <P>'.$Language->getText('project_admin_editgroupinfo','soft_required').'
 <BR><TEXTAREA cols="70" rows="6"wrap="virtual" name="form_required_sw">
-'.$row_grp['required_software'].'</TEXTAREA>
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['required_software']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
 <P>'.$Language->getText('project_admin_editgroupinfo','comments').'<BR>
-<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$row_grp['other_comments'].'</TEXTAREA>
+<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['other_comments']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
 <P>'.$Language->getText('project_admin_editgroupinfo','hide_members').'
 <INPUT TYPE="CHECKBOX" NAME="hide_members" VALUE="1"'.(($row_grp['hide_members']==1) ? ' CHECKED' : '' ).'><BR> 	 

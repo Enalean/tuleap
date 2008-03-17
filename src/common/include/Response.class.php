@@ -32,8 +32,8 @@ class Response {
             $this->_feedback =& new Feedback();
         }
     }
-    function addFeedback($level, $message) {
-        $this->_feedback->log($level, $message);
+    function addFeedback($level, $message,  $purify=CODEX_PURIFIER_CONVERT_HTML) {
+        $this->_feedback->log($level, $message, $purify);
     }
     function feedbackHasWarningsOrErrors() {
     	   return $this->_feedback->hasWarningsOrErrors();

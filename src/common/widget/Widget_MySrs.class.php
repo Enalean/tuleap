@@ -44,9 +44,23 @@ class Widget_MySrs extends Widget {
                     
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
-        
-                $hide_item_id = $request->exist('hide_item_id') ? $request->get('hide_item_id') : null;
-                $hide_sr      = $request->exist('hide_sr')      ? $request->get('hide_sr')      : null;
+
+                $vItemId = new Valid_UInt('hide_item_id');
+                $vItemId->required();
+                if($request->valid($vItemId)) {
+                    $hide_item_id = $request->get('hide_item_id');
+                } else {
+                    $hide_item_id = null;
+                }
+
+                $vSr = new Valid_WhiteList('hide_sr', array(0, 1));
+                $vSr->required();
+                if($request->valid($vSr)) {
+                    $hide_sr = $request->get('hide_sr');
+                } else {
+                    $hide_sr = null;
+                }
+
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('sr',$group_id,$hide_item_id,$rows2,$hide_sr);
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').

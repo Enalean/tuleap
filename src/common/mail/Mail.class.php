@@ -237,6 +237,14 @@ class Mail {
         foreach($this->_additionalHeaders as $name => $value) {
             $header .= $name.": ".$value.$GLOBALS['sys_lf'];
         }
+        return $this->_sendmail($header);
+    }
+
+    /**
+     * Perform effective email send.
+     * @access protected
+     */
+    function _sendmail($header) {
         return mail($this->getTo(),
             $this->getEncodedSubject(),
             $this->getBody(),

@@ -61,9 +61,9 @@ class ArtifactFactory extends Error {
 
 		// List of trackers - Check on assigned_to or multi_assigned_to or submitted by
 		$sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE ".
-			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id AND ".
+			   "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND af.group_artifact_id = agl.group_artifact_id AND ".
 			   "(af.field_name = 'assigned_to' OR af.field_name = 'multi_assigned_to') AND af.field_id = afv.field_id AND a.artifact_id = afv.artifact_id AND ".
-			   "(afv.valueInt=".$user_id." OR a.submitted_by=".$user_id.") AND a.status_id <> 3 LIMIT 100";
+			   "(afv.valueInt=". db_ei($user_id) ." OR a.submitted_by=". db_ei($user_id) .") AND a.status_id <> 3 LIMIT 100";
 
 		//echo $sql;
 		$result=db_query($sql);
@@ -83,8 +83,8 @@ class ArtifactFactory extends Error {
 
 		// List of trackers - Check on submitted_by
 		$sql = "SELECT a.*, 0 as assigned_to FROM artifact_group_list agl, artifact a WHERE ".
-			   "a.group_artifact_id = ".$this->ArtifactType->getID()." AND a.group_artifact_id = agl.group_artifact_id AND ".
-			   "a.submitted_by=".$user_id." AND a.status_id <> 3 LIMIT 100";
+			   "a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND a.group_artifact_id = agl.group_artifact_id AND ".
+			   "a.submitted_by=". db_ei($user_id) ." AND a.status_id <> 3 LIMIT 100";
 
 		//echo $sql;
 		$result=db_query($sql);
@@ -121,7 +121,7 @@ class ArtifactFactory extends Error {
 		if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
             $sql_from = " FROM artifact_group_list agl, artifact a ";
-            $sql_where = " WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
+            $sql_where = " WHERE a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND 
                           a.group_artifact_id = agl.group_artifact_id ";
             
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
@@ -156,7 +156,7 @@ class ArtifactFactory extends Error {
                         if ($af->isDateField()) {
                             $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".strtotime($cr['field_value'])."')";
                         } else {
-                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".$cr['field_value']."')";
+                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '". db_es($cr['field_value']) ."')";
                         }
                     }
 				} else {
@@ -176,7 +176,7 @@ class ArtifactFactory extends Error {
 		} else {
 			$sql = "SELECT a.artifact_id 
                     FROM artifact_group_list agl, artifact a 
-                    WHERE a.group_artifact_id = ".$this->ArtifactType->getID()." AND 
+                    WHERE a.group_artifact_id = ". db_ei($this->ArtifactType->getID()) ." AND 
                           a.group_artifact_id = agl.group_artifact_id";
         }
         
@@ -191,7 +191,7 @@ class ArtifactFactory extends Error {
 			if (!$offset || $offset < 0) {
 				$offset=0;
 			}
-			$sql .=" LIMIT $offset,$max_rows";
+			$sql .=" LIMIT ".  db_ei($offset)  .",".  db_ei($max_rows);
 		}
         
         $result=db_query($sql);

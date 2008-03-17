@@ -51,7 +51,7 @@ class TabbedLayout extends Layout {
                                     
             if (!$GLOBALS['HTTP_POST_VARS']) {
                 $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
-                $output .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($GLOBALS['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
+                $output .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
             }
         } else {
             $output .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';

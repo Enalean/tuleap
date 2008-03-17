@@ -10,19 +10,23 @@ require_once('pre.php');
 require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
+$request =& HTTPRequest::instance();
+
 if (user_isloggedin()) {
 	/*
 		User obviously has to be logged in to save place 
 	*/
-
-	if ($forum_id) {
+    $vForumId = new Valid_UInt('forum_id');
+    $vForumId->required();
+	if ($request->valid($vForumId)) {
+        $forum_id = $request->get('forum_id');
                 // Check permissions
                 if (!forum_utils_access_allowed($forum_id)) {
                     exit_error($Language->getText('global','error'),$Language->getText('forum_forum','forum_restricted'));            
                 }
 
 		//If the forum is associated to a private news, non-allowed users shouldn't be able to save their places in this forum
-		$qry = "SELECT * FROM news_bytes WHERE forum_id='$forum_id'";
+		$qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 		$res = db_query($qry);
 		if (db_numrows($res) > 0) {
 		    if (!forum_utils_news_access($forum_id)) {	    
@@ -40,7 +44,7 @@ if (user_isloggedin()) {
 		/*
 			Set up navigation vars
 		*/
-		$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id='$forum_id'");
+		$result=db_query("SELECT group_id,forum_name,is_public FROM forum_group_list WHERE group_forum_id=".db_ei($forum_id));
 
 		$group_id=db_result($result,0,'group_id');
 		$forum_name=db_result($result,0,'forum_name');
@@ -51,7 +55,7 @@ if (user_isloggedin()) {
 		echo '
 			<H2>'.$Language->getText('forum_save','save_your_place').'</H2>';
 
-		$sql="SELECT * FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id='$forum_id'";
+		$sql="SELECT * FROM forum_saved_place WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
 
 		$result = db_query($sql);
 
@@ -60,7 +64,7 @@ if (user_isloggedin()) {
 				User is not already monitoring thread, so 
 				insert a row so monitoring can begin
 			*/
-			$sql="INSERT INTO forum_saved_place (forum_id,user_id,save_date) VALUES ('$forum_id','".user_getid()."','".time()."')";
+			$sql="INSERT INTO forum_saved_place (forum_id,user_id,save_date) VALUES (".db_ei($forum_id).",'".user_getid()."','".time()."')";
 
 			$result = db_query($sql);
 
@@ -73,7 +77,7 @@ if (user_isloggedin()) {
 			}
 
 		} else {
-			$sql="UPDATE forum_saved_place SET save_date='".time()."' WHERE user_id='".user_getid()."' AND forum_id='$forum_id'";
+			$sql="UPDATE forum_saved_place SET save_date='".time()."' WHERE user_id='".user_getid()."' AND forum_id=".db_ei($forum_id);
 			$result = db_query($sql);
 
 			if (!$result) {

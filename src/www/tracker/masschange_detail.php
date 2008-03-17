@@ -18,10 +18,11 @@
 $Language->loadLanguageMsg('tracker/tracker');
 
 // Printer version ?
-if ( !isset($pv) ) {
+if ( !$request->exist('pv') ) {
 	$pv = false;
 	$ro = false;
 } else {
+    $pv = $request->get('pv');
 	if ( $pv ) $ro = true;
 }
 
@@ -34,22 +35,24 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language
 
 $ath->header($params);
 
-
+$submit = $request->get('submit');
 if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {
+    $mass_change_ids = $request->get('mass_change_ids');
   if (!$mass_change_ids) {
     $feedback = $Language->getText('tracker_masschange_detail','no_items_selected');
   } else {
-    $ath->displayMassChange($mass_change_ids);
+    $ath->displayMassChange($ro, $mass_change_ids);
   }
 } else {
   // If still not defined then force it to system 'Default' report
+  $report_id = $request->get('report_id');
   if (!$report_id) { $report_id=100; }
   // Create factories
   $report_fact = new ArtifactReportFactory();
   // Create the HTML report object
   $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
   $query = $art_field_fact->extractFieldList();
-  $ath->displayMassChange(null,$query,$art_report_html);
+  $ath->displayMassChange($ro, null,$query,$art_report_html);
 }
 // Display footer page
 $ath->footer($params);

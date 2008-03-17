@@ -92,7 +92,7 @@ $data2 = $graph->AddData($xdata,$ydata2,$xlabel);
 $graph->DrawGrid('gray');
 $graph->LineGraph( $data1, 'red' );
 $graph->LineGraph( $data2, 'blue' );
-$graph->SetTitle( "CodeX Statistics: " . group_getname($group_id) );
+$graph->SetTitle( "CodeX Statistics: " . util_unconvert_htmlspecialchars(group_getname($group_id)) );
 $graph->SetSubTitle("Page Views (red) and Downloads (blue) for the past $i days");
 $graph->SetxTitle('Date');
 $graph->SetyTitle('Views (red) / Downloads (blue)');

@@ -18,6 +18,12 @@ if (!user_isloggedin()) {
     */
     exit_not_logged_in();
 }
+if($request->valid(new Valid_UInt('release_id'))) {
+    $release_id = $request->get('release_id');
+} else {
+    exit_error($GLOBALS['Language']->getText('file_shownotes','not_found_err'),$GLOBALS['Language']->getText('file_shownotes','release_not_found'));
+}
+
 $frsrf = new FRSReleaseFactory();
 $release =& $frsrf->getFRSReleaseFromDb($release_id);
 
@@ -26,13 +32,14 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 } else {
 
+    $hp =& CodeX_HTMLPurifier::instance();
 	$group_id = $release->getGroupID();
 
 	file_utils_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));
 
 	$HTML->box1_top($Language->getText('file_shownotes','notes'));
 
-	echo '<h3>'.$Language->getText('file_shownotes','release_name').': <A HREF="showfiles.php?group_id='.$group_id.'">'.$release->getName().'</A></H3>
+	echo '<h3>'.$Language->getText('file_shownotes','release_name').': <A HREF="showfiles.php?group_id='.$group_id.'">'.$hp->purify($release->getName()).'</A></H3>
 		<P>';
 
 /*
@@ -41,19 +48,19 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-             .htmlentities($release->getNotes()).
+             .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .htmlentities($release->getChanges());
+            .$hp->purify($release->getChanges());
         echo '</PRE>';
     }else{
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-            .$release->getNotes().
+            .$hp->purify($release->getNotes()).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .$release->getChanges();
+            .$hp->purify($release->getChanges());
     }
     
 

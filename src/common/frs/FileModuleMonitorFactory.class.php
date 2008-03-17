@@ -63,19 +63,13 @@ class FileModuleMonitorFactory {
         $dar = $dao->searchById($_id);
         
 
-        if($dar->isError()){
-            return;
-        }
-        
-        if(!$dar->valid()) {
-            return;
-        }
-
         $data_array = array();
-		while ($dar->valid()){
-        	$data_array[] = $dar->current();
-        	$dar->next();
-		}
+        if(!$dar->isError() && $dar->valid()) {
+            while ($dar->valid()){
+                $data_array[] = $dar->current();
+                $dar->next();
+            }
+        }
         return $data_array;
     }
     

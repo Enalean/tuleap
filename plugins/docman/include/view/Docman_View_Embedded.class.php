@@ -38,7 +38,7 @@ class Docman_View_Embedded extends Docman_View_Display {
                     $balise = 'div';
                 }
                 echo '<'. $balise .' style="clear:both">';
-                readfile($version->getPath());
+                echo $this->hp->purify(file_get_contents($version->getPath()), CODEX_PURIFIER_FULL);
                 echo '</'. $balise .'>';
             } else {
                 $this->_controller->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));

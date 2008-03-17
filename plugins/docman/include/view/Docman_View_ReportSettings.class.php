@@ -35,8 +35,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
      */
     function _title($params) {
         $request =& HTTPRequest::instance();
+        $hp = CodeX_HTMLPurifier::instance();
         if($request->exist('report_id')) {
-            echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_report_name').' "'.$params['filter']->getName().'"</h2>';
+            echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_report_name').' "'. $hp->purify($params['filter']->getName(), CODEX_PURIFIER_CONVERT_HTML) .'"</h2>';
         } else {
             echo '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'report_settings_title') .'</h2>';
         }
@@ -55,16 +56,17 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
      *
      */
     function _getReportTableContent($reportIter, $isAdmin, &$altRowClass) {
+        $hp = CodeX_HTMLPurifier::instance();
         $html = '';
         $reportIter->rewind();
         while($reportIter->valid()) {
             $r = $reportIter->current();
             $trclass = html_get_alt_row_color($altRowClass++);
-            $html .=  "<tr class=\"".$trclass."\">\n";
+            $html .=  '<tr class="'.$trclass.'">';
             
             // Name
             $rUrl  = $this->defaultUrl.'&action=report_settings&report_id='.$r->getId();
-            $rName = '<a href="'.$rUrl.'">'.$r->getName().'</a>';
+            $rName = '<a href="'.$rUrl.'">'. $hp->purify($r->getName(), CODEX_PURIFIER_CONVERT_HTML) .'</a>';
             $html .= '<td align="left">'.$rName.'</td>';
             
             // Scope
@@ -73,8 +75,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
             
             // Delete
             $trashLink = $this->defaultUrl.'&action=report_del&report_id='.$r->getId();
-            $trashWarn = $GLOBALS['Language']->getText('plugin_docman', 'report_settings_delete', $r->getName());
-            $trashAlt  = $GLOBALS['Language']->getText('plugin_docman', 'report_settings_delete_alt', $r->getName());
+            $trashWarn = $GLOBALS['Language']->getText('plugin_docman', 'report_settings_delete',  $hp->purify(addslashes($r->getName()), CODEX_PURIFIER_CONVERT_HTML) );
+            $trashAlt  = $GLOBALS['Language']->getText('plugin_docman', 'report_settings_delete_alt',  $hp->purify($r->getName(), CODEX_PURIFIER_CONVERT_HTML) );
             $delUrl = $this->defaultUrl.'&action=report_del&report_id='.$r->getId();
             $delName = html_trash_link($trashLink, $trashWarn, $trashAlt);
             $html .= '<td align="center">'.$delName.'</td>';

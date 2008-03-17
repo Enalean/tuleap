@@ -299,7 +299,7 @@ $server->register(
  */
 function getPackages($sessionKey,$group_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getPackages','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -337,7 +337,7 @@ function package_to_soap($package) {
             $return=array(
                 'package_id' => $package->getPackageID(),
                 'group_id' => $package->getGroupID(),
-                'name' => $package->getName(),
+                'name' => util_unconvert_htmlspecialchars($package->getName()),
                 'status_id' => $package->getStatusID(),
                 'rank' => $package->getRank(),
                 'approve_license' => $package->getApproveLicense()
@@ -372,7 +372,7 @@ function packages_to_soap(&$pkg_arr) {
  */
 function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$approve_license=true) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'addPackage','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -415,7 +415,7 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
  */
 function getReleases($sessionKey,$group_id,$package_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getReleases','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -508,7 +508,7 @@ function releases_to_soap($release_arr) {
  */
 function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id,$release_date) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'addRelease','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -559,7 +559,7 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
  */
 function getFiles($sessionKey,$group_id,$package_id,$release_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getFiles','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -654,7 +654,7 @@ function files_to_soap($files_arr) {
 function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
     if (session_continue($sessionKey)) {
     
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getFile','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -730,7 +730,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id) {
     if (session_continue($sessionKey)) {
 
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'addFile','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -804,7 +804,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
 function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id) {
     if (session_continue($sessionKey)) {
 
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'addUploadedFile','Could Not Get Group','');
         } elseif ($group->isError()) {

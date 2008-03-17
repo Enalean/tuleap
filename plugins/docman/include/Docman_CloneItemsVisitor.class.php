@@ -93,7 +93,7 @@ class Docman_CloneItemsVisitor {
             $dstName = basename($srcPath);
             //print $srcPath.'-'.$dstName."-<br>";
             $fs = $this->_getFileStorage($params['data_root']);
-            $dstPath = $fs->clone($srcPath,
+            $dstPath = $fs->copy($srcPath,
                                       $dstName, $this->dstGroupId, $newItemId, 0);
 
             // Register a new file

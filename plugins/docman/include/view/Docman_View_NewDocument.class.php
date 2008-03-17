@@ -45,20 +45,29 @@ class Docman_View_NewDocument extends Docman_View_New {
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_link'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)? $params['force_item'] : new Docman_Link(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)
-            ),
-            array(
+                ));
+        $wikiAvailable = true;
+        if(isset($params['group_id'])) {
+            $go = project_get_object($params['group_id']);
+            $wikiAvailable = $go->usesWiki();
+
+        }
+        if($wikiAvailable) {
+            $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)? $params['force_item'] : new Docman_Wiki(),
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI)
-            ),
-            array(
+                );
+        }
+
+        $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_FILE,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_file'),
                 'obj'     => isset($params['force_item']) && ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) ? $params['force_item'] : new Docman_File(),
                 'checked' => ($currentItemType !== null) ? ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) : true
-            )
-        );
+                );
+
         if ($this->_controller->getProperty('embedded_are_allowed')) {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,

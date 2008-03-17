@@ -9,27 +9,27 @@
 require_once('pre.php');    
 require_once('../svn/svn_data.php');    
 
+$vFunc = new Valid_WhiteList('func', array('detailrevision', 'browse','info'));
+
+$vGroupId = new Valid_UInt('group_id');
+$vGroupId->required();
+
 $there_are_specific_permissions = true;
-if (isset($_REQUEST['group_id'])) {
-    $obj                            = group_get_object($_REQUEST['group_id']);
+if ($request->valid($vGroupId)) {
+    $obj                            = group_get_object($request->get('group_id'));
     $group_name                     = $obj->getUnixName(false);
  }
 
-
-
-if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'detailrevision' && user_isloggedin()) {
+if ($request->valid($vFunc) && $request->get('func') === 'detailrevision' && user_isloggedin()) {
     $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
 
     require('./detail_revision.php');
 
  } else if (user_isloggedin() &&                                                             //We'll browse
             (
-             (isset($_REQUEST['func']) && $_REQUEST['func'] === 'browse')     //if user ask for it
-             || (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '')     //or if user set rev_id
+             ($request->valid($vFunc) && $request->get('func') === 'browse')     //if user ask for it
+             || $request->existAndNonEmpty('rev_id')     //or if user set rev_id
              )){
-    if (isset($_REQUEST['rev_id']) && $_REQUEST['rev_id'] != '') {
-        $_rev_id = $_REQUEST['rev_id'];
-    }
     $there_are_specific_permissions = svn_utils_is_there_specific_permission($group_name);
 
     require('./browse_revision.php');

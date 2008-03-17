@@ -86,9 +86,9 @@ $server->register(
 function group_to_soap($group) {
     $soap_group = array(
         'group_id' => $group->getGroupId(),
-        'group_name' => $group->getPublicName(),
+        'group_name' => util_unconvert_htmlspecialchars($group->getPublicName()),
         'unix_group_name' => $group->getUnixName(),
-        'description' => $group->getDescription()
+        'description' => util_unconvert_htmlspecialchars($group->getDescription())
     );
     return $soap_group;
 }
@@ -139,6 +139,10 @@ function getGroupByName($sessionKey, $unix_group_name) {
         } elseif ($group->isError()) {
             return new soap_fault('2002', 'getGroupByName', $group->getErrorMessage(),'');
         }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getGroupByName', 'Restricted user: permission denied.', '');
+        }
+        
         $soap_group = group_to_soap($group);
         return new soapval('return', 'tns:Group', $soap_group);
     } else {
@@ -162,6 +166,9 @@ function getGroupById($sessionKey, $group_id) {
             return new soap_fault('2001','getGroupById', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),'');
         } elseif ($group->isError()) {
             return new soap_fault('2001', 'getGroupById', $group->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getGroupById', 'Restricted user: permission denied.', '');
         }
         
         $soap_group = group_to_soap($group);

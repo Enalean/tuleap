@@ -45,7 +45,11 @@ sub db_connect {
 
         &load_local_config($db_config_file);
 	# connect to the database
-	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost", "$sys_dbuser", "$sys_dbpasswd");
+	my $dbopt = '';
+	if($sys_enablessl) {
+	    $dbopt = ';mysql_ssl=1';
+	}
+	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost$dbopt", "$sys_dbuser", "$sys_dbpasswd");
 }
 
 ##############################

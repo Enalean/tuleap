@@ -41,12 +41,12 @@ class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
 	}
     
     function fetch() {
-        $output  = '{id:'. $this->rule->id .', ';
-        $output .= 'group_artifact_id:'. $this->rule->group_artifact_id .', ';
-        $output .= 'source_field:'. $this->rule->source_field .', ';
-        $output .= 'source_value:'. $this->rule->source_value .', ';
-        $output .= 'target_field:'. $this->rule->target_field .', ';
-        $output .= 'target_value:'. $this->rule->target_value .'';
+        $output  = '{id:'. (int)$this->rule->id .', ';
+        $output .= 'group_artifact_id:'. (int)$this->rule->group_artifact_id .', ';
+        $output .= 'source_field:'. (int)$this->rule->source_field .', ';
+        $output .= 'source_value:'. (int)$this->rule->source_value .', ';
+        $output .= 'target_field:'. (int)$this->rule->target_field .', ';
+        $output .= 'target_value:'. (int)$this->rule->target_value .'';
         $output .= '}';
         return $output;
     }

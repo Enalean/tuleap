@@ -24,7 +24,7 @@ $request =& HTTPRequest::instance();
 
 $GLOBALS['Language']->loadLanguageMsg('project/project');
 
-if (!$request->get('group_id')) {
+if (!$request->getValidated('group_id', 'GroupId')) {
     if (!$request->get('group_name')) {
         $group_id=100;
     } else {
@@ -32,7 +32,7 @@ if (!$request->get('group_id')) {
     }
  } else $group_id=$request->get('group_id');
 
-if (!$request->get('text')) {
+if (!$request->getValidated('text', 'text')) {
     # Empty string? return empty string...
     exit;
  }

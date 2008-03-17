@@ -22,7 +22,8 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
     
     function getField() {
-        return '<input type="text" name="item[wiki_page]" value="'. htmlentities($this->pagename, ENT_QUOTES) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
+        $hp =& CodeX_HTMLPurifier::instance();
+        return '<input type="text" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
     }
 
     function &getValidator() {
@@ -45,7 +46,8 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     }
     
     function getField() {
-        return '<input type="text" name="item[link_url]" value="'. htmlentities($this->link_url, ENT_QUOTES) .'" />';
+        $hp =& CodeX_HTMLPurifier::instance();
+        return '<input type="text" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
     }
 
     function &getValidator() {
@@ -91,7 +93,8 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     }
     
     function getField() {
-        return '<textarea name="content" cols="50" rows="15">'. $this->content .'</textarea>';
+        $hp =& CodeX_HTMLPurifier::instance();
+        return '<textarea name="content" cols="50" rows="15">'. $hp->purify($this->content) .'</textarea>';
     }
 
     function &getValidator() {

@@ -38,7 +38,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
-        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document, $this->item->getTitle());
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document,  $this->hp->purify($this->item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
         $content .= '<div class="docman_confirm_delete_buttons">';
         if ($this->token) {
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';

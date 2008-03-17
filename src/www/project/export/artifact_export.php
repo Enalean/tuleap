@@ -114,6 +114,9 @@ if ($export == 'artifact') {
 		header ('Content-Type: text/csv');
 		header ('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
 	
+      foreach($lbl_list as $k => $v) {
+          $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
+      }
 		echo build_csv_header($col_list, $lbl_list).$eol;
 		
 		if ($multiple_queries) {

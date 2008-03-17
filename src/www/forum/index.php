@@ -10,9 +10,18 @@ require_once('pre.php');
 require('../forum/forum_utils.php');
 $Language->loadLanguageMsg('forum/forum');
 
+$request =& HTTPRequest::instance();
 
-if (!$group_id) {
-  exit_no_group();
+if(!$request->valid(new Valid_GroupId())) {
+    exit_no_group();
+} else {
+    $group_id = $request->get('group_id');
+}
+
+if($request->valid(new Valid_Pv())) {
+    $pv = $request->get('pv');
+} else {
+    $pv = 0;
 }
 
 
@@ -50,7 +59,7 @@ if (isset($pv)&&$pv) {
     echo "<TABLE width='100%'><TR><TD>";
     echo '<H3>'.$Language->getText('forum_forum_utils','discuss_forum').'</H3>';
     echo "</TD>";
-        echo "<TD align='left'> ( <A HREF='".$PHP_SELF."?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+        echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
     echo "</TR></TABLE>";
 }
 

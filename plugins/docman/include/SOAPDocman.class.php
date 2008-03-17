@@ -49,7 +49,7 @@ class SOAPDocman extends DocmanController {
     
     /* protected */ function _setView($view) {
         switch($view) {
-        	   default:
+            default:
                $this->view = 'SOAP';
                break;
         }
@@ -61,6 +61,9 @@ class SOAPDocman extends DocmanController {
         $this->_setView('SOAP');
     }
     /* protected */ function _set_createItemView_afterCreate($view) {
+        $this->_setView('SOAP');
+    }
+    /* protected */ function _set_doesnot_belong_to_project_error() {
         $this->_setView('SOAP');
     }
 }

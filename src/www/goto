@@ -13,13 +13,17 @@ require_once('common/include/ReferenceManager.class.php');
 $reference_manager =& ReferenceManager::instance();
 $request =& HTTPRequest::instance();
 
-
-if (!$request->get('group_id'))
+$vGroupId = new Valid_GroupId();
+if (!$request->valid($vGroupId))
     $group_id=100;
  else $group_id=$request->get('group_id');
 
-if ((!$request->get('key'))
-    ||(!$request->get('val'))) {
+$vKey = new Valid_String('key');
+$vKey->required();
+$vVal = new Valid_String('val');
+$vVal->required();
+if ((!$request->valid($vKey))
+    ||(!$request->valid($vVal))) {
     exit_error($GLOBALS['Language']->getText('global','error'),
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
  }
@@ -51,4 +55,8 @@ $location = "Location: ".$ref->getLink().$feed;
 header($location);
 exit;
 
+// For emacs users
+// Local Variables:
+// mode: php
+// End:
 ?>

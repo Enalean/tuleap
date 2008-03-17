@@ -16,16 +16,20 @@ $Language->loadLanguageMsg('account/account');
 // ###### checks for valid register from form post
 
 function register_valid()	{
+    $request =& HTTPRequest::instance();
 
-	if (!isset($GLOBALS["Submit"]) || !$GLOBALS["Submit"]) {
+	if (!$request->isPost()
+        || !$request->exist('Submit')
+        || !$request->existAndNonEmpty('form_authorized_keys')) {
 		return 0;
 	}
 
-	$GLOBALS['form_authorized_keys'] = trim($GLOBALS['form_authorized_keys']);
-	$GLOBALS['form_authorized_keys'] = ereg_replace("(\r\n)|(\n)","###",$GLOBALS['form_authorized_keys']);
-	
+
+	$form_authorized_keys = trim($request->get('form_authorized_keys'));
+	$form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
+
 	// if we got this far, it must be good
-	db_query("UPDATE user SET authorized_keys='$GLOBALS[form_authorized_keys]' WHERE user_id=" . user_getid());
+	db_query("UPDATE user SET authorized_keys='".db_es($form_authorized_keys)."' WHERE user_id=" . user_getid());
 	return 1;
 }
 
@@ -42,23 +46,23 @@ if (register_valid()) {
 <?php
         echo $Language->getText('account_editsshkeys', 'message');
 	$date = getdate(time());
-	$hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
+	$hoursleft = ($GLOBALS['sys_crondelay'] - 1) - ($date['hours'] % $GLOBALS['sys_crondelay']);
 	$minutesleft = 60 - $date['minutes'];
         echo "\n".$Language->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
 
 ?>
 
-<?php if (isset($register_error) && $register_error) print "<p>$register_error"; ?>
 <form action="editsshkeys.php" method="post">
 <p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
-<br><TEXTAREA rows=10 cols=60 name="form_authorized_keys">
+<br><textarea rows="10" cols="60" name="form_authorized_keys">
 <?php
+    $purifier =& CodeX_HTMLPurifier::instance();
 	$res_keys = db_query("SELECT authorized_keys FROM user WHERE user_id=".user_getid());
 	$row_keys = db_fetch_array($res_keys);
 	$authorized_keys = ereg_replace("###","\n",$row_keys['authorized_keys']);
-	print $authorized_keys;
+	echo $purifier->purify($authorized_keys);
 ?>
-</TEXTAREA>
+</textarea>
 <p><input type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 

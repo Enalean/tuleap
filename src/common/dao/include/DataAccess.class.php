@@ -2,6 +2,9 @@
 
 require_once('DataAccessResult.class.php');
 
+if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
+if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
+
 /**
  *  A simple class for querying MySQL
  */
@@ -19,9 +22,9 @@ class DataAccess {
     * @param $pass string dbserver user password
     * @param $db string database name
     */
-    function DataAccess($host,$user,$pass,$db) {
+    function DataAccess($host,$user,$pass,$db,$opt='') {
         $this->store = array();
-        $this->db = mysql_connect($host,$user,$pass) or die('Unable to access the CodeX database. Please contact your administrator.');
+        $this->db = mysql_connect($host,$user,$pass, false, $opt) or die('Unable to access the CodeX database. Please contact your administrator.');
         if ($this->db) {
             mysql_select_db($db,$this->db);
         }
@@ -88,5 +91,17 @@ class DataAccess {
         }
         return $value;
     }
+
+    function escapeInt($v, $null = CODEX_DB_NOT_NULL) {
+        $m = array();
+        if($null === CODEX_DB_NULL && $v === '') {
+            return 'NULL';
+        }
+        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $v, $m)) {
+            return $m[1];
+        }
+        return '0';
+    }
+
 }
 ?>

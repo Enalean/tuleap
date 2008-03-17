@@ -369,7 +369,7 @@ class DocmanActions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            $item_factory->update($this->sanitizeItemData($data));
+            $item_factory->update($data);
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
                     'group_id' => $request->get('group_id'),
@@ -479,17 +479,7 @@ class DocmanActions extends Actions {
         }
         return $this->version_factory;
     }
-    function sanitizeItemData($data) {
-        $sanitized_data = $data;
-        
-        $must_be_stripped = array('title', 'wiki_page', 'link_url', 'description');
-        foreach($must_be_stripped as $property) {
-            if (isset($sanitized_data[$property])) {
-                $sanitized_data[$property] = strip_tags($sanitized_data[$property]);
-            }
-        }
-        return $sanitized_data;
-    }
+
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
@@ -529,13 +519,14 @@ class DocmanActions extends Actions {
                         'parent'  => &$new_parent,
                         'user'    => &$user)
                     );
+                    $hp = CodeX_HTMLPurifier::instance();
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                         $item->getGroupId(),
                         $old_parent->getId(), 
-                        $old_parent->getTitle(),
+                         $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
                         $new_parent->getId(), 
-                        $new_parent->getTitle()
-                    )));
+                         $hp->purify($new_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) 
+                    )), CODEX_PURIFIER_DISABLED);
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
                 }
@@ -1263,17 +1254,31 @@ class DocmanActions extends Actions {
             }
         }
 
+        $purifier =& CodeX_HTMLPurifier::instance();
+
         if(count($atf->err['db']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', implode(', ', array_unique($atf->err['db']))));
+            $ua  = array_unique($atf->err['db']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', $uas));
         }
         if(count($atf->err['perm']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', implode(', ', array_unique($atf->err['perm']))));
+            $ua  = array_unique($atf->err['perm']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', $uas));
         }
         if(count($atf->err['notreg']) > 0) {
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', implode(', ', array_unique($atf->err['notreg']))));
+            $ua  = array_unique($atf->err['notreg']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', $uas));
         }
         if(count($atf->warn['double']) > 0) {
-            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', implode(', ', array_unique($atf->warn['double']))));
+            $ua  = array_unique($atf->warn['double']);
+            $ua  = $purifier->purifyMap($ua);
+            $uas = implode(', ', $ua);
+            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', $uas));
         }
 
         if($userAdded && $noError) {
@@ -1528,7 +1533,7 @@ class DocmanActions extends Actions {
                 }
             } else {
                 // Import all personal and project reports from the given project.
-                $srcReportFactory->clone($groupId, $mdMap, $user, $forceScope);
+                $srcReportFactory->copy($groupId, $mdMap, $user, $forceScope);
                 $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
             }
         } else {
