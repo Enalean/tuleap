@@ -1310,7 +1310,7 @@ function trackerlist_to_soap($at_arr) {
                         ." FROM artifact_file af, artifact a, artifact_group_list agl"
                         ." WHERE (af.artifact_id = a.artifact_id)" 
                         ." AND (a.group_artifact_id = agl.group_artifact_id)" 
-                        ." AND (agl.group_artifact_id =".$at_arr[$i]->getID().")";
+                        ." AND (agl.group_artifact_id =". db_ei($at_arr[$i]->getID()) .")";
                 $result=db_query($sql);
                 $return[]=array(
                     'group_artifact_id'=>$at_arr[$i]->data_array['group_artifact_id'],
@@ -1552,7 +1552,7 @@ function artifacttype_to_soap($at) {
                 ." FROM artifact_file af, artifact a, artifact_group_list agl"
                 ." WHERE (af.artifact_id = a.artifact_id)" 
                 ." AND (a.group_artifact_id = agl.group_artifact_id)" 
-                ." AND (agl.group_artifact_id =".$at->getID().")";
+                ." AND (agl.group_artifact_id =".db_ei($at->getID()).")";
         $result=db_query($sql);
         $return=array(
             'group_artifact_id'=>$at->data_array['group_artifact_id'],
@@ -3201,7 +3201,7 @@ function addFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body
  */
 function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
     if (session_continue($sessionKey)) {
-    $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".$group_artifact_id);
+    $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".db_ei($group_artifact_id));
         if ($res && db_numrows($res) > 0) {
             $group_id = db_result($res, 0, 'group_id');
         } else {
@@ -3220,8 +3220,8 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
         
         $at = new ArtifactType($grp, $group_artifact_id);
         if ($at->userCanView()) {
-	    	$res=db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
-	                  " AND summary=\"".$summary."\"");
+	    	$res=db_query('SELECT artifact_id FROM artifact WHERE group_artifact_id = '.db_ei($group_artifact_id).
+	                  ' AND summary="'. db_es(htmlspecialchars($summary)) .'"');
 	        if ($res && db_numrows($res) > 0) {
 	            return new soapval('return', 'xsd:int', db_result($res, 0, 0));
 	        } else {
