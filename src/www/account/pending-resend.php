@@ -21,7 +21,7 @@ if ($GLOBALS['sys_user_approval'] != 0 && $row_user[status] != 'V') {
                $Language->getText('account_pending-resend', 'needapproval'));
  }
 if ($row_user[status] == 'P' || $row_user[status] == 'V') {
-    if (!send_new_user_email($row_user['email'], $row_user['confirm_hash'])) {
+    if (!send_new_user_email($row_user['email'], $row_user['confirm_hash'], $row['user_name'])) {
 	exit_error($Language->getText('include_exit', 'error'),
                    $row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
     }

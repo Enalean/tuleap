@@ -72,12 +72,13 @@ function send_new_project_email($group_id) {
 //
 // send mail notification to new registered user
 //
-function send_new_user_email($to,$confirm_hash)
+function send_new_user_email($to,$confirm_hash, $username, $admin_creation=false,  $password='')
 {
     global $Language;
     $base_url = get_server_url();
 
     // $message is defined in the content file
+    
     include($Language->getContent('include/new_user_email'));
     
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		

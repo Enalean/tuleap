@@ -64,6 +64,7 @@ admin_main	trove_cat	Catégories
 admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	skills	Compétences utilisateurs
+admin_main	new_user	Nouvel Utilisateur
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

@@ -92,7 +92,7 @@ if (register_valid($user_id)) {
 <form action="change_pw.php" method="post" autocomplete="off" >
 <p><? echo $Language->getText('account_change_pw', 'old_password'); ?>:
 <br><input type="password" value="" name="form_oldpw">
-<?php user_display_choose_password(is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
+<?php user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
 <p><input type="submit" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 

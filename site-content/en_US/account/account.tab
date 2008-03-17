@@ -229,13 +229,16 @@ account_register	siteupdate	Receive Email about Site Updates <span style="color:
 account_register	communitymail	Receive additional community mailings. <span style="color:#666">(Low traffic.)</span>
 account_register	purpose	Purpose 
 account_register	purpose_directions	<em>Please explain why you are applying for registration on this site</em><br>
+account_register	purpose_directions_admin	<em>You can add a comment on this user registration</em><br>
 account_register	btn_register	Register
 account_register	btn_next	Next Step
 account_register	msg_confirm	Congratulations. You have registered on $1. Your new user name is: $2</b><p>You are now being sent a confirmation email to verify your email  address. Visiting the link sent to you in this email will activate your account.</p>
+account_register	msg_confirm_admin	Congratulations. You have registered $1 on $2.<p>A confirmation email is now being sent to the user with the login: $3 and password : $4. The user can activate the account by visiting the link in the email.</p>
 account_register	title_approval	New Account Registration - Ready For Approval
 account_register	msg_approval	Congratulations. Your registration request on $1 for user <b>$2</b> has been taken into account. <p>The site administrators are now going to review your request for approval. Once approved you will receive a confirmation email to verify your email address. Visiting the link sent to you in this email will activate your account.
 account_register	mail_approval_subject	New User Registered: $1
 account_register	mail_approval_body	A new user has just registered on $1.\n\nUser Name: $2\n\nPlease click on the following URL to approve the registration:\n\n$3\n
+account_register	restricted_user	Restricted user
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php

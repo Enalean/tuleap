@@ -467,14 +467,25 @@ function user_del_preference($preference_name) {
     }
 }
 
-function user_display_choose_password($user_id = false) {
+function user_display_choose_password($page,$user_id = false) {
     $GLOBALS['Language']->loadLanguageMsg('account/account');
-    $request =& HTTPRequest::instance();
-    ?>
-    <table><tr valign='top'><td><? echo $GLOBALS['Language']->getText('account_change_pw', 'new_password'); ?>:
+    $request = & HTTPRequest :: instance();
+	?>
+    <table><tr valign='top'><td>
+    <?
+
+    if ($page == 'admin_creation') {
+        echo $GLOBALS['Language']->getText('account_change_pw', 'new_password');
+?>:
+     <br><input type="text" value="" id="form_pw" name="form_pw">
+     <script type="text/javascript" src="/scripts/user.js"></script>
+     
+    
+    <? } else { echo $GLOBALS['Language']->getText('account_change_pw', 'new_password'); ?>:
     <br><input type="password" value="" id="form_pw" name="form_pw">
     <p><? echo $GLOBALS['Language']->getText('account_change_pw', 'new_password2'); ?>:
     <br><input type="password" value="" name="form_pw2">
+    <? } ?>
     </td><td>
     <fieldset>
         <legend><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?> <span id="password_strategy_good_or_bad"></span></legend>
