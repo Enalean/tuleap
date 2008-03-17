@@ -3307,7 +3307,7 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
             'email' => db_result($artifact_cc_list, $i, 'email'),
             'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
             'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
-            'comment' => db_result($artifact_cc_list, $i, 'comment'),
+            'comment' => SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment')),
             'date' => db_result($artifact_cc_list, $i, 'date')
         );
     }
