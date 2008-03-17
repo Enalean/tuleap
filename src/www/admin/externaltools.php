@@ -14,8 +14,6 @@ $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
-
 $src = $title = '';
 
 switch($request->get('tool')) {
@@ -34,6 +32,9 @@ switch($request->get('tool')) {
     default:
         break;
 }
+
+$HTML->header(array('title'=>$title));
+
 if ($src) {
     echo '<h1>'. $title .'</h1>';
     $HTML->iframe('/'. $src, array('class' => 'iframe_service'));
