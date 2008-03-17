@@ -2309,7 +2309,7 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
             'date'                     => db_result($followups_res, $i, 'date'),
             'by'                    => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
-            'comment_type'        => db_result($followups_res, $i, 'comment_type')
+            'comment_type'        => util_unconvert_htmlspecialchars(db_result($followups_res, $i, 'comment_type'))
         );
     }
     return $return;
@@ -3486,8 +3486,8 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
                     //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                     //'artifact_id' => db_result($history, $i, 'artifact_id'),
                     'field_name' => db_result($history, $i, 'field_name'),
-                    'old_value' => db_result($history, $i, 'old_value'),
-                    'new_value' => db_result($history, $i, 'new_value'),
+                    'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                    'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                     'modification_by' => db_result($history, $i, 'user_name'),
                     'date' => db_result($history, $i, 'date')
                 );
@@ -3502,8 +3502,8 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
                 //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                 //'artifact_id' => db_result($history, $i, 'artifact_id'),
                 'field_name' => $field_name,
-                'old_value' => db_result($history, $i, 'old_value'),
-                'new_value' => db_result($history, $i, 'new_value'),
+                'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                 'modification_by' => db_result($history, $i, 'user_name'),
                 'date' => db_result($history, $i, 'date')
             );
