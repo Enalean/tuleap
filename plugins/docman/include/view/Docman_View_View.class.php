@@ -12,8 +12,8 @@ require_once(dirname(__FILE__).'/../Docman_Icons.class.php');
 require_once('Docman_View_GetMenuItemsVisitor.class.php');
 
 /* abstract */ class Docman_View_View {
-    var $dfltSortParams = null;
-    var $dfltSearchParams = null;
+    var $dfltSortParams = array();
+    var $dfltSearchParams = array();
 
     var $_controller;
     var $hp;
@@ -151,9 +151,9 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
      * sort.
      */
     function _initSearchAndSortParams($params) {
-        if($this->dfltSortParams === null) {
-            $this->dfltSortParams = null;
-            $this->dfltSearchParams = null;
+        if(!count($this->dfltSortParams)) {
+            $this->dfltSortParams = array();
+            $this->dfltSearchParams = array();
 
             if(isset($params['filter']) && $params['filter'] !== null) {
                 // Report paramters

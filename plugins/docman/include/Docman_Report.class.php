@@ -177,7 +177,7 @@ class Docman_Report {
     }
 
     function getUrlParameters() {
-        $param = null;
+        $param = array();
         // Report Id
         /*if($this->getId() !== null
            && $this->getId() > 0) {
