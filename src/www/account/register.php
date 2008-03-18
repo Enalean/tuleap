@@ -23,20 +23,10 @@ if($page == "admin_creation"){
    session_require(array('group'=>'1','admin_flags'=>'A')); 
 }
 
-function getPageValue(){
-	$request =& HTTPRequest:: instance();
-    $page='';
-    if($request->get('page')=="admin_creation" && user_is_super_user()){
-    	$page="admin_creation";
-    }
-    return $page;
-}
-
 function register_valid($confirm_hash)	{
     global $HTTP_POST_VARS, $Language;
 
     $request =& HTTPRequest:: instance();
-    $page = getPageValue();
     
     if (!$HTTP_POST_VARS['form_loginname']) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nouser'));
@@ -50,7 +40,7 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
-    if (!$HTTP_POST_VARS['form_register_purpose'] && ($GLOBALS['sys_user_approval'] && $page!="admin_creation")) {
+    if (!$HTTP_POST_VARS['form_register_purpose'] && ($GLOBALS['sys_user_approval'] && $request->get('page')!="admin_creation")) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
 	return 0;
     }
@@ -69,7 +59,7 @@ function register_valid($confirm_hash)	{
 	return 0;
     }
 
-    if ($page!="admin_creation" && $HTTP_POST_VARS['form_pw'] != $HTTP_POST_VARS['form_pw2']) {
+    if ($request->get('page')!="admin_creation" && $HTTP_POST_VARS['form_pw'] != $HTTP_POST_VARS['form_pw2']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         return 0;
     }
@@ -81,7 +71,7 @@ function register_valid($confirm_hash)	{
     }
 
     $status = 'P';
-    if($page== "admin_creation"){
+    if($request->get('page')== "admin_creation"){
         if($GLOBALS['form_restricted']){
            $status = 'W';
         } else{
@@ -115,8 +105,7 @@ function display_account_form($register_error)	{
     $hp =& CodeX_HTMLPurifier::instance();
     
     $request =& HTTPRequest:: instance();
-    $page = getPageValue();
-    
+    $page = $request->get('page');
 
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
@@ -195,7 +184,7 @@ else print "Validate Registration"?>">
 if (isset($Register)) {
 
     $request =& HTTPRequest:: instance();
-    $page = getPageValue();
+    $page = $request->get('page');
     $confirm_hash = substr(md5($session_hash . $HTTP_POST_VARS['form_pw'] . time()),0,16);
 
     if ($new_userid = register_valid($confirm_hash)) {
