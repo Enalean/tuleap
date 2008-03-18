@@ -1146,7 +1146,7 @@ $server->register(
         'artifact_id'=>'xsd:int',
         'is_dependent_on_artifact_ids'=>'xsd:string'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addArtifactDependencies',
     'rpc',
@@ -1167,7 +1167,7 @@ $server->register(
         'artifact_id'=>'xsd:int',
         'is_dependent_on_artifact_id'=>'tns:ArrayOfInt'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addDependencies',
     'rpc',
@@ -3320,7 +3320,7 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
                 return new soap_fault(add_dependency_fault, 'addArtifactDependencies', 'Dependencies addition for artifact #'.$a->getID().' failed', '');
             }
         } else {
-               return new soapval('return', 'xsd:boolean', true);
+            return new soapval('return', 'xsd:boolean', true);
         }
     } else {
         return new soap_fault(invalid_session_fault, 'addArtifactDependencies', 'Invalid Session', '');
@@ -3473,7 +3473,8 @@ function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
  * @deprecated Please use addArtifactDependencies
  */
 function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id) {
-    return addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id);
+    $ids_str = implode(",", $is_dependent_on_artifact_id);
+    return addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $ids_str);
 }
 
 /**
