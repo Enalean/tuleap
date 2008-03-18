@@ -82,7 +82,7 @@ function register_valid($confirm_hash)	{
 
     $status = 'P';
     if($request->get('page')== "admin_creation"){
-        if($GLOBALS['form_restricted']){
+        if($request->get('form_restricted')){
            $status = 'W';
         } else{
            $status = 'V';
@@ -116,7 +116,6 @@ function display_account_form($register_error)	{
     $request =& HTTPRequest::instance();
     $purifier =& CodeX_HTMLPurifier::instance();
 
-    $request =& HTTPRequest:: instance();
     $page = $request->get('page');
 
     if ($register_error) {
