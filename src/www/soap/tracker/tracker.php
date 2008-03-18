@@ -1031,7 +1031,7 @@ $server->register(
         'artifact_id'=>'xsd:int',
         'is_dependent_on_artifact_ids'=>'xsd:string'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addArtifactDependencies',
     'rpc',
@@ -1052,7 +1052,7 @@ $server->register(
         'artifact_id'=>'xsd:int',
         'is_dependent_on_artifact_id'=>'tns:ArrayOfInt'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addDependencies',
     'rpc',
@@ -3042,7 +3042,8 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
  * @deprecated Please use addArtifactDependencies
  */
 function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id) {
-    return addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id);
+    $ids_str = implode(",", $is_dependent_on_artifact_id);
+    return addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $ids_str);
 }
 
 /**
