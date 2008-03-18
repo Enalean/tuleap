@@ -54,6 +54,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function displayFieldsAndValuesAsJavascript() {
+        $hp = CodeX_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
@@ -62,11 +63,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) > 1) {
-                        echo "fields['".$field->getID()."'] = new com.xerox.codex.tracker.Field('".$field->getID()."', '".$field->getName()."', '".addslashes($field->getLabel())."');\n";
+                        echo "fields['".(int)$field->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$field->getID()."', '".(int)$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_JS_QUOTE) ."');\n";
                         $default_value = $field->getDefaultValue();
-                        echo "options['".$field->getID()."'] = {};\n";
+                        echo "options['".(int)$field->getID()."'] = {};\n";
                         while ($row = db_fetch_array($values)) {
-                            echo "options['". $field->getID() ."']['". $row[0] ."'] = {option:new Option('". addslashes($row[1]) ."', '". $row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
+                            echo "options['". (int)$field->getID() ."']['". (int)$row[0] ."'] = {option:new Option('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
                         }
                     }
                 }
@@ -81,7 +82,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $html =& new ArtifactRuleValueJavascript($rules[$key]);
-                echo 'rules_definitions['. $rules[$key]->id .'] = ';
+                echo 'rules_definitions['. (int)($rules[$key]->id) .'] = ';
                 $html->display();
                 echo ";\n";
             }
@@ -148,19 +149,20 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function saveFromRequest(&$request) {
+        //TODO: Valid the request
         switch ($request->get('direction_type')) {
             case 'source': // 1 source -> n targets
                 $this->deleteRuleValueBySource($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'));
                 //get target values
                 $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
-                $target_field   =& $art_field_fact->getFieldFromId($request->get('target_field'));
+                $target_field   = $art_field_fact->getFieldFromId($request->get('target_field'));
                 $target_values  = $target_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($target_values)) {
                     if ($request->exist('target_'. $request->get('source_field') .'_'. $request->get('target_field') .'_'. $row[0] .'_chk')) {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),
@@ -178,7 +180,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>');
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
                 $this->displayRules(array(
                     'preselected_source_field' => $request->get('source_field'),
                     'preselected_target_field' => $request->get('target_field'),

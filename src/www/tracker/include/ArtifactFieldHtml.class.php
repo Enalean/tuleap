@@ -50,13 +50,15 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function labelDisplay($break=false,$ascii=false,$tooltip=false) {
-	    $output = $this->getLabel().': ';
-	    if (!$ascii) {
-                if ($tooltip) {
-                    $output = '<a class="tooltip" href="#" title="'.$this->description.'">'.$output.'</a>';
-                }
-                $output = '<B>'.$output.'</B>';
+	    $hp = CodeX_HTMLPurifier::instance();
+        $output = SimpleSanitizer::unsanitize($this->getLabel()).': ';
+        if (!$ascii) {
+            $output =  $hp->purify($output, CODEX_PURIFIER_CONVERT_HTML) ;
+            if ($tooltip) {
+                $output = '<a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODEX_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
             }
+            $output = '<B>'. $output .'</B>';
+        }
 	    if ($break) 
 			$output .= ($ascii?"\n":'<BR>');
 	    else
@@ -78,7 +80,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false) {
 	  global $Language;
-
+      $hp = CodeX_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
 	  if (!$text_any) $text_any=$Language->getText('global','any');
 	  if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
@@ -107,7 +109,8 @@ class ArtifactFieldHtml extends ArtifactField {
                 $box_name = $this->field_name.'[]';
             }
             $output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
-            $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".addslashes($this->getLabel())."');\n";
+            $output .= '<script type="text/javascript">';
+            $output .= "\nfields['".(int)$this->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."');\n";
             $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= "</script>";
             return $output;
@@ -119,10 +122,11 @@ class ArtifactFieldHtml extends ArtifactField {
     }
     function _getValuesAsJavascript($values, $default_value) {
         global $Language;
-            $output  = "options['".$this->getID()."'] = {};\n";
+        $hp = CodeX_HTMLPurifier::instance();
+            $output  = "options['".(int)$this->getID()."'] = {};\n";
             $isDefaultValuePresent = false;
             foreach ($values as $row) {
-                $output .= "options['". $this->getID() ."']['". $row['0'] ."'] = {option:new Option('". addslashes($row['1']) ."', '". $row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
+                $output .= "options['". (int)$this->getID() ."']['". (int)$row['0'] ."'] = {option:new Option('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODEX_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
                 if ($row['0'] == $default_value) {
                     $isDefaultValuePresent = true;
                 }
@@ -130,7 +134,7 @@ class ArtifactFieldHtml extends ArtifactField {
             if (!$isDefaultValuePresent && !is_array($default_value)) {
                 // for single select box, if the default value is not present, 
                 // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
-                $output .= "options['". $this->getID() ."']['". $default_value ."'] = {option:new Option('". addslashes($Language->getText('tracker_include_field','unknown_value')) ."', '". $default_value ."'), selected:true};\n";
+                $output .= "options['". (int)$this->getID() ."']['". (int)$default_value ."'] = {option:new Option('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODEX_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."'), selected:true};\n";
             }
             return $output;
     }        
@@ -148,7 +152,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0) {
 	  global $Language;
-
+      $hp = CodeX_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
 	  if (!$text_any) $text_any=$Language->getText('global','any');
 	  if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
@@ -177,7 +181,8 @@ class ArtifactFieldHtml extends ArtifactField {
                 $box_name = $this->field_name;
             }
             $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
-            $output .= "<script type=\"text/javascript\">\nfields['".$this->getID()."'] = new com.xerox.codex.tracker.Field('".$this->getID()."', '".$this->getName()."', '".addslashes($this->getLabel())."');\n";
+            $output .= '<script type="text/javascript">';
+            $output .= "\nfields['".(int)$this->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify($this->getLabel(), CODEX_PURIFIER_JS_QUOTE)."');\n";
              $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= "\n</script>";
            return $output;
@@ -196,12 +201,12 @@ class ArtifactFieldHtml extends ArtifactField {
      *
 	 *	@return	string
 	 */
-	function multipleFieldDate($date_begin='',$date_end='',$size=0,$maxlength=0,$ro=false) {
+	function multipleFieldDate($date_begin='',$date_end='',$size=10,$maxlength=10,$ro=false) {
 	  global $Language;
 
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
 	    // in a field called 'artifact_form'
-	
+	$hp = CodeX_HTMLPurifier::instance();
 	    if ($ro)
 			if ($date_begin || $date_end) {
 			    $html = $Language->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field','end')."&nbsp;$date_end";
@@ -211,12 +216,12 @@ class ArtifactFieldHtml extends ArtifactField {
 				if (!$size || !$maxlength)
 				    list($size, $maxlength) = $this->getGlobalDisplaySize();
 		
-				$html = $Language->getText('tracker_include_field','start').'<INPUT TYPE="text" name="'.$this->getName().
-				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_begin.'">'.
+				$html = $Language->getText('tracker_include_field','start').'<INPUT TYPE="text" name="'. $hp->purify($this->getName(), CODEX_PURIFIER_CONVERT_HTML) .
+				'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($date_begin, CODEX_PURIFIER_CONVERT_HTML) .'">'.
 				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
-				$Language->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'.$this->getName().'_end'.
-				'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$date_end.'">'.
+				$Language->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'. $hp->purify($this->getName(), CODEX_PURIFIER_CONVERT_HTML) .'_end'.
+				'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($date_end, CODEX_PURIFIER_CONVERT_HTML) .'">'.
 				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 		    }
@@ -236,11 +241,11 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldDateOperator($value='',$ro=false) {
 	  global $Language;
-
+      $hp = CodeX_HTMLPurifier::instance();
 	    if ($ro) {
 			$html = htmlspecialchars($value);
 		} else {
-			$html = '<SELECT name="'.$this->field_name.'_op">'.
+			$html = '<SELECT name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .'_op">'.
 			'<OPTION VALUE=">"'.(($value == '>') ? 'SELECTED':'').'>&gt;</OPTION>'.
 			'<OPTION VALUE="="'.(($value == '=') ? 'SELECTED':'').'>=</OPTION>'.
 			'<OPTION VALUE="<"'.(($value == '<') ? 'SELECTED':'').'>&lt;</OPTION>'.
@@ -263,14 +268,14 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
 	  global $Language;
-
+      $hp = CodeX_HTMLPurifier::instance();
 	    if ($ro)
 			$html = $value;
 	    else {
 		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
 	
-		$html = '<INPUT TYPE="text" name="'.$this->field_name.
-		'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
+		$html = '<INPUT TYPE="text" name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
+		'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'">'.
 		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
 	    }
@@ -289,23 +294,23 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldText($value='',$size=0,$maxlength=0) {
-	
+        $hp = CodeX_HTMLPurifier::instance();
 	    if (!$size || !$maxlength)
 			list($size, $maxlength) = $this->getGlobalDisplaySize();
 	
-        $maxlengtharg = ' maxlength="'.$maxlength.'"';
+        $maxlengtharg = ' maxlength="'.(int)$maxlength.'"';
         if($maxlength == "") {
             $maxlengtharg = "";
         }
 
-        $sizearg = ' size="'.$size.'"';
+        $sizearg = ' size="'.(int)$size.'"';
         if($size == "") {
             $sizearg = "";
         }
 
 	    $html = '<input type="text"'
-            .' name="'.$this->field_name.'"'
-            .' value="'.$value.'"'
+            .' name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .'"'
+            .' value="'. $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_CONVERT_HTML) .'"'
             .$sizearg
             .$maxlengtharg
             .'>';
@@ -325,12 +330,12 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldTextarea($value='',$cols=0,$rows=0) {
-	
+        $hp = CodeX_HTMLPurifier::instance();
 	    if (!$cols || !$rows)
 			list($cols, $rows) = $this->getGlobalDisplaySize();
 	
-	    $html = '<TEXTAREA NAME="'.$this->field_name.
-		'" id="tracker_'. $this->field_name .'" ROWS="'.$rows.'" COLS="'.$cols.'" WRAP="SOFT">'.$value.'</TEXTAREA>';
+	    $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
+		'" id="tracker_'. $hp->purify( $this->field_name, CODEX_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
 	
 	    return($html);
 	
@@ -364,7 +369,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0) {
 	    global $sys_datefmt,$Language;
-        
+        $hp = CodeX_HTMLPurifier::instance();
         //Use url parameters to populate fields
         if (!$ro) {
             $request =& HTTPRequest::instance();
@@ -396,7 +401,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
 				else 
-				    $arr[$i] = $this->getValue($group_artifact_id,$arr[$i]);
+                $arr[$i] =  $hp->purify(SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i])), CODEX_PURIFIER_CONVERT_HTML) ;
 		    }
 	
 		    $output .= join('<br>', $arr);
@@ -432,7 +437,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
 				else 
-				    $arr[$i] = $this->getValue($group_artifact_id,$arr[$i]);
+				    $arr[$i] =  $hp->purify(SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i])), CODEX_PURIFIER_CONVERT_HTML) ;
 		    }
 	
 		    $output .= join(', ', $arr);

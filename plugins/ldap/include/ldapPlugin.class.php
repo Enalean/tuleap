@@ -161,7 +161,7 @@ class LdapPlugin extends Plugin {
             $ldap =& LDAP::instance();
             
             // Perform LDAP authentication        
-            if ($ldap->authenticate($params['loginname'], rtrim($params['passwd']))) {
+            if ($ldap->authenticate($params['loginname'], $params['passwd'])) {
                 $lri =& $ldap->searchLogin($params['loginname']);
                 if($lri->count() === 1) {
                     // Check if this user is a codex user or not. 

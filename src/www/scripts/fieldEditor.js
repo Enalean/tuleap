@@ -39,25 +39,27 @@ Object.extend(com.xerox.codex.FieldEditor.prototype, {
             highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
             highlightendcolor: "#FFFFFF"
         }, options || {});
+        var element_offsetHeight = this.element.offsetHeight;
+        var element_offsetWidth  = this.element.offsetWidth;
+        Element.hide(this.element);
         new Insertion.Before(this.element, '<div><a href="" id="'+this.element.id+'_edit_or_cancel">['+ this.options.edit +']</a></div>');
-        new Insertion.After(this.element, '<div style="font-family:monospace; font-size:10pt;" id="'+this.element.id+'_preview">'+ $F(this.element).replace('<', '&lt;') +'</div>');
+        new Insertion.After(this.element, '<div style="font-family:monospace; font-size:10pt;" id="'+this.element.id+'_preview">'+ /*$F(this.element).escapeHTML() +*/ '</div>');
         
         this.preview     = $(this.element.id+'_preview');
         this.edit_cancel = $(this.element.id+'_edit_or_cancel');
         this.is_in_edit_mode = false;
         this.warning_displayed = false;
         
-        if (this.preview.offsetHeight > this.element.offsetHeight) {
+        if (this.preview.offsetHeight > element_offsetHeight) {
             Element.setStyle(this.element, {
                 height: this.preview.offsetHeight+'px'
             });
         }
-        if (this.preview.offsetWidth > this.element.offsetWidth) {
+        if (this.preview.offsetWidth > element_offsetWidth) {
             Element.setStyle(this.element, {
                 width: this.preview.offsetWidth+'px'
             });
         }
-        Element.hide(this.element);
         this.updatePreview(false);
         
         this.onclickListener   = this.toggleEditMode.bindAsEventListener(this);
@@ -80,7 +82,7 @@ Object.extend(com.xerox.codex.FieldEditor.prototype, {
                 parameters: {
                     text: $F(this.element)
                 },
-                onComplete: (function() {
+                onComplete: (function(transport) {
                     Element.show(this.preview);
                     Element.hide(this.element);
                     this.edit_cancel.innerHTML = '['+this.options.edit+']';

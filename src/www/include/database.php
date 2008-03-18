@@ -8,9 +8,16 @@
 //
 //
 $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
+if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
+if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
+
 function db_connect() {
     global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
-    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd);
+    $conn_opt = '';
+    if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
+      $conn_opt = MYSQL_CLIENT_SSL;
+    }
+    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd, false, $conn_opt);
     unset($sys_dbpasswd);
     if (!$conn) {
         die('Database Error - Could not connect. ' . mysql_error());
@@ -120,4 +127,48 @@ function db_escape_string($string,$qhandle=false) {
     return mysql_escape_string($string);
   }
 }
+
+/**
+ * Alias for db_escape_string.
+ */
+function db_es($string,$qhandle=false) {
+    return db_escape_string($string,$qhandle);
+}
+
+/**
+ * Escape value as a valid decimal integer.
+ *
+ * If input is not a valid decimal integer, return '0'.
+ * If CODEX_DB_NULL is used, empty string '' as $val returns 'NULL' string.
+ * This last form is useful when the corresponding field is defined as INT or
+ * NULL in SQL.
+ *
+ * @see http://php.net/language.types.integer
+ * @see DataAccess::escapeInt for tests.
+ * @param  mixed $val a value to escape
+ * @param  int   $null CODEX_DB_NOT_NULL or CODEX_DB_NULL
+ * @return string Decimal integer encoded as a string
+ */
+function db_escape_int($val, $null = CODEX_DB_NOT_NULL) {
+    $match = array();
+    if($null === CODEX_DB_NULL && $val === '') {
+        return 'NULL';
+    }
+    if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val, $match)) {
+        return $match[1];
+    }
+    return '0';
+}
+
+/**
+ * Alias for db_escape_int
+ *
+ * @param mixed $val a value to escape
+ * @param  int   $null CODEX_DB_NOT_NULL or CODEX_DB_NULL
+ * @return string Decimal integer encoded as a string
+ */
+function db_ei($val, $null = CODEX_DB_NOT_NULL) {
+    return db_escape_int($val, $null);
+}
+
 ?>

@@ -99,7 +99,14 @@ class Layout extends Response {
             if (!$is_anon && !headers_sent() && $fb) {
                 $this->_serializeFeedback();
             }
-            header('Location: '. $url);
+            // Protect against CRLF injections,
+            // This seems to be fixed in php 4.4.2 and 5.1.2 according to
+            // http://php.net/header
+            if(strpos($url, "\n")) {
+                trigger_error('HTTP header injection detected. Abort.', E_USER_ERROR);
+            } else {
+                header('Location: '. $url);
+            }
         }
         exit();
     }
@@ -294,7 +301,9 @@ class Layout extends Response {
                 // If in a project page, add a project news feed
                 if ($GLOBALS['group_id']) {
                     $project=project_get_object($GLOBALS['group_id']);
-                    $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
+                    if (isset($params['toptab'])) {
+                        $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
+                    }
                     $project_feed='        <link rel="alternate" title="'.$project->getPublicName().' '.$Language->getText('include_layout','latest_news_rss').'" href="'.$sys_url.'/export/rss_sfnews.php?group_id='.$GLOBALS['group_id'].'" type="application/rss+xml">';
                 }
                 if (isset($project_feed)) {

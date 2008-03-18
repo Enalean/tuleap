@@ -28,14 +28,15 @@ if ( !$ath->isValid() ) {
 $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_field_values_details','values_admin'),
 			'help' => 'TrackerAdministration.html#TrackerBrowsingTrackerFieldValues'));
 
-echo "<H2>".$Language->getText('tracker_import_admin','tracker')." '<a href=\"/tracker/admin/?group_id=".$group_id."&atid=".$atid."\">".$ath->getName()."</a>'".
-$Language->getText('tracker_admin_field_values_details','manage_for',$field->getLabel())."</H2>";
+$hp = CodeX_HTMLPurifier::instance();
+echo "<H2>".$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id."&atid=".(int)$atid.'">'.$hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODEX_PURIFIER_CONVERT_HTML) ."</a>'".
+$Language->getText('tracker_admin_field_values_details','manage_for', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )."</H2>";
 
 if ( !$field->isSelectBox() && !$field->isMultiSelectBox() ) {
 	$ath->displayDefaultValueForm($field_id,$field->getDefaultValue());
 } else {
         $val_func = $field->getValueFunction();	
-	if ( $val_func[0] ) {	  
+	if ( isset($val_func[0]) && $val_func[0] ) {	  
 	  $ath->displayValueFunctionForm($field_id,$val_func);
 	  $ath->displayDefaultValueFunctionForm($field_id,$field->getDefaultValue(),$val_func);
 	} else {

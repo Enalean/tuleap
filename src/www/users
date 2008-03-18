@@ -8,7 +8,7 @@
 
 require_once('pre.php');    
 
-$expl_pathinfo = explode('/',$REQUEST_URI);
+$expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 
 //project name wasn't passed in the URL
 
@@ -36,4 +36,7 @@ if (db_numrows($res_user) < 1) {
 
 }
 
+// Local Variables:
+// mode: php
+// End:
 ?>

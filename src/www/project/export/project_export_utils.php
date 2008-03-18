@@ -10,6 +10,7 @@ $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
 $Language->loadLanguageMsg('project/project');
+require_once('common/include/SimpleSanitizer.class.php');
 
 function tocsv($string) {
 
@@ -20,6 +21,7 @@ function tocsv($string) {
     // a space or the user separator in the string
     if (strchr($string,' ') || strchr($string,',') ||
         strchr($string, get_csv_separator()) ||
+	strchr($string,'"') ||
 	strchr($string,"\n") ||
 	strchr($string,"\t") ||
 	strchr($string,"\r") ||
@@ -113,7 +115,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     reset($col_list);
     $cnt = 0;
     while (list(,$col) = each($col_list)) {
-      $star = (($mand_list && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
+      $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
       echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
 	'<td><b>'.$lbl_list[$col].'</b>'.$star.
 	'</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
@@ -214,7 +216,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 				$values = $field->getValues($record['artifact_id']);
 			}
 			$label_values = $field->getLabelValues($group_artifact_id,$values);
-			$record[$field->getName()] = join(",",$label_values);
+			$record[$field->getName()] = SimpleSanitizer::unsanitize(join(",",$label_values));
 			
 		} else if ( $field->isTextArea() || ($field->isTextField() && $field->getDataType() == $field->DATATYPE_TEXT) ) {
 		    // all text fields converted from HTML to ASCII

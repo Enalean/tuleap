@@ -15,7 +15,10 @@ if (user_isloggedin()) {
 		User obviously has to be logged in to monitor
 		a file module
 	*/
-	if (isset($filemodule_id)) {
+    $vFilemodule_id = new Valid_UInt('filemodule_id');
+    $vFilemodule_id->required();
+    if($request->valid($vFilemodule_id)) {
+        $filemodule_id = $request->get('filemodule_id');
 		/*
 			First check to see if they are already monitoring
 			this thread. If they are, say so and quit.
@@ -36,7 +39,7 @@ if (user_isloggedin()) {
 			} else {
 			    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','p_monitored'));
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','now_emails'));
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','turn_monitor_off'));
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','turn_monitor_off'), CODEX_PURIFIER_LIGHT);
 			}
 
 		} else {

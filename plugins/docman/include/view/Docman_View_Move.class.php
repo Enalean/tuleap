@@ -16,7 +16,8 @@ require_once('Docman_View_ItemDetailsSectionMove.class.php');
 class Docman_View_Move extends Docman_View_Details {
     
     function _getTitle($params) {
-        return $GLOBALS['Language']->getText('plugin_docman', 'move', $params['item']->getTitle());
+        $hp = CodeX_HTMLPurifier::instance();
+        return $GLOBALS['Language']->getText('plugin_docman', 'move',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
     
     function _content($params) {

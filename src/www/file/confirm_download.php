@@ -10,6 +10,17 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 $Language->loadLanguageMsg('file/file');
 
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+$vFileId = new Valid_UInt('file_id');
+$vFileId->required();
+if($request->valid($vGroupId) && $request->valid($vFileId)) {
+    $group_id = $request->get('group_id');
+    $file_id  = $request->get('file_id');
+} else {
+    exit_missing_param();
+}
+
 if (user_isloggedin()) {
 	
   $frsff = new FRSFileFactory();
@@ -47,12 +58,19 @@ if (user_isloggedin()) {
     
     }
 
-    if (!$filename) {
+    if (!$request->existAndNonEmpty('filename')) {
         # Get it from DB
         $res =& $frsff->getFRSFileFromDb($file_id);
 
         if (count( $res ) > 0) {
             $filename = $res->getFileName();
+        }
+    } else {
+        $vFileName = new Valid_String('filename');
+        if ($request->valid($vFileName)) {
+            $filename = $request->get('filename');
+        } else {
+            exit_missing_param();
         }
     }
 
@@ -71,7 +89,7 @@ if (user_isloggedin()) {
         }
     }
 
-    if ($popup) {
+    if (!$request->exist('popup')) {
         $dlscript='opener.download';
         $cancelscript='window.close()';
     } else {
@@ -91,7 +109,7 @@ if (user_isloggedin()) {
 <!--
 
 function download_local(group_id,file_id,filename) {
-    url = "http://cxtst.xrce.xerox.com/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     self.location = url;
     //history.back();
 }
@@ -113,7 +131,7 @@ function download_local(group_id,file_id,filename) {
       <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
     </td>
   </tr>
-<?php if (!$popup) echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download','back').'</a></td></tr>'; ?>
+<?php if (!$request->exist('popup')) echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">'.$Language->getText('file_confirm_download','back').'</a></td></tr>'; ?>
 </table>
 </span>
 </td></tr>
@@ -128,5 +146,4 @@ function download_local(group_id,file_id,filename) {
   */
   exit_not_logged_in();
 }
-
 

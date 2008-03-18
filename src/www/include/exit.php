@@ -43,9 +43,9 @@ function exit_restricted_user_permission_denied() {
 }
 
 function exit_not_logged_in() {
-  global $REQUEST_URI,$Language;
+  global $Language;
     //instead of a simple error page, now take them to the login page
-    header ("Location: /account/login.php?return_to=".urlencode($REQUEST_URI));
+    header ("Location: /account/login.php?return_to=".urlencode($_SERVER['REQUEST_URI']));
     //exit_error($Language->getText('include_exit','not_logged_in'),$Language->getText('include_exit','need_to_login'));
 }
 

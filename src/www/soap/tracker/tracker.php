@@ -39,7 +39,7 @@ require_once ('common/tracker/ArtifactReportFactory.class.php');
 require_once ('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once ('common/tracker/ArtifactRulesManager.class.php');
 require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
-
+require_once ('common/include/SimpleSanitizer.class.php');
 
 //
 // Type definition
@@ -1391,9 +1391,9 @@ $server->register(
  * @param int $group_id the ID of the group we want to retrieve the list of trackers
  * @return array the array of SOAPTrackerDesc that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-function &getTrackerList($sessionKey, $group_id) {
+function getTrackerList($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getTrackerList','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1464,13 +1464,13 @@ function trackerlist_to_soap($at_arr) {
                         ." FROM artifact_file af, artifact a, artifact_group_list agl"
                         ." WHERE (af.artifact_id = a.artifact_id)" 
                         ." AND (a.group_artifact_id = agl.group_artifact_id)" 
-                        ." AND (agl.group_artifact_id =".$at_arr[$i]->getID().")";
+                        ." AND (agl.group_artifact_id =". db_ei($at_arr[$i]->getID()) .")";
                 $result=db_query($sql);
                 $return[]=array(
                     'group_artifact_id'=>$at_arr[$i]->data_array['group_artifact_id'],
                     'group_id'=>$at_arr[$i]->data_array['group_id'],
-                    'name'=>$at_arr[$i]->data_array['name'],
-                    'description'=>$at_arr[$i]->data_array['description'],
+                    'name'=>SimpleSanitizer::unsanitize($at_arr[$i]->data_array['name']),
+                    'description'=>SimpleSanitizer::unsanitize($at_arr[$i]->data_array['description']),
                     'item_name'=>$at_arr[$i]->data_array['item_name'],
                     'open_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getOpenCount():-1),
                     'total_count' => ($at_arr[$i]->userHasFullAccess()?$at_arr[$i]->getTotalCount():-1),
@@ -1483,7 +1483,7 @@ function trackerlist_to_soap($at_arr) {
     return $return;
 }
 
-function &artifactreportsdesc_to_soap($artifactreportsdesc) {
+function artifactreportsdesc_to_soap($artifactreportsdesc) {
     $return = array();
     if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
         foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
@@ -1511,9 +1511,9 @@ function &artifactreportsdesc_to_soap($artifactreportsdesc) {
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the structure
  * @return the SOAPArtifactType of the tracker $group_artifact_id that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project or if $group_artifact_id doesn't exist is not a tracker of the project.
  */
-function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
+function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getArtifactType','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1549,9 +1549,9 @@ function &getArtifactType($sessionKey, $group_id, $group_artifact_id) {
  * @param int $group_id the ID of the group we want to retrieve the array of trackers
  * @return array the array of SOAPArtifactType that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
  */
-function &getArtifactTypes($sessionKey, $group_id) {
+function getArtifactTypes($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getArtifactTypes','Could Not Get Group','');
         } elseif ($group->isError()) {
@@ -1639,8 +1639,8 @@ function artifacttype_to_soap($at) {
                             'field_id' => $field->getID(),
                             'group_artifact_id' => $at->getID(),
                             'value_id' => db_result($result,$j,0),
-                            'value' => db_result($result,$j,1),
-                            'description' => ($cols > 2) ? db_result($result,$j,4) : '',
+                            'value' => SimpleSanitizer::unsanitize(db_result($result,$j,1)),
+                            'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result,$j,4) : ''),
                             'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
                             'status' => ($cols > 2) ? db_result($result,$j,6) : ''
                         );
@@ -1666,12 +1666,12 @@ function artifacttype_to_soap($at) {
                         'field_id' => $field->getID(),
                         'group_artifact_id' => $at->getID(),
                         'field_set_id' => $field->getFieldSetID(), 
-                        'field_name' => $field->getName(),
+                        'field_name' => SimpleSanitizer::unsanitize($field->getName()),
                         'data_type' => $field->getDataType(),
                         'display_type' => $field->getDisplayType(),
                         'display_size' => $field->getDisplaySize(),
-                        'label'    => $field->getLabel(),
-                        'description' => $field->getDescription(),
+                        'label'    => SimpleSanitizer::unsanitize($field->getLabel()),
+                        'description' => SimpleSanitizer::unsanitize($field->getDescription()),
                         'scope' => $field->getScope(),
                         'required' => $field->getRequired(),
                         'empty_ok' => $field->getEmptyOk(),
@@ -1690,10 +1690,10 @@ function artifacttype_to_soap($at) {
             $field_sets[] = array(
                 'field_set_id'=>$result_fieldset->getID(),
                 'group_artifact_id'=>$result_fieldset->getArtifactTypeID(),
-                'name'=>$result_fieldset->getName(),
-                'label'=>$result_fieldset->getLabel(),
-                'description'=>$result_fieldset->getDescription(),
-                'description_text'=>$result_fieldset->getDescriptionText(),
+                'name'=>SimpleSanitizer::unsanitize($result_fieldset->getName()),
+                'label'=>SimpleSanitizer::unsanitize($result_fieldset->getLabel()),
+                'description'=>SimpleSanitizer::unsanitize($result_fieldset->getDescription()),
+                'description_text'=>SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()),
                 'rank'=>$result_fieldset->getRank(),
                 'fields'=>$fields
             );
@@ -1706,13 +1706,13 @@ function artifacttype_to_soap($at) {
                 ." FROM artifact_file af, artifact a, artifact_group_list agl"
                 ." WHERE (af.artifact_id = a.artifact_id)" 
                 ." AND (a.group_artifact_id = agl.group_artifact_id)" 
-                ." AND (agl.group_artifact_id =".$at->getID().")";
+                ." AND (agl.group_artifact_id =".db_ei($at->getID()).")";
         $result=db_query($sql);
         $return=array(
             'group_artifact_id'=>$at->data_array['group_artifact_id'],
             'group_id'=>$at->data_array['group_id'],
-            'name'=>$at->data_array['name'],
-            'description'=>$at->data_array['description'],
+            'name'=>SimpleSanitizer::unsanitize($at->data_array['name']),
+            'description'=>SimpleSanitizer::unsanitize($at->data_array['description']),
             'item_name'=>$at->data_array['item_name'],
             'open_count' => ($at->userHasFullAccess()?$open_count:-1),
             'total_count' => ($at->userHasFullAccess()?$count:-1),
@@ -1780,7 +1780,7 @@ function artifactrules_to_soap($artifact_type) {
 function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows) {
     global $art_field_fact;
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifacts','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -1905,7 +1905,7 @@ function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $repor
 function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id) {    
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactById','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -1969,7 +1969,7 @@ function artifact_to_soap($artifact) {
                     $extrafieldvalues[] = array (    
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
-                        'field_value' => html_entity_decode($value)
+                        'field_value' => html_entity_decode($value)  //util_unconvert_htmlspecialchars ?
                     );
                 }
             }
@@ -2006,12 +2006,12 @@ function artifact_to_soap($artifact) {
         // summary
         $field_summary = $art_field_fact->getFieldFromName('summary');
         if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['summary'] = html_entity_decode($artifact->getSummary());
+                $return['summary'] = util_unconvert_htmlspecialchars($artifact->getSummary());
         }
         // details
         $field_details = $art_field_fact->getFieldFromName('details');
         if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
-                $return['details'] = html_entity_decode($artifact->getDetails());
+                $return['details'] = util_unconvert_htmlspecialchars($artifact->getDetails());
         }
         // severity
         $field_severity = $art_field_fact->getFieldFromName('severity');
@@ -2161,7 +2161,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2303,7 +2303,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2380,7 +2380,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'updateArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2477,7 +2477,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
     global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifact','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2540,10 +2540,10 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
  *              - group_artifact_id does not match with a valid tracker,
  *              - the artifact_id does not match with a valid artifact
  */
-function &getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
+function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactFollowups','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2590,13 +2590,13 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
         $return[] = array (
             'artifact_id'         => db_result($followups_res, $i, 'artifact_id'),    
             'follow_up_id'        => $id,   
-            'comment'             => html_entity_decode($comment), //db_result($followups_res, $i, 'new_value'),
+            'comment'             => util_unconvert_htmlspecialchars($comment), //db_result($followups_res, $i, 'new_value'),
             'date'                => db_result($followups_res, $i, 'date'),
             'original_date'       => db_result($artifact->getOriginalCommentDate($id), 0, 'date'),  
             'by'                  => (db_result($followups_res, $i, 'mod_by')==100?db_result($followups_res, $i, 'email'):db_result($followups_res, $i, 'user_name')),
             'original_by'         => (db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by')==100?db_result($artifact->getOriginalCommentSubmitter($id), 0, 'email'):user_getname(db_result($artifact->getOriginalCommentSubmitter($id), 0, 'mod_by'))),
             'comment_type_id'     => db_result($followups_res, $i, 'comment_type_id'),
-            'comment_type'        => db_result($followups_res, $i, 'comment_type'),
+            'comment_type'        => util_unconvert_htmlspecialchars(db_result($followups_res, $i, 'comment_type')),
             'field_name'          => db_result($followups_res, $i, 'field_name'),
             'user_can_edit'       => $artifact->userCanEditFollowupComment($id) ? 1 : 0 
         );
@@ -2615,9 +2615,9 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  */
-function &getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
+function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactCannedResponses','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2645,8 +2645,8 @@ function artifactcannedresponses_to_soap($cannedresponses_res) {
     for ($i=0; $i < $rows; $i++) {
         $return[] = array (
             'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
-            'title' => db_result($cannedresponses_res, $i, 'title'),
-            'body' => db_result($cannedresponses_res, $i, 'body')
+            'title' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'title')),
+            'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body'))
         );
     }
     return $return;
@@ -2664,11 +2664,11 @@ function artifactcannedresponses_to_soap($cannedresponses_res) {
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  */
-function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id) {
+function getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id) {
     // Deprecated param. DO NOT USE ANYMORE
     $user_id = user_getid();
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactReports','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2684,6 +2684,9 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
         } elseif ($at->isError()) {
             return new soap_fault(get_artifact_type_fault,'getArtifactReports',$at->getErrorMessage(),'');
         }
+        if (! $at->userCanView($user_id)) {
+            return new soap_fault(get_artifact_type_fault,'getArtifactReports', 'Permissions denied.','');
+        }
         
         $report_fact = new ArtifactReportFactory();
         if (!$report_fact || !is_object($report_fact)) {
@@ -2697,7 +2700,7 @@ function &getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_i
     }
 }
 
-function &artifactreports_to_soap($artifactreports) {
+function artifactreports_to_soap($artifactreports) {
     $return = array();
     if (is_array($artifactreports) && count($artifactreports)) {
         foreach ($artifactreports as $arid => $artifactreport){
@@ -2748,11 +2751,11 @@ function &artifactreports_to_soap($artifactreports) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
+function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false) {
     global $art_field_fact;
     
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactAttachedFiles','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2794,7 +2797,7 @@ function &getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$art
 /**
  * @deprecated please use getArtifactAttachedFiles.
  */
-function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
+function getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     return getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
 
@@ -2813,10 +2816,10 @@ function &getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id
  *              - artifact_id does not match with a valid artifact
  *              - file_id does not match with the given artifact_id
  */
-function &getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
+function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactAttachedFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2869,7 +2872,7 @@ function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
             'id' => db_result($attachedfiles_arr, $i, 'id'),
             'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
             'filename' => db_result($attachedfiles_arr, $i, 'filename'),
-            'description' => db_result($attachedfiles_arr, $i, 'description'),
+            'description' => SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description')),
             'bin_data' => ($set_bin_data?$encoded_data:null),
             'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
             'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
@@ -2888,7 +2891,7 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
         $file['id'] = db_result($attachedfiles_arr, $i, 'id');
         $file['artifact_id'] = db_result($attachedfiles_arr, $i, 'artifact_id');
         $file['filename'] = db_result($attachedfiles_arr, $i, 'filename');
-        $file['description'] = db_result($attachedfiles_arr, $i, 'description');
+        $file['description'] = SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'));
         if ($set_bin_data) {
             $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
             $encoded_data = base64_encode($bin_data);
@@ -2921,7 +2924,7 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
 function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -2978,11 +2981,11 @@ function dependencies_to_soap($artifact_type, $dependencies) {
                 'artifact_depend_id' => db_result($dependencies, $i, 'artifact_depend_id'),
                 'artifact_id' => db_result($dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => db_result($dependencies, $i, 'is_dependent_on_artifact_id'),
-                'summary' => html_entity_decode(db_result($dependencies, $i, 'summary')),
+                'summary' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'summary')),
                 'tracker_id' => db_result($dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => db_result($dependencies, $i, 'name'),
+                'tracker_name' => SimpleSanitizer::unsanitize(db_result($dependencies, $i, 'name')),
                 'group_id' => db_result($dependencies, $i, 'group_id'),
-                'group_name' => db_result($dependencies, $i, 'group_name')
+                'group_name' => util_unconvert_htmlspecialchars(db_result($dependencies, $i, 'group_name'))
             );
         }
     }
@@ -3007,7 +3010,7 @@ function dependencies_to_soap($artifact_type, $dependencies) {
 function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactInverseDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3059,11 +3062,11 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
             $return[]=array(
                 'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => $artifact_id,
-                'summary' => db_result($inverse_dependencies, $i, 'summary'),
+                'summary' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'summary')),
                 'tracker_id' => db_result($inverse_dependencies, $i, 'group_artifact_id'),
-                'tracker_name' => db_result($inverse_dependencies, $i, 'name'),
+                'tracker_name' => SimpleSanitizer::unsanitize(db_result($inverse_dependencies, $i, 'name')),
                 'group_id' => db_result($inverse_dependencies, $i, 'group_id'),
-                'group_name' => db_result($inverse_dependencies, $i, 'group_name')
+                'group_name' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'group_name'))
             );
         }
     }
@@ -3115,7 +3118,7 @@ function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$
 function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3217,7 +3220,7 @@ function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_i
 function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactFile','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3284,7 +3287,7 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
 function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids){
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactDependencies','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3497,7 +3500,7 @@ function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_i
 function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactDependency','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3564,7 +3567,7 @@ function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_
 function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactFollowup','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3632,7 +3635,7 @@ function addFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body
  */
 function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
     if (session_continue($sessionKey)) {
-    $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".$group_artifact_id);
+        $res=db_query("SELECT group_id FROM artifact_group_list WHERE group_artifact_id = ".db_ei($group_artifact_id));
         if ($res && db_numrows($res) > 0) {
             $group_id = db_result($res, 0, 'group_id');
         } else {
@@ -3651,8 +3654,8 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
         
         $at = new ArtifactType($grp, $group_artifact_id);
         if ($at->userCanView()) {
-	    	$res=db_query("SELECT artifact_id FROM artifact WHERE group_artifact_id = ".$group_artifact_id.
-	                  " AND summary=\"".$summary."\"");
+	    	$res=db_query('SELECT artifact_id FROM artifact WHERE group_artifact_id = '.db_ei($group_artifact_id).
+	                  ' AND summary="'. db_es(htmlspecialchars($summary)) .'"');
 	        if ($res && db_numrows($res) > 0) {
 	            return new soapval('return', 'xsd:int', db_result($res, 0, 0));
 	        } else {
@@ -3689,7 +3692,7 @@ function existSummary($sessionKey, $group_artifact_id, $summary) {
 function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactCCList','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3738,7 +3741,7 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
             'email' => db_result($artifact_cc_list, $i, 'email'),
             'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
             'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
-            'comment' => db_result($artifact_cc_list, $i, 'comment'),
+            'comment' => SimpleSanitizer::unsanitize(db_result($artifact_cc_list, $i, 'comment')),
             'date' => db_result($artifact_cc_list, $i, 'date')
         );
     }
@@ -3758,7 +3761,7 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
 function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'addArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3809,7 +3812,7 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
     global $art_field_fact; 
 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'deleteArtifactCC','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3863,7 +3866,7 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
 function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new soap_fault(get_group_fault,'getArtifactHistory','Could Not Get Group','');
         } elseif ($grp->isError()) {
@@ -3917,8 +3920,8 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
                     //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                     //'artifact_id' => db_result($history, $i, 'artifact_id'),
                     'field_name' => db_result($history, $i, 'field_name'),
-                    'old_value' => db_result($history, $i, 'old_value'),
-                    'new_value' => db_result($history, $i, 'new_value'),
+                    'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                    'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                     'modification_by' => db_result($history, $i, 'user_name'),
                     'date' => db_result($history, $i, 'date')
                 );
@@ -3933,8 +3936,8 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
                 //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                 //'artifact_id' => db_result($history, $i, 'artifact_id'),
                 'field_name' => $field_name,
-                'old_value' => db_result($history, $i, 'old_value'),
-                'new_value' => db_result($history, $i, 'new_value'),
+                'old_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'old_value')),
+                'new_value' => util_unconvert_htmlspecialchars(db_result($history, $i, 'new_value')),
                 'modification_by' => db_result($history, $i, 'user_name'),
                 'date' => db_result($history, $i, 'date')
             );

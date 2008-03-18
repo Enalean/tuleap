@@ -5,17 +5,18 @@ class Feedback {
     function Feedback() {
         $this->logs = array();
     }
-    function log($level, $msg) {
+    function log($level, $msg, $purify=CODEX_PURIFIER_CONVERT_HTML) {
         if(!is_array($msg)) {
             $msg = array($msg);
         }
         foreach($msg as $m) {
-            $this->logs[] = array('level' => $level, 'msg' => $m);
+            $this->logs[] = array('level' => $level, 'msg' => $m, 'purify' => $purify);
         }
     }
     function fetch() {
         $html = '';
         $old_level = null;
+        $hp =& CodeX_HTMLPurifier::instance();
         foreach($this->logs as $log) {
             if (!is_null($old_level) && $old_level != $log['level']) {
                 $html .= '</ul>';
@@ -24,7 +25,7 @@ class Feedback {
                 $old_level = $log['level'];
                 $html .= '<ul class="feedback_'. $log['level'] .'">';
             }
-            $html .= '<li>'. $log['msg'] .'</li>';
+            $html .= '<li>'. $hp->purify($log['msg'], $log['purify']) .'</li>';
         }
         if (!is_null($old_level)) {
             $html .= '</ul>';

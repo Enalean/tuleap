@@ -81,7 +81,7 @@ class Project extends Group {
         $this->project_data_array=$this->data_array;
         
         // Get Service data
-        $db_res=db_query("SELECT * FROM service WHERE group_id='$id' ORDER BY rank");
+        $db_res=db_query("SELECT * FROM service WHERE group_id='".db_es($id)."' ORDER BY rank");
         $rows=db_numrows($db_res); 
         if ($rows < 1) {
             //function in class we extended

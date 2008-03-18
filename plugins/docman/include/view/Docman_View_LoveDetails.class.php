@@ -25,9 +25,11 @@
 
 class Docman_View_LoveDetails {
     var $md;
+    var $hp;
 
     function Docman_View_LoveDetails($md) {
         $this->md = $md;
+        $this->hp =& CodeX_HTMLPurifier::instance();
     }
 
     function getNameField($value='') {
@@ -36,7 +38,7 @@ class Docman_View_LoveDetails {
         $html .=  '<tr>';
         $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_name').'</td>';
         $html .=  '<td>';
-        $html .=  '<input name="name" type="text" value="'.$value.'" class="text_field" />';
+        $html .=  '<input name="name" type="text" value="'.$this->hp->purify($value).'" class="text_field" />';
         $html .=  '</td>';
         $html .=  '</tr>';
 
@@ -49,7 +51,7 @@ class Docman_View_LoveDetails {
         $html .=  '<tr>';
         $html .=  '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_desc').'</td>';
         $html .=  '<td>';
-        $html .=  '<textarea name="descr">'.$value.'</textarea>';
+        $html .=  '<textarea name="descr">'.$this->hp->purify($value).'</textarea>';
         $html .=  '</td>';
         $html .=  '</tr>';
 

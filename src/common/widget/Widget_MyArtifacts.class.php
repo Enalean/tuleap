@@ -36,8 +36,11 @@ class Widget_MyArtifacts extends Widget {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
     function updatePreferences(&$request) {
+        $request->valid(new Valid_String('cancel'));
+        $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
+        $vShow->required();
         if (!$request->exist('cancel')) {
-            if ($request->exist('show')) {
+            if ($request->valid($vShow)) {
                 switch($request->get('show')) {
                     case 'A':
                         $this->_artifact_show = 'A';
@@ -83,8 +86,22 @@ class Widget_MyArtifacts extends Widget {
     }
     function _display_artifacts($list_trackers, $print_box_begin) {
         $request =& HTTPRequest::instance();
-        $hide_item_id  = $request->exist('hide_item_id')  ? $request->get('hide_item_id')  : null;
-        $hide_artifact = $request->exist('hide_artifact') ? $request->get('hide_artifact') : null;
+
+        $vItemId = new Valid_UInt('hide_item_id');
+        $vItemId->required();
+        if($request->valid($vItemId)) {
+            $hide_item_id = $request->get('hide_item_id');
+        } else {
+            $hide_item_id = null;
+        }
+
+        $vArtifact = new Valid_WhiteList('hide_artifact', array(0, 1));
+        $vArtifact->required();
+        if($request->valid($vArtifact)) {
+            $hide_artifact = $request->get('hide_artifact');
+        } else {
+            $hide_artifact = null;
+        }
         
         $j = $print_box_begin;
         $html_my_artifacts = "";
@@ -130,15 +147,15 @@ class Widget_MyArtifacts extends Widget {
                     }
                     $aff =& $artifact_types[$group_id][$atid]['aff'];
                     //Retrieve artifact_id field
-                    $field =& $aff->getFieldFromName('artifact_id');
+                    $field = $aff->getFieldFromName('artifact_id');
                     //Check if user can read it
                     $user_can_view_aid = $field->userCanRead($group_id, $atid);
                     //Retrieve percent_complete field
-                    $field =& $aff->getFieldFromName('percent_complete');
+                    $field = $aff->getFieldFromName('percent_complete');
                     //Check if user can read it
                     $user_can_view_percent_complete = $field && $field->userCanRead($group_id, $atid);
                     //Retriebe summary field
-                    $field =& $aff->getFieldFromName('summary');
+                    $field = $aff->getFieldFromName('summary');
                     //Check if user can read it
                     $user_can_view_summary = $field->userCanRead($group_id, $atid);
                     $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = $user_can_view_aid || $user_can_view_summary;

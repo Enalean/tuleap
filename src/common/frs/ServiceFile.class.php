@@ -33,6 +33,7 @@ class ServiceFile extends Service {
     * @return arr[title], arr[content]
     */
     function getSummaryPageContent() {
+        $hp = CodeX_HTMLPurifier::instance();
         $ret = array(
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''
@@ -66,13 +67,13 @@ class ServiceFile extends Service {
                 $ret['content'] .= '
                   <TR class="boxitem">
                   <TD>
-                    <B>' . $package['package_name']. '</B>&nbsp;
+                    <B>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODEX_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
                     <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '">'.
                         $monitor_img . '     
                     </a>
                   </TD>';
                 // Releases to display
-                $ret['content'] .= '<TD>'. $package['release_name'] .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
+                $ret['content'] .= '<TD>'.  $hp->purify($package['release_name'], CODEX_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
                     $GLOBALS['HTML']->getImage("ic/text.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes'), 'title'=>$GLOBALS['Language']->getText('include_project_home','release_notes'))) . ' 
                   </TD>
                   <TD><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';
@@ -101,8 +102,8 @@ class ServiceFile extends Service {
         $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
         "FROM frs_package,frs_release ".
         "WHERE frs_package.package_id=frs_release.package_id ".
-        "AND frs_package.group_id='". $this->getGroupId() ."' ".
-        "AND frs_release.status_id=' ".$frspf->STATUS_ACTIVE."' ".
+        "AND frs_package.group_id='". db_ei($this->getGroupId()) ."' ".
+        "AND frs_release.status_id=' ".db_ei($frspf->STATUS_ACTIVE)."' ".
         "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
         $res_files = db_query($sql);
         $rows_files = db_numrows($res_files);

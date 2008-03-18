@@ -15,12 +15,13 @@ $em =& EventManager::instance();
 $em->processEvent('before_lostpw', array());
 
 $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
+
 ?>
 
 <P><?php echo $Language->getText('account_lostpw', 'message'); ?>
 
 <FORM action="lostpw-confirm.php" method="post">
-<P><INPUT type="hidden" name="form_user" value="<?php print isset($form_user) ? $form_user : ''; ?>">
+<P>
 Login Name:
 <INPUT type="text" name="form_loginname">
 <INPUT type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">

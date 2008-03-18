@@ -61,13 +61,18 @@ echo '
 	'.db_result($res_user,0,'email').'	
 	</A></B>
 	</TD>
-</TR>
+</TR>';
+
+if($GLOBALS['sys_enable_user_skills']) {
+    echo '
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','user_prof').': </TD>
         <TD>
         <A HREF="/people/viewprofile.php?user_id='.db_result($res_user,0,'user_id').'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
-</TR>
+</TR>';
+}
 
+echo '
 <TR>
 	<TD>
 	'.$Language->getText('include_user_home','member_since').': 
@@ -152,7 +157,7 @@ $res_cat = db_query("SELECT groups.group_name, "
 	. "groups.hide_members, "
 	. "user_group.admin_flags, "
 	. "user_group.bug_flags FROM "
-	. "groups,user_group WHERE user_group.user_id='$user_id' AND "
+	. "groups,user_group WHERE user_group.user_id='".db_ei($user_id)."' AND "
 	. "groups.group_id=user_group.group_id AND groups.is_public='1' AND groups.status='A' AND groups.type='1'");
 
 // see if there were any groups

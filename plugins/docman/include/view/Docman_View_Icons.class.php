@@ -95,6 +95,7 @@ class Docman_View_Icons extends Docman_View_Browse {
     }
     
     function _displayItem(&$item, $params) {
+        $hp = CodeX_HTMLPurifier::instance();
         $html = '<div id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'" style="position:relative;">';
         
         $show_options = isset($params['show_options']) && $params['show_options'] == $item->getId();
@@ -111,13 +112,13 @@ class Docman_View_Icons extends Docman_View_Browse {
             'id'     => $item->getId()
         ));
         $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
-        $html .= '<span class="docman_item_title"><a href="'. $title_url .'">'. $item->getTitle() .'</a></span>';
+        $html .= '<span class="docman_item_title"><a href="'. $title_url .'">'.  $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML)  .'</a></span>';
         $html .= '</a>';
         //Show/hide options {{{
         $html .= $this->getItemMenu($item, $params);
         //}}}
         if (trim($item->getDescription()) != '') {
-            $html .= '<div class="docman_item_description">'. $item->getDescription() .'</div>';
+            $html .= '<div class="docman_item_description">'.  $hp->purify($item->getDescription(), CODEX_PURIFIER_BASIC) .'</div>';
         }
         $html .= '</div>';
 

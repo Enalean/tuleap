@@ -44,7 +44,7 @@ class ArtifactHtml extends Artifact {
          */
         function display($ro, $pv, $user_id) {
             global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
-            
+            $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
             // the column number is the number of field per line * 2 (label + value)
             // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
@@ -64,8 +64,8 @@ class ArtifactHtml extends Artifact {
             $summary = $this->getValue('summary');
             echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
             echo '
-            <FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
-            <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">';
+            <FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+            <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'. $sys_max_size_attachment.'">';
             if ( $ro ) {
                 echo '<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddcomment">';
             } else {
@@ -73,33 +73,33 @@ class ArtifactHtml extends Artifact {
             }
             echo '
             <INPUT TYPE="HIDDEN" NAME="artifact_timestamp" VALUE="'.time().'">
-            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-            <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
-            <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
-            <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.$this->getID().'">
-            <INPUT TYPE="HIDDEN" NAME="aid" VALUE="'.$this->getID().'">';
+            <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
+            <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.(int)$group_artifact_id.'">
+            <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">
+            <INPUT TYPE="HIDDEN" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
+            <INPUT TYPE="HIDDEN" NAME="aid" VALUE="'.(int)$this->getID().'">';
             echo '<TABLE><TR><TD class="artifact">';
             
-            echo '<table width="100%"><tr><td><H2>[ '.$this->ArtifactType->getItemName();
+            echo '<table width="100%"><tr><td><H2>[ '. $hp->purify($this->ArtifactType->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ;
             $field_artifact_id = $result_fields['artifact_id'];
             if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
-                echo " #".$this->getID();
+                echo " #". $hp->purify($this->getID(), CODEX_PURIFIER_CONVERT_HTML) ;
             }
-            echo " ] ".$summary."</H2>";
+            echo " ] ". $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ."</H2>";
             echo "</TD>";
             
             if ( $pv == 0) {
-                echo "<TD align='right'><A HREF='?func=detail&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
+                echo "<TD align='right'><A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
             }
             echo '</table>';
             
             if ($this->ArtifactType->allowsCopy()) {
-              echo "<div><A HREF='?func=copy&aid=".$this->getID()."&group_id=".$group_id."&atid=".$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></div><br />";
+              echo "<div><A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></div><br />";
             }
         
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'.group_getname($group_id).'</TD>';
+            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -125,14 +125,14 @@ class ArtifactHtml extends Artifact {
                             // Details field must be on one row
                             if ($sz > $max_size || $field->getName()=='details') {
                                 $fieldset_html .= "\n<TR>".
-                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'.$field_html['label'].'</td>'.
-                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'.$field_html['value'].'</TD>'.                     
+                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.                     
                                   "\n</TR>";
                                 $i=0;
                             } else {
                                 $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                                $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'.$field_html['label'].'</td>'.
-                                '<TD width="38%" valign="top">'.$field_html['value'].'</TD>';
+                                $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
                                 $i++;
                                 // if the line is not full, we add a additional column to give more space
                                 $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer" width="4%">&nbsp;</td>':"\n</TR>";
@@ -143,8 +143,8 @@ class ArtifactHtml extends Artifact {
                 
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
-                    $html .= '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
+                    $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
+                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
 
@@ -235,9 +235,9 @@ class ArtifactHtml extends Artifact {
             $title .= '<script type="text/javascript">';
             $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
             $title .= '</script>';
-            $title .= ' <a href="/tracker/?func=rss&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $this->ArtifactType->getGroupId() .'" ';
+            $title .= ' <a href="/tracker/?func=rss&aid='. (int)$this->getId() .'&atid='. (int)$this->ArtifactType->getID() .'&group_id='. (int)$this->ArtifactType->getGroupId() .'" ';
             $hp =& CodeX_HTMLPurifier::instance();
-            $title .= ' title="'. $hp->purify($group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. html_entity_decode($this->getValue('summary'), ENT_QUOTES)) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
+            $title .= ' title="'. $hp->purify(util_unconvert_htmlspecialchars($group->getPublicName()).' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODEX_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
             $title .= '[xml]</a> ';
             if ($pv == 0) {
                 $title .= help_button('ArtifactUpdate.html#ArtifactComments') .' ';
@@ -454,7 +454,7 @@ class ArtifactHtml extends Artifact {
      */
     function displayCopy($ro,$pv) {
         global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
-          
+        $hp = CodeX_HTMLPurifier::instance();
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
@@ -470,28 +470,28 @@ class ArtifactHtml extends Artifact {
         
         // Display submit informations if any
         if ( $this->ArtifactType->getSubmitInstructions() ) {
-            echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODEX_PURIFIER_FULL) ;
         }
         
         // Beginning of the submission form with fixed fields
-        echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+        echo '<FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
                 <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
                 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postcopy">
-                <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-                <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.$group_artifact_id.'">
-                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">
+                <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
+                <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.(int)$group_artifact_id.'">
+                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">
                 <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         echo '<TABLE><TR><TD class="artifact">';
         $summary = $this->getValue('summary');
           
         echo "<TABLE width='100%'><TR><TD>";
-        echo "<H2>[ ".$Language->getText('tracker_include_artifact','copy_of',$this->ArtifactType->getItemName()." #".$this->getID())." ] ".$summary."</H2>";
+        echo "<H2>[ ". $hp->purify($Language->getText('tracker_include_artifact','copy_of',$this->ArtifactType->getItemName()." #".$this->getID())." ] ".$summary, CODEX_PURIFIER_CONVERT_HTML) ."</H2>";
         echo "</TD></TR></TABLE>";
           
         $html = '';
         $html .= '
             <table width="100%">
-              <tr><td colspan="'.$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'.group_getname($group_id).'</TD></tr>';
+              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD></tr>';
         
         // Now display the variable part of the field list (depend on the project)
         
@@ -557,8 +557,8 @@ class ArtifactHtml extends Artifact {
             
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                $html .= '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
+                $html .= '<TR><TD COLSPAN="'. (int)$columns_number.'">&nbsp</TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'. (int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
@@ -590,11 +590,13 @@ class ArtifactHtml extends Artifact {
                 $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                 $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
             }
-            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
+            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">';
+            $html .=  $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODEX_PURIFIER_CONVERT_HTML) ;
+            $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'.$Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())).'</TEXTAREA>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
             }
         }
         if (!user_isloggedin() && ($pv == 0)) {
@@ -658,7 +660,7 @@ class ArtifactHtml extends Artifact {
         if ( !$ro ) {
         $html .= '
                         <B>'.$Language->getText('tracker_include_artifact','aids').'</B>&nbsp;
-                        <input type="text" name="artifact_id_dependent" size="20" maxlength="255" value="'.$this->getID().'">
+                        <input type="text" name="artifact_id_dependent" size="20" maxlength="255" value="'. (int)$this->getID().'">
                         &nbsp;<span style="color:#666">'.$Language->getText('tracker_include_artifact','fill').'</span><p>';
         }
         
@@ -695,7 +697,8 @@ class ArtifactHtml extends Artifact {
             global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
             $result=$this->getHistory();
             $rows=db_numrows($result);
-        $html = '';
+            $html = '';
+            $hp = CodeX_HTMLPurifier::instance();
             if ($rows > 0) {
         
                         $title_arr=array();
@@ -717,45 +720,44 @@ class ArtifactHtml extends Artifact {
 			          $value_id_old =  db_result($result, $i, 'old_value');
                 //}
                             
-                                $field = $art_field_fact->getFieldFromName($field_name);
-                                if ( $field ) {
-				  if ($field->userCanRead($group_id,$group_artifact_id)) {
+                            $field = $art_field_fact->getFieldFromName($field_name);
+                            if ( $field ) {
+                                if ($field->userCanRead($group_id,$group_artifact_id)) {
                                     $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'.$field->getLabel().'</TD><TD>';
+                                        '"><TD>'. $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                         
                                     if ($field->isSelectBox()) {
-                                                // It's a select box look for value in clear
-                                                $html .= $field->getValue($group_artifact_id, $value_id_old).'</TD><TD>';
-						$html .= $field->getValue($group_artifact_id, $value_id_new);
-				    } else if ($field->isDateField()) {
-                                                // For date fields do some special processing
-                                                $html .= format_date("Y-m-j",$value_id_old).'</TD><TD>';
-						
-						$html .= format_date("Y-m-j",$value_id_new);
+                                        // It's a select box look for value in clear
+                                        $html .= $field->getValue($group_artifact_id, $value_id_old).'</TD><TD>';
+                                        $html .= $field->getValue($group_artifact_id, $value_id_new);
+                                    } else if ($field->isDateField()) {
+                                        // For date fields do some special processing
+                                        $html .= format_date("Y-m-j",$value_id_old).'</TD><TD>';
+                                        
+                                        $html .= format_date("Y-m-j",$value_id_new);
 
                                     } else if ($field->isFloat() ) {
-                                        	$html .= number_format($value_id_old,2).'</TD><TD>';
-						$html .= number_format($value_id_new,2);
+                                        $html .= number_format($value_id_old,2).'</TD><TD>';
+                                        $html .= number_format($value_id_new,2);
                                     } else {
-                                                // It's a text zone then display directly
-                                                $html .= $value_id_old.'</TD><TD>';
-						$html .= $value_id_new;
+                                        // It's a text zone then display directly
+                                        $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
+                                        $html .= $hp->purify($value_id_new, CODEX_PURIFIER_CONVERT_HTML);
                                     }
                         
                                     $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
-				  }
-                                } else {
-				    $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
-                                        '"><TD>'.((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment&nbsp;#".((int)substr($field_name,4,-8)) : $field_name).'</TD><TD>';
-				    $html .= $value_id_old.'</TD><TD>';
-				    $html .= $value_id_new;
-				    $html .= '</TD>'.
+                                }
+                            } else {
+                                $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
+                                                    '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
+                                $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
+                                $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_new), CODEX_PURIFIER_CONVERT_HTML) ;
+                                $html .= '</TD>'.
                                         '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
-				}
-
+                            }
                         }
                 $html .= '</TABLE>';
             
@@ -775,7 +777,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function showInverseDependencies ($group_id, $group_artifact_id, $ascii=false) {
-        
+            $hp = CodeX_HTMLPurifier::instance();
             global $sys_datefmt,$sys_lf,$Language;
         
             //
@@ -784,7 +786,9 @@ class ArtifactHtml extends Artifact {
         
             $result=$this->getInverseDependencies();
             $rows=db_numrows($result);
-        
+            
+            $out = '';
+            
             // Nobody in the dependencies list -> return now
             if ($rows <= 0) {
                         if ($ascii)
@@ -828,10 +832,10 @@ class ArtifactHtml extends Artifact {
                 
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
-                                            '<a href="/tracker/?func=gotoid&group_id='. $group_id .'&aid='. $dependent_on_artifact_id .'">'. $dependent_on_artifact_id .'</a>',
-                                            $summary,
-                                            $tracker_label,
-                                            $group_label);
+                                            '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'. (int)$dependent_on_artifact_id .'</a>',
+                                             $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ,
+                                             $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_CONVERT_HTML) ,
+                                             $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_CONVERT_HTML) );
                         
                         } // for
             }
@@ -846,6 +850,7 @@ class ArtifactHtml extends Artifact {
         
     function displayAdd($user_id) {
         global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
+        $hp = CodeX_HTMLPurifier::instance();
         
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
@@ -861,22 +866,22 @@ class ArtifactHtml extends Artifact {
         
         // Display submit informations if any
         if ( $this->ArtifactType->getSubmitInstructions() ) {
-            echo util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions());
+            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODEX_PURIFIER_FULL) ;
         }
         
         // Beginning of the submission form with fixed fields
-        echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
+        echo '<FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
                 <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
                 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
-                <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$group_artifact_id.'">';
+                <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
+                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">';
         echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         echo '<TABLE><TR><TD class="artifact">';
 
         $html = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="'.($columns_number).'">
-                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
+                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TD></TR>';
         
                          
                          
@@ -915,14 +920,14 @@ class ArtifactHtml extends Artifact {
     
                         if ( ($sz > $max_size) || ($field->getName()=='details') ) {
                             $fieldset_html .= "\n<TR>".
-                                '<TD valign="top"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
+                            '<TD valign="top"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                 '<TD valign="middle" colspan="'.($columns_number-1).'">'.
                                 $value.'</TD>'.                   
                                 "\n</TR>";
                             $i=0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                            $fieldset_html .= '<TD valign="middle"><a class="tooltip" href="#" title="'.$field->getDescription().'">'.$label.$star.'</a></td>'.
+                            $fieldset_html .= '<TD valign="middle"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODEX_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                   '<TD valign="middle">'.$value.'</TD>';
                             $i++;
                             $fieldset_html .= ($i % $fields_per_line ? '<td class="artifact_spacer">&nbsp;</td>':"\n</TR>");
@@ -933,8 +938,8 @@ class ArtifactHtml extends Artifact {
             
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                $html .= '<TR><TD COLSPAN="'.$columns_number.'">&nbsp</TD></TR>';
-                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.$columns_number.'">&nbsp;<span title="'.$result_fieldset->getDescriptionText().'">'.$result_fieldset->getLabel().'</span></TD></TR>';
+                $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
+                $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODEX_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $html .= $fieldset_html;
             }
             
@@ -1003,15 +1008,15 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
     function displayEditFollowupComment($comment_id) {
-         
+         $hp = CodeX_HTMLPurifier::instance();
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
         echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
-        echo '<FORM ACTION="/tracker/?group_id='.$group_id.'&atid='.$group_artifact_id.'&func=updatecomment" METHOD="post">
-        <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.$comment_id.'">
-        <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.$this->getID().'">
-        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'.$this->getFollowup($comment_id).'</TEXTAREA>
+        echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
+        <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
+        <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
+        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($this->getFollowup($comment_id)), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
     }

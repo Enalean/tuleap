@@ -10,8 +10,19 @@ require_once('pre.php');
 
 $Language->loadLanguageMsg('project/project');
 
-if ((!$group_id) && $form_grp) 
-	$group_id=$form_grp;
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    $vFormGrp = new Valid_UInt('form_grp');
+    $vFormGrp->required();
+    if($request->valid($vFormGrp)) {
+        $group_id = $request->get('form_grp');
+    } else {
+        exit_no_group();
+    }
+}
 
 site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
@@ -32,7 +43,7 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 	. "user.email AS email, "
 	. "user_group.admin_flags AS admin_flags "
 	. "FROM user,user_group "
-	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=$group_id "
+	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=".db_ei($group_id)." "
 	. "ORDER BY user.user_name";
 
 

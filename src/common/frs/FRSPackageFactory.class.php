@@ -121,31 +121,31 @@ class FRSPackageFactory {
             return;
         }
         
-        if(!$dar->valid()) {
-            return array();
-        }
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
-        
         $packages = array();
-		while ($dar->valid()){		
-        	$data_array =& $dar->current();
-        	if ($status_id){
-        		if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
-        			$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
-        		}else{
-        			$frsrf = new FRSReleaseFactory();
-        			$authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
-        			if($authorised_releases && count($authorised_releases)>0){
-        				$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
-        			}
-        		}
-        	}else{
-        		$packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
-        	}
-        	$dar->next();
-		}
-
+        if($dar->valid()) {
+            $um =& UserManager::instance();
+            $user =& $um->getCurrentUser();
+            
+            $packages = array();
+            while ($dar->valid()){		
+                $data_array =& $dar->current();
+                if ($status_id){
+                    if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
+                        $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                    }else{
+                        $frsrf = new FRSReleaseFactory();
+                        $authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
+                        if($authorised_releases && count($authorised_releases)>0){
+                            $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                        }
+                    }
+                }else{
+                    $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                }
+                $dar->next();
+            }
+        }
+        
         return $packages;
     }
 

@@ -23,7 +23,7 @@ svn_admin_access_control	not_created	Your subversion repository has not been cre
 # Script: SF/www/svn/admin/general_settings.php
 #
 svn_admin_general_settings	upd_success	General Settings updated successfully
-svn_admin_general_settings	upd_fail	General Settings update failed: $1
+svn_admin_general_settings	upd_fail	General Settings update failed
 svn_admin_general_settings	gen_settings	Subversion Administration - General Settings
 svn_admin_general_settings	tracking	Subversion Tracking
 svn_admin_general_settings	tracking_comment	When Subversion tracking is on, the commits (file change, addition and removal) are registered in the $1 database so that they can be browsed and searched. Else commits are not logged in the database	
@@ -44,7 +44,7 @@ svn_admin_index	email_comment	Define who is going to receive email notification 
 # Script: SF/www/svn/admin/notification.php
 #
 svn_admin_notification	upd_success	Email Notification updated successfully
-svn_admin_notification	upd_fail	Email Notification update failed: $1
+svn_admin_notification	upd_fail	Email Notification update failed
 svn_admin_notification	email	Subversion Administration - Email Notification
 svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
 svn_admin_notification	mail_to	Mail to
@@ -117,3 +117,4 @@ svn_utils	write_err	Error: Can't write to file $1
 #
 svn_viewvc	access_denied	Access Denied
 svn_viewvc	acc_den_comment	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
+svn_viewvc	bad_roottype	Invalid roottype

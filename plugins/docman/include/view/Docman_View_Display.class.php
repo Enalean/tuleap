@@ -20,6 +20,7 @@ require_once('Docman_View_Docman.class.php');
         echo '<h2>'. $this->_getTitle($params) .'</h2>';
     }
     function _breadCrumbs($params) {
+        $hp = CodeX_HTMLPurifier::instance();
         $item =& $params['item'];
         $current_item       =& $item;
         $current_item_title = $item->getTitle();
@@ -52,11 +53,11 @@ require_once('Docman_View_Docman.class.php');
         foreach($parents as $parent) {
             $urlParams['id'] = $parent['id'];
             $url = $this->buildActionUrl($params, $urlParams);
-            $html .= '&nbsp;<a href="'.$url.'">'. $parent['title'] .'</a>&nbsp;/';
+            $html .= '&nbsp;<a href="'.$url.'">'.  $hp->purify($parent['title'], CODEX_PURIFIER_CONVERT_HTML)  .'</a>&nbsp;/';
         }
         $urlParams['id'] = $id;
         $url = $this->buildActionUrl($params, $urlParams);
-        $html .= '&nbsp;<a href="'.$url.'"><b>'. $current_item_title .'</b></a>';
+        $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODEX_PURIFIER_CONVERT_HTML)  .'</b></a>';
         
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
         $html .= '</div>';

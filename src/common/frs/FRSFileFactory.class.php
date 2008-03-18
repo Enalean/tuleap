@@ -51,17 +51,12 @@ class FRSFileFactory extends Error {
         	$dar = $dao->searchById($_id);
         }
 
-        if($dar->isError()){
-            return;
+        $file = null;
+        if(!$dar->isError() && $dar->valid()) {
+            $data_array =& $dar->current();
+            $file = FRSFileFactory::getFRSFileFromArray($data_array);
         }
-        
-        if(!$dar->valid()) {
-            return;
-        }
-
-        $data_array =& $dar->current();
-
-        return(FRSFileFactory::getFRSFileFromArray($data_array));
+        return $file;
     }
     
     /**
@@ -74,21 +69,14 @@ class FRSFileFactory extends Error {
         $dao =& $this->_getFRSFileDao();
         $dar = $dao->searchByReleaseId($_id);
 
-        if($dar->isError()){
-            return;
-        }
-        
-        if(!$dar->valid()) {
-            return;
-        }
-
         $files = array();
-		while ($dar->valid()){
-        	$data_array =& $dar->current();
-        	$files[] = FRSFileFactory::getFRSFileFromArray($data_array);
-        	$dar->next();
-		}
-
+        if(!$dar->isError() && $dar->valid()) {
+            while ($dar->valid()){
+                $data_array =& $dar->current();
+                $files[] = FRSFileFactory::getFRSFileFromArray($data_array);
+                $dar->next();
+            }
+        }
         return $files;
     }
     
@@ -246,7 +234,8 @@ class FRSFileFactory extends Error {
      * @return Object{FRSReleaseFactory} a FRSReleaseFactory Object.
      */
     function &_getFRSReleaseFactory() {
-        return new FRSReleaseFactory();
+        $f = new FRSReleaseFactory();
+        return $f;
     }
     
     function _delete($file_id){

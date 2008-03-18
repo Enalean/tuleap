@@ -14,9 +14,15 @@ require_once('../svn_data.php');
 
 $Language->loadLanguageMsg('svn/svn');
 
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+
 // need a group_id !!!
-if (!$group_id) {
+if (!$request->valid($vGroupId)) {
     exit_no_group();
+} else {
+    $group_id = $request->get('group_id');
+
 }
 
 // Must be at least Project Admin to configure this
@@ -24,30 +30,23 @@ if (!user_ismember($group_id,'A') && !user_ismember($group_id,'SVN_ADMIN')) {
     exit_permission_denied();
 }
 
-$func = "";
-if (isset($_REQUEST['func'])) {
-    $func = $_REQUEST['func'];
- }
-switch ($func) {
+$vFunc = new Valid_WhiteList('func', array('general_settings', 'access_control', 'notification'));
+$vFunc->required();
+if($request->valid($vFunc)) {
+    $func = $request->get('func');
 
- case 'general_settings' : {
-   require('./general_settings.php');
-   break;
- }
-
- case 'access_control' : {
-   require('./access_control.php');
-   break;
- }
-
- case 'notification' : {
-   require('./notification.php');
-   break;
- }
-
- default:
-
-
+    switch ($func) {
+    case 'general_settings' :
+        require('./general_settings.php');
+        break;
+    case 'access_control' :
+        require('./access_control.php');
+        break;
+    case 'notification' :
+        require('./notification.php');
+        break;
+    }
+} else {
    // get project object
    $project = project_get_object($group_id);
    if (!$project || !is_object($project) || $project->isError()) {

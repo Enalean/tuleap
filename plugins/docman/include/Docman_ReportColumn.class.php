@@ -139,6 +139,7 @@ extends Docman_ReportColumn {
     }
 
     function getTableBox($item, $view, $params) {
+        $hp = CodeX_HTMLPurifier::instance();
         $pathTitle = $item->getPathTitle();
         $pathId    = $item->getPathId();
         $pathUrl   = array();
@@ -150,7 +151,7 @@ extends Docman_ReportColumn {
             $dfltParams['id'] = $id;
             $url = $view->buildActionUrl($params, $dfltParams);
             
-            $href = '<a href="'.$url.'">'.$title.'</a>';
+            $href = '<a href="'.$url.'">'. $hp->purify($title, CODEX_PURIFIER_CONVERT_HTML) .'</a>';
             $pathUrl[] = $href;
         }
         $html = implode(' / ', $pathUrl);

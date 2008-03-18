@@ -20,7 +20,7 @@ require_once('Docman_View_View.class.php');
         } else {
             $url = $params['default_url'];
         }
-        user_set_preference('plugin_docman_flash', addslashes(serialize($this->_controller->feedback)));
+        user_set_preference('plugin_docman_flash', serialize($this->_controller->feedback));
         $GLOBALS['Response']->redirect($url);
     }
 }

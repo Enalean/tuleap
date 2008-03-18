@@ -415,9 +415,8 @@ class ReferenceManager {
         if ($ref_gid=="") $ref_gid=100; // use system references only
         $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
         $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
-        if (!$ref) {
-            $refInstance = null;
-        } else {
+        $refInstance = null;
+        if ($ref) {
             $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
             $refInstance->computeGotoLink($key,$match[3],$ref_gid);
         }

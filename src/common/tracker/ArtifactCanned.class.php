@@ -95,8 +95,8 @@ class ArtifactCanned extends Error {
 		}
 
 		$sql="INSERT INTO artifact_canned_responses (group_artifact_id,title,body) 
-			VALUES ('".$this->ArtifactType->getID()."',
-			'". htmlspecialchars($title) ."','". htmlspecialchars($body) ."')";
+			VALUES ('". db_ei($this->ArtifactType->getID()) ."',
+			'". db_es(htmlspecialchars($title)) ."','". db_es(htmlspecialchars($body))  ."')";
 
 		$result=db_query($sql);
 
@@ -127,7 +127,7 @@ class ArtifactCanned extends Error {
 	function fetchData($id) {
 	  global $Language;
 
-		$res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='$id' AND group_artifact_id='$this->atid'");
+		$res=db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($id) ."' AND group_artifact_id='". db_ei($this->atid) ."'");
 		if (!$res || db_numrows($res) < 1) {
 			$this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned','invalid_id'));
 			return false;
@@ -190,7 +190,7 @@ class ArtifactCanned extends Error {
 
 		$sql="delete from artifact_canned_responses 
 			
-			WHERE group_artifact_id='". $this->ArtifactType->getID() ."' AND artifact_canned_id='". $artifact_canned_id ."'";
+			WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND artifact_canned_id='".  db_ei($artifact_canned_id)  ."'";
 
 		$result=db_query($sql);
 
@@ -223,8 +223,8 @@ class ArtifactCanned extends Error {
 		}   
 
 		$sql="UPDATE artifact_canned_responses 
-			SET title='". htmlspecialchars($title) ."',body='". htmlspecialchars($body) ."'
-			WHERE group_artifact_id='". $this->ArtifactType->getID() ."' AND artifact_canned_id='". $this->getID() ."'";
+			SET title='". db_es(htmlspecialchars($title))  ."',body='". db_es(htmlspecialchars($body))  ."'
+			WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND artifact_canned_id='".  db_ei($this->getID())  ."'";
 
 		$result=db_query($sql);
 

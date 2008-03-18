@@ -14,9 +14,16 @@ require_once('common/include/URL.class.php');
 
 $Language->loadLanguageMsg('svn/svn');
 
-if (!$group_id) {
+$vGroupId = new Valid_UInt('group_id');
+$vGroupId->required();
+
+if (!$request->valid($vGroupId)) {
     exit_no_group(); // need a group_id !!!
+} else {
+    $group_id = $request->get('group_id');
 }
+
+$hp =& CodeX_HTMLPurifier::instance();
 
 svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 
@@ -24,13 +31,13 @@ svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";
 
 // Get group properties
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=".db_ei($group_id));
 $row_grp = db_fetch_array($res_grp);
 $p =& project_get_object($group_id);
 
 // Show CVS access information
 if ($row_grp['svn_preamble'] != '') {
-    echo util_unconvert_htmlspecialchars($row_grp['svn_preamble']);
+    echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODEX_PURIFIER_FULL);
 } else {
     $host = $GLOBALS['sys_default_domain'];
     if ($p && $p->usesService('svn')) {

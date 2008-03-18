@@ -56,9 +56,23 @@ class Widget_MyTasks extends Widget {
         
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
-        
-                $hide_item_id = $request->exist('hide_item_id') ? $request->get('hide_item_id') : null;
-                $hide_pm      = $request->exist('hide_pm')      ? $request->get('hide_pm')      : null;
+
+                $vItemId = new Valid_UInt('hide_item_id');
+                $vItemId->required();
+                if($request->valid($vItemId)) {
+                    $hide_item_id = $request->get('hide_item_id');
+                } else {
+                    $hide_item_id = null;
+                }
+
+                $vPm = new Valid_WhiteList('hide_pm', array(0, 1));
+                $vPm->required();
+                if($request->valid($vPm)) {
+                    $hide_pm = $request->get('hide_pm');
+                } else {
+                    $hide_pm = null;
+                }
+
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('pm',$group_project_id,$hide_item_id,$rows2,$hide_pm);
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').

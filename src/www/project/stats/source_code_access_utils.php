@@ -50,7 +50,7 @@ function logs_cond($project, $span, $who) {
  * Process SQL query and display corresponding result
  */
 function logs_display($sql, $span, $field, $title='') {
-  
+  $hp = CodeX_HTMLPurifier::instance();
   // Executions will continue until morale improves.
   $res = db_query( $sql );
 
@@ -75,7 +75,7 @@ function logs_display($sql, $span, $field, $title='') {
 	.' <td>'.strftime("%e %b %Y", $row["time"] ).'</td>'
 	.' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('.$row["realname"].')</td>'
 	.' <td>'.$row["email"].'</td>'
-	.' <td>'.$row["title"].'</td>'
+	.' <td>'. $hp->purify($row["title"], CODEX_PURIFIER_CONVERT_HTML) .'</td>'
 	.' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
 	.'</tr>'."\n";
 		}

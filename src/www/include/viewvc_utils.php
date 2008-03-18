@@ -55,8 +55,6 @@ function viewvc_utils_display_header() {
  * call the viewvc.cgi and echo the parsed output
  */
 function viewvc_utils_passcommand() {
-global $DOCUMENT_ROOT;
-
   $parse = viewvc_utils_display_header();
   $request_uri = getStringFromServer('REQUEST_URI');
 
@@ -85,7 +83,7 @@ global $DOCUMENT_ROOT;
            'PATH_INFO="'.$path.'" '.
            'PATH="'.getStringFromServer('PATH').'" '.
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
-           'DOCUMENT_ROOT="'.$DOCUMENT_ROOT.'" '.
+           'DOCUMENT_ROOT="'.getStringFromServer('DOCUMENT_ROOT').'" '.
            'CODEX_LOCAL_INC="'.getStringFromServer('CODEX_LOCAL_INC').'" '. 
            '/var/www/cgi-bin/viewvc.cgi 2>&1';
 
@@ -136,7 +134,9 @@ global $DOCUMENT_ROOT;
     $length = strpos($content, "</body>\n</html>") - $begin_doc;
    
     // Now insert references, and display
-    echo util_make_reference_links(substr($content,$begin_doc,$length),$GLOBALS['group_id']);
+    $request =& HTTPRequest::instance();
+    $group_id = (int) $request->get('group_id');
+    echo util_make_reference_links(substr($content,$begin_doc,$length),$group_id);
 
   } else {
     if ($viewvc_location) {
@@ -172,12 +172,12 @@ function viewvc_utils_track_browsing($group_id, $type) {
     $day    = strftime("%d");
     $db_day = $year.$mon.$day;
 
-    $sql = "SELECT $browse_column FROM $table WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'";
+    $sql = "SELECT ".$browse_column." FROM ".$table." WHERE group_id = ".db_ei($group_id)." AND user_id = ".$user_id." AND day = '".$db_day."'";
     $res = db_query($sql);
     if (db_numrows($res) > 0) {
-        db_query("UPDATE $table SET $browse_column=$browse_column+1 WHERE group_id = $group_id AND user_id = $user_id AND day = '$db_day'");
+        db_query("UPDATE ".$table." SET ".$browse_column."=".$browse_column."+1 WHERE group_id = ".db_ei($group_id)." AND user_id = ".$user_id." AND day = '".$db_day."'");
     } else {
-        db_query("INSERT INTO $table (group_id,user_id,day,$browse_column) VALUES ($group_id,$user_id,'$db_day',1)");
+        db_query("INSERT INTO ".$table." (group_id,user_id,day,".$browse_column.") VALUES (".db_ei($group_id).",".$user_id.",'".$db_day."',1)");
     }
   }
 }

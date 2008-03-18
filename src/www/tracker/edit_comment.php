@@ -28,7 +28,7 @@ $GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
 }
-if (!$ah->userCanEditFollowupComment($_REQUEST['artifact_history_id'])) {
+if (!$ah->userCanEditFollowupComment($request->get('artifact_history_id'))) {
     exit_permission_denied();
 }
 
@@ -43,7 +43,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
 $ath->header($params);
 
 // 
-$ah->displayEditFollowupComment($_REQUEST['artifact_history_id']);
+$ah->displayEditFollowupComment($request->get('artifact_history_id'));
 
 // Display footer page
 $ath->footer($params);

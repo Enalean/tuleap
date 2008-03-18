@@ -15,7 +15,7 @@ $Language->loadLanguageMsg('include/include');
 function send_new_project_email($group_id) {
   global $Language;
 
-	$res_grp = db_query("SELECT * FROM groups WHERE group_id='$group_id'");
+	$res_grp = db_query("SELECT * FROM groups WHERE group_id='".db_ei($group_id)."'");
 
 	if (db_numrows($res_grp) < 1) {
 	  echo $Language->getText('include_proj_email','g_not_exist',$group_id);
@@ -24,7 +24,7 @@ function send_new_project_email($group_id) {
 	$row_grp = db_fetch_array($res_grp);
 
 	$res_admins = db_query("SELECT user.user_name,user.email FROM user,user_group WHERE "
-		. "user.user_id=user_group.user_id AND user_group.group_id='$group_id' AND "
+		. "user.user_id=user_group.user_id AND user_group.group_id='".db_ei($group_id)."' AND "
 		. "user_group.admin_flags='A'");
 
 	$nb_recipients = db_numrows($res_admins);

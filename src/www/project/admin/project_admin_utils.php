@@ -112,7 +112,8 @@ function show_grouphistory ($group_id) {
 	global $sys_datefmt,$Language;
 	$result=group_get_history($group_id);
 	$rows=db_numrows($result);
-	
+	$hp =& CodeX_HTMLPurifier::instance();
+
 	if ($rows > 0) {
 	
 		echo '
@@ -149,7 +150,7 @@ function show_grouphistory ($group_id) {
 			}
 
 			echo '
-			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$msg.'</TD><TD>';
+			<TR class="'. html_get_alt_row_color($i) .'"><TD>'.$hp->purify($msg).'</TD><TD>';
 			$val = db_result($result, $i, 'old_value');
 			if ($msg_key == "perm_granted_for_field") {
 			  $pattern = '/ugroup_([^ ,]*)_name_key/';
@@ -165,7 +166,7 @@ function show_grouphistory ($group_id) {
 			  $val = $template->getLabel($val);
 			}
 
-			echo $val;
+			echo $hp->purify($val);
 						
 			echo '</TD>'.
 				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
