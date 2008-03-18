@@ -15,7 +15,7 @@ $feed = new SimplePie();
 if (isset($_GET['feed']) && $_GET['feed'] !== '')
 {
 	// Strip slashes if magic quotes is enabled (which automatically escapes certain characters)
-	if (get_magic_quotes_gpc())
+	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc())
 	{
 		$_GET['feed'] = stripslashes($_GET['feed']);
 	}
@@ -110,7 +110,7 @@ $feed->handle_content_type();
 
 
 					<!-- If a feed has already been passed through the form, then make sure that the URL remains in the form field. -->
-					<p><input type="text" name="feed" value="<?php if ($feed->subscribe_url()) echo htmlspecialchars($feed->subscribe_url()); ?>" class="text" id="feed_input" />&nbsp;<input type="submit" value="Read" class="button" /></p>
+					<p><input type="text" name="feed" value="<?php if ($feed->subscribe_url()) echo $feed->subscribe_url(); ?>" class="text" id="feed_input" />&nbsp;<input type="submit" value="Read" class="button" /></p>
 
 
 				</div>
@@ -223,7 +223,7 @@ $feed->handle_content_type();
 						?>
 
 						<!-- If the item has a permalink back to the original post (which 99% of them do), link the item's title to it. -->
-						<h4><img src="<?php echo $favicon; ?>" alt="Favicon" class="favicon" /><?php if ($item->get_permalink()) echo '<a href="' . $item->get_permalink() . '">'; echo $item->get_title(true); if ($item->get_permalink()) echo '</a>'; ?>&nbsp;<span class="footnote"><?php echo $item->get_date('j M Y, g:i a'); ?></span></h4>
+						<h4><img src="<?php echo $favicon; ?>" alt="Favicon" class="favicon" /><?php if ($item->get_permalink()) echo '<a href="' . $item->get_permalink() . '">'; echo $item->get_title(); if ($item->get_permalink()) echo '</a>'; ?>&nbsp;<span class="footnote"><?php echo $item->get_date('j M Y, g:i a'); ?></span></h4>
 
 						<!-- Display the item's primary content. -->
 						<?php echo $item->get_content(); ?>
