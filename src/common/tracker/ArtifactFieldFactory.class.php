@@ -179,7 +179,8 @@ class ArtifactFieldFactory extends Error {
 	function extractFieldList($post_method=true,$prefix=null) {
 	
 	    global $HTTP_GET_VARS, $HTTP_POST_VARS;
-
+        $request =& HTTPRequest::instance();
+        
 	    $vfl = array();
 	    if ($post_method) {
 			reset($HTTP_POST_VARS);
@@ -191,12 +192,12 @@ class ArtifactFieldFactory extends Error {
 				if (!is_bool($pos) && $pos == 0) {
 					$postfix =  substr($key, strlen($prefix));
 					if (isset($this->USAGE_BY_NAME[$postfix])) {
-						$vfl[$postfix] = $val;
+						$vfl[$postfix] = $request->get($key);
 					}
 				}
 			    } else {
 			    	if (isset($this->USAGE_BY_NAME[$key])) {
-					$vfl[$key] = $val;
+					$vfl[$key] = $request->get($key);
 					//echo "Accepted key = ".$key." val = $val<BR>";
 			    	} else {
 				  //echo "Rejected key = ".$key." val = $val<BR>";
@@ -207,7 +208,7 @@ class ArtifactFieldFactory extends Error {
 			reset($HTTP_GET_VARS);
 			while ( list($key, $val) = each($HTTP_GET_VARS)) {
 			    if (isset($this->USAGE_BY_NAME[$key])) {
-					$vfl[$key] = $val;
+					$vfl[$key] = $request->get($key);
 					//echo "Accepted key = ".$key." val = $val<BR>";
 			    } else {
 					//echo "Rejected key = ".$key." val = $val<BR>";
