@@ -22,6 +22,7 @@ if ($owner) {
             if ($project = project_get_object($owner_id)) {
                 $group_id = $owner_id;
                 $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+                $request->params['group_id'] = $group_id; //bad!
                 $redirect = '/projects/'. $project->getUnixName().'/';
                 if (!user_ismember($group_id, 'A') && !user_is_super_user()) {
                     $GLOBALS['Response']->redirect($redirect);
