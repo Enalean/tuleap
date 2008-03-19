@@ -36,6 +36,7 @@ if (user_isloggedin()) {
                     if ($project = project_get_object($owner_id)) {
                         $group_id = $owner_id;
                         $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+                        $request->params['group_id'] = $group_id; //bad!
                         if (user_ismember($group_id, 'A') || user_is_super_user()) {
                             $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
                             site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));

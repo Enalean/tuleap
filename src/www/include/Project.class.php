@@ -43,7 +43,7 @@ require_once('common/svn/ServiceSVN.class.php');
 */
 $PROJECT_OBJ=array();
 
-function project_get_object($group_id,$force_update=false) {
+function &project_get_object($group_id,$force_update=false) {
 	//create a common set of group objects
 	//saves a little wear on the database
 	global $PROJECT_OBJ;
@@ -139,27 +139,27 @@ class Project extends Group {
 
 
     function usesHomePage() {
-        return $this->use_service['homepage'];
+        return isset($this->use_service['homepage']) && $this->use_service['homepage'];
     }
     
     function usesAdmin() {
-        return $this->use_service['admin'];
+        return isset($this->use_service['admin']) && $this->use_service['admin'];
     }
     
     function usesSummary() {
-        return $this->use_service['summary'];
+        return isset($this->use_service['summary']) && $this->use_service['summary'];
     }
 
     function usesTracker() {
-        return $this->use_service['tracker'];
+        return isset($this->use_service['tracker']) && $this->use_service['tracker'];
     }
 
     function usesCVS() {
-        return $this->use_service['cvs'];
+        return isset($this->use_service['cvs']) && $this->use_service['cvs'];
     }
 
     function usesSVN() {
-        return $this->use_service['svn'];
+        return isset($this->use_service['svn']) && $this->use_service['svn'];
     }
 
     function usesBugs() {
@@ -179,7 +179,7 @@ class Project extends Group {
     }
 
     function usesFile() {
-        return $this->use_service['file'];
+        return isset($this->use_service['file']) && $this->use_service['file'];
     }
 
     function usesPm() {
@@ -189,27 +189,27 @@ class Project extends Group {
 
     //whether or not this group has opted to use mailing lists
     function usesMail() {
-        return $this->use_service['mail'];
+        return isset($this->use_service['mail']) && $this->use_service['mail'];
     }
 
     //whether or not this group has opted to use news
     function usesNews() {
-        return $this->use_service['news'];
+        return isset($this->use_service['news']) && $this->use_service['news'];
     }
 
     //whether or not this group has opted to use discussion forums
     function usesForum() {
-        return $this->use_service['forum'];
+        return isset($this->use_service['forum']) && $this->use_service['forum'];
     }       
 
     //whether or not this group has opted to use surveys
     function usesSurvey() {
-        return $this->use_service['survey'];
+        return isset($this->use_service['survey']) && $this->use_service['survey'];
     }       
 
     //whether or not this group has opted to use wiki
     function usesWiki() {
-        return $this->use_service['wiki'];
+        return isset($this->use_service['wiki']) && $this->use_service['wiki'];
     }   
 
 
