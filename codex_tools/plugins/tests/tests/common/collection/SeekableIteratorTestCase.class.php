@@ -38,8 +38,14 @@ class SeekableIteratorTestCase extends IteratorTestCase {
         $i->seek(0);
         $this->assertNoErrors();
         $this->assertReference($obj1, $i->current());
-        $this->expectError();
-        $i->seek(10);
+        try {
+            $i->seek(10);
+            $this->fail('Should throw OutOfBoundsException exception');
+        } catch(OutOfBoundsException $e) {
+            $this->pass('OutOfBoundsException has been raised');
+        } catch (Exception $e) {
+            $this->fail('Should not throw something else than OutOfBoundsException exception');
+        }
     }
 }
 //We just tells SimpleTest to always ignore this testcase
