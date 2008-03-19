@@ -13,8 +13,10 @@ require_once('Docman_View_View.class.php');
 /* abstract */ class Docman_View_Header extends Docman_View_View {
     
     function _header($params) {
-        header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+        if (!headers_sent()) {
+            header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+        }
         
         if (isset($params['title'])) {
             $htmlParams['title'] = $params['title'];
