@@ -1012,6 +1012,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $project_files_dir = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $group_unix_name;
 
             if ($is_update) {
+                $files =& $rel->getFiles();
+                
                 //remove files
                 foreach ($release_files_to_delete as $rel_file) {
                     $res =& $frsff->getFRSFileFromDb($rel_file);
@@ -1027,7 +1029,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
     
                 //update files
-                $files =& $rel->getFiles();
                 $index = 0;
                 foreach ($release_files as $rel_file) {
                               
@@ -1068,11 +1069,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     }
                                 }
                             }
-                            $index ++;
                     }
-                    
+                    $index ++;
                 }
             }
+            
             //add new files
             //files processing
             $http_files_list = array ();
