@@ -2584,8 +2584,8 @@ which in turn can fill up the root partition.  There is a way to block the clien
 CodeX until the owner can be contacted or the cause of the continual access can be cleared up.
 <BR></P>
 
-<H3>To deny http access to a client:</H3></P>
-1)  Modify /etc/httpd/conf/httpd.conf:</A>
+<H3>To deny http access to a client:</H3>
+<p>1)  Modify /etc/httpd/conf/httpd.conf:
 </P>
      <DD>&nbsp; Example of how to deny http access to 13.0.33.210:<BR>
      <DD>&nbsp; Look for the section of httpd.conf that contains the first 4 lines shown below and add line 5:
@@ -2596,14 +2596,13 @@ CodeX until the owner can be contacted or the cause of the continual access can 
                   <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Allow from all<BR>
                   <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Deny from 13.0.33.210 &nbsp; &nbsp; &nbsp; &nbsp; &#9;<I>(line to be added)</I></P>
 
-2)  /etc/rc.d/init.d/httpd restart</H3></A>
+2)  /etc/rc.d/init.d/httpd restart
 
-<H3>To deny access to everything in inetd.conf (like ftp):</H3></P>
-1)  Modify /etc/hosts.deny:</A>
-</P>
+<H3>To deny access to everything in inetd.conf (like ftp):</H3>
+1)  Modify /etc/hosts.deny:
      <DD>Example of how to deny access to 13.0.33.210:
-                   <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ALL: &nbsp; &nbsp; &nbsp; &nbsp;  13.0.33.210 &nbsp; &nbsp; &nbsp; &nbsp; &#9;<I>(line to be added)</I></P>
-</P>
+                   <DD>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ALL: &nbsp; &nbsp; &nbsp; &nbsp;  13.0.33.210 &nbsp; &nbsp; &nbsp; &nbsp; &#9;<I>(line to be added)</I>
+                                      
 Vicki Tuttle
 
 
