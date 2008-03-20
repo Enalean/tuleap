@@ -435,7 +435,34 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,$user_count)));
 }
 
-
+function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
+    $sql = "DELETE FROM ugroup_user 
+    WHERE ugroup_id = ". db_ei($ugroup_id) ."
+      AND user_id = ". db_ei($user_id);
+    $res = db_query($sql);
+    if (!$res) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+    }
+    if ($rows = db_affected_rows($res)) {
+        // Now log in project history
+        $res = ugroup_db_get_ugroup($ugroup_id);
+        group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+    }
+}
+function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
+    $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(". db_ei($ugroup_id) .", ". db_ei($user_id) .")";
+    $res = db_query($sql);
+    if (!$res) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+    }
+    if ($rows = db_affected_rows($res)) {
+        // Now log in project history
+        $res = ugroup_db_get_ugroup($ugroup_id);
+        group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+    }
+}
 
 /**
  * Delete ugroup 
