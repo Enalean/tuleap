@@ -118,7 +118,7 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</table>';
     echo '</form>';
     
-    echo '<hr /><p><b>Project members</b></p>';
+    echo '<hr /><p><b>Group members</b></p>';
     echo '<div style="padding-left:10px">';
     
     // Get existing members from group
