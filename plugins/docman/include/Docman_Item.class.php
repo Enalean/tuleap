@@ -313,6 +313,38 @@ class Docman_Item {
         return $md;
     }
 
+    /**
+     * Update item's hardcoded values according to Metadata settings.
+     */
+    function updateHardCodedMetadata($md) {
+        switch($md->getLabel()) {
+        case 'title':
+            $this->setTitle($md->getValue());
+            break;
+        case 'description':
+            $this->setDescription($md->getValue());
+            break;
+        case 'owner':
+            $this->setOwnerId($md->getValue());
+            break;
+        case 'create_date':
+            $this->setCreateDate($md->getValue());
+            break;
+        case 'update_date':
+            $this->setUpdateDate($md->getValue());
+            break;
+        case 'status':
+            $this->setStatus($md->getValue());
+            break;
+        case 'obsolescence_date':
+            $this->setObsolescenceDate($md->getValue());
+            break;
+        case 'rank':
+            $this->setRank($md->getValue());
+            break;
+        }
+    }
+
     var $pathId;
     function setPathId(&$p) {
         $this->pathId =& $p;

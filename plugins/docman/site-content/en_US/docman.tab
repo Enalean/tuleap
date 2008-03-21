@@ -344,6 +344,7 @@ plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	You do not have sufficient access rights to move this item.
 plugin_docman	error_perms_perms	You do not have sufficient access rights to set permissions for this item.
 plugin_docman	error_perms_view	You do not have sufficient access rights to view this item.
+plugin_docman	error_report_baditemid	The folder associated to this report no longer exists.
 plugin_docman	error_settings_updated	Settings cannot be updated.
 plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	File upload error. Please try again.
@@ -383,7 +384,7 @@ plugin_docman	filters_ordering_ascending	Ascending
 plugin_docman	filters_ordering_descending	Descending
 plugin_docman	filters_ordering_message	Value of $1 should be either "Ascending" or "Descending"
 
-plugin_docman	info_copy_notify_cp	copied, you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.
+plugin_docman	info_copy_notify_cp	copied, you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while move does.
 plugin_docman	info_copy_notify_cp_doc	Document $1
 plugin_docman	info_copy_notify_cp_folder	Folder $1
 plugin_docman	info_create_initversion	Initial version successfully created.
@@ -632,7 +633,9 @@ plugin_docman	view_Tree	Tree
 
 plugin_docman	warn_wiki_perms	<em>Warning: the <strong>permissions</strong> on the document you are creating <strong>may be different</strong> than the one set on the wiki page.</em>
 plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
+plugin_docman	warning_no_item_recurse	Impossible to apply recursively properties values: No item found.
 plugin_docman	warning_invalidowner	Specified owner is not a valid Codex user. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_obsolete	The file is obsolete and no longer available in standard views (Tree, Table, ...)
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
 plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.
+

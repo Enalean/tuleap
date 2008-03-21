@@ -344,6 +344,7 @@ plugin_docman	error_perms_generic	Your are not allowed to access this data.
 plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
 plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.
 plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
+plugin_docman	error_report_baditemid	Le dossier associé à ce rapport n'existe plus
 plugin_docman	error_settings_updated	Les paramètres ne peuvent pas être mis à jour.
 plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	Erreur de chargement de fichier.
@@ -383,7 +384,7 @@ plugin_docman	filters_ordering_ascending	Ascendant
 plugin_docman	filters_ordering_descending	Descendant
 plugin_docman	filters_ordering_message	La valeur de $1 devrait être soit "Ascendant", soit "Descendant"
 
-plugin_docman	info_copy_notify_cp	copié, vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.
+plugin_docman	info_copy_notify_cp	copié, vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
 plugin_docman	info_copy_notify_cp_doc	Document $1
 plugin_docman	info_copy_notify_cp_folder	Dossier $1
 plugin_docman	info_create_initversion	Version initiale créée.
@@ -630,6 +631,7 @@ plugin_docman	view_Tree	Arbre
 
 plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez créer <strong>peuvent être différent</strong>e que celles définies pour la page wiki.</em>
 plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
+plugin_docman	warning_no_item_recurse	Impossible d'appliquer récursivement les propriétés: pas d'élément.
 plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.

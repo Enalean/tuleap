@@ -76,12 +76,15 @@ class DocmanController extends Controler {
         $this->view           = null;
         $this->reportId       = null;
         $this->hierarchy      = array();
+        $this->feedback       = false;
 
         $flash = user_get_preference('plugin_docman_flash');
         if ($flash) {
             user_del_preference('plugin_docman_flash');
             $this->feedback = unserialize($flash);
-        } else {
+        }
+        if(!$this->feedback) {
+            // Note: This may happen if unserialize fails.
             $this->feedback =& $GLOBALS['Response']->_feedback;
         }
         
@@ -270,7 +273,8 @@ class DocmanController extends Controler {
 
     function setMetadataValuesFromUserInput(&$item, $itemArray, $metadataArray) {
         $mdvFactory = new Docman_MetadataValueFactory($this->groupId);
-        
+        $mdFactory = new Docman_MetadataFactory($this->groupId);
+
         $mdIter =& $item->getMetadataIterator();
         $mdIter->rewind();
         while($mdIter->valid()) {
@@ -282,6 +286,10 @@ class DocmanController extends Controler {
                 $val = $mdv->getValue();
                 $mdvFactory->validateInput($md, $val);
                 $md->setValue($val);
+                // Take care to update hardcoded values too.
+                if($mdFactory->isHardCodedMetadata($md->getLabel())) {
+                    $item->updateHardCodedMetadata($md);
+                }
             }
             $mdIter->next();
         }
@@ -431,8 +439,15 @@ class DocmanController extends Controler {
                     if($this->_viewParams['filter'] !== null 
                        && $this->_viewParams['filter']->getItemId() !== null
                        && $this->_viewParams['filter']->getItemId() != $item->getId()) {
-                        unset($item);
-                        $item =& $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
+                        $reportItem = $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
+                        // If item defined in the report exists, use it
+                        // otherwise raise an error
+                        if(!$reportItem) {
+                            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'error_report_baditemid'));
+                        } else {
+                            unset($item);
+                            $item = $reportItem;
+                        }
                     }
 
                     if ($item->getGroupId() != $this->request->get('group_id')) {
@@ -1175,14 +1190,14 @@ class DocmanController extends Controler {
                    !$this->request->exist('cancel')) {
                     $this->_viewParams['recurse'] = $this->request->get('recurse');
                     if(!$this->request->exist('validate_recurse')) {
-                        $recursionConfirmed = false;
+                        $updateConfirmed = false;
                     } elseif($this->request->get('validate_recurse') != 'true') {
-                        $recursionConfirmed = false;
+                        $updateConfirmed = false;
                     } else {
-                        $recursionConfirmed = true;
+                        $updateConfirmed = true;
                     }
                 } else {
-                    $recursionConfirmed = true;
+                    $updateConfirmed = true;
                 }
 
                 $valid = true;
@@ -1196,7 +1211,7 @@ class DocmanController extends Controler {
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)));
                     }
                     //Actions
-                    if ($valid && $recursionConfirmed) {
+                    if ($valid && $updateConfirmed) {
                         if ($view == 'update_wl') {
                             $this->action = 'update';
                         } else {
@@ -1205,7 +1220,7 @@ class DocmanController extends Controler {
                     }
                 }
                 //Views
-                if ($valid && $recursionConfirmed) {
+                if ($valid && $updateConfirmed) {
                     if ($redirect_to = Docman_Token::retrieveUrl($this->request->get('token'))) {
                         $this->_viewParams['redirect_to'] = $redirect_to;
                     }
@@ -1218,7 +1233,11 @@ class DocmanController extends Controler {
                     } else {
                         $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                         $mdFactory->appendAllListOfValuesToItem($item);
-                        $this->_viewParams['recursionConfirmed'] = $recursionConfirmed;
+                        $this->_viewParams['updateConfirmed'] = $updateConfirmed;
+                        // The item may have changed (new user input)
+                        unset($this->_viewParams['item']);
+                        $this->_viewParams['item'] =& $item;
+
                         $this->view = 'Edit';
                     }
                 }

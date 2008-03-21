@@ -431,8 +431,12 @@ class DocmanActions extends Actions {
                                 // Remove the first element (parent item) to keep
                                 // only the children.
                                 array_shift($itemIdArray);
-                                $recurseArray = $request->get('recurse');
-                                $mdvFactory->massUpdateFromRow($data['id'], $recurseArray, $itemIdArray);
+                                if(count($itemIdArray) > 0) {
+                                    $recurseArray = $request->get('recurse');
+                                    $mdvFactory->massUpdateFromRow($data['id'], $recurseArray, $itemIdArray);
+                                } else {
+                                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
+                                }
                             }
                         }
                     }
