@@ -541,6 +541,20 @@ class User {
     function hasNoUnixAccount() {
         return ($this->getUnixStatus() == 'N');
     }
+    
+    /**
+     * @return array groups id the user is member of
+     */
+    function getProjects() {
+        $projects = array();
+        $sql = "SELECT user_group.group_id FROM user_group INNER JOIN groups USING(group_id) WHERE user_group.user_id = ". $this->getId() ." AND groups.status = 'A'";
+        if ($res = db_query($sql)) {
+            while($data = db_fetch_array($res)) {
+                $projects[] = $data['group_id'];
+            }
+        }
+        return $projects;
+    }
 }
 
 ?>

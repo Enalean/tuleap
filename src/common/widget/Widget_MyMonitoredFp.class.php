@@ -26,7 +26,14 @@ class Widget_MyMonitoredFp extends Widget {
             "WHERE groups.group_id=frs_package.group_id ".
             "AND frs_package.status_id !=".$frsrf->STATUS_DELETED." ".
             "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
-            "AND filemodule_monitor.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+            "AND filemodule_monitor.user_id='".user_getid()."' ";
+        $um =& UserManager::instance();
+        $current_user =& $um->getCurrentUser();
+        if ($current_user->isRestricted()) {
+            $projects = $current_user->getProjects();
+            $sql .= "AND group_id IN (". implode(',', $projects) .") ";
+        }
+        $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
     
         $result=db_query($sql);
         $rows=db_numrows($result);
