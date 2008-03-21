@@ -28,19 +28,19 @@ require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties {
     var $token;
     var $subItemsWritable;
-    var $recursionConfirmed;
+    var $updateConfirmed;
     var $recurse;
     var $recurseOnDocs;
 
     var $nbDocsImpacted;
     var $nbFoldersImpacted;
 
-    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token, $recursionConfirmed, $recurse, $recurseOnDocs) {
+    function Docman_View_ItemDetailsSectionEditProperties(&$item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs) {
         parent::Docman_View_ItemDetailsSectionProperties($item, $url, $theme_path, true, $force);
         $this->token = $token;
         $this->formName = 'update_metadata';
         $this->subItemsWritable = null;
-        $this->recursionConfirmed = $recursionConfirmed;
+        $this->updateConfirmed = $updateConfirmed;
         $this->recurse = $recurse;
         $this->recurseOnDocs = $recurseOnDocs;
 
@@ -56,7 +56,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html = '';
         $params = array('form_name' => $this->formName);
         $html  .= '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
-        if(!$this->recursionConfirmed && $this->_subItemsAreWritable()) {
+        if(!$this->updateConfirmed && $this->_subItemsAreWritable()) {
             $html .= '<div class="docman_confirm_delete">';
             $nbDocs = 0;
             if($this->recurseOnDocs) {
@@ -86,7 +86,8 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             // Cache some info.
             $subItemsWritableVisitor =& $dPm->getSubItemsWritableVisitor();
             $this->nbDocsImpacted = $subItemsWritableVisitor->getDocumentCounter();
-            $this->nbFoldersImpacted = $subItemsWritableVisitor->getFolderCounter();
+            // Do not count the first folder which is the parent one.
+            $this->nbFoldersImpacted = $subItemsWritableVisitor->getFolderCounter() - 1;
         }
         return $this->subItemsWritable;
     }
@@ -130,7 +131,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     function _getDefaultValues() {
         $html = '';
         if($this->_subItemsAreWritable()) {
-            if(!$this->recursionConfirmed) {
+            if(!$this->updateConfirmed) {
                 $html .= '<input type="hidden" name="validate_recurse" value="true" />';
             }
         }
@@ -166,7 +167,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
         $html .= '<input type="hidden" name="action" value="update" />';
 
-        if($this->recursionConfirmed){
+        if($this->updateConfirmed){
             $confirmStr = $GLOBALS['Language']->getText('global','btn_submit');
         } else {
             $confirmStr = $GLOBALS['Language']->getText('global','btn_apply');

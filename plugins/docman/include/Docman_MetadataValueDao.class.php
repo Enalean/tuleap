@@ -227,34 +227,16 @@ class Docman_MetadataValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * Copy a given metadata value to a list of item.
+     */
     function massUpdate($srcItemId, $fieldId, $type, $dstItemIdArray) {
         $value     = null;
         $val       = null;
         $dtype     = null;
         $fieldType = null;
         $this->_matchSqlType($type, $value, $fieldType, $dtype, $val);
-
-        if($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $ret = $this->massUpdateArray($srcItemId, $fieldId, $fieldType, $dstItemIdArray);
-        } else {
-            $ret = $this->massUpdateScalar($srcItemId, $fieldId, $fieldType, $dstItemIdArray);
-        }
-        return $ret;
-    }
-
-    function massUpdateScalar($srcItemId, $fieldId, $fieldType, $dstItemIdArray) {
-        $sql = sprintf('UPDATE plugin_docman_metadata_value mdv_dst, plugin_docman_metadata_value mdv_src'.
-                       ' SET mdv_dst.%s = mdv_src.%s'.
-                       ' WHERE mdv_dst.item_id IN (%s)'.
-                       ' AND mdv_src.item_id = %d'.
-                       ' AND mdv_dst.field_id = mdv_src.field_id'.
-                       ' AND mdv_src.field_id = %d',
-                       $fieldType,
-                       $fieldType,
-                       implode(',', $dstItemIdArray),
-                       $srcItemId,
-                       $fieldId);
-        return $this->update($sql);
+        return $this->massUpdateArray($srcItemId, $fieldId, $fieldType, $dstItemIdArray);
     }
 
     /**
