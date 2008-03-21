@@ -3,7 +3,7 @@ require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/server/ServerFactory.class.php');
 require_once('common/dao/ServiceDao.class.php');
-require_once('Project.class.php');
+require_once('common/project/Project.class.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 class ServerAdmin {

@@ -243,7 +243,7 @@ if(!IS_SCRIPT) {
 }
 
 //Project extends Group and includes preference accessors
-require_once('Project.class.php');
+require_once('common/project/Project.class.php');
 
 // If the CodeX Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
@@ -314,7 +314,7 @@ $request =& HTTPRequest::instance();
 //Do nothing if we are not in a distributed architecture
 if (!IS_SCRIPT &&
     isset($GLOBALS['sys_server_id']) && $GLOBALS['sys_server_id']) {
-    require_once('Project.class.php');
+    require_once('common/project/Project.class.php');
     $redirect_to_master_if_needed = true;
     $sf      =& new ServerFactory();
     if ($_SERVER['SCRIPT_NAME'] == '/file/download.php') { //There is no group_id for /file/download.php
