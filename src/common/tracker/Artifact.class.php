@@ -2581,7 +2581,10 @@ class Artifact extends Error {
                     var matches = location.hash.match(/#comment_(\d*)/);
                     var linked_comment_id = matches ? matches[1] : null;
                     </script>';
-                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">expand all</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">collapse all</a></div>';
+                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
+                    	$Language->getText('tracker_include_artifact','expand_all').
+                    	'</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">'.
+                    	$Language->getText('tracker_include_artifact','collapse_all').'</a></div>';
                 }
             }
             
@@ -2723,7 +2726,10 @@ class Artifact extends Error {
             if (!$ascii) {
                 if ($rows > 0) {
                     $out .= '<div style="text-align:right">';
-                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">expand all</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">collapse all</a></div>';
+                    $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
+                    $Language->getText('tracker_include_artifact','expand_all').
+                    '</a> | <a href="#expand_all" onclick="tracker_collapse_all_comments(); return false;">'.
+                    $Language->getText('tracker_include_artifact','collapse_all').'</a></div>';
                 }
             }
         
