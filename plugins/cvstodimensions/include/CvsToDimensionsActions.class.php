@@ -11,7 +11,7 @@ require_once ('common/mvc/Actions.class.php');
 require_once ('common/include/HTTPRequest.class.php');
 require_once ('PluginCvstodimensionsParametersDao.class.php');
 require_once ('PluginCvstodimensionsP26CDao.class.php');
-require_once ('common/include/UserManager.class.php');
+require_once ('common/user/UserManager.class.php');
 
 class CvsToDimensionsActions extends Actions {
 

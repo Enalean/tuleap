@@ -1,7 +1,7 @@
 <?php
 
 require_once('common/widget/Widget.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 require_once('Docman_ApprovalTableFactory.class.php');
 
 /**

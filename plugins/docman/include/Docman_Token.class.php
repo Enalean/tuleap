@@ -6,7 +6,7 @@
 //
 
 require_once('common/dao/CodexDataAccess.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 require_once('Docman_TokenDao.class.php');
 
 /**

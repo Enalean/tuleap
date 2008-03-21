@@ -34,7 +34,7 @@ Mock::generate('Docman_Link');
 Mock::generate('Docman_Folder');
 Mock::generate('Iterator');
 
-require_once('common/include/User.class.php');
+require_once('common/user/User.class.php');
 Mock::generate('User');
 
 /**

@@ -27,7 +27,7 @@ require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ItemRanking.class.php');
 require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 require_once(dirname(__FILE__).'/../Docman_MetadataComparator.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 
 class Docman_View_ItemDetailsSectionPaste
 extends Docman_View_ItemDetailsSectionActions {

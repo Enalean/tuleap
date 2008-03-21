@@ -1,5 +1,5 @@
 <?php
-require_once('common/include/User.class.php');
+require_once('common/user/User.class.php');
 
 Mock::generatePartial(
     'User',

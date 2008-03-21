@@ -26,7 +26,7 @@ require_once('DocmanConstants.class.php');
 require_once('Group.class.php');
 require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 
 require_once('view/Docman_View_GetShowViewVisitor.class.php');
 require_once('view/Docman_View_GetFieldsVisitor.class.php');

@@ -23,7 +23,7 @@
  * 
  */
 require_once('include/DataAccessObject.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 
 class FileModuleMonitorDao extends DataAccessObject {
 

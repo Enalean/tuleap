@@ -23,7 +23,7 @@
 
 require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 require_once(dirname(__FILE__).'/../Docman_ItemFactory.class.php');
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 
 class Docman_View_ItemRanking {
     var $dropDownName;

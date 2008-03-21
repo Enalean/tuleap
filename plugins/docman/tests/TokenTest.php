@@ -36,9 +36,9 @@ Mock::generatePartial('Docman_Token', 'Docman_TokenTestVersion',
 require_once(dirname(__FILE__).'/../include/Docman_TokenDao.class.php');
 Mock::generate('Docman_TokenDao');
 
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once('common/include/User.class.php');
+require_once('common/user/User.class.php');
 Mock::generate('User');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');

@@ -48,10 +48,10 @@ Mock::generate('Group');
 require_once('common/include/Feedback.class.php');
 Mock::generate('Feedback');
 
-require_once('common/include/User.class.php');
+require_once('common/user/User.class.php');
 Mock::generate('User');
 
-require_once('common/include/UserManager.class.php');
+require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
 require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');

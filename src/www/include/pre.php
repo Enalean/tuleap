@@ -130,7 +130,7 @@ require_once('session.php');
 
 //user functions like get_name, logged_in, etc
 require_once('user.php');
-require_once('common/include/User.class.php');
+require_once('common/user/User.class.php');
 
 //group functions like get_name, etc
 require_once('Group.class.php');

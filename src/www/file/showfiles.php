@@ -14,7 +14,7 @@ require_once ('common/frs/FRSReleaseFactory.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FileModuleMonitorFactory.class.php');
 require_once ('common/permission/PermissionsManager.class.php');
-require_once ('common/include/UserManager.class.php');
+require_once ('common/user/UserManager.class.php');
 $Language->loadLanguageMsg('file/file');
 
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
