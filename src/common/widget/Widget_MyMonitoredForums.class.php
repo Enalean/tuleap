@@ -26,7 +26,14 @@ class Widget_MyMonitoredForums extends Widget {
              "AND groups.status = 'A' ".
             "AND forum_group_list.is_public <> 9 ".
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
-             "AND forum_monitored_forums.user_id='".user_getid()."' GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
+             "AND forum_monitored_forums.user_id='".user_getid()."' ";
+        $um =& UserManager::instance();
+        $current_user =& $um->getCurrentUser();
+        if ($current_user->isRestricted()) {
+            $projects = $current_user->getProjects();
+            $sql .= "AND group_id IN (". implode(',', $projects) .") ";
+        }
+        $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
     
         $result=db_query($sql);
         $rows=db_numrows($result);
