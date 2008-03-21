@@ -335,7 +335,12 @@ while ($ln = pop(@groupdump_array)) {
 
 		# First create the repository
 		mkdir $cvs_dir, 0775;
-		system("$cvs_cmd -d$cvs_dir init");
+                if (! $use_cvsnt) {
+                  system("$cvs_cmd -d$cvs_dir init");
+                } else {
+                  # Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
+                  system("$cvs_cmd -d$cvs_dir init -n");
+                }
 		
 		# turn off pserver writers, on anonymous readers
 		# LJ - See CVS writers update below. Just create an
