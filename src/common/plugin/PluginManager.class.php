@@ -88,10 +88,14 @@ class PluginManager {
     function availablePlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
         $plugin_factory->availablePlugin($plugin);
+        
+        $plugin->setAvailable(true);
     }
     function unavailablePlugin(&$plugin) {
         $plugin_factory =& $this->_getPluginFactory();
         $plugin_factory->unavailablePlugin($plugin);
+        
+        $plugin->setAvailable(false);
     }
     
     function &installPlugin($name) {

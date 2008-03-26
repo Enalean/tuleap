@@ -109,5 +109,12 @@ class Plugin {
         $pm =& PluginManager::instance();
         return $pm;
     }
+    /**
+     * Function called when a plugin is set as available or unavailable
+     *
+     * @param boolean $available true if the plugin is available, false if unavailable
+     */
+    function /*abstract*/ setAvailable($available) {
+    }
 }
 ?>
