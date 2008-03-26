@@ -71,7 +71,7 @@ group	short_tracker	Suivi
 menu	about_gforge	À propos de $1
 menu	account_maintenance	Gestion du compte
 menu	admin	Administration
-menu	bookmark_page	Ajouter aux signets
+menu	bookmark_page	Ajouter aux favoris
 menu	change_my_theme	Changer de thème
 menu	code_snippet	Boite à outils
 menu	code_snippet_library	Bibliothèque de code
