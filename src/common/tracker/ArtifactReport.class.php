@@ -1159,7 +1159,7 @@ class ArtifactReport extends Error {
      *
      * @return string  The default report value.
      */
-    function is_default() {
+    function isDefault() {
         return $this->is_default;
     }
 }
