@@ -79,6 +79,9 @@ class ArtifactReport extends Error {
 	// Scope of this report ('S': system, 'P': project)
 	var $scope;
 
+	// Is this default report
+    var $is_default;
+
 	/**
 	 *  Constructor.
 	 *
@@ -111,7 +114,7 @@ class ArtifactReport extends Error {
 	 *	@param	string	The report description.
 	 *	@return true on success, false on failure.
 	 */
-	function recreate($user_id,$name,$description,$scope) {
+	function recreate($user_id,$name,$description,$scope,$is_default) {
 		global $ath,$Language;
 		/* 
 		$perm = $ath->Group->getPermissionFromId( $user_id);
@@ -135,12 +138,17 @@ class ArtifactReport extends Error {
 		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
 	
 		$res = db_query("UPDATE artifact_report 
-                         SET name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."' 
+                         SET name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."' 
                          WHERE report_id=". db_ei($this->report_id) );
 	
+	    // set other reports as not default report
+	    if ($is_default ==1 ) { 
+            $res = db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
+	    }
 		$this->name = $name;
 		$this->description = $description;
 		$this->scope = $scope;
+        $this->is_default = $is_default;
 		$this->fields = array();
 		return true;
 	}
@@ -162,9 +170,24 @@ class ArtifactReport extends Error {
 		$this->name = '';
 		$this->description = '';
 		$this->scope = '';
+        $this->is_default = '';
 		$this->fields = array();
 		return true;
 	}
+
+    /**
+     *  updateDefaultReport - use this to set the report to default
+     *  @return true on success false on failure 
+     */
+
+    function updateDefaultReport() {
+        if ($GLOBALS['ath']->userIsAdmin()) {
+            db_query("UPDATE artifact_report SET is_default=1 WHERE report_id =".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
+            db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
+            return true;
+        }
+        return false;
+    }
 
 	/**
 	 *	create - use this to create a new Report in the database.
@@ -173,7 +196,7 @@ class ArtifactReport extends Error {
 	 *	@param	string	The report description.
 	 *	@return id on success, false on failure.
 	 */
-	function create($user_id,$name,$description,$scope) {
+	function create($user_id,$name,$description,$scope,$is_default) {
 		global $ath,$Language;
 		/*$perm = $ath->Group->getPermissionFromId( $user_id);
 	
@@ -190,15 +213,17 @@ class ArtifactReport extends Error {
 		$group_id = $ath->Group->getID();
 		$atid=$ath->getID();
 	
-		$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) '.
+		$sql = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope,is_default) '.
 				"VALUES ('". db_ei($atid) ."','". db_ei($user_id) ."','". db_es($name) ."',".
-				"'". db_es($description) ."','". db_es($scope) ."')";
+				"'". db_es($description) ."','". db_es($scope) ."','".db_ei($is_default)."')";
 		//echo $sql;
 
 		$res = db_query($sql);
 
 		$report_id = db_insertid($res, 'artifact_report', 'report_id');
-		
+        if (($is_default == 1) && ($report_id)) {
+            db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
+        }
 		if (!$res || !$report_id) {
 			$this->setError('ArtifactReport: '.db_error());
 			return false;
@@ -207,6 +232,7 @@ class ArtifactReport extends Error {
 			$this->description = $description;
 			$this->name = $name;
 			$this->scope = $scope;
+            $this->is_default = $is_default;
 
 			$this->fields = array();
 			return true;
@@ -250,6 +276,7 @@ class ArtifactReport extends Error {
 		$this->name = $data_array['name'];
 		$this->description = $data_array['description'];
 		$this->scope = $data_array['scope'];
+        $this->is_default = $data_array['is_default'];
 	 	$this->report_id = $report_id;
 		
 		// Read the fields infos
@@ -287,7 +314,7 @@ class ArtifactReport extends Error {
 	    
 	    // If user is unknown then get only project-wide and system wide reports
 	    // else get personal reports in addition  project-wide and system wide.
-	    $sql = 'SELECT report_id,name,description,scope FROM artifact_report WHERE ';
+	    $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
 	    if (!$user_id || ($user_id == 100)) {
 			$sql .= "(group_artifact_id=". db_ei($group_artifact_id) ." AND scope='P') OR scope='S' ".
 			    'ORDER BY report_id';
@@ -1126,6 +1153,15 @@ class ArtifactReport extends Error {
 	function getScope() {
 		return $this->scope;
 	}
+    
+    /**
+     * is_default - get is_default value
+     *
+     * @return string  The default report value.
+     */
+    function isDefault() {
+        return $this->is_default;
+    }
 }
 
 ?>

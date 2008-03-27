@@ -1585,10 +1585,10 @@ INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact wa
 --
 
 
-INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default artifact report','S');
-INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P');
-INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P');
-INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P');
+INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default artifact report','S',0);
+INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P',0);
+INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P',0);
+INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P',0);
 
 
 --

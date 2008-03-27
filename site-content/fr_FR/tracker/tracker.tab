@@ -374,6 +374,9 @@ tracker_include_report	no_match	Aucun artefact correspondant
 tracker_include_report	report_mgmt	Administration Outil de suivi - Gestion des rapports de recherche
 tracker_include_report	report_admin	  - Administration des rapports
 tracker_include_report	scope	Portée
+tracker_include_report	default	Rapport Par Défaut
+tracker_include_report	set_default	[Mettre Par Défaut]
+tracker_include_report	is_default	[Par Défaut]
 tracker_include_report	report_name	Nom du rapport
 tracker_include_report	id	ID
 tracker_include_report	mod	(Cliquer pour modifier)
