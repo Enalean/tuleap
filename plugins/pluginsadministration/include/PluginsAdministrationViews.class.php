@@ -139,7 +139,7 @@ class PluginsAdministrationViews extends Views {
             $plugin_factory =& PluginFactory::instance();
             $plugin =& $plugin_factory->getPluginById($request->get('plugin_id'));
             if(!$plugin) {
-                redirect();
+                $GLOBALS['HTML']->redirect('/plugins/pluginsadministration/');
             } else {
                 $plug_info  =& $plugin->getPluginInfo();
                 $descriptor =& $plug_info->getPluginDescriptor();
