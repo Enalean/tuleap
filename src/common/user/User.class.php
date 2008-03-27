@@ -61,7 +61,6 @@ class User {
             $this->data_array   = array('user_id' => 0);
             $this->group_data   = array();
             $this->tracker_data = array();
-            $this->setLocale(language_id_to_language_code($this->data_array['language_id']));
             $is_anonymous = true;
         }
         
@@ -238,6 +237,10 @@ class User {
         return $this->id == 0;
     }
     
+    function isLoggedIn() {
+        return !$this->isAnonymous();
+    }
+    
 	function isValid() {
 	  return is_array($this->tracker_data);
 	}
@@ -316,13 +319,20 @@ class User {
     /**
      * @return int the ID of the user
      */
-    function getID() {
+    function getId() {
         return $this->id;
+    }
+    /**
+     * alias of getUserName()
+     * @return string the name of the user (aka login)
+     */
+    function getName() {
+        return $this->getUserName();
     }
     /**
      * @return string the name of the user (aka login)
      */
-    function getName() {
+    function getUserName() {
         return $this->data_array['user_name'];
     }
     /**

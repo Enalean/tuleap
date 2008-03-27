@@ -11,6 +11,8 @@
 unset($USER_IS_SUPER_USER);
 $USER_RES=array();
 
+
+//Deprecated. Use User->isLoggedIn() instead
 function user_isloggedin() {
 	global $G_USER;
 	if (isset($G_USER['user_id']) && $G_USER['user_id']) {
@@ -20,6 +22,7 @@ function user_isloggedin() {
 	}
 }
 
+//Deprecated. Use User->isRestricted() instead
 function user_isrestricted() {
 	if (!user_isloggedin()) {
 		return false;
@@ -32,7 +35,7 @@ function user_isrestricted() {
 	} else return true;
 }
 
-
+//Deprecated. Use User->isSuperUser() instead
 function user_is_super_user() {
 	global $USER_IS_SUPER_USER;
 	/*
@@ -60,6 +63,7 @@ function user_is_super_user() {
 	}
 }
 
+//Deprecated. Use User->isMember() instead
 function user_ismember($group_id,$type=0) {
 	if (!user_isloggedin()) {
 		return false;
@@ -190,11 +194,13 @@ function user_ismember($group_id,$type=0) {
 	}
 }
 
+//Deprecated. Use User->getId() instead
 function user_getid() {
 	global $G_USER;
 	return ($G_USER?$G_USER['user_id']:0);
 }
 
+//Deprecated. Use User->getName() instead
 function user_getname($user_id = 0) {
     global $G_USER,$USER_NAMES,$Language;
 	// use current user if one is not passed in
@@ -223,6 +229,7 @@ function user_getname($user_id = 0) {
 }
 
 //quick hack - this entire library needs a rewrite similar to groups library
+//Deprecated. Use User->getRealName() instead
 function user_getrealname($user_id) {
 	global $Language;
         $result = user_get_result_set($user_id); 
@@ -235,6 +242,7 @@ function user_getrealname($user_id) {
 
 // LJ - Added here because we use the real e-mail addresse
 // on CodeX - No e-mail aliases like on SF
+//Deprecated. Use User->getEmail() instead
 function user_getemail($user_id) {
 	global $Language;
         $result = user_get_result_set($user_id); 

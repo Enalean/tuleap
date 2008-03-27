@@ -7,6 +7,7 @@
 // 
 //
 require_once('common/include/CookieManager.class.php');
+require_once('common/user/UserManager.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 
@@ -219,19 +220,23 @@ function session_require($req) {
 
 function session_setglobals($user_id) {
 	global $G_USER;
+    $um =& UserManager::instance();
 
 //	unset($G_USER);
 
 	if ($user_id > 0) {
 		$result=db_query("SELECT user_id,user_name FROM user WHERE user_id=".db_ei($user_id));
 		if (!$result || db_numrows($result) < 1) {
+            $um->setCurrentUserId(0);
 			//echo db_error();
 			$G_USER = array();
 		} else {
+            $um->setCurrentUserId($user_id);
 			$G_USER = db_fetch_array($result);
 //			echo $G_USER['user_name'].'<BR>';
 		}
 	} else {
+        $um->setCurrentUserId($user_id);
 		$G_USER = array();
 	}
 }
