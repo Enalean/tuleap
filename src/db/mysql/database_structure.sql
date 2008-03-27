@@ -2682,6 +2682,7 @@ CREATE TABLE artifact_report (
   name varchar(80) default NULL,
   description varchar(255) default NULL,
   scope char(1) NOT NULL default 'I',
+  is_default int(1) default 0,
   PRIMARY KEY  (report_id),
   KEY group_artifact_id_idx (group_artifact_id),
   KEY user_id_idx (user_id),

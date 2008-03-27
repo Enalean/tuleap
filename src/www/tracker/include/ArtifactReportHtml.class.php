@@ -697,6 +697,31 @@ class ArtifactReportHtml extends ArtifactReport {
             }
         }                   
 
+    /**
+     * Return a link for the setting default report
+     *
+     * param default_val: the default report  value
+     * @return string
+     */
+    
+    function getDefaultLink($default_val,$scope,$report_id) {
+        $g = $GLOBALS['ath']->getGroup();
+        $group_id = $g->getID();
+        $atid = $GLOBALS['ath']->getID();
+        if (($scope != 'S') && ($scope != 'I')) {
+            switch ( $default_val ) {
+                case 0:
+                    return '<a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'&update_default='.$report_id.'">'.$GLOBALS['Language']->getText('tracker_include_report','set_default').'</a>';
+                case 1:
+                    return '<b>'.$GLOBALS['Language']->getText('tracker_include_report','is_default').'</b>';
+                default:
+                    return '<a href="/tracker/admin/?func=report&group_id='.$group_id.'&atid='.$atid.'&update_default='.$report_id.'">'.$GLOBALS['Language']->getText('tracker_include_report','set_default').'</a>';
+            }
+        } else {
+            return '<b>-</b>';
+        }
+    }
+	  	 
         /**
          * Display the report list
          *
@@ -727,6 +752,9 @@ class ArtifactReportHtml extends ArtifactReport {
                 $title_arr[]=$Language->getText('tracker_include_report','report_name');
                 $title_arr[]=$Language->getText('tracker_include_artifact','desc');
                 $title_arr[]=$Language->getText('tracker_include_report','scope');
+                if ($ath->userIsAdmin()) {
+                    $title_arr[]=$Language->getText('tracker_include_report','default');
+                }
                 $title_arr[]=$Language->getText('tracker_include_canned','delete');
                 
                 echo '<p>'.$Language->getText('tracker_include_report','mod');
@@ -746,11 +774,14 @@ class ArtifactReportHtml extends ArtifactReport {
 
                     echo "</td><td>". $hp->purify($arr['name'], CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
                         "<td>". $hp->purify($arr['description'], CODEX_PURIFIER_BASIC, $group_id) .'</td>'.
-                        '<td align="center">'. $hp->purify($this->getScopeLabel($arr['scope']), CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
-                        '<td align="center">';
+                        '<td align="center">'. $hp->purify($this->getScopeLabel($arr['scope']), CODEX_PURIFIER_CONVERT_HTML) .'</td>';
                     
                         $name = $arr['name'];
         
+                    if ($ath->userIsAdmin()) {
+                        echo "\n<td align=\"center\">".$this->getDefaultLink($arr['is_default'],$arr['scope'],$arr['report_id']).'</td>';
+                    }
+                    echo "\n<td align=\"center\">";
         			if ( $arr['scope'] == 'S' || (!$ath->userIsAdmin()&&($arr['scope'] == 'P')) ) {
 	                    echo '-';
         			} else {
@@ -810,15 +841,16 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="TEXT" NAME="rep_name" VALUE="" CLASS="textfield_small" MAXLENGTH="80">
                    &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';
             
-            if ($ath->userIsAdmin())
-                        echo '<SELECT NAME="rep_scope">
+            if ($ath->userIsAdmin()) {
+                        echo '<SELECT ID="rep_scope" NAME="rep_scope" onchange="if (document.getElementById(\'rep_scope\').value == \'P\') {document.getElementById(\'rep_default\').disabled=false} else { document.getElementById(\'rep_default\').disabled=true;document.getElementById(\'rep_default\').checked=false }">
                                         <OPTION VALUE="I">'.$Language->getText('global','Personal').'</OPTION>
                                         <OPTION VALUE="P">'.$Language->getText('global','Project').'</OPTION>
                                         </SELECT>';
-            else
+                        echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
+            } else {
                         echo $Language->getText('global','Personal').' <INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="I">';
-        
-        
+                        echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" DISABLED>';
+            }
             echo ' <P>
                     <B>'.$Language->getText('tracker_include_artifact','desc').': </B>
                      <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="" SIZE="50" MAXLENGTH="120">
@@ -909,15 +941,17 @@ class ArtifactReportHtml extends ArtifactReport {
                    <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'. $hp->purify($this->name, CODEX_PURIFIER_CONVERT_HTML) .'" CLASS="textfield_small" MAXLENGTH="80">
                          &nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','scope').': </B>';
             $scope = $this->scope;
-            if ($ath->userIsAdmin())
-                        echo '<SELECT NAME="rep_scope">
+            if ($ath->userIsAdmin()) {
+                        echo '<SELECT ID="rep_scope" NAME="rep_scope" onchange="if (document.getElementById(\'rep_scope\').value == \'P\') {document.getElementById(\'rep_default\').disabled=false} else { document.getElementById(\'rep_default\').disabled=true;document.getElementById(\'rep_default\').checked=false }" >
                                         <OPTION VALUE="I"'.($scope=='I' ? 'SELECTED':'').'>'.$Language->getText('global','Personal').'</OPTION>
                                         <OPTION VALUE="P"'.($scope=='P' ? 'SELECTED':'').'>'.$Language->getText('global','Project').'</OPTION>
                                         </SELECT>';
-            else
+                        echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" '.($this->is_default == 1 ? 'CHECKED':'').' '.($this->scope != 'P' ? 'DISABLED':'').'>';
+            } else {
                         echo ($scope=='P' ? $Language->getText('global','Project'):$Language->getText('global','Personal')).
                             '<INPUT TYPE="HIDDEN" NAME="rep_scope" VALUE="'. $hp->purify($scope, CODEX_PURIFIER_CONVERT_HTML) .'">';
-        
+                        echo '&nbsp;&nbsp;&nbsp;&nbsp;<B>'.$Language->getText('tracker_include_report','default').':</B>'.'<INPUT TYPE="CHECKBOX" ID="rep_default" NAME="rep_default" '.($this->is_default == 1 ? 'CHECKED':'').' DISABLED >';
+            }
             echo '
                     <P>
                     <B>'.$Language->getText('tracker_include_artifact','desc').':</B>

@@ -218,7 +218,12 @@ if ($group_id && !$atid) {
                     $rep_name = $request->getValidated('rep_name', 'string', '');
                     $rep_desc = $request->getValidated('rep_desc', 'text', '');
                     if ($request->get('update_report')) {
-				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope);
+                if ($ath->userIsAdmin() && ($rep_scope == 'P') && ($request->exist('rep_default'))) {
+                    $rep_default = 1;
+                } else {
+                    $rep_default = 0;
+                }
+				$updated = $arh->recreate(user_getid(), $rep_name, $rep_desc, $rep_scope, $rep_default);
 				if (!$updated) {
 					if ($arh->isError())
 						exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report').': '.$arh->getErrorMessage());
@@ -226,7 +231,12 @@ if ($group_id && !$atid) {
 				}
 				$GLOBALS['Response']->addFeedback('info', "Report definition updated");
 			} else {
-				$report_id = $arh->create(user_getid(), $rep_name, $rep_desc, $rep_scope);
+                if ($ath->userIsAdmin() && ($rep_scope == 'P') && ($request->exist('rep_default'))) {
+                    $rep_default = 1;
+                } else {
+                    $rep_default = 0;
+                }
+				$report_id = $arh->create(user_getid(), $rep_name, $rep_desc, $rep_scope, $rep_default);
 				if (!$report_id) {
 					if ($arh->isError())
 						exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_created_report').': '.$arh->getErrorMessage());
@@ -265,6 +275,12 @@ if ($group_id && !$atid) {
 			}	    
 			$arh->delete();
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','report_deleted'));
+        } else if (isset($update_default)) {
+        	$arh->fetchData($update_default);
+        	if (($arh->scope == 'P') && $ath->userIsAdmin()) {
+                $arh->updateDefaultReport();
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','update_success'));
+		    }
 		}
 		
 		if ($request->getValidated('new_report')) {
