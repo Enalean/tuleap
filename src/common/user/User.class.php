@@ -1,48 +1,62 @@
-<?php   
-
-//
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
-// http://codex.xerox.com
-//
-// 
-//
-// Originally written by Marie-Luise Schneider 2005, CodeX Team, Xerox
+<?php
+/* 
+ * Copyright (c) The CodeX Team, Xerox, 2008. All Rights Reserved.
+ *
+ * Originally written by Marie-Luise Schneider 2005, CodeX Team, Xerox
+ *
+ * This file is a part of CodeX.
+ *
+ * CodeX is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * CodeX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * 
+ */
 
 //require_once('common/include/Error.class.php');
 //require_once('common/include/Permission.class.php');
 
 //$Language->loadLanguageMsg('include/include');
 
-/*
+require_once('common/language/LanguageManager.class.php');
 
-	User object
-
-	Sets up database results and preferences for a user and abstracts this info
-*/
-
-
+/**
+ *
+ * User object
+ * 
+ * Sets up database results and preferences for a user and abstracts this info
+ */
 class User {
     
-	var $id;
+    var $id;
 
-	//associative array of data from db
-	var $data_array;
+    //associative array of data from db
+    var $data_array;
 
-	//group data row from db. 
-	//For each group_id (the user is part of) one array from the user_group table
-	var $group_data;
+    //group data row from db. 
+    //For each group_id (the user is part of) one array from the user_group table
+    var $group_data;
 
-	//tracker permission data
-	//for each group_artifact_id (the user is part of) one array from the artifact-perm table
-	var $tracker_data;
+    //tracker permission data
+    //for each group_artifact_id (the user is part of) one array from the artifact-perm table
+    var $tracker_data;
 
     // Keep super user info
     var $isSuperUser;
 
     var $locale;
     
-	function User($id) {
+    function User($id) {
         global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
         
         $this->isSuperUser = null;
@@ -68,57 +82,63 @@ class User {
         if (!isset($this->data_array['language_id']) || !$this->data_array['language_id']) {
             $this->data_array['language_id'] = $GLOBALS['sys_lang'];
         }
-        $locale = language_id_to_language_code($this->data_array['language_id']);
+        $lm =& $this->_getLanguageManager();
+        $locale = $lm->getLanguageCodeFromLanguageId($this->data_array['language_id']);
         $this->setLocale($locale);
-	}
+    }
+    
+    function &_getLanguageManager() {
+        $lm =& LanguageManager::instance();
+        return $lm;
+    }
 
 
-	/*
-		Return database result handle for direct access
+    /*
+        Return database result handle for direct access
 
-		Generall should NOT be used - here for supporting deprecated group.php
-	*/
-	function fetchData($id) {
-	  global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
+        Generall should NOT be used - here for supporting deprecated group.php
+    */
+    function fetchData($id) {
+      global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
 
 
-	  $sql = "SELECT * FROM user WHERE user_id = $id";
-	  $db_res = db_query($sql);
-	  if (db_numrows($db_res) != 1) {
-	    return false;
-	  }
-	  $this->data_array=db_fetch_array($db_res);
-	  $ALL_USERS_DATA["user_$id"] = $this->data_array;
-	  
+      $sql = "SELECT * FROM user WHERE user_id = $id";
+      $db_res = db_query($sql);
+      if (db_numrows($db_res) != 1) {
+        return false;
+      }
+      $this->data_array=db_fetch_array($db_res);
+      $ALL_USERS_DATA["user_$id"] = $this->data_array;
+      
 
-	  $this->group_data=array();
-	  $sql = "SELECT * FROM user_group WHERE user_id = $id";
-	  $db_res = db_query($sql);
-	  if (db_numrows($db_res) > 0) {
-	    while ($row = db_fetch_array($db_res)) {
-	      $this->group_data[$row['group_id']] = $row;
-	    }
-	  }
-	  $ALL_USERS_GROUPS["user_$id"] = $this->group_data;
-	  
-	  $this->tracker_data = array();
-	  $sql = "SELECT group_artifact_id, perm_level FROM artifact_perm WHERE user_id = $id";
-	  $db_res = db_query($sql);
-	  if (db_numrows($db_res) > 0) {
-	    while ($row = db_fetch_array($db_res)) {
-	      $this->tracker_data[$row['group_artifact_id']] = $row;
-	    }
-	  }
-	  $ALL_USERS_TRACKERS["user_$id"] = $this->tracker_data;
+      $this->group_data=array();
+      $sql = "SELECT * FROM user_group WHERE user_id = $id";
+      $db_res = db_query($sql);
+      if (db_numrows($db_res) > 0) {
+        while ($row = db_fetch_array($db_res)) {
+          $this->group_data[$row['group_id']] = $row;
+        }
+      }
+      $ALL_USERS_GROUPS["user_$id"] = $this->group_data;
+      
+      $this->tracker_data = array();
+      $sql = "SELECT group_artifact_id, perm_level FROM artifact_perm WHERE user_id = $id";
+      $db_res = db_query($sql);
+      if (db_numrows($db_res) > 0) {
+        while ($row = db_fetch_array($db_res)) {
+          $this->tracker_data[$row['group_artifact_id']] = $row;
+        }
+      }
+      $ALL_USERS_TRACKERS["user_$id"] = $this->tracker_data;
       
       return true;
-	} 
+    } 
 
 
-	/**
-	 * is this user member of group $group_id ??
-	 */
-	function isMember($group_id,$type=0) {
+    /**
+     * is this user member of group $group_id ??
+     */
+    function isMember($group_id,$type=0) {
         /*
             CodeX admins always return true
         */
@@ -126,89 +146,89 @@ class User {
             return true;
         }
         
-	  $is_member = array_key_exists($group_id,$this->group_data);
-	  if (!$is_member) return false;
+      $is_member = array_key_exists($group_id,$this->group_data);
+      if (!$is_member) return false;
 
-	  if ($type === 0) return true;
+      if ($type === 0) return true;
 
-	  $group_perm = $this->group_data[$group_id];
+      $group_perm = $this->group_data[$group_id];
 
-	  $type=strtoupper($type);
+      $type=strtoupper($type);
 
-	  switch ($type) {
-	    /*
-	     list the supported permission types
-	    */
-	  case 'B1' : {
-	    //bug tech
-	    return ($group_perm['bug_flags'] == 1 || $group_perm['bug_flags'] == 2);
-	    break;
-	  }
-	  case 'B2' : {
-	    //bug admin
-	    return ($group_perm['bug_flags'] == 2 || $group_perm['bug_flags'] == 3);
-	    break;
-	  }
-	  case 'P1' : {
-	    //pm tech
-	    return ($group_perm['project_flags'] == 1 || $group_perm['project_flags'] == 2);
-	    break;
-	  }
-	  case 'P2' : {
-	    //pm admin
-	    return ($group_perm['project_flags'] == 2 || $group_perm['project_flags'] == 3);
-	    break;
-	  }
-	  case 'C1' : {
-	    //patch tech
-	    return ($group_perm['patch_flags'] == 1 || $group_perm['patch_flags'] == 2);
-	    break;
-	  }
-	  case 'C2' : {
-	    //patch admin
-	    return ($group_perm['patch_flags'] == 2 || $group_perm['patch_flags'] == 3);
-	    break;
-	  }
-	  case 'F2' : {
-	    //forum admin
-	    return ($group_perm['forum_flags'] == 2);
-	    break;
-	  }
-	  case 'S1' : {
-	    //support tech
-	    return ($group_perm['support_flags'] == 1 || $group_perm['support_flags'] == 2);
-	    break;
-	  }
-	  case 'S2' : {
-	    //support admin
-	    return ($group_perm['support_flags'] == 2 || $group_perm['support_flags'] == 3);
-	    break;
-	  }
-	  case 'A' : {
-	    //admin for this group
-	    return ($group_perm['admin_flags'] && $group_perm['admin_flags'] === 'A');
-	    break;
-	  }
-	  case 'D1' : {
-	    //document tech
-	    return ($group_perm['doc_flags'] == 1 || $group_perm['doc_flags'] == 2);
-	    break;
-	  }
-	  case 'D2' : {
-	    //document admin
-	    return ($group_perm['doc_flags'] == 2 || $group_perm['doc_flags'] == 3);
-	    break;
-	  }
-	  case 'R2' : {
-	    //file release admin
-	    return ($group_perm['file_flags'] == 2);
-	    break;
-	  }
-	  case 'W2': {
-	    //wiki release admin
-	    return ($group_perm['wiki_flags'] == 2);
-	    break;
-	  }
+      switch ($type) {
+        /*
+         list the supported permission types
+        */
+      case 'B1' : {
+        //bug tech
+        return ($group_perm['bug_flags'] == 1 || $group_perm['bug_flags'] == 2);
+        break;
+      }
+      case 'B2' : {
+        //bug admin
+        return ($group_perm['bug_flags'] == 2 || $group_perm['bug_flags'] == 3);
+        break;
+      }
+      case 'P1' : {
+        //pm tech
+        return ($group_perm['project_flags'] == 1 || $group_perm['project_flags'] == 2);
+        break;
+      }
+      case 'P2' : {
+        //pm admin
+        return ($group_perm['project_flags'] == 2 || $group_perm['project_flags'] == 3);
+        break;
+      }
+      case 'C1' : {
+        //patch tech
+        return ($group_perm['patch_flags'] == 1 || $group_perm['patch_flags'] == 2);
+        break;
+      }
+      case 'C2' : {
+        //patch admin
+        return ($group_perm['patch_flags'] == 2 || $group_perm['patch_flags'] == 3);
+        break;
+      }
+      case 'F2' : {
+        //forum admin
+        return ($group_perm['forum_flags'] == 2);
+        break;
+      }
+      case 'S1' : {
+        //support tech
+        return ($group_perm['support_flags'] == 1 || $group_perm['support_flags'] == 2);
+        break;
+      }
+      case 'S2' : {
+        //support admin
+        return ($group_perm['support_flags'] == 2 || $group_perm['support_flags'] == 3);
+        break;
+      }
+      case 'A' : {
+        //admin for this group
+        return ($group_perm['admin_flags'] && $group_perm['admin_flags'] === 'A');
+        break;
+      }
+      case 'D1' : {
+        //document tech
+        return ($group_perm['doc_flags'] == 1 || $group_perm['doc_flags'] == 2);
+        break;
+      }
+      case 'D2' : {
+        //document admin
+        return ($group_perm['doc_flags'] == 2 || $group_perm['doc_flags'] == 3);
+        break;
+      }
+      case 'R2' : {
+        //file release admin
+        return ($group_perm['file_flags'] == 2);
+        break;
+      }
+      case 'W2': {
+        //wiki release admin
+        return ($group_perm['wiki_flags'] == 2);
+        break;
+      }
       case 'SVN_ADMIN': {
         //svn admin
         return ($group_perm['svn_flags'] == 2);
@@ -224,12 +244,12 @@ class User {
         return ($group_perm['news_flags'] == 2);
         break;
       }
-	  default : {
-	    //fubar request
-	    return false;
-	  }
-	  }
-	}
+      default : {
+        //fubar request
+        return false;
+      }
+      }
+    }
 
     function isAnonymous() {
         return $this->id == 0;
@@ -239,27 +259,27 @@ class User {
         return !$this->isAnonymous();
     }
     
-	function isValid() {
-	  return is_array($this->tracker_data);
-	}
+    function isValid() {
+      return is_array($this->tracker_data);
+    }
 
-	/** is this user admin of the tracker group_artifact_id */
-	function isTrackerAdmin($group_id,$group_artifact_id) {
-	  return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
-	}
-
-
-	function getTrackerPerm($group_artifact_id) {
-	  $has_perm = array_key_exists($group_artifact_id,$this->tracker_data);
-	  if (!$has_perm) return 0;
-
-	  $perm = $this->tracker_data[$group_artifact_id];
-
-	  return $perm['perm_level'];
-	}
+    /** is this user admin of the tracker group_artifact_id */
+    function isTrackerAdmin($group_id,$group_artifact_id) {
+      return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
+    }
 
 
-	function isSuperUser() {
+    function getTrackerPerm($group_artifact_id) {
+      $has_perm = array_key_exists($group_artifact_id,$this->tracker_data);
+      if (!$has_perm) return 0;
+
+      $perm = $this->tracker_data[$group_artifact_id];
+
+      return $perm['perm_level'];
+    }
+
+
+    function isSuperUser() {
         if($this->isSuperUser === null) {
             $sql="SELECT * FROM user_group WHERE user_id='". $this->data_array['user_id'] ."' AND group_id='1' AND admin_flags='A'";
             $result=db_query($sql);
@@ -270,7 +290,7 @@ class User {
             }
         }
         return $this->isSuperUser;
-	}
+    }
     
     var $_ugroups;
     function &getUgroups($group_id, $instances) {

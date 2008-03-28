@@ -332,6 +332,7 @@ function language_code_to_result($alang) {
 }
 
 /* Return language code (e.g. 'en_US') corresponding to the language ID (e.g. '1'). */
+//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead
 function language_id_to_language_code($language_id=1) {
     $res=db_query("select language_code from supported_languages where language_id='".db_es($language_id)."'");
     return db_result($res,0,'language_code');
