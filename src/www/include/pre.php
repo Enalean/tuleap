@@ -162,7 +162,7 @@ if(!IS_SCRIPT) {
 
 */
 
-require('BaseLanguage.class.php');
+require('common/language/BaseLanguage.class.php');
 
 if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";

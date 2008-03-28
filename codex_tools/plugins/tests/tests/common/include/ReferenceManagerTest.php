@@ -1,5 +1,5 @@
 <?php
-require_once('BaseLanguage.class.php');
+require_once('common/language/BaseLanguage.class.php');
 $GLOBALS['Language'] = new BaseLanguage();
 $GLOBALS['Language']->loadLanguage('en_US');
 require_once('common/include/ReferenceManager.class.php');

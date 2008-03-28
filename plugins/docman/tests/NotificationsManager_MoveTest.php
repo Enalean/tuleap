@@ -39,7 +39,7 @@ Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsM
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('BaseLanguage.class.php');
+require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 require_once('Group.class.php');

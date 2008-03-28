@@ -7,7 +7,7 @@
  *
  * Tests the class String
  */
-require_once('BaseLanguage.class.php');
+require_once('common/language/BaseLanguage.class.php');
 $GLOBALS['Language'] = new BaseLanguage();
 $GLOBALS['Language']->loadLanguage('en_US');
 
