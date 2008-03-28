@@ -33,14 +33,6 @@ class UserManager {
     }
     
     function &getUserById($user_id) {
-        /*if ($user_id == 0 && user_getid()) {
-            $user_id = user_getid();
-        }
-        if (!isset($this->_users[$user_id])) {
-            $this->_users[$user_id] =& new User($user_id);
-        }
-        return $this->_users[$user_id];
-        */
         if (!isset($this->_users[$user_id])) {
             if ($user_id == 0) {
                 $this->_users[$user_id] =& new User(0);
