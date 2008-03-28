@@ -263,7 +263,7 @@ function user_getid_from_email($email) {
 	}
 }
 
-
+//Deprectaed. Use User->getEmail() and UserManager->getUserByUserName() instead
 function user_getemail_from_unix($user_name) {
 	global $Language;
         $result = user_get_result_set_from_unix($user_name); 
@@ -274,6 +274,7 @@ function user_getemail_from_unix($user_name) {
 	}
 }
 
+//Deprecated. Use UserManager->getUserById() instead and don't use db_result in all code
 function user_get_result_set($user_id) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time
@@ -287,6 +288,7 @@ function user_get_result_set($user_id) {
 	}
 }
 
+//Deprecated. Use UserManager->getUserByUserName() instead and don't use db_result in all code
 function user_get_result_set_from_unix($user_name) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time
@@ -310,6 +312,7 @@ function user_get_result_set_from_email($email) {
 }       
 
 // Get user name from user id, according to the user prefs: Codex login or Real name
+//Deprectaed. Use UserHelper->getDisplayNameFromUserId() instead
 function user_get_name_display_from_id($user_id) {
     
     if ($user_id == 100) {
@@ -335,6 +338,7 @@ function user_get_name_display_from_id($user_id) {
 }
 
 // Get user name from Codex login, according to the user prefs: Codex login or Real name
+//Deprectaed. Use UserHelper->getDisplayNameFromUserName() instead
 function user_get_name_display_from_unix($user_name) {
     
     if ($user_name == $GLOBALS['Language']->getText('global','none')) {
@@ -365,6 +369,7 @@ function user_get_name_display_from_unix($user_name) {
     
 }
 
+//Deprecated. Use user->getTimezone() instead
 function user_get_timezone() {
 	if (user_isloggedin()) {
 		$result=user_get_result_set(user_getid());
@@ -376,6 +381,7 @@ function user_get_timezone() {
 
 // Get user prefered language from the database
 // if language not defined then return system default
+//Deprecated. Use User->getLanguageId() instead
 function user_get_language() {
     if (user_isloggedin()) {
 	$result=user_get_result_set(user_getid());

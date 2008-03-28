@@ -6,9 +6,7 @@ require_once('common/dao/UserDao.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  * 
- * 
- *
- * PermissionsManager
+ * UserManager
  */
 class UserManager {
  
