@@ -21,6 +21,7 @@ class UserManager {
         $this->_users = array();
         $this->_userid_bynames = array();
         $this->_userdao =& $userdao;
+        $this->_currentuser_id = 0;
     }
     
     function &instance() {
@@ -32,6 +33,10 @@ class UserManager {
         return $_usermanager_instance;
     }
     
+    /**
+     * @param int the user_id of the user to find
+     * @return User or null if the user is not found
+     */
     function &getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
             if ($user_id == 0) {
@@ -50,6 +55,10 @@ class UserManager {
         return $this->_users[$user_id];
     }
     
+    /**
+     * @param string the user_name of the user to find
+     * @return User or null if the user is not found
+     */
     function &getUserByUserName($user_name) {
         if (!isset($this->_userid_bynames[$user_name])) {
             $dar =& $this->_userdao->searchByUserName($user_name);
@@ -73,9 +82,16 @@ class UserManager {
         return $u;
     }
     
+    /**
+     * @return User the user currently logged in (who made the request)
+     */
     function &getCurrentUser() {
         return $this->getUserById(user_getid());
     }
+    
+    /**
+     * Set the id of the user logged in
+     */
     function setCurrentUserId($user_id) {
         $this->currentuser_id = $user_id;
     }
