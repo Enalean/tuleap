@@ -65,13 +65,11 @@ class User {
         }
         
         //set the locale
-        if ($is_anonymous) {
-            $locale = language_id_to_language_code();
-        } else {
-            $locale = language_id_to_language_code($this->data_array['language_id']);
+        if (!isset($this->data_array['language_id']) || !$this->data_array['language_id']) {
+            $this->data_array['language_id'] = $GLOBALS['sys_lang'];
         }
+        $locale = language_id_to_language_code($this->data_array['language_id']);
         $this->setLocale($locale);
-        return true;
 	}
 
 
