@@ -15,17 +15,17 @@ class Map {
     
     function Map() {
         $this->elements = array();
-        $this->keys     =& new Collection();
+        $this->keys     = new Collection();
     }
     
     
     /**
      * @return the value to which this map maps the specified key.
      */
-    function &get(&$key) {
+    function get($key) {
         $value = false;
-        if ($this->containsKey($key) && isset($this->elements[$key->hashCode()])) {
-            $value =& $this->elements[$key->hashCode()];
+        if ($this->containsKey($key) && isset($this->elements[$key])) {
+            $value = $this->elements[$key];
         }
         return $value;
     }
@@ -33,15 +33,11 @@ class Map {
     /**
      * Associates the specified value with the specified key in this map
      */
-    function put(&$key, &$value) {
-        if (method_exists($key, 'equals') && method_exists($key, 'hashCode')) {
-            if (!isset($this->elements[$key->hashCode()])) {
-                $this->keys->add($key);
-            }
-            $this->elements[$key->hashCode()] =& $value;
-        } else {
-            trigger_error("key parameter must implements equals() and hashCode() methods");
+    function put($key, $value) {
+        if (!isset($this->elements[$key])) {
+            $this->keys->add($key);
         }
+        $this->elements[$key] = $value;
     }
     
     /**
@@ -61,30 +57,30 @@ class Map {
     /**
      * @return the keys of this map
      */
-    function &getKeys() {
+    function getKeys() {
         return $this->keys;
     }
     
     /**
      * @return a collection view of the values contained in this map.
      */
-    function &getValues() {
-        $col =& new Collection($this->elements);
+    function getValues() {
+        $col = new Collection($this->elements);
         return $col;
     }
     
     /**
      * @return true if this map contains a mapping for the specified key.
      */
-    function containsKey(&$key) {
+    function containsKey($key) {
         return $this->keys->contains($key);
     }
     
     /**
      * @return true if this map maps one or more keys to the specified value.
      */
-    function containsValue(&$value) {
-        $col =& $this->getValues();
+    function containsValue($value) {
+        $col = $this->getValues();
         return $col->contains($value);
     }
     
@@ -97,12 +93,12 @@ class Map {
         if (is_a($obj, "Map") && $this->size() === $obj->size()) {
             if ($this->keys->equals($obj->getKeys())) {
                 $is_identical = true;
-                $my_keys    =& $this->getKeys();
-                $obj_keys   =& $obj->getKeys();
-                $obj_values =& $obj->getValues();
-                $it =& $my_keys->iterator();
+                $my_keys    = $this->getKeys();
+                $obj_keys   = $obj->getKeys();
+                $obj_values = $obj->getValues();
+                $it = $my_keys->iterator();
                 while($it->valid() && $is_identical) {
-                    $val =& $it->current();
+                    $val = $it->current();
                     if (!($obj_values->contains($this->get($val)))) {
                         $is_identical = false;
                     }
@@ -110,7 +106,7 @@ class Map {
                 }
                 $it =& $obj_keys->iterator();
                 while($it->valid() && $is_identical) {
-                    $val =& $it->current();
+                    $val = $it->current();
                     if (!($this->containsValue($obj->get($val)))) {
                         $is_identical = false;
                     }
@@ -125,22 +121,17 @@ class Map {
     /**
      * remove a mapping
      */
-    function remove(&$key, &$wanted) {
+    function remove($key, $wanted) {
         $compare_with_equals = method_exists($wanted, 'equals');
         $removed = false;
-        if ($this->containsKey($key) && isset($this->elements[$key->hashCode()])) {
-            if (!$compare_with_equals && !(version_compare(phpversion(), '5', '>=') && is_object($wanted))) {
-                $temp = $wanted;
-                $wanted = uniqid('test');
-            }
-            if (($compare_with_equals && $wanted->equals($this->elements[$key->hashCode()])) 
-             || (!$compare_with_equals && ((method_exists($this->elements[$key->hashCode()], 'equals') && $this->elements[$key->hashCode()]->equals($wanted)) || ($wanted === $this->elements[$key->hashCode()])))) {
-                unset($this->elements[$key->hashCode()]);
+        if ($this->containsKey($key) && isset($this->elements[$key])) {
+            if (($compare_with_equals && $wanted->equals($this->elements[$key])) 
+             || (!$compare_with_equals && (
+                 (method_exists($this->elements[$key], 'equals') && $this->elements[$key]->equals($wanted)) 
+                 || ($wanted === $this->elements[$key])))) {
+                unset($this->elements[$key]);
                 $this->keys->remove($key);
                 $removed = true;
-            }
-            if (!$compare_with_equals && !(version_compare(phpversion(), '5', '>=') && is_object($wanted))) {
-                $wanted = $temp;
             }
         }
         return $removed;
@@ -149,10 +140,10 @@ class Map {
     /**
      * remove a key
      */
-    function removeKey(&$key) {
+    function removeKey($key) {
         $removed = false;
-        if ($this->containsKey($key) && isset($this->elements[$key->hashCode()])) {
-            unset($this->elements[$key->hashCode()]);
+        if ($this->containsKey($key) && isset($this->elements[$key])) {
+            unset($this->elements[$key]);
             $this->keys->remove($key);
             $removed = true;
         }

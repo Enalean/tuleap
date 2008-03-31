@@ -1,5 +1,5 @@
 <?php
-require_once('common/include/String.class.php');
+
 if (!class_exists("FakeValue")) {
     class FakeValue {}
 }
@@ -26,43 +26,43 @@ class MultiMapTestCase extends UnitTestCase {
     }
 
     function testEmptyMultiMap() {
-        $m =& new $this->class_name();
+        $m = new $this->class_name();
         $this->assertTrue($m->isEmpty());
-    }	
+    }
     function testNonEmptyMultiMap() {
-        $m =& new $this->class_name();
+        $m = new $this->class_name();
         $value = 'value';
-        $key   =& new String('key');
+        $key   = 'key';
         $m->put($key, $value);
         $this->assertFalse($m->isEmpty());
     }
     function testOneValue() {
-        $m =& new $this->class_name();
-        $value =& new FakeValue();
-        $key   =& new String('key');
+        $m = new $this->class_name();
+        $value = new FakeValue();
+        $key   = 'key';
         $m->put($key, $value);
-        $col =& $m->get($key);
+        $col = $m->get($key);
         $this->assertTrue($col->contains($value));
     }
     function testNoValue() {
-        $m =& new $this->class_name();
-        $value =& new FakeValue();
-        $key   =& new String('key');
+        $m = new $this->class_name();
+        $value = new FakeValue();
+        $key   = 'key';
         $m->put($key, $value);
         $false_key = 'false_key';
         $this->assertFalse($m->get($false_key));
     }
     function testTwoValues() {
-        $m =& new $this->class_name();
-        $value1 =& new FakeValue();
-        $key1   =& new String('key1');
+        $m = new $this->class_name();
+        $value1 = new FakeValue();
+        $key1   = 'key1';
         $m->put($key1, $value1);
-        $value2 =& new FakeValue();
-        $key2   =& new String('key2');
+        $value2 = new FakeValue();
+        $key2   = 'key2';
         $m->put($key2, $value2);
         
-        $col1 =& $m->get($key1);
-        $col2 =& $m->get($key2);
+        $col1 = $m->get($key1);
+        $col2 = $m->get($key2);
         $this->assertTrue($col1->contains($value1));
         $this->assertTrue($col2->contains($value2));
     }

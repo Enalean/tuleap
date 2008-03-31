@@ -28,7 +28,7 @@ class CreateDAOPluginInfo extends PluginInfo {
         if (file_exists($this->_conf_path)) {
             $props = parse_ini_file($this->_conf_path);
             foreach($props as $prop => $value) {
-                $key =& new String($prop);
+                $key = $pro;
                 $descriptor =& new PropertyDescriptor($key, $value);
                 $this->_addPropertyDescriptor($descriptor);
             }

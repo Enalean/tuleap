@@ -14,31 +14,31 @@ class PluginInfo {
     var $pluginDescriptor;
     var $propertyDescriptors;
     
-    function PluginInfo(&$plugin) {
-        $this->plugin              =& $plugin;
-        $this->propertyDescriptors =& new Map();
+    function PluginInfo($plugin) {
+        $this->plugin              = $plugin;
+        $this->propertyDescriptors = new Map();
     }
     
-    function setPluginDescriptor(&$descriptor) {
-        $this->pluginDescriptor =& $descriptor;
+    function setPluginDescriptor($descriptor) {
+        $this->pluginDescriptor = $descriptor;
     }
     
-    function &getPluginDescriptor() {
+    function getPluginDescriptor() {
         if (!is_a($this->pluginDescriptor, 'PluginDescriptor')) {
             $this->setPluginDescriptor(new PluginDescriptor('', '', ''));
         }
         return $this->pluginDescriptor;
     }
-    function &getPropertyDescriptors() {
+    function getPropertyDescriptors() {
         return $this->propertyDescriptors;
     }
     
-    function _addPropertyDescriptor(&$descriptor) {
-        $name =& $descriptor->getName();
+    function _addPropertyDescriptor($descriptor) {
+        $name = $descriptor->getName();
         $this->propertyDescriptors->put($name, $descriptor);
     }
-    function _removePropertyDescriptor(&$descriptor) {
-        $name =& $descriptor->getName();
+    function _removePropertyDescriptor($descriptor) {
+        $name = $descriptor->getName();
         return $this->propertyDescriptors->remove($name, $descriptor);
     }
     
@@ -49,7 +49,7 @@ class PluginInfo {
     }
     
     function getPropertyDescriptorForName($name) {
-        $n = new String($name);
+        $n =  $name;
         return $this->propertyDescriptors->get($n);
     }
 }

@@ -4,7 +4,7 @@ require_once('common/dao/CodexDataAccess.class.php');
 
 require_once('common/collection/Map.class.php');
 
-require_once('common/include/String.class.php');
+
 
 require_once('Plugin.class.php');
 
@@ -23,52 +23,52 @@ class PluginFactory {
     var $unavailable_plugins;
     var $custom_plugins;
     
-    function PluginFactory(&$plugin_dao) {
-        $this->plugin_dao =& $plugin_dao;
-        $this->retrieved_plugins    =& new Map();
-        $this->available_plugins    =& new Map();
-        $this->unavailable_plugins  =& new Map();
+    function PluginFactory($plugin_dao) {
+        $this->plugin_dao = $plugin_dao;
+        $this->retrieved_plugins    = new Map();
+        $this->available_plugins    = new Map();
+        $this->unavailable_plugins  = new Map();
         $this->custom_plugins       = array();
     }
     
-    function &instance() {
+    function instance() {
         static $_pluginfactory_instance;
         if (!$_pluginfactory_instance) {
-            $dao =& new PluginDao(CodexDataAccess::instance());
+            $dao = new PluginDao(CodexDataAccess::instance());
             $_pluginfactory_instance = new PluginFactory($dao);
         }
         return $_pluginfactory_instance;
     }
     
-    function &getPluginById($id) {
+    function getPluginById($id) {
         $p = false;
-        $key =& new String($id);
+        $key = $id;
         if ($this->retrieved_plugins->containsKey($key)) {
-            $p =& $this->retrieved_plugins->get($key);
+            $p = $this->retrieved_plugins->get($key);
         } else {
-            $dar =& $this->plugin_dao->searchById($id);
+            $dar = $this->plugin_dao->searchById($id);
             if ($row = $dar->getRow()) {
-                $p =& $this->_getInstancePlugin($id, $row['name']);
+                $p = $this->_getInstancePlugin($id, $row['name']);
             }
         }
         return $p;
     }
     
-    function &getPluginByName($name) {
-        $retrieved =& $this->retrieved_plugins->getValues();
-        $iter =& $retrieved->iterator();
+    function getPluginByName($name) {
+        $retrieved = $this->retrieved_plugins->getValues();
+        $iter = $retrieved->iterator();
         $not_found = true;
         while($iter->valid() && $not_found) {
-            $p =& $iter->current();
+            $p = $iter->current();
             $not_found = ($name != $this->getNameForPlugin($p));
             $iter->next();
         }
         if ($not_found) {
             unset($p);
             $p = false;
-            $dar =& $this->plugin_dao->searchByName($name);
+            $dar = $this->plugin_dao->searchByName($name);
             if ($row = $dar->getRow()) {
-                $p =& $this->_getInstancePlugin($row['id'], $name);
+                $p = $this->_getInstancePlugin($row['id'], $name);
             }
         }
         return $p;
@@ -78,9 +78,9 @@ class PluginFactory {
      * create a plugin in the db
      * @return the new plugin or false if there is already the plugin (same name)
      */
-    function &createPlugin($name) {
+    function createPlugin($name) {
         $p = false;
-        $dar =& $this->plugin_dao->searchByName($name);
+        $dar = $this->plugin_dao->searchByName($name);
         if (!$dar->getRow()) {
             $id = $this->plugin_dao->create($name, 0);
             if (is_int($id)) {
@@ -90,19 +90,19 @@ class PluginFactory {
         return $p;
     }
     
-    function &_getInstancePlugin($id, $name) {
+    function _getInstancePlugin($id, $name) {
         $p   = false;
-        $key =& new String($id);
+        $key = $id;
         if ($this->retrieved_plugins->containsKey($key)) {
-            $p =& $this->retrieved_plugins->get($key);
+            $p = $this->retrieved_plugins->get($key);
         } else {
             $plugin_class_info = $this->_getClassNameForPluginName($name);
             $plugin_class      = $plugin_class_info['class'];
             if ($plugin_class) {
-                $p =& new $plugin_class($id);
-                $this->retrieved_plugins->put(new String($id), $p);
+                $p = new $plugin_class($id);
+                $this->retrieved_plugins->put( $id, $p);
                 if ($plugin_class_info['custom']) {
-                    $this->custom_plugins[$id] =& $p;
+                    $this->custom_plugins[$id] = $p;
                 }
             }
         }
@@ -146,12 +146,12 @@ class PluginFactory {
     /**
      * @return Collection of enabled or disabled plugins depends on parameters
      */
-    function &_getAvailableOrUnavailablePlugins(&$map, $criteria) {
-         $dar =& $this->plugin_dao->searchByAvailable($criteria);
+    function _getAvailableOrUnavailablePlugins($map, $criteria) {
+         $dar = $this->plugin_dao->searchByAvailable($criteria);
          while($row = $dar->getRow()) {
-             $p =& $this->_getInstancePlugin($row['id'], $row['name']);
+             $p = $this->_getInstancePlugin($row['id'], $row['name']);
              if ($p) {
-                 $key =& new String($row['id']);
+                 $key = $row['id'];
                  if (!$map->containsKey($key)) {
                      $map->put($key, $p);
                  }
@@ -162,55 +162,55 @@ class PluginFactory {
     /**
      * @return Collection of unavailable plugins
      */
-    function &getUnavailablePlugins() {
+    function getUnavailablePlugins() {
          return $this->_getAvailableOrUnavailablePlugins($this->unavailable_plugins, 0);
     }
     /**
      * @return Collection of enabled plugins
      */
-    function &getAvailablePlugins() {
+    function getAvailablePlugins() {
          return $this->_getAvailableOrUnavailablePlugins($this->available_plugins, 1);
     }
     /**
      * @return Collection of all plugins
      */
-    function &getAllPlugins() {
-        $dar =& $this->plugin_dao->searchAll();
+    function getAllPlugins() {
+        $dar = $this->plugin_dao->searchAll();
         while($row = $dar->getRow()) {
-             $p =& $this->_getInstancePlugin($row['id'], $row['name']);
+             $p = $this->_getInstancePlugin($row['id'], $row['name']);
         }
         return $this->retrieved_plugins->getValues();
     }
     /**
      * @return true if the plugin is enabled
      */
-    function isPluginAvailable(&$plugin) {
+    function isPluginAvailable($plugin) {
         $this->getAvailablePlugins();
-        return $this->available_plugins->containsKey(new String($plugin->getId()));
+        return $this->available_plugins->containsKey($plugin->getId());
     }
     
     /**
      * available plugin
      */
-    function availablePlugin(&$plugin) {
+    function availablePlugin($plugin) {
         if (!$this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('1', $plugin->getId());
-            $this->available_plugins->put(new String($plugin->getId()), $plugin);
-            $this->unavailable_plugins->removeKey(new String($plugin->getId()));
+            $this->available_plugins->put( $plugin->getId(), $plugin);
+            $this->unavailable_plugins->removeKey( $plugin->getId());
         }
     }
     /**
      * unavailable plugin
      */
-    function unavailablePlugin(&$plugin) {
+    function unavailablePlugin($plugin) {
         if ($this->isPluginAvailable($plugin)) {
             $this->plugin_dao->updateAvailableByPluginId('0', $plugin->getId());
-            $this->unavailable_plugins->put(new String($plugin->getId()), $plugin);
-            $this->available_plugins->removeKey(new String($plugin->getId()));
+            $this->unavailable_plugins->put( $plugin->getId(), $plugin);
+            $this->available_plugins->removeKey( $plugin->getId());
         }
     }
     
-    function &getNotYetInstalledPlugins() {
+    function getNotYetInstalledPlugins() {
         $col     = array();
         $paths   = array($this->_getCustomPluginsRoot(), $this->_getOfficialPluginsRoot());
         $exclude = array('.', '..', 'CVS', '.svn');
@@ -229,21 +229,21 @@ class PluginFactory {
     }
 
     function isPluginInstalled($name) {
-        $dar =& $this->plugin_dao->searchByName($name);
+        $dar = $this->plugin_dao->searchByName($name);
         return ($dar->rowCount() > 0);
     }
         
-    function removePlugin(&$plugin) {
-        $id = new String($plugin->getId());
+    function removePlugin($plugin) {
+        $id =  $plugin->getId();
         $this->retrieved_plugins->removeKey($id);
         $this->available_plugins->removeKey($id);
         $this->unavailable_plugins->removeKey($id);
         return $this->plugin_dao->removeById($plugin->getId());
     }
     
-    function getNameForPlugin(&$plugin) {
+    function getNameForPlugin($plugin) {
         $name = '';
-        if ($dar =& $this->plugin_dao->searchById($plugin->getId())) {
+        if ($dar = $this->plugin_dao->searchById($plugin->getId())) {
             if ($row = $dar->getRow()) {
                 $name = $row['name'];
             }
@@ -251,7 +251,7 @@ class PluginFactory {
         return $name;
     }
     
-    function pluginIsCustom(&$plugin) {
+    function pluginIsCustom($plugin) {
         return isset($this->custom_plugins[$plugin->getId()]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 require_once('PluginInfo.class.php');
-require_once('common/include/String.class.php');
+
 require_once('common/collection/Map.class.php');
 require_once('PluginManager.class.php');
 /**
@@ -23,7 +23,7 @@ class Plugin {
     
     function Plugin($id = -1) {
         $this->id            = $id;
-        $this->hooks         =& new Map();
+        $this->hooks         = new Map();
         
         $this->SCOPE_SYSTEM  = 0;
         $this->SCOPE_PROJECT = 1;
@@ -36,18 +36,18 @@ class Plugin {
         return $this->id;
     }
     
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginInfo')) {
             $this->pluginInfo =& new PluginInfo($this);
         }
         return $this->pluginInfo;
     }
     
-    function &getHooks() {
+    function getHooks() {
         return $this->hooks->getKeys();
     }
     
-    function &getHooksAndCallbacks() {
+    function getHooksAndCallbacks() {
         return $this->hooks->getValues();
     }
     
@@ -56,10 +56,10 @@ class Plugin {
         $value['hook']       = $hook;
         $value['callback']   = $callback;
         $value['recallHook'] = $recallHook;
-        $this->hooks->put(new String($hook), $value);
+        $this->hooks->put( $hook, $value);
     }
     function _removeHook($hook) {
-        $this->hooks->removeKey(new String($hook));
+        $this->hooks->removeKey( $hook);
     }
     function CallHook($hook, $param) {
     }
@@ -73,11 +73,11 @@ class Plugin {
     }
 
     function getPluginEtcRoot() {
-        $pm =& $this->_getPluginManager();
+        $pm = $this->_getPluginManager();
         return $GLOBALS['sys_custompluginsroot'] . '/' . $pm->getNameForPlugin($this) .'/etc';
     }
     function _getPluginPath() {
-        $pm =& $this->_getPluginManager();
+        $pm = $this->_getPluginManager();
         if (isset($GLOBALS['sys_pluginspath']))
             $path = $GLOBALS['sys_pluginspath'];
         else $path=""; 
@@ -87,7 +87,7 @@ class Plugin {
         return $path.'/'.$pm->getNameForPlugin($this);
     }
     function _getThemePath() {
-        $pm =& $this->_getPluginManager();
+        $pm = $this->_getPluginManager();
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
         $dir    = '/'.$pm->getNameForPlugin($this).'/www/themes/';
@@ -105,8 +105,8 @@ class Plugin {
         }
         return $found;
     }
-    function &_getPluginManager() {
-        $pm =& PluginManager::instance();
+    function _getPluginManager() {
+        $pm = PluginManager::instance();
         return $pm;
     }
     /**

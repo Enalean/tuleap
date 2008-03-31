@@ -1,6 +1,5 @@
 <?php
 require_once('LinkedList.class.php');
-require_once('ArrayIterator.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -22,20 +21,20 @@ class PrioritizedList extends LinkedList{
     /**
      * add the element add the end of the PrioritizedList
      */
-    function add(&$element, $priority = 0) {
-        $this->elements[] =& $element;
+    function add($element, $priority = 0) {
+        $this->elements[] = $element;
         $this->priorities[$priority][] = count($this->elements) - 1;
     }
     
-    function &iterator() {
+    function iterator() {
         $tab = array();
         krsort($this->priorities);
         foreach($this->priorities as $elements) {
             foreach($elements as $position) {
-                $tab[] =& $this->elements[$position];
+                $tab[] = $this->elements[$position];
             }
         }
-        $it =& new ArrayIterator($tab);
+        $it = new ArrayIterator($tab);
         return $it;
     }
 }

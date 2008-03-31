@@ -113,7 +113,7 @@ class Rule_UserNameFormatTest extends UnitTestCase {
         $this->assertFalse($r->isValid("user:a"));
         $this->assertFalse($r->isValid("user'a"));
         $this->assertFalse($r->isValid("user`a"));
-        $this->assertFalse($r->isValid("user\"a"));
+        $this->assertFalse($r->isValid('user"a'));
         $this->assertFalse($r->isValid("user<a"));
         $this->assertFalse($r->isValid("user>a"));
         $this->assertFalse($r->isValid("user[a"));

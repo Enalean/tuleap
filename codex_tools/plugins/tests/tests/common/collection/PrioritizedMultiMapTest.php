@@ -24,19 +24,19 @@ class PrioritizedMultiMapTest extends MultiMapTestCase {
     }
     
     function testSimplePriority() {
-        $m      =& new PrioritizedMultiMap();
-        $value1 =& new FakeValue();
-        $value2 =& new FakeValue();
-        $key    =& new String('key');
+        $m      = new PrioritizedMultiMap();
+        $value1 = new FakeValue();
+        $value2 = new FakeValue();
+        $key    = 'key';
         $m->put($key, $value1, -10);
         $m->put($key, $value2, 10);
-        $col =& $m->get($key);
+        $col = $m->get($key);
         $this->assertIsA($col, "PrioritizedList");
-        $it =& $col->iterator();
-        $element =& $it->current();
+        $it = $col->iterator();
+        $element = $it->current();
         $this->assertReference($element, $value2);
         $it->next();
-        $element =& $it->current();
+        $element = $it->current();
         $this->assertReference($element, $value1);
     }
 }

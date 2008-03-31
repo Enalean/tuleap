@@ -6,8 +6,8 @@ require_once('common/collection/LinkedList.class.php');
 Mock::generate('EventListener', 'Event1MockEventListener', array('doSomething'));
 Mock::generate('EventListener', 'Event2MockEventListener', array('CallHook'));
 class TestEventManager extends EventManager {
-    function &getListenersForEvent($event) {
-        return $this->listeners->get(new String($event));
+    function getListenersForEvent($event) {
+        return $this->listeners->get( $event);
     }
 }
 /**
@@ -35,11 +35,11 @@ class EventManagerTest extends UnitTestCase {
     
     function testProcessEvent1() {
         //The listeners
-        $l1 =& new Event1MockEventListener($this);
+        $l1 = new Event1MockEventListener($this);
         $l1->expectOnce('doSomething');
-        $l2 =& new Event1MockEventListener($this);
+        $l2 = new Event1MockEventListener($this);
         $l2->expectOnce('doSomething');
-        $l3 =& new Event2MockEventListener($this);
+        $l3 = new Event2MockEventListener($this);
         $l3->expectNever('CallHook');
         
         //The events
@@ -47,7 +47,7 @@ class EventManagerTest extends UnitTestCase {
         $e2 = 'event2';
         
         //The event Manager
-        $m =& new EventManager();
+        $m = new EventManager();
         
         //We register the listeners for the type
         $m->addListener($e1, $l1, 'doSomething', false, 0);

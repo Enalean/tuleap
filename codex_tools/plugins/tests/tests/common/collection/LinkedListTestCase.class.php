@@ -14,31 +14,31 @@ class LinkedListTestCase extends CollectionTestCase {
     }
     
     function testOrder() {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-        $l =& new $this->collection_class_name();
+        $a = new StdClass();
+        $b = new StdClass();
+        $c = new StdClass();
+        $l = new $this->collection_class_name();
         $l->add($c);
         $l->add($b);
         $l->add($a);
-        $it =& $l->iterator();
-        $element =& $it->current();
+        $it = $l->iterator();
+        $element = $it->current();
         $this->assertReference($element, $c);
         $it->next();
-        $element =& $it->current();
+        $element = $it->current();
         $this->assertReference($element, $b);
         $it->next();
-        $element =& $it->current();
+        $element = $it->current();
         $this->assertReference($element, $a);
     }
     
     function testEqualsDifferentOrder() {
-        $a = 'a';
-        $b = 'b';
-        $l1 =& new $this->collection_class_name();
+        $a = new StdClass();
+        $b = new StdClass();
+        $l1 = new $this->collection_class_name();
         $l1->add($a);
         $l1->add($b);
-        $l2 =& new $this->collection_class_name();
+        $l2 = new $this->collection_class_name();
         $l2->add($b);
         $l2->add($a);
         $this->assertFalse($l1->equals($l2));

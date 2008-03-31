@@ -7,7 +7,7 @@ require_once('common/plugin/PluginHookPriorityManager.class.php');
 require_once('common/dao/DBTablesDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
-require_once('common/include/String.class.php');
+
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -26,18 +26,18 @@ class PluginManager {
     }
     
     function loadPlugins() {
-        $plugin_factory =& $this->_getPluginFactory();
-        $event_manager  =& $this->_getEventManager();
+        $plugin_factory = $this->_getPluginFactory();
+        $event_manager  = $this->_getEventManager();
         
-        $col_available_plugins =& $plugin_factory->getAvailablePlugins();
-        $available_plugins =& $col_available_plugins->iterator();
-        $priority_manager =& $this->_getPluginHookPriorityManager();
+        $col_available_plugins = $plugin_factory->getAvailablePlugins();
+        $available_plugins = $col_available_plugins->iterator();
+        $priority_manager = $this->_getPluginHookPriorityManager();
         while($available_plugins->valid()) {
-            $plugin =& $available_plugins->current();
-            $hooks =& $plugin->getHooksAndCallbacks();
-            $iter =& $hooks->iterator();
+            $plugin = $available_plugins->current();
+            $hooks = $plugin->getHooksAndCallbacks();
+            $iter = $hooks->iterator();
             while($iter->valid()) {
-                $hook =& $iter->current();
+                $hook = $iter->current();
                 $priority = $priority_manager->getPriorityForPluginHook($plugin, $hook['hook']);
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
                 $iter->next();
@@ -48,17 +48,17 @@ class PluginManager {
         $this->plugins_loaded = true;
     }
     
-    function &_getPluginFactory() {
+    function _getPluginFactory() {
         return PluginFactory::instance();
     }
     
-    function &_getEventManager() {
+    function _getEventManager() {
         return EventManager::instance();
     }
     
-    function &_getPluginHookPriorityManager() {
+    function _getPluginHookPriorityManager() {
         if (!is_a($this->pluginHookPriorityManager, 'PluginHookPriorityManager')) {
-            $this->pluginHookPriorityManager =& new PluginHookPriorityManager();
+            $this->pluginHookPriorityManager = new PluginHookPriorityManager();
         }
         return $this->pluginHookPriorityManager;
     }
@@ -67,7 +67,7 @@ class PluginManager {
         return $this->plugins_loaded;
     }
     
-    function &instance() {
+    function instance() {
         static $_pluginmanager_instance;
         if (!$_pluginmanager_instance) {
             $_pluginmanager_instance = new PluginManager();
@@ -75,37 +75,37 @@ class PluginManager {
         return $_pluginmanager_instance;
     }
     
-    function &getAllPlugins() {
-        $plugin_factory =& $this->_getPluginFactory();
+    function getAllPlugins() {
+        $plugin_factory = $this->_getPluginFactory();
         return $plugin_factory->getAllPlugins();
     }
     
-    function isPluginAvailable(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+    function isPluginAvailable($plugin) {
+        $plugin_factory = $this->_getPluginFactory();
         return $plugin_factory->isPluginAvailable($plugin);
     }
     
-    function availablePlugin(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+    function availablePlugin($plugin) {
+        $plugin_factory = $this->_getPluginFactory();
         $plugin_factory->availablePlugin($plugin);
         
         $plugin->setAvailable(true);
     }
-    function unavailablePlugin(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+    function unavailablePlugin($plugin) {
+        $plugin_factory = $this->_getPluginFactory();
         $plugin_factory->unavailablePlugin($plugin);
         
         $plugin->setAvailable(false);
     }
     
-    function &installPlugin($name) {
+    function installPlugin($name) {
         $plugin = false;
         if ($this->isNameValid($name)) {
-            $plugin_factory =& $this->_getPluginFactory();
+            $plugin_factory = $this->_getPluginFactory();
             if (!$plugin_factory->isPluginInstalled($name)) {
                 if (!$this->_executeSqlStatements('install', $name)) {
-                    $plugin_factory =& $this->_getPluginFactory();
-                    $plugin =& $plugin_factory->createPlugin($name);
+                    $plugin_factory = $this->_getPluginFactory();
+                    $plugin = $plugin_factory->createPlugin($name);
                     $this->_createEtc($name);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
@@ -115,13 +115,13 @@ class PluginManager {
         return $plugin;
     }
     
-    function uninstallPlugin(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+    function uninstallPlugin($plugin) {
+        $plugin_factory = $this->_getPluginFactory();
         $name = $plugin_factory->getNameForPlugin($plugin);
         if (!$this->_executeSqlStatements('uninstall', $name)) {
-            $phpm =& $this->_getPluginHookPriorityManager();
+            $phpm = $this->_getPluginHookPriorityManager();
             $phpm->removePlugin($plugin);
-            $plugin_factory =& $this->_getPluginFactory();
+            $plugin_factory = $this->_getPluginFactory();
             return $plugin_factory->removePlugin($plugin);
         } else {
             return false;
@@ -166,7 +166,7 @@ class PluginManager {
                                         $GLOBALS['sys_custompluginsroot'].$path_to_file);
         while(!$path_found && (list(,$sql_filename) = each($possible_file_names))) {
             if (file_exists($sql_filename)) {
-                $dbtables =& new DBTablesDAO(CodexDataAccess::instance());
+                $dbtables = new DBTablesDAO(CodexDataAccess::instance());
                 if (!$dbtables->updateFromFile($sql_filename)) {
                     $db_corrupted = true;
                 }
@@ -174,8 +174,8 @@ class PluginManager {
         }
         return $db_corrupted;
     }
-    function &getNotYetInstalledPlugins() {
-        $plugin_factory =& $this->_getPluginFactory();
+    function getNotYetInstalledPlugins() {
+        $plugin_factory = $this->_getPluginFactory();
         return $plugin_factory->getNotYetInstalledPlugins(); 
     }
     
@@ -183,29 +183,29 @@ class PluginManager {
         return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
     }
     
-    function &getPluginByName($name) {
-        $plugin_factory =& $this->_getPluginFactory();
-        $p =& $plugin_factory->getPluginByName($name);
+    function getPluginByName($name) {
+        $plugin_factory = $this->_getPluginFactory();
+        $p = $plugin_factory->getPluginByName($name);
         return $p;
     }
-    function &getPluginById($id) {
-        $plugin_factory =& $this->_getPluginFactory();
-        $p =& $plugin_factory->getPluginById($id);
+    function getPluginById($id) {
+        $plugin_factory = $this->_getPluginFactory();
+        $p = $plugin_factory->getPluginById($id);
         return $p;
     }
-    function pluginIsCustom(&$plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+    function pluginIsCustom($plugin) {
+        $plugin_factory = $this->_getPluginFactory();
         $p = $plugin_factory->pluginIsCustom($plugin);
         return $p;
     }
     
     var $plugins_name;
-    function getNameForPlugin(&$plugin) {
+    function getNameForPlugin($plugin) {
         if (!$this->plugins_name) {
             $this->plugins_name = array();
         }
         if (!isset($this->plugins_name[$plugin->getId()])) {
-            $plugin_factory =& $this->_getPluginFactory();
+            $plugin_factory = $this->_getPluginFactory();
             $this->plugins_name[$plugin->getId()] = $plugin_factory->getNameForPlugin($plugin);
         }
         return $this->plugins_name[$plugin->getId()];
@@ -214,14 +214,14 @@ class PluginManager {
     function getAllowedProjects($plugin) {
         $prjIds = null;
         //if($plugin->getScope() == $plugin->SCOPE_PROJECT) {
-        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory = $this->_getPluginFactory();
         $prjIds = $plugin_factory->getProjectsByPluginId($plugin);
         //}
         return $prjIds;
     }
     
     function _updateProjectForPlugin($action, $plugin, $projectIds) {
-        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory = $this->_getPluginFactory();
         
         $success     = true;
         $successOnce = false;
@@ -267,12 +267,12 @@ class PluginManager {
     }
 
     function isProjectPluginRestricted($plugin) {
-        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory = $this->_getPluginFactory();
         return $plugin_factory->isProjectPluginRestricted($plugin);
     }
 
     function updateProjectPluginRestriction($plugin, $restricted) {
-        $plugin_factory =& $this->_getPluginFactory();
+        $plugin_factory = $this->_getPluginFactory();
         $plugin_factory->restrictProjectPluginUse($plugin, $restricted);
         if($restricted == false) {
             $plugin_factory->truncateProjectPlugin($plugin);
@@ -281,7 +281,7 @@ class PluginManager {
 
     function isPluginAllowedForProject($plugin, $projectId) {
         if($this->isProjectPluginRestricted($plugin)) {
-            $plugin_factory =& $this->_getPluginFactory();
+            $plugin_factory = $this->_getPluginFactory();
             return $plugin_factory->isPluginAllowedForProject($plugin, $projectId);
         }
         else {

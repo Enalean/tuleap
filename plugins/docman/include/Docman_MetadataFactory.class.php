@@ -28,7 +28,6 @@ require_once('Docman_MetadataDao.class.php');
 require_once('Docman_SettingsBo.class.php');
 require_once('Docman_MetadataListOfValuesElementFactory.class.php');
 
-require_once('common/collection/ArrayIterator.class.php');
 
 /**
  * MetadataFactory give access to metadata fields

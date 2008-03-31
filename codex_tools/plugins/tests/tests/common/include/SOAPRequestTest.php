@@ -8,8 +8,9 @@ class SOAPRequestTest extends UnitTestCase {
     }
     
     function testError() {
-    	   new SOAPRequest();
-       $this->assertError();
+       new SOAPRequest();
+       $this->assertError(); //a warning in php5
+       $this->assertError(); 
     }
     function testWithoutError() {
        new SOAPRequest(array());
@@ -18,7 +19,7 @@ class SOAPRequestTest extends UnitTestCase {
     }
     
     function testInit() {
-    	   $request =& new SOAPRequest(array(
+       $request =& new SOAPRequest(array(
            'param_1' => 'value_1',
            'param_2' => 'value_2')
        );

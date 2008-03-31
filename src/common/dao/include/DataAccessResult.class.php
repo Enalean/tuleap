@@ -2,8 +2,7 @@
 /**
  *  Fetches MySQL database rows as objects
  */
-require_once('common/collection/Iterator.class.php');
-class DataAccessResult /* implements Iterator */ {
+class DataAccessResult  implements Iterator {
     /**
     * @access protected
     * $da stores data access object

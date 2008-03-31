@@ -25,7 +25,7 @@ class CvsToDimensionsPluginInfo extends PluginInfo {
             $this->checkConfigurationFiles($this->_conf_path);
             $variables = $this->_getVariablesFromConfigurationFile($this->_conf_path);
             foreach($variables as $variable) {
-                $key =& new String($variable['name']);
+                $key = $variable['name'];
                 if (preg_match('`^"(.*)"$`', $variable['value'], $match) || 
                     preg_match('`^\'(.*)\'$`', $variable['value'], $match)) 
                 {

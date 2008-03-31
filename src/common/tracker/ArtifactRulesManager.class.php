@@ -39,49 +39,49 @@ class ArtifactRulesManager {
     }
     
     function getAllRulesByArtifactTypeWithOrder($artifact_type_id) {
-		$fact =& $this->_getArtifactRuleFactory();
+		$fact = $this->_getArtifactRuleFactory();
         return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
 	}
     
     function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value);
     }
     
     function deleteRule($rule_id) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRule($rule_id);
     }
     
     function deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRuleValueBySource($artifact_type_id, $source, $source_value, $target);
     }
     
     function deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRuleValueByTarget($artifact_type_id, $source, $target, $target_value);
     }
     
-    function &_getArtifactRuleFactory() {
+    function _getArtifactRuleFactory() {
         return ArtifactRuleFactory::instance();
     }
     
     function deleteRulesByArtifactType($artifact_type_id) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByArtifactType($artifact_type_id);
     }
     function deleteRulesByFieldId($artifact_type_id, $field_id) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByFieldId($artifact_type_id, $field_id);
     }
     function deleteRulesByValueId($artifact_type_id, $field_id, $value_id) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->deleteRulesByValueId($artifact_type_id, $field_id, $value_id);
     }
     
     function copyRules($from_artifact_type_id, $to_artifact_type_id) {
-        $fact =& $this->_getArtifactRuleFactory();
+        $fact = $this->_getArtifactRuleFactory();
         return $fact->copyRules($from_artifact_type_id, $to_artifact_type_id);
     }
     
@@ -93,7 +93,7 @@ class ArtifactRulesManager {
      * @param {ArtifactFieldFactory Object} $art_field_fact reference to the artifact field factory of this artifact
      * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
      */
-    function validate($artifact_type_id, $value_field_list, &$art_field_fact) {
+    function validate($artifact_type_id, $value_field_list, $art_field_fact) {
         
         // construction of $values array : selected values in the form
         // $values[$field_id]['field'] = artifactfield Object
@@ -101,8 +101,8 @@ class ArtifactRulesManager {
         $values = array();
         reset($value_field_list);
         while (list($field_name,$value) = each($value_field_list)) {
-            $field =& $art_field_fact->getFieldFromName($field_name);
-            $values[$field->getID()] = array('field' => &$field, 'values' => is_array($value)?$value:array($value));
+            $field = $art_field_fact->getFieldFromName($field_name);
+            $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
         }
         
         // construction of $dependencies array : dependcies defined rules

@@ -1,5 +1,5 @@
 <?php
-require_once('common/include/String.class.php');
+
 if (!class_exists("FakeValue")) {
     class FakeValue {}
 }
@@ -24,21 +24,21 @@ class CollectionTestCase extends UnitTestCase {
     }
 
     function testEmptyCollection() {
-        $c =& new $this->collection_class_name();
+        $c = new $this->collection_class_name();
         $this->assertTrue($c->isEmpty());
     }
     function testNonEmptyCollection() {
-        $c =& new $this->collection_class_name();
-        $a = 'a';
+        $c = new $this->collection_class_name();
+        $a = new StdClass();
         $c->add($a);
         $this->assertFalse($c->isEmpty());
     }
     function testContains() {
-        $col =& new $this->collection_class_name();
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-        $d = 'd';
+        $col = new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $c = new StdClass();$c->toto = 3;
+        $d = new StdClass();$d->toto = 4;
         $col->add($a);
         $col->add($b);
         $col->add($c);
@@ -47,33 +47,32 @@ class CollectionTestCase extends UnitTestCase {
         $this->assertTrue($col->contains($c));
         $this->assertFalse($col->contains($d));
         
-        $key1 =& new String('key');
-        $key2 =& new String('key');
-        $col =& new $this->collection_class_name();
+        $key1 = 'key';
+        $key2 = 'key';
+        $col = new $this->collection_class_name();
         $this->assertFalse($col->contains($key2));
         $col->add($key1);
-        $this->assertTrue($key1->equals($key2)); //Just to remember see StringTest
         $this->assertTrue($col->contains($key2));
-        $GLOBALS['debug'] = true;
+        
         $key3_val = 'key';
-        $key3 =& new String($key3_val);
-        $col =& new $this->collection_class_name();
+        $key3 = $key3_val;
+        $col = new $this->collection_class_name();
         $col->add($key3);
         $this->assertTrue($col->contains($key3_val));
         unset($GLOBALS['debug']);
     }
     function testReference() {
-        $col =& new $this->collection_class_name();
-        $elem1 =& new FakeValue();
-        $elem2 =& new FakeValue();
-        $col->add($elem1);
-        $this->assertTrue($col->contains($elem1));
-        $this->assertFalse($col->contains($elem2));
+        $col = new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col->add($a);
+        $this->assertTrue($col->contains($a));
+        $this->assertFalse($col->contains($b));
     }
     function testSize() {
-        $a = 'a';
-        $b = 'b';
-        $col =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col = new $this->collection_class_name();
         $this->assertEqual($col->size(), 0);
         $col->add($a);
         $this->assertEqual($col->size(), 1);
@@ -85,49 +84,49 @@ class CollectionTestCase extends UnitTestCase {
     
     function testNotEqualsNotCollection() {
         $a = 'a';
-        $col1 =& new $this->collection_class_name();
+        $col1 = new $this->collection_class_name();
         $this->assertFalse($col1->equals($a));
     }
     
     function testEqualsNoElements() {
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $this->assertTrue($col1->equals($col2));
     }
     
     function testNotEqualsOneElement() {
-        $a = 'a';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $this->assertFalse($col1->equals($col2));
     }
     
     function testEqualsOneElement() {
-        $a = 'a';
-        $b = 'b';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
     }
     
     function testNotEqualsTwoElements() {
-        $a = 'a';
-        $b = 'b';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
         $this->assertFalse($col1->equals($col2));
     }
     function testEqualsTwoElements() {
-        $a = 'a';
-        $b = 'b';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -136,10 +135,10 @@ class CollectionTestCase extends UnitTestCase {
     }
     
     function testEqualsDifferentOrder() {
-        $a = 'a';
-        $b = 'b';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col1->add($b);
         $col2->add($b);
@@ -148,9 +147,9 @@ class CollectionTestCase extends UnitTestCase {
     }
     
     function testEqualsDifferentSizes() {
-        $a = 'a';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col1->add($a);
         $col2->add($a);
@@ -158,11 +157,11 @@ class CollectionTestCase extends UnitTestCase {
     }
     
     function testEqualsSameAndDifferentElements() {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $c = new StdClass();$c->toto = 3;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -171,10 +170,10 @@ class CollectionTestCase extends UnitTestCase {
     }
     
     function testEqualsUniqueAndNonUniqueElements() {
-        $a = 'a';
-        $b = 'b';
-        $col1 =& new $this->collection_class_name();
-        $col2 =& new $this->collection_class_name();
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
+        $col1 = new $this->collection_class_name();
+        $col2 = new $this->collection_class_name();
         $col1->add($a);
         $col1->add($a);
         $col2->add($a);
@@ -183,19 +182,19 @@ class CollectionTestCase extends UnitTestCase {
     }
     
     function testInitialArray() {
-        $a = 'a';
-        $b = 'b';
+        $a = new StdClass();$a->toto = 1;
+        $b = new StdClass();$b->toto = 2;
         $arr = array();
-        $arr[] =& $a;
-        $arr[] =& $b;
-        $col =& new $this->collection_class_name($arr);
+        $arr[] = $a;
+        $arr[] = $b;
+        $col = new $this->collection_class_name($arr);
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->contains($b));
     }
     
     function testRemove() {
-        $a = 'a';
-        $col =& new $this->collection_class_name();
+        $a = new StdClass();
+        $col = new $this->collection_class_name();
         $col->add($a);
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->remove($a));

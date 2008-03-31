@@ -23,7 +23,6 @@
 
 require_once('HTMLCleaner.class.php');
 require_once('WikiPage.class.php');
-require_once('common/collection/ArrayIterator.class.php');
 
 /**
  *

@@ -19,8 +19,8 @@ class PrioritizedMultiMap extends MultiMap{
     /**
      * Associates the specified value with the specified key in this map
      */
-    function put(&$key, &$value, $priority = 0) {
-        $col =& $this->_getCollection($key);
+    function put($key, $value, $priority = 0) {
+        $col = $this->_getCollection($key);
         $col->add($value, $priority);
     }
 }

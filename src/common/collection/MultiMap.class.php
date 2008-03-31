@@ -15,7 +15,7 @@ class MultiMap {
     /* protected */ var $collection_class_name;
     
     function MultiMap() {
-        $this->map =& new Map();
+        $this->map = new Map();
         $this->collection_class_name = "Collection";
     }
     
@@ -23,20 +23,16 @@ class MultiMap {
     /**
      * @return the Collection to which this map maps the specified key.
      */
-    function &get(&$key) {
+    function get($key) {
         return $this->map->get($key);
     }
     
     /**
      * Associates the specified value with the specified key in this map
      */
-    function put(&$key, &$value) {
-        if (method_exists($key, 'equals') && method_exists($key, 'hashCode')) {
-            $col =& $this->_getCollection($key);
-            $col->add($value);
-        } else {
-            trigger_error("key parameter must implements equals() and hashCode() methods");
-        }
+    function put($key, $value) {
+        $col = $this->_getCollection($key);
+        $col->add($value);
     }
     
     /**
@@ -50,10 +46,10 @@ class MultiMap {
      * @return the collection corresponding to the key
      * @access protected
      */
-    function &_getCollection(&$key) {
-        $col =& $this->map->get($key);
+    function _getCollection($key) {
+        $col = $this->map->get($key);
         if (!$col) {
-            $col =& new $this->collection_class_name();
+            $col = new $this->collection_class_name();
             $this->map->put($key, $col);
         }
         return $col;
@@ -62,7 +58,7 @@ class MultiMap {
     /**
      * @return the keys of this map
      */
-    function &getKeys() {
+    function getKeys() {
         return $this->map->getKeys();
     }
     
