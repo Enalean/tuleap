@@ -146,10 +146,11 @@ function account_namevalid($name, $key = '') {
 	// must have at least one character
     // MV: not useful because we already have both 'min length' and
     // 'valid chars' rules
-    //if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-    //	$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
-    //	return 0;
-    //}
+    // NT: still useful since it checks if the name does not start with a digit
+    if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+    	$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
+    	return 0;
+    }
 
 	// must contain all legal characters
 	if ($rule->containsIllegalChars($name)) {
