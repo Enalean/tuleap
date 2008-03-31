@@ -68,6 +68,9 @@ class UserHelper {
      * @see getDisplayName
      */
     function getDisplayNameFromUser(&$user) {
+        if ($user->isNone()) {
+            return $user->getUserName();
+        }
         return $this->getDisplayName($user->getUserName(), $user->getRealName());
     }
     
@@ -94,11 +97,23 @@ class UserHelper {
      * @see getDisplayName
      */
     function getDisplayNameFromUserName($user_name) {
-        $um =& $this->_getUserManager();
-        $user =& $um->getUserByUserName($user_name);
-        return $this->getDisplayNameFromUser($user);
+        if ($this->_isUserNameNone($user_name)) {
+            return $user_name;
+        } else {
+            $um =& $this->_getUserManager();
+            $user =& $um->getUserByUserName($user_name);
+            return $this->getDisplayNameFromUser($user);
+        }
     }
     
+    /**
+     * _isUserNameNone
+     *
+     * @param  user_name  
+     */
+    function _isUserNameNone($user_name) {
+        return $user_name == $GLOBALS['Language']->getText('global', 'none');
+    }
     
 }
 

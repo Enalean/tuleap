@@ -4,7 +4,7 @@ Mock::generate('User');
 Mock::generatePartial(
     'User',
     'UserTestVersion',
-    array('getStatus', 'getUnixStatus', '_getPreferencesDao')
+    array('getStatus', 'getUnixStatus', '_getPreferencesDao', 'getId')
 );
 
 require_once('common/dao/UserPreferencesDao.class.php');
@@ -109,7 +109,7 @@ class UserTest extends UnitTestCase {
         
         $user =& new UserTestVersion($this);
         $user->setReturnReference('_getPreferencesDao', $dao);
-        $user->id = 666;
+        $user->setReturnValue('getId', 666);
         
         $this->assertFalse($user->getPreference('unexisting_preference'), 'Unexisting preference, should return false');
         $this->assertEqual('123', $user->getPreference('existing_preference'), 'Existing preference should return 123');
@@ -119,6 +119,15 @@ class UserTest extends UnitTestCase {
         $this->assertTrue($user->delPreference('existing_preference'), 'Deletion of preference should return true');
         $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
-
+    
+    function testNone() {
+        $user_none =& new UserTestVersion($this);
+        $user_none->setReturnValue('getId', 100);
+        $this->assertTrue($user_none->isNone());
+        
+        $user =& new UserTestVersion($this);
+        $user->setReturnValue('getId', 666);
+        $this->assertFalse($user->isNone());
+    }
 }
 ?>

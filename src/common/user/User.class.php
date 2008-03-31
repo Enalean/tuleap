@@ -255,8 +255,12 @@ class User {
       }
     }
 
+    function isNone() {
+        return $this->getId() == 100;
+    }
+    
     function isAnonymous() {
-        return $this->id == 0;
+        return $this->getId() == 0;
     }
     
     function isLoggedIn() {
