@@ -156,7 +156,7 @@ class ArtifactHtml extends Artifact {
             
             echo $this->_getSection(
                 'artifact_section_details',
-                'Details',
+                $Language->getText('tracker_include_artifact','details'),
                 $html,
                 true
             );
@@ -568,7 +568,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_details',
-            'Details',
+            $Language->getText('tracker_include_artifact','details'),
             $html,
             true
         );
@@ -949,7 +949,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_details',
-            'Details',
+            $Language->getText('tracker_include_artifact','details'),
             $html,
             true
         );
