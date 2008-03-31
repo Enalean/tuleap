@@ -56,12 +56,16 @@ class User {
 
     var $locale;
     
+    var $_preferences;
+    var $_preferencesdao;
+    
     function User($id) {
         global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
         
         $this->isSuperUser = null;
         $this->id = $id;
         $this->locale = '';
+        $this->_preferences = array();
         
         if (isset($ALL_USERS_DATA["user_$id"])) {
             $is_anonymous = ($id == 0);
@@ -582,6 +586,69 @@ class User {
             }
         }
         return $projects;
+    }
+    
+    function &_getPreferencesDao() {
+        if (!$this->_preferencesdao) {
+            $this->_preferencesdao =& new UserPreferencesDao(CodeXDataAccess::instance());
+        }
+        return $this->_preferencesdao;
+    }
+    
+    /**
+     * getPreference
+     *
+     * @param string $preference_name
+     * @return string preference value or false if not set
+     */
+    function getPreference($preference_name) {
+        if (!isset($this->_preferences[$preference_name])) {
+            $this->_preferences[$preference_name] = false;
+            if ($this->isLoggedIn()) {
+                $dao =& $this->_getPreferencesDao();
+                $dar =& $dao->search($this->getId(), $preference_name);
+                if ($row = $dar->getRow()) {
+                    $this->_preferences[$preference_name] = $row['preference_value'];
+                }
+            }
+        }
+        return $this->_preferences[$preference_name];
+    }
+    
+    /**
+     * setPreference
+     *
+     * @param  string $preference_name
+     * @param  string $preference_value
+     * @return boolean
+     */
+    function setPreference($preference_name, $preference_value) {
+        $this->_preferences[$preference_name] = false;
+        if ($this->isLoggedIn()) {
+            $dao =& $this->_getPreferencesDao();
+            if ($dao->set($this->getId(), $preference_name, $preference_value)) {
+                $this->_preferences[$preference_name] = $preference_value;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * delPreference
+     *
+     * @param  string $preference_name  
+     * @return boolean
+     */
+    function delPreference($preference_name) {
+        $this->_preferences[$preference_name] = false;
+        if ($this->isLoggedIn()) {
+            $dao =& $this->_getPreferencesDao();
+            if ( ! $dao->delete($this->getId(), $preference_name)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

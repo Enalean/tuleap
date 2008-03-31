@@ -1,11 +1,16 @@
 <?php
 require_once('common/user/User.class.php');
-
+Mock::generate('User');
 Mock::generatePartial(
     'User',
     'UserTestVersion',
-    array('getStatus', 'getUnixStatus')
+    array('getStatus', 'getUnixStatus', '_getPreferencesDao')
 );
+
+require_once('common/dao/UserPreferencesDao.class.php');
+Mock::generate('UserPreferencesDao');
+require_once('common/dao/include/DataAccessResult.class.php');
+Mock::generate('DataAccessResult');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -83,6 +88,36 @@ class UserTest extends UnitTestCase {
         $this->assertFalse($u4->hasSuspendedUnixAccount());
         $this->assertFalse($u4->hasDeletedUnixAccount());
         $this->assertTrue($u4->hasNoUnixAccount());
+    }
+    
+    function testPreferences() {
+        $dao =& new MockUserPreferencesDao($this);
+        $dar =& new MockDataAccessResult($this);
+        
+        $empty_dar =& new MockDataAccessResult($this);
+        $empty_dar->setReturnValue('getRow', false);
+        $dar->setReturnValueAt(0, 'getRow', array('preference_value' => '123'));
+        $dar->setReturnValueAt(1, 'getRow', false);
+        
+        $dao->setReturnReference('search', $empty_dar, array(666, 'unexisting_preference'));
+        $dao->setReturnReference('search', $dar, array(666, 'existing_preference'));
+        $dao->expectCallCount('search', 2);
+        $dao->setReturnValue('set', true, array(666, 'existing_preference', '456'));
+        $dao->expectOnce('set');
+        $dao->setReturnValue('delete', true, array(666, 'existing_preference'));
+        $dao->expectOnce('delete');
+        
+        $user =& new UserTestVersion($this);
+        $user->setReturnReference('_getPreferencesDao', $dao);
+        $user->id = 666;
+        
+        $this->assertFalse($user->getPreference('unexisting_preference'), 'Unexisting preference, should return false');
+        $this->assertEqual('123', $user->getPreference('existing_preference'), 'Existing preference should return 123');
+        $this->assertEqual('123', $user->getPreference('existing_preference'), 'Existing preference should return 123, should be cached');
+        $this->assertTrue($user->setPreference('existing_preference', '456'), 'Updating preference should return true. %s');
+        $this->assertEqual('456', $user->getPreference('existing_preference'), 'Existing preference has been updated, should now return 456. No call to dao since cached during update');
+        $this->assertTrue($user->delPreference('existing_preference'), 'Deletion of preference should return true');
+        $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
 
 }

@@ -396,6 +396,7 @@ function user_get_languagecode() {
 	return db_result($res,0,'language_code');
 }
 
+//Deprecated. Use User->setPreference() instead.
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
@@ -418,6 +419,7 @@ function user_set_preference($preference_name,$value) {
 	}
 }
 
+//Deprecated. Use User->getPreference() instead.
 function user_get_preference($preference_name) {
 	GLOBAL $user_pref;
 	if (user_isloggedin()) {
@@ -459,6 +461,7 @@ function user_get_preference($preference_name) {
 	}
 }
 
+//Deprecated. Use User->delPreference() instead.
 function user_del_preference($preference_name) {
     GLOBAL $user_pref;
     if (user_isloggedin()) {

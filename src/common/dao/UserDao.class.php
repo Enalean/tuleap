@@ -331,7 +331,7 @@ class UserDao extends DataAccessObject {
             $this->da->quoteSmart($fontsize),
             $this->da->quoteSmart($theme),
             $this->da->quoteSmart($language_id));
-        $inserted = $this->update();
+        $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
