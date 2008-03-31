@@ -1982,6 +1982,7 @@ CREATE TABLE user (
   language_id int(11) NOT NULL DEFAULT 1,
   last_pwd_update int(11) NOT NULL default '0',
   last_access_date int(11) NOT NULL default '0',
+  expiry_date int(11),
   PRIMARY KEY  (user_id),
   KEY idx_user_user (status)
 ) TYPE=MyISAM;

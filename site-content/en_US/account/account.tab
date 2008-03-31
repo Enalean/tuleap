@@ -227,8 +227,11 @@ account_register	passwd2	Password (repeat)
 account_register	passwd2_directions	&nbsp;
 account_register	realname	Full/Real Name
 account_register	realname_directions	&nbsp;
-account_register	email	Email Address 
-account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>	 
+account_register	email	Email Address
+account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>
+account_register	expiry_date	Expiry Date
+account_register	expiry_date_directions	<em><strong>Remark:</strong> Once this date passed, the account will be suspended.</em>
+account_register	data_not_parsed	       Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format. 
 account_register	tz	Timezone
 account_register	mandatory	Fields marked with $1 are mandatory.
 account_register	siteupdate	Receive Email about Site Updates <span style="color:#666">(Very low traffic and includes security notices. Highly Recommended.)</span>

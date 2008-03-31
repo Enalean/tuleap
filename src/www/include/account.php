@@ -132,7 +132,7 @@ function account_make_login_from_email($email) {
     $name=preg_replace($pattern, $replacement, $email);
     $name = substr($name, 0, 32);
     $name = strtr($name, ".:;,?%^*(){}[]<>+=$", "___________________");
-    $name = strtr($name, "àaéèeùuç", "aaeeeuuc");
+    $name = strtr($name, "ï¿½aï¿½ï¿½eï¿½uï¿½", "aaeeeuuc");
     return strtolower($name);
 }
 
@@ -281,6 +281,7 @@ function account_create($loginname=''
                         ,$lang_id=1
                         ,$unix_uid
                         ,$unix_status='N'
+                        ,$expiry_date=0
                         ) {
     
     global $Language;
@@ -303,7 +304,8 @@ function account_create($loginname=''
                      ." ,timezone='".db_es($timezone)."'"
                      ." ,language_id=".db_ei($lang_id)
                      ." ,unix_uid=".db_ei($unix_uid)
-                     ." ,unix_status='".db_es($unix_status)."'");
+                     ." ,unix_status='".db_es($unix_status)."'"
+                     ." ,expiry_date=".db_ei($expiry_date));
     
     if (!$result) {
         exit_error($Language->getText('include_exit', 'error'), db_error());

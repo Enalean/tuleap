@@ -266,6 +266,8 @@ admin_usergroup	header	Gestion des association utilisateur/groupe pour l'utilisa
 admin_usergroup	account_info	Information sur le compte Unix
 admin_usergroup	shell	Shell
 admin_usergroup	email	E-mail
+admin_usergroup	expiry_date	Date d'expiration
+admin_usergroup	data_not_parsed	Désolé, le format de la date d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_usergroup	ldap_id	Identifiant LDAP
 admin_usergroup	unix_status	Statut du compte Unix
 admin_usergroup	no_account	Pas de compte Unix

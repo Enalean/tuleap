@@ -8,7 +8,8 @@
 
 require_once('pre.php');    
 require_once('account.php');
-
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -51,37 +52,47 @@ if ($action=='remove_user_from_group') {
 	/*
 		Update the user
 	*/
-        $result=db_query("UPDATE user SET shell='$form_shell', email='$email' WHERE user_id=$user_id");
-	if (!$result) {
-		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
-                echo db_error();
-	} else {
-		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
-	}
-        // Update in plugin
-        require_once('common/event/EventManager.class.php');
-        $em =& EventManager::instance();
-        $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
-                                                    'user_id' => $user_id ));        
-
-	// status changing
-	if ($form_unixstatus != 'N') {
-		$res_uid = db_query("SELECT unix_uid FROM user WHERE user_id=$user_id");
-		$row_uid = db_fetch_array($res_uid);
-		if ($row_uid['unix_uid'] == 0) {
-			// need to create uid
-			db_query("UPDATE user SET unix_uid=" . account_nextuid() . " WHERE user_id=$user_id");
-		} 
-		// now do update
-		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
-		if (!$result) {
-		    $feedback .= ' - '.$Language->getText('admin_usergroup','error_upd_ux');
-		    echo db_error();
-		} else {
-		    $feedback .= ' - '.$Language->getText('admin_usergroup','success_upd_ux');
-		}
-
-	}
+    $vDate = new Valid_String();
+    if ($expiry_date != '' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $expiry_date)) {
+        $feedback .= ' '.$Language->getText('admin_usergroup','data_not_parsed');
+    }else{
+        if ($expiry_date != '' && $vDate->validate($expiry_date)) {
+            $date_list = split("-", $expiry_date, 3);
+            $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+            $expiry_date = $unix_expiry_time; 
+        }
+        $result=db_query("UPDATE user SET shell='$form_shell', email='$email', expiry_date='$expiry_date' WHERE user_id=$user_id");
+    	if (!$result) {
+    		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
+                    echo db_error();
+    	} else {
+    		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
+    	}
+            // Update in plugin
+            require_once('common/event/EventManager.class.php');
+            $em =& EventManager::instance();
+            $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
+                                                        'user_id' => $user_id ));        
+    
+    	// status changing
+    	if ($form_unixstatus != 'N') {
+    		$res_uid = db_query("SELECT unix_uid FROM user WHERE user_id=$user_id");
+    		$row_uid = db_fetch_array($res_uid);
+    		if ($row_uid['unix_uid'] == 0) {
+    			// need to create uid
+    			db_query("UPDATE user SET unix_uid=" . account_nextuid() . " WHERE user_id=$user_id");
+    		} 
+    		// now do update
+    		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
+    		if (!$result) {
+    		    $feedback .= ' - '.$Language->getText('admin_usergroup','error_upd_ux');
+    		    echo db_error();
+    		} else {
+    		    $feedback .= ' - '.$Language->getText('admin_usergroup','success_upd_ux');
+    		}
+    
+    	}
+    }
 
 } else if ($action=='add_user_to_group') {
     /*
@@ -114,13 +125,13 @@ if ($action=='remove_user_from_group') {
 // get user info
 $res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
 $row_user = db_fetch_array($res_user);
-
+$hp =& CodeX_HTMLPurifier::instance();
 ?>
 <h2>
 <?php echo $Language->getText('admin_usergroup','header').": ".user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
 <h3>
 <?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
-<FORM method="post" action="<?php echo $PHP_SELF; ?>">
+<FORM method="post" name="update_user" action="<?php echo $PHP_SELF; ?>">
 <INPUT type="hidden" name="action" value="update_user">
 <INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
 
@@ -146,7 +157,16 @@ $row_user = db_fetch_array($res_user);
 <P>
 <?php echo $Language->getText('admin_usergroup','email'); ?>:
 <INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35" MAXLENGTH="55">
+<P>
+<?php echo $Language->getText('admin_usergroup','expiry_date'); 
+if($row_user['expiry_date'] != 0){
+   $exp_date = format_date('Y-m-d',$row_user['expiry_date']); 
+}
 
+?>:
+<INPUT TYPE="TEXT" id="expiry_date" NAME="expiry_date" VALUE="<?php echo $exp_date; ?>" SIZE="15" MAXLENGTH="10">
+<a href="<?php echo 'javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                    '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
 <P>
 <?php 
 require_once('common/event/EventManager.class.php');

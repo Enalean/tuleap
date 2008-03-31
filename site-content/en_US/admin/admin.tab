@@ -261,6 +261,8 @@ admin_usergroup	header	User/Group Management for user
 admin_usergroup	account_info	Unix Account Information
 admin_usergroup	shell	Shell
 admin_usergroup	email	Email
+admin_usergroup	expiry_date	Expiry Date
+admin_usergroup	data_not_parsed	Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format.
 admin_usergroup	ldap_id	LDAP Identifier
 admin_usergroup	unix_status	Unix Account Status
 admin_usergroup	no_account	No Unix Account

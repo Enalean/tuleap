@@ -32,4 +32,13 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent("codex_daily_start", null);
 
+//change account status to suspended when the account expiry date is passed
+$current_date = format_date('Y-m-d',time());
+$date_list = split("-", $current_date, 3);
+$unix_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+
+db_query("UPDATE user SET status='S'"
+                    ." WHERE expiry_date!=0 and expiry_date<" . $unix_time );
+
+
 ?>

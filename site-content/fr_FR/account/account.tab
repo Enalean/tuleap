@@ -233,7 +233,10 @@ account_register	passwd2_directions	&nbsp;
 account_register	realname	Nom Complet
 account_register	realname_directions	&nbsp;
 account_register	email	Adresse e-mail
-account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>	 
+account_register	email_directions	<em><strong>Remarque&nbsp;:</strong>Cette adresse e-mail sera vérifiée avant l'activation du compte. Merci de n'utiliser que des adresses e-mails autorisées.</em>
+account_register	expiry_date	Date d'expiration
+account_register	expiry_date_directions	<em><strong>Remarque&nbsp;:</strong> Une fois cette date passée, le compte sera suspendu.</em>	 
+account_register	data_not_parsed		Désolé, le format de la date du d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.	 
 account_register	tz	Fuseau Horaire
 account_register	mandatory	Les champs marqués $1 sont obligatoires.
 account_register	siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <span style="color:#666">(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</span>

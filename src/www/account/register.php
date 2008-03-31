@@ -13,7 +13,8 @@ require_once('timezones.php');
 
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
-
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $Language->loadLanguageMsg('account/account');
 $request =& HTTPRequest:: instance();
 $page = $request->get('page');
@@ -69,6 +70,18 @@ function register_valid($confirm_hash)	{
         }
         return 0;
     }
+    $expiry_date = 0;
+    if ($request->exist('form_expiry') && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
+        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
+        return 0;
+    }
+    $vDate = new Valid_String();
+    if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
+        $date_list = split("-", $request->get('form_expiry'), 3);
+        $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+        $expiry_date = $unix_expiry_time; 
+        
+    }
 
     // Escape HTML injections in some parameters
     // Note: this is not the right way to do, we should record them as is and
@@ -103,7 +116,7 @@ function register_valid($confirm_hash)	{
                           ,$tz
                           ,$Language->getText('conf','language_id')
                           ,account_nextuid()
-                          ,'A');
+                          ,'A',$expiry_date);
 
     
     return $res;
@@ -125,6 +138,7 @@ function display_account_form($register_error)	{
     $form_loginname = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
     $form_realname  = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
     $form_email     = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
+    $form_expiry     = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
     } else {
@@ -135,7 +149,7 @@ function display_account_form($register_error)	{
 
     ?>
 <?php if($page == "admin_creation"){ ?>        
-<form action="/admin/register_admin.php?page=admin_creation" method="post">
+    <form action="/admin/register_admin.php?page=admin_creation" name="new_user" method="post"> 
 <?php } else { ?>
     <form action="/account/register.php" method="post">
 <?php }?>
@@ -146,11 +160,17 @@ function display_account_form($register_error)	{
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
 <INPUT size=40 type="text" name="form_realname" value="<?php echo $form_realname; ?>">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
-
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
 <INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
-
+<?php if($page == "admin_creation"){ ?>    
+    <P><?php print $Language->getText('account_register', 'expiry_date')?>:<BR>
+    <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="<?php echo $form_expiry; ?>">
+    <a href="<?php echo 'javascript:show_calendar(\'document.new_user.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+    <BR>
+    <?php print $Language->getText('account_register', 'expiry_date_directions'); ?>
+<?php } ?>
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php 
     echo html_get_timezone_popup ('timezone',$timezone); ?>
