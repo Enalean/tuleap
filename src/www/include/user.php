@@ -391,6 +391,7 @@ function user_get_language() {
     return $lang_id;
 }
 
+//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead.
 function user_get_languagecode() {
     $res=db_query("SELECT * FROM supported_languages WHERE language_id='".user_get_language()."'");
 	return db_result($res,0,'language_code');
