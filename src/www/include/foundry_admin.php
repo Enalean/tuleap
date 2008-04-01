@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('include/include');
 
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-
+$hp = CodeX_HTMLPurifier::instance();
 if ($func) {
 	/*
 		Make a change to the database
@@ -155,7 +155,7 @@ $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name ".
 		<FORM ACTION="/foundry/'.$expl_pathinfo[2].'/admin/" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 		'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 		'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-		'<TD><A href="/users/'.$row_memb['user_name'].'/">'.$row_memb['realname'].'</A></TD></TR>';
+		'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $hp->purify($row_memb['realname'], CODEX_PURIFIER_CONVERT_HTML) .'</A></TD></TR>';
 	}
 	print '</TABLE>
 ';

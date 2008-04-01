@@ -73,7 +73,7 @@ function logs_display($sql, $span, $field, $title='') {
  
       print '<tr class="'. util_get_alt_row_color($i). '">'
 	.' <td>'.strftime("%e %b %Y", $row["time"] ).'</td>'
-	.' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('.$row["realname"].')</td>'
+	.' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODEX_PURIFIER_CONVERT_HTML) .')</td>'
 	.' <td>'.$row["email"].'</td>'
 	.' <td>'. $hp->purify($row["title"], CODEX_PURIFIER_CONVERT_HTML) .'</td>'
 	.' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
@@ -162,7 +162,7 @@ function cvsaccess_logs_extract($project,$span,$who) {
 }
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {  
-
+    $hp = CodeX_HTMLPurifier::instance();
 	// check first if service is used by this project
         // if service not used return immediately
         if (!$project->usesCVS()) {
@@ -195,7 +195,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('.$row["realname"].')</TD>'
+			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('. $hp->purify($row["realname"], CODEX_PURIFIER_CONVERT_HTML) .')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["cvs_checkouts"] . '</TD>'
 				. '<TD>' . $row["cvs_browse"] . '</TD>'
@@ -256,7 +256,7 @@ function svnaccess_logs_extract($project, $span, $who) {
 }
 
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
-
+    $hp = CodeX_HTMLPurifier::instance();
 	// check first if service is used by this project
         // if service not used return immediately
         if (! $project->usesSVN()) {
@@ -289,7 +289,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('.$row["realname"].')</TD>'
+			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('. $hp->purify($row["realname"], CODEX_PURIFIER_CONVERT_HTML) .')</TD>'
 				. '<TD>' . $row["email"] . '</TD>'
 				. '<TD>' . $row["svn_access_count"] . '</TD>'
 				. '<TD>' . $row["svn_browse"] . '</TD>'

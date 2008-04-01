@@ -33,7 +33,8 @@ class TabbedLayout extends Layout {
 	 *	@param	string	The user's realname
 	 */
 	function createLinkToUserHome($user_name, $realname) {
-		return '<a href="/users/'.$user_name.'/">'.$realname.'</a>';
+        $hp = CodeX_HTMLPurifier::instance();
+		return '<a href="/users/'.$user_name.'/">'. $hp->purify($realname, CODEX_PURIFIER_CONVERT_HTML) .'</a>';
 	}
     
     function getBodyHeader($params) {

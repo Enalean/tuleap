@@ -3,7 +3,7 @@ require_once('pre.php');
 require_once('www/my/my_utils.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');
-
+$hp = CodeX_HTMLPurifier::instance();
 if (user_isloggedin()) {
 
     $em =& EventManager::instance();
@@ -26,7 +26,7 @@ if (user_isloggedin()) {
                 case $lm->OWNER_TYPE_USER:
                     $owner_id = user_getid();
                     
-                    $title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
+                    $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
                     my_header(array('title'=>$title));
                     $lm->displayAvailableWidgets(user_getid(), $lm->OWNER_TYPE_USER, $layout_id);
                     site_footer(array());

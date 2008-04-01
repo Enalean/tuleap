@@ -53,7 +53,7 @@ class UserImport extends Error {
      */
     function parse($user_filename,&$errors,&$parsed_users) {
         global $Language;
-
+        $hp = CodeX_HTMLPurifier::instance();
         $user_file = fopen($user_filename, "r");
         $ok = true;  
         $user_dao =& new UserDao(CodexDataAccess::instance());
@@ -95,12 +95,12 @@ class UserImport extends Error {
                     // check that the user is active
                     if (! $current_user->isActive()) {
                         $ok = false;
-                        $errors=$Language->getText('project_admin_userimport','active_user',$current_user->getRealName()); 	
+                        $errors=$Language->getText('project_admin_userimport','active_user', $hp->purify($current_user->getRealName(), CODEX_PURIFIER_CONVERT_HTML) ); 	
                     } else {
                         // check that the user is not already memeber of the project
                         if ($current_user->isMember($this->group_id)) {
                         	    $ok = false;
-                            $errors=$Language->getText('project_admin_userimport','member_user',$current_user->getRealName());
+                            $errors=$Language->getText('project_admin_userimport','member_user', $hp->purify($current_user->getRealName(), CODEX_PURIFIER_CONVERT_HTML) );
                         } else {
                             // last check : is the user already in the list of imported users ?                        
                             if (! in_array($current_user->getID(), $user_id_array)) {

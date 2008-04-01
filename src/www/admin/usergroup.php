@@ -172,7 +172,7 @@ if($row_user['expiry_date'] != 0){
 require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('usergroup_update_form', array());
-
+$hp = CodeX_HTMLPurifier::instance();
 ?>
 
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">
@@ -181,7 +181,7 @@ $em->processEvent('usergroup_update_form', array());
 <?php if($GLOBALS['sys_user_approval'] == 1){ ?>
 <HR>
 <H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
-<?php echo $row_user['register_purpose']; 
+<?php echo  $hp->purify($row_user['register_purpose'], CODEX_PURIFIER_CONVERT_HTML) ; 
 }?>
 <HR>
 

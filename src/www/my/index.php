@@ -14,7 +14,7 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 $Language->loadLanguageMsg('my/my');
 $em =& EventManager::instance();
 $em->processEvent('plugin_load_language_file', null);
-
+$hp = CodeX_HTMLPurifier::instance();
 if (user_isloggedin()) {
 
     // If it's super user and license terms have not yet been agreed then redirect
@@ -32,7 +32,7 @@ if (user_isloggedin()) {
     if (browser_is_netscape4()) {
         $feedback.= $Language->getText('my_index', 'err_badbrowser');
     }
-    $title = $Language->getText('my_index', 'title', array(user_getrealname(user_getid()).' ('.user_getname().')'));
+    $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
     my_header(array('title'=>$title));

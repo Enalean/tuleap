@@ -149,8 +149,9 @@ function menu_foundry_guides($grp) {
 	echo $Language->getText('include_features_boxes','no_projects');
 	echo db_error();
     } else {
+        $hp = CodeX_HTMLPurifier::instance();
 	for ($i=0; $i<$rows; $i++) {
-	    $HTML->menu_entry('/users/'. db_result($result,$i,'user_name').'/', db_result($result,$i,'realname'));
+	    $HTML->menu_entry('/users/'. db_result($result,$i,'user_name').'/',  $hp->purify(db_result($result,$i,'realname'), CODEX_PURIFIER_CONVERT_HTML) );
 	}
     }
     $HTML->menuhtml_bottom();

@@ -4,7 +4,7 @@ $request =& HTTPRequest::instance();
 
 
 $nb_max = 50;
-
+$hp = CodeX_HTMLPurifier::instance();
 $s = db_escape_string(strtolower($request->get('search_for')));
 if ($request->get('users') || $request->get('mailinglists')) {
     if ($request->get('users')) {
@@ -41,7 +41,7 @@ if ($request->get('users') || $request->get('mailinglists')) {
         $us_informal = $data['is_list'] ? '' : 'informal';
         $email = $data['is_list'] ? $data['email'].'@'.$GLOBALS['sys_lists_host'] : $data['email'];
         if (!$data['is_list']) {
-            echo '<li><span style="font-weight:bold" class="'. $ml_informal .'">'. $data['name'] .'</span><span class="informal"> ('. $data['realname'] .')</span><div class="'. $us_informal .'">'. $email .'</div></li>';
+            echo '<li><span style="font-weight:bold" class="'. $ml_informal .'">'. $data['name'] .'</span><span class="informal"> ('.  $hp->purify($data['realname'], CODEX_PURIFIER_CONVERT_HTML)  .')</span><div class="'. $us_informal .'">'. $email .'</div></li>';
         } else {
             echo '<li><div style="font-style:italic;font-weight:bold; background:url('. util_get_dir_image_theme() .'ic/group.png) left top no-repeat; padding-left:18px" class="'. $us_informal .'">'. $email .'</div></li>';
         }

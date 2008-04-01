@@ -293,7 +293,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-	'<TD><A href="/users/'.$row_memb['user_name'].'/">'.$showname.'&nbsp;&nbsp;('.$row_memb['user_name'].') </A></TD></TR>';
+	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $hp->purify($showname, CODEX_PURIFIER_CONVERT_HTML) .'&nbsp;&nbsp;('.$row_memb['user_name'].') </A></TD></TR>';
 }
 
 print '</TABLE> <HR NoShade SIZE="1">';
