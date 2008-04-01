@@ -148,7 +148,7 @@ if ($type_of_search == "soft") {
 		for ( $i = 0; $i < $rows; $i++ ) {
 			print	"<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/users/".db_result($result, $i, 'user_name')."/\">"
 				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'user_name')."</A></TD>"
-				. "<TD>".db_result($result,$i,'realname')."</TD></TR>\n";
+				. "<TD>". $hp->purify(db_result($result,$i,'realname'), CODEX_PURIFIER_CONVERT_HTML) ."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}

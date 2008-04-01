@@ -70,16 +70,6 @@ function register_valid($confirm_hash)	{
         return 0;
     }
 
-    // Escape HTML injections in some parameters
-    // Note: this is not the right way to do, we should record them as is and
-    // escape on display but due to legacy, it's much more secure to escape now.
-    $purifier =& CodeX_HTMLPurifier::instance();
-
-    // Escape realname
-    $realname = $purifier->purify($request->get('form_realname'), CODEX_PURIFIER_STRIP_HTML);
-    // Escape register purpose
-    $register_purpose = $purifier->purify($request->get('form_register_purpose'));
-
     $status = 'P';
     if($request->get('page')== "admin_creation"){
         if($request->get('form_restricted')){
@@ -93,8 +83,8 @@ function register_valid($confirm_hash)	{
     $res = account_create($request->get('form_loginname')
                           ,$request->get('form_pw')
                           ,''
-                          ,$realname
-                          ,$register_purpose
+                          ,$request->get('form_realname')
+                          ,$request->get('form_register_purpose')
                           ,$request->get('form_email')
                           ,$status
                           ,$confirm_hash
@@ -222,7 +212,7 @@ if ($request->isPost() && $request->exist('Register')) {
             }
             $content .= '<p><b>'.$Language->getText('account_register', 'title_confirm').'</b>';
             if($admin_creation){
-                $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
+                $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array( $hp->purify($request->get('form_realname'), CODEX_PURIFIER_CONVERT_HTML) ,$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
             }else{
                 $content .= '<p>'.$Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'],$user_name));
             }

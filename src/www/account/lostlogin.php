@@ -48,7 +48,7 @@ $purifier =& CodeX_HTMLPurifier::instance();
 $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 ?>
 <p><b><?php echo $Language->getText('account_lostlogin', 'title'); ?></b>
-<P><?php echo $Language->getText('account_lostlogin', 'message', array($purifier->purify($row_lostuser['realname']))); ?>.
+<P><?php echo $Language->getText('account_lostlogin', 'message', array($purifier->purify($row_lostuser['realname'], CODEX_PURIFIER_CONVERT_HTML))); ?>.
 
 <form action="lostlogin.php" method="post">
 <p><?php echo $Language->getText('account_lostlogin', 'newpasswd'); ?>:

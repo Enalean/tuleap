@@ -27,7 +27,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 
 	*/
   global $sys_datefmt,$Language;
-
+  $hp = CodeX_HTMLPurifier::instance();
 	$g_id =  db_result($result,$row,'group_id');
 
 	if ($g_id == $GLOBALS['sys_news_group']) {
@@ -42,7 +42,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 				<TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
 					db_result($result, $row, 'user_name') .'/">'. 
 					db_result($result, $row, 'user_name') .'</A>'.
-					' ( ' .db_result($result, $row, 'realname') . ' ) '.
+					' ( ' . $hp->purify(db_result($result, $row, 'realname'), CODEX_PURIFIER_CONVERT_HTML)  . ' ) '.
 					'<BR><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $row, 'msg_id') .'">'.
 					'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.

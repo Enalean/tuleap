@@ -56,7 +56,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         $msg = '';
         switch($message_type) {
             case $this->MESSAGE_ADDED:
-                $msg .= $params['path']->get($params['parent']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
+                $msg .= $params['path']->get($params['parent']) .' has been modified by '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
                 $msg .= "\nAdded:";
                 $msg .= "\n   ". $params['item']->getTitle();

@@ -32,10 +32,6 @@ function register_valid()	{
 		return 0;
 	}
 	
-    // Escape name
-    // @see register.php
-    $purifier =& CodeX_HTMLPurifier::instance();
-
 	// if we got this far, it must be good
     $sql = "UPDATE user SET realname='".db_es($request->get('form_realname'))."' WHERE user_id=" . user_getid();
     echo $sql;

@@ -14,7 +14,7 @@ require_once('www/admin/admin_utils.php');
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-
+$hp = CodeX_HTMLPurifier::instance();
 $action_select = '';
 $status= '';
 if (isset($_REQUEST['action_select'])) {
@@ -128,7 +128,7 @@ if (db_numrows($res) < 1) {
     while ($row = db_fetch_array($res)) {
     
         ?>
-        <H2><?php echo $row['realname'].' ('.$row['user_name'].')'; ?></H2>
+        <H2><?php echo  $hp->purify($row['realname'], CODEX_PURIFIER_CONVERT_HTML) .' ('.$row['user_name'].')'; ?></H2>
     
         <p>
                                             <A href="/users/<?php echo $row['user_name']; ?>"><H3>[<?php echo $Language->getText('admin_approve_pending_users','user_info'); ?>]</H3></A>
@@ -209,7 +209,7 @@ if (db_numrows($res) < 1) {
             </TR>
             </TABLE>
         <P>
-        <B><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</B><br> <?php echo $row['register_purpose']; ?>
+        <B><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</B><br> <?php echo  $hp->purify($row['register_purpose'], CODEX_PURIFIER_CONVERT_HTML) ; ?>
     
         <br>
         &nbsp;

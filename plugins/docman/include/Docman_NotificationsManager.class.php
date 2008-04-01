@@ -175,7 +175,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         switch($message_type) {
             case $this->MESSAGE_MODIFIED:
             case $this->MESSAGE_NEWVERSION:
-                $msg .= $params['path']->get($params['item']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
+                $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
                 break;
             default:
                 $msg .= 'Something happen !';

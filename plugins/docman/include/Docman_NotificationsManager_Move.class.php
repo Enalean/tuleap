@@ -78,7 +78,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         $dpm =& $this->_getPermissionsManager();
         switch($message_type) {
             case $this->MESSAGE_MOVED:
-                $msg .= $params['item']->getTitle() .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
+                $msg .= $params['item']->getTitle() .' has been modified by '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
                 $msg .= "\nMoved ";
                 $need_sep = false;
@@ -100,7 +100,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
                 break;
             case $this->MESSAGE_MOVED_FROM:
-                $msg .= $params['path']->get($params['old_parent']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
+                $msg .= $params['path']->get($params['old_parent']) .' has been modified by '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
                 $msg .= "\n ". $params['item']->getTitle() ." moved";
                 if ($dpm->userCanAccess($params['user_monitor'], $params['old_parent']->getId())) {
@@ -117,7 +117,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 $msg .= $this->_url .'&action=details&section=notifications&id='. $params['old_parent']->getId();
                 break;
             case $this->MESSAGE_MOVED_TO:
-                $msg .= $params['path']->get($params['parent']) .' has been modified by '. util_unconvert_htmlspecialchars($user->getRealName()) .".\n";
+                $msg .= $params['path']->get($params['parent']) .' has been modified by '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
                 $msg .= "\n ". $params['item']->getTitle() ." moved";
                 if ($dpm->userCanAccess($params['user_monitor'], $params['old_parent']->getId())) {

@@ -178,7 +178,7 @@ if (($func=='edit')||($func=='do_create')) {
 <SELECT multiple size=16 name="SelectList" ID="SelectList"> ';
 
     // Display list of users
-
+    $hp = CodeX_HTMLPurifier::instance();
     // First make a quick hash of this project's restricted users
     $current_group_restricted_users=array();
     $sql="SELECT user.user_id from user, user_group WHERE user.status='R' AND user.user_id=user_group.user_id AND user_group.group_id=$group_id";
@@ -199,7 +199,7 @@ if (($func=='edit')||($func=='do_create')) {
         }
         // Don't display users that already belong to the group
         if (!isset($user_in_group[$row['user_id']]) || !$user_in_group[$row['user_id']]) {
-            echo '<option value='.$row['user_id'].'>'.$row['user_name'].' ('.addslashes($row['realname']).")\n";
+            echo '<option value='.$row['user_id'].'>'.$row['user_name'].' ('. $hp->purify($row['realname'], CODEX_PURIFIER_CONVERT_HTML) .")\n";
         } else {
             $member_id[]=$row['user_id'];
             $member_name[]=$row['user_name'].' ('.addslashes($row['realname']).")";

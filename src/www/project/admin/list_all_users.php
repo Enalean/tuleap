@@ -23,7 +23,7 @@ if ($request->exist('group_id')) {
     while ($row = db_fetch_array($res)) {
         $current_group_restricted_users[$row['user_id']] = true;
     }
-    
+    $hp = CodeX_HTMLPurifier::instance();
     $sql="SELECT user_id, user_name, realname, status FROM user WHERE status='A' OR status='R' ORDER BY user_name";
     $res = db_query($sql);
     $member_id = array();
@@ -34,7 +34,7 @@ if ($request->exist('group_id')) {
                 continue;
             }
         }
-        echo '<div><b>'.$row['user_name'].'</b> ('.addslashes($row['realname']).")</div>\n";
+        echo '<div><b>'.$row['user_name'].'</b> ('. $hp->purify($row['realname'], CODEX_PURIFIER_CONVERT_HTML) .")</div>\n";
     }
     
     echo '</div></td></tr></table>';

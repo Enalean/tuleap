@@ -9,7 +9,7 @@
 require_once('pre.php');    
 
 $Language->loadLanguageMsg('project/project');
-
+$hp = CodeX_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {
@@ -60,9 +60,9 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
 	print "\t<tr>\n";
 	print "\t\t";
 	if ( $row_memb['admin_flags']=='A' ) {
-		print "\t\t<td><b><A href=\"/users/$row_memb[user_name]/\">$row_memb[realname]</A></b></td>\n";
+		print '<td><b><A href="/users/'. $row_memb['user_name'] .'/">'. $hp->purify($row_memb['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</A></b></td>\n";
 	} else {
-		print "\t\t<td>$row_memb[realname]</td>\n";
+		print "\t\t<td>".  $hp->purify($row_memb['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</td>\n";
 	}
 	print "\t\t<td align=\"center\"><A href=\"/users/$row_memb[user_name]/\">$row_memb[user_name]</A></td>\n";
 
