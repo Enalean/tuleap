@@ -36,10 +36,10 @@ function register_valid()	{
     // @see register.php
     $purifier =& CodeX_HTMLPurifier::instance();
 
-    $realname = $purifier->purify($request->get('form_realname'), CODEX_PURIFIER_STRIP_HTML);
-
 	// if we got this far, it must be good
-	db_query("UPDATE user SET realname='".db_es($realname)."' WHERE user_id=" . user_getid());
+    $sql = "UPDATE user SET realname='".db_es($request->get('form_realname'))."' WHERE user_id=" . user_getid();
+    echo $sql;
+	db_query($sql);
 	return 1;
 }
 
@@ -50,11 +50,14 @@ if (register_valid()) {
 } else { // not valid registration, or first time to page
 	$HTML->header(array('title'=>$Language->getText('account_change_realname', 'title')));
 
+    $um = UserManager::instance();
+    $user = $um->getCurrentUser();
+    $hp = CodeX_HTMLPurifier::instance();
 ?>
 <p><b><?php $Language->getText('account_change_realname', 'title'); ?></b>
 <form action="change_realname.php" method="post">
 <p><?php echo $Language->getText('account_change_realname', 'new_name'); ?>:
-<br><input type="text" name="form_realname">
+<br><input type="text" name="form_realname" class="textfield_medium" value="<?php echo $hp->purify($user->getRealname(), CODEX_PURIFIER_CONVERT_HTML) ?>" />
 <p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
