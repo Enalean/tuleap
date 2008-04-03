@@ -1,10 +1,11 @@
 #
-# Based upon the NCSA server configuration files originally by Rob McCool.
-#
 # This is the main Apache server configuration file.  It contains the
 # configuration directives that give the server its instructions.
-# See <URL:http://httpd.apache.org/docs-2.0/> for detailed information about
-# the directives.
+# See <URL:http://httpd.apache.org/docs/2.2/> for detailed information.
+# In particular, see
+# <URL:http://httpd.apache.org/docs/2.2/mod/directives.html>
+# for a discussion of each configuration directive.
+#
 #
 # Do NOT simply read the instructions in here without understanding
 # what they do.  They're here only as hints or reminders.  If you are unsure
@@ -48,7 +49,7 @@ ServerTokens OS
 #
 # NOTE!  If you intend to place this on an NFS (or otherwise network)
 # mounted filesystem then please read the LockFile documentation
-# (available at <URL:http://httpd.apache.org/docs-2.0/mod/core.html#lockfile>);
+# (available at <URL:http://httpd.apache.org/docs/2.2/mod/mpm_common.html#lockfile>);
 # you will save yourself a lot of trouble.
 #
 # Do NOT add a slash at the end of the directory path.
@@ -64,13 +65,13 @@ PidFile run/httpd.pid
 #
 # Timeout: The number of seconds before receives and sends time out.
 #
-Timeout 300
+Timeout 120
 
 #
 # KeepAlive: Whether or not to allow persistent connections (more than
 # one request per connection). Set to "Off" to deactivate.
 #
-KeepAlive On
+KeepAlive Off
 
 #
 # MaxKeepAliveRequests: The maximum number of requests to allow
@@ -129,6 +130,7 @@ MaxRequestsPerChild  0
 # Change this to Listen on specific IP addresses as shown below to 
 # prevent Apache from glomming onto all bound IP addresses (0.0.0.0)
 #
+#Listen 12.34.56.78:80
 Listen 80
 
 #
@@ -143,18 +145,27 @@ Listen 80
 # Example:
 # LoadModule foo_module modules/mod_foo.so
 #
-LoadModule access_module modules/mod_access.so
-LoadModule auth_module modules/mod_auth.so
-LoadModule auth_anon_module modules/mod_auth_anon.so
-LoadModule auth_dbm_module modules/mod_auth_dbm.so
+LoadModule auth_basic_module modules/mod_auth_basic.so
 LoadModule auth_digest_module modules/mod_auth_digest.so
+LoadModule authn_file_module modules/mod_authn_file.so
+LoadModule authn_alias_module modules/mod_authn_alias.so
+LoadModule authn_anon_module modules/mod_authn_anon.so
+LoadModule authn_dbm_module modules/mod_authn_dbm.so
+LoadModule authn_default_module modules/mod_authn_default.so
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule authz_user_module modules/mod_authz_user.so
+LoadModule authz_owner_module modules/mod_authz_owner.so
+LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+LoadModule authz_dbm_module modules/mod_authz_dbm.so
+LoadModule authz_default_module modules/mod_authz_default.so
 LoadModule ldap_module modules/mod_ldap.so
-LoadModule auth_ldap_module modules/mod_auth_ldap.so
+LoadModule authnz_ldap_module modules/mod_authnz_ldap.so
 LoadModule include_module modules/mod_include.so
 LoadModule log_config_module modules/mod_log_config.so
+LoadModule logio_module modules/mod_logio.so
 LoadModule env_module modules/mod_env.so
+LoadModule ext_filter_module modules/mod_ext_filter.so
 LoadModule mime_magic_module modules/mod_mime_magic.so
-#LoadModule cern_meta_module modules/mod_cern_meta.so
 LoadModule expires_module modules/mod_expires.so
 LoadModule deflate_module modules/mod_deflate.so
 LoadModule headers_module modules/mod_headers.so
@@ -164,33 +175,39 @@ LoadModule mime_module modules/mod_mime.so
 LoadModule dav_module modules/mod_dav.so
 LoadModule status_module modules/mod_status.so
 LoadModule autoindex_module modules/mod_autoindex.so
-LoadModule asis_module modules/mod_asis.so
 LoadModule info_module modules/mod_info.so
 LoadModule dav_fs_module modules/mod_dav_fs.so
 LoadModule vhost_alias_module modules/mod_vhost_alias.so
 LoadModule negotiation_module modules/mod_negotiation.so
 LoadModule dir_module modules/mod_dir.so
-LoadModule imap_module modules/mod_imap.so
 #LoadModule actions_module modules/mod_actions.so
 #LoadModule speling_module modules/mod_speling.so
 #LoadModule userdir_module modules/mod_userdir.so
 LoadModule alias_module modules/mod_alias.so
 LoadModule rewrite_module modules/mod_rewrite.so
 #LoadModule proxy_module modules/mod_proxy.so
+#LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
 #LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
 #LoadModule proxy_http_module modules/mod_proxy_http.so
 #LoadModule proxy_connect_module modules/mod_proxy_connect.so
-#LoadModule cache_module modules/mod_cache.so
+LoadModule cache_module modules/mod_cache.so
 LoadModule suexec_module modules/mod_suexec.so
-#LoadModule disk_cache_module modules/mod_disk_cache.so
-#LoadModule file_cache_module modules/mod_file_cache.so
-#LoadModule mem_cache_module modules/mod_mem_cache.so
+LoadModule disk_cache_module modules/mod_disk_cache.so
+LoadModule file_cache_module modules/mod_file_cache.so
+LoadModule mem_cache_module modules/mod_mem_cache.so
 LoadModule cgi_module modules/mod_cgi.so
+LoadModule version_module modules/mod_version.so
+
+#
+# The following modules are not loaded by default:
+#
+#LoadModule cern_meta_module modules/mod_cern_meta.so
+#LoadModule asis_module modules/mod_asis.so
 
 #
 # Load config files from the config directory "/etc/httpd/conf.d".
 #
-# Include conf.d/*.conf # This is now done per virtual host
+#Include conf.d/*.conf # CodeX: This is done per virtual host
 
 #
 # ExtendedStatus controls whether Apache will generate "full" status
@@ -198,18 +215,6 @@ LoadModule cgi_module modules/mod_cgi.so
 # Off) when the "server-status" handler is called. The default is Off.
 #
 #ExtendedStatus On
-
-### Section 2: 'Main' server configuration
-#
-# The directives in this section set up the values used by the 'main'
-# server, which responds to any requests that aren't handled by a
-# <VirtualHost> definition.  These values also provide defaults for
-# any <VirtualHost> containers you may define later in the file.
-#
-# All of these directives may appear inside <VirtualHost> containers,
-# in which case these default settings will be overridden for the
-# virtual host being defined.
-#
 
 #
 # If you wish httpd to run as a different user or group, you must run
@@ -225,6 +230,18 @@ LoadModule cgi_module modules/mod_cgi.so
 #
 User codexadm
 Group codexadm
+
+### Section 2: 'Main' server configuration
+#
+# The directives in this section set up the values used by the 'main'
+# server, which responds to any requests that aren't handled by a
+# <VirtualHost> definition.  These values also provide defaults for
+# any <VirtualHost> containers you may define later in the file.
+#
+# All of these directives may appear inside <VirtualHost> containers,
+# in which case these default settings will be overridden for the
+# virtual host being defined.
+#
 
 #
 # ServerAdmin: Your address, where problems with the server should be
@@ -245,7 +262,7 @@ ServerAdmin root@localhost
 # You will have to access it by its address anyway, and this will make 
 # redirections work in a sensible way.
 #
-#ServerName new.host.name:80
+#ServerName www.example.com:80
 ServerName %sys_default_domain%
 
 #
@@ -307,15 +324,6 @@ SetEnvIf User-Agent ^CodeX let_me_in
     Allow from env=let_me_in
 </Directory>
 
-# 
-# Don't allow access to include directory for anyone.
-#
-# Not possible because of check_pw.php function...
-#<Directory "/usr/share/codex/src/www/include">
-#   AllowOverride none
-#   Order allow,deny
-#   Deny from all
-# </Directory>
 
 #
 # UserDir: The name of the directory that is appended onto a user's home
@@ -371,9 +379,8 @@ SetEnvIf User-Agent ^CodeX let_me_in
 # negotiated documents.  The MultiViews Option can be used for the 
 # same purpose, but it is much slower.
 #
-#DirectoryIndex index.html index.html.var
-DirectoryIndex index.html index.htm index.shtml index.cgi index.php index.php3
-                                                                                
+DirectoryIndex index.html index.htm index.php index.html.var
+
 #
 # AccessFileName: The name of the file to look for in each directory
 # for additional configuration directives.  See also the AllowOverride
@@ -433,7 +440,7 @@ HostnameLookups Off
 # The default is on; turn this off if you serve from NFS-mounted 
 # filesystems.  On some systems, turning it off (regardless of
 # filesystem) can improve performance; for details, please see
-# http://httpd.apache.org/docs-2.0/mod/core.html#enablemmap
+# http://httpd.apache.org/docs/2.2/mod/core.html#enablemmap
 #
 #EnableMMAP off
 
@@ -442,7 +449,7 @@ HostnameLookups Off
 # used to deliver files (assuming that the OS supports it). 
 # The default is on; turn this off if you serve from NFS-mounted 
 # filesystems.  Please see
-# http://httpd.apache.org/docs-2.0/mod/core.html#enablesendfile
+# http://httpd.apache.org/docs/2.2/mod/core.html#enablesendfile
 #
 #EnableSendfile off
 
@@ -471,6 +478,10 @@ LogFormat "%h %l %u %t \"%r\" %>s %b" common
 LogFormat "%{Referer}i -> %U" referer
 LogFormat "%{User-agent}i" agent
 
+# "combinedio" includes actual counts of actual bytes received (%I) and sent (%O); this
+# requires the mod_logio module to be loaded.
+#LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+
 #
 # The location and format of the access logfile (Common Logfile Format).
 # If you do not define any access logfiles within a <VirtualHost>
@@ -479,18 +490,17 @@ LogFormat "%{User-agent}i" agent
 # logged therein and *not* in this file.
 #
 CustomLog logs/access_log common
-#CustomLog logs/access_log combined
 
 #
-# If you would like to have agent and referer logfiles, uncomment the
-# following directives.
+# If you would like to have separate agent and referer logfiles, uncomment
+# the following directives.
 #
 #CustomLog logs/referer_log referer
 #CustomLog logs/agent_log agent
 
 #
-# If you prefer a single logfile with access, agent, and referer information
-# (Combined Logfile Format) you can use the following directive.
+# For a single logfile with access, agent, and referer information
+# (Combined Logfile Format), use the following directive:
 #
 #CustomLog logs/access_log combined
 
@@ -525,7 +535,6 @@ Alias /icons/ "/var/www/icons/"
     Order allow,deny
     Allow from all
 </Directory>
-
 
 #
 # WebDAV module configuration section.
@@ -571,7 +580,7 @@ ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
 # IndexOptions: Controls the appearance of server-generated directory
 # listings.
 #
-IndexOptions FancyIndexing VersionSort NameWidth=*
+IndexOptions FancyIndexing VersionSort NameWidth=* HTMLTable
 
 #
 # AddIcon* directives tell the server which icon to show for different
@@ -720,62 +729,13 @@ LanguagePriority en ca cs da de el eo es et fr he hr it ja ko ltz nl nn no pl pt
 ForceLanguagePriority Prefer Fallback
 
 #
-# Specify a default charset for all pages sent out. This is
-# always a good idea and opens the door for future internationalisation
-# of your web site, should you ever want it. Specifying it as
-# a default does little harm; as the standard dictates that a page
-# is in iso-8859-1 (latin1) unless specified otherwise i.e. you
-# are merely stating the obvious. There are also some security
-# reasons in browsers, related to javascript and URL parsing
-# which encourage you to always set a default char set.
+# Specify a default charset for all content served; this enables
+# interpretation of all content as UTF-8 by default.  To use the 
+# default browser choice (ISO-8859-1), or to allow the META tags
+# in HTML content to override this choice, comment out this
+# directive:
 #
-AddDefaultCharset ISO-8859-1
-
-#
-# Commonly used filename extensions to character sets. You probably
-# want to avoid clashes with the language extensions, unless you
-# are good at carefully testing your setup after each change.
-# See http://www.iana.org/assignments/character-sets for the
-# official list of charset names and their respective RFCs.
-#
-AddCharset ISO-8859-1  .iso8859-1  .latin1
-AddCharset ISO-8859-2  .iso8859-2  .latin2 .cen
-AddCharset ISO-8859-3  .iso8859-3  .latin3
-AddCharset ISO-8859-4  .iso8859-4  .latin4
-AddCharset ISO-8859-5  .iso8859-5  .latin5 .cyr .iso-ru
-AddCharset ISO-8859-6  .iso8859-6  .latin6 .arb
-AddCharset ISO-8859-7  .iso8859-7  .latin7 .grk
-AddCharset ISO-8859-8  .iso8859-8  .latin8 .heb
-AddCharset ISO-8859-9  .iso8859-9  .latin9 .trk
-AddCharset ISO-2022-JP .iso2022-jp .jis
-AddCharset ISO-2022-KR .iso2022-kr .kis
-AddCharset ISO-2022-CN .iso2022-cn .cis
-AddCharset Big5        .Big5       .big5
-# For russian, more than one charset is used (depends on client, mostly):
-AddCharset WINDOWS-1251 .cp-1251   .win-1251
-AddCharset CP866       .cp866
-AddCharset KOI8-r      .koi8-r .koi8-ru
-AddCharset KOI8-ru     .koi8-uk .ua
-AddCharset ISO-10646-UCS-2 .ucs2
-AddCharset ISO-10646-UCS-4 .ucs4
-AddCharset UTF-8       .utf8
-
-# The set below does not map to a specific (iso) standard
-# but works on a fairly wide range of browsers. Note that
-# capitalization actually matters (it should not, but it
-# does for some browsers).
-#
-# See http://www.iana.org/assignments/character-sets
-# for a list of sorts. But browsers support few.
-#
-AddCharset GB2312      .gb2312 .gb 
-AddCharset utf-7       .utf7
-AddCharset utf-8       .utf8
-AddCharset big5        .big5 .b5
-AddCharset EUC-TW      .euc-tw
-AddCharset EUC-JP      .euc-jp
-AddCharset EUC-KR      .euc-kr
-AddCharset shift_jis   .sjis
+AddDefaultCharset UTF-8
 
 #
 # AddType allows you to add to or override the MIME configuration
@@ -812,11 +772,6 @@ AddType application/x-gzip .gz .tgz
 # For files that include their own HTTP headers:
 #
 #AddHandler send-as-is asis
-
-#
-# For server-parsed imagemap files:
-#
-AddHandler imap-file map
 
 #
 # For type maps (negotiated resources):
@@ -928,9 +883,12 @@ BrowserMatch "JDK/1\.0" force-response-1.0
 # Same deal with Apple's DAV filesystem and Gnome VFS support for DAV.
 #
 BrowserMatch "Microsoft Data Access Internet Publishing Provider" redirect-carefully
+BrowserMatch "MS FrontPage" redirect-carefully
 BrowserMatch "^WebDrive" redirect-carefully
-BrowserMatch "^WebDAVFS/1.[012]" redirect-carefully
-BrowserMatch "^gnome-vfs" redirect-carefully
+BrowserMatch "^WebDAVFS/1.[0123]" redirect-carefully
+BrowserMatch "^gnome-vfs/1.0" redirect-carefully
+BrowserMatch "^XML Spy" redirect-carefully
+BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 
 #
 # Allow server status reports generated by mod_status,
@@ -978,7 +936,7 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 
 #
 # To enable a cache of proxied content, uncomment the following lines.
-# See http://httpd.apache.org/docs-2.0/mod/mod_cache.html for more details.
+# See http://httpd.apache.org/docs/2.2/mod/mod_cache.html for more details.
 #
 #<IfModule mod_disk_cache.c>
 #   CacheEnable disk /
@@ -997,7 +955,7 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 # IP addresses. This is indicated by the asterisks in the directives below.
 #
 # Please see the documentation at 
-# <URL:http://httpd.apache.org/docs-2.0/vhosts/>
+# <URL:http://httpd.apache.org/docs/2.2/vhosts/>
 # for further details before you try to setup virtual hosts.
 #
 # You may use the command line option '-S' to verify your virtual host
@@ -1019,7 +977,7 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 # The first VirtualHost section is used for requests without a known
 # server name.
 #
-#<VirtualHost *>
+#<VirtualHost *:80>
 #    ServerAdmin webmaster@dummy-host.example.com
 #    DocumentRoot /www/docs/dummy-host.example.com
 #    ServerName dummy-host.example.com
@@ -1027,9 +985,6 @@ BrowserMatch "^gnome-vfs" redirect-carefully
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
 
-# If you want to use name-based virtual hosts you need to define at
-# least one IP address (and port number) for them.
-#
 NameVirtualHost %sys_ip_address%:80
                                                                                 
 #
@@ -1044,37 +999,12 @@ NameVirtualHost %sys_ip_address%:80
  Include conf.d/*.conf
 </VirtualHost>
 
-                                                                                
-# Define the download.codex.xerox.com Web site
-# that is used for file release download via HTTP
-# Activate only if non controlled access to source code is allowe
-# Remark: 
-# The download logs need to be combined with the
-# CodeX access log file so that the script in
-# charge of computing the download stats works ok
-# (see utils/download/stats_http_parselog.pl)
-<VirtualHost %sys_ip_address%:80>
-  ServerName download.%sys_default_domain%
-  DocumentRoot /var/lib/codex/ftp/codex
-  <Directory "/var/lib/codex/ftp/codex">
-     Options Includes FollowSymLinks MultiViews
-     IndexOptions FancyIndexing
-     AllowOverride FileInfo
-     Order allow,deny
-     Allow from all
-  </Directory>
-  CustomLog logs/access_log common
-</VirtualHost>
-
 
 # Include php.conf file outside of any virtual host to make sure
 # it is available everywhere. 
 # Without it, there is an issue with the write_cache.php script
 Include conf.d/php.conf
 
-# Include support for Gnu/Mailman
-#Include conf/mailman.conf
-                                                      
 # Include per project virtual hosts (automatically generated)
 Include conf/codex_vhosts.conf
 
