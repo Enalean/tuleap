@@ -709,7 +709,6 @@ substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain"
 if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codex/conf/local.inc' 'sys_cvs_host = "cvs.' 'sys_cvs_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_svn_host = "svn.' 'sys_svn_host = "'
-  substitute '/etc/codex/conf/local.inc' 'sys_download_host = "download.' 'sys_download_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_shell_host = "shell.' 'sys_shell_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_users_host = "users.' 'sys_users_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'

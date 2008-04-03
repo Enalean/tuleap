@@ -82,9 +82,6 @@ $sys_cvs_host = "cvs.%sys_default_domain%";
 // will need to be able to access the CVS file tree via NFS.
 $sys_svn_host = "svn.%sys_default_domain%";
  
-// Machine used for downloading sources/packages
-$sys_download_host = "download.%sys_default_domain%";
- 
 // Machine(s) that host users' shell accounts
 //  N.B.: What's the difference between the user
 // host and the shell host?  They are clearly two different hostnames
