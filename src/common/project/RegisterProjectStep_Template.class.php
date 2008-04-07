@@ -53,6 +53,8 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
           //echo '</blockquote>';
           
         }
+
+        include($GLOBALS['Language']->getContent('project/template_my'));
         
         //{{{ Projects where current user is admin
         $result = db_query("SELECT groups.group_name AS group_name, "
