@@ -65,7 +65,7 @@ function new_utils_get_new_releases($start_time,&$select,&$from,&$where ) {
   $where = "WHERE frs_release.release_date > ".db_ei($start_time)." "
          . "AND frs_release.package_id = frs_package.package_id "
 	 . "AND frs_package.group_id = groups.group_id "
-         . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE;
+         . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE." ";
 
 }
 
