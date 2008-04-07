@@ -43,7 +43,7 @@ class ArtifactFileHtml extends ArtifactFile {
 	      return false;
             }
             $size = @filesize($input_file);
-            $input_data = addslashes(@fread(@fopen($input_file, 'r'), $size));
+            $input_data = @fread(@fopen($input_file, 'r'), $size);
 	    if ((strlen($input_data) < 1) || (strlen($input_data) > $sys_max_size_attachment)) {
                 $this->setError($Language->getText('tracker_include_artifactfile','not_attached', formatByteToMb($sys_max_size_attachment)));
                 return false;
