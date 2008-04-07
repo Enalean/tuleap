@@ -42,7 +42,8 @@ $query = "SELECT groups.group_name AS group_name,"
   . "AND frs_package.group_id = groups.group_id "
   . "AND frs_release.released_by = user.user_id "
   . "AND frs_package.group_id = frs_dlstats_grouptotal_agg.group_id "
-  . "AND frs_release.status_id=1 ) "
+  . "AND frs_release.status_id=1 "
+  . "AND groups.is_public=1 ) "
   . "GROUP BY frs_release.release_id "
   . "ORDER BY frs_release.release_date DESC LIMIT ". $limit*3;
 
