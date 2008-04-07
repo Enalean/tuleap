@@ -64,12 +64,14 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	}
 
 	print "\t<TABLE width=100% cellpadding=0 cellspacing=0 border=0>";
+        $frspf =& new FRSPackageFactory();
+        $frsrf =& new FRSReleaseFactory();
 	for ($i=0; $i<$rows; $i++) {
 	  $row_new = db_fetch_array($res_new);
 	  // avoid dupulicates of different file types
 	  if (!($G_RELEASE["$row_new[group_id]"])) {
-	    if ((!permission_exist("PACKAGE_READ",$row_new['package_id'] ))&&
-		(!permission_exist("RELEASE_READ",$row_new['release_id'] ))) {
+            if ($frspf->userCanRead($row_new['group_id'], $row_new['package_id'], 100) &&
+                $frsrf->userCanRead($row_new['group_id'], $row_new['package_id'], $row_new['release_id'], 100)) {
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>";
 	      print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B></A>"
