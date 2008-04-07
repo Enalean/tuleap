@@ -7,95 +7,95 @@
 // 
 //
 -->
-<h2>Conditions générales d'utilisation de <?=$GLOBALS['sys_name']?></h2>
+<h2>Conditions gÃ©nÃ©rales d'utilisation de <?=$GLOBALS['sys_name']?></h2>
 <p>
 <B>1. ACCEPTATION DES CONDITIONS GENERALES</B> 
 </p>
 
 <p>L'utilisation de <?php print $GLOBALS['sys_name']; ?> et de ses
-services (comme défini ci-dessous) est à tout moment soumise aux
-conditions générales d'utilisation (CGU) qui peuvent être mises à jour
-comme indiqué ci-dessous. Chaque utilisateur peut à tout moment
-consulter la dernière version des CGU sur&nbsp;:
+services (comme dÃ©fini ci-dessous) est Ã  tout moment soumise aux
+conditions gÃ©nÃ©rales d'utilisation (CGU) qui peuvent Ãªtre mises Ã  jour
+comme indiquÃ© ci-dessous. Chaque utilisateur peut Ã  tout moment
+consulter la derniÃ¨re version des CGU sur&nbsp;:
 
 <a href="/tos/tos.php"><?php print get_server_url(); ?>/tos/tos.php</a>.
 
 De plus, l'utilisation d'un service en particulier peut faire l'objet
-de règles particulières ("Règles spécifiques à un service") publiées
-de temps à autre et incluses dans ces CGU par cette
-référence. L'utilisation de <?php print $GLOBALS['sys_name']; ?> et/ou
+de rÃ¨gles particuliÃ¨res ("RÃ¨gles spÃ©cifiques Ã  un service") publiÃ©es
+de temps Ã  autre et incluses dans ces CGU par cette
+rÃ©fÃ©rence. L'utilisation de <?php print $GLOBALS['sys_name']; ?> et/ou
 de ses services constitue une acceptation totale des CGU; si un
 utilisateur n'accepte pas les CGU, il ou elle n'est pas en droit
 d'utiliser <?php print $GLOBALS['sys_name']; ?> ou un quelconque de
-ses services, comme défini ci-dessous, et ne doit pas accéder à <?php
+ses services, comme dÃ©fini ci-dessous, et ne doit pas accÃ©der Ã  <?php
 print $GLOBALS['sys_name']; ?> ou ses services.  </p>
 
-<p> Lors d'un changement des CGU, une notification écrite sera envoyée
-per e-mail aux utilisateurs connus au plus tard 15 jours à
-l'avance. Si un changement intervient dans les règles spécifiques à un
-service, une notification sera publiée à l'endroit où les règles
-spécifiques à un service apparaissent normalement, référençant le
+<p> Lors d'un changement des CGU, une notification Ã©crite sera envoyÃ©e
+per e-mail aux utilisateurs connus au plus tard 15 jours Ã 
+l'avance. Si un changement intervient dans les rÃ¨gles spÃ©cifiques Ã  un
+service, une notification sera publiÃ©e Ã  l'endroit oÃ¹ les rÃ¨gles
+spÃ©cifiques Ã  un service apparaissent normalement, rÃ©fÃ©renÃ§ant le
 changement sur la page de garde de ce service et en incluant un lien
-vers la version antérieure des règles spécifiques à un service.</p>
+vers la version antÃ©rieure des rÃ¨gles spÃ©cifiques Ã  un service.</p>
 
-<p> <?php print $GLOBALS['sys_name']; ?> se réserve le droit à tout
-moment de modifier ou d'interrompre, temporairement ou de façon
+<p> <?php print $GLOBALS['sys_name']; ?> se rÃ©serve le droit Ã  tout
+moment de modifier ou d'interrompre, temporairement ou de faÃ§on
 permanente, <?php print $GLOBALS['sys_name']; ?> ou l'un de ses
-services en tout ou partie en notifiant les utilisateurs comme décrit
-ci-dessus, ou immédiatement, dans le cas où des difficultés techniques
-surviendraient. <?php print $GLOBALS['sys_name']; ?> ne peut être tenu
-pour légalement responsable vis à vis des utilisateurs ou de parties
+services en tout ou partie en notifiant les utilisateurs comme dÃ©crit
+ci-dessus, ou immÃ©diatement, dans le cas oÃ¹ des difficultÃ©s techniques
+surviendraient. <?php print $GLOBALS['sys_name']; ?> ne peut Ãªtre tenu
+pour lÃ©galement responsable vis Ã  vis des utilisateurs ou de parties
 tierces pour ces modifications, suspensions ou interruptions sauf dans
-les cas explicitement mentionnés dans ce document.  </p>
+les cas explicitement mentionnÃ©s dans ce document.  </p>
 
-<p> <?php print $GLOBALS['sys_name']; ?> est un site Web appartenant à
-et géré par <?php print $GLOBALS['sys_org_name']; ?> dans le but de
-promouvoir le développement logiciel collaboratif et la réutilisation
+<p> <?php print $GLOBALS['sys_name']; ?> est un site Web appartenant Ã 
+et gÃ©rÃ© par <?php print $GLOBALS['sys_org_name']; ?> dans le but de
+promouvoir le dÃ©veloppement logiciel collaboratif et la rÃ©utilisation
 de composants logiciels selon les termes de la <b><u><a
 href="/plugins/docman/?group_id=1"
-target="_blank">Politique d'échange générale de <?php print
+target="_blank">Politique d'Ã©change gÃ©nÃ©rale de <?php print
 $GLOBALS['sys_org_name']; ?></a></b></u>.  Enregistrer votre projet
 sur <?php print $GLOBALS['sys_name']; ?> implique que vous comprenez
-les termes de cette politique générale et que vous prenez l'engagement
+les termes de cette politique gÃ©nÃ©rale et que vous prenez l'engagement
 de vous y conformer.  <p>
 
 <B>2. DESCRIPTION DU SERVICE</B> 
 </p>
 
 <p> <P> <?php print $GLOBALS['sys_name']; ?> offre actuellement aux
-utilisateurs un accès à une riche collection de ressources accessibles
+utilisateurs un accÃ¨s Ã  une riche collection de ressources accessibles
 en ligne chez <?php print $GLOBALS['sys_org_name']; ?> pour des
-activités de développement logiciel et de création de contenu,
-incluant divers outils de communication, de contrôle de version et de
+activitÃ©s de dÃ©veloppement logiciel et de crÃ©ation de contenu,
+incluant divers outils de communication, de contrÃ´le de version et de
 gestion de projet, de publication de fichiers, de forums en
-ligne... (collectivement appelés "les services").  </p>
+ligne... (collectivement appelÃ©s "les services").  </p>
 
 <p>
 <B>3. OBLIGATIONS LIEES A L'ENREGISTREMENT</B> 
 </p>
 
 <p>A la demande du site en question, chaque utilisateur doit&nbsp;: (a)
-fournir des informations véritables, précises, à jour et complètes sur
-le formulaire d'enregistrement du projet (appelées "Données du
-projet") et (b) maintenir et mettre à jour dans les meilleurs délais
-les données d'enregistrement si nécessaire. Si, après enquête, nous
-avons matière à suspecter que les informations fournies par un
-utilisateur sont fausses, incorrectes, dépassées ou incomplètes, nous
+fournir des informations vÃ©ritables, prÃ©cises, Ã  jour et complÃ¨tes sur
+le formulaire d'enregistrement du projet (appelÃ©es "DonnÃ©es du
+projet") et (b) maintenir et mettre Ã  jour dans les meilleurs dÃ©lais
+les donnÃ©es d'enregistrement si nÃ©cessaire. Si, aprÃ¨s enquÃªte, nous
+avons matiÃ¨re Ã  suspecter que les informations fournies par un
+utilisateur sont fausses, incorrectes, dÃ©passÃ©es ou incomplÃ¨tes, nous
 serions en droit de suspendre ou de clore le compte de cet utilisateur
 et d'interdire tout usage actuel ou futur des services (ou une partie
 de ceux-ci) par cet utilisateur. </p>
 
-<p>Chaque utilisateur reçoit un mot de passe et la désignation de son
-compte à la fin du processus d'enregistrement et il/elle est
-entièrement responsable du maintien de la confidentialité de ces
-informations et totalement responsables des activités se déroulant
+<p>Chaque utilisateur reÃ§oit un mot de passe et la dÃ©signation de son
+compte Ã  la fin du processus d'enregistrement et il/elle est
+entiÃ¨rement responsable du maintien de la confidentialitÃ© de ces
+informations et totalement responsables des activitÃ©s se dÃ©roulant
 sous ce compte utilisateur. <?php print $GLOBALS['sys_name']; ?> ne
-peut être tenu pour responsable des pertes ou dommages de données
-consécutives aux manquements de l'utilisateur à ces règles, y compris
-toute perte ou dommage résultant de l'oubli de (a) notifier
-immédiatement <?php print $GLOBALS['sys_name']; ?> de tout usage
-illégal de son compte ou mot de passe ou tout autre faille de sécurité
-et (b) de se déconnecter de son compte à la fin d'une session de
+peut Ãªtre tenu pour responsable des pertes ou dommages de donnÃ©es
+consÃ©cutives aux manquements de l'utilisateur Ã  ces rÃ¨gles, y compris
+toute perte ou dommage rÃ©sultant de l'oubli de (a) notifier
+immÃ©diatement <?php print $GLOBALS['sys_name']; ?> de tout usage
+illÃ©gal de son compte ou mot de passe ou tout autre faille de sÃ©curitÃ©
+et (b) de se dÃ©connecter de son compte Ã  la fin d'une session de
 travail.</p>
 
 
@@ -103,35 +103,35 @@ travail.</p>
 <B>4. CONTENU</B> 
 </p>
 
-<p> Toute information, donnée, texte, logiciel, musique, son,
-photographie, graphique, vidéo, message ou tout autre contenu
-quel qu'il soit (appelé collectivement "contenu"), publié publiquement
-ou transmis de façon privée, est sous la seule responsabilité de la
-personne qui est à l'origine de la diffusion de ce contenu. Cela
-signifie que l'utilisateur, et non l'équipe <?php print
-$GLOBALS['sys_name']; ?>, est entièrement responsable de l'ensemble du
-contenu téléchargé, posté, envoyé par e-mail ou par tout autre moyen
+<p> Toute information, donnÃ©e, texte, logiciel, musique, son,
+photographie, graphique, vidÃ©o, message ou tout autre contenu
+quel qu'il soit (appelÃ© collectivement "contenu"), publiÃ© publiquement
+ou transmis de faÃ§on privÃ©e, est sous la seule responsabilitÃ© de la
+personne qui est Ã  l'origine de la diffusion de ce contenu. Cela
+signifie que l'utilisateur, et non l'Ã©quipe <?php print
+$GLOBALS['sys_name']; ?>, est entiÃ¨rement responsable de l'ensemble du
+contenu tÃ©lÃ©chargÃ©, postÃ©, envoyÃ© par e-mail ou par tout autre moyen
 vers <?php print $GLOBALS['sys_name']; ?>. Aucun utilisateur ne doit
-transmettre de contenu ou conduire ou participer à aucune activité sur
+transmettre de contenu ou conduire ou participer Ã  aucune activitÃ© sur
 <?php print $GLOBALS['sys_name']; ?> et ses services qui, au regard de
-l'équipe <?php print $GLOBALS['sys_name']; ?>, est en contradiction
-avec les règles de conduite internes de <?php print
+l'Ã©quipe <?php print $GLOBALS['sys_name']; ?>, est en contradiction
+avec les rÃ¨gles de conduite internes de <?php print
 $GLOBALS['sys_org_name']; ?>.  </p>
 
-<p> L'équipe <?php print $GLOBALS['sys_name']; ?> ne revoit ni ne
-filtre aucun contenu, mais se réserve le droit de refuser ou de
-détruire tout contenu dont il aurait connaissance qui ne serait pas
-conforme aux objectifs du projets. De plus, l'équipe <?php print
-$GLOBALS['sys_name']; ?> a le droit (mais pas l'obligation) à sa seule 
-discrétion de refuser ou de détruire tout contenu venant en violation
-des CGU ou à caractère illégal. L'équipe <?php print $GLOBALS['sys_name'];
-?> ne contrôle pas le contenu posté via les services et ne garantit
-donc pas l'exactitude, l'intégrité ou la qualité de ce contenu. En
-aucune circonstance, l'équipe <?php print $GLOBALS['sys_name']; ?> ne
-pourra être tenue pour responsable du contenu, y compris, mais non
-limité à, la responsabilité pour toute erreur ou omission ou pour
-toute perte ou dommage de toute sorte résultant de l'utilisation de
-contenu posté, envoyé par e-mail ou publié de tout autre façon via
+<p> L'Ã©quipe <?php print $GLOBALS['sys_name']; ?> ne revoit ni ne
+filtre aucun contenu, mais se rÃ©serve le droit de refuser ou de
+dÃ©truire tout contenu dont il aurait connaissance qui ne serait pas
+conforme aux objectifs du projets. De plus, l'Ã©quipe <?php print
+$GLOBALS['sys_name']; ?> a le droit (mais pas l'obligation) Ã  sa seule 
+discrÃ©tion de refuser ou de dÃ©truire tout contenu venant en violation
+des CGU ou Ã  caractÃ¨re illÃ©gal. L'Ã©quipe <?php print $GLOBALS['sys_name'];
+?> ne contrÃ´le pas le contenu postÃ© via les services et ne garantit
+donc pas l'exactitude, l'intÃ©gritÃ© ou la qualitÃ© de ce contenu. En
+aucune circonstance, l'Ã©quipe <?php print $GLOBALS['sys_name']; ?> ne
+pourra Ãªtre tenue pour responsable du contenu, y compris, mais non
+limitÃ© Ã , la responsabilitÃ© pour toute erreur ou omission ou pour
+toute perte ou dommage de toute sorte rÃ©sultant de l'utilisation de
+contenu postÃ©, envoyÃ© par e-mail ou publiÃ© de tout autre faÃ§on via
 <?php print $GLOBALS['sys_name']; ?> ou ses services.  </p>
 
 
@@ -139,45 +139,45 @@ contenu posté, envoyé par e-mail ou publié de tout autre façon via
 <B>5. PRATIQUES GENERALES CONCERNANT L'UTILISATION ET LE STOCKAGE</B> 
 </p>
 
-<p> <?php print $GLOBALS['sys_name']; ?> se réserve le droit d'établir
-des pratiques générales et certaines limites concernant l'utilisation
-des services, comme définies par les règles spécifiques d'utilisation
-des services. Bien que l'équipe <?php print $GLOBALS['sys_name']; ?> 
-fasse son possible pour sauvegarder les données du site et mettre
-cette sauvegarde à disposition en cas de perte ou de destruction, elle
-ne peut être tenue pour responsable de la destruction ou de
-l'impossibilité de stocker un message ou tout autre forme de
-communication ou contenu maintenu ou transmis par un service. L'équipe
-<?php print $GLOBALS['sys_name']; ?> se réserve le droit de désactiver
+<p> <?php print $GLOBALS['sys_name']; ?> se rÃ©serve le droit d'Ã©tablir
+des pratiques gÃ©nÃ©rales et certaines limites concernant l'utilisation
+des services, comme dÃ©finies par les rÃ¨gles spÃ©cifiques d'utilisation
+des services. Bien que l'Ã©quipe <?php print $GLOBALS['sys_name']; ?> 
+fasse son possible pour sauvegarder les donnÃ©es du site et mettre
+cette sauvegarde Ã  disposition en cas de perte ou de destruction, elle
+ne peut Ãªtre tenue pour responsable de la destruction ou de
+l'impossibilitÃ© de stocker un message ou tout autre forme de
+communication ou contenu maintenu ou transmis par un service. L'Ã©quipe
+<?php print $GLOBALS['sys_name']; ?> se rÃ©serve le droit de dÃ©sactiver
 et d'archiver les comptes utilisateurs et projets qui demeurent
-inactifs durant une longue période.  L'équipe <?php print
-$GLOBALS['sys_name']; ?> se réserve le droit de modifier ces pratiques
-générales et les règles spécifiques d'utilisation des services à tout
-moment, à sa seule discrétion, en notifiant les utilisateurs comme
-décrit dans la section 1 ci-dessus.
+inactifs durant une longue pÃ©riode.  L'Ã©quipe <?php print
+$GLOBALS['sys_name']; ?> se rÃ©serve le droit de modifier ces pratiques
+gÃ©nÃ©rales et les rÃ¨gles spÃ©cifiques d'utilisation des services Ã  tout
+moment, Ã  sa seule discrÃ©tion, en notifiant les utilisateurs comme
+dÃ©crit dans la section 1 ci-dessus.
 </p>
 
 <p>
 <B>6. RESILIATION</B>
 </p>
 
-<p> Un compte utilisateur peut être résilié, entre autre, pour les
+<p> Un compte utilisateur peut Ãªtre rÃ©siliÃ©, entre autre, pour les
 raisons suivantes&nbsp;: 1.) violation des CGU; 2.) abus des ressources
-du site ou tentative d'accès illégal au site ou à ses ressources; 3.) 
-Utilisation des services non cohérente avec les objectifs du projet;
-4.) demande de résiliation de l'utilisateur et 5.) application des
-règles de <?php print $GLOBALS['sys_org_name']; ?> (par exemple à
-l'occasion du départ d'un employé).  </p>
+du site ou tentative d'accÃ¨s illÃ©gal au site ou Ã  ses ressources; 3.) 
+Utilisation des services non cohÃ©rente avec les objectifs du projet;
+4.) demande de rÃ©siliation de l'utilisateur et 5.) application des
+rÃ¨gles de <?php print $GLOBALS['sys_org_name']; ?> (par exemple Ã 
+l'occasion du dÃ©part d'un employÃ©).  </p>
 
-<p> La résiliation d'un accès à <?php print $GLOBALS['sys_name']; ?> 
-ou ses services peut être rendue effective sans notification préalable
-et, au moment de cette résiliation, peut amener à la désactivation ou
-la destruction d'un compte utilisateur et/ou empêcher tout accès
-ultérieur aux fichiers, aux services ou au site <?php print
+<p> La rÃ©siliation d'un accÃ¨s Ã  <?php print $GLOBALS['sys_name']; ?> 
+ou ses services peut Ãªtre rendue effective sans notification prÃ©alable
+et, au moment de cette rÃ©siliation, peut amener Ã  la dÃ©sactivation ou
+la destruction d'un compte utilisateur et/ou empÃªcher tout accÃ¨s
+ultÃ©rieur aux fichiers, aux services ou au site <?php print
 $GLOBALS['sys_name']; ?>.  <?php print $GLOBALS['sys_name']; ?>
-l'équipe <?php print $GLOBALS['sys_name']; ?> ne peut être passible de
+l'Ã©quipe <?php print $GLOBALS['sys_name']; ?> ne peut Ãªtre passible de
 sanction de la part de tout utilisateur ou partie tierce pour la
-résiliation d'un accès utilisateur ou d'un compte.  </p>
+rÃ©siliation d'un accÃ¨s utilisateur ou d'un compte.  </p>
 
 
 <p>
@@ -185,10 +185,10 @@ résiliation d'un accès utilisateur ou d'un compte.  </p>
 </p>
 
 <p>
-Veuillez informer <a href="/contact.php">l'équipe <?php print $GLOBALS['sys_name']; ?></a> de toute violation des CGU, toute violation alléguée de copyright ou de tout autre sujet.
+Veuillez informer <a href="/contact.php">l'Ã©quipe <?php print $GLOBALS['sys_name']; ?></a> de toute violation des CGU, toute violation allÃ©guÃ©e de copyright ou de tout autre sujet.
 </p>
 
 
 <p>
-Ce contenu est la propriété de <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, Equipe <?php print $GLOBALS['sys_org_name']; ?>. Tous droits réservés.
+Ce contenu est la propriÃ©tÃ© de <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, Equipe <?php print $GLOBALS['sys_org_name']; ?>. Tous droits rÃ©servÃ©s.
 </p>

@@ -23,57 +23,57 @@ conf	content_encoding	iso-8859-1
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	fr
 conf	language_id	2
-global	perm_denied	Permission Refusée
-global	error_perm_denied	Erreur - Permission Refusée
-global	back_home	Retour à la page d'accueil
+global	perm_denied	Permission RefusÃ©e
+global	error_perm_denied	Erreur - Permission RefusÃ©e
+global	back_home	Retour Ã  la page d'accueil
 global	back	Retour
 global	btn_apply	Appliquer
-global	btn_delete	Détruire
+global	btn_delete	DÃ©truire
 global	btn_cancel	Annuler
-global	btn_update	Mettre à jour
+global	btn_update	Mettre Ã  jour
 global	btn_submit	Valider
 global	btn_browse	Afficher
-global	btn_create	Créer
+global	btn_create	CrÃ©er
 global	btn_close	Fermer
-global	btn_reset	Réinitialiser
-global	reset	réinitialiser
+global	btn_reset	RÃ©initialiser
+global	reset	rÃ©initialiser
 global	yes	Oui
 global	no	Non
-global	on	Activé
-global	off	Désactivé
+global	on	ActivÃ©
+global	off	DÃ©sactivÃ©
 global	any	Tous
 global	none	Aucun
-global	begin	Début
+global	begin	DÃ©but
 global	end	Fin
 global	next	Suivant
-global	prev	Précédent
+global	prev	PrÃ©cÃ©dent
 global	printer_version	Version imprimable
 global	error	Erreur
 global	help	Aide
 global	by	par
-global	select	Sélectionner
-global	unchanged	Inchangé
+global	select	SÃ©lectionner
+global	unchanged	InchangÃ©
 global	or	ou
 global	and	et
 global	activate	activer
-global	deactivate	désactiver
+global	deactivate	dÃ©sactiver
 global	Project	Projet
-global	System	Système
+global	System	SystÃ¨me
 global	Personal	Personnel
-global	default	Défaut
-global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mailto:$1'>$1</a>.
+global	default	DÃ©faut
+global	mail_failed	L'e-mail n'a pas Ã©tÃ© envoyÃ©. Veuillez contactez <a href='mailto:$1'>$1</a>.
 global	open	Ouvert
-global	closed	Fermé
+global	closed	FermÃ©
 global	status	Statut
-global	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
-global	at_the_beginning	Au début
-global	at_the_end	À la fin
-global	after	Après $1
-global	missing_parameters	Paramètres manquants
+global	return_to	<p>La page demandÃ©e est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
+global	at_the_beginning	Au dÃ©but
+global	at_the_end	Ã€ la fin
+global	after	AprÃ¨s $1
+global	missing_parameters	ParamÃ¨tres manquants
 global	error_upload	Erreur de chargement de fichier.
-global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
-global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+global	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargÃ©. 
+global	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a Ã©tÃ© que partiellement chargÃ©.
 global	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
 global	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
-global	service_conf_not_inherited	La configuration de ce service ne sera pas héritée dans les sous-projets
+global	service_conf_not_inherited	La configuration de ce service ne sera pas hÃ©ritÃ©e dans les sous-projets
 

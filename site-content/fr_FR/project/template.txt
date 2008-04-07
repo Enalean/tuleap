@@ -7,4 +7,4 @@
 // 
 //
 -->
-<p>Avant de fournir des informations spécifiques par rapport à votre nouveau projet choississez un patron parmi les projets de patron disponible. Votre nouveau projet sera configuré exactement de la même manière que le patron choisi.</p>
+<p>Avant de fournir des informations spÃ©cifiques par rapport Ã  votre nouveau projet choississez un patron parmi les projets de patron disponible. Votre nouveau projet sera configurÃ© exactement de la mÃªme maniÃ¨re que le patron choisi.</p>

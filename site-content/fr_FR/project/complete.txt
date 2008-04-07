@@ -10,9 +10,9 @@
 <?php
 
 $content = "
-<H2>Enregistrement terminé !</H2>
-	<P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
-	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
+<H2>Enregistrement terminÃ© !</H2>
+	<P>Votre projet a Ã©tÃ© soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
+	Vous recevrez une notification de leur dÃ©cision et des instructions complÃ©mentaires dans les 24 heures.
 	<P>
 	Merci d'utiliser ".$GLOBALS['sys_name'].".
 	<P>";
@@ -25,8 +25,8 @@ $from = $GLOBALS['sys_noreply'];
 $hdrs = 'From: '.$from."\n";
 
 // subject and body can be customized to your liking
-$subject = "Nouveau projet enregistré : ".$data['project']['form_full_name'];
-$body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
+$subject = "Nouveau projet enregistrÃ© : ".$data['project']['form_full_name'];
+$body = "Un nouveau projet vient juste d'Ãªtre enregistrÃ© sur ".$GLOBALS['sys_name']."\n\n".
 "Nom du projet : ".$data['project']['form_full_name']."\n\n".
 "Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
 $href_approval."\n";

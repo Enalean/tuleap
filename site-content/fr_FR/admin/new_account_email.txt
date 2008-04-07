@@ -7,18 +7,18 @@
 // 
 //
 
-$body = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_name']
-.". En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".$GLOBALS['sys_name']
-.". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés,ou même démarrer votre "
+$body = "Vous Ãªtes maintenant un utilisateur enregistrÃ© sur ".$GLOBALS['sys_name']
+.". En tant que tel, vous pouvez participer pleinement Ã  toutes les activitÃ©s du site Web ".$GLOBALS['sys_name']
+.". Vous pouvez utiliser les forums, souscrire Ã  des listes de distributions, naviguer dans la liste des projets hÃ©bergÃ©s,ou mÃªme dÃ©marrer votre "
 ."propre projet ."
-."\n\n\n ** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".$GLOBALS['sys_name']
-." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. "
-." Votre compte shell sera activé dans approximativement $hoursleft "
+."\n\n\n ** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dÃ¨s maintenant, ".$GLOBALS['sys_name']
+." prendra quelques temps pour crÃ©er votre compte shell. Certaines fonctionnalitÃ©s comme l'accÃ¨s aux rÃ©pertoires CVS en dÃ©pendent. "
+." Votre compte shell sera activÃ© dans approximativement $hoursleft "
 ."heures $minutesleft minutes. \n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site ("
 ."<". $base_url ."/docs/site/>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
-."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
-." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
-.$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'équipe ".$GLOBALS['sys_name'];
+."(dÃ©finir votre profil de compÃ©tences, vos prÃ©fÃ©rences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
+." les amÃ©liorations que nous pourrions apporter et n'oubliez pas de parler de "
+.$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'Ã©quipe ".$GLOBALS['sys_name'];
             
 
 ?>

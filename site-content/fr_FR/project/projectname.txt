@@ -9,20 +9,20 @@
 ?>
 <P><B>Nom du projet</B>
 
-<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
+<P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associÃ©s Ã  votre projet&nbsp;:
 
-<P>Le "nom complet" est un descriptif et ne comporte pas de restriction (sauf sur sa longueur limitée à 255 caractères) et il peut être modifié à tout moment.</P>
+<P>Le "nom complet" est un descriptif et ne comporte pas de restriction (sauf sur sa longueur limitÃ©e Ã  255 caractÃ¨res) et il peut Ãªtre modifiÃ© Ã  tout moment.</P>
 
-<p>Le "nom court" (aussi appelé "nom du groupe") présente certaines restrictions&nbsp;:
+<p>Le "nom court" (aussi appelÃ© "nom du groupe") prÃ©sente certaines restrictions&nbsp;:
 
 <UL>
-<LI>Il ne doit correspondre à aucun nom court existant
-<LI>Sa longueur est comprise entre 3 et 30 caractères
-<LI>Il ne doit comporter que des caractères alphanumériques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
-<LI>Contrairement au nom long, le nom court ne peut être modifié par la suite.
+<LI>Il ne doit correspondre Ã  aucun nom court existant
+<LI>Sa longueur est comprise entre 3 et 30 caractÃ¨res
+<LI>Il ne doit comporter que des caractÃ¨res alphanumÃ©riques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
+<LI>Contrairement au nom long, le nom court ne peut Ãªtre modifiÃ© par la suite.
 </UL>
 
-<P>En dépit de ces restrictions, veillez à choisir un nom évocateur car il sera utilisé à plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dépôt CVS ou Subversion.
+<P>En dÃ©pit de ces restrictions, veillez Ã  choisir un nom Ã©vocateur car il sera utilisÃ© Ã  plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dÃ©pÃ´t CVS ou Subversion.
 </UL>
 
 <P>Veuillez remplir les champs suivants&nbsp;:

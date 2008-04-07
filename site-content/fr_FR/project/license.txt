@@ -7,32 +7,32 @@
 // 
 //
 ?>
-<P>Le site <?php print $GLOBALS['sys_name']; ?> a ÈtÈ crÈÈ pour
-promouvoir le dÈveloppement et la gestion de projet en mode
+<P>Le site <?php print $GLOBALS['sys_name']; ?> a √©t√© cr√©√© pour
+promouvoir le d√©veloppement et la gestion de projet en mode
 collaboratif au sein de <?php print $GLOBALS['sys_org_name'];
-?>. C'est aussi l'unique site que vous aurez ‡ consulter pour aller ‡
-la recherche de composants logiciels rÈutilisables.
+?>. C'est aussi l'unique site que vous aurez √† consulter pour aller √†
+la recherche de composants logiciels r√©utilisables.
 
 <p>Pour rendre les choses plus faciles, <?php print
 $GLOBALS['sys_org_name']; ?> a mis en place la <a
 href="/plugins/docman/?group_id=1"
-target="side_window"> Politique d'Èchange gÈnÈrale</a> des logiciels
-qui dÈfinit les conditions gÈnÈrales sous lesquels vous pouvez
-rÈutiliser des composants logiciels au sein de <?php print
+target="side_window"> Politique d'√©change g√©n√©rale</a> des logiciels
+qui d√©finit les conditions g√©n√©rales sous lesquels vous pouvez
+r√©utiliser des composants logiciels au sein de <?php print
 $GLOBALS['sys_org_name']; ?>.
 
-<P>Nous pensons que cette politique d'Èchange sert la cause du
-dÈveloppement collaboratif tout en offrant un bon niveau de
-protection. Cependant si ce qui vous est proposÈ par dÈfaut ne vous
+<P>Nous pensons que cette politique d'√©change sert la cause du
+d√©veloppement collaboratif tout en offrant un bon niveau de
+protection. Cependant si ce qui vous est propos√© par d√©faut ne vous
 convient pas, vous pouvez choisir l'option "Autre" dans le menu
 ci-dessous et nous faire savoir pourquoi vous souhaitez en utiliser
 une autre.
 
-<P>Choisir votre propre politique d'Èchange est une dÈcision
+<P>Choisir votre propre politique d'√©change est une d√©cision
 importante. Veuillez donc vous assurer d'avoir bien lu la <a
 href="/plugins/docman/?group_id=1"
-target="side_window">Politique d'Èchange gÈnÈrale de <?php echo
-$GLOBALS['sys_name']; ?> </a> avant de prendre une dÈcision pour votre
+target="side_window">Politique d'√©change g√©n√©rale de <?php echo
+$GLOBALS['sys_name']; ?> </a> avant de prendre une d√©cision pour votre
 projet.
 
 <P>Remarque&nbsp;: si votre projet consiste simplement en un site Web ou que
@@ -40,7 +40,7 @@ vous ne publiez aucun code source sur <?php print
 $GLOBALS['sys_name']; ?>, veuillez choisir l'option "Site Web
 uniquement" dans le menu ci-dessous.</p>
 
-<P><B>Politique d'Èchange pour ce projet</B></p>
+<P><B>Politique d'√©change pour ce projet</B></p>
 <?php
 	echo '<SELECT NAME="form_license">';
 	while (list($k,$v) = each($LICENSE)) {
@@ -51,5 +51,5 @@ uniquement" dans le menu ci-dessous.</p>
 
 ?>
 <P>
-Si vous avez choisi l'option "Autre", merci d'en prÈciser la raison et de fournir une description de votre propre politique d'Èchange.
+Si vous avez choisi l'option "Autre", merci d'en pr√©ciser la raison et de fournir une description de votre propre politique d'√©change.
 <BR><TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10></TEXTAREA>

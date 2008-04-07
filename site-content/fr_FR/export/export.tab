@@ -17,8 +17,8 @@
 #-----------------------------------------------
 # Script: SF/www/export/index.php
 #
-export_index	exports_available	Données disponibles à l'exportation
-export_index	format_explain	Les données de $1 sont exportées sous divers formats standards. La plupart des URLs accepte un paramètre permettant de personnaliser la sortie. Les données exportées sur cette page sont générées en temps réel.
+export_index	exports_available	DonnÃ©es disponibles Ã  l'exportation
+export_index	format_explain	Les donnÃ©es de $1 sont exportÃ©es sous divers formats standards. La plupart des URLs accepte un paramÃ¨tre permettant de personnaliser la sortie. Les donnÃ©es exportÃ©es sur cette page sont gÃ©nÃ©rÃ©es en temps rÃ©el.
 export_index	news_data	Annonces
 export_index	front_p_news	Annonces de la Page d'accueil
 export_index	new_releases	Nouvelles versions
@@ -26,20 +26,20 @@ export_index	newest_projects	Derniers projets
 export_index	rss_format	Format RSS
 export_index	csv_format	Format CSV
 export_index	listings	Listes
-export_index	full_proj_listing	Liste complète des projets
+export_index	full_proj_listing	Liste complÃ¨te des projets
 export_index	proj_info	Informations Projet
 export_index	proj_forum	Forums des projets
-export_index	g_id_required	argument ?group_id nécessaire dans l'URL
+export_index	g_id_required	argument ?group_id nÃ©cessaire dans l'URL
 #
 #-----------------------------------------------
 # Script: SF/www/export/nitf_sfforums.php
 #
-export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit être appelée avec un paramètre group_id valide
+export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit Ãªtre appelÃ©e avec un paramÃ¨tre group_id valide
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnewreleases.php
 #
-export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits réservés.
+export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits rÃ©servÃ©s.
 export_rss_sfnewreleases	new_releases	Nouvelles versions de $1
 #
 #-----------------------------------------------
@@ -52,10 +52,10 @@ export_rss_sfnews	news	Annonces $1
 # Script: SF/www/export/rss_sfprojects.php
 #
 export_rss_sfprojects	new_proj	Derniers projets
-export_rss_sfprojects	params	ID projet, Nom court, Nom complet, Description, Langage, Systèmes d'exploitation supportés, Etat de développement, Emplacement des versions, Informations additionnelles, Point de contact, Inventaire eTTM
+export_rss_sfprojects	params	ID projet, Nom court, Nom complet, Description, Langage, SystÃ¨mes d'exploitation supportÃ©s, Etat de dÃ©veloppement, Emplacement des versions, Informations additionnelles, Point de contact, Inventaire eTTM
 export_rss_sfprojects	prog_lang	Langage de Programmation
-export_rss_sfprojects	os	Système d'exploitation
-export_rss_sfprojects	devel_status	Etat de développement
+export_rss_sfprojects	os	SystÃ¨me d'exploitation
+export_rss_sfprojects	devel_status	Etat de dÃ©veloppement
 #
 #-----------------------------------------------
 # Script: SF/www/export/rss_utils.php

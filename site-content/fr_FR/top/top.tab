@@ -19,18 +19,18 @@
 #
 top_index	top_list	Listes des meilleurs projets
 top_index	top_proj	Les meilleurs projets de $1
-top_index	rank	Diverses statistiques d'utilisations sont collectées sur $1 . Les projets les mieux classés dans certaines catégories sont affichées ici.
+top_index	rank	Diverses statistiques d'utilisations sont collectÃ©es sur $1 . Les projets les mieux classÃ©s dans certaines catÃ©gories sont affichÃ©es ici.
 top_index	act_week	Les plus actifs cette semaine
-top_index	act_all_time	Les plus actifs depuis le début
-top_index	download	Les plus téléchargés
-top_index	downl_week	Les plus téléchargés sur les 7 derniers jours
-top_index	pageviews	Les projets les plus visités (Mesuré par le nombre d'affichage du logo CodeX)
+top_index	act_all_time	Les plus actifs depuis le dÃ©but
+top_index	download	Les plus tÃ©lÃ©chargÃ©s
+top_index	downl_week	Les plus tÃ©lÃ©chargÃ©s sur les 7 derniers jours
+top_index	pageviews	Les projets les plus visitÃ©s (MesurÃ© par le nombre d'affichage du logo CodeX)
 top_index	forum	Les forums les plus actifs
 #
 #-----------------------------------------------
 # Script: SF/www/top/mostactive.php
 #
-top_mostactive	update_daily	(Mis à jour quotidiennement)
+top_mostactive	update_daily	(Mis Ã  jour quotidiennement)
 top_mostactive	view_other_top_cat	[Voir les autres classements]
 top_mostactive	rank	Rang
 top_mostactive	name	Nom du projet
@@ -40,13 +40,13 @@ top_mostactive	more	Davantage
 #-----------------------------------------------
 # Script: SF/www/top/toplist.php
 #
-top_toplist	downl_week	Les plus téléchargés sur les 7 derniers jours
-top_toplist	downl	Téléchargements
-top_toplist	top_pageviews	Les projets les plus visités à *.$1 (en comptant les accès au logo $2)
+top_toplist	downl_week	Les plus tÃ©lÃ©chargÃ©s sur les 7 derniers jours
+top_toplist	downl	TÃ©lÃ©chargements
+top_toplist	top_pageviews	Les projets les plus visitÃ©s Ã  *.$1 (en comptant les accÃ¨s au logo $2)
 top_toplist	pageviews	Visites
 top_toplist	forum_counts	Les forums les plus actifs
 top_toplist	posts	Messages
-top_toplist	last_rank	Rang précédent
+top_toplist	last_rank	Rang prÃ©cÃ©dent
 top_toplist	change	Changement
 top_toplist	same	Idem
 top_toplist	up	+ $1

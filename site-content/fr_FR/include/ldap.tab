@@ -21,9 +21,9 @@ ldap_class	err_bind_nopasswd	Impossible d'initier la liaison sur $1&nbsp;: mot d
 ldap_class	err_bind_invpasswd	Impossible d'initier la liaison sur $1&nbsp;: mot de passe invalide ?
 ldap_class	err_nopasswd	Mot de passe absent
 ldap_class	err_cant_connect	Impossible de se connecter au serveur LDAP
-ldap_class	err_auth_search	La recherche pour l'authentification a échoué
+ldap_class	err_auth_search	La recherche pour l'authentification a Ã©chouÃ©
 ldap_class	err_nouser	Utilisateur inconnu
 ldap_class	err_badpasswd	Mot de passe invalide
-ldap_class	err_cant_bind	Impossibilité d'initier la liaison sur le serveur LDAP
-ldap_class	err_search	La recherche LDAP a échoué
-ldap_class	err_nores	Aucun résultat trouvé (pas d'utilisateur correspondant)
+ldap_class	err_cant_bind	ImpossibilitÃ© d'initier la liaison sur le serveur LDAP
+ldap_class	err_search	La recherche LDAP a Ã©chouÃ©
+ldap_class	err_nores	Aucun rÃ©sultat trouvÃ© (pas d'utilisateur correspondant)

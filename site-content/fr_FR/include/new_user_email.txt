@@ -8,20 +8,20 @@
 //
 
 if(!$admin_creation){
-$message = "Merci d'avoir créé votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
-. "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
+$message = "Merci d'avoir crÃ©Ã© votre compte utilisateur sur le site ".$GLOBALS['sys_name'].". Pour \n"
+. "confirmer votre crÃ©ation de compte veuillez suivre le lien ci-dessous : \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 . "Votre login est : ".$username."\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
-. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+. " -- L'Ã©quipe ".$GLOBALS['sys_name']."\n";
 }else {
-$message = "Vous avez été enregistré sur le site ".$GLOBALS['sys_name']." par l'administrateur. Pour\n"
-. "confirmer votre création de compte veuillez suivre le lien ci-dessous : \n\n"
+$message = "Vous avez Ã©tÃ© enregistrÃ© sur le site ".$GLOBALS['sys_name']." par l'administrateur. Pour\n"
+. "confirmer votre crÃ©ation de compte veuillez suivre le lien ci-dessous : \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 . "Votre login est : ".$username."\n"
 . "Et votre mot de passe est : ".$password."\n"
-. "Pensez à changer votre mot de passe après votre première connexion sur le site.\n\n"
+. "Pensez Ã  changer votre mot de passe aprÃ¨s votre premiÃ¨re connexion sur le site.\n\n"
 . "Vous pouvez maintenant profiter du site.\n\n"
-. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+. " -- L'Ã©quipe ".$GLOBALS['sys_name']."\n";
 }
 ?>

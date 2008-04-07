@@ -18,7 +18,7 @@
 # Script: SF/www/help/browse_bug_query_field.php
 #
 help_browse_bug_query_field	no_field	Champ inconnu&nbsp;: $1
-help_browse_bug_query_field	bug_search_criteria	Recherche de bugs - Critère de sélection
+help_browse_bug_query_field	bug_search_criteria	Recherche de bugs - CritÃ¨re de sÃ©lection
 help_browse_bug_query_field	field_name	Nom du champ
 help_browse_bug_query_field	field_type	Type du champ
 help_browse_bug_query_field	description	Description
@@ -26,10 +26,10 @@ help_browse_bug_query_field	description	Description
 #-----------------------------------------------
 # Script: SF/www/help/browse_tracker_query_field.php
 #
-help_browse_tracker_query_field	at_not_created	ArtifactType n'a pas pu être créé
-help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory n'a pas pu être créé
-help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu être créé
-help_browse_tracker_query_field	art_search_criteria	Recherche d'éléments -  Critère de sélection
+help_browse_tracker_query_field	at_not_created	ArtifactType n'a pas pu Ãªtre crÃ©Ã©
+help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory n'a pas pu Ãªtre crÃ©Ã©
+help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu Ãªtre crÃ©Ã©
+help_browse_tracker_query_field	art_search_criteria	Recherche d'Ã©lÃ©ments -  CritÃ¨re de sÃ©lection
 #
 #-----------------------------------------------
 # Script: SF/www/help/index.php
@@ -40,14 +40,14 @@ help_index	page_info	Page d'information
 #-----------------------------------------------
 # Script: SF/www/help/show_help.php
 #
-help_show_help	page_not_found	Système d'aide $1 - Erreur&nbsp;: page introuvable
-help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avez demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
+help_show_help	page_not_found	SystÃ¨me d'aide $1 - Erreur&nbsp;: page introuvable
+help_show_help	page_not_available	<h4>DÃ©solÃ©, la page d'aide que vous avez demandÃ©e (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
 #
 #-----------------------------------------------
 # Script: SF/www/help/trove_cat.php
 #
-help_trove_cat	no_such_trove_cat	Catégorie introuvable
-help_trove_cat	trove_cat	Catégorie - $1
-help_trove_cat	full_cat_name	Nom complet de la catégorie
+help_trove_cat	no_such_trove_cat	CatÃ©gorie introuvable
+help_trove_cat	trove_cat	CatÃ©gorie - $1
+help_trove_cat	full_cat_name	Nom complet de la catÃ©gorie
 help_trove_cat	short_name	Nom court
 help_trove_cat	desc	Description

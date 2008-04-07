@@ -9,11 +9,11 @@
 -->
 
 <p>
-<h2><?php print $GLOBALS['sys_name']; ?>Règles de confidentialité</h2>
+<h2><?php print $GLOBALS['sys_name']; ?>RÃ¨gles de confidentialitÃ©</h2>
 </p>
 
 <p>
-Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner autant de contrôle que possible sur vos informations personnelles, y compris les données saisies lors de l'enregistrement. Nous ferons avoir à chaque utilisateur comment nous utilisons les informations dérivées des accès utilisateurs et de l'utilisation de <?php print $GLOBALS['sys_name']; ? et de ses services.
+Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner autant de contrÃ´le que possible sur vos informations personnelles, y compris les donnÃ©es saisies lors de l'enregistrement. Nous ferons avoir Ã  chaque utilisateur comment nous utilisons les informations dÃ©rivÃ©es des accÃ¨s utilisateurs et de l'utilisation de <?php print $GLOBALS['sys_name']; ? et de ses services.
 </p>
 
 <p>
@@ -21,7 +21,7 @@ Chez <?php print $GLOBALS['sys_name']; ?>, notre objectif est de vous donner aut
 </p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines à partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces données pour dégager des statistiques et des tendances. En accord avec ces règles de confidentialité, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les données accumulées à d'autres fins, y compris (mais non limité à) l'évaluation des services et la planification des resources.
+<?php print $GLOBALS['sys_name']; ?> suivra les domaines et les machines Ã  partir desquels les utilisateurs visitent <?php print $GLOBALS['sys_name']; ?> et analisera ces donnÃ©es pour dÃ©gager des statistiques et des tendances. En accord avec ces rÃ¨gles de confidentialitÃ©, divers sites  <?php print $GLOBALS['sys_name']; ?> peuvent utiliser les donnÃ©es accumulÃ©es Ã  d'autres fins, y compris (mais non limitÃ© Ã ) l'Ã©valuation des services et la planification des resources.
 </p>
 
 <p>
