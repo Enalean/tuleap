@@ -97,7 +97,7 @@ a:hover {
 
 /* classic box */
 .boxtable { width: 99%; vertical-align: top; border-spacing: 1px; border: 0; }
-.boxtitle { background-color: #E0DDD2; font-weight: bold; text-align: center; text-transform: capitalize; color: #000000; }
+.boxtitle { background-color: #E0DDD2; font-weight: bold; text-align: center;  color: #000000; }
 .boxitem {  background-color: transparent; text-align: left; color: #333333; }
 .boxitemalt { text-align: left; background-color: #ffffff; }
 .boxhighlight { background-color: #e8e8e0; text-align: left; color: #333333; }
@@ -355,7 +355,7 @@ table.release tr td img {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
     font-weight: bold; 
     text-align: center; 
-    text-transform: capitalize; 
+     
     color: #555;
     height:1.2em;
     padding-left:40px;
