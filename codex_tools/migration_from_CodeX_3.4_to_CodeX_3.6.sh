@@ -371,7 +371,32 @@ done
 echo "Starting DB update for CodeX 3.6 This might take a few minutes."
 
 
-echo "- CodeX 3.4 updates"
+##########
+# SR #820
+echo "- SR #820"
+# The order of the three statements below is important!!!
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+INSERT INTO permissions (permission_type , object_id , ugroup_id) 
+SELECT 'TRACKER_FIELD_READ' , CONCAT(agl.group_artifact_id, '#', MAX(field_id) + 1) , 1
+FROM artifact_field AS af INNER JOIN artifact_group_list AS agl USING(group_artifact_id) 
+WHERE agl.status = 'A' AND agl.group_artifact_id <> 100
+GROUP BY agl.group_artifact_id;
+
+INSERT INTO artifact_field_usage (group_artifact_id , field_id , use_it , place) 
+SELECT agl.group_artifact_id, MAX(field_id) + 1 AS field_id, 1 , 0
+FROM artifact_field AS af INNER JOIN artifact_group_list AS agl USING(group_artifact_id) 
+WHERE agl.status = 'A' AND agl.group_artifact_id <> 100
+GROUP BY agl.group_artifact_id;
+
+INSERT INTO artifact_field (field_id , group_artifact_id , field_set_id , field_name, data_type , display_type , label , description , required , empty_ok , keep_history , special) 
+SELECT MAX(field_id) + 1 , agl.group_artifact_id , MIN(afs.field_set_id) , 'last_update_date' , 4 , 'DF' , 'Last Modified On' , 'Date and time of the latest modification in an artifact' , 0 , 0 , 0 , 1
+FROM artifact_field_set AS afs INNER JOIN artifact_field AS af USING(group_artifact_id)
+     INNER JOIN artifact_group_list AS agl USING(group_artifact_id) 
+WHERE agl.status = 'A' AND agl.group_artifact_id <> 100
+GROUP BY agl.group_artifact_id;
+
+EOF
 
 
 ###############################################################################
