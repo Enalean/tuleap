@@ -11,6 +11,9 @@ require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 
 $Language->loadLanguageMsg('new/new');
+$hp = CodeX_HTMLPurifier::instance();
+
+$offest = $request->getValidated('offset', 'uint', 0);
 
 // By default, display releases
 if (!$func) $func='releases';
@@ -74,19 +77,19 @@ if (!$res_new || db_numrows($res_new) < 1) {
                 $frsrf->userCanRead($row_new['group_id'], $row_new['package_id'], $row_new['release_id'], 100)) {
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>";
-	      print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B></A>"
-		. "\n</TD><TD nowrap><I>".$Language->getText('new_index','released_by').": <A href=\"/users/$row_new[user_name]/\">"
-		. "$row_new[user_name]</A></I></TD></TR>\n";	
+	      print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify($row_new['group_name'], CODEX_PURIFIER_CONVERT_HTML) ."</B></A>";
+		  print '</TD><TD nowrap><I>'. $Language->getText('new_index','released_by') .': <A href="/users/'. $row_new['user_name'] .'">';
+		  print  $hp->purify($row_new['user_name'], CODEX_PURIFIER_CONVERT_HTML)  .'</A></I></TD></TR>';	
 		   
-	      print "<TR><TD>".$Language->getText('new_index','module').": $row_new[module_name]</TD>\n";
-	      print "<TD>".$Language->getText('new_index','version').": $row_new[release_version]</TD>\n";
+	      print "<TR><TD>".$Language->getText('new_index','module').": ".  $hp->purify($row_new['module_name'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
+	      print "<TD>".$Language->getText('new_index','version').": ".  $hp->purify($row_new['release_version'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
 	      print "<TD>" . date("M d, h:iA",$row_new['release_date']) . "</TD>\n";
 	      print "</TR>";
 		   
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>&nbsp;<BR>";
 	      if ($row_new['short_description']) {
-		print "<I>$row_new[short_description]</I>";
+		print "<I>".  $hp->purify($row_new['short_description'], CODEX_PURIFIER_CONVERT_HTML) ."</I>";
 	      } else {
 		print "<I>".$Language->getText('new_index','no_desc')."</I>";
 	      }
@@ -98,11 +101,11 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 	      print '<TR><TD colspan=3>';
 	      // link to whole file list for downloads
-	      print "&nbsp;<BR><A href=\"/file/showfiles.php?group_id=$row_new[group_id]&release_id=$row_new[release_id]\">";
+	      print '&nbsp;<BR><A href="/file/showfiles.php?group_id='. $row_new['group_id'] .'&release_id='. $row_new['release_id'] .'">';
 	      print $Language->getText('new_index','download')."</A> ";
 	      print '('.$Language->getText('new_index','total').': '.$row_new['downloads'].') | ';
 	      // notes for this release
-	      print "<A href=\"/file/shownotes.php?release_id=".$row_new['release_id']."\">";
+	      print '<A href="/file/shownotes.php?release_id='. $row_new['release_id'] .'">';
 	      print $Language->getText('new_index','notes')."</A>";
 	      print '<HR></TD></TR>';
 
@@ -111,18 +114,18 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	  }
 	}
 	    
-	echo "<TR class=\"newproject\"><TD>";
+	echo '<TR class="newproject"><TD>';
         if ($offset != 0) {
 		echo "<B>";
-        	echo "<A HREF=\"/new/?func=releases&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$Language->getText('new_index','newer_releases')."</A></B>";
+        	echo '<A HREF="/new/?func=releases&offset='.($offset-20).'"><B><IMG SRC="'. util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> '.$Language->getText('new_index','newer_releases')."</A></B>";
         } else {
         	echo "&nbsp;";
         }
 
-	echo "</TD><TD COLSPAN=\"2\" ALIGN=\"RIGHT\">";
+	echo '</TD><TD COLSPAN="2" ALIGN="RIGHT">';
 	if (db_numrows($res_new)>$rows) {
 		echo "<B>";
-		echo "<A HREF=\"/new/?func=releases&offset=".($offset+20)."\"><B>".$Language->getText('new_index','older_releases')." <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
+		echo '<A HREF="/new/?func=releases&offset='.($offset+20).'"><B>'.$Language->getText('new_index','older_releases').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>';
 	} else {
 		echo "&nbsp;";
 	}
@@ -170,7 +173,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	for ($i=0; $i<$rows; $i++) {
 		$row_new = db_fetch_array($res_new);
 		// avoid dupulicates of different file types
-		if (!isset($G_RELEASE) || !($G_RELEASE["$row_new[group_id]"])) {
+		if (!isset($G_RELEASE) || !isset($G_RELEASE[$row_new['group_id']]) || !($G_RELEASE[$row_new['group_id']])) {
 
 		  // Get Project admin as contacts
 		  $res_admin = db_query("SELECT user.user_name AS user_name "
@@ -213,7 +216,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>";
-		  print "<A href=\"/projects/$row_new[unix_group_name]/\"><B>$row_new[group_name]</B> (" . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
+		  print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify($row_new['group_name'], CODEX_PURIFIER_CONVERT_HTML) .'</B> (' . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
 		  print "<TD nowrap><I>".$Language->getText('new_index','contact').": ";
 		  print join(',',$admins);
 		  print "</I></TD></TR>\n";	
@@ -221,9 +224,9 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>&nbsp;<BR>";
 		  if ($row_new['short_description']) {
-		    print "<I>$row_new[short_description]</I>";
+		    print '<I>'.  $hp->purify($row_new['short_description'], CODEX_PURIFIER_BASIC)  ."</I>";
 		  } else {
-		    print "<I>'.$Language->getText('new_index','no_desc').'</I>";
+		    print '<I>'.$Language->getText('new_index','no_desc').'</I>';
 		  }
 		  print "</TD>";
 		  print '<TD align=center nowrap border=1>';
@@ -254,18 +257,18 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		} 
 	}
 	
-	echo "<TR class=\"newproject\"><TD>";
+	echo '<TR class="newproject"><TD>';
         if ($offset != 0) {
 		echo "<B>";
-        	echo "<A HREF=\"/new/?func=projects&offset=".($offset-20)."\"><B><IMG SRC=\"".util_get_image_theme("t2.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> ".$Language->getText('new_index','newer_projects')."</A></B>";
+        	echo '<A HREF="/new/?func=projects&offset='.($offset-20).'"><B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE> '.$Language->getText('new_index','newer_projects')."</A></B>";
         } else {
         	echo "&nbsp;";
         }
 
-	echo "</TD><TD COLSPAN=\"2\" ALIGN=\"RIGHT\">";
+	echo '</TD><TD COLSPAN="2" ALIGN="RIGHT">';
 	if (db_numrows($res_new)>$rows) {
 		echo "<B>";
-		echo "<A HREF=\"/new/?func=projects&offset=".($offset+20)."\"><B>".$Language->getText('new_index','older_projects')." <IMG SRC=\"".util_get_image_theme("t.png")."\" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>";
+		echo '<A HREF="/new/?func=projects&offset='.($offset+20).'"><B>'.$Language->getText('new_index','older_projects').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=MIDDLE></A></B>';
 	} else {
 		echo "&nbsp;";
 	}
