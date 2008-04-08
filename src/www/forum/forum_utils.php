@@ -18,12 +18,15 @@
 require_once('www/news/news_utils.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/user/UserHelper.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 function forum_header($params) {
-  global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$sys_datefmt,$et,$et_cookie,$Language;
-
+    global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$sys_datefmt,$et,$et_cookie,$Language;
+    $hp = CodeX_HTMLPurifier::instance(); 
+    $uh = new UserHelper();
+  
 	$params['group']=$group_id;
 	$params['toptab']='forum';
     $params['help'] = 'WebForums.html';
@@ -65,7 +68,9 @@ function forum_header($params) {
 					<h3>'.$Language->getText('forum_forum_utils','news_not_found').'</h3>';
 			} else {
 				echo '
-				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.user_get_name_display_from_id( db_result($result,0,'submitted_by')).'<BR>
+				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.
+                $hp->purify($uh->getDisplayNameFromUserId(db_result($result,0,'submitted_by')), CODEX_PURIFIER_CONVERT_HTML) .
+				'<BR>
 				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
 				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>
