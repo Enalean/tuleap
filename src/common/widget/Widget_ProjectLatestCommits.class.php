@@ -28,11 +28,13 @@ class Widget_ProjectLatestCommits extends Widget {
     function getContent() {
         $html = '';
         $i = 1;
+        $UH = new UserHelper();
+        $hp = CodeX_HTMLPurifier::instance(); 
         while($data = db_fetch_array($this->latest_revisions)) {
             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
             $html .= '<div style="font-size:0.98em;">';
             $html .= '<a href="'. $this->_getLinkToCommit($data) .'">#'.$data['revision'].'</a>';
-            $html .= ' by '.$data['who'] .' on ';
+            $html .= ' by '.$hp->purify($UH->getDisplayNameFromUserName($data['who']), CODEX_PURIFIER_CONVERT_HTML) .' on ';
             //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
             $html .= format_date($GLOBALS['sys_datefmt'], (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
             $html .= '</div>';
