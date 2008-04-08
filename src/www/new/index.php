@@ -13,7 +13,7 @@ require_once('www/new/new_utils.php');
 $Language->loadLanguageMsg('new/new');
 $hp = CodeX_HTMLPurifier::instance();
 
-$offest = $request->getValidated('offset', 'uint', 0);
+$offset = $request->getValidated('offset', 'uint', 0);
 
 // By default, display releases
 if (!$func) $func='releases';
@@ -77,7 +77,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
                 $frsrf->userCanRead($row_new['group_id'], $row_new['package_id'], $row_new['release_id'], 100)) {
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>";
-	      print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify($row_new['group_name'], CODEX_PURIFIER_CONVERT_HTML) ."</B></A>";
+	      print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODEX_PURIFIER_CONVERT_HTML) ."</B></A>";
 		  print '</TD><TD nowrap><I>'. $Language->getText('new_index','released_by') .': <A href="/users/'. $row_new['user_name'] .'">';
 		  print  $hp->purify($row_new['user_name'], CODEX_PURIFIER_CONVERT_HTML)  .'</A></I></TD></TR>';	
 		   
@@ -89,7 +89,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>&nbsp;<BR>";
 	      if ($row_new['short_description']) {
-		print "<I>".  $hp->purify($row_new['short_description'], CODEX_PURIFIER_CONVERT_HTML) ."</I>";
+		print "<I>".  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODEX_PURIFIER_BASIC) ."</I>";
 	      } else {
 		print "<I>".$Language->getText('new_index','no_desc')."</I>";
 	      }
@@ -216,7 +216,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>";
-		  print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify($row_new['group_name'], CODEX_PURIFIER_CONVERT_HTML) .'</B> (' . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
+		  print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'</B> (' . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
 		  print "<TD nowrap><I>".$Language->getText('new_index','contact').": ";
 		  print join(',',$admins);
 		  print "</I></TD></TR>\n";	
@@ -224,7 +224,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>&nbsp;<BR>";
 		  if ($row_new['short_description']) {
-		    print '<I>'.  $hp->purify($row_new['short_description'], CODEX_PURIFIER_BASIC)  ."</I>";
+		    print '<I>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODEX_PURIFIER_BASIC)  ."</I>";
 		  } else {
 		    print '<I>'.$Language->getText('new_index','no_desc').'</I>';
 		  }
