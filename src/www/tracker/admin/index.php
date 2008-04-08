@@ -525,7 +525,7 @@ if ($group_id && !$atid) {
 		
         $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
-		if ( $field && $request->valid(new Valid_String('value_function'))) {
+		if ( $field && is_array($request->get('value_function'))) {
 			if ( !$field->updateValueFunction($atid, $request->get('value_function')) ) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
