@@ -11,10 +11,14 @@ require_once('graph_lib.php');
    // require you to be a member of the super-admin group
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+$request = HTTPRequest::instance();
+
+$group_id = $request->getValidated('group_id', 'GroupId');
 if ( ! $group_id ) {
 	$group_id = 0;
 }
 
+$year = $request->getValidated('year', 'uint');
 if ( ! $year ) {
 	$year = gmstrftime("%Y", time() );
 }
@@ -43,13 +47,7 @@ $graph->SetyTitle('Views (RED)');
 $graph->DrawAxis();
 //$graph->showDebug();
 
-// If PHP3 then assume GD library < 1.6 with only GIF Support
-// if PHP4 then we have GD library >= 1.6 with only PNG Support
-if (substr(phpversion(),0,1) == "3") {
-    $graph->ShowGraph('gif');
-} else {
-    $graph->ShowGraph('png');
-}
+$graph->ShowGraph('png');
 
 
 ?>
