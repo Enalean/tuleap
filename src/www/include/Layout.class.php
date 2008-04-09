@@ -250,6 +250,7 @@ class Layout extends Response {
 
 <html lang="en">
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
     <TITLE><?php echo $params['title']; ?></TITLE>
     <?php
         $em =& EventManager::instance();
