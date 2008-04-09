@@ -47,9 +47,10 @@ require_once('Widget.class.php');
         return $content;
     }
     function getPreferences() {
+        $hp = CodeX_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. htmlentities($this->rss_title, ENT_QUOTES) .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. htmlentities($this->rss_url, ENT_QUOTES) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $hp->purify($this->rss_url, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
