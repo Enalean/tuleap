@@ -34,8 +34,7 @@ function register_valid()	{
 	
 	// if we got this far, it must be good
     $sql = "UPDATE user SET realname='".db_es($request->get('form_realname'))."' WHERE user_id=" . user_getid();
-    echo $sql;
-	db_query($sql);
+    db_query($sql);
 	return 1;
 }
 
