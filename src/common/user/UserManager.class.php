@@ -88,6 +88,27 @@ class UserManager {
     }
     
     /**
+     * isUserLoadedById
+     *
+     * @param int $user_id
+     * @return boolean true if the user is already loaded
+     */
+    function isUserLoadedById($user_id) {
+        return isset($this->_users[$user_id]);
+    }
+    
+    /**
+     * isUserLoadedByUserName
+     *
+     * @param string $user_name
+     * @return boolean true if the user is already loaded
+     */
+    function isUserLoadedByUserName($user_name) {
+        return isset($this->_userid_bynames[$user_name]);
+    }
+    
+    
+    /**
      * Set the id of the user logged in
      */
     function setCurrentUserId($user_id) {

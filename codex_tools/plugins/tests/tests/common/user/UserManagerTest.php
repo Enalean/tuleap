@@ -37,8 +37,10 @@ class UserManagerTest extends UnitTestCase {
         
         $user123 =& new MockUser($this);
         $user123->setReturnValue('getId', 123);
+        $user123->setReturnValue('getUserName', 'user_123');
         $user456 =& new MockUser($this);
         $user456->setReturnValue('getId', 456);
+        $user456->setReturnValue('getUserName', 'user_456');
         
         $um =& new UserManagerTestVersion($this);
         $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
@@ -62,8 +64,10 @@ class UserManagerTest extends UnitTestCase {
         
         $user123 =& new MockUser($this);
         $user123->setReturnValue('getId', 123);
+        $user123->setReturnValue('getUserName', 'user_123');
         $user456 =& new MockUser($this);
         $user456->setReturnValue('getId', 456);
+        $user456->setReturnValue('getUserName', 'user_456');
         
         $um =& new UserManagerTestVersion($this);
         $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
@@ -108,6 +112,30 @@ class UserManagerTest extends UnitTestCase {
         $user_3 =& $um->getUserByUserName('user_456');
         $user_4 =& $um->getuserById(456);
         $this->assertReference($user_3, $user_4);
+    }
+    
+    function testIsLoaded() {
+        $dao =& new MockUserDao($this);
+        $dar =& new MockDataAccessResult($this);
+        $dao->setReturnReference('searchByUserId', $dar);
+        $dar->setReturnValueAt(0, 'getRow', array('user_name' => 'user_123', 'user_id' => 123));
+        $dar->setReturnValueAt(1, 'getRow', false);
+        
+        $dao->expectOnce('searchByUserId', array(123));
+        
+        $user123 =& new MockUser($this);
+        $user123->setReturnValue('getId', 123);
+        $user123->setReturnValue('getUserName', 'user_123');
+        
+        $um =& new UserManagerTestVersion($this);
+        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        
+        $um->UserManager($dao);
+        $this->assertFalse($um->isUserLoadedById(123));
+        $this->assertFalse($um->isUserLoadedByUserName('user_123'));
+        $um->getUserById(123);
+        $this->assertTrue($um->isUserLoadedById(123));
+        $this->assertTrue($um->isUserLoadedByUserName('user_123'));
     }
 }
 ?>
