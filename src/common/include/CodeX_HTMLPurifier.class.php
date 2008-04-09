@@ -202,7 +202,7 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_BASIC:
-            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES), $groupId));
+            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
 
         case CODEX_PURIFIER_JS_QUOTE:
@@ -215,7 +215,7 @@ class CodeX_HTMLPurifier {
             break;
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
-            $clean = htmlentities($html, ENT_QUOTES);
+            $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
             break;
         }
         return $clean;
