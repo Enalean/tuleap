@@ -30,7 +30,6 @@ require_once('Widget.class.php');
                 mkdir($GLOBALS['codex_cache_dir'] .'/rss');
             }
             $rss =& new SimplePie($this->rss_url, $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-            $rss->set_output_encoding('ISO-8859-1');
             $max_items = 10;
             $items = array_slice($rss->get_items(), 0, $max_items);
             $content .= '<table width="100%">';
