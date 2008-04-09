@@ -1,5 +1,5 @@
 <?php
-
+require_once('common/dao/UserDao.class.php');
 require_once('common/user/User.class.php');
 require_once('common/user/UserManager.class.php');
 
@@ -11,6 +11,9 @@ require_once('common/user/UserManager.class.php');
 class UserHelper {
     
     var $_username_display;
+    var $_cache_by_id;
+    var $_cache_by_username;
+    var $_userdao;
     
     /**
      * Constructor
@@ -18,6 +21,9 @@ class UserHelper {
      */
     function UserHelper() {
         $this->_username_display = $this->_getCurrentUserUsernameDisplayPreference();
+        $this->_cache_by_id = array();
+        $this->_cache_by_username = array();
+        $this->_userdao = $this->_getuserDao();
     }
     
     function _getCurrentUserUsernameDisplayPreference() {
@@ -84,8 +90,20 @@ class UserHelper {
      */
     function getDisplayNameFromUserId($user_id) {
         $um =& $this->_getUserManager();
-        $user =& $um->getUserById($user_id);
-        return $this->getDisplayNameFromUser($user);
+        if ($um->isUserLoadedById($user_id)) {
+            $user =& $um->getUserById($user_id);
+            $display = $this->getDisplayNameFromUser($user);
+        } else {
+            if (!isset($this->_cache_by_id[$user_id])) {
+                $dar = $this->_userdao->searchByUserId($user_id);
+                if ($row = $dar->getRow()) {
+                    $this->_cache_by_id[$user_id] = $this->getDisplayName($row['user_name'], $row['realname']);
+                    $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$user_id];
+                }
+            }
+            $display = $this->_cache_by_id[$user_id];
+        }
+        return $display;
     }
     
     /**
@@ -101,9 +119,21 @@ class UserHelper {
             return $user_name;
         } else {
             $um =& $this->_getUserManager();
-            $user =& $um->getUserByUserName($user_name);
-            return $this->getDisplayNameFromUser($user);
+            if ($um->isUserLoadedByUserName($user_name)) {
+                $user =& $um->getUserByUserName($user_name);
+                $display = $this->getDisplayNameFromUser($user);
+            } else {
+                if (!isset($this->_cache_by_username[$user_name])) {
+                    $dar = $this->_userdao->searchByUserName($user_name);
+                    if ($row = $dar->getRow()) {
+                        $this->_cache_by_id[$row['user_id']] = $this->getDisplayName($row['user_name'], $row['realname']);
+                        $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$row['user_id']];
+                    }
+                }
+                $display = $this->_cache_by_username[$user_name];
+            }
         }
+        return $display;
     }
     
     /**
@@ -115,6 +145,12 @@ class UserHelper {
         return $user_name == $GLOBALS['Language']->getText('global', 'none');
     }
     
+    /**
+     * Returns the user dao
+     */
+    function _getUserDao() {
+        $dao =& new UserDao(CodeXDataAccess::instance());
+    }
 }
 
 ?>
