@@ -3,7 +3,7 @@
 # easy for developers to write dynamically generated webpages.
 #
 
-<IfModule !sapi_apache2.c>
+<IfModule !mod_php5.c>
   LoadModule php5_module modules/libphp5.so
 </IfModule>
 
