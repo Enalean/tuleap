@@ -11,6 +11,7 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('common/user/UserHelper.class.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -278,11 +279,14 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         }
         echo $cell;
     }
+    
+    $uh = new UserHelper();
+    $hp = CodeX_HTMLPurifier::instance(); 
+    
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
-        $user_name = user_get_name_display_from_unix($row_dev['user_name']);
-        
+        $user_name = $hp->purify($uh->getDisplayNameFromUserName($row_dev['user_name']), CODEX_PURIFIER_CONVERT_HTML);
         echo '<td><a name="'. ucfirst(substr($row_dev['user_name'], 0, 1)) .'"></a>'. $user_name .'</td>';
         echo '
             <TD>

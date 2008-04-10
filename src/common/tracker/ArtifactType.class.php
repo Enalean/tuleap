@@ -983,22 +983,16 @@ class ArtifactType extends Error {
 		return db_query($sql); 
 	}
 
-	//
-	// People who are project members
-	function getGroupMembers () {
-		$group_id = $this->Group->getID();
-		$sql="(SELECT user.user_id,user.user_name ".
-			"FROM user,user_group ".
-			"WHERE (user.user_id=user_group.user_id ".
-			"AND user_group.group_id='".  db_ei($group_id) ."') ".
-			"ORDER BY user.user_name)";
-		return $sql;
-	}
 	
 	// People who have once submitted a bug
-	function getSubmitters () {
+	function getSubmitters ($with_display_preferences=false) {
+        $sqlname="user.user_name";
+        if ($with_display_preferences) {
+            $uh = new UserHelper();
+            $sqlname=$uh->getDisplayNameSQLQuery();
+        }
 		$group_artifact_id = $this->getID();
-		$sql="(SELECT DISTINCT user.user_id,user.user_name ".
+		$sql="(SELECT DISTINCT user.user_id, ".$sqlname." ".
 			"FROM user,artifact ".
 			"WHERE (user.user_id=artifact.submitted_by ".
 			"AND artifact.group_artifact_id='". db_ei($group_artifact_id) ."') ".
@@ -1006,47 +1000,6 @@ class ArtifactType extends Error {
 		return $sql;
 	}
 		
-	//
-	// People who are project admins
-	function getGroupAdmins () {
-		$group_id = $this->Group->getID();
-		$sql="(SELECT DISTINCT user.user_id,user.user_name ".
-			"FROM user,user_group ".
-			"WHERE (user.user_id=user_group.user_id ".
-			"AND user_group.group_id='". db_ei($group_id) ."') ". 
-		        "AND user_group.admin_flags = 'A' ".
-			"ORDER BY user.user_name)";
-		return $sql;
-	}
-
-
-	/**
-	 *	getTrackerAdmins - returns a result set of this trackers administrators. 
-	 *
-	 *	@return database result set.
-	 */
-	function getTrackerAdmins() {
-	  global $display_debug;
-          
-	  if (!isset($this->admins_res)) {
-	    $sql="(SELECT user.user_id, user.user_name ". 
-	      "FROM artifact_perm ap, user ".
-	      "WHERE (user.user_id = ap.user_id) and ".
-	      "group_artifact_id=".  db_ei($this->getID()) ." ".
-	      "AND perm_level in (2,3))";
-	    //echo "sql=$sql<br>";
-	    $this->admins_res = db_query($sql);
-            
-	    if ( $display_debug ) {
-	      $rows = db_numrows($this->admins_res);
-	      echo "<DBG:ArtifactType.getTrackerAdmins>sql=".$sql."<br>";
-	      for($i=0;$i<$rows;$i++) {
-		echo db_result($this->admins_res, $i, 'user_name')."<br>";
-	      }
-	    }
-	  }
-	  return $sql;
-	}
 
 	function getUsersPerm($group_artifact_id) {
 		$sql="SELECT u.user_id,u.user_name,au.perm_level ".

@@ -66,6 +66,33 @@ class UserHelper {
     }
     
     /**
+     * getDisplayNameSQLQuery
+     * 
+     * Get SQL statement for extracting display name from the "user" table, according to the user prefs
+     * 
+     * Username display preference: see getDisplayName()
+     *
+     */
+    function getDisplayNameSQLQuery() {
+        $name = '';
+        switch($this->_username_display) {
+        case 1:
+            $name = "CONCAT(user.user_name,' (',user.realname,')') full_name";
+            break;
+        case 2:
+            $name = 'user.user_name';
+            break;
+        case 3:
+            $name = 'user.realname';
+            break;
+        default:
+            $name = "CONCAT(user.realname,' (',user.user_name,')') full_name";
+            break;
+        }
+        return $name;
+}
+    
+    /**
      * getDisplayNameFromUser
      * 
      * Get user name from Codex login, according to the user prefs: Codex login or Real name

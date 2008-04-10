@@ -437,11 +437,11 @@ function svn_utils_format_svn_history($group_id) {
         // Format output 
         $output = '<P><b>'.$Language->getText('svn_utils','ci_week').'</b><BR>&nbsp;';
         reset($svnhist);
-        $UH = new UserHelper();
+        $uh = new UserHelper();
         $hp = CodeX_HTMLPurifier::instance(); 
         while (list($user, ) = each($svnhist)) {
             $output .= '<BR>'
-                .$hp->purify($UH->getDisplayNameFromUserName($user), CODEX_PURIFIER_CONVERT_HTML)
+                .$hp->purify($uh->getDisplayNameFromUserName($user), CODEX_PURIFIER_CONVERT_HTML)
                 .' ('.$svnhist[$user]['last'].'/'
                 .$svnhist[$user]['full'].')';
         }

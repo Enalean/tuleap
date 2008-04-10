@@ -13,6 +13,8 @@ require_once('common/include/Error.class.php');
 $GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
+require_once('common/user/UserHelper.class.php');
+
 //
 // The artifact field object
 //
@@ -560,7 +562,8 @@ class ArtifactField extends Error {
 	 */
 	function getValue($group_artifact_id,$value_id,$by_field_id=false) {
 	  global $Language;
-
+      $uh = new UserHelper();
+      
 	    // close_date and assigned_to fields are special select box fields
 	    $value_func = $this->getGlobalValueFunction();
 	    if (count($value_func) > 0) {
@@ -568,7 +571,7 @@ class ArtifactField extends Error {
 			// to make a test for the type of value function it is
 			// if ($value_func == '...')
             if(is_numeric($value_id)) {
-                return user_getname($value_id);
+            	return $uh->getDisplayNameFromUserId($value_id); 
             }
             else {
                 return $Language->getText('tracker_common_field','not_found');
@@ -618,11 +621,10 @@ class ArtifactField extends Error {
 	 *
 	 * @return array
 	 */
-	function getFieldPredefinedValues ($group_artifact_id, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false) {
+	function getFieldPredefinedValues ($group_artifact_id, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false,$with_display_preferences=false) {
 	
 		// ArtifactTypeHtml object created in index.php
 		global $ath, $RES_CACHE;
-
 	    // The "Assigned_to" box requires some special processing
 	    // because possible values  are project members) and they are
 	    // not stored in the artifact_field_value table but in the user_group table	    
@@ -630,18 +632,18 @@ class ArtifactField extends Error {
 	    if (count($value_func) > 0) {
 	        for ($i=0;$i<count($value_func);$i++) {
 			if ($value_func[$i] == 'group_members')
-			    $qry_value[$i] = $ath->getGroupMembers();
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
 			else if ($value_func[$i] == 'group_admins')
-			    $qry_value[$i] = $ath->getGroupAdmins();			    
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);	
 			else if ($value_func[$i] == 'tracker_admins')
-			    $qry_value[$i] = $ath->getTrackerAdmins();			    
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
 			else if ($value_func[$i] == 'artifact_submitters')
-			    $qry_value[$i] = $ath->getSubmitters();
+			    $qry_value[$i] = $ath->getSubmitters($with_display_preferences);			    			
 			else if (preg_match('/ugroup_([0-9]+)/', $value_func[$i], $matches))
 			  if (strlen($matches[1]) > 2)
-			    $qry_value[$i] = ugroup_db_get_members($matches[1]);			    
+			    $qry_value[$i] = ugroup_db_get_members($matches[1], $with_display_preferences);			    
 			else
-			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID());			    			
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
 		}
 		$qry = $qry_value[0];
 		if (count($qry_value) > 1) {

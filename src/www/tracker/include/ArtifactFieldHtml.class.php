@@ -88,7 +88,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$group_artifact_id) {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
-			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked,false,true,false,true);
             $array_values = array();
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
@@ -160,7 +160,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$group_artifact_id) {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
-            $result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+            $result = $this->getFieldPredefinedValues($group_artifact_id,$checked,false,true,false,true);
             $array_values = array();
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
