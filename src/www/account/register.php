@@ -209,6 +209,7 @@ else print "Validate Registration"?>">
 // ###### first check for valid login, if so, congratulate
 
 $request =& HTTPRequest::instance();
+$hp =& CodeX_HTMLPurifier::instance();
 if ($request->isPost() && $request->exist('Register')) {
 
 
