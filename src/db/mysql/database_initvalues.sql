@@ -305,6 +305,7 @@ INSERT INTO people_skill_level VALUES ('60','Wrote It');
 #
 
 INSERT INTO frs_filetype VALUES ('2000','Binary .rpm');
+INSERT INTO frs_filetype VALUES ('2100','Binary .deb');
 INSERT INTO frs_filetype VALUES ('3000','Binary .zip');
 INSERT INTO frs_filetype VALUES ('3001','Binary .bz2');
 INSERT INTO frs_filetype VALUES ('3002','Binary .gz');
@@ -494,7 +495,9 @@ INSERT INTO trove_cat VALUES (267, 2000082001, 160, 160, 'zope', 'Zope', 'Zope O
 INSERT INTO trove_cat VALUES (269, 2001010901, 160, 160, 'ruby', 'Ruby', 'A pragmatic, purely OO, extremelly elegant programming language offering the best of Perl, Python, Smalltalk and Eiffel. Worth a try ! (See http://www.ruby-lang.org)', 0, 0, 'Programming Language :: Ruby', '160 :: 269');
 INSERT INTO trove_cat VALUES (273, 2001011601, 160, 160, 'matlab', 'Matlab', 'The Matlab (Matrix Laboratory) programming language for scientific and engineering numeric computation', 0, 0, 'Programming Language :: Matlab', '160 :: 273');
 INSERT INTO trove_cat VALUES (279, 2002081301, 154, 18, 'printdrivers', 'Drivers', 'Printer drivers', 0, 0, 'Topic :: Printing :: Drivers', '18 :: 154 :: 279');
-
+INSERT INTO trove_cat VALUES (280, 2008012101, 160, 160, 'vbdotnet', 'VB.NET', 'The VB.NET programming language', 0, 0, 'Programming Language :: VB.NET', '160 :: 280');
+INSERT INTO trove_cat VALUES (281, 2008012101, 160, 160, 'csharp', 'C#', 'The C# programming language', 0, 0, 'Programming Language :: C#', '160 :: 281');
+INSERT INTO trove_cat VALUES (282, 2008012101, 160, 160, 'javascript', 'JavaScript', 'The JavaScript programming language', 0, 0, 'Programming Language :: JavaScript', '160 :: 282');
     
 
 #
@@ -1735,6 +1738,7 @@ INSERT INTO snippet_language VALUES (17,'Other Language');
 INSERT INTO snippet_language VALUES (18,'LabView');
 INSERT INTO snippet_language VALUES (19,'C#');
 INSERT INTO snippet_language VALUES (20,'Postscript');
+INSERT INTO snippet_language VALUES (21,'VB.NET');
 
 
 --
