@@ -232,6 +232,7 @@ class ArtifactFieldSet extends Error {
 	 */
 	function getAllUsedFields() {
         $result_fields = array();
+        reset($this->ArtifactFields);
         while (list($key,$field) = each($this->ArtifactFields) ) {
             if ( $field->IsUsed() ) {
                 $result_fields[$key] = $field;
@@ -247,6 +248,7 @@ class ArtifactFieldSet extends Error {
 	 */
 	function getAllUnusedFields() {
         $result_fields = array();
+        reset($this->ArtifactFields);
         while (list($key,$field) = each($this->ArtifactFields) ) {
             if ( ! $field->IsUsed() ) {
                 $result_fields[$key] = $field;
@@ -269,6 +271,7 @@ class ArtifactFieldSet extends Error {
         } else {
             $ok = false;
             $fields = $this->getAllUsedFields();
+            reset($fields);
             while (!$ok && list(,$field) = each($fields)) {
                 if (!$field->isSpecial()) {
                     $ok = $field->userCanSubmit($group_id, $group_artifact_id, $user_id);
