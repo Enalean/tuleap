@@ -23,6 +23,7 @@ require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/loc
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/SimpleSanitizer.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
