@@ -229,8 +229,8 @@ print '
 
 if ($group->isTemplate()) {
     echo '<hr NoShade SIZE="1" /><p><b>'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects') .':</b> <a id="show_projects_link" href="projects.php?group_id='. $group_id .'">'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects_show') .'</a></p><div id="show_projects_div"></div>';
-    $show_projects_show = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_show'), ENT_QUOTES);
-    $show_projects_hide = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_hide'), ENT_QUOTES);
+    $show_projects_show = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_show'), ENT_QUOTES, 'UTF-8');
+    $show_projects_hide = htmlentities($GLOBALS['Language']->getText('project_admin_index', 'show_projects_hide'), ENT_QUOTES, 'UTF-8');
     echo <<<EOS
     <script type="text/javascript">
     var show_projects_done = false;

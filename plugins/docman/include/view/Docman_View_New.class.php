@@ -153,6 +153,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
     }
 
     function _getNewsFieldset($params) {
+        $hp = CodeX_HTMLPurifier::instance();
         $html = '';
         $user =& $this->_controller->getUser();
         if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {
@@ -175,12 +176,12 @@ require_once('Docman_View_PermissionsForItem.class.php');
 
             $html .= '<div>';
             $html .= '<b><label for="news_summary">'. $GLOBALS['Language']->getText('news_admin_index','subject') .':</label></b><br />';
-            $html .= '<input type="text" name="news[summary]" id="news_summary" value="'. htmlentities($default_news_summary, ENT_QUOTES) .'" size="44" maxlength="60" /><br />';
+            $html .= '<input type="text" name="news[summary]" id="news_summary" value="'.  $hp->purify($default_news_summary, CODEX_PURIFIER_CONVERT_HTML)  .'" size="44" maxlength="60" /><br />';
             $html .= '</div>';
 
             $html .= '<div>';
             $html .= '<b><label for="news_details">'. $GLOBALS['Language']->getText('news_admin_index','details') .':</label></b><br />';
-            $html .= '<textarea name="news[details]" rows="8" cols="50" wrap="soft">'. htmlentities($default_news_details, ENT_QUOTES) .'</textarea><br />';
+            $html .= '<textarea name="news[details]" rows="8" cols="50" wrap="soft">'.  $hp->purify($default_news_details, CODEX_PURIFIER_CONVERT_HTML)  .'</textarea><br />';
             $html .= '</div>';
 
             $html .= '<table><tr style="vertical-align:top"><td><b>'. $GLOBALS['Language']->getText('news_submit','news_privacy') .'</b></td><td>';
