@@ -104,7 +104,7 @@ tracker_index	invalid_filename	Nom de fichier invalide
 tracker_index	not_create_file	L'objet fichier n'a pas pu être créé
 tracker_index	not_create_file_obj	L'objet fichier n'a pas pu être créé&nbsp;: $1
 tracker_index	not_attach_file	Impossible d'attacher le fichier à l'artefact&nbsp;: $1
-tracker_index	create_success	Artefact créé avec succès (no. $1)
+tracker_index	create_success	Artefact créé avec succès ($1)
 tracker_index	invalid_filename_attach	Nom de fichier invalide pour un attachement
 tracker_index	trackers_for	Outil de suivi pour $1
 tracker_index	admin_all_trackers	Administration des outils de suivi
@@ -117,7 +117,8 @@ tracker_index	file_delete	Fichier détruit&nbsp;: $1
 tracker_index	file_delete_success	Fichier détruit avec succès
 tracker_index	file_upload_err	Téléchargement du fichier&nbsp;: $1
 tracker_index	file_upload_success	Fichier téléchargé avec succès
-tracker_index	update_success	Mise à jour réussie
+tracker_index	mass_update_success	Mise à jour réussie
+tracker_index	update_success	Mise à jour réussie ($1)
 tracker_index	not_saved_comment	Le commentaire n'a pu être sauvegardé
 tracker_index	open	ouvert
 tracker_index	updated_aid	Modification de $1
@@ -318,7 +319,6 @@ tracker_include_artifact	check_already_submitted	Avez-vous vérifié que cet art
 tracker_include_artifact	latest_modif	DERNIERES MODIFICATIONS
 tracker_include_artifact	full_snapshot	COPIE COMPLETE
 tracker_include_artifact	follow_link	Pour des informations détaillées, suivez ce lien :
-tracker_include_artifact	update_sent	Notification de la mise à jour de l'artefact envoyée
 tracker_include_artifact	changes_by	Modifié par :
 tracker_include_artifact	anon_user	Utilisateur anonyme
 tracker_include_artifact	add_flup_comment	Commentaire additionnel
@@ -612,16 +612,13 @@ tracker_common_artifact	field_upd_fail	La mise à jour de la valeur de champ $1 
 tracker_common_artifact	canned_used	 Réponse type utilisée 
 tracker_common_artifact	unable_canned	 Impossibilité d'utiliser la réponse type 
 tracker_common_artifact	upd_fail	LA MISE A JOUR A ECHOUÉ
-tracker_common_artifact	upd_success	 Artefact mis à jour avec succès
 tracker_common_artifact	cc_add_fail	L'ajout de CC a échoué
-tracker_common_artifact	cc_added	CC ajouté
 tracker_common_artifact	prob_cc_list	erreur en détruisant une ancienne liste de CC (aid=$1). 
 tracker_common_artifact	err_cc_id	Erreur CC ID $1 n'appartient pas à cet ID d'artefact
 tracker_common_artifact	err_del_cc	Erreur à la destruction du CC ID $1 : $2
 tracker_common_artifact	cc_remove	CC enlevé
 tracker_common_artifact	invalid_art	 Artefact invalide no. $1
 tracker_common_artifact	depend_add_fail	L'ajout de dépendances sur l'artefact no. $1 a échoué
-tracker_common_artifact	depend_add	Dépendances ajoutées
 tracker_common_artifact	depend_removed	Dépendances enlevées
 tracker_common_artifact	bad_field_permission_submission	Vous n'êtes pas autorisé à soumettre le champ $1.
 tracker_common_artifact	bad_field_permission_update	Vous n'êtes pas autorisé à modifier le champ $1.

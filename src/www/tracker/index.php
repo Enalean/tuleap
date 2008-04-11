@@ -209,7 +209,9 @@ if ( $func == 'gotoid' ) {
                                 $agnf =& new ArtifactGlobalNotificationFactory();
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
+                                $itemname = $ath->getItemName();
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
+                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);
                                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                         }
                 }
@@ -297,8 +299,10 @@ if ( $func == 'gotoid' ) {
                                     $agnf =& new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
-								if ($ath->getStopNotification()) {
+                                    $itemname = $ath->getItemName();
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
+                                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);                                
+                                    if ($ath->getStopNotification()) {
 									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
 								}                            
                             $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
@@ -514,7 +518,8 @@ if ( $func == 'gotoid' ) {
                                             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage()));
                                                 $was_error=true;
                                         } else {
-                                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','file_upload_success'));
+                                             // Remove verbose feedback
+                                             //$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','file_upload_success'));
                                         }
                                 }
                         }
@@ -536,10 +541,12 @@ if ( $func == 'gotoid' ) {
                         //      Show just one feedback entry if no errors
                         //
                         if (!isset($was_error) || !$was_error) {
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
-                            	if ($ah->ArtifactType->getStopNotification()) {
-                        			$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
-                        		}                                                            
+                            $itemname = $ath->getItemName();
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success',
+                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);                                
+                            if ($ah->ArtifactType->getStopNotification()) {
+                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                            }                                                            
                         }
                         $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                 }
@@ -680,7 +687,7 @@ if ( $func == 'gotoid' ) {
 		//      Show just one feedback entry if no errors
 		//
 		if (!$was_error) {
-		    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success'));
+		    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','mass_update_success'));
 			if ($ath->getStopNotification()) {
                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
             }		  

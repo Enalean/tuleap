@@ -99,7 +99,7 @@ tracker_index	invalid_filename	Invalid filename
 tracker_index	not_create_file	Could Not Create File Object
 tracker_index	not_create_file_obj	Could Not Create File Object: $1
 tracker_index	not_attach_file	Could Not Attach File to Artifact: $1
-tracker_index	create_success	Artifact Successfully Created (#$1)
+tracker_index	create_success	Artifact Successfully Created ($1)
 tracker_index	invalid_filename_attach	Invalid filename for attachment
 tracker_index	trackers_for	Trackers for $1
 tracker_index	admin_all_trackers	Admin All Trackers
@@ -112,7 +112,8 @@ tracker_index	file_delete	File Delete: $1
 tracker_index	file_delete_success	File deleted successfully
 tracker_index	file_upload_err	File Upload: $1
 tracker_index	file_upload_success	File uploaded successfully
-tracker_index	update_success	Successfully Updated
+tracker_index	mass_update_success	Successfully Updated
+tracker_index	update_success	Successfully Updated ($1)
 tracker_index	not_saved_comment	Comment could not be saved
 tracker_index	open	open
 tracker_index	updated_aid	Updated $1
@@ -313,7 +314,6 @@ tracker_include_artifact	check_already_submitted	Did you check if this artifact 
 tracker_include_artifact	latest_modif	LATEST MODIFICATIONS
 tracker_include_artifact	full_snapshot	FULL $1 SNAPSHOT
 tracker_include_artifact	follow_link	For detailed info, follow this link:
-tracker_include_artifact	update_sent	Artifact Update Sent
 tracker_include_artifact	changes_by	Changes by:
 tracker_include_artifact	anon_user	Anonymous user
 tracker_include_artifact	add_flup_comment	Additional Follow-up Comments
@@ -607,16 +607,13 @@ tracker_common_artifact	field_upd_fail	Failed to update the field value $1
 tracker_common_artifact	canned_used	 Canned Response Used 
 tracker_common_artifact	unable_canned	 Unable to use Canned Response 
 tracker_common_artifact	upd_fail	UPDATE FAILED
-tracker_common_artifact	upd_success	 Successfully Updated Artifact 
 tracker_common_artifact	cc_add_fail	CC addition failed
-tracker_common_artifact	cc_added	CC Added
 tracker_common_artifact	prob_cc_list	problem deleting old CC List (aid=$1). 
 tracker_common_artifact	err_cc_id	Error CC ID $1 doesn't belong to artifact ID
 tracker_common_artifact	err_del_cc	Error deleting CC ID $1: $2
 tracker_common_artifact	cc_remove	CC Removed
 tracker_common_artifact	invalid_art	 Invalid artifact #$1
 tracker_common_artifact	depend_add_fail	Dependencies addition for artifact #$1 failed
-tracker_common_artifact	depend_add	Dependencies Added
 tracker_common_artifact	depend_removed	Dependency Removed
 tracker_common_artifact	bad_field_permission_submission	You are not allowed to submit the field $1.
 tracker_common_artifact	bad_field_permission_update	You are not allowed to update the field $1.

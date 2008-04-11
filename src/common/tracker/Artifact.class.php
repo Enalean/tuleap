@@ -973,7 +973,6 @@ class Artifact extends Error {
                 exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
                 return false;
             } else {
-                if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','upd_success'));
                 return true;
             }
 
@@ -1057,8 +1056,7 @@ class Artifact extends Error {
         if (!$ok) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','cc_add_fail'));
         } else {
-            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','cc_added'));
-	    $this->addHistory('cc',$old_value,$new_value);
+            $this->addHistory('cc',$old_value,$new_value);
             $changes['CC']['add'] = join(',', $arr_email);
         }
         return $ok;
@@ -1274,7 +1272,6 @@ class Artifact extends Error {
         if (!$ok) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
         } else {
-            if (!$masschange) $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','depend_add'));
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
         return $ok;
@@ -2286,7 +2283,6 @@ class Artifact extends Error {
                 $mail->send();
             }
 	    }
-	    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_include_artifact','update_sent')); //to '.$to;
       }
     }
 
