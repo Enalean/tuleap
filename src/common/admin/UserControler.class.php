@@ -36,12 +36,13 @@ class UserControler extends Controler {
     private $nbrowstodisplay;
     
     function __construct() {
-
+        
     }
 
     function viewsManagement() {
-        $userSearchDisplay = new UserSearchDisplay($this->uIterator);
-        $userSearchDisplay->display($this->nbrowstodisplay);
+        $this->initNbRowsToDisplay($this->nbrowstodisplay);
+        $userSearchDisplay = new UserSearchDisplay($this->uIterator,$this->nbrowstodisplay);
+        $userSearchDisplay->display();
     }
 
     function setUserIterator() {
@@ -127,8 +128,8 @@ class UserControler extends Controler {
         }
     }
 
-    function setNbRowsToDisplay($nbrowstodisplay) {
-        if (empty($nbrowstodisplay)) {
+    function initNbRowsToDisplay($nbrowstodisplay) {
+        if (!empty($this->nbrowstodisplay)) {
             $this->nbrowstodisplay = $nbrowstodisplay;
         }
         else {
@@ -137,7 +138,7 @@ class UserControler extends Controler {
     }
     
     function getNbRowsToDisplay() {
-        return setNbRowsToDisplay($this->nbrowstodisplay);
+        return $this->setNbRowsToDisplay($this->nbrowstodisplay);
     }
     
     function request() {

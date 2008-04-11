@@ -68,22 +68,22 @@ class AdminSearchDisplay extends AdminDisplay {
         print '</table>';
     }
 
-    function display($nbrowstodisplay) {
+    function display() {
 
         //Header
         $this->displayHeader();
         
         //Search
-        $this->displaySearchFilter($nbrowstodisplay);
+        $this->displaySearchFilter();
         
         //Browsing
-        $this->displayBrowse($nbrowstodisplay);
+        $this->displayBrowse();
         
         //Search table
         $this->displaySearch();
         
         //Browsing
-        $this->displayBrowse($nbrowstodisplay);
+        $this->displayBrowse();
         
         //footer
         $this->displayFooter();

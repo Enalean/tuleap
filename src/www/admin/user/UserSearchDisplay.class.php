@@ -33,8 +33,11 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
  */
 class UserSearchDisplay extends AdminSearchDisplay {
 
-    function __construct($uIterator) {
+    function __construct($uIterator, $nbrowstodisplay=50) {
         $this->uIterator = $uIterator;
+        
+        $this->nbrowstodisplay = $nbrowstodisplay;
+
     }
 
     /**
@@ -109,7 +112,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         print '<form name="usersearch" action="index.php" method="POST">
 
-<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="50" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
+<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrowstodisplay.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
         print '</form>';
     }
 
