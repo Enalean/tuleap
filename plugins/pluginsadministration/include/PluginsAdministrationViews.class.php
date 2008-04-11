@@ -155,7 +155,7 @@ class PluginsAdministrationViews extends Views {
                 $the_hooks = array();
                 while($hooks->valid()) {
                     $hook =& $hooks->current();
-                    $the_hooks[] = $hook->getInternalString();
+                    $the_hooks[] = $hook;
                     $hooks->next();
                 }
                 natcasesort($the_hooks);
@@ -174,12 +174,12 @@ class PluginsAdministrationViews extends Views {
                     $key   =& $iter->current();
                     $desc  =& $descs->get($key);
                     $prop_name = $desc->getName();
-                    $props .= '<tr><td class="pluginsadministration_label">'. $prop_name->getInternalString() .'</td><td>';
+                    $props .= '<tr><td class="pluginsadministration_label">'. $prop_name .'</td><td>';
                     if (is_bool($desc->getValue())) {
-                        $props .= '<input type="hidden"   name="properties['. $prop_name->getInternalString() .']" value="0" />';
-                        $props .= '<input type="checkbox" name="properties['. $prop_name->getInternalString() .']" value="1" '. ($desc->getValue() ? 'checked="checked"' : '') .'/>';
+                        $props .= '<input type="hidden"   name="properties['. $prop_name .']" value="0" />';
+                        $props .= '<input type="checkbox" name="properties['. $prop_name .']" value="1" '. ($desc->getValue() ? 'checked="checked"' : '') .'/>';
                     } else {
-                        $props .= sprintf('<input type="text" size="%d" name="properties[%s]" value="%s" />', strlen($desc->getValue()), $prop_name->getInternalString(), $desc->getValue());
+                        $props .= sprintf('<input type="text" size="%d" name="properties[%s]" value="%s" />', strlen($desc->getValue()), $prop_name, $desc->getValue());
                     }
                     $props .= '</td></tr>';
                     $iter->next();
@@ -350,14 +350,14 @@ EOS;
                 $hooks =& $col_hooks->iterator();
                 while($hooks->valid()) {
                     $hook     =& $hooks->current();
-                    $priority = $plugin_hook_priority_manager->getPriorityForPluginHook($plugin, $hook->getInternalString());
-                    if (!isset($this->_priorities[$hook->getInternalString()])) {
-                        $this->_priorities[$hook->getInternalString()] = array();
+                    $priority = $plugin_hook_priority_manager->getPriorityForPluginHook($plugin, $hook);
+                    if (!isset($this->_priorities[$hook])) {
+                        $this->_priorities[$hook] = array();
                     }
-                    if (!isset($this->_priorities[$hook->getInternalString()][$priority])) {
-                        $this->_priorities[$hook->getInternalString()][$priority] = array();
+                    if (!isset($this->_priorities[$hook][$priority])) {
+                        $this->_priorities[$hook][$priority] = array();
                     }
-                    $this->_priorities[$hook->getInternalString()][$priority][$plugin->getId()] = array('name' => $name, 'available' => $available);
+                    $this->_priorities[$hook][$priority][$plugin->getId()] = array('name' => $name, 'available' => $available);
                     $hooks->next();
                 }
                 $iter->next();
