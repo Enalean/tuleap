@@ -10,92 +10,106 @@ require_once('pre.php');
 require_once('account.php');
 require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
-
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
+$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $hp = CodeX_HTMLPurifier::instance();
+$request =& HTTPRequest:: instance();
 $action_select = '';
 $status= '';
-if (isset($_REQUEST['action_select'])) {
-    $action_select = $_REQUEST['action_select'];
+if ($request->exist('action_select')) {
+    $action_select = $request->get('action_select');
 }
-if (isset($_REQUEST['status'])) {
-    $status = $_REQUEST['status'];
+if ($request->exist('status')) {
+    $status = $request->get('status');
 }
-$page = '';
-if (isset($_REQUEST['page'])) {
-    $page = $_REQUEST['page'];
-}
-
-if (($action_select=='activate')) {
-
-    $shell="";
-    if ($status=='restricted') {
-        $newstatus='R';
-        $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
-    } else $newstatus='A';
-
-    // update the user status flag to active
-    db_query("UPDATE user SET status='".$newstatus."'".$shell.
-	     " WHERE user_id IN ($list_of_users)");
-
-    // Now send the user verification emails
-    $res_user = db_query("SELECT email, confirm_hash FROM user "
-			 . " WHERE user_id IN ($list_of_users)");
-	
-     // Send a notification message to the user when account is activated by the Site Administrator
-            $date = getdate(time());
-            $hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
-            $minutesleft = 60 - $date['minutes'];
-            $base_url = get_server_url();
-     
-     while ($row_user = db_fetch_array($res_user)) {
-        $from = $GLOBALS['sys_noreply'];
-            $to = $row_user['email'];
-            $subject = $Language->getText('admin_approve_pending_users', 'email_title', array($GLOBALS['sys_name']));
-            
-            include($Language->getContent('admin/new_account_email'));
-
-            $mail = new Mail();
-            $mail->setSubject($subject);
-            $mail->setFrom($from);
-            $mail->setTo($to);
-            $mail->setBody($body);
-            if (!$mail->send()) {
-                $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-            }
-        usleep(250000);
-    }
-
-
-} else if($action_select=='validate'){
-    if($status=='restricted'){
-        $newstatus='W';
+$expiry_date = 0;
+    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
+        $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
     }else{
-        $newstatus='V';
-    }
-    
-
-    // update the user status flag to active
-    db_query("UPDATE user SET status='".$newstatus."' 
-          WHERE user_id IN ($list_of_users)");
-
-    // Now send the user verification emails
-    $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-             . " WHERE user_id IN ($list_of_users)");
-    
-    while ($row_user = db_fetch_array($res_user)) {
-        if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'], $row_user['user_name'])) {
-                $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+        $vDate = new Valid_String();
+        if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
+            $date_list = split("-", $request->get('form_expiry'), 3);
+            $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+            $expiry_date = $unix_expiry_time; 
+            
         }
-        usleep(250000);
+      
+        $page = '';
+        if ($request->exist('page')) {
+            $page = $request->get('page');
+        }
+        
+        if (($action_select=='activate')) {
+        
+            $shell="";
+            if ($status=='restricted') {
+                $newstatus='R';
+                $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
+            } else $newstatus='A';
+        
+            // update the user status flag to active
+            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
+                 " WHERE user_id IN ($list_of_users)");
+        
+            // Now send the user verification emails
+            $res_user = db_query("SELECT email, confirm_hash FROM user "
+                     . " WHERE user_id IN ($list_of_users)");
+            
+             // Send a notification message to the user when account is activated by the Site Administrator
+                    $date = getdate(time());
+                    $hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
+                    $minutesleft = 60 - $date['minutes'];
+                    $base_url = get_server_url();
+             
+             while ($row_user = db_fetch_array($res_user)) {
+                $from = $GLOBALS['sys_noreply'];
+                    $to = $row_user['email'];
+                    $subject = $Language->getText('admin_approve_pending_users', 'email_title', array($GLOBALS['sys_name']));
+                    
+                    include($Language->getContent('admin/new_account_email'));
+        
+                    $mail = new Mail();
+                    $mail->setSubject($subject);
+                    $mail->setFrom($from);
+                    $mail->setTo($to);
+                    $mail->setBody($body);
+                    if (!$mail->send()) {
+                        $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                    }
+                usleep(250000);
+            }
+        
+        
+        } else if($action_select=='validate'){
+            if($status=='restricted'){
+                $newstatus='W';
+            }else{
+                $newstatus='V';
+            }
+            
+        
+            // update the user status flag to active
+            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."' 
+                  WHERE user_id IN ($list_of_users)");
+        
+            // Now send the user verification emails
+            $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
+                     . " WHERE user_id IN ($list_of_users)");
+            
+            while ($row_user = db_fetch_array($res_user)) {
+                if (!send_new_user_email($row_user['email'],$row_user['confirm_hash'], $row_user['user_name'])) {
+                        $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                }
+                usleep(250000);
+            }
+            
+        } else if ($action_select=='delete') {
+            db_query("UPDATE user SET status='D' WHERE user_id IN ($list_of_users)");
+        }
     }
-    
-} else if ($action_select=='delete') {
-    db_query("UPDATE user SET status='D' WHERE user_id IN ($list_of_users)");
-}
-
 //
 // No action - First time in this script 
 // Show the list of pending user waiting for approval
@@ -142,8 +156,18 @@ if (db_numrows($res) < 1) {
         <?php 
         if($GLOBALS['sys_user_approval'] != 1 || $page!='pending'){
             echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
-                <select name="action_select" size="1">
+            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            $exp_date='';
+            if($row['expiry_date'] != 0){
+                $exp_date = format_date('Y-m-d',$row['expiry_date']); 
+            }
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
+            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="<?php echo $exp_date;?>">
+            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            <BR>
+             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
+                '<p><select name="action_select" size="1">
                 <option value="activate" selected>'.$Language->getText('admin_approve_pending_users','activate').'
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
                 </select>
@@ -170,8 +194,14 @@ if (db_numrows($res) < 1) {
     if ($GLOBALS['sys_allow_restricted_users'] && $page=='pending') {
 
         echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
-                <select name="action_select" size="1">
+            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
+            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="">
+            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            <BR>
+             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
+                '<p><select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate" >'.$Language->getText('admin_approve_pending_users','activate').'
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
@@ -191,8 +221,14 @@ if (db_numrows($res) < 1) {
     <?php 
         if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
             echo '<TD>
-            <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
-                <select name="action_select" size="1">
+            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
+            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="">
+            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
+                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            <BR>
+             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
+                '<p><select name="action_select" size="1">
                 <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
                 <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        

@@ -245,14 +245,18 @@ account_register	purpose	Motif
 account_register	purpose_directions	<em>Veuillez expliquer la raison pour laquelle vous souhaitez créer un compte sur ce site</em><br>
 account_register	purpose_directions_admin	<em>Vous pouvez ajouter un commentaire sur la création de ce compte utilisateur</em><br>
 account_register	btn_register	Créer le compte
+account_register	btn_activate	Activer le compte
 account_register	btn_next	Etape suivante
+account_register	send_email	Envoyer un mail de bienvenue à l'utilisateur
 account_register	msg_confirm	Félicitations ! Vous venez de créer votre compte utilisateur sur $1. Votre nom d'utilisateur est&nbsp;: <b>$2</b><p>Un message de confirmation est en cours d'expédition pour vérifier votre adresse e-mail. En visitant le lien inclus dans ce message vous activerez votre compte.</p>
-account_register	msg_confirm_admin	Félicitations ! Vous venez de créer un compte utilisateur pour $1 sur $2.<p>Un message de confirmation, contenant son login : $3 et son mot de passe : $4, est en cours d'expédition. En visitant le lien inclus dans ce message il activera son compte.</p>
+account_register	msg_confirm_admin	Félicitation ! Vous venez de créer un compte utilisateur pour $1 sur $2.<p>Un mail l'informant de son inscription, contenant son login : $3 et son mot de passe : $4  est en cours d'expédition. Son compte est désormais activé.</p>
+account_register	msg_confirm_no_email	Félicitation ! Vous venez de créer un compte utilisateur pour $1 sur $2.<p>Veuillez noter son login $3 et son mot de passe $4 Son compte est désormais activé.</p>
 account_register	title_approval	Création de compte - Prêt pour approbation
 account_register	msg_approval	Félicitations ! Votre demande de création de compte sur $1 pour l'utilisateur <b>$2</b> a été pris en compte.<p>L'administrateur du site va maintenant examiner votre demande. Une fois approuvée vous recevrez un message de confirmation afin de vérifier votre adresse e-mail.  En visitant le lien inclus dans ce message vous activerez votre compte.
 account_register	mail_approval_subject	Création du nouveau compte : $1
 account_register	mail_approval_body	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur : $2\n\nVeuillez cliquer sur le lien ci-dessous pour confirmer la création de ce compte :\n\n$3\n
 account_register	restricted_user	Utilisateur restreint
+account_register	welcome_email_title	Bienvenue sur $1!
 #
 #-----------------------------------------------
 # Script: SF/www/account/suspended.php

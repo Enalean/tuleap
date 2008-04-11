@@ -72,7 +72,7 @@ function send_new_project_email($group_id) {
 //
 // send mail notification to new registered user
 //
-function send_new_user_email($to,$confirm_hash, $username, $admin_creation=false,  $password='')
+function send_new_user_email($to,$confirm_hash, $username)
 {
     global $Language;
     $base_url = get_server_url();
