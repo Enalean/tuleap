@@ -92,9 +92,12 @@ class UserDao extends DataAccessObject {
     * Searches User by Status 
     * @return DataAccessResult
     */
-    function & searchByStatus($status) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE status = %s",
+    function & searchByStatus($status, $offset=null, $limit=null) {
+        $sql = sprintf("SELECT * FROM user WHERE status = %s ORDER BY user_name",
             $this->da->quoteSmart($status));
+        if($offset !== null && $limit !== null) {
+            $sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
         return $this->retrieve($sql);
     }
 
@@ -294,7 +297,7 @@ class UserDao extends DataAccessObject {
     */
     function & searchByLanguageId($languageId) {
         $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme FROM user WHERE language_id = %s",
-            $this->da->quoteSmart($languageId));
+                       $this->da->quoteSmart($languageId));
         return $this->retrieve($sql);
     }
 
@@ -355,7 +358,72 @@ class UserDao extends DataAccessObject {
                 $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
+
+    /**
+     * Searches User by the begining of their name
+     * @return DataAccessResult
+     */
+    function & searchByNameFirstLetter($usersearch,$offset=null, $limit=null) {
+        $cleanUserSearch = db_escape_string($usersearch);
+        $sql = 'SELECT * '.
+               'FROM user '.
+               'WHERE user_name '.
+               'LIKE \''.$cleanUserSearch.'%\' '.
+               'ORDER BY user_name ';
+        if($offset !== null && $limit !== null) {
+            $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+        
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Search User by their login name and real name
+     * @return DataAccessResult
+     */
+    function & searchByAllNames($usersearch,$offset=null, $limit=null) {
+        $cleanUserSearch = db_escape_string($usersearch);
+        $sql = 'SELECT * '.
+               'FROM user '.
+               'WHERE (user_name '.
+               'LIKE \'%'.$cleanUserSearch.'%\' '.
+               'OR '.
+               'realname '.
+               'LIKE \'%'.$cleanUserSearch.'%\') '.
+               'ORDER BY user_name,realname ';
+        if($offset !== null && $limit !== null) {
+            $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+        
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Search user by their group name
+     * @return DataAccessResult
+     */
+    function & searchByGroupName($usersearch,$offset=null, $limit=null) {
+        $cleanUserSearch = db_escape_string($usersearch);
+        $sql = 'SELECT DISTINCT user_name,user.user_id, email, user_pw, realname, user.register_purpose, user.status, shell, unix_pw, unix_status, unix_uid, user.unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme '.
+               'FROM user, user_group, groups '.
+               'WHERE user.user_id = user_group.user_id '.
+               'AND user_group.group_id = groups.group_id '.
+               'AND groups. group_name LIKE \'%'.$cleanUserSearch.'%\' '.
+               'ORDER BY user_name ';
+        if($offset !== null && $limit !== null) {
+            $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * count the number of row of a resource
+     * @return int
+     */
+    function & count($function) {   
+        $count = db_num_rows($this->function);
+        return $count;
+    }
 }
-
-
 ?>
