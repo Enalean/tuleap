@@ -2354,9 +2354,9 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 --- Create the list of supported languages for that site
 
 INSERT INTO supported_languages VALUES \
-(1,'English','English_US.tab','en_US','ISO-8859-1',1);
+(1,'English','English_US.tab','en_US','UTF-8',1);
 INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Français','French_FR.tab','fr_FR','UTF-8',1);
 
 
 -- install and enable pluginsadministration
