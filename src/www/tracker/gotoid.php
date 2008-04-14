@@ -5,7 +5,7 @@
 // 
 //
 //
-//  Written for CodeX by Nicolas Guérin
+//  Written for CodeX by Nicolas GuÃ©rin
 //
 // This script performs a redirection to the proper artifact page, given 
 // only the artifact id, and possibly the artifact name detected in text and a group_id.

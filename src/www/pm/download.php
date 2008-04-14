@@ -6,7 +6,7 @@
 //
 // 
 //
-//	Originally written by Stéphane Bouhet, 2002, CodeX Team, Xerox
+//	Originally written by StÃ©phane Bouhet, 2002, CodeX Team, Xerox
 //
 
 require_once('pre.php');
