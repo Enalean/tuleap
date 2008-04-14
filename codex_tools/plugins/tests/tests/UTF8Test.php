@@ -11,7 +11,11 @@ class UTF8Test extends UnitTestCase {
     }
     
     function testEncoding() {
-        $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -name "*.svn-base" -print -exec file -bi {} \; | grep -i iso -B 1';
+        $exclude_wholename = array(
+            '.svn',
+            'simpletest',
+        );
+        $cmd = 'find '.$GLOBALS['codex_dir'].'/codex_tools/ -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso -B 1';
         $handle = popen($cmd, 'r');
         $error = false;
         while(!feof($handle) && ($line = fgets($handle))) {
