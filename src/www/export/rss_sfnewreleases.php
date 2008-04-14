@@ -15,7 +15,7 @@ require('./rss_utils.inc');
 $Language->loadLanguageMsg('export/export');
 
 header("Content-Type: text/xml");
-print '<?xml version="1.0" encoding="ISO-8859-1" ?>
+print '<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="0.91">
 ';
 // ## default limit

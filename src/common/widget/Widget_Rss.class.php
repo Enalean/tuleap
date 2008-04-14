@@ -94,7 +94,6 @@ require_once('Widget.class.php');
                     mkdir($GLOBALS['codex_cache_dir'] .'/rss');
                 }
                 $rss_reader =& new SimplePie($rss['url'], $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-                $rss_reader->set_output_encoding('ISO-8859-1');
                 $rss['title'] = $rss_reader->get_title();
             }
             $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($rss['title']) ."', '". db_escape_string($rss['url']) ."')";

@@ -29,7 +29,7 @@ if ($request->get('option') == "newest") {
 if ($request->get('type') == "rss") {
 
 header("Content-Type: text/xml");
-print '<?xml version="1.0"  encoding="ISO-8859-1" ?>
+print '<?xml version="1.0"  encoding="UTF-8" ?>
 <rss version="0.91">
 ';
 
