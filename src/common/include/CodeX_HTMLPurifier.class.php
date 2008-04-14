@@ -33,7 +33,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * <pre>
  * require_once('pre.php');
  * require_once('common/include/CodeX_HTMLPurifier.class.php');
- * $crapy = '<a href="" onmouseover="alert(1);">test�</a>';
+ * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
  * $hp =& CodeX_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
@@ -73,7 +73,7 @@ class CodeX_HTMLPurifier {
      */
     function getCodeXConfig() {
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('Core', 'Encoding', 'ISO-8859-1');
+        $config->set('Core', 'Encoding', 'UTF-8');
         // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
         $config->set('Cache', 'SerializerPath', $GLOBALS['codex_cache_dir']);
         return $config;
