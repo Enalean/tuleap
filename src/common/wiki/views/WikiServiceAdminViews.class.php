@@ -151,11 +151,11 @@ class WikiServiceAdminViews extends WikiViews {
    */
   function main() {
     switch (DEFAULT_LANGUAGE){
-	case 'fr_FR': printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>Gérer les documents Wiki</a></h3><p>Créer, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiPages>Gérer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiAttachments>Gérer les fichiers joints</a></h3><p>Parcourir et définir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
-		     printf("<h3><a href=%s&view=wikiPerms>Gérer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
-		     printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et réinitialisation de pages.</p>", $this->wikiLink);
+	case 'fr_FR': printf("<h2>Wiki %s - Administration</h2><h3><a href=%s&view=wikiDocuments>GÃ©rer les documents Wiki</a></h3><p>CrÃ©er, supprimer, modifier et donner des permissions sur des documents Wiki.</p>", $this->wikiname, $this->wikiAdminLink);
+		     printf("<h3><a href=%s&view=wikiPages>GÃ©rer les pages Wiki</a></h3><p>Parcourir et donner des permissions sur des pages Wiki.</p>", $this->wikiAdminLink);
+		     printf("<h3><a href=%s&view=wikiAttachments>GÃ©rer les fichiers joints</a></h3><p>Parcourir et dÃ©finir les permissions des fichiers joints au Wiki</p>", $this->wikiAdminLink);
+		     printf("<h3><a href=%s&view=wikiPerms>GÃ©rer les permissions Wiki</a></h3><p>Donner des permissions sur tout le Wiki %s.</p>", $this->wikiAdminLink, $this->wikiname);
+		     printf("<h3><a href=%s&pagename=AdministrationDePhpWiki>Administration du wiki</a></h3><p>Panneau d'administration de l'engin wiki. Plusieurs outils pour suppression , renommage et rÃ©initialisation de pages.</p>", $this->wikiLink);
 		     break;
 	case 'en_US':	     
 	default :     printf("<h2>Wiki  %s - Administration</h2><h3><a href= %s&view=wikiDocuments>Manage Wiki Documents</a></h3><p>Create, delete, modify and set specific permissions on Wiki Documents.</p>", $this->wikiname, $this->wikiAdminLink);

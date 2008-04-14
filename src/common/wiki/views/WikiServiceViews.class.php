@@ -248,8 +248,8 @@ class WikiServiceViews extends WikiViews {
         <td>';
     switch(DEFAULT_LANGUAGE){
 	    case 'fr_FR':
-            $attatch_page     = "DéposerUnFichier";
-			$preferences_page = "PréférencesUtilisateurs";   
+            $attatch_page     = "DÃ©poserUnFichier";
+			$preferences_page = "PrÃ©fÃ©rencesUtilisateurs";   
 			break;   
         case 'en_US':
         default :     
