@@ -187,7 +187,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
     *        | | `-- D |
     *        | +-------+ \
     *        `-- C        |
-    *             <-------²
+    *             <-------Â²
     *        
     *        D is moved from B to C
     *

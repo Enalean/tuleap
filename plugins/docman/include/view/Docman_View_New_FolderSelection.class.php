@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright Â© STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
