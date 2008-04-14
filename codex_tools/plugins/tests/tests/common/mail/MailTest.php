@@ -31,7 +31,7 @@ class MailTest extends UnitTestCase {
         
         $this->assertEqual($mail->getSubject(), $mail->_decodeHeader($mail->getEncodedSubject()));
         
-        $mail->setSubject("è é"); //SR #1167
+        $mail->setSubject("Ã¨ Ã©"); //SR #1167
         $this->assertEqual($mail->getSubject(), $mail->_decodeHeader($mail->getEncodedSubject()));
     }
     
