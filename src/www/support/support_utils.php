@@ -275,7 +275,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    // Send the email message
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 	    $hdrs = 'From: noreply@'.$host.$sys_lf;
-	    $hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	    $hdrs .='Content-type: text/plain; charset=UTF-8'.$sys_lf;
 	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
 	    $hdrs .='X-CodeX-Artifact: support'.$sys_lf;
 	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id.$sys_lf;
