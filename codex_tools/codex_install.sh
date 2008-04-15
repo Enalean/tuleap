@@ -128,9 +128,9 @@ do
 done
 
 ##############################################
-# Check we are running on RHEL 4
+# Check we are running on RHEL 5
 #
-RH_RELEASE="4"
+RH_RELEASE="5"
 yn="y"
 ## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4 (?)
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
@@ -162,11 +162,12 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # libart_lgpl perl-Time-HiRes -> munin
 # zip, unzip -> CLI client
 # dump -> backup_job
+# dejavu-lgc-fonts -> jpgraph
 #rpm -Uvh cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
-
+# Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec perl-Time-HiRes
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   httpd httpd-suexec mod_ssl vsftpd \
+   httpd  mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
@@ -174,9 +175,10 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    mysql MySQL-python php-mbstring php-gd \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
-   xorg-x11-deprecated-libs neon \
-   libart_lgpl perl-Time-HiRes \
+    neon \
+   libart_lgpl  \
    dump \
+   dejavu-lgc-fonts \
    zip unzip
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -192,6 +194,7 @@ if [ $rpms_ok -eq 0 ]; then
     die "$msg"
 fi
 echo "All requested RedHat RPMS installed... good!"
+
 
 ##############################################
 # Create Groups and Users
@@ -248,6 +251,14 @@ while [ "$mm_passwd" != "$mm_passwd2" ]; do
     read -s -p "Password for user mailman: " mm_passwd
     echo
     read -s -p "Retype mailman password: " mm_passwd2
+    echo
+done
+
+slm_passwd="a"; slm_passwd2="b";
+while [ "$slm_passwd" != "$slm_passwd2" ]; do
+    read -s -p "Password for Salome DB user: " slm_passwd
+    echo
+    read -s -p "Retype password for Salome DB user: " slm_passwd2
     echo
 done
 
@@ -347,7 +358,6 @@ $CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files.work
 $CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files.work
 build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
 
-
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
@@ -408,10 +418,18 @@ $RPM -e j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/j2re-*i?86.rpm
+$RPM -Uvh ${newest_rpm}/jre-*i?86.rpm
 cd /usr/java
-newest_jre=`$LS -1d j2re* | $TAIL -1`
+newest_jre=`$LS -1d jre* | $TAIL -1`
 $LN -sf $newest_jre jre
+
+# Use "alternatives" system to point to the Sun JRE
+# default priority for gcj seems(?) 1420 -> use 10000 for Sun JRE.
+/usr/sbin/alternatives --install /usr/bin/java java /usr/java/jre/bin/java 10000 \
+    --slave /usr/bin/rmiregistry rmiregistry /usr/java/jre/bin/rmiregistry \
+    --slave /usr/bin/keytool keytool /usr/java/jre/bin/keytool \
+    --slave /usr/lib/jvm/jre jre /usr/java/jre
+# Note: /usr/sbin/alternatives --set java /usr/java/jre/bin/java seems useless??
 
 # -> cvs
 echo "Removing existing CVS .."
@@ -583,6 +601,15 @@ $TAR xfz ${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
+# -> Tomcat (for SalomeTMF)
+cd /usr/share
+$RM -rf apache-tomcat-6*
+$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tgz
+dir_entry=`$LS -1d apache-tomcat-6.*`
+$LN -sf ${dir_entry} apache-tomcat-6
+$CHOWN -R codexadm.codexadm /usr/share/apache-tomcat-6/
+echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
+echo "export CATALINA_HOME=/usr/share/apache-tomcat-6" >> /home/codexadm/.profile
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -755,7 +782,11 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/b
 
 # Sometimes, PHP does not seem to set the proper access rights on /var/lib/php/session.
 # This is needed by phpMyAdmin
-$CHMOD o+rwx /var/lib/php/session
+#$CHMOD o+rwx /var/lib/php/session
+# OR
+# Make codexadm a member of the apache group?
+$USERMOD -a -G apache codexadm
+
 
 # Add PmaAbsoluteUri parameter? seems useless now
 #$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php
@@ -789,7 +820,7 @@ fi
 
 if [ ! -d "/var/lib/mysql/codex" ]; then
     freshdb=1
-    $MYSQL -u root $pass_opt -e "create database codex"
+    $MYSQL -u root $pass_opt -e "create database codex DEFAULT CHARACTER SET utf8 COLLATE utf8_bin"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
@@ -806,6 +837,39 @@ substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
 $MYSQL -u codexadm codex --password=$codexadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
 rm -f /tmp/database_initvalues.sql
 fi
+
+
+##############################################
+# Installing the SalomeTMF database
+#
+
+yn="-"
+freshdb=0
+if [ -d "/var/lib/mysql/salome" ]; then
+    read -p "Salome Database already exists. Overwrite? [y|n]:" yn
+fi
+
+# Delete the Salome DB if asked for
+if [ "$yn" = "y" ]; then
+    $MYSQL -u root $pass_opt -e "drop database salome"
+fi
+
+
+if [ ! -d "/var/lib/mysql/salome" ]; then
+    freshdb=1
+    $MYSQL -u root $pass_opt -e "create database salome DEFAULT CHARACTER SET utf8 COLLATE utf8_bin"
+    $CAT <<EOF | $MYSQL -u root mysql $pass_opt
+GRANT ALL PRIVILEGES ON salome.* TO salomeadm IDENTIFIED BY '$slm_passwd';
+FLUSH PRIVILEGES;
+EOF
+fi
+
+if [ $freshdb -eq 1 ]; then
+echo "Populating the SalomeTMF database..."
+cd $INSTALL_DIR/plugins/salome/db
+$MYSQL -u codexadm codex --password=$codexadm_passwd < salome_init.sql   # create the DB
+fi
+
 
 
 ##############################################
