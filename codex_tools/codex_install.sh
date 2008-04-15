@@ -1094,21 +1094,6 @@ crontab -u codexadm /tmp/cronfile
 
 
 ##############################################
-# Make ISO latin characters the default charset for the
-# entire system instead of UTF-8
-#
-make_backup "/etc/sysconfig/i18n"
-echo "Set ISO Latin as default system character set..."
-$CAT <<'EOF' >/etc/sysconfig/i18n
-LANG="en_US.iso885915"
-SUPPORTED="en_US.iso885915:en_US:en"
-SYSFONT="lat0-sun16"
-SYSFONTACM="iso15"
-EOF
-$CHOWN root.root /etc/sysconfig/i18n
-$CHMOD 644 /etc/sysconfig/i18n
-
-##############################################
 # Log Files rotation configuration
 #
 echo "Installing log files rotation..."
