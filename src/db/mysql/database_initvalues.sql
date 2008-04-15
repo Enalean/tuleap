@@ -1224,7 +1224,7 @@ INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, descripti
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (10, 5, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (11, 6, 'fieldset_default_slmbugs_lbl_key', 'fieldset_default_slmbugs_desc_key', 10);
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (12, 6, 'fieldset_status_slmbugs_lbl_key', 'fieldset_status_slmbugs_desc_key', 50);
-INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (13, 6, 'fieldset_salome_slmbugs_lbl_key', 'fieldset_salome_slmbugs_desc_key', 30)
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (13, 6, 'fieldset_salome_slmbugs_lbl_key', 'fieldset_salome_slmbugs_desc_key', 30);
 
 --
 -- Dumping data for table 'artifact_field'
@@ -1736,7 +1736,7 @@ INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default ar
 INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P',0);
 INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P',0);
 INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P',0);
-INSERT INTO artifact_report VALUES (5,6,100,'Salome Bugs','Salome Bugs Report','P');
+INSERT INTO artifact_report VALUES (5,6,100,'Salome Bugs','Salome Bugs Report','P',0);
 
 
 --
