@@ -129,7 +129,6 @@ class Docman_Icons {
                             break;
                         case 'rtf':
                         case 'msword':
-                        case 'vnd.ms-powerpoint':
                         case 'vnd.ms-works':
                         case 'word':
                         case 'wordperfect5.1':
