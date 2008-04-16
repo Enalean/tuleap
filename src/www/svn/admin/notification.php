@@ -41,7 +41,36 @@ $hp =& CodeX_HTMLPurifier::instance();
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
 
-$project=project_get_object($group_id);
+echo '
+ 	  	 
+	<script type="text/javascript">
+	<!--
+ 	  	 
+	function addEvent(subdir,user)
+	{
+  		var ni = document.getElementById(\'svn_notif\');
+  		var numi = document.getElementById(\'svn_val\');
+  		var num = (document.getElementById("svn_val").value -1)+ 2;
+  		numi.value = num;
+  		var divIdName = "svn_notif_"+num+"_div";
+  		var newdiv = document.createElement(\'div\');
+ 	  	 
+  		newdiv.setAttribute("id",divIdName);
+  		newdiv.innerHTML += "<table><tr><td align=center width=328><input name=\'subdirs["+num+"]\' type=\'text\' value=\'"+subdir+"\' size=42 /></td><td align=center width=328><input name=\'users["+num+"]\' type=\'text\' value=\'"+user+"\' size=42 /></td><td align=center><a href=\"javascript:;\" onclick=\"removeEvent(\'"+divIdName+"\')\"><img src=\"'.util_get_image_theme("ic/trash.png").'\"></a></td></tr></table>";
+  		ni.appendChild(newdiv);
+	}
+ 	  	 
+	function removeEvent(divNum)
+	{
+  		var d = document.getElementById(\'svn_notif\');
+  		var olddiv = document.getElementById(divNum);
+  		d.removeChild(olddiv);
+	}
+ 	  	 
+	//-->
+	</script>'; 	  	 
+
+$project = project_get_object($group_id);
 $svn_mailing_list = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
 
@@ -57,7 +86,26 @@ echo '
 
        <p><b>'.$Language->getText('svn_admin_notification','header').'</b></p>
        <p><INPUT TYPE="TEXT" SIZE="20" NAME="form_mailing_header" VALUE="'.$hp->purify($svn_mailing_header).'"></p>
+       <hr><p>'.$Language->getText('svn_admin_notification','mail_commit_subtree').'</p> 	 
+       <table border="0"><tr class="'.util_get_alt_row_color(1).'">
+       <td width=328 align=center><b>'.$Language->getText('svn_admin_notification','path_subdir').'</b></td>
+       <td width=328 align=center><b>'.$Language->getText('svn_admin_notification','users').'</b></td>
+       <td><b>'.$Language->getText('svn_admin_notification','del').'</b></td></tr></table>
 
+       <input type="hidden" value="0" id="svn_val" />
+       <div id="svn_notif"></div>';
+
+$result = svn_data_get_advanced_notif($group_id);
+if (db_numrows($result) > 0) {
+    while ($rows = db_fetch_array($result)) {
+      $dirs = $rows['svn_dir'];
+      $user = $rows['svn_user'];
+      echo '<script langauge="javascript">addEvent("'.$hp->purify($dirs,CODEX_PURIFIER_FULL).'","'.$hp->purify($user,CODEX_PURIFIER_FULL).'");</script>';
+    }
+}
+	  	 
+echo    '
+        <p><a href="javascript:;" onclick="addEvent(\'\',\'\');">'.$Language->getText('svn_admin_notification','add_new_entry').'</a></p>		
         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
 
 svn_footer(array());
