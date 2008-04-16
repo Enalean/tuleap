@@ -26,12 +26,24 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         $form_mailing_header = $request->get('form_mailing_header');
         $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
         if ($ret) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','gen_upd_success'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','gen_upd_fail'));
         }
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','gen_upd_fail'));
+    }
+    $vUsr = new Valid_Email('users');    
+    $vUsr->setErrorMessage($Language->getText('svn_admin_notification','email_invalid'));
+    if($request->validArray(new Valid_String('subdirs')) && $request->validArray($vUsr)) {
+    	$subdirs = $request->get('subdirs');
+    	$users = $request->get('users');
+    	$return = svn_data_update_advanced_notif($group_id,$subdirs,$users);
+    	if ($return) {
+    		$GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','cond_upd_success'));
+    	} else {
+    		$GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','cond_upd_fail'));
+    	}
     }
 }
 
