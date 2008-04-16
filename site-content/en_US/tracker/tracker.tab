@@ -841,6 +841,12 @@ tracker_common_fieldset	fieldset_default_tasks_lbl_key	Details
 tracker_common_fieldset	fieldset_default_tasks_desc_key	Details of the task
 tracker_common_fieldset	fieldset_status_tasks_lbl_key	Status
 tracker_common_fieldset	fieldset_status_tasks_desc_key	Status of the task
+tracker_common_fieldset	fieldset_default_slmbugs_label_key	Details
+tracker_common_fieldset	fieldset_default_slmbugs_desc_key	Details of Salomé bug
+tracker_common_fieldset	fieldset_salome_slmbugs_label_key	Salomé
+tracker_common_fieldset	fieldset_salome_slmbugs_desc_key	Salomé field set
+tracker_common_fieldset	fieldset_status_slmbugs_label_key	Status
+tracker_common_fieldset	fieldset_status_slmbugs_desc_key	Status of the Salomé bug
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class.php
