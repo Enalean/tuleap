@@ -846,11 +846,11 @@ tracker_common_fieldset	fieldset_default_tasks_lbl_key	Détails
 tracker_common_fieldset	fieldset_default_tasks_desc_key	Détails de la tâche
 tracker_common_fieldset	fieldset_status_tasks_lbl_key	Etat
 tracker_common_fieldset	fieldset_status_tasks_desc_key	Etat d'avancement de la tâche
-tracker_common_fieldset	fieldset_default_slmbugs_label_key	Détails
+tracker_common_fieldset	fieldset_default_slmbugs_lbl_key	Détails
 tracker_common_fieldset	fieldset_default_slmbugs_desc_key	Détails du bug salomé
-tracker_common_fieldset	fieldset_salome_slmbugs_label_key	Salomé
+tracker_common_fieldset	fieldset_salome_slmbugs_lbl_key	Salomé
 tracker_common_fieldset	fieldset_salome_slmbugs_desc_key	Ensemble des champs Salomé
-tracker_common_fieldset	fieldset_status_slmbugs_label_key	Etat
+tracker_common_fieldset	fieldset_status_slmbugs_lbl_key	Etat
 tracker_common_fieldset	fieldset_status_slmbugs_desc_key	Etat d'avancement du bug salomé
 #
 #-----------------------------------------------
