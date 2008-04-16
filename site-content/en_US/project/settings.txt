@@ -1,0 +1,26 @@
+<!--
+//
+// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
+// http://codex.xerox.com
+//
+// 
+//
+-->
+
+<fieldset><legend style="font-size:1.2em;">Choose the project type</legend>
+<p>Please note that the project type cannot be changed after creation</p>
+<B>Project type <?php echo help_button('ProjectAdministration.html#ProjectType'); ?> : </B>
+<select name="is_test"><option value="0" selected="selected">Project</option>
+<option value="1">Test project</option>
+</select>
+</fieldset>
+
+<fieldset><legend style="font-size:1.2em;">Choose the project privacy</legend>
+<B>Project privacy: </B>
+<select name="is_public"><option value="0">Private</option>
+<option value="1" selected="selected">Public</option>
+</select>
+</fieldset>
+
+

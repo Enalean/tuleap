@@ -107,6 +107,7 @@ register_title	license	Software Policy
 register_title	category	Project Categorization
 register_title	confirm	Final Confirmation
 register_title	services	Project Services
+register_title	settings	Project Settings
 
 register_services	desc	Please select your services
 register_services	server	Server

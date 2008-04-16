@@ -58,6 +58,7 @@ function create_project($data, $do_not_exit = false) {
         'rand_hash'           => "'". md5($random_num) ."'",
         'built_from_template' => $data['project']['built_from_template'],
         'type'                => ($data['project']['is_test'] ? 3 : 1),
+        'is_public'           => ($data['project']['is_public'] ? 1 : 0),
     );
     $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
     $result=db_query($sql);
