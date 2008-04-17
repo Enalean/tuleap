@@ -44,16 +44,16 @@ function svn_data_update_advanced_notif($group_id,$subdirs,$users) {
 
     //uniformize paths: store them in the same format (start with slash, end without slash)
     if (count($subdirs) > 0) {
-      $pattern_start = "/^\//";
-      $pattern_end = "/\/$/";
-      while (list($key, $value) = each($subdirs)) {
-        if (!preg_match($pattern_start, $value)) {
-          $subdirs[$key] = "/".$value;
+        $pattern_start = "/^\//";
+        $pattern_end = "/\/$/";
+        while (list($key, $value) = each($subdirs)) {
+            if (!preg_match($pattern_start, $value)) {
+            $subdirs[$key] = "/".$value;
+            }
+            if (preg_match($pattern_end, $subdirs[$key])) {
+                $subdirs[$key] = substr($subdirs[$key],0,strlen($subdirs[$key])-1);
+            }
         }
-        if (preg_match($pattern_end, $subdirs[$key])) {
-          $subdirs[$key] = substr($subdirs[$key],0,strlen($subdirs[$key])-1);
-        }
-      }
     }
     $ret = true;
     //delete conditional notification settings, for this project, then insert new ones
@@ -62,30 +62,34 @@ function svn_data_update_advanced_notif($group_id,$subdirs,$users) {
 				   db_ei($group_id));
 	$res_del = db_query($del);
 	if (count($subdirs) > 0) {
-	  $keys = array_keys($subdirs);
-	  for ($i=0; $i<count($keys); $i++) {
-		$sel = sprintf('SELECT NULL FROM svn_notification'.
-					   ' WHERE group_id=%d'.
-					   ' AND svn_dir="%s"'.
-					   ' AND svn_user="%s"',
-						db_ei($group_id),
-						db_es($subdirs[$keys[$i]]),
-						db_es(util_normalize_emails($users[$keys[$i]])));
-		$res_sel = db_query($sel);
-		//not insert duplicate entries
-		if (db_numrows($res_sel) < 1) {
-		  $query = sprintf('INSERT INTO svn_notification'.
-						   ' (group_id,svn_dir,svn_user)'.
-						   ' VALUES (%d,"%s","%s")',
-		 					 db_ei($group_id),
-		 					 db_es($subdirs[$keys[$i]]),
-		 					 db_es(util_normalize_emails($users[$keys[$i]])));
-		  $result = db_query($query);
-		  if (! $result) {
-		      $ret = false;	
-		  }
-		}
-	  }
+	    $keys = array_keys($subdirs);
+	    for ($i=0; $i<count($keys); $i++) {
+		    if ($subdirs[$keys[$i]] != "" && $users[$keys[$i]] != "") {
+		        $sel = sprintf('SELECT NULL FROM svn_notification'.
+			  	  	           ' WHERE group_id=%d'.
+					           ' AND svn_dir="%s"'.
+					           ' AND svn_user="%s"',
+						       db_ei($group_id),
+						       db_es($subdirs[$keys[$i]]),
+						       db_es(util_normalize_emails($users[$keys[$i]])));
+		        $res_sel = db_query($sel);
+		        //not insert duplicate entries
+		        if (db_numrows($res_sel) < 1) {
+		            $query = sprintf('INSERT INTO svn_notification'.
+			                         ' (group_id,svn_dir,svn_user)'.
+						             ' VALUES (%d,"%s","%s")',
+		 					         db_ei($group_id),
+		 					         db_es($subdirs[$keys[$i]]),
+		 					         db_es(util_normalize_emails($users[$keys[$i]])));
+		            $result = db_query($query);
+		            if (! $result) {
+		                $ret = false;	
+		            }
+		        }
+		    } else {
+			    $ret = false;
+		    }
+	    }
     }
     return $ret;
 }

@@ -56,7 +56,6 @@ svn_admin_notification	add_new_entry	[Add a new entry]
 svn_admin_notification	del	Del.
 svn_admin_notification	path_subdir	Path to sub-directory
 svn_admin_notification	users	User(s) monitoring
-svn_admin_notification	empty_field	Update failed. 'Path to sub-directory' and 'User(s) monitoring' fields must be filled in.
 svn_admin_notification	email_invalid	Conditional Notification Settings update failed. Invalid e-mail address.
 #
 #-----------------------------------------------

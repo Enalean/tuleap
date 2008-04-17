@@ -33,8 +33,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','gen_upd_fail'));
     }
-    $vUsr = new Valid_Email('users');    
-    $vUsr->setErrorMessage($Language->getText('svn_admin_notification','email_invalid'));
+    $vUsr = new Valid_Email('users');
+    $vUsr->setErrorMessage($Language->getText('svn_admin_notification','email_invalid'));    
     if($request->validArray(new Valid_String('subdirs')) && $request->validArray($vUsr)) {
     	$subdirs = $request->get('subdirs');
     	$users = $request->get('users');
