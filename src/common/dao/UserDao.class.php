@@ -23,8 +23,13 @@ class UserDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function & searchAll($offset=null, $limit=null) {
         $sql = "SELECT * FROM user";
+
+        if($offset !== null && $limit !== null) {
+            $sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+        
         return $this->retrieve($sql);
     }
     
@@ -408,13 +413,75 @@ class UserDao extends DataAccessObject {
                'FROM user, user_group, groups '.
                'WHERE user.user_id = user_group.user_id '.
                'AND user_group.group_id = groups.group_id '.
-               'AND groups. group_name LIKE \'%'.$cleanUserSearch.'%\' '.
+               'AND groups.group_name LIKE \'%'.$cleanUserSearch.'%\' '.
                'ORDER BY user_name ';
         if($offset !== null && $limit !== null) {
             $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
         }
 
         return $this->retrieve($sql);
+    }
+
+    function & searchByUserAndGroupName($username, $groupname, $offset=null, $limit=null) {
+        $cleanusername = db_escape_string($username);
+        $cleangroupname = db_escape_string($groupname);
+
+        $sql = 'SELECT DISTINCT user_name,user.user_id, email, user_pw, realname, user.register_purpose, user.status, shell, unix_pw, unix_status, unix_uid, user.unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme '.
+               'FROM user, user_group, groups '.
+               'WHERE user.user_id = user_group.user_id '.
+               'AND user_group.group_id = groups.group_id '.
+               'AND user.user__name LIKE \'%'.$cleanusername.'%\' '.
+               'OR realname '.
+               'LIKE \'%'.$cleanusername.'%\' '.
+               'AND groups.group_name LIKE \'%'.$cleangroupname.'%\' '.
+               'ORDER BY user.user_name, user.real_name, groups.group_name ';
+
+        if($offset !== null && $limit !== null) {
+            $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+
+        return $this->retrieve($sql);
+    }
+
+    function & searchByUserNameAndStatus($username, $status, $offset=null, $limit=null) {
+        $cleanusername = db_escape_string($username);
+        $cleanstatus = $this->da->quoteSmart($status);
+
+        $sql = 'SELECT * '.
+               'FROM user '.
+               'WHERE user_name '.
+               'LIKE \''.$cleanusername.'%\' '.
+               'OR realname '.
+               'LIKE \'%'.$cleanusername.'%\' '.
+               'AND status = '.$cleanstatus.
+               'ORDER BY user_name, realname, status ';
+        
+        if($offset !== null && $limit !== null) {
+            $sql .= 'LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }
+        
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * search user by criteria
+     *
+     */
+
+
+    function & searchUserByCriteria($ci) {
+
+        $sql = 'SELECT * ';
+
+        foreach($ci as $c) {
+
+            $sql .= ' FROM '.$c->getFrom();
+            $sql .= ' WHERE '.$c->getWhere();
+           //  $sql .= ' GROUP BY '.$c->getGroupBy();
+        }
+
+        return $this->retrieve($sql);
+
     }
 
     /**
@@ -426,4 +493,54 @@ class UserDao extends DataAccessObject {
         return $count;
     }
 }
+
+
+interface Statement {
+
+    public function getFrom();
+
+    public function getWhere();
+
+    // public function getGroupBy();
+    
+    public function getOrderBy();
+    
+    //    public function getLimit();
+
+}
+
+
+class UserStatusCriteria implements Statement {
+
+    private $status;
+
+    function __construct($status) {
+        $this->status = $status;
+    }
+
+    function getFrom() {
+        return 'user';
+    }
+
+    function getWhere() {
+        return 'user.status = \''.$this->status.'\'';
+    }
+
+   //  function getGroupBy() {
+//         return '';
+//     }
+
+    function getOrderBy() {
+        return 'user_name, realname, status';
+    }
+
+   //  function getLimit() {
+//         return $offset.', '.$limit;
+//     }
+
+
+}
+
+
+
 ?>

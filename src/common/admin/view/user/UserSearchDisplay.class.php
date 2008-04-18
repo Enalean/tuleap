@@ -33,8 +33,8 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
  */
 class UserSearchDisplay extends AdminSearchDisplay {
 
-    function __construct($uIterator, $nbrowstodisplay=50) {
-        $this->uIterator = $uIterator;
+    function __construct($userIterator, $nbrowstodisplay) {
+        $this->userIterator = $userIterator;
         
         $this->nbrowstodisplay = $nbrowstodisplay;
 
@@ -59,6 +59,8 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displaySearchFilter() {
       
+        
+
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_name_search');
        
         print '<table width=100%>';
@@ -71,19 +73,12 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<form name="usersearch" action="index.php" method="POST">';
         print '<input type="text" name="user_all_name_search">';
         
-        print '<input type="submit" value="'.$GLOBALS['Language']->getText('admin_main', 'search').'">';
-        print '</form>';
-
         print '</td>';
 
         print '<td align="center" width=33%>';
       
         print 'Search (GroupName, GroupUnixName):';
-        print '<form name="usersearch" action="index.php" method="POST">';
         print '<input type="text" name="group_name_search">';
-       
-        print '<input type="submit" value="'.$GLOBALS['Language']->getText('admin_main', 'search').'">';
-        print '</form>';
 
         print '</td>';
         
@@ -91,7 +86,6 @@ class UserSearchDisplay extends AdminSearchDisplay {
         
         print '<b>Status <a href="javascript:help_window(\'/help/browse_tracker_query_field.php?helpid=101%7C101%7Cstatus_id\')"><b>[?]</b></a></b><br />';
          
-        print '<form name="usersrch" action="index.php" method="POST">';
         print '<select name="user_status_search" id="status_id">';
         
         print '<option value="A">Active</option>';
@@ -102,17 +96,14 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<option value="W">Validated as Restricted</option>';
         print '<option value="S">Suspended</option>';
         print '</select>'; 
-        print '<input type="submit" value="'.$GLOBALS['Language']->getText('admin_main', 'search').'">';
-        print '</form>';   
         
         print '</td>';
 
         print '</tr>';
         print '<table>';
 
-        print '<form name="usersearch" action="index.php" method="POST">
-
-<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrowstodisplay.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
+        print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrowstodisplay.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
+        
         print '</form>';
     }
 
@@ -147,7 +138,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mail to</th></tr>';        
 
-        foreach($this->uIterator as $u) {
+        foreach($this->userIterator as $u) {
 
             print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
 <td align="center"><input type="checkbox" name="admin" id="admin" align="center"/></td>
