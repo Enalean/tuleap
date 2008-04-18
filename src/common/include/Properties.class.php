@@ -745,8 +745,8 @@ class Properties_Section_Property implements Properties_ISection {
     default:
       throw new InvalidArgumentException('Invalid arguments passed into overloaded constructor.');
     }
-    $this->_testKey($key);
-    $this->_testValue($value);
+    $this->testKey($key);
+    $this->testValue($value);
     $this->_testSeperator($seperator);
     $this->key       = $key;
     $this->seperator = $seperator;
@@ -804,7 +804,7 @@ class Properties_Section_Property implements Properties_ISection {
    * @param key
    * @throw InvalidArgumentException
    */
-  protected static function _testKey($key) {
+  public static function testKey($key) {
     if (!isset($key)) {
       throw new InvalidArgumentException("Property key may not be NULL!");
     }
@@ -820,7 +820,7 @@ class Properties_Section_Property implements Properties_ISection {
    * @param value
    * @throw InvalidArgumentException
    */
-  protected static function _testValue($value) {
+  public static function testValue($value) {
     if (!isset($value)) {
       throw new InvalidArgumentException("Property value may not be NULL!");
     }
