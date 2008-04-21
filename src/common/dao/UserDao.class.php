@@ -467,11 +467,13 @@ class UserDao extends DataAccessObject {
      * search user by criteria
      *
      */
-    function & searchUserByCriteria($ci) {
+    function & searchUserByCriteria($ca, $ci) {
 
         $sql = 'SELECT * ';
+        //        var_dump($ci);
 
-        foreach($ci as $c) {
+        var_dump($ci);
+        foreach($ca as $c) {
 
             $from = $c->getFrom();
             $where = $c->getWhere();
@@ -488,6 +490,8 @@ class UserDao extends DataAccessObject {
             $sql .= ' GROUP BY '.$groupby;
         }
    
+        $sql .= ' LIMIT '.$ci->getOffset().', '.$ci->getLimit();
+
         return $this->retrieve($sql);
     }
     

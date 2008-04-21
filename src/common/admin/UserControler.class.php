@@ -320,8 +320,11 @@ class UserControler extends Controler {
 
 
 
-        //oremiere solution avec un array
+        //premiere solution avec un array
         $criteria = array();
+
+
+        $ci = new CriteriaIterator();
 
         //deuxieme solution on passe un objet de classeCriteriaIterator
         //$criteria = new CriteriaIterator();
@@ -341,7 +344,6 @@ class UserControler extends Controler {
             if($request->isPost()) {
                 $status = $request->get('user_status_search');
 
-                
                 $criteria[] = new UserStatusCriteria($status);
       
             }
@@ -352,13 +354,9 @@ class UserControler extends Controler {
         else{
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-        $this->userIterator = $dao->searchUserByCriteria($criteria);
+        $this->userIterator = $dao->searchUserByCriteria($criteria, $ci);
 
     }
-
-    
-
-
 
  
 //     function getOffset() {
@@ -435,9 +433,15 @@ class UserControler extends Controler {
 
 class CriteriaIterator implements Iterator {
 
-    private $offset;
-
-    private $limit;
+    /**
+     * $offset int offset of the request
+     */
+    private $offset = 0;
+    
+    /**
+     * $limit int the number of user to display at once
+     */
+    private $limit = 1;
 
     function __construct() {
 
