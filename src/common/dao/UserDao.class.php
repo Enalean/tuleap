@@ -467,21 +467,20 @@ class UserDao extends DataAccessObject {
      * search user by criteria
      *
      */
-
-
     function & searchUserByCriteria($ci) {
 
         $sql = 'SELECT * ';
 
         foreach($ci as $c) {
 
-            $sql .= ' FROM '.$c->getFrom();
-            $sql .= ' WHERE '.$c->getWhere();
-           //  $sql .= ' GROUP BY '.$c->getGroupBy();
+            $from = $c->getFrom();
+            $where = $c->getWhere();
         }
 
-        return $this->retrieve($sql);
+        $sql .= 'FROM '.$from;
+        $sql .= ' WHERE '.$where;
 
+        return $this->retrieve($sql);
     }
 
     /**

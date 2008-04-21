@@ -337,7 +337,6 @@ class UserControler extends Controler {
 
                 
                 $criteria[] = new UserStatusCriteria($status);
-                
       
             }
             else {
