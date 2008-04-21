@@ -315,26 +315,16 @@ class UserControler extends Controler {
 
     function setUserIterator() {
 
-
         $dao = new UserDao(CodexDataAccess::instance());
 
-
-
-        //premiere solution avec un array
         $criteria = array();
-
 
         $ci = new CriteriaIterator();
 
-        //deuxieme solution on passe un objet de classeCriteriaIterator
-        //$criteria = new CriteriaIterator();
-
         $request =& HTTPRequest::instance();
 
-        
         $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
         
-
         $vuStatus = new Valid('user_status_search');
 
         $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
@@ -358,43 +348,6 @@ class UserControler extends Controler {
 
     }
 
- 
-//     function getOffset() {
-//         return $this->offset;
-//     }
-
-    /**
-     * init the number of rows to display in the user search view
-     *
-     * @param int $nbrowstodisplay
-     */
-    //   function initNbRowsToDisplay($nbrowstodisplay) {
-
-      //   $request =& HTTPRequest::instance();
-
-//         $v = new Valid('nbtodisplay');
-//         $v->addRule(new Rule_Int());
-        
-
-//         if (!is_null($nbrowstodisplay)) {
-
-//             if($request->valid($v)) {
-            
-//                 if($request->isPost()) {
-//                     $nbrowstodisplay = $request->get('nbtodisplay');
-//                     $this->nbrowstodisplay = $nbrowstodisplay;
-//                 }
-//             }
-//             else {
-//                 $GLOBALS['Response']->addFeedback('error', 'You must enter an integer');
-//                 $this->initNbRowsToDisplay($nbrowstodisplay);
-//             }
-//         }
-//         else {
-//             $this->nbrowstodisplay = 50;
-//         }
-//    }
-
     /**
      * init the start parameter of the list in the browse part
      *
@@ -413,23 +366,11 @@ class UserControler extends Controler {
 
     }
     
-    /**
-     * @return int the number of rows to display
-     */
-//     function getNbRowsToDisplay() {
-//         return $this->nbrowstodisplay;
-//    }
-    
     function request() {
-  
-        //        $this->initNbRowsToDisplay($_POST['nbtodisplay']);
-
-        // $this->initOffset($offset);
         
         $this->setUserIterator();
     }
 }
-
 
 class CriteriaIterator implements Iterator {
 

@@ -470,7 +470,6 @@ class UserDao extends DataAccessObject {
     function & searchUserByCriteria($ca, $ci) {
 
         $sql = 'SELECT * ';
-        //        var_dump($ci);
 
         var_dump($ci);
         foreach($ca as $c) {
