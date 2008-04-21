@@ -318,7 +318,13 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
+
+
+        //oremiere solution avec un array
         $criteria = array();
+
+        //deuxieme solution on passe un objet de classeCriteriaIterator
+        //$criteria = new CriteriaIterator();
 
         $request =& HTTPRequest::instance();
 

@@ -471,21 +471,26 @@ class UserDao extends DataAccessObject {
 
         $sql = 'SELECT * ';
 
-        var_dump($ci);
-        var_dump(UserStatusCriteria::getOffset());
-
         foreach($ci as $c) {
 
             $from = $c->getFrom();
             $where = $c->getWhere();
+            
+            if ($c->getGroupBy() !== null) {
+                $groupby = $c->getGroupBy();
+            }
         }
 
         $sql .= 'FROM '.$from;
         $sql .= ' WHERE '.$where;
-
+        
+        if ($c->getGroupBy() !== null) {
+            $sql .= ' GROUP BY '.$groupby;
+        }
+   
         return $this->retrieve($sql);
     }
-
+    
     /**
      * count the number of row of a resource
      * @return int
@@ -496,19 +501,15 @@ class UserDao extends DataAccessObject {
     }
 }
 
-
 interface Statement {
 
     public function getFrom();
 
     public function getWhere();
 
-    // public function getGroupBy();
+    public function getGroupBy();
     
     public function getOrderBy();
-    
-    //    public function getLimit();
-
 }
 
 
@@ -528,21 +529,11 @@ class UserStatusCriteria implements Statement {
         return 'user.status = \''.$this->status.'\'';
     }
 
-   //  function getGroupBy() {
-//         return '';
-//     }
+    function getGroupBy() {}
 
     function getOrderBy() {
         return 'user_name, realname, status';
     }
-
-   //  function getLimit() {
-//         return $offset.', '.$limit;
-//     }
-
-
 }
-
-
 
 ?>
