@@ -348,7 +348,6 @@ class UserControler extends Controler {
         }
         $this->userIterator = $dao->searchUserByCriteria($criteria);
 
-
     }
 
     
@@ -356,16 +355,16 @@ class UserControler extends Controler {
 
 
  
-    function getOffset() {
-        return $this->offset;
-    }
+//     function getOffset() {
+//         return $this->offset;
+//     }
 
     /**
      * init the number of rows to display in the user search view
      *
      * @param int $nbrowstodisplay
      */
-    function initNbRowsToDisplay($nbrowstodisplay) {
+    //   function initNbRowsToDisplay($nbrowstodisplay) {
 
       //   $request =& HTTPRequest::instance();
 
@@ -390,7 +389,7 @@ class UserControler extends Controler {
 //         else {
 //             $this->nbrowstodisplay = 50;
 //         }
-    }
+//    }
 
     /**
      * init the start parameter of the list in the browse part
@@ -413,9 +412,9 @@ class UserControler extends Controler {
     /**
      * @return int the number of rows to display
      */
-    function getNbRowsToDisplay() {
-        return $this->nbrowstodisplay;
-    }
+//     function getNbRowsToDisplay() {
+//         return $this->nbrowstodisplay;
+//    }
     
     function request() {
   
@@ -428,79 +427,11 @@ class UserControler extends Controler {
 }
 
 
-
-
-Class SearchUserIterator {
-
-    private $select;
-
-    private $from;
-
-    private $where;
-
-    private $orderby;
-
-    /**
-     * Constructor
-     */
-    function __contruct($select, $from, $where, $orderby) {
-        $this->select = $select;
-        $this->from = $from;
-        $this->where = $where;
-        $this->orderby = $orderby;
-    }
-
-    /**
-     * init the all  statements
-     *
-     * @param string $criteria
-     */
-//     function setStatement($select, $from, $where, $orderby) {
-//         $this->select = $select;
-//         $this->from = $from;
-//         $this->where = $where;
-//         $this->orderby = $orderby;
-//     }
-
-    /**
-     * @return string the select statement
-     */
-    function getSelect() {
-        return $this->select;
-    }
-
-    /**
-     * @return string the from statement
-     */
-    function getFrom() {
-        return $this->from;
-    }
-
-    /**
-     * @return string the where statement
-     */
-    function getWhere() {
-        return $this->where;
-    }
-
-    /**
-     * @return string the order by statement
-     */
-    function getOrderBy() {
-        return $this->orderby;
-    }
-
-
-    function getStatement() {
-        $this->getSelect();
-        $this->getFrom();
-        $this->getWhere();
-        $this->getOrderBy();
-    }
-}
-
-
 class CriteriaIterator implements Iterator {
+
+    private $offset;
+
+    private $limit;
 
     function __construct() {
 
@@ -529,14 +460,13 @@ class CriteriaIterator implements Iterator {
         return $this->offset;
     }
 
-    function setLimit($llimit) {
+    function setLimit($limit) {
 
         $request =& HTTPRequest::instance();
 
         $v = new Valid('nbtodisplay');
         $v->addRule(new Rule_Int());
         
-
         if (!is_null($limit)) {
 
             if($request->valid($v)) {

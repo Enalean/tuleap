@@ -471,6 +471,9 @@ class UserDao extends DataAccessObject {
 
         $sql = 'SELECT * ';
 
+        var_dump($ci);
+        var_dump(UserStatusCriteria::getOffset());
+
         foreach($ci as $c) {
 
             $from = $c->getFrom();
