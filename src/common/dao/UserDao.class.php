@@ -489,7 +489,6 @@ class UserDao extends DataAccessObject {
         }
    
         $sql .= ' LIMIT '.$offset.', '.$limit;
-
         return $this->retrieve($sql);
     }
     
@@ -536,6 +535,30 @@ class UserStatusCriteria implements Statement {
     function getOrderBy() {
         return 'user_name, realname, status';
     }
+}
+
+class UserNameCriteria implements Statement {
+
+    private $name;
+
+    function __construct($name) {
+        $this->name = $name;
+    }
+    
+    function getFrom() {
+        return 'user';
+    }
+
+    function getWhere() {
+        return 'user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\'';
+    }
+
+    function getGroupBy() {}
+
+    function getOrderBy() {
+        return 'user_name, realname, status';
+    }
+
 }
 
 ?>

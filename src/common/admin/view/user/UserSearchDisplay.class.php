@@ -70,7 +70,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php" method="POST">';
-        print '<input type="text" name="user_all_name_search">';
+        print '<input type="text" name="user_name_search">';
         
         print '</td>';
 
@@ -87,6 +87,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
          
         print '<select name="user_status_search" id="status_id">';
         
+        print '<option value="all">All</option>';
         print '<option value="A">Active</option>';
         print '<option value="R">Restricted</option>';
         print '<option value="V">Validated</option>';

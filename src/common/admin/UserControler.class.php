@@ -286,24 +286,6 @@ class UserControler extends Controler {
 //                 $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
                 
 //         }
-//         elseif($user_status_search !== '') {
-
-//             //escape data
-//             $clean_status = db_escape_string($user_status_search);
-
-//             $this->select = 'SELECT * ';
-            
-//             $this->from = 'FROM user ';
-            
-//             $this->where = 'WHERE status = '.$clean_status.' ';
-            
-//             $this->orderby = 'ORDER BY user_name';
-
-//             $this->suIter = $this->getStatement();
-
-//             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
-                
-//         }
         
 //         //default search : all
 //         else {
@@ -312,40 +294,6 @@ class UserControler extends Controler {
 //         }
         
 //     }
-
-    function setUserIterator() {
-
-        $dao = new UserDao(CodexDataAccess::instance());
-
-        $criteria = array();
-
-        $request =& HTTPRequest::instance();
-
-        $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
-        
-        $vuStatus = new Valid('user_status_search');
-
-        $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
-
-        if ($request->valid($vuStatus)) {
-
-            if($request->isPost()) {
-                $status = $request->get('user_status_search');
-
-                $criteria[] = new UserStatusCriteria($status);
-      
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-            }
-        }
-        else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-        }
-
-        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
-
-    }
 
     function setOffset($offset) {
         if (!is_null($offset)) {
@@ -356,10 +304,6 @@ class UserControler extends Controler {
         }
     }
 
-    function getOffset() {
-        return $this->offset;
-    }
-
     function setLimit($limit) {
 
         $request =& HTTPRequest::instance();
@@ -367,7 +311,7 @@ class UserControler extends Controler {
         $v = new Valid('nbtodisplay');
         $v->addRule(new Rule_Int());
         
-        if (!isset($_POST['nbtodisplay'])) {
+        if (!isset($limit)) {
          
             if ($request->valid($v)) {
                 
@@ -386,26 +330,66 @@ class UserControler extends Controler {
         }
     }
 
+
+    function setUserIterator() {
+
+        $dao = new UserDao(CodexDataAccess::instance());
+
+        $criteria = array();
+
+        $request =& HTTPRequest::instance();
+
+        //search by user name
+        if ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] == 'all') {
+
+            $vuName = new Valid_String('user_name_search');
+ 
+            if ($request->valid($vuName)) {
+
+                if ($request->isPost()) {
+                    $name = $request->get('user_name_search');
+                    $criteria[] = new UserNameCriteria($name);
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                }
+            }
+            else {
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+        //search by status
+        elseif (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
+            
+            $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
+            
+            $vuStatus = new Valid('user_status_search');
+            
+            $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
+            
+            if ($request->valid($vuStatus)) {
+                
+                if ($request->isPost()) {
+                    $status = $request->get('user_status_search');
+                    $criteria[] = new UserStatusCriteria($status);
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                }
+            }
+            else {
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
+    }
+    
+    function getOffset() {
+        return $this->offset;
+    }
+
     function getLimit() {
         return $this->limit;
-    }
-
-    /**
-     * init the start parameter of the list in the browse part
-     *
-     * @param int $startlist
-     */
-    function initStartList($startlist) {
-
-    }
-
-    /**
-     * init the end parameter of the list in the browse part
-     *
-     * @param int $endlist
-     */
-    function initEndList($endlist) {
-
     }
     
     function request() {
