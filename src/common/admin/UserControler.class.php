@@ -80,70 +80,7 @@ class UserControler extends Controler {
 //             else {
 //                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
 //             }
-//         }
-
-
-//         //code pour filtrer les entrees       
-
-//         if (isset($_POST['user_all_name_search'])) {
-            
-//             $whiteListArray = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '-', '_', '\'', '0', 1, 2, 3, 4, 5, 6, 7, 8, 9);
-            
-//             $v = new Valid('user_all_name_search');
-//             $v->addRule(new Rule_WhiteList($whiteListArray));
-            
-//             if($request->valid($v)) {
-                
-//                 if($request->isPost()) {
-//                     $user_all_name_search = $request->get('user_all_name_search');
-//                     //$usersearch = $user_all_name_search;
-//                     //                    $this->uIterator = $dao->searchByAllNames($usersearch, $this->offset, $this->nbrowstodisplay);
-//                 }
-//                 else {
-//                     $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-//                 }
-//             }
-//             else {
-//                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-//             }
-//         }
-       
-//         if (isset($_POST['group_name_search'])) { 
-            
-//             if($request->isPost()) {
-//                 $group_name_search = $request->get('group_name_search');
-//                 //        $usersearch = $group_name_search;
-//                 //$this->uIterator = $dao->searchByGroupName($usersearch, $this->offset, $this->nbrowstodisplay);
-//             }
-//             else {
-//                 $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-//             }
-//         }
-       
-//         if (isset($_POST['user_status_search'])) {
-            
-//             $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
-            
-//             $v = new Valid('user_status_search');
-//             $v->addRule(new Rule_WhiteList($whiteListArray));
-            
-//             if($request->valid($v)) {
-        
-//                 if($request->isPost()) {
-//                     $user_status_search = $request->get('user_status_search');
-//                     //            $usersearch = $user_status_search;
-//                     ///$this->uIterator = $dao->searchByStatus($usersearch, $this->offset, $this->nbrowstodisplay);
-//                 }
-//                 else {
-//                     $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-//                 }
-//             }
-//             else{
-//                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-//             }
-//         }
-
-
+//         
 
 //         if ($user_all_name_search !== '' && $group_name_search !== '' && $user_status_search !== '') {
 
@@ -201,28 +138,7 @@ class UserControler extends Controler {
 //             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
             
 //         }
-//         elseif ($user_all_name_search !== '' && $user_status_search !== '') {
-            
-//             //escape data
-//             $clean_user_name = db_escape_string($user_all_name_search);
-//             $clean_status = db_escape_string($user_status_search);
 
-//             $select = 'SELECT * ';
-            
-//             $from = 'FROM user ';
-
-//             $where =  'WHERE user_name LIKE \'%'.$clean_user_name.'%\' '.
-//                             'OR realname LIKE \'%'.$clean_user_name.'%\' '.
-//                             'AND status = '.$clean_status.' ';
- 
-//             $orderby =  'ORDER BY user_name, realname, status ';
-
-//             $this->suIter = $this->setStatement($select, $from, $where, $orderby);
-//             $this->suIter = $this->getStatement();
-
-//             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
-                
-//         }
 //         elseif ($group_name_search !== '' && $user_status_search !== '') {
 
 //             //escape data
@@ -246,25 +162,7 @@ class UserControler extends Controler {
 //             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
                 
 //         }
-//         elseif($user_all_name_search !== '') {
 
-//             //escape data
-//             $clean_user_name = db_escape_string($user_all_name_search);
-            
-//             $this->select = 'SELECT * ';
-
-//             $this->from = 'FROM user ';
-
-//             $this->where = 'WHERE (user_name LIKE \'%'.$clean_user_name.'%\' '.
-//                            'OR realname LIKE \'%'.$clean_user_name.'%\') ';
-
-//             $this->orderby = 'ORDER BY user_name,realname, status ';
-
-//             $suIter = $this->getStatement();
-            
-//             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
-                
-//         }
         
 //         //default search : all
 //         else {
@@ -318,8 +216,37 @@ class UserControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
+
+        //search by user and status
+        if ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] !== '' && $_POST['user_status_search'] != 'all') {
+
+            $vuName = new Valid_String('user_name_search');
+
+            $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
+            
+            $vuStatus = new Valid('user_status_search');
+
+            $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
+
+            
+            if ($request->valid($vuName) && $request->valid($vuStatus)) {
+
+                if ($request->isPost()) {
+                    $name = $request->get('user_name_search');
+                    $status = $request->get('user_status_search');
+                    $criteria[] = new UserNameStatusCriteria($name, $status);
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                }
+            }
+            else {
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+
         //search by user name
-        if ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] == 'all') {
+        elseif ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] == 'all') {
           
             $vuName = new Valid_String('user_name_search');
  
@@ -339,7 +266,7 @@ class UserControler extends Controler {
         }
 
         //search by group name
-        if ($_POST['user_group_search'] !== '' && $_POST['user_status_search'] == 'all') {
+        elseif ($_POST['user_group_search'] !== '' && $_POST['user_status_search'] == 'all') {
             
             $vuGroup = new Valid_String('user_group_search');
 

@@ -513,6 +513,32 @@ interface Statement {
     public function getOrderBy();
 }
 
+class UserNameStatusCriteria implements Statement {
+
+    private $name;
+
+    private $status;
+
+    function __construct($name, $status) {
+        $this->name = $name;
+        $this->status = $status;
+    }
+
+    function getFrom() {
+        return 'user';
+    }
+
+    function getWhere() {
+        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\') AND status = \''.$this->status.'\'';
+    }
+
+    function getGroupBy() {}
+
+    function getOrderBy() {
+        return 'user_name, realname, status';
+    }
+}
+
 
 class UserNameCriteria implements Statement {
 
