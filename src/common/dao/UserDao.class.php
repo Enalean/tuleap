@@ -514,29 +514,6 @@ interface Statement {
 }
 
 
-class UserStatusCriteria implements Statement {
-
-    private $status;
-
-    function __construct($status) {
-        $this->status = $status;
-    }
-
-    function getFrom() {
-        return 'user';
-    }
-
-    function getWhere() {
-        return 'user.status = \''.$this->status.'\'';
-    }
-
-    function getGroupBy() {}
-
-    function getOrderBy() {
-        return 'user_name, realname, status';
-    }
-}
-
 class UserNameCriteria implements Statement {
 
     private $name;
@@ -558,7 +535,55 @@ class UserNameCriteria implements Statement {
     function getOrderBy() {
         return 'user_name, realname, status';
     }
+}
 
+
+class UserGroupCriteria implements Statement {
+
+    private $group;
+
+    function __construct($group) {
+        $this->group = $group;
+    }
+
+    function getFrom() {
+        return 'user JOIN user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
+    }
+
+    function getWhere() {
+        return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
+    }
+
+    function getGroupBy() {
+        return 'user.user_id';
+}
+
+    function getOrderBy() {
+        return 'user_name, realname, status';
+    }
+}
+
+class UserStatusCriteria implements Statement {
+
+    private $status;
+
+    function __construct($status) {
+        $this->status = $status;
+    }
+
+    function getFrom() {
+        return 'user';
+    }
+
+    function getWhere() {
+        return 'user.status = \''.$this->status.'\'';
+    }
+
+    function getGroupBy() {}
+
+    function getOrderBy() {
+        return 'user_name, realname, status';
+    }
 }
 
 ?>

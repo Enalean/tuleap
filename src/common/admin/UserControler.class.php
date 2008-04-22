@@ -51,6 +51,7 @@ class UserControler extends Controler {
 
     function viewsManagement() {
         $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->limit);
+      
         $userSearchDisplay->display();
     }
 
@@ -264,28 +265,6 @@ class UserControler extends Controler {
 //             $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
                 
 //         }
-//         elseif($group_name_search !== '') {
-
-//             //escape data
-//             $clean_group_name = db_escape_string($group_name_search);
-
-//             $this->select =  'SELECT DISTINCT user_name,user.user_id, email, user_pw, realname, user.register_purpose, user.status, shell, unix_pw, unix_status, unix_uid, user.unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme ';
- 
-//                 $this->from = 'FROM user, user_group, groups ';
-                
-//                 $this->where =  'WHERE user.user_id = user_group.user_id '.
-//                                 'AND user_group.group_id = groups.group_id '.
-//                                 'AND (groups.group_name LIKE \'%'.$clean_group_name.'%\' '.
-//                                 'OR groups_unix_group_name LIKE \'%'.$clean_group_name.'%\' ';
-
-//                 $this->orderby = 'ORDER BY user_name,realname, status ';
-
-//         $suIter = new SearchUserIterator($this->select, $this->from, $this->where, $this->orderby);
-//                 $this->suIter = $this->getStatement();
-                
-//                 $this->uIterator = $dao->searchByCriteria($this->suIter, $this->offset, $this->nbrowstodisplay);
-                
-//         }
         
 //         //default search : all
 //         else {
@@ -341,7 +320,7 @@ class UserControler extends Controler {
 
         //search by user name
         if ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] == 'all') {
-
+          
             $vuName = new Valid_String('user_name_search');
  
             if ($request->valid($vuName)) {
@@ -358,6 +337,29 @@ class UserControler extends Controler {
                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
             }
         }
+
+        //search by group name
+        if ($_POST['user_group_search'] !== '' && $_POST['user_status_search'] == 'all') {
+            
+            $vuGroup = new Valid_String('user_group_search');
+
+            if ($request->valid($vuGroup)) {
+
+                if ($request->isPost()) {
+                    $group = $request->get('user_group_search');
+                  
+                    $criteria[] = new UserGroupCriteria($group);
+                   
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                }
+            }
+            else {
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+
         //search by status
         elseif (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
             

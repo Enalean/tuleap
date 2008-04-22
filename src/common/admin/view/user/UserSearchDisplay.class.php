@@ -58,8 +58,6 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displaySearchFilter() {
       
-        
-
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_name_search');
        
         print '<table width=100%>';
@@ -77,7 +75,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=33%>';
       
         print 'Search (GroupName, GroupUnixName):';
-        print '<input type="text" name="group_name_search">';
+        print '<input type="text" name="user_group_search">';
 
         print '</td>';
         
@@ -137,10 +135,10 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<th>Status</th>';
         
         print '<th>Mail to</th></tr>';        
-
+        
         foreach($this->userIterator as $u) {
 
-            print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
+            print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
 <td align="center"><input type="checkbox" name="admin" id="admin" align="center"/></td>
 <td class="user_active"><a href="#">'.$u['user_name'].'</a></td>
 <td><a href="#">'.$u['realname'].'</a></td>
