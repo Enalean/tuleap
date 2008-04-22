@@ -33,7 +33,7 @@ class UserControler extends Controler {
 
     private $userIterator;
     
-    private $nbrowstodisplay;
+    private $limit;
 
     private $offset;
 
@@ -50,7 +50,7 @@ class UserControler extends Controler {
     }
 
     function viewsManagement() {
-        $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->nbrowstodisplay);
+        $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->limit);
         $userSearchDisplay->display();
     }
 
@@ -319,8 +319,6 @@ class UserControler extends Controler {
 
         $criteria = array();
 
-        $ci = new CriteriaIterator();
-
         $request =& HTTPRequest::instance();
 
         $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
@@ -341,62 +339,13 @@ class UserControler extends Controler {
                 $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
             }
         }
-        else{
+        else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-        $this->userIterator = $dao->searchUserByCriteria($criteria, $ci);
+
+        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
 
     }
-
-    /**
-     * init the start parameter of the list in the browse part
-     *
-     * @param int $startlist
-     */
-    function initStartList($startlist) {
-
-    }
-
-    /**
-     * init the end parameter of the list in the browse part
-     *
-     * @param int $endlist
-     */
-    function initEndList($endlist) {
-
-    }
-    
-    function request() {
-        
-        $this->setUserIterator();
-    }
-}
-
-class CriteriaIterator implements Iterator {
-
-    /**
-     * $offset int offset of the request
-     */
-    private $offset = 0;
-    
-    /**
-     * $limit int the number of user to display at once
-     */
-    private $limit = 1;
-
-    function __construct() {
-
-    }
-
-    function current() {}
-
-    function next() {}
-
-    function key() {}
-
-    function valid() {}
-
-    function rewind() {}
 
     function setOffset($offset) {
         if (!is_null($offset)) {
@@ -418,18 +367,18 @@ class CriteriaIterator implements Iterator {
         $v = new Valid('nbtodisplay');
         $v->addRule(new Rule_Int());
         
-        if (!is_null($limit)) {
-
-            if($request->valid($v)) {
-            
-                if($request->isPost()) {
+        if (!isset($_POST['nbtodisplay'])) {
+         
+            if ($request->valid($v)) {
+                
+                if ($request->isPost()) {
                     $limit = $request->get('nbtodisplay');
                     $this->limit = $limit;
-                }
+               }
             }
             else {
                 $GLOBALS['Response']->addFeedback('error', 'You must enter an integer');
-                $this->initNbRowsToDisplay($limit);
+                $this->setLimit($limit);
             }
         }
         else {
@@ -440,8 +389,33 @@ class CriteriaIterator implements Iterator {
     function getLimit() {
         return $this->limit;
     }
+
+    /**
+     * init the start parameter of the list in the browse part
+     *
+     * @param int $startlist
+     */
+    function initStartList($startlist) {
+
+    }
+
+    /**
+     * init the end parameter of the list in the browse part
+     *
+     * @param int $endlist
+     */
+    function initEndList($endlist) {
+
+    }
+    
+    function request() {
+
+        $this->setOffset($this->offset);
+
+        $this->setLimit($_POST['nbtodisplay']);
+        
+        $this->setUserIterator();
+    }
 }
-
-
 
 ?>
