@@ -604,7 +604,7 @@ plugin_docman	tooltip_show_actions	Afficher les actions
 
 plugin_docman	view_empty_docmd	Propriétés du document
 plugin_docman	view_empty_emptydoc	Document vide
-plugin_docman	view_empty_docisempty	Il n'y a pas de donnée pour cette élément
+plugin_docman	view_empty_docisempty	Il n'y a pas de donnée pour cet élément
 plugin_docman	view_empty_update	Modifier ce document
 plugin_docman	view_documenttable_title	Titre
 plugin_docman	view_documenttable_desc	Description
