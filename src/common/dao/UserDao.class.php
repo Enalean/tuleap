@@ -494,9 +494,6 @@ class UserDao extends DataAccessObject {
             }
         }  
 
-
-
-        
         if ($join !== null) {
             $sql .= ' JOIN '.$join;
         }
@@ -582,6 +579,23 @@ class UserStatusCriteria implements Statement {
 
     function getWhere() {
         return 'user.status = \''.$this->status.'\'';
+    }
+
+    function getGroupBy() {}
+}
+
+class UserShortcutCriteria implements Statement {
+
+    private $shortcut;
+
+    function __construct($shortcut) {
+        $this->shortcut = $shortcut;
+    }
+
+    function getJoin() {}
+
+    function getWhere() {
+        return '(user_name LIKE \''.$this->shortcut.'%\')';
     }
 
     function getGroupBy() {}

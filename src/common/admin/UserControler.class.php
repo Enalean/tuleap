@@ -71,7 +71,7 @@ class UserControler extends Controler {
         $v = new Valid('nbtodisplay');
         $v->addRule(new Rule_Int());
         
-        if (!isset($limit)) {
+        if (isset($limit)) {
          
             if ($request->valid($v)) {
                 
@@ -90,7 +90,6 @@ class UserControler extends Controler {
         }
     }
 
-
     function setUserIterator() {
 
         $dao = new UserDao(CodexDataAccess::instance());
@@ -99,8 +98,27 @@ class UserControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
+
+
+        //search by shortcut
+        if(isset($_GET['user_name_search'])){       
+            
+            $whiteListArray = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+            
+            $v = new Valid('user_name_search');
+            $v->addRule(new Rule_WhiteList($whiteListArray));
+            
+            if($request->valid($v)) {
+                $shortcut = $request->get('user_name_search');
+                $criteria[] = new UserShortcutCriteria($shortcut);
+            }
+            else {
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+
         //search by user name
-        if ($_POST['user_name_search'] !== '') {
+        if (isset($_POST['user_name_search'])) {
            
             $vuName = new Valid_String('user_name_search');
  
@@ -108,7 +126,6 @@ class UserControler extends Controler {
 
                 if ($request->isPost()) {
                     $name = $request->get('user_name_search');
-                    $namecriteria = array();
                     $criteria[] = new UserNameCriteria($name);
                 }
                 else {
@@ -121,7 +138,7 @@ class UserControler extends Controler {
         }
 
         //search by group name
-        if ($_POST['user_group_search'] !== '') {
+        if (isset($_POST['user_group_search'])) {
            
             $vuGroup = new Valid_String('user_group_search');
 
@@ -129,7 +146,6 @@ class UserControler extends Controler {
 
                 if ($request->isPost()) {
                     $group = $request->get('user_group_search');
-                    $groupcriteria = array();
                     $criteria[] = new UserGroupCriteria($group);
                    
                 }
@@ -154,8 +170,7 @@ class UserControler extends Controler {
             if ($request->valid($vuStatus)) {
                 
                 if ($request->isPost()) {
-                    $status = $request->get('user_status_search');
-                    $statuscriteria = array();                  
+                    $status = $request->get('user_status_search');                
                     $criteria[] = new UserStatusCriteria($status);
                 }
                 else {
