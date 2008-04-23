@@ -398,6 +398,17 @@ GROUP BY agl.group_artifact_id;
 
 EOF
 
+##########
+# Add info about user login
+echo "- Add info about user login. See revision #7319"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+ALTER TABLE user ADD COLUMN prev_auth_success INT(11) NOT NULL DEFAULT 0 AFTER last_access_date
+ALTER TABLE user ADD COLUMN last_auth_success INT(11) NOT NULL DEFAULT 0 AFTER prev_auth_success
+ALTER TABLE user ADD COLUMN last_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_success
+ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_failure
+
+EOF
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
