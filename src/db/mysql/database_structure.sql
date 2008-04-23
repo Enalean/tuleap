@@ -1982,6 +1982,10 @@ CREATE TABLE user (
   language_id int(11) NOT NULL DEFAULT 1,
   last_pwd_update int(11) NOT NULL default '0',
   last_access_date int(11) NOT NULL default '0',
+  prev_auth_success INT(11) NOT NULL DEFAULT 0,
+  last_auth_success INT(11) NOT NULL DEFAULT 0,
+  last_auth_failure INT(11) NOT NULL DEFAULT 0,
+  nb_auth_failure INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   KEY idx_user_user (status)
 ) TYPE=MyISAM;
