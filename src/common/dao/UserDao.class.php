@@ -472,36 +472,44 @@ class UserDao extends DataAccessObject {
         $sql = 'SELECT * ';
         $sql .= 'FROM user ';
 
+        $iwhere = 0;
+
         foreach($ca as $c) {
             
             if ($c->getJoin()) {
-                $join = $c->getJoin();
+                $join .= $c->getJoin();
             }
-            $where = $c->getWhere();
-            
+   
+            if ($iwhere >= 1) {
+                $where .= ' AND '.$c->getWhere();
+                $iwhere++;
+            }
+            else {
+                $where .= $c->getWhere();
+                $iwhere++;
+            }
+
             if ($c->getGroupBy() !== null) {
-                $groupby = $c->getGroupBy();
+                $groupby .= $c->getGroupBy();
             }
-        }
+        }  
+
+
+
         
-        if ($c->getJoin() !== null) {
+        if ($join !== null) {
             $sql .= ' JOIN '.$join;
         }
 
-        if (count($c->getWhere()) > 1) {
-            echo 'coucou';
-        }
-
-   
         $sql .= ' WHERE '.$where;
         
-        if ($c->getGroupBy() !== null) {
+        if ($groupby !== null) {
             $sql .= ' GROUP BY '.$groupby;
         }
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-        echo $sql;
+        
         return $this->retrieve($sql);
     }
     
@@ -535,12 +543,11 @@ class UserNameCriteria implements Statement {
     function getJoin() {}
 
     function getWhere() {
-        return 'user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\'';
+        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\')';
     }
 
     function getGroupBy() {}
 }
-
 
 class UserGroupCriteria implements Statement {
 
