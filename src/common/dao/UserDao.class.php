@@ -470,25 +470,38 @@ class UserDao extends DataAccessObject {
     function & searchUserByCriteria($ca, $offset, $limit) {
 
         $sql = 'SELECT * ';
+        $sql .= 'FROM user ';
 
         foreach($ca as $c) {
-
-            $from = $c->getFrom();
+            
+            if ($c->getJoin()) {
+                $join = $c->getJoin();
+            }
             $where = $c->getWhere();
             
             if ($c->getGroupBy() !== null) {
                 $groupby = $c->getGroupBy();
             }
         }
+        
+        if ($c->getJoin() !== null) {
+            $sql .= ' JOIN '.$join;
+        }
 
-        $sql .= 'FROM '.$from;
+        if (count($c->getWhere()) > 1) {
+            echo 'coucou';
+        }
+
+   
         $sql .= ' WHERE '.$where;
         
         if ($c->getGroupBy() !== null) {
             $sql .= ' GROUP BY '.$groupby;
         }
    
+        $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$offset.', '.$limit;
+        echo $sql;
         return $this->retrieve($sql);
     }
     
@@ -504,41 +517,12 @@ class UserDao extends DataAccessObject {
 
 interface Statement {
 
-    public function getFrom();
+    public function getJoin();
 
     public function getWhere();
 
     public function getGroupBy();
-    
-    public function getOrderBy();
 }
-
-class UserNameStatusCriteria implements Statement {
-
-    private $name;
-
-    private $status;
-
-    function __construct($name, $status) {
-        $this->name = $name;
-        $this->status = $status;
-    }
-
-    function getFrom() {
-        return 'user';
-    }
-
-    function getWhere() {
-        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\') AND status = \''.$this->status.'\'';
-    }
-
-    function getGroupBy() {}
-
-    function getOrderBy() {
-        return 'user_name, realname, status';
-    }
-}
-
 
 class UserNameCriteria implements Statement {
 
@@ -547,20 +531,14 @@ class UserNameCriteria implements Statement {
     function __construct($name) {
         $this->name = $name;
     }
-    
-    function getFrom() {
-        return 'user';
-    }
+
+    function getJoin() {}
 
     function getWhere() {
         return 'user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\'';
     }
 
     function getGroupBy() {}
-
-    function getOrderBy() {
-        return 'user_name, realname, status';
-    }
 }
 
 
@@ -572,8 +550,8 @@ class UserGroupCriteria implements Statement {
         $this->group = $group;
     }
 
-    function getFrom() {
-        return 'user JOIN user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
+    function getJoin() {
+        return  'user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
     }
 
     function getWhere() {
@@ -582,10 +560,6 @@ class UserGroupCriteria implements Statement {
 
     function getGroupBy() {
         return 'user.user_id';
-}
-
-    function getOrderBy() {
-        return 'user_name, realname, status';
     }
 }
 
@@ -597,19 +571,13 @@ class UserStatusCriteria implements Statement {
         $this->status = $status;
     }
 
-    function getFrom() {
-        return 'user';
-    }
+    function getJoin() {}
 
     function getWhere() {
         return 'user.status = \''.$this->status.'\'';
     }
 
     function getGroupBy() {}
-
-    function getOrderBy() {
-        return 'user_name, realname, status';
-    }
 }
 
 ?>

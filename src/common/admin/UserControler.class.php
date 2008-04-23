@@ -216,44 +216,16 @@ class UserControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
-
-        //search by user and status
-        if ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] !== '' && $_POST['user_status_search'] != 'all') {
-
-            $vuName = new Valid_String('user_name_search');
-
-            $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
-            
-            $vuStatus = new Valid('user_status_search');
-
-            $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
-
-            
-            if ($request->valid($vuName) && $request->valid($vuStatus)) {
-
-                if ($request->isPost()) {
-                    $name = $request->get('user_name_search');
-                    $status = $request->get('user_status_search');
-                    $criteria[] = new UserNameStatusCriteria($name, $status);
-                }
-                else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-                }
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-            }
-        }
-
         //search by user name
-        elseif ($_POST['user_name_search'] !== '' && $_POST['user_status_search'] == 'all') {
-          
+        if ($_POST['user_name_search'] !== '') {
+           
             $vuName = new Valid_String('user_name_search');
  
             if ($request->valid($vuName)) {
 
                 if ($request->isPost()) {
                     $name = $request->get('user_name_search');
+                    $namecriteria = array();
                     $criteria[] = new UserNameCriteria($name);
                 }
                 else {
@@ -266,15 +238,15 @@ class UserControler extends Controler {
         }
 
         //search by group name
-        elseif ($_POST['user_group_search'] !== '' && $_POST['user_status_search'] == 'all') {
-            
+        if ($_POST['user_group_search'] !== '') {
+           
             $vuGroup = new Valid_String('user_group_search');
 
             if ($request->valid($vuGroup)) {
 
                 if ($request->isPost()) {
                     $group = $request->get('user_group_search');
-                  
+                    $groupcriteria = array();
                     $criteria[] = new UserGroupCriteria($group);
                    
                 }
@@ -288,8 +260,8 @@ class UserControler extends Controler {
         }
 
         //search by status
-        elseif (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
-            
+        if (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
+          
             $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
             
             $vuStatus = new Valid('user_status_search');
@@ -300,6 +272,7 @@ class UserControler extends Controler {
                 
                 if ($request->isPost()) {
                     $status = $request->get('user_status_search');
+                    $statuscriteria = array();                  
                     $criteria[] = new UserStatusCriteria($status);
                 }
                 else {
