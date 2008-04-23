@@ -13,32 +13,32 @@
 //
 -->
 <chapter id="Modules">
-    <title>Fonctions et paramètres des modules</title>
+    <title>Fonctions et paramÃ¨tres des modules</title>
 
     <section id="CoreFunctions">
         <title>Fonction du noyau</title>
         
-        <para>Ces fonctions ne font pas paeties d'un module spécifique. Les voici :</para>
+        <para>Ces fonctions ne font pas paeties d'un module spÃ©cifique. Les voici :</para>
         
         <section id="CoreFunctionLogin">
             <title>login</title>
             <para>login: Connection et identification au serveur.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--username: Spécifie le nom d'utilisateur avec lequel vous allez travailler. 
-                        Le nom d'utilisateur est le même que celui que vous utilisez habituellement sur
+                        <para>--username: SpÃ©cifie le nom d'utilisateur avec lequel vous allez travailler. 
+                        Le nom d'utilisateur est le mÃªme que celui que vous utilisez habituellement sur
                         la page de connexion du site CodeX.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--password: Spécifie le mot de passe associé au username pour vous authentifier.
-                        Si le mot de passe n'est pas précisé, il vous sera demandé intéractivement.
+                        <para>--password: SpÃ©cifie le mot de passe associÃ© au username pour vous authentifier.
+                        Si le mot de passe n'est pas prÃ©cisÃ©, il vous sera demandÃ© intÃ©ractivement.
                         </para>
                     </listitem>
                     <listitem>
                         <para>--project: nom UNIX du project sur lequel vous voulez travailler. 
-                        Si vous ne le spécifiez pas maintenant, chaque appel ultérieur de fonction 
-                        nécessitera de spécifier le projet auquel la fonction doit s'appliquer.
+                        Si vous ne le spÃ©cifiez pas maintenant, chaque appel ultÃ©rieur de fonction 
+                        nÃ©cessitera de spÃ©cifier le projet auquel la fonction doit s'appliquer.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -82,15 +82,15 @@ Session terminated.
             <para>
                 trackerlist : Affiche la liste des trackers d'un projet (sans la structure des trackers).
                 <note>
-                    <para>La structure des trackers n'est plus retournée par cette fonction. 
+                    <para>La structure des trackers n'est plus retournÃ©e par cette fonction. 
                     Si vous souhaitez obtenir la structure de tous les trackers d'un projet, 
-                    veuillez désormais utiliser la fonction "trackers" (<xref linkend="TrackerFunctionTrackers" />).</para>
+                    veuillez dÃ©sormais utiliser la fonction "trackers" (<xref linkend="TrackerFunctionTrackers" />).</para>
                 </note>
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -135,16 +135,16 @@ Array
                 <note>
                     <para>Comme cette fonction retourne toute la structure de tous les trackers d'un projet,
                     il se peut qu'elle devienne un peu lente avec des projets contenant beaucoup de trackers.
-                    Le cas échéant, vous pouvez utiliser la fonction "trackerlist", (voir <xref linkend="TrackerFunctionTrackerList" />)
+                    Le cas Ã©chÃ©ant, vous pouvez utiliser la fonction "trackerlist", (voir <xref linkend="TrackerFunctionTrackerList" />)
                     suivie de la fonction "tracker" (<xref linkend="TrackerFunctionTracker" />)
-                    pour obtenir la structure du tracker souhaité.
+                    pour obtenir la structure du tracker souhaitÃ©.
                     </para>
                 </note>
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -181,9 +181,9 @@ Array
                         <para>--tracker_id* : ID du tracker.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -214,26 +214,26 @@ Array
         <section id="TrackerFunctionList">
             <title>list</title>
             <para>
-                list: Affiche la liste des artefacts appartenant au tracker spécifié.
+                list: Affiche la liste des artefacts appartenant au tracker spÃ©cifiÃ©.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
                     </listitem>
                     <listitem>
-                        <para>--limit: Nombre maximum d'artefacts retournés.</para>
+                        <para>--limit: Nombre maximum d'artefacts retournÃ©s.</para>
                     </listitem>
                     <listitem>
-                        <para>--offset: Nombre d'artefacts qui seront "sautés" (ce paramètre ne peut pas être utilisé seul, il doit être accompagné du paramètre limit).</para>
+                        <para>--offset: Nombre d'artefacts qui seront "sautÃ©s" (ce paramÃ¨tre ne peut pas Ãªtre utilisÃ© seul, il doit Ãªtre accompagnÃ© du paramÃ¨tre limit).</para>
                     </listitem>
                     <listitem>
-                        <para>--[nom du champ][opérateur][valeur]: critère de filtre pour les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>--[nom du champ][opÃ©rateur][valeur]: critÃ¨re de filtre pour les artefacts retournÃ©s. Fonctionne avec les champs standards et les champs utilisateurs.</para>
                         <para>Exemple : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
-                        <para>Les opérateurs autorisés sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                        <para>Les opÃ©rateurs autorisÃ©s sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -277,8 +277,8 @@ Array
 )
                     </programlisting>
                 </example>
-                <note>Note: Dans cet exemple, "assigned_to" correspond à un champ utilisateur et 
-                      142 est la valeur recherchée pour ce champ. Nous retrouvons ce champs dans 
+                <note>Note: Dans cet exemple, "assigned_to" correspond Ã  un champ utilisateur et 
+                      142 est la valeur recherchÃ©e pour ce champ. Nous retrouvons ce champs dans 
                       la liste des "extra_fields" avec le field_id 128.
                 </note>
                 </para>
@@ -288,31 +288,31 @@ Array
         <section id="TrackerFunctionReportList">
             <title>reportlist</title>
             <para>
-                reportlist: Affiche la liste des artefacts appartenant au tracker spécifié, selon le rapport spécifié.
+                reportlist: Affiche la liste des artefacts appartenant au tracker spÃ©cifiÃ©, selon le rapport spÃ©cifiÃ©.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
                     </listitem>
                     <listitem>
-                        <para>--limit: Nombre maximum d'artefacts retournés.</para>
+                        <para>--limit: Nombre maximum d'artefacts retournÃ©s.</para>
                     </listitem>
                     <listitem>
-                        <para>--offset: Nombre d'artefacts qui seront "sautés" (ce paramètre ne peut pas être utilisé seul, il doit être accompagné du paramètre limit).</para>
+                        <para>--offset: Nombre d'artefacts qui seront "sautÃ©s" (ce paramÃ¨tre ne peut pas Ãªtre utilisÃ© seul, il doit Ãªtre accompagnÃ© du paramÃ¨tre limit).</para>
                     </listitem>
                     <listitem>
-                        <para>--[nom du champ][opérateur][valeur]: critère de filtre pour les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>--[nom du champ][opÃ©rateur][valeur]: critÃ¨re de filtre pour les artefacts retournÃ©s. Fonctionne avec les champs standards et les champs utilisateurs.</para>
                         <para>Exemple : "--open_date>2006-05-21" --assigned_to=135 --status_id=0.</para>
-                        <para>Les opérateurs autorisés sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
+                        <para>Les opÃ©rateurs autorisÃ©s sont &gt;, &gt;=, =, &lt;, &lt;=, &lt;&gt;.</para>
                     </listitem>
                     <listitem>
-                        <para>--sort={[nom du champ] [direction du tri]}*: critère de tri pour classer les artefacts retournés. Fonctionne avec les champs standards et les champs utilisateurs.</para>
+                        <para>--sort={[nom du champ] [direction du tri]}*: critÃ¨re de tri pour classer les artefacts retournÃ©s. Fonctionne avec les champs standards et les champs utilisateurs.</para>
                         <para>Exemple : --sort="severity DESC, open_date DESC, artifact_id ASC".</para>
-                        <para>Les directions autorisées sont ASC (ascendant) et DESC (descendant).</para>
+                        <para>Les directions autorisÃ©es sont ASC (ascendant) et DESC (descendant).</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -392,15 +392,15 @@ Array
         <section id="TrackerFunctionReports">
             <title>reports</title>
             <para>
-                reports: Affiche tous les rapports d'un tracker donné.
+                reports: Affiche tous les rapports d'un tracker donnÃ©.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -452,7 +452,7 @@ Array
                 add: Ajoute un artefact au tracker.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--tracker_id* : ID du tracker dans lequel le nouvel artefact sera ajouté.</para>
+                        <para>--tracker_id* : ID du tracker dans lequel le nouvel artefact sera ajoutÃ©.</para>
                     </listitem>
                     <listitem>
                         <para>--summary: Summary de l'artefact.</para>
@@ -467,12 +467,12 @@ Array
                         <para>--severity: Severity de l'artefact (1: basse, 9: haute).</para>
                     </listitem>
                     <listitem>
-                        <para>--[nom extra field]: Valeur de l'extra field. Le nom de l'extra field doit être le nom du champ (field_name). La valeur de l'extra_field dépend de son type. Pour les champs multi-valués, séparez les valeurs par une virgule.</para>
+                        <para>--[nom extra field]: Valeur de l'extra field. Le nom de l'extra field doit Ãªtre le nom du champ (field_name). La valeur de l'extra_field dÃ©pend de son type. Pour les champs multi-valuÃ©s, sÃ©parez les valeurs par une virgule.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -492,9 +492,9 @@ Is this information correct? (y/n): y
 7374
                     </programlisting>
                 </example>
-                <note>Note: Dans cet exemple, "assigned_to" correspond à un extra_field et 
+                <note>Note: Dans cet exemple, "assigned_to" correspond Ã  un extra_field et 
                       142 est une valeur valide pour ce champ.
-                      La valeur retournée (7374) est l'identifiant du nouvel artefact.
+                      La valeur retournÃ©e (7374) est l'identifiant du nouvel artefact.
                 </note>
                 </para>
             </para>
@@ -503,13 +503,13 @@ Is this information correct? (y/n): y
         <section id="TrackerFunctionUpdate">
             <title>update</title>
             <para>
-                update: Mise à jour de l'artefact.
+                update: Mise Ã  jour de l'artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact à modifier.</para>
+                        <para>--tracker_id* : ID du tracker auquel appartient l'artefact Ã  modifier.</para>
                     </listitem>
                     <listitem>
-                        <para>--id* : ID de l'artefact à modifier.</para>
+                        <para>--id* : ID de l'artefact Ã  modifier.</para>
                     </listitem>
                     <listitem>
                         <para>--status_id: Nouveau status de l'artefact.</para>
@@ -524,12 +524,12 @@ Is this information correct? (y/n): y
                         <para>--severity: Severity de l'artefact (1: Basse, 9: Haute).</para>
                     </listitem>
                     <listitem>
-                        <para>--[nom extra_field]: Valeur de l'extra field. La valeur de l'extra field dépend de son type.</para>
+                        <para>--[nom extra_field]: Valeur de l'extra field. La valeur de l'extra field dÃ©pend de son type.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -563,9 +563,9 @@ Is this information correct? (y/n): y
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -610,7 +610,7 @@ Array
         <section id="TrackerFunctionAddComment">
             <title>addComment</title>
             <para>
-                addComment: Ajoute un commentaire à un artefact.
+                addComment: Ajoute un commentaire Ã  un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
@@ -622,12 +622,12 @@ Array
                         <para>--message* : Message du commentaire.</para>
                     </listitem>
                     <listitem>
-                        <para>--comment_type_id: Type à ajouter au commentaire (optionnel).</para>
+                        <para>--comment_type_id: Type Ã  ajouter au commentaire (optionnel).</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -654,15 +654,15 @@ Array
                         <para>--artifact_id*: ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--comment_id*: ID du commentaire à modifier.</para>
+                        <para>--comment_id*: ID du commentaire Ã  modifier.</para>
                     </listitem>
                     <listitem>
                         <para>--comment*: le nouveau commentaire qui remplacera l'ancien.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -689,12 +689,12 @@ Array
                         <para>--artifact_id*: ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--comment_id*: ID du commentaire à supprimer.</para>
+                        <para>--comment_id*: ID du commentaire Ã  supprimer.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -721,9 +721,9 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -739,7 +739,7 @@ Array
         [email] => john.smith@xerox.com
         [added_by] => 142
         [added_by_name] => mnazaria
-        [comment] => Pour info, j'ai ajouté ce bug, John.
+        [comment] => Pour info, j'ai ajoutÃ© ce bug, John.
         [date] => 442128821
         )
     [...]
@@ -753,7 +753,7 @@ Array
         <section id="TrackerFunctionAddCC">
             <title>addCC</title>
             <para>
-                addCC: Ajoute une liste d'adresses email ou de logins à la liste des CC d'un artefact.
+                addCC: Ajoute une liste d'adresses email ou de logins Ã  la liste des CC d'un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker auquel appartient l'artefact.</para>
@@ -762,15 +762,15 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--cc_list*: Liste d'adresses email et/ou de logins à ajouter à la liste des CC.</para>
+                        <para>--cc_list*: Liste d'adresses email et/ou de logins Ã  ajouter Ã  la liste des CC.</para>
                     </listitem>
                     <listitem>
-                        <para>--cc_comment: Commentaire optionnel associé à la liste des CC ajoutés.</para>
+                        <para>--cc_comment: Commentaire optionnel associÃ© Ã  la liste des CC ajoutÃ©s.</para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -796,12 +796,12 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--cc_id* : ID du CC à supprimer.</para>
+                        <para>--cc_id* : ID du CC Ã  supprimer.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -818,7 +818,7 @@ Array
         <section id="TrackerFunctionDependencies">
             <title>dependencies</title>
             <para>
-                dependencies: Affiche toutes les dépendances d'un artefact.
+                dependencies: Affiche toutes les dÃ©pendances d'un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
@@ -827,9 +827,9 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -869,7 +869,7 @@ Array
         <section id="TrackerFunctionInverseDependencies">
             <title>inverseDependencies</title>
             <para>
-                inverseDependencies: Affiche toutes les dépendances inverses d'un artefact.
+                inverseDependencies: Affiche toutes les dÃ©pendances inverses d'un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
@@ -878,9 +878,9 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -910,7 +910,7 @@ Array
         <section id="TrackerFunctionAddDependencies">
             <title>addDependencies</title>
             <para>
-                addDependencies: Ajoute une liste de dépendances à un artefact.
+                addDependencies: Ajoute une liste de dÃ©pendances Ã  un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
@@ -919,12 +919,12 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--dependencies* : liste des dépendances à ajouter, séparées par une virgule.</para>
+                        <para>--dependencies* : liste des dÃ©pendances Ã  ajouter, sÃ©parÃ©es par une virgule.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -941,7 +941,7 @@ Array
         <section id="TrackerFunctionDeleteDependency">
             <title>deleteDependency</title>
             <para>
-                deleteDependency: Supprime une dépendance à un artefact.
+                deleteDependency: Supprime une dÃ©pendance Ã  un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du tracker.</para>
@@ -950,12 +950,12 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--dependency* : ID de la dépendace à supprimer.</para>
+                        <para>--dependency* : ID de la dÃ©pendace Ã  supprimer.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -981,9 +981,9 @@ Array
                         <para>--id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -1018,7 +1018,7 @@ Array
         <section id="TrackerFunctionAttachedFiles">
             <title>attachedFiles</title>
             <para>
-                attachedFiles: Liste les fichiers attachés d'un artefact (le contenu des fichiers n'est pas présent).
+                attachedFiles: Liste les fichiers attachÃ©s d'un artefact (le contenu des fichiers n'est pas prÃ©sent).
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du Tracker.</para>
@@ -1027,9 +1027,9 @@ Array
                         <para>--artifact_id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -1071,7 +1071,7 @@ Array
         <section id="TrackerFunctionAttachedFile">
             <title>attachedFile</title>
             <para>
-                attachedFile: Télécharge le fichier attaché d'un artefact.
+                attachedFile: TÃ©lÃ©charge le fichier attachÃ© d'un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : Id du Tracker.</para>
@@ -1080,15 +1080,15 @@ Array
                         <para>--artifact_id* : ID de l'artifact.</para>
                     </listitem>
                     <listitem>
-                        <para>--file_id* : ID du fichier attaché à télécharger.</para>
+                        <para>--file_id* : ID du fichier attachÃ© Ã  tÃ©lÃ©charger.</para>
                     </listitem>
                     <listitem>
-                        <para>--output: emplacement et nom du fichier à télécharger. Si non spécifié, le contenu sera affiché à l'écran.</para>
+                        <para>--output: emplacement et nom du fichier Ã  tÃ©lÃ©charger. Si non spÃ©cifiÃ©, le contenu sera affichÃ© Ã  l'Ã©cran.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -1106,7 +1106,7 @@ File retrieved successfully.
         <section id="TrackerFunctionAddAttachedFile">
             <title>addAttachedFile</title>
             <para>
-                addAttachedFile: Attache un fichier à un artefact.
+                addAttachedFile: Attache un fichier Ã  un artefact.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--tracker_id* : ID du Tracker.</para>
@@ -1115,15 +1115,15 @@ File retrieved successfully.
                         <para>--artifact_id* : ID de l'artefact.</para>
                     </listitem>
                     <listitem>
-                        <para>--file* : fihcier local à attacher.</para>
+                        <para>--file* : fihcier local Ã  attacher.</para>
                     </listitem>
                     <listitem>
                         <para>--description: Description du fichier.</para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
-                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
-                        une erreur sera affichée.</para>
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ©
+                        lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, 
+                        une erreur sera affichÃ©e.</para>
                     </listitem>
                 </itemizedlist>
                 <para>
@@ -1134,7 +1134,7 @@ File retrieved successfully.
 12
                     </programlisting>
                 </example>
-                <note>Note : La valeur retournée (12) correspond à l'identifiant du nouveau fichier créé.</note>
+                <note>Note : La valeur retournÃ©e (12) correspond Ã  l'identifiant du nouveau fichier crÃ©Ã©.</note>
                 </para>
             </para>
         </section>
@@ -1149,14 +1149,14 @@ File retrieved successfully.
     </section>
 
         <section id="FRSFunctions">
-        <title>Fonctions du système de gestion des fichiers</title>
+        <title>Fonctions du systÃ¨me de gestion des fichiers</title>
         
         <section id="FRSFunctionPackages">
             <title>packages</title>
             <para>packages: Affiche une liste des paquets disponibles pour un projet
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1194,22 +1194,22 @@ Array
 
         <section id="FRSFunctionAddPackage">
             <title>addpackage</title>
-            <para>addpackage: Ajoute un paquet au système de gestion de fichier.
+            <para>addpackage: Ajoute un paquet au systÃ¨me de gestion de fichier.
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--name*: nom du nouveau paquet à ajouter.
+                        <para>--name*: nom du nouveau paquet Ã  ajouter.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--status_id: status_id du paquet. Par défaut, le statut est actif.
+                        <para>--status_id: status_id du paquet. Par dÃ©faut, le statut est actif.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--rank: ordre d'affichage du paquet. Par défaut (si non spécifié), le rang est 0.
+                        <para>--rank: ordre d'affichage du paquet. Par dÃ©faut (si non spÃ©cifiÃ©), le rang est 0.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1221,21 +1221,21 @@ Array
 65
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (65) est l'identifiant du nouveau paquet créé.</note>
+                    <note>Note: La valeur retournÃ©e (65) est l'identifiant du nouveau paquet crÃ©Ã©.</note>
                </para>
             </para>
         </section>
         
         <section id="FRSFunctionReleases">
             <title>releases</title>
-            <para>releases: Affiche une liste des versions disponibles pour un projet et un paquet donné.
+            <para>releases: Affiche une liste des versions disponibles pour un projet et un paquet donnÃ©.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1278,18 +1278,18 @@ Array
         
         <section id="FRSFunctionAddRelease">
             <title>addrelease</title>
-            <para>addrelease: Ajoute une version au système de gestion des fichiers.
+            <para>addrelease: Ajoute une version au systÃ¨me de gestion des fichiers.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet qui contiendra la nouvelle version
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--name*: nom de la nouvelle version à créer.
+                        <para>--name*: nom de la nouvelle version Ã  crÃ©er.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--notes: notes à propos de la nouvelle version
+                        <para>--notes: notes Ã  propos de la nouvelle version
                         </para>
                     </listitem>
                     <listitem>
@@ -1297,15 +1297,15 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--status_id: status_id de la nouvelle version. Par défaut (si non spécifié), le statut est actif.
+                        <para>--status_id: status_id de la nouvelle version. Par dÃ©faut (si non spÃ©cifiÃ©), le statut est actif.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--release_date: date de la nouvelle version, au format YYYY-MM-DD. Par défaut, la date de la version est la date courante.
+                        <para>--release_date: date de la nouvelle version, au format YYYY-MM-DD. Par dÃ©faut, la date de la version est la date courante.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1317,14 +1317,14 @@ Array
 84
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (84) est l'identifiant de la nouvelle version créée.</note>
+                    <note>Note: La valeur retournÃ©e (84) est l'identifiant de la nouvelle version crÃ©Ã©e.</note>
                </para>
             </para>
         </section>
         
         <section id="FRSFunctionFiles">
             <title>files</title>
-            <para>files: Affiche une liste des fichiers disponibles pour un projet, un paquet et une version donnée.
+            <para>files: Affiche une liste des fichiers disponibles pour un projet, un paquet et une version donnÃ©e.
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: l'identifiant du paquet
@@ -1335,7 +1335,7 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1367,7 +1367,7 @@ Array
         
         <section id="FRSFunctionAddFile">
             <title>addfile</title>
-            <para>addfile: Ajoute un fichier au système de gestion des fichiers
+            <para>addfile: Ajoute un fichier au systÃ¨me de gestion des fichiers
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: identifiant du paquet qui contiendra le fichier
@@ -1378,11 +1378,11 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--local_file(*): emplacement (local) du fichier à ajouter. Utilisez cet argument si votre fichier est local. Votre fichier sera téléchargé sur le serveur. Pour ajouter des fichiers de grosse taille, merci d'utiliser la méthode d'upload décrite ci-dessous, car des problèmes mémoires peuvent survenir. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
+                        <para>--local_file(*): emplacement (local) du fichier Ã  ajouter. Utilisez cet argument si votre fichier est local. Votre fichier sera tÃ©lÃ©chargÃ© sur le serveur. Pour ajouter des fichiers de grosse taille, merci d'utiliser la mÃ©thode d'upload dÃ©crite ci-dessous, car des problÃ¨mes mÃ©moires peuvent survenir. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la mÃ©thode utilisÃ©e pour ajouter votre fichier.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--uploaded_file(*): nom du fichier à ajouter. Le fichier doit déjà se trouver dans le répertoire "incoming" du serveur. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
+                        <para>--uploaded_file(*): nom du fichier Ã  ajouter. Le fichier doit dÃ©jÃ  se trouver dans le rÃ©pertoire "incoming" du serveur. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la mÃ©thode utilisÃ©e pour ajouter votre fichier.
                         </para>
                     </listitem>
                     <listitem>
@@ -1394,7 +1394,7 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project: nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1410,16 +1410,16 @@ Array
 [mnazaria@linux codex cli ]$ ./codex.php frs addfile --package_id=6 --release_id=49 --uploaded_file=my_file.pdf
 627
 
-(pour un fichier déjà téléchargé dans le répertoire incoming de votre serveur)
+(pour un fichier dÃ©jÃ  tÃ©lÃ©chargÃ© dans le rÃ©pertoire incoming de votre serveur)
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (627) est l'identifiant du nouveau fichier créé.</note>
+                    <note>Note: La valeur retournÃ©e (627) est l'identifiant du nouveau fichier crÃ©Ã©.</note>
                </para>
                <para>
-                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
-                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
-                Si les problèmes persistent, il est conseillé de charger auparavant les fichiers sur le serveur (via scp ou ftp), puis d'utiliser 
-                la deuxième méthode (--uploaded_file)</note>
+                <note>Note: Si vous rencontrez des problÃ¨mes de mÃ©moire en essayant de tÃ©lÃ©charger des fichiers volumineux, vous pouvez augmenter
+                la mÃ©moire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
+                Si les problÃ¨mes persistent, il est conseillÃ© de charger auparavant les fichiers sur le serveur (via scp ou ftp), puis d'utiliser 
+                la deuxiÃ¨me mÃ©thode (--uploaded_file)</note>
                </para>
             </para>
         </section>
@@ -1437,15 +1437,15 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--file_id* : identifiant du fichier à retourner
+                        <para>--file_id* : identifiant du fichier Ã  retourner
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--output : emplacement où télécharger le fichier. Si non spécifié, le contenu du fichier sera affiché sur la sortie standard.
+                        <para>--output : emplacement oÃ¹ tÃ©lÃ©charger le fichier. Si non spÃ©cifiÃ©, le contenu du fichier sera affichÃ© sur la sortie standard.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1466,7 +1466,7 @@ File retrieved successfully.
     <section id="DocmanFunctions">
         <title>Fonction du Gestionnaire de Documents</title>
         
-        <para>Ce module fonctionne avec le plugin docman et nécessite que le plugin soit installé.</para>
+        <para>Ce module fonctionne avec le plugin docman et nÃ©cessite que le plugin soit installÃ©.</para>
         
         <section id="DocmanFunctionList">
             <title>list</title>
@@ -1477,7 +1477,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1533,7 +1533,7 @@ Array
             <para>createDocument : Ajoute un document au gestionnaire de documents
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--parent_id* : identifiant du parent dans lequel le document sera créé
+                        <para>--parent_id* : identifiant du parent dans lequel le document sera crÃ©Ã©
                         </para>
                     </listitem>
                     <listitem>
@@ -1563,7 +1563,7 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1577,9 +1577,9 @@ Array
                     </example>
                </para>
                <para>
-                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
-                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
-                Ce problème dépend de nombreux paramètres et pourrait persister, même après cette manipulation. Il s'agit d'une 
+                <note>Note: Si vous rencontrez des problÃ¨mes de mÃ©moire en essayant de tÃ©lÃ©charger des fichiers volumineux, vous pouvez augmenter
+                la mÃ©moire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
+                Ce problÃ¨me dÃ©pend de nombreux paramÃ¨tres et pourrait persister, mÃªme aprÃ¨s cette manipulation. Il s'agit d'une 
                 limitation technique de NuSoap.
                 </note>
                </para>
@@ -1591,7 +1591,7 @@ Array
             <para>createFolder : Ajoute un dossier au gestionnaire de documents
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--parent_id* : identifiant du parent danslequel le dossier sera créé
+                        <para>--parent_id* : identifiant du parent danslequel le dossier sera crÃ©Ã©
                         </para>
                     </listitem>
                     <listitem>
@@ -1607,7 +1607,7 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1628,11 +1628,11 @@ Array
             <para>delete : Supprime un item
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--id* : identifiant de l'item à supprimer
+                        <para>--id* : identifiant de l'item Ã  supprimer
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1653,11 +1653,11 @@ Array
             <para>monitor : Surveiller un item
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--id* : identifiant de l'item à surveiller
+                        <para>--id* : identifiant de l'item Ã  surveiller
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1675,18 +1675,18 @@ Array
         
         <section id="DocmanFunctionMove">
             <title>move</title>
-            <para>move : Déplace un item
+            <para>move : DÃ©place un item
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--id* : identifiant de l'item à déplacer
+                        <para>--id* : identifiant de l'item Ã  dÃ©placer
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--parent* : identifiant du dossier dans lequel l'item sera déplacé
+                        <para>--parent* : identifiant du dossier dans lequel l'item sera dÃ©placÃ©
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        <para>--project : nom UNIX du projet. Si vous ne le spÃ©cifiez pas, le projet spÃ©cifiÃ© lors de la connexion sera utilisÃ©. Si aucun projet n'a Ã©tÃ© spÃ©cifiÃ© lors du login, une erreur sera affichÃ©e.
                         </para>
                     </listitem>
                 </itemizedlist>

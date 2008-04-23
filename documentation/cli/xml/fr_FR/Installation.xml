@@ -17,76 +17,76 @@
     <title>Installation</title>
 
     <para>Pour installer le client en ligne de commande CodeX, 
-    vous devez disposer de PHP installé sur votre machine. La 
-    dernière version de PHP4 ou PHP5 est grandement recommandée. 
-    PHP doit également avoir été compilé sans le paramètre 
-    --disable-cli pour pouvoir être exécuté en ligne de commande.</para>
+    vous devez disposer de PHP installÃ© sur votre machine. La 
+    derniÃ¨re version de PHP4 ou PHP5 est grandement recommandÃ©e. 
+    PHP doit Ã©galement avoir Ã©tÃ© compilÃ© sans le paramÃ¨tre 
+    --disable-cli pour pouvoir Ãªtre exÃ©cutÃ© en ligne de commande.</para>
 
-    <para>Vous devez vérifier dans quel répertoire se trouve 
-    l'exécutable PHP installé sur votre machine. Le répertoire 
-    est celui spécifié lors de la compilation de PHP (si aucun 
-    préfixe n'a été spécifié, celui par défaut est /usr, 
-    l'exécutable PHP devrait donc se trouver dans /usr/bin/php).
+    <para>Vous devez vÃ©rifier dans quel rÃ©pertoire se trouve 
+    l'exÃ©cutable PHP installÃ© sur votre machine. Le rÃ©pertoire 
+    est celui spÃ©cifiÃ© lors de la compilation de PHP (si aucun 
+    prÃ©fixe n'a Ã©tÃ© spÃ©cifiÃ©, celui par dÃ©faut est /usr, 
+    l'exÃ©cutable PHP devrait donc se trouver dans /usr/bin/php).
     <tip>
-        <title>Comment savoir ou se trouve l'exécutable PHP ?</title>
-        <para>Vous pouvez vérifier dans quel répertoire PHP est 
-            installé en executant la commande suivante :
+        <title>Comment savoir ou se trouve l'exÃ©cutable PHP ?</title>
+        <para>Vous pouvez vÃ©rifier dans quel rÃ©pertoire PHP est 
+            installÃ© en executant la commande suivante :
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 # which php
 /usr/bin/php
             </programlisting>
-            Dans ce cas, l'exécutable PHP est /usr/bin/php.
+            Dans ce cas, l'exÃ©cutable PHP est /usr/bin/php.
         </para>
     </tip>
     </para>
 
-    <para><note>Si vous prévoyez d'utiliser le client en Ligne de Commande 
+    <para><note>Si vous prÃ©voyez d'utiliser le client en Ligne de Commande 
     pour administrer une installation de CodeX via une connection HTTPS, 
     vous devez compiler PHP avec l'extension CURL (en utilisant l'option 
     --with-curl dans le script de configuration).</note></para>
 
-    <para>Une fois que PHP est proprement installé, vous pouvez télécharger 
-    et décompresser le client en ligne de commande dans un répertoire sur 
+    <para>Une fois que PHP est proprement installÃ©, vous pouvez tÃ©lÃ©charger 
+    et dÃ©compresser le client en ligne de commande dans un rÃ©pertoire sur 
     votre machine locale.</para>
 
-    <para>Après avoir décompressé le client en ligne de commande, vous devez 
-    éditer le fichier $PREFIX/codex.php (où $PREFIX est le répertoire dans 
-    lequel le client a été décompressé) avec votre éditeur préféré et modifier 
+    <para>AprÃ¨s avoir dÃ©compressÃ© le client en ligne de commande, vous devez 
+    Ã©diter le fichier $PREFIX/codex.php (oÃ¹ $PREFIX est le rÃ©pertoire dans 
+    lequel le client a Ã©tÃ© dÃ©compressÃ©) avec votre Ã©diteur prÃ©fÃ©rÃ© et modifier 
     les choses suivantes :
     <procedure>
         <step>
-          <para>Changer la première ligne, qui est : 
+          <para>Changer la premiÃ¨re ligne, qui est : 
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 #!/usr/bin/php -q
             </programlisting>
-            pour la faire pointer sur le chemin de l'exécutable PHP de votre machine. 
-            (si il est différent de /usr/bin/php)
+            pour la faire pointer sur le chemin de l'exÃ©cutable PHP de votre machine. 
+            (si il est diffÃ©rent de /usr/bin/php)
           </para>
         </step>
         <step>
-          <para>Trouver la section Configuration dans le script (délimitée par des commentaires) 
+          <para>Trouver la section Configuration dans le script (dÃ©limitÃ©e par des commentaires) 
                 et modifier les constantes suivantes :
                 <para>
                 <itemizedlist mark="bullet" spacing="compact">
                  <listitem>
-                    <para>NUSOAP_DIR: Pointe vers le répertoire d'installation 
+                    <para>NUSOAP_DIR: Pointe vers le rÃ©pertoire d'installation 
                         de la librairie PHP NuSOAP. Une copie de cette librairie 
-                        se trouve dans le répertoire $PREFIX/nusoap/.
+                        se trouve dans le rÃ©pertoire $PREFIX/nusoap/.
                     </para>
                  </listitem>
                  <listitem>
-                    <para>CODEX_CLI_DIR: Pointe vers le répertoire dans lequel se 
-                        trouvent les fichiers nécessaires au client. Habituellement, 
+                    <para>CODEX_CLI_DIR: Pointe vers le rÃ©pertoire dans lequel se 
+                        trouvent les fichiers nÃ©cessaires au client. Habituellement, 
                         il s'agit de $PREFIX/include/.
                     </para>
                  </listitem>
                  <listitem>
                     <para>WSDL_URL (optionel): l'URL du WSDL de votre serveur CodeX SOAP. 
-                        L'URL est très certainement http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
-                        Vous pouvez vérifier l'exactitude de l'URL en la tapant dans votre navigateur, 
-                        vous devriez alors obtenir un fichier XML renvoyé par le serveur.
-                        Si les variables ne sont pas affectées, le client essaiera d'utiliser 
-                        le WSDL spécifié dans la variable d'environement CODEX_WSDL.
+                        L'URL est trÃ¨s certainement http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
+                        Vous pouvez vÃ©rifier l'exactitude de l'URL en la tapant dans votre navigateur, 
+                        vous devriez alors obtenir un fichier XML renvoyÃ© par le serveur.
+                        Si les variables ne sont pas affectÃ©es, le client essaiera d'utiliser 
+                        le WSDL spÃ©cifiÃ© dans la variable d'environement CODEX_WSDL.
                     </para>
                  </listitem>
                 </itemizedlist>
@@ -94,8 +94,8 @@
           </para>
         </step>
         <step>
-          <para>Assurez-vous que le script codex.php ait bien les droits d'exécution. 
-                Sinon, donnez-les lui en exécutant la commande suivante :
+          <para>Assurez-vous que le script codex.php ait bien les droits d'exÃ©cution. 
+                Sinon, donnez-les lui en exÃ©cutant la commande suivante :
                 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 chmod +x $PREFIX/codex.php
                 </programlisting>
@@ -104,11 +104,11 @@ chmod +x $PREFIX/codex.php
     </procedure>
     
     <para>
-        Quand tout est installé correctement, vous pouvez tester l'installation 
+        Quand tout est installÃ© correctement, vous pouvez tester l'installation 
         pour voir si tout fonctionne correctement. Pour cela, essayer de vous 
-        connecter au serveur en exécutant la commande de "login". Placez-vous 
-        tout d'abord dans le répertoire dans lequel vous avez décompressé le 
-        client, et exécutez la commande suivante :
+        connecter au serveur en exÃ©cutant la commande de "login". Placez-vous 
+        tout d'abord dans le rÃ©pertoire dans lequel vous avez dÃ©compressÃ© le 
+        client, et exÃ©cutez la commande suivante :
         <example>
             <title>commande de login</title>
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -124,10 +124,10 @@ Logged in.
     </para>
 
     <para>Le message peut varier selon la configuration de votre serveur.
-        Si vous obtenez une erreur ressemblant à : 
+        Si vous obtenez une erreur ressemblant Ã  : 
         "Fatal error: wsdl error: HTTP ERROR: Couldn't open socket connection to 
         server http://&SYS_DEFAULT_DOMAIN; prior to connect().",
-        cela veut dire que votre ordinateur n'arrive pas à se connecter au 
+        cela veut dire que votre ordinateur n'arrive pas Ã  se connecter au 
         serveur CodeX. Dans ce cas, vous devez vous assurer que l'adresse du serveur est 
         correcte et que vous pouvez bien vous connecter au serveur depuis votre ordinateur. 
     </para>

@@ -14,25 +14,25 @@
   <chapter id="ProjectAdministration">
     <title>Administration d'un projet</title>
 
-    <para>Lorsque vous accédez à la page de Sommaire d'un projet ou à
-    l'un de ses services, une nouvelle entrée appelée Admin apparaît
+    <para>Lorsque vous accÃ©dez Ã  la page de Sommaire d'un projet ou Ã 
+    l'un de ses services, une nouvelle entrÃ©e appelÃ©e Admin apparaÃ®t
     dans la barre de menu du projet.</para>
 
-    <para>Seuls les membres du projets ont accès aux pages
+    <para>Seuls les membres du projets ont accÃ¨s aux pages
     d'administration du projet. Tous les autres utilisateurs s'en
-    verront refuser l'accès.</para>
+    verront refuser l'accÃ¨s.</para>
 
     <section id="ProjectAdministrationMenu">
       <title>Menu d'administration du projet</title>
 
-      <para>Sous le menu principal du projet que nous avons présenté
+      <para>Sous le menu principal du projet que nous avons prÃ©sentÃ©
       lors du passage en revue de la page de sommaire, figure le menu
-      d'administration du projet. A l'exception d'un ou deux éléments
+      d'administration du projet. A l'exception d'un ou deux Ã©lÃ©ments
       ce menu d'administration et le contenu de la page d'accueil de
       la section administration ne sont pas redondants. Ils donnent
-      accès à des fonctions d'administration distinctes. Dans les
-      sections qui suivent nous préciserons à côté de chaque fonction
-      d'administration si on y accède par le menu d'administration ou
+      accÃ¨s Ã  des fonctions d'administration distinctes. Dans les
+      sections qui suivent nous prÃ©ciserons Ã  cÃ´tÃ© de chaque fonction
+      d'administration si on y accÃ¨de par le menu d'administration ou
       par la page d'accueil de la section administration.</para>
     </section>
 
@@ -41,35 +41,35 @@
 
       <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
-      <para>L'administration des membres d'un projet est aisée. Selon le nombre 
-       d'utilisateurs à ajouter au projet, vous pouvez utiliser
-       l'une des deux méthodes ci-dessous :
+      <para>L'administration des membres d'un projet est aisÃ©e. Selon le nombre 
+       d'utilisateurs Ã  ajouter au projet, vous pouvez utiliser
+       l'une des deux mÃ©thodes ci-dessous :
       </para>
 
       <section id="AddingSingleUser">
         <title>Ajout d'un utilisateur</title>
           <para>Pour ajouter un utilisateur aux membres du groupe, un des
           administrateurs du projet doit simplement taper le nom de
-          l'utilisateur invité dans le champ réservé à cet effet et
+          l'utilisateur invitÃ© dans le champ rÃ©servÃ© Ã  cet effet et
           cliquer sur le bouton &#34;Ajouter un utilisateur&#34;. Si vous
-          ne connaissez pas le nom du nouveau membre à ajouter, ouvrez une
-          nouvelle fenêtre et utilisez la boîte de recherche par mots-clés
-          en tapant une partie du nom ou du prénom de l'utilisateur et en
-          n'oubliant pas de préciser que la recherche porte sur les
-          &#34;Utilisateurs&#34;. La liste de résultat fera
-          vraisemblablement apparaître le nom complet et le nom
+          ne connaissez pas le nom du nouveau membre Ã  ajouter, ouvrez une
+          nouvelle fenÃªtre et utilisez la boÃ®te de recherche par mots-clÃ©s
+          en tapant une partie du nom ou du prÃ©nom de l'utilisateur et en
+          n'oubliant pas de prÃ©ciser que la recherche porte sur les
+          &#34;Utilisateurs&#34;. La liste de rÃ©sultat fera
+          vraisemblablement apparaÃ®tre le nom complet et le nom
           d'utilisateur de la personne que vous recherchez.</para>
       </section>
       <section id="UserImport">
         <title>Import d'une liste d'utilisateurs</title>
-          <para>Si le nombre d'utilisateurs à ajouter est important, 
+          <para>Si le nombre d'utilisateurs Ã  ajouter est important, 
           un des administrateurs du projet peut importer une liste
-          d'utilisateurs à partir d'un fichier texte. Pour cela, cliquer
+          d'utilisateurs Ã  partir d'un fichier texte. Pour cela, cliquer
           sur le lien &#34;Importer une liste d'utilisateurs&#34;.
           On vous proposera alors de choisir un fichier texte comportant
-          la liste des utilisateurs à importer. Le fichier doit comporter
-          un utilisateur par ligne, soit en spécifiant son adresse email,
-          soit en spécifiant son nom de login CodeX.</para>
+          la liste des utilisateurs Ã  importer. Le fichier doit comporter
+          un utilisateur par ligne, soit en spÃ©cifiant son adresse email,
+          soit en spÃ©cifiant son nom de login CodeX.</para>
           <example>
             <title>Exemple de fichier pour l'import d'utilisateurs</title>
                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -80,13 +80,13 @@ bob.johnson@xerox.com
 smith3
 john.smith@xerox.com</programlisting>
           </example>
-          <para>Le processus d'import se déroule alors en deux temps.
-          Une première vérification du fichier est effectuée, qui donne lui
-          à un compte-rendu des utilisateurs détectés. Après validation,
-          les utilisateurs sont effectivement ajoutés au projet.
-          Le système n'effectuera pas l'import en cas d'erreur (utilisateur inconnu,
-          non enregistré sur CodeX, utilisateur non actif, adresse mail inconnue, etc.).
-          Les doublons ne produisent pas d'erreur. Un seul utilisateur est ajouté dans
+          <para>Le processus d'import se dÃ©roule alors en deux temps.
+          Une premiÃ¨re vÃ©rification du fichier est effectuÃ©e, qui donne lui
+          Ã  un compte-rendu des utilisateurs dÃ©tectÃ©s. AprÃ¨s validation,
+          les utilisateurs sont effectivement ajoutÃ©s au projet.
+          Le systÃ¨me n'effectuera pas l'import en cas d'erreur (utilisateur inconnu,
+          non enregistrÃ© sur CodeX, utilisateur non actif, adresse mail inconnue, etc.).
+          Les doublons ne produisent pas d'erreur. Un seul utilisateur est ajoutÃ© dans
           ce cas.</para>
       </section>
 
@@ -94,31 +94,31 @@ john.smith@xerox.com</programlisting>
         <title>Suppression d'utilisateurs</title>
         
           <para>Supprimer un utilisateur des membres du projet est encore
-          plus simple. Il suffit de cliquer sur l'icône corbeille
+          plus simple. Il suffit de cliquer sur l'icÃ´ne corbeille
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/trash.png"
-          /></imageobject></inlinemediaobject>) située à proximité du nom
+          /></imageobject></inlinemediaobject>) situÃ©e Ã  proximitÃ© du nom
           de l'utilisateur. Supprimer un utilisateur des membres du projet
-          n'a absolument aucun effet sur l'historique ou l'intégrité des
-          données du projet. En d'autres termes tous les artefacts des
-          outils de suivi soumis par ou assignés à cette personne restent
-          présents et inchangés dans la base de données. Seul la capacité
-          de cette personne à gérer le projet est affectée. Notez aussi
+          n'a absolument aucun effet sur l'historique ou l'intÃ©gritÃ© des
+          donnÃ©es du projet. En d'autres termes tous les artefacts des
+          outils de suivi soumis par ou assignÃ©s Ã  cette personne restent
+          prÃ©sents et inchangÃ©s dans la base de donnÃ©es. Seul la capacitÃ©
+          de cette personne Ã  gÃ©rer le projet est affectÃ©e. Notez aussi
           que pour supprimer un administrateur de la liste des membres du
-          projet, un autre administrateur doit d'abord lui ôter son statut
+          projet, un autre administrateur doit d'abord lui Ã´ter son statut
           d'administrateur en positionnant la valeur de la permission
-          &#34;Admin. Projet&#34; à &#34;Non&#34; dans la table d'édition
+          &#34;Admin. Projet&#34; Ã  &#34;Non&#34; dans la table d'Ã©dition
           des permissions utilisateurs. En d'autres termes, un
-          administrateur de projet ne peut être supprimé de la liste des
+          administrateur de projet ne peut Ãªtre supprimÃ© de la liste des
           membres tant qu'il a le statut d'administrateur.</para>
       </section>
       
-      <note><para>Vous avez probablement remarqué que tous les noms
+      <note><para>Vous avez probablement remarquÃ© que tous les noms
       d'utilisateurs figurant sur la la page d'administration sont en
       fait des liens hypertextes. Sur cette page comme sur beaucoup
-      d'autres, un clic sur un nom d'utilisateur vous mène sur une
+      d'autres, un clic sur un nom d'utilisateur vous mÃ¨ne sur une
       page d'information le concernant (y compris son lieu de travail,
-      téléphone, fax... extraits de l'annuaire d'entreprise) qui vous
+      tÃ©lÃ©phone, fax... extraits de l'annuaire d'entreprise) qui vous
       permet aussi de lui envoyer un email par le biais d'un
       formulaire Web.</para></note>
 
@@ -140,22 +140,22 @@ john.smith@xerox.com</programlisting>
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
       <para>L'item &#34;&Eacute;dition Infos Publiques&#34; du menu
-      d'administration permet à un administrateur de mettre à jour les
-      éléments de description du projet; il s'agit d'éléments fournis
+      d'administration permet Ã  un administrateur de mettre Ã  jour les
+      Ã©lÃ©ments de description du projet; il s'agit d'Ã©lÃ©ments fournis
       pendant la phase d'enregistrement du projet.</para>
 
     </section>
 
     <section id="ProjectCategorization">
-      <title>Catégorisation du projet</title>
+      <title>CatÃ©gorisation du projet</title>
 
       <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
 
-      <para>C'est ici que vous pouvez définir la catégorisation de
-      votre projet. Vous pouvez définir au plus trois valeurs pour
-      chacun des sept critères de catégorisation utilisé
+      <para>C'est ici que vous pouvez dÃ©finir la catÃ©gorisation de
+      votre projet. Vous pouvez dÃ©finir au plus trois valeurs pour
+      chacun des sept critÃ¨res de catÃ©gorisation utilisÃ©
       dans l'arbre des projets. Si vous ne trouvez pas de valeur
-      correspondant à votre projet, n'hésitez pas à contacter l'équipe
+      correspondant Ã  votre projet, n'hÃ©sitez pas Ã  contacter l'Ã©quipe
       CodeX.</para>
     </section>
 
@@ -175,60 +175,60 @@ john.smith@xerox.com</programlisting>
 	  <listitem>
 	    <para><emphasis role="bold">Patron de projet</emphasis>:
 	      Si vous utilisez ce type de projet, des nouveaux projets
-	      peuvent réutiliser la configuration des services de ce 
-	      projet. En enrégistrant un nouveau projet
+	      peuvent rÃ©utiliser la configuration des services de ce 
+	      projet. En enrÃ©gistrant un nouveau projet
 	      (voir <xref linkend="ProjectRegistration" />) votre patron
-	      de projet est listé comme patron disponible. Quand vous
+	      de projet est listÃ© comme patron disponible. Quand vous
 	      choisissez votre projet comme patron le nouveau projet
-	      utilisera exactement la même configuration. Cela enclut
+	      utilisera exactement la mÃªme configuration. Cela enclut
 	      que
 	      
 	      <itemizedlist spacing="compact">
 	        <listitem>
-	          <para>le nouveau projet est classé selon les
-		  mêmes critères que le projet de patron 
+	          <para>le nouveau projet est classÃ© selon les
+		  mÃªmes critÃ¨res que le projet de patron 
 		  (voir <xref linkend="SoftwareMap" />).</para>
 	        </listitem>
 	        <listitem>
-	          <para>les mêmes services sont activés (voir 
+	          <para>les mÃªmes services sont activÃ©s (voir 
 		  <xref linkend="ServiceConfiguration" />). Les services non 
-          disponibles ne seront pas présents. Les services désactivés seront 
-          également désactivés par défaut.
+          disponibles ne seront pas prÃ©sents. Les services dÃ©sactivÃ©s seront 
+          Ã©galement dÃ©sactivÃ©s par dÃ©faut.
             </para>
 	        </listitem>
 	        <listitem>
-	          <para>les mêmes references sont définies (voir 
+	          <para>les mÃªmes references sont dÃ©finies (voir 
 		  <xref linkend="ReferenceConfiguration" />).</para>
 	        </listitem>
 		<listitem>
-	          <para>les mêmes groupes d'utilisateurs existent
+	          <para>les mÃªmes groupes d'utilisateurs existent
 		  (voir <xref linkend="UserGroups" />).</para>
 		</listitem>
 		<listitem>
 	          <para>tous les outils de suivi ayant l'option "instantier dans les nouveaux projets"
-		  sont copiés avec les champs associés, leurs valeurs, leurs dépendances ainsi 
+		  sont copiÃ©s avec les champs associÃ©s, leurs valeurs, leurs dÃ©pendances ainsi 
 		  que les rapports de recherche et les permissions (voir <xref linkend="TrackerAdministration" />).</para>
 		</listitem>
         <listitem>
-	          <para>les mêmes forums seront créés. Par contre, les messages 
-              ne sont pas copiés.</para>
+	          <para>les mÃªmes forums seront crÃ©Ã©s. Par contre, les messages 
+              ne sont pas copiÃ©s.</para>
 		</listitem>
         <listitem>
 	          <para>les documents, ainsi que l'architecture du gestionnaire de document 
-               seront présents.</para>
+               seront prÃ©sents.</para>
 		</listitem>
         <listitem>
-            <para>les paramètres d'administration CVS seront copiés (préambule, suivi CVS, Mode CVS Watch),
-            mais les adresses emails et les permissions CVS ne sont pas copiés.
+            <para>les paramÃ¨tres d'administration CVS seront copiÃ©s (prÃ©ambule, suivi CVS, Mode CVS Watch),
+            mais les adresses emails et les permissions CVS ne sont pas copiÃ©s.
             </para>
         </listitem>
         <listitem>
-            <para>les paramètres d'administration SVN seront copiés (préambule, suivi SVN),
-            mais les adresses emails et les permissions SVN ne sont pas copiés.
+            <para>les paramÃ¨tres d'administration SVN seront copiÃ©s (prÃ©ambule, suivi SVN),
+            mais les adresses emails et les permissions SVN ne sont pas copiÃ©s.
             </para>
         </listitem>
         <listitem>
-            <para>les paquets et leurs permissions seront copiés.
+            <para>les paquets et leurs permissions seront copiÃ©s.
             </para>
         </listitem>
 	     
@@ -236,10 +236,10 @@ john.smith@xerox.com</programlisting>
 	    
 	      Remarquez que les membres du projet de patron ne seront pas 
 	      automatiquement membres du nouveau projet.
-	      Un projet de patron n'apparaît plus dans l'arbre des projets
+	      Un projet de patron n'apparaÃ®t plus dans l'arbre des projets
 	      et est exclu des statistiques de projets du tableau de bord 
 	      de CodeX (see <xref linkend="TheCodeXDashboard" />) comme 
-	      les projets récents, les projets les plus actifs, etc.
+	      les projets rÃ©cents, les projets les plus actifs, etc.
 	    </para>
 	  </listitem>
 
@@ -247,7 +247,7 @@ john.smith@xerox.com</programlisting>
 	    <para><emphasis role="bold">Projet de test</emphasis>:
 	      Si vous voulez juste essayer tout ce qui est faisable avec
 	      un projet CodeX vous pouvez utiliser le type projet de test.
-	      En utilisant ce type de projet votre projet n'apparaît plus 
+	      En utilisant ce type de projet votre projet n'apparaÃ®t plus 
 	      dans l'arbre des projets ni dans les statistiques de projets 
 	      du tableau de bord de CodeX.
 	    </para>
@@ -262,14 +262,14 @@ john.smith@xerox.com</programlisting>
 
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
-      <para>L'entrée &#34;Configuration des services&#34; dans le menu
-      d'administration donne accès à la liste de tous les services
-      activés pour le projet courant. Les services sont les items qui
-      apparaissent dans la &#34;Barre de Services&#34;, à savoir le
-      menu qui apparaît en haut de chaque page du projet: outils de
+      <para>L'entrÃ©e &#34;Configuration des services&#34; dans le menu
+      d'administration donne accÃ¨s Ã  la liste de tous les services
+      activÃ©s pour le projet courant. Les services sont les items qui
+      apparaissent dans la &#34;Barre de Services&#34;, Ã  savoir le
+      menu qui apparaÃ®t en haut de chaque page du projet: outils de
       suivi, documentation, CVS, Page d'accueil, etc... La page de
-      configuration des services permet à l'administrateur du projet
-      de modifier, activer, désactiver ou même créer des services dans
+      configuration des services permet Ã  l'administrateur du projet
+      de modifier, activer, dÃ©sactiver ou mÃªme crÃ©er des services dans
       la barre de services.
       </para>
 
@@ -277,62 +277,62 @@ john.smith@xerox.com</programlisting>
  
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Les services système</emphasis> :
-          ces services sont définis par l'administrateur du site et
-          sont communs à tous les projets. Seuls leur état
-          (actif/inactif) et leur position à l'écran peuvent être
-          modifiés (voir ci-dessous).
+          <para><emphasis role="bold">Les services systÃ¨me</emphasis> :
+          ces services sont dÃ©finis par l'administrateur du site et
+          sont communs Ã  tous les projets. Seuls leur Ã©tat
+          (actif/inactif) et leur position Ã  l'Ã©cran peuvent Ãªtre
+          modifiÃ©s (voir ci-dessous).
           </para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Les services projet</emphasis> :
-          ces services peuvent être modifiés à loisir, voire même
-          supprimés par l'administrateur du projet.
+          ces services peuvent Ãªtre modifiÃ©s Ã  loisir, voire mÃªme
+          supprimÃ©s par l'administrateur du projet.
           </para>
         </listitem>
       </itemizedlist>
 
       <para>La seule exception concerne le service <emphasis
-      role="bold">Site Web</emphasis>; il s'agit d'un service système
-      mais il peut être personnalisé pour pointer sur l'URL de votre
-      choix. Chaque projet hébergé sur CodeX possède son propre
-      serveur Web virtuel sur le site CodeX. Par défaut le service
+      role="bold">Site Web</emphasis>; il s'agit d'un service systÃ¨me
+      mais il peut Ãªtre personnalisÃ© pour pointer sur l'URL de votre
+      choix. Chaque projet hÃ©bergÃ© sur CodeX possÃ¨de son propre
+      serveur Web virtuel sur le site CodeX. Par dÃ©faut le service
       &#34;Site Web&#34; de la barre de services pointe sur ce site
       (voir le <xref linkend="ProjectWebSite" /> pour plus de
-      détails). Vous pouvez remplacer l'URL par défaut avec un
-      pointeur vers votre propre site Web. Attention à ne pas
+      dÃ©tails). Vous pouvez remplacer l'URL par dÃ©faut avec un
+      pointeur vers votre propre site Web. Attention Ã  ne pas
       confondre le site web de votre projet avec la page de
       sommaire. Le site web de votre projet pointe sur un ensemble de
-      pages HTML dont vous êtes l'auteur alors que la page de sommaire
-      du projet est uniquement un point d'entrée vers les différents
-      services et délivrables de votre projet.</para>
+      pages HTML dont vous Ãªtes l'auteur alors que la page de sommaire
+      du projet est uniquement un point d'entrÃ©e vers les diffÃ©rents
+      services et dÃ©livrables de votre projet.</para>
 
 
     <section id="ServiceCreation">
-      <title>Créer ou modifier un service</title> <para>Lors de la
-      création ou de la modification d'un service, vous devez fournir
+      <title>CrÃ©er ou modifier un service</title> <para>Lors de la
+      crÃ©ation ou de la modification d'un service, vous devez fournir
       les informations suivantes:</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Label du service</emphasis> : Il
-          s'agit du nom du service tel qu'il apparaîtra dans la barre
-          de services. Il doit être aussi concis que possible.</para>
+          s'agit du nom du service tel qu'il apparaÃ®tra dans la barre
+          de services. Il doit Ãªtre aussi concis que possible.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Lien vers le service</emphasis> :
-          il s'agit de l'URL qui mène au service en question, c'est à
-          dire l'URL vers lequel l'utilisateur est redirigé lorsqu'il
-          sélectionne ce service dans la barre de service. Si l'URL
-          est absolu (c'est à dire qu'il commence par
-          &#34;http://&#34;), la page d'accès à ce service s'ouvrira
-          dans une nouvelle fenêtre de votre navigateur. Dans le cas
-          contraire la page sera chargée dans la fenêtre courante.
+          il s'agit de l'URL qui mÃ¨ne au service en question, c'est Ã 
+          dire l'URL vers lequel l'utilisateur est redirigÃ© lorsqu'il
+          sÃ©lectionne ce service dans la barre de service. Si l'URL
+          est absolu (c'est Ã  dire qu'il commence par
+          &#34;http://&#34;), la page d'accÃ¨s Ã  ce service s'ouvrira
+          dans une nouvelle fenÃªtre de votre navigateur. Dans le cas
+          contraire la page sera chargÃ©e dans la fenÃªtre courante.
           </para>
-          <para>Quelques mots-clés particuliers peuvent être utilisés
-          dans l'URL; ils seront automatiquement remplacés par leur
-          valeur avant d'être insérés dans la barre de service:
+          <para>Quelques mots-clÃ©s particuliers peuvent Ãªtre utilisÃ©s
+          dans l'URL; ils seront automatiquement remplacÃ©s par leur
+          valeur avant d'Ãªtre insÃ©rÃ©s dans la barre de service:
           <itemizedlist mark="bullet">
             <listitem>
               <para><emphasis role="bold">$projectname</emphasis> :
@@ -356,7 +356,7 @@ john.smith@xerox.com</programlisting>
             <listitem>
               <para><emphasis
               role="bold">$sys_default_protocol</emphasis> : 'https' si
-              le serveur CodeX fonctionne en mode sécurisé, 'http'
+              le serveur CodeX fonctionne en mode sÃ©curisÃ©, 'http'
               dans le cas contraire.
               </para>
               <para></para>
@@ -368,35 +368,35 @@ john.smith@xerox.com</programlisting>
         <step>
           <para><emphasis role="bold">Description du
           service</emphasis> : Description courte du service. Elle
-          est affichée dans une bulle de texte lorsque le curseur de la
+          est affichÃ©e dans une bulle de texte lorsque le curseur de la
           souris se trouve sur le label du service dans la barre de
           services.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Actif</emphasis> : En cochant
-          cette case, le service est activé c'est à dire qu'il est
-          utilisable et qu'il apparaît dans la barre de
-          services. Décocher la case revient à désactiver le service et
-          à le faire disparaître de la barre de services. Il est à
-          noter que la désactivation d'un service n'affecte en rien
-          les données de ce dernier. En d'autres termes, la
-          réactivation d'un service donne accès à l'ensemble des
-          données telles qu'elles étaient au moment de la
-          désactivation. Voir aussi la &#34;Suppression d'un
+          cette case, le service est activÃ© c'est Ã  dire qu'il est
+          utilisable et qu'il apparaÃ®t dans la barre de
+          services. DÃ©cocher la case revient Ã  dÃ©sactiver le service et
+          Ã  le faire disparaÃ®tre de la barre de services. Il est Ã 
+          noter que la dÃ©sactivation d'un service n'affecte en rien
+          les donnÃ©es de ce dernier. En d'autres termes, la
+          rÃ©activation d'un service donne accÃ¨s Ã  l'ensemble des
+          donnÃ©es telles qu'elles Ã©taient au moment de la
+          dÃ©sactivation. Voir aussi la &#34;Suppression d'un
           service&#34; ci-dessous.
           </para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Rang à l'écran</emphasis> : ce
-          nombre entier arbitraire permet de définir la position de ce
+          <para><emphasis role="bold">Rang Ã  l'Ã©cran</emphasis> : ce
+          nombre entier arbitraire permet de dÃ©finir la position de ce
           service relativement aux autres dans la barre de
           service. Les services ayant la valeur de rang la plus faible
           appraitra en premier dans la barre de service (en partant de
-          la gauche). Il est recommandé d'utiliser des nombres comme
-          10, 20, 30,... pour pouvoir insérer de futurs services sans
-          avoir à renuméroter tous les services existants.</para>
+          la gauche). Il est recommandÃ© d'utiliser des nombres comme
+          10, 20, 30,... pour pouvoir insÃ©rer de futurs services sans
+          avoir Ã  renumÃ©roter tous les services existants.</para>
         </step>
       </procedure>
     </section>
@@ -404,13 +404,13 @@ john.smith@xerox.com</programlisting>
     <section id="ServiceDeletion">
       <title>Suppression d'un service</title>
 
-      <para>les services peuvent aussi être détruits si l'icône
-      corbeille figure à proximité du nom du service. Un clic sur
-      cette icône supprime définitivement le service de la liste. Les
-      données du service correspondant sont cependant préservées.
+      <para>les services peuvent aussi Ãªtre dÃ©truits si l'icÃ´ne
+      corbeille figure Ã  proximitÃ© du nom du service. Un clic sur
+      cette icÃ´ne supprime dÃ©finitivement le service de la liste. Les
+      donnÃ©es du service correspondant sont cependant prÃ©servÃ©es.
       </para>
-      <para>Les services système ne peuvent être détruits. Vous pouvez
-      cependant les désactiver pour qu'ils n'apparaissent pas dans la
+      <para>Les services systÃ¨me ne peuvent Ãªtre dÃ©truits. Vous pouvez
+      cependant les dÃ©sactiver pour qu'ils n'apparaissent pas dans la
       barre de services.
       </para>
     </section>
@@ -421,12 +421,12 @@ john.smith@xerox.com</programlisting>
 
       <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
 
-      <para>La page d'administration du projet donne aussi un accès
-      direct à l'ensemble des modules d'administration de chaque
-      service activés par le projet. Cet accès est fourni sous la
-      forme d'une liste de liens hypertextes situés en bas à gauche de
+      <para>La page d'administration du projet donne aussi un accÃ¨s
+      direct Ã  l'ensemble des modules d'administration de chaque
+      service activÃ©s par le projet. Cet accÃ¨s est fourni sous la
+      forme d'une liste de liens hypertextes situÃ©s en bas Ã  gauche de
       la page d'administration. Seuls les membres du projet ayant les
-      droits d'administration sur les différents services ont accès à
+      droits d'administration sur les diffÃ©rents services ont accÃ¨s Ã 
       ces modules (voir <xref linkend="UserPermissions" />).</para>
 
     </section>
@@ -434,40 +434,40 @@ john.smith@xerox.com</programlisting>
 
 
     <section id="ReferenceConfiguration">
-      <title>Configuration des patrons de référence</title>
+      <title>Configuration des patrons de rÃ©fÃ©rence</title>
 
       <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
 
-      <para>La page de configuration des patrons de référence liste l'ensemble des patrons de référence disponibles dans le projet. Elle permet aussi aux administrateurs du projet de modifier, activer, désactiver, ou créer des patrons de référence.
+      <para>La page de configuration des patrons de rÃ©fÃ©rence liste l'ensemble des patrons de rÃ©fÃ©rence disponibles dans le projet. Elle permet aussi aux administrateurs du projet de modifier, activer, dÃ©sactiver, ou crÃ©er des patrons de rÃ©fÃ©rence.
       </para>
 
     <section id="ReferenceOverview">
-      <title>Présentation des références</title>
+      <title>PrÃ©sentation des rÃ©fÃ©rences</title>
 
-      <para>Les patrons de référence sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
+      <para>Les patrons de rÃ©fÃ©rence sont un outils puissant permettant de crÃ©er des rÃ©fÃ©rences croisÃ©es entre objets de CodeX. En fonction d'un patron de texte, CodeX peut crÃ©er automatiquement un hyperlien vers l'objet souhaitÃ©.
       </para>
-      <para>Lorsque vous tapez un commentaire, ou un message de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
+      <para>Lorsque vous tapez un commentaire, ou un message de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprÃ©tÃ© comme une rÃ©fÃ©rence Ã  l'objet XXX numÃ©ro NNN. Ainsi, 'art #123' sera dÃ©tectÃ© comme une rÃ©fÃ©rence Ã  l'artefact numÃ©ro 123, et CodeX crÃ©era automatiquement un hyperlien qui pointe sur la page dÃ©crivant prÃ©cisÃ©ment cet artefact.
       </para>
-      <para>Vous pouvez également référencer un objet appartenant à un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour référencer l'objet XXX numéro NNN appartenant au projet numéro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une référence à la page wiki 'Accueil' du projet 'monproj'.
+      <para>Vous pouvez Ã©galement rÃ©fÃ©rencer un objet appartenant Ã  un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour rÃ©fÃ©rencer l'objet XXX numÃ©ro NNN appartenant au projet numÃ©ro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une rÃ©fÃ©rence Ã  la page wiki 'Accueil' du projet 'monproj'.
       </para>
-      <para>Certains patrons de référence peuvent nécessiter plusieurs paramètres. Dans ce cas, utilisez le caractère '/' comme séparateur entre les paramètres. Par exemple, 'wiki #Accueil/2' crée une référence vers la page wiki 'Accueil' à la version 2.
+      <para>Certains patrons de rÃ©fÃ©rence peuvent nÃ©cessiter plusieurs paramÃ¨tres. Dans ce cas, utilisez le caractÃ¨re '/' comme sÃ©parateur entre les paramÃ¨tres. Par exemple, 'wiki #Accueil/2' crÃ©e une rÃ©fÃ©rence vers la page wiki 'Accueil' Ã  la version 2.
       </para>
 
-      <para>Il existe deux types de patrons de référence:</para>
+      <para>Il existe deux types de patrons de rÃ©fÃ©rence:</para>
 
  
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Les patrons de référence système</emphasis> :
-ces patrons de référence sont définis par l'administrateur du site et sont communs à l'ensemble des projets. Ils ne peuvent pas être modifiés, excepté leur statut (activé/désactivé).
+          <para><emphasis role="bold">Les patrons de rÃ©fÃ©rence systÃ¨me</emphasis> :
+ces patrons de rÃ©fÃ©rence sont dÃ©finis par l'administrateur du site et sont communs Ã  l'ensemble des projets. Ils ne peuvent pas Ãªtre modifiÃ©s, exceptÃ© leur statut (activÃ©/dÃ©sactivÃ©).
           </para>
-          <para>La plupart des patrons de référence système sont liés à un service spécifique. Ainsi 'art', 'doc', 'file' ou 'wiki' sont liés respectivement aux services outils de suivi, gestionnaire de documents, gestionnaire de fichiers et Wiki. Afin de faciliter l'utilisation de ces patrons de référence, ils sont automatiquement activés ou désactivés lorsque le service correspondant est activé/désactivé. Cependant, il est toujours possible de les activer ou de les désactiver manuellement.
+          <para>La plupart des patrons de rÃ©fÃ©rence systÃ¨me sont liÃ©s Ã  un service spÃ©cifique. Ainsi 'art', 'doc', 'file' ou 'wiki' sont liÃ©s respectivement aux services outils de suivi, gestionnaire de documents, gestionnaire de fichiers et Wiki. Afin de faciliter l'utilisation de ces patrons de rÃ©fÃ©rence, ils sont automatiquement activÃ©s ou dÃ©sactivÃ©s lorsque le service correspondant est activÃ©/dÃ©sactivÃ©. Cependant, il est toujours possible de les activer ou de les dÃ©sactiver manuellement.
           </para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Les patrons de référence projet</emphasis> : 
-          ces patrons de référence peuvent être entièrement personnalisés par les administrateurs du projet.
+          <para><emphasis role="bold">Les patrons de rÃ©fÃ©rence projet</emphasis> : 
+          ces patrons de rÃ©fÃ©rence peuvent Ãªtre entiÃ¨rement personnalisÃ©s par les administrateurs du projet.
           </para>
         </listitem>
       </itemizedlist>
@@ -475,61 +475,61 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
 
     <section id="ReferencePredefined">
-      <title>Patrons de référence prédéfinis</title>
-<para>Voici la liste des patrons de référence prédéfinis :</para>
+      <title>Patrons de rÃ©fÃ©rence prÃ©dÃ©finis</title>
+<para>Voici la liste des patrons de rÃ©fÃ©rence prÃ©dÃ©finis :</para>
       <itemizedlist mark="bullet">
         <listitem><para><emphasis role="bold">art #num ou artifact #num</emphasis> : 
-        référence à l'artefact numéro 'num'. C'est un numéro global au système (l'artefact 'num' est unique, et n'existe que dans un projet). Cette référence crée un lien vers la page de description et de mise à jour de l'artefact. En sus des mots clés 'art' et 'artifact', les artefacts peuvent être référencés à l'aide du nom court de l'outil de suivi. Ainsi, un artefact issu d'un outil de suivi de bugs (anomalies) pourra être référencé par <emphasis role="bold">bug #NNN</emphasis>, une demande de support (support request) par <emphasis role="bold">sr #NNN</emphasis>, une tâche par <emphasis role="bold">task #NNN</emphasis> et un patch avec <emphasis role="bold">patch #NNN</emphasis>. Ainsi, lorque vous créez un outil de suivi personnalisé, il est important de bien choisir son nom court.</para></listitem>
+        rÃ©fÃ©rence Ã  l'artefact numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me (l'artefact 'num' est unique, et n'existe que dans un projet). Cette rÃ©fÃ©rence crÃ©e un lien vers la page de description et de mise Ã  jour de l'artefact. En sus des mots clÃ©s 'art' et 'artifact', les artefacts peuvent Ãªtre rÃ©fÃ©rencÃ©s Ã  l'aide du nom court de l'outil de suivi. Ainsi, un artefact issu d'un outil de suivi de bugs (anomalies) pourra Ãªtre rÃ©fÃ©rencÃ© par <emphasis role="bold">bug #NNN</emphasis>, une demande de support (support request) par <emphasis role="bold">sr #NNN</emphasis>, une tÃ¢che par <emphasis role="bold">task #NNN</emphasis> et un patch avec <emphasis role="bold">patch #NNN</emphasis>. Ainsi, lorque vous crÃ©ez un outil de suivi personnalisÃ©, il est important de bien choisir son nom court.</para></listitem>
         <listitem><para><emphasis role="bold">commit #num ou cvs #num</emphasis> : 
-        référence au commit CVS numéro 'num'. C'est un numéro global au système. Cette référence crée un lien vers la page de description du commit, qui contient le message du commit, la liste des fichiers modifiés, les liens vers les modifications, ...</para></listitem>
+        rÃ©fÃ©rence au commit CVS numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me. Cette rÃ©fÃ©rence crÃ©e un lien vers la page de description du commit, qui contient le message du commit, la liste des fichiers modifiÃ©s, les liens vers les modifications, ...</para></listitem>
         <listitem><para><emphasis role="bold">rev #num ou revision #num ou svn #num</emphasis> : 
-        référence à la révision Subversion numéro 'num'. C'est un numéro propre au projet : si vous souhaitez référencer une révision Subversion d'un autre projet, il vous faudra spécifier le projet dans la référence (par exemple: 'rev #monproj#123'). Cette référence crée un lien vers la page de description de la révision, qui contient le message du commit, la liste des fichiers modifiés, les liens vers les modifications, ...</para></listitem>
+        rÃ©fÃ©rence Ã  la rÃ©vision Subversion numÃ©ro 'num'. C'est un numÃ©ro propre au projet : si vous souhaitez rÃ©fÃ©rencer une rÃ©vision Subversion d'un autre projet, il vous faudra spÃ©cifier le projet dans la rÃ©fÃ©rence (par exemple: 'rev #monproj#123'). Cette rÃ©fÃ©rence crÃ©e un lien vers la page de description de la rÃ©vision, qui contient le message du commit, la liste des fichiers modifiÃ©s, les liens vers les modifications, ...</para></listitem>
         <listitem><para><emphasis role="bold">wiki #pagewiki et wiki #pagewiki/num</emphasis> : 
-        référence à la page Wiki nommée 'pagewiki'. Le second format permet de spécifier la version de la page Wiki. Les pages Wiki sont propres à un projet, donc si vous devez référencer une page appartenant à un autre projet, il faut spécifier le projet dans la référence. </para></listitem>
+        rÃ©fÃ©rence Ã  la page Wiki nommÃ©e 'pagewiki'. Le second format permet de spÃ©cifier la version de la page Wiki. Les pages Wiki sont propres Ã  un projet, donc si vous devez rÃ©fÃ©rencer une page appartenant Ã  un autre projet, il faut spÃ©cifier le projet dans la rÃ©fÃ©rence. </para></listitem>
         <listitem><para><emphasis role="bold">doc #num ou document #num</emphasis> : 
-        référence au document numéro 'num'. C'est un numéro global au système. Les numéros de documents sont visibles dans la page principale du service 'Documentation' : l'identifiant est visible lorsqu'on place la souris sur le titre. La référence pointe sur le document lui-même.</para></listitem>
+        rÃ©fÃ©rence au document numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me. Les numÃ©ros de documents sont visibles dans la page principale du service 'Documentation' : l'identifiant est visible lorsqu'on place la souris sur le titre. La rÃ©fÃ©rence pointe sur le document lui-mÃªme.</para></listitem>
         <listitem><para><emphasis role="bold">news #num</emphasis> : 
-        référence vers l'annonce numéro 'num'. C'est un numéro global au système. Cette référence crée un lien vers la page d'annonce, où il est possible d'ajouter des commentaires.</para></listitem>
+        rÃ©fÃ©rence vers l'annonce numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me. Cette rÃ©fÃ©rence crÃ©e un lien vers la page d'annonce, oÃ¹ il est possible d'ajouter des commentaires.</para></listitem>
         <listitem><para><emphasis role="bold">forum #num et msg #num</emphasis> : 
-        référence vers le forum numéro 'num' ou vers le message de forum numéro 'num'. Ce sont des numéros globaux au système. La première référence crée un lien vers la page d'accueil du forum, tandis que la deuxième crée un lien vers un message précis.</para></listitem>
+        rÃ©fÃ©rence vers le forum numÃ©ro 'num' ou vers le message de forum numÃ©ro 'num'. Ce sont des numÃ©ros globaux au systÃ¨me. La premiÃ¨re rÃ©fÃ©rence crÃ©e un lien vers la page d'accueil du forum, tandis que la deuxiÃ¨me crÃ©e un lien vers un message prÃ©cis.</para></listitem>
         <listitem><para><emphasis role="bold">file #num</emphasis> : 
-        référence vers le fichier numéro 'num'. C'est un numéro global au système. Ce type de référence permet de télécharger directement un fichier faisant partie d'une version. Les numéros de fichiers sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom du fichier. La référence pointe sur le fichier lui-même, et le navigateur peut alors vous demander à quel endroit vous voulez le sauvegarder. Il se peut aussi que vous deviez accepter la licence du projet avant de pouvoir télécharger le fichier.</para></listitem>
+        rÃ©fÃ©rence vers le fichier numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me. Ce type de rÃ©fÃ©rence permet de tÃ©lÃ©charger directement un fichier faisant partie d'une version. Les numÃ©ros de fichiers sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom du fichier. La rÃ©fÃ©rence pointe sur le fichier lui-mÃªme, et le navigateur peut alors vous demander Ã  quel endroit vous voulez le sauvegarder. Il se peut aussi que vous deviez accepter la licence du projet avant de pouvoir tÃ©lÃ©charger le fichier.</para></listitem>
         <listitem><para><emphasis role="bold">release #num</emphasis> : 
-        référence vers la version (release) numéro 'num'. C'est un numéro global au système. Les numéros de version sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom de la version. La référence pointe sur la page d'accueil du gestionnaire de fichier, où la version référencée est mise en valeur dans la liste.</para></listitem>
+        rÃ©fÃ©rence vers la version (release) numÃ©ro 'num'. C'est un numÃ©ro global au systÃ¨me. Les numÃ©ros de version sont visibles dans la page principale du service 'Fichiers' : l'identifiant est visible lorsqu'on place la souris sur le nom de la version. La rÃ©fÃ©rence pointe sur la page d'accueil du gestionnaire de fichier, oÃ¹ la version rÃ©fÃ©rencÃ©e est mise en valeur dans la liste.</para></listitem>
       </itemizedlist>
     </section>
 
     <section id="ReferenceUsage">
-      <title>Utilisation des références</title>
+      <title>Utilisation des rÃ©fÃ©rences</title>
 
-      <para>Lors des phases de développement ou de maintenance d'un
+      <para>Lors des phases de dÃ©veloppement ou de maintenance d'un
       projet, il est essentiel de garder la trace des changements
-      effectués dans le code source. C'est ce que font les systèmes de
-      gestion de configuration comme CVS ou Subversion. En complément de ce suivi,
+      effectuÃ©s dans le code source. C'est ce que font les systÃ¨mes de
+      gestion de configuration comme CVS ou Subversion. En complÃ©ment de ce suivi,
       il est tout aussi critique de pouvoir relier ces changements de
-      code aux artefacts (une tâche, une anomalie ou une demande
-      d'assistance) qui ont amené les développeurs à modifier le code
-      ou la documentation. Et inversement, à la lecture d'un artefact
-      il est très utile de voir quels changements il a engendré dans
+      code aux artefacts (une tÃ¢che, une anomalie ou une demande
+      d'assistance) qui ont amenÃ© les dÃ©veloppeurs Ã  modifier le code
+      ou la documentation. Et inversement, Ã  la lecture d'un artefact
+      il est trÃ¨s utile de voir quels changements il a engendrÃ© dans
       le code source.</para>
 
-      <para>L'intégration de CVS et de Subversion avec CodeX fournit précisément ce
-      mécanisme de références croisées. Ceci est rendu possible par
-      l'utilisation des références à utiliser dans les
+      <para>L'intÃ©gration de CVS et de Subversion avec CodeX fournit prÃ©cisÃ©ment ce
+      mÃ©canisme de rÃ©fÃ©rences croisÃ©es. Ceci est rendu possible par
+      l'utilisation des rÃ©fÃ©rences Ã  utiliser dans les
       commentaires des artefacts ou dans les messages de commits
-      que CodeX reconnaît automatiquement.</para>
+      que CodeX reconnaÃ®t automatiquement.</para>
 
 
-      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source comme ClearCase.
+      <para>Le systÃ¨me n'est pas limitÃ© aux rÃ©fÃ©rences Ã  des commits ou a des artefact, puisqu'il est Ã©galement possible de rÃ©fÃ©rencer un message postÃ© dans un forum, une documentation, ou un fichier. Le systÃ¨me est suffisament flexible pour permettre le rÃ©fÃ©rencement d'objets qui ne sont pas dans CodeX. Il vous suffit de crÃ©er vos propres patrons de rÃ©fÃ©rence pour relier vos messages Ã  un gestionnaire de document externe comme Docushare, ou Ã  un outil de gestion de code source comme ClearCase.
       </para>
 
-   <para><tip><title>Coup de pouce: référencez les artefacts et les
+   <para><tip><title>Coup de pouce: rÃ©fÃ©rencez les artefacts et les
    commits</title><para>C'est une excellente pratique que de
-   toujours référencer les tâches, anomalies, demande d'assistance
-   appropriées dans le message de commit CVS ou Subversion. De la même façon,
-   lorsque l'artefact correspondant est fermé, assurez-vous de
-   mentionner le commit qui résout le problème dans un
-   commentaire. Vous constaterez que cette pratique est extrêmement
+   toujours rÃ©fÃ©rencer les tÃ¢ches, anomalies, demande d'assistance
+   appropriÃ©es dans le message de commit CVS ou Subversion. De la mÃªme faÃ§on,
+   lorsque l'artefact correspondant est fermÃ©, assurez-vous de
+   mentionner le commit qui rÃ©sout le problÃ¨me dans un
+   commentaire. Vous constaterez que cette pratique est extrÃªmement
    efficace pour suivre l'historique des changements et pourquoi un
    changement a eu lieu.</para></tip></para>
 
@@ -538,29 +538,29 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
 
     <section id="ReferenceCreation">
-      <title>Création ou modification d'un patron de référence</title>
-      <para>Pour créer ou modifier un patron de référence, il faut remplir les champs suivants :</para>
+      <title>CrÃ©ation ou modification d'un patron de rÃ©fÃ©rence</title>
+      <para>Pour crÃ©er ou modifier un patron de rÃ©fÃ©rence, il faut remplir les champs suivants :</para>
      <procedure>
         <step>
-          <para><emphasis role="bold">Mot-clé</emphasis> :
-          C'est le mot-clé qui va déclencher la création d'une référence lorsqu'il est détecté.
-          Il est préférable de le choisir court et explicite pour favoriser la lecture des références.
+          <para><emphasis role="bold">Mot-clÃ©</emphasis> :
+          C'est le mot-clÃ© qui va dÃ©clencher la crÃ©ation d'une rÃ©fÃ©rence lorsqu'il est dÃ©tectÃ©.
+          Il est prÃ©fÃ©rable de le choisir court et explicite pour favoriser la lecture des rÃ©fÃ©rences.
         </para>
         </step>
 
         <step>
           <para><emphasis role="bold">Description</emphasis> :
-          Courte description du patron de référence. Elle est affichée lorsqu'on place la souris sur une référence extraite.</para>
+          Courte description du patron de rÃ©fÃ©rence. Elle est affichÃ©e lorsqu'on place la souris sur une rÃ©fÃ©rence extraite.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Lien</emphasis> :
-          C'est l'URL vers lequel pointe la référence. L'utilisateur sera automatiquement
-          redirigé vers cette adresse s'il clique sur la référence.
-          L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des patrons de référence qui pointent vers des pages externes. 
-          La nouvelle page sera chargée dans le fenêtre courante.
+          C'est l'URL vers lequel pointe la rÃ©fÃ©rence. L'utilisateur sera automatiquement
+          redirigÃ© vers cette adresse s'il clique sur la rÃ©fÃ©rence.
+          L'URL ne pointe pas nÃ©cessairement vers le serveur CodeX: on peut crÃ©er des patrons de rÃ©fÃ©rence qui pointent vers des pages externes. 
+          La nouvelle page sera chargÃ©e dans le fenÃªtre courante.
           </para>
-          <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence:
+          <para>Certaines chaÃ®nes de caractÃ¨res seront interprÃ©tÃ©es lors de la crÃ©ation de la rÃ©fÃ©rence:
           </para>
           <itemizedlist mark="bullet">
             <listitem>
@@ -571,31 +571,31 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
             <listitem>
               <para><emphasis role="bold">$group_id</emphasis> : 
-              numéro du projet.
+              numÃ©ro du projet.
               </para>
             </listitem>
 
             <listitem>
               <para><emphasis role="bold">$0</emphasis> : 
-              le mot-clé extrait par ce patron de référence.
+              le mot-clÃ© extrait par ce patron de rÃ©fÃ©rence.
               </para>
             </listitem>
 
             <listitem>
               <para><emphasis role="bold">$1</emphasis> : 
-              le premier paramètre de la référence.
+              le premier paramÃ¨tre de la rÃ©fÃ©rence.
               </para>
             </listitem>
 
             <listitem>
               <para><emphasis role="bold">$2</emphasis> : 
-              le deuxième paramètre de la référence.
+              le deuxiÃ¨me paramÃ¨tre de la rÃ©fÃ©rence.
               </para>
             </listitem>
 
             <listitem>
               <para><emphasis role="bold">$3...$9</emphasis> : 
-              du troisième au neuvième paramètre de la référence.
+              du troisiÃ¨me au neuviÃ¨me paramÃ¨tre de la rÃ©fÃ©rence.
               </para>
             </listitem>
           </itemizedlist>
@@ -607,18 +607,18 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
           <listitem><para><emphasis role="bold">artifact #25</emphasis> : '$0' vaut 'artifact', '$1' vaut '25'</para></listitem>
           <listitem><para><emphasis role="bold">wiki #codex:Accueil/1</emphasis> : '$0' vaut 'wiki', '$1' vaut 'Accueil', '$2' vaut '1', '$projname' vaut 'codex'</para></listitem>
           <listitem><para><emphasis role="bold">myref #123:1/23/456</emphasis> : '$0' vaut 'myref', '$1' vaut '1', '$2' vaut '23', '$3' vaut '456' et '$group_id' vaut '123'</para></listitem>
-          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez défini le patron de référence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la référence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
-          <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez défini le patron de référence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la référence 'ds #123' lancera le téléchargement du document '123' de votre serveur Docushare local.</para></listitem>
+          <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez dÃ©fini le patron de rÃ©fÃ©rence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la rÃ©fÃ©rence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
+          <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez dÃ©fini le patron de rÃ©fÃ©rence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la rÃ©fÃ©rence 'ds #123' lancera le tÃ©lÃ©chargement du document '123' de votre serveur Docushare local.</para></listitem>
           </itemizedlist>
-          <para>Il faut noter que le nombre de paramètres est important: si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans le patron de référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs patrons de référence avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes: 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
+          <para>Il faut noter que le nombre de paramÃ¨tres est important: si le nombre de paramÃ¨tres dans le texte ne correspond pas au nombre de paramÃ¨tres dÃ©finis dans le patron de rÃ©fÃ©rence, la rÃ©fÃ©rence ne sera pas extraite. Ceci permet de crÃ©er plusieurs patrons de rÃ©fÃ©rence avec le mÃªme mot-clÃ©, mais un nombre de paramÃ¨tres diffÃ©rent. Voyez par exemple les rÃ©fÃ©rences suivantes: 'wiki #Accueil' est une rÃ©fÃ©rence Ã  un seul paramÃ¨tre pointant vers la page Wiki 'Accueil', alors que la rÃ©fÃ©rence 'wiki #Accueil/2' est une autre rÃ©fÃ©rence Ã  deux paramÃ¨tres pointant vers la page Wiki 'Accueil' Ã  la version '2'.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Actif</emphasis> : En cochant
-          cette case, le patron de référence est activé, c'est à dire qu'il est
+          cette case, le patron de rÃ©fÃ©rence est activÃ©, c'est Ã  dire qu'il est
           utilisable et sera extrait automatiquement. 
-          Décocher la case revient à désactiver le patron de référence.
-          Voir aussi la &#34;Suppression d'un patron de référence&#34; ci-dessous.
+          DÃ©cocher la case revient Ã  dÃ©sactiver le patron de rÃ©fÃ©rence.
+          Voir aussi la &#34;Suppression d'un patron de rÃ©fÃ©rence&#34; ci-dessous.
           </para>
         </step>
 
@@ -626,14 +626,14 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
     </section>
 
     <section id="ReferenceDeletion">
-      <title>Suppression d'un patron de référence</title>
+      <title>Suppression d'un patron de rÃ©fÃ©rence</title>
 
-      <para>les patrons de référence projet peuvent aussi être détruits. Un clic sur
-      l'icône corbeille figurant à proximité du nom du patron de référence supprime définitivement ce dernier.
-      Un patron de référence détruit devra être recréé pour être à nouveau utilisable.
+      <para>les patrons de rÃ©fÃ©rence projet peuvent aussi Ãªtre dÃ©truits. Un clic sur
+      l'icÃ´ne corbeille figurant Ã  proximitÃ© du nom du patron de rÃ©fÃ©rence supprime dÃ©finitivement ce dernier.
+      Un patron de rÃ©fÃ©rence dÃ©truit devra Ãªtre recrÃ©Ã© pour Ãªtre Ã  nouveau utilisable.
       </para>
-      <para>Les patrons de référence système ne peuvent être détruits. Vous pouvez
-      cependant les désactiver pour que les références ne soient plus extraites.
+      <para>Les patrons de rÃ©fÃ©rence systÃ¨me ne peuvent Ãªtre dÃ©truits. Vous pouvez
+      cependant les dÃ©sactiver pour que les rÃ©fÃ©rences ne soient plus extraites.
       </para>
     </section>
     </section>
@@ -644,8 +644,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
       <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
-      <para>Les administrateurs du projet ont la capacité à définir
-      les permissions des membres du projets. Un membre de l'équipe de
+      <para>Les administrateurs du projet ont la capacitÃ© Ã  dÃ©finir
+      les permissions des membres du projets. Un membre de l'Ã©quipe de
       projet peut par exemple avoir tous les droits d'administration
       sur l'outil de suivi des anomalies et aucun droit concernant le
       gestionnaire de document du projet.</para>
@@ -664,34 +664,34 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       <para>La <xref
       linkend="FigureASampleProjectMembersPermissionTable" /> montre
       un exemple de table de permissions des membres d'un
-      projet. Chaque colonne représente un service ou une capacité de
-      l'utilisateur et chaque ligne représente les droits d'un des
+      projet. Chaque colonne reprÃ©sente un service ou une capacitÃ© de
+      l'utilisateur et chaque ligne reprÃ©sente les droits d'un des
       membres du projet. Passons en revue chacune des colonnes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Admin Projet</emphasis> : Un
-          choix Oui/Non permet de définir si un utilisateur est un
+          choix Oui/Non permet de dÃ©finir si un utilisateur est un
           administrateur du projet ou pas. Un administrateur a
           absolument tous les droits sur tous les services, les
-          délivrables et les membres du projet. Seuls les
-          administrateurs ont accès à la page de définition des
+          dÃ©livrables et les membres du projet. Seuls les
+          administrateurs ont accÃ¨s Ã  la page de dÃ©finition des
           permissions des utilisateurs.</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">&Eacute;criture CVS</emphasis> :
-          actuellement toujours positionné à Oui. Tous les membres du
-          projet ont les droits d'accès en écriture sur le dépôt CVS
+          actuellement toujours positionnÃ© Ã  Oui. Tous les membres du
+          projet ont les droits d'accÃ¨s en Ã©criture sur le dÃ©pÃ´t CVS
           <footnote><para>CVS signifie Concurrent Version
-          System. C'est l'un des systèmes de contrôle de version offert
-          par CodeX. CVS est utilisé par des centaines de milliers de
-          projets à travers le monde. Voir <ulink
+          System. C'est l'un des systÃ¨mes de contrÃ´le de version offert
+          par CodeX. CVS est utilisÃ© par des centaines de milliers de
+          projets Ã  travers le monde. Voir <ulink
           url="http://www.cvshome.org">http://www.cvshome.org</ulink>
           pour plus d'information.</para></footnote> du projet et cela
-          ne peut être modifié depuis l'interface utilisateur de
-          CodeX. Nous verrons cependant comment désactiver l'accès en
-          écriture au dépôt CVS dans le chapitre qui lui est consacré
+          ne peut Ãªtre modifiÃ© depuis l'interface utilisateur de
+          CodeX. Nous verrons cependant comment dÃ©sactiver l'accÃ¨s en
+          Ã©criture au dÃ©pÃ´t CVS dans le chapitre qui lui est consacrÃ©
           (<xref linkend="VersionControlWithCVS" />).</para>
         </listitem>
 
@@ -702,7 +702,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
           <itemizedlist spacing="compact">
             <listitem>
               <para><emphasis role="underline">None</emphasis> :
-              l'utilisateur a les mêmes droits sur cet outil qu'un
+              l'utilisateur a les mÃªmes droits sur cet outil qu'un
               utilisateur externe au projet.</para>
             </listitem>
 
@@ -712,7 +712,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
               administrateurs des outils de suivi (et des autres
               services) ont tous les droits d'administration
               concernant ce service. Par exemple, il leur est possible
-              de définir de nouveaux champs ou de nouvelles valeurs pour
+              de dÃ©finir de nouveaux champs ou de nouvelles valeurs pour
               les champs de cet outil de suivi.</para>
             </listitem>
 
@@ -726,25 +726,25 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
           <itemizedlist spacing="compact">
             <listitem>
               <para><emphasis role="underline">None</emphasis> :
-              l'utilisateur a les mêmes droits sur cet outil qu'un
+              l'utilisateur a les mÃªmes droits sur cet outil qu'un
               utilisateur externe au projet.</para>
             </listitem>
 
             <listitem>
-              <para><emphasis role="underline">Modérateur</emphasis> :
-              (Forums uniquement) : un modérateur a la capacité à gérer
-              la section forum du projet, à savoir créer/détruire des
-              forums, supprimer des messages indésirables dans un
+              <para><emphasis role="underline">ModÃ©rateur</emphasis> :
+              (Forums uniquement) : un modÃ©rateur a la capacitÃ© Ã  gÃ©rer
+              la section forum du projet, Ã  savoir crÃ©er/dÃ©truire des
+              forums, supprimer des messages indÃ©sirables dans un
               forum et changer la configuration d'un forum comme
-              modifier le statut (public/privé) ou changer la
+              modifier le statut (public/privÃ©) ou changer la
               description.</para>
             </listitem>
 
             <listitem>
               <para><emphasis role="underline">&Eacute;diteur</emphasis> :
-              (Gestionnaire de documents uniquement) : Un éditeur peut
+              (Gestionnaire de documents uniquement) : Un Ã©diteur peut
               passer en revue et valider un document avant sa
-              publication. Il peut aussi mettre à jour ou détruire un
+              publication. Il peut aussi mettre Ã  jour ou dÃ©truire un
               document.</para>
             </listitem>
 
@@ -752,13 +752,13 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
               <para><emphasis
               role="underline">Administrateur</emphasis> :
               (Gestionnaire de fichiers uniquement) : un
-              administrateur du gestionnaire de fichiers peut gérer
+              administrateur du gestionnaire de fichiers peut gÃ©rer
               les paquets et les versions de fichiers. Il peut aussi
-              définir les permissions d'accès à ces fichiers pour les
-              différents groupes d'utilisateurs existants. Il ne peut
-              cependant pas définir les groupes d'utilisateurs. Seuls
+              dÃ©finir les permissions d'accÃ¨s Ã  ces fichiers pour les
+              diffÃ©rents groupes d'utilisateurs existants. Il ne peut
+              cependant pas dÃ©finir les groupes d'utilisateurs. Seuls
               les administrateurs du projet ont cette
-              possibilité.</para> <para> </para>
+              possibilitÃ©.</para> <para> </para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -776,8 +776,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       <important>
         <title>Rappel !</title>
 
-        <para>N&#39;oubliez pas de cliquer sur le bouton &#34;Mettre à
-        jour les permissions&#34; en bas de page après avoir effectuer
+        <para>N&#39;oubliez pas de cliquer sur le bouton &#34;Mettre Ã 
+        jour les permissions&#34; en bas de page aprÃ¨s avoir effectuer
         des modifications dans la table des permissions.</para>
       </important>
     </section>
@@ -787,22 +787,22 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
     
     <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
     
-    <para>Un groupe d'utilisateurs, aussi appelé &#34;ugroup&#34;, est
+    <para>Un groupe d'utilisateurs, aussi appelÃ© &#34;ugroup&#34;, est
     tout simplement un regroupement d'utilisateurs CodeX. Les groupes
-    d'utilisateurs sont utilisés dans le but de définir des
-    permissions spécifiques sur certaines données du projet (certains
+    d'utilisateurs sont utilisÃ©s dans le but de dÃ©finir des
+    permissions spÃ©cifiques sur certaines donnÃ©es du projet (certains
     paquets ou versions de fichiers par exemple - voir <xref
     linkend="PackageModification" />). Un groupe d'utilisateurs est
-    toujours attaché à un projet en particulier, mais les utilisateurs
-    d'un groupe ne doivent pas nécessairement être membres de ce
+    toujours attachÃ© Ã  un projet en particulier, mais les utilisateurs
+    d'un groupe ne doivent pas nÃ©cessairement Ãªtre membres de ce
     projet.</para>
     
     <section id="UGroupList">
       <title>Gestion des groupes d'utilisateurs</title>
 
       <para>La fonction d'&#34;Administration des groupes
-      d'utilisateurs&#34; donne accès à la liste de tous les groupes
-      d'utilisateurs définis pour ce projet et permet d'en créer de
+      d'utilisateurs&#34; donne accÃ¨s Ã  la liste de tous les groupes
+      d'utilisateurs dÃ©finis pour ce projet et permet d'en crÃ©er de
       nouveau.</para>
 
       <figure id="FigureUserGroupManagementPage">
@@ -822,43 +822,43 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
      <procedure>
         <step>
           <para><emphasis role="bold">Les groupes d'utilisateurs
-          prédéfinis</emphasis> : Ces groupes sont automatiquement
-          définis pour chaque projet. Il s'agit par exemple de:
+          prÃ©dÃ©finis</emphasis> : Ces groupes sont automatiquement
+          dÃ©finis pour chaque projet. Il s'agit par exemple de:
           <emphasis role="bold">membres_projet, admins_projet,
           utilisateurs_enregistres, personne,
           admins_gestionnaire_fichier</emphasis>, etc... Ces groupes
-          sont dynamiques c'est à dire que CodeX maintient la liste
+          sont dynamiques c'est Ã  dire que CodeX maintient la liste
           des membres de ce groupe pour vous. Ainsi si un nouveau
           membre du projet se voit accorder les droits
-          d'administrateur il sera automatiquement ajouté au groupe
-          'admins_projet' et disposera des mêmes permissions que
-          celles déjà accordées à ce groupe.</para>
+          d'administrateur il sera automatiquement ajoutÃ© au groupe
+          'admins_projet' et disposera des mÃªmes permissions que
+          celles dÃ©jÃ  accordÃ©es Ã  ce groupe.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Les groupes d'utilisateurs
-          personnalisés</emphasis> sont définis par les
-          administrateurs du projet. Ils sont composés d'une liste
-          statique d'utilisateurs qui doivent tous être des
-          utilisateurs enregistrés de CodeX. Cette liste peut être
-          modifiée à tout moment par l'administrateur. Elle n'est pas
-          modifiée automatiquement sauf si un utilisateur est supprimé
+          personnalisÃ©s</emphasis> sont dÃ©finis par les
+          administrateurs du projet. Ils sont composÃ©s d'une liste
+          statique d'utilisateurs qui doivent tous Ãªtre des
+          utilisateurs enregistrÃ©s de CodeX. Cette liste peut Ãªtre
+          modifiÃ©e Ã  tout moment par l'administrateur. Elle n'est pas
+          modifiÃ©e automatiquement sauf si un utilisateur est supprimÃ©
           de la liste des membres du projet ou si son compte CodeX est
-          supprimé.
+          supprimÃ©.
           </para>
         </step>
       </procedure>
     </section>
 
     <section id="UGroupCreation">
-      <title>Créer un groupe d'utilisateurs </title>
+      <title>CrÃ©er un groupe d'utilisateurs </title>
 
-      <para>Lors de la création d'un groupe d'utilisateurs, les
-      informations suivantes doivent être fournies:</para>
+      <para>Lors de la crÃ©ation d'un groupe d'utilisateurs, les
+      informations suivantes doivent Ãªtre fournies:</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Nom</emphasis> : Il s'agit du nom
-          du groupe tel qu'il apparaîtra dans les écrans de définition
+          du groupe tel qu'il apparaÃ®tra dans les Ã©crans de dÃ©finition
           des permissions. Le nom ne peut contenir ni espace, ni
           ponctuation.</para>
         </step>
@@ -866,19 +866,19 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
         <step>
           <para><emphasis role="bold">Description</emphasis> : une
           description courte du groupe d'utilisateurs. Elle est
-          uniquement utilisée dans les écrans d'administration des
+          uniquement utilisÃ©e dans les Ã©crans d'administration des
           groupes d'utilisateurs.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Créer à partir de</emphasis> :
-          c'est un moyen de présélection rapide des membres du groupe:
-          vous pouvez créer un groupe à partir de rien (Groupe vide)
+          <para><emphasis role="bold">CrÃ©er Ã  partir de</emphasis> :
+          c'est un moyen de prÃ©sÃ©lection rapide des membres du groupe:
+          vous pouvez crÃ©er un groupe Ã  partir de rien (Groupe vide)
           ou bien en partant de la liste des membres du projet ou des
           administrateurs du projet. Les membres de ces groupes seront
-          alors automatiquement insérés dans le nouveau groupe. Dans
-          l'étape suivante vous pourrez ajouter ou supprimer des
-          utilisateurs à ce groupe.
+          alors automatiquement insÃ©rÃ©s dans le nouveau groupe. Dans
+          l'Ã©tape suivante vous pourrez ajouter ou supprimer des
+          utilisateurs Ã  ce groupe.
           </para>
         </step>
       </procedure>
@@ -893,61 +893,61 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
         </mediaobject>
       </figure>
 
-      <para>Sur l'écran suivant (voir <xref
+      <para>Sur l'Ã©cran suivant (voir <xref
       linkend="FigureUserGroupEdit" />), l'administrateur du projet
-      peut sélectionner les membres du groupe nouvellement
-      créé.</para>
+      peut sÃ©lectionner les membres du groupe nouvellement
+      crÃ©Ã©.</para>
 
       <para>Deux colonnes sont visibles: celle de gauche contient la
-      liste de tous les utilisateurs enregistrés sur le site et celle
-      de droite présente la liste des utilisateurs déjà admis dans le
-      groupe. Vous devez utiliser les flèches situées entre les deux
-      colonnes pour supprimer ou intégrer de nouveaux utilisateurs
+      liste de tous les utilisateurs enregistrÃ©s sur le site et celle
+      de droite prÃ©sente la liste des utilisateurs dÃ©jÃ  admis dans le
+      groupe. Vous devez utiliser les flÃ¨ches situÃ©es entre les deux
+      colonnes pour supprimer ou intÃ©grer de nouveaux utilisateurs
       dans ce groupe.</para>
 
-      <para>L'interface utilisateur offre aussi plusieurs façons très
-      pratiques de sélectionner certains utilisateurs lorsque la liste
-      des utilisateurs enregistrés est très longue. Vous pouvez, par
+      <para>L'interface utilisateur offre aussi plusieurs faÃ§ons trÃ¨s
+      pratiques de sÃ©lectionner certains utilisateurs lorsque la liste
+      des utilisateurs enregistrÃ©s est trÃ¨s longue. Vous pouvez, par
       exemple, choisir d'afficher uniquement les utilisateurs dont le
       nom commence par une certaine lettre de l'alphabet ou vous
       pouvez aussi filtrer en tapant une partie du nom de
-      l'utilisateur dans la boîte de texte 'Filtre'. Par exemple, si
+      l'utilisateur dans la boÃ®te de texte 'Filtre'. Par exemple, si
       vous tapez 'jean', seuls les utilisateurs dont le nom complet ou
-      le nom d'utilisateur comporte cette chaîne de caractères seront
-      affichés.</para>
+      le nom d'utilisateur comporte cette chaÃ®ne de caractÃ¨res seront
+      affichÃ©s.</para>
 
-      <para>Une fois la sélection des utilisateurs terminée, il ne
-      vous reste plus qu'à cliquer sur le bouton Valider pour créer le
+      <para>Une fois la sÃ©lection des utilisateurs terminÃ©e, il ne
+      vous reste plus qu'Ã  cliquer sur le bouton Valider pour crÃ©er le
       groupe d'utilisateurs.</para>
 
     </section>
 
       <tip>
-        <title>Coup de pouce: combiner les groupes pré-définis avec des utilisateurs supplémentaires ?</title>
+        <title>Coup de pouce: combiner les groupes prÃ©-dÃ©finis avec des utilisateurs supplÃ©mentaires ?</title>
 
         <para>Il se peut que vous souhaitiez accorder certaines
-        permissions à tous les membres du projet plus quelques
-        utilisateurs externes. Dans ce cas, il peut vous paraître
-        tentant de créer un nouveau groupe à partir du groupe
+        permissions Ã  tous les membres du projet plus quelques
+        utilisateurs externes. Dans ce cas, il peut vous paraÃ®tre
+        tentant de crÃ©er un nouveau groupe Ã  partir du groupe
         membres_projet et d'y ajouter les quelques utilisateurs
-        externes manquants. Cette solution est tout à fait acceptable
-        mais elle présente l'inconvénient de ne pas mettre à jour
+        externes manquants. Cette solution est tout Ã  fait acceptable
+        mais elle prÃ©sente l'inconvÃ©nient de ne pas mettre Ã  jour
         automatiquement le groupe lorsque de nouveaux utilisateurs
         quittent ou rejoignent les membres du projet. Dans ce cas vous
-        devrez effectuer les mêmes opérations manuellement pour le
-        groupe défini. Il est donc préférable de créer un groupe qui
+        devrez effectuer les mÃªmes opÃ©rations manuellement pour le
+        groupe dÃ©fini. Il est donc prÃ©fÃ©rable de crÃ©er un groupe qui
         ne contient que les utilisateurs externes et de lui accorder
-        les mêmes permissions qu'au groupe dynamique 'membres_projet'.
+        les mÃªmes permissions qu'au groupe dynamique 'membres_projet'.
         </para>
       </tip>
 
     <section id="UGroupUpdate">
       <title>Modifier un groupe d'utilisateurs</title>
 
-      <para>Pour mettre à jour un groupe d'utilisateurs existant, il
-      suffit de le sélectionner dans la liste des groupes
-      d'utilisateurs. Un écran semblable à l'écran de création
-      apparaît alors qui vous permet de modifier la composition de ce
+      <para>Pour mettre Ã  jour un groupe d'utilisateurs existant, il
+      suffit de le sÃ©lectionner dans la liste des groupes
+      d'utilisateurs. Un Ã©cran semblable Ã  l'Ã©cran de crÃ©ation
+      apparaÃ®t alors qui vous permet de modifier la composition de ce
       groupe d'utilisateurs.</para>
 
     </section>
@@ -956,51 +956,51 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
     <section id="UGroupDeletion">
       <title>Supprimer un groupe d'utilisateurs</title>
 
-      <para>Les groupes d'utilisateurs peuvent aisément être supprimés
-      en cliquant sur l'icône corbeille situé en regard du nom du
+      <para>Les groupes d'utilisateurs peuvent aisÃ©ment Ãªtre supprimÃ©s
+      en cliquant sur l'icÃ´ne corbeille situÃ© en regard du nom du
       groupe sur la page d'administration des groupes (voir <xref
       linkend="FigureUserGroupManagementPage" />). Seuls les groupes
-      d'utilisateurs personnalisés peuvent être supprimés.</para>
+      d'utilisateurs personnalisÃ©s peuvent Ãªtre supprimÃ©s.</para>
 
       <important>
         <title>Avertissement</title>
 
         <para>Veuillez noter que la suppression d'un groupe
-        d'utilisateurs impliqué dans la définition de certaines
+        d'utilisateurs impliquÃ© dans la dÃ©finition de certaines
         permissions est une action dangereuse. Par exemple, si ce
-        groupe sert à limiter l'accès à un paquet logiciel, la
-        suppression du groupe entraînera la suppression du contrôle
-        d'accès et son retour au comportement par défaut, c'est à dire
-        un accès à tous les utilisateurs.
+        groupe sert Ã  limiter l'accÃ¨s Ã  un paquet logiciel, la
+        suppression du groupe entraÃ®nera la suppression du contrÃ´le
+        d'accÃ¨s et son retour au comportement par dÃ©faut, c'est Ã  dire
+        un accÃ¨s Ã  tous les utilisateurs.
       </para>
       </important>
     </section>
 
 
     <section>
-      <title>Informations complémentaires sur les groupes d'utilisateurs</title>
+      <title>Informations complÃ©mentaires sur les groupes d'utilisateurs</title>
 
-      <para>Il est possible de connaître l'ensemble des groupes auquel
-      appartient un membre du projet en accédant à la page de
-      définition des permissions des membres(<xref
+      <para>Il est possible de connaÃ®tre l'ensemble des groupes auquel
+      appartient un membre du projet en accÃ©dant Ã  la page de
+      dÃ©finition des permissions des membres(<xref
       linkend="UserPermissions" />). Veuillez noter cependant que
-      seuls sont affichés les groupes définis pour le projet
-      courant. L'utilisateur peut effectivement appartenir à d'autres
+      seuls sont affichÃ©s les groupes dÃ©finis pour le projet
+      courant. L'utilisateur peut effectivement appartenir Ã  d'autres
       groupes d'utilisateurs dans d'autre projets.
       </para>
 
       <para>En bas de la page de modification d'un groupe
       d'utilisateurs (<xref linkend="FigureUserGroupEdit" />) figure
       aussi la liste de toutes les permissions dans lesquelles ce
-      groupe est impliqué au niveau des différents services (par
-      exemple l'accès aux paquets et versions des logiciels).</para>
+      groupe est impliquÃ© au niveau des diffÃ©rents services (par
+      exemple l'accÃ¨s aux paquets et versions des logiciels).</para>
 
       <para>Lorsqu'un utilisateur quitte les membres du projet, il est
-      automatiquement supprimé de tous les groupes d'utilisateurs pour
-      des raisons de sécurité.</para>
+      automatiquement supprimÃ© de tous les groupes d'utilisateurs pour
+      des raisons de sÃ©curitÃ©.</para>
 
-      <para>De la même façon lorsqu'un compte utilisateur est supprimé
-      par les administrateurs du site, il est automatiquement supprimé
+      <para>De la mÃªme faÃ§on lorsqu'un compte utilisateur est supprimÃ©
+      par les administrateurs du site, il est automatiquement supprimÃ©
       de tous les groupes dont il est membre quel que soit le
       projet.</para>
     </section>
@@ -1009,76 +1009,76 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
 
     <section id="ProjectDataExport">
-      <title>Exportation des données du projet</title>
+      <title>Exportation des donnÃ©es du projet</title>
 
       <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
-      <para>CodeX est particulièrement attractif pour de nombreuses
-      équipes de projet car il offre une série d'outils complets pour
-      le développement et la gestion de projet. Un projet peut-être
-      géré quasiment intégralement depuis CodeX. Cependant il se peut
-      que l'équipe ressente le besoin d'effectuer certaines opérations
-      sur les données du projet en dehors de CodeX comme par exemple
-      rédiger un rapport sur l'état d'avancement du projet, ce qui se
+      <para>CodeX est particuliÃ¨rement attractif pour de nombreuses
+      Ã©quipes de projet car il offre une sÃ©rie d'outils complets pour
+      le dÃ©veloppement et la gestion de projet. Un projet peut-Ãªtre
+      gÃ©rÃ© quasiment intÃ©gralement depuis CodeX. Cependant il se peut
+      que l'Ã©quipe ressente le besoin d'effectuer certaines opÃ©rations
+      sur les donnÃ©es du projet en dehors de CodeX comme par exemple
+      rÃ©diger un rapport sur l'Ã©tat d'avancement du projet, ce qui se
       passe bien ou moins bien, actualiser la date de livraison
-      prévue, dériver des données statistiques, etc...</para>
+      prÃ©vue, dÃ©river des donnÃ©es statistiques, etc...</para>
 
       <para>Il n'est pas du ressort de CodeX de fournir ces outils de
-      reporting sophistiqués. Il existe de nombreux outils spécialisés
-      sur le marché capable de générer des rapports d'activité et
-      chaque équipe possède son outil préféré. Dans le but de
-      satisfaire la grande diversité de ces besoins, CodeX offre un
-      mécanisme très efficace qui permet d'exporter les données hors
+      reporting sophistiquÃ©s. Il existe de nombreux outils spÃ©cialisÃ©s
+      sur le marchÃ© capable de gÃ©nÃ©rer des rapports d'activitÃ© et
+      chaque Ã©quipe possÃ¨de son outil prÃ©fÃ©rÃ©. Dans le but de
+      satisfaire la grande diversitÃ© de ces besoins, CodeX offre un
+      mÃ©canisme trÃ¨s efficace qui permet d'exporter les donnÃ©es hors
       du projet pour les utiliser dans des outils comme MS Access, MS
       Excel, Crystal Report, Open Office ou tout autre outil
-      adapté.</para>
+      adaptÃ©.</para>
 
-      <para>CodeX offre 2 mécanismes d'exportation des données :</para>
+      <para>CodeX offre 2 mÃ©canismes d'exportation des donnÃ©es :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Exportation au format
-          texte</emphasis> : ce mécanisme permet d'exporter les données
+          texte</emphasis> : ce mÃ©canisme permet d'exporter les donnÃ©es
           au format CSV (Comma Separated Value), un format reconnu par
           quasiment tous les outils de bureautique ou les bases de
-          données du marché. Si vous souhaitez développer votre propre
+          donnÃ©es du marchÃ©. Si vous souhaitez dÃ©velopper votre propre
           application de reporting, la plupart des langages de
           programmation propose une librairie standard capable de
           manipuler le format CSV.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Accès direct à la base de
-          données</emphasis> : à proprement parlé il ne s'agit pas
-          d'exportation de données. Ce mécanisme permet en fait de se
-          connecter directement à la base de données de vote projet via
+          <para><emphasis role="bold">AccÃ¨s direct Ã  la base de
+          donnÃ©es</emphasis> : Ã  proprement parlÃ© il ne s'agit pas
+          d'exportation de donnÃ©es. Ce mÃ©canisme permet en fait de se
+          connecter directement Ã  la base de donnÃ©es de vote projet via
           un pilote ODBC ou JDBC. Si vous souhaitez manipuler les
-          données de votre projet avec un outil de base de données
+          donnÃ©es de votre projet avec un outil de base de donnÃ©es
           (comme MS Access ou une application ODBC/JDBC) c'est sans
-          aucun doute le mécanisme d'exportation à utiliser.</para>
+          aucun doute le mÃ©canisme d'exportation Ã  utiliser.</para>
         </listitem>
     </itemizedlist>
 
 
     <section id="ExportedData">
-      <title>Données exportées</title>
+      <title>DonnÃ©es exportÃ©es</title>
 
-      <para>CodeX exporte les données suivantes (le détail des champs
-      exportés et de leur format est disponible sur la page CodeX) :
+      <para>CodeX exporte les donnÃ©es suivantes (le dÃ©tail des champs
+      exportÃ©s et de leur format est disponible sur la page CodeX) :
       </para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
 	  <para><emphasis role="bold">Outil de suivi</emphasis> :
-	  toutes les données des artefacts, l'historique de leurs
-	  modifications et leurs dépendances peuvent être exportés
+	  toutes les donnÃ©es des artefacts, l'historique de leurs
+	  modifications et leurs dÃ©pendances peuvent Ãªtre exportÃ©s
 	  pour chaque outil de suivi.</para>
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="bold">Réponses aux
-	  enquêtes</emphasis> : toutes les réponses à toutes les
-	  enquêtes menées par votre projet sont exportables.</para>
+	  <para><emphasis role="bold">RÃ©ponses aux
+	  enquÃªtes</emphasis> : toutes les rÃ©ponses Ã  toutes les
+	  enquÃªtes menÃ©es par votre projet sont exportables.</para>
 	</listitem>
       </itemizedlist>
     </section>
@@ -1087,72 +1087,72 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       <title>Exportation au format texte</title>
 
       <para>L'exportation au format texte suit le format CSV bien
-      connu de toutes les suites bureautiques du marché. Il peut être
-      très facilement importé dans MS Access, MS Excel, Open
+      connu de toutes les suites bureautiques du marchÃ©. Il peut Ãªtre
+      trÃ¨s facilement importÃ© dans MS Access, MS Excel, Open
       Calc,&hellip;</para>
 
       <section id="ImportingCSVFilesinExcel">
 	<title>Chargement d'un fichier CSV dans Excel</title> <para>Un
-	clic sur un des liens d'exportation des données de la page
-	d'exportation génère et télécharge à la volée un fichier CSV
+	clic sur un des liens d'exportation des donnÃ©es de la page
+	d'exportation gÃ©nÃ¨re et tÃ©lÃ©charge Ã  la volÃ©e un fichier CSV
 	que vous pouvez sauvegarder sur votre ordinateur ou ouvrir
 	directement dans Excel ou tout autre tableur de votre
-	choix. Aucune configuration particulière n'est
-	nécessaire dans la plupart des cas.
-    Néanmoins, vous avez la possibilité de changer le séparateur CSV 
-    (voir <xref linkend="AccountMaintenance" />) si le séparateur par 
-    défaut ne correspond pas au séparateur par défaut de votre version d'Excel
-    <footnote><para>Par exemple, le séparateur par défaut de la version française
+	choix. Aucune configuration particuliÃ¨re n'est
+	nÃ©cessaire dans la plupart des cas.
+    NÃ©anmoins, vous avez la possibilitÃ© de changer le sÃ©parateur CSV 
+    (voir <xref linkend="AccountMaintenance" />) si le sÃ©parateur par 
+    dÃ©faut ne correspond pas au sÃ©parateur par dÃ©faut de votre version d'Excel
+    <footnote><para>Par exemple, le sÃ©parateur par dÃ©faut de la version franÃ§aise
     d'Excel est le point-virgule au lieu de la virgule.</para></footnote>.</para>
       </section>
 
       <section id="ImportingCSVFilesinMS-Access">
 	<title>Chargement de fichiers CSV dans MS-Access</title>
 
-	<para>Avant de pouvoir importer les données dans MS Access,
-	vous devez d'abord créer une nouvelle base de
-	données. Exécutez ensuite les étapes suivantes :</para>
+	<para>Avant de pouvoir importer les donnÃ©es dans MS Access,
+	vous devez d'abord crÃ©er une nouvelle base de
+	donnÃ©es. ExÃ©cutez ensuite les Ã©tapes suivantes :</para>
 
 	<itemizedlist mark="bullet" spacing="compact">
 	  <listitem>
-	    <para>Sélectionnez <literal>Menu Fichier -> Accès au données externes -> Importer</literal></para>
+	    <para>SÃ©lectionnez <literal>Menu Fichier -> AccÃ¨s au donnÃ©es externes -> Importer</literal></para>
 	  </listitem>
 	  <listitem>
 	    <para>Choisissez le fichier CSV que vous venez juste de
 	    sauvegarder puis cliquez sur le bouton
-	    <literal>Importer...</literal>. Une prévisualisation de la
-	    table importée vous est présentée pour validation.</para>
+	    <literal>Importer...</literal>. Une prÃ©visualisation de la
+	    table importÃ©e vous est prÃ©sentÃ©e pour validation.</para>
 	  </listitem>
 	  <listitem>
-	    <para>Cliquez sur le bouton <literal>Avancé...</literal></para>
+	    <para>Cliquez sur le bouton <literal>AvancÃ©...</literal></para>
 	  </listitem>
 	  <listitem>
-	    <para>Positionnez le délimiteur de texte à " (un guillemet)</para>
+	    <para>Positionnez le dÃ©limiteur de texte Ã  " (un guillemet)</para>
 	  </listitem>
 	  <listitem>
-	    <para>Positionnez le format de date à <literal>AMJ</literal></para>
+	    <para>Positionnez le format de date Ã  <literal>AMJ</literal></para>
 	  </listitem>
 	  <listitem>
-	    <para>Positionnez le délimiteur de date à - (tiret)</para>
+	    <para>Positionnez le dÃ©limiteur de date Ã  - (tiret)</para>
 	  </listitem>
 	  
 	  <listitem>
 	    <para>Ensuite saisissez le nom et le type de chaque champ
-	    dans la partie inférieure de la boîte de
+	    dans la partie infÃ©rieure de la boÃ®te de
 	    dialogue. Souvenez-vous que ces informations sont
-	    disponibles sur la page d'exportation des données de
+	    disponibles sur la page d'exportation des donnÃ©es de
 	    CodeX.</para>
 
 	    <note><para><emphasis role="bold">Remarque
 	    importante</emphasis> : vous pouvez conserver les noms de
-	    champs par défaut (Champ1,....ChampN) ainsi que les types
-	    par défaut proposés par MS Access. La seule exception
+	    champs par dÃ©faut (Champ1,....ChampN) ainsi que les types
+	    par dÃ©faut proposÃ©s par MS Access. La seule exception
 	    concerne les champs texte longs comme les champs
 	    commentaires ou la description originale d'un artefact
-	    dont le type doit être Memo. Si vous ne spécifiez pas ce type
-	    spécifique, MS Access va corrompre les données
-	    importées.</para> <para>Si vous rencontrez des difficultés
-	    à l'importation du fichier CSV, veuillez consulter la
+	    dont le type doit Ãªtre Memo. Si vous ne spÃ©cifiez pas ce type
+	    spÃ©cifique, MS Access va corrompre les donnÃ©es
+	    importÃ©es.</para> <para>Si vous rencontrez des difficultÃ©s
+	    Ã  l'importation du fichier CSV, veuillez consulter la
 	    <xref linkend="ExcelAndRegionals"/> </para></note>
 	  </listitem>
 	</itemizedlist>
@@ -1162,50 +1162,50 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 	button. For future import of the same table simply click on
 	the Specs... button and reload your Import
 	specification.-->
-        Après avoir spécifié les paramètres de l'importation, vous pouvez
+        AprÃ¨s avoir spÃ©cifiÃ© les paramÃ¨tres de l'importation, vous pouvez
         les enregistrer en cliquant sur le bouton 
         <literal>Sauvegarder sous...</literal>.Pour de futures importations
-        sur la même table, cliquez simplement sur le bouton Specs... et
-        rechargez vos paramètres d'importation.</para>
+        sur la mÃªme table, cliquez simplement sur le bouton Specs... et
+        rechargez vos paramÃ¨tres d'importation.</para>
       </section>
 
     </section>
 
     <section id="DirectDatabaseAccess">
-      <title>Accès direct à la base de données</title>
+      <title>AccÃ¨s direct Ã  la base de donnÃ©es</title>
 
-      <para>Dans le but d'offrir une flexibilité maximale CodeX offre
-      aussi un accès direct aux données du projet via un connexion
-      ODBC ou JDBC. Une fois installé sur votre PC, le pilote ODBC (ou
-      JDBC) de MySQL permet un accès transparent aux tables de votre
-      base de données spécifiques.</para>
+      <para>Dans le but d'offrir une flexibilitÃ© maximale CodeX offre
+      aussi un accÃ¨s direct aux donnÃ©es du projet via un connexion
+      ODBC ou JDBC. Une fois installÃ© sur votre PC, le pilote ODBC (ou
+      JDBC) de MySQL permet un accÃ¨s transparent aux tables de votre
+      base de donnÃ©es spÃ©cifiques.</para>
 
-      <para>Si vous utilisez MS Access pour générer vos rapports
-      d'activité, l'accès direct à la base de données est le moyen le
-      plus simple et le plus rapide d'exploiter vos données.</para>
+      <para>Si vous utilisez MS Access pour gÃ©nÃ©rer vos rapports
+      d'activitÃ©, l'accÃ¨s direct Ã  la base de donnÃ©es est le moyen le
+      plus simple et le plus rapide d'exploiter vos donnÃ©es.</para>
 
 
       <section id="GeneratingYourProjectDatabase">
-	<title>Générer la base de données du projet</title>
+	<title>GÃ©nÃ©rer la base de donnÃ©es du projet</title>
 
-	<para>Avant toute tentative d'accès aux données de votre
-	projet via ODBC ou JDBC vous devez d'abord générer la base de
-	données du projet. Pour ce faire, rendez vous sur la page
-	d'exportation des données et cliquez sur le lien 'Générer la
-	base de données du projet' au bas de la page. Vous devrez
-	aussi cliquer sur ce lien à chaque fois que vous voulez
-	actualiser les données de votre projet.</para>
+	<para>Avant toute tentative d'accÃ¨s aux donnÃ©es de votre
+	projet via ODBC ou JDBC vous devez d'abord gÃ©nÃ©rer la base de
+	donnÃ©es du projet. Pour ce faire, rendez vous sur la page
+	d'exportation des donnÃ©es et cliquez sur le lien 'GÃ©nÃ©rer la
+	base de donnÃ©es du projet' au bas de la page. Vous devrez
+	aussi cliquer sur ce lien Ã  chaque fois que vous voulez
+	actualiser les donnÃ©es de votre projet.</para>
 
-	<para>Si tout se passe comme prévu, la base de données de
-	votre projet sera alors générée en temps réel et un message
+	<para>Si tout se passe comme prÃ©vu, la base de donnÃ©es de
+	votre projet sera alors gÃ©nÃ©rÃ©e en temps rÃ©el et un message
 	vous informera de la fin du processus en vous rappelant la
-	valeur des paramètres à utiliser pour vous connecter depuis
+	valeur des paramÃ¨tres Ã  utiliser pour vous connecter depuis
 	votre ordinateur. Conservez-les soigneusement.</para>
 
 	<note><para><emphasis role="bold">Remarque</emphasis> : si la
-	base de données de votre projet contient plusieurs milliers
-	d'enregistrements (tâches, bugs&hellip;) le processus de
-	génération de la base de données peut prendre plusieurs
+	base de donnÃ©es de votre projet contient plusieurs milliers
+	d'enregistrements (tÃ¢ches, bugs&hellip;) le processus de
+	gÃ©nÃ©ration de la base de donnÃ©es peut prendre plusieurs
 	minutes.</para></note>
       </section>
       
@@ -1216,18 +1216,18 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 	  <step>
 	    <para>Chargez tout d'abord le <ulink
 	    url="http://www.mysql.com/downloads/api-myodbc.html">pilote
-	    ODBC de MySQL </ulink> et décompressez l'archive dans un
-	    répertoire temporaire de votre choix.</para> </step>
+	    ODBC de MySQL </ulink> et dÃ©compressez l'archive dans un
+	    rÃ©pertoire temporaire de votre choix.</para> </step>
 	  <step>
-	    <para>Lancez l'exécution du programme setup et parcourez
-	    les étapes du processus d'installation.<emphasis
+	    <para>Lancez l'exÃ©cution du programme setup et parcourez
+	    les Ã©tapes du processus d'installation.<emphasis
 	    role="bold">Remarque importante</emphasis> : sur Windows
-	    NT/2000/XP vous devez être administrateur pour pouvoir
+	    NT/2000/XP vous devez Ãªtre administrateur pour pouvoir
 	    installer le pilote.</para>
 	  </step>
 	  <step>
-	    <para>Ajouter votre base de données dans les Source de
-	    Données Windows. Pour les utilisateurs de Windows
+	    <para>Ajouter votre base de donnÃ©es dans les Source de
+	    DonnÃ©es Windows. Pour les utilisateurs de Windows
 	    NT/2000/XP :</para>
 
 	    <itemizedlist mark="bullet" spacing="compact">
@@ -1235,30 +1235,30 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 		<para>Utilisez votre login Windows habituel.</para>
 	      </listitem>
 	      <listitem>
-		<para>Cliquez sur <literal>menu Démarrer ->
+		<para>Cliquez sur <literal>menu DÃ©marrer ->
 		Configuration -> Panneau de Configuration -> Outils
-		d'administration -> Sources de données
+		d'administration -> Sources de donnÃ©es
 		(ODBC)</literal></para>
 	      </listitem>
 	      <listitem>
-		<para>Sélectionnez l'onglet "DSN Utilisateur" et cliquez sur le bouton 
+		<para>SÃ©lectionnez l'onglet "DSN Utilisateur" et cliquez sur le bouton 
 		"Ajouter"</para>
 	      </listitem>
 	      <listitem>
-		<para>Sélectionnez l'item "MySQL" dans la liste puis
+		<para>SÃ©lectionnez l'item "MySQL" dans la liste puis
 		cliquez sur le bouton "Terminer"</para>
 	      </listitem>
 	      
 	      <listitem>
-		<para>Une boîte de dialogue apparaît vous demandant
-		les paramètres de connexion suivants :</para>
+		<para>Une boÃ®te de dialogue apparaÃ®t vous demandant
+		les paramÃ¨tres de connexion suivants :</para>
 
 		<itemizedlist mark="bullet" spacing="compact">
 		  <listitem>
 		    <para><emphasis>Windows DSN Name</emphasis> :
 		    c'est le nom de votre choix pour cette
 		    connexion. Vous pouvez indiquer quelque chose
-		    comme "Base de données du projet X" par
+		    comme "Base de donnÃ©es du projet X" par
 		    exemple.</para>
 		  </listitem>
 		  <listitem>
@@ -1266,10 +1266,10 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis> : le
-		    nom de la bases de données correspond au nom court
-		    de votre projet préfixé par 'cx_'.
-                    Il vous a été donné à la fin du
-		    processus de génération de votre base (voir plus
+		    nom de la bases de donnÃ©es correspond au nom court
+		    de votre projet prÃ©fixÃ© par 'cx_'.
+                    Il vous a Ã©tÃ© donnÃ© Ã  la fin du
+		    processus de gÃ©nÃ©ration de votre base (voir plus
 		    haut).</para>
 		  </listitem>
 		  <listitem>
@@ -1282,7 +1282,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>Port (if not 3306)</emphasis> :
-		    utilisez le port par défaut (ou laissez le champ
+		    utilisez le port par dÃ©faut (ou laissez le champ
 		    vide).</para>
 		  </listitem>
 		  
@@ -1301,7 +1301,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 	<title>Installer et configurer le pilote JDBC de MySQL</title>
 
 	<para>Pour ceux d'entre vous qui utilisent une application
-	Java basée sur un driver JDBC, les instructions d'installation
+	Java basÃ©e sur un driver JDBC, les instructions d'installation
 	du pilote JDBC de MySQL sont disponibles sur la page <ulink
 	url="http://www.mysql.com/doc/en/Java.html">MySQL Java
 	Connectivity</ulink> page.</para>
@@ -1309,44 +1309,44 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       </section>
 
       <section id="UsingYourProjectDatabaseFromMS-Access">
-	<title>Utiliser les données du projet depuis MS-Access</title>
+	<title>Utiliser les donnÃ©es du projet depuis MS-Access</title>
 
-	<para>Avant d'utiliser MS-Access pour vous connecter à la base
-	de données de votre projet, assurez-vous que le pilote ODBC de
-	MySQL est correctement installé sur votre ordinateur( voir
+	<para>Avant d'utiliser MS-Access pour vous connecter Ã  la base
+	de donnÃ©es de votre projet, assurez-vous que le pilote ODBC de
+	MySQL est correctement installÃ© sur votre ordinateur( voir
 	<xref linkend="InstallingandConfiguringtheMySQLODBCDriver" />)
-	et que vous avez généré la base de données elle-même (voir
+	et que vous avez gÃ©nÃ©rÃ© la base de donnÃ©es elle-mÃªme (voir
 	<xref linkend="GeneratingYourProjectDatabase" />). Ensuite
-	exécutez les étapes suivantes :</para>
+	exÃ©cutez les Ã©tapes suivantes :</para>
 
 	<itemizedlist mark="bullet" spacing="compact">
 	  <listitem>
-	    <para>Lancez MS Access et ouvrez une nouvelle base de données.</para>
+	    <para>Lancez MS Access et ouvrez une nouvelle base de donnÃ©es.</para>
 	  </listitem>
 	  <listitem>
-	    <para>Dans le menu <literal>Fichier</literal> sélectionnez
-	    <literal>Données externes -> Importer</literal>. </para>
+	    <para>Dans le menu <literal>Fichier</literal> sÃ©lectionnez
+	    <literal>DonnÃ©es externes -> Importer</literal>. </para>
 	  </listitem>
 	  <listitem>
-	    <para>Dans la boîte de sélection <literal>Types de
-	    fichier</literal> sélectionnez l'entrée <literal>Bases de
-	    données ODBC</literal>.</para>
+	    <para>Dans la boÃ®te de sÃ©lection <literal>Types de
+	    fichier</literal> sÃ©lectionnez l'entrÃ©e <literal>Bases de
+	    donnÃ©es ODBC</literal>.</para>
 	  </listitem>
 	  <listitem>
-	    <para>Sélectionnez l'onglet <literal>Source de données machine</literal>
-	    et cliquez sur la base de données de votre projet.</para>
+	    <para>SÃ©lectionnez l'onglet <literal>Source de donnÃ©es machine</literal>
+	    et cliquez sur la base de donnÃ©es de votre projet.</para>
 	  </listitem>
 	  <listitem>
-	    <para>Sélectionnez les tables qui vous intéressent ou bien
+	    <para>SÃ©lectionnez les tables qui vous intÃ©ressent ou bien
 	    l'ensemble des tables en cliquant sur <literal>Tout
-	    sélectionner</literal>.</para>
+	    sÃ©lectionner</literal>.</para>
 	  </listitem>
 	</itemizedlist>
 
-	<para>MS-Access importe instantanément (à la vitesse de
-	MS-Access :-)) les données de votre projet et vous pouvez
-	désormais exploiter vos données comme vous le feriez pour une
-	base de données native MS Access.</para>
+	<para>MS-Access importe instantanÃ©ment (Ã  la vitesse de
+	MS-Access :-)) les donnÃ©es de votre projet et vous pouvez
+	dÃ©sormais exploiter vos donnÃ©es comme vous le feriez pour une
+	base de donnÃ©es native MS Access.</para>
       </section>
 
     </section>
@@ -1358,7 +1358,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
       <title>Importation d'artefacts dans les outils de suivi</title>
 
       <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-      <para>Reportez vous à la <xref linkend="ArtifactImport" /></para>
+      <para>Reportez vous Ã  la <xref linkend="ArtifactImport" /></para>
     </section>
 
 
@@ -1369,8 +1369,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
 
       <para>L'historique du projet fournit une fonction d'audit aux
       membres du projet. Un clic sur cet item montre une liste de
-      l'ensemble des changements opérés dans le module
-      d'administration du projet depuis sa création. La liste décrit
+      l'ensemble des changements opÃ©rÃ©s dans le module
+      d'administration du projet depuis sa crÃ©ation. La liste dÃ©crit
       la nature du changement intervenu (modification des infos
       publiques, modification des permissions,...), la valeur de
       l'information avant le changement, l'auteur et la date de la
@@ -1378,54 +1378,54 @@ ces patrons de référence sont définis par l'administrateur du site et sont commu
     </section>
 
     <section id="SourceCodeAccessLogs">
-      <title>Journal des accès</title>
+      <title>Journal des accÃ¨s</title>
 
       <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>Selon la configuration du site CodeX et la configuration
-      de chaque projet, différentes populations d'utilisateurs sont
-      susceptibles d'avoir accès au téléchargement de document, de
+      de chaque projet, diffÃ©rentes populations d'utilisateurs sont
+      susceptibles d'avoir accÃ¨s au tÃ©lÃ©chargement de document, de
       code source et de fichiers.</para>
 
-      <para>Le journal d'accès fournit aux membres du projet un audit
-      complet des accès à ces ressources. La page du journal d'accès
+      <para>Le journal d'accÃ¨s fournit aux membres du projet un audit
+      complet des accÃ¨s Ã  ces ressources. La page du journal d'accÃ¨s
       comprend les informations suivantes :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para>Les fichiers ont été téléchargés par qui et à quelle
-          date. L'heure de téléchargement est indiquée en temps local
-          pour l'utilisateur qui les a téléchargés.</para>
+          <para>Les fichiers ont Ã©tÃ© tÃ©lÃ©chargÃ©s par qui et Ã  quelle
+          date. L'heure de tÃ©lÃ©chargement est indiquÃ©e en temps local
+          pour l'utilisateur qui les a tÃ©lÃ©chargÃ©s.</para>
         </listitem>
 
         <listitem>
-          <para>La liste des opérations de checkout ou d'update sur le
-          dépôt CVS ainsi que la liste des personnes ayant navigué
+          <para>La liste des opÃ©rations de checkout ou d'update sur le
+          dÃ©pÃ´t CVS ainsi que la liste des personnes ayant naviguÃ©
           dans l'arbre CVS via l'interface Web de CodeX.</para>
         </listitem>
 
         <listitem>
-          <para>Quels utilisateurs ont accédé au dépôt Subversion soit
+          <para>Quels utilisateurs ont accÃ©dÃ© au dÃ©pÃ´t Subversion soit
           via un client Subversion soit via l'interface Web de
           CodeX.</para>
         </listitem>
 
         <listitem>
-          <para>Quels utilisateurs ont téléchargé des documents du
+          <para>Quels utilisateurs ont tÃ©lÃ©chargÃ© des documents du
           gestionnaire de documentation du projet hormis ceux qui sont
           accessibles aux utilisateurs anonymes (voir <xref
           linkend="DocumentAdministration"/>).</para>
         </listitem>
       </itemizedlist>
 
-      <para>L'affichage du journal d'accès peut être filtré pour
-      présenter soit l'accès de tous les utilisateurs, soit ceux des
-      membres du projet ou encore ceux des non membres (défaut). La
-      fenêtre de temps peut aussi être ajustée pour montrer une portion
+      <para>L'affichage du journal d'accÃ¨s peut Ãªtre filtrÃ© pour
+      prÃ©senter soit l'accÃ¨s de tous les utilisateurs, soit ceux des
+      membres du projet ou encore ceux des non membres (dÃ©faut). La
+      fenÃªtre de temps peut aussi Ãªtre ajustÃ©e pour montrer une portion
       plus ou moins grande de l'historique.</para>
 
       <figure id="FigureSourceCodeAccessLogsForACodeXProject">
-        <title>Exemple de journal d'accès</title>
+        <title>Exemple de journal d'accÃ¨s</title>
 
         <mediaobject>
           <imageobject>

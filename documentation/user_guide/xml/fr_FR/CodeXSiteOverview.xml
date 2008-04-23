@@ -14,55 +14,55 @@
   <chapter id="CodeXSiteOverview">
     <title>Vue d'ensemble du site CodeX</title>
 
-    <para>CodeX est un site Web de &SYS_ORG_NAME; accessible à l'URL
+    <para>CodeX est un site Web de &SYS_ORG_NAME; accessible Ã  l'URL
     <ulink
     url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Pour
     utiliser le site CodeX vous pouvez utiliser votre navigateur
-    favori<footnote><para>CodeX utilise du HTML standard et très peu
-    de Javascript. Il est supporté sur Netscape 6/7, IE 5/6, Mozilla
+    favori<footnote><para>CodeX utilise du HTML standard et trÃ¨s peu
+    de Javascript. Il est supportÃ© sur Netscape 6/7, IE 5/6, Mozilla
     et Firefox. D'autres navigateurs comme Opera ou Konqueror
-    fonctionnent également. CodeX utilise peu de graphisme et il est
-    donc utilisable par des navigateurs spécialisés comme ceux destinés
+    fonctionnent Ã©galement. CodeX utilise peu de graphisme et il est
+    donc utilisable par des navigateurs spÃ©cialisÃ©s comme ceux destinÃ©s
     aux personnes malvoyantes.</para></footnote>. CodeX est un site
     riche et ce guide de l'utilisateur va vous accompagner dans la
-    découverte de l'ensemble des services disponibles. Pour vous aider
-    à retrouver votre chemin dans cette panoplie de services, la <xref
+    dÃ©couverte de l'ensemble des services disponibles. Pour vous aider
+    Ã  retrouver votre chemin dans cette panoplie de services, la <xref
     linkend="FigureCodeXWebPageFlowChart" /> vous en donne une vue
-    d'ensemble et le chemin à emprunter pour accéder à un service
+    d'ensemble et le chemin Ã  emprunter pour accÃ©der Ã  un service
     particulier.</para>
 
     <section id="CodeXHomePage">
       <title>Page d'accueil CodeX</title>
 
-      <para>La page d'accueil est divisée en quatre parties (voir la <xref
+      <para>La page d'accueil est divisÃ©e en quatre parties (voir la <xref
       linkend="FigureTheCodeXHomePage" />) :</para>
 
       <procedure>
         <step>
           <para><emphasis role="bold">Le menu principal de
-          CodeX</emphasis> : sur la partie gauche de l'écran ou au
-          sommet selon le thème graphique employé.</para>
+          CodeX</emphasis> : sur la partie gauche de l'Ã©cran ou au
+          sommet selon le thÃ¨me graphique employÃ©.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Une courte introduction à
-          CodeX</emphasis> : la partie centrale supérieure présente le
-          site CodeX en quelques points clés et fournit des pointeurs
+          <para><emphasis role="bold">Une courte introduction Ã 
+          CodeX</emphasis> : la partie centrale supÃ©rieure prÃ©sente le
+          site CodeX en quelques points clÃ©s et fournit des pointeurs
           vers des documents ou des services importants.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">Les dernières nouvelles de
-          CodeX</emphasis> : la partie centrale inférieure montre en
-          permanence les dix nouvelles les plus récentes concernant la
-          vie des projets hébergés ou du site CodeX.</para>
+          <para><emphasis role="bold">Les derniÃ¨res nouvelles de
+          CodeX</emphasis> : la partie centrale infÃ©rieure montre en
+          permanence les dix nouvelles les plus rÃ©centes concernant la
+          vie des projets hÃ©bergÃ©s ou du site CodeX.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">La tableau de bord
           CodeX</emphasis> : La partie droite de la page d'accueil
-          montre une série d'indicateurs statistiques concernant
-          l'activité globale du site CodeX.</para>
+          montre une sÃ©rie d'indicateurs statistiques concernant
+          l'activitÃ© globale du site CodeX.</para>
         </step>
       </procedure>
     </section>
@@ -70,33 +70,33 @@
     <section id="TheCodeXMainMenu">
       <title>Le menu principal de CodeX</title>
 
-      <para>Le menu principal de CodeX est présent sur l'ensemble des
-      pages du site. Son contenu peut varier selon les pages visitées
-      et suivant les droits qui vous sont octroyés. En d'autres termes
-      il dépend du contexte. En voici deux exemples :</para>
+      <para>Le menu principal de CodeX est prÃ©sent sur l'ensemble des
+      pages du site. Son contenu peut varier selon les pages visitÃ©es
+      et suivant les droits qui vous sont octroyÃ©s. En d'autres termes
+      il dÃ©pend du contexte. En voici deux exemples :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
           <para>Si vous visitez le site en tant qu'utilisateur
-          anonyme, la partie supérieure du menu vous invite à vous
-          connecter au système ou bien à créer un compte si vous n'en
-          avez pas. Si vous êtes connecté d'autres entrées deviendront
-          visibles dans le menu comme Se déconnecter, Mon compte, Ma
+          anonyme, la partie supÃ©rieure du menu vous invite Ã  vous
+          connecter au systÃ¨me ou bien Ã  crÃ©er un compte si vous n'en
+          avez pas. Si vous Ãªtes connectÃ© d'autres entrÃ©es deviendront
+          visibles dans le menu comme Se dÃ©connecter, Mon compte, Ma
           page personnelle, etc&hellip;</para>
         </listitem>
 
         <listitem>
-          <para>De la même façon, si vous décidez de visiter un projet
-          particulier, le menu situé en haut de la page vous
-          présentera l'ensemble des services disponibles.</para>
+          <para>De la mÃªme faÃ§on, si vous dÃ©cidez de visiter un projet
+          particulier, le menu situÃ© en haut de la page vous
+          prÃ©sentera l'ensemble des services disponibles.</para>
         </listitem>
       </itemizedlist>
 
       <para>Dans le reste de cette section nous allons uniquement
-      couvrir les entrées du menu qui sont permanentes et
-      indépendantes du contexte. Les autres entrées liées aux projets
-      seront décrites plus tard dans ce document.</para>
+      couvrir les entrÃ©es du menu qui sont permanentes et
+      indÃ©pendantes du contexte. Les autres entrÃ©es liÃ©es aux projets
+      seront dÃ©crites plus tard dans ce document.</para>
 
       <figure id="FigureCodeXWebPageFlowChart">
         <title>Vue d'ensemble du site CodeX</title>
@@ -114,12 +114,12 @@
         <title>Arbre des projets</title>
 
         <para>L'arbre des projets est un important service de CodeX
-        que vous pouvez (ou devez !) utiliser pour déterminer si
-        certains logiciels développés sur le site peuvent présenter un
-        intérêt pour vos propres activités. L'arbre des projets est
-        l'une des deux façons de chercher des informations dans la base
-        de projets existants. L'autre façon s'appuie sur la fonction
-        Recherche par mots-clés.</para>
+        que vous pouvez (ou devez !) utiliser pour dÃ©terminer si
+        certains logiciels dÃ©veloppÃ©s sur le site peuvent prÃ©senter un
+        intÃ©rÃªt pour vos propres activitÃ©s. L'arbre des projets est
+        l'une des deux faÃ§ons de chercher des informations dans la base
+        de projets existants. L'autre faÃ§on s'appuie sur la fonction
+        Recherche par mots-clÃ©s.</para>
 
         <figure id="FigureSoftwareMapSampleBrowsing">
           <title>Exemple de navigation dans l'arbre des projets</title>
@@ -132,15 +132,15 @@
           </mediaobject>
         </figure>
 
-        <para>Quand un projet est créé il est classé suivant 7
-        critères :</para>
+        <para>Quand un projet est crÃ©Ã© il est classÃ© suivant 7
+        critÃ¨res :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
             <para><emphasis role="bold">Statut de
-            développement</emphasis> : le niveau de maturité du projet
-            (alpha, bêta, stable,...)</para>
+            dÃ©veloppement</emphasis> : le niveau de maturitÃ© du projet
+            (alpha, bÃªta, stable,...)</para>
           </listitem>
 
           <listitem>
@@ -151,144 +151,144 @@
 
           <listitem>
             <para><emphasis role="bold">Audience</emphasis> : La
-            population d'utilisateurs visée (développeurs,
+            population d'utilisateurs visÃ©e (dÃ©veloppeurs,
             utilisateurs finaux, administrateurs
-            système,&hellip;)</para>
+            systÃ¨me,&hellip;)</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Licence</emphasis> : la licence
             de distribution du logiciel. Dans la plupart des cas il
-            s'agira de la licence d'échange de CodeX de
+            s'agira de la licence d'Ã©change de CodeX de
             &SYS_ORG_NAME;</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Système
-            d'exploitation</emphasis> : Le ou les systèmes
-            d'exploitation sur lesquels le logiciel s'exécute</para>
+            <para><emphasis role="bold">SystÃ¨me
+            d'exploitation</emphasis> : Le ou les systÃ¨mes
+            d'exploitation sur lesquels le logiciel s'exÃ©cute</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Langages de
             programmation</emphasis> : les langages de programmation
-            utilisés dans le développement de ce projet.</para>
+            utilisÃ©s dans le dÃ©veloppement de ce projet.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Domaine</emphasis> : Le domaine
             d'application de votre projet qui varie suivant le domaine
-            d'activité de l'entreprise.</para>
+            d'activitÃ© de l'entreprise.</para>
           </listitem>
         </itemizedlist>
 
-        <para>Chaque critère peut recevoir jusqu'à trois valeurs pour
-        un projet donné (comme, par exemple, trois langages de
+        <para>Chaque critÃ¨re peut recevoir jusqu'Ã  trois valeurs pour
+        un projet donnÃ© (comme, par exemple, trois langages de
         programmation). Les valeurs sont choisies parmi une liste
-        prédéfinie par les administrateurs du site. Le critère
-        &#34;Domaine&#34; (ou &#34;Topic&#34; en anglais) reflète le
-        domaine dont traite votre projet et se présente sous la forme
-        d'une hiérarchie de domaines et de sous-domaines que l'équipe
-        d'administration de CodeX affine au fur et à mesure de
+        prÃ©dÃ©finie par les administrateurs du site. Le critÃ¨re
+        &#34;Domaine&#34; (ou &#34;Topic&#34; en anglais) reflÃ¨te le
+        domaine dont traite votre projet et se prÃ©sente sous la forme
+        d'une hiÃ©rarchie de domaines et de sous-domaines que l'Ã©quipe
+        d'administration de CodeX affine au fur et Ã  mesure de
         l'enregistrement des projets.</para>
 
         <para>En utilisant l'arbre des projets il est possible de
-        visualiser les projets répondants à certains critères. Les
-        projets sont présentés avec leurs nom, description, date de
-        création, taux d'activité et d'autres informations utiles. Les
-        valeurs des sept critères du projet sont affichées à la suite
-        de la description. Notez qu'à côté de chaque valeur d'un
-        critère figure un lien hypertexte appelé [Filtre]. Cliquer sur
+        visualiser les projets rÃ©pondants Ã  certains critÃ¨res. Les
+        projets sont prÃ©sentÃ©s avec leurs nom, description, date de
+        crÃ©ation, taux d'activitÃ© et d'autres informations utiles. Les
+        valeurs des sept critÃ¨res du projet sont affichÃ©es Ã  la suite
+        de la description. Notez qu'Ã  cÃ´tÃ© de chaque valeur d'un
+        critÃ¨re figure un lien hypertexte appelÃ© [Filtre]. Cliquer sur
         l'un de ces liens a pour effet de n'afficher que les projets
-        qui correspondent à cette valeur du critère.Les projets de type
+        qui correspondent Ã  cette valeur du critÃ¨re.Les projets de type
 	patron et les projets de test (voir <xref linkend="ProjectType" />) 
-	ne sont pas listés dans l'arbre des projets.</para>
+	ne sont pas listÃ©s dans l'arbre des projets.</para>
 
-        <para>Un exemple d'affichage de l'arbre des projets est montré
+        <para>Un exemple d'affichage de l'arbre des projets est montrÃ©
         <xref linkend="FigureSoftwareMapSampleBrowsing" />. Dans cet
         exemple, l'utilisatrice a d'abord ouvert le dossier Langages
-        de Programmation puis elle a sélectionné le langage C. Ceci a
-        probablement amené un grand nombre de projets et elle a donc
-        appliqué deux filtres supplémentaires : le premier spécifie que
-        le Statut de développement doit être Stable et le second impose
-        que le logiciel fonctionne avec le système d'exploitation
+        de Programmation puis elle a sÃ©lectionnÃ© le langage C. Ceci a
+        probablement amenÃ© un grand nombre de projets et elle a donc
+        appliquÃ© deux filtres supplÃ©mentaires : le premier spÃ©cifie que
+        le Statut de dÃ©veloppement doit Ãªtre Stable et le second impose
+        que le logiciel fonctionne avec le systÃ¨me d'exploitation
         SunOS/Solaris.</para>
 
-        <para>En appliquant ces multiples critères de sélection,
-        l'utilisatrice réduit le nombre de projets potentiellement
-        intéressant à neuf et elle peut donc les examiner un par un
-        (seul le premier projet est montré sur la <xref
+        <para>En appliquant ces multiples critÃ¨res de sÃ©lection,
+        l'utilisatrice rÃ©duit le nombre de projets potentiellement
+        intÃ©ressant Ã  neuf et elle peut donc les examiner un par un
+        (seul le premier projet est montrÃ© sur la <xref
         linkend="FigureSoftwareMapSampleBrowsing" />). Les filtres ont
-        une autre propriété intéressante : ils sont persistants. Cela
-        signifie que si vous décidez d'explorer l'arbre des projets en
+        une autre propriÃ©tÃ© intÃ©ressante : ils sont persistants. Cela
+        signifie que si vous dÃ©cidez d'explorer l'arbre des projets en
         partant d'un autre angle (par exemple en ouvrant le dossier
-        Domaine en premier), les filtres sélectionnés continuent à
-        s'appliquer. Pour relâcher les contraintes imposées par les
+        Domaine en premier), les filtres sÃ©lectionnÃ©s continuent Ã 
+        s'appliquer. Pour relÃ¢cher les contraintes imposÃ©es par les
         filtres il suffit de cliquer sur le lien [Supprimer ce filtre]
-        situé à côté du critère.</para>
+        situÃ© Ã  cÃ´tÃ© du critÃ¨re.</para>
 
         <para><tip><title>Coup de pouce</title><para>Si vous effectuez souvent
-        le même parcours dans l'arbre des projets, vous pouvez
-        enregistrer l'étape finale de ce parcours dans votre Page
+        le mÃªme parcours dans l'arbre des projets, vous pouvez
+        enregistrer l'Ã©tape finale de ce parcours dans votre Page
         personnelle. Pour se faire, effectuez vos manipulations sur
-        l'arbre comme expliqué ci-dessus puis cliquez sur le lien
+        l'arbre comme expliquÃ© ci-dessus puis cliquez sur le lien
         "Cette page en signet" dans le menu principal CodeX. Une
-        nouvelle entrée apparaîtra alors dans votre page personnelle
-        que vous pouvez éditez afin de lui donner une description plus
+        nouvelle entrÃ©e apparaÃ®tra alors dans votre page personnelle
+        que vous pouvez Ã©ditez afin de lui donner une description plus
         parlante.</para></tip></para>
       </section>
 
       <section id="TheCodeSnippetLibrary">
-        <title>La boîte à outils</title>
+        <title>La boÃ®te Ã  outils</title>
 
-        <para>Un projet hébergé sur CodeX a la possibilité d'utiliser
+        <para>Un projet hÃ©bergÃ© sur CodeX a la possibilitÃ© d'utiliser
         de nombreux outils et services. Toutefois tous les logiciels
-        ne nécessitent pas un environnement aussi riche. Pour partager
-        ou sauvegarder un court échantillon de code comme une macro,
-        une fonction, un script shell un outil simple paraît plus
-        adapté. C'est précisément le rôle de la boîte à outils.</para>
+        ne nÃ©cessitent pas un environnement aussi riche. Pour partager
+        ou sauvegarder un court Ã©chantillon de code comme une macro,
+        une fonction, un script shell un outil simple paraÃ®t plus
+        adaptÃ©. C'est prÃ©cisÃ©ment le rÃ´le de la boÃ®te Ã  outils.</para>
 
-        <para>La boîte à outils est accessible depuis le menu
+        <para>La boÃ®te Ã  outils est accessible depuis le menu
         principal de CodeX sur la partie gauche ou la partie
-        supérieure de l'écran (voir la <xref
+        supÃ©rieure de l'Ã©cran (voir la <xref
         linkend="FigureTheCodeXHomePage" />)</para>
 
         <section id="CodeSnippetBrowsing">
-          <title>Navigation dans les échantillons</title>
+          <title>Navigation dans les Ã©chantillons</title>
 
-          <para>La page d'accueil de la boîte à outils classifie les échantillons
-          par catégorie et par langages de programmation. Le nombre en
-          regard du label d'une catégorie indique le nombre d'échantillons 
-          présents dans la catégorie.</para>
+          <para>La page d'accueil de la boÃ®te Ã  outils classifie les Ã©chantillons
+          par catÃ©gorie et par langages de programmation. Le nombre en
+          regard du label d'une catÃ©gorie indique le nombre d'Ã©chantillons 
+          prÃ©sents dans la catÃ©gorie.</para>
 
           <para></para>
 
-	  <para>Vous pouvez parcourir la collection d'échantillons de
-	  deux façons :</para>
+	  <para>Vous pouvez parcourir la collection d'Ã©chantillons de
+	  deux faÃ§ons :</para>
 
           <itemizedlist mark="bullet"
                         spacing="compact">
             <listitem>
-              <para>Parcourir les catégories ou la classification par
+              <para>Parcourir les catÃ©gories ou la classification par
               langage de programmation</para>
             </listitem>
 
             <listitem>
-              <para>Utiliser la boîte de recherche par mots-clés
-              situés en bas à gauche ou en haut à droite de
-              l'écran. La recherche s'effectue dans le titre et la
-              description des échantillons.</para>
+              <para>Utiliser la boÃ®te de recherche par mots-clÃ©s
+              situÃ©s en bas Ã  gauche ou en haut Ã  droite de
+              l'Ã©cran. La recherche s'effectue dans le titre et la
+              description des Ã©chantillons.</para>
             </listitem>
           </itemizedlist>
 
-          <para>Les échantillons correspondants sont affichés avec
+          <para>Les Ã©chantillons correspondants sont affichÃ©s avec
           leur identifiant unique (ID), leur titre, leur description
           ainsi que le nom de l'auteur. Veuillez noter qu'en cliquant
-          sur le nom de l'auteur, vous pouvez immédiatement lui
+          sur le nom de l'auteur, vous pouvez immÃ©diatement lui
           envoyer une suggestion ou une question par email.</para>
 
           <figure id="FigureListOfCodeSnippetsInTheHTMLManipulationCategory">
-            <title>Liste des échantillons de code dans la catégorie &#39;HTML Manipulation&#39;</title>
+            <title>Liste des Ã©chantillons de code dans la catÃ©gorie &#39;HTML Manipulation&#39;</title>
 
             <mediaobject>
               <imageobject>
@@ -300,120 +300,120 @@
         </section>
 
         <section id="CodeSnippetSubmission">
-          <title>Créer un échantillon</title>
+          <title>CrÃ©er un Ã©chantillon</title>
 
-          <para>Pour soumettre un nouvel échantillon, cliquez sur le
-          bouton &#34;Créer un nouvel échantillon&#34; dans le menu de
-          la boîte à outils situé en haut de la page. Remplissez les
+          <para>Pour soumettre un nouvel Ã©chantillon, cliquez sur le
+          bouton &#34;CrÃ©er un nouvel Ã©chantillon&#34; dans le menu de
+          la boÃ®te Ã  outils situÃ© en haut de la page. Remplissez les
           champs titre et description (tout pointeur Web - ou URL -
-          tapé dans le champ description sera automatiquement
-          transformé en hyperliens par CodeX), le type de
-          l'échantillon, sa catégorie et son langage de
-          programmation. Si une catégorie ou un langage de
-          programmation venait à manquer, veuillez contacter l'équipe
+          tapÃ© dans le champ description sera automatiquement
+          transformÃ© en hyperliens par CodeX), le type de
+          l'Ã©chantillon, sa catÃ©gorie et son langage de
+          programmation. Si une catÃ©gorie ou un langage de
+          programmation venait Ã  manquer, veuillez contacter l'Ã©quipe
           CodeX.</para>
 
-          <para>Il est vivement recommandé de fournir également un
-          numéro de version. Il s'agit d'un champ de texte libre qui
+          <para>Il est vivement recommandÃ© de fournir Ã©galement un
+          numÃ©ro de version. Il s'agit d'un champ de texte libre qui
           peut prendre n'importe quelle valeur. Utiliser un nom ou un
-          numéro de version est utile si vous pensez soumettre de
-          nouvelles versions ultérieurement. Nous vous recommandons
-          également de porter ce même numéro de version dans le code
-          source de l'échantillon pour que les utilisateurs puissent
-          déterminer s'ils disposent de la version la plus récente
-          lors d'une prochaine visite à la boîte à outils.</para>
+          numÃ©ro de version est utile si vous pensez soumettre de
+          nouvelles versions ultÃ©rieurement. Nous vous recommandons
+          Ã©galement de porter ce mÃªme numÃ©ro de version dans le code
+          source de l'Ã©chantillon pour que les utilisateurs puissent
+          dÃ©terminer s'ils disposent de la version la plus rÃ©cente
+          lors d'une prochaine visite Ã  la boÃ®te Ã  outils.</para>
 
-          <para>L'échantillon de code lui-même peut être soumis soit
-          par la biais d'une opération copier-coller dans la zone de
-          texte prévue à cet effet ou en téléchargeant un fichier. Dans
-          la mesure du possible, il est préférable d'utiliser la zone
-          de texte car le code sera alors immédiatement visible sur la
-          page Web lors de la consultation de la boîte à outils par d'autres
+          <para>L'Ã©chantillon de code lui-mÃªme peut Ãªtre soumis soit
+          par la biais d'une opÃ©ration copier-coller dans la zone de
+          texte prÃ©vue Ã  cet effet ou en tÃ©lÃ©chargeant un fichier. Dans
+          la mesure du possible, il est prÃ©fÃ©rable d'utiliser la zone
+          de texte car le code sera alors immÃ©diatement visible sur la
+          page Web lors de la consultation de la boÃ®te Ã  outils par d'autres
           utilisateurs.</para>
 
-          <para>Il existe cependant des cas où le téléchargement est
+          <para>Il existe cependant des cas oÃ¹ le tÃ©lÃ©chargement est
           obligatoire, notamment pour les fichiers dont le format
           n'est pas directement lisible pour un utilisateur. Un
-          exemple typique est le cas où l'échantillon est composé de
-          plusieurs fichiers regroupés dans une archive tar ou zip. Il
-          peut aussi s'agir de fichiers propriétaires ou binaires
-          émanant d'applications spécialisées (par exemple le logiciel
+          exemple typique est le cas oÃ¹ l'Ã©chantillon est composÃ© de
+          plusieurs fichiers regroupÃ©s dans une archive tar ou zip. Il
+          peut aussi s'agir de fichiers propriÃ©taires ou binaires
+          Ã©manant d'applications spÃ©cialisÃ©es (par exemple le logiciel
           de simulation LabView). Dans tous les cas, ne <emphasis
           role="underline">jamais</emphasis> poster de fichier binaire
-          ou byte-code pur résultant d'une compilation C, C++,
-          Java,... car la boîte à outils est avant tout faite pour
-          partager et réutiliser des échantillons de code utiles à
+          ou byte-code pur rÃ©sultant d'une compilation C, C++,
+          Java,... car la boÃ®te Ã  outils est avant tout faite pour
+          partager et rÃ©utiliser des Ã©chantillons de code utiles Ã 
           tous.</para>
         </section>
 
         <section id="UpdatingACodeSnippet">
-          <title>Mettre un échantillon à jour</title>
+          <title>Mettre un Ã©chantillon Ã  jour</title>
 
-          <para>Pour mettre à jour un échantillon avec une nouvelle
-          version du code, sélectionnez l'échantillon soit en parcourant
-          les catégories soit en effectuant une recherche par
-          mots-clés. Cliquez sur l´échantillon approprié, puis sur le
+          <para>Pour mettre Ã  jour un Ã©chantillon avec une nouvelle
+          version du code, sÃ©lectionnez l'Ã©chantillon soit en parcourant
+          les catÃ©gories soit en effectuant une recherche par
+          mots-clÃ©s. Cliquez sur lÂ´Ã©chantillon appropriÃ©, puis sur le
           lien &#34;Soumettre un nouvelle version&#34; en bas de
           page. Fournissez une description des modifications, un
-          nouveau numéro de version et copier-coller ou télécharger le
-          nouvel échantillon de code correspondant.</para>
+          nouveau numÃ©ro de version et copier-coller ou tÃ©lÃ©charger le
+          nouvel Ã©chantillon de code correspondant.</para>
 
-          <note><para>Veuillez noter que bien qu'il s'agisse du même
-          échantillon, CodeX assigne un nouvel indentifiant à chaque
-          nouvelle version. Ainsi pour référencer la nouvelle version
-          d'un échantillon dans un paquet d'échantillons (voir la
-          section concernant le regroupement d'échantillons 
+          <note><para>Veuillez noter que bien qu'il s'agisse du mÃªme
+          Ã©chantillon, CodeX assigne un nouvel indentifiant Ã  chaque
+          nouvelle version. Ainsi pour rÃ©fÃ©rencer la nouvelle version
+          d'un Ã©chantillon dans un paquet d'Ã©chantillons (voir la
+          section concernant le regroupement d'Ã©chantillons 
           plus loin) vous devrez supprimer l'ancienne version et
-          insérer la nouvelle).</para></note>
+          insÃ©rer la nouvelle).</para></note>
         </section>
 
         <section id="DeletingACodeSnippet">
-          <title>Détruire un échantillon</title>
+          <title>DÃ©truire un Ã©chantillon</title>
 
-          <para>Procéder comme indiqué précédemment pour la sélection
-          de l'échantillon. Après avoir sélectionné l'échantillon
-          voulu, utilisez l'icône en forme de corbeille
+          <para>ProcÃ©der comme indiquÃ© prÃ©cÃ©demment pour la sÃ©lection
+          de l'Ã©chantillon. AprÃ¨s avoir sÃ©lectionnÃ© l'Ã©chantillon
+          voulu, utilisez l'icÃ´ne en forme de corbeille
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/trash.png"
           /></imageobject></inlinemediaobject>) pour supprimer une ou
-          plusieurs versions de l'échantillon</para>
+          plusieurs versions de l'Ã©chantillon</para>
         </section>
 
         <section id="GroupingCodeSnippets">
-          <title>Regrouper des échantillons</title>
+          <title>Regrouper des Ã©chantillons</title>
 
-          <para>Si vous avez soumis des échantillons qui ont un
-          rapport entre eux il peut être intéressant de les regrouper
-          un sein d'un paquet d'échantillons.</para>
+          <para>Si vous avez soumis des Ã©chantillons qui ont un
+          rapport entre eux il peut Ãªtre intÃ©ressant de les regrouper
+          un sein d'un paquet d'Ã©chantillons.</para>
 
-          <para>Pour créer un paquet d'échantillons, cliquez sur
-          &#34;Créer un paquet&#34; dans le menu situé en haut de la
+          <para>Pour crÃ©er un paquet d'Ã©chantillons, cliquez sur
+          &#34;CrÃ©er un paquet&#34; dans le menu situÃ© en haut de la
           page. Fournissez un titre, une description, un type, une
-          catégorie et un numéro de version pour ce paquet. Après
-          avoir soumis le formulaire, une nouvelle fenêtre apparaît
+          catÃ©gorie et un numÃ©ro de version pour ce paquet. AprÃ¨s
+          avoir soumis le formulaire, une nouvelle fenÃªtre apparaÃ®t
           vous demandant d'indiquer les identifiants uniques (ID) des
-          échantillons à placer dans le paquet. Veillez à avoir cette
-          liste d'identifiant à portée de main lors de la création
+          Ã©chantillons Ã  placer dans le paquet. Veillez Ã  avoir cette
+          liste d'identifiant Ã  portÃ©e de main lors de la crÃ©ation
           d'un paquet.</para>
 			
 			
-			<para>Veuillez noter qu'il existe un indentifiant d'échantillon ainsi qu'un
-				identifiant de version d'échantillon. Si vous téléchargez une nouvelle
-				version d'un échantillon, l'identifiant de l'échantillon ne change pas
-				contrairement à l'identifiant de la version de l'échantillon. Ainsi
-				lorsque vous créez des paquets d'échantillons, assurez-vous d'utiliser
+			<para>Veuillez noter qu'il existe un indentifiant d'Ã©chantillon ainsi qu'un
+				identifiant de version d'Ã©chantillon. Si vous tÃ©lÃ©chargez une nouvelle
+				version d'un Ã©chantillon, l'identifiant de l'Ã©chantillon ne change pas
+				contrairement Ã  l'identifiant de la version de l'Ã©chantillon. Ainsi
+				lorsque vous crÃ©ez des paquets d'Ã©chantillons, assurez-vous d'utiliser
 				l'identifiant de la nouvelle version.</para>
         </section>
 
         <section id="UpdatingACodeSnippetPackage">
-          <title>Mettre à jour un paquet d'échantillons</title>
+          <title>Mettre Ã  jour un paquet d'Ã©chantillons</title>
 
-			<para>Comme un échantillon, un paquet peut être mis à jour. Pour se faire,
-				procédez comme pour un échantillon, Il faut tout d'abord le rechercher dans
-				la boîte à outils, le sélectionner et enfin, cliquez sur l'icône d'édition.
-				A partir de là vous pouvez ajouter ou supprimer des échantillons. Si vous
-				voulez mettre à jour le paquet en y intégrant une nouvelle version d'un
-				échantillon, détruisez d'abord l'ancienne version puis ajoutez la
+			<para>Comme un Ã©chantillon, un paquet peut Ãªtre mis Ã  jour. Pour se faire,
+				procÃ©dez comme pour un Ã©chantillon, Il faut tout d'abord le rechercher dans
+				la boÃ®te Ã  outils, le sÃ©lectionner et enfin, cliquez sur l'icÃ´ne d'Ã©dition.
+				A partir de lÃ  vous pouvez ajouter ou supprimer des Ã©chantillons. Si vous
+				voulez mettre Ã  jour le paquet en y intÃ©grant une nouvelle version d'un
+				Ã©chantillon, dÃ©truisez d'abord l'ancienne version puis ajoutez la
 				nouvelle en utilisant son identifiant de version (ID) propre (voir <xref
 					linkend="UpdatingACodeSnippet"/>).</para>
         </section>
@@ -426,13 +426,13 @@
       <section id="HelpIndex">
         <title>Index de l'aide</title>
 
-        <para>CodeX est livré avec un guide de l'utilisateur très
-        complet décrivant l'ensemble des outils et services. Un clic
+        <para>CodeX est livrÃ© avec un guide de l'utilisateur trÃ¨s
+        complet dÃ©crivant l'ensemble des outils et services. Un clic
         sur le lien &#34;Index de l'aide&#34; dirige l'utilisateur vers
-        la table des matières du guide de l'utilisateur de CodeX. Ce
-        même guide est utilisé sur l'ensemble du site CodeX par les
+        la table des matiÃ¨res du guide de l'utilisateur de CodeX. Ce
+        mÃªme guide est utilisÃ© sur l'ensemble du site CodeX par les
         liens &#34;Aide&#34; apparaissant dans quasiment tous les
-        menus. Une version PDF de l'intégralité du guide de
+        menus. Une version PDF de l'intÃ©gralitÃ© du guide de
         l'utilisateur est disponible dans la section
         &#34;Documentation Site&#34;.</para>
       </section>
@@ -441,51 +441,51 @@
         <title>Documentation Site</title>
 
         <para>Le lien &#34;Documentation Site&#34; est le point
-        d'entrée vers l'ensemble de la documentation relative à
+        d'entrÃ©e vers l'ensemble de la documentation relative Ã 
         l'ensemble du site CodeX. Son contenu est variable mais il
-        comporte en général le guide utilisateur, des présentations et
-        d'autres documents importants maintenus par l'équipe
+        comporte en gÃ©nÃ©ral le guide utilisateur, des prÃ©sentations et
+        d'autres documents importants maintenus par l'Ã©quipe
         CodeX. Lisez les attentivement.</para>
 
       </section>
 
       <section>
-        <title>Canaux développeurs</title>
+        <title>Canaux dÃ©veloppeurs</title>
 
         <para>L'un des objectifs prioritaires du site CodeX est de
-        devenir le forum d'échange des développeurs logiciels quelle que
-        soit l'organisation à laquelle ils appartiennent.</para>
+        devenir le forum d'Ã©change des dÃ©veloppeurs logiciels quelle que
+        soit l'organisation Ã  laquelle ils appartiennent.</para>
 
-        <para>C'est pour cette raison que CodeX propose une série de
-        listes de distribution (appelée Canaux Développeurs) où toute
-        personne, y compris un utilisateur non enregistré de CodeX,
-        peut souscrire. Chaque canal est dédié à un sujet
-        particulier. La création de nouveaux canaux est sous la
-        responsabilité des administrateurs du site CodeX. Contactez les
-        à <email>&SYS_EMAIL_CONTACT;</email> si vous souhaitez faire
-        une demande de création.</para>
+        <para>C'est pour cette raison que CodeX propose une sÃ©rie de
+        listes de distribution (appelÃ©e Canaux DÃ©veloppeurs) oÃ¹ toute
+        personne, y compris un utilisateur non enregistrÃ© de CodeX,
+        peut souscrire. Chaque canal est dÃ©diÃ© Ã  un sujet
+        particulier. La crÃ©ation de nouveaux canaux est sous la
+        responsabilitÃ© des administrateurs du site CodeX. Contactez les
+        Ã  <email>&SYS_EMAIL_CONTACT;</email> si vous souhaitez faire
+        une demande de crÃ©ation.</para>
 
-        <para>Le Canaux Développeurs de CodeX présente un certain
-        nombre de caractéristiques intéressantes :</para>
+        <para>Le Canaux DÃ©veloppeurs de CodeX prÃ©sente un certain
+        nombre de caractÃ©ristiques intÃ©ressantes :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
-            <para>Les opérations d'abonnement et le désabonnement au
-            canal peuvent être effectuées par l'utilisateur lui-même à
+            <para>Les opÃ©rations d'abonnement et le dÃ©sabonnement au
+            canal peuvent Ãªtre effectuÃ©es par l'utilisateur lui-mÃªme Ã 
             travers l'interface Web de CodeX.</para>
           </listitem>
 
           <listitem>
-            <para>Tous les messages adressés au canal sont archivés et
-            sont donc consultables à tout moment. (Dans le futur, il
+            <para>Tous les messages adressÃ©s au canal sont archivÃ©s et
+            sont donc consultables Ã  tout moment. (Dans le futur, il
             sera aussi possible d'effectuer des recherches par
-            mots-clés).</para>
+            mots-clÃ©s).</para>
           </listitem>
 
           <listitem>
-            <para>Les abonnés peuvent demander à recevoir une version
-            condensée des échanges plutôt que chaque message
+            <para>Les abonnÃ©s peuvent demander Ã  recevoir une version
+            condensÃ©e des Ã©changes plutÃ´t que chaque message
             individuellement.</para>
           </listitem>
         </itemizedlist>
@@ -495,20 +495,20 @@
         <title>Forums de discussion CodeX</title>
 
         <para>Les forums de discussion CodeX proposent une alternative
-        au Canaux Développeurs. Il s'agit de forums d'échange dont
-        l'objectif est d'améliorer la communication entre les
-        utilisateurs de CodeX et l'équipe en charge de
-        l'administration du site. On y trouve des forums où il est
+        au Canaux DÃ©veloppeurs. Il s'agit de forums d'Ã©change dont
+        l'objectif est d'amÃ©liorer la communication entre les
+        utilisateurs de CodeX et l'Ã©quipe en charge de
+        l'administration du site. On y trouve des forums oÃ¹ il est
         possible de demander de l'aide, d'envoyer des suggestions, des
-        demandes de nouvelles fonctionnalités ou de nouvelles
-        catégories pour l'arbre des projets par exemple,
+        demandes de nouvelles fonctionnalitÃ©s ou de nouvelles
+        catÃ©gories pour l'arbre des projets par exemple,
         etc&hellip;</para>
 
-        <para>Ces forums sont entièrement basés web ce qui implique
+        <para>Ces forums sont entiÃ¨rement basÃ©s web ce qui implique
         d'utiliser l'interface web de CodeX pour lire ou poster un
-        message. Toutefois l'utilisateur a la possibilité de placer un
+        message. Toutefois l'utilisateur a la possibilitÃ© de placer un
         forum sous surveillance afin de recevoir par email tout les
-        échanges qui ont lieu sur le forum.</para>
+        Ã©changes qui ont lieu sur le forum.</para>
 
       </section>
 
@@ -519,10 +519,10 @@
         the &#34;Contact Us&#34; link to get in touch with the CodeX
         Team.</para> -->
         <para>En plus des forums de discussion, vous pouvez toujours utiliser 
-        le lien &#34;Contactez-nous&#34; pour contacter l'équipe CodeX.</para>
+        le lien &#34;Contactez-nous&#34; pour contacter l'Ã©quipe CodeX.</para>
 
-        <para>N'hésitez pas à faire usage de ce lien dès que vous en
-        ressentez le besoin. Nous sommes là pour vous aider.</para>
+        <para>N'hÃ©sitez pas Ã  faire usage de ce lien dÃ¨s que vous en
+        ressentez le besoin. Nous sommes lÃ  pour vous aider.</para>
       </section>
       </section>
 
@@ -530,7 +530,7 @@
         <title>La fonction de recherche</title>
 
         <para>CodeX vous permet d'effectuer une recherche par
-        mots-clés dans quasiment toutes les informations disponibles
+        mots-clÃ©s dans quasiment toutes les informations disponibles
         sur le site. Lorsque vous vous trouvez sur la page d'accueil
         de CodeX vous pouvez rechercher des informations dans les
         ressources suivantes :</para>
@@ -539,21 +539,21 @@
                       spacing="compact">
           <listitem>
             <para><emphasis role="bold">Les projets
-            logiciels</emphasis> : les mots-clés sont recherchés dans
+            logiciels</emphasis> : les mots-clÃ©s sont recherchÃ©s dans
             le nom et les descriptions courte et longue des
-            projets. Ce mécanisme de recherche est très complémentaire
+            projets. Ce mÃ©canisme de recherche est trÃ¨s complÃ©mentaire
             avec l'arbre des projets (voir <xref linkend="SoftwareMap"
             />).</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Boîte à outils</emphasis> :
-            vous pouvez effectuer une recherche par mots-clés dans les
-            échantillons de code disponibles dans la boîte à outils de
+            <para><emphasis role="bold">BoÃ®te Ã  outils</emphasis> :
+            vous pouvez effectuer une recherche par mots-clÃ©s dans les
+            Ã©chantillons de code disponibles dans la boÃ®te Ã  outils de
             CodeX (voir <xref linkend="TheCodeSnippetLibrary" />). La
             recherche porte sur le nom et la description. Vous pouvez
-            ainsi trouver facilement des échantillons de code qui
-            répondent à vos problèmes.</para>
+            ainsi trouver facilement des Ã©chantillons de code qui
+            rÃ©pondent Ã  vos problÃ¨mes.</para>
           </listitem>
 
           <listitem>
@@ -566,16 +566,16 @@
           
           <listitem>
             <para role=""><emphasis role="bold">Wiki</emphasis>: Le Wiki 
-            est un outil collaboratif de rédaction (voir <xref linkend="WikiService" />). 
-            Vous pouvez effectuer une recherche en texte intégral dans les wikis.</para>
+            est un outil collaboratif de rÃ©daction (voir <xref linkend="WikiService" />). 
+            Vous pouvez effectuer une recherche en texte intÃ©gral dans les wikis.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Cet outil de suivi</emphasis> :
-            si vous utilisez un outil de suivi de CodeX, l'entrée
-            &#34;Cet outil de suivi&#34; apparaît dans la boîte de
+            si vous utilisez un outil de suivi de CodeX, l'entrÃ©e
+            &#34;Cet outil de suivi&#34; apparaÃ®t dans la boÃ®te de
             recherche, permettant ainsi d'effectuer une recherche par
-            mots-clés dans les artefacts de cet outil de suivi.</para>
+            mots-clÃ©s dans les artefacts de cet outil de suivi.</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -584,77 +584,77 @@
     <section id="TheCodeXDashboard">
       <title>Le tableau de bord de CodeX</title>
 
-      <para>Par défaut, le tableau de bord de CodeX se trouve sur la
+      <para>Par dÃ©faut, le tableau de bord de CodeX se trouve sur la
       partie droite de la page d'accueil du site. Il donne une vue
-      d'ensemble de l'activité du site à travers plusieurs
+      d'ensemble de l'activitÃ© du site Ã  travers plusieurs
       indicateurs :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
           <para><emphasis role="bold">Statistiques CodeX</emphasis> :
-          indique le nombre total de projets hébergés sur CodeX
-	  (à part ceux qui ont le statut privé ainsi que les projets 
+          indique le nombre total de projets hÃ©bergÃ©s sur CodeX
+	  (Ã  part ceux qui ont le statut privÃ© ainsi que les projets 
 	  de patron et les projets de test), le
-          nombre d'utilisateurs enregistrés, le nombre total de
-          téléchargements et le nombre de pages visitées depuis
+          nombre d'utilisateurs enregistrÃ©s, le nombre total de
+          tÃ©lÃ©chargements et le nombre de pages visitÃ©es depuis
           l'ouverture du site.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Top Téléchargements
+          <para><emphasis role="bold">Top TÃ©lÃ©chargements
           hier</emphasis> : donne la liste des projets qui ont fait
-          l'objet d'un téléchargement la veille et en quelle
-          quantité.</para>
+          l'objet d'un tÃ©lÃ©chargement la veille et en quelle
+          quantitÃ©.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Versions récentes</emphasis> :
-          donne une liste des versions de logiciels les plus récentes
-          postées sur le site par les différents projets. Si vous
-          souhaitez connaître les dernières versions disponibles vous
-          pouvez visiter la page d'accueil régulièrement. CodeX vous
+          <para><emphasis role="bold">Versions rÃ©centes</emphasis> :
+          donne une liste des versions de logiciels les plus rÃ©centes
+          postÃ©es sur le site par les diffÃ©rents projets. Si vous
+          souhaitez connaÃ®tre les derniÃ¨res versions disponibles vous
+          pouvez visiter la page d'accueil rÃ©guliÃ¨rement. CodeX vous
           offre aussi le moyen de surveiller l'apparition de nouvelles
-          versions pour un projet donné. Pour se faire vous devez vous
+          versions pour un projet donnÃ©. Pour se faire vous devez vous
           rendre sur la page de Sommaire du Projet (ou page d'accueil)
-          et sélectionner ensuite l'icône de surveillance
+          et sÃ©lectionner ensuite l'icÃ´ne de surveillance
           (<inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/mail16d.png"
-          /></imageobject></inlinemediaobject>) placé à proximité du
-          nom du paquet logiciel qui vous intéresse. Une fois le
+          /></imageobject></inlinemediaobject>) placÃ© Ã  proximitÃ© du
+          nom du paquet logiciel qui vous intÃ©resse. Une fois le
           paquet sous surveillance, un email vous sera automatiquement
-          envoyé dès que l'équipe de projet publie une nouvelle
+          envoyÃ© dÃ¨s que l'Ã©quipe de projet publie une nouvelle
           version.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Projets récents</emphasis> : les
-          10 derniers projets enregistrés. En listant cette liste de
-          façon régulière vous pouvez être tenu informé de la création
+          <para><emphasis role="bold">Projets rÃ©cents</emphasis> : les
+          10 derniers projets enregistrÃ©s. En listant cette liste de
+          faÃ§on rÃ©guliÃ¨re vous pouvez Ãªtre tenu informÃ© de la crÃ©ation
           de tout nouveau projet CodeX.</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Les plus actifs cette
           semaine</emphasis> : les 20 projets les plus actifs sur la
-          semaine écoulée de 0 à 100%. La formule magique utilisée
-          pour ce calcul est une somme pondérée de l'activité observée
-          dans chacun des services utilisés par les projets. Elle
+          semaine Ã©coulÃ©e de 0 Ã  100%. La formule magique utilisÃ©e
+          pour ce calcul est une somme pondÃ©rÃ©e de l'activitÃ© observÃ©e
+          dans chacun des services utilisÃ©s par les projets. Elle
           prend en compte de nombreux indicateurs : le nombre de
           transactions CVS/Subversion, le nombre d'artefacts (bugs,
-          tâches...) soumis ou modifiés, le nombre de versions de
-          logiciel postés, etc&hellip; En consultant cette liste vous
-          aurez une bonne idée du degré d'activité des projets.</para>
+          tÃ¢ches...) soumis ou modifiÃ©s, le nombre de versions de
+          logiciel postÃ©s, etc&hellip; En consultant cette liste vous
+          aurez une bonne idÃ©e du degrÃ© d'activitÃ© des projets.</para>
         </listitem>
       </itemizedlist>
 
       <para>En conclusion, nous vous recommandons vivement de visiter
-      la page d'accueil de CodeX de façon régulière. Ce faisant vous
-      aurez un excellent aperçu de ce qui se passe en matière de
-      développement logiciel chez &SYS_ORG_NAME;.</para>
+      la page d'accueil de CodeX de faÃ§on rÃ©guliÃ¨re. Ce faisant vous
+      aurez un excellent aperÃ§u de ce qui se passe en matiÃ¨re de
+      dÃ©veloppement logiciel chez &SYS_ORG_NAME;.</para>
 
       <para><emphasis role="underline">En un mot comme en
-      cent</emphasis> : Faites de CodeX la page par défaut de votre
+      cent</emphasis> : Faites de CodeX la page par dÃ©faut de votre
       navigateur :-)</para>
     </section>
   </chapter>
