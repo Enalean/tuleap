@@ -15,7 +15,7 @@ class UTF8Test extends UnitTestCase {
             '.svn',
             'simpletest',
         );
-        $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso -B 1';
+        $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso-8859 -B 1';
         $handle = popen($cmd, 'r');
         $error = false;
         $filename = '';
@@ -37,7 +37,7 @@ class UTF8Test extends UnitTestCase {
     
     function testHtmlEncoding() {
         //file -i does not work well on text/xml files
-        $this->_parseHtmlFiles($GLOBALS['codex_dir'].'/documentation/user_guide');
+        $this->_parseHtmlFiles($GLOBALS['codex_dir'].'/');
     }
     
     private function _parseHtmlFiles($file) {
@@ -52,6 +52,7 @@ class UTF8Test extends UnitTestCase {
             //ascii files are allowed
             //utf-8 files are allowed
             if ((strstr($result, 'CHARSET = ASCII') === FALSE) && 
+                (strstr($result, 'CHARSET = UTF-8') === FALSE) && 
                 (strstr($result, 'Probable Charset = UTF-8') === FALSE)
             ) {
                 $this->fail('The file [ '. $file . ' ] has '. implode(', ', explode("\n", $result)));
