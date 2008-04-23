@@ -18,18 +18,19 @@ class UTF8Test extends UnitTestCase {
         $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso -B 1';
         $handle = popen($cmd, 'r');
         $error = false;
+        $filename = '';
         while(!feof($handle) && ($line = fgets($handle))) {
-            if (!$error) {
-                echo "<pre>\n";
+            if (strpos($line, '--') !== 0) {
+                if (!$filename ) {
+                    $filename = $line;
+                } else {
+                    $this->fail('The file [ '. $filename .' ] is '. $line);
+                    $filename = '';
+                }
             }
-            echo $line;
-            flush();
             $error = true;
         }
-        if ($error) {
-            echo "\n</pre>";
-            $this->fail();
-        } else {
+        if (!$error) {
             $this->pass();
         }
     }
@@ -54,6 +55,8 @@ class UTF8Test extends UnitTestCase {
                 (strstr($result, 'Probable Charset = UTF-8') === FALSE)
             ) {
                 $this->fail('The file [ '. $file . ' ] has '. implode(', ', explode("\n", $result)));
+            } else {
+                $this->pass();
             }
         }
     }
