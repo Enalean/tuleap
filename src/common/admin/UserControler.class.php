@@ -99,89 +99,95 @@ class UserControler extends Controler {
         $request =& HTTPRequest::instance();
 
 
+        //default case
+        if (!isset($_GET['user_shortcut_search']) && !isset($_POST['user_name_search']) && !isset($_POST['user_group_search']) && !isset($_POST['user_status_search'])) {
 
-        //search by shortcut
-        if(isset($_GET['user_name_search'])){       
-            
-            $whiteListArray = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-            
-            $v = new Valid('user_name_search');
-            $v->addRule(new Rule_WhiteList($whiteListArray));
-            
-            if($request->valid($v)) {
-                $shortcut = $request->get('user_name_search');
-                $criteria[] = new UserShortcutCriteria($shortcut);
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-            }
+            $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());
         }
+        else {
 
-        //search by user name
-        if (isset($_POST['user_name_search'])) {
+            //search by shortcut
+            if(isset($_GET['user_shortcut_search'])){       
+            
+                $whiteListArray = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+            
+                $v = new Valid('user_shortcut_search');
+                $v->addRule(new Rule_WhiteList($whiteListArray));
+            
+                if($request->valid($v)) {
+                    $shortcut = $request->get('user_shortcut_search');
+                    $criteria[] = new UserShortcutCriteria($shortcut);
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+                }
+            }
+
+            //search by user name
+            if (isset($_POST['user_name_search'])) {
            
-            $vuName = new Valid_String('user_name_search');
+                $vuName = new Valid_String('user_name_search');
  
-            if ($request->valid($vuName)) {
+                if ($request->valid($vuName)) {
 
-                if ($request->isPost()) {
-                    $name = $request->get('user_name_search');
-                    $criteria[] = new UserNameCriteria($name);
+                    if ($request->isPost()) {
+                        $name = $request->get('user_name_search');
+                        $criteria[] = new UserNameCriteria($name);
+                    }
+                    else {
+                        $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                    }
                 }
                 else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                    $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
                 }
             }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-            }
-        }
-
-        //search by group name
-        if (isset($_POST['user_group_search'])) {
-           
-            $vuGroup = new Valid_String('user_group_search');
-
-            if ($request->valid($vuGroup)) {
-
-                if ($request->isPost()) {
-                    $group = $request->get('user_group_search');
-                    $criteria[] = new UserGroupCriteria($group);
-                   
-                }
-                else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
-                }
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-            }
-        }
-
-        //search by status
-        if (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
-          
-            $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
             
-            $vuStatus = new Valid('user_status_search');
-            
-            $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
-            
-            if ($request->valid($vuStatus)) {
+            //search by group name
+            if (isset($_POST['user_group_search'])) {
                 
-                if ($request->isPost()) {
-                    $status = $request->get('user_status_search');                
-                    $criteria[] = new UserStatusCriteria($status);
+                $vuGroup = new Valid_String('user_group_search');
+                
+                if ($request->valid($vuGroup)) {
+                    
+                    if ($request->isPost()) {
+                        $group = $request->get('user_group_search');
+                        $criteria[] = new UserGroupCriteria($group);
+                    }
+                    else {
+                        $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                    }
                 }
                 else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                    $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
                 }
             }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            
+            //search by status
+            if (isset($_POST['user_status_search']) && $_POST['user_status_search'] != 'all') {
+                
+                $whiteListArray = array('A', 'R', 'V', 'P', 'D', 'W', 'S');
+                
+                $vuStatus = new Valid('user_status_search');
+                
+                $vuStatus->addRule(new Rule_WhiteList($whiteListArray));
+                
+                if ($request->valid($vuStatus)) {
+                    
+                    if ($request->isPost()) {
+                        $status = $request->get('user_status_search');                
+                        $criteria[] = new UserStatusCriteria($status);
+                    }
+                    else {
+                        $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+                    }
+                }
+                else {
+                    $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+                }
             }
+            $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
         }
-        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
     }
     
     function getOffset() {

@@ -58,7 +58,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displaySearchFilter() {
       
-        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_name_search');
+        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_shortcut_search');
        
         print '<table width=100%>';
 
