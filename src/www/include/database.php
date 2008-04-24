@@ -53,7 +53,7 @@ function db_query($qstring,$print=0) {
 function db_numrows($qhandle) {
 	// return only if qhandle exists, otherwise 0
 	if ($qhandle) {
-		return @mysql_num_rows($qhandle);
+        return @mysql_num_rows($qhandle);
 	} else {
 		return 0;
 	}

@@ -33,10 +33,55 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
  */
 class UserSearchDisplay extends AdminSearchDisplay {
 
-    function __construct($userIterator, $nbrows) {
+    private $userIterator;
+
+    private $offset;
+
+    private $nbrows;
+
+    private $start;
+
+    private $end;
+
+    private $nbuser;
+
+    function __construct($userIterator, $offset, $nbrows, $nbuser) {
         
         $this->userIterator = $userIterator;
+        $this->offset = $offset;
         $this->nbrows = $nbrows;
+        $this->nbuser = $nbuser;
+    }
+
+    /**
+     * initStart()
+     *
+     */
+    function initStart() {
+        $this->start = $this->offset + 1;
+    }
+
+    /**
+     * initEnd()
+     *
+     */
+    function initEnd() {
+        $this->end = $this->offset + $this->nbrows;
+    }
+    /**
+     * getStart()
+     *
+     */
+    function getStart() {
+        return $this->start;
+    }
+
+    /**
+     * getEnd()
+     *
+     */
+    function getEnd() {
+        return $this->end;
     }
 
     /**
@@ -110,7 +155,9 @@ class UserSearchDisplay extends AdminSearchDisplay {
      *
      */
     function displayBrowse() {
-        parent::displayBrowse();
+        $this->initStart();
+        $this->initEnd();
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser);
     }
 
     /**

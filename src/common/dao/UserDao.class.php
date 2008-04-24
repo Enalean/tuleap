@@ -24,13 +24,12 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll($offset=null, $limit=null) {
-        $sql = "SELECT * FROM user";
+        $this->sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user";
 
         if($offset !== null && $limit !== null) {
-            $sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
-        }
-        
-        return $this->retrieve($sql);
+            $this->sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
+        }        
+        return $this->retrieve($this->sql);
     }
     
     /**
@@ -370,7 +369,7 @@ class UserDao extends DataAccessObject {
      */
     function & searchUserByCriteria($ca, $offset, $limit) {
 
-        $sql = 'SELECT * ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 
         $iwhere = 0;
@@ -407,8 +406,19 @@ class UserDao extends DataAccessObject {
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-        
+
         return $this->retrieve($sql);
+    }
+
+    function getFoundRows() {
+        $sql = 'SELECT FOUND_ROWS() as nb';
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            return $row['nb'];
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -416,7 +426,7 @@ class UserDao extends DataAccessObject {
      * @return int
      */
     function & count($function) {   
-        $count = db_num_rows($this->function);
+        $count = db_numrows($this->function);
         return $count;
     }
 }

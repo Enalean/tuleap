@@ -51,17 +51,17 @@ class AdminSearchDisplay extends AdminDisplay {
         print '</p>';        
     }
 
-    function displayBrowse() {
+    function displayBrowse($start, $end, $offset, $limit, $nbuser) {
 
         print '<table width=100%>';
         
         print '<tr>';
         
-        print '<td class="browse_left"><a href="#">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="#">&lt; '.$GLOBALS['Language']->getText('global', 'prev').'X</a></span></td>';
+        print '<td class="browse_left"><a href="index.php?offset=0&limit='.$limit.'">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="index.php?offset='.$offset.'&limit='.$limit.'">&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</a></span></td>';
         
-        print '<td class="browse_center">Items X - Y</td>';
+        print '<td class="browse_center">Items '.$start.' - '.$end.'</td>';
 
-        print '<td class="browse_right"><a href="#">'.$GLOBALS['Language']->getText('global', 'next').'X &gt;</a>  <a href="#">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
+        print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset=&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
 
         print '</tr>';
         

@@ -37,9 +37,7 @@ class UserControler extends Controler {
 
     private $offset;
 
-    private $startlist;
-
-    private $endlist;
+    private $nbuser;
 
     /**
      * constructor
@@ -49,18 +47,31 @@ class UserControler extends Controler {
 
     }
 
-    function viewsManagement() {
-        $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->limit);
-      
+    function viewsManagement() {        
+        $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
         $userSearchDisplay->display();
     }
 
-    function setOffset($offset) {
-        if (!is_null($offset)) {
-            $this->offset = $offset;
+    function setNbUser() {
+        $dao = new UserDao(CodexDataAccess::instance());
+        $this->nbuser = $dao->getFoundRows();
+    }
+
+    function setOffset($offset = null) {
+
+        if ($offset === null) {
+            $this->offset = 0;
         }
         else {
-            $this->offset = 0;
+            $request =& HTTPRequest::instance();
+            
+            $voffset = new valid('offset');
+            $voffset->addRule(new Rule_Int());
+            
+            if ($request->valid($offset)) {
+                $offset = $request->get('offset');
+                $this->offset = $offset;
+            }
         }
     }
 
@@ -70,15 +81,23 @@ class UserControler extends Controler {
 
         $v = new Valid('nbtodisplay');
         $v->addRule(new Rule_Int());
+
+
+        $vlimit = new Valid('limit');
+        $vlimit->addRule(new Rule_Int());
         
         if (isset($limit)) {
          
-            if ($request->valid($v)) {
+            if ($request->valid($v) || $request->valid($vlimit)) {
                 
                 if ($request->isPost()) {
                     $limit = $request->get('nbtodisplay');
                     $this->limit = $limit;
-               }
+                }
+                else {
+                    $limit = $request->get('limit');
+                    $this->limit = $limit;
+                }
             }
             else {
                 $GLOBALS['Response']->addFeedback('error', 'You must enter an integer');
@@ -98,22 +117,16 @@ class UserControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
-
-        //default case
-        if (!isset($_GET['user_shortcut_search']) && !isset($_POST['user_name_search']) && !isset($_POST['user_group_search']) && !isset($_POST['user_status_search'])) {
-
-            $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());
-        }
-        else {
+        if (isset($_GET['user_shortcut_search']) || $_POST['user_name_search'] != '' || $_POST['user_group_search'] != '') {
 
             //search by shortcut
             if(isset($_GET['user_shortcut_search'])){       
-            
+                
                 $whiteListArray = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
             
                 $v = new Valid('user_shortcut_search');
                 $v->addRule(new Rule_WhiteList($whiteListArray));
-            
+                
                 if($request->valid($v)) {
                     $shortcut = $request->get('user_shortcut_search');
                     $criteria[] = new UserShortcutCriteria($shortcut);
@@ -124,12 +137,12 @@ class UserControler extends Controler {
             }
 
             //search by user name
-            if (isset($_POST['user_name_search'])) {
-           
+            if ($_POST['user_name_search'] != '') {
+                
                 $vuName = new Valid_String('user_name_search');
- 
+                
                 if ($request->valid($vuName)) {
-
+                    
                     if ($request->isPost()) {
                         $name = $request->get('user_name_search');
                         $criteria[] = new UserNameCriteria($name);
@@ -144,7 +157,7 @@ class UserControler extends Controler {
             }
             
             //search by group name
-            if (isset($_POST['user_group_search'])) {
+            if ($_POST['user_group_search'] != '') {
                 
                 $vuGroup = new Valid_String('user_group_search');
                 
@@ -186,7 +199,10 @@ class UserControler extends Controler {
                     $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
                 }
             }
-            $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());
+            $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());    
+        }
+        else {
+            $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());         
         }
     }
     
@@ -197,14 +213,20 @@ class UserControler extends Controler {
     function getLimit() {
         return $this->limit;
     }
+
+    function getNbUser() {
+        return $this->nbuser;
+    }
     
     function request() {
 
-        $this->setOffset($this->offset);
-
-        $this->setLimit($_POST['nbtodisplay']);
+        $this->setOffset($_GET['offset']);
         
+        $this->setLimit($_POST['nbtodisplay']);
+               
         $this->setUserIterator();
+        
+        $this->setNbUser();
     }
 }
 
