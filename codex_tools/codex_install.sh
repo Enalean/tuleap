@@ -820,7 +820,7 @@ fi
 
 if [ ! -d "/var/lib/mysql/codex" ]; then
     freshdb=1
-    $MYSQL -u root $pass_opt -e "create database codex DEFAULT CHARACTER SET utf8 COLLATE utf8_bin"
+    $MYSQL -u root $pass_opt -e "create database codex DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
@@ -857,7 +857,7 @@ fi
 
 if [ ! -d "/var/lib/mysql/salome" ]; then
     freshdb=1
-    $MYSQL -u root $pass_opt -e "create database salome DEFAULT CHARACTER SET utf8 COLLATE utf8_bin"
+    $MYSQL -u root $pass_opt -e "create database salome DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES ON salome.* TO salomeadm IDENTIFIED BY '$slm_passwd';
 FLUSH PRIVILEGES;
@@ -1366,9 +1366,8 @@ $CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
 $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 # salome plugin
-TODO ask salome pwd
 $CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $salome_pwd $INSTALL_DIR/plugins/salome/webapps/jdbc_client/cfg/
+java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/webapps/jdbc_client/cfg/
 
 ##############################################
 # End of installation
