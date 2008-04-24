@@ -127,6 +127,7 @@ class Layout extends Response {
         foreach($html_options as $key => $value) {
             echo $key .'="'. $value .'"';
         }
+        echo '>';
         echo '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
         echo '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
         foreach($items as $i => $item) {
