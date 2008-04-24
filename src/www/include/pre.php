@@ -135,8 +135,10 @@ require_once('help.php');
 //exit_error library
 require_once('exit.php');
 
-//various html libs like button bar, themable
-require_once('html.php');
+if (! IS_SCRIPT) {
+    //various html libs like button bar, themable
+    require_once('html.php');
+}
 
 //left-hand nav library, themable
 require_once('menu.php');
@@ -206,7 +208,6 @@ if (user_isloggedin()) {
 //Set up the vars and theme functions 
 if(!IS_SCRIPT) {
     require_once('theme.php');
-
 
     // HTML layout class, may be overriden by the Theme class
 
@@ -294,7 +295,6 @@ if (!IS_SCRIPT &&
     } else {
         header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
     }
-    exit;
 }
 
 if (!IS_SCRIPT &&

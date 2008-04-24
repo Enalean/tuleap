@@ -161,10 +161,10 @@ if ( $func == 'gotoid' ) {
                         // CC
                         $add_cc = $request->get('add_cc');
                         $array_add_cc = split('[,;]', $add_cc);
-			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                        exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
-			}
-			// Files
+						if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
+                        	exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+						}
+				// Files
                         if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
@@ -209,6 +209,12 @@ if ( $func == 'gotoid' ) {
                                 $agnf =& new ArtifactGlobalNotificationFactory();
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
+				
+								// add the artifact to date reminder processing table, if relevant
+								if ($ah->getStatusID() == 1) {
+									$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+                        		}
+				
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                         }
@@ -297,7 +303,13 @@ if ( $func == 'gotoid' ) {
                                     $agnf =& new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
+
+				// add the artifact to date reminder processing table, if relevant
+				if ($ah->getStatusID() == 1) {
+					$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+				}
+
+				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
 								if ($ath->getStopNotification()) {
 									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
 								}                            
