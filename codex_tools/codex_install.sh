@@ -1365,6 +1365,11 @@ $CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
 # serverupdate plugin
 $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
+# salome plugin
+TODO ask salome pwd
+$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $salome_pwd $INSTALL_DIR/plugins/salome/webapps/jdbc_client/cfg/
+
 ##############################################
 # End of installation
 #
