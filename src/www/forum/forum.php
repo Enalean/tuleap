@@ -125,12 +125,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         // MV: add management on "on post monitoring"
         $vMonitor = new Valid_WhiteList('enable_monitoring', array('1'));
         $vMonitor->required();
-        if($request->valid($vMonitor)) {
+        $vThreadId = new Valid_UInt('thread_id');
+        $vThreadId->required();
+        
+        if($request->valid($vMonitor) && $request->valid($vThreadId)) {
             if(user_isloggedin()) {
-                if(!forum_is_monitored($forum_id, user_getid())) {
-                    if (forum_add_monitor ($forum_id, user_getid()) ) {
-                        $feedback .= $Language->getText('forum_monitor','now_monitoring');              
-                    } else {
+                if(!user_monitor_forum($forum_id, user_getid())) {
+                    if (! forum_thread_add_monitor ($forum_id, $request->get('thread_id'),user_getid()) ) {
                         $feedback .= $Language->getText('forum_forum_utils','insert_err');
                     }
                 }
@@ -139,8 +140,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         // Note: there is a 'msg_id' send but not used here.
 
-        $vThreadId = new Valid_UInt('thread_id');
-        $vThreadId->required();
 
         $vFollowUp = new Valid_UInt('is_followup_to');
         $vFollowUp->required();
