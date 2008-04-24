@@ -150,10 +150,10 @@ if ( $func == 'gotoid' ) {
                         
                         // CC
                         $array_add_cc = split('[,;]', $add_cc);
-			if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                        exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
-			}
-			// Files
+						if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
+                        	exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+						}
+				// Files
                         if ($add_file && !util_check_fileupload($input_file)) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
@@ -197,8 +197,10 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
 				
-				// add the artifact to date reminder processing table, if relevant
-				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);				
+								// add the artifact to date reminder processing table, if relevant
+								if ($ah->getStatusID() == 1) {
+									$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+                        		}
 				
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');
@@ -284,7 +286,9 @@ if ( $func == 'gotoid' ) {
                                     $ah->mailFollowupWithPermissions($addresses);
 
 				// add the artifact to date reminder processing table, if relevant
-				$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+				if ($ah->getStatusID() == 1) {
+					$ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
+				}
 
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',$ah->getID()));
                             require('./browse.php');

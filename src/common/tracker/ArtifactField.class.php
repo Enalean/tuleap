@@ -1289,15 +1289,15 @@ class ArtifactField extends Error {
 		    $this->setDefaultReminderSettings($this->field_id,$group_artifact_id);
 		    //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
 		    $art = sprintf('SELECT * FROM artifact'
-				  .' WHERE group_artifact_id=%d'
-				  .' AND status_id <> 3',
-				  $group_artifact_id);
+                                 .' WHERE group_artifact_id=%d'
+                                 .' AND status_id <> 3',
+                                 $group_artifact_id);
 		    $res_art = db_query($art);
 		    if (db_numrows($res_art) > 0) {
 		        while ($arr = db_fetch_array($res_art)) {
 		            $artifact_id = $arr['artifact_id'];
 		            $ath->addArtifactToDateReminderProcessing($this->field_id,$artifact_id,$group_artifact_id);
-			}
+				}
 		    }
 		}
 				
