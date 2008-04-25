@@ -924,6 +924,7 @@ class Artifact extends Error {
 					$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
 			}
 	    }
+	    }
 
             // Comment field history is handled a little differently. Followup comments
             // are added in the bug history along with the comment type.
