@@ -33,18 +33,53 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
  */
 class UserSearchDisplay extends AdminSearchDisplay {
 
+    /**
+     * $useIterator
+     *
+     * @type Iterator $userIterator
+     */
     private $userIterator;
 
+    /**
+     * $offset
+     *
+     * @type int $offset
+     */
     private $offset;
 
+    /**
+     * $nbrows
+     *
+     * @type int $nbrows
+     */
     private $nbrows;
 
+    /**
+     * $start
+     *
+     * @type int $start
+     */
     private $start;
 
+    /**
+     * $end
+     *
+     * @type int $end
+     */
     private $end;
 
+    /**
+     * $nbuser
+     *
+     * @type int $nbuser
+     */
     private $nbuser;
 
+    /**
+     * $iffsetmax
+     *
+     * @type int $offsetmax
+     */
     private $offsetmax;
 
     function __construct($userIterator, $offset, $nbrows, $nbuser) {
@@ -77,9 +112,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
         }
     }
 
+    /**
+     * initMaxOffset()
+     *
+     */
     function initMaxOffset() {
 
-        $this->offsetmax = floor($this->nbuser / $this->nbrows) * $this->nbrows;
+        $this->offsetmax = $this->nbuser - $this->nbrows;
     }
 
     /**

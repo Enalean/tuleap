@@ -75,44 +75,53 @@ class UserControler extends Controler {
         }
     }
 
-    function setLimit($limit) {
-
-        $request =& HTTPRequest::instance();
-
-        $v = new Valid('nbtodisplay');
-        $v->addRule(new Rule_Int());
-
-
-        $vlimit = new Valid('limit');
-        $vlimit->addRule(new Rule_Int());
+    function setLimit() {
         
-        if (isset($limit)) {
-         
-            if ($request->valid($v) || $request->valid($vlimit)) {
-                
+        $request =& HTTPRequest::instance();
+        
+        if ($_GET['limit']) {
+
+            $vlimit = new Valid('limit');
+            $vlimit->addRule(new Rule_Int());
+
+            if ($request->valid($vlimit)) {
+                $limit = $request->get('limit');
+                $this->limit = $limit;
+            }
+            else {
+
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+        }
+        elseif ($_POST['nbtodisplay']) {
+
+            $v = new Valid('nbtodisplay');
+            $v->addRule(new Rule_Int());
+
+            if ($request->valid($v)) {
                 if ($request->isPost()) {
                     $limit = $request->get('nbtodisplay');
                     $this->limit = $limit;
                 }
                 else {
-                    $limit = $request->get('limit');
-                    $this->limit = $limit;
+                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST'); 
                 }
+                
             }
             else {
-                $GLOBALS['Response']->addFeedback('error', 'You must enter an integer');
-                $this->setLimit($limit);
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid'); 
             }
+ 
         }
         else {
             $this->limit = 50;
         }
     }
-
+ 
     function setUserIterator() {
 
         $dao = new UserDao(CodexDataAccess::instance());
-
+        
         $criteria = array();
 
         $request =& HTTPRequest::instance();
@@ -222,7 +231,7 @@ class UserControler extends Controler {
 
         $this->setOffset($_GET['offset']);
         
-        $this->setLimit($_POST['nbtodisplay']);
+        $this->setLimit();
                
         $this->setUserIterator();
         
