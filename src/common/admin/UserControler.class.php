@@ -31,12 +31,32 @@ require_once('common/mvc/Controler.class.php');
 
 class UserControler extends Controler {
 
+    /**
+     * $userIterator
+     *
+     * @type Iterator $userIterator
+     */
     private $userIterator;
     
+    /** 
+     * $limit
+     *
+     * @type int $limit
+     */
     private $limit;
 
+    /**
+     * $offset
+     *
+     * @type int $offset
+     */
     private $offset;
 
+    /**
+     * $nbuser
+     *
+     * @type int $nbuser
+     */
     private $nbuser;
 
     /**
