@@ -68,13 +68,18 @@ class UserSearchDisplay extends AdminSearchDisplay {
      *
      */
     function initEnd() {
-        $this->end = $this->offset + $this->nbrows;
+
+        if ($this->nbrows > $this->nbuser) {
+            $this->end = $this->nbuser;
+        }
+        else {
+            $this->end = $this->offset + $this->nbrows;
+        }
     }
 
     function initMaxOffset() {
 
         $this->offsetmax = floor($this->nbuser / $this->nbrows) * $this->nbrows;
-        echo $this->offsetmax;
     }
 
     /**

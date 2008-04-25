@@ -61,7 +61,6 @@ class UserControler extends Controler {
 
         if ($offset === null) {
             $this->offset = 0;
-            echo 'offset cas null '.$this->offset;
         }
         else {
             $request =& HTTPRequest::instance();
@@ -72,14 +71,7 @@ class UserControler extends Controler {
             if ($request->valid($voffset)) {
                 $offset = $request->get('offset');
                 $this->offset = $offset;
-
-                echo 'offset init '>$this->offset;
-
             }
-            else {
-                echo 'Mistake';
-            }
-
         }
     }
 
