@@ -185,6 +185,8 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrows.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
         
         print '</form>';
+
+        print $this->nbuser.' '.$GLOBALS['Language']->getText('tracker_include_report','matching');
     }
 
     /**
