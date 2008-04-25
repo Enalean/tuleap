@@ -177,126 +177,6 @@ class ArtifactDateReminderFactory extends Error {
 	
 	}
 	
-	/**
-	* Get the notification start date (Unix timestamp) for a given event 
-	* 
-	* @return int
-	*/
-	function getNotificationStartDate() {
-	
-	    $sql = sprintf('SELECT notification_start, notification_type FROM artifact_date_reminder_settings'
-			    .' WHERE reminder_id=%d'
-			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
-	    $res  =db_query($sql);
-	    $start = db_result($res,0,'notification_start');    
-	    $type = db_result($res,0,'notification_type');
-	    $date_value = $this->getDateValue();    
-	    $shift = intval($start * 24 * 3600);
-	    if ($type == 0) {
-	        //notification starts before occurence date
-	        $notif_start_date = intval($date_value - $shift);
-	    } else {
-	        //notification starts after occurence date
-	        $notif_start_date = intval($date_value + $shift);
-	    }
-
-	    return $notif_start_date;	    
-	    
-	}
-	
-	/**
-	* Get the recurse of the event : how many reminders have to be sent
-	*
-	* @return int
-	*/
-	function getRecurse() {
-	    
-	    $sql = sprintf('SELECT recurse FROM artifact_date_reminder_settings'
-			    .' WHERE reminder_id=%d'
-			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
-	    $res = db_query($sql);
-	    
-	    return db_result($res,0,'recurse');
-	    
-	}
-
-	/**
-	* Get the frequency of the event : interval of reminder mails
-	*
-	* @return int
-	*/
-	function getFrequency() {
-	    
-	    $sql = sprintf('SELECT frequency FROM artifact_date_reminder_settings'
-			    .' WHERE reminder_id=%d'
-			    .' AND field_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $this->getReminderId(),$this->getFieldId(),$this->getGroupArtifactId());
-	    $res = db_query($sql);
-	    
-	    return db_result($res,0,'frequency');
-	    
-	}
-	
-	/**
-	* Get the date (unix timestamp) of next reminder mail
-	* 
-	* @return int
-	*/
-	function getNextReminderDate() {
-	
-	    if ($this->getNotificationSent() < $this->getRecurse()) {
-	        $shift = intval($this->getFrequency() * $this->getNotificationSent() * 24 * 3600);
-	        return intval($this->getNotificationStartDate() + $shift);
-	    }
-	
-	}
-	
-	/**
-	* Get the date field value corresponding to this object
-	* 
-	* @return int
-	*/
-	function getDateValue() {
-		    
-	    $group = group_get_object($this->getGroupId());   
-	    $at = new ArtifactType($group,$this->getGroupArtifactId());
-	    $art_field_fact = new ArtifactFieldFactory($at);
-	    $field = $art_field_fact->getFieldFromId($this->getFieldId());  	     
-
-	    if (! $field->isStandardField()) {
-	        $qry = sprintf('SELECT valueDate FROM artifact_field_value'
-				.' WHERE artifact_id=%d'
-				.' AND field_id=%d',
-				$this->getArtifactId(),$this->getFieldId());
-	        $result = db_query($qry);
-	        $valueDate = db_result($result,0,'valueDate');	    
-	    } else {
-	        //End Date
-	        $qry = sprintf('SELECT close_date FROM artifact'
-				.' WHERE artifact_id=%d'
-				.' AND group_artifact_id=%d',
-				$this->getArtifactId(),$this->getGroupArtifactId());
-	        $result = db_query($qry);		    	    
-	        $valueDate = db_result($result,0,'close_date');
-	    }
-	    
-	    return $valueDate;
-	    
-	}
-	
-	/**
-	 * Get the number of mails that should have been sent, but
-	 * weren't sent due to different possible issues
-	 *
-	 * @return int
-	 */
-	function getNotificationToBeSent() {
-
     /**
      * Get the notification start date (Unix timestamp) for a given event 
      * 
@@ -576,9 +456,6 @@ class ArtifactDateReminderFactory extends Error {
         return $res;
     }
 
-		return $res;
-	}
-		
 	/**
 	* Check if user (user_id) is allowed to receive reminder mail
 	*
