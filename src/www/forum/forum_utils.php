@@ -432,6 +432,8 @@ function get_forum_saved_date($forum_id) {
 function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum_id) {
   global $feedback,$Language;
 	if (user_isloggedin()) {
+		
+		$request =& HTTPRequest::instance();
 		if (!$group_forum_id) {
 			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','post_without_id'));
 		}
@@ -492,7 +494,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
 		$msg_id=db_insertid($result);
 		
-		if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring']) {
+		if ($request->isPost('enable_monitoring') && $request->exist('enable_monitoring')) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
 		} else {
 		    forum_thread_delete_monitor($group_forum_id, $msg_id);
@@ -632,7 +634,6 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             $mail =& new Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . util_unconvert_htmlspecialchars(db_result($result,0,'forum_name'))." - ". db_result($result,0, 'user_name') ."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
-            print $tolist;
             $mail->setBcc($tolist);
             
 	        $url1 = get_server_url()."/forum/monitor.php?forum_id=".$forum_id;
