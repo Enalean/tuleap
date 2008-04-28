@@ -27,7 +27,7 @@ require_once('Docman_Metadata.class.php');
 
 class Docman_MetadataHtmlFactory {
     
-    function &getFromMetadata(&$md, $formParams) {
+    function getFromMetadata($md, $formParams) {
         $mdh = null;
 
         switch($md->getLabel()) {
@@ -66,14 +66,11 @@ class Docman_MetadataHtmlFactory {
         $formParams = array('form_name' => $formName,
                             'theme_path' => $themePath);
 
-        $mdIter->rewind();
-        while($mdIter->valid()) {
-            $md =& $mdIter->current();
+        foreach($mdIter as $md) {
             if(($whitelist && isset($mdla[$md->getLabel()]))
                || (!$whitelist && !isset($mdla[$md->getLabel()]))) {
                 $fields[$md->getLabel()] = $this->getFromMetadata($md, $formParams);
             }
-            $mdIter->next();
         }
         return $fields;
     }
