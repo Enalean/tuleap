@@ -54,8 +54,6 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
           
         }
 
-        include($GLOBALS['Language']->getContent('project/template_my'));
-        
         //{{{ Projects where current user is admin
         $result = db_query("SELECT groups.group_name AS group_name, "
             . "groups.group_id AS group_id, "
@@ -70,6 +68,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         echo db_error($result);
         $rows = db_numrows($result);
         if ($result && $rows) {
+            include($GLOBALS['Language']->getContent('project/template_my'));
             echo '<br />';
             $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose_admin'));
             print '<TABLE width="100%">';
