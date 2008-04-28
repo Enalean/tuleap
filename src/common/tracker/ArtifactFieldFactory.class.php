@@ -414,7 +414,7 @@ class ArtifactFieldFactory extends Error {
 		',"'. db_es($field->getDisplayType()) .'","'. db_es($field->getDisplaySize()) .'","'. db_es($field->getLabel()) .
 		'","'. db_es($field->getDescription()) .'","'. db_es($field->getScope()) .'",'. db_ei($field->getRequired()) .
 		','. db_ei($field->getEmptyOk()) .','. db_ei($field->getKeepHistory()) .','. db_ei($field->getSpecial()) .
-		',"'. db_es(implode(",",$dest_val_func)) .'","'. db_es($field->getDefaultValue(true)).'","'.db_ei($field->getNotificationStatus()).'")';
+		',"'. db_es(implode(",",$dest_val_func)) .'","'. db_es($field->getDefaultValue(true)).'",'.db_ei($field->getNotificationStatus()).')';
 	      
 	      $res_insert = db_query($sql_insert);
 	      //echo $sql_insert;

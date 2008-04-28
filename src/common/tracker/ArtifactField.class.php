@@ -1299,7 +1299,7 @@ class ArtifactField extends Error {
 		    $art = sprintf('SELECT * FROM artifact'
                                  .' WHERE group_artifact_id=%d'
                                  .' AND status_id <> 3',
-                                 $group_artifact_id);
+                                 db_ei($group_artifact_id));
 		    $res_art = db_query($art);
 		    if (db_numrows($res_art) > 0) {
 		        while ($arr = db_fetch_array($res_art)) {

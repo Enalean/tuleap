@@ -889,7 +889,7 @@ class Artifact extends Error {
                     	$changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
                     	$changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
 
-	$request = HTTPRequest::instance();
+
 						//update date reminder processing data, according to date field value update
 						if ($field->isDateField()) {
 				    		if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
@@ -910,20 +910,20 @@ class Artifact extends Error {
             }
         } // while
 
-	
+		$request = HTTPRequest::instance();
 	    //for masschange look at the special case of changing the submitted_by param
 	    if ($masschange) {
-		reset($HTTP_POST_VARS);
-		while ( list($key, $val) = each($HTTP_POST_VARS)) {
-            $val = $request->get($key); //Don't use HTTP_POST_VARS
-			if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
-				$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
-				$res = db_query($sql);
-				$field = $art_field_fact->getFieldFromName('submitted_by');
-				if ($this->getSubmittedBy() != $val)
-					$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
-			}
-	    }
+			reset($HTTP_POST_VARS);
+			while ( list($key, $val) = each($HTTP_POST_VARS)) {
+            	$val = $request->get($key); //Don't use HTTP_POST_VARS
+				if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
+					$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
+					$res = db_query($sql);
+					$field = $art_field_fact->getFieldFromName('submitted_by');
+					if ($this->getSubmittedBy() != $val)
+						$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
+				}
+	   		}
 	    }
 
             // Comment field history is handled a little differently. Followup comments
