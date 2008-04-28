@@ -91,47 +91,34 @@ function forum_header($params) {
         echo '<P><H3>'.$Language->getText('forum_forum_utils','discuss_forum').': <A HREF="/forum/forum.php?forum_id='.$forum_id.'">'.$forum_name.'</A></H3>';
     }
 
-        if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
-            echo '<P><B>';
+    if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
+        echo '<P><B>';
 
-            $request =& HTTPRequest::instance();
+        $request =& HTTPRequest::instance();
 	    if ($forum_id && user_isloggedin() && !$request->exist('delete')) {
-                if (user_monitor_forum($forum_id,user_getid()) ) {
-                    $msg = $Language->getText('forum_forum_utils','stop_monitor');
-                } else {
-                    $msg = $Language->getText('forum_forum_utils','monitor');
-                }
-	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
-                echo html_image("ic/monitor_forum.png",array()).' '.$msg.'</A> | ';
-				
-		echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
-			        
-		echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
-	        echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
-                print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
-	        echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
-                if (isset($msg_id) && $msg_id) {
-                    echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
-	        } else {
-                    echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
-                }
-	    }
-            
-            echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
-            echo html_image("ic/check.png",array()).' '.$msg.'</A> | '.
-                        '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
-            echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
-                    print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
-            echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
-            if (isset($msg_id) && $msg_id) {
-                echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+            if (user_monitor_forum($forum_id,user_getid()) ) {
+                $msg = $Language->getText('forum_forum_utils','stop_monitor');
             } else {
-                echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+                $msg = $Language->getText('forum_forum_utils','monitor');
             }
-        }
-        
-        // The forum admin link is only displayed for the forum administrators (and the project administrator of course)
-        if (user_ismember($group_id, 'A') || user_ismember($group_id, 'F2')) {
+	        echo '<A HREF="/forum/monitor.php?forum_id='.$forum_id.'">';
+            echo html_image("ic/monitor_forum.png",array()).' '.$msg.'</A> | ';
+				
+			echo '<A HREF="/forum/monitor_thread.php?forum_id='.$forum_id.'"> '.html_image("ic/monitor_thread.png",array()).$Language->getText('forum_forum_utils','monitor_thread').'</A> | ';
+			        
+			echo '<A HREF="/forum/save.php?forum_id='.$forum_id.'">';
+	    	echo  html_image("ic/save.png",array()) .' '.$Language->getText('forum_forum_utils','save_place').'</A> | ';
+        	print ' <a href="forum.php?forum_id='. $forum_id .'#start_new_thread">';
+	    	echo  html_image("ic/thread.png",array()) .' '.$Language->getText('forum_forum_utils','start_thread').'</A> | ';
+        	if (isset($msg_id) && $msg_id) {
+            	echo "<A HREF='".$_SERVER['PHP_SELF']."?msg_id=$msg_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+	    	} else {
+            	echo "<A HREF='".$_SERVER['PHP_SELF']."?forum_id=$forum_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> | ";
+            }
+	    }
+
+        // The forum admin link is only displayed for the forum moderators
+        if (user_ismember($group_id, 'F2')) {
             echo '  <A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('forum_forum_utils','admin').'</A></B>';
             if (isset($params['help']) && $params['help']) {
                 echo ' | ';
@@ -504,7 +491,13 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		}
 
 		$msg_id=db_insertid($result);
-		handle_monitoring($group_forum_id,$msg_id);
+		
+		if(isset($_POST['enable_monitoring']) && $_POST['enable_monitoring']) {
+		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
+		} else {
+		    forum_thread_delete_monitor($group_forum_id, $msg_id);
+		}
+		handle_monitoring($group_forum_id,$thread_id,$msg_id);
 
 	} else {
 
@@ -588,7 +581,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
 
 }
 
-function handle_monitoring($forum_id,$msg_id) {
+function handle_monitoring($forum_id,$thread_id,$msg_id) {
     global $feedback,$sys_lf,$Language;
 	/*
 		Checks to see if anyone is monitoring this forum
@@ -623,7 +616,7 @@ function handle_monitoring($forum_id,$msg_id) {
 
 	if ($result && $rows > 0) {
 		$tolist=implode(result_column_to_array($result),', ');
-		//echo $tolist;
+
 		$sql="SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
 			"FROM forum,user,forum_group_list,groups ".

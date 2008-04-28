@@ -83,6 +83,7 @@ forum_forum_utils	proj_latest_news	Project Latest News
 forum_forum_utils	discuss_forum	Discussion Forums
 forum_forum_utils	stop_monitor	Stop Monitoring Forum
 forum_forum_utils	monitor	Monitor Forum
+forum_forum_utils	monitor_thread	Thread Monitoring Panel
 forum_forum_utils	save_place	Save Place
 forum_forum_utils	start_thread	Start New Thread
 forum_forum_utils	admin	Admin
@@ -113,6 +114,7 @@ forum_forum_utils	mail_sent	Email sent
 forum_forum_utils	mail_not_sent	Email not sent
 forum_forum_utils	people_monitoring	people monitoring
 forum_forum_utils	no_one_monitoring	No one monitoring
+forum_forum_utils	monitor_this_thread	<strong>Monitor this thread</strong>
 #
 #-----------------------------------------------
 # Script: SF/www/forum/index.php
@@ -159,3 +161,11 @@ forum_thread	post_to_thread	Post to this thread
 forum_thread	choose_thread	Choose Thread
 forum_thread	choose_thread_first	Sorry, Choose A Thread First
 forum_thread	view_thread	View Thread
+#
+#-----------------------------------------------
+# Script: src/www/forum/monitor_thread.php
+#
+forum_monitor_thread	tmonitor	Monitor?
+forum_monitor_thread	notice	You are monitoring the whole forum. If you want to monitor only specific threads, Stop Monitoring Forum.
+forum_monitor_thread	monitor_success	Thread monitoring updated.
+forum_monitor_thread	monitor_fail	Thread monitoring update failed.
