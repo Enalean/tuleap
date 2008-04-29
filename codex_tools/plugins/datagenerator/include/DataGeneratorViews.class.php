@@ -31,6 +31,13 @@ class DataGeneratorViews extends Views {
         echo '<form action="/plugins/datagenerator/?action=generate" method="POST">';
         
         echo '<fieldset>';
+        echo '<legend><input type="hidden" name="data[users][generate]" value="0" /><input type="checkbox" name="data[users][generate]" id="data_users" value="1" /><label for="data_users">Users</label></legend>';
+        echo '<table>';
+        echo '<tr><td>Nb to create:</td><td><input type="text" name="data[users][nb]" value="10" /></td></tr>';
+        echo '</table>';
+        echo '</fieldset>';
+        
+        echo '<fieldset>';
         echo '<legend><input type="hidden" name="data[projects][generate]" value="0" /><input type="checkbox" name="data[projects][generate]" id="data_projects" value="1" /><label for="data_projects">Projects</label></legend>';
         echo '<table>';
         echo '<tr><td>Nb to create:</td><td><input type="text" name="data[projects][nb]" value="10" /></td></tr>';
