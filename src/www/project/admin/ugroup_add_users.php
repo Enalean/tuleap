@@ -50,6 +50,9 @@ function display_user_result_table($res) {
             echo '</div>';
             echo '</td>';
         }
+        while($i++ % $nb_cols != 0) {
+            echo '<td width="20%"></td>';
+        }
         echo '</tr></table>';
     } else {
         echo 'No user match';
@@ -61,6 +64,7 @@ $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 if ($ugroup_id) {
     $res = ugroup_db_get_ugroup($ugroup_id);
     if ($res) {
+        $ugroup_name = db_result($res, 0, 'name');
         $hp = CodeX_HTMLPurifier::instance();
         
         //define capitals
@@ -85,11 +89,14 @@ if ($ugroup_id) {
         $valid_order_by = new Valid_WhiteList('order_by', array('name', 'email'));
         $valid_order_by->required();
         
-        $valid_asc = new Valid_WhiteList('', array('asc', 'desc'));
+        $valid_asc = new Valid_WhiteList('asc', array('asc', 'desc'));
         $valid_asc->required();
         
-        $valid_begin = new Valid_WhiteList('', $allowed_begin_values);
+        $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
         $valid_begin->required();
+        
+        $valid_in_project = new Valid_UInt('in_project');
+        $valid_in_project->required();
         
         $offset           = $request->getValidated('offset', 'uint', 0);
         $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 20;
@@ -97,6 +104,7 @@ if ($ugroup_id) {
         $asc              = $request->getValidated('asc', $valid_asc, 'asc');
         $search           = $request->getValidated('search', 'string', '');
         $begin            = $request->getValidated('begin', $valid_begin, '');
+        $in_project       = $request->getValidated('in_project', $valid_in_project, $group_id);
         
         $user = $request->get('user');
         if ($user && is_array($user)) {
@@ -120,28 +128,18 @@ if ($ugroup_id) {
                     '&order_by='. urlencode($order_by) .
                     '&asc='. urlencode($asc) .
                     '&search='. urlencode($search) .
-                    '&begin='. urlencode($begin)
+                    '&begin='. urlencode($begin) .
+                    '&in_project='. urlencode($begin)
                 );
             }
         }
         //Display the page
-        $ugroup_name = db_result($res, 0, 'name');
         project_admin_header(array(
             'title'=> $Language->getText('project_admin_editugroup','edit_ug'),
             'group'=>$group_id,
             'help' => 'UserGroups.html#UGroupCreation')
         );
-        echo '<P><h2>'. 'Add users to '. $ugroup_name .'</h2>';
-        
-        //fetch existing members
-        /*$sql = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
-        $members = array();
-        if ($res = db_query($sql)) {
-            while($data = db_fetch_array($res)) {
-                $members[] = $data['user_id'];
-            }
-        }
-        */
+        echo '<P><h2>'. 'Add users to '.  $hp->purify($ugroup_name, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
         
         //Display the form
         $selected = 'selected="selected"';
@@ -153,9 +151,10 @@ if ($ugroup_id) {
 
         //Filter
         echo '<fieldset><legend>'. 'Filter' .'</legend>';
-        echo '<div>';
+        echo '<div>'. 'Search users:';
+        echo '<ul>';
         //contains
-        echo 'Search users whose name or email contains ';
+        echo '<li>'. 'whose name or email contains ';
         echo '<input type="text" name="search" value="'.  $hp->purify($search, CODEX_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
         //begin
         echo 'or begins with ';
@@ -165,6 +164,14 @@ if ($ugroup_id) {
             echo '<option value="'. $b .'" '. ($b == $begin ? $selected : '') .'>'. $b .'</option>';
         }
         echo '</select>';
+        echo '</li>';
+        echo '<li>'. 'in ';
+        echo '<select name="in_project">';
+        echo '<option value="0" '. ( !$in_project ? $selected : '') .'>'. 'any project' .'</option>';
+        echo '<option value="'. (int)$group_id .'" '. ($in_project == $group_id ? $selected : '') .'>'. 'this project' .'</option>';
+        echo '</select>';
+        echo '</li>';
+        echo '</ul>';
         echo '</div>';
         echo '</fieldset>';
         
@@ -197,10 +204,18 @@ if ($ugroup_id) {
         
         echo '</div>';
         echo '</fieldset>';
-        echo '<div style="text-align:center"><input type="submit" value="Ok" /></div>';
+        echo '<div style="text-align:center"><input type="submit" value="Browse" /></div>';
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
                 FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroup_id) .") AS R
+                ";
+        if ($in_project) {
+            $sql .= " INNER JOIN user_group USING ( user_id ) ";
+        }
+        $sql .= "
                 WHERE status in ('A', 'R') ";
+        if ($in_project) {
+            $sql .= " AND user_group.group_id = ". db_ei($in_project) ." ";
+        }
         if ($search || $begin) {
             $sql .= ' AND ( ';
             if ($search) {
@@ -210,7 +225,7 @@ if ($ugroup_id) {
                 }
             }
             if ($begin) {
-                $sql .= " user.realname LIKE '". db_es($begin) ."%' OR user.user_name LIKE '". db_es($begin) ."' OR user.email LIKE '". db_es($begin) ."%' ";
+                $sql .= " user.realname LIKE '". db_es($begin) ."%' OR user.user_name LIKE '". db_es($begin) ."%' OR user.email LIKE '". db_es($begin) ."%' ";
             }
             $sql .= " ) ";
         }
@@ -237,6 +252,7 @@ if ($ugroup_id) {
                     '&amp;asc='. urlencode($asc) .
                     '&amp;search='. urlencode($search) .
                     '&amp;begin='. urlencode($begin) .
+                    '&amp;in_project='. (int)$in_project .
                     '">';
                 if ($i == $current_page) {
                     echo '<b>'. ($i + 1) .'</b>';
@@ -254,7 +270,7 @@ if ($ugroup_id) {
         $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
         $res_members = db_query($sql_members);
         if (db_numrows($res_members)>0) {
-            echo '<h3>'. 'Members' .'</h3>';
+            echo '<fieldset><legend>'. 'Members' .'</legend>';
             echo '<table>';
             $i = 0;
             $hp = CodeX_HTMLPurifier::instance();
@@ -267,6 +283,7 @@ if ($ugroup_id) {
                 echo '</tr>';
             }
             echo '</table>';
+            echo '</fieldset>';
         }
         echo '</td></tr></table>';
         
