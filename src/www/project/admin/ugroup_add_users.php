@@ -129,7 +129,7 @@ if ($ugroup_id) {
                     '&asc='. urlencode($asc) .
                     '&search='. urlencode($search) .
                     '&begin='. urlencode($begin) .
-                    '&in_project='. urlencode($begin)
+                    '&in_project='. (int)$in_project
                 );
             }
         }
@@ -271,18 +271,18 @@ if ($ugroup_id) {
         $res_members = db_query($sql_members);
         if (db_numrows($res_members)>0) {
             echo '<fieldset><legend>'. 'Members' .'</legend>';
-            echo '<table>';
+            echo '<table border="0" cellspacing="0" cellpadding="0"><tbody>';
             $i = 0;
             $hp = CodeX_HTMLPurifier::instance();
             while ($data = db_fetch_array($res_members)) {
                 echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
+                echo '<td style="white-space:nowrap">'. user_get_name_display_from_id($data['user_id']) .'</td>';
                 echo '<td>';
-                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/group_delete.png" onclick="return confirm(\''.  $hp->purify(addslashes('Remove '. user_get_name_display_from_id($data['user_id']) .' from '. $ugroup_name .'?'), CODEX_PURIFIER_CONVERT_HTML)  .'\');" name="user_id" value="'. $data['user_id'] .'" />';
+                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/group_delete.png" name="user['. $data['user_id'] .']" value="remove" />';
                 echo '</td>';
                 echo '</tr>';
             }
-            echo '</table>';
+            echo '</tbody></table>';
             echo '</fieldset>';
         }
         echo '</td></tr></table>';
