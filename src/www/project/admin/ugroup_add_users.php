@@ -82,12 +82,21 @@ if ($ugroup_id) {
             $allowed_begin_values[] = $data['capital'];
         }
 
+        $valid_order_by = new Valid_WhiteList('order_by', array('name', 'email'));
+        $valid_order_by->required();
+        
+        $valid_asc = new Valid_WhiteList('', array('asc', 'desc'));
+        $valid_asc->required();
+        
+        $valid_begin = new Valid_WhiteList('', $allowed_begin_values);
+        $valid_begin->required();
+        
         $offset           = $request->getValidated('offset', 'uint', 0);
         $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 20;
-        $order_by         = $request->getValidated('order_by', new Valid_WhiteList('', array('name', 'email')), 'name');
-        $asc              = $request->getValidated('asc', new Valid_WhiteList('', array('asc', 'desc')), 'asc');
+        $order_by         = $request->getValidated('order_by', $valid_order_by, 'name');
+        $asc              = $request->getValidated('asc', $valid_asc, 'asc');
         $search           = $request->getValidated('search', 'string', '');
-        $begin            = $request->getValidated('begin', new Valid_WhiteList('', $allowed_begin_values), '');
+        $begin            = $request->getValidated('begin', $valid_begin, '');
         
         $user = $request->get('user');
         if ($user && is_array($user)) {
@@ -137,10 +146,11 @@ if ($ugroup_id) {
         //Display the form
         $selected = 'selected="selected"';
         echo '<form action="" method="GET">';
+        echo '<table><tr valign="top"><td>';
         echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />';
         echo '<input type="hidden" name="ugroup_id" value="'. (int)$ugroup_id .'" />';
         echo '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
-        
+
         //Filter
         echo '<fieldset><legend>'. 'Filter' .'</legend>';
         echo '<div>';
@@ -211,7 +221,7 @@ if ($ugroup_id) {
         $num_total_rows = db_result($res2, 0, 'nb');
         display_user_result_table($res);
         
-        //Jump tp page
+        //Jump to page
         $nb_of_pages = ceil($num_total_rows / $number_per_page);
         $current_page = round($offset / $number_per_page);
         echo '<div style="font-family:Verdana">Page: ';
@@ -239,6 +249,26 @@ if ($ugroup_id) {
             }
         }
         echo '</div>';
+        
+        echo '</td><td>';
+        $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
+        $res_members = db_query($sql_members);
+        if (db_numrows($res_members)>0) {
+            echo '<h3>'. 'Members' .'</h3>';
+            echo '<table>';
+            $i = 0;
+            $hp = CodeX_HTMLPurifier::instance();
+            while ($data = db_fetch_array($res_members)) {
+                echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
+                echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
+                echo '<td>';
+                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/group_delete.png" onclick="return confirm(\''.  $hp->purify(addslashes('Remove '. user_get_name_display_from_id($data['user_id']) .' from '. $ugroup_name .'?'), CODEX_PURIFIER_CONVERT_HTML)  .'\');" name="user_id" value="'. $data['user_id'] .'" />';
+                echo '</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+        }
+        echo '</td></tr></table>';
         
         echo '</form>';
         echo '<p><a href="/project/admin/editugroup.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'&amp;func=edit">&laquo; Go back to the ugroup edition</a></p>';
