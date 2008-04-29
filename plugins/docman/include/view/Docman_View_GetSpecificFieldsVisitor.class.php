@@ -94,7 +94,57 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     
     function getField() {
         $hp =& CodeX_HTMLPurifier::instance();
-        return '<textarea name="content" cols="50" rows="15">'. $hp->purify($this->content) .'</textarea>';
+        $html = '<script type="text/javascript" src="/scripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
+var embedded_content_rte = null;
+var CodeX_RTE = Class.create({
+        initialize:function(element) {
+            this.element = $(element);
+            this.rte     = false;
+            this.element.insert({before: \'<div><a href="javascript:embedded_rte.toggle();">Toggle rich text formatting</a></div>\'});
+        },
+        init_rte: function() {
+            tinyMCE.init({
+                    // General options
+                    mode : "exact",
+                    elements : this.element.id,
+                    theme : "advanced",
+                    language : "'. substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) .'",
+                    
+                    plugins : "safari,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,pagebreak",
+                    
+                    // Theme options
+                    theme_advanced_toolbar_location : "top",
+                    theme_advanced_toolbar_align : "left",
+                    theme_advanced_statusbar_location : "bottom",
+                    theme_advanced_resizing : true,
+                    theme_advanced_disable : "styleselect",
+                    theme_advanced_buttons1_add_before : "",
+                    theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+                    theme_advanced_buttons2_add_before : "insertdate,inserttime,preview,separator,forecolor,backcolor,|",
+                    theme_advanced_buttons3_add_before : "tablecontrols,separator",
+                    theme_advanced_buttons3_add : "emotions,media,advhr,separator,ltr,rtl,separator,fullscreen",
+                    theme_advanced_buttons4 : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator,insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,|,visualchars,nonbreaking,blockquote,pagebreak,|,insertfile,insertimage",
+            });
+            this.rte = true;
+        },
+        toggle: function() {
+            if (!this.rte) {
+                this.init_rte();
+            } else {
+                if (!tinyMCE.get(this.element.id)) {
+                    tinyMCE.execCommand("mceAddControl", false, this.element.id);
+                } else {
+                    tinyMCE.execCommand("mceRemoveControl", false, this.element.id);
+                }
+            }
+        }
+});
+var embedded_rte = null;
+document.observe("dom:loaded", function() { embedded_rte = new CodeX_RTE("embedded_content"); } );
+</script>';
+        $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">'. $hp->purify($this->content) .'</textarea>';
+        return $html;
     }
 
     function &getValidator() {
