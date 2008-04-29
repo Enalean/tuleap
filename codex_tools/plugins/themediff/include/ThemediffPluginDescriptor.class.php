@@ -2,7 +2,7 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('Themediff', 'Themediff');
+$GLOBALS['Language']->loadLanguageMsg('themediff', 'themediff');
 
 class ThemediffPluginDescriptor extends PluginDescriptor {
     
