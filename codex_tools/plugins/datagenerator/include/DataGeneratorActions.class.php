@@ -43,6 +43,7 @@ class DataGeneratorActions extends Actions {
                             'form_comments'             => '',
                             'built_from_template'       => 100,
                             'is_test'                   => false,
+                            'is_public'                 => true,
                             'trove'                     => array(),
                         )),
                         $do_not_exit = true);/**/
