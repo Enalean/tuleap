@@ -16,7 +16,6 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 
-// On va modifier cette fonction  gestion du tableau
 function show_users_list ($result,$user_name_search="") {
     global $Language;
 	echo '<P>'.$Language->getText('admin_userlist','legend').'
@@ -29,7 +28,6 @@ function show_users_list ($result,$user_name_search="") {
 
     $i = 0;
 
-    //c'est dans cette partie que l'on gere les colonnes ( nombre, titre...)
 
     echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
     echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
@@ -41,7 +39,6 @@ function show_users_list ($result,$user_name_search="") {
     echo "<th>".$Language->getText('admin_userlist','suspended')."</th>\n";
 
     
-    //c'est dans cette partie que l'on affiche les utilisateurs
 	while ($usr = db_fetch_array($result)) {
 		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">";
 		if ($usr['status'] == 'A') print "<B>";
