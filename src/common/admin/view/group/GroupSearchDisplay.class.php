@@ -22,7 +22,10 @@
  *
  * 
  */
-require_once('admin_view.php');
+require_once('pre.php');
+require_once('account.php');
+require_once('www/project/admin/ugroup_utils.php');
+require_once('common/admin/view/AdminSearchDisplay.class.php');
 
 /**
  * GroupSearchDisplay
@@ -30,17 +33,117 @@ require_once('admin_view.php');
  */
 class GroupSearchDisplay extends AdminSearchDisplay {
     
-    function __construct() {
-        
+    /**
+     * $groupIterator
+     *
+     * @type Iterator $groupIterator
+     */
+    private $groupIterator;
+
+    /**
+     * $offset
+     *
+     * @type int $offset
+     */
+    private $offset;
+
+    /**
+     * $nbrows
+     *
+     * @type int $nbrows
+     */
+    private $nbrows;
+
+    /**
+     * $start
+     *
+     * @type int $start
+     */
+    private $start;
+
+    /**
+     * $end
+     *
+     * @type int $end
+     */
+    private $end;
+
+    /**
+     * $nbgroup
+     *
+     * @type int $nbgroup
+     */
+    private $nbgroup;
+
+    /**
+     * $offsetmax
+     *
+     * @type int $offsetmax
+     */
+    private $offsetmax;
+
+    function __construct($groupIterator, $offset, $nbrows, $nbuser) {
+
+        $this->groupIterator = $groupIterator;
+        $this->offset = $offset;
+        $this->nbrows = $nbrows;
+        $this->nbgroup = $nbgroup;        
     }
     
+    /**
+     * initStart()
+     *
+     */
+    function initStart() {
+        $this->start = $this->offset+1;
+    }
+
+    /**
+     * initEnd()
+     *
+     */
+    function initEnd() {
+
+        if ($this->nbrows > $this->nbgroup) {
+            $this->end = $this->nbgroup;
+        }
+        else {
+            $this->end = $this->offset + $this->nbrows;
+        }
+    }
+
+    /**
+     * initMaxOffset()
+     *
+     */
+    function initMaxOffset() {
+
+        $this->offsetmax = $this->nbgroup - $this->nbrows;
+
+    }
+
+    /**
+     * displayHeader()
+     *
+     */
     function displayHeader() {
+
+
+        $GLOBALS['Language']->loadLanguageMsg('admin/admin');
+
+        session_require(array('group'=>'1','admin_flas'=>'A'));
+        //changer le titre
+        $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_userlist','title')));
+        
+
+        
+        //regarder si il n'y a pas de all categorie dans le site-content
         parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>All Categories</b>');
     }
 
     function displaySearchFilter() {
         
-        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_group'));
+        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_group'), '?group_shortcut_search');
 
         print '<table width=100%>';
         
@@ -49,11 +152,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=25%>';
         
         print 'Search (GroupName, GroupUnixName):';
-        print '<form name="usersrch" action="search.php" method="POST">';
-        print '<input type="text" name="search">';
-        print '<input type="hidden" name="usersearch" value="1">';
+        print '<form name="groupsrch" action="index.php" method="POST">';
+        print '<input type="text" name="group_name_search">';
         print '<input type="submit" value="'.$GLOBALS['Language']->getText('admin_main', 'search').'">';
-        print '</form>';
         
         print '</td>';
         
@@ -61,7 +162,8 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<b>Status <a href="javascript:help_window(\'/help/browse_tracker_query_field.php?helpid=101%7C101%7Cstatus_id\')"><b>[?]</b></a></b><br />';
         
-        print '<select name="status_id" id="status_id">';
+        print '<select name="group_status_search" id="status_id">';
+        print '<option value="all">All</options>';
         print '<option value="">Incomplete</option>';
         print '<option value="">Active</option>';
         print '<option value="">Pending</option>';
@@ -75,7 +177,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<b>Public? </b><br />';
         
-        print '<select name="status_id" id="status_id">';
+        print '<select name="group_state_search" id="state_id">';
         print '<option value="">Any</option>';
         print '<option value="">Yes</option>';
         print '<option value="">No</option>';
@@ -86,7 +188,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=25%>';
         print '<b>Project type </b><br />';
         
-        print '<select name="status_id" id="status_id">';
+        print '<select name="group_type_search" id="type_id">';
         print '<option value="">Project</option>';
         print '<option value="">Template</option>';
         print '<option value="">Test Projet</option>';
@@ -102,15 +204,25 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
     }
 
+    /**
+     * displayBrowse()
+     *
+     */
     function displayBrowse() {
-        parent::displayBrowse();
+        $this->initStart();
+        $this->initEnd();
+        $this->initMaxOffset();
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbgroup, $this->offsetmax);
     }
    
+    /**
+     * displaySearch()
+     *
+     */
     function displaySearch() {
      
         $odd_even = array('boxitem', 'boxitemalt');
         $i = 1;
-
 
         print '<table width=100% cellspacing=0 cellpadding=0 border="1" align="center">';
         
@@ -131,8 +243,12 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<th>'.$GLOBALS['Language']->getText('admin_grouplist','members').'</th>';
         
         print '<th>Mailto</th></tr>';
+
+        foreach($this->userIterator as $u) {
         
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
+            //rajouter les test sur les status et rajouter les valeurs des status dans la liste
+
+            print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
 <td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
 <td>codex</td>
 <td >A</td>
@@ -142,303 +258,16 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 <td>0</td>
 <td>1</td>
 <td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_suspended"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>s</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_pending"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>P</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_holding"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >H</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_deleted"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>D</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_incomplete"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>I</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-        
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
-        print '<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td>A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
-
+        }
         print '</table>';
     }
+
+    /**
+     * displayFooter()
+     */
+    function displayFooter() {
+        $GLOBALS['HTML']->footer(array());
+    }
 }
+
 ?>

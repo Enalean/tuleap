@@ -34,7 +34,7 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
 class UserSearchDisplay extends AdminSearchDisplay {
 
     /**
-     * $useIterator
+     * $userIterator
      *
      * @type Iterator $userIterator
      */
@@ -76,7 +76,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
     private $nbuser;
 
     /**
-     * $iffsetmax
+     * $offsetmax
      *
      * @type int $offsetmax
      */
@@ -141,7 +141,8 @@ class UserSearchDisplay extends AdminSearchDisplay {
     function displaySearchFilter() {
       
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_shortcut_search');
-       
+
+        
         print '<table width=100%>';
 
         print '<tr>';
@@ -150,8 +151,12 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php" method="POST">';
-        print '<input type="text" name="user_name_search">';
+        print '<input type="text" name="user_name_search" id="username">';
         
+
+        print '<div class="update" id="username_update"></div> ';
+        print '<input type="hidden" name="username_id" id="username_id" value="" /><br/>';
+
         print '</td>';
 
         print '<td align="center" width=33%>';
@@ -190,7 +195,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
     }
 
     /**
-     * displayBrowse
+     * displayBrowse()
      *
      */
     function displayBrowse() {
@@ -245,6 +250,9 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '</table>';       
     }
 
+    /**
+     * displayFooter()
+     */
     function displayFooter() {
         $GLOBALS['HTML']->footer(array());
     }

@@ -22,15 +22,9 @@
  *
  * 
  */
-require_once('common/admin/UserControler.class.php');
+require_once('common/admin/GroupControler.class.php');
 
-$controler = new UserControler();
+$controler = new GroupControler();
 $controler->process();
 
 ?>
-
-<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
-<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
-<script type="text/javascript" src="/scripts/autocompletion.js"></script>
-
-<script type="text/javascript">autocomplete();</script>

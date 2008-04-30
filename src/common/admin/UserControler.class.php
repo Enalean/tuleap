@@ -25,6 +25,7 @@
 require_once('pre.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');
 require_once('common/admin/view/user/UserSearchDisplay.class.php');
+//require_once('common/admin/view/user/UserAutocompletionForm.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/mvc/Controler.class.php');
@@ -67,16 +68,30 @@ class UserControler extends Controler {
 
     }
 
+    /**
+     * viewManagement()
+     */
     function viewsManagement() {        
         $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
         $userSearchDisplay->display();
+        //        $userAutocompletionForm = new UserAutocompletionForm($this->userIterator);
+        //$userAutocompletionForm->display();
+       
     }
 
+    /**
+     * setNbUser()
+     */
     function setNbUser() {
         $dao = new UserDao(CodexDataAccess::instance());
         $this->nbuser = $dao->getFoundRows();
     }
 
+    /**
+     * setOffset()
+     *
+     * @param int $offset
+     */
     function setOffset($offset = null) {
 
         if ($offset === null) {
@@ -95,6 +110,9 @@ class UserControler extends Controler {
         }
     }
 
+    /**
+     * setLimit()
+     */
     function setLimit() {
         
         $request =& HTTPRequest::instance();
@@ -126,18 +144,19 @@ class UserControler extends Controler {
                 else {
                     $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST'); 
                 }
-                
             }
             else {
                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid'); 
             }
- 
         }
         else {
             $this->limit = 50;
         }
     }
  
+    /**
+     * setUserIterator()
+     */
     function setUserIterator() {
 
         $dao = new UserDao(CodexDataAccess::instance());
@@ -234,19 +253,31 @@ class UserControler extends Controler {
             $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());         
         }
     }
-    
+
+    /**
+     * getOffset()
+     */    
     function getOffset() {
         return $this->offset;
     }
 
+    /**
+     * getLimit()
+     */
     function getLimit() {
         return $this->limit;
     }
 
+    /**
+     * getNbUser()
+     */
     function getNbUser() {
         return $this->nbuser;
     }
     
+    /**
+     * request()
+     */
     function request() {
 
         $this->setOffset($_GET['offset']);
@@ -256,6 +287,7 @@ class UserControler extends Controler {
         $this->setUserIterator();
         
         $this->setNbUser();
+
     }
 }
 

@@ -34,10 +34,21 @@ class AdminSearchDisplay extends AdminDisplay {
         
     }
 
+    /**
+     * displayHeader()
+     *
+     * @param $header
+     */
     function displayHeader($header) {
         parent::displayHeader($header);        
     }
     
+    /**
+     * displaySearchFilter
+     *
+     * @param array $abc_entitled
+     * @param string $letterlink
+     */
     function displaySearchFilter($abc_entitled, $letterlink) {       
 
         $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
@@ -51,6 +62,16 @@ class AdminSearchDisplay extends AdminDisplay {
         print '</p>';        
     }
 
+    /**
+     * displayBrowse
+     *
+     * @param int $start
+     * @param int $end
+     * @param int $offset
+     * @param int $limit
+     * @param int $nbuser
+     * @param int $offsetmax
+     */
     function displayBrowse($start, $end, $offset, $limit, $nbuser, $offsetmax) {
 
       $prev = $offset - $limit;
@@ -70,11 +91,11 @@ class AdminSearchDisplay extends AdminDisplay {
       print '<td class="browse_center">Items '.$start.' - '.$end.'</td>';
 
       if ($offset >= ($nbuser-1)|| $offsetmax <=0) {
-          echo 'condition ';
+          
  print '<td class="browse_right">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</td>';
       }
       else {
-          echo 'coucou';
+          
           print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset='.$offsetmax.'&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
       }
 
@@ -83,6 +104,9 @@ class AdminSearchDisplay extends AdminDisplay {
       print '</table>';
     }
 
+    /**
+     * display
+     */
     function display() {
 
         //Header
