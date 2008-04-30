@@ -180,7 +180,7 @@ class UserControler extends Controler {
                 
                 if($request->valid($v)) {
                     $shortcut = $request->get('user_shortcut_search');
-                    $criteria[] = new UserShortcutCriteria($shortcut);
+                    $criteria[] = new UserShortcut($shortcut);
                 }
                 else {
                     $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -196,7 +196,7 @@ class UserControler extends Controler {
                     
                     if ($request->isPost()) {
                         $name = $request->get('user_name_search');
-                        $criteria[] = new UserNameCriteria($name);
+                        $criteria[] = new UserName($name);
                     }
                     else {
                         $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
@@ -216,7 +216,7 @@ class UserControler extends Controler {
                     
                     if ($request->isPost()) {
                         $group = $request->get('user_group_search');
-                        $criteria[] = new UserGroupCriteria($group);
+                        $criteria[] = new UserGroup($group);
                     }
                     else {
                         $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
@@ -240,7 +240,7 @@ class UserControler extends Controler {
                     
                     if ($request->isPost()) {
                         $status = $request->get('user_status_search');                
-                        $criteria[] = new UserStatusCriteria($status);
+                        $criteria[] = new UserStatus($status);
                     }
                     else {
                         $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');

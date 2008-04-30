@@ -23,7 +23,7 @@
  * 
  */
 
-class UserNameCriteria implements iStatement {
+class UserName implements iStatement {
 
     private $name;
 
@@ -40,7 +40,7 @@ class UserNameCriteria implements iStatement {
     function getGroupBy() {}
 }
 
-class UserGroupCriteria implements iStatement {
+class UserGroup implements iStatement {
 
     private $group;
 
@@ -61,7 +61,7 @@ class UserGroupCriteria implements iStatement {
     }
 }
 
-class UserStatusCriteria implements iStatement {
+class UserStatus implements iStatement {
 
     private $status;
 
@@ -78,7 +78,7 @@ class UserStatusCriteria implements iStatement {
     function getGroupBy() {}
 }
 
-class UserShortcutCriteria implements iStatement {
+class UserShortcut implements iStatement {
 
     private $shortcut;
 
