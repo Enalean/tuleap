@@ -253,7 +253,7 @@ class UserControler extends Controler {
                 }
             }
         }
-        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());    
+        $this->userIterator = $dao->searchUserByFilter($criteria, $this->getOffset(), $this->getLimit());    
     }
 
     /**

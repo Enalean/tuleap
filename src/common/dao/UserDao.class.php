@@ -365,7 +365,7 @@ class UserDao extends DataAccessObject {
      * search user by criteria
      *
      */
-    function & searchUserByCriteria($ca, $offset, $limit) {
+    function & searchUserByFilter($ca, $offset, $limit) {
         
 
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';

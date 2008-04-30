@@ -27,7 +27,7 @@ require_once('StatementInterface.php');
 /**
  * init SQL request to search user by name
  */
-class UserName implements iStatement {
+class UserNameFilter implements iStatement {
 
     /**
      * $name
@@ -52,7 +52,7 @@ class UserName implements iStatement {
 /**
  * init SQL request to search user by group name
  */
-class UserGroup implements iStatement {
+class UserGroupFilter implements iStatement {
 
     /**
      * $group
@@ -81,7 +81,7 @@ class UserGroup implements iStatement {
 /**
  * init SQL request to search user by status
  */
-class UserStatus implements iStatement {
+class UserStatusFilter implements iStatement {
 
     /**
      * $status
@@ -107,7 +107,7 @@ class UserStatus implements iStatement {
  * init SQL request to search user by shortcut
  *
  */
-class UserShortcut implements iStatement {
+class UserShortcutFilter implements iStatement {
 
     /**
      * $shortcut
