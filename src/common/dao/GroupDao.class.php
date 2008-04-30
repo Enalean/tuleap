@@ -3,6 +3,7 @@
 
 
 require_once('include/DataAccessObject.class.php');
+require_once('GroupFilter.php');
 
 /**
  *  Data Access Object for User 
@@ -99,16 +100,7 @@ class GroupDao extends DataAccessObject {
     }
 }
 
-interface Statements {
-
-    public function getJoin();
-
-    public function getWhere();
-
-    public function getGroupBy();
-}
-
-class GroupNameCriteria implements Statements {
+class GroupName implements Statement {
 
     private $name;
 
@@ -127,7 +119,7 @@ class GroupNameCriteria implements Statements {
 
 
 //adapter les classe et les requete sql
-class GroupGroupCriteria implements Statements {
+class GroupGroup implements Statement {
 
     private $group;
 
@@ -148,7 +140,7 @@ class GroupGroupCriteria implements Statements {
     }
 }
 
-class GroupStatusCriteria implements Statements {
+class GroupStatus implements Statement {
 
     private $status;
 
@@ -165,7 +157,7 @@ class GroupStatusCriteria implements Statements {
     function getGroupBy() {}
 }
 
-class GroupShortcutCriteria implements Statements {
+class GroupShortcut implements Statement {
 
     private $shortcut;
 
