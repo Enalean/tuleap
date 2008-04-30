@@ -17,6 +17,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 
 function show_users_list ($result,$user_name_search="") {
+    $hp = CodeX-HTMLPurifier::instance();
     global $Language;
 	echo '<P>'.$Language->getText('admin_userlist','legend').'
 		<P>
@@ -27,8 +28,6 @@ function show_users_list ($result,$user_name_search="") {
     } else  $user_name_param="";
 
     $i = 0;
-
-
     echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
     echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
     echo "<th>Profile</th><th>".$Language->getText('admin_userlist','active')."</th>\n";
@@ -38,7 +37,6 @@ function show_users_list ($result,$user_name_search="") {
     echo "<th>".$Language->getText('admin_userlist','deleted')."</th>";
     echo "<th>".$Language->getText('admin_userlist','suspended')."</th>\n";
 
-    
 	while ($usr = db_fetch_array($result)) {
 		print "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\"><TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">";
 		if ($usr['status'] == 'A') print "<B>";
@@ -54,7 +52,7 @@ function show_users_list ($result,$user_name_search="") {
 		if ($usr['status'] == 'S') print "</TD>";
 		if ($usr['status'] == 'P') print "</TD>";
         if ($usr['status'] == 'V') print "</TD>";
-		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">".$usr['realname']."</A></TD>";
+		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">". $hp->purify($usr['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</A></TD>";
 		print "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
                 if ($usr['status'] == 'A') {
                     print "\n<TD>".$Language->getText('admin_userlist','active')."</TD>";
@@ -75,9 +73,6 @@ function show_users_list ($result,$user_name_search="") {
 	print "</TABLE>";
 
 }
-
-
-
 
 // Administrative functions
 if (!isset($action)) {
