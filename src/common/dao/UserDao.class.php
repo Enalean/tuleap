@@ -432,13 +432,4 @@ class UserDao extends DataAccessObject {
     }
 }
 
-interface iStatement {
-
-    public function getJoin();
-
-    public function getWhere();
-
-    public function getGroupBy();
-}
-
 ?>

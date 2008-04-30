@@ -22,9 +22,18 @@
  *
  * 
  */
+require_once('StatementInterface.php');
 
+/**
+ * init SQL request to search user by name
+ */
 class UserName implements iStatement {
 
+    /**
+     * $name
+     *
+     * @type string $name
+     */
     private $name;
 
     function __construct($name) {
@@ -40,8 +49,16 @@ class UserName implements iStatement {
     function getGroupBy() {}
 }
 
+/**
+ * init SQL request to search user by group name
+ */
 class UserGroup implements iStatement {
 
+    /**
+     * $group
+     *
+     * @type string $group
+     */
     private $group;
 
     function __construct($group) {
@@ -61,8 +78,16 @@ class UserGroup implements iStatement {
     }
 }
 
+/**
+ * init SQL request to search user by status
+ */
 class UserStatus implements iStatement {
 
+    /**
+     * $status
+     *
+     * @type string $status
+     */
     private $status;
 
     function __construct($status) {
@@ -78,8 +103,17 @@ class UserStatus implements iStatement {
     function getGroupBy() {}
 }
 
+/**
+ * init SQL request to search user by shortcut
+ *
+ */
 class UserShortcut implements iStatement {
 
+    /**
+     * $shortcut
+     *
+     * @type string $shortcut
+     */
     private $shortcut;
 
     function __construct($shortcut) {
