@@ -6,23 +6,9 @@ new Ajax.Autocompleter ('username',
                         {
                             method: 'post',
 			    minChars: 1,
-                            paramName: 'user_name_search',
-			   
+                            paramName: 'user_name_search'
 			}
 		       );
 
-
-}
-
-
-function ac_return(field, item) {
-
-    alert('coucou');
-
-    alert(field.value);
-    alert(item.value);
-    
-
-document.write(field.split(" "));
 
 }
