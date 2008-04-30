@@ -22,7 +22,6 @@
  *
  * 
  */
-require_once('pre.php');
 require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');

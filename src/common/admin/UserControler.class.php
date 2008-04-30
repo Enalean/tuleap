@@ -25,7 +25,7 @@
 require_once('pre.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');
 require_once('common/admin/view/user/UserSearchDisplay.class.php');
-//require_once('common/admin/view/user/UserAutocompletionForm.class.php');
+require_once('www/admin/user/UserAutocompletionForm.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/mvc/Controler.class.php');
@@ -71,12 +71,15 @@ class UserControler extends Controler {
     /**
      * viewManagement()
      */
-    function viewsManagement() {        
-        $userSearchDisplay = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
-        $userSearchDisplay->display();
-        //        $userAutocompletionForm = new UserAutocompletionForm($this->userIterator);
-        //$userAutocompletionForm->display();
-       
+    function viewsManagement() {
+     
+       //  if($this-> == 'ajax') {
+//             $view = new UserSearchAjaxDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
+//         } 
+//         else {
+            $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
+            // }
+        $view->display();
     }
 
     /**
@@ -241,6 +244,8 @@ class UserControler extends Controler {
                     }
                     else {
                         $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST');
+
+
                     }
                 }
                 else {
@@ -287,7 +292,6 @@ class UserControler extends Controler {
         $this->setUserIterator();
         
         $this->setNbUser();
-
     }
 }
 

@@ -35,7 +35,7 @@ require_once('common/dao/CodexDataAccess.class.php');
 
  
 
-class UserAutocompletionForm {
+class UserSearchAjaxDisplay {
 
     /**
      * $userIterator
@@ -43,9 +43,27 @@ class UserAutocompletionForm {
      * @type Iterator $userIterator
      */
     private $userIterator;
+
+    /**
+     * $offset
+     *
+     * @type int $offset
+     */
+    private $offset;
+
+    /**
+     * $limit
+     *
+     * @type int $limit
+     */
+    private $limit;
+
+
+
     
-    function __construct() {
-        
+    function __construct($userIterator) {
+        $this->userIterator->$userIterator;
+
     }
 
     /**
@@ -93,8 +111,8 @@ class UserAutocompletionForm {
     }
   }
 
-$userAutocompletionForm = new UserAutocompletionForm();
-$userAutocompletionForm->initUserIterator();
-$userAutocompletionForm->display();
+//  $userAutocompletionForm = new UserAutocompletionForm();
+//  $userAutocompletionForm->initUserIterator();
+//  $userAutocompletionForm->display();
 
 ?>
