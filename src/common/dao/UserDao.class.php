@@ -24,11 +24,8 @@ class UserDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll($offset=null, $limit=null) {
+    function & searchAll() {
         $this->sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user";
-
-        if($offset !== null && $limit !== null) {
-            $this->sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
         }        
         return $this->retrieve($this->sql);
     }
@@ -369,40 +366,45 @@ class UserDao extends DataAccessObject {
      *
      */
     function & searchUserByCriteria($ca, $offset, $limit) {
+        
 
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 
-        $iwhere = 0;
+        if (!empty($ca )) {
 
-        foreach($ca as $c) {
+            $iwhere = 0;
+
+            foreach($ca as $c) {
             
-            if ($c->getJoin()) {
-                $join .= $c->getJoin();
+                if ($c->getJoin()) {
+                    $join .= $c->getJoin();
+                }
+                
+                if ($iwhere >= 1) {
+                    $where .= ' AND '.$c->getWhere();
+                    $iwhere++;
+                }
+                else {
+                    $where .= $c->getWhere();
+                    $iwhere++;
+                }
+                
+                if ($c->getGroupBy() !== null) {
+                    $groupby .= $c->getGroupBy();
+                }
+            }  
+            
+            if ($join !== null) {
+                $sql .= ' JOIN '.$join;
             }
-   
-            if ($iwhere >= 1) {
-                $where .= ' AND '.$c->getWhere();
-                $iwhere++;
+            
+            $sql .= ' WHERE '.$where;
+            
+            if ($groupby !== null) {
+                $sql .= ' GROUP BY '.$groupby;
             }
-            else {
-                $where .= $c->getWhere();
-                $iwhere++;
-            }
-
-            if ($c->getGroupBy() !== null) {
-                $groupby .= $c->getGroupBy();
-            }
-        }  
-
-        if ($join !== null) {
-            $sql .= ' JOIN '.$join;
-        }
-
-        $sql .= ' WHERE '.$where;
-        
-        if ($groupby !== null) {
-            $sql .= ' GROUP BY '.$groupby;
+            
         }
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';

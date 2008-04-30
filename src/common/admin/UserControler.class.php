@@ -252,11 +252,8 @@ class UserControler extends Controler {
                     $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
                 }
             }
-            $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());    
         }
-        else {
-            $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());         
-        }
+        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());    
     }
 
     /**
