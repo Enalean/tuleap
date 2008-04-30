@@ -6,6 +6,7 @@
 //
 
 require_once('include/DataAccessObject.class.php');
+require_once('UserFilter.php');
 
 /**
  *  Data Access Object for User 
@@ -431,7 +432,7 @@ class UserDao extends DataAccessObject {
     }
 }
 
-interface Statement {
+interface iStatement {
 
     public function getJoin();
 
@@ -440,76 +441,76 @@ interface Statement {
     public function getGroupBy();
 }
 
-class UserNameCriteria implements Statement {
+// class UserNameCriteria implements Statement {
 
-    private $name;
+//     private $name;
 
-    function __construct($name) {
-        $this->name = $name;
-    }
+//     function __construct($name) {
+//         $this->name = $name;
+//     }
 
-    function getJoin() {}
+//     function getJoin() {}
 
-    function getWhere() {
-        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\')';
-    }
+//     function getWhere() {
+//         return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\')';
+//     }
 
-    function getGroupBy() {}
-}
+//     function getGroupBy() {}
+// }
 
-class UserGroupCriteria implements Statement {
+// class UserGroupCriteria implements Statement {
 
-    private $group;
+//     private $group;
 
-    function __construct($group) {
-        $this->group = $group;
-    }
+//     function __construct($group) {
+//         $this->group = $group;
+//     }
 
-    function getJoin() {
-        return  'user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
-    }
+//     function getJoin() {
+//         return  'user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
+//     }
 
-    function getWhere() {
-        return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
-    }
+//     function getWhere() {
+//         return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
+//     }
 
-    function getGroupBy() {
-        return 'user.user_id';
-    }
-}
+//     function getGroupBy() {
+//         return 'user.user_id';
+//     }
+// }
 
-class UserStatusCriteria implements Statement {
+// class UserStatusCriteria implements Statement {
 
-    private $status;
+//     private $status;
 
-    function __construct($status) {
-        $this->status = $status;
-    }
+//     function __construct($status) {
+//         $this->status = $status;
+//     }
 
-    function getJoin() {}
+//     function getJoin() {}
 
-    function getWhere() {
-        return 'user.status = \''.$this->status.'\'';
-    }
+//     function getWhere() {
+//         return 'user.status = \''.$this->status.'\'';
+//     }
 
-    function getGroupBy() {}
-}
+//     function getGroupBy() {}
+// }
 
-class UserShortcutCriteria implements Statement {
+// class UserShortcutCriteria implements Statement {
 
-    private $shortcut;
+//     private $shortcut;
 
-    function __construct($shortcut) {
-        $this->shortcut = $shortcut;
-    }
+//     function __construct($shortcut) {
+//         $this->shortcut = $shortcut;
+//     }
 
-    function getJoin() {}
+//     function getJoin() {}
 
-    function getWhere() {
-        return '(user_name LIKE \''.$this->shortcut.'%\')';
-    }
+//     function getWhere() {
+//         return '(user_name LIKE \''.$this->shortcut.'%\')';
+//     }
 
-    function getGroupBy() {}
-}
+//     function getGroupBy() {}
+// }
 
 ?>
