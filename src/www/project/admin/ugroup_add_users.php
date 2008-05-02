@@ -23,7 +23,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 
 function display_user_result_table($res) {
-    $nb_cols = 4;
+    $nb_cols = 3;
     if (db_numrows($res)) {
         echo '<table><tr>';
         $i = 0;
@@ -32,14 +32,14 @@ function display_user_result_table($res) {
                 echo '</tr><tr>';
             }
             $action     = 'add';
-            $icon       = '/ic/group_add.png';
+            $icon       = '/ic/add.png';
             $background = 'eee';
             if ($data['is_on']) {
                 $action     = 'remove';
-                $icon       = '/ic/group_delete.png';
+                $icon       = '/ic/delete.png';
                 $background = 'dcf7c4';
             }
-            echo '<td width="20%">';
+            echo '<td width="'. round(100/$nb_cols) .'%">';
             echo '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
             //echo '<div style="float:left;padding-right:3px;"><input type="checkbox" name="user_id" value="'. $data['user_id'] .'" /></div>';
             echo '<div style="">';
@@ -51,7 +51,7 @@ function display_user_result_table($res) {
             echo '</td>';
         }
         while($i++ % $nb_cols != 0) {
-            echo '<td width="20%"></td>';
+            echo '<td width="'. round(100/$nb_cols) .'%"></td>';
         }
         echo '</tr></table>';
     } else {
@@ -86,22 +86,14 @@ if ($ugroup_id) {
             $allowed_begin_values[] = $data['capital'];
         }
 
-        $valid_order_by = new Valid_WhiteList('order_by', array('name', 'email'));
-        $valid_order_by->required();
-        
-        $valid_asc = new Valid_WhiteList('asc', array('asc', 'desc'));
-        $valid_asc->required();
-        
         $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
         $valid_begin->required();
         
         $valid_in_project = new Valid_UInt('in_project');
         $valid_in_project->required();
         
-        $offset           = $request->getValidated('offset', 'uint', 0);
-        $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 20;
-        $order_by         = $request->getValidated('order_by', $valid_order_by, 'name');
-        $asc              = $request->getValidated('asc', $valid_asc, 'asc');
+        $offset           = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
+        $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
         $search           = $request->getValidated('search', 'string', '');
         $begin            = $request->getValidated('begin', $valid_begin, '');
         $in_project       = $request->getValidated('in_project', $valid_in_project, $group_id);
@@ -125,8 +117,6 @@ if ($ugroup_id) {
                     '&ugroup_id='. (int)$ugroup_id .
                     '&offset='. (int)$offset .
                     '&number_per_page='. (int)$number_per_page .
-                    '&order_by='. urlencode($order_by) .
-                    '&asc='. urlencode($asc) .
                     '&search='. urlencode($search) .
                     '&begin='. urlencode($begin) .
                     '&in_project='. (int)$in_project
@@ -145,16 +135,46 @@ if ($ugroup_id) {
         $selected = 'selected="selected"';
         echo '<form action="" method="GET">';
         echo '<table><tr valign="top"><td>';
+        
+        //Display existing members
+        echo '<fieldset><legend>'. 'Members' .'</legend>';
+        $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
+        $res_members = db_query($sql_members);
+        if (db_numrows($res_members)>0) {
+            echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
+            $i = 0;
+            $hp = CodeX_HTMLPurifier::instance();
+            while ($data = db_fetch_array($res_members)) {
+                echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
+                echo '<td style="white-space:nowrap">'. user_get_name_display_from_id($data['user_id']) .'</td>';
+                echo '<td>';
+                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/delete.png" name="user['. $data['user_id'] .']" value="remove" />';
+                echo '</td>';
+                echo '</tr>';
+            }
+            echo '</tbody></table>';
+            echo '</fieldset>';
+        } else {
+            echo 'The group is empty';
+        }
+        
+        echo '</td><td>';
+
         echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />';
         echo '<input type="hidden" name="ugroup_id" value="'. (int)$ugroup_id .'" />';
         echo '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
 
         //Filter
-        echo '<fieldset><legend>'. 'Filter' .'</legend>';
-        echo '<div>'. 'Search users:';
-        echo '<ul>';
+        echo '<fieldset><legend>'. 'Users' .'</legend>';
+        echo '<p>'. 'Search in ';
+        echo '<select name="in_project">';
+        echo '<option value="0" '. ( !$in_project ? $selected : '') .'>'. 'any project' .'</option>';
+        echo '<option value="'. (int)$group_id .'" '. ($in_project == $group_id ? $selected : '') .'>'. 'this project' .'</option>';
+        echo '</select>';
+        echo ' users ';
+        
         //contains
-        echo '<li>'. 'whose name or email contains ';
+        echo 'whose name or email contains ';
         echo '<input type="text" name="search" value="'.  $hp->purify($search, CODEX_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
         //begin
         echo 'or begins with ';
@@ -163,48 +183,25 @@ if ($ugroup_id) {
         foreach($allowed_begin_values as $b) {
             echo '<option value="'. $b .'" '. ($b == $begin ? $selected : '') .'>'. $b .'</option>';
         }
-        echo '</select>';
-        echo '</li>';
-        echo '<li>'. 'in ';
-        echo '<select name="in_project">';
-        echo '<option value="0" '. ( !$in_project ? $selected : '') .'>'. 'any project' .'</option>';
-        echo '<option value="'. (int)$group_id .'" '. ($in_project == $group_id ? $selected : '') .'>'. 'this project' .'</option>';
-        echo '</select>';
-        echo '</li>';
-        echo '</ul>';
-        echo '</div>';
-        echo '</fieldset>';
+        echo '</select>. ';
         
         //Display
-        echo '<fieldset><legend>'. 'Display' .'</legend>';
-        echo '<div>';
-        echo 'Show ';
+        echo '<span style="white-space:nowrap;">Show ';
         //number per page
         echo '<select name="number_per_page">';
-        echo '<option '. ($number_per_page == 20 ? $selected : '') .'>20</option>';
-        echo '<option '. ($number_per_page == 40 ? $selected : '') .'>40</option>';
-        echo '<option '. ($number_per_page == 80 ? $selected : '') .'>80</option>';
-        if (!in_array($number_per_page, array(20, 40, 80))) {
+        echo '<option '. ($number_per_page == 15 ? $selected : '') .'>15</option>';
+        echo '<option '. ($number_per_page == 30 ? $selected : '') .'>30</option>';
+        echo '<option '. ($number_per_page == 60 ? $selected : '') .'>60</option>';
+        if (!in_array($number_per_page, array(15, 30, 60))) {
             echo '<option '. $selected .'>'. (int)$number_per_page .'</option>';
         }
         echo '</select> ';
-        echo 'users sorted by ';
-        //Order by
-        echo '<select name="order_by">';
-        echo '<option value="name"  '. ($order_by == 'name'  ? $selected : '') .'>'. 'name' .'</option>';
-        echo '<option value="email" '. ($order_by == 'email' ? $selected : '') .'>'. 'email' .'</option>';
-        echo '</select> ';
-        echo 'with ';
-        //asc
-        echo '<select name="asc">';
-        echo '<option value="asc"  '. ($asc == 'asc'  ? $selected : '') .'>'. 'ascending order' .'</option>';
-        echo '<option value="desc" '. ($asc == 'desc' ? $selected : '') .'>'. 'descending order' .'</option>';
-        echo '</select> ';
+        echo 'users per page. ';
         
         
-        echo '</div>';
-        echo '</fieldset>';
-        echo '<div style="text-align:center"><input type="submit" value="Browse" /></div>';
+        echo '<input type="submit" name="browse" value="Browse" /></span>';
+        echo '</p>';
+        
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
                 FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroup_id) .") AS R
                 ";
@@ -229,8 +226,9 @@ if ($ugroup_id) {
             }
             $sql .= " ) ";
         }
-        $sql .= "ORDER BY ". ($order_by == 'name' ? (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') : 'email') ." ". $asc ."
+        $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
                 LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
+        //echo $sql;
         $res = db_query($sql);
         $res2 = db_query('SELECT FOUND_ROWS() as nb');
         $num_total_rows = db_result($res2, 0, 'nb');
@@ -248,8 +246,6 @@ if ($ugroup_id) {
                     '&amp;ugroup_id='. (int)$ugroup_id .
                     '&amp;offset='. (int)($i * $number_per_page) .
                     '&amp;number_per_page='. (int)$number_per_page .
-                    '&amp;order_by='. urlencode($order_by) .
-                    '&amp;asc='. urlencode($asc) .
                     '&amp;search='. urlencode($search) .
                     '&amp;begin='. urlencode($begin) .
                     '&amp;in_project='. (int)$in_project .
@@ -266,29 +262,12 @@ if ($ugroup_id) {
         }
         echo '</div>';
         
-        echo '</td><td>';
-        $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
-        $res_members = db_query($sql_members);
-        if (db_numrows($res_members)>0) {
-            echo '<fieldset><legend>'. 'Members' .'</legend>';
-            echo '<table border="0" cellspacing="0" cellpadding="0"><tbody>';
-            $i = 0;
-            $hp = CodeX_HTMLPurifier::instance();
-            while ($data = db_fetch_array($res_members)) {
-                echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                echo '<td style="white-space:nowrap">'. user_get_name_display_from_id($data['user_id']) .'</td>';
-                echo '<td>';
-                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/group_delete.png" name="user['. $data['user_id'] .']" value="remove" />';
-                echo '</td>';
-                echo '</tr>';
-            }
-            echo '</tbody></table>';
-            echo '</fieldset>';
-        }
+        echo '</fieldset>';
+
         echo '</td></tr></table>';
         
         echo '</form>';
-        echo '<p><a href="/project/admin/editugroup.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'&amp;func=edit">&laquo; Go back to the ugroup edition</a></p>';
+        echo '<p><a href="/project/admin/editugroup.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'&amp;func=edit">&laquo; Go back to the user group edition</a></p>';
         $GLOBALS['HTML']->footer(array());
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));

@@ -135,7 +135,7 @@ if (($func=='edit')||($func=='do_create')) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
             echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
             echo '<td>';
-            echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/group_delete.png" onclick="return confirm(\''.  $hp->purify(addslashes('Remove '. user_get_name_display_from_id($data['user_id']) .' from '. $ugroup_name .'?'), CODEX_PURIFIER_CONVERT_HTML)  .'\');" name="user_id" value="'. $data['user_id'] .'" />';
+            echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/delete.png" onclick="return confirm(\''.  $hp->purify(addslashes('Remove '. user_get_name_display_from_id($data['user_id']) .' from '. $ugroup_name .'?'), CODEX_PURIFIER_CONVERT_HTML)  .'\');" name="user_id" value="'. $data['user_id'] .'" />';
             echo '</td>';
             echo '</tr>';
         }
@@ -147,6 +147,8 @@ if (($func=='edit')||($func=='do_create')) {
     echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/group_add.png') .'Add users to this group'.'</a></p>';
     echo '</div>';
 
+    echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; Go back to the user groups list</a></p>';
+        
     // Display associated permissions
     $sql="SELECT * FROM permissions WHERE ugroup_id=$ugroup_id ORDER BY permission_type";
     $res=db_query($sql);
