@@ -25,7 +25,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $sql = "SELECT  * FROM user"; 
+        $sql = "SELECT * FROM user"; 
         return $this->retrieve($sql);
     }
     
@@ -94,7 +94,8 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByStatus($status) {
-        $sql = sprintf("SELECT * FROM user WHERE status = %s ORDER BY user_name",
+        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, ma
+il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE status = %s",
             $this->da->quoteSmart($status));
         return $this->retrieve($sql);
     }
