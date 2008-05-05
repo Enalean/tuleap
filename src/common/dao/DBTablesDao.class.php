@@ -30,7 +30,7 @@ class DBTablesDao extends DataAccessObject {
     
     function convertToUTF8($name) {
         $sql = "ALTER TABLE ". $name ." CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;";
-        return $this->retrieve($sql);
+        return $this->update($sql);
     }
     
     /**
