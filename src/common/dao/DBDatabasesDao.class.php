@@ -19,5 +19,9 @@ class DBDatabasesDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    function setDefaultCharsetUTF8($name) {
+        $sql = 'ALTER DATABASE '. $name .' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
+        return $this->update($sql);
+    }
 }
 ?>
