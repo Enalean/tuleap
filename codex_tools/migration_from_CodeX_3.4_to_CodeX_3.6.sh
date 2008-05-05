@@ -371,8 +371,8 @@ done
 echo "Starting DB update for CodeX 3.6 This might take a few minutes."
 
 ##########
-# Migrate all database to UTF-8
-echo "- Migrate all database to UTF-8"
+# Migrate all CodeX databases to UTF-8
+echo "- Migrate all CodeX databases to UTF-8"
 $CAT <<EOF | php
 <?php
 
@@ -394,6 +394,7 @@ foreach($db_dao->searchAll() as $db) {
             echo ".";
             flush();
         }
+        $db_dao->setDefaultCharsetUTF8($db);
         echo " done\n";
     } else {
         echo ' ! Ignoring '. $db ."\n";
