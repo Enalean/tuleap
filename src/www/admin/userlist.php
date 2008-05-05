@@ -17,7 +17,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
 
 function show_users_list ($result,$user_name_search="") {
-    $hp = CodeX-HTMLPurifier::instance();
+    $hp = CodeX_HTMLPurifier::instance();
     global $Language;
 	echo '<P>'.$Language->getText('admin_userlist','legend').'
 		<P>
