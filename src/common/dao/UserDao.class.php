@@ -25,9 +25,8 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $this->sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user";
-        }        
-        return $this->retrieve($this->sql);
+        $sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user"; 
+        return $this->retrieve($sql);
     }
     
     /**

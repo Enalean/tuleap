@@ -32,7 +32,7 @@ interface iStatement {
     public function getWhere();
 
     public function getGroupBy();
- 
+    
   }
 
 ?>
