@@ -614,6 +614,7 @@ echo "export CATALINA_HOME=/usr/share/apache-tomcat-6" >> /home/codexadm/.profil
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
 [mysqld]
+default-character-set=utf8
 log-bin=codex-bin
 skip-innodb
 skip-bdb
