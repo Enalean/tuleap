@@ -25,7 +25,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user"; 
+        $sql = "SELECT  * FROM user"; 
         return $this->retrieve($sql);
     }
     
@@ -93,12 +93,9 @@ class UserDao extends DataAccessObject {
     * Searches User by Status 
     * @return DataAccessResult
     */
-    function & searchByStatus($status, $offset=null, $limit=null) {
+    function & searchByStatus($status) {
         $sql = sprintf("SELECT * FROM user WHERE status = %s ORDER BY user_name",
             $this->da->quoteSmart($status));
-        if($offset !== null && $limit !== null) {
-            $sql .= ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
-        }
         return $this->retrieve($sql);
     }
 
@@ -298,7 +295,7 @@ class UserDao extends DataAccessObject {
     */
     function & searchByLanguageId($languageId) {
         $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme FROM user WHERE language_id = %s",
-                       $this->da->quoteSmart($languageId));
+            $this->da->quoteSmart($languageId));
         return $this->retrieve($sql);
     }
 
