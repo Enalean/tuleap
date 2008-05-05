@@ -370,6 +370,37 @@ done
 
 echo "Starting DB update for CodeX 3.6 This might take a few minutes."
 
+##########
+# Migrate all database to UTF-8
+echo "- Migrate all database to UTF-8"
+$CAT <<EOF | php
+<?php
+
+require_once('src/common/dao/DBTablesDao.class.php');
+require_once('src/common/dao/DBDatabasesDao.class.php');
+require_once('src/common/dao/include/DataAccess.class.php');
+
+$da = new DataAccess('', 'root', '$old_passwd', 'codex');
+$tables_dao = new DBTablesDao($da);
+
+$db_dao = new DBDatabasesDao($da);
+foreach($db_dao->searchAll() as $db) {
+    $db = $db['Database'];
+    if ($db == 'codex' || preg_match('/^cx_/', $db)) {
+        echo " + ". $db;
+        $tables_dao->update('USE '. $db);
+        foreach($tables_dao->searchAll() as $row) {
+            $tables_dao->convertToUTF8($row['Tables_in_'. $db]);
+            echo ".";
+            flush();
+        }
+        echo " done\n";
+    } else {
+        echo ' ! Ignoring '. $db ."\n";
+    }
+}
+?>
+EOF
 
 ##########
 # SR #820
