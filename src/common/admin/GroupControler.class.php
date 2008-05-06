@@ -33,6 +33,20 @@ require_once('common/mvc/Controler.class.php');
 class GroupControler extends Controler {
 
     /**
+     * $mainGroupIterator
+     *
+     * @type Iterator $mainGroupIterator
+     */
+    private $mainGroupIterator;
+
+    /**
+     * $adminEmailIterator
+     *
+     * @type Iterator $adminEmailIterator
+     */
+    private $adminEmailIterator;
+
+    /**
      * $groupIterator
      *
      * @type Iterator $groupIterator
@@ -56,9 +70,9 @@ class GroupControler extends Controler {
     /**
      * $nbuser
      *
-     * @type int $nbuser
+     * @type int $nbgroup
      */
-    private $nbuser;
+    private $nbgroup;
 
     /**
      * constructor
@@ -72,10 +86,9 @@ class GroupControler extends Controler {
      * viewManagement()
      */
     function viewsManagement() {        
-        $groupSearchDisplay = new GroupSearchDisplay($this->groupIterator,$this->offset,$this->limit, $this->nbuser);
+        $groupSearchDisplay = new GroupSearchDisplay($this->groupIterator,$this->offset,$this->limit, $this->nbgroup);
         $groupSearchDisplay->display();       
     }
-
 
     /**
      * setNbUser()
@@ -154,27 +167,37 @@ class GroupControler extends Controler {
  
 
     /**
-     * setGroupIterator()
+     * setMainGroupIterator()
      */
-    function setGroupIterator() {
+    function setMainGroupIterator() {
 
         $dao = new GroupDao(CodexDataAccess::instance());
-        
-        $criteria = array();
 
-        $request =& HTTPRequest::instance();
+        $filter = array();
 
-
-
-        //ecrire le code des tests...
-
-        
-        $this->userIterator = $dao->searchUserByCriteria($criteria, $this->getOffset(), $this->getLimit());    
-        // }
-        // else {
-        //      $this->userIterator = $dao->searchAll($this->getOffset(), $this->getLimit());         
-        // }
+        $this->mainGroupIterator = $dao->searchGroupByFilter($criteria, $this->getOffset(), $this->getLimit());
     }
+
+    /**
+     * setGroupIterator()
+     */
+//     function setGroupIterator() {
+
+//         $dao = new GroupDao(CodexDataAccess::instance());
+        
+        
+//         $criteria = array();
+        
+//         //$request =& HTTPRequest::instance();
+
+
+
+//         //ecrire le code des tests...
+
+        
+//         $this->groupIterator = $dao->searchGroupByFilter($criteria, $this->getOffset(), $this->getLimit());    
+        
+//     }
 
 
     /**
@@ -195,7 +218,7 @@ class GroupControler extends Controler {
      * getNbUser()
      */
     function getNbGroup() {
-        return $this->nbuser;
+        return $this->nbgroup;
     }
     
     /**
@@ -207,49 +230,10 @@ class GroupControler extends Controler {
         
         $this->setLimit();
         
-        $this->setGroupIterator();
+        $this->setMainGroupIterator();
         
-        $this->setNbGroup();
-        
+        $this->setNbGroup();        
     }
-    
-
-
 }
-
-
-
-
-
-
-
-// $Language->loadLanguageMsg('admin/admin');
-
-// session_require(array('group'=>'1','admin_flas'=>'A'));
-
-// $HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
-
-
-// $groupSearchDisplay = new GroupSearchDisplay();
-
-
-// //Header
-// $groupSearchDisplay->displayHeader();
-
-// //Search
-// $groupSearchDisplay->displaySearchFilter();
-
-// //Browsing
-// $groupSearchDisplay->displayBrowse();
-
-
-// //Search table
-// $groupSearchDisplay->displaySearch();
-
-
-// //Browsing
-// $groupSearchDisplay->displayBrowse();
-
-// $HTML->footer(array());
 
 ?>

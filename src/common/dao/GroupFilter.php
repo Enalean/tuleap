@@ -25,7 +25,7 @@
 
 require_once('StatementInterface.php');
 
-class GroupNameFilter implements Statement {
+class GroupNameFilter implements iStatement {
 
     private $name;
 
@@ -44,7 +44,7 @@ class GroupNameFilter implements Statement {
 
 
 //adapter les classe et les requete sql
-class GroupGroupFilter implements Statement {
+class GroupGroupFilter implements iStatement {
 
     private $group;
 
@@ -65,7 +65,7 @@ class GroupGroupFilter implements Statement {
     }
 }
 
-class GroupStatusFilter implements Statement {
+class GroupStatusFilter implements iStatement {
 
     private $status;
 
@@ -82,7 +82,7 @@ class GroupStatusFilter implements Statement {
     function getGroupBy() {}
 }
 
-class GroupShortcutFilter implements Statement {
+class GroupShortcutFilter implements iStatement {
 
     private $shortcut;
 

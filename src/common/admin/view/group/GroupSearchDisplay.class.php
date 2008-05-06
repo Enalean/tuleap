@@ -82,7 +82,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      */
     private $offsetmax;
 
-    function __construct($groupIterator, $offset, $nbrows, $nbuser) {
+    function __construct($groupIterator, $offset, $nbrows, $nbgroup) {
 
         $this->groupIterator = $groupIterator;
         $this->offset = $offset;
@@ -226,37 +226,34 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         print '<table width=100% cellspacing=0 cellpadding=0 border="1" align="center">';
         
-        print '<tr><th>Group Name '.$GLOBALS['Language']->getText('admin_grouplist','click').'</th>';
+        print '<tr><th>'.$GLOBALS['Language']->getText('admin_groupedit','grp_name').' '.$GLOBALS['Language']->getText('admin_grouplist','click').'</th>';
         
-        print '<th>Unix Group Name</th>';
+        print '<th>'.$GLOBALS['Language']->getText('admin_groupedit','unix_grp').'</th>';
         
-        print '<th>Status</th>';
+        print '<th>'.$GLOBALS['Language']->getText('global','status').'</th>';
         
-        print '<th>Project Type</th>';
+        print '<th>'.$GLOBALS['Language']->getText('admin_groupedit','group_type').'</th>';
         
-        print '<th>Status</th>';
+        print '<th>'.$GLOBALS['Language']->getText('admin_groupedit','public').'</th>';
         
-        print '<th>License</th>';
-        
-        print '<th>'.$GLOBALS['Language']->getText('admin_grouplist','categ').'</th>';
+        print '<th>'.$GLOBALS['Language']->getText('admin_groupedit','license').'</th>';
         
         print '<th>'.$GLOBALS['Language']->getText('admin_grouplist','members').'</th>';
         
         print '<th>Mailto</th></tr>';
 
-        foreach($this->userIterator as $u) {
-        
+        foreach($this->groupIterator as $g) {
+            
             //rajouter les test sur les status et rajouter les valeurs des status dans la liste
-
+            echo $g['c'];
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
-<td align="center" class="group_active"><a href="#">CodeX Administration Project</a></td>
-<td>codex</td>
-<td >A</td>
-<td>Project</td>
-<td>1</td>
-<td>xrx</a></td>
-<td>0</td>
-<td>1</td>
+<td align="center" class="group_active"><a href="#">'.$g['group_name'].'</a></td>
+<td>'.$g['unix_group_name'].'</td>
+<td >'.$g['status'].'</td>
+<td>'.$g['name'].'</td>
+<td>'.$g['is_public'].'</td>
+<td>'.$g['license'].'</a></td>
+<td>'.$g['c'].'</td>
 <td><a href="mailto:admin@domain">mailto</a></td></tr>';
         }
         print '</table>';

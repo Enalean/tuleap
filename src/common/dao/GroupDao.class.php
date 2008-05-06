@@ -32,52 +32,70 @@ class GroupDao extends DataAccessObject {
     }
     
     /**
-     * search group by criteria
+     * search group by filter
      * adapter cette methode
      *
      */
-    function & searchGroupByFilter($ca, $offset, $limit) {
+    function searchGroupByFilter($ca, $offset, $limit) {
 
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
-        $sql .= 'FROM user ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '.
+               'FROM user JOIN user_group ON user.user_id = user_group.user_id '. 
+               'JOIN groups ON user_group.group_id = groups.group_id '.
+               'JOIN group_type ON groups.type = group_type.type_id '.
+               'GROUP BY groups.group_id';
 
-        $iwhere = 0;
+        if (!empty($ca)) {
 
-        foreach($ca as $c) {
+            $iwhere = 0;
+
+            foreach($ca as $c) {
             
-            if ($c->getJoin()) {
-                $join .= $c->getJoin();
-            }
+                if ($c->getJoin()) {
+                    $join .= $c->getJoin();
+                }
    
-            if ($iwhere >= 1) {
-                $where .= ' AND '.$c->getWhere();
-                $iwhere++;
+                if ($iwhere >= 1) {
+                    $where .= ' AND '.$c->getWhere();
+                    $iwhere++;
+                }
+                else {
+                    $where .= $c->getWhere();
+                    $iwhere++;
+                }
+                
+                if ($c->getGroupBy() !== null) {
+                    $groupby .= $c->getGroupBy();
+                }
+            }  
+
+            if ($join !== null) {
+                $sql .= ' JOIN '.$join;
             }
-            else {
-                $where .= $c->getWhere();
-                $iwhere++;
+            
+            $sql .= ' WHERE '.$where;
+            
+            if ($groupby !== null) {
+                $sql .= ' GROUP BY '.$groupby;
             }
 
-            if ($c->getGroupBy() !== null) {
-                $groupby .= $c->getGroupBy();
-            }
-        }  
-
-        if ($join !== null) {
-            $sql .= ' JOIN '.$join;
-        }
-
-        $sql .= ' WHERE '.$where;
-        
-        if ($groupby !== null) {
-            $sql .= ' GROUP BY '.$groupby;
         }
    
-        $sql .= ' ORDER BY user.user_name, user.realname, user.status';
+        $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
 
         return $this->retrieve($sql);
     }
+
+    /**
+     * search the email of groups admins
+     *
+     */
+    function searchNbMember() {
+
+
+        $sql = " SELECT email,user_group.user_id, group_id FROM user JOIN user_group ON user.user_id = user_group.user_id WHERE admin_flags = 'A' AND user_group.group_id = 1";
+
+     }
 
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
