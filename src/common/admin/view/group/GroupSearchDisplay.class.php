@@ -130,13 +130,10 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
 
-        session_require(array('group'=>'1','admin_flas'=>'A'));
-        //changer le titre
-        $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_userlist','title')));
-        
-
-        
-        //regarder si il n'y a pas de all categorie dans le site-content
+        session_require(array('group'=>'1','admin_flags'=>'A'));
+       
+        $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_grouplist','title')));
+              
         parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>'.$GLOBALS['Language']->getText('admin_grouplist','all_categ').'</b>');
     }
 
