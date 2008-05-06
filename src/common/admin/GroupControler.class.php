@@ -211,8 +211,17 @@ class GroupControler extends Controler {
                     $this->groupArray[$keyaei]['is_public'] .= $mgi['is_public'];
                     $this->groupArray[$keyaei]['license'] .= $mgi['license'];
                     $this->groupArray[$keyaei]['c'] .= $mgi['c'];
-
+                    
                     $this->groupArray[$keyaei]['email'] .= $valaei['email'];
+
+                    if (count($valaei['email'])>1) {
+                        $i = 1;
+
+                        while($i < count($valaei['email'])) {
+                            $this->groupArray[$keyaei]['email'] .= ';'.$valaei['email'];
+                            $i++;
+                        }
+                    }
                     $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
                 }
             }
