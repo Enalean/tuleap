@@ -47,11 +47,11 @@ class GroupControler extends Controler {
     private $adminEmailIterator;
 
     /**
-     * $groupIterator
+     * $groupArray
      *
-     * @type Iterator $groupIterator
+     * @type Array $groupArray
      */
-    private $groupIterator;
+    private $groupArray;
     
     /** 
      * $limit
@@ -86,7 +86,7 @@ class GroupControler extends Controler {
      * viewManagement()
      */
     function viewsManagement() {        
-        $groupSearchDisplay = new GroupSearchDisplay($this->groupIterator,$this->offset,$this->limit, $this->nbgroup);
+        $groupSearchDisplay = new GroupSearchDisplay($this->groupArray,$this->offset,$this->limit, $this->nbgroup);
         $groupSearchDisplay->display();       
     }
 
@@ -175,7 +175,7 @@ class GroupControler extends Controler {
 
         $filter = array();
 
-        $this->mainGroupIterator = $dao->searchGroupByFilter($criteria, $this->getOffset(), $this->getLimit());
+        $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
     }
 
     /**
@@ -192,26 +192,32 @@ class GroupControler extends Controler {
     }
 
     /**
-     * setGroupIterator()
+     * mergeGroupIterators()
      */
-//     function setGroupIterator() {
+    function mergeGroupIterators () {
 
-//         $dao = new GroupDao(CodexDataAccess::instance());
-        
-        
-//         $criteria = array();
-        
-//         //$request =& HTTPRequest::instance();
+        foreach ($this->mainGroupIterator as  $mgi) {
 
+            foreach ($this->adminEmailIterator as $keyaei => $valaei) {
 
+                if ($mgi['group_id'] == $valaei['group_id']) {
 
-//         //ecrire le code des tests...
+                    $this->groupArray[$keyaei]['group_id'] .= $mgi['group_id'];
+                    $this->groupArray[$keyaei]['group_name'] .= $mgi['group_name'];
+                    $this->groupArray[$keyaei]['unix_group_name'] .= $mgi['unix_group_name'];
+                    $this->groupArray[$keyaei]['status'] .= $mgi['status'];
+                    $this->groupArray[$keyaei]['type'] .= $mgi['type'];
+                    $this->groupArray[$keyaei]['name'] .= $mgi['name'];
+                    $this->groupArray[$keyaei]['is_public'] .= $mgi['is_public'];
+                    $this->groupArray[$keyaei]['license'] .= $mgi['license'];
+                    $this->groupArray[$keyaei]['c'] .= $mgi['c'];
 
-        
-//         $this->groupIterator = $dao->searchGroupByFilter($criteria, $this->getOffset(), $this->getLimit());    
-        
-//     }
-
+                    $this->groupArray[$keyaei]['email'] .= $valaei['email'];
+                    $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
+                }
+            }
+        }
+    }
 
     /**
      * getOffset()
@@ -244,8 +250,10 @@ class GroupControler extends Controler {
         $this->setLimit();
         
         $this->setMainGroupIterator();
-
+         
         $this->setAdminEmailIterator();
+
+        $this->mergegroupIterators();
         
         $this->setNbGroup();        
     }

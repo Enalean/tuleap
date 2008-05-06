@@ -34,11 +34,11 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
 class GroupSearchDisplay extends AdminSearchDisplay {
     
     /**
-     * $groupIterator
+     * $groupArray
      *
-     * @type Iterator $groupIterator
+     * @type Array $groupArray
      */
-    private $groupIterator;
+    private $groupArray;
 
     /**
      * $offset
@@ -82,9 +82,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      */
     private $offsetmax;
 
-    function __construct($groupIterator, $offset, $nbrows, $nbgroup) {
+    function __construct($groupArray, $offset, $nbrows, $nbgroup) {
 
-        $this->groupIterator = $groupIterator;
+        $this->groupArray = $groupArray;
         $this->offset = $offset;
         $this->nbrows = $nbrows;
         $this->nbgroup = $nbgroup;        
@@ -119,7 +119,6 @@ class GroupSearchDisplay extends AdminSearchDisplay {
     function initMaxOffset() {
 
         $this->offsetmax = $this->nbgroup - $this->nbrows;
-
     }
 
     /**
@@ -242,19 +241,18 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mailto</th></tr>';
 
-        foreach($this->groupIterator as $g) {
+
+        foreach($this->groupArray as $ga) {
             
-            //rajouter les test sur les status et rajouter les valeurs des status dans la liste
-            echo $g['c'];
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
-<td align="center" class="group_active"><a href="#">'.$g['group_name'].'</a></td>
-<td>'.$g['unix_group_name'].'</td>
-<td >'.$g['status'].'</td>
-<td>'.$g['name'].'</td>
-<td>'.$g['is_public'].'</td>
-<td>'.$g['license'].'</a></td>
-<td>'.$g['c'].'</td>
-<td><a href="mailto:admin@domain">mailto</a></td></tr>';
+<td align="center" class="group_active"><a href="#">'.$ga['group_name'].'</a></td>
+<td>'.$ga['unix_group_name'].'</td>
+<td >'.$ga['status'].'</td>
+<td>'.$ga['name'].'</td>
+<td>'.$ga['is_public'].'</td>
+<td>'.$ga['license'].'</a></td>
+<td>'.$ga['c'].'</td>
+<td><a href="mailto:admin@domain">'.$ga['email'].'</a></td></tr>';
         }
         print '</table>';
     }
