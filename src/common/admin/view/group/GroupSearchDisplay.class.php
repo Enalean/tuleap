@@ -252,7 +252,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 <td>'.$ga['is_public'].'</td>
 <td>'.$ga['license'].'</a></td>
 <td>'.$ga['c'].'</td>
-<td><a href="mailto:admin@domain">'.$ga['email'].'</a></td></tr>';
+<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
         }
         print '</table>';
     }
