@@ -137,7 +137,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         
         //regarder si il n'y a pas de all categorie dans le site-content
-        parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>All Categories</b>');
+        parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>'.$GLOBALS['Language']->getText('admin_grouplist','all_categ').'</b>');
     }
 
     function displaySearchFilter() {
