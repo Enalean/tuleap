@@ -175,6 +175,8 @@ class GroupControler extends Controler {
 
         $filter = array();
 
+        $request =& HTTPRequest::instance();
+
         //define white lists for parameters
         $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -195,13 +197,7 @@ class GroupControler extends Controler {
 
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);
-                echo 'shortcut';
-            }
-
-
-
-        
-
+        }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
     }

@@ -93,7 +93,7 @@ class GroupShortcutFilter implements iStatement {
     function getJoin() {}
 
     function getWhere() {
-        return '(user_name LIKE \''.$this->shortcut.'%\')';
+        return '(group_name LIKE \''.$this->shortcut.'%\')';
     }
 
     function getGroupBy() {}
