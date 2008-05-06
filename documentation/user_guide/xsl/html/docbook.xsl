@@ -5,7 +5,7 @@
                 version='1.0'>
 
 <xsl:output method="html"
-            encoding="ISO-8859-1"
+            encoding="UTF-8"
             indent="no"/>
 
 <!--
