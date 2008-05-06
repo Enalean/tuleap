@@ -179,6 +179,19 @@ class GroupControler extends Controler {
     }
 
     /**
+     * setAdminEmailIterator
+     */
+    function setAdminEmailIterator() {
+
+        $dao = new GroupDao(CodexDataAccess::instance());
+
+        $filter = array();
+
+        $this->adminEmailIterator = $dao->searchAdminEmail();
+        
+    }
+
+    /**
      * setGroupIterator()
      */
 //     function setGroupIterator() {
@@ -231,6 +244,8 @@ class GroupControler extends Controler {
         $this->setLimit();
         
         $this->setMainGroupIterator();
+
+        $this->setAdminEmailIterator();
         
         $this->setNbGroup();        
     }
