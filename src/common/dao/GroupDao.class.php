@@ -41,8 +41,8 @@ class GroupDao extends DataAccessObject {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '.
                'FROM user JOIN user_group ON user.user_id = user_group.user_id '. 
                'JOIN groups ON user_group.group_id = groups.group_id '.
-               'JOIN group_type ON groups.type = group_type.type_id '.
-               'GROUP BY groups.group_id';
+               'JOIN group_type ON groups.type = group_type.type_id ';
+           
 
         if (!empty($ca)) {
 
@@ -80,6 +80,7 @@ class GroupDao extends DataAccessObject {
 
         }
    
+        $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
 

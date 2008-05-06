@@ -215,6 +215,9 @@ class UserControler extends Controler {
         if ($request->valid($validStatus)) {
             $status = $request->get('user_status_search');                
         }
+        else{
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
 
         if (isset($shortcut) || $name != '' || $group != '' || $status != '') {
             if (isset($shortcut)) {
