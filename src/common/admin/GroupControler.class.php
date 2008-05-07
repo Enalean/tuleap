@@ -96,9 +96,6 @@ class GroupControler extends Controler {
     function setNbGroup() {
         $dao = new GroupDao(CodexDataAccess::instance());
 
-        echo '<pre>';
-        var_dump($dao);
-        echo '</pre>';
         $this->nbgroup = $dao->getFoundRows();
     }
 
@@ -198,10 +195,8 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         if (isset($shortcut)) {
-                $filter[] = new GroupShortcutFilter($shortcut);
-                
+                $filter[] = new GroupShortcutFilter($shortcut);        
         }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
@@ -235,15 +230,11 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         if (isset($shortcut)) {
-                $filter[] = new GroupShortcutFilter($shortcut);
-                
+                $filter[] = new GroupShortcutFilter($shortcut);                
         }
 
-
-        $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);
-        
+        $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
     }
 
     /**
@@ -251,11 +242,9 @@ class GroupControler extends Controler {
      */
     function mergeGroupIterators () {
 
-        var_dump($this->mainGroupIterator);
-
         $this->groupArray[] = array();
 
-        foreach ($this->mainGroupIterator as  $mgi) {
+        foreach ($this->mainGroupIterator as $mgi) {
 
             foreach ($this->adminEmailIterator as $keyaei => $valaei) {
 
@@ -316,16 +305,14 @@ class GroupControler extends Controler {
         $this->setOffset($_GET['offset']);
         
         $this->setLimit();
+
+        $this->setAdminEmailIterator();
         
         $this->setMainGroupIterator();
-         
-        $this->setAdminEmailIterator();
-
+        
         $this->setNbGroup();   
 
         $this->mergeGroupIterators();
-        
-        //$this->setNbGroup();        
     }
 }
 

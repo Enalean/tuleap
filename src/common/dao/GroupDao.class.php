@@ -99,7 +99,6 @@ class GroupDao extends DataAccessObject {
                'JOIN groups ON user_group.group_id = groups.group_id '.
                'WHERE admin_flags = \'A\'';
 
-
         if (!empty($ca)) {
 
             foreach($ca as $c) {
