@@ -153,10 +153,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=25%>';
         
         print 'Search (GroupName, GroupUnixName):';
-        print '<form name="groupsrch" action="index.php" method="POST">';
+        print '<form name="groupsearch" action="index.php" method="POST">';
         print '<input type="text" name="group_name_search">';
-        print '<input type="submit" value="'.$GLOBALS['Language']->getText('admin_main', 'search').'">';
-        
+           
         print '</td>';
         
         print '<td align="center" width=25%>';
@@ -165,11 +164,11 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<select name="group_status_search" id="status_id">';
         print '<option value="all">All</options>';
-        print '<option value="">Incomplete</option>';
-        print '<option value="">Active</option>';
-        print '<option value="">Pending</option>';
-        print '<option value="">Holding</option>';
-        print '<option value="">Deleted</option>';
+        print '<option value="I">Incomplete</option>';
+        print '<option value="A">Active</option>';
+        print '<option value="P">Pending</option>';
+        print '<option value="H">Holding</option>';
+        print '<option value="D">Deleted</option>';
         print '</select>';
         
         print '</td>';
@@ -179,9 +178,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<b>Public? </b><br />';
         
         print '<select name="group_state_search" id="state_id">';
-        print '<option value="">Any</option>';
-        print '<option value="">Yes</option>';
-        print '<option value="">No</option>';
+        print '<option value="any">Any</option>';
+        print '<option value="1">Yes</option>';
+        print '<option value="0">No</option>';
         print '</select>';
     
         print '</td>';
@@ -202,6 +201,8 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '</table>';
         
         print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="50" maxlength="5" size="3" name="chunksz"/> groups at once.</p>';
+
+        print '</form>';
 
         print $this->nbgroup.' '.$GLOBALS['Language']->getText('tracker_include_report','matching');
     }

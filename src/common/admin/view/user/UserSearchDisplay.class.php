@@ -158,8 +158,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php" method="POST">';
         print '<input type="text" name="user_name_search" id="username">';
-        
-
+      
         print '<div class="update" id="username_update"></div> ';
         print '<input type="hidden" name="username_id" id="username_id" value="" /><br/>';
 
