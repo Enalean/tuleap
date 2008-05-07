@@ -189,8 +189,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<b>Project type </b><br />';
         
         print '<select name="group_type_search" id="type_id">';
+        print '<option value="any">Any</option>';
         print '<option value="1">Project</option>';
-        print '<option value="2"Template</option>';
+        print '<option value="2">Template</option>';
         print '<option value="3">Test Projet</option>';
         print '</select>';
         

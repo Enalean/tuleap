@@ -185,6 +185,8 @@ class GroupControler extends Controler {
 
         $stateWhiteList = array('any', '0', '1');
 
+        $typeWhiteList = array('any', '1', '2', '3');
+
         //valid parameters
 
         //valid shortcut
@@ -235,6 +237,17 @@ class GroupControler extends Controler {
         }
 
 
+        //valid type
+        $validType = new Valid('group_type_search');
+        $validType->addRule(new Rule_WhiteList($typeWhiteList));
+
+        if ($request->valid($validType)) {
+            $type = $request->get('group_type_search');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
 
         if ($shortcut != '') {
                 $filter[] = new GroupShortcutFilter($shortcut);        
@@ -247,6 +260,9 @@ class GroupControler extends Controler {
         }
         if ($state != '' && $state != 'any') {
             $filter[] = new GroupStateFilter($state);
+        }
+        if ($type != '' && $type != 'any') {
+            $filter[] = new GroupTypeFilter($type);
         }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
@@ -269,6 +285,8 @@ class GroupControler extends Controler {
         $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
 
         $stateWhiteList = array('any', '0', '1');
+
+        $typeWhiteList = array('any', '1', '2', '3');
 
         //valid parameters
         
@@ -316,6 +334,17 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
+        //valid type
+        $validType = new Valid('group_type_search');
+        $validType->addRule(new Rule_WhiteList($typeWhiteList));
+
+        if ($request->valid($validType)) {
+            $type = $request->get('group_type_search');
+        }
+        else  {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
         if ($shortcut != '') {
                 $filter[] = new GroupShortcutFilter($shortcut);                
         }
@@ -327,6 +356,9 @@ class GroupControler extends Controler {
         }
         if ($state != '' && $state != 'any') {
             $filter[] = new GroupStateFilter($state);
+        }
+        if ($type != '' && $type != 'any') {
+            $filter[] = new GroupTypeFilter($type);
         }
 
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
