@@ -18,7 +18,7 @@ if ($request->exist('wsdl')) {
 	
 try {
     
-    $server = new SoapServer($uri.'/soap/codex.wsdl.static',  
+    $server = new SoapServer($uri.'/soap/codex.wsdl.php?wsdl',  
     							array('trace' => 1, 
     								  'soap_version' => SOAP_1_1
     							));
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    echo '<li>' , $func , '</li>';
 	}
     echo '</ul>';
-    echo '<a href="codex.wsdl">You can access the WSDL</a>';
+    echo '<a href="codex.wsdl.php?wsdl">You can access the WSDL</a>';
 }
 
 ?>

@@ -29,7 +29,7 @@ define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
 if (array_key_exists("CODEX_WSDL", $_ENV)) {
 	$host = $_ENV["CODEX_WSDL"];
 } else {
-	$host = "%wsdl_domain%/soap/codex.wsdl.static";
+	$host = "%wsdl_domain%/soap/codex.wsdl.php?wsdl";
 }
 
 /**** END OF CONFIGURATION SECTION ****/

@@ -4991,7 +4991,8 @@ class wsdl extends nusoap_base {
 		if (count($this->ports) >= 1) {
 			foreach($this->ports as $pName => $attrs) {
 				$xml .= '<port name="' . $pName . '" binding="tns:' . $attrs['binding'] . '">';
-				$xml .= '<soap:address location="' . $attrs['location'] . ($debug ? '?debug=1' : '') . '"/>';
+				// To work with PHP SOAP, we need to point to the directory, not the script itself. (CodeX)
+				$xml .= '<soap:address location="' . substr($attrs['location'],0,strrpos($attrs['location'],'/')+1) . ($debug ? '?debug=1' : '') . '"/>';
 				$xml .= '</port>';
 			} 
 		} 
