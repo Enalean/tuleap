@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="OtherServices">
@@ -181,11 +182,11 @@ newgrp projectname
             At this time, only session (login/logout) and tracker 
             services are available.
       </para>
-      <para>A human-friendly description of the services is available at <ulink url="/soap/">
+      <para>A human-friendly description of the services is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/">
         http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>. It is a list of
         services, with a description of each function, its input, output and documentation</para>
       <para>A more detailed description of the services is also available with 
-      the more formal WSDL language at <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>.
+      the more formal WSDL language at <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>.
       The WSDL also includes the types definition.
       </para>
     </section>
@@ -200,7 +201,7 @@ newgrp projectname
         a CC address or a dependency to an artifact), and the mail notification is 
         not active with the CLI.
       </para>
-      <para>The full CLI documentation is available at <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+      <para>The full CLI documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
       </para>
     </section>
 
@@ -246,7 +247,7 @@ newgrp projectname
             <step><para>Enjoy CodeX!</para></step>
         </procedure>
       </para>
-      <para>The full Eclipse plugin documentation is available at <ulink url="/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf</ulink>
+      <para>The full Eclipse plugin documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf</ulink>
       </para>
     </section>
     

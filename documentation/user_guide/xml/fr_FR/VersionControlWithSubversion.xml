@@ -9,6 +9,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="VersionControlWithSubversion">
@@ -1084,11 +1085,18 @@ svn update
       <title>Observer les modifications</title>
 
       <para>Si vous souhaitez savoir quels fichiers ont été modifiés
-      dans le dépôt Subversion ou dans votre copie de travail depuis
-      votre dernière mise à jour, tapez la commande suivante :</para>
+      dans votre copie de travail depuis votre dernière mise à jour,
+      tapez la commande suivante :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn status
+      </programlisting>
+      
+      <para>Ou quels fichiers ont été mis à jour dans le dépôt Subversion
+      depuis votre dernière mise à jour :</para>
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn status -u
         </programlisting>
 
       <para>Cette commande vous donnera la liste des fichiers ayant

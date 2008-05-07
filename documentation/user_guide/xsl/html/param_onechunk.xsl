@@ -12,7 +12,8 @@
 //
 // $Id: 
 //
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 
@@ -32,8 +33,7 @@ procedure before
 <!-- CX-SBT: Generate the legal notice in the same file -->
 <xsl:param name="generate.legalnotice.link" select="0"/>
 
-<!-- CX-SBT: Generate the revision history in the same file   ### Doesn't work ! ### -->
-<xsl:param name="generate.revhistory.link" select="0"></xsl:param>
+
 
 <!-- CX-SBT: auto numerotation -->
 <xsl:param name="section.autolabel" select="1"/>

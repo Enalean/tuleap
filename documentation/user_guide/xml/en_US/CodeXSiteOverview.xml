@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="CodeXSiteOverview">
@@ -104,7 +105,7 @@
 
 
       <section id="SoftwareMap">
-        <title>Software Map</title>
+        <title>Software Map (or Project Tree)</title>
 
         <para>The Software Map is a pivotal service in CodeX that you can
         (should) use to determine if there are some pieces of software that
@@ -250,13 +251,15 @@
 
             <listitem>
               <para>Use the Search box in the CodeX Main menu on the left hand
-              side or on the upper right corner of the screen. Keywords typed are search in the code
-              snippet title and in the code snippet description.</para>
+              side or on the upper right corner of the screen. Keywords typed are 
+              search in the code snippet title and in the code snippet description.
+              </para>
             </listitem>
           </itemizedlist>
 
           <para>Matching snippets are shown in a list along with their code
-          snippet ID number, title and detailed description as well as the
+          snippet ID number, title and short description. If you navigated 
+          through the categories, there is also a detailed description as well as the
           author&#39;s name. Please note that by clicking on the author&#39;s
           name you can immediately send a question or a suggestion to the
           author of the code snippet.</para>
@@ -277,8 +280,8 @@
         <section id="CodeSnippetSubmission">
           <title>Code Snippet Submission</title>
 
-          <para>To submit a new code snippet click on the &#34;Submit
-          a new Code Snippet&#34; link in the Code Snippet Menu at the
+          <para>To submit a new code snippet click on the &#34;Create
+          a new Snippet&#34; link in the Code Snippet Menu at the
           top of the screen. Provide the code snippet title and
           description. You can use Web locations (URLs) in the
           description field. CodeX will automatically turn them into
@@ -486,7 +489,8 @@
             <para><emphasis role="bold">Software Projects</emphasis>: a match
             is attempted with project names as well as their short and long
             description. This search mechanism is very complementary with the
-            Software Map (see <xref linkend="SoftwareMap" />).</para>
+            Software Map (see <xref linkend="SoftwareMap" />). Notice that a private
+            project will never appear as a search result.</para>
           </listitem>
 
           <listitem>
@@ -585,7 +589,7 @@
       Page on a regular basis for it gives you an excellent idea of what is
       going on in terms of software development across &SYS_ORG_NAME;.</para>
 
-      <para><emphasis role="underline">Bottom line</emphasis>: Make CodeX your
+      <para><emphasis role="underline">Bookmark This Page</emphasis>: Make CodeX your
       browser home page :-)</para>
     </section>
   </chapter>

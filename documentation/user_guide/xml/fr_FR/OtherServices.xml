@@ -9,6 +9,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="OtherServices">
@@ -180,14 +181,14 @@ newgrp nom_projet
             (login/logout) et le service Outil de suivi sont disponibles via l'API.
       </para>
       <para>Une description des services est disponible à l'adresse 
-        <ulink url="/soap/">
+        <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/">
          http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>.
         Il s'agit d'une liste de services,
         avec pour chaque fonction, ses paramètres d'entrée, de sortie et une documentation.
       </para>
       <para>Une description plus détaillée des services est également disponible dans le language 
       formel WSDL à l'adresse 
-      <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>
+      <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>
       Le WSDL contient en plus la définition des type.
       </para>
     </section>
@@ -204,7 +205,7 @@ newgrp nom_projet
         en copie CC ou une dependance à un artefact), et la notification par mail n'est pas active.
       </para>
       <para>La documentation du client en ligne de commande est disponible à l'adresse : 
-        <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+        <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
       </para>
     </section>
 

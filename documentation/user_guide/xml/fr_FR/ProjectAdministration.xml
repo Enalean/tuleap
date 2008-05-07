@@ -9,6 +9,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="ProjectAdministration">
@@ -324,11 +325,8 @@ john.smith@xerox.com</programlisting>
           <para><emphasis role="bold">Lien vers le service</emphasis> :
           il s'agit de l'URL qui mène au service en question, c'est à
           dire l'URL vers lequel l'utilisateur est redirigé lorsqu'il
-          sélectionne ce service dans la barre de service. Si l'URL
-          est absolu (c'est à dire qu'il commence par
-          &#34;http://&#34;), la page d'accès à ce service s'ouvrira
-          dans une nouvelle fenêtre de votre navigateur. Dans le cas
-          contraire la page sera chargée dans la fenêtre courante.
+          sélectionne ce service dans la barre de service. La page $
+          sera chargée dans la fenêtre courante.
           </para>
           <para>Quelques mots-clés particuliers peuvent être utilisés
           dans l'URL; ils seront automatiquement remplacés par leur

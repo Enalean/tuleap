@@ -9,6 +9,7 @@
 // $Id: 
 //
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 
@@ -39,8 +40,8 @@
   </p>
   <hr/></div>
 
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/revhistory"/>
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/authorgroup"/>
+<!--  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/revhistory"/> -->
+<!-- <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/authorgroup"/> -->
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/legalnotice"/>
   <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/copyright"/>
 </xsl:template>

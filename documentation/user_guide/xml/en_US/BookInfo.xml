@@ -8,20 +8,11 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <bookinfo>
-    <authorgroup>
-      <author>
-        <firstname>Laurent</firstname>
-
-        <surname>Julliard</surname>
-
-        <affiliation>
-          <orgname>Xerox/XIG/ISTC - Open Source Team, Laurent.Julliard@crt.xerox.com</orgname>
-        </affiliation>
-      </author>
-    </authorgroup>
+    
 
     <copyright>
       <year>2000</year>
@@ -32,6 +23,7 @@
       <year>2005</year>
       <year>2006</year>
       <year>2007</year>
+      <year>2008</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
@@ -638,6 +630,16 @@
         <revremark>Update for the 3.2 CodeX release:
         Documentation of the new File service, documentation of templates,
         documentation of CVS Watch, and many fixes (see SR #337).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.1</revnumber>
+
+        <date>6-May-2008</date>
+
+        <authorinitials>CodeX team</authorinitials>
+
+        <revremark>Minor corrections, updates and links fix.
         </revremark>
       </revision>
     </revhistory>

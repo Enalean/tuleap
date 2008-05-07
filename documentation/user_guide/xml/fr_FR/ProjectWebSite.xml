@@ -9,7 +9,9 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
+
 -->
   <chapter id="ProjectWebSite">
     <title>Site Web d'un projet</title>
@@ -78,16 +80,17 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
             icônes ou documents utilisés ou référencés dans vos pages
             Web doivent aussi se trouver à  cet endroit (ou dans un
             sous-répertoire sous htdocs). Dans le jargon
-            Apache<footnote><para>Apache est un serveur HTTP développé
+            Apache le répertoire <literal>/home/groups/projectname/htdocs</literal>
+            est appelé le 'Document Root' (Racine des documents) de votre
+            site Web.</para>
+
+			<para><tip><title>Tip : Apache</title><para>Apache est un serveur HTTP développé
             par la Consortium Apache. Il est disponible sous une
             licence Open Source et il est de loin de le serveur Web le
             plus populaire avec plus de 60% de part de marché. Pour
             plus d'information consultez le site Web Apache sur <ulink
-            url="http://www.apache.org">http://httpd.apache.org</ulink></para></footnote>
-            le répertoire
-            <literal>/home/groups/projectname/htdocs</literal> est
-            appelé le 'Document Root' (Racine des documents) de votre
-            site Web.</para>
+            url="http://www.apache.org">http://httpd.apache.org</ulink>
+            </para></tip></para>
 
 			<para>Apache s'attend à  ce que la page d'accueil de votre site Web se trouve dans
 				un des fichiers suivants :</para>
