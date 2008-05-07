@@ -95,7 +95,12 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      *
      */
     function initStart() {
-        $this->start = $this->offset+1;
+        if ($this->nbgroup == 0) {
+            $this->start = 0;
+        }
+        else {
+            $this->start = $this->offset+1;
+        }
     }
 
     /**
