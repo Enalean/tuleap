@@ -197,6 +197,7 @@ class GroupControler extends Controler {
 
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);
+                
         }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
@@ -219,6 +220,8 @@ class GroupControler extends Controler {
      * mergeGroupIterators()
      */
     function mergeGroupIterators () {
+
+        if ($this->nbgroup != 0) {
 
         foreach ($this->mainGroupIterator as  $mgi) {
 
@@ -249,6 +252,11 @@ class GroupControler extends Controler {
                     $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
                 }
             }
+        }
+
+        }
+        else {
+            echo 'coucou';
         }
     }
 

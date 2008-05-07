@@ -94,7 +94,14 @@ class UserSearchDisplay extends AdminSearchDisplay {
      *
      */
     function initStart() {
+        if ($this->nbuser == 0) {
+            $this->start = 0;
+        }
+        else {
+
         $this->start = $this->offset + 1;
+
+        }
     }
 
     /**
@@ -225,8 +232,8 @@ class UserSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Status</th>';
         
-        print '<th>Mail to</th></tr>';        
-        
+        print '<th>Mail to</th></tr>';   
+
         foreach($this->userIterator as $u) {
 
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">

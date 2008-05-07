@@ -239,7 +239,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mailto</th></tr>';
 
-
+        var_dump($this->groupArray);
         foreach($this->groupArray as $ga) {
             
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
