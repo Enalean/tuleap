@@ -1,5 +1,5 @@
 <?php
-require_once ('nusoap.php');
+
 require_once ('pre.php');
 require_once ('session.php');
 require_once('common/include/Error.class.php');
@@ -13,6 +13,8 @@ define('invalid_document_fault', '3018');
 define('invalid_folder_fault', '3019');
 define('PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
 
+if (defined('NUSOAP')) {
+	
 //
 // Type definition
 //
@@ -161,6 +163,8 @@ $GLOBALS['server']->register(
     'Move an item in a new folder'
 );
 
+} else {
+	
 //
 // Function implementation
 //
@@ -483,6 +487,19 @@ function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
     } else {
         return new soap_fault(invalid_session_fault,'moveDocmanItem','Invalid Session','');
     }
+}
+
+$GLOBALS['server']->addFunction(
+        array(
+            'getRootFolder',
+            'listFolder',
+            'createDocmanDocument',
+            'createDocmanFolder',
+            'deleteDocmanItem',
+            'monitorDocmanItem',
+            'moveDocmanItem'
+            ));	
+
 }
 
 
