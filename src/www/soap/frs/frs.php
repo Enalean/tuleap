@@ -1,5 +1,4 @@
 <?php
-require_once ('nusoap.php');
 require_once ('pre.php');
 require_once ('session.php');
 require_once('common/include/Error.class.php');
@@ -14,6 +13,8 @@ require_once('common/frs/FRSFileFactory.class.php');
 define('invalid_package_fault', '3017');
 define('invalid_release_fault', '3018');
 define('invalid_file_fault', '3019');
+
+if (defined('NUSOAP')) {
 
 //
 // Type definition
@@ -285,10 +286,8 @@ $server->register(
     'encoded',
     'Get the file names of the file present in the incoming directory on the server.'
 );
-
-//
-// Function implementation
-//
+	
+} else {
 
 /**
  * getPackages - returns an array of FRSPackages that belongs to the project identified by group_id
@@ -301,12 +300,12 @@ function getPackages($sessionKey,$group_id) {
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getPackages','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','getPackages');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getPackages', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'getPackages');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getPackages', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getPackages');
         }
         
         $pkg_fact = new FRSPackageFactory();
@@ -314,7 +313,7 @@ function getPackages($sessionKey,$group_id) {
         $packages =& $pkg_fact->getFRSPackagesFromDb($group_id, 1); // 1 for active packages
         return packages_to_soap($packages);
     } else {
-        return new soap_fault(invalid_session_fault,'getPackages','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getPackages');
     }
 }
 
@@ -374,34 +373,34 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'addPackage','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group', 'addPackage');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'addPackage', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'addPackage');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'addPackage', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'addPackage');
         }
         
         $pkg_fact = new FRSPackageFactory();
         if ($pkg_fact->userCanCreate($group_id)) {
             // we check that the package name don't already exist
             if ($pkg_fact->isPackageNameExist($package_name, $group_id)) {
-                return new soap_fault('', 'addPackage', 'Package name already exists in this project', '');
+                return new SoapFault('', 'Package name already exists in this project', 'addPackage');
             } else {
                 $dao =& $pkg_fact->_getFRSPackageDao();
                 $dar = $dao->create($group->getID(), $package_name, $status_id, $rank, $approve_license);
                 if (!$dar) {
-                    return new soap_fault('', 'addPackage', $dar->isError(), '');
+                    return new SoapFault('', $dar->isError(), 'addPackage');
                 } else {
                     // if there is no error, $dar contains the package_id
                     return $dar;
                 }
             }
         } else {
-            return new soap_fault('','addPackage','User is not allowed to create a package','');
+            return new SoapFault('','User is not allowed to create a package','addPackage');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'addPackage','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','addPackage');
     }
 }
 
@@ -417,23 +416,23 @@ function getReleases($sessionKey,$group_id,$package_id) {
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getReleases','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','getReleases');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getReleases', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getReleases');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getReleases', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getReleases');
         }
         
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'getReleases','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','getReleases');
         }
         // check access rights to this package
         if (! $package->userCanRead() || ! $package->isActive()) {
-            return new soap_fault(invalid_package_fault,'getReleases','Permission to this Package denied','');
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getReleases');
         }
         
         $release_fact = new FRSReleaseFactory();
@@ -441,7 +440,7 @@ function getReleases($sessionKey,$group_id,$package_id) {
         $releases =& $release_fact->getFRSReleasesFromDb($package_id, 1, $group_id); // 1 for active releases
         return releases_to_soap($releases);
     } else {
-        return new soap_fault(invalid_session_fault,'getReleases','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getReleases');
     }
 }
 
@@ -510,40 +509,40 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'addRelease','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','addRelease');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'addRelease', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'addRelease');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'addRelease', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'addRelease');
         }
         
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'addRelease','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','addRelease');
         }
         
         $release_fact = new FRSReleaseFactory();
         if ($release_fact->userCanCreate($group_id)) {
             if ($release_fact->isReleaseNameExist($name, $package_id)) {
-                return new soap_fault('', 'addRelease', 'Release name already exists in this package', '');
+                return new SoapFault('', 'Release name already exists in this package', 'addRelease');
             } else {
                 $dao =& $release_fact->_getFRSReleaseDao();
                 $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 0, $release_date);
                 if (!$dar) {
-                    return new soap_fault('', 'addRelease', $dar->isError(), '');
+                    return new SoapFault('', $dar->isError(), 'addRelease');
                 } else {
                     // if there is no error, $dar contains the release_id
                     return $dar;
                 }
             }
         } else {
-            return new soap_fault('', 'addRelease', 'User is not allowed to create a release', '');
+            return new SoapFault('', 'User is not allowed to create a release', 'addRelease');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'addRelease','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','addRelease');
     }
 }
 
@@ -561,40 +560,40 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
     if (session_continue($sessionKey)) {
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getFiles','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFiles');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getFiles', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFiles');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getFiles', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFiles');
         }
         
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'getFiles','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFiles');
         }
         // check access rights to this package
         if (! $package->userCanRead() || ! $package->isActive()) {
-            return new soap_fault(invalid_package_fault,'getFiles','Permission to this Package denied','');
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFiles');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-            return new soap_fault(invalid_release_fault,'getFiles','Invalid Release','');
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFiles');
         }
         // check access rights to this release
         if (! $release->userCanRead() || ! $release->isActive()) {
-            return new soap_fault(invalid_release_fault,'getFiles','Permission to this Release denied','');
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
         }
         
         $files_arr =& $release->getFiles();
         return files_to_soap($files_arr);
     } else {
-        return new soap_fault(invalid_session_fault,'getFiles','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getFiles');
     }
 }
 
@@ -656,44 +655,44 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
     
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'getFile','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFile');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'getFile', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFile');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getFile', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFile');
         }
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'getFile','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFile');
         }
         // check access rights to this package
         if (! $package->userCanRead() || ! $package->isActive()) {
-            return new soap_fault(invalid_package_fault,'getFiles','Permission to this Package denied','');
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFiles');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-            return new soap_fault(invalid_release_fault,'getFile','Invalid Release','');
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFile');
         }
         // check access rights to this release
         if (! $release->userCanRead() || ! $release->isActive()) {
-            return new soap_fault(invalid_release_fault,'getFiles','Permission to this Release denied','');
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
         }
         
         $file_fact = new FRSFileFactory();
         $file =& $file_fact->getFRSFileFromDb($file_id);
         if (!$file || $file->getReleaseID() != $release_id) {
-            return new soap_fault(invalid_file_fault,'getFile','Invalid File','');
+            return new SoapFault(invalid_file_fault,'Invalid File','getFile');
         }
         
         if (!$file->fileExists()) {
-            return new soap_fault(invalid_file_fault,'getFile','File doesn\'t exist on the server','');
+            return new SoapFault(invalid_file_fault,'File doesn\'t exist on the server','getFile');
         }
         
         // Log the download action
@@ -702,7 +701,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         $contents = $file->getContent();
         return base64_encode($contents);
     } else {
-        return new soap_fault(invalid_session_fault,'getFile','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'getFile','Invalid Session','');
     }
 }
 
@@ -732,26 +731,26 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
 
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'addFile','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','addFile');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'addFile', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'addFile');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'addFile', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'addFile');
         }
         
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'addFile','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','addFile');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->getPackageID() != $package_id) {
-            return new soap_fault(invalid_release_fault,'addFile','Invalid Release','');
+            return new SoapFault(invalid_release_fault,'Invalid Release','addFile');
         }
         
         $file_fact = new FRSFileFactory();
@@ -759,14 +758,14 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             $tmpname = tempnam("/tmp", "codex_soap_frs");
             $fh = fopen($tmpname, "wb");
             if (!$fh) {
-                return new soap_fault('','addFile','Could not create temporary file in directory /tmp', '');
+                return new SoapFault('','Could not create temporary file in directory /tmp', 'addFile');
             }
             fwrite($fh, base64_decode($base64_contents));
             fclose($fh);
             
             // move the file in the incoming dir
             if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
-                return new soap_fault('','addFile','Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'');
+                return new SoapFault('','Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
             }
             
             // call addUploadedFile function
@@ -774,10 +773,10 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id);
             
         } else {
-            return new soap_fault('', 'addFile', 'User is not allowed to add a file', '');
+            return new SoapFault('', 'User is not allowed to add a file', 'addFile');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'addFile','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','addFile');
     }
 }
 
@@ -806,26 +805,26 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
 
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault(get_group_fault,'addUploadedFile','Could Not Get Group','');
+            return new SoapFault(get_group_fault,'Could Not Get Group','addUploadedFile');
         } elseif ($group->isError()) {
-            return new soap_fault(get_group_fault, 'addUploadedFile', $group->getErrorMessage(),'');
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'addUploadedFile');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'addUploadedFile', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'addUploadedFile');
         }
         
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
         $package =& $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
-            return new soap_fault(invalid_package_fault,'addUploadedFile','Invalid Package','');
+            return new SoapFault(invalid_package_fault,'Invalid Package','addUploadedFile');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->getPackageID() != $package_id) {
-            return new soap_fault(invalid_release_fault,'addUploadedFile','Invalid Release','');
+            return new SoapFault(invalid_release_fault,'Invalid Release','addUploadedFile');
         }
         
         $file_fact = new FRSFileFactory();
@@ -833,18 +832,18 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
                 $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
                 if (! $file_id) {
-                    return new soap_fault('','addUploadedFile',$file_fact->getErrorMessage(),'');
+                    return new SoapFault('',$file_fact->getErrorMessage(),'addUploadedFile');
                 } else {
                     return $file_id;
                 }
             } else {
-                return new soap_fault('', 'addUploadedFile', 'Filename "'.$filename.'" already exists', '');
+                return new SoapFault('', 'Filename "'.$filename.'" already exists', 'addUploadedFile');
             }
         } else {
-            return new soap_fault('', 'addUploadedFile', 'User is not allowed to add a file', '');
+            return new SoapFault('', 'User is not allowed to add a file', 'addUploadedFile');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'addUploadedFile','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','addUploadedFile');
     }
 }
 
@@ -866,9 +865,26 @@ function getUploadedFiles($sessionKey, $group_id) {
             $file_names = $file_fact->getUploadedFileNames();
             return $file_names;
         } else {
-            return new soap_fault('', 'getUploadedFiles', 'User not allowed to see the uploaded files', '');
+            return new SoapFault('', 'User not allowed to see the uploaded files', 'getUploadedFiles');
         }
     } else {
-        return new soap_fault(invalid_session_fault,'getUploadedFiles','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getUploadedFiles');
     }
 }
+
+$server->addFunction(
+    	array(
+            'getPackages',
+            'addPackage',
+            'getReleases',
+    	    'addRelease',
+    	    'getFiles',
+    	    'GetFile',
+    	    'addFile',
+    	    'addUploadedFile',
+    	    'getUploadedFiles'
+            ));
+
+}
+
+?>

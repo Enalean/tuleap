@@ -3,6 +3,8 @@
 require_once('user.php');
 require_once('common/include/GroupFactory.class.php');
 
+if (defined('NUSOAP')) {
+	
 //
 // Type definition
 //
@@ -73,9 +75,8 @@ $server->register(
     'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
 );
 
-//
-// Function implementation
-//
+} else {
+	
 
 /**
  * Returns a soap Group object corresponding to the CodeX Group object
@@ -84,7 +85,7 @@ $server->register(
  * @return array the soap group object
  */
 function group_to_soap($group) {
-    $soap_group = array(
+	$soap_group = array(
         'group_id' => $group->getGroupId(),
         'group_name' => util_unconvert_htmlspecialchars($group->getPublicName()),
         'unix_group_name' => $group->getUnixName(),
@@ -117,7 +118,7 @@ function getMyProjects($sessionKey) {
         $my_groups = $gf->getMyGroups();
         return groups_to_soap($my_groups);
     } else {
-        return new soap_fault(invalid_session_fault,'getMyProjects','Invalid Session ','');
+        return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getMyProjects');
     }
 }
 
@@ -135,18 +136,18 @@ function getGroupByName($sessionKey, $unix_group_name) {
     if (session_continue($sessionKey)) {
         $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
         if (! $group || !is_object($group)) {
-            return new soap_fault('2002','getGroupByName', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'), '');
+            return new SoapFault('2002', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'), 'getGroupByName');
         } elseif ($group->isError()) {
-            return new soap_fault('2002', 'getGroupByName', $group->getErrorMessage(),'');
+            return new SoapFault('2002', $group->getErrorMessage(), 'getGroupByName', '');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getGroupByName', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getGroupByName');
         }
         
         $soap_group = group_to_soap($group);
-        return new soapval('return', 'tns:Group', $soap_group);
+        return new SoapVar($soap_group, SOAP_ENC_OBJECT);
     } else {
-        return new soap_fault(invalid_session_fault,'getGroupByName','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getGroupByName');
     }
 }
 
@@ -163,18 +164,18 @@ function getGroupById($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $group = new Group($group_id);
         if (!$group || !is_object($group)) {
-            return new soap_fault('2001','getGroupById', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),'');
+            return new SoapFault('2001', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),'getGroupById');
         } elseif ($group->isError()) {
-            return new soap_fault('2001', 'getGroupById', $group->getErrorMessage(),'');
+            return new SoapFault('2001', $group->getErrorMessage(),'getGroupById');
         }
         if (!checkRestrictedAccess($group)) {
-            return new soap_fault(get_group_fault, 'getGroupById', 'Restricted user: permission denied.', '');
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getGroupById');
         }
         
         $soap_group = group_to_soap($group);
-        return new soapval('return', 'tns:Group', $soap_group);
+        return $soap_group;
     } else {
-        return new soap_fault(invalid_session_fault,'getGroup','Invalid Session','');
+        return new SoapFault(invalid_session_fault,'Invalid Session','getGroup');
     }
 }
 
@@ -205,6 +206,15 @@ function checkRestrictedAccess($group) {
     } else {
         return true;
     }
+}
+
+$server->addFunction(
+    	array(
+            'getMyProjects',
+            'getGroupByName',
+            'getGroupById'
+            ));
+
 }
 
 ?>
