@@ -9,12 +9,12 @@
  */
 
 /**
- * CodeXSOAP - Wrapper function for NuSOAP class.
+ * CodeXSOAP - Wrapper function for SOAP class.
  *
  * This class will pass on each command common variables to the server, like the
  * session ID and the project name
  */
-class CodeXSOAP extends soap_client {
+class CodeXSOAP extends SoapClient {
 	var $sess_hash;
 	var $wsdl_string;
 	var $connected;
@@ -66,10 +66,14 @@ class CodeXSOAP extends soap_client {
 		
 		// Add session parameters
 		if ($use_extra_params) {
-			if (!array_key_exists("sessionKey", $params)) $params["sessionKey"] = $this->session_string;
+			if (!array_key_exists("sessionKey", $params)) {
+                //$params["sessionKey"] = $this->session_string;
+                $params = array('sessionKey' => $this->session_string) + $params;   // params need to be in the right order (sessionKey first)
+            }
 		}
+		
 		$LOG->add("CodeXSOAP::Executing command ".$command."...");
-        return parent::call($command,$params);
+        return parent::__call($command,$params);
 	}
 	
 	/**
@@ -87,13 +91,15 @@ class CodeXSOAP extends soap_client {
 			}
 		}
 		
-		$LOG->add("CodeXSOAP::Connecting to the server ".$this->wsdl_string."...");
-		parent::soap_client($this->wsdl_string, "wsdl");
-		if (($error = $this->getError())) {
-			exit_error($error, $this->faultcode);
+        try {
+            $LOG->add("CodeXSOAP::Connecting to the server ".$this->wsdl_string."...");
+            parent::__construct($this->wsdl_string, array('trace' => 1));
+        } catch (SoapFault $fault) {
+            exit_error($fault, $this->faultcode);
 		}
 		$LOG->add("CodeXSOAP::Connected!");
 		$this->connected = true;
+        
 	}
 	
 	/** 

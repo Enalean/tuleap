@@ -62,20 +62,20 @@ class CLI_Action_Default_Login extends CLI_Action {
         return true;
     }
     function before_soapCall($loaded_params) {
-        $GLOBALS['soap']->endSession();
+    	$GLOBALS['soap']->endSession();
         if (isset($loaded_params['others']['host'])) {
             if (isset($loaded_params['others']['host']) && $loaded_params['others']['secure']) {
                 $protocol = "https";
             } else {
                 $protocol = "http";
             }
-            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/?wsdl");
+            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codex.wsdl");
         }
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);
-        $session_string = $soap_result['session_hash'];
-        $user_id = $soap_result['user_id'];
+        $session_string = $soap_result->session_hash;
+        $user_id = $soap_result->user_id;
         $GLOBALS['LOG']->add("Logged in as user ".$loaded_params['soap']['loginname']." (user_id=".$user_id."), using session string ".$session_string);
         if (!$loaded_params['others']['quiet']) echo "Logged in.\n";
         $GLOBALS['soap']->setSessionString($session_string);
@@ -95,6 +95,11 @@ class CLI_Action_Default_Login extends CLI_Action {
         
         $GLOBALS['soap']->saveSession();
     }
+    
+    function use_extra_params() {
+        return false;
+    }
+    
 }
 
 ?>
