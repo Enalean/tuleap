@@ -195,9 +195,25 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
+
+        //valid group name
+        $validGroupName = new Valid_String('group_name_search');
+      
+        if ($request->valid($validGroupName)) {
+            $name = $request->get('group_name_search');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+        }
+
+
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);        
         }
+        if ($name != '') {
+                $filter[] = new GroupNameFilter($name);
+        }
+
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
     }
@@ -229,10 +245,25 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
+
+        //valid group name
+        $validGroupName = new Valid_String('group_name_search');
+      
+        if ($request->valid($validGroupName)) {
+            $name = $request->get('group_name_search');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+        }
+
+
         
 
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);                
+        }
+        if ($name != '') {
+            $filter[] = new GroupNameFilter($name);
         }
 
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
