@@ -93,7 +93,7 @@ class GroupDao extends DataAccessObject {
      */
     function searchAdminEmailByFilter($ca) {
 
-        $sql = 'SELECT email,user_group.user_id, group_id '.
+        $sql = 'SELECT email,user_group.user_id, user_group.group_id '.
                'FROM user '.
                'JOIN user_group ON user.user_id = user_group.user_id '.
                'JOIN groups ON user_group.group_id = groups.group_id '.
@@ -104,10 +104,6 @@ class GroupDao extends DataAccessObject {
 
             foreach($ca as $c) {
             
-                if ($c->getJoin()) {
-                    $join .= $c->getJoin();
-                }
-   
                 if ($c->getWhere()) {
                     $where .= ' AND '.$c->getWhere();
                 }
@@ -116,17 +112,10 @@ class GroupDao extends DataAccessObject {
                     $groupby .= $c->getGroupBy();
                 }
             }  
-
-            if ($join !== null) {
-                $sql .= ' JOIN '.$join;
-            }
-            
-            $sql .= ' WHERE '.$where;
-            
+                   
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
-
         }
 
         return $this->retrieve($sql);
