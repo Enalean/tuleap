@@ -165,7 +165,7 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());        
 
-        $criteria = array();
+        $filter = array();
 
         $request =& HTTPRequest::instance();
 
@@ -220,19 +220,19 @@ class UserControler extends Controler {
         }
 
         if ($shortcut != '') {
-            $criteria[] = new UserShortcutFilter($shortcut);
+            $filter[] = new UserShortcutFilter($shortcut);
         }
         if ($name != '') {
-            $criteria[] = new UserNameFilter($name);
+            $filter[] = new UserNameFilter($name);
         }
         if ($group != '') {
-            $criteria[] = new UserGroupFilter($group);
+            $filter[] = new UserGroupFilter($group);
         }
         if ($status != '' && $status != 'all') {
-            $criteria[] = new UserStatusFilter($status);
+            $filter[] = new UserStatusFilter($status);
         }
         
-        $this->userIterator = $dao->searchUserByFilter($criteria, $this->getOffset(), $this->getLimit());    
+        $this->userIterator = $dao->searchUserByFilter($filter, $this->getOffset(), $this->getLimit());    
     }
 
     /**
