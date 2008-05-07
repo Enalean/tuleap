@@ -226,13 +226,15 @@ class GroupControler extends Controler {
 
 
 
-        if (isset($shortcut)) {
+        if ($shortcut != '') {
                 $filter[] = new GroupShortcutFilter($shortcut);        
         }
         if ($name != '') {
                 $filter[] = new GroupNameFilter($name);
         }
-
+        if ($status != '' && $status != 'all') {
+            $filter[] = new GroupStatusFilter($status);
+        }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
     }
@@ -290,7 +292,7 @@ class GroupControler extends Controler {
         }
        
 
-        if (isset($shortcut)) {
+        if ($shortcut != '') {
                 $filter[] = new GroupShortcutFilter($shortcut);                
         }
         if ($name != '') {
