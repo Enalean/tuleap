@@ -83,7 +83,7 @@ class GroupDao extends DataAccessObject {
         $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-       
+        echo 'Main sql : '.$sql;
         return $this->retrieve($sql);
     }
 
@@ -117,7 +117,7 @@ class GroupDao extends DataAccessObject {
             }
             $sql .= $where;
         }
-       
+        echo 'Mail sql : '.$sql.'<br />';
         return $this->retrieve($sql);
      }
 

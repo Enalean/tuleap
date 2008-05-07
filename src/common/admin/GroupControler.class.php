@@ -181,6 +181,9 @@ class GroupControler extends Controler {
         //define white lists for parameters
         $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
+        $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
+
+
         //valid parameters
 
         //valid shortcut
@@ -205,6 +208,22 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
         }
+
+
+        //valid status
+        $validStatus = new Valid('group_status_search');
+        $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
+
+        if ($request->valid($validStatus)) {
+            $status = $request->get('group_status_search');                
+        }
+        else{
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+
+
 
 
         if (isset($shortcut)) {
@@ -232,6 +251,9 @@ class GroupControler extends Controler {
         //define white lists for parameters
         $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
+        $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
+
+
         //valid parameters
         
         //valid shortcut
@@ -256,14 +278,26 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
         }
 
+        //valid status
+        $validStatus = new Valid('group_status_search');
+        $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
 
-        
+        if ($request->valid($validStatus)) {
+            $status = $request->get('group_status_search');                
+        }
+        else{
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+       
 
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);                
         }
         if ($name != '') {
             $filter[] = new GroupNameFilter($name);
+        }
+        if ($status != '' && $status != 'all') {
+            $filter[] = new GroupStatusFilter($status);
         }
 
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        

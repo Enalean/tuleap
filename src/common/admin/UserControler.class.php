@@ -219,19 +219,17 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-        if (isset($shortcut) || $name != '' || $group != '' || $status != '') {
-            if (isset($shortcut)) {
-                $criteria[] = new UserShortcutFilter($shortcut);
-            }
-            if ($name != '') {
-                $criteria[] = new UserNameFilter($name);
-            }
-            if ($group != '') {
-                $criteria[] = new UserGroupFilter($group);
-            }
-            if ($status != '' && $status != 'all') {
-                $criteria[] = new UserStatusFilter($status);
-            }
+        if ($shortcut != '') {
+            $criteria[] = new UserShortcutFilter($shortcut);
+        }
+        if ($name != '') {
+            $criteria[] = new UserNameFilter($name);
+        }
+        if ($group != '') {
+            $criteria[] = new UserGroupFilter($group);
+        }
+        if ($status != '' && $status != 'all') {
+            $criteria[] = new UserStatusFilter($status);
         }
         
         $this->userIterator = $dao->searchUserByFilter($criteria, $this->getOffset(), $this->getLimit());    
