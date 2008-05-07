@@ -62,16 +62,16 @@ class GroupStateFilter implements iStatement {
 
 class GroupTypeFilter implements iStatement {
 
-    private $group;
+    private $type;
 
-    function __construct($group) {
-        $this->group = $group;
+    function __construct($type) {
+        $this->type = $type;
     }
 
     function getJoin() {}
 
     function getWhere() {
-        return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
+        return '(type = '.$this->type.')';
     }
 
     function getGroupBy() {}
