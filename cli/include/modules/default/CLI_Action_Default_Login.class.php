@@ -69,7 +69,7 @@ class CLI_Action_Default_Login extends CLI_Action {
             } else {
                 $protocol = "http";
             }
-            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codex.wsdl");
+            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codex.wsdl.static");
         }
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
