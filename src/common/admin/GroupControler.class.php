@@ -227,6 +227,8 @@ class GroupControler extends Controler {
 
         var_dump($this->mainGroupIterator);
 
+        $this->groupArray[] = array();
+
         foreach ($this->mainGroupIterator as  $mgi) {
 
             foreach ($this->adminEmailIterator as $keyaei => $valaei) {

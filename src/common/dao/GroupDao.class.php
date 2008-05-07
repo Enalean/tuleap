@@ -91,11 +91,43 @@ class GroupDao extends DataAccessObject {
      * search the email of groups admins
      *
      */
-    function searchAdminEmail() {
+    function searchAdminEmailByFilter($ca) {
 
         $sql = 'SELECT email,user_group.user_id, group_id '.
-            'FROM user JOIN user_group ON user.user_id = user_group.user_id '.
-            'WHERE admin_flags = \'A\'';
+               'FROM user '.
+               'JOIN user_group ON user.user_id = user_group.user_id '.
+               'JOIN groups ON user_group.group_id = groups.group_id '.
+               'WHERE admin_flags = \'A\'';
+
+
+        if (!empty($ca)) {
+
+            foreach($ca as $c) {
+            
+                if ($c->getJoin()) {
+                    $join .= $c->getJoin();
+                }
+   
+                if ($c->getWhere()) {
+                    $where .= ' AND '.$c->getWhere();
+                }
+                
+                if ($c->getGroupBy() !== null) {
+                    $groupby .= $c->getGroupBy();
+                }
+            }  
+
+            if ($join !== null) {
+                $sql .= ' JOIN '.$join;
+            }
+            
+            $sql .= ' WHERE '.$where;
+            
+            if ($groupby !== null) {
+                $sql .= ' GROUP BY '.$groupby;
+            }
+
+        }
 
         return $this->retrieve($sql);
      }

@@ -190,9 +190,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<b>Project type </b><br />';
         
         print '<select name="group_type_search" id="type_id">';
-        print '<option value="">Project</option>';
-        print '<option value="">Template</option>';
-        print '<option value="">Test Projet</option>';
+        print '<option value="1">Project</option>';
+        print '<option value="2"Template</option>';
+        print '<option value="3">Test Projet</option>';
         print '</select>';
         
         print '</td>';
@@ -244,7 +244,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mailto</th></tr>';
 
+        echo count($this->groupArray);
         var_dump($this->groupArray);
+
         foreach($this->groupArray as $ga) {
             
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
@@ -254,8 +256,11 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 <td>'.$ga['name'].'</td>
 <td>'.$ga['is_public'].'</td>
 <td>'.$ga['license'].'</a></td>
-<td>'.$ga['c'].'</td>
-<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
+<td>'.$ga['c'].'</td>';
+
+            if (count($this->groupArray) != 0) {
+                print '<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
+            }
         }
         print '</table>';
     }

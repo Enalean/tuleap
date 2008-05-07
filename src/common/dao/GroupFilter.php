@@ -112,6 +112,4 @@ class GroupShortcutFilter implements iStatement {
     function getGroupBy() {}
 }
 
-//rajouter des classe en fonction des criteres
-
 ?>
