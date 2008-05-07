@@ -36,7 +36,7 @@ class GroupNameFilter implements iStatement {
     function getJoin() {}
 
     function getWhere() {
-        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\')';
+        return '(group_name LIKE \'%'.$this->name.'%\' OR unix_group_name LIKE \'%'.$this->name.'%\')';
     }
 
     function getGroupBy() {}
