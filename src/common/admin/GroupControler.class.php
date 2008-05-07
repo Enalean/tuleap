@@ -213,11 +213,11 @@ class GroupControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
-//define white lists for parameters
+        //define white lists for parameters
         $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
         //valid parameters
-
+        
         //valid shortcut
         $validShortcut = new Valid('group_shortcut_search');
        
@@ -229,6 +229,7 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
+        
 
         if (isset($shortcut)) {
                 $filter[] = new GroupShortcutFilter($shortcut);                

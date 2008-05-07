@@ -244,27 +244,25 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mailto</th></tr>';
 
-        echo count($this->groupArray);
-        var_dump($this->groupArray);
+        
+        if ($this->nbgroup != 0) {    
 
-        foreach($this->groupArray as $ga) {
+            foreach($this->groupArray as $ga) {
             
-            print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
+                print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
 <td align="center" class="group_active"><a href="#">'.$ga['group_name'].'</a></td>
 <td>'.$ga['unix_group_name'].'</td>
 <td >'.$ga['status'].'</td>
 <td>'.$ga['name'].'</td>
 <td>'.$ga['is_public'].'</td>
 <td>'.$ga['license'].'</a></td>
-<td>'.$ga['c'].'</td>';
-
-            if (count($this->groupArray) != 0) {
-                print '<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
+<td>'.$ga['c'].'</td>
+<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
             }
         }
         print '</table>';
     }
-
+    
     /**
      * displayFooter()
      */

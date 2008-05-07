@@ -115,8 +115,8 @@ class GroupDao extends DataAccessObject {
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
+            $sql .= $where;
         }
-
         return $this->retrieve($sql);
      }
 
