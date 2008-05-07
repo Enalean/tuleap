@@ -76,7 +76,7 @@ class GroupStatusFilter implements iStatement {
     function getJoin() {}
 
     function getWhere() {
-        return 'user.status = \''.$this->status.'\'';
+        return 'groups.status = \''.$this->status.'\'';
     }
 
     function getGroupBy() {}

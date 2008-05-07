@@ -95,6 +95,10 @@ class GroupControler extends Controler {
      */
     function setNbGroup() {
         $dao = new GroupDao(CodexDataAccess::instance());
+
+        echo '<pre>';
+        var_dump($dao);
+        echo '</pre>';
         $this->nbgroup = $dao->getFoundRows();
     }
 
@@ -221,7 +225,7 @@ class GroupControler extends Controler {
      */
     function mergeGroupIterators () {
 
-        if ($this->nbgroup != 0) {
+        var_dump($this->mainGroupIterator);
 
         foreach ($this->mainGroupIterator as  $mgi) {
 
@@ -252,11 +256,6 @@ class GroupControler extends Controler {
                     $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
                 }
             }
-        }
-
-        }
-        else {
-            echo 'coucou';
         }
     }
 
@@ -294,9 +293,11 @@ class GroupControler extends Controler {
          
         $this->setAdminEmailIterator();
 
-        $this->mergegroupIterators();
+        $this->setNbGroup();   
+
+        $this->mergeGroupIterators();
         
-        $this->setNbGroup();        
+        //$this->setNbGroup();        
     }
 }
 
