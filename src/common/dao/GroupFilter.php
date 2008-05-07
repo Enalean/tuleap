@@ -43,8 +43,24 @@ class GroupNameFilter implements iStatement {
 }
 
 
-//adapter les classe et les requete sql
-class GroupGroupFilter implements iStatement {
+class GroupStateFilter implements iStatement {
+
+    private $state;
+
+    function __construct($state) {
+        $this->state = $state;
+    }
+
+    function getJoin() {}
+
+    function getWhere() {
+        return '(is_public ='.$this->state.')';
+    }
+
+    function getGroupBy() {}
+}
+
+class GroupTypeFilter implements iStatement {
 
     private $group;
 
@@ -52,18 +68,15 @@ class GroupGroupFilter implements iStatement {
         $this->group = $group;
     }
 
-    function getJoin() {
-        return  'user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
-    }
+    function getJoin() {}
 
     function getWhere() {
         return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
     }
 
-    function getGroupBy() {
-        return 'user.user_id';
-    }
+    function getGroupBy() {}
 }
+
 
 class GroupStatusFilter implements iStatement {
 
