@@ -83,7 +83,6 @@ class GroupDao extends DataAccessObject {
         $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-       
         return $this->retrieve($sql);
     }
 
