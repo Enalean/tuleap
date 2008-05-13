@@ -350,9 +350,11 @@ class Layout extends Response {
         include($Language->getContent('layout/footer'));
         	
         if ( user_ismember(1,'A') && $GLOBALS['DEBUG_MODE'] ) {
-                echo '<CENTER><B><span class="highlight">'.$Language->getText('include_layout','query_count').": ";
+                $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
+                echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
                 echo $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] + $GLOBALS['DEBUG_DAO_QUERY_COUNT'];
-                echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .") </span></B></CENTER>";
+                echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .")<br>";
+                echo "Page generated in ".$debug_compute_tile." seconds</debug>";
         }
           
         echo '</body>';

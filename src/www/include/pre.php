@@ -17,6 +17,9 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
 // Debug mode: display debug data in page footer.
 // Only displayed for site-admins
 $GLOBALS['DEBUG_MODE']=0;
+if ($GLOBALS['DEBUG_MODE']) {
+    $GLOBALS['debug_time_start'] = microtime(true);
+ }
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
