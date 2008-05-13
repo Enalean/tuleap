@@ -238,7 +238,7 @@ function show_sitestats() {
     $return .= $Language->getText('include_features_boxes','hosted_projects').': <B>'.number_format(stats_getprojects_active()).'</B>';
     $return .= '<BR>'.$Language->getText('include_features_boxes','registered_users').': <B>'.number_format(stats_getusers()).'</B>';
     $return .= '<BR>'.$Language->getText('include_features_boxes','files_download').': <B>'.number_format(stats_downloads_total()).'</B>';
-    $return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
+    //$return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
     return $return;
 }
 

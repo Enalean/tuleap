@@ -65,6 +65,12 @@ admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	skills	Compétences utilisateurs
 admin_main	new_user	Nouvel Utilisateur
+admin_main	active_users	Utilisateurs actifs
+admin_main	lastday_users	Les dernières 24 heures
+admin_main	lastmonth_users	Le mois dernier
+admin_main	last3months_users	Les 3 derniers mois
+admin_main	stat_projects	Statistiques des projets
+admin_main	stat_users	Statistiques des utilisateurs
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

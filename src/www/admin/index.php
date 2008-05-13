@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
+require_once('www/stats/site_stats_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -41,6 +42,37 @@ $validated_users = $row['count'];
  
 <h2><?php echo $Language->getText('admin_main', 'header'); ?></h2>
 <p><i><?php echo $Language->getText('admin_main', 'message'); ?></i>
+
+//Display of Site Statistics
+<h3><?php echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
+<ul>
+<?php
+		print "<li>".$Language->getText('admin_main', 'stat_users').":" ;
+        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
+        $row = db_fetch_array();
+        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_u').": <B>$row[count]</B></li>";
+		print "<li>".$Language->getText('admin_main', 'sstat_pend_u').": <B>$pending_users</B></li>";
+		
+		print "<li>".$Language->getText('admin_main','active_users').':';
+		print "<ul><li>".$Language->getText('admin_main','lastday_users').': <B>'.number_format(stats_getactiveusers(84600)).'</B></li>';
+		print "<li>".$Language->getText('admin_main','lastmonth_users').': <B>'.number_format(stats_getactiveusers(2678400)).'</B></li>';
+		print "<li>".$Language->getText('admin_main','last3months_users').': <B>'.number_format(stats_getactiveusers(8031600)).'</B></li></ul></li>';
+  
+		print "</ul></li><li>".$Language->getText('admin_main', 'stat_projects').":" ;
+        db_query("SELECT count(*) AS count FROM groups");
+        $row = db_fetch_array();
+        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_g').": <B>$row[count]</B></li>";
+
+        db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
+        $row = db_fetch_array();
+        print "<li>".$Language->getText('admin_main', 'sstat_reg_act_g').": <B>$row[count]</B></li>";
+
+		print "<li>".$Language->getText('admin_main', 'sstat_pend_g').": <B>$pending_projects</B></li></ul>";
+
+        
+		print "</li>";
+?>
+</ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_user'); ?></h3>
 <ul>
@@ -163,26 +195,6 @@ echo ")</b>";?>
     $em->processEvent('site_admin_option_hook', null);
 ?>
 </ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
-<?php
-        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
-        $row = db_fetch_array();
-        print "<P>".$Language->getText('admin_main', 'sstat_reg_u').": <B>$row[count]</B>";
-
-        db_query("SELECT count(*) AS count FROM groups");
-        $row = db_fetch_array();
-        print "<BR>".$Language->getText('admin_main', 'sstat_reg_g').": <B>$row[count]</B>";
-
-        db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
-        $row = db_fetch_array();
-        print "<BR>".$Language->getText('admin_main', 'sstat_reg_act_g').": <B>$row[count]</B>";
-
-	print "<BR>".$Language->getText('admin_main', 'sstat_pend_g').": <B>$pending_projects</B>";
-
-        print "<BR>".$Language->getText('admin_main', 'sstat_pend_u').": <B>$pending_users</B>";
-
-?>
 
 
 <?php

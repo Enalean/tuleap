@@ -60,6 +60,12 @@ admin_main	trove_cat_list	Trove Categories List
 admin_main	trove_cat_add	Trove Categories Add
 admin_main	skills	People Skills
 admin_main	new_user	New User
+admin_main	active_users	Active Users
+admin_main	lastday_users	Last 24 hours
+admin_main	lastmonth_users	Last month
+admin_main	last3months_users	Last 3 months
+admin_main	stat_projects	Projects Statistics
+admin_main	stat_users	Users Statistics
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
