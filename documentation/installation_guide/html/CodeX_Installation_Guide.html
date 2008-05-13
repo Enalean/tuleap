@@ -612,8 +612,8 @@ Packages<br>
       </td>
       <td valign="top">Install httpd and mod_ssl RPMs.&nbsp;
 httpd-devel and httpd-manual RPMs are
-optional. This is no longer a patched version of Apache 2.0: you can use the standard package.<br>
-However, if you wish to support cgi-bins in project web sites, you still need to install a custom httpd-suexec RPM. 
+optional. This is no longer a patched version of Apache 2.0: <b>you can use the standard package provided by RedHat</b>.<br>
+However, for CodeX version 3.4, if you wish to support cgi-bins in project web sites, you still need to install a custom httpd-suexec RPM. 
 This package is provided with the CodeX software. In order to install it, you will probably need to use the '--nodeps' RPM flag, 
 because it might not match exactly with your apache version number. 
 <br>Example:
@@ -622,6 +622,20 @@ rpm -e --nodeps httpd-suexec
 rpm -Uvh --nodeps httpd-suexec-2.0.52-28.ent.codex.i386.rpm 
 service httpd restart 
 </pre>
+For CodeX versions after 3.4, the package is no longer provided, and we don't allow project CGI scripts any longer, for security reasons.
+<br>Here is a brief explanation:
+<br>
+<b>We won't allow cgi scripts to run on project web sites.</b> Why?
+<br>
+ 1- if we don't use 'suexec', the CGI is run as codexadm and has access to every possible data.<br>
+    There is no way to limit the CGI action except by using suexec.<br>
+    Even if we used a separate "apache" user, different from codexadm, it would have access to sensitive data (DB password...)<br>
+ 2- if we want to use SUExec:<br>
+    - we need to compile it along with apache because it needs compile time parameters (apache user name [codexadm], etc.)<br>
+      This implies maintaining our own apache installation and RPMS...<br>
+    - suexec needs to be specially patched to allow reading/writing to directories with different ownership (based on user group, not user name)<br>
+      This potentially adds security holes, and is not recommended by the Apache Group.<br>
+    - suexec directive must be different for all apache vhosts, so we can't use vhost aliases.<br>
       </td>
     </tr>
     <tr>

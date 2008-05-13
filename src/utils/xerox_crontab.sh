@@ -93,17 +93,7 @@ cp -f /etc/group /etc/group.backup
 cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 ./new_parse.pl
 
-# Apache must be restarted after user/group update because
-# Unix Groups are used in Apache Virtual Hosts declaration
-if [ $SYS_DISABLE_SUBDOMAINS != 1 ]; then
-  cp -f /etc/httpd/conf/codex_vhosts.conf /etc/httpd/conf/codex_vhosts.conf.backup
-  cp -f $dump_dir/apache_dump /etc/httpd/conf/codex_vhosts.conf
-  cp -f /etc/httpd/conf/codex_svnhosts.conf /etc/httpd/conf/codex_svnhosts.conf.backup
-  cp -f $dump_dir/subversion_dump /etc/httpd/conf/codex_svnhosts.conf
-fi
-touch /etc/httpd/conf/codex_vhosts.conf
-touch /etc/httpd/conf/codex_svnhosts.conf
-
+# Apache configuration must be reloaded because of new SVN repositories
 cp -f /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codex_svnroot.conf.backup
 cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codex_svnroot.conf
 /usr/sbin/apachectl graceful

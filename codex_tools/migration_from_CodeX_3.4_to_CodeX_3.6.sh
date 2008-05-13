@@ -548,3 +548,7 @@ $CAT $TODO_FILE
 
 exit 1;
 
+# TODO:
+# Delete or rename: /etc/httpd/conf/codex_vhosts.conf
+# Delete or rename: /etc/httpd/conf/codex_svnhosts.conf
+# Warn that project web site CGI are no longer supported.
