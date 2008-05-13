@@ -179,7 +179,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    libart_lgpl  \
    dump \
    dejavu-lgc-fonts \
-   zip unzip
+   zip unzip enscript
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -462,13 +462,6 @@ cd ${RPMS_DIR}/cvsgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
 
-# -> enscript
-$RPM -e enscript 2>/dev/null
-echo "Installing enscript RPM for CodeX...."
-cd ${RPMS_DIR}/enscript
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/enscript-1*i?86.rpm
-
 # -> highlight
 $RPM -e highlight 2>/dev/null
 echo "Installing highlight RPM for CodeX...."
@@ -503,15 +496,18 @@ $RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
 
 # Munin
 echo "Removing installed Munin if any .."
-$RPM -e `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*'` 2>/dev/null
+$RPM -e `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
 echo "Installing Munin RPMs for CodeX...."
 cd ${RPMS_DIR}/munin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
 $RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-SNMP-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Config-General-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
 $RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
-$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
 
 # -> HTML Purifier
 echo "Removing installed htmlpurifier if any .."
@@ -523,35 +519,6 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/htmlpurifier-2*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
-
-# Create Apache config file for Munin (not in RPM...)
-$CAT <<'EOF' >/etc/httpd/conf.d/munin.conf
-#
-# Apache configuration to support munin and munin-cgi-graph
-#
-
-ScriptAlias /munin/dyn/ /var/www/html/munin/cgi
-
-<Directory /var/www/html/munin/cgi>
-        AllowOverride None
-        Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
-        Order allow,deny
-        Allow from all
-</Directory>
-
-Alias /munin "/var/www/html/munin"
-
-<Directory "/var/www/html/munin">
-    AllowOverride None
-    Options None
-    Order allow,deny
-    Allow from all
-</Directory>
-
-EOF
-
-# enable service by default
-$CHKCONFIG munin-node on
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
@@ -713,9 +680,6 @@ do
 done
 $CHOWN -R codexadm.codexadm /etc/codex/documentation
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
-$TOUCH /etc/httpd/conf/codex_vhosts.conf
-$TOUCH /etc/httpd/conf/codex_svnhosts.conf
-$TOUCH /etc/httpd/conf/codex_svnhosts_ssl.conf
 $CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codex/bin
 $CHOWN root.root /usr/lib/codex/bin/backup_job
 $CHMOD 740 /usr/lib/codex/bin/backup_job
