@@ -67,10 +67,19 @@ admin_main	skills	Compétences utilisateurs
 admin_main	new_user	Nouvel Utilisateur
 admin_main	active_users	Utilisateurs actifs
 admin_main	lastday_users	Les dernières 24 heures
+admin_main	lastweek_users	La semaine dernière
 admin_main	lastmonth_users	Le mois dernier
 admin_main	last3months_users	Les 3 derniers mois
 admin_main	stat_projects	Statistiques des projets
 admin_main	stat_users	Statistiques des utilisateurs
+admin_main	status_user	Par status 
+admin_main	statusactif_user	actif(s)
+admin_main	statusrestricted_user	restreint(s)
+admin_main	statushold_user	suspendu(s)
+admin_main	statusdeleted_user	détruit(s)
+admin_main	statusvalidated_user	validé(s)
+admin_main	statuspending_user	en attente
+admin_main	statustotal_user	total
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
