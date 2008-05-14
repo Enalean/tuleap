@@ -98,8 +98,6 @@ class UserEditDisplay extends AdminEditDisplay {
 
         print '</p><hr>';
 
-
-
     }
 
 

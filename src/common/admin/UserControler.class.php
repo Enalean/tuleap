@@ -248,27 +248,6 @@ class UserControler extends Controler {
     }
 
     /**
-     * getOffset()
-     */    
-    function getOffset() {
-        return $this->offset;
-    }
-
-    /**
-     * getLimit()
-     */
-    function getLimit() {
-        return $this->limit;
-    }
-
-    /**
-     * getNbUser()
-     */
-    function getNbUser() {
-        return $this->nbuser;
-    }
-    
-    /**
      * request()
      */
     function request() {
