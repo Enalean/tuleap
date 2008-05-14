@@ -270,7 +270,7 @@ class GroupControler extends Controler {
             $filter[] = new GroupTypeFilter($type);
         }
 
-        $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->getOffset(), $this->getLimit());
+        $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->offset, $this->limit);
     }
 
     /**
@@ -408,7 +408,7 @@ class GroupControler extends Controler {
         }
     }
 
-    
+
     /**
      * request()
      */

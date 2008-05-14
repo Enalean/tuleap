@@ -102,6 +102,37 @@ class UserEditDisplay extends AdminEditDisplay {
 
 
     /**
+     * displayCurrentGroups()
+     *
+     */
+    function displayCurrentGroups() {
+
+        print '<p>';
+  
+        print $GLOBALS['Language']->getText('admin_usergroup','current_groups');
+
+        print '</p>';
+
+        print '<a href="groupedit.php?group_id=1"><b>CodeX Administration Project</b></a>&nbsp;&nbsp;&nbsp;';
+        print '<a href="usergroup.php?user_id=101&amp;action=remove_user_from_group&amp;group_id=1">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a>';
+
+        print '<form action="index.php" method="post">';
+
+        print '<br />'.$GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
+
+        print '<input name="admin_flags" value="A" type="text"><br />';
+
+        print '<input name="Update_Group" value="Update" type="submit">';
+        print '</form>';
+
+		print '<hr>';
+
+
+
+    }
+
+
+    /**
      * displayFooter()
      */
     function displayFooter() {
@@ -118,6 +149,8 @@ class UserEditDisplay extends AdminEditDisplay {
         $this->displayHeader();
 
         $this->displayUnixAccountInformation();
+
+        $this->displayCurrentGroups();
 
         $this->displayFooter();
     }

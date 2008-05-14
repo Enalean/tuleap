@@ -244,9 +244,10 @@ class UserControler extends Controler {
             $filter[] = new UserStatusFilter($status);
         }
         
-        $this->userIterator = $dao->searchUserByFilter($filter, $this->getOffset(), $this->getLimit());    
+        $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
     }
 
+   
     /**
      * request()
      */
