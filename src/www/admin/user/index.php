@@ -35,19 +35,5 @@ $controler->process();
 <script type="text/javascript" src="/scripts/autocompletion.js"></script>
 
 <script type="text/javascript">
-
-    //    if(document.getElementById('user_name_search').value != '') {
-
-
-
-
-
 autocomplete();
-
-
-//    }
-
-
-
-
 </script>

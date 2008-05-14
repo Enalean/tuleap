@@ -121,37 +121,43 @@ class UserControler extends Controler {
         
         $request =& HTTPRequest::instance();
         
-        if ($_GET['limit']) {
 
-            $vlimit = new Valid('limit');
-            $vlimit->addRule(new Rule_Int());
+        //valid parameters
 
-            if ($request->valid($vlimit)) {
-                $limit = $request->get('limit');
-                $this->limit = $limit;
-            }
-            else {
 
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        //valid limit
+
+        $validLimit = new Valid('limit');
+        $validLimit->addRule(new Rule_Int());
+                
+        if($request->valid($validLimit)) {
+            $limit = $request->get('limit');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+        //valid nbtodisplay
+
+        $validNbToDisplay = new Valid('nbtodisplay');
+        $validNbToDisplay->addRule(new Rule_Int());
+                
+        if($request->valid($validNbToDisplay)) {
+            if ($request->isPost()) {
+                $nbtodisplay = $request->get('nbtodisplay');
             }
         }
-        elseif ($_POST['nbtodisplay']) {
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
 
-            $v = new Valid('nbtodisplay');
-            $v->addRule(new Rule_Int());
 
-            if ($request->valid($v)) {
-                if ($request->isPost()) {
-                    $limit = $request->get('nbtodisplay');
-                    $this->limit = $limit;
-                }
-                else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST'); 
-                }
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid'); 
-            }
+        if ($limit != '') {
+            $this->limit = $limit;
+        }
+        elseif ($nbtodisplay != '') {
+            $this->limit = $nbtodisplay;
         }
         else {
             $this->limit = 50;
