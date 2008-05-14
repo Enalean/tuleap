@@ -408,26 +408,6 @@ class GroupControler extends Controler {
         }
     }
 
-    /**
-     * getOffset()
-     */    
-    function getOffset() {
-        return $this->offset;
-    }
-    
-    /**
-     * getLimit()
-     */
-    function getLimit() {
-        return $this->limit;
-    }
-    
-    /**
-     * getNbUser()
-     */
-    function getNbGroup() {
-        return $this->nbgroup;
-    }
     
     /**
      * request()
