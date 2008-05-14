@@ -124,7 +124,6 @@ class UserControler extends Controler {
 
         //valid parameters
 
-
         //valid limit
 
         $validLimit = new Valid('limit');

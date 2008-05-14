@@ -129,37 +129,42 @@ class GroupControler extends Controler {
         
         $request =& HTTPRequest::instance();
         
-        if ($_GET['limit']) {
+   
+        //valid parameters
 
-            $vlimit = new Valid('limit');
-            $vlimit->addRule(new Rule_Int());
+        //valid limit
 
-            if ($request->valid($vlimit)) {
-                $limit = $request->get('limit');
-                $this->limit = $limit;
-            }
-            else {
+        $validLimit = new Valid('limit');
+        $validLimit->addRule(new Rule_Int());
 
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+
+        if($request->valid($validLimit)) {
+            $limit = $request->get('limit');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+        //valid nbrows
+        
+        $validNbRows = new Valid('nbrows');
+        $validNbRows->addRule(new Rule_Int());
+        
+        if($request->valid($validNbRows)) {
+            if ($request->isPost()) {
+                $nbrows = $request->get('nbrows');
             }
         }
-        elseif ($_POST['nbtodisplay']) {
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
 
-            $v = new Valid('nbtodisplay');
-            $v->addRule(new Rule_Int());
-
-            if ($request->valid($v)) {
-                if ($request->isPost()) {
-                    $limit = $request->get('nbtodisplay');
-                    $this->limit = $limit;
-                }
-                else {
-                    $GLOBALS['Response']->addFeedback('error', 'Your data don\'t provide to POST'); 
-                }
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid'); 
-            }
+        if ($limit != '') {
+            $this->limit = $limit;
+        }
+        elseif ($nbrows != '') {
+            $this->limit = $nbrows;
         }
         else {
             $this->limit = 50;

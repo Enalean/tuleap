@@ -204,7 +204,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         print '</table>';
         
-        print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="50" maxlength="5" size="3" name="chunksz"/> groups at once.</p>';
+        print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrows.'" maxlength="5" size="3" name="nbrows"/> groups at once.</p>';
 
         print '</form>';
 
