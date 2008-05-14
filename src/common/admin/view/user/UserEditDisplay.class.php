@@ -127,10 +127,33 @@ class UserEditDisplay extends AdminEditDisplay {
 
 		print '<hr>';
 
-
-
     }
 
+
+    /**
+     * displayAddUser()
+     *
+     */
+    function displayAddUser() {
+
+
+        print '<form action="index.php" method="post">';
+
+        print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
+
+        print '<input name="group_id" length="4" maxlength="5" type="text">';
+
+        print '</p><p>';
+
+        print '<input name="Submit" value="Submit" type="submit">';
+
+        print '</p><p>';
+
+        print '<a href="user_changepw.php?user_id=101">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a>';
+
+        print '</p></form>';
+
+    }
 
     /**
      * displayFooter()
@@ -151,6 +174,8 @@ class UserEditDisplay extends AdminEditDisplay {
         $this->displayUnixAccountInformation();
 
         $this->displayCurrentGroups();
+
+        $this->displayAddUser();
 
         $this->displayFooter();
     }
