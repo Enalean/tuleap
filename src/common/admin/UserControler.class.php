@@ -79,8 +79,25 @@ class UserControler extends Controler {
 //             $view = new UserSearchAjaxDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
 //         } 
 //         else {
-        if (!is_null($_GET['user_id'])) {
+
+        $request =& HTTPRequest::instance();
+
+
+        $validUserId = new Valid('use_id');
+        $validUserId->addRule(new Rule_Int());
+                
+        if($request->valid($validUserId)) {
+            $user_id = $request->get('user_id');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+
+        if ($user_id) {
             $view = new UserEditDisplay();
+            
         
         }
         else {
