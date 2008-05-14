@@ -267,7 +267,22 @@ class UserControler extends Controler {
      */
     function request() {
 
-        $this->setOffset($_GET['offset']);
+        $request =& HTTPRequest::instance();
+
+        //valid offset
+
+        $validOffset = new Valid('offset');
+        $validOffset->addRule(new Rule_Int());
+
+        if($request->valid($validOffset)) {
+            $offset = $request->get('offset');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+        $this->setOffset($offset);
         
         $this->setLimit();
                
