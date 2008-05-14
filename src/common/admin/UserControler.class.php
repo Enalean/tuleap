@@ -97,9 +97,11 @@ class UserControler extends Controler {
      * @param int $offset
      */
     function setOffset($offset = null) {
-
+       
         if ($offset === null) {
             $this->offset = 0;
+            echo 'case 0 '.$this->offset;
+
         }
         else {
             $request =& HTTPRequest::instance();
@@ -110,6 +112,8 @@ class UserControler extends Controler {
             if ($request->valid($voffset)) {
                 $offset = $request->get('offset');
                 $this->offset = $offset;
+
+                echo 'case offset'.$this->offset;
             }
         }
     }
@@ -265,23 +269,8 @@ class UserControler extends Controler {
      * request()
      */
     function request() {
-
-        $request =& HTTPRequest::instance();
-
-        //valid offset
-
-        $validOffset = new Valid('offset');
-        $validOffset->addRule(new Rule_Int());
-
-        if($request->valid($validOffset)) {
-            $offset = $request->get('offset');
-        }
-        else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-        }
-
-
-        $this->setOffset($offset);
+               
+        $this->setOffset($_GET['offset']);
         
         $this->setLimit();
                
