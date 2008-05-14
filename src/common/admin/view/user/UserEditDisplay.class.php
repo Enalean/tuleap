@@ -47,7 +47,7 @@ class UserEditDisplay extends AdminEditDisplay {
         session_require(array('group'=>'1','admin_flas'=>'A'));
         
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
-        parent::displayHeader($GLOBALS['Language']->getText('admin_usergroup','header').': <b>';
+        parent::displayHeader($GLOBALS['Language']->getText('admin_usergroup','header').': <b>');
     }
 
 

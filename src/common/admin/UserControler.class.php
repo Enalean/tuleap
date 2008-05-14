@@ -25,6 +25,7 @@
 require_once('pre.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');
 require_once('common/admin/view/user/UserSearchDisplay.class.php');
+require_once('common/admin/view/user/UserEditDisplay.class.php');
 require_once('www/admin/user/UserAutocompletionForm.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/dao/UserDao.class.php');
@@ -78,8 +79,14 @@ class UserControler extends Controler {
 //             $view = new UserSearchAjaxDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
 //         } 
 //         else {
+        if (!is_null($_GET['user_id'])) {
+            $view = new UserEditDisplay();
+        
+        }
+        else {
+
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
-            // }
+        }
         $view->display();
     }
 
