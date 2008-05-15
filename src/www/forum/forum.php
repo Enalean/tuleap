@@ -41,7 +41,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 			<TR>
 				<TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
 					db_result($result, $row, 'user_name') .'/">'. 
-					db_result($result, $row, 'user_name') .'</A>'.
+					user_get_name_display_from_unix(db_result($result, $row, "user_name")) .'</A>'.
 					' ( ' . $hp->purify(db_result($result, $row, 'realname'), CODEX_PURIFIER_CONVERT_HTML)  . ' ) '.
 					'<BR><A HREF="/forum/message.php?msg_id='.
 					db_result($result, $row, 'msg_id') .'">'.
@@ -52,7 +52,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 			</TR>
 			<TR>
 				<TD>
-					'. util_make_links( nl2br ( db_result($result,$row,'body') ), $g_id ) .'
+					<pre>'. util_make_links(db_result($result,$row,'body'), $g_id ) .'</pre>
 				</TD>
 			</TR>
 		</TABLE>';
@@ -408,7 +408,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 					show the subject and poster
 				*/
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-					'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
+					'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
 					'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 				/*
