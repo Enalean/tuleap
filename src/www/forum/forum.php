@@ -63,7 +63,7 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
   global $total_rows,$sys_datefmt,$Language;
 
 	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)."' AND forum_group_list.group_forum_id = forum.group_forum_id ".
+		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)." AND forum_group_list.group_forum_id = forum.group_forum_id ".
 		"ORDER BY forum.date ASC;";
 
 	$result=db_query($sql);
