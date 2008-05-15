@@ -19,7 +19,9 @@ if ($type_of_search !== "tracker" &&
     $type_of_search !== "wiki") {
     $HTML->header(array('title'=>$Language->getText('search_index','search')));
     echo "<P><CENTER>";
-    $HTML->searchBox();
+    if(($GLOBALS['sys_user_theme']=='savannah')||($GLOBALS['sys_user_theme']=='CodeX')){
+    	$HTML->searchBox();
+    }
 }
 $hp = CodeX_HTMLPurifier::instance();
 /*
