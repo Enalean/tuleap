@@ -175,13 +175,16 @@ class UserEditDisplay extends AdminEditDisplay {
         print '</p>';
 
         print '<a href="groupedit.php?group_id=1"><b>CodeX Administration Project</b></a>&nbsp;&nbsp;&nbsp;';
-        print '<a href="usergroup.php?user_id=101&amp;action=remove_user_from_group&amp;group_id=1">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a>';
+        print '<a href="usergroup.php?user_id=101&amp;action=remove_user_from_group&amp;group_id=1">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
 
         print '<form action="index.php" method="post">';
 
-        print '<br />'.$GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
+        print '<input type="checkbox" name="adminflag" value="A"';
+        if ($this->useradminflag['admin_flags']) print 'checked="checked"';
+        print ' />';
 
-        print '<input name="admin_flags" value="'.$this->useradminflag['admin_flags'].'" type="text"><br />';
+        print $GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
+
 
         print '<input name="Update_Group" value="Update" type="submit">';
         print '</form>';
