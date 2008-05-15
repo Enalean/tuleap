@@ -77,7 +77,7 @@ class UserEditDisplay extends AdminEditDisplay {
         print '<form method="post" name="update_user" action="index.php">';
         
         print '<p>Shell:';
-        
+
         print '<select name="form_shell">';
         
         print '<option value="/bin/sh"';
@@ -122,26 +122,67 @@ class UserEditDisplay extends AdminEditDisplay {
 
         print '</select>';
 
+        print '</p>';
+
+
+        print '<p>Codex Account Status:';
+
+        print '<select name="form_codexstatus">';
+
+        print '<option value="A"';
+        if ($this->userparam['status'] == 'A') print 'selected="selected"';
+        print '>'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
+
+        print '<option value="R"';
+        if ($this->userparam['status'] == 'R' || $this->userparam['status'] == 'W') print 'selected="selected"';
+        print '>'.$GLOBALS['Language']->getText('admin_userlist','restricted').'</option>';
+
+        print '<option value="V"';
+        if ($this->userparam['status'] == 'V') print 'selected="selected"';
+        print '>'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
+
+        print '<option value="P"';
+        if ($this->userparam['status'] == 'P') print 'selected="selected"';
+        print '>Pending</option>';
+
+        print '<option value="D"';
+        if ($this->userparam['status'] == 'D') print 'selected="selected"';
+        print '>'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>'; 
+
+        print '<option value="S"';
+        if ($this->userparam['status'] == 'S') print 'selected="selected"';
+        print '>'.$GLOBALS['Language']->getText('admin_userlist','suspended').'</option>';
         
-        print '</p><p>Unix Account Status:';
+        print '</select></p>';
+
+
+
+            
+            
+
+
+
+
+
+        print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
 
         print '<select name="form_unixstatus">';
 
         print '<option value="N"';
         if($this->userparam['unix_status'] == 'N') print 'selected="selected"';
-        print '>No Unix Account</option>';
+        print '>'.$GLOBALS['Language']->getText('admin_usergroup','no_account').'</option>';
 
         print '<option value="A"';
         if($this->userparam['unix_status'] == 'A') print 'selected="selected"';
-        print '>Active</option>';
+        print '>'.$GLOBALS['Language']->getText('admin_usergroup','active').'</option>';
         
         print '<option value="S"';
         if($this->userparam['unix_status'] == 'S') print 'selected="selected"';
-        print '>Suspended</option>';
+        print '>'.$GLOBALS['Language']->getText('admin_usergroup','suspended').'</option>';
         
         print '<option value="D"';
         if($this->userparam['unix_status'] == 'D') print 'selected="selected"';
-        print '>Deleted</option>';
+        print '>'.$GLOBALS['Language']->getText('admin_usergroup','deleted').'</option>';
 
         print '</select>';
 

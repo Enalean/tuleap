@@ -242,13 +242,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
 <td><a href="#">[DevProfil]</a></td>
 <td>';
 
-            if ($u['status'] == 'A') print 'Active';
-            if ($u['status'] == 'R') print 'Restricted';
-            if ($u['status'] == 'V') print 'Validated';
+            if ($u['status'] == 'A') print $GLOBALS['Language']->getText('admin_userlist','active');
+            if ($u['status'] == 'R') print $GLOBALS['Language']->getText('admin_userlist','restricted');
+            if ($u['status'] == 'V') print $GLOBALS['Language']->getText('admin_userlist','validated');
             if ($u['status'] == 'P') print 'Pending';
-            if ($u['status'] == 'D') print 'Deleted';
-            if ($u['status'] == 'W') print 'Restricted';
-            if ($u['status'] == 'S') print 'Suspended';   
+            if ($u['status'] == 'D') print $GLOBALS['Language']->getText('admin_userlist','deleted');
+            if ($u['status'] == 'W') print $GLOBALS['Language']->getText('admin_userlist','restricted');
+            if ($u['status'] == 'S') print  $GLOBALS['Language']->getText('admin_userlist','suspended');   
             print '</td>
 <td><a href="'.$u['email'].'">'.$u['email'].'</a></td></tr>';
         }
