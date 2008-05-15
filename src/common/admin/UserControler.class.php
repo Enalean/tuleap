@@ -62,6 +62,31 @@ class UserControler extends Controler {
      */
     private $nbuser;
 
+
+    /**
+     * $userparam an array that contains the params of a user (for the editing mode)
+     *
+     * @type array $userparam
+     */
+    private $userparam;
+
+
+    /**
+     * $userid 
+     *
+     * @type int $userid
+     */
+    private $userid;
+
+
+    /**
+     * $useradminflag
+     *
+     * @type string $useradminflag
+     */
+    private $useradminflag;
+
+
     /**
      * constructor
      *
@@ -80,25 +105,8 @@ class UserControler extends Controler {
 //         } 
 //         else {
 
-        $request =& HTTPRequest::instance();
-
-
-        $validUserId = new Valid('use_id');
-        $validUserId->addRule(new Rule_Int());
-                
-        if($request->valid($validUserId)) {
-            $user_id = $request->get('user_id');
-        }
-        else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-        }
-
-
-
-        if ($user_id) {
-            $view = new UserEditDisplay();
-            
-        
+        if ($this->userid) {
+            $view = new UserEditDisplay($this->userparam, $this->useradminflag);
         }
         else {
 
@@ -186,7 +194,35 @@ class UserControler extends Controler {
             $this->limit = 50;
         }
     }
+
  
+    /**
+     * setUserParam
+     */
+    function setUserParam($userid) {
+
+        $dao = new UserDao(CodexDataAccess::instance());
+
+        $dar = $dao->searchByUserId($userid);
+            
+        $this->userparam = $dar->getRow();
+
+    }
+
+
+    /**
+     * setUserAdminFlag
+     */
+    function setUserAdminFlag($userid) {
+
+        $dao =  new UserDao(CodexDataAccess::instance());
+
+        $dar = $dao->searchAdminFlag($userid);
+
+        $this->useradminflag = $dar->getRow();
+    }
+
+
     /**
      * setUserIterator()
      */
@@ -269,7 +305,26 @@ class UserControler extends Controler {
      * request()
      */
     function request() {
-               
+        
+        $request =& HTTPRequest::instance();
+
+        $validUserId = new Valid('user_id');
+        $validUserId->addRule(new Rule_Int());
+        
+        if($request->valid($validUserId)) {
+            $this->userid = $request->get('user_id');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+        if ($this->userid) {
+
+            $this->setUserParam($this->userid);
+            $this->setUserAdminFlag($this->userid);
+        }
+
         $this->setOffset($_GET['offset']);
         
         $this->setLimit();
@@ -277,6 +332,7 @@ class UserControler extends Controler {
         $this->setUserIterator();
         
         $this->setNbUser();
+
     }
 }
 

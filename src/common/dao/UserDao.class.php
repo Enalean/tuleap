@@ -40,6 +40,16 @@ class UserDao extends DataAccessObject {
     }
 
     /**
+     * Searches user's administration flag by UserId
+     * @return DataAccessResult
+     */
+    function searchAdminFlag($userId) {
+        $sql = sprintf("SELECT admin_flags FROM user_group WHERE user_id = %s",
+                       $this->da->quoteSmart($userId));
+        return $this->retrieve($sql);
+    }
+
+    /**
     * Searches User by UserName 
     * @return DataAccessResult
     */
@@ -415,7 +425,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            return $row['nb'];
+            return $row['nb'];        
         } else {
             return false;
         }

@@ -32,8 +32,23 @@ require_once('common/admin/view/AdminEditDisplay.class.php');
  */
 class UserEditDisplay extends AdminEditDisplay {
 
-    function __construct() {
+    /**
+     * $userparam
+     *
+     * @type array $userparam
+     */
+    private $userparam;
 
+    /**
+     * $useradminflag
+     *
+     * @type string $useradminflag
+     */
+
+    function __construct($userparam, $useradminflag) {
+ 
+       $this->userparam = $userparam;
+       $this->useradminflag = $useradminflag;
     }
 
 
@@ -58,34 +73,80 @@ class UserEditDisplay extends AdminEditDisplay {
     function displayUnixAccountInformation() {
 
         print $GLOBALS['Language']->getText('admin_usergroup','account_info');
-
+        
         print '<form method="post" name="update_user" action="index.php">';
         
         print '<p>Shell:';
-
+        
         print '<select name="form_shell">';
-        print '<option value="/bin/sh">/bin/sh</option>';
-        print '<option selected="selected" value="/bin/bash">/bin/bash</option>';
-        print '<option value="/sbin/nologin">/sbin/nologin</option>';
-        print '<option value="/bin/bash2">/bin/bash2</option>';
-        print '<option value="/bin/ash">/bin/ash</option>';
-        print '<option value="/bin/bsh">/bin/bsh</option>';
-        print '<option value="/bin/ksh">/bin/ksh</option>';
-        print '<option value="/bin/tcsh">/bin/tcsh</option>';
-        print '<option value="/bin/csh">/bin/csh</option>';
-        print '<option value="/bin/zsh">/bin/zsh</option>';
+        
+        print '<option value="/bin/sh"';
+        if($this->userparam['shell'] == '/bin/sh') print 'selected="selected"';
+        print ' >/bin/sh</option>';
+        
+        print '<option value="/bin/bash"';
+        if($this->userparam['shell'] == '/bin/bash') print 'selected="selected"';
+        print '>/bin/bash</option>';
+
+        print '<option value="/sbin/nologin"';
+        if($this->userparam['shell'] == '/sbin/nologin') print 'selected="selected"';
+        print '>/sbin/nologin</option>';
+    
+        print '<option value="/bin/bash2"';
+        if($this->userparam['shell'] == '/bin/bash2') print 'selected="selected"';
+        print '>/bin/bash2</option>';
+
+        print '<option value="/bin/ash"';
+        if($this->userparam['shell'] == '/bin/ash') print 'selected="selected"';
+        print '>/bin/ash</option>';
+
+        print '<option value="/bin/bsh"';
+        if($this->userparam['shell'] == '/bin/bsh') print 'selected="selected"';
+        print '>/bin/bsh</option>';
+
+        print '<option value="/bin/ksh"';
+        if($this->userparam['shell'] == '/bin/ksh') print 'selected="selected"';
+        print '>/bin/ksh</option>';
+
+        print '<option value="/bin/tcsh"';
+        if($this->userparam['shell'] == '/bin/tcsh') print 'selected="selected"';
+        print '>/bin/tcsh</option>';
+
+        print '<option value="/bin/csh"';
+        if($this->userparam['shell'] == '/bin/csh') print 'selected="selected"';
+        print '>/bin/csh</option>';
+
+        print '<option value="/bin/zsh"';
+        if($this->userparam['shell'] == '/bin/zsh') print 'selected="selected"';
+        print '>/bin/zsh</option>';
+
         print '</select>';
 
+        
         print '</p><p>Unix Account Status:';
+
         print '<select name="form_unixstatus">';
-        print '<option value="N">No Unix Account</option>';
-        print '<option selected="selected" value="A">Active</option>';
-        print '<option value="S">Suspended</option>';
-        print '<option value="D">Deleted</option>';
+
+        print '<option value="N"';
+        if($this->userparam['unix_status'] == 'N') print 'selected="selected"';
+        print '>No Unix Account</option>';
+
+        print '<option value="A"';
+        if($this->userparam['unix_status'] == 'A') print 'selected="selected"';
+        print '>Active</option>';
+        
+        print '<option value="S"';
+        if($this->userparam['unix_status'] == 'S') print 'selected="selected"';
+        print '>Suspended</option>';
+        
+        print '<option value="D"';
+        if($this->userparam['unix_status'] == 'D') print 'selected="selected"';
+        print '>Deleted</option>';
+
         print '</select>';
 
         print '</p><p>Email:';
-        print '<input name="email" value="codex-admin@_DOMAIN_NAME_" size="35" maxlength="55" type="text">';
+        print '<input name="email" value="'.$this->userparam['email'].'" size="35" maxlength="55" type="text">';
 
         print '</p><p>Expiry Date:';
 
@@ -120,7 +181,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
         print '<br />'.$GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
 
-        print '<input name="admin_flags" value="A" type="text"><br />';
+        print '<input name="admin_flags" value="'.$this->useradminflag['admin_flags'].'" type="text"><br />';
 
         print '<input name="Update_Group" value="Update" type="submit">';
         print '</form>';
