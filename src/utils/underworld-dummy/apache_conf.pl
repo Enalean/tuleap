@@ -36,6 +36,7 @@ while(my ($unix_group_name,$group_name,$location,$server_id) = $c->fetchrow()) {
 	  "    AuthType Basic\n",
 	  "    AuthName \"Subversion Authorization ($group_name)\"\n",
 	  "    AuthUserFile $apache_htpasswd\n",
+          "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n",
 	  "</Location>\n\n");
     }
 }

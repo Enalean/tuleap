@@ -1,0 +1,204 @@
+/**
+ * Repos Style (c) 2007 www.reposstyle.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/* reposstyle.com version 1.5 */
+html {
+	filter: expression(document.execCommand("BackgroundImageCache", false, true));
+}
+body {
+	margin-top: 0px;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 82.5%;
+}
+h1 {
+	font-weight: normal;
+	font-size: 1.8em;
+}
+h2 {
+	font-weight: normal;
+	font-size: 1.4em;
+	color: #444444;
+}
+h3 {
+	font-weight: normal;
+	margin-bottom: 3px;
+	font-size: 1.1em;
+	letter-spacing: 0.1em;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+/* command = commandbar button, <a> is  active, <span> is greyed out */
+.command {
+	background-position: left center;
+	background-repeat: no-repeat;
+	font-size: 82.5%;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-left: 20px;
+	padding-right: 0.2em;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+a.command {
+	color: #333333;
+	border-left: 1px solid #f0f0ee;
+	border-right: 1px solid #f0f0ee;
+}
+span.command {
+	color: #BBBBBB;
+}
+/* action is for buttons inside listings, <a> is  active, <span> is greyed out */
+a.action {
+	color: #555555;
+	background-color: #F0F0EE;
+	font-size: 82.5%;
+	margin: 0.2em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	border-top: 1px solid #E7E7E6;
+	border-right: 1px solid #DDDDDD;
+	border-bottom: 1px solid #E7E7E6;
+	border-left: 1px solid #DDDDDD;
+}
+span.action {
+	display: none;
+}
+/* common page elements, may also be layouted for each tool */
+#commandbar {
+	min-width: 980px;
+	height: 1.5em;
+	background-color: #ECF1EF;
+	padding: 3px;
+	border-bottom: 1px solid #CCCCCC;
+}
+/* command = commandbar button, <a> is  active, <span> is greyed out */
+#commandbar a, #commandbar span {
+	background-position: left center;
+	background-repeat: no-repeat;
+	font-size: 82.5%;
+	margin-left: 0.4em;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-left: 22px;
+	padding-right: 1.0em;
+	padding-top: 0.4em;
+	padding-bottom: 0.6em;
+	line-height: 1.5em;
+}
+#commandbar a {
+	color: #555555;
+	border-right: 2px dotted #D5E0E0;
+}
+#commandbar span {
+	color: #BBBBBB;
+}
+/* common commands */
+#commandbar #back {
+	background-image: url('commands/16x16/back.png');
+}
+#commandbar #repository {
+	background-image: url('commands/16x16/repository.png');
+}
+#commandbar #parent {
+	background-image: url('commands/16x16/parent.png');
+}
+#commandbar #history {
+	background-image: url('commands/16x16/history.png');
+}
+#commandbar #download {
+	background-image: url('commands/16x16/download.png');
+}
+#commandbar #refresh {
+	background-image: url('commands/16x16/refresh.png');
+}
+#commandbar #home {
+	background-image: url('commands/16x16/home.png');
+}
+#footer {
+	margin-top: 1.5em;
+	padding: 0.2em;
+	width: 100%;
+	clear: both;
+	border-top: 1px solid #CCCCCC;
+	background-color: #F4F4F4;
+	color: #999999;
+	font-size: 85.5%;
+}
+#footer a {
+	color: #667799;
+}
+.legal {
+	position: absolute;
+	right: 10px;
+	text-align: right;
+}
+.n0, .n1, .n2, .n3 {
+	background: url(rowbackground.png) top repeat-x;
+}
+ul.index {
+	padding: 0;
+	margin: 0;
+}
+.index li {
+	list-style: none;
+	padding: 1px;
+	margin: 0;
+	border-bottom: 1px solid #FFFFFF;
+}
+.index li:hover {
+	border-bottom: 1px dashed #CCCC99;
+}
+.index li .actions {
+	display: inline;
+	position: absolute;
+	left: 36em;
+}
+/* layout of version control concepts, these are usually span tags */
+a.file {
+	color: #001155;
+}
+a.folder, #path a {
+	color: #001133;
+}
+.project {
+}
+.revision {
+	color: #006600;
+	padding: 1px;
+	border: 1px dotted #cccc99;
+	font-size-adjust: 0.4;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.username {
+	color: #663300;
+	padding-left: 18px;
+	background: url(commands/16x16/user.png) left no-repeat;
+}
+.datetime {
+	color: #666666;
+}
+.message {
+	font-style: italic;
+}
+.error {
+	color: #CC0000;
+}
