@@ -1030,12 +1030,13 @@ if [ "$yn" = "y" ]; then
     $CHOWN codexadm.codexadm /etc/codex/site-content/en_US/others
     $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
 fi
+
 if [ "$disable_subdomains" = "y" ]; then
-  echo "HomePage service disabled in project configuration..."
-  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET is_used = '0', is_active = '0' WHERE short_name = 'homepage'"
-else
-  todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
+  echo "Use same-host project web sites"
+  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET link = '/www/$projectname' WHERE short_name = 'homepage'"
 fi
+
+todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
 todo "Customize site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
