@@ -731,6 +731,12 @@ echo html_blankimage(5,100);
         echo $output;
     }
     
+    //diplaying search box in body
+    function bodySearchBox() {
+    	$this->searchBox();
+    }
+    
+    
     function getOsdnNavBar() {
         $output = '
         <!-- OSDN navbar -->

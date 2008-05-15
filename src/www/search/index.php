@@ -19,9 +19,7 @@ if ($type_of_search !== "tracker" &&
     $type_of_search !== "wiki") {
     $HTML->header(array('title'=>$Language->getText('search_index','search')));
     echo "<P><CENTER>";
-    if(($GLOBALS['sys_user_theme']=='savannah')||($GLOBALS['sys_user_theme']=='CodeX')){
-    	$HTML->searchBox();
-    }
+    $HTML->bodySearchBox();
 }
 $hp = CodeX_HTMLPurifier::instance();
 /*
@@ -34,11 +32,13 @@ if ($words && (strlen($words) < 3)) {
 }
 
 if (!$words) {
-	echo '<BR>'.$Language->getText('search_index','enter_s_words').'</CENTER><P>';
+	echo '<BR>'.$Language->getText('search_index','enter_s_words');
 	$HTML->footer(array());
 	exit;
 }
 
+	echo '</CENTER><P>';
+	
 $words = trim($words);
 $no_rows = 0;
 
