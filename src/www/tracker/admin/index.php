@@ -552,13 +552,13 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
             // For date fields, it is possible to give a computed default value (current date)
-            if ($field->isDateField() && $request->getValidated('default_date_type', new Valid_WhiteList('current_date'))) {
+            if ($field->isDateField() && $request->get('default_date_type')=='current_date') {
                 $computed_value = 'current_date';
             } else {
                 $computed_value = false;
             }
             if ( (!$field->isDateField() && $request->valid(new Valid_String('default_value'))) 
-                || $request->valid(new Valid_Date('default_value'))) {
+                || $request->valid(new Valid_String('default_value'))) {
             
                 if ( !$field->updateDefaultValue($atid, $request->get('default_value'), $computed_value) ) {
                     exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
