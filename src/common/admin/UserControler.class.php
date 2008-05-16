@@ -171,12 +171,12 @@ class UserControler extends Controler {
         //valid nbtodisplay
 
         $validNbToDisplay = new Valid('nbtodisplay');
+        //$validNbToDisplay->required();
         $validNbToDisplay->addRule(new Rule_Int());
+
                 
         if($request->valid($validNbToDisplay)) {
-            if ($request->isPost()) {
-                $nbtodisplay = $request->get('nbtodisplay');
-            }
+            $nbtodisplay = $request->get('nbtodisplay');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
