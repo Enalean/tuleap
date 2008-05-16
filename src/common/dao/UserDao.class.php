@@ -381,13 +381,16 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         if (!empty($ca )) {
 
             $iwhere = 0;
+            $join = '';
+            $where = '';
+            $groupby = '';
 
             foreach($ca as $c) {
             
                 if ($c->getJoin()) {
                     $join .= $c->getJoin();
                 }
-                
+                                
                 if ($iwhere >= 1) {
                     $where .= ' AND '.$c->getWhere();
                     $iwhere++;
