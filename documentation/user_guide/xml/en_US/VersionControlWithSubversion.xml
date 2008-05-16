@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="VersionControlWithSubversion">
@@ -1034,13 +1035,19 @@ svn update
     <section id="SubversionExaminingyourChanges">
       <title>Examining your Changes</title>
 
-      <para>If you want to know what files have changed on the
-      Subversion repository since your last update or which ones have
-      been modified in your own working copy, run the following
+	  <para>If you want to know which files have been modified in your own working
+	  copy since your last update, run the following
       command:</para>
-
+      
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 svn status
+       </programlisting>
+        
+      <para>Or wich files have changed on the Subversion repository since 
+      your last update :</para>       
+
+      <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+svn status -u
         </programlisting>
 
       <para>The output will show you a list of files which undergo

@@ -1,5 +1,7 @@
 <?php
 
+if (defined('NUSOAP')) {
+	
 //
 // Type definition
 //
@@ -46,5 +48,7 @@ $server->wsdl->addComplexType(
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:int[]')),
     'xsd:int'
 );
+
+}
 
 ?>

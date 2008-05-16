@@ -717,7 +717,7 @@ while ($ln = pop(@groupdump_array)) {
 
         $group_dir = $grpdir_prefix."/".$gname;
         # $log_dir = $group_dir."/log";
-        $cgi_dir = $group_dir."/cgi-bin";
+        #$cgi_dir = $group_dir."/cgi-bin";
         $ht_dir = $group_dir."/htdocs";
         $ftp_frs_group_dir = $ftp_frs_dir_prefix."/".$gname;
         $ftp_anon_group_dir = $ftp_anon_dir_prefix."/".$gname;
@@ -734,11 +734,6 @@ while ($ln = pop(@groupdump_array)) {
 		mkdir $group_dir, 0775;
 		chown $dummy_uid, $gid, ($group_dir);
 		chmod 02775, ($group_dir);
-	    }
-	    if ( $gstatus eq 'A' && !(-e "$cgi_dir")) {
-		mkdir $cgi_dir, 0775;
-		chown $dummy_uid, $gid, ($cgi_dir);
-		chmod 02775, ($cgi_dir);
 	    }
 	    if ( $gstatus eq 'A' && !(-e "$ht_dir")) {
 		mkdir $ht_dir, 0775;
@@ -802,7 +797,10 @@ write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
 write_array_file($apache_htpasswd, @htpasswd_array);
-write_array_file($smb_passwd_file, @smbpasswd_array) if ($winaccount_on);
+if ($winaccount_on) {
+  write_array_file($smb_passwd_file, @smbpasswd_array);
+  chmod 0600, "$smb_passwd_file";
+}
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
 if ($use_cvsnt && $server_is_master) {

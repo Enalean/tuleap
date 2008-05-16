@@ -140,6 +140,7 @@ function foundry_top_downloads($comma_sep_groups) {
 function show_top_downloads() {
     global $Language;
     $return  = "";
+    $hp = CodeX_HTMLPurifier::instance();
     // Get time for today and yesterday at midnight
     $end_time = mktime(0,0,0);
     $start_time = $end_time - 86400;
@@ -163,7 +164,7 @@ function show_top_downloads() {
     while ($row_topdown = db_fetch_array($res_topdown)) {
         if ($row_topdown['downloads'] > 0) 
             $return .= '('. $row_topdown['downloads'] .') <A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
-                . $row_topdown['group_name'] ."</A><BR>\n";
+                .  $hp->purify(util_unconvert_htmlspecialchars($row_topdown['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
     }
     $return .= '<center><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
 	
@@ -174,7 +175,7 @@ function show_top_downloads() {
 function show_newest_releases() {
     global $Language;
     $return  = "";
-    
+    $hp = CodeX_HTMLPurifier::instance();
     // Fetch releases that are no more than 3 months old
     $start_time = strval(time() - 3*30*24*3600);
     $query = new_utils_get_new_releases_short($start_time);
@@ -193,9 +194,9 @@ function show_newest_releases() {
             //    (!permission_exist("RELEASE_READ",$row_newrel['release_id'] ))) {
             if ($frspf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], 100) &&
                 $frsrf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], $row_newrel['release_id'], 100)) {
-                $return .= '('. $row_newrel['release_version'] .')&nbsp;'.
+                $return .= '('.  $hp->purify($row_newrel['release_version'], CODEX_PURIFIER_CONVERT_HTML)  .')&nbsp;'.
                     '<A href="/projects/'. $row_newrel['unix_group_name'] .'/">'.
-                    $row_newrel['group_name'] ."</A><BR>\n";
+                     $hp->purify(util_unconvert_htmlspecialchars($row_newrel['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
                 
                 $count++;
                 $DONE[$row_newrel['group_id']] = true;
@@ -237,13 +238,14 @@ function show_sitestats() {
     $return .= $Language->getText('include_features_boxes','hosted_projects').': <B>'.number_format(stats_getprojects_active()).'</B>';
     $return .= '<BR>'.$Language->getText('include_features_boxes','registered_users').': <B>'.number_format(stats_getusers()).'</B>';
     $return .= '<BR>'.$Language->getText('include_features_boxes','files_download').': <B>'.number_format(stats_downloads_total()).'</B>';
-    $return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
+    //$return .= '<BR>'.$Language->getText('include_features_boxes','pages_viewed').': <B>'.number_format(stats_getpageviews_total()).'</B>&nbsp;';
     return $return;
 }
 
 function show_newest_projects() {
     global $Language;
     $return  = "";
+    $hp = CodeX_HTMLPurifier::instance();
     $start_time = strval(time()-(24*3600));
     $limit = 10;
     $sql = new_utils_get_new_projects ($start_time,0,$limit);
@@ -256,7 +258,7 @@ function show_newest_projects() {
             if ( $row_newproj['register_time'] ) {
                 $return .= "(" . date("m/d",$row_newproj['register_time'])  . ") "
                     . '<A href="/projects/'. $row_newproj['unix_group_name'] .'/">'
-                    . $row_newproj['group_name'] ."</A><BR>\n";
+                    .  $hp->purify(util_unconvert_htmlspecialchars($row_newproj['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
             }
         }
         $return .= '<CENTER><A href="/new/?func=projects">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
@@ -267,6 +269,7 @@ function show_newest_projects() {
 function show_highest_ranked_projects() {
     global $Language;
     $return  = "";
+    $hp = CodeX_HTMLPurifier::instance();
     //don't take into account test projects and template projects
     $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
         "project_weekly_metric.ranking,project_weekly_metric.percentile ".
@@ -281,7 +284,7 @@ function show_highest_ranked_projects() {
         while ($row=db_fetch_array($result)) {
             $return .= '<B>( '.$row['percentile'].'% )</B>'
                 .' <A HREF="/projects/'.$row['unix_group_name'].
-                '/">'.$row['group_name'].'</A><BR>';
+                '/">'. $hp->purify(util_unconvert_htmlspecialchars($row['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'</A><BR>';
         }
         $return .= '<CENTER><A href="/top/mostactive.php?type=week">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
     }

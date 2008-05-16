@@ -1102,7 +1102,7 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 	$hdrs='From: noreply@'.$host.$sys_lf;
-	$hdrs .='Content-type: text/plain; charset=iso-8859-1'.$sys_lf;
+	$hdrs .='Content-type: text/plain; charset=utf-8'.$sys_lf;
 	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
 	$hdrs .='X-CodeX-Artifact: bug'.$sys_lf;
 	$hdrs .='X-CodeX-Artifact-ID: '.$bug_id.$sys_lf;

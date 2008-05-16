@@ -20,10 +20,6 @@
 /**** CONFIGURATION SECTION ****/
 
 /**
- * Directory where NuSOAP library is located (use trailing slash)
- */
-define("NUSOAP_DIR", dirname(__FILE__)."/nusoap/");
-/**
  * Directory where common include files and module scripts are located (use trailing slash)
  */ 
 define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
@@ -33,30 +29,20 @@ define("CODEX_CLI_DIR", dirname(__FILE__)."/include/");
 if (array_key_exists("CODEX_WSDL", $_ENV)) {
 	$host = $_ENV["CODEX_WSDL"];
 } else {
-	$host = "%wsdl_domain%/soap/index.php?wsdl";
+	$host = "%wsdl_domain%/soap/codex.wsdl.php?wsdl";
 }
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.4.1";
+$CLI_VERSION = "0.5.0";
 
 error_reporting(E_ALL);
 
 /* Include common files */
-require_once(NUSOAP_DIR."nusoap.php");		// Main NuSOAP library
 require_once(CODEX_CLI_DIR."common.php");	// Common functions, variables and defines
 require_once(CODEX_CLI_DIR."CodeXSOAP.class.php");	// CodeX SOAP wrapper
 require_once(CODEX_CLI_DIR."Log.class.php");	// Logging class
 require_once(CODEX_CLI_DIR."CLI_ModuleFactory.class.php");
-
-// This is automatically done by PHP >= 4.3.0
-// Code copied from http://ar2.php.net/install.unix.commandline
-if (! defined("STDIN") || ! defined("STDOUT") || ! defined("STDERR")) {
-    define('STDIN',fopen("php://stdin","r"));
-	define('STDOUT',fopen("php://stdout","r"));
-	define('STDERR',fopen("php://stderr","r"));
-	register_shutdown_function( create_function( '' , 'fclose(STDIN); fclose(STDOUT); fclose(STDERR); return true;' ) );
-}
 
 // Global logging object
 

@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="ProjectWebSite">
@@ -72,14 +73,16 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
             or SSI instructions (see below for more details). All the images,
             icons or documents used or referenced in your Web pages must also
             be stored in this directory (or in any sub-directory under
-            htdocs). In the Apache<footnote><para>Apache is the HTTP server
-            developed by the Apache Consortium. It is available under an Open
-            Source license and is by far the most popular Web server in the
-            world with more than 60% of the market share. For more information
-            on Apache see <ulink url="http://www.apache.org">http://httpd.apache.org</ulink></para></footnote>
-            jargon the directory <literal>/home/groups/projectname/htdocs</literal>
+            htdocs). In the Apache jargon the directory <literal>/home/groups/projectname/htdocs</literal>
             is the Document Root of your Web Site.</para>
-
+			
+			<para><tip><title>Tip : Apache</title><para>Apache is the HTTP 
+			server developed by the Apache Consortium. It is available under an Open
+            Source license and is by far the most popular Web server in the world 
+            with more than 60% of the market share. For more information on Apache
+            see <ulink url="http://www.apache.org">http://httpd.apache.org</ulink>
+            </para></tip></para>
+            
             <para>Apache expects your home page to have one of the following
             name:</para>
 

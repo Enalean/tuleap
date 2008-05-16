@@ -9,8 +9,8 @@ require_once('common/dao/CodexDataAccess.class.php');
 class Mail {
     
     function Mail() {
-        $this->setHeaderCharset('ISO-8859-1');
-        $this->setBodyCharset('ISO-8859-1');
+        $this->setHeaderCharset('UTF-8');
+        $this->setBodyCharset('UTF-8');
         $this->setMimeType('text/plain');
         $this->setTo('', true);
         $this->setBcc('', true);

@@ -9,6 +9,9 @@
 //      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
 //
 
+require_once('common/user/UserHelper.class.php');
+
+
 $GLOBALS['Language']->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
@@ -87,11 +90,18 @@ function svn_utils_technician_box($projectname,$name='_commiter',$checked='xzxz'
 		return $Language->getText('svn_utils','g_id_err');
 	} else {
 		$result=svn_data_get_technicians($projectname);
-                if (!in_array($checked,util_result_column_to_array($result))) {
-                    // Selected 'my commits' but never commited
-                    $checked='xzxz';
-                }
-		return html_build_select_box($result,$name,$checked,true,$text_100);
+        if (!in_array($checked,util_result_column_to_array($result))) {
+            // Selected 'my commits' but never commited
+            $checked='xzxz';
+        }
+        $userids=util_result_column_to_array($result,0);
+        $usernames=util_result_column_to_array($result,1);
+        // Format user name according to preferences
+        $UH = new UserHelper();
+        foreach ($usernames as &$username) {
+            $username = $UH->getDisplayNameFromUserName($username);
+        }           
+        return html_build_select_box_from_arrays($userids,$usernames,$name,$checked,true,$text_100,false,'',false,'', CODEX_PURIFIER_CONVERT_HTML);
 	}
 }
 
@@ -427,8 +437,12 @@ function svn_utils_format_svn_history($group_id) {
         // Format output 
         $output = '<P><b>'.$Language->getText('svn_utils','ci_week').'</b><BR>&nbsp;';
         reset($svnhist);
+        $uh = new UserHelper();
+        $hp = CodeX_HTMLPurifier::instance(); 
         while (list($user, ) = each($svnhist)) {
-            $output .= '<BR>'.$user.' ('.$svnhist[$user]['last'].'/'
+            $output .= '<BR>'
+                .$hp->purify($uh->getDisplayNameFromUserName($user), CODEX_PURIFIER_CONVERT_HTML)
+                .' ('.$svnhist[$user]['last'].'/'
                 .$svnhist[$user]['full'].')';
         }
     }

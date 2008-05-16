@@ -5,6 +5,7 @@ session_require(array('isloggedin'=>1));
 require_once('common/include/HTTPRequest.class.php');
 
 require_once('common/project/RegisterProjectStep_Intro.class.php');
+require_once('common/project/RegisterProjectStep_Settings.class.php');
 require_once('common/project/RegisterProjectStep_Template.class.php');
 require_once('common/project/RegisterProjectStep_BasicInfo.class.php');
 require_once('common/project/RegisterProjectStep_Name.class.php');
@@ -24,6 +25,7 @@ $data         = $request->exist('data') ? unserialize($request->get('data')) : a
 $steps = array(
     new RegisterProjectStep_Intro($data),
     new RegisterProjectStep_Name($data),
+    new RegisterProjectStep_Settings($data),
     new RegisterProjectStep_Template($data),
     new RegisterProjectStep_BasicInfo($data),
     new RegisterProjectStep_Services($data),

@@ -33,7 +33,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
  * <pre>
  * require_once('pre.php');
  * require_once('common/include/CodeX_HTMLPurifier.class.php');
- * $crapy = '<a href="" onmouseover="alert(1);">test�</a>';
+ * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
  * $hp =& CodeX_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
@@ -73,7 +73,7 @@ class CodeX_HTMLPurifier {
      */
     function getCodeXConfig() {
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('Core', 'Encoding', 'ISO-8859-1');
+        $config->set('Core', 'Encoding', 'UTF-8');
         // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
         $config->set('Cache', 'SerializerPath', $GLOBALS['codex_cache_dir']);
         return $config;
@@ -202,7 +202,7 @@ class CodeX_HTMLPurifier {
             break;
 
         case CODEX_PURIFIER_BASIC:
-            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES), $groupId));
+            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
 
         case CODEX_PURIFIER_JS_QUOTE:
@@ -215,7 +215,7 @@ class CodeX_HTMLPurifier {
             break;
         case CODEX_PURIFIER_CONVERT_HTML:
         default:
-            $clean = htmlentities($html, ENT_QUOTES);
+            $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
             break;
         }
         return $clean;

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -9,6 +9,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="OtherServices">
@@ -17,23 +18,23 @@
     <section id="ShellAccount">
       <title>Compte Shell</title>
 
-		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalité
-			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
+		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalitÃ©
+			peut avoir Ã©tÃ© dÃ©sactivÃ©e par l'administrateur de votre site CodeX et s'avÃ©rer
 			indisponible dans votre organisation.</para>
 
-		<para>Si l'administrateur CodeX a activé cette fonctionnalité, chaque
-			utilisateur enregistré dispose alors de son compte Shell Unix sur le serveur de
-			comptes Shell CodeX. Vous pouvez accéder à ce compte de deux façons :</para>
+		<para>Si l'administrateur CodeX a activÃ© cette fonctionnalitÃ©, chaque
+			utilisateur enregistrÃ© dispose alors de son compte Shell Unix sur le serveur de
+			comptes Shell CodeX. Vous pouvez accÃ©der Ã  ce compte de deux faÃ§ons :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
 			<para><emphasis role="bold">SSH</emphasis> : l'utilisation du client de
-				compte shell sécurisé est recommandée pour se connecter au serveur de
+				compte shell sÃ©curisÃ© est recommandÃ©e pour se connecter au serveur de
 				comptes Shell CodeX. Les clients SSH sont disponibles sur toutes les
-				plateformes (Windows, Linux, Unix et Mac). Ils établissent un lien
-				sécurisé avec vos répertoires personnels et vous permettent aussi de
-				disposer d'autres utilitaires comme SCP pour le transfert de fichiers à
-				distance. Pour accéder à votre compte Shell, tapez la commande suivante et
+				plateformes (Windows, Linux, Unix et Mac). Ils Ã©tablissent un lien
+				sÃ©curisÃ© avec vos rÃ©pertoires personnels et vous permettent aussi de
+				disposer d'autres utilitaires comme SCP pour le transfert de fichiers Ã 
+				distance. Pour accÃ©der Ã  votre compte Shell, tapez la commande suivante et
 				utilisez votre nom d'utilisateur et mot de passe CodeX pour vous
 				identifier :</para>
 
@@ -43,12 +44,12 @@ ssh -l nom_utilisateur &SYS_SHELL_HOST;
         </listitem>
 
         <listitem>
-			<para><emphasis role="bold">Telnet</emphasis> : telnet est livré en
-				standard dans les environnement Windows et Unix. Pour accéder à votre
+			<para><emphasis role="bold">Telnet</emphasis> : telnet est livrÃ© en
+				standard dans les environnement Windows et Unix. Pour accÃ©der Ã  votre
 				compte Shell, tapez la commande suivante et utilisez votre nom
 				d'utilisateur et mot de passe CodeX pour vous identifier (remarque : sur
-				certains sites CodeX il se peut que telnet soit désactivé pour des raisons
-				de sécurité) :</para>
+				certains sites CodeX il se peut que telnet soit dÃ©sactivÃ© pour des raisons
+				de sÃ©curitÃ©) :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 telnet &SYS_SHELL_HOST;
@@ -56,11 +57,11 @@ telnet &SYS_SHELL_HOST;
         </listitem>
       </itemizedlist>
 
-		<para>Que vous utilisiez SSH ou telnet, une bannière de bienvenue vous est présentée
-			une fois la connexion établie. Ce message vous indique quels sont les
-			répertoires auxquels vous avez accès. Utilisez la commande Unix &#34;cd&#34;
-			pour changer le répertoire de travail courant. Si vous êtes membre de plusieurs
-			projets vous devez spécifier pour quel projet vous allez travailler durant
+		<para>Que vous utilisiez SSH ou telnet, une banniÃ¨re de bienvenue vous est prÃ©sentÃ©e
+			une fois la connexion Ã©tablie. Ce message vous indique quels sont les
+			rÃ©pertoires auxquels vous avez accÃ¨s. Utilisez la commande Unix &#34;cd&#34;
+			pour changer le rÃ©pertoire de travail courant. Si vous Ãªtes membre de plusieurs
+			projets vous devez spÃ©cifier pour quel projet vous allez travailler durant
 			cette session Shell en utilisant la commande suivante :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -68,7 +69,7 @@ newgrp nom_projet
 </programlisting>
 
 		<para>Vous pouvez utiliser cette commande autant de fois que vous le souhaitez
-			lorsque vous vous apprêtez à travailler pour un autre de vos projets.</para>
+			lorsque vous vous apprÃªtez Ã  travailler pour un autre de vos projets.</para>
 
       <para></para>
       <para></para>
@@ -77,32 +78,32 @@ newgrp nom_projet
     <section id="FTPStorageSpaces">
       <title>Espaces de stockage FTP anonyme</title>
 
-	<para>Chaque projet dispose de son propre espace de stockage FTP anonyme. Si vous souhaitez controller les accès à vos fichiers, utilisez plutôt le gestionnaire de fichiers (<xref
+	<para>Chaque projet dispose de son propre espace de stockage FTP anonyme. Si vous souhaitez controller les accÃ¨s Ã  vos fichiers, utilisez plutÃ´t le gestionnaire de fichiers (<xref
         linkend="FileRelease" />)</para>
 
-	<para>L'espace FTP anonyme peut être utilisé par les membres du projet pour
-		télécharger tout type de documents, données ou délivrables du projet. Cet
-		espace de stockage est accessible en lecture à tous les utilisateurs CodeX et
-		tous les fichiers placés dans cet espace peuvent donc être librement
-		téléchargés. En conséquence, assurez-vous d'utiliser cet espace de stockage
+	<para>L'espace FTP anonyme peut Ãªtre utilisÃ© par les membres du projet pour
+		tÃ©lÃ©charger tout type de documents, donnÃ©es ou dÃ©livrables du projet. Cet
+		espace de stockage est accessible en lecture Ã  tous les utilisateurs CodeX et
+		tous les fichiers placÃ©s dans cet espace peuvent donc Ãªtre librement
+		tÃ©lÃ©chargÃ©s. En consÃ©quence, assurez-vous d'utiliser cet espace de stockage
 		uniquement pour des fichiers lisibles par tous.</para>
 
         <itemizedlist mark="bullet" spacing="compact">
           <listitem>
-			<para>Accès en utilisateur anonyme : utilisez un client ftp pour vous connecter
-				à <literal>&SYS_DOWNLOAD_HOST;</literal>. Utilisez &#34;ftp&#34;
+			<para>AccÃ¨s en utilisateur anonyme : utilisez un client ftp pour vous connecter
+				Ã  <literal>&SYS_DOWNLOAD_HOST;</literal>. Utilisez &#34;ftp&#34;
 				comme nom d'utilisateur et votre adresse email comme mot de passe. Ensuite
 				utilisez la commande <literal>cd /pub/nom_projet</literal> pour
-				accéder à l'espace FTP anonyme.</para>
+				accÃ©der Ã  l'espace FTP anonyme.</para>
           </listitem>
 
           <listitem>
-			<para>Accès pour les membres du projet : utilisez un client ftp pour vous
-				connecter à <literal>&SYS_DOWNLOAD_HOST;</literal>. utilisez votre
+			<para>AccÃ¨s pour les membres du projet : utilisez un client ftp pour vous
+				connecter Ã  <literal>&SYS_DOWNLOAD_HOST;</literal>. utilisez votre
 				nom d'utilisateur et mot de passe CodeX pour vous identifier, puis tapez la
-				commande <literal>cd /var/lib/codex/ftp/pub/nom_projet</literal> pour accéder à l'espace
-				FTP anonyme. A partir de là les membres du projet ont accès en lecture et en
-				écriture et peuvent télécharger des fichiers dans les deux sens.</para>
+				commande <literal>cd /var/lib/codex/ftp/pub/nom_projet</literal> pour accÃ©der Ã  l'espace
+				FTP anonyme. A partir de lÃ  les membres du projet ont accÃ¨s en lecture et en
+				Ã©criture et peuvent tÃ©lÃ©charger des fichiers dans les deux sens.</para>
 
 		<para>Pour pointer sur cet espace de stockage dans une page Web ou dans un email,
 			utilisez l'URL suivant :</para>
@@ -114,52 +115,52 @@ newgrp nom_projet
     </section>
 
 	<section id="MSWindowsSharedResources">
-		<title>Ressources partagées MS Windows</title>
+		<title>Ressources partagÃ©es MS Windows</title>
 		
-		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalité
-			peut avoir été désactivée par l'administrateur de votre site CodeX et s'avérer
+		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalitÃ©
+			peut avoir Ã©tÃ© dÃ©sactivÃ©e par l'administrateur de votre site CodeX et s'avÃ©rer
 			indisponible dans votre organisation.</para>
 		
 		<para>Les utilisateurs Windows (et les utilisateurs Linux/Unix disposant de
-			Samba) peuvent utiliser des disques réseau pour accéder aux espaces de stockage
+			Samba) peuvent utiliser des disques rÃ©seau pour accÃ©der aux espaces de stockage
 			suivants depuis leur explorateur de fichiers :</para>
 		
 		<itemizedlist mark="bullet" spacing="compact">
 			<listitem>
-				<para>Votre répertoire maison (home directory),</para>
+				<para>Votre rÃ©pertoire maison (home directory),</para>
 			</listitem>
 			
 			<listitem>
-				<para>Les divers répertoires maison du projet (où se situe le site Web du
+				<para>Les divers rÃ©pertoires maison du projet (oÃ¹ se situe le site Web du
 					projet)</para>
 			</listitem>
 			
 			<listitem>
-				<para>L'espace FTP entrant où vous pouvez directement glisser-déposer
-					les fichiers à inclure dans vos publication de version au lieu
+				<para>L'espace FTP entrant oÃ¹ vous pouvez directement glisser-dÃ©poser
+					les fichiers Ã  inclure dans vos publication de version au lieu
 					d'utiliser un client FTP pour le chargement. (Voir 
                                         <xref linkend="ReleaseAdministration"/>)</para>
 			</listitem>
 		</itemizedlist>
 		
-		<para>Pour accéder aux ressources partagées CodeX, ouvrez votre explorateur de
-			fichiers, naviguez dans le Réseau Microsoft Global, ouvrez le domaine
+		<para>Pour accÃ©der aux ressources partagÃ©es CodeX, ouvrez votre explorateur de
+			fichiers, naviguez dans le RÃ©seau Microsoft Global, ouvrez le domaine
 			&SYS_SAMBA_DOMAIN; et cliquez sur le serveur CodeX. Utilisez vos nom
 			d'utilisateur et mot de passe CodeX pour vous connecter aux ressources (ils vous
-			seront demandés uniquement s'ils ne sont pas identiques à vos nom
+			seront demandÃ©s uniquement s'ils ne sont pas identiques Ã  vos nom
 			d'utilisateur et mot de passe Windows).</para>
 		
-		<para>Les ressources partagées peuvent aussi être accédées directement en
+		<para>Les ressources partagÃ©es peuvent aussi Ãªtre accÃ©dÃ©es directement en
 			utilisant les chemins suivants :</para>
 		
 		<itemizedlist mark="bullet" spacing="compact">
 			<listitem>
-				<para><literal>\\codex\nom_utilisateur</literal> (Répertoire
+				<para><literal>\\codex\nom_utilisateur</literal> (RÃ©pertoire
 					maison de l'utilisateur)</para>
 			</listitem>
 			
 			<listitem>
-				<para><literal>\\codex\Projects</literal> (Les répertoires de tous
+				<para><literal>\\codex\Projects</literal> (Les rÃ©pertoires de tous
 					les projets - uniquement pour les membres d'un projet)</para>
 			</listitem>
 			
@@ -169,42 +170,42 @@ newgrp nom_projet
 			</listitem>
 		</itemizedlist>
 		
-		<para>Inutile de préciser que les permissions en écriture et en lecture mises en
-			place par CodeX pour protéger vos données s'appliquent à toutes ces ressources partagées.</para>
+		<para>Inutile de prÃ©ciser que les permissions en Ã©criture et en lecture mises en
+			place par CodeX pour protÃ©ger vos donnÃ©es s'appliquent Ã  toutes ces ressources partagÃ©es.</para>
 	</section>
     
     <section id="SoapAPI">
       <title>API SOAP</title>
-      <para>CodeX fournit une API SOAP pour accéder à CodeX avec les 'web services'.
+      <para>CodeX fournit une API SOAP pour accÃ©der Ã  CodeX avec les 'web services'.
             Actuellement, seuls les sessions 
             (login/logout) et le service Outil de suivi sont disponibles via l'API.
       </para>
-      <para>Une description des services est disponible à l'adresse 
-        <ulink url="/soap/">
+      <para>Une description des services est disponible Ã  l'adresse 
+        <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/">
          http://&SYS_DEFAULT_DOMAIN;/soap/</ulink>.
         Il s'agit d'une liste de services,
-        avec pour chaque fonction, ses paramètres d'entrée, de sortie et une documentation.
+        avec pour chaque fonction, ses paramÃ¨tres d'entrÃ©e, de sortie et une documentation.
       </para>
-      <para>Une description plus détaillée des services est également disponible dans le language 
-      formel WSDL à l'adresse 
-      <ulink url="/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>
-      Le WSDL contient en plus la définition des type.
+      <para>Une description plus dÃ©taillÃ©e des services est Ã©galement disponible dans le language 
+      formel WSDL Ã  l'adresse 
+      <ulink url="http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl">http://&SYS_DEFAULT_DOMAIN;/soap/?wsdl</ulink>
+      Le WSDL contient en plus la dÃ©finition des type.
       </para>
     </section>
     
     <section id="CodeXCLI">
       <title>Client en Ligne de Commande CodeX (Command Line Interface, CLI)</title>
-      <para>Une autre manière d'utiliser CodeX est d'utiliser le client en ligne 
+      <para>Une autre maniÃ¨re d'utiliser CodeX est d'utiliser le client en ligne 
         de commande (CLI). Il s'agit d'une application cliente qui utilise l'API
         SOAP pour communiquer avec le serveur CodeX.
         Pour l'instant, seuls les sessions (login/logout) 
         et le service des Outils de suivi sont disopnibles. 
-        Le client en ligne de commande n'implémente pas non plus certaines fonctions 
+        Le client en ligne de commande n'implÃ©mente pas non plus certaines fonctions 
         de l'API SOAP (par exemple, il n'est pas possible d'attacher un fichier, une adresse 
-        en copie CC ou une dependance à un artefact), et la notification par mail n'est pas active.
+        en copie CC ou une dependance Ã  un artefact), et la notification par mail n'est pas active.
       </para>
-      <para>La documentation du client en ligne de commande est disponible à l'adresse : 
-        <ulink url="/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+      <para>La documentation du client en ligne de commande est disponible Ã  l'adresse : 
+        <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
       </para>
     </section>
 
@@ -212,7 +213,7 @@ newgrp nom_projet
       <title>Plugin Eclipse CodeX</title>
       <para>CodeX dispose d'un plugin pour l'IDE Eclipse. 
         Ce plugin vous permet de parcourir vos artefacts, 
-        de les modifier, et d'en créer de nouveaux, le 
+        de les modifier, et d'en crÃ©er de nouveaux, le 
         tout dans l'environnement Eclipse.
         <figure id="FigureCodeXEclipsePlugin">
           <title>Plugin CodeX pour l'IDE Eclipse</title>
@@ -224,33 +225,33 @@ newgrp nom_projet
           </mediaobject>
         </figure>
       </para>
-      <para>Le plugin Eclipse est disponible pour la version 3.2 d'Eclipse et nécessite le JRE 1.5</para>
-      <para>Le plugin Eclipse peut être installé par le mécanisme updatesite d'Eclipse.
+      <para>Le plugin Eclipse est disponible pour la version 3.2 d'Eclipse et nÃ©cessite le JRE 1.5</para>
+      <para>Le plugin Eclipse peut Ãªtre installÃ© par le mÃ©canisme updatesite d'Eclipse.
         Le site web updatesite CodeX est : &SYS_UPDATE_SITE;
       </para>
       <para>
-        Pour installer le plugin CodeX avec le mécanisme "update site" d'Eclipse, veuillez suivre les instructions ci-dessous:
+        Pour installer le plugin CodeX avec le mÃ©canisme "update site" d'Eclipse, veuillez suivre les instructions ci-dessous:
         <procedure>
-            <step><para>Dans le menu principal d'Eclipse, sélectionnez <emphasis role="bold">Help > Software Update > Find and install...</emphasis></para></step>
+            <step><para>Dans le menu principal d'Eclipse, sÃ©lectionnez <emphasis role="bold">Help > Software Update > Find and install...</emphasis></para></step>
             <step><para>Cochez la case <emphasis role="bold">Search for new features to install</emphasis>, puis cliquez sur Next</para></step>
             <step><para>Pressez le bouton <emphasis role="bold">New Remote Site...</emphasis></para></step>
             <step>
-                <para>Remplissez la boîte de dialogue avec :
+                <para>Remplissez la boÃ®te de dialogue avec :
                     <substeps>
                      <step><para><emphasis role="bold">Name:</emphasis> CodeX (par exemple)</para></step>
                      <step><para><emphasis role="bold">URL:</emphasis> &SYS_UPDATE_SITE;</para></step>
                     </substeps>
                 </para>
             </step>
-            <step><para>Cochez la case <emphasis role="bold">CodeX</emphasis> (vous pouvez déplier pour voir le détails de la feature), puis cliquez sur OK</para></step>
+            <step><para>Cochez la case <emphasis role="bold">CodeX</emphasis> (vous pouvez dÃ©plier pour voir le dÃ©tails de la feature), puis cliquez sur OK</para></step>
             <step><para>Eclipse vous demandera ensuite d'accepter la licence. Si vous acceptez la licence, cochez "I accept the terms in the license agreement".</para></step>
             <step><para>Cliquez sur le bouton <emphasis role="bold">Finish</emphasis></para></step>
-            <step><para>Eclipse vous demande de confirmer les feature à installer. Cliquez sur le bouton <emphasis role="bold">Install</emphasis>.</para></step>
-            <step><para>Eclipse va télécharger les features et peut avoir besoin de redémarrer pour terminer l'installation</para></step>
+            <step><para>Eclipse vous demande de confirmer les feature Ã  installer. Cliquez sur le bouton <emphasis role="bold">Install</emphasis>.</para></step>
+            <step><para>Eclipse va tÃ©lÃ©charger les features et peut avoir besoin de redÃ©marrer pour terminer l'installation</para></step>
             <step><para>Profitez de CodeX !</para></step>
         </procedure>
       </para>
-      <para>La documentation du plugin Eclipse est disponible à l'adresse <ulink url="/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf</ulink>
+      <para>La documentation du plugin Eclipse est disponible Ã  l'adresse <ulink url="/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/Guide_Utilisateur_Plugin_Eclipse_CodeX.pdf</ulink>
       </para>
     </section>
     

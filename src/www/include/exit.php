@@ -63,7 +63,7 @@ function exit_missing_param() {
 }
 
 function print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail) {
-    echo '<?xml version="1.0" encoding="ISO-8859-1"?>';
+    echo '<?xml version="1.0" encoding="UTF-8"?>';
     echo '<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">';
     echo '<SOAP-ENV:Body>';
     echo '<SOAP-ENV:Fault>';

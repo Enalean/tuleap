@@ -71,11 +71,12 @@ function register_valid($confirm_hash)	{
         return 0;
     }
     $expiry_date = 0;
-    if ($request->exist('form_expiry') && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
+    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $request->get('form_expiry'))) {
         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
         return 0;
     }
     $vDate = new Valid_String();
+    $vDate->required();
     if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
         $date_list = split("-", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
@@ -86,9 +87,9 @@ function register_valid($confirm_hash)	{
     $status = 'P';
     if($request->get('page')== "admin_creation"){
         if($request->get('form_restricted')){
-           $status = 'W';
+           $status = 'R';
         } else{
-           $status = 'V';
+           $status = 'A';
         }
     }
 
@@ -200,7 +201,10 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
 
 <P>
 <p><input type="submit" name="Register" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register'); 
-else print "Validate Registration"?>">
+else print $Language->getText('account_register', 'btn_activate');?>">
+<?php if($page == "admin_creation") {?>
+<INPUT type="checkbox" name="form_send_email" value="1" >
+<?php print $Language->getText('account_register', 'send_email'); }?>
 
 </form>
 <?
@@ -209,6 +213,7 @@ else print "Validate Registration"?>">
 // ###### first check for valid login, if so, congratulate
 
 $request =& HTTPRequest::instance();
+$hp =& CodeX_HTMLPurifier::instance();
 if ($request->isPost() && $request->exist('Register')) {
 
 
@@ -225,14 +230,40 @@ if ($request->isPost() && $request->exist('Register')) {
         if($page == 'admin_creation'){
             $admin_creation = true;
             $password = $request->get('form_pw');
+            $login = $request->get('form_loginname');
+            if($request->get('form_send_email')){
+                //send an email to the user with th login and password                
+                $from = $GLOBALS['sys_noreply'];
+                $to = $request->get('form_email');
+                $subject = $Language->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
+                
+                include($Language->getContent('account/new_account_email'));
+                
+                $mail = new Mail();
+                $mail->setSubject($subject);
+                $mail->setFrom($from);
+                $mail->setTo($to);
+                $mail->setBody($body);
+                if (!$mail->send()) {
+                    $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                }
+            }
         }
         if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
-            if (!send_new_user_email($request->get('form_email'), $confirm_hash, $user_name, $admin_creation, $password)) {
-                $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-            }
+            if(!$admin_creation) {
+                if (!send_new_user_email($request->get('form_email'), $confirm_hash, $user_name)) {
+                    $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+                }   
+            } else {
+                
+            }   
             $content .= '<p><b>'.$Language->getText('account_register', 'title_confirm').'</b>';
             if($admin_creation){
-                $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array( $hp->purify($request->get('form_realname'), CODEX_PURIFIER_CONVERT_HTML) ,$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
+                    if($request->get('form_send_email')){
+                        $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_admin', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
+                    }else {
+                        $content .= '<p>'.$Language->getText('account_register', 'msg_confirm_no_email', array($request->get('form_realname'),$GLOBALS['sys_name'], $request->get('form_loginname'), $request->get('form_pw')));
+                    }             
             }else{
                 $content .= '<p>'.$Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'],$user_name));
             }

@@ -410,11 +410,15 @@ class ArtifactReportHtml extends ArtifactReport {
 				    $width .= ' class="small"';
 				    
 				    if ( $field->isDateField() ) {
-						if ($value)
-						    $html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
-						else
+						if ($value) {
+							if ($field->getName() == 'last_update_date') {
+								$html_result .= "<TD $width>".format_date("Y-m-d H:i",$value).'</TD>'."\n";
+							} else {
+								$html_result .= "<TD $width>".format_date("Y-m-d",$value).'</TD>'."\n";
+							}	
+						} else {
 						    $html_result .= '<TD align="center">-</TD>';
-	
+						}
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";

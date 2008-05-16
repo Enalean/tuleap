@@ -9,6 +9,7 @@
 // $Id: 
 //
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 
@@ -55,8 +56,11 @@
   <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="artheader/pubdate"/>
   <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="articleinfo/revision"/>
   <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="artheader/revision"/>
-  <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="articleinfo/revhistory"/>
-  <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="artheader/revhistory"/>
+  
+<!--  <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="articleinfo/revhistory"/> -->
+
+<!-- <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="artheader/revhistory"/> -->
+  
   <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="articleinfo/abstract"/>
   <xsl:apply-templates mode="article.titlepage.recto.auto.mode" select="artheader/abstract"/>
 </xsl:template>
@@ -163,6 +167,7 @@
 </fo:block>
 </xsl:template>
 
+
 <xsl:template match="revhistory" mode="article.titlepage.recto.auto.mode">
 <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" xsl:use-attribute-sets="article.titlepage.recto.style">
 <xsl:apply-templates select="." mode="article.titlepage.recto.mode"/>
@@ -203,7 +208,7 @@
   <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/legalnotice"/>
   <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/pubdate"/>
   <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/revision"/>
-  <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/revhistory"/>
+<!--  <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/revhistory"/> -->
   <xsl:apply-templates mode="set.titlepage.recto.auto.mode" select="setinfo/abstract"/>
 </xsl:template>
 
@@ -380,7 +385,7 @@
 <xsl:template name="book.titlepage.verso">
 
   <!-- CX-SBT: Add the revision history -->
-  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/revhistory"/>
+ <!-- <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/revhistory"/> -->
   
   <!-- CX-SBT: Just authogroup, copyright and legalnotice -->
   
@@ -639,8 +644,10 @@
   <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="partintroinfo/revision"/>
   <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="partintroinfo/revhistory"/>
-  <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+
+<!--  <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="partintroinfo/revhistory"/> -->
+<!--  <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="docinfo/revhistory"/> -->
+
   <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="partintroinfo/abstract"/>
   <xsl:apply-templates mode="partintro.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>
@@ -800,8 +807,10 @@
   <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="referenceinfo/revision"/>
   <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="referenceinfo/revhistory"/>
-  <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="referenceinfo/revhistory"/> -->
+  <!-- <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="docinfo/revhistory"/> -->
+  
   <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="referenceinfo/abstract"/>
   <xsl:apply-templates mode="reference.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>
@@ -1014,8 +1023,10 @@
   <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="prefaceinfo/revision"/>
   <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="prefaceinfo/revhistory"/>
-  <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="prefaceinfo/revhistory"/> -->
+  <!-- <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="docinfo/revhistory"/> -->
+  
   <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="prefaceinfo/abstract"/>
   <xsl:apply-templates mode="preface.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>
@@ -1169,8 +1180,10 @@
   <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="chapterinfo/revision"/>
   <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="chapterinfo/revhistory"/>
-  <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="chapterinfo/revhistory"/> -->
+  <!-- <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="docinfo/revhistory"/> -->
+  
   <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="chapterinfo/abstract"/>
   <xsl:apply-templates mode="chapter.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>
@@ -1332,8 +1345,10 @@
   <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="appendixinfo/revision"/>
   <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="appendixinfo/revhistory"/>
-  <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="appendixinfo/revhistory"/> -->
+  <!-- <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="docinfo/revhistory"/>-->
+  
   <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="appendixinfo/abstract"/>
   <xsl:apply-templates mode="appendix.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>
@@ -1480,7 +1495,9 @@
   <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/legalnotice"/>
   <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/pubdate"/>
   <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/revision"/>
-  <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/revhistory"/> -->
+  
   <xsl:apply-templates mode="section.titlepage.recto.auto.mode" select="sectioninfo/abstract"/>
 </xsl:template>
 
@@ -1624,7 +1641,9 @@
   <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/legalnotice"/>
   <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/pubdate"/>
   <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/revision"/>
-  <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/revhistory"/> -->
+  
   <xsl:apply-templates mode="sect1.titlepage.recto.auto.mode" select="sect1info/abstract"/>
 </xsl:template>
 
@@ -1768,7 +1787,9 @@
   <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/legalnotice"/>
   <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/pubdate"/>
   <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/revision"/>
-  <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/revhistory"/> -->
+  
   <xsl:apply-templates mode="sect2.titlepage.recto.auto.mode" select="sect2info/abstract"/>
 </xsl:template>
 
@@ -1912,7 +1933,9 @@
   <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/legalnotice"/>
   <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/pubdate"/>
   <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/revision"/>
-  <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/revhistory"/> -->
+  
   <xsl:apply-templates mode="sect3.titlepage.recto.auto.mode" select="sect3info/abstract"/>
 </xsl:template>
 
@@ -2056,7 +2079,9 @@
   <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/legalnotice"/>
   <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/pubdate"/>
   <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/revision"/>
-  <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/revhistory"/> -->
+  
   <xsl:apply-templates mode="sect4.titlepage.recto.auto.mode" select="sect4info/abstract"/>
 </xsl:template>
 
@@ -2200,7 +2225,9 @@
   <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/legalnotice"/>
   <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/pubdate"/>
   <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/revision"/>
-  <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/revhistory"/> -->
+  
   <xsl:apply-templates mode="sect5.titlepage.recto.auto.mode" select="sect5info/abstract"/>
 </xsl:template>
 
@@ -2359,8 +2386,11 @@
   <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="docinfo/pubdate"/>
   <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="simplesectinfo/revision"/>
   <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="docinfo/revision"/>
-  <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="simplesectinfo/revhistory"/>
-  <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="docinfo/revhistory"/>
+  
+  <!-- <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="simplesectinfo/revhistory"/> -->
+  
+  <!-- <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="docinfo/revhistory"/> -->
+  
   <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="simplesectinfo/abstract"/>
   <xsl:apply-templates mode="simplesect.titlepage.recto.auto.mode" select="docinfo/abstract"/>
 </xsl:template>

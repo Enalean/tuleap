@@ -1160,7 +1160,7 @@ class DocmanActions extends Actions {
         
         $_logmsg = $GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp_'.$_itemtype).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
         
-        $this->_controler->feedback->log('info', $_logmsg);
+        $this->_controler->feedback->log('info', $_logmsg, CODEX_PURIFIER_LIGHT);
     }
 
     function paste($params) {

@@ -141,8 +141,8 @@ class Rule_UserNameFormatTest extends UnitTestCase {
         $this->assertFalse($r->isValid("user*a"));
 
         // Accent & language
-        $this->assertFalse($r->isValid("useré"));
-        $this->assertFalse($r->isValid("userç"));
+        $this->assertFalse($r->isValid("userÃ©"));
+        $this->assertFalse($r->isValid("userÃ§"));
     }
 
 }

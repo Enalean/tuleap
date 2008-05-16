@@ -5,8 +5,9 @@
                 version='1.0'>
 
 <xsl:output method="html"
-            encoding="ISO-8859-1"
+            encoding="UTF-8"
             indent="no"/>
+
 
 <!--
 //
@@ -17,6 +18,7 @@
 // $Id: 
 //
 //	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 
@@ -25,14 +27,14 @@
 <xsl:template name="user.footer.navigation">
   <xsl:param name="node" select="."/>
   <br/><div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2006. All Rights Reserved</i></font>
+  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2008. All Rights Reserved</i></font>
   </div>
 </xsl:template>
 
 <xsl:template name="user.header.navigation">
   <xsl:param name="node" select="."/>
   <div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2006. All Rights Reserved</i></font>
+  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2008. All Rights Reserved</i></font>
   </div><br/>
 </xsl:template>
 

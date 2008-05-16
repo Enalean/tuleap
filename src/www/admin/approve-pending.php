@@ -142,6 +142,8 @@ if (db_numrows($res_grp) < 1) {
         // ########################## OTHER INFO
     
         print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
+        print "<br><u>".$Language->getText('admin_groupedit','public')."</u>: ". ($row_grp['is_public'] ? $Language->getText('global', 'yes') :  $Language->getText('global', 'no'));
+        
         print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
     
         print "<br><u>".$Language->getText('admin_groupedit','description')."</u>:<br> $row_grp[register_purpose]";

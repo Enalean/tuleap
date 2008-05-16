@@ -516,4 +516,19 @@ function stats_getusers() {
         return "error";
     }
 }
+
+
+function stats_getactiveusers($since) {
+	$time_totest=time()-$since;
+	
+    $res_count = db_query("SELECT count(*) AS count FROM user WHERE last_access_date> $time_totest ");
+    
+    if (db_numrows($res_count) > 0) {
+        $row_count = db_fetch_array($res_count);
+        return $row_count['count'];
+    } else {
+        return "error";
+    }  
+}
+
 ?>

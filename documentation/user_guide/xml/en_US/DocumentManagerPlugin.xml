@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 <chapter id="DocumentManagerPlugin">
@@ -196,7 +197,7 @@
     <section><title>History</title>
       <para>This action allows the user to see logs and old versions (if available).</para>
       <figure id="docman2_history">
-          <title>Update a link</title>
+          <title>See a document history</title>
           <mediaobject>
             <imageobject>
               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_docman2_history.png" />
@@ -248,7 +249,7 @@
         <para>"read" means access to the document, see it in the browse view, 
         see its properties or metadata, see its history.</para>
         <para>Please note that if a user cannot read a folder, then he cannot access 
-        to all of its subitems whatever their permissions, even deep in the hierarchy.</para>
+        to any of its subitems whatever their permissions, even deep in the hierarchy.</para>
       </section>
       
       <section>

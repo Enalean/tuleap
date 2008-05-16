@@ -6,6 +6,8 @@ require_once('common/include/CookieManager.class.php');
 define('invalid_session_fault', '3001');
 define('login_fault', '3002');
 
+if (defined('NUSOAP')) {
+	
 //
 // Type definition
 //
@@ -59,10 +61,8 @@ $server->register('logout',
      Returns a soap fault if the sessionKey is not a valid session key.'
 );
 
-//
-// Function implementation
-//
-
+} else {
+	
 /**
  * login : login the CodeX server
  *
@@ -74,15 +74,16 @@ $server->register('logout',
  */
 function login($loginname, $passwd) {
     global $Language;
+    
     list($success, $status) = session_login_valid($loginname,$passwd);
     if ($success) {
         $return = array(
             'user_id'  => session_get_userid(),
             'session_hash' => $GLOBALS['session_hash']
         );
-        return new soapval('return', 'tns:Session',$return);
+        return $return;
     } else {
-        return new soap_fault(login_fault, 'login', $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), '');
+        return new SoapFault(login_fault, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
     }
 }
 
@@ -101,9 +102,9 @@ function retrieveSession($session_hash) {
             'user_id'  => session_get_userid(),
             'session_hash' => $session_hash
         );
-        return new soapval('return', 'tns:Session',$return);
+        return $return;
     } else {
-        return new soap_fault(invalid_session_fault, 'retrieveSession', 'Invalid Session.', '');
+        return new SoapFault(invalid_session_fault, 'Invalid Session.', 'retrieveSession');
     }
 }
 
@@ -122,8 +123,18 @@ function logout($sessionKey) {
         $cookie_manager =& new CookieManager();
         $cookie_manager->removeCookie('session_hash');
     } else {
-        return new soap_fault(invalid_session_fault, 'logout', 'Invalid Session','');
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'logout');
     }
+}
+
+$server->addFunction(
+        array(
+            'login',
+            'retrieveSession',
+            'logout'
+            ));
+
+
 }
 
 ?>

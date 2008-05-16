@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -9,21 +9,22 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <bookinfo>
-    <authorgroup>
-      <author>
-        <firstname>Laurent</firstname>
-
-        <surname>Julliard</surname>
-
-        <affiliation>
-          <orgname>Xerox/XGS/BPS - CodeX Team, Laurent.Julliard@crt.xerox.com</orgname>
-        </affiliation>
-      </author>
-    </authorgroup>
-
+ <!--   <authorgroup>
+//      <author>
+//        <firstname>Laurent</firstname>
+//
+//        <surname>Julliard</surname>
+//
+//        <affiliation>
+//          <orgname>Xerox/XGS/BPS - CodeX Team, Laurent.Julliard@crt.xerox.com</orgname>
+//        </affiliation>
+//      </author>
+//    </authorgroup>
+-->
     <copyright>
       <year>2000</year>
       <year>2001</year>
@@ -33,12 +34,13 @@
       <year>2005</year>
       <year>2006</year>
       <year>2007</year>
+      <year>2008</year>
 
       <holder>The Document Company - Xerox. All rights reserved.</holder>
     </copyright>
 
     <legalnotice>
-      <para>Ce document est diffusé sous la licence Codex Component Software License</para>
+      <para>Ce document est diffusÃ© sous la licence Codex Component Software License</para>
 
       <para>Copyright protection claimed includes all forms and matters of
       copyrightable material and information now allowed by statutory or
@@ -46,15 +48,15 @@
       material generated from the software programs which are displayed on the
       screen such as icons, screen displays, looks, etc.</para>
 
-      <para>Imprimé aux Etats-Unis d'Amérique</para>
+      <para>ImprimÃ© aux Etats-Unis d'AmÃ©rique</para>
 
-      <para>Xerox et tous les produits Xerox mentionnés dans cette
-      publication sont des marques déposées de Xerox
+      <para>Xerox et tous les produits Xerox mentionnÃ©s dans cette
+      publication sont des marques dÃ©posÃ©es de Xerox
       Corporation.</para>
 
-      <para>Ce document a été formaté à l'aide de la DTD XML
-      DocBook. La version HTML a été générée avec le génerateur HTML
-      de DocBook. La version PDF a été faite à l'aide de Apache
+      <para>Ce document a Ã©tÃ© formatÃ© Ã  l'aide de la DTD XML
+      DocBook. La version HTML a Ã©tÃ© gÃ©nÃ©rÃ©e avec le gÃ©nerateur HTML
+      de DocBook. La version PDF a Ã©tÃ© faite Ã  l'aide de Apache
       FOP.</para>
     </legalnotice>
 
@@ -66,7 +68,7 @@
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>Version française initiale par  L. Julliard basée sur la version 2.9.4 anglaise du 21-Déc-2005</revremark>
+        <revremark>Version franÃ§aise initiale par  L. Julliard basÃ©e sur la version 2.9.4 anglaise du 21-DÃ©c-2005</revremark>
       </revision>
       <revision>
         <revnumber>2.9.5</revnumber>
@@ -75,7 +77,7 @@
 
         <authorinitials>Nicolas Guerin</authorinitials>
 
-        <revremark>Ajout d'une section concernant la gestion des références.</revremark>
+        <revremark>Ajout d'une section concernant la gestion des rÃ©fÃ©rences.</revremark>
       </revision>
       <revision>
         <revnumber>2.9.6</revnumber>
@@ -84,8 +86,8 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Mise à jour de la section Survey Manager suite à l'amélioration de ST 
-	des boutons radio spécifiques pour les sondages
+        <revremark>Mise Ã  jour de la section Survey Manager suite Ã  l'amÃ©lioration de ST 
+	des boutons radio spÃ©cifiques pour les sondages
         </revremark>
       </revision>
       <revision>
@@ -95,8 +97,8 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Mise à jour des chapitres Vue d'ensemble du site
-	CodeX, Créer un nouveau projet et Administration d'un projet
+        <revremark>Mise Ã  jour des chapitres Vue d'ensemble du site
+	CodeX, CrÃ©er un nouveau projet et Administration d'un projet
 	pour les patron de projets.
         </revremark>
       </revision>
@@ -107,9 +109,9 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Mise à jour de la section Service d'annonces
-	pour inclure les amélioration de ST sur les annonces
-	privées (SR #265).
+        <revremark>Mise Ã  jour de la section Service d'annonces
+	pour inclure les amÃ©lioration de ST sur les annonces
+	privÃ©es (SR #265).
         </revremark>
       </revision>
       <revision>
@@ -120,8 +122,8 @@
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
         <revremark>Dans paragraphe type de projet : correction 
-	du lien sur références et ajout de détails sur la création de
-	projets à partir d'un projet de patron. 
+	du lien sur rÃ©fÃ©rences et ajout de dÃ©tails sur la crÃ©ation de
+	projets Ã  partir d'un projet de patron. 
         </revremark>
       </revision>
       <revision>
@@ -131,10 +133,21 @@
 
         <authorinitials>Equipe CodeX</authorinitials>
 
-        <revremark>Mise à jour pour la version 3.2 de CodeX :
+        <revremark>Mise Ã  jour pour la version 3.2 de CodeX :
         Documentation du nouveau service Fichiers, documentation 
         des templates, documentation du mode CVS Watch, nombreuses 
         corrections (voir SR #337).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.1</revnumber>
+
+        <date>6-May-2008</date>
+
+        <authorinitials>Equipe CodeX</authorinitials>
+
+        <revremark>Corrections mineures, mise Ã  jour de certaines sections et
+        rÃ©paration de liens.
         </revremark>
       </revision>
     </revhistory>

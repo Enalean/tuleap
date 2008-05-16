@@ -1,4 +1,4 @@
-Copyright © STMicroelectronics, %year%. All Rights Reserved.
+Copyright Â© STMicroelectronics, %year%. All Rights Reserved.
 
 Originally written by %author%, %year%.
 

@@ -1,8 +1,6 @@
 <?php
-require_once ('pre.php');
-require_once ('nusoap.php');
 
-define ('permission_denied_fault', '3016');
+require_once('pre.php');
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -13,35 +11,44 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 
 $uri = $protocol.'://'.$sys_default_domain;
 
-// Instantiate server object
-$server = new soap_server();
+if ($request->exist('wsdl')) {
+	header("Location: ".$uri."/soap/codex.wsdl.php?wsdl");
+	exit();
+}
+	
+try {
+    
+    $server = new SoapServer($uri.'/soap/codex.wsdl.php?wsdl',  
+    							array('trace' => 1, 
+    								  'soap_version' => SOAP_1_1
+    							));
 
-//configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
-$server->configureWSDL('CodeXAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
+	require_once('common/session.php');
+    require_once('common/group.php');
+    require_once('tracker/tracker.php');
+    require_once('frs/frs.php');
+    
+    // include the <Plugin> API (only if plugin is available)
+	$em =& EventManager::instance();
+	$em->processEvent('soap', array());
+    
+} catch (Exception $e) {
+    echo $e;
+}
 
 
-//include the common TYPES API
-require_once('./common/types.php');
-
-//include the common SESSION API
-require_once('./common/session.php');
-
-// include the common GROUP API
-require_once('./common/group.php');
-
-// include the TRACKER API
-require_once('./tracker/tracker.php');
-
-// include the FRS API
-require_once('./frs/frs.php');
-
-// include the <Plugin> API (only if docman plugin is available)
-$em =& EventManager::instance();
-$em->processEvent('soap', array());
-
-// Call the service method to initiate the transaction and send the response
-$HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
-$server->service($HTTP_RAW_POST_DATA);
-
+// if POST was used to send this request, we handle it
+// else, we display a list of available methods
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$server -> handle();
+} else {
+	echo '<strong>This SOAP server can handle following functions : </strong>';    
+    echo '<ul>';
+    foreach($server -> getFunctions() as $func) {        
+	    echo '<li>' , $func , '</li>';
+	}
+    echo '</ul>';
+    echo '<a href="codex.wsdl.php?wsdl">You can access the WSDL</a>';
+}
 
 ?>

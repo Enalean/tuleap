@@ -30,7 +30,6 @@ require_once('Widget.class.php');
                 mkdir($GLOBALS['codex_cache_dir'] .'/rss');
             }
             $rss =& new SimplePie($this->rss_url, $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-            $rss->set_output_encoding('ISO-8859-1');
             $max_items = 10;
             $items = array_slice($rss->get_items(), 0, $max_items);
             $content .= '<table width="100%">';
@@ -48,9 +47,10 @@ require_once('Widget.class.php');
         return $content;
     }
     function getPreferences() {
+        $hp = CodeX_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. htmlentities($this->rss_title, ENT_QUOTES) .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. htmlentities($this->rss_url, ENT_QUOTES) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $hp->purify($this->rss_url, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
@@ -94,7 +94,6 @@ require_once('Widget.class.php');
                     mkdir($GLOBALS['codex_cache_dir'] .'/rss');
                 }
                 $rss_reader =& new SimplePie($rss['url'], $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-                $rss_reader->set_output_encoding('ISO-8859-1');
                 $rss['title'] = $rss_reader->get_title();
             }
             $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($rss['title']) ."', '". db_escape_string($rss['url']) ."')";

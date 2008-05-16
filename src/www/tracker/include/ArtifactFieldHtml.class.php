@@ -88,7 +88,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$group_artifact_id) {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
-			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+			$result = $this->getFieldPredefinedValues($group_artifact_id,$checked,false,true,false,true);
             $array_values = array();
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
@@ -160,7 +160,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$group_artifact_id) {
 			return $Language->getText('tracker_include_field','error_no_atid');
 	    } else {
-            $result = $this->getFieldPredefinedValues($group_artifact_id,$checked);
+            $result = $this->getFieldPredefinedValues($group_artifact_id,$checked,false,true,false,true);
             $array_values = array();
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
@@ -400,11 +400,18 @@ class ArtifactFieldHtml extends ArtifactField {
 				    $arr[$i] = $text_any;
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
-				else 
-                $arr[$i] =  $hp->purify(SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i])), CODEX_PURIFIER_CONVERT_HTML) ;
+                else {
+                    $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
+                    if (!$ascii) {
+                        $arr[$i] =  $hp->purify($arr[$i], CODEX_PURIFIER_CONVERT_HTML);
+                    }
+                }
 		    }
-	
-		    $output .= join('<br>', $arr);
+            if ($ascii) {
+                $output .= join(', ', $arr);
+            } else {
+                $output .= join('<br>', $arr);
+            }
 	
 		} else {
 		    
@@ -436,8 +443,12 @@ class ArtifactFieldHtml extends ArtifactField {
 				    $arr[$i] = $text_any;
 				else if ($arr[$i] == 100 )
 				    $arr[$i] = $text_none;
-				else 
-				    $arr[$i] =  $hp->purify(SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i])), CODEX_PURIFIER_CONVERT_HTML) ;
+				else  {
+                    $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
+                    if (!$ascii) {
+                        $arr[$i] =  $hp->purify($arr[$i], CODEX_PURIFIER_CONVERT_HTML);
+                    }
+                }
 		    }
 	
 		    $output .= join(', ', $arr);

@@ -6,6 +6,10 @@
 //
 // 
 
+if (version_compare(phpversion(), '5.1.6', '<')) {
+    die('CodeX must be run on a PHP 5.1.6 (or greater) engine');
+}
+
 /*
 	redirect to proper hostname to get around certificate problem on IE 5
 */
@@ -13,12 +17,16 @@
 // Debug mode: display debug data in page footer.
 // Only displayed for site-admins
 $GLOBALS['DEBUG_MODE']=0;
+if ($GLOBALS['DEBUG_MODE']) {
+    $GLOBALS['debug_time_start'] = microtime(true);
+ }
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/SimpleSanitizer.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {

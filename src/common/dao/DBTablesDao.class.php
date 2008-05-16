@@ -27,6 +27,12 @@ class DBTablesDao extends DataAccessObject {
         $sql = "ANALYZE TABLE ".$name;
         return $this->retrieve($sql);
     }
+    
+    function convertToUTF8($name) {
+        $sql = "ALTER TABLE ". $name ." CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;";
+        return $this->update($sql);
+    }
+    
     /**
     * Gets a log files
     * @return object a result object

@@ -333,7 +333,7 @@ sub send_admin_email {
     $smtp->datasend("<html>\n");
     $smtp->datasend("<head>\n");
     $smtp->datasend("<title>Listing of XSD Files</title>\n");
-    $smtp->datasend("<meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-1\">\n");
+    $smtp->datasend("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     $smtp->datasend("</head>\n");
     $smtp->datasend("<body>\n");
 
@@ -398,7 +398,7 @@ sub intro_message {
     push(@message, "<html>\n");
     push(@message, "<head>\n");
     push(@message, "<title>The XSD Files In the CodeX Repository Have Changed</title>\n");
-    push(@message, "<meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-1\">\n");
+    push(@message, "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     push(@message, "</head>\n");
     push(@message, "<body>\n");
     push(@message, "<p>\n");
@@ -439,7 +439,7 @@ sub compose_project_email {
     push(@message, "<html>\n");
     push(@message, "<head>\n");
     push(@message, "<title>CodeX project ${project}: Information on the XML Schema Registry</title>\n");
-    push(@message, "<meta http-equiv=\"content-type\" content=\"text/html; charset=ISO-8859-1\">\n");
+    push(@message, "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     push(@message, "</head>\n");
     push(@message, "<body>\n");
 

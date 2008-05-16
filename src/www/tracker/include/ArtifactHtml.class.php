@@ -434,6 +434,8 @@ class ArtifactHtml extends Artifact {
                     $value = util_user_link(user_getname($field_value));
                 } else if ($field->getName() == 'open_date') {
                     $value = format_date($GLOBALS['sys_datefmt'],$field_value);
+                } else if ($field->getName() == 'last_update_date') {
+                	$value = format_date($GLOBALS['sys_datefmt'],$field_value);    
                 } else {
                     $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
                     if ($read_only) $value = util_make_links($value,$group_id, $group_artifact_id);

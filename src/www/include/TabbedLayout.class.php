@@ -645,6 +645,10 @@ if (isset($params['group']) && $params['group']) {
         print $this->getSearchBox();
 	}
 	
+	//diplaying search box in body
+    function bodySearchBox() {
+    	//do nothing
+    }
 	
 	/**
 	 * feedback() - returns the htmlized feedback string when an action is performed.

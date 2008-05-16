@@ -7,21 +7,11 @@
 // 
 // 
 
-if(!$admin_creation){
 $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. In order\n"
 . "to confirm your registration you must visit the following url: \n\n"
 . "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
 . "Your login is: ".$username."\n\n"
 . "Enjoy the site.\n\n"
 . " -- The ".$GLOBALS['sys_name']." Team\n";
-}else {
-$message = "You have been registered on the ".$GLOBALS['sys_name']." web site by the administrator. In order\n"
-. "to confirm your registration you must visit the following url: \n\n"
-. "<". $base_url ."/account/verify.php?confirm_hash=$confirm_hash>\n\n"
-. "Your login is: ".$username."\n"
-. "And you password is: ".$password."\n"
-. "Please change your password after your first connection to the web site.\n\n"
-. "Enjoy the site.\n\n"
-. " -- The ".$GLOBALS['sys_name']." Team\n";
-}
+
 ?>

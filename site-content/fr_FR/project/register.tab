@@ -111,6 +111,7 @@ register_title	license	Politique d'échange des logiciels
 register_title	category	Catégorisation du projet
 register_title	confirm	Confirmation finale
 register_title	services	Services du projet
+register_title	settings	Propriétés du projet
 
 register_services	desc	Sélectionnez vos services
 register_services	server	Serveur

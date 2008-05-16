@@ -191,7 +191,7 @@ LoadModule rewrite_module modules/mod_rewrite.so
 #LoadModule proxy_http_module modules/mod_proxy_http.so
 #LoadModule proxy_connect_module modules/mod_proxy_connect.so
 LoadModule cache_module modules/mod_cache.so
-LoadModule suexec_module modules/mod_suexec.so
+#LoadModule suexec_module modules/mod_suexec.so
 LoadModule disk_cache_module modules/mod_disk_cache.so
 LoadModule file_cache_module modules/mod_file_cache.so
 LoadModule mem_cache_module modules/mod_mem_cache.so
@@ -552,18 +552,18 @@ Alias /icons/ "/var/www/icons/"
 # The same rules about trailing "/" apply to ScriptAlias directives as to
 # Alias.
 #
-ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+#ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
 
 #
 # "/var/www/cgi-bin" should be changed to whatever your ScriptAliased
 # CGI directory exists, if you have that configured.
 #
-<Directory "/var/www/cgi-bin">
-    AllowOverride None
-    Options None
-    Order allow,deny
-    Allow from all
-</Directory>
+#<Directory "/var/www/cgi-bin">
+#    AllowOverride None
+#    Options None
+#    Order allow,deny
+#    Allow from all
+#</Directory>
 
 #
 # Redirect allows you to tell clients about documents which used to exist in
@@ -1005,15 +1005,42 @@ NameVirtualHost %sys_ip_address%:80
 # Without it, there is an issue with the write_cache.php script
 Include conf.d/php.conf
 
-# Include per project virtual hosts (automatically generated)
-Include conf/codex_vhosts.conf
-
-# Include per project Subversion repository (automatically generated)
-# A second file is included in ssl.conf for secure Subversion servers.
-Include conf/codex_svnhosts.conf
-
 # Include SSL related configuration
 Include conf/ssl.conf
+
+#
+# Subversion virtual hosts alias
+#
+<VirtualHost 13.202.220.182:80>
+        ServerName cxtst3.xrce.xerox.com
+        ServerAlias svn.*.cxtst3.xrce.xerox.com
+        Include conf.d/codex_svnroot.conf
+</VirtualHost>
+
+#
+# Project web site virtual hosts alias
+#
+<VirtualHost 13.202.220.182:80>
+        ServerName cxtst3.xrce.xerox.com
+        ServerAlias *.cxtst3.xrce.xerox.com
+        VirtualDocumentRoot /home/groups/%1/htdocs
+        # We won't allow cgi scripts to run on project web sites. (see installation guide)
+        DirectoryIndex index.html index.php
+        # PHP variables
+        php_admin_value open_basedir "/home/groups/"
+        php_admin_value include_path "."
+        php_admin_flag safe_mode on
+        php_admin_flag safe_mode_gid on
+        <Directory /home/groups>
+               Options Indexes FollowSymlinks
+               AllowOverride All
+               order allow,deny
+               allow from all
+       </Directory>
+        LogFormat "%v %h %l %u %t \"%r\" %>s %b" vhost
+        CustomLog logs/vhosts-access_log vhost
+</VirtualHost>
+
                                              
 #
 # On the production server the local.inc file is in /etc/codex/conf/local.inc

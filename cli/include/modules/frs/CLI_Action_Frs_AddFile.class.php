@@ -84,9 +84,20 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
                     $loaded_params['soap']['is_upload'] = true;
                     fclose($fh);
+                    
+                    // sort the parameters in the right order
+                    uksort($loaded_params['soap'], array($this, "sort_parameters"));
+                    
                 }
             }
         }
     }
+    
+	function sort_parameters($p1, $p2) {
+        $order = array('group_id', 'package_id', 'release_id', 'filename', 'base64_contents', 'type_id', 'processor_id', 'is_upload');
+        $order_flip = array_flip($order);
+        return $order_flip[$p1] > $order_flip[$p2];
+    }
+    
 }
 ?>

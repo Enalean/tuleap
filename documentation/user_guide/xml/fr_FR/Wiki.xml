@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
@@ -15,88 +15,88 @@
   <chapter id="WikiService">
     <title>Service Wiki</title>
 
-    <para>CodeX offre un service Wiki à chaque projet. Le wiki utilisé
+    <para>CodeX offre un service Wiki Ã  chaque projet. Le wiki utilisÃ©
     dans CodeX s'appuie sur l'outil <ulink
     url="http://phpwiki.sourceforge.net">phpWiki</ulink>.
     </para>
 
 
   <section id="WikiOverview">
-    <title>Présentation d'un Wiki</title>
+    <title>PrÃ©sentation d'un Wiki</title>
 
     <section id="WikiDefinition">
-      <title>Définition d'un Wiki</title>
+      <title>DÃ©finition d'un Wiki</title>
 
-      <para>Un Wiki est un site Web qui permet à ses utilisateurs
-      d'ajouter très facilement du contenu ou de modifier le contenu
-      déjà en place.</para>
+      <para>Un Wiki est un site Web qui permet Ã  ses utilisateurs
+      d'ajouter trÃ¨s facilement du contenu ou de modifier le contenu
+      dÃ©jÃ  en place.</para>
 
-      <para>Un Wiki permet de rédiger un document de façon
-      collaborative à l'aide d'un langage de balises simple et en
+      <para>Un Wiki permet de rÃ©diger un document de faÃ§on
+      collaborative Ã  l'aide d'un langage de balises simple et en
       utilisant uniquement un navigateur Web. Une page d'un wiki est
-      appelée "page wiki" alors que l'ensemble des pages
-      interconnectées par le biais d'hyperliens sont collectivement
-      baptisées "le wiki". CodeX offre en complément la notion de
+      appelÃ©e "page wiki" alors que l'ensemble des pages
+      interconnectÃ©es par le biais d'hyperliens sont collectivement
+      baptisÃ©es "le wiki". CodeX offre en complÃ©ment la notion de
       "Document Wiki" : il s'agit d'une page wiki directement
       accessible depuis la page d'accueil du service Wiki du
       projet.</para>
 
-      <para>Une propriété caractéristique de la technologie Wiki est
-      la facilité avec laquelle des pages peuvent être créées ou
-      modifiées. Il n'y pas de mécanisme de revue ou d'approbation des
-      modifications effectuées et les Wikis CodeX sont ouverts à tous
-      les utilisateurs enregistrés.</para>
+      <para>Une propriÃ©tÃ© caractÃ©ristique de la technologie Wiki est
+      la facilitÃ© avec laquelle des pages peuvent Ãªtre crÃ©Ã©es ou
+      modifiÃ©es. Il n'y pas de mÃ©canisme de revue ou d'approbation des
+      modifications effectuÃ©es et les Wikis CodeX sont ouverts Ã  tous
+      les utilisateurs enregistrÃ©s.</para>
     </section>
 
     <section id="WikiPageFormatting">
       <title>Wiki Page Formatting</title>
 
-      <para>Dans les Wikis de CodeX, une page possède trois
-      représentations : le code HTML, la page résultant du rendu par le
-      navigateur et le code source de la page éditable par
-      l'utilisateur à partir duquel la version HTML est générée. Le
+      <para>Dans les Wikis de CodeX, une page possÃ¨de trois
+      reprÃ©sentations : le code HTML, la page rÃ©sultant du rendu par le
+      navigateur et le code source de la page Ã©ditable par
+      l'utilisateur Ã  partir duquel la version HTML est gÃ©nÃ©rÃ©e. Le
       format du code source, connu sous le nom de "wikitext", est un
-      langage de marquage simplifié.</para>
+      langage de marquage simplifiÃ©.</para>
 
-      <para>Le langage de marquage "wikitext" est né de la
+      <para>Le langage de marquage "wikitext" est nÃ© de la
       constatation que HTML, avec sa longue liste de balises
-      imbriquées, est trop complexe pour permettre l'édition simple et
-      rapide de documents et empêche l'utilisateur de se concentrer
+      imbriquÃ©es, est trop complexe pour permettre l'Ã©dition simple et
+      rapide de documents et empÃªche l'utilisateur de se concentrer
       sur le contenu de la page. Le fait que l'utilisateur ne puisse
-      pas utiliser toutes les fonctionnalités de HTML, telles que
-      JavaScript et les feuilles de styles est aussi bénéfique car
-      cela permet d'assurer une cohérence dans le style des pages et
-      d'éviter les failles de sécurité.</para>
+      pas utiliser toutes les fonctionnalitÃ©s de HTML, telles que
+      JavaScript et les feuilles de styles est aussi bÃ©nÃ©fique car
+      cela permet d'assurer une cohÃ©rence dans le style des pages et
+      d'Ã©viter les failles de sÃ©curitÃ©.</para>
     </section>
 
     <section id="WikiLinkingandCreatingPages">
-      <title>Lier et créer des pages</title>
+      <title>Lier et crÃ©er des pages</title>
 
       <para>Les Wikis sont de vrais documents hypertextes avec une
-      structure de navigation non linéaire. Chaque page contient des
-      liens vers d'autres pages. Les liens sont automatiquement créés
-      en utilisant une syntaxe particulière appelée "patron de
+      structure de navigation non linÃ©aire. Chaque page contient des
+      liens vers d'autres pages. Les liens sont automatiquement crÃ©Ã©s
+      en utilisant une syntaxe particuliÃ¨re appelÃ©e "patron de
       lien".</para>
 
-      <para>Les wikis CodeX utilisent le "patron de lien" appelé
-      CasseChameau (CamelCase en anglais), qui consiste à considérer
-      comme hyperlien une série de mots collés ensemble dont la
-      première lettre est une majuscule (les mots "CamelCase",
-      "RéférencesBibliographiques" en sont des exemples). Le terme
-      CasseChameau vient de l'allure des mots composés dont les
-      majuscules ressemblent à des bosses de chameau. </para>
+      <para>Les wikis CodeX utilisent le "patron de lien" appelÃ©
+      CasseChameau (CamelCase en anglais), qui consiste Ã  considÃ©rer
+      comme hyperlien une sÃ©rie de mots collÃ©s ensemble dont la
+      premiÃ¨re lettre est une majuscule (les mots "CamelCase",
+      "RÃ©fÃ©rencesBibliographiques" en sont des exemples). Le terme
+      CasseChameau vient de l'allure des mots composÃ©s dont les
+      majuscules ressemblent Ã  des bosses de chameau. </para>
 
-      <para>A noter qu'il existe aussi une autre façon de créer des
+      <para>A noter qu'il existe aussi une autre faÃ§on de crÃ©er des
       liens wikis en incluant une portion de texte entre
-      crochets. Cela permet par exemple de créer des pages dont le
+      crochets. Cela permet par exemple de crÃ©er des pages dont le
       titre doit comporter des espaces.</para>
 
-      <para>Dans un Wiki, une nouvelle page est créée simplement en
+      <para>Dans un Wiki, une nouvelle page est crÃ©Ã©e simplement en
       tapant un lien dans une page existante. Si la page cible
-      n'existe pas le lien est marqué comme étant nouveau. En cliquant
-      sur ce lien, une nouvelle fenêtre d'édition apparaît et permet à
-      l'utilisateur de taper son texte. Ce mécanisme permet d'éviter
-      les pages orphelines qui ne seraient référencées nulle part dans
+      n'existe pas le lien est marquÃ© comme Ã©tant nouveau. En cliquant
+      sur ce lien, une nouvelle fenÃªtre d'Ã©dition apparaÃ®t et permet Ã 
+      l'utilisateur de taper son texte. Ce mÃ©canisme permet d'Ã©viter
+      les pages orphelines qui ne seraient rÃ©fÃ©rencÃ©es nulle part dans
       le Wiki.</para>
     </section>
 
@@ -104,7 +104,7 @@
       <title>Rechercher</title>
 
       <para>Les Wikis CodeX permettent d'effectuer des recherches par
-      mots-clés aussi bien dans le titre que dans le contenu des
+      mots-clÃ©s aussi bien dans le titre que dans le contenu des
       pages.</para>
     </section>
   </section>
@@ -112,75 +112,75 @@
   <section id="CodeXWikis">
     <title>Les Wikis de CodeX</title>
 
-    <para>Les Wikis de CodeX sont spécifiques à chaque projet. Ainsi
-    deux projets distincts peuvent utiliser les mêmes noms de pages
+    <para>Les Wikis de CodeX sont spÃ©cifiques Ã  chaque projet. Ainsi
+    deux projets distincts peuvent utiliser les mÃªmes noms de pages
     sans risque de conflit.</para>
 
     <section id="WikiCreation">
-      <title>Création d'un Wiki</title>
+      <title>CrÃ©ation d'un Wiki</title>
 
-      <para>Pour être utilisable, le Wiki doit d'abord être initialisé
+      <para>Pour Ãªtre utilisable, le Wiki doit d'abord Ãªtre initialisÃ©
       par l'administrateur du projet. Pour ce faire, cliquez sur le
-      lien "wiki" dans la barre des services, sélectionnez la langue
-      d'utilisation de votre Wiki, cliquez sur 'Créer' et attendez la
-      fin du processus de création.</para>
+      lien "wiki" dans la barre des services, sÃ©lectionnez la langue
+      d'utilisation de votre Wiki, cliquez sur 'CrÃ©er' et attendez la
+      fin du processus de crÃ©ation.</para>
 
       <para>Veuillez noter que la langue d'utilisation du Wiki est
-      définie une fois pour toute à la création du Wiki. Le Wiki
+      dÃ©finie une fois pour toute Ã  la crÃ©ation du Wiki. Le Wiki
       s'affichera dans la langue choisie quelles que soient les
-      préférences de langues exprimées par chaque utilisateur.</para>
+      prÃ©fÃ©rences de langues exprimÃ©es par chaque utilisateur.</para>
 
-      <para>La création du Wiki donne naissance à un certain nombre de
-      pages très utiles : une page d'accueil, une "sandbox" où faire
+      <para>La crÃ©ation du Wiki donne naissance Ã  un certain nombre de
+      pages trÃ¨s utiles : une page d'accueil, une "sandbox" oÃ¹ faire
       des tests, la documentation PhpWiki, etc&hellip;</para>
     </section>
 
     <section id="WikiPermissions">
       <title>Permissions du Wiki</title>
 
-      <para>Par défaut, les Wikis de CodeX sont lisibles et
-      modifiables par n'importe quel utilisateur enregistré.</para>
+      <para>Par dÃ©faut, les Wikis de CodeX sont lisibles et
+      modifiables par n'importe quel utilisateur enregistrÃ©.</para>
 
-      <para>Bien que cette politique d'accès soit en général la
-      meilleure, certains Wikis ne doivent pas être publics. Pour
-      répondre à ce besoin, CodeX offre un mécanisme de gestion des
-      permissions basés sur les groupes d'utilisateurs comme pour le
+      <para>Bien que cette politique d'accÃ¨s soit en gÃ©nÃ©ral la
+      meilleure, certains Wikis ne doivent pas Ãªtre publics. Pour
+      rÃ©pondre Ã  ce besoin, CodeX offre un mÃ©canisme de gestion des
+      permissions basÃ©s sur les groupes d'utilisateurs comme pour le
       gestionnaire de fichiers et de documents (voir <xref
       linkend="UserGroups"/>, <xref linkend="PackageModification"/>
-      et <xref linkend="DocAccessPermissions"/>). Les droits d'accès
-      peuvent être définis au niveau du Wiki et s'appliquer à toutes
+      et <xref linkend="DocAccessPermissions"/>). Les droits d'accÃ¨s
+      peuvent Ãªtre dÃ©finis au niveau du Wiki et s'appliquer Ã  toutes
       les pages, ou bien au niveau de la page permettant ainsi de
-      protéger uniquement certaines pages bien choisies.</para>
+      protÃ©ger uniquement certaines pages bien choisies.</para>
     </section>
 
     <section id="ExamplesofWikiPages">
       <title>Exemples de pages Wiki</title>
 
-      <para>Les Wikis de projets hébergés sur CodeX peuvent être utilisés de maintes façons. Les exemples qui suivent sont juste des suggestions :</para>
+      <para>Les Wikis de projets hÃ©bergÃ©s sur CodeX peuvent Ãªtre utilisÃ©s de maintes faÃ§ons. Les exemples qui suivent sont juste des suggestions :</para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para><emphasis role="bold">Rapport de réunion</emphasis> :
-	  les Wikis sont très pratiques pour rédiger des rapports de
-	  réunion. Il suffit de taper le nom du meeting sous forme
+	  <para><emphasis role="bold">Rapport de rÃ©union</emphasis> :
+	  les Wikis sont trÃ¨s pratiques pour rÃ©diger des rapports de
+	  rÃ©union. Il suffit de taper le nom du meeting sous forme
 	  d'un lien wiki, de cliquer sur le nouveau lien et de taper
-	  le rapport de réunion. De plus, n'importe quel utilisateur
+	  le rapport de rÃ©union. De plus, n'importe quel utilisateur
 	  peut modifier ou corriger le contenu par la suite.</para>
 	</listitem>
 	<listitem>
 	  <para><emphasis role="bold">Calendrier de projet</emphasis> :
 	  les pages Wikis de CodeX peuvent inclure un calendrier
-	  partagé accessible et modifiable par tous les membres du
+	  partagÃ© accessible et modifiable par tous les membres du
 	  projet (voir la page CalendarPlugin).</para>
 	</listitem>
 	<listitem>
 	  <para><emphasis role="bold">Documentation</emphasis> : un
-	  Wiki est une façon très pratique de fournir la documentation
-	  relative à un projet (guide utilisateur, guide
+	  Wiki est une faÃ§on trÃ¨s pratique de fournir la documentation
+	  relative Ã  un projet (guide utilisateur, guide
 	  d'administration, FAQ, etc&hellip;). Cette documentation
-	  peut être mise à jour par les membres de l'équipes, vos
-	  partenaires, voire même vos clients s'ils ont les droits
-	  d'accès.</para>
+	  peut Ãªtre mise Ã  jour par les membres de l'Ã©quipes, vos
+	  partenaires, voire mÃªme vos clients s'ils ont les droits
+	  d'accÃ¨s.</para>
 	</listitem>
       </itemizedlist>
     </section>
@@ -188,10 +188,10 @@
     <section id="MoreWikiDocumentation">
       <title>En savoir plus</title>
 
-      <para>Tous les Wikis de CodeX sont initialisés avec un jeu de
-      pages par défaut dont la documentation PhpWiki. Consultez la
+      <para>Tous les Wikis de CodeX sont initialisÃ©s avec un jeu de
+      pages par dÃ©faut dont la documentation PhpWiki. Consultez la
       page PhpWikiDocumentation pour une description de toutes les
-      fonctionnalités de PhpWiki : syntaxe du langage de marquage,
+      fonctionnalitÃ©s de PhpWiki : syntaxe du langage de marquage,
       plugins, etc&hellip;</para>
     </section>
 

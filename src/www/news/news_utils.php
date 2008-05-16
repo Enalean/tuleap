@@ -15,6 +15,7 @@ require_once('www/project/admin/permissions.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/forum/forum_utils.php');
 require_once('common/mail/Mail.class.php');
+require_once('common/user/UserHelper.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('news/news');
 
@@ -61,6 +62,9 @@ function news_footer($params) {
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
     global $sys_datefmt, $sys_news_group,$Language;
+    $hp = CodeX_HTMLPurifier::instance(); 
+    $uh = new UserHelper();
+    
     $return  = "";
     if (!$group_id) {
 	$group_id=$sys_news_group;
@@ -136,7 +140,9 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                     $return .= '
                                                    <BR>&nbsp;';
                 }
-                $return .= '&nbsp;&nbsp;&nbsp;<I>'.user_get_name_display_from_unix(db_result($result,$i,'user_name')) .' - '.
+                $return .= '&nbsp;&nbsp;&nbsp;<I>'.
+                    $hp->purify($uh->getDisplayNameFromUserName(db_result($result,$i,'user_name')), CODEX_PURIFIER_CONVERT_HTML) .
+                    ' - '.
                     format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
                     $proj_name . $summ_txt;
         

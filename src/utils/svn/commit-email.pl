@@ -619,11 +619,9 @@ foreach my $project (@project_settings_list)
     # Basically: adding/tweaking the content-type is nice, but don't
     # think that is the proper solution.
 
-    # CodeX is not UTF-8 yet, so stick to iso-8859
-    #push(@head, "Content-Type: text/plain; charset=UTF-8\n");
+    push(@head, "Content-Type: text/plain; charset=UTF-8\n");
     #push(@head, "Content-Transfer-Encoding: 8bit\n");
-    push(@head, "Content-type: text/plain; charset=iso-8859-1");
-
+    
     push(@head, "\n");
 
     if ($sendmail =~ /\w/ and @email_addresses)

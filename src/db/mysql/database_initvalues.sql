@@ -305,6 +305,7 @@ INSERT INTO people_skill_level VALUES ('60','Wrote It');
 #
 
 INSERT INTO frs_filetype VALUES ('2000','Binary .rpm');
+INSERT INTO frs_filetype VALUES ('2100','Binary .deb');
 INSERT INTO frs_filetype VALUES ('3000','Binary .zip');
 INSERT INTO frs_filetype VALUES ('3001','Binary .bz2');
 INSERT INTO frs_filetype VALUES ('3002','Binary .gz');
@@ -494,7 +495,9 @@ INSERT INTO trove_cat VALUES (267, 2000082001, 160, 160, 'zope', 'Zope', 'Zope O
 INSERT INTO trove_cat VALUES (269, 2001010901, 160, 160, 'ruby', 'Ruby', 'A pragmatic, purely OO, extremelly elegant programming language offering the best of Perl, Python, Smalltalk and Eiffel. Worth a try ! (See http://www.ruby-lang.org)', 0, 0, 'Programming Language :: Ruby', '160 :: 269');
 INSERT INTO trove_cat VALUES (273, 2001011601, 160, 160, 'matlab', 'Matlab', 'The Matlab (Matrix Laboratory) programming language for scientific and engineering numeric computation', 0, 0, 'Programming Language :: Matlab', '160 :: 273');
 INSERT INTO trove_cat VALUES (279, 2002081301, 154, 18, 'printdrivers', 'Drivers', 'Printer drivers', 0, 0, 'Topic :: Printing :: Drivers', '18 :: 154 :: 279');
-
+INSERT INTO trove_cat VALUES (280, 2008012101, 160, 160, 'vbdotnet', 'VB.NET', 'The VB.NET programming language', 0, 0, 'Programming Language :: VB.NET', '160 :: 280');
+INSERT INTO trove_cat VALUES (281, 2008012101, 160, 160, 'csharp', 'C#', 'The C# programming language', 0, 0, 'Programming Language :: C#', '160 :: 281');
+INSERT INTO trove_cat VALUES (282, 2008012101, 160, 160, 'javascript', 'JavaScript', 'The JavaScript programming language', 0, 0, 'Programming Language :: JavaScript', '160 :: 282');
     
 
 #
@@ -1198,6 +1201,7 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, NULL, NULL, 1, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, NULL, NULL, 0, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 1, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (6, 100, 'Salome Bug', 'Salome Bug Tracker', 'slmbug', 1, NULL, NULL, 0, 0);
 
 --
 -- This tracker has the id 100 to force the next id to be greater than 100
@@ -1218,6 +1222,9 @@ INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, descripti
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (8, 5, 'fieldset_default_patches_lbl_key', 'fieldset_default_patches_desc_key', 10);
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (9, 5, 'fieldset_patchtext_patches_lbl_key', 'fieldset_patchtext_patches_desc_key', 20);
 INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (10, 5, 'fieldset_status_patches_lbl_key', 'fieldset_status_patches_desc_key', 30);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (11, 6, 'fieldset_default_slmbugs_lbl_key', 'fieldset_default_slmbugs_desc_key', 10);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (12, 6, 'fieldset_status_slmbugs_lbl_key', 'fieldset_status_slmbugs_desc_key', 50);
+INSERT INTO artifact_field_set (field_set_id, group_artifact_id, name, description, rank) VALUES (13, 6, 'fieldset_salome_slmbugs_lbl_key', 'fieldset_salome_slmbugs_desc_key', 30);
 
 --
 -- Dumping data for table 'artifact_field'
@@ -1229,6 +1236,7 @@ INSERT INTO artifact_field VALUES (6,1,1,'open_date',4,'DF','','Submitted on','D
 INSERT INTO artifact_field VALUES (5,1,1,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (1,1,1,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (4,1,2,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (31,1,1,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (3,1,1,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (2,1,2,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (30,1,2,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
@@ -1267,6 +1275,7 @@ INSERT INTO artifact_field VALUES (9,2,3,'multi_assigned_to',5,'MB','','Assigned
 INSERT INTO artifact_field VALUES (12,2,3,'subproject_id',2,'SB','','Subproject','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (13,2,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (14,2,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (16,2,3,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- SR tracker
 INSERT INTO artifact_field VALUES (9,3,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (7,3,6,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1279,6 +1288,7 @@ INSERT INTO artifact_field VALUES (2,3,5,'summary',1,'TF','60/150','Summary','On
 INSERT INTO artifact_field VALUES (1,3,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (10,3,6,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,3,5,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (13,3,5,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Empty tracker
 INSERT INTO artifact_field VALUES (1,4,7,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,4,7,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -1291,6 +1301,7 @@ INSERT INTO artifact_field VALUES (7,4,7,'severity',2,'SB','','Severity','Impact
 INSERT INTO artifact_field VALUES (8,4,7,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (9,4,7,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
 INSERT INTO artifact_field VALUES (10,4,7,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (12,4,7,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Patches tracker
 INSERT INTO artifact_field VALUES (1,5,8,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,5,8,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
@@ -1304,6 +1315,45 @@ INSERT INTO artifact_field VALUES (9,5,10,'status_id',2,'SB','','Status','Artifa
 INSERT INTO artifact_field VALUES (10,5,8,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (11,5,8,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
 INSERT INTO artifact_field VALUES (12,5,10,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (13,5,8,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
+-- Salome Bugs tracker
+INSERT INTO artifact_field VALUES (1,6,11,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
+INSERT INTO artifact_field VALUES (2,6,12,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (3,6,11,'category_id',2,'SB','','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (4,6,12,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100');
+INSERT INTO artifact_field VALUES (5,6,11,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,6,11,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (7,6,11,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
+INSERT INTO artifact_field VALUES (8,6,11,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5');
+INSERT INTO artifact_field VALUES (9,6,11,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (10,6,11,'comment_type_id',2,'SB','','Comment Type','Specify the nature of the  follow up comment attached to this artifact (Workaround, Test Case, Impacted Files,...)','',0,1,0,1,NULL,'100');
+INSERT INTO artifact_field VALUES (11,6,11,'category_version_id',2,'SB','','Component Version','The version of the System Component (aka Category) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (12,6,11,'platform_version_id',2,'SB','','Platform Version','The name and version of the platform your software was running on when the artifact occured (e.g. Solaris 2.8, Linux 2.4, Windows NT4 SP2,...)','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (13,6,12,'reproducibility_id',2,'SB','','Reproducibility','How easy is it to reproduce the artifact','S',0,0,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (14,6,12,'size_id',2,'SB','','Size (loc)','The size of the code you need to develop or rework in order to fix the artifact','S',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (15,6,12,'fix_release_id',2,'SB','','Fixed Release','The release in which the artifact was actually fixed','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (16,6,12,'resolution_id',2,'SB','','Resolution','How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (17,6,12,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (18,6,12,'plan_release_id',2,'SB','','Planned Release','The release in which you initially planned the artifact to be fixed','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (19,6,11,'component_version',1,'TF','10/40','Component Version','Version of the system component (or work product) impacted by the artifact. Same as the other Component Version field <u>except</u> this one is free text.','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (20,6,11,'bug_group_id',2,'SB','','Group','Characterizes the nature of the artifact (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (22,6,11,'priority',2,'SB','','Priority','How quickly the artifact must be fixed (Immediate, Normal, Low, Later,...)','S',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (23,6,11,'keywords',1,'TF','60/120','Keywords','A list of comma separated keywords associated with a artifact','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (24,6,11,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100');
+INSERT INTO artifact_field VALUES (26,6,11,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (27,6,11,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (28,6,11,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (29,6,12,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (30,6,12,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
+INSERT INTO artifact_field VALUES (31,6,13,'slm_environment',1,'TF','60/150','Environment','Associated Salomé TMF environment','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (32,6,13,'slm_campaign',1,'TF','60/150','Campaign','Associated Salomé TMF campaign','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (33,6,13,'slm_family',1,'TF','60/150','Family','Associated Salomé TMF family','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (34,6,13,'slm_suite',1,'TF','60/150','Suite','Associated Salomé TMF suite','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (35,6,13,'slm_test',1,'TF','60/150','Test','Associated Salomé TMF test','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (36,6,13,'slm_action',1,'TF','60/150','Action','Associated Salomé TMF action','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (37,6,13,'slm_execution',1,'TF','60/150','Execution','Associated Salomé TMF execution','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (38,6,13,'slm_dataset',1,'TF','60/150','Data Set','Associated Salomé TMF data set','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (39,6,11,'slm_priority',2,'SB','','Salome Priority','Salome Priority involved in QSScore calculation. Please do not modify it.','',0,1,1,0,NULL,'2');
 --
 -- Dumping data for table 'artifact_field_usage'
 --
@@ -1322,6 +1372,7 @@ INSERT INTO artifact_field_usage VALUES (10,1,1,NULL);
 INSERT INTO artifact_field_usage VALUES (9,1,1,1000);
 INSERT INTO artifact_field_usage VALUES (16,1,1,40);
 INSERT INTO artifact_field_usage VALUES (20,1,1,30);
+INSERT INTO artifact_field_usage VALUES (31,1,1,0);
 INSERT INTO artifact_field_usage VALUES (2,2,1,20);
 INSERT INTO artifact_field_usage VALUES (3,2,1,30);
 INSERT INTO artifact_field_usage VALUES (4,2,1,40);
@@ -1333,6 +1384,7 @@ INSERT INTO artifact_field_usage VALUES (11,2,1,50);
 INSERT INTO artifact_field_usage VALUES (15,2,0,0);
 INSERT INTO artifact_field_usage VALUES (1,2,1,1);
 INSERT INTO artifact_field_usage VALUES (10,2,1,0);
+INSERT INTO artifact_field_usage VALUES (16,2,1,0);
 INSERT INTO artifact_field_usage VALUES (9,3,1,NULL);
 INSERT INTO artifact_field_usage VALUES (7,3,1,30);
 INSERT INTO artifact_field_usage VALUES (12,3,0,0);
@@ -1342,6 +1394,7 @@ INSERT INTO artifact_field_usage VALUES (4,3,1,5);
 INSERT INTO artifact_field_usage VALUES (3,3,1,1000);
 INSERT INTO artifact_field_usage VALUES (2,3,1,900);
 INSERT INTO artifact_field_usage VALUES (1,3,1,1);
+INSERT INTO artifact_field_usage VALUES (13,3,1,0);
 INSERT INTO artifact_field_usage VALUES (9,2,1,70);
 INSERT INTO artifact_field_usage VALUES (12,2,1,10);
 
@@ -1378,6 +1431,7 @@ INSERT INTO artifact_field_usage VALUES (8,4,1,20);
 INSERT INTO artifact_field_usage VALUES (9,4,1,30);
 INSERT INTO artifact_field_usage VALUES (10,4,0,40);
 INSERT INTO artifact_field_usage VALUES (11,4,0,0);
+INSERT INTO artifact_field_usage VALUES (12,4,1,0);
 
 
 INSERT INTO artifact_field_usage VALUES (1,5,1,0);
@@ -1392,6 +1446,46 @@ INSERT INTO artifact_field_usage VALUES (9,5,1,0);
 INSERT INTO artifact_field_usage VALUES (10,5,1,0);
 INSERT INTO artifact_field_usage VALUES (11,5,0,0);
 INSERT INTO artifact_field_usage VALUES (12,5,1,0);
+INSERT INTO artifact_field_usage VALUES (13,5,1,0);
+
+INSERT INTO artifact_field_usage VALUES (7,6,1,0);
+INSERT INTO artifact_field_usage VALUES (6,6,1,0);
+INSERT INTO artifact_field_usage VALUES (5,6,1,900);
+INSERT INTO artifact_field_usage VALUES (1,6,1,0);
+INSERT INTO artifact_field_usage VALUES (4,6,1,50);
+INSERT INTO artifact_field_usage VALUES (3,6,1,10);
+INSERT INTO artifact_field_usage VALUES (2,6,1,60);
+INSERT INTO artifact_field_usage VALUES (30,6,0,0);
+INSERT INTO artifact_field_usage VALUES (8,6,1,20);
+INSERT INTO artifact_field_usage VALUES (10,6,1,NULL);
+INSERT INTO artifact_field_usage VALUES (9,6,1,1000);
+INSERT INTO artifact_field_usage VALUES (16,6,1,40);
+INSERT INTO artifact_field_usage VALUES (20,6,1,30);
+INSERT INTO artifact_field_usage VALUES (11,6,0,0);
+INSERT INTO artifact_field_usage VALUES (12,6,0,0);
+INSERT INTO artifact_field_usage VALUES (13,6,0,0);
+INSERT INTO artifact_field_usage VALUES (14,6,0,0);
+INSERT INTO artifact_field_usage VALUES (15,6,0,0);
+INSERT INTO artifact_field_usage VALUES (17,6,0,0);
+INSERT INTO artifact_field_usage VALUES (18,6,0,0);
+INSERT INTO artifact_field_usage VALUES (19,6,0,0);
+INSERT INTO artifact_field_usage VALUES (22,6,0,0);
+INSERT INTO artifact_field_usage VALUES (23,6,0,0);
+INSERT INTO artifact_field_usage VALUES (24,6,0,0);
+INSERT INTO artifact_field_usage VALUES (26,6,0,0);
+INSERT INTO artifact_field_usage VALUES (27,6,0,0);
+INSERT INTO artifact_field_usage VALUES (28,6,0,0);
+INSERT INTO artifact_field_usage VALUES (29,6,0,0);
+INSERT INTO artifact_field_usage VALUES (31,6,1,20);
+INSERT INTO artifact_field_usage VALUES (32,6,1,10);
+INSERT INTO artifact_field_usage VALUES (33,6,1,30);
+INSERT INTO artifact_field_usage VALUES (34,6,1,50);
+INSERT INTO artifact_field_usage VALUES (35,6,1,70);
+INSERT INTO artifact_field_usage VALUES (36,6,1,80);
+INSERT INTO artifact_field_usage VALUES (37,6,1,40);
+INSERT INTO artifact_field_usage VALUES (38,6,1,60);
+INSERT INTO artifact_field_usage VALUES (39,6,0,40);
+
 --
 -- Dumping data for table 'artifact_field_value_list'
 --
@@ -1580,6 +1674,59 @@ INSERT INTO artifact_field_value_list VALUES (10,5,9,'9 - Critical','',90,'P');
 INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A'); 
 --' For proper syntax highlighting in emacs :-)
 INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted.',50,'A');
+
+
+INSERT INTO artifact_field_value_list VALUES (2,6,1,'Open','The artifact has been submitted',20,'P');
+INSERT INTO artifact_field_value_list VALUES (2,6,3,'Closed','The artifact is no longer active. See the Resolution field for details on how it was resolved.',400,'P');
+
+INSERT INTO artifact_field_value_list VALUES (30,6,1,'New','The artifact has just been submitted',20,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,2,'Analyzed','The cause of the artifact has been identified and documented',30,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,3,'Accepted','The artifact will be worked on.',40,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,4,'Under Implementation','The artifact is being worked on.',50,'A');
+
+INSERT INTO artifact_field_value_list VALUES (30,6,5,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',60,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,6,'Ready for Test','Updated/Created software is ready to be included in the next build',70,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,7,'In Test','Updated/Created software is in the build and is ready to enter the test phase',80,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,8,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',90,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,9,'Declined','The artifact was not accepted.',100,'A');
+INSERT INTO artifact_field_value_list VALUES (30,6,10,'Done','The artifact is closed.',110,'A');
+
+INSERT INTO artifact_field_value_list VALUES (3,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,1,'1 - Ordinary','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,2,'2','',20,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,3,'3','',30,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,4,'4','',40,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,5,'5 - Major','',50,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,6,'6','',60,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,7,'7','',70,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,8,'8','',80,'P');
+INSERT INTO artifact_field_value_list VALUES (8,6,9,'9 - Critical','',90,'P');
+INSERT INTO artifact_field_value_list VALUES (10,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (16,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (16,6,1,'Fixed','The bug was resolved',20,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,2,'Invalid','The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)',30,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,3,'Wont Fix','The bug won''t be fixed (probably because it is very minor)',40,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,4,'Later','The bug will be fixed later (no date given)',50,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,5,'Remind','The bug will be fixed later but keep in the remind state for easy identification',60,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,6,'Works for me','The project team was unable to reproduce the bug',70,'A');
+INSERT INTO artifact_field_value_list VALUES (16,6,7,'Duplicate','This bug is already covered by another bug description (see related bugs list)',80,'A');
+
+INSERT INTO artifact_field_value_list VALUES (11,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (12,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (13,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (14,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (15,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (18,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (20,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (22,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (24,6,100,'None','',10,'P');
+
+INSERT INTO artifact_field_value_list VALUES (39,6,100,'None','',10,'P');
+INSERT INTO artifact_field_value_list VALUES (39,6,1,'Low','',20,'P');
+INSERT INTO artifact_field_value_list VALUES (39,6,2,'Normal','',30,'P');
+INSERT INTO artifact_field_value_list VALUES (39,6,3,'High','',40,'P');
+
+
 --
 -- Dumping data for table 'artifact_report'
 --
@@ -1589,6 +1736,7 @@ INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default ar
 INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P',0);
 INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P',0);
 INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P',0);
+INSERT INTO artifact_report VALUES (5,6,100,'Salome Bugs','Salome Bugs Report','P',0);
 
 
 --
@@ -1628,7 +1776,20 @@ INSERT INTO artifact_report_field VALUES (4,'summary',0,1,NULL,20,NULL);
 INSERT INTO artifact_report_field VALUES (4,'open_date',0,1,NULL,30,NULL);
 INSERT INTO artifact_report_field VALUES (4,'submitted_by',0,1,NULL,50,NULL);
 INSERT INTO artifact_report_field VALUES (4,'bug_group_id',1,0,20,NULL,NULL);
-
+INSERT INTO artifact_report_field VALUES (5,'assigned_to',1,1,30,40,NULL);
+INSERT INTO artifact_report_field VALUES (5,'status_id',1,0,40,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'artifact_id',0,1,NULL,10,NULL);
+INSERT INTO artifact_report_field VALUES (5,'summary',0,1,NULL,20,NULL);
+INSERT INTO artifact_report_field VALUES (5,'open_date',0,1,NULL,30,NULL);
+INSERT INTO artifact_report_field VALUES (5,'submitted_by',0,1,NULL,50,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_environment',1,0,60,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_campaign',1,0,70,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_family',1,0,80,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_suite',1,0,90,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_action',1,0,100,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_test',1,0,110,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_execution',1,0,120,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (5,'slm_dataset',1,0,130,NULL,NULL);
 
 # ==============================
 # artifact_notification_role table
@@ -1725,6 +1886,7 @@ INSERT INTO snippet_language VALUES (17,'Other Language');
 INSERT INTO snippet_language VALUES (18,'LabView');
 INSERT INTO snippet_language VALUES (19,'C#');
 INSERT INTO snippet_language VALUES (20,'Postscript');
+INSERT INTO snippet_language VALUES (21,'VB.NET');
 
 
 --
@@ -1941,6 +2103,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#28',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#29',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#30',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','1#31',1);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','1#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','1#3',3);
@@ -1995,6 +2158,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#13',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#14',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#15',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','2#16',1);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#4',3);
@@ -2027,6 +2191,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#10',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#11',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#12',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','3#13',1);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','3#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','3#3',3);
@@ -2057,6 +2222,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#9',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#10',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#11',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','4#12',1);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','4#3',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','4#4',3);
@@ -2089,6 +2255,7 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','5#10',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','5#11',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','5#12',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','5#13',1);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','5#3',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','5#5',3);
@@ -2100,6 +2267,86 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','5#11',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','5#12',3);
 
+
+-- Salome Bug Tracker
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_ACCESS_FULL','6',1);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#3',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#4',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#5',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#8',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#9',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#20',2);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#1',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#2',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#3',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#4',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#5',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#6',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#7',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#8',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#9',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#10',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#11',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#12',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#13',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#14',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#15',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#16',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#17',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#18',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#19',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#20',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#22',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#23',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#24',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#26',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#27',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#28',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#29',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#30',1);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#31',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#32',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#33',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#34',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#35',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#36',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#37',1);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#38',1);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#39',1);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#2',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#3',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#4',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#5',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#8',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#9',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#10',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#11',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#12',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#13',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#14',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#15',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#16',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#17',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#18',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#19',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#20',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#22',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#23',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#24',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#26',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#27',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#28',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#29',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#30',3);
+
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#39',3);
+
+
 --- 
 --- supported_languages table
 --- 
@@ -2107,9 +2354,9 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 --- Create the list of supported languages for that site
 
 INSERT INTO supported_languages VALUES \
-(1,'English','English_US.tab','en_US','ISO-8859-1',1);
+(1,'English','English_US.tab','en_US','UTF-8',1);
 INSERT INTO supported_languages VALUES \
-(2,'Fran�ais','French_FR.tab','fr_FR','ISO-8859-1',1);
+(2,'Français','French_FR.tab','fr_FR','UTF-8',1);
 
 
 -- install and enable pluginsadministration
@@ -2126,6 +2373,10 @@ INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
 
 -- install and enable codexjri plugin
 INSERT INTO plugin (name, available) VALUES ('codexjri', '1');
+
+-- install and enable salome plugin
+INSERT INTO plugin (name, available) VALUES ('salome', '1');
+
 
 --
 -- Insert default references

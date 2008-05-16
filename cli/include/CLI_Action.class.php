@@ -100,18 +100,21 @@ class CLI_Action {
     }
     function after_loadParams(&$loaded_params) {
     }
-    function soapCall($soap_params) {
-        return $GLOBALS['soap']->call($this->soapCommand, $soap_params);
+    function use_extra_params() {
+        return true;
     }
-    function soapError() {
+    function soapCall($soap_params, $use_extra_params = true) {
+        return $GLOBALS['soap']->call($this->soapCommand, $soap_params, $use_extra_params);
+    }
+    /*function soapError() {
         if (($error = $GLOBALS['soap']->getError())) {
             $GLOBALS['LOG']->add($GLOBALS['soap']->responseData);
             exit_error($error, $GLOBALS['soap']->faultcode);
         }
-    }
+    }*/
 
     function execute($params) {
-        $soap_result = null;
+    	$soap_result = null;
         if ($this->module->getParameter($params, array('h', 'help'))) {
             echo $this->help();
         } else {
@@ -119,8 +122,12 @@ class CLI_Action {
             $this->after_loadParams($loaded_params);
             if ($this->confirmation($loaded_params)) {
                 $this->before_soapCall($loaded_params);
-                $soap_result = $this->soapCall($loaded_params['soap']);
-                $this->soapError();
+                try {
+                	$soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+                } catch (SoapFault $fault) {
+                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
+                    exit_error($fault, $fault->getCode());
+                }
                 $this->soapResult($params, $soap_result, array(), $loaded_params);
             }
         }
@@ -150,13 +157,20 @@ class CLI_Action {
     function show_output($result, $fieldnames = array()) {
         // There are 3 types of output: a scalar (int, string), a vector or a matrix (table-like).
         // Try to guess which output is the best for $result
-        if (is_array($result)) {
+        if (is_object($result)) {
+            
+            $this->show_object($result, $fieldnames);
+            
+        } elseif(is_array($result)) {
+            
             if (count($result) == 0) {
                 echo "No results\n";
                 return;
             }
             
             if (isset($result[0]) && is_array($result[0])) {
+                $this->show_matrix($result, $fieldnames);
+            } elseif (isset($result[0]) && is_object($result[0])) {
                 $this->show_matrix($result, $fieldnames);
             } else {
                 $this->show_vector($result, $fieldnames);
@@ -165,6 +179,168 @@ class CLI_Action {
             $this->show_scalar($result, $fieldnames);
         }
     }
+    
+    
+    function show_object($result, $fieldnames = array()) {
+        $titles = array();
+        $lengths = array();
+        
+        // this is for showing multidimensional arrays
+        static $recursive_id = 1;
+        
+        foreach ($result as $colname => $value) {
+            if (!isset($titles[$colname])) {
+                if (!isset($fieldnames[$colname])) {
+                    $titles[$colname] = $colname;
+                } else {
+                    $titles[$colname] = $fieldnames[$colname];
+                }
+            }
+            
+            if (!is_array($value)) {
+                if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($value)+2) {
+                    $lengths[$colname] = max(strlen($value), strlen($titles[$colname]));
+                    $lengths[$colname] += 2;
+                }
+            } else {
+                $lengths[$colname] = strlen($titles[$colname]) + 2;
+            }
+        }
+    
+        // show the titles
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "|".$this->center_text($title, $length);
+        }
+        echo "|\n";
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        
+        $recursive_items = array();
+        // now show the values
+        foreach ($result as $colname => $value) {
+            // recursively show the multi dimensional array
+            if (is_array($value)) {
+                if (array_key_exists($colname, $fieldnames)) $rec_titles = $fieldnames[$colname];
+                else $rec_titles = array();
+                $recursive_items[$recursive_id] = array("titles" => $rec_titles, "values" => $value);
+                // show the reference # instead
+                $value = "[".$recursive_id."]";
+                $recursive_id++;
+            }
+            
+            $length = $lengths[$colname];
+            if (is_array($value)) continue;
+            echo "| ".$value.str_repeat(" ", $length-strlen($value)-1);
+        }
+        echo "|\n";
+        
+        
+        // show last line
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        
+        // now recursively show the multidimensional array
+        foreach ($recursive_items as $id => $item) {
+            echo "\n";
+            echo "[".$id."]:\n";
+            $this->show_output($item["values"], $item["titles"]);
+        }
+    }
+    
+    
+    function show_objects($result, $fieldnames = array()) {
+        $titles = array();
+        $lengths = array();
+        
+        // this is for showing multidimensional arrays
+        static $recursive_id = 1;
+        
+        foreach ($result as $row) {
+            foreach ($row as $colname => $value) {
+                if (!isset($titles[$colname])) {
+                    if (!isset($fieldnames[$colname])) {
+                        $titles[$colname] = $colname;
+                    } else {
+                        $titles[$colname] = $fieldnames[$colname];
+                    }
+                }
+                
+                if (!is_array($value)) {
+                    if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($value)+2) {
+                        $lengths[$colname] = max(strlen($value), strlen($titles[$colname]));
+                        $lengths[$colname] += 2;
+                    }
+                } else {
+                    $lengths[$colname] = strlen($titles[$colname]) + 2;
+                }
+            }
+        }
+    
+        // show the titles
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "|".$this->center_text($title, $length);
+        }
+        echo "|\n";
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        
+        $recursive_items = array();
+        // now show the values
+        foreach ($result as $row) {
+            foreach ($row as $colname => $value) {
+                // recursively show the multi dimensional array
+                if (is_array($value)) {
+                    if (array_key_exists($colname, $fieldnames)) $rec_titles = $fieldnames[$colname];
+                    else $rec_titles = array();
+                    $recursive_items[$recursive_id] = array("titles" => $rec_titles, "values" => $value);
+                    // show the reference # instead
+                    $value = "[".$recursive_id."]";
+                    $recursive_id++;
+                }
+                
+                $length = $lengths[$colname];
+                if (is_array($value)) continue;
+                echo "| ".$value.str_repeat(" ", $length-strlen($value)-1);
+            }
+            echo "|\n";
+        }
+        
+        // show last line
+        foreach ($titles as $colname => $title) {
+            $length = $lengths[$colname];
+            echo "+".str_repeat("-", $length);
+        }
+        echo "+\n";
+        
+        // now recursively show the multidimensional array
+        foreach ($recursive_items as $id => $item) {
+            echo "\n";
+            echo "[".$id."]:\n";
+            $this->show_output($item["values"], $item["titles"]);
+        }
+    }
+    
     /**
      * extracted from GForge Command-line Interface
      * contained in GForge.
@@ -352,12 +528,18 @@ class CLI_Action {
      */
     function get_group_id($unix_group_name) {
         if (!isset($this->cached_group_id[$unix_group_name])) {
-            $res = $GLOBALS['soap']->call("getGroupByName", array("unix_group_name" => $unix_group_name));
-            
-            if (($error = $GLOBALS['soap']->getError()) || !is_array($res) || count($res) == 0) {        // An error here means that no group was found
+            try {
+                
+                $res = $GLOBALS['soap']->call("getGroupByName", array(/*"sessionKey" => $GLOBALS['soap']->session_string, */ "unix_group_name" => $unix_group_name));
+                
+                if (!is_object($res)) {        // An error here means that no group was found
+                    $this->cached_group_id[$unix_group_name] = 0;
+                } else {
+                    $this->cached_group_id[$unix_group_name] = $res->group_id;
+                }
+                
+             } catch (SoapFault $fault) {
                 $this->cached_group_id[$unix_group_name] = 0;
-            } else {
-                $this->cached_group_id[$unix_group_name] = $res["group_id"];
             }
         }
         return $this->cached_group_id[$unix_group_name];

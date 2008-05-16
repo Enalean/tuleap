@@ -581,12 +581,14 @@ EOS;
                         $can_submit_or_update = (($group_first 
                                                    && $second_part['shortname'] !== "artifact_id"
                                                    && $second_part['shortname'] !== "submitted_by"
-                                                   && $second_part['shortname'] !== "open_date")
+                                                   && $second_part['shortname'] !== "open_date"
+                                                   && $second_part['shortname'] !== "last_update_date")
                                                   ||
                                                   (!$group_first 
                                                    && $first_part['shortname'] !== "artifact_id"
                                                    && $first_part['shortname'] !== "submitted_by"
-                                                   && $first_part['shortname'] !== "open_date"));
+                                                   && $first_part['shortname'] !== "open_date"
+                                                   && $first_part['shortname'] !== "last_update_date"));
                         
                         $can_submit = $can_submit_or_update; //(And add here those who can only be submitted)
 
@@ -778,26 +780,6 @@ EOS;
 		
 	}
 	
-	/**
-	 *  Display a selectbox for the user members
-	 *
-	 *  @return void
-	 */
-	function displayGroupUsers() {
-        $hp = CodeX_HTMLPurifier::instance();
-	    $qry=$this->getGroupMembers();
-	    $result=db_query($qry);
-	    $rows=db_numrows($result);
-	
-		echo '<SELECT name="user_id">';
-		for ($i=0; $i < $rows; $i++) {
-			$user_id = db_result($result, $i, 'user_id');
-		    $user_name = db_result($result, $i, 'user_name');
-			echo '<OPTION value="'.(int)$user_id.'">'. $hp->purify($user_name, CODEX_PURIFIER_CONVERT_HTML) .'</OPTION>';
-		}
-		echo '</SELECT>';
-
-	}
 	
 	/**
 	 *  Display the differents options for this tracker

@@ -54,8 +54,6 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
           
         }
 
-        include($GLOBALS['Language']->getContent('project/template_my'));
-        
         //{{{ Projects where current user is admin
         $result = db_query("SELECT groups.group_name AS group_name, "
             . "groups.group_id AS group_id, "
@@ -70,6 +68,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         echo db_error($result);
         $rows = db_numrows($result);
         if ($result && $rows) {
+            include($GLOBALS['Language']->getContent('project/template_my'));
             echo '<br />';
             $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose_admin'));
             print '<TABLE width="100%">';
@@ -88,16 +87,9 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         //}}}
         
         echo '</fieldset>';
-        
-        echo '<fieldset><legend style="font-size:1.2em;">Choose the project type</legend>';
-        echo '<p>'. 'Please note that the project type cannot be changed after creation' .'</p>';
-        echo '<B>'.$GLOBALS['Language']->getText('project_admin_index','group_type').' '.help_button('ProjectAdministration.html#ProjectType').' : </B> ';
-        echo html_build_select_box_from_arrays(array('0', '1'),array($GLOBALS['Language']->getText('include_common_template','project'),$GLOBALS['Language']->getText('include_common_template','test_project')),'is_test','0',false);
-        echo '</fieldset>';
     }
     function onLeave($request, &$data) {
         $data['project']['built_from_template'] = $request->get('built_from_template');
-        $data['project']['is_test'] = $request->get('is_test') ? '1' : '0';
         return $this->validate($data);
     }
     function validate($data) {

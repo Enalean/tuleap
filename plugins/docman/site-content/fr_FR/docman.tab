@@ -1,75 +1,75 @@
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
-plugin_docman	action_details	Propriétés
+plugin_docman	action_details	PropriÃ©tÃ©s
 plugin_docman	action_history	Historique
-plugin_docman	action_move	Déplacer
+plugin_docman	action_move	DÃ©placer
 plugin_docman	action_newdocument	Nouveau document
 plugin_docman	action_newfolder	Nouveau dossier
 plugin_docman	action_newversion	Nouvelle version
 plugin_docman	action_notifications	Notifications
 plugin_docman	action_paste	Coller
 plugin_docman	action_permissions	Permissions
-plugin_docman	action_update	Mise à jour
+plugin_docman	action_update	Mise Ã  jour
 plugin_docman	action_show	Afficher
 plugin_docman	action_showactions	Afficher les options
 
-plugin_docman	approval_force_notify_success	Les approbateurs ont été notfiés.
+plugin_docman	approval_force_notify_success	Les approbateurs ont Ã©tÃ© notfiÃ©s.
 plugin_docman	approval_review_state_0	Pas encore
-plugin_docman	approval_review_state_1	Approuvé
-plugin_docman	approval_review_state_2	Réprouvé
+plugin_docman	approval_review_state_1	ApprouvÃ©
+plugin_docman	approval_review_state_2	RÃ©prouvÃ©
 plugin_docman	approval_review_state_3	Commentaire seulement
 plugin_docman	approval_review_state_4	Pas d'avis
 plugin_docman	approval_notif_mail_subject	[$1] Merci d'approuver '$2'
-plugin_docman	approval_notif_mail_body	Vous êtes convié à approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou réprouver le document :\n<$7>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
-plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuvez/réprouvez pas le document.\n
+plugin_docman	approval_notif_mail_body	Vous Ãªtes conviÃ© Ã  approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou rÃ©prouver le document :\n<$7>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.\n
+plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un aprÃ¨s l'autre.\nPersonne *ne sera notifiÃ©* tant que vous n'approuvez/rÃ©prouvez pas le document.\n
 plugin_docman	approval_notif_mail_notif_all	Tous d'un coup\n
 plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n$1\n\n
-plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a été réprouvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
-plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a été réprouver par un approbateur
-plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a été approuvé par tous les approbateurs.\nAccès direct à la table d'approbation :\n<$2>\n\nMerci de noter que le statut du document n'a pas été modifié. Vous pouvez\nmodifier les propriétés du document :\n<$3>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
-plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' a été approuvé par tous les approbateurs
-plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' a été approuvé par un approbateur
-plugin_docman	approval_notif_approve_user_mail_body	Votre document '$1' a été approuvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
+plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a Ã©tÃ© rÃ©prouvÃ© par $3 <$4>.\nAccÃ¨s direct Ã  la table d'approbation :\n<$2>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.
+plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a Ã©tÃ© rÃ©prouver par un approbateur
+plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a Ã©tÃ© approuvÃ© par tous les approbateurs.\nAccÃ¨s direct Ã  la table d'approbation :\n<$2>\n\nMerci de noter que le statut du document n'a pas Ã©tÃ© modifiÃ©. Vous pouvez\nmodifier les propriÃ©tÃ©s du document :\n<$3>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.
+plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' a Ã©tÃ© approuvÃ© par tous les approbateurs
+plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' a Ã©tÃ© approuvÃ© par un approbateur
+plugin_docman	approval_notif_approve_user_mail_body	Votre document '$1' a Ã©tÃ© approuvÃ© par $3 <$4>.\nAccÃ¨s direct Ã  la table d'approbation :\n<$2>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.
 plugin_docman	approval_notif_approve_user_mail_com	avec des commentaires
-plugin_docman	approval_notif_comment_mail_subject	[$1] un approbateur a commenté '$2'
-plugin_docman	approval_notif_comment_mail_body	Votre document '$1' a été commenté (mais ni approuvé, ni rejeté) par '$2' <$3>.\n$5\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
-plugin_docman	approval_notif_comment_mail_seq	\nImportant : cette table d'approbation est configurée en mode 'Sequentiel'.\nLa séquence de notification est suspendue jusqu'à ce que $1 approuve ou rejette le document.
+plugin_docman	approval_notif_comment_mail_subject	[$1] un approbateur a commentÃ© '$2'
+plugin_docman	approval_notif_comment_mail_body	Votre document '$1' a Ã©tÃ© commentÃ© (mais ni approuvÃ©, ni rejetÃ©) par '$2' <$3>.\n$5\nVous pouvez accÃ©der Ã  la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.\n
+plugin_docman	approval_notif_comment_mail_seq	\nImportant : cette table d'approbation est configurÃ©e en mode 'Sequentiel'.\nLa sÃ©quence de notification est suspendue jusqu'Ã  ce que $1 approuve ou rejette le document.
 plugin_docman	approval_notif_declined_mail_subject	[$1] un approbateur ne donnera pas son avis sur '$2'
-plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvé par $3 <$4>.\n\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
-plugin_docman	approval_notification_failure	Pas d'email envoyé aux approbateurs.
-plugin_docman	approval_notification_success	Email envoyé aux approbateurs.
-plugin_docman	approval_review_success	Votre approbation n'a pas été enregistrée.
+plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvÃ© par $3 <$4>.\n\nVous pouvez accÃ©der Ã  la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message gÃ©nÃ©rÃ© automatiquement. Merci de ne pas rÃ©pondre Ã  cet email.\n
+plugin_docman	approval_notification_failure	Pas d'email envoyÃ© aux approbateurs.
+plugin_docman	approval_notification_success	Email envoyÃ© aux approbateurs.
+plugin_docman	approval_review_success	Votre approbation n'a pas Ã©tÃ© enregistrÃ©e.
 plugin_docman	approval_review_failure	Une erreur est survenue lors de l'enregistrement de votre approbation.
-plugin_docman	approval_useradd_success	L'utilisateur a été ajouté à la table.
-plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : <em>$1</em>.
+plugin_docman	approval_useradd_success	L'utilisateur a Ã©tÃ© ajoutÃ© Ã  la table.
+plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accÃ¨s au document : <em>$1</em>.
 plugin_docman	approval_useradd_err_db	Impossible d'ajouter les utilisateurs suivants. Erreur interne : <em>$1</em>.
 plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : <em>$1</em>. 
-plugin_docman	approval_useradd_warn_double	Déjà dans la table d'approbation : <em>$1</em>.
-plugin_docman	approval_userdel_success	Tous les utilisateurs sélectionnés ont été supprimé de la table d'approbation.
+plugin_docman	approval_useradd_warn_double	DÃ©jÃ  dans la table d'approbation : <em>$1</em>.
+plugin_docman	approval_userdel_success	Tous les utilisateurs sÃ©lectionnÃ©s ont Ã©tÃ© supprimÃ© de la table d'approbation.
 plugin_docman	approval_userdel_failure	Impossible de supprimer $1 de la table d'approbation.
-plugin_docman	approval_tableupd_success	Paramètres de la tables modifiés.
-plugin_docman	approval_tableupd_failure	Le paramètres de la table n'ont pas été modifiés.
-plugin_docman	approval_tableins_failure	Un erreur est survenue lors de la création de la table d'approbation pour ce document.
-plugin_docman	approval_tabledel_success	Table supprimée.
+plugin_docman	approval_tableupd_success	ParamÃ¨tres de la tables modifiÃ©s.
+plugin_docman	approval_tableupd_failure	Le paramÃ¨tres de la table n'ont pas Ã©tÃ© modifiÃ©s.
+plugin_docman	approval_tableins_failure	Un erreur est survenue lors de la crÃ©ation de la table d'approbation pour ce document.
+plugin_docman	approval_tabledel_success	Table supprimÃ©e.
 plugin_docman	approval_tabledel_failure	Une erreur est survenue lors de la suppression de la table.
 
 plugin_docman	admin_md_detail_backtomenu	Retour au menu
-plugin_docman	admin_md_detail_param_title	Paramètres de la propriété
+plugin_docman	admin_md_detail_param_title	ParamÃ¨tres de la propriÃ©tÃ©
 plugin_docman	admin_md_detail_param_name	Nom :
 plugin_docman	admin_md_detail_param_desc	Description :
 plugin_docman	admin_md_detail_param_allowempty	Autorise la valeur vide :
 plugin_docman	admin_md_detail_param_allowmultiplevalue	Autorise les valeurs multiples :
 plugin_docman	admin_md_detail_param_keephistory	Garde l'historique :
-plugin_docman	admin_md_detail_param_useit	Utiliser cette propriété:
+plugin_docman	admin_md_detail_param_useit	Utiliser cette propriÃ©tÃ©:
 plugin_docman	admin_md_detail_param_type	Type :
-plugin_docman	admin_md_detail_param_dfltvalue	Valeur par défaut :
+plugin_docman	admin_md_detail_param_dfltvalue	Valeur par dÃ©faut :
 plugin_docman	admin_md_detail_param_yes	Oui
 plugin_docman	admin_md_detail_param_no	Non
 plugin_docman	admin_md_detail_param_type_text	Texte
-plugin_docman	admin_md_detail_param_type_string	Chaîne de caractères
+plugin_docman	admin_md_detail_param_type_string	ChaÃ®ne de caractÃ¨res
 plugin_docman	admin_md_detail_param_type_date	Date
 plugin_docman	admin_md_detail_param_type_list	Liste de valeurs
-plugin_docman	admin_md_detail_val_title	Valeurs de la propriété
+plugin_docman	admin_md_detail_val_title	Valeurs de la propriÃ©tÃ©
 plugin_docman	admin_md_detail_val_name	Nom
 plugin_docman	admin_md_detail_val_desc	Description
 plugin_docman	admin_md_detail_val_rank	Rang
@@ -78,80 +78,80 @@ plugin_docman	admin_md_detail_val_delete	Supprimer
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
 plugin_docman	admin_md_detail_val_perm	Permanent
-plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catégorie courante. Tous les documents déjà étiquetté avec cette valeur se verront affecter la valeur \'None\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catÃ©gorie courante. Tous les documents dÃ©jÃ  Ã©tiquettÃ© avec cette valeur se verront affecter la valeur \'None\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
 plugin_docman	admin_md_detail_val_delete_alt	Supprimer la valeur '$1'
-plugin_docman	admin_md_detail_val_create_title	Créer une nouvelle valeur
+plugin_docman	admin_md_detail_val_create_title	CrÃ©er une nouvelle valeur
 plugin_docman	admin_md_detail_val_create_name	Nom :
 plugin_docman	admin_md_detail_val_create_desc	Description :
 plugin_docman	admin_md_detail_val_create_rank	Rang :
-plugin_docman	admin_md_detail_val_create_rank_beg	Au début
+plugin_docman	admin_md_detail_val_create_rank_beg	Au dÃ©but
 plugin_docman	admin_md_detail_val_create_rank_end	A la fin
-plugin_docman	admin_md_detail_val_create_rank_after	Après
-plugin_docman	admin_md_detail_val_create_dflt	Par défaut?
-plugin_docman	admin_md_detail_val_create_submit	Créer
-plugin_docman	admin_md_details_title	Détails de la propriété "$1"
-plugin_docman	admin_md_detupdlove_title	Modification de la valeur '$2' de la propriété '$1'
+plugin_docman	admin_md_detail_val_create_rank_after	AprÃ¨s
+plugin_docman	admin_md_detail_val_create_dflt	Par dÃ©faut?
+plugin_docman	admin_md_detail_val_create_submit	CrÃ©er
+plugin_docman	admin_md_details_title	DÃ©tails de la propriÃ©tÃ© "$1"
+plugin_docman	admin_md_detupdlove_title	Modification de la valeur '$2' de la propriÃ©tÃ© '$1'
 plugin_docman	admin_md_detupdlove_update	Modifier
-plugin_docman	admin_md_detupdlove_backtomenu	Retour vers les détails de propriété
+plugin_docman	admin_md_detupdlove_backtomenu	Retour vers les dÃ©tails de propriÃ©tÃ©
 
-plugin_docman	admin_md_import_title	Importer les propriétés de "$1"
-plugin_docman	admin_md_import_desc	<p>La table suivante souligne les différence entre les propriétes de $1 et $2.</p><p>Si il ya des différences, vous pouvez cliquer sur le bouton [Importer] à la fin de la page. Les propriétés de $1 seront modifiées pour correspondre à ce qui est défini dans $2.</p><p><strong>Note :</strong> cette opération supprime ni les propriétes ni les valeurs de $1 et $2.</p>
-plugin_docman	admin_md_import_form_nothingtodo	Les propriétés des deux projets correspondent. Rien n'est à faire.
+plugin_docman	admin_md_import_title	Importer les propriÃ©tÃ©s de "$1"
+plugin_docman	admin_md_import_desc	<p>La table suivante souligne les diffÃ©rence entre les propriÃ©tes de $1 et $2.</p><p>Si il ya des diffÃ©rences, vous pouvez cliquer sur le bouton [Importer] Ã  la fin de la page. Les propriÃ©tÃ©s de $1 seront modifiÃ©es pour correspondre Ã  ce qui est dÃ©fini dans $2.</p><p><strong>Note :</strong> cette opÃ©ration supprime ni les propriÃ©tes ni les valeurs de $1 et $2.</p>
+plugin_docman	admin_md_import_form_nothingtodo	Les propriÃ©tÃ©s des deux projets correspondent. Rien n'est Ã  faire.
 plugin_docman	admin_md_import_form_submit	Importer
-plugin_docman	admin_md_import_success	Propriétés importées avec succès de '$1'
-plugin_docman	admin_md_import_tbl_prop	Propriété
-plugin_docman	admin_md_import_tbl_diff	Différences<br />entre $1 et $2
+plugin_docman	admin_md_import_success	PropriÃ©tÃ©s importÃ©es avec succÃ¨s de '$1'
+plugin_docman	admin_md_import_tbl_prop	PropriÃ©tÃ©
+plugin_docman	admin_md_import_tbl_diff	DiffÃ©rences<br />entre $1 et $2
 plugin_docman	admin_md_import_tbl_dstprj	Destination
 plugin_docman	admin_md_import_tbl_action	Actions d'import<br />dans $1
-plugin_docman	admin_md_import_tbl_act_update_md	Surchargera les paramètres de <strong>$1</strong> dans $2 : $3
-plugin_docman	admin_md_import_tbl_act_import_md	Créeara la propriété <strong>$1</strong> avec les mêmes paramètres et valeurs
-plugin_docman	admin_md_import_tbl_act_import_love	Créera la valeur <strong>$1</strong>
-plugin_docman	admin_md_import_tbl_status_equals	Déjà à jour
-plugin_docman	admin_md_import_tbl_status_equivalent	Les paramètres diffèrent
-plugin_docman	admin_md_import_tbl_status_exists	Présent
+plugin_docman	admin_md_import_tbl_act_update_md	Surchargera les paramÃ¨tres de <strong>$1</strong> dans $2 : $3
+plugin_docman	admin_md_import_tbl_act_import_md	CrÃ©eara la propriÃ©tÃ© <strong>$1</strong> avec les mÃªmes paramÃ¨tres et valeurs
+plugin_docman	admin_md_import_tbl_act_import_love	CrÃ©era la valeur <strong>$1</strong>
+plugin_docman	admin_md_import_tbl_status_equals	DÃ©jÃ  Ã  jour
+plugin_docman	admin_md_import_tbl_status_equivalent	Les paramÃ¨tres diffÃ¨rent
+plugin_docman	admin_md_import_tbl_status_exists	PrÃ©sent
 plugin_docman	admin_md_import_tbl_status_missing	N'existe pas
-plugin_docman	admin_md_import_tbl_status_onlydst	Présent
+plugin_docman	admin_md_import_tbl_status_onlydst	PrÃ©sent
 plugin_docman	admin_md_import_param_desc	Description : <strong><em>nouveau texte</em></strong>
 plugin_docman	admin_md_import_param_allowempty	Autoriser la valeur vide : <strong>$1</strong>
-plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sélection multiple : <strong>$1</strong>
+plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sÃ©lection multiple : <strong>$1</strong>
 plugin_docman	admin_md_import_param_useit	Usage : <strong>$1</strong>
-plugin_docman	admin_md_import_param_0	Désactivé
-plugin_docman	admin_md_import_param_1	Activé
+plugin_docman	admin_md_import_param_0	DÃ©sactivÃ©
+plugin_docman	admin_md_import_param_1	ActivÃ©
 
 
-plugin_docman	admin_metadata_title	Gérer les propriétés
-plugin_docman	admin_metadata_import_desc	Vous pouvez importer des propriétés de n'importe quel projet auquel vous avez accès.
-plugin_docman	admin_metadata_import_title	Importer les propriétés d'un projet
-plugin_docman	admin_metadata_import_submit	Vérification avant import
-plugin_docman	admin_metadata_list_title	Propriétés disponibles
-plugin_docman	admin_metadata_descr	Sélectionnez les propriétés que vous voulez pour vos documents.
-plugin_docman	admin_metadata_instructions	<p>Définissez quelles propriétés sont disponibles dans votre gestionnaire de documents. Chaque propriété sera remplie lors de la soumission d'un document et sera visible dans les propriétés du document.</p><p><strong>Permissions :</strong> les permissions sur les propriétés d'un document sont les mêmes que sur le document lui-même.</p>
+plugin_docman	admin_metadata_title	GÃ©rer les propriÃ©tÃ©s
+plugin_docman	admin_metadata_import_desc	Vous pouvez importer des propriÃ©tÃ©s de n'importe quel projet auquel vous avez accÃ¨s.
+plugin_docman	admin_metadata_import_title	Importer les propriÃ©tÃ©s d'un projet
+plugin_docman	admin_metadata_import_submit	VÃ©rification avant import
+plugin_docman	admin_metadata_list_title	PropriÃ©tÃ©s disponibles
+plugin_docman	admin_metadata_descr	SÃ©lectionnez les propriÃ©tÃ©s que vous voulez pour vos documents.
+plugin_docman	admin_metadata_instructions	<p>DÃ©finissez quelles propriÃ©tÃ©s sont disponibles dans votre gestionnaire de documents. Chaque propriÃ©tÃ© sera remplie lors de la soumission d'un document et sera visible dans les propriÃ©tÃ©s du document.</p><p><strong>Permissions :</strong> les permissions sur les propriÃ©tÃ©s d'un document sont les mÃªmes que sur le document lui-mÃªme.</p>
 plugin_docman	admin_metadata_list_name	Nom
 plugin_docman	admin_metadata_list_descr	Description
 plugin_docman	admin_metadata_list_status	Status
 plugin_docman	admin_metadata_list_delete	Supprimer
-plugin_docman	admin_metadata_new_title	Créer une nouvelle propriété
-plugin_docman	admin_metadata_new_submit	Créer
-plugin_docman	admin_obsolete_title	Gérer les documents obsolètes
-plugin_docman	admin_obsolete_descr	Afficher et modifier les documents obsolètes.
-plugin_docman	admin_obsolete_help	Ceci est la liste de tous les documents qui sont obsolètes. Si vous cliquez sur le titre d'un document, vous serez redirigé vers les propriétés du document où vous pourrez le rendre à nouveau disponible.
-plugin_docman	admin_permissions_title	Gérer les permissions
-plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionnaire de documents.
-plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
-plugin_docman	admin_report_title	Gérer les rapports de recherche
-plugin_docman	admin_report_descr	Modifier la portée des rapports.
+plugin_docman	admin_metadata_new_title	CrÃ©er une nouvelle propriÃ©tÃ©
+plugin_docman	admin_metadata_new_submit	CrÃ©er
+plugin_docman	admin_obsolete_title	GÃ©rer les documents obsolÃ¨tes
+plugin_docman	admin_obsolete_descr	Afficher et modifier les documents obsolÃ¨tes.
+plugin_docman	admin_obsolete_help	Ceci est la liste de tous les documents qui sont obsolÃ¨tes. Si vous cliquez sur le titre d'un document, vous serez redirigÃ© vers les propriÃ©tÃ©s du document oÃ¹ vous pourrez le rendre Ã  nouveau disponible.
+plugin_docman	admin_permissions_title	GÃ©rer les permissions
+plugin_docman	admin_permissions_descr	DÃ©finir qui peut administrer le gestionnaire de documents.
+plugin_docman	admin_permissions_instructions	SÃ©lectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
+plugin_docman	admin_report_title	GÃ©rer les rapports de recherche
+plugin_docman	admin_report_descr	Modifier la portÃ©e des rapports.
 plugin_docman	admin_title	Administration
-plugin_docman	admin_view_title	Gérer les préférence d'affichage
-plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
-plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre pourra être ignoré selon les préférences utilisateurs.
+plugin_docman	admin_view_title	GÃ©rer les prÃ©fÃ©rence d'affichage
+plugin_docman	admin_view_descr	DÃ©finir la vue par dÃ©faut pour le gestionnaire de documents.
+plugin_docman	admin_view_instructions	Selectionnez la vue par dÃ©faut pour le parcours des documents. Notez que ce paramÃ¨tre pourra Ãªtre ignorÃ© selon les prÃ©fÃ©rences utilisateurs.
 
 plugin_docman	breadcrumbs_location	Chemin :
 
 plugin_docman	browse_viewas	-- Vue:
-plugin_docman	browse_customreports	-- Rapports personnalisés :
+plugin_docman	browse_customreports	-- Rapports personnalisÃ©s :
 
-plugin_docman	clone_file_label	Copier du modèle
-plugin_docman	clone_file_changelog	Copie de <em>$1</em> dans <em>$2</em> à la version <em>$3</em>.
+plugin_docman	clone_file_label	Copier du modÃ¨le
+plugin_docman	clone_file_changelog	Copie de <em>$1</em> dans <em>$2</em> Ã  la version <em>$3</em>.
 
 plugin_docman	descriptor_description	Gestionnaire de documents
 plugin_docman	descriptor_name	Gestionnaire de Documents
@@ -165,42 +165,42 @@ plugin_docman	details_actions_delete_candelete_document	Vous pouvez <a href="$1"
 plugin_docman	details_actions_delete_candelete_folder	Vous pouvez <a href="$1">supprimer ce dossier</a>.
 plugin_docman	details_actions_delete_cannotdelete_document	Vous ne pouvez pas supprimer ce document.
 plugin_docman	details_actions_delete_cannotdelete_folder	Vous ne pouvez pas supprimer ce dossier.
-plugin_docman	details_actions_move	Déplacement
-plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">déplacer ce document</a> dans un autre dossier ou au sein de son dossier actuel.
-plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">déplacer ce dossier</a> dans un autre dossier ou au sein de son dossier actuel.
-plugin_docman	details_actions_move_cannotmove_document	Vous ne pouvez pas déplacer ce document.
-plugin_docman	details_actions_move_cannotmove_folder	Vous ne pouvez pas déplacer ce dossier.
+plugin_docman	details_actions_move	DÃ©placement
+plugin_docman	details_actions_move_canmove_document	Vous pouvez <a href="$1">dÃ©placer ce document</a> dans un autre dossier ou au sein de son dossier actuel.
+plugin_docman	details_actions_move_canmove_folder	Vous pouvez <a href="$1">dÃ©placer ce dossier</a> dans un autre dossier ou au sein de son dossier actuel.
+plugin_docman	details_actions_move_cannotmove_document	Vous ne pouvez pas dÃ©placer ce document.
+plugin_docman	details_actions_move_cannotmove_folder	Vous ne pouvez pas dÃ©placer ce dossier.
 plugin_docman	details_actions_newdocument	Nouveau document
-plugin_docman	details_actions_newdocument_cancreate	Vous pouvez <a href="$1">créer un nouveau document</a> dans ce dossier.
+plugin_docman	details_actions_newdocument_cancreate	Vous pouvez <a href="$1">crÃ©er un nouveau document</a> dans ce dossier.
 plugin_docman	details_actions_newfolder	Nouveau dossier
-plugin_docman	details_actions_newfolder_cancreate	Vous pouvez <a href="$1">créer un nouveau dossier</a> dans ce dossier.
+plugin_docman	details_actions_newfolder_cancreate	Vous pouvez <a href="$1">crÃ©er un nouveau dossier</a> dans ce dossier.
 plugin_docman	details_actions_newversion	Nouvelle version
-plugin_docman	details_actions_newversion_button	Créer une nouvelle version
-plugin_docman	details_actions_newversion_cancreate	Vous pouvez <a href="$1">créer une nouvelle version</a>.
-plugin_docman	details_actions_newversion_cannotcreate	Vous ne pouvez pas créer une nouvelle version.
+plugin_docman	details_actions_newversion_button	CrÃ©er une nouvelle version
+plugin_docman	details_actions_newversion_cancreate	Vous pouvez <a href="$1">crÃ©er une nouvelle version</a>.
+plugin_docman	details_actions_newversion_cannotcreate	Vous ne pouvez pas crÃ©er une nouvelle version.
 plugin_docman	details_actions_newversion_changelog	Description des changements :
 plugin_docman	details_actions_newversion_label	Nom de version :
 plugin_docman	details_actions_paste	Coller
 plugin_docman	details_actions_paste_canpaste	Vous pouvez <a href="$1">coller '$2' dans ce dossier</a>.
-plugin_docman	details_actions_update	Mise à jour
-plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre à jour</a> ce document.
-plugin_docman	details_actions_update_cannot	Vous ne pouvez pas mettre à jour ce document.
+plugin_docman	details_actions_update	Mise Ã  jour
+plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre Ã  jour</a> ce document.
+plugin_docman	details_actions_update_cannot	Vous ne pouvez pas mettre Ã  jour ce document.
 plugin_docman	details_approval	Table d'approbation
-plugin_docman	details_approval_approval_title	Détails du cycle d'approbation
+plugin_docman	details_approval_approval_title	DÃ©tails du cycle d'approbation
 plugin_docman	details_approval_admin	Admin
 plugin_docman	details_approval_comment	Commentaire
 plugin_docman	details_approval_create_reviewers_title	Ajouter des approbateurs
-plugin_docman	details_approval_create_reviewers_hand	Entrez la liste manuellement (separés par ',') :
+plugin_docman	details_approval_create_reviewers_hand	Entrez la liste manuellement (separÃ©s par ',') :
 plugin_docman	details_approval_create_reviewers_ugroup	Ajouter les membres d'un groupe d'utilisateurs :
-plugin_docman	details_approval_create_reviewers_submit	Ajouter à la table
+plugin_docman	details_approval_create_reviewers_submit	Ajouter Ã  la table
 plugin_docman	details_approval_create_title	Administration de la table d'approbation pour $1
-plugin_docman	details_approval_create_settings	Paramètres globaux de la table d'approbation
+plugin_docman	details_approval_create_settings	ParamÃ¨tres globaux de la table d'approbation
 plugin_docman	details_approval_create_no_reviewers	Il n'y a pas d'approbateurs pour ce document.
-plugin_docman	details_approval_create_submit	Mettre à jour
-plugin_docman	details_approval_create_table_act	<strong>Actions</strong> pour les approbateurs sélectionnés:
+plugin_docman	details_approval_create_submit	Mettre Ã  jour
+plugin_docman	details_approval_create_table_act	<strong>Actions</strong> pour les approbateurs sÃ©lectionnÃ©s:
 plugin_docman	details_approval_create_table_act_mail	Forcer la notification
 plugin_docman	details_approval_create_table_act_rm	Supprimer de la table
-plugin_docman	details_approval_cycle_start_date	Date de début du cycle d'approbation :
+plugin_docman	details_approval_cycle_start_date	Date de dÃ©but du cycle d'approbation :
 plugin_docman	details_approval_date	Date
 plugin_docman	details_approval_doc_review_title	Document sous approbation
 plugin_docman	details_approval_doc_review_link	Cliquez pour ouvrir le document
@@ -210,199 +210,199 @@ plugin_docman	details_approval_doc_review_version_na	Pas applicable
 plugin_docman	details_approval_email_back	Retour vers la table d'approbation.
 plugin_docman	details_approval_email_subject	Sujet :
 plugin_docman	details_approval_email_title	Email de notification
-plugin_docman	details_approval_table_delete_txt	<h3>Confirmez la suppression de la table d'approbation</h3><p>Vous êtes sur le point de supprimer une table d'approbation. Merci de noter que toutes les données (liste des approbateurs, approbation en cours, paramètres) seront supprimées.</p><p>Êtes vous sûr de vouloir continuer ?</p>
+plugin_docman	details_approval_table_delete_txt	<h3>Confirmez la suppression de la table d'approbation</h3><p>Vous Ãªtes sur le point de supprimer une table d'approbation. Merci de noter que toutes les donnÃ©es (liste des approbateurs, approbation en cours, paramÃ¨tres) seront supprimÃ©es.</p><p>ÃŠtes vous sÃ»r de vouloir continuer ?</p>
 plugin_docman	details_approval_no_table	Pas de table d'approbation pour ce documment.
-plugin_docman	details_approval_no_table_create	Créer une nouvelle table d'approbation
+plugin_docman	details_approval_no_table_create	CrÃ©er une nouvelle table d'approbation
 plugin_docman	details_approval_not_available	La table d'approbation n'est pas encore disponible.
-plugin_docman	details_approval_notif_0	Désactivé
+plugin_docman	details_approval_notif_0	DÃ©sactivÃ©
 plugin_docman	details_approval_notif_1	Tous d'un coup
 plugin_docman	details_approval_notif_2	Sequentiellement
 plugin_docman	details_approval_notif_email	Email de notification
 plugin_docman	details_approval_notif_email_act	Voir l'email de notification
 plugin_docman	details_approval_notif_relaunch	Relancer la notification :
-plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuvé/réprouvé.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuvé/réprouvé) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>
-plugin_docman	details_approval_notif_reviewers_submit	Notifier les personnes sélectionnées
-plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personnes sélectionnées
+plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux maniÃ¨res :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuvÃ©/rÃ©prouvÃ©.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuvÃ©/rÃ©prouvÃ©) l'un aprÃ¨s l'autre. Si quelqu'un rÃ©prouve le document, la sÃ©quence s'arrÃªte.</li></ul>
+plugin_docman	details_approval_notif_reviewers_submit	Notifier les personnes sÃ©lectionnÃ©es
+plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personnes sÃ©lectionnÃ©es
 plugin_docman	details_approval_notif_title	Notification
 plugin_docman	details_approval_notif_type	Type de notification :
-plugin_docman	details_approval_notif_submit	Mettre à jour les paramètres
+plugin_docman	details_approval_notif_submit	Mettre Ã  jour les paramÃ¨tres
 plugin_docman	details_approval_owner_comment	Commentaire du demandeur :
 plugin_docman	details_approval_rank	Rang
 plugin_docman	details_approval_requester	Demandeur d'approbation :
 plugin_docman	details_approval_review_comment	Ajouter un commantaire :
 plugin_docman	details_approval_review_date	Date d'approbation :
 plugin_docman	details_approval_review_notif	Notification :
-plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifié.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la séquence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>Séquentiel</em>, le workflow est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
+plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifiÃ©.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la sÃ©quence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>SÃ©quentiel</em>, le workflow est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
 plugin_docman	details_approval_review_review	Approbation :
 plugin_docman	details_approval_review_submit	Envoyer mon approbation
 plugin_docman	details_approval_review_table	Table d'approbation :
 plugin_docman	details_approval_review_table_link	Cliquez pour voir la table d'approbation
 plugin_docman	details_approval_review_title	Approbation
 plugin_docman	details_approval_review_version	Version en cours d'approbation :
-plugin_docman	details_approval_review_version_not_upd	Attention : la version du document que vous approuvez n'est pas la dernière.
+plugin_docman	details_approval_review_version_not_upd	Attention : la version du document que vous approuvez n'est pas la derniÃ¨re.
 plugin_docman	details_approval_reviewer	Nom
 plugin_docman	details_approval_review	Approbation
-plugin_docman	details_approval_select	Sélectionner
+plugin_docman	details_approval_select	SÃ©lectionner
 plugin_docman	details_approval_state	Approbation
-plugin_docman	details_approval_table_0	Désactivé
+plugin_docman	details_approval_table_0	DÃ©sactivÃ©
 plugin_docman	details_approval_table_1	Disponible
-plugin_docman	details_approval_table_2	Fermé
-plugin_docman	details_approval_table_3	Supprimé
+plugin_docman	details_approval_table_2	FermÃ©
+plugin_docman	details_approval_table_3	SupprimÃ©
 plugin_docman	details_approval_table_status	Status de la table :
 plugin_docman	details_approval_table_title	Table d'approbation
 plugin_docman	details_approval_table_description	Commentaire :
-plugin_docman	details_approval_table_help	La table suivante a pour but d'organiser le cycle d'approbation :<ul><li>Avec <strong>Selectionner</strong> vous choisissez les approbateurs sur lesquels vous voulez appliquer une <strong>action</strong> (voir ci-dessous)</li><li>Avec <strong>Rang</strong> vous sélectionnez l'ordre d'envoi des emails (seulement en mode séquentiel <em>Sequential</em>)</li><li>Avec <strong>Actions</strong> vous pouvez au choix :<ul><li><strong>Supprimer de la table</strong>. Historique perdu.</li><li>ou <strong>Forcer la notification</strong> pour envoyer un email de notification indépendamment de l'état d'approbation.</li></ul></li></ul>
+plugin_docman	details_approval_table_help	La table suivante a pour but d'organiser le cycle d'approbation :<ul><li>Avec <strong>Selectionner</strong> vous choisissez les approbateurs sur lesquels vous voulez appliquer une <strong>action</strong> (voir ci-dessous)</li><li>Avec <strong>Rang</strong> vous sÃ©lectionnez l'ordre d'envoi des emails (seulement en mode sÃ©quentiel <em>Sequential</em>)</li><li>Avec <strong>Actions</strong> vous pouvez au choix :<ul><li><strong>Supprimer de la table</strong>. Historique perdu.</li><li>ou <strong>Forcer la notification</strong> pour envoyer un email de notification indÃ©pendamment de l'Ã©tat d'approbation.</li></ul></li></ul>
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
 plugin_docman	details_delete	Suppression
 plugin_docman	details_delete_cancel	Non, je ne veux pas le supprimer
-plugin_docman	details_delete_confirm	Oui, je suis sûr !
+plugin_docman	details_delete_confirm	Oui, je suis sÃ»r !
 plugin_docman	details_delete_title	Supprimer $1
-plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un document.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
-plugin_docman	details_delete_warning_file	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un fichier. Avant de confirmer, notez que toutes les versions seront supprimées.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
-plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du dossier $1</h3><p>Vous êtes sur le point de supprimer un dossier. Avant de confirmer, notez que tous les sous-éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
-plugin_docman	details_edit_title	Edition des propriétés de $1
+plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du document $1</h3><p>Vous Ãªtes sur le point de supprimer un document.</p><p>ÃŠtes-vous sÃ»r de vouloir le supprimer ?</p>
+plugin_docman	details_delete_warning_file	<h3>Confirmez la suppression du document $1</h3><p>Vous Ãªtes sur le point de supprimer un fichier. Avant de confirmer, notez que toutes les versions seront supprimÃ©es.</p><p>ÃŠtes-vous sÃ»r de vouloir le supprimer ?</p>
+plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du dossier $1</h3><p>Vous Ãªtes sur le point de supprimer un dossier. Avant de confirmer, notez que tous les sous-Ã©lÃ©ments et leurs versions seront supprimÃ©s.</p><p>ÃŠtes-vous sÃ»r de vouloir le supprimer ?</p>
+plugin_docman	details_edit_title	Edition des propriÃ©tÃ©s de $1
 plugin_docman	details_history	Historique
 plugin_docman	details_history_anonymous	Anonyme
 plugin_docman	details_history_logs	Historique du document
-plugin_docman	details_history_logs_error	Erreur lors de la récupération de l'historique !
+plugin_docman	details_history_logs_error	Erreur lors de la rÃ©cupÃ©ration de l'historique !
 plugin_docman	details_history_logs_no	Il n'y a pas encore d'historique.
 plugin_docman	details_history_logs_what	Quoi
 plugin_docman	details_history_logs_when	Quand
 plugin_docman	details_history_logs_who	Qui
 plugin_docman	details_history_logs_old_value	Ancienne valeur
 plugin_docman	details_history_logs_new_value	Nouvelle valeur
-plugin_docman	details_history_logs_change_field	Mise à jour de <em>$1</em>
+plugin_docman	details_history_logs_change_field	Mise Ã  jour de <em>$1</em>
 plugin_docman	details_history_versions	Versions
 plugin_docman	details_history_versions_author	Auteur
 plugin_docman	details_history_versions_changelog	Changement
 plugin_docman	details_history_versions_date	Date
-plugin_docman	details_history_versions_error	Erreur lors de la récupération des versions
+plugin_docman	details_history_versions_error	Erreur lors de la rÃ©cupÃ©ration des versions
 plugin_docman	details_history_versions_label	Nom
 plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
-plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
-plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
-plugin_docman	details_paste_importmd	Importer les propriétés de $1 :
-plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> Il y a des différences dans les définitions de propriétés entre $1 et $2. Vous <strong>pouvez perdre</strong> des <strong>informations</strong>.</p><p>Vous pouvez soit :<ul><li>Forcer la copie, alors seules les propriétés présentent à la fois dans $1 et dans $2 seront copiées.</li><li>Demander à un administrateur du gestionnaire de document d'importer les définitions des propriétés de $2</li></ul></p><p><strong>Note :</strong> Ceci <strong>n'impacte pas les documents</strong> eux-mêmes, ça ne s'applique qu'aux propriétés.</p>
-plugin_docman	details_paste_mddiff_title	Propriétés de document
+plugin_docman	details_notifications_sendemail	Envoyez-moi un email dÃ¨s que cet Ã©lÃ©ment est modifiÃ©.
+plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiÃ©rarchie.
+plugin_docman	details_paste_importmd	Importer les propriÃ©tÃ©s de $1 :
+plugin_docman	details_paste_mddiff_noadmin	<p><img src="$3" /> Il y a des diffÃ©rences dans les dÃ©finitions de propriÃ©tÃ©s entre $1 et $2. Vous <strong>pouvez perdre</strong> des <strong>informations</strong>.</p><p>Vous pouvez soit :<ul><li>Forcer la copie, alors seules les propriÃ©tÃ©s prÃ©sentent Ã  la fois dans $1 et dans $2 seront copiÃ©es.</li><li>Demander Ã  un administrateur du gestionnaire de document d'importer les dÃ©finitions des propriÃ©tÃ©s de $2</li></ul></p><p><strong>Note :</strong> Ceci <strong>n'impacte pas les documents</strong> eux-mÃªmes, Ã§a ne s'applique qu'aux propriÃ©tÃ©s.</p>
+plugin_docman	details_paste_mddiff_title	PropriÃ©tÃ©s de document
 plugin_docman	details_paste_button_paste	Coller
 plugin_docman	details_paste_button_pasteanyway	Coller [force]
 plugin_docman	details_paste_title	Coller '$1' dans '$2'
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
-plugin_docman	details_permissions_perms	Permissions d'accès
-plugin_docman	details_permissions_recursive	récursif (appliquer les mêmes permissions pour tous les sous-éléments de ce dossier)
-plugin_docman	details_properties	Propriétés
-plugin_docman	details_properties_dfltv	Valeurs par défaut
-plugin_docman	details_properties_dfltv_desc	Définissez les propriétés par défaut pour les éléments qui seront créés dans ce dossier.
-plugin_docman	details_properties_dfltv_rec	Appliquer<br>récursivement
-plugin_docman	details_properties_dfltv_md	Propriété
+plugin_docman	details_permissions_perms	Permissions d'accÃ¨s
+plugin_docman	details_permissions_recursive	rÃ©cursif (appliquer les mÃªmes permissions pour tous les sous-Ã©lÃ©ments de ce dossier)
+plugin_docman	details_properties	PropriÃ©tÃ©s
+plugin_docman	details_properties_dfltv	Valeurs par dÃ©faut
+plugin_docman	details_properties_dfltv_desc	DÃ©finissez les propriÃ©tÃ©s par dÃ©faut pour les Ã©lÃ©ments qui seront crÃ©Ã©s dans ce dossier.
+plugin_docman	details_properties_dfltv_rec	Appliquer<br>rÃ©cursivement
+plugin_docman	details_properties_dfltv_md	PropriÃ©tÃ©
 plugin_docman	details_properties_dfltv_val	Valeur
-plugin_docman	details_properties_dfltv_include_docs_desc	Par défaut les mise à jour n'affecte que les dossiers, vous pouvez également mettre à jour les documents avec la liste déroulante ci-dessous
+plugin_docman	details_properties_dfltv_include_docs_desc	Par dÃ©faut les mise Ã  jour n'affecte que les dossiers, vous pouvez Ã©galement mettre Ã  jour les documents avec la liste dÃ©roulante ci-dessous
 plugin_docman	details_properties_dfltv_include_docs	Appliquer sur les documents et les dossiers
 plugin_docman	details_properties_dfltv_include_fold	Appliquer seulement sur les dossiers
-plugin_docman	details_properties_dfltv_include_title	Options de récursion
-plugin_docman	details_properties_edit	Editer les propriétés
-plugin_docman	details_properties_folder	Propriétés du dossier
+plugin_docman	details_properties_dfltv_include_title	Options de rÃ©cursion
+plugin_docman	details_properties_edit	Editer les propriÃ©tÃ©s
+plugin_docman	details_properties_folder	PropriÃ©tÃ©s du dossier
 plugin_docman	details_properties_view_doc_lbl	Lien direct :
 plugin_docman	details_properties_view_doc_val	Cliquer pour ouvrir le document
-plugin_docman	details_title	Détails de $1
-plugin_docman	details_update_title	Mise à jour de $1
-plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application récursive des valeurs par défaut.</h3><p>Vous êtes sur le point d'appliquer les valeurs sélectionnées dans dans l'ensemble de champ <strong>Valeur par défaut</strong> ci-dessous sur <strong>$1 documents and $2 folders</strong>.</p>
+plugin_docman	details_title	DÃ©tails de $1
+plugin_docman	details_update_title	Mise Ã  jour de $1
+plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application rÃ©cursive des valeurs par dÃ©faut.</h3><p>Vous Ãªtes sur le point d'appliquer les valeurs sÃ©lectionnÃ©es dans dans l'ensemble de champ <strong>Valeur par dÃ©faut</strong> ci-dessous sur <strong>$1 documents and $2 folders</strong>.</p>
 
-plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
+plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accÃ©der au gestionnaire de document. Nous ne garantissons pas la compatibilitÃ© du service avec ce navigateur.
 
-plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
-plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
-plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
-plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
-plugin_docman	error_create_news	Erreur lors de la création de la news. Vérifiez que vous avez les bonnes permissions.
-plugin_docman	error_create_news_details	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ détails.
-plugin_docman	error_create_news_summary	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ sujet.
+plugin_docman	error_alreadyinstalled	Gestionnaire de documents dÃ©jÃ  installÃ©.
+plugin_docman	error_cannot_delete_hc_md	Vous n'Ãªtes pas autorisÃ©s Ã  supprimer les propriÃ©tÃ©s systemes.
+plugin_docman	error_create_initversion	Erreur lors de la crÃ©ation de la version initiale.
+plugin_docman	error_create_newversion	Erreur lors de la crÃ©ation d'une nouvelle version.
+plugin_docman	error_create_news	Erreur lors de la crÃ©ation de la news. VÃ©rifiez que vous avez les bonnes permissions.
+plugin_docman	error_create_news_details	Erreur lors de la crÃ©ation de la news. VÃ©rifiez que vous avez rempli le champ dÃ©tails.
+plugin_docman	error_create_news_summary	Erreur lors de la crÃ©ation de la news. VÃ©rifiez que vous avez rempli le champ sujet.
 plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il n'est pas vide.
 plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
-plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
-plugin_docman	error_invalid_md	Propriété invalide
-plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
-plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
-plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
-plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
-plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
-plugin_docman	error_paste_in_document	Vous ne pouvez pas coller un élément dans un document
-plugin_docman	error_paste_no_valid_item	Pas d'élément valide à coller. L'élément n'a pas été copié ou n'existe plus.
+plugin_docman	error_filenotfound	Le fichier ne peut Ãªtre trouvÃ©.
+plugin_docman	error_invalid_md	PropriÃ©tÃ© invalide
+plugin_docman	error_item_not_deleted	Impossible de supprimer l'Ã©lÃ©ment.
+plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet Ã©lÃ©ment car il contient des items que vous ne pouvez pas modifier (pas d'accÃ¨s 'RÃ©dacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
+plugin_docman	error_item_not_moved	Impossible de dÃ©placer l'Ã©lÃ©ment.
+plugin_docman	error_md_or_love	Il y a une erreur dans les paramÃ¨tres. Retour vers l'Ã©cran prÃ©cÃ©dent.
+plugin_docman	error_no_perm_install	Vous devez Ãªtre un administrateur projet pour initaliser ce service.
+plugin_docman	error_paste_in_document	Vous ne pouvez pas coller un Ã©lÃ©ment dans un document
+plugin_docman	error_paste_no_valid_item	Pas d'Ã©lÃ©ment valide Ã  coller. L'Ã©lÃ©ment n'a pas Ã©tÃ© copiÃ© ou n'existe plus.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.
-plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
-plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.
-plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet élément.
+plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour crÃ©er un Ã©lÃ©ment dans ce dossier.
+plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour Ã©diter cet Ã©lÃ©ment.
+plugin_docman	error_perms_delete	Vous n'avez pas les droits suffisants pour supprimer cet Ã©lÃ©ment.
 plugin_docman	error_perms_delete_item	Vous n'avez pas les droits suffisants pour supprimer $1.
 plugin_docman	error_perms_generic	Your are not allowed to access this data.
-plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour déplacer cet élément.
-plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour définir des permissions sur cet élément.
-plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet élément.
-plugin_docman	error_report_baditemid	Le dossier associé à ce rapport n'existe plus
-plugin_docman	error_settings_updated	Les paramètres ne peuvent pas être mis à jour.
+plugin_docman	error_perms_move	Vous n'avez pas les droits suffisants pour dÃ©placer cet Ã©lÃ©ment.
+plugin_docman	error_perms_perms	Vous n'avez pas les droits suffisants pour dÃ©finir des permissions sur cet Ã©lÃ©ment.
+plugin_docman	error_perms_view	Vous n'avez pas les droits suffisants pour voir cet Ã©lÃ©ment.
+plugin_docman	error_report_baditemid	Le dossier associÃ© Ã  ce rapport n'existe plus
+plugin_docman	error_settings_updated	Les paramÃ¨tres ne peuvent pas Ãªtre mis Ã  jour.
 plugin_docman	error_perms_updated	$1
 plugin_docman	error_upload	Erreur de chargement de fichier.
-plugin_docman	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargé. 
-plugin_docman	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a été que partiellement chargé.
+plugin_docman	error_upload_nofile	Erreur de chargement de fichier($1). Aucun fichier chargÃ©. 
+plugin_docman	error_upload_partial	Erreur de chargement de fichier($1). Le fichier n'a Ã©tÃ© que partiellement chargÃ©.
 plugin_docman	error_upload_size	Erreur de chargement de fichier($1). Le fichier est trop gros.
 plugin_docman	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
 
-plugin_docman	event_add	Création
+plugin_docman	event_add	CrÃ©ation
 plugin_docman	event_edit	Edition
-plugin_docman	event_move	Déplacement
+plugin_docman	event_move	DÃ©placement
 plugin_docman	event_del	Suppression
-plugin_docman	event_access	Accès
+plugin_docman	event_access	AccÃ¨s
 plugin_docman	event_newversion	Nouvelle version
-plugin_docman	event_metadataupdate	Mise à jour de propriété
+plugin_docman	event_metadataupdate	Mise Ã  jour de propriÃ©tÃ©
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
 plugin_docman	field_title	Titre :
-plugin_docman	field_owner	Propriétaire :
+plugin_docman	field_owner	PropriÃ©taire :
 plugin_docman	field_status	Statut :
-plugin_docman	field_obsolescence_date	Validité :
-plugin_docman	field_create_date	Date de création :
-plugin_docman	field_update_date	Date de dernière mise à jour :
+plugin_docman	field_obsolescence_date	ValiditÃ© :
+plugin_docman	field_create_date	Date de crÃ©ation :
+plugin_docman	field_update_date	Date de derniÃ¨re mise Ã  jour :
 
 plugin_docman	filters	Filtres
 plugin_docman	filters_advsearch_0	(ou utiliser <a href="$1">la recherche simple</a>)
-plugin_docman	filters_advsearch_1	(ou utiliser <a href="$1">la recherche avancée</a>)
+plugin_docman	filters_advsearch_1	(ou utiliser <a href="$1">la recherche avancÃ©e</a>)
 plugin_docman	filters_global_txt	Recherche globale de texte
-plugin_docman	filters_html_date_start	Début :
+plugin_docman	filters_html_date_start	DÃ©but :
 plugin_docman	filters_html_date_end	Fin :
 plugin_docman	filters_date_end	Date de fin
-plugin_docman	filters_date_message	La date entrée dans le champ "$1" n'est pas valide. Le format de date valide est YYYY-M-D (ex. '$2' pour aujourd'hui) ou alors laissez le champ vide.
-plugin_docman	filters_date_start	Date de début
+plugin_docman	filters_date_message	La date entrÃ©e dans le champ "$1" n'est pas valide. Le format de date valide est YYYY-M-D (ex. '$2' pour aujourd'hui) ou alors laissez le champ vide.
+plugin_docman	filters_date_start	Date de dÃ©but
 plugin_docman	filters_ordering	Ordre
 plugin_docman	filters_ordering_ascending	Ascendant
 plugin_docman	filters_ordering_descending	Descendant
-plugin_docman	filters_ordering_message	La valeur de $1 devrait être soit "Ascendant", soit "Descendant"
+plugin_docman	filters_ordering_message	La valeur de $1 devrait Ãªtre soit "Ascendant", soit "Descendant"
 
-plugin_docman	info_copy_notify_cp	copié, vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
+plugin_docman	info_copy_notify_cp	copiÃ©, vous pouvez maintenant le coller oÃ¹ vous vouler (mÃªme entre diffÃ©rents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> Ã  la diffÃ©rence du dÃ©placement.
 plugin_docman	info_copy_notify_cp_doc	Document $1
 plugin_docman	info_copy_notify_cp_folder	Dossier $1
-plugin_docman	info_create_initversion	Version initiale créée.
-plugin_docman	info_create_newversion	Nouvelle version créée.
-plugin_docman	info_document_created	Document créé.
-plugin_docman	info_folder_created	Dossier créé.
-plugin_docman	info_item_deleted	Elément supprimé.
-plugin_docman	info_item_updated	Elément mis à jour.
-plugin_docman	info_item_moved	Elément déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
-plugin_docman	info_news_created	News créée.
-plugin_docman	info_perms_updated	Permissions mises à jour.
-plugin_docman	info_perms_recursive_updated	Permissions pour les sous-éléments mises à jour.
-plugin_docman	info_settings_updated	Paramètres mis à jour.
+plugin_docman	info_create_initversion	Version initiale crÃ©Ã©e.
+plugin_docman	info_create_newversion	Nouvelle version crÃ©Ã©e.
+plugin_docman	info_document_created	Document crÃ©Ã©.
+plugin_docman	info_folder_created	Dossier crÃ©Ã©.
+plugin_docman	info_item_deleted	ElÃ©ment supprimÃ©.
+plugin_docman	info_item_updated	ElÃ©ment mis Ã  jour.
+plugin_docman	info_item_moved	ElÃ©ment dÃ©placÃ© de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
+plugin_docman	info_news_created	News crÃ©Ã©e.
+plugin_docman	info_perms_updated	Permissions mises Ã  jour.
+plugin_docman	info_perms_recursive_updated	Permissions pour les sous-Ã©lÃ©ments mises Ã  jour.
+plugin_docman	info_settings_updated	ParamÃ¨tres mis Ã  jour.
 
-plugin_docman	item_does_not_belong	$1 ne fait pas parti du projet $2. Vous avez été redirigé vers le projet $3.
+plugin_docman	item_does_not_belong	$1 ne fait pas parti du projet $2. Vous avez Ã©tÃ© redirigÃ© vers le projet $3.
 
 plugin_docman	logsdaily_field	Documents
-plugin_docman	logsdaily_title	Accès aux documents
+plugin_docman	logsdaily_title	AccÃ¨s aux documents
 
 plugin_docman	love_special_none_name_key	Aucun
 plugin_docman	love_special_none_desc_key	Aucun
@@ -412,18 +412,18 @@ plugin_docman	max_size_msg	(La taille maximum d'un fichier est de $1 MOctets)
 plugin_docman	my_reviews	Documents en attente d'approbation
 plugin_docman	my_reviews_reviewer	Approbateur
 plugin_docman	my_reviews_requester	Demandeur d'approbation
-plugin_docman	my_no_review	Pas de documents à approuver.
-plugin_docman	my_no_request	Pas d'approbation demandée.
+plugin_docman	my_no_review	Pas de documents Ã  approuver.
+plugin_docman	my_no_request	Pas d'approbation demandÃ©e.
 
-plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
-plugin_docman	md_cdate_name	Date de création
+plugin_docman	md_bo_badlabel	Nom de propriÃ©tÃ© '$1' inconnu.
+plugin_docman	md_cdate_name	Date de crÃ©ation
 plugin_docman	md_cdate_desc	Date d'ajout du document dans le gestionnaire.
-plugin_docman	md_del_success	"$1" supprimée
+plugin_docman	md_del_success	"$1" supprimÃ©e
 plugin_docman	md_del_failure	Une erreur est survenue lors de la suppression de "$1"
 plugin_docman	md_desc_name	Description
 plugin_docman	md_desc_desc	Description du document.
 plugin_docman	md_install_commentkeyword_name	Commentaires
-plugin_docman	md_install_commentkeyword_desc	Informations complémentaires sur le document.
+plugin_docman	md_install_commentkeyword_desc	Informations complÃ©mentaires sur le document.
 plugin_docman	md_error_empty_gen	"$1" est requis, merci de remplir le champ.
 plugin_docman	md_html_validity_3_months	3 Mois
 plugin_docman	md_html_validity_6_months	6 Mois
@@ -431,88 +431,88 @@ plugin_docman	md_html_validity_12_months	12 Mois
 plugin_docman	md_html_validity_corresp_date	Date correspondante :
 plugin_docman	md_html_validity_fixed_date	Date fixe
 plugin_docman	md_html_validity_permanent	Permanent
-plugin_docman	md_html_validity_today	Aujourd'hui obsolète
+plugin_docman	md_html_validity_today	Aujourd'hui obsolÃ¨te
 plugin_docman	md_love_status_none_name	Aucun
-plugin_docman	md_love_status_none_desc	Le statut de l'élément n'est pas géré.
+plugin_docman	md_love_status_none_desc	Le statut de l'Ã©lÃ©ment n'est pas gÃ©rÃ©.
 plugin_docman	md_love_status_draft_name	Brouillon
 plugin_docman	md_love_status_draft_desc	
-plugin_docman	md_love_status_approved_name	Approuvé
+plugin_docman	md_love_status_approved_name	ApprouvÃ©
 plugin_docman	md_love_status_approved_desc	
-plugin_docman	md_love_status_rejected_name	Rejeté
+plugin_docman	md_love_status_rejected_name	RejetÃ©
 plugin_docman	md_love_status_rejected_desc	
 plugin_docman	md_odate_name	Date d'obsolescence
-plugin_docman	md_odate_desc	Définit une période de validité pour votre document. Il sera automatiquement archivé à la fin de la période.
-plugin_docman	md_owner_name	Propriétaire
-plugin_docman	md_owner_desc	Valeur par défaut: celui qui soumet. Correspond au propriétaire officiel du document.
+plugin_docman	md_odate_desc	DÃ©finit une pÃ©riode de validitÃ© pour votre document. Il sera automatiquement archivÃ© Ã  la fin de la pÃ©riode.
+plugin_docman	md_owner_name	PropriÃ©taire
+plugin_docman	md_owner_desc	Valeur par dÃ©faut: celui qui soumet. Correspond au propriÃ©taire officiel du document.
 plugin_docman	md_status_name	Statut
 plugin_docman	md_status_desc	Statut du document.
 plugin_docman	md_title_name	Titre
 plugin_docman	md_title_desc	Titre du document.
-plugin_docman	md_udate_name	Date de mise à jour
-plugin_docman	md_udate_desc	Dernière mise à jour du document ou de ses propriétés.
+plugin_docman	md_udate_name	Date de mise Ã  jour
+plugin_docman	md_udate_desc	DerniÃ¨re mise Ã  jour du document ou de ses propriÃ©tÃ©s.
 
-plugin_docman	mdv_bo_updateerror	Erreur lors de la mise à jour de la propriété '$1'
-plugin_docman	mdv_bo_updateunknown	Tentative de mise à jour d'une propriété inconnue '$1'
-plugin_docman	mdv_bo_errbadtype	Mauvais type de propriété
-plugin_docman	mdv_bo_createerror	Erreur de création de la propriété '$1'
-plugin_docman	mdv_bo_createunknown	Tentative de création d'une propriété inconnue
+plugin_docman	mdv_bo_updateerror	Erreur lors de la mise Ã  jour de la propriÃ©tÃ© '$1'
+plugin_docman	mdv_bo_updateunknown	Tentative de mise Ã  jour d'une propriÃ©tÃ© inconnue '$1'
+plugin_docman	mdv_bo_errbadtype	Mauvais type de propriÃ©tÃ©
+plugin_docman	mdv_bo_createerror	Erreur de crÃ©ation de la propriÃ©tÃ© '$1'
+plugin_docman	mdv_bo_createunknown	Tentative de crÃ©ation d'une propriÃ©tÃ© inconnue
 
-plugin_docman	missing_param	Le paramètre $1 est manquant
+plugin_docman	missing_param	Le paramÃ¨tre $1 est manquant
 
-plugin_docman	move	Déplacement de $1
-plugin_docman	move_actual	L'élément est dans ce dossier.
-plugin_docman	move_after	Après $1
-plugin_docman	move_cancel	Annuler le déplacement.
+plugin_docman	move	DÃ©placement de $1
+plugin_docman	move_actual	L'Ã©lÃ©ment est dans ce dossier.
+plugin_docman	move_after	AprÃ¨s $1
+plugin_docman	move_cancel	Annuler le dÃ©placement.
 plugin_docman	move_descr	1. Choisissez le nouveau dossier :
 plugin_docman	move_descr2	2. Choisissez la position :
-plugin_docman	move_descr3	3. Sélectionnez la position de '$1' dans le dossier '$2' :
-plugin_docman	move_here	déplacer ici.
-plugin_docman	move_position_beginning	Au début
+plugin_docman	move_descr3	3. SÃ©lectionnez la position de '$1' dans le dossier '$2' :
+plugin_docman	move_here	dÃ©placer ici.
+plugin_docman	move_position_beginning	Au dÃ©but
 plugin_docman	move_position_end	A la fin
-plugin_docman	move_position_select	Personnalisée <em>(prochaine étape)</em>
+plugin_docman	move_position_select	PersonnalisÃ©e <em>(prochaine Ã©tape)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
-plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoir parent
-plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoir où vous souhaitez que ce document apparaisse.
-plugin_docman	new_fldsel_location_help	Comment utiliser le sélecteur de dossier:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante <em>Position</em> permet de sélectionner la position au sein du dossier sélectionné.</li></ul>
-plugin_docman	new_fldsel_typehelp	Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un nouveau dossier.
+plugin_docman	new_fldsel_title	Nouveau document - SÃ©lection du rÃ©pertoir parent
+plugin_docman	new_fldsel_location_desc	Merci de sÃ©lectionner le rÃ©pertoir oÃ¹ vous souhaitez que ce document apparaisse.
+plugin_docman	new_fldsel_location_help	Comment utiliser le sÃ©lecteur de dossier:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste dÃ©roulante <em>Position</em> permet de sÃ©lectionner la position au sein du dossier sÃ©lectionnÃ©.</li></ul>
+plugin_docman	new_fldsel_typehelp	Vous pouvez soit crÃ©er un nouveau document (fichier, lien, wiki, etc) ou un nouveau dossier.
 plugin_docman	new_fldsel_location	Chemin
 plugin_docman	new_fldsel_type	Nature du document
-plugin_docman	new_fldsel_createfolder	Créer un dossier
-plugin_docman	new_fldsel_createdoc	Créer un document
+plugin_docman	new_fldsel_createfolder	CrÃ©er un dossier
+plugin_docman	new_fldsel_createdoc	CrÃ©er un document
 
-plugin_docman	new_dfltvalues	Valeur par défaut
+plugin_docman	new_dfltvalues	Valeur par dÃ©faut
 plugin_docman	new_document	Nouveau document
-plugin_docman	new_document_action	Créer le document
-plugin_docman	new_document_embedded	Fichier embarqué
+plugin_docman	new_document_action	CrÃ©er le document
+plugin_docman	new_document_embedded	Fichier embarquÃ©
 plugin_docman	new_document_empty	Document vide
 plugin_docman	new_document_file	Fichier
 plugin_docman	new_document_link	Lien
 plugin_docman	new_document_wiki	Page wiki
 plugin_docman	new_folder	Nouveau dossier
-plugin_docman	new_folder_action	Créer le dossier
-plugin_docman	new_generalproperties	Propriétés
+plugin_docman	new_folder_action	CrÃ©er le dossier
+plugin_docman	new_generalproperties	PropriÃ©tÃ©s
 plugin_docman	new_in	Dans :&nbsp;
 plugin_docman	new_location	Chemin
-plugin_docman	new_need_to_be_manager	<br />Vous devez avoir les droits de Gestionnaire pour définir les permissions.
+plugin_docman	new_need_to_be_manager	<br />Vous devez avoir les droits de Gestionnaire pour dÃ©finir les permissions.
 plugin_docman	new_news_displayform	Afficher le formulaire de news
 plugin_docman	new_news_explain	En tant qu'administrateur du projet, vous pouvez publier une news.
 plugin_docman	new_news_letblank	Laissez les champs vides si vous ne voulez pas envoyer de news.
 plugin_docman	new_other_folders	autres dossiers:
 plugin_docman	new_position	Position :
-plugin_docman	new_same_perms_as_parent	Les même permissions que celles du parent.
+plugin_docman	new_same_perms_as_parent	Les mÃªme permissions que celles du parent.
 plugin_docman	new_specificproperties	Nature du document
 plugin_docman	new_mandatory_help	* Champ obligatoire
 plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
-plugin_docman	notifications_on	Vous surveillez désormais '$1'.
-plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
+plugin_docman	notifications_on	Vous surveillez dÃ©sormais '$1'.
+plugin_docman	notifications_cascade_on	Vous surveillez dÃ©sormais '$1' et sa sous-hiÃ©rarchie.
 
-plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolète dans un mois
-plugin_docman	obso_warn_email_body	En tant que propriétaire du document, vous êtes notifié de l'obsolescence du document:\nTitre : $1\nProjet : $2\nObsolescence : $3\nLien direct : <$4>\n\nCe document disparaîtra de votre gestionnaire de document dans un mois \nsi vous ne faites rien. Ce document restera accessible à travaers l'interface\nd'administration néanmoins.\nVous pouvez changer la date d'obsolescence de votre document à l'adresse suivante : \n<$5>\n\n--\nCeci est un message automatique. Merci de ne pas répondre à cet email.\n
+plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolÃ¨te dans un mois
+plugin_docman	obso_warn_email_body	En tant que propriÃ©taire du document, vous Ãªtes notifiÃ© de l'obsolescence du document:\nTitre : $1\nProjet : $2\nObsolescence : $3\nLien direct : <$4>\n\nCe document disparaÃ®tra de votre gestionnaire de document dans un mois \nsi vous ne faites rien. Ce document restera accessible Ã  travaers l'interface\nd'administration nÃ©anmoins.\nVous pouvez changer la date d'obsolescence de votre document Ã  l'adresse suivante : \n<$5>\n\n--\nCeci est un message automatique. Merci de ne pas rÃ©pondre Ã  cet email.\n
 
-plugin_docman	operation_canceled	Operation annulée
+plugin_docman	operation_canceled	Operation annulÃ©e
 
 plugin_docman	permission_admin	Administrateur de document
 plugin_docman	permission_admin_short	Administrateur
@@ -520,28 +520,28 @@ plugin_docman	permission_manage	Gestionnaire de document
 plugin_docman	permission_manage_short	Gestionnaire
 plugin_docman	permission_read	Lecteur de document
 plugin_docman	permission_read_short	Lecteur
-plugin_docman	permission_write	Rédacteur de document
-plugin_docman	permission_write_short	Rédacteur
+plugin_docman	permission_write	RÃ©dacteur de document
+plugin_docman	permission_write_short	RÃ©dacteur
 
-plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis à jour</p><p>Vous allez être redirigé <a href="$1">vers le gestionnaire de documents</a>.</p></div>
+plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis Ã  jour</p><p>Vous allez Ãªtre redirigÃ© <a href="$1">vers le gestionnaire de documents</a>.</p></div>
 
 plugin_docman	report_add_filter	Ajouter
 plugin_docman	report_clear_filters	Tout effacer
-plugin_docman	report_clone_success	Rapport cloné
+plugin_docman	report_clone_success	Rapport clonÃ©
 plugin_docman	report_custom_fltr	Personnaliser les filtres
 plugin_docman	report_del_failure	Une erreur est apparue lors de la suppression d'un rapport
 plugindocman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
-plugin_docman	report_del_notfound	Rapport non trouvé. Suppression annulée.
-plugin_docman	report_del_notowner	Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. Suppression annulée.
-plugin_docman	report_del_success	Rapport supprimé
+plugin_docman	report_del_notfound	Rapport non trouvÃ©. Suppression annulÃ©e.
+plugin_docman	report_del_notowner	Vous ne pouvez pas supprimer un rapport que vous ne possÃ©dez pas. Suppression annulÃ©e.
+plugin_docman	report_del_success	Rapport supprimÃ©
 plugin_docman	report_err_notfound	Le rapport que vous voulez clonner n'existe pas.
 plugin_docman	report_err_clone_iorp	Vous ne pouvez cloner que les rapports 'projet' ou personnels.
-plugin_docman	report_filters_options	Critères de recherche :
-plugin_docman	report_image_not_readable	Une image est associée à ce rapport mais vous n'avez pas les permissions de la voir.
+plugin_docman	report_filters_options	CritÃ¨res de recherche :
+plugin_docman	report_image_not_readable	Une image est associÃ©e Ã  ce rapport mais vous n'avez pas les permissions de la voir.
 plugin_docman	report_name_new	Merci d'entrer un nom pour la nouvelle recherche :
-plugin_docman	report_name_upd	Mise à jour de la recherche :
+plugin_docman	report_name_upd	Mise Ã  jour de la recherche :
 plugin_docman	report_new_filter_name	Nouveau nom de filtre :
-plugin_docman	report_no_filters	Il n'y a pas encore de critère sélectionné. Vous pouvez ajouter un critère de recherche avec la liste déroulante ci-dessous.
+plugin_docman	report_no_filters	Il n'y a pas encore de critÃ¨re sÃ©lectionnÃ©. Vous pouvez ajouter un critÃ¨re de recherche avec la liste dÃ©roulante ci-dessous.
 plugin_docman	report_reports_options	Sauver les options:
 plugin_docman	report_save_opt	Sauver les options
 plugin_docman	report_save_report	Sauver en tant que
@@ -549,39 +549,39 @@ plugin_docman	report_save_new_report_i	Nouveau rapport personnel...
 plugin_docman	report_save_new_report_p	Nouveau rapport projet...
 plugin_docman	report_save_P_reports	-- Rapports projet:
 plugin_docman	report_save_I_reports	-- Rapports personnels:
-plugin_docman	report_saved_prjreports	-- Recherche projet sauvegardée :
-plugin_docman	report_saved_persoreports	-- Mes recherches sauvegardées :
+plugin_docman	report_saved_prjreports	-- Recherche projet sauvegardÃ©e :
+plugin_docman	report_saved_persoreports	-- Mes recherches sauvegardÃ©es :
 
-plugin_docman	report_settings_delete	Êtes vous sûrs de vouloir supprimer le rapport \'$1\'?
+plugin_docman	report_settings_delete	ÃŠtes vous sÃ»rs de vouloir supprimer le rapport \'$1\'?
 plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
 plugin_docman	report_settings_description	Description :
-plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport défini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes dans les deux projets (même nom, sensible à la casse). L'import fera de son mieux pour importer le plus de données possible.
+plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport dÃ©fini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriÃ©tÃ©s et les valeurs sont les mÃªmes dans les deux projets (mÃªme nom, sensible Ã  la casse). L'import fera de son mieux pour importer le plus de donnÃ©es possible.
 plugin_docman	report_settings_import_sel_prj	Projet :
 plugin_docman	report_settings_import_sel_prj_id	Selectionner par group_id
 plugin_docman	report_settings_import_sel_rpt	Rapport :
 plugin_docman	report_settings_import_sel_rpt_id	Selectionner par report_id
 plugin_docman	report_settings_import_title	Importer les rapports d'un autre projet.
-plugin_docman	report_settings_my	Afficher mes recherche sauvegardées
+plugin_docman	report_settings_my	Afficher mes recherche sauvegardÃ©es
 plugin_docman	report_settings_report_name	Rapport
 plugin_docman	report_settings_report_delete	Supprimer
 plugin_docman	report_settings_report_description	Description :
-plugin_docman	report_settings_report_info	Vous pouvez personnaliser votre rapport en ajoutant un texte et une image. Note : une image est juste une reference sur une image valide disponible dans le gestionnaire de document (indépendamment des projets).
+plugin_docman	report_settings_report_info	Vous pouvez personnaliser votre rapport en ajoutant un texte et une image. Note : une image est juste une reference sur une image valide disponible dans le gestionnaire de document (indÃ©pendamment des projets).
 plugin_docman	report_settings_report_image	Id de l'image :
-plugin_docman	report_settings_report_image_help	Se réfère à un id de document disponible dans le gestionnaire de document (Attention : <strong>les permissions s'appliquent</strong>).
+plugin_docman	report_settings_report_image_help	Se rÃ©fÃ¨re Ã  un id de document disponible dans le gestionnaire de document (Attention : <strong>les permissions s'appliquent</strong>).
 plugin_docman	report_settings_report_image_current	Image courrante :
-plugin_docman	report_settings_report_scope	Portée :
+plugin_docman	report_settings_report_scope	PortÃ©e :
 plugin_docman	report_settings_report_title	Titre :
-plugin_docman	report_settings_table_intro	Vous pouvez modifier les paramêtres du rapport que vous avez créer pour ce projet.
+plugin_docman	report_settings_table_intro	Vous pouvez modifier les paramÃªtres du rapport que vous avez crÃ©er pour ce projet.
 plugin_docman	report_settings_table_title	Liste des rapports
 plugin_docman	report_settings_title	Administration des rapports de recherche
 
 plugin_docman	report_scope_I	Personnel
 plugin_docman	report_scope_P	Projet
-plugin_docman	report_toggle_tooltip	Basculer la sélection des critères de recherche
-plugin_docman	report_upd_failure	Une erreur est apparue lors de la mise à jour d'un rapport.
-plugin_docman	report_upd_notfound	Rapport non trouvé. Mise à jour annulée.
-plugin_docman	report_upd_success	Rapport mis à jour.
-plugin_docman	report_upd_groupmismatch	Les ids de projet ne correspondent pas. Mise à jour annulée.
+plugin_docman	report_toggle_tooltip	Basculer la sÃ©lection des critÃ¨res de recherche
+plugin_docman	report_upd_failure	Une erreur est apparue lors de la mise Ã  jour d'un rapport.
+plugin_docman	report_upd_notfound	Rapport non trouvÃ©. Mise Ã  jour annulÃ©e.
+plugin_docman	report_upd_success	Rapport mis Ã  jour.
+plugin_docman	report_upd_groupmismatch	Les ids de projet ne correspondent pas. Mise Ã  jour annulÃ©e.
 
 plugin_docman	resource_name_document	Document <a href="$1">$2</a>
 plugin_docman	resource_name_folder	Dossier <a href="$1">$2</a>
@@ -591,7 +591,7 @@ plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Gestionnaire de documents
 
 plugin_docman	specificfield_embeddedcontent	Contenu :
-plugin_docman	specificfield_empty	Un document vide n'a pas de type. Vous pourrez choisir le type plus tard. C'est pratique pour créer une entrée dans une hierarchie sans avoir le document.
+plugin_docman	specificfield_empty	Un document vide n'a pas de type. Vous pourrez choisir le type plus tard. C'est pratique pour crÃ©er une entrÃ©e dans une hierarchie sans avoir le document.
 plugin_docman	specificfield_pagename	Nom de la page :
 plugin_docman	specificfield_url	Url :
 
@@ -602,37 +602,37 @@ plugin_docman	toolbar_docman	Documentation projet
 
 plugin_docman	tooltip_show_actions	Afficher les actions
 
-plugin_docman	view_empty_docmd	Propriétés du document
+plugin_docman	view_empty_docmd	PropriÃ©tÃ©s du document
 plugin_docman	view_empty_emptydoc	Document vide
-plugin_docman	view_empty_docisempty	Il n'y a pas de donnée pour cette élément
+plugin_docman	view_empty_docisempty	Il n'y a pas de donnÃ©e pour cet Ã©lÃ©ment
 plugin_docman	view_empty_update	Modifier ce document
 plugin_docman	view_documenttable_title	Titre
 plugin_docman	view_documenttable_desc	Description
-plugin_docman	view_documenttable_docfound	Documents trouvés
-plugin_docman	view_documenttable_owner	Propriétaire
+plugin_docman	view_documenttable_docfound	Documents trouvÃ©s
+plugin_docman	view_documenttable_owner	PropriÃ©taire
 plugin_docman	view_documenttable_subdate	Date de soumission
 plugin_docman	view_documenttable_location	Chemin
-plugin_docman	view_documenttable_update_date	Dernière mise-à-jour
+plugin_docman	view_documenttable_update_date	DerniÃ¨re mise-Ã -jour
 plugin_docman	view_documenttable_status	Statut
 plugin_docman	view_documenttable_toggletitle	Cliquez sur le titre pour inverser le tri du tableau
-plugin_docman	view_documenttable_begin	Début
-plugin_docman	view_documenttable_previous	Précédent
+plugin_docman	view_documenttable_begin	DÃ©but
+plugin_docman	view_documenttable_previous	PrÃ©cÃ©dent
 plugin_docman	view_documenttable_next	Suivant
 plugin_docman	view_documenttable_end	Fin
 
-plugin_docman	view_itemrank_after	Après
-plugin_docman	view_itemrank_beg	Au début
+plugin_docman	view_itemrank_after	AprÃ¨s
+plugin_docman	view_itemrank_beg	Au dÃ©but
 plugin_docman	view_itemrank_end	A la fin
 plugin_docman	view_itemrank_position	Position :
 
-plugin_docman	view_Icons	Icônes
+plugin_docman	view_Icons	IcÃ´nes
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Arbre
 
-plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez créer <strong>peuvent être différent</strong>e que celles définies pour la page wiki.</em>
-plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
-plugin_docman	warning_no_item_recurse	Impossible d'appliquer récursivement les propriétés: pas d'élément.
-plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
-plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
-plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
-plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.
+plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez crÃ©er <strong>peuvent Ãªtre diffÃ©rent</strong>e que celles dÃ©finies pour la page wiki.</em>
+plugin_docman	warning_missingowner	Le propriÃ©taire n'existe pas. Vous Ãªtes le propriÃ©taire. Vous pouvez changer le propriÃ©taire dans les propriÃ©tÃ©s de l'Ã©lÃ©ment.
+plugin_docman	warning_no_item_recurse	Impossible d'appliquer rÃ©cursivement les propriÃ©tÃ©s: pas d'Ã©lÃ©ment.
+plugin_docman	warning_invalidowner	Le propriÃ©taire spÃ©cifiÃ© n'est pas valide. Vous Ãªtes le propriÃ©taire. Vous pouvez changer le propriÃ©taire dans les propriÃ©tÃ©s de l'Ã©lÃ©ment.
+plugin_docman	warning_obsolete	Le fichier est obsolÃ¨te et n'est plus disponible dans les vues standard (Arbre, Table, ...)
+plugin_docman	warning_perms	Les permissions pour $1 sont ignorÃ©es parce que $2 est $3.
+plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'Ã©lÃ©ment $1 puisque vous n'avez pas les droits requis.

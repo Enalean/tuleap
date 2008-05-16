@@ -44,10 +44,10 @@ if (strstr($submitted_field->getLabel(),"ubmit")) {
  } else {
   // Assume French
   $lbl_list['follow_ups'] = "Fil de commentaires";
-  $lbl_list['is_dependent_on'] = "Dépend de";
+  $lbl_list['is_dependent_on'] = "DÃ©pend de";
   
   $dsc_list['follow_ups'] = "Tout le fil de commentaires en un seul bloc de texte";
-  $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dépend";
+  $dsc_list['is_dependent_on'] = "Liste des artefacts dont celui-ci dÃ©pend";
  }
 
 // Add the 2 fields that we build ourselves for user convenience

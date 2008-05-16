@@ -127,6 +127,7 @@ class Layout extends Response {
         foreach($html_options as $key => $value) {
             echo $key .'="'. $value .'"';
         }
+        echo '>';
         echo '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
         echo '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
         foreach($items as $i => $item) {
@@ -250,6 +251,7 @@ class Layout extends Response {
 
 <html lang="en">
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
     <TITLE><?php echo $params['title']; ?></TITLE>
     <?php
         $em =& EventManager::instance();
@@ -348,9 +350,11 @@ class Layout extends Response {
         include($Language->getContent('layout/footer'));
         	
         if ( user_ismember(1,'A') && $GLOBALS['DEBUG_MODE'] ) {
-                echo "<CENTER><B><span class=\"highlight\">".$Language->getText('include_layout','query_count').": ".
-                ($GLOBALS[DEBUG_DBPHP_QUERY_COUNT]+$GLOBALS[DEBUG_DAO_QUERY_COUNT]).
-                " (".$GLOBALS[DEBUG_DBPHP_QUERY_COUNT]." + ".$GLOBALS[DEBUG_DAO_QUERY_COUNT].") </span></B></CENTER>";
+                $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
+                echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
+                echo $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] + $GLOBALS['DEBUG_DAO_QUERY_COUNT'];
+                echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .")<br>";
+                echo "Page generated in ".$debug_compute_tile." seconds</debug>";
         }
           
         echo '</body>';
@@ -726,6 +730,12 @@ echo html_blankimage(5,100);
         $output .= "\t</CENTER>\n";
         echo $output;
     }
+    
+    //diplaying search box in body
+    function bodySearchBox() {
+    	$this->searchBox();
+    }
+    
     
     function getOsdnNavBar() {
         $output = '

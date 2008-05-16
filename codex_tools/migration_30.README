@@ -16,7 +16,7 @@ Here is a brief summary of the process:
 - install CodeX 3.0.1
 - copy the backed-up files and DB to their new place
 - run the upgrade script migration_from_CodeX_2.8_to_CodeX_3.0.1.sh ...
-et voil‡!
+et voil√†!
 
 RedHat recommends a full re-installation of RHEL4, and not un upgrade from RHEL3
 to RHEL4:

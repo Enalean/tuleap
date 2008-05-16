@@ -128,8 +128,7 @@ class nusoap_base {
 	* @var      string
 	* @access   public
 	*/
-    var $soap_defencoding = 'ISO-8859-1';
-	//var $soap_defencoding = 'UTF-8';
+	var $soap_defencoding = 'UTF-8';
 
 	/**
 	* namespaces in an array of prefix => uri
@@ -4876,7 +4875,7 @@ class wsdl extends nusoap_base {
 	*/
 	function serialize($debug = 0)
 	{
-		$xml = '<?xml version="1.0" encoding="ISO-8859-1"?>';
+		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= "\n<definitions";
 		foreach($this->namespaces as $k => $v) {
 			$xml .= " xmlns:$k=\"$v\"";
@@ -4992,7 +4991,8 @@ class wsdl extends nusoap_base {
 		if (count($this->ports) >= 1) {
 			foreach($this->ports as $pName => $attrs) {
 				$xml .= '<port name="' . $pName . '" binding="tns:' . $attrs['binding'] . '">';
-				$xml .= '<soap:address location="' . $attrs['location'] . ($debug ? '?debug=1' : '') . '"/>';
+				// To work with PHP SOAP, we need to point to the directory, not the script itself. (CodeX)
+				$xml .= '<soap:address location="' . substr($attrs['location'],0,strrpos($attrs['location'],'/')+1) . ($debug ? '?debug=1' : '') . '"/>';
 				$xml .= '</port>';
 			} 
 		} 

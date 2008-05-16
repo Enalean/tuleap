@@ -8,6 +8,7 @@
 // 
 //
 // Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
   <chapter id="ProjectAdministration">
@@ -294,9 +295,7 @@ john.smith@xerox.com</programlisting>
           <para><emphasis role="bold">Service Link</emphasis>:
           This is the URL of the service, i.e. the address the user will be 
           redirected to when clicking on the service label in the Service Bar.
-          If the URL is absolute (i.e. starting with &#34;http://&#34;), the page
-          will be loaded in a new window. Otherwise, it will be loaded in the 
-          current window.
+          It will be loaded in the current window.
           </para>
           <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
           <itemizedlist mark="bullet">
@@ -1107,7 +1106,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 
 	<note><para><emphasis role="bold">Remark</emphasis>: if your project
 	database contains several thousands of records (tasks,
-	bugs,&hellip;) it may take the project database generation may
+	bugs,&hellip;), the project database generation may
 	take several minutes to complete.</para></note>
       </section>
       

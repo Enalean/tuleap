@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
+require_once('www/stats/site_stats_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -17,20 +18,45 @@ site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
-// Get the number of pending users and projects
+// Get various number of users and projects from status
 db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
 $row = db_fetch_array();
 $pending_projects = $row['count'];
 
+
+db_query("SELECT count(*) AS count FROM user WHERE status='P'");
+$row = db_fetch_array();
+$realpending_users = $row['count'];
+    
+db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
+$row = db_fetch_array();
+$validated_users = $row['count'];
+    
+db_query("SELECT count(*) AS count FROM user WHERE status='R'");
+$row = db_fetch_array();
+$restricted_users = $row['count'];
+    
+db_query("SELECT count(*) AS count FROM user WHERE status='A'");
+$row = db_fetch_array();
+$actif_users = $row['count'];
+    
+db_query("SELECT count(*) AS count FROM user WHERE status='S'");
+$row = db_fetch_array();
+$hold_users = $row['count'];
+
+db_query("SELECT count(*) AS count FROM user WHERE status='D'");
+$row = db_fetch_array();
+$deleted_users = $row['count'];
+
+
+
 if($GLOBALS['sys_user_approval'] == 1){
-    db_query("SELECT count(*) AS count FROM user WHERE status='P'");
-    $row = db_fetch_array();
-    $pending_users = $row['count'];
+    $pending_users = $realpending_users; 
+    
 }else{
-    db_query("SELECT count(*) AS count FROM user WHERE status='P' OR status='V' OR status='W'");
-    $row = db_fetch_array();
-    $pending_users = $row['count'];
+    $pending_users = $realpending_users + $validated_users ;
 }
+
 
 
 db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
@@ -41,6 +67,48 @@ $validated_users = $row['count'];
  
 <h2><?php echo $Language->getText('admin_main', 'header'); ?></h2>
 <p><i><?php echo $Language->getText('admin_main', 'message'); ?></i>
+
+
+<h3><?php 
+//Display of Site Statistics
+echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
+<ul>
+<?php
+		print "<li>".$Language->getText('admin_main', 'stat_users')." :" ;
+        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
+        $row = db_fetch_array();
+        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_u')." : <B>$row[count]</B></li>";
+		print "<li>".$Language->getText('admin_main', 'status_user')." : " ;
+		print "<B>$actif_users</B> ".$Language->getText('admin_main', 'statusactif_user');
+		print ", <B>".$restricted_users."</B> ".$Language->getText('admin_main', 'statusrestricted_user');
+		print ", <B>".$hold_users."</B> ".$Language->getText('admin_main', 'statushold_user');
+		print ", <B>".$deleted_users."</B> ".$Language->getText('admin_main', 'statusdeleted_user');
+		print ", <B>".$validated_users."</B> ".$Language->getText('admin_main', 'statusvalidated_user');
+		print ", <B>".$realpending_users."</B> ".$Language->getText('admin_main', 'statuspending_user');
+		print ", ".$Language->getText('admin_main', 'statustotal_user')." : <B>".($realpending_users + $validated_users + $deleted_users + $hold_users + $restricted_users + $actif_users)."</B></li>";
+		
+			
+		print "<li>".$Language->getText('admin_main','active_users').' :';
+		print "<ul><li>".$Language->getText('admin_main','lastday_users').' : <B>'.number_format(stats_getactiveusers(84600)).'</B></li>';
+		print "<li>".$Language->getText('admin_main','lastweek_users').' : <B>'.number_format(stats_getactiveusers(592200)).'</B></li>';
+		print "<li>".$Language->getText('admin_main','lastmonth_users').' : <B>'.number_format(stats_getactiveusers(2678400)).'</B></li>';
+		print "<li>".$Language->getText('admin_main','last3months_users').' : <B>'.number_format(stats_getactiveusers(8031600)).'</B></li></ul></li>';
+  
+		print "</ul></li><li>".$Language->getText('admin_main', 'stat_projects')." :" ;
+        db_query("SELECT count(*) AS count FROM groups");
+        $row = db_fetch_array();
+        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_g')." : <B>$row[count]</B></li>";
+
+        db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
+        $row = db_fetch_array();
+        print "<li>".$Language->getText('admin_main', 'sstat_reg_act_g')." : <B>$row[count]</B></li>";
+
+		print "<li>".$Language->getText('admin_main', 'sstat_pend_g')." : <B>$pending_projects</B></li></ul>";
+
+        
+		print "</li>";
+?>
+</ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_user'); ?></h3>
 <ul>
@@ -163,26 +231,6 @@ echo ")</b>";?>
     $em->processEvent('site_admin_option_hook', null);
 ?>
 </ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
-<?php
-        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
-        $row = db_fetch_array();
-        print "<P>".$Language->getText('admin_main', 'sstat_reg_u').": <B>$row[count]</B>";
-
-        db_query("SELECT count(*) AS count FROM groups");
-        $row = db_fetch_array();
-        print "<BR>".$Language->getText('admin_main', 'sstat_reg_g').": <B>$row[count]</B>";
-
-        db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
-        $row = db_fetch_array();
-        print "<BR>".$Language->getText('admin_main', 'sstat_reg_act_g').": <B>$row[count]</B>";
-
-	print "<BR>".$Language->getText('admin_main', 'sstat_pend_g').": <B>$pending_projects</B>";
-
-        print "<BR>".$Language->getText('admin_main', 'sstat_pend_u').": <B>$pending_users</B>";
-
-?>
 
 
 <?php

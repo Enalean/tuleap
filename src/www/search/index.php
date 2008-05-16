@@ -19,7 +19,7 @@ if ($type_of_search !== "tracker" &&
     $type_of_search !== "wiki") {
     $HTML->header(array('title'=>$Language->getText('search_index','search')));
     echo "<P><CENTER>";
-    $HTML->searchBox();
+    $HTML->bodySearchBox();
 }
 $hp = CodeX_HTMLPurifier::instance();
 /*
@@ -32,11 +32,13 @@ if ($words && (strlen($words) < 3)) {
 }
 
 if (!$words) {
-	echo '<BR>'.$Language->getText('search_index','enter_s_words').'</CENTER><P>';
+	echo '<BR>'.$Language->getText('search_index','enter_s_words');
 	$HTML->footer(array());
 	exit;
 }
 
+	echo '</CENTER><P>';
+	
 $words = trim($words);
 $no_rows = 0;
 
@@ -538,7 +540,7 @@ if ($type_of_search == "soft") {
         $language_id = db_fetch_array($result);
         //Build the search pagename in the wiki language
         if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntÃ©gral';}
     }
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));

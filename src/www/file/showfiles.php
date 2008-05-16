@@ -32,6 +32,8 @@ if (!user_isloggedin()) {
 
 $authorized_user = false;
 
+$hp = CodeX_HTMLPurifier::instance();
+
 $request =& HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -176,10 +178,10 @@ while (list ($package_id, $package) = each($packages)) {
         print " <$emphasis>". $package->getName() ."</$emphasis>";
         if (!$pv) {
             if (user_ismember($group_id,'R2')) {
-                print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">';
-                print '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=>htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES), 'title'=>htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES)));
+                print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML)  .'">';
+                print '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML) ));
                 print '</a>';
-                //print '     &nbsp;&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES) .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
+                //print '     &nbsp;&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES, 'UTF-8') .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES, 'UTF-8') .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
             }
             print ' &nbsp; ';
             print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
@@ -190,8 +192,8 @@ while (list ($package_id, $package) = each($packages)) {
             }
             print '</a>';
             if (user_ismember($group_id,'R2')) {
-                print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES) .'\');">'
-                            . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=>htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES), 'title'=>htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES))) .'</a>';
+                print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), CODEX_PURIFIER_CONVERT_HTML)  .'\');">'
+                            . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML) )) .'</a>';
             }
         }
         print '</legend>';
@@ -259,8 +261,8 @@ while (list ($package_id, $package) = each($packages)) {
                     print "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
                         if (user_ismember($group_id,'R2')) {
-                            print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES) .'">'
-                            . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=>htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES), 'title'=>htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), ENT_QUOTES))) .'</a>';
+                            print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML)  .'">'
+                            . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODEX_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
                         print ' &nbsp; ';
                         print '     <a href="shownotes.php?release_id=' . $package_release->getReleaseID() . '"><img src="'.util_get_image_theme("ic/text.png").'" alt="'.$Language->getText('file_showfiles', 'read_notes').'" title="'.$Language->getText('file_showfiles', 'read_notes').'" /></a>';
@@ -273,8 +275,8 @@ while (list ($package_id, $package) = each($packages)) {
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
                     if (!$pv && user_ismember($group_id,'R2')) {
-                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES) .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), ENT_QUOTES) .'\');">'
-                        . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=>htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES), 'title'=>htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES))) .'</a>';
+                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), CODEX_PURIFIER_CONVERT_HTML) .'\');">'
+                        . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODEX_PURIFIER_CONVERT_HTML) )) .'</a>';
                     }
                     print '</TD></TR>' . "\n";
                     print '</table>';
