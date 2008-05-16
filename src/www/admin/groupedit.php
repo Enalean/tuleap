@@ -42,22 +42,6 @@ if ($Update) {
 
 	$group = group_get_object($group_id,false,true);
 
-	/*
-		If this is a foundry, see if they have a preferences row, if not, create one
-
-	if ($group_type=='2') {
-		$res=db_query("SELECT * FROM foundry_data WHERE foundry_id='$group_id'");
-		if (db_numrows($res) < 1) {
-			group_add_history ('feedback_history','',$group_id);
-
-			$feedback .= $Language->getText('admin_groupedit','feedback_foundry');
-			$r=db_query("INSERT INTO foundry_data (foundry_id) VALUES ('$group_id')");
-			if (!$r || db_affected_rows($r) < 1) {
-				echo $Language->getText('admin_groupedit','feedback_insert').': '.db_error();
-			}
-		}
-	}
-	*/
 }
 
 // get current information

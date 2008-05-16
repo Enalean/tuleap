@@ -19,14 +19,14 @@ require_once('common/include/TemplateSingleton.class.php');
 
 	Sets up database results and preferences for a group and abstracts this info
 
-	Foundry.class.php and Project.class.php call this.
+	Project.class.php call this.
 
 	Project.class.php contains all the deprecated API from the old group.php file
 
 
 
 	GENERALLY YOU SHOULD NEVER CALL THIS OBJECT
-	USE Project and Foundry instead
+	USE Project instead
 	DIRECT CALLS TO THIS OBJECT ARE NOT SUPPORTED
 
 */
@@ -135,7 +135,7 @@ class Group extends Error {
 
 
 	/*
-		Foundry, project, etc
+		Project, template, test, etc
 	*/
 	function getType() {
 		return $this->data_array['type'];
@@ -151,15 +151,6 @@ class Group extends Error {
 	*/
 	function getStatus() {
 		return $this->data_array['status'];
-	}
-
-	/*
-		Simple boolean test to see if it's a foundry or not
-	*/
-	function isFoundry() {
-	  //foundries not supported so far
-	  return false;
-
 	}
 
 	/*

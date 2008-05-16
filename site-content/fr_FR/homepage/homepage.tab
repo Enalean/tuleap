@@ -27,13 +27,6 @@ contact	title	Contactez-nous
 404	no_page	PAGE INTROUVABLE
 #
 #-----------------------------------------------
-# Script: SF/www/about_foundries.php
-#
-about_foundries	title	A propos des fonderies
-about_foundries	message	Les fonderies permet aux développeurs ayant les mêmes sujets d'intérêt de se regrouper, de partager leur expertise et des nouveautés, de prendre et donner des conseils, et plus généralement de s'entraider afin de produire rapidement du code de meilleur qualité.<p>Si vous souhaitez contribuer à une fonderie ou la créer, <a href="mailto:$1">contactez-nous</a>.<p>Voici les liste des fonderies actuellement disponibles sur le site&nbsp;: $1</p>
-about_foundries	no_foundries	Aucune fonderie disponible
-#
-#-----------------------------------------------
 # Script: SF/www/index.php
 #
 homepage	title	Bienvenue

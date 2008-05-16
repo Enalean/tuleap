@@ -487,7 +487,6 @@ function site_project_header($params) {
 
 	/*
 		Check to see if active
-		Check to see if project rather than foundry
 		Check to see if private (if private check if user_ismember)
 	*/
 

@@ -76,79 +76,6 @@ include_features_boxes	files_download	Fichiers téléchargés
 include_features_boxes	pages_viewed	Pages visitées
 #
 #-----------------------------------------------
-# Script: SF/www/include/foundry_admin.php
-#
-include_foundry_admin	removed_proj	Enlever un projet
-include_foundry_admin	user_not_removed	Impossible d'enlever l'utilisateur - Vous ne pouvez pas enlever un administrateur d'un projet.\nVous devez d'abord leur enlever leur droit d'administrateur et/ou désigner un autre administrateur pour ce projet
-include_foundry_admin	user_removed	Utilisateur enlevé
-include_foundry_admin	proj_added	Le projet a été ajouté
-include_foundry_admin	proj_already_member	Le projet est déjà membre
-include_foundry_admin	proj_not_exist	Ce projet n'existe pas
-include_foundry_admin	upd_fail	La mise à jour a échoué
-include_foundry_admin	data_updated	Données mises à jour
-include_foundry_admin	proj_admin	Administration du projet&nbsp;: $1
-include_foundry_admin	featured_proj	Projets à l'affiche
-include_foundry_admin	no_proj	Aucun projet
-include_foundry_admin	g_members	Membres du projet
-include_foundry_admin	edit_perm	Modifier les permissions des membres
-include_foundry_admin	submit_news	Soumettez votre annonce
-include_foundry_admin	foundry_news_admin	Administration des annonces de fonderies
-include_foundry_admin	forum_admin	Administration des forums
-include_foundry_admin	edit_freeform	Edition HTML libre
-include_foundry_admin	tool_admin	Administration des outils
-include_foundry_admin	guide_img	Image guide
-include_foundry_admin	logo_img	Image logo
-include_foundry_admin	trove_cat	Catégories
-include_foundry_admin	must_separate	séparer avec des virgules
-include_foundry_admin	add_proj_users	Ajouter des projets/utilisateurs
-include_foundry_admin	add_proj	Ajouter un projet
-include_foundry_admin	add_user	Ajouter un utilisateur
-include_foundry_admin	unix_name	Nom Unix
-include_foundry_admin	rank	Rang (pour les projets)
-include_foundry_admin	add	Ajouter
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_home.php
-#  
-include_foundry_home	title	$1 - Fonderie
-include_foundry_home	foundry_news	Annonces de la fonderie
-include_foundry_home	discussion_forums	Forums de discussion 
-include_foundry_home	no_forums_found	Pas de forum pour $1
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_html_admin.php
-#
-include_foundry_html_admin	choose_field	Choisir un champ à éditer
-include_foundry_html_admin	top_freeform	HTML libre haut
-include_foundry_html_admin	bottom_freeform	HTML libre bas
-include_foundry_html_admin	sponsor	HTML Sponsors
-include_foundry_html_admin	preview	Prévisualisation
-include_foundry_html_admin	save_changes	Sauver les changements
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_news.php
-#
-include_foundry_news	upd_err	ERREUR lors de la mise à jour
-include_foundry_news	newsbyte_upd	Annonce mise à jour.
-include_foundry_news	newsbyte	Annonces
-include_foundry_news	not_found_err	Erreur&nbsp;: introuvable
-include_foundry_news	approve_newsbyte	Approuve une annonce
-include_foundry_news	submitted_for_proj	Soumise par le projet
-include_foundry_news	submitted_by	Soumise par
-include_foundry_news	approve_for_foundry	Approuver pour la page d'accueil de la fonderie
-include_foundry_news	unapprove	Rejeter
-include_foundry_news	delete	Détruire
-include_foundry_news	subject	Sujet
-include_foundry_news	details	Détails
-include_foundry_news	no_queued_items_found	Aucune annonce dans la file d'attente
-include_foundry_news	items_need_approve	Ces annonces doivent être approuvées
-include_foundry_news	no_deleted_items_this_week	Aucune annonce détruite cette semaine	
-include_foundry_news	items_deleted_past_week	Ces annonces ont été détruites la semaine passée
-include_foundry_news	no_approved_items_this_week	Aucune annonce approuvée cette semaine
-include_foundry_news	items_approved_past_week	Ces annonces ont été approuvée la semaine passée
-include_foundry_news	need_to_be_proj_admin	Permission refusée. Vous devez administrateur du projet ou du site.
-#
-#-----------------------------------------------
 # Script: SF/www/include/group.php
 #
 include_group	g_not_found	Groupe introuvable
@@ -235,7 +162,6 @@ include_menu	site_doc	Documentation site
 include_menu	dev_channel	Canaux développeurs
 include_menu	discussion_forum	Forums de discussions
 include_menu	contact_us	Contactez-nous
-include_menu	sf_foundries	Fonderies CodeX
 include_menu	about_foudries	À propos des fonderies
 include_menu	games	Jeux
 include_menu	printing	Impression
@@ -243,9 +169,6 @@ include_menu	proj	Projet
 include_menu	proj_summary	Sommaire du projet
 include_menu	proj_admin	Administration du projet
 include_menu	summary_page	Sommaire
-include_menu	foundry_admin	Administration fonderie
-include_menu	foundry_guides	Guides fonderies
-include_menu	foundry	Fonderie
 include_menu	logged_in	Connecté
 include_menu	logout	Se déconnecter
 include_menu	register_new_proj	Enregistrer un projet

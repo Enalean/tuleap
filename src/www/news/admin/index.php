@@ -58,9 +58,6 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
         
         if ($request->valid($validSummary) && $request->valid($validDetails)) {
         
-            //foundry stuff - remove this news from the foundry so it has to be re-approved by the admin
-            db_query("DELETE FROM foundry_news WHERE news_id=". db_ei($id));
-
             $sql="UPDATE news_bytes SET is_approved=". db_ei($status) .", summary='".db_es(htmlspecialchars($request->get('summary')))."', ".
                 "details='".db_es(htmlspecialchars($request->get('details')))."' WHERE id=". db_ei($id) ." AND group_id=". db_ei($group_id);
             $result=db_query($sql);

@@ -65,7 +65,6 @@ if ($ARGV[0]) {
 
 my @files=`find $source_dir $plugin_src_dir -name "*.class"`;
 push @files,`find $source_dir $plugin_src_dir -name "*.php"`;
-push @files,"$source_dir/www/foundry";
 push @files,"$source_dir/www/projects";
 push @files,"$source_dir/www/users";
 

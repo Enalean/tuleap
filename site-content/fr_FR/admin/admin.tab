@@ -153,9 +153,6 @@ admin_groupedit_add	unix_name	Nom unix du nouveau groupe
 #
 admin_groupedit	title	Editer un groupe
 admin_groupedit	feedback_info	Mettre à jour les infos du projet
-admin_groupedit	feedback_history	enregistrement foundry_data ajouté
-admin_groupedit	feedback_foundry	enregistrement foundry_data créé 
-admin_groupedit	feedback_insert	enregistrement foundry_data ajouté n'a pu être inséré 
 admin_groupedit	error_group	Groupe invalide passé en paramètre.
 admin_groupedit	proj_edit	Editer les détails d'un projet
 admin_groupedit	proj_admin	Admin Projet

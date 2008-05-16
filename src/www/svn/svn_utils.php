@@ -20,12 +20,8 @@ function svn_header($params) {
 	$params['toptab']='svn';
 	$params['group']=$group_id;
 
-	//only projects can use cvs, and only if they have it turned on
 	$project=project_get_object($group_id);
 
-	if ($project->isFoundry()) {
-		exit_error($Language->getText('global','error'),$Language->getText('svn_utils','proj_err'));
-	}
 	if (!$project->usesService('svn')) {
 	    exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
 	}
@@ -60,10 +56,6 @@ function svn_header_admin($params) {
     
     $project=project_get_object($group_id);
     
-    //only projects can use the svn manager, and only if they have it turned on
-    if ($project->isFoundry()) {
-	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','proj_err'));
-    }
     if (!$project->usesService('svn')) {
 	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','browse_off'));
     }

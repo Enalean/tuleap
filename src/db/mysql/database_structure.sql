@@ -697,63 +697,6 @@ CREATE TABLE forum_thread_id (
   PRIMARY KEY  (thread_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'foundry_data'
-#
-
-CREATE TABLE foundry_data (
-  foundry_id int(11) NOT NULL auto_increment,
-  freeform1_html text,
-  freeform2_html text,
-  sponsor1_html text,
-  sponsor2_html text,
-  guide_image_id int(11) NOT NULL default '0',
-  logo_image_id int(11) NOT NULL default '0',
-  trove_categories text,
-  PRIMARY KEY  (foundry_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'foundry_news'
-#
-
-CREATE TABLE foundry_news (
-  foundry_news_id int(11) NOT NULL auto_increment,
-  foundry_id int(11) NOT NULL default '0',
-  news_id int(11) NOT NULL default '0',
-  approve_date int(11) NOT NULL default '0',
-  is_approved int(11) NOT NULL default '0',
-  PRIMARY KEY  (foundry_news_id),
-  KEY idx_foundry_news_foundry (foundry_id),
-  KEY idx_foundry_news_foundry_approved_date (foundry_id,is_approved,approve_date),
-  KEY idx_foundry_news_foundry_approved (foundry_id,is_approved)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'foundry_preferred_projects'
-#
-
-CREATE TABLE foundry_preferred_projects (
-  foundry_project_id int(11) NOT NULL auto_increment,
-  foundry_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0',
-  rank int(11) NOT NULL default '0',
-  PRIMARY KEY  (foundry_project_id),
-  KEY idx_foundry_project_group (group_id),
-  KEY idx_foundry_project_group_rank (group_id,rank)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'foundry_projects'
-#
-
-CREATE TABLE foundry_projects (
-  id int(11) NOT NULL auto_increment,
-  foundry_id int(11) NOT NULL default '0',
-  project_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (id),
-  KEY idx_foundry_projects_foundry (foundry_id)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'frs_dlstats_agg'

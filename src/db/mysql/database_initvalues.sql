@@ -241,7 +241,6 @@ INSERT INTO bug VALUES (100, 100, 3, 1, 100, 100, 100, 1058260700, 'None', '', 0
 INSERT INTO group_type VALUES ('1','project');
 INSERT INTO group_type VALUES ('2','template');
 INSERT INTO group_type VALUES ('3','test_project');
-#INSERT INTO group_type VALUES ('4','Foundry');
 
 
 #

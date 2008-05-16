@@ -149,9 +149,6 @@ admin_groupedit_add	unix_name	New unix group name
 #
 admin_groupedit	title	Editing Group
 admin_groupedit	feedback_info	Updating Project Info
-admin_groupedit	feedback_history	added foundry_data row
-admin_groupedit	feedback_foundry	CREATING NEW FOUNDRY_DATA ROW 
-admin_groupedit	feedback_insert	COULD NOT INSERT NEW FOUNDRY_DATA ROW 
 admin_groupedit	error_group	Invalid group was passed in.
 admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin

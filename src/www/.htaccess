@@ -5,9 +5,6 @@ ForceType application/x-httpd-php
 <Files users>
 ForceType application/x-httpd-php
 </Files>
-<Files foundry>
-ForceType application/x-httpd-php
-</Files>
 <Files goto>
 ForceType application/x-httpd-php
 </Files>

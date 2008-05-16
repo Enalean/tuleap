@@ -27,9 +27,6 @@ function support_header($params) {
 	//only projects can use the bug tracker, and only if they have it turned on
 	$project=project_get_object($group_id);
 
-	if ($project->isFoundry()) {
-		exit_error('Error','Only Projects Can Use The Support Request Manager');
-	}
 	if (!$project->usesSupport()) {
 		exit_error('Error','This Project Has Turned Off The Support Request Manager');
 	}
@@ -63,9 +60,6 @@ function support_header_admin($params) {
     $project=project_get_object($group_id);
     
     //only projects can use the bug tracker, and only if they have it turned on
-    if ($project->isFoundry()) {
-	exit_error('Error','Only Projects Can Use The Support Request Manager');
-    }
     if (!$project->usesSupport()) {
 	exit_error('Error','This Project Has Turned Off The Support Request Manager');
     }

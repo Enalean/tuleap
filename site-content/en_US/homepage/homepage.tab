@@ -22,13 +22,6 @@ contact	title	Contact Us
 404	no_page	PAGE NOT FOUND
 #
 #-----------------------------------------------
-# Script: SF/www/about_foundries.php
-#
-about_foundries	title	About Foundries
-about_foundries	message	Foundries serve as places for developers interested in a given topic to congregate, share expertise and news, get and give advice, and generally help each other develop  better software faster.<p>If you're interested in volunteering to help support or start a foundry please <a href="mailto:$1">contact us</a>.<p>Here is a list of all foundries currently available on the system:$1</p>
-about_foundries	no_foundries	No foundry found
-#
-#-----------------------------------------------
 # Script: SF/www/index.php
 #
 homepage	title	Welcome

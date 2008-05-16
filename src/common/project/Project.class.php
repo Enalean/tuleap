@@ -15,7 +15,7 @@ require_once('common/frs/ServiceFile.class.php');
 require_once('common/svn/ServiceSVN.class.php');
 /*
 
-	An object wrapper for project (as opposed to foundry) data
+	An object wrapper for project data
 
 	Extends the base object, Group
 

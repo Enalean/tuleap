@@ -397,8 +397,6 @@ if (isset($params['group']) && $params['group']) {
 			if ($project && is_object($project)) {
 				if ($project->isError()) {
 
-				} elseif ($project->isFoundry()) {
-
 				} else {
 					$TABS_DIRS[]='/projects/'.$project->getUnixName().'/';
 					$TABS_TITLES[]=$project->getPublicName();

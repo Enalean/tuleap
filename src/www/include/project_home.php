@@ -22,12 +22,6 @@ $Language->loadLanguageMsg('include/include');
 $em =& EventManager::instance();
 $em->processEvent('plugin_load_language_file', null);
 
-//make sure this project is NOT a foundry
-if ($project->isFoundry()) {
-	header ("Location: /foundry/". $project->getUnixName() ."/");
-	exit;
-}       
-
 $hp =& CodeX_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();

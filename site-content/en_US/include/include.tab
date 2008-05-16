@@ -69,79 +69,7 @@ include_features_boxes	hosted_projects	Hosted Projects
 include_features_boxes	registered_users	Registered Users
 include_features_boxes	files_download	Files Downloaded
 include_features_boxes	pages_viewed	Pages Viewed
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_admin.php
-#
-include_foundry_admin	removed_proj	Removed a Project
-include_foundry_admin	user_not_removed	User Not Removed - You cannot remove admins from a project.\nYou must first turn off their admin flag and/or find another admin for the project
-include_foundry_admin	user_removed	Removed a User
-include_foundry_admin	proj_added	Project was added
-include_foundry_admin	proj_already_member	Project was already a featured member
-include_foundry_admin	proj_not_exist	That project does not exist
-include_foundry_admin	upd_fail	Update failed
-include_foundry_admin	data_updated	Data Updated
-include_foundry_admin	proj_admin	Project Admin: $1
-include_foundry_admin	featured_proj	Featured Projects
-include_foundry_admin	no_proj	No Projects
-include_foundry_admin	g_members	Group Members
-include_foundry_admin	edit_perm	Edit Member Permissions
-include_foundry_admin	submit_news	Submit Your News
-include_foundry_admin	foundry_news_admin	Foundry-wide News Admin
-include_foundry_admin	forum_admin	Forum Admin
-include_foundry_admin	edit_freeform	Edit FreeForm HTML
-include_foundry_admin	tool_admin	Tool Admin
-include_foundry_admin	guide_img	Guide Image
-include_foundry_admin	logo_img	Logo Image
-include_foundry_admin	trove_cat	Trove Categories
-include_foundry_admin	must_separate	must comma separate
-include_foundry_admin	add_proj_users	Add Projects/Users
-include_foundry_admin	add_proj	Add Project
-include_foundry_admin	add_user	Add User
-include_foundry_admin	unix_name	Unix Name
-include_foundry_admin	rank	Rank (for projects)
-include_foundry_admin	add	Add
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_home.php
-#  
-include_foundry_home	title	$1 - Foundry
-include_foundry_home	foundry_news	Foundry News
-include_foundry_home	discussion_forums	Discussion Forums
-include_foundry_home	no_forums_found	No forums found for $1
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_html_admin.php
-#
-include_foundry_html_admin	choose_field	Choose A Field To Edit
-include_foundry_html_admin	top_freeform	Top Freeform HTML
-include_foundry_html_admin	bottom_freeform	Bottom Freeform HTML
-include_foundry_html_admin	sponsor	Sponsor HTML
-include_foundry_html_admin	preview	Preview
-include_foundry_html_admin	save_changes	Save Changes
-#
-#-----------------------------------------------
-# Script: SF/www/include/foundry_news.php
-#
-include_foundry_news	upd_err	ERROR doing update
-include_foundry_news	newsbyte_upd	NewsByte Updated.
-include_foundry_news	newsbyte	NewsBytes
-include_foundry_news	not_found_err	Error - not found
-include_foundry_news	approve_newsbyte	Approve a NewsByte
-include_foundry_news	submitted_for_proj	Submitted for Project
-include_foundry_news	submitted_by	Submitted by
-include_foundry_news	approve_for_foundry	Approve For Foundry Page
-include_foundry_news	unapprove	Unapprove
-include_foundry_news	delete	Delete
-include_foundry_news	subject	Subject
-include_foundry_news	details	Details
-include_foundry_news	no_queued_items_found	No Queued Items Found
-include_foundry_news	items_need_approve	These items need to be approved
-include_foundry_news	no_deleted_items_this_week	No deleted items found for this week	
-include_foundry_news	items_deleted_past_week	These items were deleted this past week
-include_foundry_news	no_approved_items_this_week	No approved items found for this week
-include_foundry_news	items_approved_past_week	These items were approved this past week
-include_foundry_news	need_to_be_proj_admin	Permission Denied. You have to be an admin on the project you are editing or a member of the SourceForge News team.
+
 #
 #-----------------------------------------------
 # Script: SF/www/include/group.php
@@ -230,17 +158,12 @@ include_menu	site_doc	Site Documentation
 include_menu	dev_channel	Developers Channels
 include_menu	discussion_forum	Discussion Forums
 include_menu	contact_us	Contact Us
-include_menu	sf_foundries	Sourceforge Foundries
-include_menu	about_foudries	About Foundries
 include_menu	games	Games
 include_menu	printing	Printing
 include_menu	proj	Project
 include_menu	proj_summary	Project Summary
 include_menu	proj_admin	Project Admin
 include_menu	summary_page	Summary Page
-include_menu	foundry_admin	Foundry Admin
-include_menu	foundry_guides	Foundry Guides
-include_menu	foundry	Foundry
 include_menu	logged_in	Logged In
 include_menu	logout	Logout
 include_menu	register_new_proj	Register New Project
