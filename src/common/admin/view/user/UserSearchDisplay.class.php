@@ -166,7 +166,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         print '<td align="center" width=33%>';
       
-        print 'Search (GroupName, GroupUnixName):';
+        print 'Search (GroupName, GroupUnixName):<br />';
         print '<input type="text" name="user_group_search">';
 
         print '</td>';
@@ -178,13 +178,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<select name="user_status_search" id="status_id">';
         
         print '<option value="all">All</option>';
-        print '<option value="A">Active</option>';
-        print '<option value="R">Restricted</option>';
-        print '<option value="V">Validated</option>';
+        print '<option value="A">'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
+        print '<option value="R">'.$GLOBALS['Language']->getText('admin_userlist','restricted').'</option>';
+        print '<option value="V">'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
         print '<option value="P">Pending</option>';
-        print '<option value="D">Deleted</option>';
+        print '<option value="D">'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>';
         print '<option value="W">Validated as Restricted</option>';
-        print '<option value="S">Suspended</option>';
+        print '<option value="S">'.$GLOBALS['Language']->getText('admin_userlist','suspended').'</option>';
         print '</select>'; 
         
         print '</td>';
@@ -248,7 +248,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
             if ($u['status'] == 'P') print 'Pending';
             if ($u['status'] == 'D') print $GLOBALS['Language']->getText('admin_userlist','deleted');
             if ($u['status'] == 'W') print $GLOBALS['Language']->getText('admin_userlist','restricted');
-            if ($u['status'] == 'S') print  $GLOBALS['Language']->getText('admin_userlist','suspended');   
+            if ($u['status'] == 'S') print $GLOBALS['Language']->getText('admin_userlist','suspended');   
             print '</td>
 <td><a href="'.$u['email'].'">'.$u['email'].'</a></td></tr>';
         }
