@@ -128,21 +128,20 @@ class UserControler extends Controler {
      *
      * @param int $offset
      */
-    function setOffset($offset = null) {
-       
-        if ($offset === null) {
-            $this->offset = 0;
+    function setOffset() {
+        
+        $request =& HTTPRequest::instance();
+
+        $validoffset = new valid('offset');
+        $validoffset->required();
+        $validoffset->addRule(new Rule_Int());
+        
+        if ($request->valid($validoffset)) {
+            $offset = $request->get('offset');
+            $this->offset = $offset;
         }
         else {
-            $request =& HTTPRequest::instance();
-            
-            $voffset = new valid('offset');
-            $voffset->addRule(new Rule_Int());
-            
-            if ($request->valid($voffset)) {
-                $offset = $request->get('offset');
-                $this->offset = $offset;
-            }
+            $this->offset = 0;
         }
     }
 
@@ -308,31 +307,33 @@ class UserControler extends Controler {
         
         $request =& HTTPRequest::instance();
 
+        
+        //valid parameters
+
+        //valid user id
         $validUserId = new Valid('user_id');
         $validUserId->addRule(new Rule_Int());
         
-        if($request->valid($validUserId)) {
+        if ($request->valid($validUserId)) {
             $this->userid = $request->get('user_id');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
-        if ($this->userid) {
+       if ($this->userid) {
 
             $this->setUserParam($this->userid);
             $this->setUserAdminFlag($this->userid);
         }
 
-        $this->setOffset($_GET['offset']);
-        
+        $this->setOffset();        
+
         $this->setLimit();
                
         $this->setUserIterator();
         
         $this->setNbUser();
-
     }
 }
 
