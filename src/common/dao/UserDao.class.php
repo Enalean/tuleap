@@ -381,9 +381,9 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         if (!empty($ca )) {
 
             $iwhere = 0;
-            $join = null;
-            $where = null;
-            $groupby = null;
+            $join = '';
+            $where = '';
+            $groupby = '';
 
             foreach($ca as $c) {
             
