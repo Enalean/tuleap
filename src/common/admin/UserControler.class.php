@@ -62,14 +62,12 @@ class UserControler extends Controler {
      */
     private $nbuser;
 
-
     /**
      * $userparam an array that contains the params of a user (for the editing mode)
      *
      * @type array $userparam
      */
     private $userparam;
-
 
     /**
      * $userid 
@@ -78,6 +76,12 @@ class UserControler extends Controler {
      */
     private $userid;
 
+    /**
+     * $username
+     *
+     * @type string $username
+     */
+    private $username;
 
     /**
      * $useradminflag
@@ -85,6 +89,22 @@ class UserControler extends Controler {
      * @type string $useradminflag
      */
     private $useradminflag;
+
+    /**
+     * $group
+     *
+     * @type string $group
+     */
+    private $group;
+
+    /**
+     * $status
+     *
+     * @type string $status
+     */
+    private $status;
+
+
 
 
     /**
@@ -110,7 +130,7 @@ class UserControler extends Controler {
         }
         else {
 
-            $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
+            $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->username, $this->group, $this->status);
         }
         $view->display();
     }
@@ -171,10 +191,8 @@ class UserControler extends Controler {
         //valid nbtodisplay
 
         $validNbToDisplay = new Valid('nbtodisplay');
-        //$validNbToDisplay->required();
         $validNbToDisplay->addRule(new Rule_Int());
 
-                
         if($request->valid($validNbToDisplay)) {
             $nbtodisplay = $request->get('nbtodisplay');
         }
@@ -205,7 +223,6 @@ class UserControler extends Controler {
         $dar = $dao->searchByUserId($userid);
             
         $this->userparam = $dar->getRow();
-
     }
 
 
@@ -256,7 +273,7 @@ class UserControler extends Controler {
         $validUserName = new Valid_String('user_name_search');
       
         if ($request->valid($validUserName)) {
-            $name = $request->get('user_name_search');
+            $this->username = $request->get('user_name_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
@@ -266,7 +283,7 @@ class UserControler extends Controler {
         $validUserGroup = new Valid_String('user_group_search');
                 
         if ($request->valid($validUserGroup)) {
-            $group = $request->get('user_group_search');
+            $this->group = $request->get('user_group_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -277,7 +294,7 @@ class UserControler extends Controler {
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList), 'Your (status) data are not valid');
 
         if ($request->valid($validStatus)) {
-            $status = $request->get('user_status_search');                
+            $this->status = $request->get('user_status_search');                
         }
         else{
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -286,17 +303,18 @@ class UserControler extends Controler {
         if ($shortcut != '') {
             $filter[] = new UserShortcutFilter($shortcut);
         }
-        if ($name != '') {
-            $filter[] = new UserNameFilter($name);
+        if ($this->username != '') {
+            $filter[] = new UserNameFilter($this->username);
         }
-        if ($group != '') {
-            $filter[] = new UserGroupFilter($group);
+        if ($this->group != '') {
+            $filter[] = new UserGroupFilter($this->group);
         }
-        if ($status != '' && $status != 'all') {
-            $filter[] = new UserStatusFilter($status);
+        if ($this->status != '' && $this->status != 'all') {
+            $filter[] = new UserStatusFilter($this->status);
         }
         
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
+ 
     }
 
    
@@ -321,7 +339,7 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-       if ($this->userid) {
+        if ($this->userid) {
 
             $this->setUserParam($this->userid);
             $this->setUserAdminFlag($this->userid);

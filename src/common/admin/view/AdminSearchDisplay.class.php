@@ -71,8 +71,11 @@ class AdminSearchDisplay extends AdminDisplay {
      * @param int $limit
      * @param int $nbuser
      * @param int $offsetmax
+     * @param string $username
+     * @param string $group
+     * @param string $status
      */
-    function displayBrowse($start, $end, $offset, $limit, $nbuser, $offsetmax) {
+    function displayBrowse($start, $end, $offset, $limit, $nbuser, $offsetmax, $username, $group, $status) {
 
       $prev = $offset - $limit;
      
@@ -81,14 +84,16 @@ class AdminSearchDisplay extends AdminDisplay {
       print '<tr>';
 
       if ($offset <= 0) {
+
  print '<td class="browse_left">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</span></td>';
       }
       else {
-      
-          print '<td class="browse_left"><a href="index.php?offset=0&limit='.$limit.'">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="index.php?offset='.$prev.'&limit='.$limit.'">&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</a></span></td>';
+   
+          print '<td class="browse_left"><a href="index.php?offset=0&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="index.php?offset='.$prev.'&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</a></span></td>';
       }
 
       print '<td class="browse_center">Items '.$start.' - '.$end.'</td>';
+
 
       if ($offset >= ($nbuser-1)|| $offsetmax <=0) {
           
@@ -96,7 +101,7 @@ class AdminSearchDisplay extends AdminDisplay {
       }
       else {
           
-          print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset='.$offsetmax.'&limit='.$limit.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
+          print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset='.$offsetmax.'&limit='.$limit.'&user_name_search='.$username.'&user_group_name='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
       }
 
       print '</tr>';

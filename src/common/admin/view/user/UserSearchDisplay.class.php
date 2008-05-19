@@ -81,12 +81,41 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     private $offsetmax;
 
-    function __construct($userIterator, $offset, $nbrows, $nbuser) {
+
+    /**
+     * $username
+     *
+     * @type string $username
+     */
+    private $username;
+
+    /**
+     * $group
+     *
+     * @type string $group
+     */
+    private $group;
+    
+    /**
+     * $status
+     *
+     * @type string $status
+     */
+    private $status;
+
+
+    /**
+     * constructor
+     */
+    function __construct($userIterator, $offset, $nbrows, $nbuser, $username, $group, $status) {
         
         $this->userIterator = $userIterator;
         $this->offset = $offset;
         $this->nbrows = $nbrows;
         $this->nbuser = $nbuser;
+        $this->username = $username;
+        $this->group = $group;
+        $this->status = $status;
     }
 
     /**
@@ -98,9 +127,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
             $this->start = 0;
         }
         else {
-
-        $this->start = $this->offset + 1;
-
+            $this->start = $this->offset + 1;
         }
     }
 
@@ -207,7 +234,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         $this->initStart();
         $this->initEnd();
         $this->initMaxOffset();
-        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax);
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->username, $this->group, $this->status);
     }
 
     /**
