@@ -47,6 +47,9 @@ class GroupDao extends DataAccessObject {
         if (!empty($ca)) {
 
             $iwhere = 0;
+            $join = null;
+            $where = null;
+            $groupby = null;
 
             foreach($ca as $c) {
             

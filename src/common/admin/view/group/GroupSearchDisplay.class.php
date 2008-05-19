@@ -190,7 +190,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
     function displaySearchFilter() {
         
-        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_group'), '?group_shortcut_search');
+        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_group'), $this->offset, $this->nbrows);
 
         print '<table width=100%>';
         

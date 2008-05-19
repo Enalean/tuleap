@@ -139,21 +139,20 @@ class GroupControler extends Controler {
      *
      * @param int $offset
      */
-    function setOffset($offset = null) {
+    function setOffset() {
 
-        if ($offset === null) {
-            $this->offset = 0;
+        $request =& HTTPRequest::instance();
+            
+        $validoffset = new valid('offset');
+        $validoffset->required();
+        $validoffset->addRule(new Rule_Int());
+            
+        if ($request->valid($validoffset)) {
+            $offset = $request->get('offset');
+            $this->offset = $offset;
         }
         else {
-            $request =& HTTPRequest::instance();
-            
-            $voffset = new valid('offset');
-            $voffset->addRule(new Rule_Int());
-            
-            if ($request->valid($voffset)) {
-                $offset = $request->get('offset');
-                $this->offset = $offset;
-            }
+            $this->offset = 0;
         }
     }
 
@@ -187,9 +186,7 @@ class GroupControler extends Controler {
         $validNbRows->addRule(new Rule_Int());
         
         if($request->valid($validNbRows)) {
-            if ($request->isPost()) {
-                $nbrows = $request->get('nbrows');
-            }
+            $nbrows = $request->get('nbrows');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -415,8 +412,20 @@ class GroupControler extends Controler {
 
             foreach ($this->adminEmailIterator as $keyaei => $valaei) {
 
-                if ($mgi['group_id'] == $valaei['group_id']) {
+                $this->groupArray[$keyaei]['group_id'] = null;
+                $this->groupArray[$keyaei]['group_name'] = null;
+                $this->groupArray[$keyaei]['unix_group_name'] = null;
+                $this->groupArray[$keyaei]['status'] = null;
+                $this->groupArray[$keyaei]['type'] = null;
+                $this->groupArray[$keyaei]['name'] = null;
+                $this->groupArray[$keyaei]['is_public'] = null;
+                $this->groupArray[$keyaei]['license'] = null;
+                $this->groupArray[$keyaei]['c'] = null;
+                $this->groupArray[$keyaei]['email'] = null;
+                $this->groupArray[$keyaei]['user_id'] = null;
 
+                if ($mgi['group_id'] == $valaei['group_id']) {
+                    
                     $this->groupArray[$keyaei]['group_id'] .= $mgi['group_id'];
                     $this->groupArray[$keyaei]['group_name'] .= $mgi['group_name'];
                     $this->groupArray[$keyaei]['unix_group_name'] .= $mgi['unix_group_name'];
@@ -449,7 +458,7 @@ class GroupControler extends Controler {
      */
     function request() {
         
-        $this->setOffset($_GET['offset']);
+        $this->setOffset();
         
         $this->setLimit();
 
