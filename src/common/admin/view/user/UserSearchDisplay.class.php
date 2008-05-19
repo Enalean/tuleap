@@ -242,7 +242,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
         $this->initStart();
         $this->initEnd();
         $this->initMaxOffset();
-        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->shortcut, $this->username, $this->group, $this->status);
+
+
+        $link = '&user_shortcut_search='.$this->shortcut.'&user_name_search='.$this->username.'&user_group_search='.$this->group.'&user_status_search='.$this->status;
+
+
+        //        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->shortcut, $this->username, $this->group, $this->status);
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $link);
     }
 
     /**

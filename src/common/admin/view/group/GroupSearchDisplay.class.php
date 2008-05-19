@@ -82,12 +82,55 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      */
     private $offsetmax;
 
-    function __construct($groupArray, $offset, $nbrows, $nbgroup) {
+    /**
+     * $shortcut
+     *
+     * @type string $shortcut
+     */
+    private $shortcut;
+
+    /**
+     * $name
+     *
+     * @type string $name
+     */
+    private $name;
+
+    /**
+     * $status
+     *
+     * @type string $status
+     */
+    private $status;
+
+    /**
+     * $state
+     *
+     * @type string $state
+     */
+    private $state;
+
+    /**
+     * $type
+     *
+     * @type string $type
+     */
+    private $type;
+
+    /**
+     * constructor
+     */
+    function __construct($groupArray, $offset, $nbrows, $nbgroup, $shortcut, $name, $status, $state, $type) {
 
         $this->groupArray = $groupArray;
         $this->offset = $offset;
         $this->nbrows = $nbrows;
-        $this->nbgroup = $nbgroup;        
+        $this->nbgroup = $nbgroup;
+        $this->shortcut = $shortcut;
+        $this->name = $name;
+        $this->status = $status;
+        $this->state = $state;
+        $this->type = $type;
     }
     
     /**
@@ -219,7 +262,11 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         $this->initStart();
         $this->initEnd();
         $this->initMaxOffset();
-        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbgroup, $this->offsetmax);
+        
+        $link = '&group_shortcut_search='.$this->shortcut.'&group_name_search='.$this->name.'&group_status_search='.$this->status.'&group_state_search='.$this->state.'&group_type_search='.$this->type;
+
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbgroup, $this->offsetmax, $link);
+        
     }
    
     /**

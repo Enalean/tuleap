@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
@@ -75,6 +76,41 @@ class GroupControler extends Controler {
     private $nbgroup;
 
     /**
+     * $shortcut
+     *
+     * @type string $nbgroup
+     */
+    private $shortcut;
+
+    /**
+     * $name
+     *
+     * @type string $name
+     */
+    private $name;
+
+    /**
+     * $status
+     *
+     * @type string $status
+     */
+    private $status;
+
+    /**
+     * $state
+     *
+     * @type string $state
+     */
+    private $state;
+
+    /**
+     * $type
+     *
+     * @type string $type
+     */
+    private $type;
+
+    /**
      * constructor
      *
      */    
@@ -86,7 +122,7 @@ class GroupControler extends Controler {
      * viewManagement()
      */
     function viewsManagement() {        
-        $groupSearchDisplay = new GroupSearchDisplay($this->groupArray,$this->offset,$this->limit, $this->nbgroup);
+        $groupSearchDisplay = new GroupSearchDisplay($this->groupArray, $this->offset, $this->limit, $this->nbgroup, $this->shortcut, $this->name, $this->status, $this->state, $this->type);
         $groupSearchDisplay->display();       
     }
 
@@ -95,7 +131,6 @@ class GroupControler extends Controler {
      */
     function setNbGroup() {
         $dao = new GroupDao(CodexDataAccess::instance());
-
         $this->nbgroup = $dao->getFoundRows();
     }
 
@@ -200,7 +235,7 @@ class GroupControler extends Controler {
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
                 
         if($request->valid($validShortcut)) {
-            $shortcut = $request->get('group_shortcut_search');
+            $this->shortcut = $request->get('group_shortcut_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -211,7 +246,7 @@ class GroupControler extends Controler {
         $validGroupName = new Valid_String('group_name_search');
       
         if ($request->valid($validGroupName)) {
-            $name = $request->get('group_name_search');
+            $this->name = $request->get('group_name_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
@@ -223,7 +258,7 @@ class GroupControler extends Controler {
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
 
         if ($request->valid($validStatus)) {
-            $status = $request->get('group_status_search');                
+            $this->status = $request->get('group_status_search');                
         }
         else{
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -235,7 +270,7 @@ class GroupControler extends Controler {
         $validState->addRule(new Rule_WhiteList($stateWhiteList));
 
         if ($request->valid($validState)) {
-            $state = $request->get('group_state_search');
+            $this->state = $request->get('group_state_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -247,27 +282,27 @@ class GroupControler extends Controler {
         $validType->addRule(new Rule_WhiteList($typeWhiteList));
 
         if ($request->valid($validType)) {
-            $type = $request->get('group_type_search');
+            $this->type = $request->get('group_type_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
 
-        if ($shortcut != '') {
-                $filter[] = new GroupShortcutFilter($shortcut);        
+        if ($this->shortcut != '') {
+                $filter[] = new GroupShortcutFilter($this->shortcut);        
         }
-        if ($name != '') {
-                $filter[] = new GroupNameFilter($name);
+        if ($this->name != '') {
+                $filter[] = new GroupNameFilter($this->name);
         }
-        if ($status != '' && $status != 'all') {
-            $filter[] = new GroupStatusFilter($status);
+        if ($this->status != '' && $this->status != 'all') {
+            $filter[] = new GroupStatusFilter($this->status);
         }
-        if ($state != '' && $state != 'any') {
-            $filter[] = new GroupStateFilter($state);
+        if ($this->state != '' && $this->state != 'any') {
+            $filter[] = new GroupStateFilter($this->state);
         }
-        if ($type != '' && $type != 'any') {
-            $filter[] = new GroupTypeFilter($type);
+        if ($this->type != '' && $this->type != 'any') {
+            $filter[] = new GroupTypeFilter($this->type);
         }
 
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->offset, $this->limit);
@@ -301,7 +336,7 @@ class GroupControler extends Controler {
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
                 
         if($request->valid($validShortcut)) {
-            $shortcut = $request->get('group_shortcut_search');
+            $this->shortcut = $request->get('group_shortcut_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -311,7 +346,7 @@ class GroupControler extends Controler {
         $validGroupName = new Valid_String('group_name_search');
       
         if ($request->valid($validGroupName)) {
-            $name = $request->get('group_name_search');
+            $this->name = $request->get('group_name_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
@@ -322,7 +357,7 @@ class GroupControler extends Controler {
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
 
         if ($request->valid($validStatus)) {
-            $status = $request->get('group_status_search');                
+            $this->status = $request->get('group_status_search');                
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -333,7 +368,7 @@ class GroupControler extends Controler {
         $validState->addRule(new Rule_WhiteList($stateWhiteList));
 
         if ($request->valid($validState)) {
-            $state = $request->get('group_state_search');
+            $this->state = $request->get('group_state_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -344,26 +379,26 @@ class GroupControler extends Controler {
         $validType->addRule(new Rule_WhiteList($typeWhiteList));
 
         if ($request->valid($validType)) {
-            $type = $request->get('group_type_search');
+            $this->type = $request->get('group_type_search');
         }
         else  {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-        if ($shortcut != '') {
-                $filter[] = new GroupShortcutFilter($shortcut);                
+        if ($this->shortcut != '') {
+                $filter[] = new GroupShortcutFilter($this->shortcut);                
         }
-        if ($name != '') {
-            $filter[] = new GroupNameFilter($name);
+        if ($this->name != '') {
+            $filter[] = new GroupNameFilter($this->name);
         }
-        if ($status != '' && $status != 'all') {
-            $filter[] = new GroupStatusFilter($status);
+        if ($this->status != '' && $this->status != 'all') {
+            $filter[] = new GroupStatusFilter($this->status);
         }
-        if ($state != '' && $state != 'any') {
-            $filter[] = new GroupStateFilter($state);
+        if ($this->state != '' && $this->state != 'any') {
+            $filter[] = new GroupStateFilter($this->state);
         }
-        if ($type != '' && $type != 'any') {
-            $filter[] = new GroupTypeFilter($type);
+        if ($this->type != '' && $this->type != 'any') {
+            $filter[] = new GroupTypeFilter($this->type);
         }
 
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
