@@ -81,6 +81,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     private $offsetmax;
 
+    /**
+     * $shortcut
+     *
+     * @type string $shortcut
+     */
+    private $shortcut;
+
 
     /**
      * $username
@@ -107,12 +114,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
     /**
      * constructor
      */
-    function __construct($userIterator, $offset, $nbrows, $nbuser, $username, $group, $status) {
+    function __construct($userIterator, $offset, $nbrows, $nbuser, $shortcut, $username, $group, $status) {
         
         $this->userIterator = $userIterator;
         $this->offset = $offset;
         $this->nbrows = $nbrows;
         $this->nbuser = $nbuser;
+        $this->shortcut = $shortcut;
         $this->username = $username;
         $this->group = $group;
         $this->status = $status;
@@ -173,7 +181,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displaySearchFilter() {
       
-        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), '?user_shortcut_search');
+        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), $this->offset, $this->nbrows);
 
         
         print '<table width=100%>';
@@ -234,7 +242,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         $this->initStart();
         $this->initEnd();
         $this->initMaxOffset();
-        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->username, $this->group, $this->status);
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->shortcut, $this->username, $this->group, $this->status);
     }
 
     /**

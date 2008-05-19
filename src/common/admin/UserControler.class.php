@@ -77,6 +77,13 @@ class UserControler extends Controler {
     private $userid;
 
     /**
+     * $shortcut
+     *
+     * @type string $shortcut
+     */
+    private $shortcut;
+
+    /**
      * $username
      *
      * @type string $username
@@ -130,7 +137,7 @@ class UserControler extends Controler {
         }
         else {
 
-            $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->username, $this->group, $this->status);
+            $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
         }
         $view->display();
     }
@@ -263,7 +270,7 @@ class UserControler extends Controler {
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
                 
         if($request->valid($validShortcut)) {
-            $shortcut = $request->get('user_shortcut_search');
+            $this->shortcut = $request->get('user_shortcut_search');
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -300,8 +307,8 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-        if ($shortcut != '') {
-            $filter[] = new UserShortcutFilter($shortcut);
+        if ($this->shortcut != '') {
+            $filter[] = new UserShortcutFilter($this->shortcut);
         }
         if ($this->username != '') {
             $filter[] = new UserNameFilter($this->username);

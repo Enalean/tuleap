@@ -49,7 +49,7 @@ class AdminSearchDisplay extends AdminDisplay {
      * @param array $abc_entitled
      * @param string $letterlink
      */
-    function displaySearchFilter($abc_entitled, $letterlink) {       
+    function displaySearchFilter($abc_entitled, $offset, $limit) {       
 
         $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
         
@@ -57,7 +57,7 @@ class AdminSearchDisplay extends AdminDisplay {
         print $abc_entitled;
         
         for ($i=0; $i < count($abc_array); $i++) {
-            echo '<a href="'.$letterlink.'='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
+            echo '<a href="index.php?offset='.$offset.'&limit='.$limit.'&user_shortcut_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
         }
         print '</p>';        
     }
@@ -75,7 +75,7 @@ class AdminSearchDisplay extends AdminDisplay {
      * @param string $group
      * @param string $status
      */
-    function displayBrowse($start, $end, $offset, $limit, $nbuser, $offsetmax, $username, $group, $status) {
+    function displayBrowse($start, $end, $offset, $limit, $nbuser, $offsetmax, $shortcut, $username, $group, $status) {
 
       $prev = $offset - $limit;
      
@@ -89,7 +89,7 @@ class AdminSearchDisplay extends AdminDisplay {
       }
       else {
    
-          print '<td class="browse_left"><a href="index.php?offset=0&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="index.php?offset='.$prev.'&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</a></span></td>';
+          print '<td class="browse_left"><a href="index.php?offset=0&limit='.$limit.'&user_shortcut_search='.$shortcut.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt;&lt; '.$GLOBALS['Language']->getText('global', 'begin').'</a>  <a href="index.php?offset='.$prev.'&limit='.$limit.'&user_shortcut_search='.$shortcut.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">&lt; '.$GLOBALS['Language']->getText('global', 'prev').' '. $limit .'</a></span></td>';
       }
 
       print '<td class="browse_center">Items '.$start.' - '.$end.'</td>';
@@ -101,7 +101,7 @@ class AdminSearchDisplay extends AdminDisplay {
       }
       else {
           
-          print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset='.$offsetmax.'&limit='.$limit.'&user_name_search='.$username.'&user_group_name='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
+          print '<td class="browse_right"><a href="index.php?offset='.$end.'&limit='.$limit.'&user_shortcut_search='.$shortcut.'&user_name_search='.$username.'&user_group_search='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;</a>  <a href="index.php?offset='.$offsetmax.'&limit='.$limit.'&user_shortcut_search='.$shortcut.'&user_name_search='.$username.'&user_group_name='.$group.'&user_status_search='.$status.'">'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</a></td>';
       }
 
       print '</tr>';
