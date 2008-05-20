@@ -127,7 +127,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
         print '<p>Codex Account Status:';
 
-        print '<select name="form_codexstatus">';
+        print '<select name="form_codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
 
         print '<option value="A"';
         if ($this->userparam['status'] == 'A') print 'selected="selected"';
@@ -156,18 +156,10 @@ class UserEditDisplay extends AdminEditDisplay {
         print '</select></p>';
 
 
-
-            
-            
-
-
-
-
-
         print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
-
+        
         print '<select name="form_unixstatus">';
-
+        
         print '<option value="N"';
         if($this->userparam['unix_status'] == 'N') print 'selected="selected"';
         print '>'.$GLOBALS['Language']->getText('admin_usergroup','no_account').'</option>';
@@ -183,23 +175,23 @@ class UserEditDisplay extends AdminEditDisplay {
         print '<option value="D"';
         if($this->userparam['unix_status'] == 'D') print 'selected="selected"';
         print '>'.$GLOBALS['Language']->getText('admin_usergroup','deleted').'</option>';
-
+        
         print '</select>';
-
+        
         print '</p><p>Email:';
         print '<input name="email" value="'.$this->userparam['email'].'" size="35" maxlength="55" type="text">';
-
+        
         print '</p><p>Expiry Date:';
 
         print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
         print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a>';
-
+        
         print '</p><p>';
-
+        
         print '<input name="Update_Unix" value="Update" type="submit">';
-
+        
         print '</p><hr>';
-
+        
     }
 
 

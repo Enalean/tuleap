@@ -29,7 +29,7 @@ $controler = new UserControler();
 $controler->process();
 
 ?>
-
+<script type="text/javascript" src="/scripts/autoselectlist.js"></script>
 <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
 <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
 <script type="text/javascript" src="/scripts/autocompletion.js"></script>

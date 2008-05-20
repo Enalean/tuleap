@@ -94,11 +94,6 @@ class AdminSearchDisplay extends AdminDisplay {
 
       print '<td class="browse_center">Items '.$start.' - '.$end.'</td>';
 
-
-
-      //test pour les liens de fin next et end
-      echo 'offset : '.$offset.'<br />nbuser : '.$nbuser.'<br />$offsetmax : '.$offsetmax;
-
       if ($offset >= ($nbuser-$limit)|| $offsetmax <=0) {
           
  print '<td class="browse_right">'.$GLOBALS['Language']->getText('global', 'next').' '.$limit .'&gt;'.$GLOBALS['Language']->getText('global', 'end').' &gt;&gt;</td>';
