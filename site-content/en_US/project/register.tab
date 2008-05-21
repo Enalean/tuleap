@@ -21,9 +21,9 @@ register_category	select_3_classifs	Please select up to three classifications fo
 # Script: src/common/project//confirmation.php
 #
 register_confirmation	registration_complete	Registration Complete
-register_confirmation	upd_fail	UPDATING TO ACTIVE FAILED. <B>PLEASE</B> report to $1 $2
-register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. <B>PLEASE</B> report to admin@$1 $2
-register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. <B>PLEASE</B> report to $1 $2
+register_confirmation	upd_fail	UPDATING TO ACTIVE FAILED. PLEASE report to $1 $2
+register_confirmation	ins_file_fail	INSERTING FILEMODULE FAILED. PLEASE report to admin@$1 $2
+register_confirmation	set_owner_fail	SETTING YOU AS OWNER FAILED. PLEASE report to $1 $2
 register_confirmation	open_discussion	Open Discussion
 register_confirmation	general_discussion	General Discussion
 register_confirmation	get_help	Get Help
@@ -36,6 +36,7 @@ register_confirmation	cant_copy_svn_infos	ERROR - Can not copy default SVN infor
 register_confirmation	registration_deleted	Registration Deleted
 register_confirmation	project_deleted	Project registration deleted
 register_confirmation	try_again	Please try again in the future.
+register_confirmation	ins_desc_fail	INSERTING DESCRIPTION FIELD FAILED. PLEASE report to admin@$1 $2
 #
 #-----------------------------------------------
 # Script: src/common/project//form.php
@@ -76,7 +77,7 @@ register_license	license	License
 # Script: src/common/project//projectname.php
 #
 register_projectname	ins_query_fail	INSERT QUERY FAILED. Please notify $1
-register_projectname	info_missed	Missing Information. <B>PLEASE</B> fill in all required information.
+register_projectname	info_missed	Missing Information. PLEASE fill in all required information.
 #
 #-----------------------------------------------
 # Script: src/common/project//tos.php
@@ -122,3 +123,9 @@ register_confirmation	form_full_name	Full Name
 register_confirmation	form_unix_name	Short Name
 register_confirmation	form_license	Policy
 register_confirmation	trove	Categories
+#
+#-----------------------------------------------
+# Script: src/common/project/RegisterProjectDescription.php
+#
+register_desc	short_description	Short Project Description
+register_desc	short_description_desc	What's the purpose of your project (3-4 lines description). HTML tags allowed.

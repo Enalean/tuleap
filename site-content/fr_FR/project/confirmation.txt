@@ -7,21 +7,7 @@
 // 
 //
 
-        echo '
-	<B>Description courte du projet<font color="red">*</font>&nbsp;:</B><BR>
-	<TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="12">'.$data['project']['form_short_description'].'</TEXTAREA>
-	<P>
-	<B>Description complète du projet<font color="red">*</font>&nbsp;:</B><BR>
-	<TEXTAREA name="form_purpose" wrap="virtual" cols="70" rows="12">'.$data['project']['form_purpose'].'</TEXTAREA>
-	<P>
-	<B>Propriété intellectuelle&nbsp;:</B><BR>
-	<TEXTAREA name="form_patents" wrap="virtual" cols="70" rows="6">'.$data['project']['form_patents'].'</TEXTAREA>
-	<P>
-	<B>Autres logiciels requis&nbsp;:</B><BR>
-	<TEXTAREA name="form_required_sw" wrap="virtual" cols="70" rows="6">'.$data['project']['form_required_sw'].'</TEXTAREA>
-	<P>
-	<B>Autres Commentaires&nbsp;:</B><BR>
-	<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'.$data['project']['form_comments'].'</TEXTAREA>
+    echo '
 
 	<P>	<B>Nom complet&nbsp;:</B><BR>
 	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.$data['project']['form_full_name'].'">

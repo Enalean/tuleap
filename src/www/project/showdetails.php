@@ -18,13 +18,15 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
+$currentproject= new project($group_id);
+
 site_project_header(array('title'=>$Language->getText('project_showdetails','proj_details'),'group'=>$group_id,'toptab'=>'summary'));
 
 print '<P><h3>'.$Language->getText('project_showdetails','proj_details').'</h3>';
 
 // Now fetch the project details
 
-$result=db_query("SELECT register_purpose,patents_ips,required_software,other_comments, license_other ".
+$result=db_query("SELECT license_other ".
 		"FROM groups ".
 		"WHERE group_id=".db_ei($group_id));
 
@@ -32,29 +34,34 @@ if (!$result || db_numrows($result) < 1) {
 	echo db_error();
 	exit_error($Language->getText('project_showdetails','proj_not_found'),$Language->getText('project_showdetails','no_detail'));
 }
+
+$license_other = db_result($result,0,'license_other');
+
+$descfields=getProjectsDescFieldsInfos();
+$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
+
 $hp = CodeX_HTMLPurifier::instance();
-	$register_purpose = db_result($result,0,'register_purpose');
-	$patents_ips = db_result($result,0,'patents_ips');
-	$required_software = db_result($result,0,'required_software');
-	$other_comments = db_result($result,0,'other_comments');
-	$license_other = db_result($result,0,'license_other');
+
+for($i=0;$i<sizeof($descfields);$i++){
+	
+	
+	$displayfieldname[$i]=$descfields[$i]['desc_name'];
+	$displayfieldvalue[$i]='';
+	for($j=0;$j<sizeof($descfieldsvalue);$j++){
+		
+		if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
+			$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
+		}	
+	}
+	
+	echo "<P><b><u>".$hp->purify($displayfieldname[$i],CODEX_PURIFIER_LIGHT,$group_id)."</u></b></P>";
+	echo "<P>";
+	echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT, $group_id)  ;
+	echo "</P>";
+}
+	
+	
 ?>
-
-<P>
-<b><u><?php echo $Language->getText('project_admin_editgroupinfo','long_desc'); ?></u></b>
-<P><?php echo ($register_purpose == '') ? $Language->getText('global','none').'.' :  $hp->purify(util_unconvert_htmlspecialchars($register_purpose), CODEX_PURIFIER_LIGHT, $group_id)  ; ?>
-
-<P>
-<b><u><?php echo $Language->getText('project_admin_editgroupinfo','patents'); ?></u></b>
-<P><?php echo ($patents_ips == '') ? $Language->getText('global','none').'.' :  $hp->purify(util_unconvert_htmlspecialchars($patents_ips), CODEX_PURIFIER_BASIC, $group_id)  ; ?>
-
-<P>
-<b><u><?php echo $Language->getText('project_admin_editgroupinfo','soft_required'); ?></u></b>
-<P><?php echo ($required_software == '') ? $Language->getText('global','none').'.' :  $hp->purify(util_unconvert_htmlspecialchars($required_software), CODEX_PURIFIER_BASIC, $group_id)  ; ?>
-
-<P>
-<b><u><?php echo $Language->getText('project_admin_editgroupinfo','comments'); ?></u></b>
-<P><?php echo ($other_comments == '') ? $Language->getText('global','none').'.' :  $hp->purify(util_unconvert_htmlspecialchars($other_comments), CODEX_PURIFIER_BASIC, $group_id)  ; ?>
 
 <?php
 

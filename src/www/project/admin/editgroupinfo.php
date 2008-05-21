@@ -12,7 +12,12 @@ require_once('www/project/admin/project_admin_utils.php');
 
 $Language->loadLanguageMsg('project/project');
 
+$group_id=$request->get('group_id');
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+$descfieldsinfos = getProjectsDescFieldsInfos();
+$currentproject= new project($group_id);
+$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
 
 // If this was a submission, make updates
 
@@ -23,28 +28,101 @@ if (db_numrows($res_grp) < 1) {
 }
 $row_grp = db_fetch_array($res_grp);
 
-if (isset($Update)) {
 
+$form_group_name=$request->get('form_group_name');
+$form_shortdesc =$request->get('form_shortdesc');
+$hide_members=$request->get('hide_members');
+$Update=$request->get('Update');
+
+$valid_data=0;
+if($Update){
+	//data validation
+	$valid_data=1;
+	if (!$form_group_name||!$form_shortdesc) {
+	    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'info_missed'));
+		$valid_data=0;
+	}
+	    
+	$descfieldsinfos = getProjectsDescFieldsInfos();
+	for($i=0;$i<sizeof($descfieldsinfos);$i++){
+	    	$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
+			
+		if ( ($descfieldsinfos[$i]['desc_required']==1) && (!$currentform) ) {
+	    	$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'info_missed'));
+		    $valid_data=0;
+		}
+	}
+}
     
+
+if ($valid_data==1) {
+	
+	// insert descriptions 
+	$updatedesc=0;
+	for($i=0;$i<sizeof($descfieldsinfos);$i++){
+		
+		$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));
+		
+		
+		
+		for($j=0;$j<sizeof($descfieldsvalue);$j++){
+		
+			if($descfieldsvalue[$j]['group_desc_id']==$descfieldsinfos[$i]['group_desc_id']){
+				$previousvalue[$i]=$descfieldsvalue[$j]['value'];
+			}	
+		}
+		
+		
+		if($currentform!=''){
+			
+			if(isset($previousvalue[$i])&&($previousvalue[$i]!=$currentform)){
+				
+				$sql='UPDATE group_desc_value SET '
+						."value='".db_escape_string($currentform)."'";
+				$sql .=" WHERE group_id=$group_id AND group_desc_id='".$descfieldsinfos[$i]["group_desc_id"]."'";
+				
+				$resultdesc[$i]=db_query($sql);
+				if($resultdesc[$i] || db_affected_rows($resultdesc[$i]) >= 1){
+					$updatedesc=1;
+				}
+				
+			}else if(!isset($previousvalue[$i])){
+				$sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES"
+					 ." ('".$group_id."','".$descfieldsinfos[$i]["group_desc_id"]."','".db_escape_string($currentform)."')";
+				$resultdesc[$i]=db_query($sql);
+				if($resultdesc){
+					$updatedesc=1;
+				}	
+			}
+								
+		}else{
+			if(isset($previousvalue[$i])){	
+				$sql="DELETE FROM group_desc_value WHERE group_id=$group_id AND group_desc_id='".$descfieldsinfos[$i]["group_desc_id"]."'";
+				$resultdesc[$i]=db_query($sql);
+				if($resultdesc){
+					$updatedesc=1;
+				}	
+			}			
+		}
+	}	
     // in the database, these all default to '1', 
     // so we have to explicity set 0
     
     $sql = 'UPDATE groups SET '
         ."group_name='".htmlspecialchars($form_group_name)."',"
         ."short_description='$form_shortdesc',"
-        ."register_purpose='".htmlspecialchars($form_purpose)."', "
-        ."required_software='".htmlspecialchars($form_required_sw)."', "
-        ."patents_ips='".htmlspecialchars($form_patents)."',  "
-        ."other_comments='".htmlspecialchars($form_comments)."', "
         ."hide_members='$hide_members'";
 		
-    $sql .= " WHERE group_id=$group_id";
+    $sql .= " WHERE group_id='".$group_id."'";
 
     //echo $sql;
     $result=db_query($sql);
-    if (!$result || db_affected_rows($result) < 1) {
+    
+    if ((!$result || db_affected_rows($result) < 1)&&($updatedesc==0)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
     } else {
+    	
+    	
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
         group_add_history('changed_public_info','',$group_id);
         
@@ -55,14 +133,19 @@ if (isset($Update)) {
         ));
     
     }
+    
+    
+    
 }
 
 // update info for page
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id='".$group_id."'");
 if (db_numrows($res_grp) < 1) {
 	exit_no_group();
 }
 $row_grp = db_fetch_array($res_grp);
+$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
+
 
 project_admin_header(array('title'=>$Language->getText('project_admin_editgroupinfo','editing_g_info'),'group'=>$group_id,
 			   'help' => 'ProjectPublicInformation.html'));
@@ -75,29 +158,54 @@ print '
 <FORM action="'.$PHP_SELF.'" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
-<P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'
+<P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
 <BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'">
 
-<P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'
+<P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'<font color="red">*</font>
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
-'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
 
-<P>'.$Language->getText('project_admin_editgroupinfo','long_desc').'
-<BR><TEXTAREA cols="70" rows="10" wrap="virtual" name="form_purpose">
-'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['register_purpose']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
 
-<P>'.$Language->getText('project_admin_editgroupinfo','patents').'
-<BR><TEXTAREA cols="70" rows="6" wrap="virtual" name="form_patents">
-'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['patents_ips']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+for($i=0;$i<sizeof($descfieldsinfos);$i++){
 
-<P>'.$Language->getText('project_admin_editgroupinfo','soft_required').'
-<BR><TEXTAREA cols="70" rows="6"wrap="virtual" name="form_required_sw">
-'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['required_software']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+	for($j=0;$j<sizeof($descfieldsvalue);$j++){
+		
+		if($descfieldsvalue[$j]['group_desc_id']==$descfieldsinfos[$i]['group_desc_id']){
+			$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
+		}	
+	}
 
-<P>'.$Language->getText('project_admin_editgroupinfo','comments').'<BR>
-<TEXTAREA name="form_comments" wrap="virtual" cols="70" rows="4">'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['other_comments']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+	echo "<P><u>".$hp->purify($descfieldsinfos[$i]["desc_name"],CODEX_PURIFIER_LIGHT,$group_id);
+	if($descfieldsinfos[$i]["desc_required"]==1){
+		echo "<font color='red'>*</font>";
+	}
+	echo ":</u>";
+	if($descfieldsinfos[$i]["desc_type"]=='line'){
+		
+		echo "<BR><TEXTAREA name='form_".$descfieldsinfos[$i]["group_desc_id"].
+			 "' wrap='virtual' cols='70' rows='1'>";
+			 
+		if(isset($displayfieldvalue[$i])){
+			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_LIGHT,$group_id);
+		}
+		echo "</TEXTAREA></BR>" ;
+		
+	}else if($descfieldsinfos[$i]["desc_type"]=='text'){
+		
+		echo "<BR><TEXTAREA name='form_".$descfieldsinfos[$i]["group_desc_id"].
+			 "' wrap='virtual' cols='70' rows='8'>";
+			 
+		if(isset($displayfieldvalue[$i])){
+			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_LIGHT,$group_id);
+		}
+		echo "</TEXTAREA></BR>" ;
+	}
+	echo "</P>";
+}
 
-<P>'.$Language->getText('project_admin_editgroupinfo','hide_members').'
+echo '<INPUT TYPE="HIDDEN" NAME="hide_members" VALUE="0">'; 
+
+echo '<P>'.$Language->getText('project_admin_editgroupinfo','hide_members').'
 <INPUT TYPE="CHECKBOX" NAME="hide_members" VALUE="1"'.(($row_grp['hide_members']==1) ? ' CHECKED' : '' ).'><BR> 	 
 <HR>
 

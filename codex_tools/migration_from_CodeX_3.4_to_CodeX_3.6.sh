@@ -403,6 +403,117 @@ foreach($db_dao->searchAll() as $db) {
 ?>
 EOF
 
+#########
+# story #15757 Project Description custom fields
+
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+CREATE TABLE `codex`.`group_desc` (
+`group_desc_id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
+`desc_required` BOOL NOT NULL DEFAULT FALSE,
+`desc_name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`desc_description` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+`desc_rank` INT( 11 ) NOT NULL DEFAULT '0',
+`desc_type` ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
+PRIMARY KEY ( `group_desc_id` ),
+UNIQUE (`desc_name`)
+) CHARACTER SET utf8 COLLATE utf8_general_ci ;
+
+CREATE TABLE `codex`.`group_desc_value` (
+`desc_value_id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
+`group_id` INT( 11 ) NOT NULL ,
+`group_desc_id` INT( 11 ) NOT NULL ,
+`value` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+PRIMARY KEY ( `desc_value_id` )
+) CHARACTER SET utf8 COLLATE utf8_general_ci ;
+
+INSERT INTO `codex`.`group_desc` (
+`group_desc_id` ,
+`desc_required` ,
+`desc_name` ,
+`desc_description` ,
+`desc_rank` ,
+`desc_type`
+)
+VALUES (
+NULL , '1', 'Full Project Description', '<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project. ',
+'1', 'text'
+);
+
+INSERT INTO `codex`.`group_desc` (
+`group_desc_id` ,
+`desc_required` ,
+`desc_name` ,
+`desc_description` ,
+`desc_rank` ,
+`desc_type`
+)
+VALUES (
+NULL , '0', 'Intellectual Property', 'If your project is covered by Patents or IPs list them here.',
+'5', 'text'
+);
+
+INSERT INTO `codex`.`group_desc` (
+`group_desc_id` ,
+`desc_required` ,
+`desc_name` ,
+`desc_description` ,
+`desc_rank` ,
+`desc_type`
+)
+VALUES (
+NULL , '0', 'Required Software', 'If your project requires the use of 3rd Party (commercial or Open Source) or other internal Xerox software to work properly, list them here.',
+'5', 'text'
+);
+
+INSERT INTO `codex`.`group_desc` (
+`group_desc_id` ,
+`desc_required` ,
+`desc_name` ,
+`desc_description` ,
+`desc_rank` ,
+`desc_type`
+)
+VALUES (
+NULL , '0', 'Other Comments', 'Anything you\'d like to say about your projects that is not covered above. For instance, if your software is used in Xerox products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.',
+'5', 'text'
+);
+
+INSERT INTO group_desc_value( group_desc_id, group_id, value ) 
+(
+SELECT group_desc_id, group_id,
+REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(register_purpose, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
+FROM group_desc, groups
+WHERE group_desc.desc_name = 'Full Project Description'
+AND groups.register_purpose != ''
+) ; 
+
+INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
+SELECT group_desc_id, group_id,
+REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(patents_ips, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
+FROM group_desc, groups
+WHERE group_desc.desc_name = 'Intellectual Property'
+AND groups.patents_ips != ''
+) ;
+
+INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
+SELECT group_desc_id, group_id,
+REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(required_software, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
+FROM group_desc, groups
+WHERE group_desc.desc_name = 'Required Software'
+AND groups.required_software != ''
+) ;
+
+INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
+SELECT group_desc_id, group_id,
+REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(other_comments, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
+FROM group_desc, groups
+WHERE group_desc.desc_name = 'Other Comments'
+AND groups.other_comments != ''
+) ;
+
+EOF
+
 ##########
 # SR #820
 echo "- SR #820"

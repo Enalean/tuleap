@@ -24,6 +24,10 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 *
 * @param  data  
 */
+
+        
+        
+
 function create_project($data, $do_not_exit = false) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
@@ -38,6 +42,9 @@ function create_project($data, $do_not_exit = false) {
     } else {
       $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
     }
+    
+    
+    
     // make group entry
     $insert_data = array(
         'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
@@ -50,10 +57,6 @@ function create_project($data, $do_not_exit = false) {
         'license'             => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_license'])) ."'",
         'license_other'       => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_license_other'])) ."'",
         'short_description'   => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_short_description'])) ."'",
-        'register_purpose'    => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_purpose'])) ."'",
-        'required_software'   => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_required_sw'])) ."'",
-        'patents_ips'         => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_patents'])) ."'",
-        'other_comments'      => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_comments'])) ."'",
         'register_time'       => time(),
         'rand_hash'           => "'". md5($random_num) ."'",
         'built_from_template' => $data['project']['built_from_template'],
@@ -62,10 +65,31 @@ function create_project($data, $do_not_exit = false) {
     );
     $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
     $result=db_query($sql);
+    
+    
+    
     if (!$result) {
         exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','upd_fail',array($GLOBALS['sys_email_admin'],db_error())));
     } else {
         $group_id = db_insertid($result);
+        
+        // insert descriptions 
+        $descfieldsinfos = getProjectsDescFieldsInfos();
+
+		for($i=0;$i<sizeof($descfieldsinfos);$i++){
+			if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]) && ($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]!='')){
+				$sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".$group_id."','".$descfieldsinfos[$i]["group_desc_id"]."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')"; 
+				$result=db_query($sql);
+        		
+        		
+        		if (!$result) {
+                	list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+                	exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_desc_fail',array($host,db_error())));
+        		}
+			}
+		}
+        
+        
         
         // insert trove categories
         foreach($data['project']['trove'] as $root => $values) {

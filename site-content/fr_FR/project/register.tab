@@ -41,6 +41,7 @@ register_confirmation	cant_copy_svn_infos	ERREUR - Impossible de copier les info
 register_confirmation	registration_deleted	Enregistrement détruit
 register_confirmation	project_deleted	Enregistrement du projet détruit.
 register_confirmation	try_again	Merci de réessayer plus tard.
+register_confirmation	ins_desc_fail	ERREUR - INSERTION DE DESCRIPTION A ECHOUE. Veuillez en informer admin@$1 $2
 #
 #-----------------------------------------------
 # Script: src/common/project//form.php
@@ -115,3 +116,10 @@ register_title	settings	Propriétés du projet
 
 register_services	desc	Sélectionnez vos services
 register_services	server	Serveur
+#
+#-----------------------------------------------
+# Script: src/common/project/RegisterProjectDescription.php
+#
+register_desc	short_description	Description courte du projet
+register_desc	short_description_desc	Quel est le sujet de votre projet (description de 3 ou 4 lignes). Balises HTML autorisées.
+

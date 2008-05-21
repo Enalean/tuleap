@@ -183,6 +183,12 @@ echo ")</b>";?>
 <li><a href="/news/admin"><?php echo $Language->getText('admin_main', 'site_news_approval'); ?></A>
 </ul>
 
+<h3><?php echo $Language->getText('admin_main', 'desc_fields'); ?></h3>
+<ul>
+<li><a href="/admin/descfields/desc_fields_edit.php"><?php echo $Language->getText('admin_main', 'desc_fields_edit'); ?></A>
+</ul>
+
+
 <h3><?php echo $Language->getText('admin_main', 'trove_cat'); ?></h3>
 <ul>
 <li><a href="/admin/trove/trove_cat_list.php"><?php echo $Language->getText('admin_main', 'trove_cat_list'); ?></A>

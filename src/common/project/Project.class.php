@@ -55,6 +55,27 @@ function &project_get_object($group_id,$force_update=false) {
 	}
 }
 
+// see getProjectsDescFieldsInfos
+function cmp($a, $b){
+	if ($a["desc_rank"] == $b["desc_rank"]) {
+        return 0;
+    }
+    return ($a["desc_rank"] < $b["desc_rank"]) ? -1 : 1;
+}
+ 
+function getProjectsDescFieldsInfos(){
+	$sql = 'SELECT * FROM group_desc WHERE 1';
+      
+    $descfieldsinfos = array();
+    if ($res = db_query($sql)) {
+        while($data = db_fetch_array($res)) {
+            $descfieldsinfos[] = $data;
+        }
+    }
+    
+	usort($descfieldsinfos, "cmp");
+    return $descfieldsinfos;
+}	
 
 
 class Project extends Group {
@@ -318,6 +339,19 @@ class Project extends Group {
         }
         return $subprojects;
     }
+    
+    function getProjectsDescFieldsValue(){
+    	$sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id='.$this->getGroupId() ;
+        
+        $descfieldsvalue = array();
+        if ($res = db_query($sql)) {
+            while($data = db_fetch_array($res)) {
+                $descfieldsvalue[] = $data;
+            }
+        }
+        
+        return $descfieldsvalue;
+    }
 }
 
 /*
@@ -343,5 +377,5 @@ function group_get_result($group_id=0) {
 	$grp = project_get_object($group_id);
 	return $grp->getData();
 }       
-	
+
 ?>

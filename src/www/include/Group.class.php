@@ -201,12 +201,7 @@ class Group extends Error {
 	  return $this->data_array['short_description'];
 	}
 
-	//LJ Get the longest description provided during the 
-        //LJ registration process.
-	function getPurpose() {
-		return $this->data_array['register_purpose'];
-	}
-
+	
 	//date the group was registered
 	function getStartDate() {
 		return $this->data_array['register_time'];

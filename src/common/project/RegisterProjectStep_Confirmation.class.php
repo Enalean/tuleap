@@ -21,15 +21,20 @@ class RegisterProjectStep_Confirmation extends RegisterProjectStep {
     function display($data) {
         global $Language;
         require('vars.php');
+        require_once('RegisterProjectDescription.php');
         include($GLOBALS['Language']->getContent('project/confirmation'));
     }
     function onLeave($request, &$data) {
         //Arggh! Copy paste from steps. Must be enhanced !!!!
         $data['project']['form_short_description'] = $request->get('form_short_description');
-        $data['project']['form_purpose']           = $request->get('form_purpose');
-        $data['project']['form_required_sw']       = $request->get('form_required_sw');
-        $data['project']['form_patents']           = $request->get('form_patents');
-        $data['project']['form_comments']          = $request->get('form_comments');
+        
+        $descfieldsinfos = getProjectsDescFieldsInfos();
+    	
+    	for($i=0;$i<sizeof($descfieldsinfos);$i++){
+    		
+    		$data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]] = $request->get("form_".$descfieldsinfos[$i]["group_desc_id"]);
+    		
+    	}
         
         $data['project']['form_license']       = $request->get('form_license');
         $data['project']['form_license_other'] = $request->get('form_license_other');

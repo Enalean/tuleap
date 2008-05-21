@@ -75,7 +75,8 @@ admin_main	statusdeleted_user	deleted
 admin_main	statusvalidated_user	validated
 admin_main	statuspending_user	pending
 admin_main	statustotal_user	total
-
+admin_main	desc_fields	Project Description Fields
+admin_main	desc_fields_edit	Project Description Fields Edition
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
@@ -382,3 +383,28 @@ admin_servers	info_updated	Server <em>$1</em> has been updated
 admin_servers	info_notcreated	Server has not been created
 admin_servers	info_notdeleted	Server <em>$1</em> has not been deleted
 admin_servers	info_notupdated	Server <em>$1</em> has not been updated
+#-----------------------------------------------
+# Script: src/www/admin/descfields/desc_fields_edit.php
+#
+admin_desc_fields	title	Description Fields Edition
+admin_desc_fields	header	Description Fields Edition
+admin_desc_fields	header_add	Add a Description Fields 
+admin_desc_fields	desc_name	Field Name
+admin_desc_fields	desc_description	Field Description
+admin_desc_fields	desc_required	Is Required
+admin_desc_fields	desc_type	Description Type
+admin_desc_fields	desc_yes	Yes
+admin_desc_fields	desc_no	No
+admin_desc_fields	desc_line	Line
+admin_desc_fields	desc_text	Text Area
+admin_desc_fields	rank_on_screen	Rank On Screen
+admin_desc_fields	del?	Delete ?
+admin_desc_fields	ins_desc_field_fail	INSERTING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
+admin_desc_fields	del_desc_field_fail	DELETING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
+admin_desc_fields	update_required_desc_field_fail	UPDATING DESCRIPTION FAILED. PLEASE report to admin@$1 $2
+admin_desc_fields	update_desc_field_fail	UPDATE FAILED OR NO DATA CHANGED!
+admin_desc_fields	info_missed	Missing Information. PLEASE fill in all required information.
+admin_desc_fields	info_rank_noint	Rank must be an integer value!
+admin_desc_fields	add_success	Description Field Successfully added !
+admin_desc_fields	update_success	Description Field Successfully updated !
+admin_desc_fields	remove_success	Description Field Successfully deleted !

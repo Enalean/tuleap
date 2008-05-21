@@ -86,6 +86,16 @@ INSERT INTO user SET \
         last_pwd_update = '0', \
         last_access_date = '0';
 
+#
+# Default Data for 'group_desc'
+#
+INSERT INTO group_desc SET \
+		group_desc_id='1' , \
+		desc_required='1' , \
+		desc_name='Full Project Description' , \
+		desc_description='<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.' , \
+		desc_rank='1' , \
+		desc_type='text';
 
 #
 # Default Data for 'groups'
@@ -103,10 +113,6 @@ INSERT INTO groups SET \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   license = 'xrx', \
-  register_purpose = '', \
-  required_software = '', \
-  patents_ips = '', \
-  other_comments = '', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
@@ -190,10 +196,6 @@ INSERT INTO groups SET \
   cvs_box = '', \
   svn_box = '', \
   license = '', \
-  register_purpose = '', \
-  required_software = '', \
-  patents_ips = '', \
-  other_comments = '', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \

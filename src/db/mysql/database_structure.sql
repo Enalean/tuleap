@@ -933,10 +933,6 @@ CREATE TABLE groups (
   cvs_box varchar(20) NOT NULL default 'cvs1',
   svn_box varchar(20) NOT NULL default 'svn1',
   license varchar(16) default NULL,
-  register_purpose text,
-  required_software text,
-  patents_ips text,
-  other_comments text,
   license_other text,
   register_time int(11) NOT NULL default '0',
   rand_hash text,
@@ -971,6 +967,31 @@ CREATE TABLE groups (
   KEY idx_groups_public (is_public),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type)
+) TYPE=MyISAM;
+#
+# Table structure for table 'group_desc'
+#
+
+CREATE TABLE group_desc (
+  group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  desc_required BOOL NOT NULL DEFAULT FALSE,
+  desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  desc_description text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+  desc_rank INT( 11 ) NOT NULL DEFAULT '0',
+  desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
+  PRIMARY KEY (group_desc_id),
+  UNIQUE (desc_name)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'group_desc_value'
+#
+CREATE TABLE group_desc_value (
+  desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  group_id INT( 11 ) NOT NULL ,
+  group_desc_id INT( 11 ) NOT NULL ,
+  value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  PRIMARY KEY (desc_value_id)
 ) TYPE=MyISAM;
 
 #
