@@ -484,7 +484,7 @@ $RPM -e phpMyAdmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for CodeX...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/phpMyAdmin-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 
 # -> mailman
 echo "Removing installed mailman if any .."
@@ -516,7 +516,7 @@ $RPM -e htmlpurifier-docs 2>/dev/null
 echo "Installing htmlpurifier RPM for CodeX...."
 cd ${RPMS_DIR}/htmlpurifier
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/htmlpurifier-2*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
 
@@ -571,7 +571,7 @@ $LN -sf ${dir_entry} docbook-xsl
 # -> Tomcat (for SalomeTMF)
 cd /usr/share
 $RM -rf apache-tomcat-6*
-$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tgz
+$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tar.gz
 dir_entry=`$LS -1d apache-tomcat-6.*`
 $LN -sf ${dir_entry} apache-tomcat-6
 $CHOWN -R codexadm.codexadm /usr/share/apache-tomcat-6/
@@ -604,9 +604,11 @@ pid-file=/var/run/mysqld/mysqld.pid
 
 EOF
 
-
+echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
+echo "***************************************"
 # Start database
 $SERVICE mysqld start
+echo "***************************************"
 
 
 ##############################################
@@ -628,7 +630,7 @@ echo "Installing the CodeX software..."
 cd $INSTALL_DIR
 $TAR xfz ${CodeX_DIR}/codex*.tgz
 $CHOWN -R codexadm.codexadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
@@ -807,6 +809,7 @@ fi
 ##############################################
 # Installing the SalomeTMF database
 #
+echo "Creating the SalomeTMF database... $pass_opt"
 
 yn="-"
 freshdb=0
@@ -1369,3 +1372,16 @@ echo "Installation completed successfully!"
 $CAT $TODO_FILE
 
 exit 0
+
+
+todo:
+salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
+Missing SELinux RPM, JRE RPM, apr and apr-utils RPM, 
+Saxon, Fop, Jimi DocBook
+OK? Apache tomcat missing?
+OK? MySQL long message
+utilities/ missing (fileforge...)
+Can t initialize salome DB: Access denied to user root with password: no
+
+TODO:
+must move jre RPM in subdir
