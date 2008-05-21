@@ -26,6 +26,7 @@ require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');
 
+
 /**
  * UserSearchDisplay
  *
@@ -87,7 +88,6 @@ class UserSearchDisplay extends AdminSearchDisplay {
      * @type string $shortcut
      */
     private $shortcut;
-
 
     /**
      * $username
@@ -173,16 +173,46 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_userlist','title')));
         parent::displayHeader($GLOBALS['Language']->getText('admin_userlist','user_list').': <b>'.$GLOBALS['Language']->getText('admin_userlist','all_groups').'</b>');
-    }
 
+        
+        ?>
+            <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
+                 <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
+                 <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
+                 <script type="text/javascript" src="/scripts/formcontrol.js"></script>
+                 <script type="text/javascript">
+                 
+                 function autocomplete() {
+            
+            Event.observe(window, 'load', function () {
+                    var ori = $('gen_prop_allowed_project');
+                    if (ori) {
+                        var update = Builder.node('div', {id:'gen_prop_allowed_project_choices', style:'background:white'});
+                        Element.hide(update);
+                        ori.parentNode.appendChild(update);
+                        new Ajax.Autocompleter('gen_prop_allowed_project', update, '/user/autocompletion.php', {
+                            tokens: ',', paramName: 'value'
+                                    });
+                    }
+                });                           
+        }
+        
+        autocomplete();
+        
+        </script>
+                    
+              <?php 
+              }
+    
+    
     /**
      *displaySearchFilter()
      *
      */
     function displaySearchFilter() {
-      
+        
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), $this->offset, $this->nbrows);
-
+        
         print '<table width=100%>';
 
         print '<tr>';
@@ -192,15 +222,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php?offset=0&limit='.$this->nbrows.'" method="POST">';
         
-        // print '<input type="text" name="user_name_search" id="username">';
         print '<input type="text" name="user_name_search" id="gen_prop_allowed_project">';
-
-
-        
-        //        print '<div class="update" id="username_update"></div> ';
-        
-        print '<div class="update" id="gen_prop_allowed_project_choices"></div> ';
-        //        print '<input type="hidden" name="username_id" id="username_id" value="" /><br/>';
 
         print '</td>';
 

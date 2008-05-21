@@ -127,14 +127,7 @@ class UserControler extends Controler {
      */
     function viewsManagement() {
      
-         if($this->view == 'ajax_projects') {
-             $view = new UserSearchAjaxDisplay($this->userIterator);
-             echo $_GET['user_name_search'];
-            
-         } 
-        
-
-        elseif ($this->userid) {
+        if ($this->userid) {
             $view = new UserEditDisplay($this->userparam, $this->useradminflag);
         }
         else {
@@ -377,18 +370,6 @@ class UserControler extends Controler {
             $this->setUserParam($this->userid);
             $this->setUserAdminFlag($this->userid);
         }
-
-
-        //valid view
-        $validView = new Valid_String('view');
-
-        if ($request->valid($validView)) {
-            $this->view = $request->get('view');
-        }
-        else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-        }
-       
 
         $this->setOffset();        
 
