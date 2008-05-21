@@ -27,14 +27,9 @@ require_once('common/dao/UserDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
 
-
-
-
-
-
-
- 
-
+/**
+ * UserSearchAjaxDisplay()
+ */
 class UserSearchAjaxDisplay {
 
     /**
@@ -44,54 +39,42 @@ class UserSearchAjaxDisplay {
      */
     private $userIterator;
 
+   
     /**
-     * $offset
-     *
-     * @type int $offset
-     */
-    private $offset;
-
-    /**
-     * $limit
-     *
-     * @type int $limit
-     */
-    private $limit;
-
-
-
-    
+     * constructor
+     */    
     function __construct($userIterator) {
         $this->userIterator->$userIterator;
 
     }
 
+
     /**
      * initUserIterator()
      *
      */
-    function initUserIterator() {
+    //     function initUserIterator() {
         
-        $dao = new UserDao(CodexDataAccess::instance());
+//         $dao = new UserDao(CodexDataAccess::instance());
         
-        $criteria = array();
+//         $filter = array();
         
-        $request =& HTTPRequest::instance();
+//         $request =& HTTPRequest::instance();
 
-        $vuName = new Valid_String('user_name_search');
+//         $vuName = new Valid_String('user_name_search');
         
-        if ($request->valid($vuName)) {
+//         if ($request->valid($vuName)) {
             
-            if ($request->isPost()) {
-                $name = $request->get('user_name_search');
-                $criteria[] = new UserNameCriteria($name);
-            }
-            else {
-                echo 'peut etre qui recuperien';
-            }
-        }
-        $this->userIterator = $dao->searchUserByCriteria($criteria, 0, 10);
-    }
+//             if ($request->isPost()) {
+//                 $name = $request->get('user_name_search');
+//                 $filter[] = new UserNameCriteria($name);
+//             }
+//             else {
+//                 echo 'peut etre qui recuperien';
+//             }
+//         }
+//         $this->userIterator = $dao->searchUserByCriteria($filter, 0, 10);
+//     }
 
     /**
      * display()
@@ -103,16 +86,12 @@ class UserSearchAjaxDisplay {
         
         foreach($this->userIterator as $u) {
             
-            print '<li class="autocomplete"><div class="user_name"><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
+            print '<li class="autocomplete"><div class="gen_prop_alliwed_project_choices"><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
             
             print '</li>';   
         }
         print '</ul>';
     }
   }
-
-//  $userAutocompletionForm = new UserAutocompletionForm();
-//  $userAutocompletionForm->initUserIterator();
-//  $userAutocompletionForm->display();
 
 ?>

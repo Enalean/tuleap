@@ -11,6 +11,7 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
+
 class PluginsAdministrationViews extends Views {
     
     function PluginsAdministrationViews(&$controler, $view=null) {

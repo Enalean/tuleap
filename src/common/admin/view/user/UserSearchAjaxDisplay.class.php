@@ -22,19 +22,40 @@
  *
  * 
  */
-require_once('common/admin/UserControler.class.php');
-//require_once('www/admin/user/UserAutocompletionForm.class.php');
 
-$controler = new UserControler();
-$controler->process();
+class UserAutocompletionForm {
+
+    /**
+     * $userIterator
+     *
+     * @type Iterator $userIterator
+     */
+    private $userIterator;
+
+    function __construct($userIterator) {
+        $this->userIterator = $userIterator;
+    }
+
+    function display() {
+
+        $i = 0;
+        print '<ul class="autocomplete">'; 
+        
+        foreach($this->userIterator as $u) {
+            
+            print '<li class="autocomplete"><div class="user__name">('.$u['user_id'].') '.$u['user_name'].' '.$u['realname'].'</div>';
+    
+            print '</li>';
+            
+            $i++;
+            if ($i >= 10) {
+                echo 'coucou';             
+
+            }
+        }
+        print '</ul>';
+   
+    }
+}
 
 ?>
-<script type="text/javascript" src="/scripts/autoselectlist.js"></script>
-<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
-<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
-<script type="text/javascript" src="/scripts/autocompletion.js"></script>
-<script type="text/javascript" src="/scripts/formcontrol.js"></script>
-
-<script type="text/javascript">
-autocomplete();
-</script>

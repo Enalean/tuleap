@@ -127,12 +127,14 @@ class UserControler extends Controler {
      */
     function viewsManagement() {
      
-       //  if($this-> == 'ajax') {
-//             $view = new UserSearchAjaxDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser);
-//         } 
-//         else {
+         if($this->view == 'ajax_projects') {
+             $view = new UserSearchAjaxDisplay($this->userIterator);
+             echo $_GET['user_name_search'];
+            
+         } 
+        
 
-        if ($this->userid) {
+        elseif ($this->userid) {
             $view = new UserEditDisplay($this->userparam, $this->useradminflag);
         }
         else {
@@ -321,8 +323,32 @@ class UserControler extends Controler {
         }
         
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
- 
-    }
+
+
+        if ($this->view == 'ajax_projects') {
+         
+            $dao = new UserDao(CodexDataAccess::instance());
+        
+            $filter = array();
+            
+            $request =& HTTPRequest::instance();
+            
+            $vuName = new Valid_String('user_name_search');
+            
+            if ($request->valid($vuName)) {
+               
+                //  if ($request->isPost()) {
+                    $name = $request->get('user_name_search');
+                    $filter[] = new UserNameFilter($name);
+            }
+            else {
+                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            }
+           
+            $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
+                     
+        }
+     }
 
    
     /**
@@ -351,6 +377,18 @@ class UserControler extends Controler {
             $this->setUserParam($this->userid);
             $this->setUserAdminFlag($this->userid);
         }
+
+
+        //valid view
+        $validView = new Valid_String('view');
+
+        if ($request->valid($validView)) {
+            $this->view = $request->get('view');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+       
 
         $this->setOffset();        
 

@@ -68,7 +68,7 @@ body,
 .browse_right { text-align:right; }
 
 /* Autocompletion */
-.update{
+/*.update{
     position:absolute;
     width:250px;
     background-color:white;
@@ -101,4 +101,16 @@ li.autocomplete div.user_name {
     font-weight:bold;
     font-size:12px;
     line-height:1.2em;
+}*/
+
+#gen_prop_allowed_project_choices {
+    background:white;
+}
+#gen_prop_allowed_project_choices ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+#gen_prop_allowed_project_choices ul li.selected {
+    background:#eef;
 }

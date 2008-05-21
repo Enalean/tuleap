@@ -72,7 +72,7 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayUnixAccountInformation() {
 
-        print $GLOBALS['Language']->getText('admin_usergroup','account_info');
+        print '<h1><b>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</b></h1>';
         
         print '<form method="post" name="update_user" action="index.php">';
         

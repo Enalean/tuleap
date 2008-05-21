@@ -183,7 +183,6 @@ class UserSearchDisplay extends AdminSearchDisplay {
       
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), $this->offset, $this->nbrows);
 
-        
         print '<table width=100%>';
 
         print '<tr>';
@@ -191,11 +190,17 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=33%>';
 
         print 'Search (Login Name, Real Name):';
-        print '<form name="usersearch" action="index.php" method="POST">';
-        print '<input type="text" name="user_name_search" id="username">';
-      
-        print '<div class="update" id="username_update"></div> ';
-        print '<input type="hidden" name="username_id" id="username_id" value="" /><br/>';
+        print '<form name="usersearch" action="index.php?offset=0&limit='.$this->nbrows.'" method="POST">';
+        
+        // print '<input type="text" name="user_name_search" id="username">';
+        print '<input type="text" name="user_name_search" id="gen_prop_allowed_project">';
+
+
+        
+        //        print '<div class="update" id="username_update"></div> ';
+        
+        print '<div class="update" id="gen_prop_allowed_project_choices"></div> ';
+        //        print '<input type="hidden" name="username_id" id="username_id" value="" /><br/>';
 
         print '</td>';
 
@@ -244,11 +249,9 @@ class UserSearchDisplay extends AdminSearchDisplay {
         $this->initMaxOffset();
 
 
-        $link = '&user_shortcut_search='.$this->shortcut.'&user_name_search='.$this->username.'&user_group_search='.$this->group.'&user_status_search='.$this->status;
-
-
-        //        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->shortcut, $this->username, $this->group, $this->status);
-        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $link);
+        $this->link = '&user_shortcut_search='.$this->shortcut.'&user_name_search='.$this->username.'&user_group_search='.$this->group.'&user_status_search='.$this->status;
+   
+        parent::displayBrowse($this->start, $this->end, $this->offset, $this->nbrows, $this->nbuser, $this->offsetmax, $this->link);
     }
 
     /**
@@ -294,6 +297,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 <td><a href="'.$u['email'].'">'.$u['email'].'</a></td></tr>';
         }
         print '</table>';       
+        print '<p><a onClick="checkAll(1);">Check all items</a> - <a onClick="checkAll(0);">Clear all items</a></p>';
     }
 
     /**
