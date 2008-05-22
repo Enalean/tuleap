@@ -23,15 +23,23 @@
  * 
  */
 require_once('pre.php');
-require_once('common/dao/UserDao.class.php');
+require_once('common/dao/GroupDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
 
 /**
- * UserAutocompletionControler()
+ * GroupAutocompletionControler()
  */
-class UserAutocompletionControler {
-   
+class GroupAutocompletionControler {
+
+    /**
+     * $groupIterator
+     *
+     * @type iterator $groupIterator
+     */
+    private $groupIterator;   
+
+
     /**
      * constructor
      */    
@@ -39,36 +47,31 @@ class UserAutocompletionControler {
        
     }
 
-
+   
     /**
-     * initUserIterator()
+     * initGroupIterator()
      *
      */
-    function initUserIterator() {
-
-
-        $dao = new UserDao(CodexDataAccess::instance());        
-
+    function initGroupIterator() {
+        
+        $dao = new GroupDao(CodexDataAccess::instance());
+        
         $filter = array();
-
+        
         $request =& HTTPRequest::instance();
 
+        $validGroupName = new Valid_String('value');
         
-        //valid parameters
-
-        //valid user name
-        $validUserName = new Valid_String('value');
-      
-        if ($request->valid($validUserName)) {
+        if ($request->valid($validGroupName)) {
+            
             $name = $request->get('value');
-            $filter[] = new UserNameFilter($name);
+            $filter[] = new GroupNameFilter($name);
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-               
-        $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
-
+        
+        $this->groupIterator = $dao->searchGroupByFilter($filter, 0, 10);
     }
 
     /**
@@ -79,14 +82,13 @@ class UserAutocompletionControler {
         
         print '<ul class="autocompletion">'; 
         
-        foreach($this->userIterator as $u) {
-            
-            print '<li class="autocompletion"><div><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
+        foreach($this->groupIterator as $g) {
+
+            print '<li class="autocompletion"><div><span class="informal">('.$g['group_id'].') </span>'.$g['group_name'].'<span class="informal"> '.$g['unix_group_name'].'</span></div>';
             
             print '</li>';   
         }
         print '</ul>';
-
     }
   
 
@@ -95,11 +97,11 @@ class UserAutocompletionControler {
      */
     function request() {
 
-        $this->initUserIterator();
+        $this->initGroupIterator();
         $this->display();
     }
 }
 
-$userautocompletion = new UserAutocompletionControler();
-$userautocompletion->request();
+$groupautocompletion = new GroupAutocompletionControler();
+$groupautocompletion->request();
 ?>

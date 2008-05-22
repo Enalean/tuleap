@@ -330,12 +330,11 @@ class UserControler extends Controler {
             
             if ($request->valid($vuName)) {
                
-                //  if ($request->isPost()) {
-                    $name = $request->get('user_name_search');
-                    $filter[] = new UserNameFilter($name);
+                $name = $request->get('user_name_search');
+                $filter[] = new UserNameFilter($name);
             }
             else {
-                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
             }
            
             $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
