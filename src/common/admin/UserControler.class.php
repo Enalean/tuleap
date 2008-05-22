@@ -112,8 +112,6 @@ class UserControler extends Controler {
     private $status;
 
 
-
-
     /**
      * constructor
      *
@@ -350,7 +348,6 @@ class UserControler extends Controler {
         
         $request =& HTTPRequest::instance();
 
-        
         //valid parameters
 
         //valid user id

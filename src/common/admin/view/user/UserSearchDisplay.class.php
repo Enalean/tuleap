@@ -167,6 +167,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      *
      */
     function displayHeader() {
+
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
 
         session_require(array('group'=>'1','admin_flas'=>'A'));
@@ -307,10 +308,13 @@ class UserSearchDisplay extends AdminSearchDisplay {
         
         print '<th>Mail to</th></tr>';   
 
+
+        print '<form name="userdisplay action="index.php" method="POST">';
+
         foreach($this->userIterator as $u) {
 
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
-<td align="center"><input type="checkbox" name="admin" id="admin" align="center"/></td>
+<td align="center"><input type="checkbox" name="'.$u['user_name'].'" value="'.$u['user_id'].'" align="center"/></td>
 <td class="user_active"><a href="?user_id='.$u['user_id'].'">'.$u['user_name'].'</a></td>
 <td><a href="#">'.$u['realname'].'</a></td>
 <td><a href="#">[DevProfil]</a></td>
@@ -328,6 +332,10 @@ class UserSearchDisplay extends AdminSearchDisplay {
         }
         print '</table>';       
         print '<p><a onClick="checkAll(1);">Check all items</a> - <a onClick="checkAll(0);">Clear all items</a></p>';
+
+        print '<input type="submit" value="Submit" name="submit">';
+
+    print '</form>';
     }
 
     /**
