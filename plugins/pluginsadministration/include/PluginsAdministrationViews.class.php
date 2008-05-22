@@ -11,7 +11,6 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
-
 class PluginsAdministrationViews extends Views {
     
     function PluginsAdministrationViews(&$controler, $view=null) {
@@ -31,11 +30,7 @@ class PluginsAdministrationViews extends Views {
     }
     
     function display($view='') {
-        if ($view == 'ajax_projects') {
-            $this->$view();
-        } else {
-            parent::display($view);
-        }
+        parent::display($view);  
     }
     // {{{ Views
     function browse() {
@@ -115,21 +110,6 @@ class PluginsAdministrationViews extends Views {
         }
         if ($browse) {
             $this->browse();
-        }
-    }
-    function ajax_projects() {
-        $request =& HTTPRequest::instance();
-        $p = $request->get('gen_prop');
-        if ($p && isset($p['allowed_project'])) {
-            $value = db_escape_string($p['allowed_project']);
-            $sql = db_query("SELECT group_id, unix_group_name FROM groups WHERE group_id LIKE '%$value%' OR unix_group_name LIKE '%$value%'");
-            if (db_numrows($sql)) {
-                echo '<ul>';
-                while($row = db_fetch_array($sql)) {
-                    echo '<li>'. $row[0] .' ('. $row[1] .')</li>';
-                }
-                echo '</ul>';
-            }
         }
     }
     function properties() {
@@ -240,31 +220,18 @@ class PluginsAdministrationViews extends Views {
                     $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_delproject').' <input name="gen_prop[disallowed_project]" type="text" value="" />';
 
                     $output .= <<<EOS
-                    <style type="text/css">
-                    #gen_prop_allowed_project_choices {
-                        background:white;
-                    }
-                    #gen_prop_allowed_project_choices ul {
-                        margin:0;
-                        padding:0;
-                        list-style:none;
-                    }
-                    #gen_prop_allowed_project_choices ul li.selected {
-                        background:#eef;
-                    }
-                    </style>
-                    <script type="text/javascript">
-                    Event.observe(window, 'load', function () {
-                            var ori = $('gen_prop_allowed_project');
-                            if (ori) {
-                                var update = Builder.node('div', {id:'gen_prop_allowed_project_choices', style:'background:white'});
-                                Element.hide(update);
-                                ori.parentNode.appendChild(update);
-                                new Ajax.Autocompleter('gen_prop_allowed_project', update, '?view=ajax_projects', {
-                                        tokens: ','
-                                });
-                            }
-                    });
+                        <script type="text/javascript">
+                        Event.observe(window, 'load', function () {
+                                var ori = $('gen_prop_allowed_project');
+                                if (ori) {
+                                    var update = Builder.node('div', {id:'gen_prop_allowed_project_choices', style:'background:white', class:'autocompletion'});
+                                    Element.hide(update);
+                                    ori.parentNode.appendChild(update);
+                                    new Ajax.Autocompleter('gen_prop_allowed_project', update, '/project/autocompletion.php', {
+                                        tokens: ',', paramName:'value'
+                                                });
+                                }
+                            });
                     </script>
 EOS;
                     $yesChecked = 'checked="checked" ';

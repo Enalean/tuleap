@@ -22,7 +22,6 @@ class PluginsAdministration extends Controler {
         if ($request->exist('view')) {
             switch ($request->get('view')) {
                 case 'properties':
-                case 'ajax_projects':
                     $this->view = $request->get('view');
                     break;
                 default:
