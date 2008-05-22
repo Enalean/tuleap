@@ -103,14 +103,3 @@ li.autocomplete div.user_name {
     line-height:1.2em;
 }*/
 
-#gen_prop_allowed_project_choices {
-    background:white;
-}
-#gen_prop_allowed_project_choices ul {
-    margin:0;
-    padding:0;
-    list-style:none;
-}
-#gen_prop_allowed_project_choices ul li.selected {
-    background:#eef;
-}
