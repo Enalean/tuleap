@@ -63,7 +63,11 @@ class UserEditDisplay extends AdminEditDisplay {
         
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
         parent::displayHeader($GLOBALS['Language']->getText('admin_usergroup','header').': ');
-    }
+        ?>
+            <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
+                 
+                 <?php
+                 }
 
 
     /**

@@ -176,8 +176,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         
         ?>
-            <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
-                 <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
+            <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
                  <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
                  <script type="text/javascript" src="/scripts/formcontrol.js"></script>
                  <script type="text/javascript">
@@ -206,10 +205,10 @@ class UserSearchDisplay extends AdminSearchDisplay {
                         tokens: ',', paramName: 'value'
                                     });
                 }
-                }); 
-            
+            }); 
+        
         </script>
-                    
+              
               <?php 
               }
     
