@@ -185,12 +185,12 @@ class UserSearchDisplay extends AdminSearchDisplay {
                  function autocomplete() {
             
             Event.observe(window, 'load', function () {
-                    var ori = $('gen_prop_allowed_project');
+                    var ori = $('user_name');
                     if (ori) {
-                        var update = Builder.node('div', {id:'gen_prop_allowed_project_choices', style:'background:white'});
+                        var update = Builder.node('div', {id:'user_name_choices', style:'background:white', class:'autocompletion'});
                         Element.hide(update);
                         ori.parentNode.appendChild(update);
-                        new Ajax.Autocompleter('gen_prop_allowed_project', update, '/user/autocompletion.php', {
+                        new Ajax.Autocompleter('user_name', update, '/user/autocompletion.php', {
                             tokens: ',', paramName: 'value'
                                     });
                     }
@@ -222,7 +222,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php?offset=0&limit='.$this->nbrows.'" method="POST">';
         
-        print '<input type="text" name="user_name_search" id="gen_prop_allowed_project">';
+        print '<input class="autocompletion" type="text" name="user_name_search" id="user_name">';
 
         print '</td>';
 

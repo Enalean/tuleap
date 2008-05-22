@@ -72,11 +72,11 @@ class UserAutocompletionControler {
      */
     function display() {
         
-        print '<ul class="autocomplete">'; 
+        print '<ul class="autocompletion">'; 
         
         foreach($this->userIterator as $u) {
             
-            print '<li class="autocomplete"><div class="gen_prop_alliwed_project_choices"><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
+            print '<li class="autocompletion"><div class="gen_prop_alliwed_project_choices"><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
             
             print '</li>';   
         }

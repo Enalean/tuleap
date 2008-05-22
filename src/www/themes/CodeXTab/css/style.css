@@ -462,15 +462,17 @@ table.release tr td img {
 
 
 /* {{{ autocompletion field */
-#gen_prop_allowed_project_choices {
+.autocompletion {
     background:white;
 }
-#gen_prop_allowed_project_choices ul {
+
+.autocompletion ul {
     margin:0;
     padding:0;
     list-style:none;
 }
-#gen_prop_allowed_project_choices ul li.selected {
+
+.autocompletion ul li.selected {
     background:#eef;
 }
 /* }}} */

@@ -67,39 +67,4 @@ body,
 .browse_center { text-align:center; }
 .browse_right { text-align:right; }
 
-/* Autocompletion */
-/*.update{
-    position:absolute;
-    width:250px;
-    background-color:white;
-    border:1px solid #888;
-    margin:0px;
-    padding:0px;
-}
-
-ul.autocomplete {
-    list-style-type: none;
-    margin:0px;
-    padding:0px;
-    text-align: left;
-}
-
-ul.autocomplete li.selected { 
-    background-color: #ffb; 
-    cursor: pointer; 
-}
-
-li.autocomplete {
-    list-style-type: none;
-    display:block;
-    margin:0;
-    padding:2px;
-    height:32px;
-}
-
-li.autocomplete div.user_name {
-    font-weight:bold;
-    font-size:12px;
-    line-height:1.2em;
-}*/
 
