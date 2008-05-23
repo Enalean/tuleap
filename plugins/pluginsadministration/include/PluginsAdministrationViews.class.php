@@ -217,7 +217,7 @@ class PluginsAdministrationViews extends Views {
                     $output .=       '<br>';
                     $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_addproject').' <span><input name="gen_prop[allowed_project]" id="gen_prop_allowed_project" type="text" value="" /></span>';
                     $output .=       '&nbsp;';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_delproject').' <input name="gen_prop[disallowed_project]" type="text" value="" />';
+                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_delproject').' <input name="gen_prop[disallowed_project]" id="gen_prop_unallowed_project" type="text" value="" />';
 
                     $output .= <<<EOS
                         <script type="text/javascript">
@@ -232,6 +232,18 @@ class PluginsAdministrationViews extends Views {
                                                 });
                                 }
                             });
+
+                    Event.observe(window, 'load', function () {
+                            var ori = $('gen_prop_unallowed_project');
+                            if (ori) {
+                                var update = Builder.node('div', {id:'gen_prop_unallowed_project_choices', style:'background:white', class:'autocompletion'});
+                                Element.hide(update);
+                                ori.parentNode.appendChild(update);
+                                new Ajax.Autocompleter('gen_prop_unallowed_project', update, '/project/autocompletion.php', {
+                                    tokens: ',', paramName:'value'
+                                            });
+                            }
+                        });
                     </script>
 EOS;
                     $yesChecked = 'checked="checked" ';
