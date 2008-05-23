@@ -159,6 +159,7 @@ $hp =& CodeX_HTMLPurifier::instance();
 <INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35" MAXLENGTH="55">
 <P>
 <?php echo $Language->getText('admin_usergroup','expiry_date'); 
+$exp_date='';
 if($row_user['expiry_date'] != 0){
    $exp_date = format_date('Y-m-d',$row_user['expiry_date']); 
 }
