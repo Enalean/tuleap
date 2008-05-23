@@ -186,12 +186,42 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
               
         parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>'.$GLOBALS['Language']->getText('admin_grouplist','all_categ').'</b>');
-    }
 
+        ?>
+
+            <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
+                 <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
+                 <script type="text/javascript">
+                 
+                 Event.observe(window, 'load', function () {
+                         var ori = $('group_name');
+                         if (ori) {
+                             var update = Builder.node('div', {id:'group_name_choices', style:'background:white', class:'autocompletion'});
+                             
+                             Element.hide(update);
+                             
+                             ori.parentNode.appendChild(update);
+                             new Ajax.Autocompleter('group_name', update, '/project/autocompletion.php', {
+                                 tokens: ',', paramName: 'value'
+                                         });
+                         }
+                     }); 
+                       
+        </script>
+              
+              
+              
+              <?php
+              }
+    
+    /**
+     * displaySearchFilter()
+     *
+     */
     function displaySearchFilter() {
         
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_group'), $this->offset, $this->nbrows);
-
+        
         print '<table width=100%>';
         
         print '<tr>';
@@ -200,7 +230,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print 'Search (GroupName, GroupUnixName):';
         print '<form name="groupsearch" action="index.php" method="POST">';
-        print '<input type="text" name="group_name_search">';
+        print '<input type="text" name="group_name_search" id="group_name">';
            
         print '</td>';
         

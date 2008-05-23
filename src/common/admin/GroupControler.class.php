@@ -244,6 +244,13 @@ class GroupControler extends Controler {
       
         if ($request->valid($validGroupName)) {
             $this->name = $request->get('group_name_search');
+            $this->name = explode(',', $this->name);
+            $this->name = $this->name[0];
+                     
+            if ( preg_match('#^.*\((.*)\)$#',$this->name, $matches)) {
+                $this->name = $matches[1];
+            }
+
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
@@ -344,6 +351,13 @@ class GroupControler extends Controler {
       
         if ($request->valid($validGroupName)) {
             $this->name = $request->get('group_name_search');
+            $this->name = $request->get('group_name_search');
+            $this->name = explode(',', $this->name);
+            $this->name = $this->name[0];
+            
+            if ( preg_match('#^.*\((.*)\)$#',$this->name, $matches)) {
+                $this->name = $matches[1];
+            }
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
