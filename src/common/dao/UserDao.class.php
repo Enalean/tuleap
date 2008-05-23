@@ -374,7 +374,6 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      */
     function & searchUserByFilter($ca, $offset, $limit) {
         
-
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 

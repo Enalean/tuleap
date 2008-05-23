@@ -23,7 +23,6 @@
  * 
  */
 require_once('common/admin/UserControler.class.php');
-//require_once('www/admin/user/UserAutocompletionForm.class.php');
 
 $controler = new UserControler();
 $controler->process();

@@ -284,6 +284,12 @@ class UserControler extends Controler {
                 
         if ($request->valid($validUserGroup)) {
             $this->group = $request->get('user_group_search');
+            $this->group = explode(',', $this->group);
+            $this->group = $this->group[0];
+                     
+            if ( preg_match('#^.*\((.*)\)$#',$this->group, $matches)) {
+                $this->group = $matches[1];
+            }
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');

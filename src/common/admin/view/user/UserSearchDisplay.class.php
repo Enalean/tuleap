@@ -193,21 +193,24 @@ class UserSearchDisplay extends AdminSearchDisplay {
                                  tokens: ',', paramName: 'value'
                                          });
                          }
-                     }); 
-        
+                     });
+    
         
         Event.observe(window, 'load', function () {
                 var ori = $('user_group');
                 if (ori) {
                     var update = Builder.node('div', {id:'user_group_choices', style:'background:white', class:'autocompletion'});
+                    
                     Element.hide(update);
+                    
                     ori.parentNode.appendChild(update);
                     new Ajax.Autocompleter('user_group', update, '/project/autocompletion.php', {
                         tokens: ',', paramName: 'value'
-                                    });
+                                });
                 }
             }); 
         
+               
         </script>
               
               <?php 
@@ -219,7 +222,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      *
      */
     function displaySearchFilter() {
-        
+
         parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main','display_user'), $this->offset, $this->nbrows);
         
         print '<table width=100%>';
@@ -231,14 +234,15 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php?offset=0&limit='.$this->nbrows.'" method="POST">';
         
-        print '<input type="text" class="autocompletion" name="user_name_search" id="user_name">';
+        print '<input type="text" class="autocompletion" name="user_name_search" id="user_name" />';
 
         print '</td>';
 
         print '<td align="center" width=33%>';
       
         print 'Search (GroupName, GroupUnixName):<br />';
-        print '<input type="text" class="autocompletion" name="user_group_search" id="user_group">';
+        print '<input type="text" class="autocompletion" name="user_group_search" id="user_group" />';
+        print '<input type="hidden" name="user_group_search_id" id="group_id" />';
 
         print '</td>';
         

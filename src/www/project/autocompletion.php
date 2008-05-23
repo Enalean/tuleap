@@ -84,7 +84,7 @@ class GroupAutocompletionControler {
         
         foreach($this->groupIterator as $g) {
 
-            print '<li class="autocompletion"><div><span class="informal">('.$g['group_id'].') </span>'.$g['group_name'].'<span class="informal"> '.$g['unix_group_name'].'</span></div>';
+            print '<li class="autocompletion"><div>'.$g['group_id'].' ('.$g['unix_group_name'].')<span class="informal"> '.$g['group_name'].'</span></div>';
             
             print '</li>';   
         }
