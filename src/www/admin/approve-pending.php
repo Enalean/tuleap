@@ -99,7 +99,7 @@ if (db_numrows($res_grp) < 1) {
         $group = new Group($row_grp['group_id']);
         
         $currentproject= new project($row_grp['group_id']);
-        $hp = CodeX_HTMLPurifier::instance();
+        
         
         $members_id = $group->getMembersId();
         if (count($members_id) > 0) {
@@ -150,24 +150,9 @@ if (db_numrows($res_grp) < 1) {
         
         print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
     
-    	$descfields = getProjectsDescFieldsInfos();
-    	$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
-    	for($i=0;$i<sizeof($descfields);$i++){
-	
-			$displayfieldname[$i]=$descfields[$i]['desc_name'];
-			$displayfieldvalue[$i]='';
-			for($j=0;$j<sizeof($descfieldsvalue);$j++){
-				
-				if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
-					$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
-				}	
-			}
-			
-			echo "<P><b><u>".$hp->purify($displayfieldname[$i],CODEX_PURIFIER_LIGHT,$group_id)."</u></b></P>";
-			echo "<P>";
-			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT, $group_id)  ;
-			echo "</P>";
-		}
+ 
+    	$currentproject->displayProjectsDescFieldsValue();
+    	
       
         print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
         

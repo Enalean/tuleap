@@ -150,10 +150,10 @@ if($update_fields_desc_id){
 	echo "<INPUT TYPE='HIDDEN' NAME='form_desc_id' VALUE='".$update_fields_desc_id."'>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_name')." ; ";
-	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='".$hp->purify($row_update['desc_name'],CODEX_PURIFIER_LIGHT)."'></br></p>";	
+	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='".$hp->purify($row_update['desc_name'],CODEX_PURIFIER_CONVERT_HTML)."'></br></p>";	
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_description')." ; ";
-	echo "<br><TEXTAREA cols='70' rows='5' wrap='virtual' name='form_desc'>".$hp->purify($row_update['desc_description'],CODEX_PURIFIER_LIGHT)."</TEXTAREA></br></p>";
+	echo "<br><TEXTAREA cols='70' rows='5' wrap='virtual' name='form_desc'>".$hp->purify($row_update['desc_description'],CODEX_PURIFIER_CONVERT_HTML)."</TEXTAREA></br></p>";
 	
 	
 	
@@ -200,11 +200,30 @@ if($update_fields_desc_id){
 	
 	echo html_build_list_table_top($title_arr);
 	
+	
+	
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
+		
+		$desc_name=$descfieldsinfos[$i]["desc_name"];
+		if(preg_match('/(.*):(.*)/', $desc_name, $matches)) {
+			
+			if ($Language->hasText($matches[1], $matches[2])) {
+	    		$desc_name = $Language->getText($matches[1], $matches[2]);
+			}
+		}
+		$desc_desc=$descfieldsinfos[$i]["desc_description"];
+		if(preg_match('/(.*):(.*)/', $desc_desc, $matches)) {
+			
+			if ($Language->hasText($matches[1], $matches[2])) {
+	    		$desc_desc = $Language->getText($matches[1], $matches[2]);
+			}
+		}	
+		
+	
 		echo "<TR class='".util_get_alt_row_color($i)."'>";
 	
-		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($descfieldsinfos[$i]['desc_name'],CODEX_PURIFIER_LIGHT)."</a></TD>";
-		echo "<TD align='center'>".$hp->purify($descfieldsinfos[$i]['desc_description'],CODEX_PURIFIER_LIGHT)."</TD>";
+		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name,CODEX_PURIFIER_LIGHT)."</a></TD>";
+		echo "<TD align='center'>".$hp->purify($desc_desc,CODEX_PURIFIER_LIGHT)."</TD>";
 		if($descfieldsinfos[$i]['desc_required']==0){
 			echo "<TD align='center'><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
 		}else{

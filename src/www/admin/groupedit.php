@@ -18,7 +18,6 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $group = group_get_object($group_id,false,true);
 
 $currentproject= new project($group_id);
-$hp = CodeX_HTMLPurifier::instance();
 
 // group public choice
 $Update=$request->get('Update');
@@ -131,24 +130,7 @@ echo $template->showTypeBox('group_type',$group->getType());
 print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
 print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
 
-$descfields = getProjectsDescFieldsInfos();
-$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
-for($i=0;$i<sizeof($descfields);$i++){
-
-	$displayfieldname[$i]=$descfields[$i]['desc_name'];
-	$displayfieldvalue[$i]='';
-	for($j=0;$j<sizeof($descfieldsvalue);$j++){
-		
-		if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
-			$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
-		}	
-	}
-	
-	echo "<P><b><u>".$hp->purify($displayfieldname[$i],CODEX_PURIFIER_LIGHT,$group_id)."</u></b></P>";
-	echo "<P>";
-	echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT, $group_id)  ;
-	echo "</P>";
-}
+$currentproject->displayProjectsDescFieldsValue();
 	
 print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
 

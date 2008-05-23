@@ -8,7 +8,7 @@
 require_once('pre.php');
 
 $Language->loadLanguageMsg('project/project');
-
+$hp = CodeX_HTMLPurifier::instance();
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -37,29 +37,7 @@ if (!$result || db_numrows($result) < 1) {
 
 $license_other = db_result($result,0,'license_other');
 
-$descfields=getProjectsDescFieldsInfos();
-$descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
-
-$hp = CodeX_HTMLPurifier::instance();
-
-for($i=0;$i<sizeof($descfields);$i++){
-	
-	
-	$displayfieldname[$i]=$descfields[$i]['desc_name'];
-	$displayfieldvalue[$i]='';
-	for($j=0;$j<sizeof($descfieldsvalue);$j++){
-		
-		if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
-			$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
-		}	
-	}
-	
-	echo "<P><b><u>".$hp->purify($displayfieldname[$i],CODEX_PURIFIER_LIGHT,$group_id)."</u></b></P>";
-	echo "<P>";
-	echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT, $group_id)  ;
-	echo "</P>";
-}
-	
+$currentproject->displayProjectsDescFieldsValue();	
 	
 ?>
 

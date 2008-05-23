@@ -92,8 +92,16 @@ INSERT INTO user SET \
 INSERT INTO group_desc SET \
 		group_desc_id='1' , \
 		desc_required='1' , \
-		desc_name='Full Project Description' , \
-		desc_description='<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.' , \
+		desc_name='project_desc_name:full_desc' , \
+		desc_description='project_desc_desc:full_desc' , \
+		desc_rank='1' , \
+		desc_type='text';
+		
+INSERT INTO group_desc SET \
+		group_desc_id='1' , \
+		desc_required='1' , \
+		desc_name='project_desc_name:other_comments' , \
+		desc_description='project_desc_desc:other_comments' , \
 		desc_rank='1' , \
 		desc_type='text';
 

@@ -436,7 +436,7 @@ INSERT INTO `codex`.`group_desc` (
 `desc_type`
 )
 VALUES (
-NULL , '1', 'Full Project Description', '<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project. ',
+NULL , '1', 'project_desc_name:full_desc', 'project_desc_desc:full_desc',
 '1', 'text'
 );
 
@@ -449,7 +449,7 @@ INSERT INTO `codex`.`group_desc` (
 `desc_type`
 )
 VALUES (
-NULL , '0', 'Intellectual Property', 'If your project is covered by Patents or IPs list them here.',
+NULL , '0', 'project_desc_name:int_prop', 'project_desc_desc:int_prop',
 '5', 'text'
 );
 
@@ -462,7 +462,7 @@ INSERT INTO `codex`.`group_desc` (
 `desc_type`
 )
 VALUES (
-NULL , '0', 'Required Software', 'If your project requires the use of 3rd Party (commercial or Open Source) or other internal Xerox software to work properly, list them here.',
+NULL , '0', 'project_desc_name:req_soft', 'project_desc_desc:req_soft',
 '5', 'text'
 );
 
@@ -475,7 +475,7 @@ INSERT INTO `codex`.`group_desc` (
 `desc_type`
 )
 VALUES (
-NULL , '0', 'Other Comments', 'Anything you\'d like to say about your projects that is not covered above. For instance, if your software is used in Xerox products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.',
+NULL , '0', 'project_desc_name:other_comments', 'project_desc_desc:other_comments',
 '5', 'text'
 );
 
@@ -484,7 +484,7 @@ INSERT INTO group_desc_value( group_desc_id, group_id, value )
 SELECT group_desc_id, group_id,
 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(register_purpose, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
 FROM group_desc, groups
-WHERE group_desc.desc_name = 'Full Project Description'
+WHERE group_desc.desc_name = 'project_desc_name:full_desc'
 AND groups.register_purpose != ''
 ) ; 
 
@@ -492,7 +492,7 @@ INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
 SELECT group_desc_id, group_id,
 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(patents_ips, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
 FROM group_desc, groups
-WHERE group_desc.desc_name = 'Intellectual Property'
+WHERE group_desc.desc_name = 'project_desc_name:int_prop'
 AND groups.patents_ips != ''
 ) ;
 
@@ -500,7 +500,7 @@ INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
 SELECT group_desc_id, group_id,
 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(required_software, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
 FROM group_desc, groups
-WHERE group_desc.desc_name = 'Required Software'
+WHERE group_desc.desc_name = 'project_desc_name:req_soft'
 AND groups.required_software != ''
 ) ;
 
@@ -508,7 +508,7 @@ INSERT INTO group_desc_value( group_desc_id, group_id, value ) (
 SELECT group_desc_id, group_id,
 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(other_comments, '&nbsp;', ' '), '&quot;', '"'), '&gt;', '>'), '&lt;', '<'), '&amp;', '&')
 FROM group_desc, groups
-WHERE group_desc.desc_name = 'Other Comments'
+WHERE group_desc.desc_name = 'project_desc_name:other_comments'
 AND groups.other_comments != ''
 ) ;
 

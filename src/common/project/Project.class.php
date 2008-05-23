@@ -352,6 +352,40 @@ class Project extends Group {
         
         return $descfieldsvalue;
     }
+    
+    function displayProjectsDescFieldsValue(){
+    	$descfieldsvalue=$this->getProjectsDescFieldsValue();
+    	$descfields = getProjectsDescFieldsInfos();
+    	$hp = CodeX_HTMLPurifier::instance();
+    	global $Language;
+    	$Language->loadLanguageMsg('project/project');
+    	
+    	for($i=0;$i<sizeof($descfields);$i++){
+	
+			$displayfieldname[$i]=$descfields[$i]['desc_name'];
+			$displayfieldvalue[$i]='';
+			for($j=0;$j<sizeof($descfieldsvalue);$j++){
+				
+				if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
+					$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
+				}	
+			}
+			
+			$descname=$displayfieldname[$i];
+			if(preg_match('/(.*):(.*)/', $descname, $matches)) {		
+        		if ($Language->hasText($matches[1], $matches[2])) {
+            		$descname = $Language->getText($matches[1], $matches[2]);
+        		}
+    		}
+			
+			echo "<P><b><u>".$hp->purify($descname,CODEX_PURIFIER_LIGHT,$this->getGroupId())."</u></b></P>";
+			echo "<P>";
+			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT,$this->getGroupId())  ;
+			echo "</P>";
+			
+		}
+    	
+    }
 }
 
 /*
