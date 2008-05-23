@@ -174,21 +174,29 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
 		}	
 	}
-
-	echo "<P><u>".$hp->purify($descfieldsinfos[$i]["desc_name"],CODEX_PURIFIER_LIGHT,$group_id);
+	
+	$descname=$descfieldsinfos[$i]["desc_name"];
+	if(preg_match('/(.*):(.*)/', $descname, $matches)) {
+		
+		if ($Language->hasText($matches[1], $matches[2])) {
+    		$descname = $Language->getText($matches[1], $matches[2]);
+		}
+	}
+    		
+	echo "<P><u>".$hp->purify($descname,CODEX_PURIFIER_LIGHT,$group_id);
 	if($descfieldsinfos[$i]["desc_required"]==1){
 		echo "<font color='red'>*</font>";
 	}
 	echo ":</u>";
 	if($descfieldsinfos[$i]["desc_type"]=='line'){
 		
-		echo "<BR><TEXTAREA name='form_".$descfieldsinfos[$i]["group_desc_id"].
-			 "' wrap='virtual' cols='70' rows='1'>";
+		echo "<BR><INPUT type='text' size='70' maxlen='70' name='form_".$descfieldsinfos[$i]["group_desc_id"];
 			 
 		if(isset($displayfieldvalue[$i])){
-			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_LIGHT,$group_id);
+			echo "' value='".$hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_CONVERT_HTML,$group_id);
 		}
-		echo "</TEXTAREA></BR>" ;
+		
+		echo "'></BR>" ;
 		
 	}else if($descfieldsinfos[$i]["desc_type"]=='text'){
 		
@@ -196,7 +204,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 "' wrap='virtual' cols='70' rows='8'>";
 			 
 		if(isset($displayfieldvalue[$i])){
-			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_LIGHT,$group_id);
+			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_CONVERT_HTML,$group_id);
 		}
 		echo "</TEXTAREA></BR>" ;
 	}

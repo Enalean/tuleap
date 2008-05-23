@@ -841,3 +841,15 @@ project_ugroup	ugroup_wiki_admin_name_key	wiki_admins
 project_ugroup	ugroup_tracker_admins_name_key	tracker_admins
 #project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
 project_ugroup	ugroup_nobody_name_key	nobody
+#-----------------------------------------------
+# Script: /www/project/Project.class.php
+#
+project_desc_name	full_desc	Full Project Description
+project_desc_name	other_comments	Other Comments
+project_desc_name	req_soft	Required Software
+project_desc_name	int_prop	Intellectual Property
+
+project_desc_desc	full_desc	<b>*** IMPORTANT NOTE ***</b> Make sure you provide a detailed description that contains all the keywords that will help others to find and reuse your software component. Failing to provide an accurate description may also delay the approval of your project.
+project_desc_desc	other_comments	Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in Xerox products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
+project_desc_desc	req_soft	If your project requires the use of 3rd Party (commercial or Open Source) or other internal Xerox software to work properly, list them here.
+project_desc_desc	int_prop	If your project is covered by Patents or IPs list them here.
