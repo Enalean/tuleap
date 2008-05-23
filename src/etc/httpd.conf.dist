@@ -1011,18 +1011,18 @@ Include conf/ssl.conf
 #
 # Subversion virtual hosts alias
 #
-<VirtualHost 13.202.220.182:80>
-        ServerName cxtst3.xrce.xerox.com
-        ServerAlias svn.*.cxtst3.xrce.xerox.com
+<VirtualHost %sys_ip_address%:80>
+        ServerName %sys_default_domain%
+        ServerAlias svn.*.%sys_default_domain%
         Include conf.d/codex_svnroot.conf
 </VirtualHost>
 
 #
 # Project web site virtual hosts alias
 #
-<VirtualHost 13.202.220.182:80>
-        ServerName cxtst3.xrce.xerox.com
-        ServerAlias *.cxtst3.xrce.xerox.com
+<VirtualHost %sys_ip_address%:80>
+        ServerName %sys_default_domain%
+        ServerAlias *.%sys_default_domain%
         VirtualDocumentRoot /home/groups/%1/htdocs
         # We won't allow cgi scripts to run on project web sites. (see installation guide)
         DirectoryIndex index.html index.php
