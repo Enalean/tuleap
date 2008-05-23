@@ -746,7 +746,7 @@ function util_cleanup_emails ($addresses) {
 // Clean up email address (remove spaces...) and add @... if it is a simple
 // login name
 function util_normalize_email ($address) {
-    list($host,$port) = explode(':',$GLOBALS['sys_users_host']);
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
     $address = util_cleanup_emails($address);
     if (validate_email($address))
 	return $address;
@@ -780,7 +780,7 @@ function validate_emails ($addresses) {
 **/
 function util_normalize_emails($adresses) {
     $adresses = util_split_emails($adresses);
-    list($host,$port) = explode(':',$GLOBALS['sys_users_host']);
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
     foreach($adresses as $key => $value) {
         if (trim($value) !== "") {
             $value = util_cleanup_emails($value);

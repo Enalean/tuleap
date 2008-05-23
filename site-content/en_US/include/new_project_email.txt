@@ -6,8 +6,11 @@
 //
 // 
 //
-
-$web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
+if ($GLOBALS["sys_disable_subdomains"]) {
+  $web_server="http://".$GLOBALS['sys_default_domain']."/www/".$row_grp['unix_group_name'];
+} else {
+  $web_server= "http://".$row_grp['unix_group_name'].".".$GLOBALS['sys_default_domain'];
+}
 
 // Message preamble with Web pointers and server names
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
@@ -16,11 +19,16 @@ $message =
 
 Project Full Name:    '.$row_grp['group_name'].'
 Project Unix Name:    '.$row_grp['unix_group_name'].'
-Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'].'
-Project Web Server:   '.$web_server.'
-CVS Server:           cvs.'.$row_grp['unix_group_name'].'.'.$host.'
-Subversion Server:    '.$svn_url.'
-Shell Server:         '.$row_grp['unix_group_name'].'.'.$host.
+Project Summary Page: '.$server.'/projects/'.$row_grp['unix_group_name'];
+if ($p && $p->usesHomePage()) {
+  $message = $message."\nProject Web Server:   ".$web_server;
+}
+if ($p && $p->usesCVS()) {
+  $message = $message."\nCVS Server:           cvs.".$row_grp['unix_group_name'].".".$host;
+}
+if ($p && $p->usesSVN()) {
+  $message = $message."\nSubversion Server:    ".$svn_url;
+}
 
 // Directions for project administrators on what to do next
 $message = $message .'
@@ -32,7 +40,7 @@ Guide) is available under the "Site documentation" link on the
 '.$GLOBALS['sys_name'].' Home page.
 
 We now invite you to visit the Public Summary page of your project at
-'.get_server_url().'/projects/'.$row_grp['unix_group_name'].',
+'.$server.'/projects/'.$row_grp['unix_group_name'].',
 create a short public description for your project and categorize it
 in the Software Map if it hasn\'t been done.
 This will be immensely helpful to the '.$GLOBALS['sys_name'].' visitors.
@@ -52,11 +60,9 @@ look at the problem.
 
 - Also note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
 to be aware of your project specific server names (see above). If you
-are in a hurry, you may try shelling into
-'. $GLOBALS['sys_shell_host']. ' and pointing your CVS client to
-'. $GLOBALS['sys_cvs_host'].'.
+are in a hurry, you may try pointing at '. $host. ' directly.
 
-- Remark: if you already have a CVS or subversion repository of your
+- Remark: if you already have a CVS or Subversion repository of your
 own and want to transfer it as is on '.$GLOBALS['sys_name'].' then
 contact the  '.$GLOBALS['sys_name'].' team.
 

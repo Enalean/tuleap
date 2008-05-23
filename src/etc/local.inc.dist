@@ -67,27 +67,6 @@ $sys_https_host = "%sys_default_domain%";
 //- you have 2 servers (s1.codex.com & s2.codex.com) 
 //   => cookie domain should be "codex.com" for SSO
 $sys_cookie_domain = "%sys_default_domain%";
-
-// Machine that hosts CVS.
-// Note that while this machine need not be the same as the CodeX host,
-// the "cvsweb" interface currently must run on the CodeX host system.
-// If this host is different from the CodeX host, then the CodeX host
-// will need to be able to access the CVS file tree via NFS.
-$sys_cvs_host = "cvs.%sys_default_domain%";
- 
-// Machine that hosts Subversion.
-// Note that while this machine need not be the same as the CodeX host,
-// the "viewvc" interface currently must run on the CodeX host system.
-// If this host is different from the CodeX host, then the CodeX host
-// will need to be able to access the CVS file tree via NFS.
-$sys_svn_host = "svn.%sys_default_domain%";
- 
-// Machine(s) that host users' shell accounts
-//  N.B.: What's the difference between the user
-// host and the shell host?  They are clearly two different hostnames
-// in the source code, but they seem to serve the same purpose..?
-$sys_shell_host = "shell.%sys_default_domain%";
-$sys_users_host = "users.%sys_default_domain%";
  
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
