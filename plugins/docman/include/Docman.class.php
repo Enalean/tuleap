@@ -76,7 +76,7 @@ class Docman extends DocmanController {
         }
     }
     /* protected */ function _set_doesnot_belong_to_project_error() {
-        $this->view = 'Redirect';
+        $this->view = 'DocmanError';
     }
     
     /**

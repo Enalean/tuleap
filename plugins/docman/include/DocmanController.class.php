@@ -453,8 +453,7 @@ class DocmanController extends Controler {
                     if ($item->getGroupId() != $this->request->get('group_id')) {
                         $g =& group_get_object($this->request->get('group_id'));
                         $g2 =& group_get_object($item->getGroupId());
-                        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getTitle(), util_unconvert_htmlspecialchars($g->getPublicName()), util_unconvert_htmlspecialchars($g2->getPublicName()))));
-                        $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
+                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($g->getPublicName()))));
                         $this->_set_doesnot_belong_to_project_error();
                     } else {
                         $user = $this->getUser();
@@ -1124,7 +1123,7 @@ class DocmanController extends Controler {
                     $this->view = 'DocmanError';
                 } else {
                     $parent =& $item_factory->getItemFromDb($i['parent_id']);
-                    if (!$parent || !$this->userCanWrite($parent->getId())) {
+                    if (!$parent || $parent->getGroupId() != $this->getGroupId() || !$this->userCanWrite($parent->getId())) {
                         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_create'));
                         $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
                     } else {
