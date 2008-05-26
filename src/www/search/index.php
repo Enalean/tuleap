@@ -73,7 +73,7 @@ if ($type_of_search == "soft") {
 	/*
 		Query to find software
 	*/
-	$sql = "SELECT group_name,unix_group_name,groups.group_id,short_description, group_desc_value.group_id ".
+	$sql = "SELECT DISTINCT group_name,unix_group_name,groups.group_id,short_description ".
 		"FROM groups, group_desc_value ".$from_restricted.
 		"WHERE status='A' AND is_public='1' AND (groups.group_id=group_desc_value.group_id) AND ((group_name LIKE '%$words1%') OR (short_description LIKE '%$words2%') OR (unix_group_name LIKE '%$words3%') OR (group_desc_value.value LIKE '%$words3%')) ".$where_restricted." LIMIT $offset,26";
 
