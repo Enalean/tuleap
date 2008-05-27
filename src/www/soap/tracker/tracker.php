@@ -472,7 +472,6 @@ $server->wsdl->addComplexType(
     array(
         'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
-        'user_id'           => array('name'=>'user_id', 'type' => 'xsd:int'),
         'name'              => array('name'=>'name', 'type' => 'xsd:string'),
         'description'       => array('name'=>'description', 'type' => 'xsd:string'),
         'scope'             => array('name'=>'scope', 'type' => 'xsd:string')    
@@ -1415,7 +1414,7 @@ function getTrackerList($sessionKey, $group_id) {
             return new SoapFault(get_artifact_type_factory_fault, $atf->getErrorMessage(), 'getTrackerList');
         }
         // The function getArtifactTypes returns only the trackers the user is allowed to view
-        return new SoapVar(trackerlist_to_soap($atf->getArtifactTypes()), SOAP_ENC_OBJECT, 'tns:ArrayOfTrackerDesc');
+        return trackerlist_to_soap($atf->getArtifactTypes());
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getTrackerList');
     }
