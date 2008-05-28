@@ -26,12 +26,20 @@ $hp = CodeX_HTMLPurifier::instance();
 	Force them to enter at least three characters
 */
 if ($words && (strlen($words) < 3)) {
-	echo '<H2>'.$Language->getText('search_index','at_least_3_ch').'</H2>';
+	if ($type_of_search == "tracker" ||
+        $type_of_search == "wiki") {
+        $HTML->header(array('title'=>$Language->getText('search_index','search')));
+    }
+    echo '<H2>'.$Language->getText('search_index','at_least_3_ch').'</H2>';
 	$HTML->footer(array());
 	exit;
 }
 
 if (!$words) {
+    if ($type_of_search == "tracker" ||
+        $type_of_search == "wiki") {
+        $HTML->header(array('title'=>$Language->getText('search_index','search')));
+    }
 	echo '<BR>'.$Language->getText('search_index','enter_s_words');
 	$HTML->footer(array());
 	exit;
