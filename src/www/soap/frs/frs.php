@@ -859,6 +859,17 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
  */
 function getUploadedFiles($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
+        
+        $group = group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new soap_fault(get_group_fault,'getUploadedFiles','Could Not Get Group','');
+        } elseif ($group->isError()) {
+            return new soap_fault(get_group_fault, 'getUploadedFiles', $group->getErrorMessage(),'');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new soap_fault(get_group_fault, 'getUploadedFiles', 'Restricted user: permission denied.', '');
+        }
+        
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             $soap_files = array();
