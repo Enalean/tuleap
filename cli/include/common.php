@@ -17,7 +17,7 @@
  * exit_error - Exits the program displaying an error and returning an error code
  */
 function exit_error($msg, $errcode=1) {
-    echo "Fatal error: ".$msg."\n";
+    echo "Fatal error: [".$msg->faultcode."] ".$msg->faultstring."\n";
     exit (intval($errcode));
 }
 
