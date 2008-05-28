@@ -53,7 +53,7 @@ function onChangeAllFilter() {
 	} else {
 		$results = $gf->getAllGroups();
 	}
-    $hp = CodeXHTMLPurifier::instance();
+    $hp = CodeX_HTMLPurifier::instance();
     while ($groups_array = db_fetch_array($results)) {
     	echo '<option value="'.(int)$groups_array["group_id"].'">'. $hp->purify($groups_array["group_name"]) .'</option>';
     }
