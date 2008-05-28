@@ -428,7 +428,7 @@ tracker_include_type	define_use	Définir les champs utilisés par cet outil de s
 tracker_include_type	mng_field_values	Gérer les valeurs des champs
 tracker_include_type	define_values	Définir les valeurs associées aux champs utilisés par cet outil de suivi.
 tracker_include_type	mng_response	Gérer les réponses type
-tracker_include_type	add_del_resp	Ajouter, modifier our détruire les réponses type.
+tracker_include_type	add_del_resp	Ajouter, modifier ou détruire les réponses type.
 tracker_include_type	mng_reports	Gérer les rapports de recherche de l'outil de suivi
 tracker_include_type	define_reports	Définir les rapports de recherche de cet outil de suivi&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
 tracker_include_type	define_title	Définir le titre, la description, etc&hellip; de cet outil de suivi.
