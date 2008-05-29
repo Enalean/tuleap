@@ -651,7 +651,7 @@ tracker_common_field	val_id_requ	L'ID de la valeur et son nom sont obligatoires.
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php
 #
-tracker_common_field_factory	missing	Champs manquants&nbsp;: $1 <p>La valeur vide n'est pas autorisée pour les champs listés ci-dessus. Retournez à la page précédente et essayez à nouveau.
+tracker_common_field_factory	missing	Champs manquants : $1. La valeur vide n'est pas autorisée pour les champs listés ci-dessus.
 tracker_common_field_factory	use_ins_err	Erreur lors de l'insertion de artifact_field_usage ($1-$2) : $3
 tracker_common_field_factory	vl_ins_err	Erreur lors de l'insertion de artifact_field_value_list ($1-$2) : $3
 tracker_common_field_factory	label_requ	Le label du champ, son type de donnée et son type d'affichage sont obligatoires.

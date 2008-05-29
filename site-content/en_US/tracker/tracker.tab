@@ -646,7 +646,7 @@ tracker_common_field	val_id_requ	Value id and value name are required.
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php
 #
-tracker_common_field_factory	missing	Missing fields: $1 <p>Empty values for the above listed field(s) are not allowed. Click on the Back arrow of your browser and try again
+tracker_common_field_factory	missing	Missing fields: $1. Empty values for the above listed field(s) are not allowed. 
 tracker_common_field_factory	use_ins_err	Error during inserting artifact_field_usage ($1-$2): $3
 tracker_common_field_factory	vl_ins_err	Error during inserting artifact_field_value_list ($1-$2): $3
 tracker_common_field_factory	label_requ	Field label, data type or display type are required.
