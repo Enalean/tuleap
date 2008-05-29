@@ -27,14 +27,14 @@ class UserLdap {
      * Create a common set of user result sets,
      * so it doesn't have to be fetched each time
      */
-    function getUserResultSet($ldapId) {        		
+    function getUserResultSet($ldapId) {
         global $USER_RES;
-        
-        $res = db_query("SELECT * FROM user WHERE ldap_id='".db_es($ldapId)."'");
+
+        $res = db_query("SELECT * FROM user WHERE ldap_id='".db_es($ldapId)."' AND status IN ('A', 'R')");
         $user_id = db_result($res,0,'user_id');
         $USER_RES["_".$user_id."_"] = $res;
         return $USER_RES["_".$user_id."_"];
-    }     
+    }
 
     function isLdapUser($user_id) {
         $sql = 'SELECT user_id'

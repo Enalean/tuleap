@@ -843,11 +843,12 @@ function util_normalize_emails($adresses) {
  * reference another user with his email, codex user_name, ldap uid, ldap
  * common name.
  * This function returns the best identifier:
- * - if $ident is a CodeX user name, it is returned as-is
- * - else, if $ident is a valid LDAP id of a CodeX user, return the CodeX name
- * - else, if $ident is a valid LDAP id of an unknown user, return the user email (from LDAP directory)
- * - else, if $ident is an email address and 'strict' is false, return the address
- * - else, return an empty string
+ * - First ask to plugins (mainly LDAP) if they know a codex user with this
+ *   identifier
+ * - If no user found by plugin, test if identifier is a valid codex username
+ * - Otherwise, if not in strict mode (ie. doesn't mandate a valid codex user)
+ *   test if its a valid email address.
+ * - Else, return an empty string (ie. not a valid identifier)
  *
  * @param ident (IN) : A user identifier
  * @param strict (IN): If strict mode is enabled only CodeX user and ldap valid
@@ -860,21 +861,30 @@ function util_user_finder($ident, $strict=true) {
     $ident = rtrim($ident);
     $ident = trim($ident);
 
-    $res = user_get_result_set_from_unix($ident);
-    if($res && db_numrows($res) === 1 ) {
-        $bestCodexIdentifier = $ident;
-    }
-    else {
-        $em =& EventManager::instance();
-        $eParams = array();
-        $eParams['ident']                 = $ident;
-        $eParams['best_codex_identifier'] =& $bestCodexIdentifier;
-        $em->processEvent('user_finder', $eParams);
-        if ($bestCodexIdentifier == '' && !$strict) {
-            // Test email address
-            if (validate_email($ident)) $bestCodexIdentifier=$ident;
+    $em =& EventManager::instance();
+    $eParams = array();
+    $eParams['ident']                 = $ident;
+    $eParams['strict']                = $strict;
+    $eParams['best_codex_identifier'] =& $bestCodexIdentifier;
+    $em->processEvent('user_finder', $eParams);
+    if ($bestCodexIdentifier == '') {
+        // No valid user found, try an internal lookup for username
+        $res = user_get_result_set_from_unix($ident);
+        if($res && db_numrows($res) == 1) {
+            if(db_result($res, 0, 'status') == 'A' || db_result($res, 0, 'status') == 'R') {
+                $bestCodexIdentifier = $ident;
+            }
+        } else {
+            // Neither Plugins nor codex found a valid user with this
+            // identifier. If allowed, return the identifier as email address
+            // if the identifier is a valid email address.
+            if(!$strict) {
+                if (validate_email($ident)) {
+                    $bestCodexIdentifier=$ident;
+                }
+            }
         }
-    } 
+    }
 
     return $bestCodexIdentifier;
 }

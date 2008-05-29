@@ -249,6 +249,7 @@ class LdapPlugin extends Plugin {
      * Hook
      * Params:
      *  IN  $params['ident']
+     *  IN  $params['strict'] If set to true, $ident must be a valid codex user.
      *  OUT $params['best_codex_identifier']
      */
     function userFinder($params) {
@@ -264,7 +265,7 @@ class LdapPlugin extends Plugin {
             if(db_numrows($res1) === 1) {
                 $bestCodexIdentifier = db_result($res1, 0, 'user_name');
             }
-            else {
+            elseif(!$params['strict']) {
                 $bestCodexIdentifier = $lr->getEmail();
             }
         }

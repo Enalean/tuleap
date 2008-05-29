@@ -55,9 +55,9 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
 
 	    //user was found but if it's a pending account adding
 	    //is not allowed
-	    if (db_result($res_newuser,0,'status') == 'P') {
-	      $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','account_pending',$user_unix_name));
-		return false;
+	    if (db_result($res_newuser,0,'status') != 'A' && db_result($res_newuser,0,'status') != 'R') {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account', 'account_notactive',$user_unix_name));
+            return false;
 	    }
 
 		$form_newuid = db_result($res_newuser,0,'user_id');
