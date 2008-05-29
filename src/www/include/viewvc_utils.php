@@ -39,6 +39,8 @@ function viewvc_utils_display_header() {
   if (strpos($request_uri,"view=graphimg") !== false) return false;
   if (strpos($request_uri,"annotate=") !== false) return true;
   if (strpos($request_uri,"view=redirect_path") !== false) return false;
+  // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
+  if (strpos($request_uri,"&rev=") !== false) return false;
 
   if ( strpos($request_uri,"/?") === false && 
        strpos($request_uri,"&r1=") === false &&
