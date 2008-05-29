@@ -79,7 +79,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                 } else if (!($fh = fopen($loaded_params['others']['local_file'], "rb"))) {
                     exit_error("Could not open '". $loaded_params['others']['local_file'] ."' for reading");
                 } else {
-                    $contents = fread($fh, filesize($loaded_params['others']['local_file']));
+                    $contents = @fread($fh, filesize($loaded_params['others']['local_file']));
                     $loaded_params['soap']['base64_contents'] = base64_encode($contents);
                     $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
                     $loaded_params['soap']['is_upload'] = true;
@@ -91,6 +91,20 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                 }
             }
         }
+    }
+    
+    function confirmation($loaded_params) {
+        if (!array_key_exists('noask', $loaded_params['others']) || !$loaded_params['others']['noask']) {
+            if ($loaded_params['others']['local_file']) {
+                if (filesize($loaded_params['others']['local_file']) == 0) {
+                    echo "You're about to add an empty file (with size 0):\n";
+                    if (!$this->user_confirm("Do you want to proceed?")) {
+                        exit_error("Submission aborted");
+                    }
+                }
+            }
+        }
+        return true;
     }
     
 	function sort_parameters($p1, $p2) {
