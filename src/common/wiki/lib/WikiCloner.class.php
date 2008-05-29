@@ -86,6 +86,14 @@ class WikiCloner {
       return $this->tmpl_wiki_exist;
   } 
   
+  function templateWikiHaveAttachments() { 
+    $res = db_query('SELECT count(*) AS nb FROM wiki_attachment' 
+                    .' WHERE group_id='.$this->template_id); 
+    $tmpl_wiki_attach_exist = (db_result($res, 0, 'nb') > 0); 
+    return $tmpl_wiki_attach_exist; 
+  } 
+
+
  /**
    *
    *  Create a clone of the template wiki. It includes:
@@ -101,9 +109,11 @@ class WikiCloner {
       $this->addNonEmptyInfo($arr);
       $this->addWikiLinkEntries($arr);
       $this->cloneWikiRecentTable($arr);
-      $attachments_array = $this->cloneWikiAttachementTable();
-      $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
-      $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
+      if($this->templateWikiHaveAttachments()) {
+        $attachments_array = $this->cloneWikiAttachementTable();
+        $attachments_rev_arr = $this->cloneWikiAttachmentRevisionTable($attachments_array);
+        $this->cloneWikiAttachmentLogTable($attachments_array, $attachments_rev_arr);
+      }
       $this->cloneWikiPermission();
       $this->cloneWikiPagesPermissions($arr);
 
