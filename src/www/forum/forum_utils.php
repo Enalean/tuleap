@@ -816,7 +816,7 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
         }   
     }   
     return true;   
-}  
+} 
 
 function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
     /*
