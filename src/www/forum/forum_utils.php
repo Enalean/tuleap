@@ -80,7 +80,7 @@ function forum_header($params) {
 			echo '</TD></TR></TABLE>';
 		}
 	} else {
-		//this is just a regular forum, not a news item
+        //this is just a regular forum, not a news item
         site_project_header($params);
 	}
 
