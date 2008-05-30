@@ -497,7 +497,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		if ($request->isPost('enable_monitoring') && $request->exist('enable_monitoring')) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
 		} else {
-		    forum_thread_delete_monitor($group_forum_id, $msg_id, user_getid());
+		    forum_thread_delete_monitor_by_user($group_forum_id, $msg_id, user_getid());
 		}
 		handle_monitoring($group_forum_id,$thread_id,$msg_id);
 
@@ -800,26 +800,7 @@ function forum_thread_is_monitored($thread_id) {
 	return ($res && db_numrows($res) >= 1);				
 }
 
-function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
-    /*
-	    Add thread monitor settings for user (user_id)
-         */
-    
-    if (! user_monitor_forum_thread($thread_id,$user_id)) {
-        $sql = sprintf('INSERT INTO forum_monitored_threads'
-			.' (forum_id, thread_id, user_id)'
-			.' VALUES (%d,%d,%d)',
-			db_ei($forum_id),db_ei($thread_id),db_ei($user_id));
-        $res = db_query($sql);
-        if (! $res) {
-    		return false; 
-    	}
-    }
-    return true;    
-	    
-}
-
-function forum_thread_delete_monitor($forum_id,$msg_id, $user_id) {
+function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
     /*
 	    Delete thread monitor settings for user (user_id)
          */
@@ -835,6 +816,24 @@ function forum_thread_delete_monitor($forum_id,$msg_id, $user_id) {
            .' AND thread_id=%d'
            .' AND user_id=%d',
            db_ei($forum_id),db_ei($thread_id), db_ei($user_id));
+    $result= db_query($qry);
+    return true;
+}
+
+function forum_thread_delete_monitor($forum_id,$msg_id) {
+    /*
+	    Delete a thread monitor settings.
+         */
+    $sql = sprintf('SELECT * FROM forum'
+		    .' WHERE group_forum_id=%d'
+		    .' AND msg_id=%d',
+		    db_ei($forum_id),db_ei($msg_id));
+    $res = db_query($sql);    
+    $thread_id = db_result($res,0,'thread_id');
+    $qry = sprintf('DELETE FROM forum_monitored_threads'
+           .' WHERE forum_id=%d'
+           .' AND thread_id=%d',
+           db_ei($forum_id),db_ei($thread_id));
     $result= db_query($qry);
     return true;
 }
