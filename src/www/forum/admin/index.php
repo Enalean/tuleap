@@ -78,7 +78,9 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                         }
 
                         if ($authorized_to_delete_message) {
-			  $feedback .= $Language->getText('forum_admin_index','msgs_del',recursive_delete($msg_id,$forum_id));
+                            //delete monitor settings on the corresponding thread, before deleting the message
+                            forum_thread_delete_monitor($forum_id,$msg_id);
+                            $feedback .= $Language->getText('forum_admin_index','msgs_del',recursive_delete($msg_id,$forum_id));
                         } else {
                             $feedback .= ' '.$Language->getText('forum_admin_index','msg_not_in_group').' ';
                         }
