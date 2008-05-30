@@ -800,6 +800,24 @@ function forum_thread_is_monitored($thread_id) {
 	return ($res && db_numrows($res) >= 1);				
 }
 
+function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {   
+    /*   
+            Add thread monitor settings for user (user_id)   
+         */   
+     
+    if (! user_monitor_forum_thread($thread_id,$user_id)) {   
+        $sql = sprintf('INSERT INTO forum_monitored_threads'   
+                        .' (forum_id, thread_id, user_id)'   
+                        .' VALUES (%d,%d,%d)',   
+                        db_ei($forum_id),db_ei($thread_id),db_ei($user_id));   
+        $res = db_query($sql);   
+        if (! $res) {   
+            return false;   
+        }   
+    }   
+    return true;   
+}  
+
 function forum_thread_delete_monitor_by_user($forum_id,$msg_id, $user_id) {
     /*
 	    Delete thread monitor settings for user (user_id)
