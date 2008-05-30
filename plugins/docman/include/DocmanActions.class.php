@@ -807,7 +807,7 @@ class DocmanActions extends Actions {
                                                            'ignore_collapse' => true));
                 if ($item) {
                     $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user' => &$user))) {
+                    if ($item->accept($deletor, array('user' => &$user, 'parent' => $itemFactory->getItemFromDb($item->getParentId())))) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                     }
                 }

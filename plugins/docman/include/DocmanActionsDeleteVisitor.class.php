@@ -36,11 +36,13 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
     function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
+        $parent =& $params['parent'];
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
             $it =& $items->iterator();
             while($it->valid()) {
                 $o =& $it->current();
+                $params['parent'] =& $item;
                 if (!$o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
                 }
@@ -53,6 +55,7 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             return false;
         } else {
             //Mark the folder as deleted;
+            $params['parent'] =& $parent;
             return $this->_deleteItem($item, $params);
         }
     }
@@ -100,6 +103,7 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
             $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
                 'group_id' => $item->getGroupId(),
                 'item'     => &$item,
+                'parent'   => &$params['parent'],
                 'user'     => &$params['user'])
             );
             return true;
