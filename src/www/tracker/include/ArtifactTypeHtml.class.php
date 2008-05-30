@@ -1854,10 +1854,16 @@ EOS;
 			if ( $field->getName() == "severity" ) {
 				$html .= '<TD align="center">'. $hp->purify($row['value_id'], CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
 			}
-		    $html .= '<TD><A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
-			'&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">'.
-			$hp->purify(SimpleSanitizer::unsanitize($row['value']), CODEX_PURIFIER_CONVERT_HTML).'</A></td>'.
-			"\n<td>". $hp->purify(SimpleSanitizer::unsanitize($row['description']), CODEX_PURIFIER_BASIC, $this->getGroupId()) .'</td>'.
+                        $html .= '<TD>';
+                        if ( $row['value_id'] != 100 ) { # Can't edit 'None'
+                            $html.='<A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
+                            '&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">';
+                        }
+			$html .= $hp->purify(SimpleSanitizer::unsanitize($row['value']), CODEX_PURIFIER_CONVERT_HTML);
+                        if ( $row['value_id'] != 100 ) { # Can't edit 'None'
+                            $html .= '</A>';
+                        }
+			$html .= "</td>\n<td>". $hp->purify(SimpleSanitizer::unsanitize($row['description']), CODEX_PURIFIER_BASIC, $this->getGroupId()) .'</td>'.
 			"\n<td align =\"center\">". $hp->purify($rank, CODEX_PURIFIER_CONVERT_HTML) .'</td>'.
 			"\n<td align =\"center\">". $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) .'</td>';
 			

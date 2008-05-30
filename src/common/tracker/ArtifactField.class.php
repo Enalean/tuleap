@@ -1571,7 +1571,8 @@ class ArtifactField extends Error {
 	  global $Language;
 
 		// Check arguments
-		if ( $value_id=="" || $value=="" ) {
+		if ( $value_id=="" || $value=="" || $value_id == 100) {
+                        // $value_id == 100 -> Can't edit "None" value
 			$this->setError($Language->getText('tracker_common_field','val_id_requ'));
 			return false;
 		}
