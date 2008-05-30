@@ -192,7 +192,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> '.$Language->getText('global','no').'<P>
-			<P>
 			<P><B>'.$Language->getText('forum_admin_index','monitor').'</B><BR>
                                                       '.$Language->getText('forum_admin_index','monitor_recommendation').' <br>
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
@@ -229,14 +228,14 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
 			$title_arr=array();
 			$title_arr[]=$Language->getText('forum_admin_index','forum');
-			$title_arr[]=$Language->getText('global','status');
+			$title_arr[]=$Language->getText('global','status');			
 			$title_arr[]=$Language->getText('forum_admin_index','update');
 		
 			echo html_build_list_table_top ($title_arr);
 
 			for ($i=0; $i<$rows; $i++) {
 				echo '
-					<TR class="'. util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
+					<TR class="'.util_get_alt_row_color($i) .'"><TD>'.db_result($result,$i,'forum_name').'</TD>';
 				echo '
 					<FORM ACTION="?" METHOD="POST">
 					<INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
@@ -253,7 +252,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
 					</TD></TR>
-					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="3">
+					<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="4">
 						<B>'.$Language->getText('forum_admin_index','forum_name').':</B><BR>
 						<INPUT TYPE="TEXT" NAME="forum_name" VALUE="'. db_result($result,$i,'forum_name').'" SIZE="30" MAXLENGTH="50"><BR>
 						<B>'.$Language->getText('forum_admin_index','description').':</B><BR>
