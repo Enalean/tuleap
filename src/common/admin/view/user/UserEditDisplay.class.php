@@ -201,6 +201,8 @@ class UserEditDisplay extends AdminEditDisplay {
             
                 
             print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
+
+            print '</form><hr>';
         }
         // select one user
         elseif(count($this->userparam) == 1 ) {
@@ -317,17 +319,119 @@ class UserEditDisplay extends AdminEditDisplay {
             
             
             print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
+
+            print '</form><hr>';
         }
         //select several user
         else {
 
-          
-          
+            print '<p>Shell:';
             
-        }
-       
-        print '</form><hr>';
+            print '<select name="form_shell">';
+            
+            print '<option value="/bin/sh"';
+            //if($this->userparam[0]['shell'] == '/bin/sh') print 'selected="selected"';
+            print ' >/bin/sh</option>';
+            
+            print '<option value="/bin/bash"';
+            //if($this->userparam[0]['shell'] == '/bin/bash') print 'selected="selected"';
+            print '>/bin/bash</option>';
+
+            print '<option value="/sbin/nologin"';
+            //if($this->userparam[0]['shell'] == '/sbin/nologin') print 'selected="selected"';
+            print '>/sbin/nologin</option>';
+    
+            print '<option value="/bin/bash2"';
+            //if($this->userparam[0]['shell'] == '/bin/bash2') print 'selected="selected"';
+            print '>/bin/bash2</option>';
+            
+            print '<option value="/bin/ash"';
+            //if($this->userparam[0]['shell'] == '/bin/ash') print 'selected="selected"';
+            print '>/bin/ash</option>';
+
+            print '<option value="/bin/bsh"';
+            //if($this->userparam[0]['shell'] == '/bin/bsh') print 'selected="selected"';
+            print '>/bin/bsh</option>';
+
+            print '<option value="/bin/ksh"';
+            //if($this->userparam[0]['shell'] == '/bin/ksh') print 'selected="selected"';
+            print '>/bin/ksh</option>';
+
+            print '<option value="/bin/tcsh"';
+            //if($this->userparam[0]['shell'] == '/bin/tcsh') print 'selected="selected"';
+            print '>/bin/tcsh</option>';
+
+            print '<option value="/bin/csh"';
+            //if($this->userparam[0]['shell'] == '/bin/csh') print 'selected="selected"';
+            print '>/bin/csh</option>';
+
+            print '<option value="/bin/zsh"';
+            //if($this->userparam[0]['shell'] == '/bin/zsh') print 'selected="selected"';
+            print '>/bin/zsh</option>';
+
+            print '</select></p>';
+
         
+            print '<p>Codex Account Status:';
+
+            print '<select name="form_codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
+
+            print '<option value="A"';
+            //if ($this->userparam[0]['status'] == 'A') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
+            
+            print '<option value="R"';
+            //if ($this->userparam[0]['status'] == 'R' || $this->userparam[0]['status'] == 'W') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_userlist','restricted').'</option>';
+            
+            print '<option value="V"';
+            //if ($this->userparam[0]['status'] == 'V') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
+            
+            print '<option value="P"';
+            //if ($this->userparam[0]['status'] == 'P') print 'selected="selected"';
+            print '>Pending</option>';
+            
+            print '<option value="D"';
+            //if ($this->userparam[0]['status'] == 'D') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>'; 
+            
+            print '<option value="S"';
+            //if ($this->userparam[0]['status'] == 'S') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_userlist','suspended').'</option>';
+            
+            print '</select></p>';
+          
+
+            print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
+            
+            print '<select name="form_unixstatus">';
+            
+            print '<option value="N"';
+            //if($this->userparam[0]['unix_status'] == 'N') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_usergroup','no_account').'</option>';
+
+            print '<option value="A"';
+            //if($this->userparam[0]['unix_status'] == 'A') print 'selected="selected"';
+            print '>'.$GLOBALS['Language']->getText('admin_usergroup','active').'</option>';
+        
+            print '<option value="S">'.$GLOBALS['Language']->getText('admin_usergroup','suspended').'</option>';
+            
+            print '<option value="D">'.$GLOBALS['Language']->getText('admin_usergroup','deleted').'</option>';
+            
+            print '</select></p>';
+
+
+            print '<p>Expiry Date:';
+            
+            print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
+            print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
+            
+            
+            print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
+
+            print '</form>';
+        }
     }
 
 
