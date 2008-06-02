@@ -33,6 +33,10 @@
 	$suppress_headers = TRUE;
 	include_once('include/display.git_opml.php');
 	git_opml($gitphp_conf['projectroot'],$git_projects);
+ } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
+	$suppress_headers = TRUE;
+	include_once('include/display.git_project_index.php');
+	git_project_index($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['p'])) {
  	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p']))
 		echo "No such directory";
