@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  util.age_string.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Utility - convert age to a readable string
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,23 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+function age_string($age)
+{
+	if ($age > 60*60*24*365*2)
+		return (int)($age/60/60/24/365) . " years ago";
+	else if ($age > 60*60*24*(365/12)*2)
+		return (int)($age/60/60/24/(365/12)) . " months ago";
+	else if ($age > 60*60*24*7*2)
+		return (int)($age/60/60/24/7) . " weeks ago";
+	else if ($age > 60*60*24*2)
+		return (int)($age/60/60/24) . " days ago";
+	else if ($age > 60*60*2)
+		return (int)($age/60/60) . " hours ago";
+	else if ($age > 60*2)
+		return (int)($age/60) . " min ago";
+	else if ($age > 2)
+		return (int)$age . " sec ago";
+	return "right now";
+}
 
 ?>

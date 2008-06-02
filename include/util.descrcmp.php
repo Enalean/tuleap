@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  util.descrcmp.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Utility - project description comparison function
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
  include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+
+function descrcmp($a,$b)
+{
+	global $gitphp_conf;
+	return strcmp(git_project_descr($gitphp_conf['projectroot'],$b),git_project_descr($gitphp_conf['projectroot'],$b));
+}
 
 ?>

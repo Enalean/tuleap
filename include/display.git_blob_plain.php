@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  display.git_blob_plain.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Display - blob (plaintext)
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+ include_once('gitutil.git_cat_file.php');
+
+function git_blob_plain($projectroot,$project,$hash,$file)
+{
+	if ($file)
+		$saveas = $file;
+	else
+		$saveas = $hash . ".txt";
+	header("Content-type: text/plain; charset=UTF-8");
+	header("Content-disposition: inline; filename=\"" . $saveas . "\"");
+	echo git_cat_file($projectroot . $project, $hash);
+}
 
 ?>

@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  util.mode_str.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Utility - octal mode to mode string
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+function mode_str($octmode)
+{
+	$mode = octdec($octmode);
+	if (($mode & 0x4000) == 0x4000)
+		return "drwxr-xr-x";
+	else if (($mode & 0xA000) == 0xA000)
+		return "lrwxrwxrwx";
+	else if (($mode & 0x8000) == 0x8000) {
+		if (($mode & 0x0040) == 0x0040)
+			return "-rwxr-xr-x";
+		else
+			return "-rw-r--r--";
+	}
+	return "----------";
+}
 
 ?>

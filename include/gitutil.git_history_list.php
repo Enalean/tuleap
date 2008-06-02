@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  gitutil.git_history_list.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Git utility - history list
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,11 @@
  */
 
  include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+
+function git_history_list($proj,$hash,$file)
+{
+	global $gitphp_conf;
+	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_LIST . " " . $hash . " | env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_DIFF_TREE . " -r --stdin '" . $file . "'");
+}
 
 ?>

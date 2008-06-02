@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  gitutil.git_ls_tree.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Git utility - list tree
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,14 @@
  */
 
  include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+
+function git_ls_tree($proj,$hash,$nullterm = FALSE)
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_LS_TREE;
+	if ($nullterm)
+		$cmd .= " -z";
+	return shell_exec($cmd . " " . $hash);
+}
 
 ?>

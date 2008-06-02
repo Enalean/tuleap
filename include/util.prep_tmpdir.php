@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  util.prep_tmpdir.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Utility - Prepare temporary directory
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+function prep_tmpdir()
+{
+	global $gitphp_conf;
+	if (file_exists($gitphp_conf['gittmp'])) {
+		if (is_dir($gitphp_conf['gittmp'])) {
+			if (!is_writeable($gitphp_conf['gittmp']))
+				return "Specified tmpdir is not writeable!";
+		} else
+			return "Specified tmpdir is not a directory";
+	} else
+		if (!mkdir($gitphp_conf['gittmp'],0700))
+			return "Could not create tmpdir";
+	return TRUE;
+}
 
 ?>

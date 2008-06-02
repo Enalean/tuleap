@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  gitutil.git_project_owner.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Git utility - project owner
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+function git_project_owner($projectroot,$project)
+{
+	$data = posix_getpwuid(fileowner($projectroot . $project));
+	if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
+		return $data['gecos'];
+	return $data['name'];
+}
 
 ?>

@@ -1,10 +1,10 @@
 <?php
 /*
- *  gitphp.lib.php
+ *  gitutil.git_cat_file.php
  *  gitphp: A PHP git repository browser
- *  Component: Function library
+ *  Component: Git utility - cat file
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,14 @@
  */
 
  include_once('defs.commands.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_read_projects.php');
+
+function git_cat_file($proj,$hash,$pipeto = NULL, $type = "blob")
+{
+	global $gitphp_conf;
+	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_CAT_FILE . " " . $type . " " . $hash;
+	if ($pipeto)
+		$cmd .= " > " . $pipeto;
+	return shell_exec($cmd);
+}
 
 ?>
