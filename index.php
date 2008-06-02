@@ -27,7 +27,7 @@
  /*
   * Configuration
   */
- include_once('config.inc.php');
+ include_once('config/gitphp.conf.php');
 
  /*
   * Instantiate Smarty
