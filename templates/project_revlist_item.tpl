@@ -5,10 +5,11 @@
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
- <tr class="{$class}">
  {if $truncate}
+ <tr class="light">
   <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">...</td>
  {else}
+ <tr class="{$class}">
   <td><i>{$commitage}</i></td>
   <td><i>{$commitauthor}</i></td>
   <td>
