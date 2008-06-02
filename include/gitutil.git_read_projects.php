@@ -7,6 +7,8 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
+ include_once('gitutil.git_recurse_projects.php');
+
 function git_read_projects($projectroot,$projectlist)
 {
 	$projects = array();
@@ -27,14 +29,12 @@ function git_read_projects($projectroot,$projectlist)
 					}
 				}
 			} else {
-				if ($dh = opendir($projectroot)) {
-					while (($file = readdir($dh)) !== false) {
-						if ((strpos($file,'.') !== 0) && is_dir($projectroot . $file) && is_file($projectroot . $file . "/HEAD"))
-							$projects[] = $file;
-					}
-					closedir($dh);
-				} else
-					return "Could not read project directory";
+				$projects = git_recurse_projects($projectroot);
+				$len = count($projects);
+				$cut = strlen($projectroot);
+				for ($i = 0; $i < $len; $i++) {
+					$projects[$i] = substr($projects[$i],$cut + 1);
+				}
 			}
 		} else
 			return "Projectroot is not a directory";
