@@ -21,12 +21,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-define('GIT_CAT_FILE','git-cat-file');
-define('GIT_DIFF_TREE','git-diff-tree');
-define('GIT_LS_TREE','git-ls-tree');
-define('GIT_REV_LIST','git-rev-list');
-define('GIT_REV_PARSE','git-rev-parse');
-define('GIT_TAR_TREE','git-tar-tree');
+ include_once('commands.php');
 
 function projectcmp($a,$b)
 {
