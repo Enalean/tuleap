@@ -223,20 +223,17 @@ class UserControler extends Controler {
 
         if(is_array($userid)) {
             
-            foreach ($userid as $uid) {
-
+            foreach($userid as $uid) {
                 $dar = $dao->searchByUserId($uid);
                 $userparam[] = $dar->getRow();
             }
         }
         else {
             $dar = $dao->searchByUserId($userid);
-            
             $userparam = $dar->getRow();
         }
 
         $this->userparam = $userparam;
-
     }
 
 
@@ -247,9 +244,19 @@ class UserControler extends Controler {
 
         $dao =  new UserDao(CodexDataAccess::instance());
 
-        $dar = $dao->searchAdminFlag($userid);
+        if(is_array($userid)) {
 
-        $this->useradminflag = $dar->getRow();
+            foreach($userid as $uid) {
+                $dar = $dao->searchAdminFlag($uid);
+                $useradminflag[] = $dar->getRow();
+            }
+        }
+        else {
+            $dar = $dao->searchAdminFlag($userid);
+            $useradminflag = $dar->getRow();
+        }
+
+        $this->useradminflag = $useradminflag;
     }
 
 
@@ -383,7 +390,7 @@ class UserControler extends Controler {
         if ($this->userid) {
             
             $this->setUserParam($this->userid);
-            // $this->setUserAdminFlag($this->userid);
+            $this->setUserAdminFlag($this->userid);
         }
 
         $this->setOffset();        
