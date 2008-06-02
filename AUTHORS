@@ -1,0 +1,11 @@
+#
+# N: Name
+# E: Email
+# W: Web address
+# P: PGP key ID and fingerprint
+# D: Description
+#
+
+N: Christopher Han
+E: xiphux@gmail.com
+D: Original implementation and lead developer
