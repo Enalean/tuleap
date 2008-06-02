@@ -8,7 +8,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <opml version="1.0">
 <head>
-  <title>Git OPML Export</title>
+  <title>{$title} OPML Export</title>
 </head>
 <body>
 <outline text="git RSS feeds">
