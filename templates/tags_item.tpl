@@ -14,6 +14,6 @@
  {/if}
  </td>
  <td class="link">
- {if $type == "tag"}<a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$id}">tag</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project}&a={$reftype}&h={$refid}">{$reftype}</a>{if $reftype == "commit"} | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$refid}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$refid}">snapshot</a>{/if}
+ {if $type == "tag"}<a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$id}">tag</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project}&a={$reftype}&h={$refid}">{$reftype}</a>{if $reftype == "commit"} | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$refid}">snapshot</a>{/if}
  </td>
  </tr>
