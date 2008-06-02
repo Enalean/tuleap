@@ -1,7 +1,5 @@
 <?php
  ob_start();
- $version = "v01d";
- $gitphp_appstring = "gitphp $version";
 /*
  *  index.php
  *  gitphp: A PHP git repository browser
@@ -23,6 +21,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
+ /*
+  * Version
+  */
+ include_once('include/version.php');
 
  /*
   * Configuration
@@ -128,7 +131,7 @@
  if (!$suppress_headers) {
 	 $tpl->clear_all_assign();
 	 $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
-	 $tpl->assign("version",$version);
+	 $tpl->assign("version",$gitphp_version);
 	 $title = $gitphp_conf['title'];
 	 if ($rss_link) {
 		$tpl->assign("rss_link",TRUE);
