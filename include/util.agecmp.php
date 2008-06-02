@@ -31,7 +31,7 @@ function agecmp($a,$b)
 	$cb = git_read_commit($gitphp_conf['projectroot'] . $b, git_read_head($gitphp_conf['projectroot'] . $b));
 	if ($ca['age'] == $cb['age'])
 		return 0;
-	return ($ca['age'] < $cb['age'] ? 1 : -1);
+	return ($ca['age'] < $cb['age'] ? -1 : 1);
 }
 
 ?>
