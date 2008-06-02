@@ -53,6 +53,8 @@ $gitphp_conf['gittmp'] = "/tmp/gitphp/";
  * The string that will be used as the page title
  * The variable '$gitphp_appstring' will expand to
  * the name (gitphp) and version
+ * The variable '$gitphp_version' will expand to the
+ * version number only
  */
 $gitphp_conf['title'] = "centraldogma :: $gitphp_appstring";
 
