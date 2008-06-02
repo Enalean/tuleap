@@ -42,7 +42,7 @@
  /*
   * Function library
   */
- include_once('gitphp.lib.php');
+ include_once('include/gitphp.lib.php');
 
  $rss_link = FALSE;
  $suppress_headers = FALSE;
