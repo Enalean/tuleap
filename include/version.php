@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
- $gitphp_version = "v01d";
+ $gitphp_version = "0.0.4";
  $gitphp_appstring = "gitphp $gitphp_version";
 
 ?>
