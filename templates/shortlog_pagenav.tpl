@@ -1,5 +1,5 @@
 {*
- *  shortlog_page.tpl
+ *  shortlog_pagenav.tpl
  *  gitphp: A PHP git repository browser
  *  Component: Shortlog view page nav template
  *
