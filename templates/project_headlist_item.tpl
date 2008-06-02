@@ -10,7 +10,7 @@
    <td><a href="{$SCRIPT_NAME}?p={$project}&a=heads">...</a></td>
  {else}
    <td><i>{$headage}</i></td>
-   <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$headname}" class="list"><b>{$headname}</b></td>
-   <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$headname}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$headname}">log</a></td>
+   <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headname}" class="list"><b>{$headname}</b></td>
+   <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headname}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headname}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headname}&hb={$headname}">tree</a></td>
  {/if}
  </tr>
