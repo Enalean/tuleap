@@ -76,14 +76,21 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayUnixAccountInformation() {
 
-        print '<h1><b>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</b></h1>';
-        
+        print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</h3>';
+
+      
+
         print '<form method="post" name="update_user" action="index.php">';
-        
+
+
+        //clic on user link
+        if(isset($this->userparam['user_id'])) {
+
+
         print '<p>Shell:';
 
         print '<select name="form_shell">';
-        
+                     
         print '<option value="/bin/sh"';
         if($this->userparam['shell'] == '/bin/sh') print 'selected="selected"';
         print ' >/bin/sh</option>';
@@ -194,7 +201,135 @@ class UserEditDisplay extends AdminEditDisplay {
         
         print '<input name="Update_Unix" value="Update" type="submit">';
         
-        print '</p><hr>';
+        print '</p>';
+
+
+
+           
+
+        }
+        // select one user
+        elseif(count($this->userparam) == 1 ) {
+
+print '<p>Shell:';
+
+        print '<select name="form_shell">';
+                     
+        print '<option value="/bin/sh"';
+        if($this->userparam[0]['shell'] == '/bin/sh') print 'selected="selected"';
+        print ' >/bin/sh</option>';
+        
+        print '<option value="/bin/bash"';
+        if($this->userparam[0]['shell'] == '/bin/bash') print 'selected="selected"';
+        print '>/bin/bash</option>';
+
+        print '<option value="/sbin/nologin"';
+        if($this->userparam[0]['shell'] == '/sbin/nologin') print 'selected="selected"';
+        print '>/sbin/nologin</option>';
+    
+        print '<option value="/bin/bash2"';
+        if($this->userparam[0]['shell'] == '/bin/bash2') print 'selected="selected"';
+        print '>/bin/bash2</option>';
+
+        print '<option value="/bin/ash"';
+        if($this->userparam[0]['shell'] == '/bin/ash') print 'selected="selected"';
+        print '>/bin/ash</option>';
+
+        print '<option value="/bin/bsh"';
+        if($this->userparam[0]['shell'] == '/bin/bsh') print 'selected="selected"';
+        print '>/bin/bsh</option>';
+
+        print '<option value="/bin/ksh"';
+        if($this->userparam[0]['shell'] == '/bin/ksh') print 'selected="selected"';
+        print '>/bin/ksh</option>';
+
+        print '<option value="/bin/tcsh"';
+        if($this->userparam[0]['shell'] == '/bin/tcsh') print 'selected="selected"';
+        print '>/bin/tcsh</option>';
+
+        print '<option value="/bin/csh"';
+        if($this->userparam[0]['shell'] == '/bin/csh') print 'selected="selected"';
+        print '>/bin/csh</option>';
+
+        print '<option value="/bin/zsh"';
+        if($this->userparam[0]['shell'] == '/bin/zsh') print 'selected="selected"';
+        print '>/bin/zsh</option>';
+
+        print '</select>';
+
+        print '</p>';
+
+
+
+
+          
+
+      
+
+
+        }
+        //select several user
+        else {
+
+          
+print '<p>Shell:';
+
+        print '<select name="form_shell">';
+                     
+        print '<option value="/bin/sh"';
+        if($this->userparam['shell'] == '/bin/sh') print 'selected="selected"';
+        print ' >/bin/sh</option>';
+        
+        print '<option value="/bin/bash"';
+        if($this->userparam['shell'] == '/bin/bash') print 'selected="selected"';
+        print '>/bin/bash</option>';
+
+        print '<option value="/sbin/nologin"';
+        if($this->userparam['shell'] == '/sbin/nologin') print 'selected="selected"';
+        print '>/sbin/nologin</option>';
+    
+        print '<option value="/bin/bash2"';
+        if($this->userparam['shell'] == '/bin/bash2') print 'selected="selected"';
+        print '>/bin/bash2</option>';
+
+        print '<option value="/bin/ash"';
+        if($this->userparam['shell'] == '/bin/ash') print 'selected="selected"';
+        print '>/bin/ash</option>';
+
+        print '<option value="/bin/bsh"';
+        if($this->userparam['shell'] == '/bin/bsh') print 'selected="selected"';
+        print '>/bin/bsh</option>';
+
+        print '<option value="/bin/ksh"';
+        if($this->userparam['shell'] == '/bin/ksh') print 'selected="selected"';
+        print '>/bin/ksh</option>';
+
+        print '<option value="/bin/tcsh"';
+        if($this->userparam['shell'] == '/bin/tcsh') print 'selected="selected"';
+        print '>/bin/tcsh</option>';
+
+        print '<option value="/bin/csh"';
+        if($this->userparam['shell'] == '/bin/csh') print 'selected="selected"';
+        print '>/bin/csh</option>';
+
+        print '<option value="/bin/zsh"';
+        if($this->userparam['shell'] == '/bin/zsh') print 'selected="selected"';
+        print '>/bin/zsh</option>';
+
+        print '</select>';
+
+        print '</p>';
+
+
+
+
+
+
+
+            
+        }
+       
+        print '</form><hr>';
         
     }
 
@@ -236,7 +371,6 @@ class UserEditDisplay extends AdminEditDisplay {
      *
      */
     function displayAddUser() {
-
 
         print '<form action="index.php" method="post">';
 

@@ -125,13 +125,13 @@ class UserControler extends Controler {
      */
     function viewsManagement() {
      
-      //   if ($this->userid) {
-//             $view = new UserEditDisplay($this->userparam, $this->useradminflag);
-//         }
-//         else {
-
+        if ($this->userid) {
+            $view = new UserEditDisplay($this->userparam, $this->useradminflag);
+        }
+        else {
+            
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
-            //}
+        }
     
         $view->display();
     }
