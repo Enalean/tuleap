@@ -68,7 +68,7 @@ function git_project_list($projectroot,$projectlist,$order)
 						$alternate = !$alternate;
 					}
 				} else {
-					git_project_listentry($projectroot,$plist,($alternate?"dark":"light"));
+					git_project_listentry($projectroot,$plist,($alternate?"dark":"light"),FALSE);
 					$alternate = !$alternate;
 				}
 			}
