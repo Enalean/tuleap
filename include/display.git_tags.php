@@ -32,6 +32,7 @@ function git_tags($projectroot,$project)
 	$tpl->assign("project",$project);
 	$tpl->assign("head",$head);
 	$tpl->display("tags_nav.tpl");
+	$tpl->display("tags_header.tpl");
 	$taglist = git_read_refs($projectroot, $project, "refs/tags");
 	if (isset($taglist) && (count($taglist) > 0)) {
 		$alternate = FALSE;
