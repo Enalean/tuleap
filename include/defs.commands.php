@@ -12,6 +12,7 @@ define('GIT_DIFF_TREE','git-diff-tree');
 define('GIT_LS_TREE','git-ls-tree');
 define('GIT_REV_LIST','git-rev-list');
 define('GIT_REV_PARSE','git-rev-parse');
+define('GIT_SHOW_REF','git-show-ref');
 define('GIT_TAR_TREE','git-tar-tree');
 
 ?>
