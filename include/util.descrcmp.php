@@ -26,7 +26,7 @@
 function descrcmp($a,$b)
 {
 	global $gitphp_conf;
-	return strcmp(git_project_descr($gitphp_conf['projectroot'],$b),git_project_descr($gitphp_conf['projectroot'],$b));
+	return strcmp(git_project_descr($gitphp_conf['projectroot'],$a),git_project_descr($gitphp_conf['projectroot'],$b));
 }
 
 ?>
