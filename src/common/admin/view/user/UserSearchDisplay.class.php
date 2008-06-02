@@ -318,7 +318,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         foreach($this->userIterator as $u) {
 
             print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
-<td align="center"><input type="checkbox" name="'.$u['user_name'].'" value="'.$u['user_id'].'" align="center"/></td>
+<td align="center"><input type="checkbox" name="user_id[]" value="'.$u['user_id'].'" align="center"/></td>
 <td class="user_active"><a href="?user_id='.$u['user_id'].'">'.$u['user_name'].'</a></td>
 <td><a href="#">'.$u['realname'].'</a></td>
 <td><a href="#">[DevProfil]</a></td>

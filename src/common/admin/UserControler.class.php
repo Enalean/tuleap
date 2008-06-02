@@ -125,13 +125,14 @@ class UserControler extends Controler {
      */
     function viewsManagement() {
      
-        if ($this->userid) {
-            $view = new UserEditDisplay($this->userparam, $this->useradminflag);
-        }
-        else {
+      //   if ($this->userid) {
+//             $view = new UserEditDisplay($this->userparam, $this->useradminflag);
+//         }
+//         else {
 
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
-        }
+            //}
+    
         $view->display();
     }
 
@@ -171,7 +172,7 @@ class UserControler extends Controler {
     function setLimit() {
         
         $request =& HTTPRequest::instance();
-        
+
 
         //valid parameters
 
@@ -220,9 +221,22 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
-        $dar = $dao->searchByUserId($userid);
+        if(is_array($userid)) {
             
-        $this->userparam = $dar->getRow();
+            foreach ($userid as $uid) {
+
+                $dar = $dao->searchByUserId($uid);
+                $userparam[] = $dar->getRow();
+            }
+        }
+        else {
+            $dar = $dao->searchByUserId($userid);
+            
+            $userparam = $dar->getRow();
+        }
+
+        $this->userparam = $userparam;
+
     }
 
 
@@ -351,26 +365,25 @@ class UserControler extends Controler {
      * request()
      */
     function request() {
-        
+
         $request =& HTTPRequest::instance();
 
         //valid parameters
 
         //valid user id
-        $validUserId = new Valid('user_id');
-        $validUserId->addRule(new Rule_Int());
+        $validUserId = new Valid_UInt('user_id');
         
-        if ($request->valid($validUserId)) {
+        if ($request->validArray($validUserId) || $this->userid == '') {
             $this->userid = $request->get('user_id');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', 'totoYour data are not valid');
         }
 
         if ($this->userid) {
-
+            
             $this->setUserParam($this->userid);
-            $this->setUserAdminFlag($this->userid);
+            // $this->setUserAdminFlag($this->userid);
         }
 
         $this->setOffset();        
