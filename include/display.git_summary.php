@@ -63,7 +63,7 @@ function git_summary($projectroot,$project)
 			$tpl->assign("class","light");
 		$alternate = !$alternate;
 		$tpl->assign("project",$project);
-		if ($i < 16) {
+		if ($i <= 16) {
 			$tpl->assign("commit",$rev);
 			if (isset($refs[$rev]))
 				$tpl->assign("commitref",$refs[$rev]);
