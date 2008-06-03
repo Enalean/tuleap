@@ -12,16 +12,9 @@
 
 function git_history_list($proj,$hash,$file)
 {
-	$list = array();
-	$cmd = GIT_REV_LIST . " " . $hash;
-	$out = git_exec($proj, $cmd);
-	$outlist = explode("\n",$out);
-	foreach ($outlist as $i => $line) {
-		$out2 = git_exec($proj, GIT_DIFF_TREE . " -r " . $line . " '" . $file . "'");
-		$out2list = explode("\n",$out2);
-		$list = array_merge($list, $out2list);
-	}
-	return $list;
+	global $gitphp_conf;
+	$cmd = GIT_REV_LIST . " " . $hash . " | " . $gitphp_conf['gitbin'] . " --git-dir=" . $proj . " " . GIT_DIFF_TREE . " -r --stdin -- " . $file;
+	return git_exec($proj, $cmd);
 }
 
 ?>

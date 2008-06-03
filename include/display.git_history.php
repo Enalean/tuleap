@@ -30,7 +30,8 @@ function git_history($projectroot,$project,$hash,$file)
 	$tpl->display("history_header.tpl");
 	$cmdout = git_history_list($projectroot . $project, $hash, $file);
 	$alternate = FALSE;
-	foreach ($cmdout as $i => $line) {
+	$lines = explode("\n", $cmdout);
+	foreach ($lines as $i => $line) {
 		if (ereg("^([0-9a-fA-F]{40})",$line,$regs))
 			$commit = $regs[1];
 		else if (ereg(":([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs) && isset($commit)) {
