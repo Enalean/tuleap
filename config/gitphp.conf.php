@@ -22,10 +22,13 @@ $gitphp_conf['projectroot'] = "/git/";
 
 /*
  * gitbin
- * Path to git binaries (don't forget trailing slash!)
- * (Leave blank or comment to just use $PATH)
+ * Path to git binary
+ * For example, /usr/bin/git on Linux
+ * or C:\\Program Files\\Git\\cmd\\git.cmd on Windows
+ * with msysgit.  You can also omit the full path and just
+ * use the executable name to search the user's $PATH.
  */
-$gitphp_conf['gitbin'] = "/usr/bin/";
+$gitphp_conf['gitbin'] = "/usr/bin/git";
 
 /*
  * gittmp

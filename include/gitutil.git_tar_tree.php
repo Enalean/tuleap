@@ -8,14 +8,14 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_tar_tree($proj,$hash,$rname = NULL)
 {
-	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_TAR_TREE . " " . $hash;
+	$cmd = GIT_TAR_TREE . " " . $hash;
 	if ($rname)
 		$cmd .= " " . $rname;
-	return $cmd;
+	return git_exec($proj, $cmd);
 }
 
 ?>

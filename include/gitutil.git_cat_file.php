@@ -8,14 +8,14 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_cat_file($proj,$hash,$pipeto = NULL, $type = "blob")
 {
-	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_CAT_FILE . " " . $type . " " . $hash;
+	$cmd = GIT_CAT_FILE . " " . $type . " " . $hash;
+	$out = git_exec($proj, $cmd);
 	if ($pipeto)
 		$cmd .= " > " . $pipeto;
-	return shell_exec($cmd);
 }
 
 ?>

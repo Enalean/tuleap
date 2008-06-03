@@ -8,14 +8,14 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_diff_tree($proj,$hashes,$renames = FALSE)
 {
-	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_DIFF_TREE . " -r ";
+	$cmd = GIT_DIFF_TREE . " -r ";
 	if ($renames)
 		$cmd .= "-M ";
-	return shell_exec($cmd . $hashes);
+	return git_exec($proj, $cmd . $hashes);
 }
 
 ?>

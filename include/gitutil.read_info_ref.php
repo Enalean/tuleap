@@ -8,12 +8,13 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function read_info_ref($project, $type = "")
 {
-	global $gitphp_conf;
 	$refs = array();
-	$showrefs = shell_exec("env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . GIT_SHOW_REF . " --dereference");
+	$cmd = GIT_SHOW_REF . " --dereference";
+	$showrefs = git_exec($project, $cmd);
 	$lines = explode("\n",$showrefs);
 	foreach ($lines as $no => $line) {
 		if (ereg("^([0-9a-fA-F]{40}) .*" . $type . "/([^\^]+)",$line,$regs)) {

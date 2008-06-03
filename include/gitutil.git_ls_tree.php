@@ -8,14 +8,14 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_ls_tree($proj,$hash,$nullterm = FALSE)
 {
-	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_LS_TREE;
+	$cmd = GIT_LS_TREE;
 	if ($nullterm)
 		$cmd .= " -z";
-	return shell_exec($cmd . " " . $hash);
+	return git_exec($proj, $cmd . " " . $hash);
 }
 
 ?>

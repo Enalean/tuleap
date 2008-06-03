@@ -8,18 +8,18 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_rev_list($proj,$head,$count = NULL,$header = FALSE,$parents = FALSE)
 {
-	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_LIST . " ";
+	$cmd = GIT_REV_LIST . " ";
 	if ($header)
 		$cmd .= "--header ";
 	if ($parents)
 		$cmd .= "--parents ";
 	if ($count)
 		$cmd .= "--max-count=" . $count;
-	return shell_exec($cmd . " " . $head);
+	return git_exec($proj, $cmd . " " . $head);
 }
 
 ?>

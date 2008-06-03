@@ -8,11 +8,20 @@
  */
 
  include_once('defs.commands.php');
+ include_once('gitutil.git_exec.php');
 
 function git_history_list($proj,$hash,$file)
 {
-	global $gitphp_conf;
-	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_LIST . " " . $hash . " | env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_DIFF_TREE . " -r --stdin '" . $file . "'");
+	$list = array();
+	$cmd = GIT_REV_LIST . " " . $hash;
+	$out = git_exec($proj, $cmd);
+	$outlist = explode("\n",$out);
+	foreach ($outlist as $i => $line) {
+		$out2 = git_exec($proj, GIT_DIFF_TREE . " -r " . $line . " '" . $file . "'");
+		$out2list = explode("\n",$out2);
+		$list = array_merge($list, $out2list);
+	}
+	return $list;
 }
 
 ?>

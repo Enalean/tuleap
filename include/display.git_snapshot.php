@@ -15,15 +15,15 @@ function git_snapshot($projectroot,$project,$hash)
 	if (!isset($hash))
 		$hash = "HEAD";
 	$rname = str_replace(array("/",".git"),array("-",""),$project);
-	$cmd = git_tar_tree($projectroot . $project, $hash, $rname);
+	$tar = git_tar_tree($projectroot . $project, $hash, $rname);
 	if ($gitphp_conf['bzsnapshots'] && function_exists("bzcompress")) {
 		header("Content-Type: application/x-bzip2");
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar.bz2");
-		echo bzcompress(shell_exec($cmd),$gitphp_conf['bzblocksize']);
+		echo bzcompress($tar,$gitphp_conf['bzblocksize']);
 	} else {
 		header("Content-Type: application/x-tar");
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar");
-		echo shell_exec($cmd);
+		echo $tar;
 	}
 }
 

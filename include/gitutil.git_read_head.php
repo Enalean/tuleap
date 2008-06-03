@@ -8,11 +8,12 @@
  */
 
 include_once('defs.commands.php');
+include_once('gitutil.git_exec.php');
 
 function git_read_head($proj)
 {
-	global $gitphp_conf;
-	return shell_exec("env GIT_DIR=" . $proj . " " . $gitphp_conf['gitbin'] . GIT_REV_PARSE . " --verify HEAD");
+	$cmd = GIT_REV_PARSE . " --verify HEAD";
+	return git_exec($proj, $cmd);
 }
 
 ?>
