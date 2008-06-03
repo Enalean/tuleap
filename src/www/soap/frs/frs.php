@@ -59,7 +59,6 @@ $server->wsdl->addComplexType(
         'notes' => array('name'=>'notes', 'type' => 'xsd:string'),
         'changes' => array('name'=>'changes', 'type' => 'xsd:string'),
         'status_id' => array('name'=>'description', 'type' => 'xsd:string'),
-        'preformatted' => array('name'=>'preformatted', 'type' => 'xsd:boolean'),
         'release_date' => array('name'=>'release_date', 'type' => 'xsd:int'),
         'released_by' => array('name'=>'released_by', 'type' => 'xsd:string'),
     )
@@ -341,7 +340,7 @@ function package_to_soap($package) {
                 'rank' => $package->getRank(),
                 'approve_license' => $package->getApproveLicense()
                 );
-        } 
+        }
     }
     return $return;
 }
