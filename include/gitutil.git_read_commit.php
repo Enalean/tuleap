@@ -26,7 +26,8 @@ function git_read_commit($proj,$head)
 		$tok = strtok(" ");
 	}
 	$commit['parents'] = $parents;
-	$commit['parent'] = $parents[0];
+	if (isset($parents[0]))
+		$commit['parent'] = $parents[0];
 	$comment = array();
 	foreach ($lines as $i => $line) {
 		if (ereg("^tree ([0-9a-fA-F]{40})$",$line,$regs))
@@ -63,6 +64,7 @@ function git_read_commit($proj,$head)
 	$age = time() - $commit['committer_epoch'];
 	$commit['age'] = $age;
 	$commit['age_string'] = age_string($age);
+	date_default_timezone_set("UTC");
 	if ($age > 60*60*24*7*2) {
 		$commit['age_string_date'] = date("Y-m-d",$commit['committer_epoch']);
 		$commit['age_string_age'] = $commit['age_string'];

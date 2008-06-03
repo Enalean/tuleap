@@ -48,23 +48,25 @@ function git_log($projectroot,$project,$hash,$page)
 		$tpl->assign("age_string",$co['age_string']);
 		$tpl->display("log_info.tpl");
 	}
-	for ($i = ($page * 100); $i <= count($revlist); $i++) {
-		$tpl->clear_all_assign();
+	for ($i = ($page * 100); $i < count($revlist); $i++) {
 		$commit = $revlist[$i];
-		$co = git_read_commit($projectroot . $project, $commit);
-		$ad = date_str($co['author_epoch']);
-		$tpl->assign("project",$project);
-		$tpl->assign("commit",$commit);
-		if (isset($refs[$commit]))
-			$tpl->assign("commitref",$refs[$commit]);
-		$tpl->assign("agestring",$co['age_string']);
-		$tpl->assign("title",$co['title']);
-		$tpl->assign("authorname",$co['author_name']);
-		$tpl->assign("rfc2822",$ad['rfc2822']);
-		$tpl->assign("comment",$co['comment']);
-		if (count($co['comment']) > 0)
-			$tpl->assign("notempty",TRUE);
-		$tpl->display("log_item.tpl");
+		if (isset($commit) && strlen($commit) > 1) {
+			$tpl->clear_all_assign();
+			$co = git_read_commit($projectroot . $project, $commit);
+			$ad = date_str($co['author_epoch']);
+			$tpl->assign("project",$project);
+			$tpl->assign("commit",$commit);
+			if (isset($refs[$commit]))
+				$tpl->assign("commitref",$refs[$commit]);
+			$tpl->assign("agestring",$co['age_string']);
+			$tpl->assign("title",$co['title']);
+			$tpl->assign("authorname",$co['author_name']);
+			$tpl->assign("rfc2822",$ad['rfc2822']);
+			$tpl->assign("comment",$co['comment']);
+			if (count($co['comment']) > 0)
+				$tpl->assign("notempty",TRUE);
+			$tpl->display("log_item.tpl");
+		}
 	}
 }
 

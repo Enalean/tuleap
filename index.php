@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL | E_STRICT);
 /*
  *  index.php
  *  gitphp: A PHP git repository browser
@@ -56,15 +55,15 @@ error_reporting(E_ALL | E_STRICT);
 					break;
 				case "tree":
 					include_once('include/display.git_tree.php');
-					git_tree($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f'],$_GET['hb']);
+					git_tree($gitphp_conf['projectroot'], $_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "shortlog":
 					include_once('include/display.git_shortlog.php');
-					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
+					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "log":
 					include_once('include/display.git_log.php');
-					git_log($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['pg']);
+					git_log($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "commit":
 					include_once('include/display.git_commit.php');
@@ -72,12 +71,12 @@ error_reporting(E_ALL | E_STRICT);
 					break;
 				case "commitdiff":
 					include_once('include/display.git_commitdiff.php');
-					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
+					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
 					$suppress_headers = TRUE;
 					include_once('include/display.git_commitdiff_plain.php');
-					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hp']);
+					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "heads":
 					include_once('include/display.git_heads.php');
@@ -94,30 +93,30 @@ error_reporting(E_ALL | E_STRICT);
 					break;
 				case "blob":
 					include_once('include/display.git_blob.php');
-					git_blob($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f'],$_GET['hb']);
+					git_blob($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
 					$suppress_headers = TRUE;
 					include_once('include/display.git_blob_plain.php');
-					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f']);
+					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff":
 					include_once('include/display.git_blobdiff.php');
-					git_blobdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],$_GET['f']);
+					git_blobdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
 					$suppress_headers = TRUE;
 					include_once('include/display.git_blobdiff_plain.php');
-					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],$_GET['f']);
+					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "snapshot":
 					$suppress_headers = TRUE;
 					include_once('include/display.git_snapshot.php');
-					git_snapshot($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
+					git_snapshot($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
 				case "history":
 					include_once('include/display.git_history.php');
-					git_history($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['f']);
+					git_history($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				default:
 					echo "Unknown action";

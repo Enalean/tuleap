@@ -42,7 +42,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 	$tpl->display("shortlog_pagenav.tpl");
 
 	$alternate = FALSE;
-	for ($i = ($page * 100); $i <= count($revlist); $i++) {
+	for ($i = ($page * 100); $i < count($revlist); $i++) {
 		$tpl->clear_all_assign();
 		$commit = $revlist[$i];
 		if (strlen(trim($commit)) > 0) {
