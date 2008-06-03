@@ -19,27 +19,27 @@ class CLI_Action_Tracker_ReportList extends CLI_Action {
             'parameters'     => array('tracker_id'),
         ));
         $this->addParam(array(
-            'name'           => 'max_rows',
-            'description'    => '--limit=<limit>        The maximum number of returned artifacts.',
-            'parameters'     => array('limit'),
+            'name'           => 'report_id',
+            'description'    => '--report_id=<report> ID of the report',
+        ));
+        $this->addParam(array(
+            'name'           => 'criteria',
+            'description'    => '--[field_name][operator][value] a criteria to filter the returned artifacts (e.g: "--open_date<2006-05-21")',
+            'method'         => array(&$this, 'getArtifactCriteria'),
         ));
         $this->addParam(array(
             'name'           => 'offset',
             'description'    => '--offset=<offset>     Number of artifacts that will be skipped (comes with the limit parameter).',
         ));
         $this->addParam(array(
-            'name'           => 'report_id',
-            'description'    => '--report_id=<report> ID of the report',
+            'name'           => 'max_rows',
+            'description'    => '--limit=<limit>        The maximum number of returned artifacts.',
+            'parameters'     => array('limit'),
         ));
         $this->addParam(array(
             'name'           => 'sort_criteria',
             'description'    => '--sort="field_name ASC, field_name DESC, ..."',
             'parameters'     => array('sort'),
-        ));
-        $this->addParam(array(
-            'name'           => 'criteria',
-            'description'    => '--[field_name][operator][value] a criteria to filter the returned artifacts (e.g: "--open_date<2006-05-21")',
-            'method'         => array(&$this, 'getArtifactCriteria'),
         ));
     }
     function getArtifactCriteria($params) {
@@ -83,7 +83,7 @@ class CLI_Action_Tracker_ReportList extends CLI_Action {
         $loaded_params['user_id'] = $GLOBALS['soap']->getSessionUserID();
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        if (!is_array($soap_result) || count($soap_result) == 0) {
+        if (!is_object($soap_result) || $soap_result->total_artifacts_number == 0) {
             if (!$loaded_params['others']['quiet']) echo "No artifacts were found for this tracker.";
         } else {
             if (!$loaded_params['others']['quiet']) $this->show_output($soap_result, $fieldnames);

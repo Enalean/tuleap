@@ -62,7 +62,7 @@ class CLI_Action_Tracker_List extends CLI_Action {
         $loaded_params['user_id'] = $GLOBALS['soap']->getSessionUserID();
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        if (!is_array($soap_result) || count($soap_result) == 0) {
+        if (!is_object($soap_result) || $soap_result->total_artifacts_number == 0) {
             if (!$loaded_params['others']['quiet']) echo "No artifacts were found for this tracker.";
         } else {
             if (!$loaded_params['others']['quiet']) $this->show_output($soap_result, $fieldnames);
