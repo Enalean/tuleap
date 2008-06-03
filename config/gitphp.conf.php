@@ -31,6 +31,13 @@ $gitphp_conf['projectroot'] = "/git/";
 $gitphp_conf['gitbin'] = "/usr/bin/git";
 
 /*
+ * diffbin
+ * Path to diff binary
+ * Same rules as gitbin
+ */
+$gitphp_conf['diffbin'] = "/usr/bin/diff";
+
+/*
  * gittmp
  * Location for temporary files for diffs
  * (don't forget trailing slash!)

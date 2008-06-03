@@ -23,7 +23,7 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 		$to_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_to";
 		git_cat_file($proj,$to,$to_tmp);
 	}
-	$diffout = shell_exec("diff -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
+	$diffout = shell_exec($gitphp_conf['diffbin'] . " -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
 	if ($format == "plain")
 		echo $diffout;
 	else {
