@@ -29,7 +29,7 @@ $gitphp_conf['projectroot'] = "/git/";
  * use the executable name to search the user's $PATH.
  * Note: Versions of PHP below 5.2 have buggy handling of spaces
  * in paths.  Use the 8.3 version of the filename if you're
- * having trouble.
+ * having trouble, e.g. C:\\Progra~1\\Git\\cmd\\git.cmd
  */
 $gitphp_conf['gitbin'] = "/usr/bin/git";
 
