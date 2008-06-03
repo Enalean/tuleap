@@ -494,7 +494,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
 		$msg_id=db_insertid($result);
 		
-		if ($request->isPost('enable_monitoring') && $request->exist('enable_monitoring')) {
+		if ($request->isPost() && $request->existAndNonEmpty('enable_monitoring')) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
 		} else {
 		    forum_thread_delete_monitor_by_user($group_forum_id, $msg_id, user_getid());

@@ -37,12 +37,18 @@ $request =& HTTPRequest::instance();
 $vFrm = new Valid_UInt('forum_id');
 $vFrm->required();
 
-if ($request->isPost('submit') && $request->exist('submit')) {
+$vUid = new Valid_UInt('user_id');
+$vUid->required();
+
+$vMthr = new Valid_UInt('mthread');
+$vMthr->required();
+
+if ($request->isPost() && $request->exist('submit')) {
     
-    if ($request->valid(new Valid_UInt('user_id'))) {
+    if ($request->valid($vUid)) {
     	$uid = $request->get('user_id');
     }
-    if ($request->validArray(new Valid_UInt('mthread'))) {
+    if ($request->validArray($vMthr)) {
     	$mthread = $request->get('mthread');
     }
 	if ($request->valid($vFrm)) {
