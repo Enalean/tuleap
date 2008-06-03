@@ -24,12 +24,12 @@ $gitphp_conf['projectroot'] = "/git/";
  * gitbin
  * Path to git binary
  * For example, /usr/bin/git on Linux
- * or C:\\Program Files\\Git\\cmd\\git.cmd on Windows
+ * or C:\\Program Files\\Git\\bin\\git.exe on Windows
  * with msysgit.  You can also omit the full path and just
  * use the executable name to search the user's $PATH.
  * Note: Versions of PHP below 5.2 have buggy handling of spaces
  * in paths.  Use the 8.3 version of the filename if you're
- * having trouble, e.g. C:\\Progra~1\\Git\\cmd\\git.cmd
+ * having trouble, e.g. C:\\Progra~1\\Git\\bin\\git.exe
  */
 $gitphp_conf['gitbin'] = "/usr/bin/git";
 
@@ -37,6 +37,7 @@ $gitphp_conf['gitbin'] = "/usr/bin/git";
  * diffbin
  * Path to diff binary
  * Same rules as gitbin
+ * Windows (msysgit): C:\\Progra~1\\Git\\bin\\diff.exe
  */
 $gitphp_conf['diffbin'] = "/usr/bin/diff";
 
