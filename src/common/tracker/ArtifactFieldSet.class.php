@@ -260,12 +260,17 @@ class ArtifactFieldSet extends Error {
     /** 
      * userCanSubmit : returns true if user has Submit permission on this fieldset (this means that at least one field of this fieldset has submit permissions)
      *
-     * @param user_id: if not given or 0 take the current user
+     * @param user_id: if not given or false take the current user
      */ 
-    function userCanSubmit($group_id, $group_artifact_id, $user_id = 0) {
+    function userCanSubmit($group_id, $group_artifact_id, $user_id = false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+        if (! $user_id) {
+            $user =& $um->getCurrentUser();
+            $user_id = $user->getId();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         if ($user->isSuperUser()) {
             $ok = true;
         } else {

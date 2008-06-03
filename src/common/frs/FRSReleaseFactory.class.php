@@ -274,12 +274,17 @@ class FRSReleaseFactory {
 	/** return true if user has Read or Update permission on this release 
 	 * @param group_id: the package this release is in
 	 * @param release_id: the release id 
-	 * @param user_id: if not given or 0 take the current user
+	 * @param user_id: if not given or false take the current user
      */ 
-	function userCanRead($group_id,$package_id,$release_id,$user_id=0) {
+	function userCanRead($group_id,$package_id,$release_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+            $user_id = $user->getId();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
         	$ok = $user->isSuperUser() 
               	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
@@ -293,13 +298,17 @@ class FRSReleaseFactory {
     /** return true if user has Update permission on this release 
      * @param int $group_id the project this release is in
      * @param int $release_id the ID of the release to update
-     * @param int $user_id if not given or 0, take the current user
+     * @param int $user_id if not given or false, take the current user
      * @return boolean true if user can update the release $release_id, false otherwise
      */ 
-	function userCanUpdate($group_id,$release_id,$user_id=0) {
+	function userCanUpdate($group_id,$release_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         $ok = $user->isSuperUser() 
               || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
         return $ok;
@@ -312,13 +321,17 @@ class FRSReleaseFactory {
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
      * @param int $group_id the project ID this release is in
-     * @param int $user_id the ID of the user. If not given or 0, take the current user
+     * @param int $user_id the ID of the user. If not given or false, take the current user
      * @return boolean true if the user has permission to create releases, false otherwise
      */ 
-	function userCanCreate($group_id,$user_id=0) {
+	function userCanCreate($group_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
 	}

@@ -1653,12 +1653,16 @@ class ArtifactField extends Error {
 	/** return true if user has Read or Update permission on this field 
 	 * @param group_id: the project this field is in
 	 * @param group_artifact_id: the trackers id this field is in
-	 * @param user_id: if not given or 0 take the current user
+	 * @param user_id: if not given or false take the current user
 	**/ 
-	function userCanRead($group_id,$group_artifact_id,$user_id=0) {
+	function userCanRead($group_id,$group_artifact_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         $ok = $user->isSuperUser() 
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)))
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
@@ -1668,12 +1672,16 @@ class ArtifactField extends Error {
 	/** return true if user has Update permission on this field 
 	 * @param group_id: the project this field is in
 	 * @param group_artifact_id: the trackers id this field is in
-	 * @param user_id: if not given or 0 take the current user
+	 * @param user_id: if not given or false take the current user
 	**/ 
-	function userCanUpdate($group_id,$group_artifact_id,$user_id=0) {
+	function userCanUpdate($group_id,$group_artifact_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
         $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
 	}
@@ -1682,12 +1690,16 @@ class ArtifactField extends Error {
 	/** return true if user has Submit permission on this field 
 	 * @param group_id: the project this field is in
 	 * @param group_artifact_id: the trackers id this field is in
-	 * @param user_id: if not given or 0 take the current user
+	 * @param user_id: if not given or false take the current user
 	**/ 
-	function userCanSubmit($group_id,$group_artifact_id,$user_id=0) {
+	function userCanSubmit($group_id,$group_artifact_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
-        $user =& $um->getUserById($user_id);
+	    if (! $user_id) {
+            $user =& $um->getCurrentUser();
+        } else {
+            $user =& $um->getUserById($user_id);    
+        }
 	$ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
 	}
