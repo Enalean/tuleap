@@ -13,9 +13,9 @@
 function git_cat_file($proj,$hash,$pipeto = NULL, $type = "blob")
 {
 	$cmd = GIT_CAT_FILE . " " . $type . " " . $hash;
-	$out = git_exec($proj, $cmd);
 	if ($pipeto)
 		$cmd .= " > " . $pipeto;
+	return git_exec($proj, $cmd);
 }
 
 ?>
