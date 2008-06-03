@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL | E_STRICT);
 /*
  *  index.php
  *  gitphp: A PHP git repository browser
@@ -127,7 +128,7 @@
  } else {
  	$tpl->display("hometext.tpl");
 	include_once('include/display.git_project_list.php');
- 	git_project_list($gitphp_conf['projectroot'],$git_projects,$_GET['o']);
+ 	git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
  }
  $main = ob_get_contents();
  ob_end_clean();

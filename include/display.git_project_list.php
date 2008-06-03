@@ -14,14 +14,15 @@
  include_once('display.git_project_listentry.php');
  include_once('gitutil.git_read_projects.php');
 
-function git_project_list($projectroot,$projectlist,$order)
+function git_project_list($projectroot,$projectlist,$order = "project")
 {
 	global $tpl,$git_projects;
 	$projects = git_read_projects($projectroot,$projectlist);
 	if (is_array($projects)) {
 		if (count($projects) > 0) {
 			$tpl->clear_all_assign();
-			$tpl->assign("order",$order);
+			if ($order)
+				$tpl->assign("order",$order);
 			$tpl->display("projlist_header.tpl");
 			if (!isset($git_projects)) {
 				switch ($order) {
