@@ -14,7 +14,10 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 	global $gitphp_conf,$tpl;
 	$from_tmp = "/dev/null";
 	$to_tmp = "/dev/null";
-	$pid = posix_getpid();
+	if (function_exists('posix_getpid'))
+		$pid = posix_getpid();
+	else
+		$pid = rand();
 	if (isset($from)) {
 		$from_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_from";
 		git_cat_file($proj,$from,$from_tmp);
