@@ -10,7 +10,7 @@
  function git_exec_nix($project, $command)
  {
  	global $gitphp_conf;
-	$cmd = "env GIT_DIR=" . $project . " " . $gitphp_conf['gitbin'] . " " . $command;
+	$cmd = $gitphp_conf['gitbin'] . " --git-dir=" . $project . " " . $command;
 	return shell_exec($cmd);
  }
 
