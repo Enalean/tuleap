@@ -47,8 +47,7 @@ class UserDao extends DataAccessObject {
     function searchGroupByUserId($userId) {
         $sql = sprintf("SELECT * FROM user JOIN user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id) WHERE user.user_id IN (%s)",
                        $this->da->quoteSmart($userId));
-        echo $sql;
-        return $this->retrieve($sql);
+          return $this->retrieve($sql);
     }
 
     /**
