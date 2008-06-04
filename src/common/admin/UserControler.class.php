@@ -126,7 +126,7 @@ class UserControler extends Controler {
     function viewsManagement() {
      
         if ($this->userid) {
-            $view = new UserEditDisplay($this->userparam, $this->useradminflag);
+            $view = new UserEditDisplay($this->userparam, $this->useradminflag, $this->groupparam);
         }
         else {
             
@@ -234,6 +234,43 @@ class UserControler extends Controler {
         }
 
         $this->userparam = $userparam;
+    }
+
+    /**
+     * setGroupParam
+     */
+    function setGroupParam($userid) {
+
+        $dao = new UserDao(CodexDataAccess::instance());
+
+
+        var_dump($userid);
+
+        if(is_array($userid)) {
+
+            if (count($userid) > 1) {
+
+
+                
+                $userid = implode(",", $userid);
+               
+            }
+                else {
+                    $userid = $userid[0];
+                }
+
+
+        }
+        else {
+            $dar = $dao->searchGroupByUserId($userid);
+           
+        }     
+        $dar = $dao->searchGroupByUserId($userid);
+       
+        $groupparam = $dar->getRow();    
+        $this->groupparam = $groupparam;
+
+               
     }
 
 
@@ -384,12 +421,13 @@ class UserControler extends Controler {
             $this->userid = $request->get('user_id');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'totoYour data are not valid');
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
         if ($this->userid) {
             
             $this->setUserParam($this->userid);
+            $this->setGroupParam($this->userid);
             $this->setUserAdminFlag($this->userid);
         }
 

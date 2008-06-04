@@ -128,4 +128,5 @@ class UserShortcutFilter implements iStatement {
 
     function getGroupBy() {}
 }
+
 ?>

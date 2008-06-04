@@ -39,6 +39,18 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+
+    /**
+     * Searches information about user and user's group by UserId
+     * @return DataAccessResult
+     */
+    function searchGroupByUserId($userId) {
+        $sql = sprintf("SELECT * FROM user JOIN user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id) WHERE user.user_id IN (%s)",
+                       $this->da->quoteSmart($userId));
+        echo $sql;
+        return $this->retrieve($sql);
+    }
+
     /**
      * Searches user's administration flag by UserId
      * @return DataAccessResult
@@ -369,7 +381,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
     }
 
     /**
-     * search user by criteria
+     * search user by filter
      *
      */
     function & searchUserByFilter($ca, $offset, $limit) {
@@ -380,16 +392,23 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         if (!empty($ca )) {
 
             $iwhere = 0;
+            $ijoin = 0;
             $join = null;
             $where = null;
             $groupby = null;
 
             foreach($ca as $c) {
-            
+                
                 if ($c->getJoin()) {
-                    $join .= $c->getJoin();
+
+                    if ($ijoin < 1) {
+
+                        $join .= $c->getJoin();
+                        $ijoin++;
+                    }
                 }
-                                
+                 
+ 
                 if ($iwhere >= 1) {
                     $where .= ' AND '.$c->getWhere();
                     $iwhere++;
@@ -418,6 +437,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$offset.', '.$limit;
+        
 
         return $this->retrieve($sql);
     }

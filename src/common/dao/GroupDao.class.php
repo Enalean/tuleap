@@ -20,8 +20,8 @@ class GroupDao extends DataAccessObject {
     /**
      * Gets all tables of the db
      * @return DataAccessResult
-     adapeter cette methode
-    */
+     *
+     */
     function & searchAll($offset=null, $limit=null) {
         $this->sql = "SELECT  SQL_CALC_FOUND_ROWS * FROM user";
 
@@ -30,10 +30,10 @@ class GroupDao extends DataAccessObject {
         }        
         return $this->retrieve($this->sql);
     }
-    
+ 
     /**
      * search group by filter
-     * adapter cette methode
+     * 
      *
      */
     function searchGroupByFilter($ca, $offset, $limit) {

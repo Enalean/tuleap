@@ -45,10 +45,11 @@ class UserEditDisplay extends AdminEditDisplay {
      * @type string $useradminflag
      */
 
-    function __construct($userparam, $useradminflag) {
- 
-       $this->userparam = $userparam;
-       $this->useradminflag = $useradminflag;
+    function __construct($userparam, $useradminflag, $groupparam) {
+    
+        $this->userparam = $userparam;
+        $this->useradminflag = $useradminflag;
+        $this->groupparam = $groupparam;
     }
 
 
