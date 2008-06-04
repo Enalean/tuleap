@@ -111,6 +111,13 @@ class UserControler extends Controler {
      */
     private $status;
 
+    /**
+     * $groupparam
+     *
+     * @type mixed $groupparam
+     */
+    private $groupparam;
+
 
     /**
      * constructor
@@ -129,7 +136,6 @@ class UserControler extends Controler {
             $view = new UserEditDisplay($this->userparam, $this->useradminflag, $this->groupparam);
         }
         else {
-            
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
         }
     
@@ -146,8 +152,6 @@ class UserControler extends Controler {
 
     /**
      * setOffset()
-     *
-     * @param int $offset
      */
     function setOffset() {
         
@@ -173,7 +177,6 @@ class UserControler extends Controler {
         
         $request =& HTTPRequest::instance();
 
-
         //valid parameters
 
         //valid limit
@@ -188,7 +191,6 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         //valid nbtodisplay
 
         $validNbToDisplay = new Valid('nbtodisplay');
@@ -201,7 +203,6 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         if ($limit != '') {
             $this->limit = $limit;
         }
@@ -212,7 +213,6 @@ class UserControler extends Controler {
             $this->limit = 50;
         }
     }
-
  
     /**
      * setUserParam
@@ -222,7 +222,6 @@ class UserControler extends Controler {
         $dao = new UserDao(CodexDataAccess::instance());
 
         if(is_array($userid)) {
-            
             foreach($userid as $uid) {
                 $dar = $dao->searchByUserId($uid);
                 $userparam[] = $dar->getRow();
@@ -242,36 +241,14 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
-
-        var_dump($userid);
-
         if(is_array($userid)) {
-
-            if (count($userid) > 1) {
-
-
-                
-                $userid = implode(",", $userid);
-               
-            }
-                else {
-                    $userid = $userid[0];
-                }
-
-
+            $userid = implode(",", $userid);
         }
-        else {
-            $dar = $dao->searchGroupByUserId($userid);
-           
-        }     
+        
         $dar = $dao->searchGroupByUserId($userid);
-       
         $groupparam = $dar->getRow();    
-        $this->groupparam = $groupparam;
-
-               
+        $this->groupparam = $groupparam;               
     }
-
 
     /**
      * setUserAdminFlag
@@ -281,7 +258,6 @@ class UserControler extends Controler {
         $dao =  new UserDao(CodexDataAccess::instance());
 
         if(is_array($userid)) {
-
             foreach($userid as $uid) {
                 $dar = $dao->searchAdminFlag($uid);
                 $useradminflag[] = $dar->getRow();
@@ -295,16 +271,13 @@ class UserControler extends Controler {
         $this->useradminflag = $useradminflag;
     }
 
-
     /**
      * setUserIterator()
      */
     function setUserIterator() {
 
         $dao = new UserDao(CodexDataAccess::instance());        
-
         $filter = array();
-
         $request =& HTTPRequest::instance();
 
         //define white lists for parameters
@@ -316,7 +289,6 @@ class UserControler extends Controler {
 
         //valid shortcut
         $validShortcut = new Valid('user_shortcut_search');
-       
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
                 
         if($request->valid($validShortcut)) {
@@ -343,7 +315,7 @@ class UserControler extends Controler {
             $this->group = $request->get('user_group_search');
             $this->group = explode(',', $this->group);
             $this->group = $this->group[0];
-                     
+            
             if ( preg_match('#^.*\((.*)\)$#',$this->group, $matches)) {
                 $this->group = $matches[1];
             }
@@ -378,31 +350,23 @@ class UserControler extends Controler {
         
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
 
-
         if ($this->view == 'ajax_projects') {
          
             $dao = new UserDao(CodexDataAccess::instance());
-        
             $filter = array();
-            
             $request =& HTTPRequest::instance();
-            
             $vuName = new Valid_String('user_name_search');
             
             if ($request->valid($vuName)) {
-               
                 $name = $request->get('user_name_search');
                 $filter[] = new UserNameFilter($name);
             }
             else {
                 $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
             }
-           
             $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
-                     
         }
      }
-
    
     /**
      * request()
@@ -424,7 +388,6 @@ class UserControler extends Controler {
         }
 
         if ($this->userid) {
-            
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
             $this->setUserAdminFlag($this->userid);
@@ -433,7 +396,7 @@ class UserControler extends Controler {
         $this->setOffset();        
 
         $this->setLimit();
-               
+            
         $this->setUserIterator();
         
         $this->setNbUser();

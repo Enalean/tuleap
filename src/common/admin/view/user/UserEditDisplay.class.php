@@ -35,7 +35,7 @@ class UserEditDisplay extends AdminEditDisplay {
     /**
      * $userparam
      *
-     * @type array $userparam
+     * @type mixed $userparam
      */
     private $userparam;
 
@@ -44,6 +44,14 @@ class UserEditDisplay extends AdminEditDisplay {
      *
      * @type string $useradminflag
      */
+    private $useradminflag;
+
+    /**
+     * $groupparam
+     *
+     * @type mixed $groupparam
+     */
+    private $groupparam;
 
     function __construct($userparam, $useradminflag, $groupparam) {
     

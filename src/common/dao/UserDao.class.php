@@ -399,14 +399,11 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
             foreach($ca as $c) {
                 
                 if ($c->getJoin()) {
-
                     if ($ijoin < 1) {
-
                         $join .= $c->getJoin();
                         $ijoin++;
                     }
                 }
-                 
  
                 if ($iwhere >= 1) {
                     $where .= ' AND '.$c->getWhere();
@@ -431,12 +428,10 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
-            
         }
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-        
 
         return $this->retrieve($sql);
     }
