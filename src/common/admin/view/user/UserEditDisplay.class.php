@@ -40,26 +40,17 @@ class UserEditDisplay extends AdminEditDisplay {
     private $userparam;
 
     /**
-     * $useradminflag
-     *
-     * @type string $useradminflag
-     */
-    private $useradminflag;
-
-    /**
      * $groupparam
      *
      * @type mixed $groupparam
      */
     private $groupparam;
 
-    function __construct($userparam, $useradminflag, $groupparam) {
+    function __construct($userparam, $groupparam) {
     
         $this->userparam = $userparam;
-        $this->useradminflag = $useradminflag;
         $this->groupparam = $groupparam;
     }
-
 
     /**
      * displayHeader()
@@ -77,7 +68,6 @@ class UserEditDisplay extends AdminEditDisplay {
                  
                  <?php
                  }
-
 
     /**
      * displayUnixAccountInformation()
@@ -323,16 +313,11 @@ class UserEditDisplay extends AdminEditDisplay {
         }
     }
 
-
     /**
      * displayCurrentGroups()
      *
      */
     function displayCurrentGroups() {
-
-
-
-       
 
         //clic on user link
         if(isset($this->userparam['user_id'])) {
@@ -350,7 +335,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<form action="index.php" method="post">';
 
             print '<input type="checkbox" name="adminflag" value="A"';
-            if ($this->useradminflag['admin_flags']) print 'checked="checked"';
+            if ($this->groupparam['admin_flags']) print 'checked="checked"';
             print ' />';
             
             print $GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
@@ -377,7 +362,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<form action="index.php" method="post">';
             
             print '<input type="checkbox" name="adminflag" value="A"';
-            if ($this->useradminflag[0]['admin_flags']) print 'checked="checked"';
+            if ($this->groupparam['admin_flags']) print 'checked="checked"';
             print ' />';
             
             print $GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';

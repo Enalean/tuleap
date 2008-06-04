@@ -91,13 +91,6 @@ class UserControler extends Controler {
     private $username;
 
     /**
-     * $useradminflag
-     *
-     * @type string $useradminflag
-     */
-    private $useradminflag;
-
-    /**
      * $group
      *
      * @type string $group
@@ -133,7 +126,7 @@ class UserControler extends Controler {
     function viewsManagement() {
      
         if ($this->userid) {
-            $view = new UserEditDisplay($this->userparam, $this->useradminflag, $this->groupparam);
+            $view = new UserEditDisplay($this->userparam, $this->groupparam);
         }
         else {
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
@@ -248,27 +241,6 @@ class UserControler extends Controler {
         $dar = $dao->searchGroupByUserId($userid);
         $groupparam = $dar->getRow();    
         $this->groupparam = $groupparam;               
-    }
-
-    /**
-     * setUserAdminFlag
-     */
-    function setUserAdminFlag($userid) {
-
-        $dao =  new UserDao(CodexDataAccess::instance());
-
-        if(is_array($userid)) {
-            foreach($userid as $uid) {
-                $dar = $dao->searchAdminFlag($uid);
-                $useradminflag[] = $dar->getRow();
-            }
-        }
-        else {
-            $dar = $dao->searchAdminFlag($userid);
-            $useradminflag = $dar->getRow();
-        }
-
-        $this->useradminflag = $useradminflag;
     }
 
     /**
@@ -390,7 +362,6 @@ class UserControler extends Controler {
         if ($this->userid) {
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
-            $this->setUserAdminFlag($this->userid);
         }
 
         $this->setOffset();        

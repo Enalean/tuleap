@@ -39,7 +39,6 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-
     /**
      * Searches information about user and user's group by UserId
      * @return DataAccessResult
@@ -49,17 +48,7 @@ class UserDao extends DataAccessObject {
                        $this->da->quoteSmart($userId));
           return $this->retrieve($sql);
     }
-
-    /**
-     * Searches user's administration flag by UserId
-     * @return DataAccessResult
-     */
-    function searchAdminFlag($userId) {
-        $sql = sprintf("SELECT admin_flags FROM user_group WHERE user_id = %s",
-                       $this->da->quoteSmart($userId));
-        return $this->retrieve($sql);
-    }
-
+    
     /**
     * Searches User by UserName 
     * @return DataAccessResult
