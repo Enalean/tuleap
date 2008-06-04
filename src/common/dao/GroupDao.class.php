@@ -38,9 +38,9 @@ class GroupDao extends DataAccessObject {
      */
     function searchGroupByFilter($ca, $offset, $limit) {
 
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '.
-               'FROM user JOIN user_group ON user.user_id = user_group.user_id '. 
-               'JOIN groups ON user_group.group_id = groups.group_id '.
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '. 
+               'FROM user RIGHT JOIN user_group ON user.user_id = user_group.user_id '. 
+               'RIGHT JOIN groups ON user_group.group_id = groups.group_id '.
                'JOIN group_type ON groups.type = group_type.type_id ';
            
 
@@ -80,12 +80,12 @@ class GroupDao extends DataAccessObject {
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
-
         }
    
         $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
+        echo $sql;
         return $this->retrieve($sql);
     }
 
