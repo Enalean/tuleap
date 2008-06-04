@@ -308,7 +308,6 @@ class GroupControler extends Controler {
         if ($this->type != '' && $this->type != 'any') {
             $filter[] = new GroupTypeFilter($this->type);
         }
-
         $this->mainGroupIterator = $dao->searchGroupByFilter($filter, $this->offset, $this->limit);
     }
 
@@ -411,7 +410,6 @@ class GroupControler extends Controler {
         if ($this->type != '' && $this->type != 'any') {
             $filter[] = new GroupTypeFilter($this->type);
         }
-
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
     }
 
@@ -454,12 +452,13 @@ class GroupControler extends Controler {
 
                     if (count($valaei['email'])>1) {
                         $i = 1;
-
+                        
                         while($i < count($valaei['email'])) {
                             $this->groupArray[$keyaei]['email'] .= ';'.$valaei['email'];
                             $i++;
                         }
                     }
+                    
                     $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
                 }
             }
