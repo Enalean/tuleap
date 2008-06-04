@@ -515,6 +515,16 @@
 	the list of results in landscape format.</para>
       </section>
 
+
+	<section id="ArtifactCharts">
+	 <title>Graphical visualization</title>
+	 <para>You can also view graphical results of your search in 
+	 the &#39;Charts&#39; section. There si basely three types of graph
+	 supported : Pie, Bar and Gantt. 
+	 </para>
+	</section>
+
+
       <section id="TrackerReports">
 	<title>Tracker Reports</title>
 
@@ -536,6 +546,23 @@
 	linkend="TrackerReportManagement" /> for more details on
 	managing tracker reports.</para>
       </section>
+	
+	<section id="GraphTrackerReports">
+	 <title>Graphical Tracker Reports</title>
+
+	 <para>There is also a report system for the graphical visualization
+	 service. Depending on the project, users may enjoy the ability to 
+	 choose from several graphical tracker reports by using the upper
+ 	 pull-down menu of the &#39;Charts&#39; section</para>
+
+     <para>Any CodeX user with access to the tracker can define her
+	 own personal graphical report. In this case the report is a personal one
+	 and is only visible to this particular user. On the contrary,
+	 tracker administrators have the ability to define project-wide
+	 graphical reports that all users will be able to use. See <xref
+	 linkend="GraphTrackerReportManagement" /> for more details on
+	 managing tracker reports.</para>
+    </section>
 
     </section>
 
@@ -3034,7 +3061,9 @@ width="14.5cm" />
 	    </imageobject>
 	  </mediaobject>
 	</figure>
-
+	
+	<para>The same interface is available to browse the trackers graphical
+	 reports.</para>
       </section>
   
       <section id="TrackerReportSetting">
@@ -3143,6 +3172,127 @@ width="14.5cm" />
 	
       </section>
 
+    </section>
+    
+   <section id="GraphTrackerReportSetting">
+	<title>Tracker Graphical Report Setting</title>
+
+	<para>After you click on a graphical report ID in the graphical
+	report list (see <xref linkend="TrackerReportBrowsing" />, 
+	the report setting screen appears. This screen allows you to define what type of graphs will be
+	    displayed .</para>
+	
+	There is three graph types supported: Pie, Bar and Gantt.
+	
+	<section id="graphedition">
+	 <title>Creating / Editing a graph</title>
+	 <para>To create a new graph for the graphical report, juste click on the
+	 type of the graph you want to create, Pie, Bar or Gantt. To edit an existing
+	 graph, click on the pencil button in the upper right corner of the graph. 
+	 By clicking on the red cross buton, you will delete the graph. Commun 
+	 informations available on the creation /edition screen available 
+	 are as follows:
+	 </para>
+		<itemizedlist mark="bullet"
+		  spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Title</emphasis>: each graph must be
+			given a name. This name must not be too long as it
+		    will appear in the upper center of the graph.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Description</emphasis>: enter a short 
+			description of the graph here, it will appear under the title in 
+			the graph.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Rank</emphasis>: the rank sets 
+			the display order of the varioux graphs in the graphical report.
+			</para>
+		  </listitem>
+		</itemizedlist>
+	 </section>
+	
+	 <section id="piegraphsettings">
+	  <title>Creating / Editing a Pie graph</title>
+	  <para>Specific informations available for the Pie graph are as follows:</para>
+	
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Width and Height</emphasis>: set the size 
+			of the graph in pixels.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Source Data</emphasis>: set the tracker
+			field on which computation of the Pie graph will be based.</para>
+		  </listitem>
+		</itemizedlist>
+	 </section>
+
+	 <section id="bargraphsettings">
+	  <title>Creating / Editing a Bar graph</title>
+	  <para>Specific informations available for the Bar graph are as follows:</para>
+	
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Width and Height</emphasis>: set the size 
+			of the graph in pixels.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Source Data</emphasis>: set the tracker
+			field on which computation of the Bar graph will be based.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Group by</emphasis>: set a tracker field
+			by which computation of source field will be grouped.</para>
+		  </listitem>
+	  </itemizedlist>
+	 </section>
+	
+	 <section id="ganttgraphsettings">
+	  <title>Creating / Editing a Gantt graph</title>
+	  <para>Specific informations available for the Gantt graph are as follows:</para>
+	
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Start Date</emphasis>: set the tracker
+			field for the start date.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Finish Date</emphasis>: set the tracker
+			field for the finish date.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Due Date</emphasis>: set the tracker
+			field for the due date.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Time Scale</emphasis>: can be day, weak,
+			month and year.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">As of date</emphasis>: Date considered 
+			as a reference for data display. Default value is today.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Summary</emphasis>: Text to be displayed 
+			on the gantt left, and in the bar tooltip.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Left Hint, Center Hint, Right Hint</emphasis>:
+			Text to be displayed on the left, center and right of the bar tooltip.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Progress</emphasis>:
+			Percentage of completion of the task.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Right Text</emphasis>:
+			Text to be displayed at the right of the gantt bar.</para>
+	  	  </listitem>
+	  </itemizedlist>
+	 </section>
+	
     </section>
     
     <section id="TrackerEmailNotificationSettings">

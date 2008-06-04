@@ -38,6 +38,7 @@ global	on	On
 global	off	Off
 global	any	Any
 global	none	None
+global	none_dashed	-- None --
 global	begin	Begin
 global	end	End
 global	next	Next

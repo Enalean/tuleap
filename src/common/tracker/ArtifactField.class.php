@@ -441,6 +441,15 @@ class ArtifactField extends Error {
 	}
 
 	/**
+	 *  Return true if the field is a int 
+	 *
+	 * @return boolean
+	 */
+	function isInt() {
+		return ( $this->getDataType() == $this->DATATYPE_INT );
+	}
+
+	/**
 	 *  Return true if the field is allowed to be empty
 	 *
 	 * @return boolean

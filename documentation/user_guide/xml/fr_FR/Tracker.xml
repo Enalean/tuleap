@@ -561,7 +561,16 @@
         vous conseillons d'imprimer les résultats en format
         paysage.</para>
       </section>
-
+	
+	  <section id="ArtifactCharts">
+		 <title>Visualisation graphique</title>
+		 <para>Il est également possible de visualiser les résultats de la
+		 requête dans la section &#39;Graphiques&#39; . Il y a trois types de graphiques disponibles
+		 nativement : le camembert, le graphique en bâton, et le diagramme 
+		 de Gantt.
+		 </para>
+	  </section>
+    
       <section id="TrackerReports">
         <title>Rapports de recherche des outils de suivi</title>
 
@@ -585,7 +594,30 @@
         détails concernant la configuration des rapports de
         recherche.</para>
       </section>
+	
+	 <section id="GraphTrackerReports">
+	   <title>Rapports graphiques</title>
 
+	   <para>Il existe également un système de rapport graphique pour les
+	   outils de suivi. Suivant le projet, les utilisateurs
+        apprécieront la possibilité de pouvoir choisir parmi plusieurs
+        rapports de recherche en utilisant la boîte de sélection
+        prévue à cet effet en haut de la page de recherche. Si aucun
+        rapport spécifique n'a été défini, le rapport appelé
+        &#39;Défault&#39; est le seul disponible.</para>
+
+		<para>Tout utilisateur CodeX ayant accès à l'outil de suivi peut définir
+        son propre rapport graphique de recherche. Dans ce cas, le rapport
+        est personnel et il est uniquement visible par l'utilisateur 
+        qui l'a créé. A l'inverse, les administrateurs du tracker peuvent
+        définir des rapports graphiques de recherche pour l'ensemble du projet
+        que tous les utilisateurs pourront utiliser. Reportez vous à la
+        <xref linkend="GraphTrackerReportManagement" /> pour plus de
+        détails concernant la configuration des rapports graphiques de
+        recherche.</para>
+        
+      </section>
+      
     </section>
     
   </section>
@@ -3194,6 +3226,9 @@ width="14.5cm" />
             </imageobject>
           </mediaobject>
         </figure>
+        
+        <para>La même interface est disponible pour la navigation dans les rapports 
+        graphiques de recherche.</para>
 
       </section>
 
@@ -3308,6 +3343,131 @@ width="14.5cm" />
         
       </section>
 
+    </section>
+
+	<section id="GraphTrackerReportSetting">
+	<title>Configuration des rapports graphiques de recherche</title>
+
+	<para>Après avoir sélectionné l'identifiant (ID) d'un rapport graphique
+        de recherche présenté dans la liste des rapports (voir <xref
+        linkend="TrackerReportBrowsing" />], l'écran de configuration
+        du rapport s'affiche. Cet écran vous permet de définir quels types de
+        graphiques afficher.</para>
+	
+	Il y a trois types de graphiques possibles: Camembert, Bâtons et Gantt.
+	
+	<section id="graphedition">
+	 <title>Créer / Modifier un graphique</title>
+	 <para>Pour créer un nouveau graphique pour le rapport, cliquer simplement
+	 sur le type de graphique que vous voulez créer (camembert, bâton ou Gantt)
+	 Pour modifier un graphique existant, cliquez sur l'icône en forme de crayon 
+	 dans le coin en haut à droite du graphique. En cliquant sur la croix rouge, 
+	 vous effacerez le graphique. Les informations communes à tous les types 
+	 de graphique disponible sur l'écran de création / modification de graphique 
+	 sont les suivantes :
+	 </para>
+		<itemizedlist mark="bullet"
+		  spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Titre</emphasis>: le titre du graphique, 
+			il sera affiché dans la partie supérieur du graphique.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Description</emphasis>: une description
+			courte du graphique, elle sera également affichée sur le graphique.
+			</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Rang</emphasis>: le rang détermine
+			l'ordre d'affichage des graphiques dans le rapport.
+			</para>
+		  </listitem>
+		</itemizedlist>
+	 </section>
+	
+	 <section id="piegraphsettings">
+	  <title>Créer / Modifier un graphique camembert</title>
+	  <para>Les informations spécifiques disponibles pour les 
+	  graphiques camemberts sont les suivantes :</para>
+	
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Largeur et Hauteur</emphasis>: déterminent
+			la taille du graphique en pixels.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Données sources</emphasis>: données principales 
+			à partir desquelles le graphique sera tracé</para>
+		  </listitem>
+		</itemizedlist>
+	 </section>
+
+	 <section id="bargraphsettings">
+	  <title>Créer / Modifier un graphique en bâtons</title>
+	  <para>Les informations spécifiques disponibles pour les 
+	  graphiques en bâtons sont les suivantes :</para>
+	  
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Largeur et Hauteur</emphasis>: déterminent
+			la taille du graphique en pixels.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Données sources</emphasis>: données principales 
+			à partir desquelles le graphique sera tracé</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Grouper par</emphasis>: données servant à 
+			regrouper les données sources par catégories.</para>
+		  </listitem>
+	  </itemizedlist>
+	 </section>
+	
+	 <section id="ganttgraphsettings">
+	  <title>Créer / Modifier un diagramme de Gantt</title>
+	  <para>Les informations spécifiques disponibles pour le diagramme
+	  de Gantt sont les suivantes :</para>
+	  	
+	  <itemizedlist mark="bullet" spacing="compact">
+		  <listitem>
+			<para><emphasis role="bold">Date de début</emphasis>: détermine le
+			champ de l'outil de suivi utilisé comme date de début.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Date de fin</emphasis>:  détermine le
+			champ de l'outil de suivi utilisé comme date de fin estimé.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Fin prévue</emphasis>:  détermine le
+			champ de l'outil de suivi utilisé comme date de fin.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Echelle Temporelle</emphasis>: peut être
+			jour, semaine, mois et année.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">A la date</emphasis>: Date de référence 
+			pour l'affichage du graphique, la valeur par défaut est le jour courant.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Résumé</emphasis>: Texte affiché dans la 
+			colonne de gauche (Summary), et dans les info-bulles des barres.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Indice de gauche, central, de droite</emphasis>:
+			Texte à afficher à gauche, au milieu et à droite dans les info-bulles des barres.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Progression</emphasis>: Pourcentage 
+			d'achèvement de la tache.</para>
+		  </listitem>
+		  <listitem>
+			<para><emphasis role="bold">Texte à droite</emphasis>: Text à afficher 
+			à la droite des barres.</para>
+	  	  </listitem>
+	  </itemizedlist>
+	 </section>
+	
     </section>
 
     <section id="TrackerEmailNotificationSettings">

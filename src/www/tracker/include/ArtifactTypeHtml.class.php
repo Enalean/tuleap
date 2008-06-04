@@ -122,7 +122,10 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=field_dependencies">'.$Language->getText('tracker_include_type','field_dependencies').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=canned">'.$Language->getText('tracker_include_type','canned_resp').'</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','reports').'</a>';
-		echo ' | <a href="/tracker/admin/?func=notification&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
+
+        $em =& EventManager::instance();
+        $em->processEvent('tracker_graphic_report_admin_header',null);
+        		echo ' | <a href="/tracker/admin/?func=notification&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
                 echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 		echo '</strong><hr>';
 	}
@@ -310,7 +313,8 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		echo '<H3><a href="/tracker/admin/?func=report&group_id='.(int)$group_id.'&atid='.(int)$atid.'">'.$Language->getText('tracker_include_type','mng_reports').'</a></H3>';
 		echo $Language->getText('tracker_include_type','define_reports');
-				
+		$em =& EventManager::instance();
+        $em->processEvent('tracker_graphic_report_add_link',null);					
 		echo '<H3><a href="/tracker/admin?func=notification&group_id='.(int)$group_id.'&atid='.(int)$atid.'">'.$Language->getText('tracker_include_type','mail_notif').'</a></H3>';
 		echo $Language->getText('tracker_include_type','define_notif');
 

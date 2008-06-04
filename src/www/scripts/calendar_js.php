@@ -32,7 +32,7 @@ function show_calendar(str_target, str_datetime, css_theme_file, img_theme_path)
         var n_weekstart = <?php echo $start; ?>; // day week starts from (normally 0 or 1)
 
         // escape fieldname
-    str_target_escaped = escapeFormElements(str_target);
+    str_target_escaped = str_target.replace(/'/g, '\\\'');
         
 	// If no date/time given then default to today at 00:00
 	if (str_datetime == null || str_datetime =="") {

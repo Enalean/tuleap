@@ -948,6 +948,22 @@ if ( $func == 'gotoid' ) {
             }
             break;
         }
+        case 'toggle_section':
+            $collapsable_sections = array('results', 'query');
+            EventManager::instance()->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
+            if (in_array($request->get('section'), $collapsable_sections)) {
+                $current_user = UserManager::instance()->getCurrentUser();
+                $pref_name = 'tracker_'. (int)$atid .'_hide_section_'. $request->get('section');
+                if ($current_user->getPreference($pref_name)) {
+                    $current_user->delPreference($pref_name);
+                } else {
+                    $current_user->setPreference($pref_name, 1);
+                }
+            }
+            if (!$request->isAjax()) {
+                require('./browse.php');
+            }
+            break;
         default: {
                 require('./browse.php');
                 break;

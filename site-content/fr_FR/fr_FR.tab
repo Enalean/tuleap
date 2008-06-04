@@ -43,6 +43,7 @@ global	on	Activé
 global	off	Désactivé
 global	any	Tous
 global	none	Aucun
+global	none_dashed	-- Aucun --
 global	begin	Début
 global	end	Fin
 global	next	Suivant

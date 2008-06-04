@@ -524,9 +524,9 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false) {
             $hp = CodeX_HTMLPurifier::instance();
-	  global $ath,$art_field_fact,$Language;
+            global $ath,$art_field_fact,$Language;
                 
-	  $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+            $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
 
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() && $pv == 0) {
@@ -537,19 +537,17 @@ class ArtifactReportHtml extends ArtifactReport {
                           <FORM ACTION="" METHOD="GET" NAME="artifact_form">
                           <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">';
-		if ($masschange) {
-                          $html_result .= ' 
-			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange">';
-		} else {
-			  $html_result .= '
-			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">';
-		}
+                if ($masschange) {
+                    $html_result .= '<INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange">';
+                } else {
+                    $html_result .= '<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">';
+                }
 
                 $html_result .= '
-			  <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
+                          <INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'. $hp->purify($advsrch, CODEX_PURIFIER_CONVERT_HTML) .'">
                           <INPUT TYPE="HIDDEN" NAME="msort" VALUE="'. $hp->purify($msort, CODEX_PURIFIER_CONVERT_HTML) .'">
-			  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
+                          <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
                           <TR><TD colspan="'.(int)$this->fields_per_line.'" nowrap>';
 
                 
@@ -557,7 +555,6 @@ class ArtifactReportHtml extends ArtifactReport {
                 if ($pv == 0) {
                     $res_report = $this->getReports($this->group_artifact_id,user_getid());
                     $box_name = 'report_id" onChange="document.artifact_form.go_report.click()';
-
                         $html_result .= '<b>'.$Language->getText('tracker_include_report','using_report');
                         $html_result .= html_build_select_box($res_report,$box_name,$report_id,false,'',false,'',false,'', CODEX_PURIFIER_CONVERT_HTML);
                         $html_result .= '<input VALUE="'.$Language->getText('tracker_include_report','btn_go').'" NAME="go_report" type="submit">'.'</b>';
@@ -581,8 +578,8 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
                 $url .= "&morder=".  $hp->purify($morder, CODEX_PURIFIER_CONVERT_HTML) ;
 
-                $em =& EventManager::instance();
                 $params = array('url'=>&$url);
+                $em =& EventManager::instance();
                 $em->processEvent('tracker_urlparam_processing', $params);
                 $url_nomorder = $url;
                 
@@ -598,50 +595,89 @@ class ArtifactReportHtml extends ArtifactReport {
                 if ($pv == 0) {
                      $html_result .= '<small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('.$Language->getText('tracker_include_report','or_use').' <a href="'.
                          $url_alternate_search.'">'. $hp->purify($text, CODEX_PURIFIER_CONVERT_HTML) .'</a>)</small></h3><p>';
-                     $params = array('html_result' =>&$html_result);
-                     $em->processEvent('tracker_form_browse_add_in', $params);
                 }
                 
-                //$html_result .= $html_select;
-                
+                $current_user = UserManager::instance()->getCurrentUser();
+                $user_dont_want_to_see_query = $current_user->getPreference('tracker_'. (int)$this->group_artifact_id .'_hide_section_query');
                 $html_result .= '</TABLE>';
-
                 // Display query fields
-		if ($pv != 2) {
-                    $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
-                
-                    if ($pv == 0) {
-                        $html_result .= '<p><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_browse').'"></FONT> '.
-                            '<input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-                            'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODEX_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report','at_once').'</FORM>';
+                if ($pv != 2) {
+                    $html_result .= '<A name="results"></A>';
+                    $html_result .= '<h3>';
+                    $onclick = '';
+                    $onclick .= "if ($('artifacts_query').empty()) { return true }";
+                    if (!$current_user->isAnonymous()) {
+                        $onclick .= "else { new Ajax.Request(this.href); }";
                     }
+                    $onclick .= "if ($('artifacts_query').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
+                    $onclick .= "new Effect.toggle($('artifacts_query'), 'slide', {duration:0.1});";
+                    $onclick .= "return false;";
+                    $html_result .= '<a href="'. $url .'&amp;func=toggle_section&amp;section=query" onclick="'. $onclick .'">';
+                    if ($user_dont_want_to_see_query) {
+                        $image = 'ic/toggle_plus.png';
+                    } else {
+                        $image = 'ic/toggle_minus.png';
+                    }
+                    $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                    $html_result .= '</a>';
+                    $html_result .= $Language->getText('tracker_include_report','query') .'</h3>';
+                    $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
+                    if (!$user_dont_want_to_see_query) {
+                        $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
+                        $html_result .= '<div style="text-align:center"><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
+                    }
+                    $html_result .= '</div>';
                 }
-		
+                
                 //
                 // Finally display the result table
                 // 
-                
+                $user_dont_want_to_see_results = $current_user->getPreference('tracker_'. (int)$this->group_artifact_id .'_hide_section_results');
                 $totalrows = $this->selectReportItems($prefs,$morder,$advsrch,$aids); // Filter according to permissions
 
                 if ($totalrows > 0) {
                 
                     // Build the sorting header messages
                     if ($pv != 2) {    
-		        if ( $morder ) {
+                        if ( $morder ) {
                                 $order_statement = $Language->getText('tracker_include_report','sorted_by').' '.($pv != 0 ? '':help_button('ArtifactBrowsing.html#ArtifactListSorting',false)).
                                     ' : '.$this->criteriaListToText($morder, $url_nomorder);
                         } else {
                                 $order_statement ='';
                         }
-                    
+                        
                         $html_result .= '<A name="results"></A>';
-			$html_result .= '<h3>'.(int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</h3>';
-                
+                        $html_result .= '<h3>';
                         if ($pv == 0) {
+                            $onclick = '';
+                            $onclick .= "if ($('artifacts_result').empty()) { return true }";
+                            if (!$current_user->isAnonymous()) {
+                                $onclick .= "else { new Ajax.Request(this.href); }";
+                            }
+                            $onclick .= "if ($('artifacts_result').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
+                            $onclick .= "new Effect.toggle($('artifacts_result'), 'slide', {duration:0.1});";
+                            $onclick .= "return false;";
+                            $html_result .= '<a href="'. $url .'&amp;func=toggle_section&amp;section=results" onclick="'. $onclick .'">';
+                            if ($user_dont_want_to_see_results) {
+                                $image = 'ic/toggle_plus.png';
+                            } else {
+                                $image = 'ic/toggle_minus.png';
+                            }
+                            $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                            $html_result .= '</a>';
+                        }
+                        $html_result .= (int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</h3>';
+                        $html_result .= '<div id="artifacts_result" style="padding-left:16px;">';
+                    }
+                    if ($pv != 2 && !$user_dont_want_to_see_results) {
+                        if ($pv == 0) {
+                                $html_result .= '<p> '.$Language->getText('global','btn_browse') .
+                                    ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
+                                    'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODEX_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report','at_once').'</FORM>';
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
                                 if ( $field && $field->isUsed()) {
-				  $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=severity#results"><b>'. $hp->purify($Language->getText('tracker_include_report','sort_sev',$field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</b></A> ';
+                                    $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=severity#results"><b>'. $hp->purify($Language->getText('tracker_include_report','sort_sev',$field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) .'</b></A> ';
                                 }
                                 $html_result .= $Language->getText('global','or').' <A HREF="'.$url.'&order=#results"><b>'.$Language->getText('tracker_include_report','reset_sort').'</b></a>. ';
                         }
@@ -650,7 +686,7 @@ class ArtifactReportHtml extends ArtifactReport {
                                 $url_alternate_sort = str_replace('msort=1','msort=0',$url).
                                     '&order=#results';
                                 $text = $Language->getText('global','deactivate');
-			} else {    
+                        } else {    
                                 $url_alternate_sort = str_replace('msort=0','msort=1',$url).
                             '&order=#results';
                                 $text = $Language->getText('global','activate');
@@ -661,13 +697,17 @@ class ArtifactReportHtml extends ArtifactReport {
                                     '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
                                     '&nbsp;'.$Language->getText('global','printer_version').'</a>)'."\n";
                         }
-		    }    
+                    }    
                 
-                    if ($pv != 0) { $chunksz = 100000; }
-                    $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,$url,($pv == 1 ? true:false),$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange,$pv);
-                    if ($pv != 2) {  
-		        #priority colors are not displayed in table-only view 
-		        $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
+                    if ($pv != 0) { 
+                        $chunksz = 100000; 
+                    }
+                    if ($pv == 2 || !$user_dont_want_to_see_results) {
+                        $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,$url,($pv == 1 ? true:false),$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange,$pv);
+                    }
+                    if ($pv != 2 && !$user_dont_want_to_see_results) {  
+                        #priority colors are not displayed in table-only view 
+                        $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
                     }
                 } else {
                 
@@ -675,10 +715,11 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_result .= db_error();
                 
                 }
-        
+                $html_result .= '</div>';
                 echo $html_result;
                 
-                //return $html_result;
+                $em =& EventManager::instance();
+                $em->processEvent('tracker_after_report',array('group_id' => $group_id, 'atid' => (int)$this->group_artifact_id, 'url' => $url));
         }
 
         /**

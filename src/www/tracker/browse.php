@@ -353,12 +353,22 @@ $params=array('title'=>$_title,
 // Display the menus
 $ath->header($params);
 
+$em =& EventManager::instance();
+$pref_params = array('group_id'   => $group_id,
+                     'atid'       => $atid,
+                     'report_id'  => $report_id,
+                     'prefs'      => $prefs,
+                     'morder'     => $morder,
+                     'chunksz'    => $chunksz,
+                     'advsrch'    => $advsrch,
+                     'msort'      => $msort,
+                     'offset'     => $offset,
+                     'set'        => $set
+);
+$em->processEvent('tracker_user_pref',$pref_params);
+
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,$pv,$masschange);
-
-$em =& EventManager::instance();
-$em->processEvent('tracker_after_report',null);
-
 $ath->footer($params);
 
 ?>

@@ -73,13 +73,14 @@ class DataAccessObject {
     * @param   $id  The id of the item to rank. 0 if the item doesn't exist.
     * @param   $parent_id   The id of the element used to group items
     * @param   $rank    The rank asked for the items. Possible values are :
+    *                       '--'        => do not change the rank
     *                       'beginning' => to put item before each others
     *                       'end'       => to put item after each others
     *                       'up'        => to put item before previous sibling
     *                       'down'      => to put item after next sibling
     *                       <int>       => to put item at a specific position. 
     *                   Please note that for a new item ($id = 0) you must not use
-    *                   'up' or 'down' value
+    *                   '--', 'up' or 'down' value
     * @param   $options 
     *           'primary_key' => the column name of the primary key. Default 'id'
     *           'parent_key'  => the column key used to groups items. Default 'parent_id'
@@ -91,6 +92,8 @@ class DataAccessObject {
         $newRank = null;
         if (!isset($options['primary_key'])) {
             $options['primary_key'] = 'id';
+        }
+        if (!isset($options['parent_key'])) {
             $options['parent_key']  = 'parent_id';
         }
         
@@ -106,6 +109,17 @@ class DataAccessObject {
         }
         else {
             switch($rank) {
+            case '--':
+                $sql = sprintf('SELECT rank'.
+                               ' FROM '. $this->table_name .
+                               ' WHERE '. $options['primary_key'] .' = %d',
+                               (int)$id);
+                $dar = $this->retrieve($sql);
+                if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    $row = $dar->current();
+                    $newRank = $row['rank'];
+                }
+                break;
             case 'end':
                 // Simple case: just pickup the most high rank in the table
                 // and add 1 to be laster than the first.

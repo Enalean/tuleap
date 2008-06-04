@@ -1043,6 +1043,8 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
+		$em =& EventManager::instance();
+		$em->processEvent('tracker_graphic_report_admin',null);		
 		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),'help' => 'TrackerAdministration.html'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());
