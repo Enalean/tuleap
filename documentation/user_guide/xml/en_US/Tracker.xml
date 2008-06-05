@@ -560,7 +560,7 @@
 	 and is only visible to this particular user. On the contrary,
 	 tracker administrators have the ability to define project-wide
 	 graphical reports that all users will be able to use. See <xref
-	 linkend="GraphTrackerReportManagement" /> for more details on
+	 linkend="GraphTrackerReportSetting" /> for more details on
 	 managing tracker reports.</para>
     </section>
 
@@ -3178,9 +3178,9 @@ width="14.5cm" />
 	<title>Tracker Graphical Report Setting</title>
 
 	<para>After you click on a graphical report ID in the graphical
-	report list (see <xref linkend="TrackerReportBrowsing" />, 
-	the report setting screen appears. This screen allows you to define what type of graphs will be
-	    displayed .</para>
+	report list (see <xref linkend="TrackerReportBrowsing" />), 
+	the report setting screen appears. This screen allows you to define
+	what type of graphs will be displayed .</para>
 	
 	There is three graph types supported: Pie, Bar and Gantt.
 	
@@ -3227,6 +3227,13 @@ width="14.5cm" />
 			field on which computation of the Pie graph will be based.</para>
 		  </listitem>
 		</itemizedlist>
+		<mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackergraphpie.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+        
 	 </section>
 
 	 <section id="bargraphsettings">
@@ -3247,6 +3254,13 @@ width="14.5cm" />
 			by which computation of source field will be grouped.</para>
 		  </listitem>
 	  </itemizedlist>
+	   <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackergraphbar.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+        
 	 </section>
 	
 	 <section id="ganttgraphsettings">
@@ -3291,6 +3305,13 @@ width="14.5cm" />
 			Text to be displayed at the right of the gantt bar.</para>
 	  	  </listitem>
 	  </itemizedlist>
+	  <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackergraphgantt.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+        
 	 </section>
 	
     </section>

@@ -612,7 +612,7 @@
         qui l'a créé. A l'inverse, les administrateurs du tracker peuvent
         définir des rapports graphiques de recherche pour l'ensemble du projet
         que tous les utilisateurs pourront utiliser. Reportez vous à la
-        <xref linkend="GraphTrackerReportManagement" /> pour plus de
+        <xref linkend="GraphTrackerReportSetting" /> pour plus de
         détails concernant la configuration des rapports graphiques de
         recherche.</para>
         
@@ -3237,7 +3237,7 @@ width="14.5cm" />
 
         <para>Après avoir sélectionné l'identifiant (ID) d'un rapport
         de recherche présenté dans la liste des rapports (voir <xref
-        linkend="TrackerReportBrowsing" />], l'écran de configuration
+        linkend="TrackerReportBrowsing" />), l'écran de configuration
         du rapport s'affiche. Cet écran vous permet de définir quels
         champs utiliser comme critères de recherche et quels champs
         doivent figurer dans les colonnes de la table de résultats
@@ -3345,12 +3345,12 @@ width="14.5cm" />
 
     </section>
 
-	<section id="GraphTrackerReportSetting">
+   <section id="GraphTrackerReportSetting">
 	<title>Configuration des rapports graphiques de recherche</title>
 
 	<para>Après avoir sélectionné l'identifiant (ID) d'un rapport graphique
         de recherche présenté dans la liste des rapports (voir <xref
-        linkend="TrackerReportBrowsing" />], l'écran de configuration
+        linkend="TrackerReportBrowsing" />), l'écran de configuration
         du rapport s'affiche. Cet écran vous permet de définir quels types de
         graphiques afficher.</para>
 	
@@ -3400,6 +3400,14 @@ width="14.5cm" />
 			à partir desquelles le graphique sera tracé</para>
 		  </listitem>
 		</itemizedlist>
+		
+		<mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackergraphpie.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+		
 	 </section>
 
 	 <section id="bargraphsettings">
@@ -3421,6 +3429,14 @@ width="14.5cm" />
 			regrouper les données sources par catégories.</para>
 		  </listitem>
 	  </itemizedlist>
+	  
+	  <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackergraphbar.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+        
 	 </section>
 	
 	 <section id="ganttgraphsettings">
@@ -3466,6 +3482,14 @@ width="14.5cm" />
 			à la droite des barres.</para>
 	  	  </listitem>
 	  </itemizedlist>
+	  
+	  <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_trackergraphgantt.png" width="15.3cm" />
+          </imageobject>
+        </mediaobject>
+        
 	 </section>
 	
     </section>
