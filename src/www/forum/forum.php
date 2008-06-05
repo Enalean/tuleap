@@ -27,7 +27,6 @@ function forum_show_a_nested_message ($result,$row=0) {
 
 	*/
   global $sys_datefmt,$Language;
-  $hp = CodeX_HTMLPurifier::instance();
 	$g_id =  db_result($result,$row,'group_id');
 
 	if ($g_id == $GLOBALS['sys_news_group']) {
@@ -38,21 +37,21 @@ function forum_show_a_nested_message ($result,$row=0) {
 
 	$ret_val = '
 		<TABLE BORDER="0" WIDTH="100%">
-			<TR>
-				<TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
-					db_result($result, $row, 'user_name') .'/">'. 
-					db_result($result, $row, 'user_name') .'</A>'.
-					' ( ' . $hp->purify(db_result($result, $row, 'realname'), CODEX_PURIFIER_CONVERT_HTML)  . ' ) '.
-					'<BR><A HREF="/forum/message.php?msg_id='.
-					db_result($result, $row, 'msg_id') .'">'.
-					'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
-					db_result($result, $row, 'subject') .' [ '.$Language->getText('forum_forum','reply').' ]</A> &nbsp; '.
-					'<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
-				</TD>
+			<TR>                  
+              <TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
+                    db_result($result, $row, 'user_name') .'/">'. 
+                    user_get_name_display_from_unix(db_result($result, $row, "user_name")) .'</A>'.
+                    '<BR><A HREF="/forum/message.php?msg_id='.
+                    db_result($result, $row, 'msg_id') .'">'.
+                    '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
+                    db_result($result, $row, 'subject') .' [ '.$Language->getText('forum_forum','reply').' ]</A> &nbsp; '.
+                    '<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
+                </TD>      
+                               
 			</TR>
 			<TR>
 				<TD>
-					'. util_make_links( nl2br ( db_result($result,$row,'body') ), $g_id ) .'
+					<pre>'. util_make_links(db_result($result,$row,'body'), $g_id ) .'</pre>
 				</TD>
 			</TR>
 		</TABLE>';
@@ -63,7 +62,7 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
   global $total_rows,$sys_datefmt,$Language;
 
 	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
-		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)."' AND forum_group_list.group_forum_id = forum.group_forum_id ".
+		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)." AND forum_group_list.group_forum_id = forum.group_forum_id ".
 		"ORDER BY forum.date ASC;";
 
 	$result=db_query($sql);
@@ -125,12 +124,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         // MV: add management on "on post monitoring"
         $vMonitor = new Valid_WhiteList('enable_monitoring', array('1'));
         $vMonitor->required();
-        if($request->valid($vMonitor)) {
+        $vThreadId = new Valid_UInt('thread_id');
+        $vThreadId->required();
+        
+        if($request->valid($vMonitor) && $request->valid($vThreadId)) {
             if(user_isloggedin()) {
-                if(!forum_is_monitored($forum_id, user_getid())) {
-                    if (forum_add_monitor ($forum_id, user_getid()) ) {
-                        $feedback .= $Language->getText('forum_monitor','now_monitoring');              
-                    } else {
+                if(!user_monitor_forum($forum_id, user_getid())) {
+                    if (! forum_thread_add_monitor ($forum_id, $request->get('thread_id'),user_getid()) ) {
                         $feedback .= $Language->getText('forum_forum_utils','insert_err');
                     }
                 }
@@ -139,8 +139,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         // Note: there is a 'msg_id' send but not used here.
 
-        $vThreadId = new Valid_UInt('thread_id');
-        $vThreadId->required();
 
         $vFollowUp = new Valid_UInt('is_followup_to');
         $vFollowUp->required();
@@ -409,7 +407,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 					show the subject and poster
 				*/
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-					'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
+					'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
 					'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
 
 				/*

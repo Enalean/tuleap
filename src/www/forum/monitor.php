@@ -33,13 +33,13 @@ if (user_isloggedin()) {
 	    $qry = "SELECT * FROM news_bytes WHERE forum_id=".db_ei($forum_id);
 	    $res = db_query($qry);
 	    if (db_numrows($res) > 0) {
-	        if (!forum_utils_news_access($forum_id) && !forum_is_monitored($forum_id, user_getid())) {	    
+	        if (!forum_utils_news_access($forum_id) && !user_monitor_forum($forum_id, user_getid())) {	    
 	            exit_error($Language->getText('global','error'),$Language->getText('news_admin_index','permission_denied'));
 	        }
 	    }
         
         $forum_monitor_error = false;
-		if (forum_is_monitored($forum_id, user_getid())) {
+		if (user_monitor_forum($forum_id, user_getid())) {
 		    // If already monitored then stop monitoring
             forum_delete_monitor($forum_id, user_getid());
         } else {
@@ -60,7 +60,7 @@ if (user_isloggedin()) {
 		echo '
 			<H2>'.$Language->getText('forum_monitor','monitor').'</H2>';
 
-		if (forum_is_monitored($forum_id, user_getid())) {
+		if (user_monitor_forum($forum_id, user_getid())) {
             echo "<span class=\"highlight\"><H3>".$Language->getText('forum_monitor','now_monitoring')."</H3></span>";
             echo '<P>'.$Language->getText('forum_monitor','get_followups').'</p>';
             echo '<P>'.$Language->getText('forum_monitor','to_turn_monitor_off').'</p>';
