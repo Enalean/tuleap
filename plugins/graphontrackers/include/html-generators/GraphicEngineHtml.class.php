@@ -161,8 +161,8 @@ class graphicEngineHtml extends Error {
                 ' \'<A href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.
                     $hp->purify($GLOBALS['ath']->getName()).
                 '</A>\' -  '.
-                $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_report').' \''.$hp->purify($gr->name).'\'
-              </H2>';
+                $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_report').' \''.$hp->purify($gr->name).'\' ';
+		echo help_button('TrackerAdministration.html#GraphTrackerReportSetting').'</H2>';
         echo '<p><a href="/tracker/admin/?func=reportgraphic&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$atid .'">&laquo; '. $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','return_reports') .'</a></p>';
         echo '<FORM NAME="show_rep_graphic" ACTION="/tracker/admin/" METHOD="POST">
               <INPUT TYPE="HIDDEN" NAME="func" VALUE="reportgraphic">
@@ -222,7 +222,8 @@ class graphicEngineHtml extends Error {
                 ' \'<A href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.
                     $hp->purify($GLOBALS['ath']->getName()).
                 '</A>\' -  '.
-                $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_chart', array($hp->purify($chart->getTitle()))) .'</H2>';
+                $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_chart', array($hp->purify($chart->getTitle())));
+        echo ' '.help_button('TrackerAdministration.html#GraphTrackerReportSetting').'</H2>';
         echo '<script type="text/javascript" src="/plugins/graphontrackers/dependencies.js"></script>';
         echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         
