@@ -82,7 +82,7 @@ class GroupDao extends DataAccessObject {
         }
    
         $sql .= ' GROUP BY groups.group_id';
-        $sql .= ' ORDER BY groups.group_name';
+        $sql .= ' ORDER BY groups.group_id,groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
         
         return $this->retrieve($sql);
@@ -119,7 +119,11 @@ class GroupDao extends DataAccessObject {
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
+
             $sql .= $where;
+            $sql .= ' ORDER BY groups.group_id,groups.group_name';
+
+
         }
 
         return $this->retrieve($sql);
