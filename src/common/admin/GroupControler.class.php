@@ -418,53 +418,35 @@ class GroupControler extends Controler {
      */
     function mergeGroupIterators () {
 
-        $this->groupArray[] = array();
+        $this->groupArray = array();
 
-        foreach ($this->mainGroupIterator as $mgi) {
-
-            foreach ($this->adminEmailIterator as $keyaei => $valaei) {
-
-                $this->groupArray[$keyaei]['group_id'] = null;
-                $this->groupArray[$keyaei]['group_name'] = null;
-                $this->groupArray[$keyaei]['unix_group_name'] = null;
-                $this->groupArray[$keyaei]['status'] = null;
-                $this->groupArray[$keyaei]['type'] = null;
-                $this->groupArray[$keyaei]['name'] = null;
-                $this->groupArray[$keyaei]['is_public'] = null;
-                $this->groupArray[$keyaei]['license'] = null;
-                $this->groupArray[$keyaei]['c'] = null;
-                $this->groupArray[$keyaei]['email'] = null;
-                $this->groupArray[$keyaei]['user_id'] = null;
-
-                if ($mgi['group_id'] == $valaei['group_id']) {
+       
+        foreach ($this->mainGroupIterator as $mGroupIterator =>$val) {
+            
+            $i = $val['group_id'];
+                       
+            $this->groupArray[$i]['group_name'] = $val['group_name'];
+            $this->groupArray[$i]['unix_group_name'] = $val['unix_group_name']; 
+            $this->groupArray[$i]['status'] = $val['status'];  
+            $this->groupArray[$i]['name'] = $val['name'];
+            $this->groupArray[$i]['is_public'] = $val['is_public'];
+            $this->groupArray[$i]['license'] = $val['license'];
+            $this->groupArray[$i]['c'] = $val['c'];
+            $this->groupArray[$i]['email'] = null;
+                
+            foreach ($this->adminEmailIterator as $aEmailIterator => $valaEmail) {
+                
+                $j = $valaEmail['group_id'];
+                
+                if ($i == $valaEmail['group_id']) {
                     
-                    $this->groupArray[$keyaei]['group_id'] .= $mgi['group_id'];
-                    $this->groupArray[$keyaei]['group_name'] .= $mgi['group_name'];
-                    $this->groupArray[$keyaei]['unix_group_name'] .= $mgi['unix_group_name'];
-                    $this->groupArray[$keyaei]['status'] .= $mgi['status'];
-                    $this->groupArray[$keyaei]['type'] .= $mgi['type'];
-                    $this->groupArray[$keyaei]['name'] .= $mgi['name'];
-                    $this->groupArray[$keyaei]['is_public'] .= $mgi['is_public'];
-                    $this->groupArray[$keyaei]['license'] .= $mgi['license'];
-                    $this->groupArray[$keyaei]['c'] .= $mgi['c'];
-                    
-                    $this->groupArray[$keyaei]['email'] .= $valaei['email'];
-
-                    if (count($valaei['email'])>1) {
-                        $i = 1;
-                        
-                        while($i < count($valaei['email'])) {
-                            $this->groupArray[$keyaei]['email'] .= ';'.$valaei['email'];
-                            $i++;
-                        }
-                    }
-                    
-                    $this->groupArray[$keyaei]['user_id'] .= $valaei['user_id'];
+                    $this->groupArray[$i]['email'] .= $valaEmail['email'].';';
                 }
             }
+            $this->groupArray[$i]['email'] = substr($this->groupArray[$i]['email'],0,strlen($this->groupArray[$i]['email']) - 1);
         }
     }
-
+    
 
     /**
      * request()

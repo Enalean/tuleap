@@ -84,7 +84,7 @@ class GroupDao extends DataAccessObject {
         $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_name';
         $sql .= ' LIMIT '.$offset.', '.$limit;
-
+        
         return $this->retrieve($sql);
     }
 
@@ -95,9 +95,9 @@ class GroupDao extends DataAccessObject {
     function searchAdminEmailByFilter($ca) {
 
         $sql = 'SELECT email,user_group.user_id, user_group.group_id '.
-               'FROM user '.
-               'JOIN user_group ON user.user_id = user_group.user_id '.
-               'JOIN groups ON user_group.group_id = groups.group_id '.
+               'FROM groups '.
+               'JOIN user_group ON groups.group_id = user_group.group_id '.
+               'JOIN user ON user_group.user_id = user.user_id '.
                'WHERE admin_flags = \'A\'';
 
         if (!empty($ca)) {
@@ -121,7 +121,7 @@ class GroupDao extends DataAccessObject {
             }
             $sql .= $where;
         }
-     
+
         return $this->retrieve($sql);
      }
 
