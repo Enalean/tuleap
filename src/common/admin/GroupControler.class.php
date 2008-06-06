@@ -420,7 +420,6 @@ class GroupControler extends Controler {
 
         $this->groupArray = array();
 
-       
         foreach ($this->mainGroupIterator as $mGroupIterator =>$val) {
             
             $i = $val['group_id'];
@@ -433,22 +432,19 @@ class GroupControler extends Controler {
             $this->groupArray[$i]['license'] = $val['license'];
             $this->groupArray[$i]['c'] = $val['c'];
             $this->groupArray[$i]['email'] = null;
-                
-            $valaEmail = $this->adminEmailIterator->current();
-            
-            while ($this->adminEmailIterator->valid() && $valaEmail['group_id'] <= $i ) {
-                      
+
+            do {
+                $groupMatch = true;
                 $valaEmail = $this->adminEmailIterator->current();
- 
-                if ($i == $valaEmail['group_id']) {
-                  
+                if($valaEmail['group_id'] == $i) {
                     $this->groupArray[$i]['email'] .= $valaEmail['email'].';';
-                    $this->adminEmailIterator->next();     
-                      
+                    $this->adminEmailIterator->next();
+                } else {
+                    $groupMatch = false;
                 }
-            }
+            } while ($this->adminEmailIterator->valid() && $groupMatch);
+
             $this->groupArray[$i]['email'] = substr($this->groupArray[$i]['email'],0,strlen($this->groupArray[$i]['email']) - 1);
-            
         }
     }
 
