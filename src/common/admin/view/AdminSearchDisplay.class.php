@@ -49,7 +49,7 @@ class AdminSearchDisplay extends AdminDisplay {
      * @param array $abc_entitled
      * @param string $letterlink
      */
-    function displaySearchFilter($abc_entitled, $offset, $limit) {       
+    function displaySearchFilter($abc_entitled, $link,$offset, $limit) {       
 
         $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
         
@@ -57,7 +57,7 @@ class AdminSearchDisplay extends AdminDisplay {
         print $abc_entitled;
         
         for ($i=0; $i < count($abc_array); $i++) {
-            echo '<a href="index.php?offset='.$offset.'&limit='.$limit.'&user_shortcut_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
+            print '<a href="index.php?offset='.$offset.'&limit='.$limit.'&'.$link.'='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
         }
         print '</p>';        
     }
