@@ -904,41 +904,57 @@ class ArtifactReportHtml extends ArtifactReport {
             echo html_build_list_table_top ($title_arr);
             $i=0;
             $aff = new ArtifactFieldFactory($ath);
-            $fields = $aff->getAllUsedFields();
-            while ( list($key, $field) = each($fields)) {
-        
-                // Do not show fields not used by the project
-                if ( !$field->isUsed()) { continue; }
-        
-                // Do not show some special fields any way 
-                if ($field->isSpecial()) { 
-                    if ( ($field->getName() == 'group_id') ||
-                         ($field->getName() == 'comment_type_id') )
-                        { continue; }
-                }
-        
-                //Do not show unreadable fields
-                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
-                    continue;
-                }
-
-                $cb_search = 'CBSRCH_'.$field->getName();
-                $cb_report = 'CBREP_'.$field->getName();
-                $tf_search = 'TFSRCH_'.$field->getName();
-                $tf_report = 'TFREP_'.$field->getName();
-                $tf_colwidth = 'TFCW_'.$field->getName();
-                echo '<TR class="'. util_get_alt_row_color($i) .'">';
-                
-                echo "\n<td>".$field->label.'</td>'.
-                    "\n<td>".$field->description.'</td>'.
-                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.        
-                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.        
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.      
-                    '</tr>';
-                $i++;
-            }
+            
+            $art_fieldset_fact = new ArtifactFieldsetFactory($ath);
+      		$used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+      		
+      		// fetch list of used fieldsets for this artifact
+	    	foreach ($used_fieldsets as $fieldset_id => $fieldset) {
+            	$used_fields = $fieldset->getAllUsedFields();
+            	echo '<TR class="boxtitle">';
+            	echo '<TD>'.$fieldset->getLabel().'</TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '</TR>';
+	            while ( list($key, $field) = each($used_fields)) {
+	        
+	                // Do not show fields not used by the project
+	                if ( !$field->isUsed()) { continue; }
+	        
+	                // Do not show some special fields any way 
+	                if ($field->isSpecial()) { 
+	                    if ( ($field->getName() == 'group_id') ||
+	                         ($field->getName() == 'comment_type_id') )
+	                        { continue; }
+	                }
+	        
+	                //Do not show unreadable fields
+	                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
+	                    continue;
+	                }
+	
+	                $cb_search = 'CBSRCH_'.$field->getName();
+	                $cb_report = 'CBREP_'.$field->getName();
+	                $tf_search = 'TFSRCH_'.$field->getName();
+	                $tf_report = 'TFREP_'.$field->getName();
+	                $tf_colwidth = 'TFCW_'.$field->getName();
+	                echo '<TR class="'. util_get_alt_row_color($i) .'">';
+	                
+	                echo "\n<td>".$field->label.'</td>'.
+	                    "\n<td>".$field->description.'</td>'.
+	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.        
+	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.        
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.      
+	                    '</tr>';
+	                $i++;
+	            }
+	    	}
             echo '</TABLE>'.
                 '<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
                 '</FORM>';
@@ -1004,57 +1020,79 @@ class ArtifactReportHtml extends ArtifactReport {
                           <P>';
         
             echo html_build_list_table_top ($title_arr);
+            
+            // Write all the fields, grouped by fieldsetset and ordered by rank.
+            
             $i=0;
             $aff = new ArtifactFieldFactory($ath);
-            $fields = $aff->getAllUsedFields();
-            while ( list($key, $field) = each($fields) ) {
+
+            $art_fieldset_fact = new ArtifactFieldsetFactory($ath);
+      		$used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+      		
+      		// fetch list of used fieldsets for this artifact
+	    	foreach ($used_fieldsets as $fieldset_id => $fieldset) {
+            	$used_fields = $fieldset->getAllUsedFields();
+            	echo '<TR class="boxtitle">';
+            	echo '<TD>'.$fieldset->getLabel().'</TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '<TD></TD>';
+            	echo '</TR>';
+            	while ( list($key, $field) = each($used_fields) ) {
         
-                // Do not show fields not used by the project
-                if ( !$field->isUsed()) { continue; }
-        
-                // Do not show some special fields any way 
-                if ($field->isSpecial()) { 
-                    if ( ($field->getName() == 'group_id') ||
-                         ($field->getName() == 'comment_type_id') )
-                        { continue; }
-                }
-                
-                //Do not show unreadable fields
-                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
-                    continue;
-                }
-                $cb_search = 'CBSRCH_'.$field->getName();
-                $cb_report = 'CBREP_'.$field->getName();
-                $tf_search = 'TFSRCH_'.$field->getName();
-                $tf_report = 'TFREP_'.$field->getName();
-                $tf_colwidth = 'TFCW_'.$field->getName();
-                
-                $rep_field = null;
-                if (isset($this->fields[$field->getName()])) {
-                        $rep_field = $this->fields[$field->getName()];
-                }
-                if (!$rep_field) {
-                  $rep_field = new ArtifactReportField();
-                }       
-        
-                $cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED':'');
-                $cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED':'');
-                $tf_search_val = $rep_field->getPlaceQuery();
-                $tf_report_val = $rep_field->getPlaceResult();
-                $tf_colwidth_val = $rep_field->getColWidth();
-        
-                echo '<TR class="'. util_get_alt_row_color($i) .'">';
-                
-                echo "\n<td>".$field->getLabel().'</td>'.
-                    "\n<td>".$field->getDescription().'</td>'.
-                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.      
-                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.      
-                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.          
-                    '</tr>';
-                $i++;
-            }
+	                // Do not show fields not used by the project
+	                if ( !$field->isUsed()) { continue; }
+	        
+	                // Do not show some special fields any way 
+	                if ($field->isSpecial()) { 
+	                    if ( ($field->getName() == 'group_id') ||
+	                         ($field->getName() == 'comment_type_id') )
+	                        { continue; }
+	                }
+	                
+	                //Do not show unreadable fields
+	                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
+	                    continue;
+	                }
+	                $cb_search = 'CBSRCH_'.$field->getName();
+	                $cb_report = 'CBREP_'.$field->getName();
+	                $tf_search = 'TFSRCH_'.$field->getName();
+	                $tf_report = 'TFREP_'.$field->getName();
+	                $tf_colwidth = 'TFCW_'.$field->getName();
+	                
+	                $rep_field = null;
+	                if (isset($this->fields[$field->getName()])) {
+	                        $rep_field = $this->fields[$field->getName()];
+	                }
+	                if (!$rep_field) {
+	                  $rep_field = new ArtifactReportField();
+	                }       
+	        
+	                $cb_search_chk = ($rep_field->isShowOnQuery() ? 'CHECKED':'');
+	                $cb_report_chk = ($rep_field->isShowOnResult() ? 'CHECKED':'');
+	                $tf_search_val = $rep_field->getPlaceQuery();
+	                $tf_report_val = $rep_field->getPlaceResult();
+	                $tf_colwidth_val = $rep_field->getColWidth();
+	        
+	                echo '<TR class="'. util_get_alt_row_color($i) .'">';
+	                
+	                echo "\n<td>".$field->getLabel().'</td>'.
+	                    "\n<td>".$field->getDescription().'</td>'.
+	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.      
+	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.      
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.          
+	                    '</TR>';
+	                $i++;
+	            }
+            	
+	    	}
+            
+            
             echo '</TABLE>'.
                 '<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
                 '</FORM>';
