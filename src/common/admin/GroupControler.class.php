@@ -434,19 +434,23 @@ class GroupControler extends Controler {
             $this->groupArray[$i]['c'] = $val['c'];
             $this->groupArray[$i]['email'] = null;
                 
-            foreach ($this->adminEmailIterator as $aEmailIterator => $valaEmail) {
-                
-                $j = $valaEmail['group_id'];
-                
+            $valaEmail = $this->adminEmailIterator->current();
+            
+            while ($this->adminEmailIterator->valid() && $valaEmail['group_id'] <= $i ) {
+                      
+                $valaEmail = $this->adminEmailIterator->current();
+ 
                 if ($i == $valaEmail['group_id']) {
-                    
+                  
                     $this->groupArray[$i]['email'] .= $valaEmail['email'].';';
+                    $this->adminEmailIterator->next();     
+                      
                 }
             }
             $this->groupArray[$i]['email'] = substr($this->groupArray[$i]['email'],0,strlen($this->groupArray[$i]['email']) - 1);
+            
         }
     }
-    
 
     /**
      * request()
