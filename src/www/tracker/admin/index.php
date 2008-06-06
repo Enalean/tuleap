@@ -557,8 +557,10 @@ if ($group_id && !$atid) {
             } else {
                 $computed_value = false;
             }
+
             if ( (!$field->isDateField() && $request->valid(new Valid_String('default_value'))) 
-                || $request->valid(new Valid_String('default_value'))) {
+                || ($request->valid(new Valid_String('default_value')))
+                || ($field->isTextArea() && $request->valid(new Valid_Text('default_value')))) {
             
                 if ( !$field->updateDefaultValue($atid, $request->get('default_value'), $computed_value) ) {
                     exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());

@@ -2163,7 +2163,10 @@ EOS;
             echo '<INPUT TYPE="text" name="default_value" size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
 			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
 			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a><br />';
-		} else {
+		} else if($field->isTextArea()){
+			echo $Language->getText('tracker_include_type','val').': ';
+			echo '<BR><TEXTAREA NAME="default_value" wrap="virtual" cols="90" rows="12" >'.$hp->purify($default_value, CODEX_PURIFIER_CONVERT_HTML).' </TEXTAREA></BR>';
+		}else {
 	      	echo $Language->getText('tracker_include_type','val').': <INPUT TYPE="text" NAME="default_value" VALUE="'. $hp->purify($default_value, CODEX_PURIFIER_CONVERT_HTML) .'">';
 		}
 
