@@ -190,8 +190,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
        
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_grouplist','title')));
 
-        print "<br><a href=\"groupedit-add.php\">[".$GLOBALS['Language']->getText('admin_grouplist','add_group')."]</a>";
-
+        print '<br><a href="/admin/groupedit-add.php">['.$GLOBALS['Language']->getText('admin_grouplist','add_group').']</a>';
               
         parent::displayHeader($GLOBALS['Language']->getText('admin_grouplist','for_categ').' <b>'.$GLOBALS['Language']->getText('admin_grouplist','all_categ').'</b>');
 
