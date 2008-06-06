@@ -911,14 +911,8 @@ class ArtifactReportHtml extends ArtifactReport {
       		// fetch list of used fieldsets for this artifact
 	    	foreach ($used_fieldsets as $fieldset_id => $fieldset) {
             	$used_fields = $fieldset->getAllUsedFields();
-            	echo '<TR class="boxtitle">';
-            	echo '<TD>'.$fieldset->getLabel().'</TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
+            	echo '<TR class="fieldset_separator">';
+            	echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
             	echo '</TR>';
 	            while ( list($key, $field) = each($used_fields)) {
 	        
@@ -1032,14 +1026,8 @@ class ArtifactReportHtml extends ArtifactReport {
       		// fetch list of used fieldsets for this artifact
 	    	foreach ($used_fieldsets as $fieldset_id => $fieldset) {
             	$used_fields = $fieldset->getAllUsedFields();
-            	echo '<TR class="boxtitle">';
-            	echo '<TD>'.$fieldset->getLabel().'</TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
-            	echo '<TD></TD>';
+            	echo '<TR class="fieldset_separator">';
+            	echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
             	echo '</TR>';
             	while ( list($key, $field) = each($used_fields) ) {
         
