@@ -375,13 +375,19 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 <td>'.$ga['name'].'</td>
 <td>'.$ga['is_public'].'</td>
 <td>'.$ga['license'].'</a></td>
-<td>'.$ga['c'].'</td>
-<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
+<td>'.$ga['c'].'</td>';
+
+                if($ga['email']) {
+                    print '<td><a href="mailto:'.$ga['email'].'">Mailto</a></td></tr>';
+                } else {
+                    print '<td></td></tr>';
+                }
             }
         }
         print '</table>';
     }
-    
+
+
     /**
      * displayFooter()
      */
