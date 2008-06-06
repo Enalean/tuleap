@@ -311,8 +311,6 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      *
      */
     function displaySearch() {
-
-      
         
         $odd_even = array('boxitem', 'boxitemalt');
         $i = 1;
@@ -337,45 +335,43 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         
         if ($this->nbgroup != 0) {  
-
-            $groupArray = array();
             
             foreach ($this->mainGroupIterator as $mGroupIterator =>$val) {
                 $iGroup = $val['group_id'];
                 
-                $groupArray[$iGroup]['group_name'] = $val['group_name'];
-                $groupArray[$iGroup]['unix_group_name'] = $val['unix_group_name']; 
-                $groupArray[$iGroup]['status'] = $val['status'];  
-                $groupArray[$iGroup]['name'] = $val['name'];
-                $groupArray[$iGroup]['is_public'] = $val['is_public'];
-                $groupArray[$iGroup]['license'] = $val['license'];
-                $groupArray[$iGroup]['c'] = $val['c'];
-                $groupArray[$iGroup]['email'] = null;
-                
+                $group_name = $val['group_name'];
+                $unix_group_name = $val['unix_group_name']; 
+                $status = $val['status'];  
+                $name = $val['name'];
+                $is_public = $val['is_public'];
+                $license = $val['license'];
+                $c = $val['c'];
+                $email = null;
+
                 print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
-<td align="center" class="group_active"><a href="#">'.$groupArray[$iGroup]['group_name'].'</a></td>
-<td>'.$groupArray[$iGroup]['unix_group_name'].'</td>
-<td >'.$groupArray[$iGroup]['status'].'</td>
-<td>'.$groupArray[$iGroup]['name'].'</td>
-<td>'.$groupArray[$iGroup]['is_public'].'</td>
-<td>'.$groupArray[$iGroup]['license'].'</a></td>
-<td>'.$groupArray[$iGroup]['c'].'</td>';
-                
+ <td align="center" class="group_active"><a href="#">'.$group_name.'</a></td>
+ <td>'.$unix_group_name.'</td>
+ <td >'.$status.'</td>
+ <td>'.$name.'</td>
+ <td>'.$is_public.'</td>
+ <td>'.$license.'</a></td>
+ <td>'.$c.'</td>';
+   
                 do {
                     $groupMatch = true;
                     $valaEmail = $this->adminEmailIterator->current();
                     if($valaEmail['group_id'] == $iGroup) {
-                        $groupArray[$iGroup]['email'] .= $valaEmail['email'].';';
+                        $email .= $valaEmail['email'].';';
                         $this->adminEmailIterator->next();
                     } else {
                         $groupMatch = false;
                     }
                 } while ($this->adminEmailIterator->valid() && $groupMatch);
                 
-                $groupArray[$iGroup]['email'] = substr($groupArray[$iGroup]['email'],0,strlen($groupArray[$iGroup]['email']) - 1);
+                $email = substr($email,0,strlen($email) - 1);
 
-                if ($groupArray[$iGroup]['email']) {
-                    print '<td><a href="mailto:'.$groupArray[$iGroup]['email'].'">Mailto</a></td></tr>';
+                if ($email) {
+                    print '<td><a href="mailto:'.$email.'">Mailto</a></td></tr>';
                 } else {
                     print '<td></td></tr>';
                 }
