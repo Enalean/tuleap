@@ -34,11 +34,18 @@ require_once('common/admin/view/AdminSearchDisplay.class.php');
 class GroupSearchDisplay extends AdminSearchDisplay {
     
     /**
-     * $groupArray
+     * $mainGroupIterator
      *
-     * @type Array $groupArray
+     * @type mixed $mainGroupItertator
      */
-    private $groupArray;
+    private $mainGroupIterator;
+
+    /**
+     * $adminEmailIterator
+     *
+     * @type mixed $adminEmailIterator
+     */
+    private $adminEmailIterator;
 
     /**
      * $offset
@@ -120,9 +127,10 @@ class GroupSearchDisplay extends AdminSearchDisplay {
     /**
      * constructor
      */
-    function __construct($groupArray, $offset, $nbrows, $nbgroup, $shortcut, $name, $status, $state, $type) {
+    function __construct($mainGroupIterator, $adminEmailIterator, $offset, $nbrows, $nbgroup, $shortcut, $name, $status, $state, $type) {
 
-        $this->groupArray = $groupArray;
+        $this->mainGroupIterator = $mainGroupIterator;
+        $this->adminEmailIterator = $adminEmailIterator;
         $this->offset = $offset;
         $this->nbrows = $nbrows;
         $this->nbgroup = $nbgroup;
@@ -304,10 +312,39 @@ class GroupSearchDisplay extends AdminSearchDisplay {
      *
      */
     function displaySearch() {
-     
+
+        $groupArray = array();
+
+        foreach ($this->mainGroupIterator as $mGroupIterator =>$val) {
+            
+            $i = $val['group_id'];
+            
+            $groupArray[$i]['group_name'] = $val['group_name'];
+            $groupArray[$i]['unix_group_name'] = $val['unix_group_name']; 
+            $groupArray[$i]['status'] = $val['status'];  
+            $groupArray[$i]['name'] = $val['name'];
+            $groupArray[$i]['is_public'] = $val['is_public'];
+            $groupArray[$i]['license'] = $val['license'];
+            $groupArray[$i]['c'] = $val['c'];
+            $groupArray[$i]['email'] = null;
+            
+            do {
+                $groupMatch = true;
+                $valaEmail = $this->adminEmailIterator->current();
+                if($valaEmail['group_id'] == $i) {
+                    $groupArray[$i]['email'] .= $valaEmail['email'].';';
+                    $this->adminEmailIterator->next();
+                } else {
+                    $groupMatch = false;
+                }
+            } while ($this->adminEmailIterator->valid() && $groupMatch);
+
+            $groupArray[$i]['email'] = substr($groupArray[$i]['email'],0,strlen($groupArray[$i]['email']) - 1);
+        }
+        
         $odd_even = array('boxitem', 'boxitemalt');
         $i = 1;
-
+        
         print '<table width=100% cellspacing=0 cellpadding=0 border="1" align="center">';
         
         print '<tr><th>'.$GLOBALS['Language']->getText('admin_groupedit','grp_name').' '.$GLOBALS['Language']->getText('admin_grouplist','click').'</th>';
@@ -328,9 +365,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
 
         
         if ($this->nbgroup != 0) {    
-
-            foreach($this->groupArray as $ga) {
             
+            foreach($groupArray as $ga) {
+                
                 print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
 <td align="center" class="group_active"><a href="#">'.$ga['group_name'].'</a></td>
 <td>'.$ga['unix_group_name'].'</td>

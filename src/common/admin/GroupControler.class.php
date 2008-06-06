@@ -122,7 +122,7 @@ class GroupControler extends Controler {
      * viewManagement()
      */
     function viewsManagement() {        
-        $groupSearchDisplay = new GroupSearchDisplay($this->groupArray, $this->offset, $this->limit, $this->nbgroup, $this->shortcut, $this->name, $this->status, $this->state, $this->type);
+        $groupSearchDisplay = new GroupSearchDisplay($this->mainGroupIterator, $this->adminEmailIterator, $this->offset, $this->limit, $this->nbgroup, $this->shortcut, $this->name, $this->status, $this->state, $this->type);
         $groupSearchDisplay->display();       
     }
 
@@ -413,40 +413,6 @@ class GroupControler extends Controler {
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
     }
 
-    /**
-     * mergeGroupIterators()
-     */
-    function mergeGroupIterators () {
-
-        $this->groupArray = array();
-
-        foreach ($this->mainGroupIterator as $mGroupIterator =>$val) {
-            
-            $i = $val['group_id'];
-                       
-            $this->groupArray[$i]['group_name'] = $val['group_name'];
-            $this->groupArray[$i]['unix_group_name'] = $val['unix_group_name']; 
-            $this->groupArray[$i]['status'] = $val['status'];  
-            $this->groupArray[$i]['name'] = $val['name'];
-            $this->groupArray[$i]['is_public'] = $val['is_public'];
-            $this->groupArray[$i]['license'] = $val['license'];
-            $this->groupArray[$i]['c'] = $val['c'];
-            $this->groupArray[$i]['email'] = null;
-
-            do {
-                $groupMatch = true;
-                $valaEmail = $this->adminEmailIterator->current();
-                if($valaEmail['group_id'] == $i) {
-                    $this->groupArray[$i]['email'] .= $valaEmail['email'].';';
-                    $this->adminEmailIterator->next();
-                } else {
-                    $groupMatch = false;
-                }
-            } while ($this->adminEmailIterator->valid() && $groupMatch);
-
-            $this->groupArray[$i]['email'] = substr($this->groupArray[$i]['email'],0,strlen($this->groupArray[$i]['email']) - 1);
-        }
-    }
 
     /**
      * request()
@@ -461,9 +427,7 @@ class GroupControler extends Controler {
         
         $this->setMainGroupIterator();
         
-        $this->setNbGroup();   
-
-        $this->mergeGroupIterators();
+        $this->setNbGroup();
     }
 }
 
