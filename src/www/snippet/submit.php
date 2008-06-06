@@ -30,17 +30,8 @@ if (user_isloggedin()) {
 	/*
 	  Create a new snippet entry, then create a new snippet version entry
 	*/
-        if ($name && $description && $language != 0 && $category != 0 && $type != 0 && $version && $code) {
-            if ($license==100) {
-                // No license!
-		$feedback .= ' '.$Language->getText('snippet_details','select_license').' ';
-            } else if ($category==100) {
-		$feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
-            } else if ($type==100) {
-		$feedback .= ' '.$Language->getText('snippet_details','select_type').' ';
-            } else if ($language==100) {
-		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
-            } else {
+        if ($name && $description && $language != 0 && $category != 0 && $type != 0 && 
+            $language != 100 && $category != 100 && $type != 100 && $license != 100 && $version && $code) {
                 $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
                     "VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
                     htmlspecialchars($description)."','$type','$language','$license')";
@@ -68,8 +59,17 @@ if (user_isloggedin()) {
                         $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','add_success').' ';
                     }
                 }
-	    }
 	} else {
+            if ($license==100) {
+                // No license!
+		$feedback .= ' '.$Language->getText('snippet_details','select_license').' ';
+            } else if ($category==100) {
+		$feedback .= ' '.$Language->getText('snippet_details','select_category').' ';
+            } else if ($type==100) {
+		$feedback .= ' '.$Language->getText('snippet_details','select_type').' ';
+            } else if ($language==100) {
+		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
+            }
 	    exit_error($Language->getText('global','error'),$Language->getText('snippet_add_snippet_to_package','error_fill_all_info'));
 	}
 	
