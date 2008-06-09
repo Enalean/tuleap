@@ -19,6 +19,10 @@ $Language->loadLanguageMsg('snippet/snippet');
 function snippet_header($params) {
 	global $is_snippet_page,$HTML,$feedback,$Language;
 
+        if ($GLOBALS['sys_use_snippet'] == 0) {
+            exit_permission_denied();
+        }
+
 	// LJ used so the search box will add the necessary element to the pop-up box
 	// CodeX Specific
 	$is_snippet_page=1;

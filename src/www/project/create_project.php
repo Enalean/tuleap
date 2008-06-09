@@ -92,13 +92,15 @@ function create_project($data, $do_not_exit = false) {
         
         
         // insert trove categories
-        foreach($data['project']['trove'] as $root => $values) {
-            foreach($values as $value) {
-                db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
-                    ."group_id,trove_cat_root) VALUES (". $value .",". time() .",". $group_id .",". $root .")");
+        if (isset($data['project']['trove'])) {
+            foreach($data['project']['trove'] as $root => $values) {
+                foreach($values as $value) {
+                    db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
+                             ."group_id,trove_cat_root) VALUES (". $value .",". time() .",". $group_id .",". $root .")");
+                }
             }
         }
-        
+
         // define a module
         $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".group_getunixname($group_id)."')");
         if (!$result) {

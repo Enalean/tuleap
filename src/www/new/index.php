@@ -186,33 +186,35 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		    $admins[] = '<A href="/users/'.$row_admin['user_name'].'/">'.$row_admin['user_name'].'</A>';
 		    //echo '<A href="/users/'.$row_admin['user_name'].'/">'.$row_admin['user_name'].'</A>';
 		  }
+		  $lang = $os = $devstate = array();
 
-		  // Get languages, OS Runtime and Development state from trove map
-		  $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
+                  if ($GLOBALS['sys_use_trove'] != 0) {
+                      // Get languages, OS Runtime and Development state from trove map
+                      $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
 					   .'trove_cat.fullpath_ids AS fullpath_ids,'
 					   .'trove_cat.trove_cat_id AS trove_cat_id '
 					   .'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
 					   .'trove_group_link.trove_cat_id AND trove_group_link.group_id='
 					   .$row_new['group_id'].' ORDER BY trove_cat.fullpath');
-		  $lang = $os = $devstate = array();
 		  
-		  while ($row_trovecat = db_fetch_array($res_trovecat)) {
-		    $folders = explode(" :: ",$row_trovecat['fullpath']);
-		    $folders_len = count($folders);
+                      while ($row_trovecat = db_fetch_array($res_trovecat)) {
+                          $folders = explode(" :: ",$row_trovecat['fullpath']);
+                          $folders_len = count($folders);
 		    
-		    $pl_pattern = '"/'.$Language->getText('new_index','prog_lang').'/"';
-		    $os_pattern = '"/'.$Language->getText('new_index','os').'/"';
-		    $devel_status_pattern = '"/'.$Language->getText('new_index','devel_status').'/"';
-		    if ( preg_match($pl_pattern, $folders[0])) {
-		      $lang[] = $folders[$folders_len - 1];
-		    }
-		    else if ( preg_match($os_pattern, $folders[0])) {
-		      $os[] = $folders[$folders_len - 1];
-		    }
-		    else if ( preg_match($devel_status_pattern, $folders[0])) {
-		      $devstate[] = $folders[$folders_len - 1];
-		    }
-		  }
+                          $pl_pattern = '"/'.$Language->getText('new_index','prog_lang').'/"';
+                          $os_pattern = '"/'.$Language->getText('new_index','os').'/"';
+                          $devel_status_pattern = '"/'.$Language->getText('new_index','devel_status').'/"';
+                          if ( preg_match($pl_pattern, $folders[0])) {
+                              $lang[] = $folders[$folders_len - 1];
+                          }
+                          else if ( preg_match($os_pattern, $folders[0])) {
+                              $os[] = $folders[$folders_len - 1];
+                          }
+                          else if ( preg_match($devel_status_pattern, $folders[0])) {
+                              $devstate[] = $folders[$folders_len - 1];
+                          }
+                      }
+                  }
 
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>";

@@ -10,6 +10,12 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('trove.php');
 
+
+if ($GLOBALS['sys_use_trove'] == 0) {
+    exit_permission_denied();
+}
+
+
 $Language->loadLanguageMsg('softwaremap/softwaremap');
 
 // assign default. 18 is 'topic'

@@ -358,5 +358,14 @@ $sys_proxy = "";
 // (1 to enable, 0 to disable)
 $sys_enable_user_skills = 1;
 
+// Enable trove categorization (project tree/software map)
+// (1 to enable, 0 to disable)
+$sys_use_trove = 1;
+
+// Enable code snippet library
+// (1 to enable, 0 to disable)
+$sys_use_snippet = 1;
+
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

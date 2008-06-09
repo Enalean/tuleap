@@ -22,7 +22,8 @@ $current_step = $request->exist('current_step') ? $request->get('current_step') 
 $data         = $request->exist('data') ? unserialize($request->get('data')) : array();
 
 //Register steps
-$steps = array(
+if ($GLOBALS['sys_use_trove'] != 0) {
+    $steps = array(
     new RegisterProjectStep_Intro($data),
     new RegisterProjectStep_Name($data),
     new RegisterProjectStep_Settings($data),
@@ -32,7 +33,19 @@ $steps = array(
     new RegisterProjectStep_Category($data),
     new RegisterProjectStep_License($data),
     new RegisterProjectStep_Confirmation($data),
-);
+    );
+} else {
+    $steps = array(
+    new RegisterProjectStep_Intro($data),
+    new RegisterProjectStep_Name($data),
+    new RegisterProjectStep_Settings($data),
+    new RegisterProjectStep_Template($data),
+    new RegisterProjectStep_BasicInfo($data),
+    new RegisterProjectStep_Services($data),
+    new RegisterProjectStep_License($data),
+    new RegisterProjectStep_Confirmation($data),
+    );
+}
 
 //Process request
 if ($request->exist('cancel')) {

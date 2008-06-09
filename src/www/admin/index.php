@@ -189,13 +189,17 @@ echo ")</b>";?>
 </ul>
 
 
-<h3><?php echo $Language->getText('admin_main', 'trove_cat'); ?></h3>
+<h3><?php         
+if ($GLOBALS['sys_use_trove'] != 0) {
+    echo $Language->getText('admin_main', 'trove_cat'); ?></h3>
 <ul>
 <li><a href="/admin/trove/trove_cat_list.php"><?php echo $Language->getText('admin_main', 'trove_cat_list'); ?></A>
 <li><a href="/admin/trove/trove_cat_add.php"><?php echo $Language->getText('admin_main', 'trove_cat_add'); ?></A>
 </ul>
 
-<h3><?php echo $Language->getText('admin_main', 'header_svc'); ?></h3>
+<h3><?php
+} // if trove
+ echo $Language->getText('admin_main', 'header_svc'); ?></h3>
 <ul>
 <li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_svc'); ?></A>
 </ul>

@@ -25,8 +25,10 @@ function menu_site_admin() {
     }
     $HTML->menu_entry('/news/admin',$Language->getText('include_menu','site_news_approve'));
     $HTML->menu_entry('/admin/massmail.php',$Language->getText('include_menu','mass_mail'));
-    $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
-    $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
+    if ($GLOBALS['sys_use_trove'] != 0) {
+        $HTML->menu_entry('/admin/trove/trove_cat_list.php',$Language->getText('include_menu','trove_cat_list'));
+        $HTML->menu_entry('/admin/trove/trove_cat_add.php',$Language->getText('include_menu','trove_cat_add'));
+    }
     $HTML->menu_entry('/people/admin',$Language->getText('include_menu','people_skill'));
     
     $em =& EventManager::instance();
@@ -54,17 +56,21 @@ function menuhtml_bottom() {
 function menu_software() {
   GLOBAL $HTML,$Language;
     $HTML->menuhtml_top($Language->getText('include_menu','software')); 
-    $HTML->menu_entry('/softwaremap/',$Language->getText('include_menu','software_map'));
+    if ($GLOBALS['sys_use_trove'] != 0) {
+        $HTML->menu_entry('/softwaremap/',$Language->getText('include_menu','software_map'));
+    }
     $HTML->menu_entry('/new/',$Language->getText('include_menu','new_releases'));
     // LJ No mirror		$HTML->menu_entry('/mirrors/',$Language->getText('include_menu','other_site_mirrors'));
-    $HTML->menu_entry('/snippet/',$Language->getText('include_menu','code_snippet_lib'));
+    if ($GLOBALS['sys_use_snippet'] != 0) {
+        $HTML->menu_entry('/snippet/',$Language->getText('include_menu','code_snippet_lib'));
+    }
     $HTML->menuhtml_bottom();
 }
 
 function menu_site() {
   GLOBAL $HTML,$Language;
     $HTML->menuhtml_top($Language->getText('include_layout','Help'));
-    $HTML->menu_entry('/documentation/user_guide/html/en_US/','<b>'.$Language->getText('include_menu','help_index').'</b>');
+    $HTML->menu_entry('/documentation/user_guide/html/'.$Language->getLanguageCode().'/','<b>'.$Language->getText('include_menu','help_index').'</b>');
     $HTML->menu_entry('/plugins/docman/?group_id=1',$Language->getText('include_menu','site_doc'));
     $HTML->menu_entry('/mail/?group_id=1',$Language->getText('include_menu','dev_channel'));
     $HTML->menu_entry('/forum/?group_id=1',$Language->getText('include_menu','discussion_forum'));

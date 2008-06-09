@@ -356,7 +356,7 @@ if (isset($params['group']) && $params['group']) {
 	}
 
 	function outerTabs($params) {
-		global $Language,$sys_use_trove,$sys_use_snippet,$sys_use_people;
+		global $Language,$sys_use_people;
 
 		$TABS_DIRS[]='/';
 		$TABS_TITLES[]=$Language->getText('menu','home');
@@ -366,20 +366,24 @@ if (isset($params['group']) && $params['group']) {
             $TABS_TITLES[]=$Language->getText('menu','my_personal_page');
         }
         
-        $TABS_DIRS[]='/softwaremap/';
-        $TABS_TITLES[]=$Language->getText('menu','projectree');
+        if ($GLOBALS['sys_use_trove'] != 0) {
+            $TABS_DIRS[]='/softwaremap/';
+            $TABS_TITLES[]=$Language->getText('menu','projectree');
+        }
 
-        $TABS_DIRS[]='/snippet/';
-        $TABS_TITLES[]=$Language->getText('menu','code_snippet');
+        if ($GLOBALS['sys_use_snippet'] != 0) {
+            $TABS_DIRS[]='/snippet/';
+            $TABS_TITLES[]=$Language->getText('menu','code_snippet');
+        }
 
         if ($sys_use_people) {
-			$TABS_DIRS[]='/people/';
-			$TABS_TITLES[]=$Language->getText('menu','project_help_wanted');
-		}
-		if (user_ismember(1,'A')) {
-			$TABS_DIRS[]='/admin/';
-			$TABS_TITLES[]=$Language->getText('menu','admin');
-		}
+            $TABS_DIRS[]='/people/';
+            $TABS_TITLES[]=$Language->getText('menu','project_help_wanted');
+        }
+	if (user_ismember(1,'A')) {
+            $TABS_DIRS[]='/admin/';
+            $TABS_TITLES[]=$Language->getText('menu','admin');
+	}
 
         $TABS_DIRS[]='/site/';
         $TABS_TITLES[]=$Language->getText('include_layout','Help');
@@ -592,7 +596,9 @@ if (isset($params['group']) && $params['group']) {
             $output .= "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
         }
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
-        $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
+        if ($GLOBALS['sys_use_snippet'] != 0) {
+            $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
+        }
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
         $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','wiki')."</OPTION>\n";
 

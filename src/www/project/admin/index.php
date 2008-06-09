@@ -168,32 +168,36 @@ print '&nbsp;
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }
-print '<!-- Not implemented on CodeX
-<P align=center>
-<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
--->
+//print '<!-- Not implemented on CodeX
+//<P align=center>
+//<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
+//-->';
+
+if ($GLOBALS['sys_use_trove'] != 0) {
+    print '
 <P>
 <B>'.$Language->getText('project_admin_index','trove_cat_info').'
 
 <UL>';
 
-// list all trove categories
-$res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
+    // list all trove categories
+    $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
 			 .'trove_cat.trove_cat_id AS trove_cat_id '
 			 .'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
 			 .'trove_group_link.trove_cat_id AND trove_group_link.group_id='.$group_id
 			 .' ORDER BY trove_group_id');
-while ($row_trovecat = db_fetch_array($res_trovecat)) {
-    print ('<LI>'.$row_trovecat['fullpath'].' '
-	   .help_button('trove_cat',$row_trovecat['trove_cat_id'])."\n");
-}
+    while ($row_trovecat = db_fetch_array($res_trovecat)) {
+        print ('<LI>'.$row_trovecat['fullpath'].' '
+               .help_button('trove_cat',$row_trovecat['trove_cat_id'])."\n");
+    }
 
-print '
+    print '
 </UL>
 <P align="center">
 <A href="/project/admin/group_trove.php?group_id='.$group_id.'">'
 .'<B>'.$Language->getText('project_admin_index','edit_trove_cat').'</B></A>
 ';
+ }
 
 
 // list all possible project types
