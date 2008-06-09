@@ -71,8 +71,7 @@ if ($action=='remove_user_from_group') {
             // Update in plugin
             require_once('common/event/EventManager.class.php');
             $em =& EventManager::instance();
-            $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
-                                                        'user_id' => $user_id ));        
+            $em->processEvent('usergroup_update', array('user_id' => $user_id));
     
     	// status changing
     	if ($form_unixstatus != 'N') {
@@ -172,7 +171,7 @@ if($row_user['expiry_date'] != 0){
 <?php 
 require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
-$em->processEvent('usergroup_update_form', array());
+$em->processEvent('usergroup_update_form', array('row_user' => $row_user));
 $hp = CodeX_HTMLPurifier::instance();
 ?>
 

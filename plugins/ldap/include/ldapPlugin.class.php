@@ -5,9 +5,9 @@ require_once('LDAP.class.php');
 require_once('UserLdap.class.php');
 
 class LdapPlugin extends Plugin {
-	
-	function LdapPlugin($id) {
-		$this->Plugin($id);
+    
+    function LdapPlugin($id) {
+        $this->Plugin($id);
 
         // Layout
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
@@ -53,8 +53,8 @@ class LdapPlugin extends Plugin {
 
 
         $this->_addHook('before_register', 'redirectToLogin', false);
-	}
-	
+    }
+    
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'LdapPluginInfo')) {
             require_once('LdapPluginInfo.class.php');
@@ -63,9 +63,9 @@ class LdapPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-	function CallHook($hook, $params) {
-        // do nothing		
-	}
+    function CallHook($hook, $params) {
+        // do nothing        
+    }
     
     function ldapSearchEntry($params) {        
         // IN  $params['type_of_search']
@@ -110,7 +110,7 @@ class LdapPlugin extends Plugin {
                 echo html_build_list_table_top ($title_arr);
 
                 echo "\n";
-	
+    
                 $lri->seek($params['offset']);
                 $i = $params['nbRows'];
                 while(($ldapres = $lri->iterate()) && $i > 0) {
@@ -120,7 +120,7 @@ class LdapPlugin extends Plugin {
                     print "<TD>";
                     print $this->buildLinkToDirectory($ldapres, $ldapres->getCommonName());
                     print "</TD>\n";
-		 
+         
                     print "<TD>";
 
                     $dbres = UserLdap::getUserResultSet($ldapres->getEdUid());
@@ -131,7 +131,7 @@ class LdapPlugin extends Plugin {
                             .$user_name
                             .'</a>';
                     }
-                    print "</TD>\n";				  
+                    print "</TD>\n";                  
 
                     print "</TR>\n";
 
@@ -165,10 +165,10 @@ class LdapPlugin extends Plugin {
                 $lri =& $ldap->searchLogin($params['loginname']);
                 if($lri->count() === 1) {
                     // Check if this user is a codex user or not. 
-                    $lr = $lri->get(0);	    
+                    $lr = $lri->get(0);        
                     $qry = "SELECT user_id,status"
                         . " FROM user"
-                        . " WHERE ldap_id='".$lr->getEdUid()."'";
+                        . " WHERE ldap_id='".db_es($lr->getEdUid())."'";
                     $res = db_query($qry);
                     if (!$res || db_numrows($res) < 1) {
                         // Authenticated user
@@ -187,10 +187,10 @@ class LdapPlugin extends Plugin {
                         $return_to_arg = '';;
                         if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
                             $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
-			    if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
+                            if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
                         } else {
                             if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
-			}                        
+                        }                        
                         $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
                     }
                     else {
@@ -200,7 +200,7 @@ class LdapPlugin extends Plugin {
                         $params['auth_user_status']  = db_result($res,0,'status');
                         $params['auth_success']      = true;
                     }
-                }	  
+                }      
                 else {
                     // @todo: transfert to plugin site-content
                     $GLOBALS['feedback'] .= $Language->getText('include_session','invalid_ldap_name') .'. ';
@@ -257,7 +257,7 @@ class LdapPlugin extends Plugin {
         $lri  =& $ldap->searchUser($params['ident']);
         
         $bestCodexIdentifier = '';
-        if(!$ldap->isError() && ($lri->count() == 1)) {	      
+        if(!$ldap->isError() && ($lri->count() == 1)) {          
             $lr =& $lri->get(0);
 
             $res1 = UserLdap::getUserResultSet($lr->getEdUid());
@@ -459,22 +459,25 @@ class LdapPlugin extends Plugin {
     function addLdapInput($params) {
         global $Language;
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            echo $Language->getText('admin_usergroup','ldap_id').': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="'.$row_user['ldap_id'].'" SIZE="35" MAXLENGTH="55">
+            echo $Language->getText('admin_usergroup','ldap_id').': <INPUT TYPE="TEXT" NAME="ldap_id" VALUE="'.$params['row_user']['ldap_id'].'" SIZE="35" MAXLENGTH="55">
 <P>';
         }
     }
 
     function updateLdapID($params) {
-        //$params['HTTP_POST_VARS']
         //$params['user_id']
         global $Language;
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $result=db_query("UPDATE user SET ldap_id='".$params['HTTP_POST_VARS']['ldap_id']."' WHERE user_id=".$params['user_id']);
+            $request =& HTTPRequest::instance();
+            $ldapId = $request->getValidated('ldap_id', 'string', false);
+            if($ldapId !== false) {
+                $result = db_query("UPDATE user SET ldap_id='".db_es($ldapId)."' WHERE user_id=".db_ei($params['user_id']));
+            }
             if (!$result) {
-		$GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup','error_upd_u');
+                $GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup','error_upd_u');
                 echo db_error();
             } else {
-		$GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup','success_upd_u');
+                $GLOBALS['feedback'] .= ' '.$Language->getText('admin_usergroup','success_upd_u');
             }
         }
     }
