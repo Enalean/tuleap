@@ -45,6 +45,13 @@ class colorsFactory{
             'palevioletred1',
             'olivedrab1',
             'gold',
+            'red',
+            'gray9',
+            'salmon',
+            'darkgreen',
+            'white',
+            'darkblue'
+            
        );
     }
     

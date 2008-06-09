@@ -83,7 +83,7 @@ class bar_engine {
         $this->graph->xaxis->SetTickSide(SIDE_DOWN);
         
         $this->graph->xaxis->title->setMargin(60,20,20,20);
-        $this->graph->xaxis->title->setColor('darkblue');
+        $this->graph->xaxis->title->setColor($this->cf->getColor_name(15));
         
         if (!is_null($this->xaxis)) {
             $this->graph->xaxis->SetTickLabels($this->xaxis);
