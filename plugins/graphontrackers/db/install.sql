@@ -50,51 +50,45 @@ CREATE TABLE plugin_graphontrackers_bar_chart(
   field_group varchar(255)
 );
 
-INSERT INTO plugin_graphontrackers_report_graphic (group_artifact_id,user_id,name,description,scope) 
-SELECT group_artifact_id,101,'Default','Graphic Report By Default','P'
-FROM artifact_group_list;
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 0, NULL, NULL, 1, 0);
+--
+-- Dumping data for table 'plugin_graphontrackers_report_graphic'
+--
+INSERT INTO plugin_graphontrackers_report_graphic (report_graphic_id, group_artifact_id,user_id,name,description,scope) VALUES (1,1,101,'Default','Graphic Report By Default For Bugs','P');
+INSERT INTO plugin_graphontrackers_report_graphic (report_graphic_id, group_artifact_id,user_id,name,description,scope) VALUES (2,3,101,'Default','Graphic Report By Default For Support Requests','P');
+INSERT INTO plugin_graphontrackers_report_graphic (report_graphic_id, group_artifact_id,user_id,name,description,scope) VALUES (3,2,101,'Default','Graphic Report By Default For Tasks','P');
+INSERT INTO plugin_graphontrackers_report_graphic (report_graphic_id, group_artifact_id,user_id,name,description,scope) VALUES (4,2,101,'Gantt','Gantt Graph for Task Management','P');
+--
+-- Dumping data for table 'plugin_graphontrackers_chart'
+--
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (1,1,5,pie,'Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (2,1,10,bar,'Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (3,1,15,pie,'Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (4,2,5,pie,'Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (5,2,10,bar,'Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (6,2,15,pie,'Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (7,3,5,pie,'Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (8,3,10,bar,'Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (9,3,15,bar,'Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (10,4,5,gantt,'Gantt','Gantt Chart for Task Management') ;
+--
+-- Dumping data for table 'plugin_graphontrackers_bar_chart'
+--
+INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES (2,'severity','');
+INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES (5,'severity','');
+INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES (8,'severity','');
+INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES (9,'multi_assigned_to','');
+--
+-- Dumping data for table 'plugin_graphontrackers_pie_chart'
+--
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (1,'status_id');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (2,'status_id');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (3,'status_id');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (1,'assigned_to');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (2,'assigned_to');
+--
+-- Dumping data for table 'plugin_graphontrackers_gantt_chart'
+--
+INSERT INTO plugin_graphontrackers_gantt_chart (id,field_start,field_due, field_finish,field_percentage,field_righttext,scale,as_of_date,summary) VALUES (10,'start_date','due_date', 'end_date','percent_complete','severity','day',0,'summary');
 
-#
-INSERT INTO plugin_graphontrackers_chart (report_graphic_id,rank,chart_type,title,description)
-SELECT report_graphic_id, 1, 'bar', 'Assignees','Number of artifacts by assignee'
-FROM plugin_graphontrackers_report_graphic;
-
-INSERT INTO plugin_graphontrackers_bar_chart (id, field_base,field_group) 
-SELECT id,'assigned_to',''
-FROM plugin_graphontrackers_chart, (SELECT IFNULL(MAX(id),0) as max_id FROM plugin_graphontrackers_bar_chart) AS R
-WHERE chart_type = 'bar'
-  AND id > R.max_id;
-
-#
-INSERT INTO plugin_graphontrackers_chart (report_graphic_id,rank,chart_type,title,description)
-SELECT report_graphic_id, 2, 'pie', 'Severity','Artifacts by severity'
-FROM plugin_graphontrackers_report_graphic;
-
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) 
-SELECT id,'severity'
-FROM plugin_graphontrackers_chart, (SELECT IFNULL(MAX(id),0) as max_id FROM plugin_graphontrackers_pie_chart) AS R
-WHERE chart_type = 'pie'
-  AND id > R.max_id;
-
-#
-INSERT INTO plugin_graphontrackers_chart (report_graphic_id,rank,chart_type,title,description)
-SELECT report_graphic_id, 3, 'pie', 'Category','Artifacts by category'
-FROM plugin_graphontrackers_report_graphic;
-
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) 
-SELECT id,'category_id'
-FROM plugin_graphontrackers_chart, (SELECT IFNULL(MAX(id),0) as max_id FROM plugin_graphontrackers_pie_chart) AS R
-WHERE chart_type = 'pie'
-  AND id > R.max_id;
-
-#
-INSERT INTO plugin_graphontrackers_chart (report_graphic_id,rank,chart_type,title,description)
-SELECT report_graphic_id, 4, 'pie', 'Status','Artifacts by status'
-FROM plugin_graphontrackers_report_graphic;
-
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) 
-SELECT id,'status_id'
-FROM plugin_graphontrackers_chart, (SELECT IFNULL(MAX(id),0) as max_id FROM plugin_graphontrackers_pie_chart) AS R
-WHERE chart_type = 'pie'
-  AND id > R.max_id;
 

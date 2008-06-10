@@ -1273,7 +1273,7 @@ INSERT INTO artifact_field VALUES (29,1,2,'close_date',4,'DF','','End Date','End
 INSERT INTO artifact_field VALUES (2,2,4,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
 INSERT INTO artifact_field VALUES (4,2,4,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
 INSERT INTO artifact_field VALUES (5,2,4,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','Close Date','Close Date','',0,0,0,1,'','');
 INSERT INTO artifact_field VALUES (7,2,3,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (8,2,3,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,2,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1285,6 +1285,8 @@ INSERT INTO artifact_field VALUES (12,2,3,'subproject_id',2,'SB','','Subproject'
 INSERT INTO artifact_field VALUES (13,2,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (14,2,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (16,2,3,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (17,2,4,'due_date',4,'DF','','Due Date','Due Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (18,2,4,'end_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
 -- SR tracker
 INSERT INTO artifact_field VALUES (9,3,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (7,3,6,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1386,7 +1388,9 @@ INSERT INTO artifact_field_usage VALUES (2,2,1,20);
 INSERT INTO artifact_field_usage VALUES (3,2,1,30);
 INSERT INTO artifact_field_usage VALUES (4,2,1,40);
 INSERT INTO artifact_field_usage VALUES (5,2,1,60);
-INSERT INTO artifact_field_usage VALUES (6,2,1,80);
+INSERT INTO artifact_field_usage VALUES (17,2,1,62);
+INSERT INTO artifact_field_usage VALUES (18,2,1,64);
+INSERT INTO artifact_field_usage VALUES (6,2,0,0);
 INSERT INTO artifact_field_usage VALUES (7,2,1,900);
 INSERT INTO artifact_field_usage VALUES (8,2,1,1000);
 INSERT INTO artifact_field_usage VALUES (11,2,1,50);
