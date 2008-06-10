@@ -50,7 +50,7 @@ CREATE TABLE plugin_graphontrackers_bar_chart(
   field_group varchar(255)
 );
 
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (1, 100, 'Bugs', 'Bugs Tracker', 'bug', 0, NULL, NULL, 1, 0);
+
 --
 -- Dumping data for table 'plugin_graphontrackers_report_graphic'
 --
