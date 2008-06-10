@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- $gitphp_version = "0.0.4";
+ $gitphp_version = "0.0.5";
  $gitphp_appstring = "gitphp $gitphp_version";
 
 ?>
