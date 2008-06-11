@@ -284,7 +284,12 @@ if ($set=='my') {
     while (list($field,$arr_val) = each($prefs)) {
         while (list(,$value_id) = each($arr_val)) {
             if (!is_array($value_id)) {
-                $pref_stg .= '&'.$field.'[]='.urlencode($value_id);
+                // Don't add [] for date operator (not really a field)
+                if (substr($field, 0 - strlen('_op')) == '_op') {
+                    $pref_stg .= '&'.$field.'='.urlencode($value_id);
+                } else {
+                    $pref_stg .= '&'.$field.'[]='.urlencode($value_id);
+                }
             } else {
                 $pref_stg .= '&'.$field.'[]='.$value_id;
             }
