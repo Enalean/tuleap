@@ -200,7 +200,13 @@ class ArtifactFieldFactory extends Error {
 					$vfl[$key] = $request->get($key);
 					//echo "Accepted key = ".$key." val = $val<BR>";
 			    	} else {
-				  //echo "Rejected key = ".$key." val = $val<BR>";
+                        // we add operator for date filtering (used for masschange)
+                        // the field present in HTTP_POST_VARS is named like [$field_name]_op
+                        if (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key)-strlen('_op'))]) && substr($key, -3) == '_op') {
+                            $vfl[$key] = $request->get($key);
+                        } else {
+                            //echo "Rejected key = ".$key." val = $val<BR>";
+                        }
 			    	}
 			    }
 			}
