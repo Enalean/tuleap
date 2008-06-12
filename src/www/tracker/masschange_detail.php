@@ -26,6 +26,12 @@ if ( !$request->exist('pv') ) {
 	if ( $pv ) $ro = true;
 }
 
+if ($request->exist('advsrch')) {
+    $advsrch = $request->get('advsrch');
+} else {
+    $advsrch = 0;
+}
+
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language->getText('tracker_index','mass_change'),
               'pagename'=>'tracker',
               'atid'=>$ath->getID(),
@@ -52,7 +58,7 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
   // Create the HTML report object
   $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
   $query = $art_field_fact->extractFieldList();
-  $ath->displayMassChange($ro, null,$query,$art_report_html);
+  $ath->displayMassChange($ro, null,$query,$art_report_html, $advsrch);
 }
 // Display footer page
 $ath->footer($params);

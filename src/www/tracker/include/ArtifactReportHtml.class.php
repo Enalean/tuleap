@@ -470,6 +470,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		$html_result .= '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
                           <INPUT TYPE="HIDDEN" NAME="report_id" VALUE="'.(int)$this->report_id.'">
+                          <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.(int)$advsrch.'">
                           <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange_detail">';
 		// get the query
 		while (list($field,$value) = each($prefs) ) {
