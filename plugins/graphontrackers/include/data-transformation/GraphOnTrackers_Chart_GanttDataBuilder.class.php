@@ -291,55 +291,21 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         return $this->getSFValues($this->chart->getField_righttext());
     }
 
-    /**
-    * getter method to get hintleft property
-    *
-    *     @return String : text diplayed in the left of tooltip
-    */
-
-    function getHintLeft() {
-        return $this->getSFValues($this->chart->getField_hintleft());
-    }
-
-    /**
-    * getter method to get hintcenter property
-    *
-    *     @return String : text diplayed on the tooltip center
-    */
-
-    function getHintcenter() {
-        return $this->getSFValues($this->chart->getField_hintcenter());
-    }
-
-    /**
-    * getter method to get hint property
-    *
-    *     @return String : text diplayed in the right of ganttbar (activity) tooltip
-    */
-
-    function getHintright() {
-        return $this->getSFValues($this->chart->getField_hintright());
-    }
+ 
 
 
     function getHint() {
         $summary    = $this->getSummary();
-        $hintleft   = $this->getHintleft();
-        $hintcenter = $this->getHintcenter();
-        $hintright  = $this->getHintright();
+        $progress = $this->getProgress();
         $returns = array();
         for ($i=0;$i<count($summary);$i++) {
             $returns[$i]['id']  = isset($summary[$i]['id'])?$summary[$i]['id']:"";
-            $returns[$i]['val'] = isset($summary[$i]['val'])?$summary[$i]['val']." : ":"";
+            $returns[$i]['val'] = isset($summary[$i]['val'])?$summary[$i]['val']:"";
 
-            $posleft   = $this->seekId($summary[$i]['id'],$hintleft);
-            $posright  = $this->seekId($summary[$i]['id'],$hintright);
-            $poscenter = $this->seekId($summary[$i]['id'],$hintcenter);
-
-            $returns[$i]['val'] .= isset($hintleft[$posleft])?$hintleft[$posleft]['val']." | ":"";
-            $returns[$i]['val'] .= isset($hintcenter[$poscenter])?$hintcenter[$poscenter]['val']." | ":"";
-            $returns[$i]['val'] .= isset($hintright[$posright])?$hintright[$posright]['val']:"";
-        }
+			$progress_tooltip = $this->seekId($summary[$i]['id'],$progress);
+  
+            $returns[$i]['val'] .= isset($progress[$progress_tooltip])?" : ".(100*$progress[$progress_tooltip]['val'])."%":"";
+         }
         return $returns;
     }
 

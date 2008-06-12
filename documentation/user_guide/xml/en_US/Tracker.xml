@@ -3292,17 +3292,14 @@ width="14.5cm" />
 			<para><emphasis role="bold">Summary</emphasis>: Text to be displayed 
 			on the gantt left, and in the bar tooltip.</para>
 		  </listitem>
-		  <listitem>
-			<para><emphasis role="bold">Left Hint, Center Hint, Right Hint</emphasis>:
-			Text to be displayed on the left, center and right of the bar tooltip.</para>
-		  </listitem>
+
 		  <listitem>
 			<para><emphasis role="bold">Progress</emphasis>:
 			Percentage of completion of the task.</para>
 		  </listitem>
 		  <listitem>
-			<para><emphasis role="bold">Right Text</emphasis>:
-			Text to be displayed at the right of the gantt bar.</para>
+			<para><emphasis role="bold">Informations at the right of the bars</emphasis>:
+			Text to be displayed at the right of the gantt bars.</para>
 	  	  </listitem>
 	  </itemizedlist>
 	  <mediaobject>

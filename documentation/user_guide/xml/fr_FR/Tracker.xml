@@ -3470,16 +3470,12 @@ width="14.5cm" />
 			colonne de gauche (Summary), et dans les info-bulles des barres.</para>
 		  </listitem>
 		  <listitem>
-			<para><emphasis role="bold">Indice de gauche, central, de droite</emphasis>:
-			Texte à afficher à gauche, au milieu et à droite dans les info-bulles des barres.</para>
-		  </listitem>
-		  <listitem>
 			<para><emphasis role="bold">Progression</emphasis>: Pourcentage 
 			d'achèvement de la tache.</para>
 		  </listitem>
 		  <listitem>
-			<para><emphasis role="bold">Texte à droite</emphasis>: Text à afficher 
-			à la droite des barres.</para>
+			<para><emphasis role="bold">Information à droite des barres</emphasis>: Texte affiché 
+			à la droite des barres dans le diagramme de Gantt.</para>
 	  	  </listitem>
 	  </itemizedlist>
 	  

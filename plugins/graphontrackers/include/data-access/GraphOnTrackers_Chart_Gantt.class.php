@@ -37,9 +37,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     protected $field_due;
     protected $field_finish;
     protected $field_percentage;
-    protected $field_hintleft;
-    protected $field_hintcenter;
-    protected $field_hintright;
     protected $field_righttext;
     protected $scale;
     protected $as_of_date;
@@ -58,9 +55,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
         $this->field_due        = $arr['field_due'];
         $this->field_finish     = $arr['field_finish'];
         $this->field_percentage = $arr['field_percentage'];
-        $this->field_hintleft   = $arr['field_hintleft'];
-        $this->field_hintcenter = $arr['field_hintcenter'];
-        $this->field_hintright  = $arr['field_hintright'];
         $this->field_righttext  = $arr['field_righttext'];
         $this->scale            = $arr['scale'];
         $this->as_of_date       = $arr['as_of_date'];
@@ -68,8 +62,8 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     }
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
         $sql = sprintf("INSERT INTO plugin_graphontrackers_gantt_chart
-                       (id,field_start, field_due, field_finish, field_percentage, field_hintleft, field_hintcenter, field_hintright, field_righttext, scale, as_of_date, summary)
-                       VALUES(%d,'','','','','','','','','','','summary')",
+                       (id,field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
+                       VALUES(%d,'','','','','','','','summary')",
                        db_ei($id));
 
         $res = db_query($sql);
@@ -84,12 +78,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     public function setField_finish($field_finish) { return $this->field_finish = $field_finish; }
     public function getField_percentage() { return $this->field_percentage; }
     public function setField_percentage($field_percentage) { return $this->field_percentage = $field_percentage; }
-    public function getField_hintleft() { return $this->field_hintleft; }
-    public function setField_hintleft($field_hintleft) { return $this->field_hintleft = $field_hintleft; }
-    public function getField_hintcenter() { return $this->field_hintcenter; }
-    public function setField_hintcenter($field_hintcenter) { return $this->field_hintcenter = $field_hintcenter; }
-    public function getField_hintright() { return $this->field_hintright; }
-    public function setField_hintright($field_hintright) { return $this->field_hintright = $field_hintright; }
     public function getField_righttext() { return $this->field_righttext; }
     public function setField_righttext($field_righttext) { return $this->field_righttext = $field_righttext; }
     public function getScale() { return $this->scale; }
@@ -124,26 +112,22 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
                 ),
                 new HTML_Element_Columns(
                     new HTML_Element_Selectbox_TrackerFields_Texts($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_summary'), 'chart[summary]', $this->getSummary()),
-                    new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_as_of_date'), 'chart[as_of_date]', $this->getAs_of_date()),
-                    new HTML_Element_Selectbox_TrackerFields_Numerics($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true)
 
-                ),
+                    new HTML_Element_Selectbox_TrackerFields_Numerics($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
+                    new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_scale'), 'chart[scale]', $this->getScale())
 
-	            new HTML_Element_Columns(
-	                new HTML_Element_Selectbox_TrackerFields_Selectboxes($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_hintleft'), 'chart[field_hintleft]', $this->getField_hintleft(), true),
-	                new HTML_Element_Selectbox_TrackerFields_Selectboxes($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_hintcenter'), 'chart[field_hintcenter]', $this->getField_hintcenter(), true),
-	                new HTML_Element_Selectbox_TrackerFields_Selectboxes($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_hintright'), 'chart[field_hintright]', $this->getField_hintright(), true)
                 ),
 
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_Selectboxes($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true),
-                    new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_scale'), 'chart[scale]', $this->getScale())
+                    new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_as_of_date'), 'chart[as_of_date]', $this->getAs_of_date()),
+                    new HTML_Element_Selectbox_TrackerFields_Selectboxes($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
+                    
                 ),
         ));
     }
     protected function updateSpecificProperties($row) {
         $db_update_needed = false;
-        foreach(array('field_start', 'field_due', 'field_finish', 'field_percentage', 'field_hintleft', 'field_hintcenter', 'field_hintright', 'field_righttext', 'scale', 'as_of_date', 'summary') as $prop) {
+        foreach(array('field_start', 'field_due', 'field_finish', 'field_percentage', 'field_righttext', 'scale', 'as_of_date', 'summary') as $prop) {
             if (isset($row[$prop]) && $this->$prop != $row[$prop]) {
                 if ($prop == 'as_of_date') {
                     $this->$prop = strtotime($row[$prop]);
@@ -159,9 +143,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
                             field_due        = '%s',
                             field_finish     = '%s',
                             field_percentage = '%s',
-                            field_hintleft   = '%s',
-                            field_hintcenter = '%s',
-                            field_hintright  = '%s',
                             field_righttext  = '%s',
                             scale            = '%s',
                             as_of_date       = %d,
@@ -171,9 +152,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
                        db_es($this->field_due),
                        db_es($this->field_finish),
                        db_es($this->field_percentage),
-                       db_es($this->field_hintleft),
-                       db_es($this->field_hintcenter),
-                       db_es($this->field_hintright),
                        db_es($this->field_righttext),
                        db_es($this->scale),
                        db_es($this->as_of_date),
@@ -198,27 +176,6 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
 	    	$artifact_field_percentage=new ArtifactField();
 	    	$artifact_field_percentage->fetchData($GLOBALS['ath']->getID(),$this->field_percentage);
 	    	if(!$artifact_field_percentage->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	if($this->field_hintleft){
-	    	$artifact_field_hintleft=new ArtifactField();
-    		$artifact_field_hintleft->fetchData($GLOBALS['ath']->getID(),$this->field_hintleft);
-	    	if(!$artifact_field_hintleft->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	if($this->field_hintcenter){
-	    	$artifact_field_hintcenter=new ArtifactField();
-    		$artifact_field_hintcenter->fetchData($GLOBALS['ath']->getID(),$this->field_hintcenter);
-	    	if(!$artifact_field_hintcenter->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
-    			return false;
-    		}
-    	}
-    	if($this->field_hintright){
-	    	$artifact_field_hintright=new ArtifactField();
-    		$artifact_field_hintright->fetchData($GLOBALS['ath']->getID(),$this->field_hintright);
-	    	if(!$artifact_field_hintright->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid())){
     			return false;
     		}
     	}
