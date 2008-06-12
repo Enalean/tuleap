@@ -245,7 +245,14 @@ class GraphOnTrackers_Report extends Error{
     */
 
     function delete() {
+        if (!$this->charts) {
+            $this->loadCharts();
+        }
+        for($i=0;$i<sizeof($this->charts);$i++){
+        	$this->deleteChart($this->charts[$i]->getId());
+        }
         // then delete the report entry item
+        
         $sql = sprintf('DELETE FROM plugin_graphontrackers_report_graphic 
                         WHERE report_graphic_id=%d',
                         db_ei($this->id)
@@ -261,8 +268,9 @@ class GraphOnTrackers_Report extends Error{
         $this->id = '';
         $this->group_artifact_id = '';
         $this->user_id = '';
+        
         // return the deleted report id
-        return $report_id;;
+        return $report_id;
     }
 
     /**

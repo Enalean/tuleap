@@ -64,7 +64,7 @@ class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
         return new GraphOnTrackers_Chart_BarDataBuilder($this,$artifacts);
     }
     public function delete() {
-        $sql = "DELTE FROM plugin_graphontrackers_bar_chart WHERE id = ". db_ei($this->id);
+        $sql = "DELETE FROM plugin_graphontrackers_bar_chart WHERE id = ". db_ei($this->id);
         $res = db_query($sql);
     }
     public function getProperties() {

@@ -47,7 +47,11 @@ plugin_graphontrackers_admin_menu	graphic_report	Rapports graphiques
 plugin_graphontrackers_include_report	pie	Camembert
 plugin_graphontrackers_include_report	bar	Bâtons
 plugin_graphontrackers_include_report	gantt	Gantt
-
+plugin_graphontrackers_graphreportcopy	ins_err	Erreur lors de l'insertion de plugin_graphontrackers_report_graphic ($1-$2) : $3
+plugin_graphontrackers_graphreportcopy	ins_err_chart	Erreur lors de l'insertion de plugin_graphontrackers_chart ($1-$2) : $3
+plugin_graphontrackers_graphreportcopy	ins_err_chart_pie	Erreur lors de l'insertion de plugin_graphontrackers_pie_chart ($1-$2) : $3
+plugin_graphontrackers_graphreportcopy	ins_err_chart_bar	Erreur lors de l'insertion de plugin_graphontrackers_bar_chart ($1-$2) : $3
+plugin_graphontrackers_graphreportcopy	ins_err_chart_gantt	Erreur lors de l'insertion de plugin_graphontrackers_gantt_chart ($1-$2) : $3
 #
 #-----------------------------------------------
 # Script:include/graphontrackersPluginDescriptor.class

@@ -242,6 +242,11 @@ class ArtifactTypeFactory extends Error {
         $art_report_fact = new ArtifactReportFactory();
         $art_report_fact->deleteReports($atid);
         
+        //Generate an event 
+        $em =& EventManager::instance();
+		$pref_params = array('atid'   => $atid);
+		$em->processEvent('artifactType_deleted',$pref_params);
+        
         // Delete the artifact rules
         $art_rule_fact = ArtifactRuleFactory::instance();
         $art_rule_fact->deleteRulesByArtifactType($atid);
@@ -528,6 +533,11 @@ class ArtifactTypeFactory extends Error {
 		  $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
 		  return false;
 		}
+		$em =& EventManager::instance();
+		$pref_params = array('atid_source'   => $atid_template,
+                     		 'atid_dest'     => $id);
+		$em->processEvent('artifactType_created',$pref_params);
+	
 		
 		// Copy artifact_notification_event and artifact_notification_role
 		if ( !$at_new->copyNotificationEvent($id) ) {

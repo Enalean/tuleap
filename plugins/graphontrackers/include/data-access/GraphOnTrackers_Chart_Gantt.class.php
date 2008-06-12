@@ -108,7 +108,7 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
         return new GraphOnTrackers_Chart_GanttDataBuilder($this,$artifacts);
     }
     public function delete() {
-        $sql = "DELTE FROM plugin_graphontrackers_gantt_chart WHERE id = ". db_ei($this->id);
+        $sql = "DELETE FROM plugin_graphontrackers_gantt_chart WHERE id = ". db_ei($this->id);
         $res = db_query($sql);
     }
     public function getProperties() {

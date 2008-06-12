@@ -61,7 +61,7 @@ class GraphOnTrackers_Chart_Pie extends GraphOnTrackers_Chart {
         return new GraphOnTrackers_Chart_PieDataBuilder($this,$artifacts);
     }
     public function delete() {
-        $sql = "DELTE FROM plugin_graphontrackers_pie_chart WHERE id = ". db_ei($this->id);
+        $sql = "DELETE FROM plugin_graphontrackers_pie_chart WHERE id = ". db_ei($this->id);
         $res = db_query($sql);
     }
     
