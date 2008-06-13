@@ -3723,19 +3723,20 @@ function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id
             return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactCCList');
         }
     
-        return artifactCC_to_soap($group_id, $group_artifact_id, $a->getCCList());
+        return artifactCC_to_soap($group_id, $group_artifact_id, $artifact_id, $a->getCCList());
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactCCList');
     }
 }
  
-function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_cc_list) {
+function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_id, $artifact_cc_list) {
     $return = array();
     $rows=db_numrows($artifact_cc_list);
     for ($i=0; $i<$rows; $i++) {
         // retrieve the field, for permission checks
         $return[]=array(
             'artifact_cc_id' => db_result($artifact_cc_list, $i, 'artifact_cc_id'),
+            'artifact_id' => $artifact_id,
             'email' => db_result($artifact_cc_list, $i, 'email'),
             'added_by' => db_result($artifact_cc_list, $i, 'added_by'),
             'added_by_name' => db_result($artifact_cc_list, $i, 'user_name'),
