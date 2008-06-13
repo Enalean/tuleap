@@ -444,7 +444,6 @@ $server->wsdl->addComplexType(
     array(
         'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
-        'user_id'           => array('name'=>'user_id', 'type' => 'xsd:int'),
         'name'              => array('name'=>'name', 'type' => 'xsd:string'),
         'description'       => array('name'=>'description', 'type' => 'xsd:string'),
         'scope'             => array('name'=>'scope', 'type' => 'xsd:string'),
