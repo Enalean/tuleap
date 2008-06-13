@@ -127,10 +127,12 @@ class gantt_engine {
     }
     
    function Valid_datas(){
-    	if((is_array($this->data)) && (array_sum($this->data)>0)){
+   	
+    	if(count($this->data)>0){
+    		
     		return true;
     	}else{
-    		
+    		 
 			echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";				
     		return false;
     	}

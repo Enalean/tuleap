@@ -31,6 +31,10 @@
 #
 #
 #-----------------------------------------------
+# Script:include/graphic-library/*_engine.class
+#
+plugin_graphontrackers_engine	no_datas	Pas de données à afficher pour le graphique $1
+#-----------------------------------------------
 # Script:include/ArtifactReportGraphicGanttHtml.class
 #
 plugin_graphontrackers_date_scale	year	Année

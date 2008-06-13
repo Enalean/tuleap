@@ -49,7 +49,8 @@ class bar_engine {
     }
     
     function Valid_datas(){
-    	if((is_array($this->data)) && (array_sum($this->data)>0)){
+    	
+    	if(count($this->data)>0){
     		return true;
     	}else{
     		
