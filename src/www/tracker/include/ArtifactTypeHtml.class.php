@@ -67,7 +67,6 @@ class ArtifactTypeHtml extends ArtifactType {
 			echo ' | <a href="/tracker/?func=masschange&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_index','mass_change').' </a>';
 			echo ' | <a href="/tracker/?func=import&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_import_admin','import').' </a>';
                     }
-                    echo ' | <a href="/tracker/?func=reporting&group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'.$Language->getText('tracker_include_type','reporting').'</a>';
                     echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'.$Language->getText('tracker_include_type','admin').'</a>';
                     if ($params['help']) {
                         echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
@@ -2244,95 +2243,6 @@ EOS;
 			return $Language->getText('tracker_include_type','unknown_stat').":".$status;
 		}
 	}
-
-	/**
-	 *  Display the reporting main page
-	 *
-	 *  @return void
-	 */
-	function reportingMainPage() {
-        $hp = CodeX_HTMLPurifier::instance();
-		global $art_field_fact,$Language;
-	
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) ."' - ".$Language->getText('tracker_include_type','report_system'),
-				  'help' => 'TrackerReporting.html'));
-	
-		echo '<H2>'.$Language->getText('tracker_include_type','tracker_report_syst').'</H2>';
-		echo "\n<P>";
-		echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=aging\">".$Language->getText('tracker_include_type','aging_rep')."</A><BR>";
-	
-		$fields = $art_field_fact->getAllUsedFields();
-	
-		while (list($field_name,$field) = each($fields)	) {
-		    if ($field->isSpecial()) { continue;}
-	
-		    if ($field->isSelectBox()) {
-	
-			echo "\n<A HREF=\"/tracker?func=reporting&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field=".(int)$field->getID()."\"> ". $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s by '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ."'</A><BR>";
-		    }
-		}
-	
-		$this->footer(array());
-	
-	}
-	
-	/**
-	 *  Display the reporting by age
-	 *
-	 *  @return void
-	 */
-	function reportingByAge() {
-		global $Language;
-        $hp = CodeX_HTMLPurifier::instance();
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) ."' - ".$Language->getText('tracker_include_type','aging_rep'),
-				  'help' => 'TrackerReporting.html'));
-	
-		
-		$closedItems = $this->getArtifactsByAge();
-	
-	
-		echo '<H2>'.$Language->getText('tracker_include_type','tracker_aging_rep').'</H2>';
-	
-		GraphIt($closedItems['names'], $closedItems['values'],$Language->getText('tracker_include_type','avg_time', $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s"));
-		echo "<P>";
-	
-		$openItems = $this->getOpenArtifactsByAge();
-		
-		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','nb_open', $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) ."s"));
-		$this->footer(array());
-	}
-	
-	/**
-	 *  Display the reporting by field
-	 *
-	 *  @return void
-	 */
-	function reportingByField($field_id) {
-		global $art_field_fact,$Language;
-        $hp = CodeX_HTMLPurifier::instance();
-		$field = $art_field_fact->getFieldFromId($field_id);
-	
-		$this->header(array("title"=>$Language->getText('tracker_import_admin','tracker')." '". $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) ."' - ".$Language->getText('tracker_include_type','rep_field')." '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ."'",
-				  'help' => 'TrackerReporting.html'));
-	
-		if ($field->isStandardField()) {
-			$openItems = $this->getOpenArtifactsBy($field);
-			$allItems = $this->getArtifactsBy($field);
-		} else {
-			$openItems = $this->getOpenArtifactsByField($field);
-			$allItems = $this->getArtifactsByField($field);
-		}
-	
-		echo '<H3>'.$Language->getText('tracker_include_type','open_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
-	
-		GraphIt($openItems['names'], $openItems['values'],$Language->getText('tracker_include_type','open_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )));
-		echo '<H3>'.$Language->getText('tracker_include_type','all_by',array('\'<a href="/tracker?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\'', $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )).'</H3>';
-	
-		GraphIt($allItems['names'], $allItems['values'],$Language->getText('tracker_include_type','all_by',array( $hp->purify($this->getItemName(), CODEX_PURIFIER_CONVERT_HTML) , $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) )));
-		$this->footer(array());
-	
-	}
-
 
 
 	/**

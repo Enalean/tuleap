@@ -923,31 +923,7 @@ if ( $func == 'gotoid' ) {
 	  break;
 	}
 
-        case 'reporting': {
-
-                if ( !user_isloggedin() ) {
-                        exit_not_logged_in();
-                        return;
-                }
-                
-            if ( !$ath->userIsAdmin() ) {
-                        exit_permission_denied();
-                        return;
-                }
-                
-            if ($field = $request->get('field')) {
-              if ($field == 'aging') {
-                        $ath->reportingByAge();
-              } else {
-                        // It's any of the select box field. 
-                        $ath->reportingByField($field);
-              }
-                
-            } else {
-              $ath->reportingMainPage();
-            }
-            break;
-        }
+       
         case 'toggle_section':
             $collapsable_sections = array('results', 'query');
             EventManager::instance()->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
