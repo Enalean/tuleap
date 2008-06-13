@@ -373,7 +373,6 @@ class GraphOnTrackersPlugin extends Plugin {
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
 				
 				exit_error($Language->getText('global','error'),$Language->getText('plugin_graphontrackers_graphreportcopy','ins_err',array($report_array["report_graphic_id"],$atid_dest,db_error())));
-				return false;
 			}
 			$report_id_source = db_ei($report_array["report_graphic_id"]);
 			$report_id_dest = db_insertid($res_insert,'plugin_graphontrackers_report_graphic','report_graphic_id');
@@ -396,7 +395,6 @@ class GraphOnTrackersPlugin extends Plugin {
 				if (!$res_insert_chart || db_affected_rows($res_insert_chart) <= 0) {
 					
 					exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart',array($report_array["report_graphic_id"],$report_id_dest,db_error())));
-					return false;
 				}
 				$id_dest = db_insertid($res_insert_chart,'plugin_graphontrackers_chart','id');
 				
@@ -410,7 +408,6 @@ class GraphOnTrackersPlugin extends Plugin {
 					$res_insert_pie = db_query($sql_insert_pie);				
 					if (!$res_insert_pie || db_affected_rows($res_insert_pie) < 1) {	
 						exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_pie',array($id_dest,$report_id_dest,db_error())));				
-						return false;
 					}
 				}else if($chart_type=='bar'){
 					$sql_bar_chart='SELECT * FROM plugin_graphontrackers_bar_chart WHERE id='.db_ei($id_source) ;
@@ -422,7 +419,6 @@ class GraphOnTrackersPlugin extends Plugin {
 					$res_insert_bar = db_query($sql_insert_bar);				
 					if (!$res_insert_bar || db_affected_rows($res_insert_bar) < 1) {						
 						exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_bar',array($id_dest,$report_id_dest,db_error())));				
-						return false;
 					}
 					
 				}else if($chart_type=='gantt'){
@@ -443,7 +439,6 @@ class GraphOnTrackersPlugin extends Plugin {
 					$res_insert_gantt = db_query($sql_insert_gantt);				
 					if (!$res_insert_gantt || db_affected_rows($res_insert_gantt) < 1) {
 						exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_gantt',array($id_dest,$report_id_dest,db_error())));				
-						return false;
 					}
 				}
 			}

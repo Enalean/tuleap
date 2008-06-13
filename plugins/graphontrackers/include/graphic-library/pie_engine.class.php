@@ -39,6 +39,15 @@ class pie_engine {
         $this->jp_graph_path = $GLOBALS['jpgraph_dir'];        
     }
     
+    function Valid_datas(){
+    	if((is_array($this->data)) && (array_sum($this->data)>0)){
+    		return true;
+    	}else{
+    		
+			echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";				
+    		return false;
+    	}
+    }
     function buildGraph() {
         $this->graph = new Chart_Pie($this->width,$this->height);
 
