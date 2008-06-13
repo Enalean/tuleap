@@ -190,6 +190,9 @@ class DataBuilder {
         $sql ="$select $from $where $group_by $order_by";
         //echo $sql;
         $res = db_query($sql);
+        $result['field1']=array();
+        $result['field2']=array();
+        $result['c']=array();
         for($i=0;$i<db_numrows($res);$i++) {
             $r[$i] = db_fetch_array($res);
             $result['field1'][$i] = $r[$i]['field1'];

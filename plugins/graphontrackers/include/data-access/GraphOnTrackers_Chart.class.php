@@ -100,9 +100,12 @@ abstract class GraphOnTrackers_Chart {
     public function display() {
     	
     	if($this->userCanVisualize()){
-        	$e = $this->buildGraph();
-        	echo $e->graph->GetHTMLImageMap("map".$this->getId());
-        	$this->displayImgTag();
+    		
+    		$e = $this->buildGraph();
+    		if($e){
+	        	echo $e->graph->GetHTMLImageMap("map".$this->getId());
+	        	$this->displayImgTag();
+    		}
     	}
     }
     
@@ -137,9 +140,14 @@ abstract class GraphOnTrackers_Chart {
         //prepare the propeties for the chart
         $pcdb->buildProperties($e);
         
-        //build the chart
-        $e->buildGraph();
-        return $e;
+        if($e->Valid_datas()){
+        	//build the chart
+	        $e->buildGraph();
+	        return $e;	
+        }else{
+        	return false;
+        }      
+        
     }
     
     /**
