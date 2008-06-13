@@ -2334,12 +2334,12 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
         // translate the field_name in field_id, in order to call the real addArtifact function
         $extrafields_with_id = array();
         foreach($extra_fields as $extra_field_name) {
-            $field = $art_field_fact->getFieldFromName($extra_field_name['field_name']);
+            $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
             if ($field) {
                 $extra_field_id = $field->getID();
-                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
+                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name->field_value);
             } else {
-                return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name['field_name'],'addArtifact');
+                return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name->field_name,'addArtifact');
             }
         }
         
@@ -2508,12 +2508,12 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
         // translate the field_name in field_id, in order to call the real addArtifact function
         $extrafields_with_id = array();
         foreach($extra_fields as $extra_field_name) {
-            $field = $art_field_fact->getFieldFromName($extra_field_name['field_name']);
+            $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
             if ($field) {
                 $extra_field_id = $field->getID();
-                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name['field_value']);
+                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name->field_value);
             } else {
-                return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name['field_name'],'updateArtifact');
+                return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name->field_name,'updateArtifact');
             }
         }
         
