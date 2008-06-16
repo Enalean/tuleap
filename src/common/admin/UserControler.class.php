@@ -140,7 +140,7 @@ class UserControler extends Controler {
     function viewsManagement() {
      
         if ($this->userid) {
-            $view = new UserEditDisplay($this->userparam, $this->groupparam);
+            $view = new UserEditDisplay($this->userparam, $this->groupparam, $this->task);
         }
         else {
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
@@ -396,7 +396,6 @@ class UserControler extends Controler {
 
         if ($request->valid($validGroupId)) {
             $this->groupid = $request->get('group_id');
-            //            echo $this->groupid;
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -407,7 +406,6 @@ class UserControler extends Controler {
 
         if ($request->valid($validTask)) {
             $this->task = $request->get('task');
-            //echo $this->task;
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');

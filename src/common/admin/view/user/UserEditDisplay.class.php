@@ -46,10 +46,17 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     private $groupparam;
 
-    function __construct($userparam, $groupparam) {
+    /**
+     * $task
+     *
+     * @type string $task
+     */
+
+    function __construct($userparam, $groupparam, $task) {
     
         $this->userparam = $userparam;
         $this->groupparam = $groupparam;
+        $this->task = $task;
     }
 
     /**
@@ -434,7 +441,9 @@ class UserEditDisplay extends AdminEditDisplay {
 
         $this->displayUnixAccountInformation();
 
-        $this->displayCurrentGroups();
+        if ($this->task != 'remove_user_from_group') {
+            $this->displayCurrentGroups();
+        }
 
         $this->displayAddUser();
 
