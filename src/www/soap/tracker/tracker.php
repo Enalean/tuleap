@@ -811,7 +811,7 @@ $server->register(
     'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.'
 );
 
 $server->register(
@@ -834,7 +834,7 @@ $server->register(
     'Add an Artifact in the tracker tracker_name of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
-     Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.
+     Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.'
 );
 
 $server->register(
@@ -858,7 +858,7 @@ $server->register(
     'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, or if the update failed.
+     if the artifart_id is not a valid one, or if the update failed.'
 );
 
 $server->register(
@@ -882,7 +882,7 @@ $server->register(
     'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, or if the update failed.
+     if the artifart_id is not a valid one, or if the update failed.'
 );
 
 $server->register(
@@ -1079,7 +1079,7 @@ $server->register(
      of the tracker group_artifact_id of the project group_id.
      Returns true if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, or if the add failed.
+     if the artifact_id is not a valid one, or if the add failed.'
 );
 
 $server->register(
@@ -1098,7 +1098,7 @@ $server->register(
     'Delete the dependency between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
      Returns the ID of the deleted dependency if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.
+     if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.'
 );
 
 $server->register(
@@ -1119,7 +1119,7 @@ $server->register(
      with optionals comment type and canned response. If canned response is set, it will replace the body.
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifact_id is not a valid one, or if the add failed.
+     if the artifact_id is not a valid one, or if the add failed.'
 );
 
 $server->register(
@@ -1138,7 +1138,7 @@ $server->register(
     'encoded',
     'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.
+     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.'
 );
 
 $server->register(
@@ -1156,7 +1156,7 @@ $server->register(
     'encoded',
     'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.
+     if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.'
 );
 
 $server->register(
