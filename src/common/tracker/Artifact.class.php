@@ -1254,10 +1254,14 @@ class Artifact extends Error {
                         
         $ok = true;
         $ids = explode(",",$artifact_id_dependent);
-                
+           
         while (list(,$id) = each($ids)) {
             // Add this id only if not already exist
             //echo "add id=".$id."<br>";
+            
+            // Remove potential spaces (if the list of IDs are entered like that : 171, 765, 555)
+            $id = trim($id);
+            
             // Check existance
             if (!$this->validArtifact($id)) {
                 $ok = false;
