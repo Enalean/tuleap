@@ -87,6 +87,7 @@ plugin_graphontrackers_include_report	return_reports	Go back to graphic reports
 plugin_graphontrackers_report	title	Charts 
 plugin_graphontrackers_include_report	tooltip_edit	Edit Chart
 plugin_graphontrackers_include_report	tooltip_del	Delete Chart
+plugin_graphontrackers_report	btn_go	Go 
 #
 #-----------------------------------------------
 # Script:include/HTML_Element.class.php

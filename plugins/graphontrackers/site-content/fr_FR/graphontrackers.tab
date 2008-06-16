@@ -86,6 +86,7 @@ plugin_graphontrackers_include_report	return_reports	Retourner aux rapports grap
 plugin_graphontrackers_report	title	Graphiques
 plugin_graphontrackers_include_report	tooltip_edit	Modifier ce graphique
 plugin_graphontrackers_include_report	tooltip_del	Supprimer ce graphique
+plugin_graphontrackers_report	btn_go	Valider 
 #
 #-----------------------------------------------
 # Script:include/HTML_Element.class.php
