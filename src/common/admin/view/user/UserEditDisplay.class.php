@@ -330,7 +330,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
 
             print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
+            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;task=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
 
             print '<form action="index.php" method="post">';
 
@@ -356,7 +356,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '</p>';
             
             print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="index.php?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
+            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;task=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
             
             print '<form action="index.php" method="post">';
             

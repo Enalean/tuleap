@@ -37,7 +37,7 @@ class UserControler extends Controler {
     /**
      * $userIterator
      *
-     * @type Iterator $userIterator
+     * @type mixed $userIterator
      */
     private $userIterator;
     
@@ -75,6 +75,20 @@ class UserControler extends Controler {
      * @type int $userid
      */
     private $userid;
+
+    /**
+     * $groupid
+     *
+     * @type int $groupid
+     */
+    private $groupid;
+
+    /**
+     * $action
+     *
+     * @type string $action
+     */
+    private $task;
 
     /**
      * $shortcut
@@ -340,6 +354,23 @@ class UserControler extends Controler {
             $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
         }
      }
+
+    /**
+     * remove a user for a group
+     */
+    function removeUserFromGroup() {
+
+       $dao = new UserDao(CodexDataAccess::instance());
+
+       $dar = $dao->removeUserByGroupId($this->userid, $this->groupid);
+
+       if(!$dar) {
+           $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_del_u'));
+       }
+       else {
+           $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_del_u'));
+       }
+    }
    
     /**
      * request()
@@ -360,9 +391,39 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
+        //valid group id
+        $validGroupId = new Valid_UInt('group_id');
+
+        if ($request->valid($validGroupId)) {
+            $this->groupid = $request->get('group_id');
+            //            echo $this->groupid;
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+        //valid task
+        $validTask = new Valid_String('task');
+
+        if ($request->valid($validTask)) {
+            $this->task = $request->get('task');
+            //echo $this->task;
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
         if ($this->userid) {
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
+        }
+
+        if ($this->task) {
+
+            if ($this->task == 'remove_user_from_group') {
+                $this->removeUserFromGroup();
+            }
         }
 
         $this->setOffset();        

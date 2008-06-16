@@ -425,6 +425,19 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         return $this->retrieve($sql);
     }
 
+    /**
+     * remove user by group id
+     *
+     */
+    function removeUserByGroupId($userid, $groupid) {
+
+        $sql = 'DELETE FROM user_group '.
+               'WHERE user_id='.$userid.
+               ' AND group_id='.$groupid;
+
+        return $this->update($sql);
+    }
+
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
