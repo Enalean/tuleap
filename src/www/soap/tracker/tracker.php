@@ -812,7 +812,6 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -836,7 +835,6 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -850,9 +848,7 @@ $server->register(
         'summary'=>'xsd:string', 
         'details'=>'xsd:string', 
         'severity'=>'xsd:int', 
-        'extra_fields'=>'tns:ArrayOfArtifactFieldValue',
-        'artifact_id_dependent'=>'xsd:string',
-        'canned_response'=>'xsd:int'
+        'extra_fields'=>'tns:ArrayOfArtifactFieldValue'
     ),
     array('return'=>'xsd:int'),
     $uri,
@@ -863,7 +859,6 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -877,9 +872,7 @@ $server->register(
         'summary'=>'xsd:string', 
         'details'=>'xsd:string', 
         'severity'=>'xsd:int', 
-        'extra_fields'=>'tns:ArrayOfArtifactFieldNameValue',
-        'artifact_id_dependent'=>'xsd:string',
-        'canned_response'=>'xsd:int'
+        'extra_fields'=>'tns:ArrayOfArtifactFieldNameValue'
     ),
     array('return'=>'xsd:int'),
     $uri,
@@ -890,7 +883,6 @@ $server->register(
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -929,17 +921,15 @@ $server->register(
     'getArtifactReports',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int',
-        'user_id'=>'xsd:int'
+        'group_artifact_id'=>'xsd:int'
     ),
     array('return'=>'tns:ArrayOfArtifactReport'),
     $uri,
     $uri.'#getArtifactReports',
     'rpc',
     'encoded',
-    'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the user user_id. 
-     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
-     or if the user_id is not a valid one.'
+    'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the current user. 
+     Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one.'
 );
 
 $server->register(
@@ -957,21 +947,6 @@ $server->register(
     'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one. NOTE : for performance reasons, the result does not contain the content of the file. Please use getArtifactAttachedFile to get the content of a single file'
-);
-
-$server->register(
-    'getAttachedFiles',
-    array('sessionKey'=>'xsd:string',
-          'group_id'=>'xsd:int',
-          'group_artifact_id'=>'xsd:int',
-          'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactFile'),
-    $uri,
-    $uri.'#getAttachedFiles',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use getArtifactAttachedFiles'
 );
 
 $server->register(
@@ -1028,21 +1003,6 @@ $server->register(
 );
 
 $server->register(
-    'getDependencies',
-    array('sessionKey'=>'xsd:string',
-          'group_id'=>'xsd:int',
-          'group_artifact_id'=>'xsd:int',
-          'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactDependency'),
-    $uri,
-    $uri.'#getDependencies',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use getArtifactDependencies'
-);
-
-$server->register(
     'getArtifactInverseDependencies',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -1084,41 +1044,6 @@ $server->register(
 );
 
 $server->register(
-    'addArtifactFile',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int',
-        'artifact_id'=>'xsd:int',
-        'encoded_data'=>'xsd:string',
-        'description'=>'xsd:string',
-        'filename'=>'xsd:string',
-        'filetype'=>'xsd:string'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#addArtifactFile',
-    'rpc',
-    'encoded',
-    'Deprecated. Use addArtifactAttachedFile.'
-);
-
-$server->register(
-    'deleteArtifactFile',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int',
-        'artifact_id'=>'xsd:int',
-        'file_id'=>'xsd:int'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#deleteArtifactFile',
-    'rpc',
-    'encoded',
-    'Deprecated. Use deleteArtifactAttachedFile.'
-);
-
-$server->register(
     'deleteArtifactAttachedFile',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
@@ -1155,23 +1080,6 @@ $server->register(
      Returns true if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the add failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
-);
-
-$server->register(
-    'addDependencies',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int',
-        'artifact_id'=>'xsd:int',
-        'is_dependent_on_artifact_id'=>'tns:ArrayOfInt'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#addDependencies',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use addArtifactDependencies'
 );
 
 $server->register(
@@ -1191,23 +1099,6 @@ $server->register(
      Returns the ID of the deleted dependency if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.
-     NOTE : the mail notification system is not implemented with the SOAP API.'
-);
-
-$server->register(
-    'deleteDependency',
-    array('sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'group_artifact_id'=>'xsd:int',
-        'artifact_id'=>'xsd:int',
-        'dependent_on_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#deleteDependency',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use deleteArtifactDependency'
 );
 
 $server->register(
@@ -1229,23 +1120,6 @@ $server->register(
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the add failed.
-     NOTE : the mail notification system is implemented.'
-);
-
-$server->register(
-    'addFollowup',
-    array('sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'group_artifact_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int',
-        'body' => 'xsd:string'
-    ),
-    array(),
-    $uri,
-    $uri.'#addFollowup',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use addArtifactFollowup'
 );
 
 $server->register(
@@ -1265,7 +1139,6 @@ $server->register(
     'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -1284,7 +1157,6 @@ $server->register(
     'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.
-     NOTE : the mail notification system is implemented.'
 );
 
 $server->register(
@@ -1300,20 +1172,6 @@ $server->register(
     'encoded',
     'Check if there is an artifact in the tracker group_artifact_id that already have the summary summary (the summary is unique inside a given tracker).
      Returns the ID of the artifact containing the same summary in the tracker, or -1 if the summary does not exist in this tracker.'
-);
-
-$server->register(
-    'existSummary',
-    array('sessionKey' => 'xsd:string',
-        'group_artifact_id' => 'xsd:int',
-        'summary' => 'xsd:string'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#existSummary',
-    'rpc',
-    'encoded',
-    'Deprecated. Please use existArtifactSummary'
 );
 
 $server->register(
@@ -2137,8 +1995,6 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 /**
  * addArtifact - add an artifact in tracker $group_artifact_id of the project $group_id with given valuess
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
  * @param int $group_artifact_id the ID of the tracker we want to add the artifact
@@ -2279,8 +2135,6 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 /**
  * addArtifactWithFieldNames - add an artifact in tracker $tracjer_name of the project $group_id with given valuess
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the artifact
  * @param int $group_artifact_id the ID of the tracker we want to add the artifact
@@ -2353,8 +2207,6 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 /**
  * updateArtifact - update the artifact $artifact_id in tracker $group_artifact_id of the project $group_id with given values
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
  * @param int $group_artifact_id the ID of the tracker we want to update the artifact
@@ -2365,8 +2217,6 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
  * @param array{SOAPArtifactFieldValue} $extra_fields the extra_fields of the artifact (non standard fields)
- * @param @deprecated string $artifact_id_dependent a list of artifact IDs (separated with a comma) this artifact is dependent. PLEASE DO NOT USE THIS PARAM
- * @param @deprecated int $canned_response the id of the canned response associated with a follow-up. PLEASE DO NOT USE THIS PARAM
  * @return int the ID of the artifact, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -2375,7 +2225,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
+function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
@@ -2450,8 +2300,6 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 /**
  * updateArtifactWithFieldNames - update the artifact $artifact_id in tracker $tracker_name of the project $group_id with given values
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the artifact
  * @param int $group_artifact_id the ID of the tracker we want to update the artifact
@@ -2462,8 +2310,6 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
  * @param array{SOAPArtifactFieldNameValue} $extra_fields the extra_fields of the artifact (non standard fields)
- * @param @deprecated string $artifact_id_dependent a list of artifact IDs (separated with a comma) this artifact is dependent. PLEASE DO NOT USE THIS PARAM
- * @param @deprecated int $canned_response the id of the canned response associated with a follow-up. PLEASE DO NOT USE THIS PARAM
  * @return int the ID of the artifact, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -2472,7 +2318,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields, $artifact_id_dependent, $canned_response) {
+function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
@@ -2656,14 +2502,12 @@ function artifactcannedresponses_to_soap($cannedresponses_res) {
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the reports
  * @param int $group_artifact_id the ID of the tracker we want to retrieve the reports
- * @param @deprecated int user_id the ID of the user we want to get the report. PLEASE DO NOT USE THIS PARAM.
  * @return array{SOAPArtifactReport} the array of the reports of the current user for this tracker,
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
  *              - group_artifact_id does not match with a valid tracker
  */
-function getArtifactReports($sessionKey, $group_id, $group_artifact_id, $user_id) {
-    // Deprecated param. DO NOT USE ANYMORE
+function getArtifactReports($sessionKey, $group_id, $group_artifact_id) {
     $user_id = user_getid();
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
@@ -2790,13 +2634,6 @@ function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$arti
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactAttachedFiles');
     }
-}
-
-/**
- * @deprecated please use getArtifactAttachedFiles.
- */
-function getAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
-    return getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id);
 }
 
 /**
@@ -2960,13 +2797,6 @@ function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artif
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactDependencies');
     }
 }
-
-/**
- * @deprecated please use getArtifactDependencies.
- */
-function getDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
-    return getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id);
-}
  
 function dependencies_to_soap($artifact_type, $dependencies) {
     $return = array();
@@ -3073,30 +2903,6 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
 } 
 
 /**
- * addArtifactFile - add an attached file to the artifact $artifact_id
- *
- * @deprecated use addArtifactAttachedFile
- *
- * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group we want to attach the file
- * @param int $group_artifact_id the ID of the tracker we want to attach the file
- * @param int $artifact_id the ID of the artifact we want to attach the file
- * @param string $encoded_data the raw data of the file, encoded in base64
- * @param string $description description of the file
- * @param string $filename name of the file
- * @param string $filetype mime-type of the file (text/plain, image/jpeg, etc...)
- * @return int the ID of the new attached file created,
- *              or a soap fault if :
- *              - group_id does not match with a valid project, 
- *              - group_artifact_id does not match with a valid tracker
- *              - artifact_id does not match with a valid artifact
- *              - the file attachment to the artifact failed
- */
-function addArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
-    return addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype);
-}
-
-/**
  * addArtifactAttachedFile - add an attached file to the artifact $artifact_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -3180,8 +2986,6 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
 
 /**
  * deleteArtifactFile - delete an attached file to the artifact $artifact_id
- *
- * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to delete the file
@@ -3270,8 +3074,6 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
 /**
  * addArtifactDependencies - add dependencies to the artifact $artifact_id
  *
- * NOTE : the mail notification system is not implemented with the SOAP API.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to add the dependencies
  * @param int $group_artifact_id the ID of the tracker we want to add the dependencies
@@ -3331,8 +3133,6 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
 
 /**
  * updateArtifactFollowUp - update the artifact follow up $artifact_history_id in tracker $group_artifact_id of the project $group_id for the artifact $artifact_id with given comment
- *
- * NOTE : the mail notification system is implemented.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to update the comment
@@ -3407,8 +3207,6 @@ function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
 /**
  * deleteArtifactFollowUp- delete the artifact follow up $artifact_history_id in tracker $group_artifact_id of the project $group_id for the artifact $artifact_id
  *
- * NOTE : the mail notification system is implemented.
- *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to delete the comment
  * @param int $group_artifact_id the ID of the tracker we want to delete the comment
@@ -3472,17 +3270,7 @@ function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
 }
 
 /**
- * @deprecated Please use addArtifactDependencies
- */
-function addDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_id) {
-    $ids_str = implode(",", $is_dependent_on_artifact_id);
-    return addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $ids_str);
-}
-
-/**
  * deleteArtifactDependency - delete the dependency between $artifact_id and $dependent_on_artifact_id
- *
- * NOTE : the mail notification system is not implemented with the SOAP API.
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to delete the dependency
@@ -3541,12 +3329,6 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
     }
 }
 
-/**
- * @deprecated Please use deleteArtifactDependency
- */
-function deleteDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id) {
-    return deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id);
-}
 
 /**
  * addArtifactFollowup - add a followup to the artifact $artifact_id
@@ -3614,14 +3396,6 @@ function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_
     }
 }
 
-/**
- * @deprecated Please use addArtifactFollowup
- */
-function addFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body) {
-    return addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body);
-}
-
-
 
 /**
  * existArtifactSummary - check if the tracker $group_artifact_id already contains an artifact with the summary $summary
@@ -3666,13 +3440,6 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'existArtifactSummary');
     }
-}
-
-/**
- * @deprecated Please use existArtifactSummary
- */
-function existSummary($sessionKey, $group_artifact_id, $summary) {
-    return existArtifactSummary($sessionKey, $group_artifact_id, $summary);
 }
 
 /**
