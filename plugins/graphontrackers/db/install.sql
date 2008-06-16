@@ -86,6 +86,6 @@ INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (6,'assigned
 --
 -- Dumping data for table 'plugin_graphontrackers_gantt_chart'
 --
-INSERT INTO plugin_graphontrackers_gantt_chart (id,field_start,field_due, field_finish,field_percentage,field_righttext,scale,as_of_date,summary) VALUES (10,'start_date','due_date', 'end_date','percent_complete','severity','day',0,'summary');
+INSERT INTO plugin_graphontrackers_gantt_chart (id,field_start,field_due, field_finish,field_percentage,field_righttext,scale,as_of_date,summary) VALUES (10,'start_date','due_date', 'end_date','percent','severity','day',0,'summary');
 
 

@@ -27,6 +27,7 @@ require_once(dirname(__FILE__).'/../graphic-library/gantt_engine.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Dates.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Numerics.class.php');
+require_once('common/html/HTML_Element_Selectbox_TrackerFields_Int_TextFields.class.php');
 require_once('common/html/HTML_Element_Input_Date.class.php');
 require_once('common/html/HTML_Element_Selectbox_Scale.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Texts.class.php');
@@ -113,7 +114,7 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
                 new HTML_Element_Columns(
                     new HTML_Element_Selectbox_TrackerFields_Texts($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_summary'), 'chart[summary]', $this->getSummary()),
 
-                    new HTML_Element_Selectbox_TrackerFields_Numerics($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
+                    new HTML_Element_Selectbox_TrackerFields_Int_TextFields($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
                     new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackers_gantt_property','gantt_scale'), 'chart[scale]', $this->getScale())
 
                 ),

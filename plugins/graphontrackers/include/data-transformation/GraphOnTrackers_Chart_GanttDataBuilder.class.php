@@ -272,13 +272,21 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
     function getProgress() {
         $af = new ArtifactField();
         $af->fetchData($this->chart->getGraphicReport()->getAtid(),$this->chart->getField_percentage());
-        if (($af->isSelectBox()) || ($af->isMultiSelectBox())) {
-            return $this->convertFromTextToPercent($this->getSFValues($this->chart->getField_percentage()));
-        } else if($af->data_type == 2) {
-            return $this->getIntValues($this->chart->getField_percentage());
-        } else if ($af->data_type == 3) {
-            return $this->getFloatValues($this->chart->getField_percentage());
-        }
+        
+		$value_array= $this->getIntValues($this->chart->getField_percentage());
+		$clean_value_array=array();
+		for($i=0;$i<count($value_array);$i++){       		
+			$clean_value_array[$i]['id'] = $value_array[$i]['id'];
+	    	if ($value_array[$i]['val']<0){
+	    		$clean_value_array[$i]['val']=0;
+	    	}else if($value_array[$i]['val']>100){
+	    		$clean_value_array[$i]['val']=1;
+	    	}else{
+	    	    $clean_value_array[$i]['val']=$value_array[$i]['val']/100;
+	    	}
+		}
+		return $clean_value_array;
+  
     }
 
     /**
@@ -444,22 +452,6 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         } else {
             return $pos;
         }
-    }
-
-
-    /**
-     * Convert the value of Percent complete from text to float
-     * The return value (between 0 and 1)
-     *
-     * @return float
-     */
-    function convertFromTextToPercent($str) {
-        for($i=0;$i<count($str);$i++){
-            $token = explode("%",$str[$i]['val']);
-            $returns[$i]['id'] = $str[$i]['id'];
-            $returns[$i]['val'] = trim($token[0]/100);
-        }
-        return $returns;
     }
 
 }

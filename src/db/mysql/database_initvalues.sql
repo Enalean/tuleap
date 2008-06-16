@@ -1270,7 +1270,7 @@ INSERT INTO artifact_field VALUES (27,1,1,'originator_email',1,'TF','20/40','Ori
 INSERT INTO artifact_field VALUES (28,1,1,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (29,1,2,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 -- Tasks tracker
-INSERT INTO artifact_field VALUES (2,2,4,'percent_complete',2,'SB','2','Percent complete','Percentage of completion','',0,0,1,0,NULL,'1000');
+INSERT INTO artifact_field VALUES (2,2,4,'percent',2,'TF','3/3','Percentage of completion (1-100)','Integer value between 0-100','',0,0,1,0,NULL,'0');
 INSERT INTO artifact_field VALUES (4,2,4,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
 INSERT INTO artifact_field VALUES (5,2,4,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','Close Date','Close Date','',0,0,0,1,'','');
