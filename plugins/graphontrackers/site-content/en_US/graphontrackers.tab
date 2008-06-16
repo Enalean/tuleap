@@ -31,6 +31,10 @@
 #
 #
 #-----------------------------------------------
+# Script:src/common/charts/Chart.class.php
+#
+plugin_graphontrackers_error	jp_graph	JpGraph Error for graph $1
+#-----------------------------------------------
 # Script:include/graphic-library/*_engine.class
 #
 plugin_graphontrackers_engine	no_datas	No datas to display for graph $1

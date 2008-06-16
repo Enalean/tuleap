@@ -88,7 +88,16 @@ class Chart {
     }
     
     public function __call($method, $args) {
+    	
+    	try{
         $result = call_user_func_array(array($this->_jpgraph_instance, $method), $args);
+    	}
+    	catch (Exception $exc) {
+			//echo $exc -> getMessage();
+			echo " <p class='feedback_error'>".$GLOBALS['Language']->getText('plugin_graphontrackers_error','jp_graph',array($this->__get("title")->t))."</p>";	
+			//echo $this->__get("title")->t;
+			return false;
+        }
         if (!strnatcasecmp($method, 'SetScale')) {
             $this->_jpgraph_instance->xaxis->SetColor($this->getMainColor(), $this->getMainColor());
             $this->_jpgraph_instance->xaxis->SetFont(FF_DEJAVU,FS_NORMAL,8);
