@@ -2985,26 +2985,6 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
 }
 
 /**
- * deleteArtifactFile - delete an attached file to the artifact $artifact_id
- *
- * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group we want to delete the file
- * @param int $group_artifact_id the ID of the tracker we want to delete the file
- * @param int $artifact_id the ID of the artifact we want to delete the file
- * @param string $file_id the ID of the file we want to delete
- * @return int the ID of the deleted file,
- *              or a soap fault if :
- *              - group_id does not match with a valid project, 
- *              - group_artifact_id does not match with a valid tracker
- *              - artifact_id does not match with a valid artifact
- *              - file_id does not match with a valid attached file
- *              - the file deletion failed
- */
-function deleteArtifactFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
-    return deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id);
-}
-
-/**
  * deleteArtifactAttachedFile - delete an attached file to the artifact $artifact_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
