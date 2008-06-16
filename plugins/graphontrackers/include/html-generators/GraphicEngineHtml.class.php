@@ -293,7 +293,8 @@ class graphicEngineHtml extends Error {
         $hp =& CodeX_HTMLPurifier::instance();
         require_once(dirname(__FILE__)."/../data-access/GraphOnTrackers_Report.class.php");
         $reports  = $this->grf->getReports_ids();
-        $returns  = '<B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_graphic_report_label','use_graphic_report').'&nbsp;&nbsp;</B><SELECT NAME="report_graphic_id">';
+        $returns  = '<B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_graphic_report_label','use_graphic_report').'&nbsp;&nbsp;</B>' .
+        			'<SELECT NAME="report_graphic_id" onChange="document.artifact_form.go_graphreport.click()">';
         $returns .= '<OPTION VALUE="0">'.$GLOBALS['Language']->getText('plugin_graphontrackers_empty_select','none_value').'</OPTION>';
         for ($i=0;$i<count($reports);$i++){
             $r = new GraphOnTrackers_Report($reports[$i]);
@@ -303,7 +304,7 @@ class graphicEngineHtml extends Error {
                 $returns .= '<OPTION  VALUE="'.$hp->purify($r->getId()).'">'.$hp->purify($r->getName()).'</OPTION>';
             }
         }
-        $returns .= '</SELECT>&nbsp;<INPUT TYPE="submit" VALUE="Go"/>';
+        $returns .= '</SELECT>&nbsp;<INPUT TYPE="submit" VALUE="'.$GLOBALS['Language']->getText('plugin_graphontrackers_report','btn_go').'" NAME="go_graphreport"/>';
         return $returns;
     }
 }

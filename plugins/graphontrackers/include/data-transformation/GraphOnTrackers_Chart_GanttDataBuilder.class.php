@@ -303,8 +303,6 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
             $returns[$i]['val'] = isset($summary[$i]['val'])?$summary[$i]['val']:"";
 
 			$progress_tooltip = $this->seekId($summary[$i]['id'],$progress);
-  
-            $returns[$i]['val'] .= isset($progress[$progress_tooltip])?" : ".(100*$progress[$progress_tooltip]['val'])."%":"";
          }
         return $returns;
     }
