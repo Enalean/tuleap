@@ -3058,6 +3058,7 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
         $artifact = new Artifact($artifact_type, db_result($inverse_dependencies, $i, 'artifact_id'));
         if ($artifact && $artifact->userCanView()) {
             $return[]=array(
+                'artifact_depend_id' => db_result($inverse_dependencies, $i, 'artifact_depend_id'),
                 'artifact_id' => db_result($inverse_dependencies, $i, 'artifact_id'),
                 'is_dependent_on_artifact_id' => $artifact_id,
                 'summary' => util_unconvert_htmlspecialchars(db_result($inverse_dependencies, $i, 'summary')),
