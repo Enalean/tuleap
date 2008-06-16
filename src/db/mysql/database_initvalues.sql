@@ -2390,6 +2390,9 @@ INSERT INTO plugin (name, available) VALUES ('codexjri', '1');
 -- install and enable salome plugin
 INSERT INTO plugin (name, available) VALUES ('salome', '1');
 
+-- install and enable graphontracker plugin
+INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
+
 
 --
 -- Insert default references

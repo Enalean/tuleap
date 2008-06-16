@@ -405,7 +405,7 @@ EOF
 
 #########
 # story #15757 Project Description custom fields
-
+echo "- Add Project Description custom fields. See revision #8610"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 CREATE TABLE `codex`.`group_desc` (
@@ -511,6 +511,62 @@ FROM group_desc, groups
 WHERE group_desc.desc_name = 'project_desc_name:other_comments'
 AND groups.other_comments != ''
 ) ;
+
+EOF
+
+#########
+# GraphonTracker plugin : Tables creation and plugin activation.
+echo "- Add GraphonTracker plugin. See revision #8712"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+DROP TABLE IF EXISTS plugin_graphontrackers_report_graphic;
+CREATE TABLE plugin_graphontrackers_report_graphic (
+  report_graphic_id int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
+  group_artifact_id int(11) ,
+  user_id int(11) ,
+  name varchar(255) ,
+  description varchar(255) ,
+  scope char(1) 
+);
+DROP TABLE IF EXISTS plugin_graphontrackers_chart;
+CREATE TABLE plugin_graphontrackers_chart (
+  id int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
+  report_graphic_id int(11) NOT NULL,
+  rank int(11) NOT NULL,
+  chart_type varchar(255),
+  title varchar(255),
+  description text,
+  width int(11) DEFAULT 600,
+  height int(11) DEFAULT 400,
+  KEY (report_graphic_id),
+  KEY (chart_type)
+);
+DROP TABLE IF EXISTS plugin_graphontrackers_gantt_chart;
+CREATE TABLE plugin_graphontrackers_gantt_chart(
+  id int(11)  NOT NULL PRIMARY KEY,
+  field_start varchar(255) ,
+  field_due varchar(255) ,
+  field_finish varchar(255) ,
+  field_percentage varchar(255) ,
+  field_righttext varchar(255) ,
+  scale varchar(20) ,
+  as_of_date int(11) ,
+  summary varchar(255) 
+);
+DROP TABLE IF EXISTS plugin_graphontrackers_pie_chart;
+CREATE TABLE plugin_graphontrackers_pie_chart(
+  id int(11)  NOT NULL PRIMARY KEY ,
+  field_base varchar(255)
+);
+DROP TABLE IF EXISTS plugin_graphontrackers_bar_chart;
+CREATE TABLE plugin_graphontrackers_bar_chart(
+  id int(11)  NOT NULL PRIMARY KEY ,
+  field_base varchar(255) ,
+  field_group varchar(255)
+);
+
+-- install and enable graphontracker plugin
+INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
 
@@ -648,6 +704,12 @@ todo "  -New icons: add.png, close.png, comment.png, cross.png, group.png, quote
 todo "  -New image: widget-header.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
 todo "  -Updated CSS: Everything below the line '/* {{{ Widgets */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css (except the 'password validator' section if it is already present)."
 todo "  -If you redefined generic_header_start() in your theme layout class, you should add a call to warning_for_services_which_configuration_is_not_inherited() (see Layout.class.php)"
+todo "The new Graphontrackers Plugin is available, no graphical reports for your site has presently been created"
+todo "You can create your own reports for each (template) tracker via the trackers administration menu.
+todo "To use the Gannt graph with the task tracker, you will have to :
+todo "  - rename the old "end date" field into a "close date" or so on.
+todo "  - create an "end date" and a "due date" field for the task tracker
+todo "
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
