@@ -79,10 +79,10 @@ INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES 
 -- Dumping data for table 'plugin_graphontrackers_pie_chart'
 --
 INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (1,'status_id');
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (2,'status_id');
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (3,'status_id');
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (1,'assigned_to');
-INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (2,'assigned_to');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (4,'status_id');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (7,'status_id');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (3,'assigned_to');
+INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES (6,'assigned_to');
 --
 -- Dumping data for table 'plugin_graphontrackers_gantt_chart'
 --
