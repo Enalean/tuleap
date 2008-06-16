@@ -224,9 +224,10 @@ class UserControler extends Controler {
             $dar = $dao->searchByUserId($userid);
             $userparam = $dar->getRow();
         }
+        
         $this->userparam = $userparam;
     }
-
+    
     /**
      * setGroupParam
      */

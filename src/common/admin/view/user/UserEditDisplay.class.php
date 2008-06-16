@@ -62,7 +62,7 @@ class UserEditDisplay extends AdminEditDisplay {
         session_require(array('group'=>'1','admin_flas'=>'A'));
         
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
-        parent::displayHeader($GLOBALS['Language']->getText('admin_usergroup','header').': ');
+        parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam['user_name'].' (ID '.$this->userparam['user_id'].')</h2>');
         ?>
             <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
                  
@@ -81,7 +81,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
       
 
-        print '<form method="post" name="update_user" action="index.php">';
+        print '<form method="post" name="update_user" action="/admin/usergroup.php">';
 
 
         //clic on user link
@@ -330,7 +330,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
 
             print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="usergroup.php?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
+            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
 
             print '<form action="index.php" method="post">';
 
@@ -356,7 +356,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '</p>';
             
             print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="usergroup.php?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
+            print '<a href="index.php?user_id='.$this->userparam['user_id'].'&amp;action=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
             
             print '<form action="index.php" method="post">';
             
