@@ -91,6 +91,13 @@ class UserControler extends Controler {
     private $task;
 
     /**
+     * $adminflag
+     *
+     * @type string $adminflag
+     */
+    private $adminflag;
+
+    /**
      * $shortcut
      *
      * @type string $shortcut
@@ -238,6 +245,9 @@ class UserControler extends Controler {
         }
         
         $this->userparam = $userparam;
+
+//         echo 'param des user';
+//         var_dump($this->userparam);
     }
     
     /**
@@ -253,7 +263,9 @@ class UserControler extends Controler {
         
         $dar = $dao->searchGroupByUserId($userid);
         $groupparam = $dar->getRow();    
-        $this->groupparam = $groupparam;               
+        $this->groupparam = $groupparam;
+//         echo 'param du group';        
+//         var_dump($this->groupparam);
     }
 
     /**
@@ -356,19 +368,19 @@ class UserControler extends Controler {
     /**
      * remove a user for a group
      */
-    function removeUserFromGroup() {
+  //   function removeUserFromGroup() {
 
-       $dao = new UserDao(CodexDataAccess::instance());
+//        $dao = new UserDao(CodexDataAccess::instance());
 
-       $dar = $dao->removeUserByGroupId($this->userid, $this->groupid);
+//        $dar = $dao->removeUserByGroupId($this->userid, $this->groupid);
 
-       if(!$dar) {
-           $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_del_u'));
-       }
-       else {
-           $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_del_u'));
-       }
-    }
+//        if(!$dar) {
+//            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_del_u'));
+//        }
+//        else {
+//            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_del_u'));
+//        }
+//     }
 
 
     /**
@@ -405,6 +417,22 @@ class UserControler extends Controler {
         }
     }
    
+    /**
+     * manage the admin_flag value
+     */
+ //    function manageAdminFlag() {
+
+//         if ($this->adminflag == 'A') {
+//             echo $this->adminflag;
+//         }
+//         elseif ($this->adminflag == null) {
+//             echo 'coucou';
+//         }
+//         else {
+//             echo 'bouh';
+//         }
+//     }
+
 
     /**
      * request()
@@ -449,14 +477,12 @@ class UserControler extends Controler {
         if ($this->userid) {
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
+            
         }
 
         if ($this->task) {
 
-            if ($this->task == 'remove_user_from_group') {
-                $this->removeUserFromGroup();
-            }
-            elseif($this->task == 'add_user_to_group') {
+          if($this->task == 'add_user_to_group') {
                 $this->addUserToGroup();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);

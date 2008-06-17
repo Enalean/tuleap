@@ -66,10 +66,16 @@ class UserEditDisplay extends AdminEditDisplay {
     function displayHeader() {
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
         
-        session_require(array('group'=>'1','admin_flas'=>'A'));
+        session_require(array('group'=>'1','admin_flag'=>'A'));
         
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
-        parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam['user_name'].' (ID '.$this->userparam['user_id'].')</h2>');
+
+        if(isset($this->userparam['user_id'])) {
+  parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam['user_name'].' (ID '.$this->userparam['user_id'].')</h2>');
+        }
+        elseif(count($this->userparam) == 1 ) {
+            parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam[0]['user_name'].' (ID '.$this->userparam[0]['user_id'].')</h2>');
+        }
         ?>
             <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
                  
@@ -327,7 +333,8 @@ class UserEditDisplay extends AdminEditDisplay {
     function displayCurrentGroups() {
 
         //clic on user link
-        if(isset($this->userparam['user_id'])) {
+        
+        if(isset($this->userparam['user_id']) || count($this->userparam) == 1) {
 
             print '<p>';
   
@@ -335,47 +342,33 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '</p>';
 
-            print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;task=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
 
-            print '<form action="index.php" method="post">';
+            print '<table  cellspacing=0 cellpadding=0 border="1">';
 
-            print '<input type="checkbox" name="adminflag" value="A"';
-            if ($this->groupparam['admin_flags']) print 'checked="checked"';
-            print ' />';
-            
-            print $GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
-            
-            
-            print '<input name="Update_Group" value="Update" type="submit">';
-            print '</form>';
-            
-            print '<hr>';
-        }
-        // select one user
-        elseif(count($this->userparam) == 1) {
-                        
-            print '<p>';
-            
-            print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','current_groups').'</h3>';
-            
-            print '</p>';
-            
-            print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
-            print '<a href="?user_id='.$this->userparam['user_id'].'&amp;task=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
-            
-            print '<form action="index.php" method="post">';
-            
-            print '<input type="checkbox" name="adminflag" value="A"';
-            if ($this->groupparam['admin_flags']) print 'checked="checked"';
-            print ' />';
-            
-            print $GLOBALS['Language']->getText('admin_usergroup','admin_flags').':<br />';
-            
-            
-            print '<input name="Update_Group" value="Update" type="submit">';
-            print '</form>';
-            
+            print '<tr>';
+
+            print '<td>Group Name</td>';
+
+            print '<td>Remove from group</td>';
+
+            print '<td>Administration Flag</td>';
+
+            print '</tr>';
+
+
+            print '<tr>';
+
+            print '<td><a href="/admin/groupedit.php?group_id='.$this->groupparam['group_id'].'">'.$this->groupparam['group_name'].'</a></td>';
+
+            print '<td><a href="/project/admin/?group_id='.$this->groupparam['group_id'].'">Remove User from group</a></td>';
+
+            print '<td><a href="/project/admin/userperms.php?group_id='.$this->groupparam['group_id'].'">Administration Flag</a></td>';
+
+            print '</tr>';
+
+
+            print '</table>';
+
             print '<hr>';
         }
         //select several user => display nothing
@@ -416,7 +409,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<input type="hidden" name="task" value="add_user_to_group" />';
 
-            print '<input type="hidden" name="user_id" value="'.$this->userparam['user_id'].'" />';
+            print '<input type="hidden" name="user_id" value="'.$this->userparam[0]['user_id'].'" />';
             
             print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
             

@@ -426,19 +426,6 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
     }
 
     /**
-     * remove user by group id
-     *
-     */
-    function removeUserByGroupId($userid, $groupid) {
-
-        $sql = 'DELETE FROM user_group '.
-               'WHERE user_id='.$userid.
-               ' AND group_id='.$groupid;
-
-        return $this->update($sql);
-    }
-
-    /**
      * search user in the user_group table
      *
      */
