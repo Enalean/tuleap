@@ -349,7 +349,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
                 $email = null;
 
                 print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
- <td align="center" class="group_active"><a href="#">'.$group_name.'</a></td>
+ <td align="center"><a href="/admin/groupedit.php?group_id='.$iGroup.'">'.$group_name.'</a></td>
  <td>'.$unix_group_name.'</td>
  <td >'.$status.'</td>
  <td>'.$name.'</td>
