@@ -64,8 +64,20 @@ class CLI_Action_Tracker_AddAttachedFile extends CLI_Action {
                     $loaded_params['soap']['filetype'] = '';
                 }
                 fclose($fh);
+
+                // sort the parameters in the right order
+                uksort($loaded_params['soap'], array($this, "sort_parameters"));
+
             }
         }
-    }}
+    }
+
+    function sort_parameters($p1, $p2) {
+        $order = array('group_id', 'group_artifact_id', 'artifact_id', 'encoded_data', 'description', 'filename', 'filetype');
+        $order_flip = array_flip($order);
+        return $order_flip[$p1] > $order_flip[$p2];
+    }
+
+}
 
 ?>
