@@ -2702,13 +2702,12 @@ function artifactfiles_to_soap($attachedfiles_arr, $set_bin_data = false) {
     $rows=db_numrows($attachedfiles_arr);
     for ($i=0; $i<$rows; $i++) {
         $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
-        $encoded_data = base64_encode($bin_data);
         $return[] = array(
             'id' => db_result($attachedfiles_arr, $i, 'id'),
             'artifact_id' => db_result($attachedfiles_arr, $i, 'artifact_id'),
             'filename' => db_result($attachedfiles_arr, $i, 'filename'),
             'description' => SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description')),
-            'bin_data' => ($set_bin_data?$encoded_data:null),
+            'bin_data' => ($set_bin_data?$bin_data:null),
             'filesize' => db_result($attachedfiles_arr, $i, 'filesize'),
             'filetype' => db_result($attachedfiles_arr, $i, 'filetype'),
             'adddate' => db_result($attachedfiles_arr, $i, 'adddate'),
@@ -2729,8 +2728,7 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
         $file['description'] = SimpleSanitizer::unsanitize(db_result($attachedfiles_arr, $i, 'description'));
         if ($set_bin_data) {
             $bin_data = db_result($attachedfiles_arr, $i, 'bin_data');
-            $encoded_data = base64_encode($bin_data);
-            $file['bin_data'] = $encoded_data;
+            $file['bin_data'] = $bin_data;
         }
         $file['filesize'] = db_result($attachedfiles_arr, $i, 'filesize');
         $file['filetype'] = db_result($attachedfiles_arr, $i, 'filetype');
@@ -2961,7 +2959,7 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
             return new SoapFault(get_artifact_file_fault,$af->getErrorMessage(),'addArtifactFile');
         }
 
-        $bin_data = addslashes(base64_decode($encoded_data));
+        $bin_data = base64_decode($encoded_data);
 
         $filesize = strlen($bin_data);
 

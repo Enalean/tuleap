@@ -64,7 +64,7 @@ class CLI_Action_Tracker_AttachedFile extends CLI_Action {
         return true;
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        $file = $soap_result['bin_data'];
+        $file = $soap_result->bin_data;
     
         if ($loaded_params['others']['output']) {
             $output = $loaded_params['others']['output'];
