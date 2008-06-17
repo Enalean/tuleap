@@ -30,7 +30,7 @@
 class AdminDisplay {
 
     function __construct() {
-
+        $GLOBALS['Language']->loadLanguageMsg('admin/admin');
     }
 
     function displayHeader($header) {

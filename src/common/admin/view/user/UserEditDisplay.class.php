@@ -53,7 +53,7 @@ class UserEditDisplay extends AdminEditDisplay {
      */
 
     function __construct($userparam, $groupparam, $task) {
-    
+        parent::__construct();
         $this->userparam = $userparam;
         $this->groupparam = $groupparam;
         $this->task = $task;
@@ -335,7 +335,6 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '</p>';
 
-
             print '<a href="groupedit.php?group_id='.$this->groupparam['group_id'].'"><b>'.$this->groupparam['group_name'].'</b></a>&nbsp;&nbsp;&nbsp;';
             print '<a href="?user_id='.$this->userparam['user_id'].'&amp;task=remove_user_from_group&amp;group_id='.$this->groupparam['group_id'].'">['.$GLOBALS['Language']->gettext('admin_usergroup','remove_ug').']</a><br />';
 
@@ -395,6 +394,10 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<form action="index.php" method="post">';
             
             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
+
+            print '<input type="hidden" name="task" value="add_user_to_group" />';
+
+            print '<input type="hidden" name="user_id" value="'.$this->userparam['user_id'].'" />';
             
             print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
             
@@ -410,6 +413,10 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<form action="index.php" method="post">';
             
             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
+
+            print '<input type="hidden" name="task" value="add_user_to_group" />';
+
+            print '<input type="hidden" name="user_id" value="'.$this->userparam['user_id'].'" />';
             
             print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
             

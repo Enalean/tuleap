@@ -371,7 +371,43 @@ class UserControler extends Controler {
            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_del_u'));
        }
     }
+
+
+    /**
+     * add user to a group
+     */
+    function addUserToGroup() {
+        
+        $dao = new UserDao(CodexDataAccess::instance());
+
+        if(!$this->userid) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nouid'));
+        }        
+        elseif(!$this->groupid) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nogid'));
+        }
+        else {
+            $dar = $dao->searchUserInUserGroup($this->userid, $this->groupid);
+
+            if (!$dar || db_numrows($dar) < 1) {
+                $daradduser = $dao->addUserToGroup($this->userid, $this->groupid);
+
+                if (!$daradduser || db_affected_rows($daradduser) < 1) {
+
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));
+                } 
+                else {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_add_ug'));
+                    
+                }
+            } 
+            else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_member',$this->groupid));
+            }
+        }
+    }
    
+
     /**
      * request()
      */
@@ -421,6 +457,9 @@ class UserControler extends Controler {
 
             if ($this->task == 'remove_user_from_group') {
                 $this->removeUserFromGroup();
+            }
+            elseif($this->task == 'add_user_to_group') {
+                $this->addUserToGroup();
             }
         }
 

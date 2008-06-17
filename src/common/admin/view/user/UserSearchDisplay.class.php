@@ -116,6 +116,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function __construct($userIterator, $offset, $nbrows, $nbuser, $shortcut, $username, $group, $status) {
         
+        parent::__construct(); 
         $this->userIterator = $userIterator;
         $this->offset = $offset;
         $this->nbrows = $nbrows;

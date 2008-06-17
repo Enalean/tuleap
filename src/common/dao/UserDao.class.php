@@ -438,6 +438,31 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         return $this->update($sql);
     }
 
+    /**
+     * search user in the user_group table
+     *
+     */
+    function searchUserInUserGroup($userid, $groupid) {
+
+        $sql = 'SELECT user_id FROM user_group '.
+               'WHERE user_id='.$userid.
+               ' AND group_id='.$groupid;
+
+        return $this->update($sql);
+    }
+
+    /**
+     * add user to group
+     *
+     */
+    function addUserToGroup($userid, $groupid) {
+
+        $sql = 'INSERT INTO user_group (user_id,group_id) '.
+               'VALUES ('.$userid.','.$groupid.')';
+
+        return $this->update($sql);
+    }
+
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);

@@ -31,7 +31,7 @@ require_once('common/admin/view/AdminDisplay.class.php');
 class AdminSearchDisplay extends AdminDisplay {
     
     function __construct() {
-        
+        parent::__construct();
     }
 
     /**
