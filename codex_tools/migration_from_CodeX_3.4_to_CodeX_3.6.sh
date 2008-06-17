@@ -709,6 +709,7 @@ todo "You can create your own reports for each (template) tracker via the tracke
 todo "To use the Gannt graph with the task tracker, you will have to :
 todo "  - rename the old "end date" field into a "close date" or so on.
 todo "  - create an "end date" and a "due date" field for the task tracker
+todo "  - create a "progress" field, type INT and display TextField for the task tracker, with value between 0-100 (percentage of completion) 
 todo "
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"

@@ -1704,7 +1704,7 @@ width="14.5cm" />
       pas un logiciel de gestion de projet comme CA-SuperProject,
       MS-Project ou d'autres logiciels puissants et complexes qu'on
       peut trouver sur le marché. L'outil de suivi de tâches n'est pas capable de
-      construire un diagramme de Gantt ou un Pert et il n'a pas non
+      construire un diagramme de Pert et il n'a pas non
       plus de fonction de planification. Il s'agit plutôt d'un outil
       qui permet aux membres du projet de suivre l'évolution de leur
       tâche et le temps qu'ils y consacrent ou bien encore de suivre
@@ -3471,7 +3471,8 @@ width="14.5cm" />
 		  </listitem>
 		  <listitem>
 			<para><emphasis role="bold">Progression</emphasis>: Pourcentage 
-			d'achèvement de la tache.</para>
+			d'achèvement de la tache. Ce champ doit être de type entier, son mode d'affichage
+			un champ texte, et ses valeurs doivent être comprises entre 0 et 100.</para>
 		  </listitem>
 		  <listitem>
 			<para><emphasis role="bold">Information à droite des barres</emphasis>: Texte affiché 

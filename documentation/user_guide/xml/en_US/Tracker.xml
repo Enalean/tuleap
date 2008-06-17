@@ -1620,7 +1620,7 @@ width="14.5cm" />
       <para>The CodeX Task tracker is a task manager and not a project
       management software like CA-SuperProject, MS-Project or other
       powerful and complex desktop products available on the
-      market. The CodeX Task Tracker cannot build a Gantt or Pert
+      market. The CodeX Task Tracker cannot build a Pert
       chart, it doesn&#39;t have any planning capabilities. It is
       rather a time sheet tool which allows project members to track
       their time and manage other things like weekly TODO list for
@@ -3292,10 +3292,9 @@ width="14.5cm" />
 			<para><emphasis role="bold">Summary</emphasis>: Text to be displayed 
 			on the gantt left, and in the bar tooltip.</para>
 		  </listitem>
-
 		  <listitem>
 			<para><emphasis role="bold">Progress</emphasis>:
-			Percentage of completion of the task.</para>
+			Percentage of completion of the task. Must be an integer field display in a Text Field, with values between 0-100.</para>
 		  </listitem>
 		  <listitem>
 			<para><emphasis role="bold">Informations at the right of the bars</emphasis>:
