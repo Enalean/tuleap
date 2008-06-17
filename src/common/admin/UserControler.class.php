@@ -187,7 +187,6 @@ class UserControler extends Controler {
         //valid parameters
 
         //valid limit
-
         $validLimit = new Valid('limit');
         $validLimit->addRule(new Rule_Int());
                 
@@ -199,7 +198,6 @@ class UserControler extends Controler {
         }
 
         //valid nbtodisplay
-
         $validNbToDisplay = new Valid('nbtodisplay');
         $validNbToDisplay->addRule(new Rule_Int());
 
@@ -460,6 +458,8 @@ class UserControler extends Controler {
             }
             elseif($this->task == 'add_user_to_group') {
                 $this->addUserToGroup();
+                $this->setUserParam($this->userid);
+                $this->setGroupParam($this->userid);
             }
         }
 
