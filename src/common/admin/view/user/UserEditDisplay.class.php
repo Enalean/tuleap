@@ -342,7 +342,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '</p>';
 
 
-            print '<table  cellspacing=0 cellpadding=0 border="1">';
+            print '<table  cellspacing=0 cellpadding=5 border="1">';
 
             print '<tr>';
 

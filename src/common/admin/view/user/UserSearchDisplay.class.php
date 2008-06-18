@@ -169,7 +169,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displayHeader() {
 
-        $GLOBALS['Language']->loadLanguageMsg('admin/admin');
+        //  $GLOBALS['Language']->loadLanguageMsg('admin/admin');
 
         session_require(array('group'=>'1','admin_flas'=>'A'));
 
