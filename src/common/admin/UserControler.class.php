@@ -199,7 +199,6 @@ class UserControler extends Controler {
                 
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
-            echo 'coucou1';
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
@@ -211,27 +210,19 @@ class UserControler extends Controler {
 
         if($request->valid($validNbToDisplay)) {
             $nbtodisplay = $request->get('nbtodisplay');
-            echo 'coucou2';
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-        //        if ($limit != '') {
-        //    $this->limit = $limit;
-        //    echo 'coucou3';
-        // }
         if ($nbtodisplay != '') {
             $this->limit = $nbtodisplay;
-            echo 'coucou4';
         }
         elseif ($limit != '') {
             $this->limit = $limit;
-            echo 'coucou3';
         }
         else {
             $this->limit = 50;
-            echo 'coucou5';
         }
     }
  

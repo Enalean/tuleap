@@ -169,8 +169,6 @@ class UserSearchDisplay extends AdminSearchDisplay {
      */
     function displayHeader() {
 
-        //  $GLOBALS['Language']->loadLanguageMsg('admin/admin');
-
         session_require(array('group'=>'1','admin_flas'=>'A'));
 
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_userlist','title')));
@@ -233,7 +231,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<td align="center" width=33%>';
 
         print 'Search (Login Name, Real Name):';
-        print '<form name="usersearch" action="index.php?offset=0&limit='.$this->nbrows.'" method="POST">';
+        print '<form name="usersearch" action="index.php" method="POST">';
         
         print '<input type="text" class="autocompletion" name="user_name_search" id="user_name" />';
 
