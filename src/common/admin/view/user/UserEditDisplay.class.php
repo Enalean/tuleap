@@ -346,11 +346,11 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<tr>';
 
-            print '<td>Group Name</td>';
+            print '<td>'.$GLOBALS['Language']->getText('admin_groupedit', 'grp_name').'</td>';
 
-            print '<td>Remove from group</td>';
+            print '<td>'.$GLOBALS['Language']->getText('admin_usergroup', 'remove_ug').'</td>';
 
-            print '<td>Administration Flag</td>';
+            print '<td>'.$GLOBALS['Language']->getText('admin_usergroup', 'admin_flags').'</td>';
 
             print '</tr>';
 
@@ -360,9 +360,9 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<td><a href="/admin/groupedit.php?group_id='.$gparam['group_id'].'">'.$gparam['group_name'].'</a></td>';
 
-            print '<td><a href="/project/admin/?group_id='.$gparam['group_id'].'">Remove User from group</a></td>';
+            print '<td><a href="/project/admin/?group_id='.$gparam['group_id'].'">'.$GLOBALS['Language']->getText('admin_usergroup', 'remove_ug').'</a></td>';
 
-            print '<td><a href="/project/admin/userperms.php?group_id='.$gparam['group_id'].'">Administration Flag</a></td>';
+            print '<td><a href="/project/admin/userperms.php?group_id='.$gparam['group_id'].'">'.$GLOBALS['Language']->getText('admin_usergroup', 'admin_flags').'</a></td>';
 
             print '</tr>';
 
