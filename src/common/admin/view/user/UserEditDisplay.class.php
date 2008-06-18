@@ -332,13 +332,7 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayCurrentGroups() {
 
-        //clic on user link
-
-        echo '<pre>';
-        var_dump($this->groupparam);
-        echo '</pre>';
-
-        
+        //select one user
         if(isset($this->userparam['user_id']) || count($this->userparam) == 1) {
 
             print '<p>';

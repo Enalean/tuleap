@@ -258,8 +258,7 @@ class UserControler extends Controler {
             $userid = implode(",", $userid);
         }
         
-        $dar = $dao->searchGroupByUserId($userid);
-        $groupparam = $dar;
+        $groupparam = $dao->searchGroupByUserId($userid);
         $this->groupparam = $groupparam;
     }
 

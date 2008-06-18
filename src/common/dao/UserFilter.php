@@ -37,7 +37,8 @@ class UserNameFilter implements iStatement {
     private $name;
 
     function __construct($name) {
-        $this->name = $name;
+        $cleanname = db_escape_string($name);
+        $this->name = $cleanname;
     }
 
     function getJoin() {}
@@ -62,7 +63,8 @@ class UserGroupFilter implements iStatement {
     private $group;
 
     function __construct($group) {
-        $this->group = $group;
+        $cleangroup = db_escape_string($group);
+        $this->group = $cleangroup;
     }
 
     function getJoin() {
@@ -91,7 +93,8 @@ class UserStatusFilter implements iStatement {
     private $status;
 
     function __construct($status) {
-        $this->status = $status;
+        $cleanstatus = db_escape_string($status);
+        $this->status = $cleanstatus;
     }
 
     function getJoin() {}
@@ -117,7 +120,8 @@ class UserShortcutFilter implements iStatement {
     private $shortcut;
 
     function __construct($shortcut) {
-        $this->shortcut = $shortcut;
+        $cleanshortcut = db_escape_string($shortcut);
+        $this->shortcut = $cleanshortcut;
     }
 
     function getJoin() {}

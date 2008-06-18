@@ -40,7 +40,7 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-     * Searches information about user and user's group by UserId
+     * Searches information about user and user's group(s) by UserId
      * @return DataAccessResult
      */
     function searchGroupByUserId($userId) {
@@ -373,7 +373,10 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      *
      */
     function & searchUserByFilter($ca, $offset, $limit) {
-        
+     
+        $cleanoffset = db_escape_int($offset);
+        $cleanlimit = db_escape_int($limit);
+   
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 
@@ -420,7 +423,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         }
    
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
-        $sql .= ' LIMIT '.$offset.', '.$limit;
+        $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
 
         return $this->retrieve($sql);
     }
@@ -431,9 +434,9 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      */
     function searchUserInUserGroup($userid, $groupid) {
 
-        $sql = 'SELECT user_id FROM user_group '.
-               'WHERE user_id='.$userid.
-               ' AND group_id='.$groupid;
+        $sql = sprintf("SELECT user_id FROM user_group WHERE user_id=%d AND group_id=%d",
+            $this->da->quoteSmart($userid),
+            $this->da->quoteSmart($groupid));
 
         return $this->update($sql);
     }
@@ -444,8 +447,9 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      */
     function addUserToGroup($userid, $groupid) {
 
-        $sql = 'INSERT INTO user_group (user_id,group_id) '.
-               'VALUES ('.$userid.','.$groupid.')';
+        $sql = sprintf("INSERT INTO user_group (user_id,group_id) VALUES (%d, %d)",
+                       $this->da->quoteSmart($userid),
+                       $this->da->quoteSmart($groupid));
 
         return $this->update($sql);
     }
