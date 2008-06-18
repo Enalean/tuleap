@@ -147,7 +147,7 @@ $server->register(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'package_id'=>'xsd:int'),
-    array('getPackagesResponse'=>'tns:ArrayOfFRSRelease'),
+    array('getReleasesResponse'=>'tns:ArrayOfFRSRelease'),
     $uri,
     $uri.'#getReleases',
     'rpc',
@@ -231,7 +231,7 @@ $server->register(
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int'
         ),
-    array('addFile'=>'xsd:string'),
+    array('addFile'=>'xsd:int'),
     $uri,
     $uri.'#addFile',
     'rpc',
@@ -257,7 +257,7 @@ $server->register(
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int'
         ),
-    array('addUploadedFile'=>'xsd:string'),
+    array('addUploadedFile'=>'xsd:int'),
     $uri,
     $uri.'#addUploadedFile',
     'rpc',
