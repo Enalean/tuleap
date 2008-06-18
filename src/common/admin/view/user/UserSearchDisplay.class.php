@@ -320,7 +320,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
 <td align="center"><input type="checkbox" name="user_id[]" value="'.$u['user_id'].'" align="center"/></td>
 <td><a href="?user_id='.$u['user_id'].'">'.$u['user_name'].'</a></td>
 <td>'.$u['realname'].'</td>
-<td><a href="#">[DevProfil]</a></td>
+<td><a href="/users/'.$u['user_name'].'">[DevProfil]</a></td>
 <td>';
 
             if ($u['status'] == 'A') print $GLOBALS['Language']->getText('admin_userlist','active');
