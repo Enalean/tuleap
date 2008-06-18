@@ -384,19 +384,19 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
         if ($pkg_fact->userCanCreate($group_id)) {
             // we check that the package name don't already exist
             if ($pkg_fact->isPackageNameExist($package_name, $group_id)) {
-                return new SoapFault('', 'Package name already exists in this project', 'addPackage');
+                return new SoapFault(invalid_package_fault, 'Package name already exists in this project', 'addPackage');
             } else {
                 $dao =& $pkg_fact->_getFRSPackageDao();
                 $dar = $dao->create($group->getID(), $package_name, $status_id, $rank, $approve_license);
                 if (!$dar) {
-                    return new SoapFault('', $dar->isError(), 'addPackage');
+                    return new SoapFault(invalid_package_fault, $dar->isError(), 'addPackage');
                 } else {
                     // if there is no error, $dar contains the package_id
                     return $dar;
                 }
             }
         } else {
-            return new SoapFault('','User is not allowed to create a package','addPackage');
+            return new SoapFault(invalid_package_fault,'User is not allowed to create a package','addPackage');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addPackage');
@@ -526,19 +526,19 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
         $release_fact = new FRSReleaseFactory();
         if ($release_fact->userCanCreate($group_id)) {
             if ($release_fact->isReleaseNameExist($name, $package_id)) {
-                return new SoapFault('', 'Release name already exists in this package', 'addRelease');
+                return new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease');
             } else {
                 $dao =& $release_fact->_getFRSReleaseDao();
                 $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 0, $release_date);
                 if (!$dar) {
-                    return new SoapFault('', $dar->isError(), 'addRelease');
+                    return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
                 } else {
                     // if there is no error, $dar contains the release_id
                     return $dar;
                 }
             }
         } else {
-            return new SoapFault('', 'User is not allowed to create a release', 'addRelease');
+            return new SoapFault(invalid_release_fault, 'User is not allowed to create a release', 'addRelease');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addRelease');
@@ -757,14 +757,14 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             $tmpname = tempnam("/tmp", "codex_soap_frs");
             $fh = fopen($tmpname, "wb");
             if (!$fh) {
-                return new SoapFault('','Could not create temporary file in directory /tmp', 'addFile');
+                return new SoapFault(invalid_file_fault,'Could not create temporary file in directory /tmp', 'addFile');
             }
             fwrite($fh, base64_decode($base64_contents));
             fclose($fh);
             
             // move the file in the incoming dir
             if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
-                return new SoapFault('','Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
+                return new SoapFault(invalid_file_fault,'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
             }
             
             // call addUploadedFile function
@@ -772,7 +772,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id);
             
         } else {
-            return new SoapFault('', 'User is not allowed to add a file', 'addFile');
+            return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addFile');
@@ -831,15 +831,15 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
                 $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
                 if (! $file_id) {
-                    return new SoapFault('',$file_fact->getErrorMessage(),'addUploadedFile');
+                    return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
                 } else {
                     return $file_id;
                 }
             } else {
-                return new SoapFault('', 'Filename "'.$filename.'" already exists', 'addUploadedFile');
+                return new SoapFault(invalid_file_fault, 'Filename "'.$filename.'" already exists', 'addUploadedFile');
             }
         } else {
-            return new SoapFault('', 'User is not allowed to add a file', 'addUploadedFile');
+            return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addUploadedFile');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addUploadedFile');
@@ -875,7 +875,7 @@ function getUploadedFiles($sessionKey, $group_id) {
             $file_names = $file_fact->getUploadedFileNames();
             return $file_names;
         } else {
-            return new SoapFault('', 'User not allowed to see the uploaded files', 'getUploadedFiles');
+            return new SoapFault(invalid_file_fault, 'User not allowed to see the uploaded files', 'getUploadedFiles');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getUploadedFiles');
