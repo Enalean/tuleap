@@ -245,9 +245,6 @@ class UserControler extends Controler {
         }
         
         $this->userparam = $userparam;
-
-//         echo 'param des user';
-//         var_dump($this->userparam);
     }
     
     /**
@@ -262,10 +259,8 @@ class UserControler extends Controler {
         }
         
         $dar = $dao->searchGroupByUserId($userid);
-        $groupparam = $dar->getRow();    
+        $groupparam = $dar;
         $this->groupparam = $groupparam;
-//         echo 'param du group';        
-//         var_dump($this->groupparam);
     }
 
     /**
@@ -365,23 +360,6 @@ class UserControler extends Controler {
         }
      }
 
-    /**
-     * remove a user for a group
-     */
-  //   function removeUserFromGroup() {
-
-//        $dao = new UserDao(CodexDataAccess::instance());
-
-//        $dar = $dao->removeUserByGroupId($this->userid, $this->groupid);
-
-//        if(!$dar) {
-//            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_del_u'));
-//        }
-//        else {
-//            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_del_u'));
-//        }
-//     }
-
 
     /**
      * add user to a group
@@ -416,22 +394,6 @@ class UserControler extends Controler {
             }
         }
     }
-   
-    /**
-     * manage the admin_flag value
-     */
- //    function manageAdminFlag() {
-
-//         if ($this->adminflag == 'A') {
-//             echo $this->adminflag;
-//         }
-//         elseif ($this->adminflag == null) {
-//             echo 'coucou';
-//         }
-//         else {
-//             echo 'bouh';
-//         }
-//     }
 
 
     /**

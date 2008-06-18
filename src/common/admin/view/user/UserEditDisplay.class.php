@@ -333,6 +333,11 @@ class UserEditDisplay extends AdminEditDisplay {
     function displayCurrentGroups() {
 
         //clic on user link
+
+        echo '<pre>';
+        var_dump($this->groupparam);
+        echo '</pre>';
+
         
         if(isset($this->userparam['user_id']) || count($this->userparam) == 1) {
 
@@ -356,15 +361,18 @@ class UserEditDisplay extends AdminEditDisplay {
             print '</tr>';
 
 
+            foreach($this->groupparam as $gparam) {
             print '<tr>';
 
-            print '<td><a href="/admin/groupedit.php?group_id='.$this->groupparam['group_id'].'">'.$this->groupparam['group_name'].'</a></td>';
+            print '<td><a href="/admin/groupedit.php?group_id='.$gparam['group_id'].'">'.$gparam['group_name'].'</a></td>';
 
-            print '<td><a href="/project/admin/?group_id='.$this->groupparam['group_id'].'">Remove User from group</a></td>';
+            print '<td><a href="/project/admin/?group_id='.$gparam['group_id'].'">Remove User from group</a></td>';
 
-            print '<td><a href="/project/admin/userperms.php?group_id='.$this->groupparam['group_id'].'">Administration Flag</a></td>';
+            print '<td><a href="/project/admin/userperms.php?group_id='.$gparam['group_id'].'">Administration Flag</a></td>';
 
             print '</tr>';
+
+            }
 
 
             print '</table>';
