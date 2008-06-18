@@ -122,10 +122,7 @@ class GroupDao extends DataAccessObject {
 
             $sql .= $where;
             $sql .= ' ORDER BY groups.group_id,groups.group_name';
-
-
         }
-
         return $this->retrieve($sql);
      }
 

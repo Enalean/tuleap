@@ -429,6 +429,20 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
     }
 
     /**
+     * search group by id
+     * This function is used to check the existance of a group before adding user in it
+     *
+     */
+    function searchGroupById($groupid) {
+
+        $sql = sprintf("SELECT * FROM groups WHERE group_id=%d",
+            $this->da->quoteSmart($groupid));
+
+        return $this->retrieve($sql);
+    }
+
+
+    /**
      * search user in the user_group table
      *
      */

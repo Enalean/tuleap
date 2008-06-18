@@ -374,26 +374,35 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nogid'));
         }
         else {
-            $dar = $dao->searchUserInUserGroup($this->userid, $this->groupid);
 
-            if (!$dar || db_numrows($dar) < 1) {
-                $daradduser = $dao->addUserToGroup($this->userid, $this->groupid);
+            $dao->searchGroupById($this->groupid);
 
-                if (!$daradduser || db_affected_rows($daradduser) < 1) {
-
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));
+            //if the doesn't group exist
+            if(!$dao || $dao->getFoundRows() <1) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_userlist','error_noadd'));
+            }
+            else {
+                $dao->searchUserInUserGroup($this->userid, $this->groupid);
+                
+                //if user doesn't belong to this group
+                if (!$dao || $dao->getFoundRows() < 1) {
+                    $dao->addUserToGroup($this->userid, $this->groupid);
+                
+                    //if there is problem in adding user to this group
+                    if (!$dao || $dao->getFoundRows() < 1) {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));
+                    } 
+                    else {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_add_ug'));
+                    }
                 } 
                 else {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_add_ug'));
-                    
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_member',$this->groupid));
                 }
-            } 
-            else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_member',$this->groupid));
             }
         }
     }
-
+    
 
     /**
      * request()
@@ -438,7 +447,6 @@ class UserControler extends Controler {
         if ($this->userid) {
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
-            
         }
 
         if ($this->task) {
