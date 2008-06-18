@@ -54,7 +54,7 @@ $server->register(
     'getGroupByName',
     array('sessionKey'=>'xsd:string',
         'unix_group_name'=>'xsd:string'),
-    array('return'=>'tns:ArrayOfGroup'),
+    array('return'=>'tns:Group'),
     $uri,
     $uri.'#getGroupByName',
     'rpc',
