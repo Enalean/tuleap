@@ -60,6 +60,8 @@ class CLI_Action_Tracker_List extends CLI_Action {
     }
     function before_soapCall(&$loaded_params) {
         $loaded_params['user_id'] = $GLOBALS['soap']->getSessionUserID();
+        // sort the parameters in the right order
+        uksort($loaded_params['soap'], array($this, "sort_parameters"));
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!is_object($soap_result) || $soap_result->total_artifacts_number == 0) {
@@ -68,6 +70,13 @@ class CLI_Action_Tracker_List extends CLI_Action {
             if (!$loaded_params['others']['quiet']) $this->show_output($soap_result, $fieldnames);
         }
     }
+
+    function sort_parameters($p1, $p2) {
+        $order = array('group_id', 'group_artifact_id', 'criteria', 'max_rows', 'offset');
+        $order_flip = array_flip($order);
+        return $order_flip[$p1] > $order_flip[$p2];
+    }
+
 }
 
 ?>

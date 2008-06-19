@@ -119,7 +119,7 @@ class ArtifactFactory extends Error {
 		global $Language, $art_field_fact;
         
         $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
-        
+
         $artifacts = array();
 		if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
@@ -129,45 +129,45 @@ class ArtifactFactory extends Error {
             
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
             foreach ($criteria as $c => $cr) {
-				$af = $art_field_fact->getFieldFromName($cr['field_name']);
+				$af = $art_field_fact->getFieldFromName($cr->field_name);
 				if (!$af || !is_object($af)) {
-                    $this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
+                    $this->setError('Cannot Get ArtifactField From Name : '.$cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
                     $this->setError($art_field_fact->getErrorMessage());
 	        	    return false;
                 }
                 
-                if ($af->isDateField() && ($cr['field_name'] != 'open_date' && $cr['field_name'] != 'close_date')) {
+                if ($af->isDateField() && ($cr->field_name != 'open_date' && $cr->field_name != 'close_date')) {
                     // The SQL query expects a timestamp, whereas the given date is in YYYY-MM-DD format
-                    $cr['field_value'] = strtotime($cr['field_value']);
+                    $cr->field_value = strtotime($cr->field_value);
                 }
                 
                 $operator = "=";    // operator by default
-				if (isset($cr['operator']) && in_array($cr['operator'], $ACCEPTED_OPERATORS)) {
-                    $operator = $cr['operator'];
+				if (isset($cr->operator) && in_array($cr->operator, $ACCEPTED_OPERATORS)) {
+                    $operator = $cr->operator;
                 }
                 
 				if ($af->isStandardField()) {
-                    if ($cr['operator'] == '=' && ($cr['field_name'] == 'open_date' || $cr['field_name'] == 'close_date')) {
+                    if ($cr->operator == '=' && ($cr->field_name == 'open_date' || $cr->field_name == 'close_date')) {
                         // special case for open_date and close_date with operator = : the hours, minutes, and seconds are stored, so we have to compare an interval
-                        list($year,$month,$day) = util_date_explode($cr['field_value']);
+                        list($year,$month,$day) = util_date_explode($cr->field_value);
                         $time_end = mktime(23, 59, 59, $month, $day, $year);
-                        $sql_where .= " AND (a.".$cr['field_name']." >= '".strtotime($cr['field_value'])."')";
-                        $sql_where .= " AND (a.".$cr['field_name']." <= '".$time_end."')";
+                        $sql_where .= " AND (a.".$cr->field_name." >= '".strtotime($cr->field_value)."')";
+                        $sql_where .= " AND (a.".$cr->field_name." <= '".$time_end."')";
                     } else {
                         if ($af->isDateField()) {
-                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '".strtotime($cr['field_value'])."')";
+                            $sql_where .= " AND (a.".$cr->field_name." ".$operator." '".strtotime($cr->field_value)."')";
                         } else {
-                            $sql_where .= " AND (a.".$cr['field_name']." ".$operator." '". db_es($cr['field_value']) ."')";
+                            $sql_where .= " AND (a.".$cr->field_name." ".$operator." '". db_es($cr->field_value) ."')";
                         }
                     }
 				} else {
                     $sql_select .= ", afv".$cpt_criteria.".valueInt ";
                     $sql_from .= ", artifact_field af".$cpt_criteria.", artifact_field_value afv".$cpt_criteria." ";
                     $sql_where .= " AND af".$cpt_criteria.".group_artifact_id = agl.group_artifact_id
-                                    AND (af".$cpt_criteria.".field_name = '".$cr['field_name']."' 
-                                    AND afv".$cpt_criteria.".".$af->getValueFieldName()." ".$operator." '".$cr['field_value']."') 
+                                    AND (af".$cpt_criteria.".field_name = '".$cr->field_name."' 
+                                    AND afv".$cpt_criteria.".".$af->getValueFieldName()." ".$operator." '".$cr->field_value."') 
                                     AND af".$cpt_criteria.".field_id = afv".$cpt_criteria.".field_id 
                                     AND a.artifact_id = afv".$cpt_criteria.".artifact_id ";
 				}        
