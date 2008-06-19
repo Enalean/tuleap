@@ -39,7 +39,7 @@ class CLI_Action_Tracker_DeleteDependency extends CLI_Action {
         }
         return true;
     }
-    function validate_is_dependent_on_artifact_id(&$dependency) {
+    function validate_dependent_on_artifact_id(&$dependency) {
         if (!$dependency) {
             exit_error("You must specify the dependency to delete using the --dependency parameter.");
         }
