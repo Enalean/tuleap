@@ -1198,7 +1198,7 @@ $server->register(
         'cc_list' => 'xsd:string',
         'cc_comment' => 'xsd:string'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#addArtifactCC',
     'rpc',
@@ -1214,7 +1214,7 @@ $server->register(
         'artifact_id' => 'xsd:int',
         'artifact_cc_id' => 'xsd:int'
     ),
-    array(),
+    array('return'=>'xsd:boolean'),
     $uri,
     $uri.'#deleteArtifactCC',
     'rpc',
@@ -3537,8 +3537,10 @@ function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id,
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactCC');
         }
-        if (!$a->addCC($cc_list,$cc_comment,&$changes,false)) {
+        if (! $ok = $a->addCC($cc_list,$cc_comment,&$changes,false)) {
             return new SoapFault(add_cc_fault, 'CC could not be added', 'addArtifactCC');
+        } else {
+        	return $ok;
         }
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'addArtifactCC');
@@ -3588,8 +3590,10 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'deleteArtifactCC');
         }
-        if (!$a->deleteCC($artifact_cc_id,&$changes,false)) {
+        if (! $ok = $a->deleteCC($artifact_cc_id,&$changes,false)) {
             return new SoapFault(delete_cc_fault, 'CC could not be deleted', 'deleteArtifactCC');
+        } else {
+        	return $ok;
         }
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteArtifactCC');
