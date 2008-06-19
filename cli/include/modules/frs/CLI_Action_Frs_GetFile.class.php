@@ -16,11 +16,11 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'release_id',
-            'description'    => '--release_id=<package_id>    Id of the release the returned file belong to.',
+            'description'    => '--release_id=<release_id>    Id of the release the returned file belong to.',
         ));
         $this->addParam(array(
             'name'           => 'file_id',
-            'description'    => '--release_id=<package_id>    Id of the release the returned file belong to.',
+            'description'    => '--file_id=<file_id>    Id of the file.',
         ));
         $this->addParam(array(
             'name'           => 'output',
