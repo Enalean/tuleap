@@ -889,7 +889,7 @@ $server->addFunction(
             'getReleases',
     	    'addRelease',
     	    'getFiles',
-    	    'GetFile',
+    	    'getFile',
     	    'addFile',
     	    'addUploadedFile',
     	    'getUploadedFiles'
