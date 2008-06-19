@@ -240,24 +240,24 @@ class ArtifactFactory extends Error {
         // Filter part
         if (is_array($criteria)) {
             foreach($criteria as $cr) {
-                $af = $art_field_fact->getFieldFromName($cr['field_name']);
+                $af = $art_field_fact->getFieldFromName($cr->field_name);
                 if (!$af || !is_object($af)) {
-                    $this->setError('Cannot Get ArtifactField From Name : '.$cr['field_name']);
+                    $this->setError('Cannot Get ArtifactField From Name : '.$cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
                     $this->setError($art_field_fact->getErrorMessage());
                     return false;
                 }
                 
-                if (! array_key_exists($cr['field_name'], $query_fields)) {
-                    $this->setError('You cannot filter on field '.$cr['field_name'].': it is not a query field for report '.$report_id);
+                if (! array_key_exists($cr->field_name, $query_fields)) {
+                    $this->setError('You cannot filter on field '.$cr->field_name.': it is not a query field for report '.$report_id);
                     return false;
                 }
                 
                 if ($af->isSelectBox() || $af->isMultiSelectBox()) {
-                    $prefs[$cr['field_name']] = explode("," , $cr['field_value']);
+                    $prefs[$cr->field_name] = explode("," , $cr->field_value);
                 } else {
-                    $prefs[$cr['field_name']] = array($cr['field_value']);
+                    $prefs[$cr->field_name] = array($cr->field_value);
                 }
             }
         }
@@ -267,25 +267,25 @@ class ArtifactFactory extends Error {
         $array_morder = array();
         if (is_array($sort_criteria)) {
             foreach($sort_criteria as $sort_cr) {
-                $field_name = $sort_cr['field_name'];
+                $field_name = $sort_cr->field_name;
                 // check if fieldname is ok
-                $af = $art_field_fact->getFieldFromName($sort_cr['field_name']);
+                $af = $art_field_fact->getFieldFromName($sort_cr->field_name);
                 if (!$af || !is_object($af)) {
-                    $this->setError('Cannot Get ArtifactField From Name : '.$sort_cr['field_name']);
+                    $this->setError('Cannot Get ArtifactField From Name : '.$sort_cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
                     $this->setError($art_field_fact->getErrorMessage());
                     return false;
                 }
                 
-                if (! array_key_exists($sort_cr['field_name'], $result_fields)) {
-                    $this->setError('You cannot sort on field '.$sort_cr['field_name'].': it is not a result field for report '.$report_id);
+                if (! array_key_exists($sort_cr->field_name, $result_fields)) {
+                    $this->setError('You cannot sort on field '.$sort_cr->field_name.': it is not a result field for report '.$report_id);
                     return false;
                 }
                 
                 // check if direction is ok
                 $sort_direction = '>'; // by default, direction is ASC
-                if (isset($sort_cr['sort_direction']) && $sort_cr['sort_direction'] == 'DESC') {
+                if (isset($sort_cr->sort_direction) && $sort_cr->sort_direction == 'DESC') {
                     $sort_direction = '<';
                 }
                 
