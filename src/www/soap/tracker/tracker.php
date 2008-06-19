@@ -2153,7 +2153,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
  *              - the artifact creation failed.
  */
 function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
-    global $art_field_fact, $ath; 
+	global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
         $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
@@ -2477,18 +2477,19 @@ function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) 
         } elseif ($at->isError()) {
             return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactCannedResponses');
         }
-        return artifactcannedresponses_to_soap($at->getCannedResponses());
+        return artifactcannedresponses_to_soap($at->getCannedResponses(), $group_artifact_id);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session ','getArtifactCannedResponses');
     }
 }
 
-function artifactcannedresponses_to_soap($cannedresponses_res) {
+function artifactcannedresponses_to_soap($cannedresponses_res, $group_artifact_id) {
     $return = array();
     $rows = db_numrows($cannedresponses_res);
     for ($i=0; $i < $rows; $i++) {
         $return[] = array (
             'artifact_canned_id' => db_result($cannedresponses_res, $i, 'artifact_canned_id'),
+            'group_artifact_id' => $group_artifact_id,
             'title' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'title')),
             'body' => util_unconvert_htmlspecialchars(db_result($cannedresponses_res, $i, 'body'))
         );
