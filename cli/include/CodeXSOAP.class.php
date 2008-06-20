@@ -17,6 +17,8 @@
 class CodeXSOAP extends SoapClient {
 	var $sess_hash;
 	var $wsdl_string;
+	var $proxy_host;
+	var $proxy_port;
 	var $connected;
 	var $session_string;
 	var $session_file;		// Configuration file for this session
@@ -29,6 +31,8 @@ class CodeXSOAP extends SoapClient {
 	 */
 	function CodeXSOAP() {
 		$this->wsdl_string = "";
+		$this->proxy_host = "";
+		$this->proxy_port = 0;
 		$this->connected = false;
 		$this->session_string = "";
 		$this->session_group_id = 0;		// By default don't use a group
@@ -92,14 +96,23 @@ class CodeXSOAP extends SoapClient {
 		}
 		
         try {
-            $LOG->add("CodeXSOAP::Connecting to the server ".$this->wsdl_string."...");
-            parent::__construct($this->wsdl_string, array('trace' => 1));
+        	$log_proxy = '';
+        	if ($this->proxy_host && $this->proxy_port) {
+        		$log_proxy = ', using proxy '.$this->proxy_host.':'.$this->proxy_port;
+        	}
+            $LOG->add("CodeXSOAP::Connecting to the server ".$this->wsdl_string.$log_proxy."...");
+            $options = array('trace' => true);
+            if ($this->proxy_host && $this->proxy_port) {
+            	$options['proxy_host'] = $this->proxy_host;
+            	$options['proxy_port'] = (int)$this->proxy_port;
+            }
+            parent::__construct($this->wsdl_string, $options);
         } catch (SoapFault $fault) {
             exit_error($fault, $this->faultcode);
 		}
 		$LOG->add("CodeXSOAP::Connected!");
 		$this->connected = true;
-        
+		
 	}
 	
 	/** 
@@ -139,6 +152,18 @@ class CodeXSOAP extends SoapClient {
 		$this->wsdl_string = $wsdl;
 	}
 	
+	function setProxy($proxy) {
+		$arr_proxy = explode(":", $proxy);
+		$this->proxy_host = $arr_proxy[0];
+		$this->proxy_port = $arr_proxy[1];
+	}
+	function getProxyHost() {
+		return $this->proxy_host;
+	}
+	function getProxyPort() {
+		return $this->proxy_port;
+	}
+	
 	function saveSession() {
 		$handler = fopen($this->session_file, "w");
 		if (!$handler) {
@@ -150,6 +175,8 @@ class CodeXSOAP extends SoapClient {
 		fputs($handler, "session_group_id=\"".$this->session_group_id."\"\n");
 		fputs($handler, "session_user=\"".$this->session_user."\"\n");
         fputs($handler, "session_user_id=\"".$this->session_user_id."\"\n");
+        fputs($handler, "proxy_host=\"".$this->proxy_host."\"\n");
+        fputs($handler, "proxy_port=\"".$this->proxy_port."\"\n");
 		fclose($handler);
 		
 		chmod($this->session_file, 0600);
@@ -165,6 +192,8 @@ class CodeXSOAP extends SoapClient {
 				$this->session_user = $session["session_user"];
                 $this->session_user_id = $session["session_user_id"];
 				$this->wsdl_string = $session["wsdl_string"];
+				$this->proxy_host = $session["proxy_host"];
+				$this->proxy_port = $session["proxy_port"];
 			}
 		}
 	}

@@ -33,6 +33,11 @@ class CLI_Action_Default_Login extends CLI_Action {
             'soap'           => false
         ));
         $this->addParam(array(
+            'name'           => 'proxy',
+            'description'    => '--proxy=<proxy_host:proxy_port>           (Optional) proxy: for instance myproxy:8008',
+            'soap'           => false
+        ));
+        $this->addParam(array(
             'name'           => 'secure',
             'description'    => '--secure or -s                            (Optional) use https',
             'parameters'     => array('secure', 's'),
@@ -71,6 +76,11 @@ class CLI_Action_Default_Login extends CLI_Action {
             }
             $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codex.wsdl.php?wsdl");
         }
+    	if (isset($loaded_params['others']['proxy'])) {
+    		$proxy = $loaded_params['others']['proxy'];
+            $GLOBALS['soap']->setProxy($proxy);
+        }
+        
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);
