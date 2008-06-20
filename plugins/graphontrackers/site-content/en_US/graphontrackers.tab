@@ -152,7 +152,6 @@ plugin_graphontrackers_bar_header	bar_delete	Del?
 plugin_graphontrackers_bar_header	bar_params	Bar Graph
 plugin_graphontrackers_bar_header	bar_source_params	Data Sources
 p
-
 #
 #-----------------------------------------------
 # Script:include/graphontrackersPlugin.class.php
