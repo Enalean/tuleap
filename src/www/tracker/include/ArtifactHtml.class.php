@@ -16,6 +16,7 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/ReferenceManager.class.php');
 require_once('javascript_helpers.php');
 require_once('common/rss/RSS.class.php');
+require_once('common/include/CrossReferenceFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 
@@ -152,7 +153,11 @@ class ArtifactHtml extends Artifact {
             
             $html .= '<tr><td><p><font color="red">*</font>: '.
                  $Language->getText('tracker_include_type','fields_requ').
-                 '</p></td></tr></TABLE>';
+                 '</p></td></tr>';
+			
+			$crossref_fact= new CrossReferenceFactory($this->getID(),'tracker',$group_id);
+			$crossref_fact->fetchDatas();
+            $html.='<tr<td>'.$crossref_fact->getHTMLDisplayCrossRefs().'</td></tr></TABLE>';
             
             echo $this->_getSection(
                 'artifact_section_details',
@@ -160,7 +165,7 @@ class ArtifactHtml extends Artifact {
                 $html,
                 true
             );
-
+			
             if (!$ro) {
                 echo '<div style="text-align:center"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
             }

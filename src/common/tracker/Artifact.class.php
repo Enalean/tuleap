@@ -428,9 +428,12 @@ class Artifact extends Error {
         //
         //  Create the insert statement for standard field
         //
+        //Reference manager for cross reference
+        $reference_manager =& ReferenceManager::instance();
         reset($vfl);
         $vfl_cols = '';
         $vfl_values = '';
+        $text_value_list=array();
         while (list($field_name,$value) = each($vfl)) {
                 
 	    //echo "<br>field_name=$field_name, value=$value";
@@ -446,6 +449,9 @@ class Artifact extends Error {
                 $is_text = ($field->isTextField() || $field->isTextArea());
                 if  ($is_text) {
                     $value = htmlspecialchars($value);
+                    //Log for Cross references
+                    $text_value_list[]=$value;
+                    
                 } else if ($field->isDateField()) {
                     // if it's a date we must convert the format to unix time
                     list($value,$ok) = util_date_to_unixtime($value);
@@ -503,6 +509,12 @@ class Artifact extends Error {
                     $is_text = ($field->isTextField() || $field->isTextArea());
                     if  ($is_text) {
                         $value = htmlspecialchars($value);
+                        
+                        //Log for Cross references
+						$text_value_list[]=$value;
+
+
+                        
                     } else if ($field->isDateField()) {
                         // if it's a date we must convert the format to unix time
                         list($value,$ok) = util_date_to_unixtime($value);
@@ -530,9 +542,14 @@ class Artifact extends Error {
                 }
                                 
             } // while
+            
 
         }
 
+		//Add Cross Reference
+		for($i=0;$i<sizeof($text_value_list);$i++){
+			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,'tracker',$ath->getGroupID());
+		}
         // All ok then reload the artifact data to make sure it is cached
         // correctly in memory
         $this->fetchData($artifact_id);
@@ -712,9 +729,8 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false)
-        {
-            global $art_field_fact,$HTTP_POST_VARS,$Language;
+    function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false){
+    	global $art_field_fact,$HTTP_POST_VARS,$Language;
             
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
@@ -728,255 +744,266 @@ class Artifact extends Error {
             	}
 	    }
         
-            //get this artifact from the db
-            $result=$this->getFieldsValues();
-        
+        //get this artifact from the db
+        $result=$this->getFieldsValues();
+    
             
                 
-            //
-            //  See which fields changed during the modification
-            //  and if we must keep history then do it. Also add them to the update
-            //  statement
-            //
-            $changes = array();
-            $upd_list = '';
-            reset($vfl);
-            while (list($field_name,$value) = each($vfl)) {
+        //
+        //  See which fields changed during the modification
+        //  and if we must keep history then do it. Also add them to the update
+        //  statement
+        //
+        $reference_manager =& ReferenceManager::instance();
+        $text_value_list=array();
+        $changes = array();
+        $upd_list = '';
+        reset($vfl);
+        while (list($field_name,$value) = each($vfl)) {
                 
-                $field = $art_field_fact->getFieldFromName($field_name);
+            $field = $art_field_fact->getFieldFromName($field_name);
+                
+            // skip over special fields  except for details which in this 
+            // particular case can be processed normally
+            if ($field->isSpecial()) {
+	            continue; 
+            }
                     
-                    // skip over special fields  except for details which in this 
-                    // particular case can be processed normally
-                    if ($field->isSpecial()) {
-                        continue; 
-                    }
-                    
-                    // we check if the given value is authorized for this field (for select box fields only)
-                    // we don't check here the none value, we have already check it before (we can't check here the none value because the function checkValueInPredefinedValues don't take the none value into account)
-                    // if the value did not change, we don't do the check (because of stored values that can be deleted now)
-                    if (! $masschange && $result[$field_name] != $value && $field->isSelectBox() && $value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
+            // we check if the given value is authorized for this field (for select box fields only)
+            // we don't check here the none value, we have already check it before (we can't check here the none value because the function checkValueInPredefinedValues don't take the none value into account)
+            // if the value did not change, we don't do the check (because of stored values that can be deleted now)
+            if (! $masschange && $result[$field_name] != $value && $field->isSelectBox() && $value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $value)) {
+                $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                return false;
+            }                    
+            if (! $masschange && $field->isMultiSelectBox()) {
+                foreach ($value as $a_value) {
+                    if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
                         $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
                         return false;
-                    }                    
-                    if (! $masschange && $field->isMultiSelectBox()) {
-                        foreach ($value as $a_value) {
-                            if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
-                                $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
-                                return false;
-                            }
-                        }
                     }
+                }
+            }
 
-                    if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
+            if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
-		      if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
-				continue;
-			}
-                        // The field is a multi values field and it has multi assigned values
-                        $values = $value;
-                        
-                        // check if the user can update the field or not
-                        if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
-                            // we only throw an error if the values has changed
-                            $old_values = $field->getValues($this->getID());
-                            list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
-                            if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
-                                // The user does not have the permissions to update the current field,
-                                // we exit the function with an error message
-                                $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
-                                return false;
-                            }
-                        }
-
-			//don't take into account the none value if there are several values selected
-			if (count($values) > 1) {
-				$temp = array();
-				while (list($i,$v) = each($values)) {
-					if ($v == 100) {
-						unset($values[$i]);
-						$unset = true;
-					} else {
-						$temp[] = $v;
-					}
+				if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
+					continue;
 				}
-				if (isset($unset) && $unset) $values = $temp;
-			}
+	            // The field is a multi values field and it has multi assigned values
+	            $values = $value;
+	            
+		        // check if the user can update the field or not
+		        if (! $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
+		            // we only throw an error if the values has changed
+		            $old_values = $field->getValues($this->getID());
+		            list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+		            if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
+		                // The user does not have the permissions to update the current field,
+		                // we exit the function with an error message
+		                $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+	                    return false;
+	                }
+            	}
 
-                        $old_values = $field->getValues($this->getID());
-                        
-                        list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
+				//don't take into account the none value if there are several values selected
+				if (count($values) > 1) {
+					$temp = array();
+					while (list($i,$v) = each($values)) {
+						if ($v == 100) {
+							unset($values[$i]);
+							$unset = true;
+						} else {
+							$temp[] = $v;
+						}
+					}
+					if (isset($unset) && $unset) $values = $temp;
+				}
 
-                        // Check if there are some differences
-                        if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
+           		$old_values = $field->getValues($this->getID());
+            
+	            list($deleted_values,$added_values) = util_double_diff_array($old_values,$values);
 
-                            // Add values in the history
-                            $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
-                            $val = join(",",$a);
-			    $b = $field->getLabelValues($this->ArtifactType->getID(),$values);
-			    $new_val = join(",",$b);
-                            $this->addHistory($field,$val,$new_val);
+	            // Check if there are some differences
+	            if ((count($deleted_values) > 0) || (count($added_values) > 0)) {
+	
+	                // Add values in the history
+	                $a = $field->getLabelValues($this->ArtifactType->getID(),$old_values);
+	                $val = join(",",$a);
+				    $b = $field->getLabelValues($this->ArtifactType->getID(),$values);
+				    $new_val = join(",",$b);
+	                $this->addHistory($field,$val,$new_val);
+	                                
+	                // Update the field value
+	                if ( !$field->updateValues($this->getID(),$values) ) {
+	                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
+	                }
+	                //Log for Cross references
+                    $text_value_list[]=$values;
+                                        
+	                // Keep track of the change
+	                $field_html = new ArtifactFieldHtml($field);
+	                if (count($deleted_values) > 0) {
+	                    $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$deleted_values));
+	                    $changes[$field_name]['del']=$val;
+	                }
+	                if (count($added_values) > 0) {
+	                    $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$added_values));
+	                    $changes[$field_name]['add']=$val;
+	                }
+	            }
+                                        
+	        } else {
+	        	if ($masschange && ($value==$Language->getText('global','unchanged'))) {
+					continue;
+				}	
+       
+                $old_value = $result[$field_name];
+                $is_text = ($field->isTextField() || $field->isTextArea());
+                if  ($is_text) {
+                    $differ = ($old_value != stripslashes(htmlspecialchars($value)));
+                    //Log for Cross references
+					$text_value_list[]=$value; 
+					
+                } else if ($field->isDateField()) {
+                    // if it's a date we must convert the format to unix time
+	 				if ($value != '') list($value,$ok) = util_date_to_unixtime($value);
+			  		else $value = '0';
+
+				    //first have a look if both dates are uninitialized
+					if (($old_value == 0 || $old_value == '') && ($value == 0 || !$ok )) {
+						$differ = false;
+					} else {
+				    	// and make also sure that the old_value has been treated as the new value
+				    	// i.e. old_value (unix timestamp) -> local date (with hours cut off, so change the date by x  hours) -> unixtime
+						$old_date = format_date("Y-m-j",$old_value);
+						list($old_val,$ok) = util_date_to_unixtime($old_date);
+                    	$differ = ($old_val != $value);
+			    	}
+                } else {
+	                $differ = ($old_value != $value);
+                }
+                if ($differ) {
+	                // The userCanUpdate test is only done on modified fields
+                    if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
                                 
-                            // Update the field value
-                            if ( !$field->updateValues($this->getID(),$values) ) {
+	                    if ($is_text) {
+	                        if ( $field->isStandardField() ) {
+	                            $upd_list .= "$field_name='".db_es(htmlspecialchars($value))."',";                                                 
+                            } else {
+                                $update_value = htmlspecialchars($value);
+                            }
+                                                    
+                            $this->addHistory($field,$old_value,$value);
+                            $value = stripslashes($value);
+                        } else {
+                            if ( $field->isStandardField() ) {
+                                $upd_list .= "$field_name='". db_es($value) ."',";
+                        	} else {
+                            	$update_value = $value;
+                        	}
+                            $this->addHistory($field,$old_value,$value);
+                        }
+                                    
+                        // Update the field value
+                        if ( !$field->isStandardField() ) {
+                            if ( !$field->updateValue($this->getID(),$update_value) ) {
                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
                             }
-                                    
-                            // Keep track of the change
-                            $field_html = new ArtifactFieldHtml($field);
-                            if (count($deleted_values) > 0) {
-                                $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$deleted_values));
-                                $changes[$field_name]['del']=$val;
-                            }
-                            if (count($added_values) > 0) {
-                                $val = join(",",$field->getLabelValues($this->ArtifactType->getID(),$added_values));
-                                $changes[$field_name]['add']=$val;
-                            }
                         }
                                         
+                        // Keep track of the change
+                        $field_html = new ArtifactFieldHtml($field);
+                        $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
+                        $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
                     } else {
-	        	if ($masschange && ($value==$Language->getText('global','unchanged'))) {
-				continue;
-			}	
-       
-                        $old_value = $result[$field_name];
-                        $is_text = ($field->isTextField() || $field->isTextArea());
-                        if  ($is_text) {
-                            $differ = ($old_value != stripslashes(htmlspecialchars($value))); 
-                        } else if ($field->isDateField()) {
-                            // if it's a date we must convert the format to unix time
-			  if ($value != '') list($value,$ok) = util_date_to_unixtime($value);
-			  else $value = '0';
+	                    // The user does not have the permissions to update the current field,
+	                    // we exit the function with an error message
+	                    $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
+	                    return false;
+	                }
+	            }
+            }
+        } // while
 
-			    //first have a look if both dates are uninitialized
-			  if (($old_value == 0 || $old_value == '') && ($value == 0 || !$ok )) {
-				$differ = false;
-			    } else {
-			    	// and make also sure that the old_value has been treated as the new value
-			    	// i.e. old_value (unix timestamp) -> local date (with hours cut off, so change the date by x  hours) -> unixtime
-				$old_date = format_date("Y-m-j",$old_value);
-				list($old_val,$ok) = util_date_to_unixtime($old_date);
-                            	$differ = ($old_val != $value);
-			    }
-                        } else {
-                            $differ = ($old_value != $value);
-                        }
-                        if ($differ) {
-                            // The userCanUpdate test is only done on modified fields
-                            if ( $field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID(), user_getid())) {
-                                
-                                if ($is_text) {
-                                    if ( $field->isStandardField() ) {
-                                        $upd_list .= "$field_name='".db_es(htmlspecialchars($value))."',";                                                 
-                                    } else {
-                                        $update_value = htmlspecialchars($value);
-                                    }
-                                                    
-                                    $this->addHistory($field,$old_value,$value);
-                                    $value = stripslashes($value);
-                                } else {
-                                    if ( $field->isStandardField() ) {
-                                        $upd_list .= "$field_name='". db_es($value) ."',";
-                                    } else {
-                                        $update_value = $value;
-                                    }
-                                    $this->addHistory($field,$old_value,$value);
-                                }
-                                    
-                                // Update the field value
-                                if ( !$field->isStandardField() ) {
-                                    if ( !$field->updateValue($this->getID(),$update_value) ) {
-                                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
-                                    }
-                                }
-                                        
-                                // Keep track of the change
-                                $field_html = new ArtifactFieldHtml($field);
-                                $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
-                                $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
-                            } else {
-                                // The user does not have the permissions to update the current field,
-                                // we exit the function with an error message
-                                $this->setError($Language->getText('tracker_common_artifact','bad_field_permission_update', $field->getLabel()));
-                                return false;
-                            }
-                        }
-                    }
-            } // while
+		for($i=0;$i<sizeof($text_value_list);$i++){
+			$reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),'tracker',$this->ArtifactType->getGroupID());
+		}
 
-	$request = HTTPRequest::instance();
+		$request = HTTPRequest::instance();
 	    //for masschange look at the special case of changing the submitted_by param
 	    if ($masschange) {
-		reset($HTTP_POST_VARS);
-		while ( list($key, $val) = each($HTTP_POST_VARS)) {
-            $val = $request->get($key); //Don't use HTTP_POST_VARS
-			if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
-				$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
-				$res = db_query($sql);
-				$field = $art_field_fact->getFieldFromName('submitted_by');
-				if ($this->getSubmittedBy() != $val)
-					$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
+			reset($HTTP_POST_VARS);
+			while ( list($key, $val) = each($HTTP_POST_VARS)) {
+	            $val = $request->get($key); //Don't use HTTP_POST_VARS
+				if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
+					$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
+					$res = db_query($sql);
+					$field = $art_field_fact->getFieldFromName('submitted_by');
+					if ($this->getSubmittedBy() != $val)
+						$this->addHistory('submitted_by',$this->getSubmittedBy(),$val);
+				}
 			}
-		}
 	    }
 
-            // Comment field history is handled a little differently. Followup comments
-            // are added in the bug history along with the comment type.
-            // 
-            // If a canned response is given it overrides anything typed in the followup
-            // comment text area. 
-            $comment = $request->get('comment');
-            $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
+        // Comment field history is handled a little differently. Followup comments
+        // are added in the bug history along with the comment type.
+        // 
+        // If a canned response is given it overrides anything typed in the followup
+        // comment text area. 
+        $comment = $request->get('comment');
+        $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
 
 	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes);
             
-            
-            //
-            //  Enter the timestamp if we are changing to closed or declined
-            //
-            if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
-                $now=time();
-                $upd_list .= "close_date='$now',";
-                $field = $art_field_fact->getFieldFromName('close_date');
-                if ( $field ) {
-                    $this->addHistory ($field,$result['close_date'],'');
-                }
+        $reference_manager->extractCrossRef($comment,$this->getID(),'tracker',$this->ArtifactType->getGroupID());    
+        //
+        //  Enter the timestamp if we are changing to closed or declined
+        //
+        if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
+            $now=time();
+            $upd_list .= "close_date='$now',";
+            $field = $art_field_fact->getFieldFromName('close_date');
+            if ( $field ) {
+                $this->addHistory ($field,$result['close_date'],'');
             }
+        }
         
-            //
-            //  Insert the list of dependencies 
-            //
+        //
+        //  Insert the list of dependencies 
+        //
         
 	    if ($import && $artifact_id_dependent) {
-		if (!$this->deleteAllDependencies()) return false;
-		if ($artifact_id_dependent == $Language->getText('global','none')) unset($artifact_id_dependent);
+			if (!$this->deleteAllDependencies()) return false;
+			if ($artifact_id_dependent == $Language->getText('global','none')) unset($artifact_id_dependent);
 	    }
-            if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange)) {
-                return false;
-            }
-                
-            //
-            //  Finally, build the full SQL query and update the artifact itself (if need be)
-            //
-        
-            $res_upd = true;
-            if ($upd_list) {
-                // strip the excess comma at the end of the update field list
-                $upd_list = substr($upd_list,0,-1);
-                
-                $sql="UPDATE artifact SET $upd_list ".
-                    " WHERE artifact_id=". db_ei($this->getID()) ;
-                
-                $res_upd=db_query($sql);
-            }
-
-            if (!$res_upd) {
-                exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
-                return false;
-            } else {
-                return true;
-            }
-
+        if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange)) {
+            return false;
         }
+                
+        //
+        //  Finally, build the full SQL query and update the artifact itself (if need be)
+        //
+    
+        $res_upd = true;
+        if ($upd_list) {
+            // strip the excess comma at the end of the update field list
+            $upd_list = substr($upd_list,0,-1);
+            
+            $sql="UPDATE artifact SET $upd_list ".
+                " WHERE artifact_id=". db_ei($this->getID()) ;
+            
+            $res_upd=db_query($sql);
+        }
+
+        if (!$res_upd) {
+            exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
+            return false;
+        } else {
+            return true;
+        }
+
+    }
 
 
 

@@ -342,6 +342,78 @@ class ReferenceManager {
         }
         return $referencesInstances;
     }
+    
+    function extractCrossRef($html,$source_id, $source_type, $source_gid){
+		$referencesInstances=array();
+        $matches = $this->_extractAllMatches($html);
+        foreach ($matches as $match) {
+        	// Analyse match
+	        $key=strtolower($match[1]);
+	        if ($match[2]) {
+	            // A target project name or ID was specified
+	            // remove trailing colon
+	            $target_project=substr($match[2],0,strlen($match[2])-1);
+	            // id or name?
+	            if (is_numeric($target_project)) {
+	                $ref_gid = $target_project;
+	            } else {
+	                // project name instead...
+	                $this->_initGroupHash();
+	                if (isset($this->groupIdByName[$target_project])) {
+	                    $ref_gid = $this->groupIdByName[$target_project];
+	                } else {
+	                    return null;
+	                }
+	            }
+	        } else {
+	            if ($this->tmpGroupIdForCallbackFunction) {
+	                $ref_gid = $this->tmpGroupIdForCallbackFunction;
+	            } else {
+	                if (array_key_exists('group_id', $GLOBALS)) {
+	                    $ref_gid=$GLOBALS['group_id']; // might not be set
+	                } else {
+	                    $ref_gid = '';
+	                }
+	            }
+	        }
+	
+	        $value=$match[3];
+	        if ($ref_gid=="") $ref_gid=100; // use system references only
+		    $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
+	        $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+  
+	        if ($ref) {
+         
+        
+		    	//Cross reference
+	            $sqlkey='SELECT service_short_name from reference where keyword="'.$match[1].'"';
+	            $reskey = db_query($sqlkey);
+	    		if ($reskey && db_numrows($reskey) >0) {
+	    			$key_array = db_fetch_array($reskey);
+	    			$target_type= $key_array['service_short_name'];
+	    			if($target_type=="svn" || $target_type=="tracker"){
+		    			$target_id=$match[3];
+		            	$target_gid=$ref_gid;
+		            	$user_id=user_getid();
+		            	if($target_type=="tracker"){
+		            		$sql='SELECT group_id FROM artifact_group_list agl,artifact at WHERE agl.group_artifact_id = at.group_artifact_id AND at.artifact_id='.$target_id;
+		            		$res = db_query($sql);
+							if (!$res || db_numrows($res) < 1) {
+							   
+						    }else{
+								$field_array = db_fetch_array($res);
+								$target_gid=$field_array['group_id'];
+						    }
+		            	}	            		
+		            	$cross_ref=new CrossReference($source_id,$source_gid,$source_type, $target_id,$target_gid,$target_type,$user_id);
+			            if(!$cross_ref->existInDb()){
+			            	$cross_ref->createDbCrossRef();
+			            }
+	    			}
+	    		}
+	        }
+        }
+    }
 
     /**
      * extract references from text $html (same as extractReferences) but returns them grouped by Description, and removes the duplicates references
@@ -417,8 +489,9 @@ class ReferenceManager {
         $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
         $refInstance = null;
         if ($ref) {
-            $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref);
+            $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref,$match[3]);
             $refInstance->computeGotoLink($key,$match[3],$ref_gid);
+          
         }
         return $refInstance;
     }

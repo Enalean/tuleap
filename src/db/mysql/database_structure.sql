@@ -3350,6 +3350,27 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 );
 
 
+
+-- 
+-- Structure de la table 'layouts_contents'
+-- 
+DROP TABLE IF EXISTS cross_references;
+CREATE TABLE IF NOT EXISTS cross_ref (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT, 
+  created_at INT(11) NOT NULL DEFAULT '0',
+  user_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  source_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  target_id INT(11) unsigned NOT NULL DEFAULT '0',
+  target_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (id)
+  
+) TYPE=MyISAM;
+
+
 #
 # EOF
 #
+
