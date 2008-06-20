@@ -29,12 +29,12 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
             'description'    => '--type=<file|link|wiki|embedded_file>     nature of the document'
         ));
         $this->addParam(array(
-            'name'           => 'ordering',
-            'description'    => '--ordering=<begin|end>     Place where the new document will be hosted'
-        ));
-        $this->addParam(array(
             'name'           => 'content',
             'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document'
+        ));
+        $this->addParam(array(
+            'name'           => 'ordering',
+            'description'    => '--ordering=<begin|end>     Place where the new document will be hosted'
         ));
     }
     
