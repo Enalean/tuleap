@@ -110,6 +110,9 @@ class BaseLanguage {
 				$this->loadLanguageFile($dir."/".$matches[1].".tab");
 			} else {
 				$line = explode("\t", $ary[$i], 3);
+                if (!isset($line[1]) || !isset($line[2])) {
+                    throw new Exception("Error in language file $fname at line $i");
+                }
 				$this->text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
 				//echo "(".strlen(trim($ary[$i])).")"."Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
 			}
