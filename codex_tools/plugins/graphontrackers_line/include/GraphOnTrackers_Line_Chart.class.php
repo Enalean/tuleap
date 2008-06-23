@@ -144,8 +144,15 @@ class GraphOnTrackers_Line_Chart extends GraphOnTrackers_Chart {
         }
         return false;
     }
+    
     public function getHelp() {
         return trim(file_get_contents($GLOBALS['Language']->getContent('line_doc', null, 'graphontrackers_line', '.html')));
+    }
+    
+    public function userCanVisualize(){
+        $artifact_field_base=new ArtifactField();
+        $artifact_field_base->fetchData($GLOBALS['ath']->getID(),$this->field_base);
+        return $artifact_field_base->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid());
     }
 }
 ?>
