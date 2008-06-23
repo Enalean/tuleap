@@ -514,62 +514,6 @@ AND groups.other_comments != ''
 
 EOF
 
-#########
-# GraphonTracker plugin : Tables creation and plugin activation.
-echo "- Add GraphonTracker plugin. See revision #8712"
-$CAT <<EOF | $MYSQL $pass_opt codex
-
-DROP TABLE IF EXISTS plugin_graphontrackers_report_graphic;
-CREATE TABLE plugin_graphontrackers_report_graphic (
-  report_graphic_id int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
-  group_artifact_id int(11) ,
-  user_id int(11) ,
-  name varchar(255) ,
-  description varchar(255) ,
-  scope char(1) 
-);
-DROP TABLE IF EXISTS plugin_graphontrackers_chart;
-CREATE TABLE plugin_graphontrackers_chart (
-  id int(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT ,
-  report_graphic_id int(11) NOT NULL,
-  rank int(11) NOT NULL,
-  chart_type varchar(255),
-  title varchar(255),
-  description text,
-  width int(11) DEFAULT 600,
-  height int(11) DEFAULT 400,
-  KEY (report_graphic_id),
-  KEY (chart_type)
-);
-DROP TABLE IF EXISTS plugin_graphontrackers_gantt_chart;
-CREATE TABLE plugin_graphontrackers_gantt_chart(
-  id int(11)  NOT NULL PRIMARY KEY,
-  field_start varchar(255) ,
-  field_due varchar(255) ,
-  field_finish varchar(255) ,
-  field_percentage varchar(255) ,
-  field_righttext varchar(255) ,
-  scale varchar(20) ,
-  as_of_date int(11) ,
-  summary varchar(255) 
-);
-DROP TABLE IF EXISTS plugin_graphontrackers_pie_chart;
-CREATE TABLE plugin_graphontrackers_pie_chart(
-  id int(11)  NOT NULL PRIMARY KEY ,
-  field_base varchar(255)
-);
-DROP TABLE IF EXISTS plugin_graphontrackers_bar_chart;
-CREATE TABLE plugin_graphontrackers_bar_chart(
-  id int(11)  NOT NULL PRIMARY KEY ,
-  field_base varchar(255) ,
-  field_group varchar(255)
-);
-
--- install and enable graphontracker plugin
-INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
-
-EOF
-
 ##########
 # SR #820
 echo "- SR #820"
@@ -606,6 +550,18 @@ ALTER TABLE user ADD COLUMN prev_auth_success INT(11) NOT NULL DEFAULT 0 AFTER l
 ALTER TABLE user ADD COLUMN last_auth_success INT(11) NOT NULL DEFAULT 0 AFTER prev_auth_success
 ALTER TABLE user ADD COLUMN last_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_success
 ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_failure
+
+EOF
+
+##########
+# Install GraphOnTrackers plugin
+echo "- Add GraphonTrackers plugin schema"
+$CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL $pass_opt codex
+
+echo "- Install GraphonTrackers plugin"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
 
