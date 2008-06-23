@@ -16,10 +16,10 @@
     <title>Installation</title>
 
     <para>In order to install CodeX's Command Line Interface (CLI), 
-    you must have PHP installed on your local machine. The latest 
-    PHP4 version or PHP 5 is highly recommended. Also, PHP must be 
-    compiled without the --disable-cli parameter in order to create 
-    the PHP binaries.</para>
+    you must have PHP5 installed on your local machine (CLI won't
+    work with PHP4). The latest PHP 5 version is highly recommended. 
+    Also, PHP must be compiled without the --disable-cli parameter 
+    in order to create the PHP binaries.</para>
 
     <para>You must check in which directory you have your PHP binary 
     installed. The directory is the prefix that was specified when 
@@ -64,12 +64,6 @@
                 and change the following constants:
                 <para>
                 <itemizedlist mark="bullet" spacing="compact">
-                 <listitem>
-                    <para>NUSOAP_DIR: Points to the installation directory of the 
-                        NuSOAP PHP Library. A copy of the library is located in 
-                        $PREFIX/nusoap/.
-                    </para>
-                 </listitem>
                  <listitem>
                     <para>CODEX_CLI_DIR: Points to the directory where the CLI 
                         auxiliary files are to be found. It usually is 

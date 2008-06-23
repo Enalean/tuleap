@@ -36,6 +36,14 @@
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--host: Spécifie le serveur CodeX (optionnel).
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--proxy: Spécifie le proxy si nécessaire (optionnel). La syntaxe est la suivante : --host=proxy_host:proxy_port
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du project sur lequel vous voulez travailler. 
                         Si vous ne le spécifiez pas maintenant, chaque appel ultérieur de fonction 
                         nécessitera de spécifier le projet auquel la fonction doit s'appliquer.

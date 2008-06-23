@@ -34,6 +34,14 @@
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--host: Specifies the host where your CodeX server (as well as the soap server) is installed (optional).
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--proxy: Specifies the proxy if needed. Use is --host=proxy_host:proxy_port
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you plan working on. If you don't specify this, any future
                         function call will require you to specify the project in which the function will be applied.
                         </para>

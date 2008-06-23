@@ -17,8 +17,9 @@
     <title>Installation</title>
 
     <para>Pour installer le client en ligne de commande CodeX, 
-    vous devez disposer de PHP installé sur votre machine. La 
-    dernière version de PHP4 ou PHP5 est grandement recommandée. 
+    vous devez disposer de PHP5 installé sur votre machine
+    (Le CLI ne fonctionnera pas avec PHP4). 
+    La dernière version de PHP5 est grandement recommandée. 
     PHP doit également avoir été compilé sans le paramètre 
     --disable-cli pour pouvoir être exécuté en ligne de commande.</para>
 
@@ -68,12 +69,6 @@
                 et modifier les constantes suivantes :
                 <para>
                 <itemizedlist mark="bullet" spacing="compact">
-                 <listitem>
-                    <para>NUSOAP_DIR: Pointe vers le répertoire d'installation 
-                        de la librairie PHP NuSOAP. Une copie de cette librairie 
-                        se trouve dans le répertoire $PREFIX/nusoap/.
-                    </para>
-                 </listitem>
                  <listitem>
                     <para>CODEX_CLI_DIR: Pointe vers le répertoire dans lequel se 
                         trouvent les fichiers nécessaires au client. Habituellement, 
