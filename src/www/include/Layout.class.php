@@ -77,7 +77,61 @@ class Layout extends Response {
 		$bgpri[9] = 'priori';
 
 	}
-
+    
+    function getChartColors() {
+        return array(
+            'lightsalmon',
+            'palegreen',
+            'palegoldenrod',
+            'lightyellow',
+            'paleturquoise',
+            'steelblue1',
+            'thistle',
+            'palevioletred1',
+            'wheat1',
+            'gold',
+            'olivedrab1',
+            'lightcyan',
+            'lightcyan3',
+            'lightgoldenrod1',
+            'rosybrown',
+            'mistyrose',
+            'silver',
+            'aquamarine',
+        );
+    }
+    
+    function getChartBackgroundColor() {
+        return "white";
+    }
+    
+    function getChartMainColor() {
+        return "#444444";
+    }
+    
+    public function getGanttErrorBarColor() {
+        return 'salmon';
+    }
+    
+    public function getGanttGreenBarColor() {
+        return 'darkgreen';
+    }
+    
+    public function getGanttTodayLineColor() {
+        return 'red';
+    }
+    
+    public function getGanttHeaderColor() {
+        return 'gray9';
+    }
+    
+    public function getGanttBarColor() {
+        return 'steelblue1';
+    }
+    
+    public function getGanttMilestoneColor() {
+        return 'orange';
+    }
     
     function redirect($url) {
        $is_anon = session_hash() ? false : true;

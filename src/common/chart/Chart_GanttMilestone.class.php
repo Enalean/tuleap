@@ -41,7 +41,7 @@ class Chart_GanttMileStone {
     */
     public function __construct($aVPos,$aLabel,$aDate,$aCaption="") {
         $this->_jpgraph_instance = new MileStone($aVPos,$aLabel,$aDate,$aCaption);
-        $color      = "orange";
+        $color      = $GLOBALS['HTML']->getGanttMilestoneColor();
         $color_dark = $color .':0.6';
         
         $this->_jpgraph_instance->mark->setColor($color_dark);

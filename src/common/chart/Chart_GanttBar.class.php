@@ -41,7 +41,7 @@ class Chart_GanttBar {
     */
     public function __construct($aPos,$aLabel,$aStart,$aEnd,$aCaption="",$aHeightFactor=0.6) {
         $this->_jpgraph_instance = new GanttBar($aPos,$aLabel,$aStart,$aEnd,$aCaption,$aHeightFactor);
-        $color      = "steelblue1";
+        $color      = $GLOBALS['HTML']->getGanttBarColor();
         $color_dark = $color .':0.65';
         $this->_jpgraph_instance->progress->SetPattern(BAND_SOLID, $color_dark);
         $this->_jpgraph_instance->setColor($color_dark);

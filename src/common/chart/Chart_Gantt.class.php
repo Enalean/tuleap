@@ -44,7 +44,7 @@ class Chart_Gantt extends Chart{
     public function __construct($aWidth=0,$aHeight=0,$aCachedName="",$aTimeOut=0,$aInline=true) {
         parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
         
-        $header_color = 'gray9';
+        $header_color = $GLOBALS['HTML']->getGanttHeaderColor();
         
         $this->scale->year->grid->SetColor($this->getMainColor());
         $this->scale->year->grid->Show(true);
@@ -73,15 +73,15 @@ class Chart_Gantt extends Chart{
     }
     
     public function getErrorBarColor() {
-        return 'salmon';
+        return $GLOBALS['HTML']->getGanttErrorBarColor();
     }
     
     public function getGreenBarColor() {
-        return 'darkgreen';
+        return $GLOBALS['HTML']->getGanttGreenBarColor();
     }
     
     public function getTodayLineColor() {
-        return 'red';
+        return $GLOBALS['HTML']->getGanttTodayLineColor();
     }
     
 }

@@ -48,7 +48,7 @@ class Chart {
     public function __construct($aWidth=600,$aHeight=400,$aCachedName="",$aTimeOut=0,$aInline=true) {
         $classname = $this->_getGraphClass();
         $this->_jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
-        $this->_jpgraph_instance->SetMarginColor("white");
+        $this->_jpgraph_instance->SetMarginColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->_jpgraph_instance->SetFrame(true, $this->getMainColor(), 1);
         if ($aWidth && $aHeight) {
             $this->_jpgraph_instance->img->SetAntiAliasing();
@@ -56,7 +56,7 @@ class Chart {
         
         $this->_jpgraph_instance->legend->SetShadow(false);
         $this->_jpgraph_instance->legend->SetColor($this->getMainColor());
-        $this->_jpgraph_instance->legend->SetFillColor('#fefefe');
+        $this->_jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->_jpgraph_instance->legend->SetFont(FF_DEJAVU,FS_NORMAL,8);
         $this->_jpgraph_instance->legend->SetVColMargin(5);
         
@@ -66,27 +66,6 @@ class Chart {
         
         $this->_jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL,8);
         $this->_jpgraph_instance->subtitle->SetColor($this->getMainColor());
-        
-        $this->_themed_colors = array(
-            'lightsalmon',
-            'palegreen',
-            'palegoldenrod',
-            'lightyellow',
-            'paleturquoise',
-            'steelblue1',
-            'thistle',
-            'palevioletred1',
-            'wheat1',
-            'gold',
-            'olivedrab1',
-            'lightcyan',
-            'lightcyan3',
-            'lightgoldenrod1',
-            'rosybrown',
-            'mistyrose',
-            'silver',
-            'aquamarine',
-        );
     }
         
     protected function _getGraphClass() {
@@ -138,11 +117,11 @@ class Chart {
     }
     
     public function getMainColor() {
-        return "#444444";
+        return $GLOBALS['HTML']->getChartMainColor();
     }
     
     public function getThemedColors() {
-        return $this->_themed_colors;
+        return $GLOBALS['HTML']->getChartColors();
     }
 }
 ?>
