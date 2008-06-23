@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class line_engine extends GraphOnTrackers_Engine {
+class GraphOnTrackers_Engine_Line extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
@@ -83,27 +83,6 @@ class line_engine extends GraphOnTrackers_Engine {
             $this->graph->Add( $lineplot);
         }
         return $this->graph;
-    }
-    
-    
-    function isDataAvailable() {
-        $returns = false;
-        for ($i=0;$i<count($this->data);$i++) {
-            if (array_sum($this->data[$i])>0){
-                $returns = true;
-            }
-        }
-        return $returns;
-    }
-    
-    
-    function invMatrix($matrix) {
-        for($i=0;$i<count($matrix);$i++) {
-            for($j=0;$j<count($matrix[$i]);$j++) {
-               $inversed_matrix[$j][$i] = $matrix[$i][$j];
-            }
-        }
-        return $inversed_matrix;
     }
 }
 ?>

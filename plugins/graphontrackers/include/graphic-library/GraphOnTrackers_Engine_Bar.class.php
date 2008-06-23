@@ -22,7 +22,7 @@
  */
 require_once('GraphOnTrackers_Engine.class.php');
 
-class bar_engine extends GraphOnTrackers_Engine {
+class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
@@ -40,7 +40,7 @@ class bar_engine extends GraphOnTrackers_Engine {
     /**
      * class constructor
      */
-    function bar_engine() {
+    function __construct() {
         require_once('colorsFactory.class.php');
         $this->jp_graph_path = $GLOBALS['jpgraph_dir'];
         $this->cf = new colorsFactory();       

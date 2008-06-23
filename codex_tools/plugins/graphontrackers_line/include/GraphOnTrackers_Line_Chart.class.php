@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('GraphOnTrackers_Chart_LineDataBuilder.class.php');
-require_once('line_engine.class.php');
+require_once('GraphOnTrackers_Engine_Line.class.php');
 
 require_once('HTML_Element_Method_Selectbox.class.php');
 require_once('HTML_Element_TrackerFields_State.class.php');
@@ -84,7 +84,7 @@ class GraphOnTrackers_Line_Chart extends GraphOnTrackers_Chart {
     public function setMethod($method) { return $this->method = $method; }
     
     protected function getEngine() {
-        return new line_engine();
+        return new GraphOnTrackers_Engine_Line();
     }
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackers_Chart_LineDataBuilder($this,$artifacts);

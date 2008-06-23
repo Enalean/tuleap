@@ -23,7 +23,7 @@
 require_once('colorsFactory.class.php');
 require_once('GraphOnTrackers_Engine.class.php');
 
-class gantt_engine extends GraphOnTrackers_Engine {
+class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     
     var $graph;
     var $title;

@@ -22,7 +22,7 @@
  */
 require_once('GraphOnTrackers_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackers_Chart_BarDataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/bar_engine.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackers_Engine_Bar.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class.php');
         
 class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
@@ -58,7 +58,7 @@ class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
     public function setField_group($field_group) { return $this->field_group = $field_group; }
     
     protected function getEngine() {
-        return new bar_engine();
+        return new GraphOnTrackers_Engine_Bar();
     }
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackers_Chart_BarDataBuilder($this,$artifacts);

@@ -22,7 +22,7 @@
  */
 require_once('GraphOnTrackers_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackers_Chart_PieDataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/pie_engine.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackers_Engine_Pie.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class.php');
 
@@ -55,7 +55,7 @@ class GraphOnTrackers_Chart_Pie extends GraphOnTrackers_Chart {
     public function setField_base($field_base) { return $this->field_base = $field_base; }
      
     protected function getEngine() {
-        return new pie_engine();
+        return new GraphOnTrackers_Engine_Pie();
     }
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackers_Chart_PieDataBuilder($this,$artifacts);

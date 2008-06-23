@@ -23,7 +23,7 @@
 
 require_once('GraphOnTrackers_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackers_Chart_GanttDataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/gantt_engine.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackers_Engine_Gantt.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Dates.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Numerics.class.php');
@@ -91,7 +91,7 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     public static function getDefaultWidth(){return 0;  }
     
     protected function getEngine() {
-        return new gantt_engine();
+        return new GraphOnTrackers_Engine_Gantt();
     }
     protected function getChartDataBuilder($artifacts) {
         return new GraphOnTrackers_Chart_GanttDataBuilder($this,$artifacts);

@@ -24,7 +24,7 @@ require_once('common/chart/Chart_Pie.class.php');
 require_once('colorsFactory.class.php');
 require_once('GraphOnTrackers_Engine.class.php');
 
-class pie_engine extends GraphOnTrackers_Engine {
+class GraphOnTrackers_Engine_Pie extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
