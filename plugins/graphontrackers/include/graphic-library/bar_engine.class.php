@@ -20,8 +20,9 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+require_once('GraphOnTrackers_Engine.class.php');
 
-class bar_engine {
+class bar_engine extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
@@ -37,34 +38,17 @@ class bar_engine {
     var $jp_graph_path;
     
     /**
-	* class constructor
-	*
-	* 	@return null
-    */
-    
+     * class constructor
+     */
     function bar_engine() {
-    	require_once('colorsFactory.class.php');
+        require_once('colorsFactory.class.php');
         $this->jp_graph_path = $GLOBALS['jpgraph_dir'];
         $this->cf = new colorsFactory();       
     }
     
-    function Valid_datas(){
-    	
-    	if(count($this->data)>0){
-    		return true;
-    	}else{
-    		
-			echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";				
-    		return false;
-    	}
-    }
-    
     /**
-	* function to build bar chart object (JpGraph object)
-	*   
-	* 	@return Bar graph object (JpGraph object)
-    */
-    
+     * Builds bar chart object
+     */
     function buildGraph() {
         require_once('common/chart/Chart.class.php');
         if ($this->width == 0) {
@@ -150,21 +134,6 @@ class bar_engine {
         }
         $this->graph->img->SetMargin(50,$right_margin,100,100);
         return $this->graph;
-    }
-    
-    /**
-	* function to inverse matrix
-	*   
-	* 	@return matrix: inversed matrix
-    */
-
-    function invMatrix($matrix) {
-        for($i=0;$i<count($matrix);$i++) {
-            for($j=0;$j<count($matrix[$i]);$j++) {
-               $inversed_matrix[$j][$i] = $matrix[$i][$j];
-            }
-        }
-        return $inversed_matrix;
     }
 }
 ?>

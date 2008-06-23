@@ -21,8 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('colorsFactory.class.php');
+require_once('GraphOnTrackers_Engine.class.php');
 
-class gantt_engine {
+class gantt_engine extends GraphOnTrackers_Engine {
     
     var $graph;
     var $title;
@@ -39,11 +40,6 @@ class gantt_engine {
     var $summary;
     var $data;
     var $jp_graph_path;
-    
-    function gantt_engine(){
-        $this->jp_graph_path = $GLOBALS['jpgraph_dir'];
-    }
-
     
     function setTitle($title) {
         $this->title = $title;
@@ -126,23 +122,9 @@ class gantt_engine {
         }        
     }
     
-   function Valid_datas(){
-   	
-    	if(count($this->data)>0){
-    		
-    		return true;
-    	}else{
-    		 
-			echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";				
-    		return false;
-    	}
-    }
-    
     /**
-    * function to build gantt graph
-    * @return string
-    */ 
-    
+    * Builds gantt graph
+    */
     function buildGraph() {
         require_once('common/chart/Chart_Gantt.class.php');
         $cf = new colorsFactory(); 

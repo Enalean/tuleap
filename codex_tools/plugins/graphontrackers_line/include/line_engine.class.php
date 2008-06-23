@@ -21,8 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
-class line_engine {
+class line_engine extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
@@ -38,10 +37,6 @@ class line_engine {
     var $data;
     var $xaxis;
     var $jp_graph_path;
-    
-    function line_engine() {
-        $this->jp_graph_path = $GLOBALS['jpgraph_dir'];        
-    }
     
     function buildGraph() {
         if ($this->width == 0) {

@@ -22,8 +22,9 @@
  */
 require_once('common/chart/Chart_Pie.class.php');
 require_once('colorsFactory.class.php');
+require_once('GraphOnTrackers_Engine.class.php');
 
-class pie_engine {
+class pie_engine extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
@@ -35,19 +36,18 @@ class pie_engine {
     var $legend;
     
     
-    function pie_engine() {
-        $this->jp_graph_path = $GLOBALS['jpgraph_dir'];        
+    function validData(){
+        if ((is_array($this->data)) && (array_sum($this->data) > 0)){
+            return true;
+        }else{
+            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";                
+            return false;
+        }
     }
     
-    function Valid_datas(){
-    	if((is_array($this->data)) && (array_sum($this->data)>0)){
-    		return true;
-    	}else{
-    		
-			echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackers_engine','no_datas',array($this->title))."</p>";				
-    		return false;
-    	}
-    }
+    /**
+     * Builds pie graph
+     */
     function buildGraph() {
         $this->graph = new Chart_Pie($this->width,$this->height);
 
@@ -82,27 +82,6 @@ class pie_engine {
             $this->graph->Add($p);
         }          
         return $this->graph;
-    }
-    
-    
-    function isDataAvailable() {
-        $returns = false;
-        for ($i=0;$i<count($this->data);$i++) {
-            if (array_sum($this->data[$i])>0){
-                $returns = true;
-            }
-        }
-        return $returns;
-    }
-    
-    
-    function invMatrix($matrix) {
-        for($i=0;$i<count($matrix);$i++) {
-            for($j=0;$j<count($matrix[$i]);$j++) {
-               $inversed_matrix[$j][$i] = $matrix[$i][$j];
-            }
-        }
-        return $inversed_matrix;
     }
 }
 ?>

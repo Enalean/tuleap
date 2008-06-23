@@ -140,12 +140,12 @@ abstract class GraphOnTrackers_Chart {
         //prepare the propeties for the chart
         $pcdb->buildProperties($e);
         
-        if($e->Valid_datas()){
-        	//build the chart
-	        $e->buildGraph();
-	        return $e;	
-        }else{
-        	return false;
+        if ($e->validData()) {
+            //build the chart
+            $e->buildGraph();
+            return $e;
+        } else {
+            return false;
         }      
         
     }
