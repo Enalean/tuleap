@@ -38,8 +38,51 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph_gantt.php');
 */
 class Chart_Gantt extends Chart{
 
+    /**
+    * Constructor
+    */
+    public function __construct($aWidth=0,$aHeight=0,$aCachedName="",$aTimeOut=0,$aInline=true) {
+        parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
+        
+        $header_color = 'gray9';
+        
+        $this->scale->year->grid->SetColor($this->getMainColor());
+        $this->scale->year->grid->Show(true);
+        $this->scale->year->SetBackgroundColor($header_color);
+        $this->scale->year->SetFont($this->getFont(), FS_NORMAL, 8);
+        
+        $this->scale->month->grid->SetColor($this->getMainColor());
+        $this->scale->month->grid->Show(true);
+        $this->scale->month->SetBackgroundColor($header_color);
+        $this->scale->month->SetFont($this->getFont(), FS_NORMAL, 8);
+        
+        $this->scale->week->grid->SetColor($this->getMainColor());
+        $this->scale->week->SetFont($this->getFont(), FS_NORMAL, 8);
+        
+        $this->scale->day->grid->SetColor($this->getMainColor());
+        $this->scale->day->SetFont($this->getFont(), FS_NORMAL, 6);
+        
+        $this->scale->actinfo->SetBackgroundColor($header_color);
+        $this->scale->actinfo->SetFont($this->getFont(), FS_NORMAL, 8);
+        
+        $this->scale->actinfo->vgrid->SetColor($header_color);
+    }
+    
     protected function _getGraphClass() {
         return 'GanttGraph';
     }
+    
+    public function getErrorBarColor() {
+        return 'salmon';
+    }
+    
+    public function getGreenBarColor() {
+        return 'darkgreen';
+    }
+    
+    public function getTodayLineColor() {
+        return 'red';
+    }
+    
 }
 ?>

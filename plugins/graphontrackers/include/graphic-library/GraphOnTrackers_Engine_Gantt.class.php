@@ -20,7 +20,6 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('colorsFactory.class.php');
 require_once('GraphOnTrackers_Engine.class.php');
 
 class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
@@ -97,29 +96,42 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     }
       
     
-    function formatScale(&$scale_dim) {
+    function formatScale() {
         switch ($this->scale){
             case 'day':
-                $scale_dim = 1;
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK | GANTT_HDAY;
                 break;
             case 'week':
-                $scale_dim = 3;
                 return GANTT_HYEAR | GANTT_HMONTH | GANTT_HWEEK;
                 break; 
             case 'month':
-                $scale_dim = 7;
                 return GANTT_HYEAR | GANTT_HMONTH;
                 break;
             case 'year':
-                $scale_dim = 14;
-                return GANTT_HYEAR;
-                break;
             default:
-                $scale_dim = 14;
                 return GANTT_HYEAR;
                 break;
         }        
+    }
+    
+    function getScaleDim() {
+        $scale_dim = null;
+        switch ($this->scale){
+            case 'day':
+                $scale_dim = 1;
+                break;
+            case 'week':
+                $scale_dim = 3;
+                break; 
+            case 'month':
+                $scale_dim = 7;
+                break;
+            case 'year':
+            default:
+                $scale_dim = 14;
+                break;
+        }
+        return $scale_dim;
     }
     
     /**
@@ -127,7 +139,6 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     */
     function buildGraph() {
         require_once('common/chart/Chart_Gantt.class.php');
-        $cf = new colorsFactory(); 
               
         $this->graph = new Chart_Gantt($this->width,$this->height,"auto");
         
@@ -147,40 +158,22 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         if ($this->asOfDate == 0) {
             $dateRep  = date("Y-m-d",strtotime('now'));
             $dateDisp = date("m-d-Y",strtotime('now'));
-            $vline = new GanttVLine($dateRep,"Today:".$dateDisp, $cf->getColor_name(10), 1, 'solid');
+            $vline = new GanttVLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         } else {
             $dateRep  = date("Y-m-d",$this->asOfDate);
             $dateDisp = date("m-d-Y",$this->asOfDate);
-            $vline = new GanttVLine($dateRep,$dateDisp, $cf->getColor_name(10), 1, 'solid');
+            $vline = new GanttVLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         }
         $vline->SetDayOffset(0.5);
         $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7); 
         $vline->title->setColor($this->graph->getMainColor());
         $this->graph->Add($vline);
         
-        
-        
-        
         //scale setup
-        $this->graph->ShowHeaders($this->formatScale(&$scale_dim));
-  
-        //formating scale
-
-        $this->graph->scale->month->grid->SetColor($this->graph->getMainColor());
-        $this->graph->scale->month->grid->Show(true);
-        $this->graph->scale->month->SetBackgroundColor($cf->getColor_name(11));
-        $this->graph->scale->month->SetFont($this->graph->getFont(), FS_NORMAL, 8);
+        $this->graph->ShowHeaders($this->formatScale());
+        $scale_dim = $this->getScaleDim();
         
-        $this->graph->scale->year->grid->SetColor($this->graph->getMainColor());
-        $this->graph->scale->year->grid->Show(true);
-        $this->graph->scale->year->SetBackgroundColor($cf->getColor_name(11));
-        $this->graph->scale->year->SetFont($this->graph->getFont(), FS_NORMAL, 8);
-   
         //add info to gantt graph
-        $this->graph->scale->actinfo->SetBackgroundColor($cf->getColor_name(11));
-        $this->graph->scale->actinfo->SetFont($this->graph->getFont(), FS_NORMAL, 8);
-        
-        $this->graph->scale->actinfo->vgrid->SetColor($cf->getColor_name(11));
         $this->graph->scale->actinfo->SetColTitles(array("Summary"),array(20));
         
 
@@ -223,8 +216,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'end'     => date($format,$this->data[$i]['finish']-(60*60*24*$scale_dim)),
                             'caption' => "",
                             'height'  => 0.2));
-                    $bar->SetColor($cf->getColor_name(12).":0.7");
-                    $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12));
+                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");
+                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor());
                 }
                 
             }
@@ -248,8 +241,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'end'     => date($format,$today),
                             'caption' => "",
                             'height'  => 0.2));
-                        $bar->SetColor($cf->getColor_name(13).":0.7");
-                        $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(13),94);
+                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");
+                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
                         
                     } else {
                         
@@ -261,8 +254,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'end'     => date($format,$this->data[$i]['finish']-(60*60*24*$scale_dim)),
                             'caption' => "",
                             'height'  => 0.2));
-                        $bar->SetColor($cf->getColor_name(13).":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(13),94);
+                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
+                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
                         
                     }
                     
@@ -274,8 +267,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'start'   => date($format,$this->data[$i]['due']+(60*60*24)),
                             'end'     => date($format,$this->data[$i]['finish']-(60*60*24)),
                             'caption' => ""));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                     
                         $this->addMilestone($i, $this->data[$i], array('caption' => ''));
                     
@@ -286,8 +279,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'start'  => date($format,$this->data[$i]['finish']+(60*60*24)), 
                             'end'    => 'right',
                             'height' => 0.2));
-                        $bar->SetColor($cf->getColor_name(13).":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(13),94);
+                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
+                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
                         
                         
                     } else {
@@ -296,8 +289,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'start'   => date($format,$this->data[$i]['due']+(60*60*24)),
                             'end'     => date($format,$this->data[$i]['finish']-(60*60*24)),
                             'caption' => ""));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                     
                         $this->addMilestone($i, $this->data[$i], array('caption' => ''));
                     
@@ -312,8 +305,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                         'start'  => date($format,$this->data[$i]['finish']+(60*60*24)), 
                         'end'    => 'due',
                         'height' => 0.2));
-                    $bar->SetColor($cf->getColor_name(13).":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(13),94);
+                    $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
+                    $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
                     
                     $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
                                         
@@ -334,8 +327,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                     $bar = $this->addBar($i, $this->data[$i], false, array(
                         'start'   => 'due',
                         'height'  => 0.2));
-                    $bar->SetColor($cf->getColor_name(12).":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12),94);
+                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
+                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
                      
                     $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
                                                             
@@ -345,7 +338,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                         'start'  => 'finish',
                         'end'    => 'due',
                         'height' => 0.2));
-                    $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(14),94);
+                    $bar->SetPattern(GANTT_SOLID,"white",94);
 
                     $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
                                         
@@ -361,8 +354,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'label' => "",
                             'start' => 'due',
                             'end'   => date($format,$today)));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                     
                         $this->addMilestone($i, $this->data[$i], array('label' => "", 'caption' => ''));
 
@@ -373,8 +366,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                         $a2 = $this->addBar($i, $this->data[$i], false, array(
                             'start' => 'due',
                             'end'   => 'finish'));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                     
                         $this->addMilestone($i, $this->data[$i], array('caption' => ''));
 
@@ -393,8 +386,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                         $a2 = $this->addBar($i, $this->data[$i], false, array(
                             'start' => date($format,$this->data[$i]['due']+(60*60*24)),
                             'end'     => date($format,$today)));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                         
                     } else {
                         
@@ -405,8 +398,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                         $a2 = $this->addBar($i, $this->data[$i], false, array(
                             'start' => date($format,$this->data[$i]['due']+(60*60*24)),
                             'end'     => 'finish'));
-                        $a2->SetColor($cf->getColor_name(12).":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                         
                     }
                                         
@@ -441,8 +434,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                                 'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
                                 'end'   => 'due',
                                 'height' => 0.2));
-                            $bar->SetPattern(GANTT_VLINE,$cf->getColor_name(14),92);
-                            $bar->SetFillColor($cf->getColor_name(15));
+                            $bar->SetPattern(GANTT_VLINE,"white",92);
+                            $bar->SetFillColor("darkblue");
                             
                             $this->addBar($i, $this->data[$i], true, array('end' => date($format,$today), 'caption' => ""));
                             
@@ -454,8 +447,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                                 'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
                                 'end' => 'due',
                                 'height' => 0.2));
-                            $bar->SetPattern(GANTT_VLINE,$cf->getColor_name(14),92);
-                            $bar->SetFillColor($cf->getColor_name(15));
+                            $bar->SetPattern(GANTT_VLINE,"white",92);
+                            $bar->SetFillColor("darkblue");
                         }
                         
                     }
@@ -472,8 +465,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                                 'end'     => date($format,$today),
                                 'caption' => "",
                                 'height'  => 0.2));
-                            $bar->SetColor($cf->getColor_name(12).":0.7");;
-                            $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12),94);
+                            $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
+                            $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
                             
                             $this->addMilestone($i, $this->data[$i], array('caption' => ''));
                             
@@ -488,8 +481,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                                 'end' => date($format,$this->data[$i]['finish']-(60*60*24)),
                                 'caption' => "",
                                 'height' => 0.2));
-                            $bar->SetColor($cf->getColor_name(12).":0.7");;
-                            $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12),94);
+                            $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
+                            $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
                             
                             $bar1 = $this->addBar($i, $this->data[$i], false, array(
                                 'label' => "",
@@ -497,8 +490,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                                 'end' => date($format,$this->data[$i]['start']-(60*60*24)),
                                 'caption' => "",
                                 'height' => 0.2));
-                            $bar1->SetColor($cf->getColor_name(12).":0.7");;
-                            $bar1->SetPattern(GANTT_SOLID,$cf->getColor_name(12),94);
+                            $bar1->SetColor($this->graph->getErrorBarColor().":0.7");;
+                            $bar1->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
                             
                             $this->addMilestone($i, $this->data[$i], array('caption' => ''));
                             
@@ -514,8 +507,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                             'end' => 'start',
                             'caption' => "",
                             'height' => 0.2));
-                        $bar->SetColor($cf->getColor_name(12).":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12),94);
+                        $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
+                        $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
                         
                         $this->addMilestone($i, $this->data[$i], array('caption' => ''));
                         
@@ -536,8 +529,8 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                     $bar = $this->addBar($i, $this->data[$i], false, array(
                         'start' => date($format,$this->data[$i]['due']+(60*60*24)),
                         'end' => date($format,$this->data[$i]['start']-(60*60*24))));
-                    $bar->SetColor($cf->getColor_name(12).":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$cf->getColor_name(12),98);
+                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
+                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
                     
                     $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
 

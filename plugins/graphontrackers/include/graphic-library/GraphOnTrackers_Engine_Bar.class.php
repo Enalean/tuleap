@@ -34,17 +34,6 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
     var $data;
     var $legend;
     var $xaxis;
-    var $cf;
-    var $jp_graph_path;
-    
-    /**
-     * class constructor
-     */
-    function __construct() {
-        require_once('colorsFactory.class.php');
-        $this->jp_graph_path = $GLOBALS['jpgraph_dir'];
-        $this->cf = new colorsFactory();       
-    }
     
     /**
      * Builds bar chart object
@@ -78,14 +67,15 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
         $this->graph->xaxis->SetTickSide(SIDE_DOWN);
         
         $this->graph->xaxis->title->setMargin(60,20,20,20);
-        $this->graph->xaxis->title->setColor($this->cf->getColor_name(15));
         
         if (!is_null($this->xaxis)) {
             $this->graph->xaxis->SetTickLabels($this->xaxis);
         } else {
             $this->graph->xaxis->SetTickLabels($this->legend);
         }
-
+        
+        $colors = $this->graph->getThemedColors();
+        
         if (is_null($this->xaxis)) {
             if ((is_array($this->data)) && (array_sum($this->data)>0)) {
                 $b = new BarPlot($this->data);
@@ -99,8 +89,8 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
                 $b->value->SetMargin(2);
                 
                 $b->SetWidth(0.4);
-                $b->SetColor($this->cf->getColor_name(0).':0.7');
-                $b->SetFillColor($this->cf->getColor_name(0));
+                $b->SetColor($colors[0].':0.7');
+                $b->SetFillColor($colors[0]);
                 // end hard coded parameter
                 $this->graph->add($b);
             }
@@ -119,8 +109,8 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
                     $b[$l]->value->SetMargin(2);   
                     $b[$l]->SetLegend($this->legend[$i]);
                     $b[$l]->SetWidth(0.4);
-                    $b[$l]->SetColor($this->cf->getColor_name($l).':0.7');
-                    $b[$l]->SetFillColor($this->cf->getColor_name($l));
+                    $b[$l]->SetColor($colors[$l].':0.7');
+                    $b[$l]->SetFillColor($colors[$l]);
                     $l++;
                     // end hard coded parameter
                 }

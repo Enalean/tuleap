@@ -21,7 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('common/chart/Chart_Pie.class.php');
-require_once('colorsFactory.class.php');
 require_once('GraphOnTrackers_Engine.class.php');
 
 class GraphOnTrackers_Engine_Pie extends GraphOnTrackers_Engine {
@@ -65,10 +64,7 @@ class GraphOnTrackers_Engine_Pie extends GraphOnTrackers_Engine {
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);
             
-            $cf = new colorsFactory();       
-            $p->setSliceColors($cf->getColors());
-            
-            
+            $p->setSliceColors($this->graph->getThemedColors());
             
             $p->SetCenter(0.4,0.6);
             $p->SetLegends($this->legend);

@@ -40,6 +40,7 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph_date.php');
 class Chart {
     
     protected $_jpgraph_instance;
+    protected $_themed_colors;
     
     /**
     * Constructor
@@ -65,6 +66,27 @@ class Chart {
         
         $this->_jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL,8);
         $this->_jpgraph_instance->subtitle->SetColor($this->getMainColor());
+        
+        $this->_themed_colors = array(
+            'lightsalmon',
+            'palegreen',
+            'palegoldenrod',
+            'lightyellow',
+            'paleturquoise',
+            'steelblue1',
+            'thistle',
+            'palevioletred1',
+            'wheat1',
+            'gold',
+            'olivedrab1',
+            'lightcyan',
+            'lightcyan3',
+            'lightgoldenrod1',
+            'rosybrown',
+            'mistyrose',
+            'silver',
+            'aquamarine',
+        );
     }
         
     protected function _getGraphClass() {
@@ -117,6 +139,10 @@ class Chart {
     
     public function getMainColor() {
         return "#444444";
+    }
+    
+    public function getThemedColors() {
+        return $this->_themed_colors;
     }
 }
 ?>
