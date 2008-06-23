@@ -101,7 +101,7 @@ class GraphOnTrackers_Line_Chart extends GraphOnTrackers_Chart {
                     new HTML_Element_TrackerFields_State($GLOBALS['Language']->getText('plugin_graphontrackers_line_property', 'state_source'),'chart[state_source]', $this->getState_source(),$this->getField_base()),
                     new HTML_Element_TrackerFields_State($GLOBALS['Language']->getText('plugin_graphontrackers_line_property', 'state_target'),'chart[state_target]', $this->getState_target(),$this->getField_base(),true)
                 ),
-                new ComponentsHTML_Columns(
+                new HTML_Element_Columns(
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_line_property', 'date_reference'),'chart[date_reference]', $this->getDate_reference()),
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_line_property', 'date_min'), 'chart[date_min]', $this->getDate_min()),
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_line_property', 'date_max'), 'chart[date_max]', $this->getDate_max())
