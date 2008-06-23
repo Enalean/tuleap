@@ -359,6 +359,9 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         $engine->description= $this->chart->getDescription();
         $engine->scale      = $this->chart->getScale();
         $engine->asOfDate   = $this->chart->getAs_of_date();
+        $af = new ArtifactField();
+        $af->fetchData($this->chart->getGraphicReport()->getAtid(),$this->chart->getSummary());
+        $engine->summary_label = $af->getLabel();
         $this->buildData($engine);
     }
 

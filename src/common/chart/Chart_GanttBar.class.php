@@ -77,8 +77,8 @@ class Chart_GanttBar {
     public function SetCSIM($link, $alt) {
         $this->_jpgraph_instance->SetCSIMTarget($link); 
         $this->_jpgraph_instance->SetCSIMAlt($alt);
-        $this->_jpgraph_instance->title->SetCSIMTarget($link); 
-        $this->_jpgraph_instance->title->SetCSIMAlt($alt);
+        $this->_jpgraph_instance->title->SetCSIMTarget(array($link, $link)); 
+        $this->_jpgraph_instance->title->SetCSIMAlt(array($alt));
     }
 }
 ?>

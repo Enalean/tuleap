@@ -39,6 +39,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     var $summary;
     var $data;
     var $jp_graph_path;
+    var $summary_label;
     
     function setTitle($title) {
         $this->title = $title;
@@ -174,7 +175,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         $scale_dim = $this->getScaleDim();
         
         //add info to gantt graph
-        $this->graph->scale->actinfo->SetColTitles(array("Summary"),array(20));
+        $this->graph->scale->actinfo->SetColTitles(array("Id", $this->summary_label));
         
 
         $format = "Y-m-d";
@@ -616,7 +617,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
             $aEnd = date($format, $data['finish']);
         }
         
-        $aLabel        = isset($params['label']) ? $params['label'] : array(html_entity_decode($data['summary']));
+        $aLabel        = isset($params['label']) ? $params['label'] : array($data['id'], html_entity_decode($data['summary']));
         $aCaption      = isset($params['caption']) ? $params['caption'] : $data['right'];
         $aHeightFactor = isset($params['height']) ? $params['height'] : 0.6; //default jpgraph value
         
@@ -631,7 +632,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     
     protected function addMilestone($pos, $data, $params = array()) {
         $format = "Y-m-d";
-        $aLabel   = isset($params['label']) ? $params['label'] : array(html_entity_decode($data['summary']));
+        $aLabel   = isset($params['label']) ? $params['label'] : array($data['id'], html_entity_decode($data['summary']));
         if (isset($params['date'])) {
             if (in_array($params['date'], array('start', 'due', 'finish'))) {
                 $aDate = date($format, $data[$params['date']]);
