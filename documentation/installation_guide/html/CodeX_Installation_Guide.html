@@ -851,12 +851,9 @@ below for more information<br>
 CodeX has its own domain name and the name server for the CodeX
 domain is hosted on the central CodeX server. <br>
 <h2>DNS Zone file</h2>
-Your DNS zone (called codex.zone) definition file must be placed in <tt>/var/named/</tt>
-because this path is hardcoded in the <tt>/usr/share/codex/src/utils/underworld-dummy/dns_conf.pl</tt>
-script that is used to automatically generate the DNS aliases for
-project sites and per project CVS and SVN servers. <br>
+Your DNS zone (called codex_full.zone) definition file must be placed in <tt>/var/named/chroot/var/named</tt>.
 <br>
-As an example here is how the codex.zone file looks like on the CodeX
+As an example here is how the codex_full.zone file looks like on the CodeX
 central site of the Xerox Corporation. Adapt the file to your own needs:<br>
 <br>
 <blockquote><tt>$TTL 3600</tt><br>
@@ -938,11 +935,13 @@ IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mailer-east.xerox.com.</tt><br>
-  <br>
+<tt>  <br>
 ;<br>
-; *** From here out is auto-generated ***<br>
-:<br>
-</blockquote>
+; Wildcard DNS entry, to match all possible hosts: projnamme.*, cvs.projname.*, svn.projname.*, etc.<br>
+;<br>
+*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CNAME&nbsp;&nbsp; atlas<br>
+<br>
+</tt></blockquote>
 <br>
 <br>
 As you can see the CodeX central hosts all the CodeX services on a
@@ -956,15 +955,6 @@ export specific services to a separate server
 and all you'll have to do is to redefine the alias name to point to
 the IP address of the new server. Note that all servers must
 remain in the CodeX domain.<br>
-<br>
-Also note that CodeX cron job will generate another file called
-codex_full.zone in the same directory as the codex.zone file. This file
-is obtained by taking the codex.zone file (which you can edit by hand)
-and appending auto-generated aliases for the each project Web site (
-http://<span style="font-style: italic;">projectname.your.codex.domain</span>)
-and each CVS server
-(<span style="font-style: italic;">cvs.projectname.your.codex.domain</span>)
-and Subversion server (<span style="font-style: italic;">svn.projectname.your.codex.domain</span>)<br>
 <br>
 <h2>Named.conf file</h2>
 <span style="font-family: monospace;">/etc/named.conf</span> is the

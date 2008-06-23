@@ -634,7 +634,7 @@ $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf /var/named/codex.zone \
+for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codex_full.zone \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
 /etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf.d/codex_aliases.conf; do
@@ -716,14 +716,14 @@ substitute '/etc/httpd/conf/ssl.conf' '%sys_default_domain%' "$sys_default_domai
 substitute '/etc/httpd/conf/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 if [ "$disable_subdomains" != "y" ]; then
-  # replace string patterns in codex.zone
+  # replace string patterns in codex_full.zone
   sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
   dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/codex.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/codex.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/codex.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/codex.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/codex.zone' '%dns_serial%' "$dns_serial"
+  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/chroot/var/named/codex_full.zone' '%dns_serial%' "$dns_serial"
 fi
 
 # Make sure SELinux contexts are valid
@@ -1053,19 +1053,10 @@ fi
 #
 if [ "$disable_subdomains" != "y" ]; then
   todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
-  todo "    update /var/named/codex.zone - replace all words starting with %%, and copy it:"
-  todo "      > cp /var/named/codex.zone /var/named/chroot/var/named/codex_full.zone"
+  todo "    update /var/named/chroot/var/named/codex_full.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
   todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
-  todo "    edit /etc/named.conf :"
-  todo "      add DNS forwarders"
-  todo "      make sure the dns cache file exists (or 'touch' it)"
-  todo "      add at the end of the file (before the include):"
-  todo "zone \"$sys_default_domain\" {"
-  todo "          type master;"
-  todo "          file \"codex_full.zone\";"
-  todo "};"
-  todo "    start 'named' service (or reboot)"
+  todo "    edit /etc/named.conf to create the new zone."
 fi
 
 ##############################################
@@ -1375,13 +1366,16 @@ exit 0
 
 
 todo:
-salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
-Missing SELinux RPM, JRE RPM, apr and apr-utils RPM, 
-Saxon, Fop, Jimi DocBook
+OK? JRE RPM, Docbook
 OK? Apache tomcat missing?
 OK? MySQL long message
-utilities/ missing (fileforge...)
+OK? utilities/ missing (fileforge...)
+
+salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
+Missing SELinux RPM, apr and apr-utils RPM, 
 Can t initialize salome DB: Access denied to user root with password: no
 
-TODO:
-must move jre RPM in subdir
+SELinux rpms:
+selinux-policy-devel ?
+selinux-policy-XYZ.src.rpm.
+policycoreutils

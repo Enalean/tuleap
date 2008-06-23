@@ -682,3 +682,7 @@ exit 1;
 # Delete or rename: /etc/httpd/conf/codex_vhosts.conf
 # Delete or rename: /etc/httpd/conf/codex_svnhosts.conf
 # Warn that project web site CGI are no longer supported.
+
+# DNS
+# Add wildcard at the end of codex_full.zone and
+# ask to cleanup all the entries.

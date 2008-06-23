@@ -58,24 +58,6 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 cp $dump_dir/aliases /etc/aliases.codex
 /usr/bin/newaliases
 
-# and restart sendmail to be sure the new aliases DB
-# is taken into account (should not be necessary but I had
-# 2nd note: in the end it's not necessary to restart it
-# problems without restarting)
-# LJ killall -HUP sendmail
-
-
-# generate the DNS zone file and restart the DNS daemon
-#
-if [ $SYS_DISABLE_SUBDOMAINS != 1 ]; then
-  DNS_DIR=/var/named/chroot/var/named
-  ./dns_conf.pl
-  cp -f $DNS_DIR/codex_full.zone $DNS_DIR/codex_full.zone.backup
-  cp -f $dump_dir/dns_dump $DNS_DIR/codex_full.zone
-  killall -HUP named
-fi
-
-
 # generate the list of CodeX virtual hosts
 ./apache_conf.pl
 
