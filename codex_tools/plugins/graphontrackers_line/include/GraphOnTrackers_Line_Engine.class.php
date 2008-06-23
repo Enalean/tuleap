@@ -84,5 +84,10 @@ class GraphOnTrackers_Line_Engine extends GraphOnTrackers_Engine {
         }
         return $this->graph;
     }
+    
+    public function validData() {
+        //There is always data for line chart ?!
+        return true;
+    }
 }
 ?>
