@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GraphOnTrackers_Engine_Line extends GraphOnTrackers_Engine {
+class GraphOnTrackers_Line_Engine extends GraphOnTrackers_Engine {
 
     var $graph;
     var $title;
