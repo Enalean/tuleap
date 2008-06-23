@@ -1335,8 +1335,8 @@ $CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --pas
 java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/webapps/jdbc_client/cfg/
 
 #GraphOnTrackers plugin
-$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-$CAT $INSTALL_DIR/plugins/salome/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 ##############################################
 # End of installation
