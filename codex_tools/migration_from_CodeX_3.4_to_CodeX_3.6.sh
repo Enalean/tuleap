@@ -408,74 +408,74 @@ EOF
 echo "- Add Project Description custom fields. See revision #8610"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
-CREATE TABLE `codex`.`group_desc` (
-`group_desc_id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-`desc_required` BOOL NOT NULL DEFAULT FALSE,
-`desc_name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-`desc_description` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
-`desc_rank` INT( 11 ) NOT NULL DEFAULT '0',
-`desc_type` ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
-PRIMARY KEY ( `group_desc_id` ),
-UNIQUE (`desc_name`)
+CREATE TABLE codex.group_desc (
+group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+desc_required BOOL NOT NULL DEFAULT FALSE,
+desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+desc_description text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+desc_rank INT( 11 ) NOT NULL DEFAULT '0',
+desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
+PRIMARY KEY ( group_desc_id ),
+UNIQUE (desc_name)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
-CREATE TABLE `codex`.`group_desc_value` (
-`desc_value_id` INT( 11 ) NOT NULL AUTO_INCREMENT ,
-`group_id` INT( 11 ) NOT NULL ,
-`group_desc_id` INT( 11 ) NOT NULL ,
-`value` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-PRIMARY KEY ( `desc_value_id` )
+CREATE TABLE codex.group_desc_value (
+desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+group_id INT( 11 ) NOT NULL ,
+group_desc_id INT( 11 ) NOT NULL ,
+value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+PRIMARY KEY ( desc_value_id )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
-INSERT INTO `codex`.`group_desc` (
-`group_desc_id` ,
-`desc_required` ,
-`desc_name` ,
-`desc_description` ,
-`desc_rank` ,
-`desc_type`
+INSERT INTO codex.group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
 )
 VALUES (
-NULL , '1', 'project_desc_name:full_desc', 'project_desc_desc:full_desc',
+'101' , '1', 'project_desc_name:full_desc', 'project_desc_desc:full_desc',
 '1', 'text'
 );
 
-INSERT INTO `codex`.`group_desc` (
-`group_desc_id` ,
-`desc_required` ,
-`desc_name` ,
-`desc_description` ,
-`desc_rank` ,
-`desc_type`
+INSERT INTO codex.group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
 )
 VALUES (
-NULL , '0', 'project_desc_name:int_prop', 'project_desc_desc:int_prop',
+'102' , '0', 'project_desc_name:int_prop', 'project_desc_desc:int_prop',
 '5', 'text'
 );
 
-INSERT INTO `codex`.`group_desc` (
-`group_desc_id` ,
-`desc_required` ,
-`desc_name` ,
-`desc_description` ,
-`desc_rank` ,
-`desc_type`
+INSERT INTO codex.group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
 )
 VALUES (
-NULL , '0', 'project_desc_name:req_soft', 'project_desc_desc:req_soft',
+'103' , '0', 'project_desc_name:req_soft', 'project_desc_desc:req_soft',
 '5', 'text'
 );
 
-INSERT INTO `codex`.`group_desc` (
-`group_desc_id` ,
-`desc_required` ,
-`desc_name` ,
-`desc_description` ,
-`desc_rank` ,
-`desc_type`
+INSERT INTO codex.group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
 )
 VALUES (
-NULL , '0', 'project_desc_name:other_comments', 'project_desc_desc:other_comments',
+'104' , '0', 'project_desc_name:other_comments', 'project_desc_desc:other_comments',
 '5', 'text'
 );
 
@@ -686,3 +686,5 @@ exit 1;
 # DNS
 # Add wildcard at the end of codex_full.zone and
 # ask to cleanup all the entries.
+
+# SVN 1.5
