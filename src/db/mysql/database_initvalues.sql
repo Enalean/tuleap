@@ -1209,7 +1209,7 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (2, 100, 'Tasks', 'Tasks Tracker', 'task', 0, NULL, NULL, 1, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, NULL, NULL, 1, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, NULL, NULL, 0, 0);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 1, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 0, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (6, 100, 'Salome Bug', 'Salome Bug Tracker', 'slmbug', 1, NULL, NULL, 0, 0);
 
 --
