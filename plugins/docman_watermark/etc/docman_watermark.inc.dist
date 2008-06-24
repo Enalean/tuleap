@@ -1,0 +1,7 @@
+<?php
+
+// Where the documentation files are located
+$docman_watermark_root = '/var/lib/codex/docman_watermark';
+$docman_watermark_zendpath = '';
+
+?>

@@ -29,6 +29,14 @@ class Docman_View_Download extends Docman_View_View {
                     'version'  => $version->getNumber(),
                     'user'     => &$params['user']
                 ));
+                $event_manager->processEvent('docman_file_before_download', array(
+                    'group_id'  => $params['group_id'],
+                    'item'      => &$params['item'],
+                    'user'      => &$params['user'],
+                    'headers' => array('mime_type' => $version->getFiletype(),
+                                       'file_name' => $version->getFilename()),
+                    'path'      => $version->getPath()
+                    ));
                 header('Content-Type: '. $version->getFiletype());
                 header('Content-Length: '. $version->getFilesize());
                 header('Content-Disposition: filename="'. $version->getFilename() .'"');
