@@ -8,16 +8,16 @@ INSERT INTO plugin_graphontrackers_report_graphic (report_graphic_id, group_arti
 --
 -- Dumping data for table 'plugin_graphontrackers_chart'
 --
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (1,1,5,pie,'Status','Number of Artifacts by Status') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (2,1,10,bar,'Severity','Number of Artifacts by severity level') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (3,1,15,pie,'Assignment','Number of Artifacts by Assignee') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (4,2,5,pie,'Status','Number of Artifacts by Status') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (5,2,10,bar,'Severity','Number of Artifacts by severity level') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (6,2,15,pie,'Assignment','Number of Artifacts by Assignee') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (7,3,5,pie,'Status','Number of Artifacts by Status') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (8,3,10,bar,'Severity','Number of Artifacts by severity level') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (9,3,15,bar,'Assignment','Number of Artifacts by Assignee') ;
-INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (10,4,5,gantt,'Gantt','Gantt Chart for Task Management') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (1,1,5,'pie','Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (2,1,10,'bar','Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (3,1,15,'pie','Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (4,2,5,'pie','Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (5,2,10,'bar','Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (6,2,15,'pie','Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (7,3,5,'pie','Status','Number of Artifacts by Status') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (8,3,10,'bar','Severity','Number of Artifacts by severity level') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (9,3,15,'bar','Assignment','Number of Artifacts by Assignee') ;
+INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description) VALUES (10,4,5,'gantt','Gantt','Gantt Chart for Task Management') ;
 --
 -- Dumping data for table 'plugin_graphontrackers_bar_chart'
 --
