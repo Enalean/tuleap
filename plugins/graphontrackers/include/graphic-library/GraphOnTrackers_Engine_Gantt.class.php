@@ -179,417 +179,95 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         
 
         $format = "Y-m-d";
-        $today  = strtotime('now'); 
+        $today  = strtotime('now');
+        $one_day = 24*3600;
         for($i=0;$i<count($this->data);$i++){
+            $s = $this->data[$i]['start'];
+            $d = $this->data[$i]['due'];
+            $f = $this->data[$i]['finish'];
             
-            // start=0 and due=0 and finish=0
-            if (($this->data[$i]['start'] == 0) && ($this->data[$i]['due'] == 0) && ($this->data[$i]['finish'] == 0)) {
-
-                $begin_date = date($format, $today);
-                $end_date   = date($format, $today);
-                $this->addBar($i, $this->data[$i], false, array(
-                    'start'   => date($format, $today),
-                    'end'     => date($format, $today),
+            //Milestone
+            if (($s == 0 && $d == 0 && $f != 0)
+                || ($s == 0 && $d != 0 && $f == 0)
+                || ($s == 0 && $d != 0 && $f == $d)
+                ) 
+            {
+                $this->addMilestone($i, $this->data[$i], array('date' => date($format, max($this->data[$i]['due'], $this->data[$i]['finish']))));
+            }
+            //Late milestone
+            elseif ($s == 0 && $d != 0 && $f != 0 && $d < $f) {
+                $this->addLateBar($i, $this->data[$i], false, array(
+                    'start'   => 'due',
+                    'end'     => 'finish',
+                    'label'   => "",
                     'caption' => "",
-                    'height'  => 0.2));
-                
+                    'height'  => 0.2
+                ));
+                $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
             }
-            
-            // tasks with (start=0 due=0 finished !=0)
-            if (($this->data[$i]['start'] == 0) && ($this->data[$i]['due'] == 0) && ($this->data[$i]['finish'] != 0)) {
-                
-                if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                    
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                 
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'label'  => "", 
-                            'start'  => date($format, $this->data[$i]['finish'] - (60*60*24*5*$scale_dim)), 
-                            'end'    => date($format,$today),
-                            'height' => 0.2));
-                    
-                } else {
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
-                 
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'label'   => "", 
-                            'start'   => date($format, $this->data[$i]['finish'] - (60*60*24*5*$scale_dim)), 
-                            'end'     => date($format,$this->data[$i]['finish']-(60*60*24*$scale_dim)),
-                            'caption' => "",
-                            'height'  => 0.2));
-                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");
-                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor());
-                }
-                
-            }
-            
-
-            
-            // task with (start=0 due!=0 finish!=0)
-   
-            if (($this->data[$i]['start'] == 0) && ($this->data[$i]['due'] != 0) && ($this->data[$i]['finish'] != 0))  {
-                
-                if ($this->data[$i]['due'] == $this->data[$i]['finish']) {
-                    
-                    if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                        
-                        $this->addMilestone($i, $this->data[$i]);
-                    
-                        $begin_date = date($format, $this->data[$i]['finish'] - (60*60*24*5*$scale_dim)); 
-                        $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'label'   => "", 
-                            'start'   => $begin_date, 
-                            'end'     => date($format,$today),
-                            'caption' => "",
-                            'height'  => 0.2));
-                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");
-                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
-                        
-                    } else {
-                        
-                        $this->addMilestone($i, $this->data[$i]);
-                    
-                        $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'label'   => "", 
-                            'start'   => date($format, $this->data[$i]['finish'] - (60*60*24*5*$scale_dim)), 
-                            'end'     => date($format,$this->data[$i]['finish']-(60*60*24*$scale_dim)),
-                            'caption' => "",
-                            'height'  => 0.2));
-                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
-                        
-                    }
-                    
-                } else if ($this->data[$i]['due'] < $this->data[$i]['finish']) { 
-
-                    if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                        
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'start'   => date($format,$this->data[$i]['due']+(60*60*24)),
-                            'end'     => date($format,$this->data[$i]['finish']-(60*60*24)),
-                            'caption' => ""));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                    
-                        $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                    
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                        
-                        $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'label'  => "", 
-                            'start'  => date($format,$this->data[$i]['finish']+(60*60*24)), 
-                            'end'    => 'right',
-                            'height' => 0.2));
-                        $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
-                        
-                        
-                    } else {
-                        
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'start'   => date($format,$this->data[$i]['due']+(60*60*24)),
-                            'end'     => date($format,$this->data[$i]['finish']-(60*60*24)),
-                            'caption' => ""));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                    
-                        $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                    
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
-                        
-                    }
-                    
-                } else if ($this->data[$i]['due'] > $this->data[$i]['finish']) {
-                    
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                        'label'  => "", 
-                        'start'  => date($format,$this->data[$i]['finish']+(60*60*24)), 
-                        'end'    => 'due',
-                        'height' => 0.2));
-                    $bar->SetColor($this->graph->getGreenBarColor().":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$this->graph->getGreenBarColor(),94);
-                    
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                                        
-                }
-                 
-            }
-
-            // task with (start!=0 due!=0 finish!=0)
-            
-            if (($this->data[$i]['start'] != 0) && ($this->data[$i]['due'] != 0) && ($this->data[$i]['finish'] != 0))  {
-                
-                if (($this->data[$i]['start'] == $this->data[$i]['due']) && ($this->data[$i]['due'] == $this->data[$i]['finish'])) {
-                    
-                    $a1 = $this->addBar($i, $this->data[$i], true, array( 'end' => 'due'));
-                    
-                } else if (($this->data[$i]['start'] == $this->data[$i]['due']) && ($this->data[$i]['due'] < $this->data[$i]['finish'])) {
-                    
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                        'start'   => 'due',
-                        'height'  => 0.2));
-                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
-                     
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
-                                                            
-                } else if (($this->data[$i]['start'] == $this->data[$i]['due']) && ($this->data[$i]['due'] > $this->data[$i]['finish'])) {
-                    
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                        'start'  => 'finish',
-                        'end'    => 'due',
-                        'height' => 0.2));
-                    $bar->SetPattern(GANTT_SOLID,"white",94);
-
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                                        
-                } else if (($this->data[$i]['start'] < $this->data[$i]['due']) && ($this->data[$i]['due'] == $this->data[$i]['finish'])) {
-                    
-                    $a1 = $this->addBar($i, $this->data[$i], true, array('end' => 'due'));
-                                                            
-                } else if (($this->data[$i]['start'] > $this->data[$i]['due']) && ($this->data[$i]['due'] == $this->data[$i]['finish'])) {
-                    
-                    if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                        
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'label' => "",
-                            'start' => 'due',
-                            'end'   => date($format,$today)));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                    
-                        $this->addMilestone($i, $this->data[$i], array('label' => "", 'caption' => ''));
-
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
-                        
-                    } else { 
-                    
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'start' => 'due',
-                            'end'   => 'finish'));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                    
-                        $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ""));
-                        
-                    }
-                    
-                } else if (($this->data[$i]['start'] < $this->data[$i]['due']) && ($this->data[$i]['due'] < $this->data[$i]['finish'])) {
-                    
-                    if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                        
-                        $a1 = $this->addBar($i, $this->data[$i], true, array(
-                            'end'     => 'due',
-                            'caption' => ""));
-
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'start' => date($format,$this->data[$i]['due']+(60*60*24)),
-                            'end'     => date($format,$today)));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                        
-                    } else {
-                        
-                        $a1 = $this->addBar($i, $this->data[$i], true, array(
-                            'end'     => 'due',
-                            'caption' => ""));
-
-                        $a2 = $this->addBar($i, $this->data[$i], false, array(
-                            'start' => date($format,$this->data[$i]['due']+(60*60*24)),
-                            'end'     => 'finish'));
-                        $a2->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $a2->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                        
-                    }
-                                        
-                } else if (($this->data[$i]['start'] < $this->data[$i]['due']) && ($this->data[$i]['due'] > $this->data[$i]['finish'])) {
-                    
-                    if ($this->data[$i]['start'] == $this->data[$i]['finish']) {
-                        
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ""));
-                        
-                        $this->addBar($i, $this->data[$i], false, array(
-                                'label' => "",
-                                'start' => 'finish',
-                                'end'   => 'due',
-                                'height' => 0.2));
-                        
-                    } else if ($this->data[$i]['start'] > $this->data[$i]['finish']) {
-                        
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                        
-                        $this->addBar($i, $this->data[$i], false, array(
-                                'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
-                                'end'   => 'due',
-                                'height' => 0.2));
-                        
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ""));
-                                                
-                    } else if ($this->data[$i]['start'] < $this->data[$i]['finish']) {
-                        
-                        if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-
-                            $bar = $this->addBar($i, $this->data[$i], true, array(
-                                'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
-                                'end'   => 'due',
-                                'height' => 0.2));
-                            $bar->SetPattern(GANTT_VLINE,"white",92);
-                            $bar->SetFillColor("darkblue");
-                            
-                            $this->addBar($i, $this->data[$i], true, array('end' => date($format,$today), 'caption' => ""));
-                            
-                        } else {
-                        
-                            $this->addBar($i, $this->data[$i], true, array('caption' => ""));
-
-                            $bar = $this->addBar($i, $this->data[$i], false, array(
-                                'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
-                                'end' => 'due',
-                                'height' => 0.2));
-                            $bar->SetPattern(GANTT_VLINE,"white",92);
-                            $bar->SetFillColor("darkblue");
-                        }
-                        
-                    }
-                    
-                } else if (($this->data[$i]['start'] > $this->data[$i]['due']) && ($this->data[$i]['due'] < $this->data[$i]['finish'])) {
-                    
-                    if ($this->data[$i]['start'] == $this->data[$i]['finish']) {
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                    } else if ($this->data[$i]['start'] > $this->data[$i]['finish']) {
-                        if (($this->data[$i]['finish'] < $today) && ($this->data[$i]['progress']<1)) {
-                            $bar = $this->addBar($i, $this->data[$i], false, array(
-                                'label'   => "",
-                                'start'   => date($format,$this->data[$i]['due']+(60*60*24)),
-                                'end'     => date($format,$today),
-                                'caption' => "",
-                                'height'  => 0.2));
-                            $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
-                            $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
-                            
-                            $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                            
-                            $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                            
-                            $this->addMilestone($i, $this->data[$i], array('date' => 'start'));
-                                                        
-                        } else {
-                            $bar = $this->addBar($i, $this->data[$i], false, array(
-                                'label' => "",
-                                'start' => date($format,$this->data[$i]['due']+(60*60*24)),
-                                'end' => date($format,$this->data[$i]['finish']-(60*60*24)),
-                                'caption' => "",
-                                'height' => 0.2));
-                            $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
-                            $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
-                            
-                            $bar1 = $this->addBar($i, $this->data[$i], false, array(
-                                'label' => "",
-                                'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
-                                'end' => date($format,$this->data[$i]['start']-(60*60*24)),
-                                'caption' => "",
-                                'height' => 0.2));
-                            $bar1->SetColor($this->graph->getErrorBarColor().":0.7");;
-                            $bar1->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
-                            
-                            $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                            
-                            $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-                            
-                            $this->addMilestone($i, $this->data[$i], array('date' => 'start'));
-                            
-                        }
-                        
-                    } else if ($this->data[$i]['start'] < $this->data[$i]['finish']) {
-                        $bar = $this->addBar($i, $this->data[$i], false, array(
-                            'start' => 'due',
-                            'end' => 'start',
-                            'caption' => "",
-                            'height' => 0.2));
-                        $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
-                        $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),94);
-                        
-                        $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                        
-                        $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
-                        
-                    }
-                
-                } else if (($this->data[$i]['start'] > $this->data[$i]['due']) && ($this->data[$i]['due'] > $this->data[$i]['finish'])) {
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
-                        
-                    $this->addBar($i, $this->data[$i], true, array(
-                        'start' => date($format,$this->data[$i]['finish']+(60*60*24)),
-                        'end' => date($format,$this->data[$i]['due']-(60*60*24)),
-                        'caption' => ""));
-                        
-                    $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                       
-                    $bar = $this->addBar($i, $this->data[$i], false, array(
-                        'start' => date($format,$this->data[$i]['due']+(60*60*24)),
-                        'end' => date($format,$this->data[$i]['start']-(60*60*24))));
-                    $bar->SetColor($this->graph->getErrorBarColor().":0.7");;
-                    $bar->SetPattern(GANTT_SOLID,$this->graph->getErrorBarColor(),98);
-                    
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'finish', 'caption' => ''));
-
-                }
-                
-            }
-            
-            // task with (start!=0 due!=0 finish=0)
-            if (($this->data[$i]['start'] != 0) && ($this->data[$i]['due'] != 0) && ($this->data[$i]['finish'] == 0))  {
-                if ($this->data[$i]['start'] == $this->data[$i]['due'] ) {
-                    $this->addBar($i, $this->data[$i], true, array('end' => date($format,$this->data[$i]['due'])));
-                } else if ($this->data[$i]['start'] > $this->data[$i]['due'] ) {
-
-                    $this->addBar($i, $this->data[$i], false, array(
-                        'label'   => "",
-                        'start'   => date($format,$this->data[$i]['due']+(60*60*24)), 
-                        'end'     => date($format,$this->data[$i]['start']-(60*60*24)),
-                        'caption' => "",
-                        'height'  => 0.2));
-                    
-                    $this->addMilestone($i, $this->data[$i], array('date' => 'start'));
-
-                    $this->addMilestone($i, $this->data[$i], array('caption' => ''));
-                    
-                } else if ($this->data[$i]['start'] < $this->data[$i]['due'] ) {
-                    $this->addBar($i, $this->data[$i], true, array('end' => date($format,$this->data[$i]['due'])));
-                }
-                
-            }
-            
-            // task with (start!=0 due=0 finish=0)
-            if (($this->data[$i]['start'] != 0) && ($this->data[$i]['due'] == 0) && ($this->data[$i]['finish'] == 0))  {
-                $end_date   = date($format,$this->data[$i]['start']+(60*60*24*5*$scale_dim));
-                $start_date = date($format,$this->data[$i]['start']+(60*60*24));
+            //Early milestone
+            elseif ($s == 0 && $d != 0 && $f != 0 && $f < $d) {
                 $this->addBar($i, $this->data[$i], false, array(
+                    'start'   => 'finish',
+                    'end'     => 'due',
+                    'label'   => "",
+                    'caption' => "",
+                    'height'  => 0.2
+                ));
+                $this->addMilestone($i, $this->data[$i], array('date' => 'finish'));
+            }
+            //Bar, start to finish
+            elseif ($s != 0 && $d == 0 && $s <= $f) {
+                $this->addBar($i, $this->data[$i], true, array(
+                    'start'   => 'start',
+                    'end'     => 'finish'
+                ));
+            }
+            //Bar, start to due
+            elseif ($s != 0 && $d != 0 && $s <= $d && ($f == 0 || $d == $f)) {
+                $this->addBar($i, $this->data[$i], true, array(
+                    'start'   => 'start',
+                    'end'     => 'due'
+                ));
+            }
+            //Late bar, start to due to finish
+            elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $d && $d < $f) {
+                $this->addBar($i, $this->data[$i], true, array(
+                    'start' => 'start', 
+                    'end' => 'due', 
+                    'caption' => ""));
+                $bar = $this->addLateBar($i, $this->data[$i], false, array(
+                    'start' => 'due', 
+                    'end' => 'finish', 
+                    'label' => ""));
+            }
+            //Late bar, due to start
+            elseif ($s != 0 && $d != 0 && $d < $s && ($f == 0 || $s == $f)) {
+                $bar = $this->addLateBar($i, $this->data[$i], true, array(
+                    'start' => 'due', 
+                    'end' => 'start'));
+            }
+            //Late bar, due to finish
+            elseif ($s != 0 && $d != 0 && $f != 0 && $d < $s && $s < $f) {
+                $bar = $this->addLateBar($i, $this->data[$i], true, array(
+                    'start' => 'due', 
+                    'end' => 'finish'));
+            }
+            //Early bar
+            elseif ($s != 0 && $d != 0 && $f != 0 && $s <= $f && $f < $d) {
+                $this->addBar($i, $this->data[$i], true, array(
+                    'start' => 'start', 
+                    'end' => 'finish', 
+                    'caption' => ""));
+                $this->addBar($i, $this->data[$i], false, array(
+                    'start' => date($format, $this->data[$i]['finish'] + $one_day), 
+                    'end' => 'due', 
                     'label' => "", 
-                    'start' => $start_date, 
-                    'end' => $end_date,
                     'height' => 0.2));
-                    
-                $this->addMilestone($i, $this->data[$i], array('date' => 'start', 'caption' => ''));
             }
-            
-            // task with (start=0 due=!0 finish=0)
-            if (($this->data[$i]['start'] == 0) && ($this->data[$i]['due'] != 0) && ($this->data[$i]['finish'] == 0))  {
-                $this->addMilestone($i, $this->data[$i]);
-            }
-            
-            // task with (start!=0 due=0 finish!=0)
-            if (($this->data[$i]['start'] != 0) && ($this->data[$i]['due'] == 0) && ($this->data[$i]['finish'] != 0))  {
-                if ($this->data[$i]['start'] > $this->data[$i]['finish']) {
-                    $aStart = 'finish';
-                    $aEnd   = 'start';
-                } else {
-                    $aStart = 'start';
-                    $aEnd   = 'finish';
-                }
-                $this->addBar($i, $this->data[$i], true, array('start' => $aStart, 'end' => $aEnd));
+            //Error
+            else {
+                $this->addErrorBar($i, $this->data[$i]);
             }
         }
     }
@@ -649,6 +327,43 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         $milestone->SetCSIM($data['links'], $data['hint']);
         $this->graph->Add($milestone);
         return $milestone;
+    }
+    
+    protected function addErrorBar($pos, $data) {
+        $format   = "Y-m-d";
+        
+        $debut = null;
+        $fin   = null;
+        foreach(array('start', 'due', 'finish') as $date) {
+            if ($data[$date]) {
+                if (!$debut) {
+                    $debut = $data[$date];
+                } else {
+                    $debut = min($debut, $data[$date]);
+                }
+            }
+            if (!$fin) {
+                $fin = $data[$date];
+            } else {
+                $fin = max($fin, $data[$date]);
+            }
+        }
+        if (!$debut) {
+            $debut = strtotime('now');
+        }
+        if (!$fin) {
+            $fin = $debut;
+        }
+        
+        $bar = $this->addBar($pos, $data, false, array('start' => date($format, $debut), 'end' => date($format, $fin), 'height' => 0.2));
+        $bar->SetColor($this->graph->getErrorBarColor().":0.7");
+        $bar->SetPattern(GANTT_RDIAG,"black", 96);
+    }
+    
+    protected function addLateBar($pos, $data, $progress, $params = array()) {
+        $bar = $this->addBar($pos, $data, $progress, $params);
+        $bar->SetColor($this->graph->getLateBarColor().":0.7");
+        $bar->SetPattern(GANTT_SOLID,$this->graph->getLateBarColor());
     }
 }
 
