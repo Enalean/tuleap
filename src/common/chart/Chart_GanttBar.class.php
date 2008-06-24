@@ -46,9 +46,9 @@ class Chart_GanttBar {
         $this->_jpgraph_instance->progress->SetPattern(BAND_SOLID, $color_dark);
         $this->_jpgraph_instance->setColor($color_dark);
         $this->_jpgraph_instance->setPattern(GANTT_SOLID, $color);
-        $this->_jpgraph_instance->title->setColor("#444444");
+        $this->_jpgraph_instance->title->setColor($this->getMainColor());
         $this->_jpgraph_instance->title->setFont(FF_DEJAVU, FS_NORMAL, 8);
-        $this->_jpgraph_instance->caption->setColor("#444444");
+        $this->_jpgraph_instance->caption->setColor($this->getMainColor());
         $this->_jpgraph_instance->caption->setFont(FF_DEJAVU, FS_NORMAL, 7);
                         
     }

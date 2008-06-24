@@ -49,7 +49,7 @@ class Chart_GanttMileStone {
         
         $this->_jpgraph_instance->title->setColor($color_dark);
         $this->_jpgraph_instance->title->setFont(FF_DEJAVU, FS_NORMAL, 8);
-        $this->_jpgraph_instance->caption->setColor("#444444");
+        $this->_jpgraph_instance->caption->setColor($this->getMainColor());
         $this->_jpgraph_instance->caption->setFont(FF_DEJAVU, FS_NORMAL, 7);
         
     }
