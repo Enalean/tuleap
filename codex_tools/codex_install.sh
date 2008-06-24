@@ -158,16 +158,17 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 # xorg-x11-deprecated-libs -> docbook/java
-# neon -> subversion XXX add swig ??
 # libart_lgpl perl-Time-HiRes -> munin
 # zip, unzip -> CLI client
 # dump -> backup_job
 # dejavu-lgc-fonts -> jpgraph
 #rpm -Uvh cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
 # Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec perl-Time-HiRes
+# compat-libstdc++-33 -> CVSnt
+# apr apr-util -> svn
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
-   httpd  mod_ssl vsftpd \
+   httpd  apr apr-util mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
@@ -175,10 +176,10 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    mysql MySQL-python php-mbstring php-gd \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
-    neon \
    libart_lgpl  \
    dump \
    dejavu-lgc-fonts \
+   compat-libstdc++-33 \
    zip unzip enscript
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -401,15 +402,15 @@ cd - > /dev/null
 
 
 # SELinux CodeX-specific policy
-if [ $SELINUX_ENABLED ]; then
-    echo "Removing existing SELinux policy .."
-    $RPM -e selinux-policy-targeted-sources 2>/dev/null
-    $RPM -e selinux-policy-targeted 2>/dev/null
-    echo "Installing SELinux targeted policy for CodeX...."
-    cd ${RPMS_DIR}/selinux-policy-targeted
-    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
-fi
+#if [ $SELINUX_ENABLED ]; then
+#    echo "Removing existing SELinux policy .."
+#    $RPM -e selinux-policy-targeted-sources 2>/dev/null
+#    $RPM -e selinux-policy-targeted 2>/dev/null
+#    echo "Installing SELinux targeted policy for CodeX...."
+#    cd ${RPMS_DIR}/selinux-policy-targeted
+#    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+#    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
+#fi
 
 # -> jre
 echo "Removing existing Java JRE..."
@@ -441,13 +442,12 @@ $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> subversion
 echo "Removing RedHat subversion .."
-$RPM -e `rpm -qa 'subversion*' mod_dav_svn` 2>/dev/null
-echo "Installing Subversion RPMs for CodeX...."
+$RPM -e `rpm -qa 'subversion*' neon neon-devel mod_dav_svn` 2>/dev/null
+echo "Installing Subversion and Neon RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#$RPM -Uvh --force ${newest_rpm}/swig-1*.i386.rpm
-$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm
-$RPM -Uvh ${newest_rpm}/apr-util-0*.i386.rpm
+$RPM -Uvh ${newest_rpm}/neon-0.*.i386.rpm
+$RPM -Uvh ${newest_rpm}/neon-devel*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm
 $RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
 $RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
@@ -480,7 +480,7 @@ $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 
 # -> phpMyAdmin
 echo "Removing installed phpMyAdmin if any .."
-$RPM -e phpMyAdmin 2>/dev/null
+$RPM -e phpMyAdmin phpmyadmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for CodeX...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -831,7 +831,8 @@ fi
 if [ $freshdb -eq 1 ]; then
 echo "Populating the SalomeTMF database..."
 cd $INSTALL_DIR/plugins/salome/db
-$MYSQL -u codexadm codex --password=$codexadm_passwd < salome_init.sql   # create the DB
+# XXX not ready yet 
+#$MYSQL -u codexadm codex --password=$codexadm_passwd < salome_init.sql   # create the DB
 fi
 
 
@@ -1366,16 +1367,16 @@ exit 0
 
 
 todo:
-OK? JRE RPM, Docbook
 OK? Apache tomcat missing?
-OK? MySQL long message
 OK? utilities/ missing (fileforge...)
 
 salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
-Missing SELinux RPM, apr and apr-utils RPM, 
+Missing SELinux RPM
 Can t initialize salome DB: Access denied to user root with password: no
 
 SELinux rpms:
 selinux-policy-devel ?
 selinux-policy-XYZ.src.rpm.
 policycoreutils
+
+failed to link /usr/lib/jvm/jre -> /etc/alternatives/jre: No such file or directory
