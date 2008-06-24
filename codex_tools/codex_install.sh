@@ -1379,4 +1379,24 @@ selinux-policy-devel ?
 selinux-policy-XYZ.src.rpm.
 policycoreutils
 
+ERRORS:
+=======
+
 failed to link /usr/lib/jvm/jre -> /etc/alternatives/jre: No such file or directory
+
+error: Failed dependencies:
+        perl(File::Path) >= 1.0404 is needed by subversion-tools-1.5.0-1.i386
+
+OK? ERROR 1054 (42S22) at line 151: Unknown column 'register_purpose' in 'field list'
+
+Creating the SalomeTMF database...
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+
+Error generating key.
+java.lang.Exception: Error generating key.
+        at com.xerox.xrce.codex.salome.tools.keygen.KeyGen.generateKey(Unknown Source)
+        at com.xerox.xrce.codex.salome.tools.keygen.KeyGen.main(Unknown Source)
+Caused by: java.io.FileNotFoundException: /usr/share/codex/plugins/salome/webapps/jdbc_client/cfg/key.txt (No such file or directory)
+
+OK? ERROR 1054 (42S22) at line 11: Unknown column 'pie' in 'field list'
