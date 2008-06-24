@@ -90,7 +90,7 @@ INSERT INTO user SET \
 # Default Data for 'group_desc'
 #
 INSERT INTO group_desc SET \
-		group_desc_id='1' , \
+		group_desc_id='101' , \
 		desc_required='1' , \
 		desc_name='project_desc_name:full_desc' , \
 		desc_description='project_desc_desc:full_desc' , \
@@ -98,7 +98,7 @@ INSERT INTO group_desc SET \
 		desc_type='text';
 		
 INSERT INTO group_desc SET \
-		group_desc_id='1' , \
+		group_desc_id='104' , \
 		desc_required='1' , \
 		desc_name='project_desc_name:other_comments' , \
 		desc_description='project_desc_desc:other_comments' , \
