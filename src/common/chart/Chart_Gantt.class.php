@@ -72,6 +72,10 @@ class Chart_Gantt extends Chart{
         return 'GanttGraph';
     }
     
+    public function getLateBarColor() {
+        return $GLOBALS['HTML']->getGanttLateBarColor();
+    }
+    
     public function getErrorBarColor() {
         return $GLOBALS['HTML']->getGanttErrorBarColor();
     }

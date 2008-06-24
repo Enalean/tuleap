@@ -109,8 +109,12 @@ class Layout extends Response {
         return "#444444";
     }
     
-    public function getGanttErrorBarColor() {
+    public function getGanttLateBarColor() {
         return 'salmon';
+    }
+    
+    public function getGanttErrorBarColor() {
+        return 'yellow';
     }
     
     public function getGanttGreenBarColor() {
