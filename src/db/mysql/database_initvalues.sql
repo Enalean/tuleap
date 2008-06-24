@@ -160,10 +160,6 @@ INSERT INTO groups SET \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   license = 'xrx', \
-  register_purpose = 'Site News Private Project\r\n\r\n', \
-  required_software = '', \
-  patents_ips = '', \
-  other_comments = '', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
