@@ -9,6 +9,8 @@
 
 require_once('common/include/CrossReference.class.php');
 
+$Language->loadLanguageMsg('references/references');
+
 class CrossReferenceFactory {
     
     var $entity_id;
@@ -27,6 +29,7 @@ class CrossReferenceFactory {
        $this->entity_gid=$entity_group_id;
        $this->source_refs_datas=0;
        $this->target_refs_datas=0;
+              
     }
 	
 	function fetchDatas(){
@@ -46,6 +49,7 @@ class CrossReferenceFactory {
 			
 	    	while ($field_array = db_fetch_array($res)) {
 	    		
+	    		
 	    		$target_id=$field_array['target_id'];
 	    	    $target_gid=$field_array['target_gid'];
 	    	    $target_type=$field_array['target_type'];
@@ -62,12 +66,20 @@ class CrossReferenceFactory {
 	    	    	){
 	    	    	$this->source_refs_datas[$itarget]=new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
 	    	    	$itarget++;
-	    	    }else{
+	    	    }
+	    	    if(($source_id==$this->entity_id)&&
+	    	    	($source_gid==$this->entity_gid)&&
+	    	    	($source_type==$this->entity_type)
+	    	    	){
 	    	    	$this->target_refs_datas[$isource]=new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
 	    	    	$isource++;
 	    	    }
 	    	}
 		}
+	}
+
+	function getNbReferences(){
+		return (sizeof($this->target_refs_datas) +sizeof($this->source_refs_datas));
 	}
 
     /** Accessors */
@@ -78,25 +90,205 @@ class CrossReferenceFactory {
     function DisplayCrossRefs() {
     	echo $this->getHTMLDisplayCrossRefs();
     }
+    
     function getHTMLDisplayCrossRefs() {
-    	$display = "Reference to : <br/>";
-    	if($this->target_refs_datas!=0){
-		    for($i=0;$i<sizeof($this->target_refs_datas);$i++){
-		    	
-		    	$display.= "<a href='".$this->target_refs_datas[$i]->getRefTargetUrl()."'>";
-		    	$display.= "-> ".$this->target_refs_datas[$i]->getRefTargetKey();
-		    	$display.= " #".$this->target_refs_datas[$i]->getRefTargetId()."</a><br/>";
-		    }
+    	global $Language;
+    	
+    	$artifact_ref_from=array();
+    	$artifact_ref_to=array();
+    	$rev_svn_ref_from=array();
+    	$rev_svn_ref_to=array();
+    	$cvs_commit_ref_from=array();
+    	$cvs_commit_ref_to=array();
+    	$artIdArray=array();
+    	$artCrossArray=array();
+    	$artIdCrossArray=array();
+    	$revSvnGidIdArray=array();
+    	$revSvnCrossArray=array();
+    	$revSvnGidIdCrossArray=array();
+    	$cvsCommitGidIdArray=array();
+    	$cvsCommitCrossArray=array();
+    	$cvsCommitGidIdCrossArray=array();
+    	
+    	
+    	//first pass to fill *CrossArray
+    	for($i=0;$i<sizeof($this->target_refs_datas);$i++){   		
+    		if($this->target_refs_datas[$i]->getInsertTargetType()=='artifact'){  			
+    			$artIdArray[]=$this->target_refs_datas[$i]->getRefTargetId();
+    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='revision_svn'){
+    			$revSvnGidIdArray[]=$this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId();
+    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='commit_cvs'){
+    			$cvsCommitGidIdArray[]=$this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId();
+    		}	  		
     	}
-    	$display.= "Referenced from : <br/>";
-    	if($this->source_refs_datas!=0){
-		    for($i=0;$i<sizeof($this->source_refs_datas);$i++){
-		    	
-		    	$display.= "<a href='".$this->source_refs_datas[$i]->getRefSourceUrl()."'>";
-		    	$display.= "<- ".$this->source_refs_datas[$i]->getRefSourceKey();
-		    	$display.= " #".$this->source_refs_datas[$i]->getRefSourceId()."</a><br/>";
-		    }
+    	
+    	for($i=0;$i<sizeof($this->source_refs_datas);$i++){
+    		if($this->source_refs_datas[$i]->getInsertSourceType()=='artifact'){
+    			if(in_array($this->source_refs_datas[$i]->getRefSourceId(),$artIdArray)){
+    				$artIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceId();
+    				$artCrossArray[]=$this->source_refs_datas[$i];
+    			}else{
+    				$artifact_ref_from[]=$this->source_refs_datas[$i];
+    			}
+    		}else if($this->source_refs_datas[$i]->getInsertSourceType()=='revision_svn'){
+    			if(in_array($this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId(),$revSvnGidIdArray)){
+    				$revSvnGidIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId();
+    				$revSvnCrossArray[]=$this->source_refs_datas[$i];
+    			}else{
+    				$rev_svn_ref_from[]=$this->source_refs_datas[$i] ;
+    			}  
+    		}else if($this->source_refs_datas[$i]->getInsertSourceType()=='commit_cvs'){
+    			if(in_array($this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId(),$cvsCommitGidIdArray)){
+    				$cvsCommitGidIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId();
+    				$cvsCommitCrossArray[]=$this->source_refs_datas[$i];
+    			}else{
+    				$cvs_commit_ref_from[]=$this->source_refs_datas[$i] ;
+    			}  
+    		}	  		
     	}
+    	
+    	    	
+    	//second pass
+    	for($i=0;$i<sizeof($this->target_refs_datas);$i++){   		
+    		if($this->target_refs_datas[$i]->getInsertTargetType()=='artifact'){  			
+    			if(!in_array($this->target_refs_datas[$i]->getRefTargetId(),$artIdCrossArray)){
+    				$artifact_ref_to[]=$this->target_refs_datas[$i] ;
+    			}
+    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='revision_svn'){
+    			if(!in_array($this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId(),$revSvnGidIdCrossArray)){
+    				$rev_svn_ref_to[]=$this->target_refs_datas[$i] ;
+    			}
+    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='commit_cvs'){    			
+    			if(!in_array($this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId(),$cvsCommitGidIdCrossArray)){
+    				$cvs_commit_ref_to[]=$this->target_refs_datas[$i] ;
+    			}
+    		}	  		
+    	}
+    	
+    	
+
+    	$display='';
+    	if((sizeof($artCrossArray)+sizeof($artifact_ref_from)+sizeof($artifact_ref_to))>0){
+    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','artifact')."</B>";
+    		if(sizeof($artCrossArray)>0){
+    			$display.="<br><-> : ";
+    			for($i=0;$i<sizeof($artCrossArray);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artCrossArray[$i]->getRefSourceUrl()."'>";
+	    			$display.= "#".$artCrossArray[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($artCrossArray)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($artifact_ref_from)>0){
+    			$display.="<br><- : ";
+    			for($i=0;$i<sizeof($artifact_ref_from);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artifact_ref_from[$i]->getRefSourceUrl()."'>";
+	    			$display.= "#".$artifact_ref_from[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($artifact_ref_from)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($artifact_ref_to)>0){
+    			$display.="<br>-> : ";
+    			for($i=0;$i<sizeof($artifact_ref_to);$i++){		
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artifact_ref_to[$i]->getRefTargetUrl()."'>";
+	    			$display.="#".$artifact_ref_to[$i]->getRefTargetId()."</a>";
+	    			if($i!=(sizeof($artifact_ref_to)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		$display.="</p>";
+    		
+    	}
+    	if((sizeof($revSvnCrossArray)+sizeof($rev_svn_ref_from)+sizeof($rev_svn_ref_to))>0){
+    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','svn_revision')."</B>";
+    		if(sizeof($revSvnCrossArray)>0){
+    			$display.="<br><-> : ";
+    			for($i=0;$i<sizeof($revSvnCrossArray);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$revSvnCrossArray[$i]->getRefSourceUrl()."'>";
+	    			$display.= "#".$revSvnCrossArray[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($revSvnCrossArray)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($rev_svn_ref_from)>0){
+    			$display.="<br><- : ";
+    			for($i=0;$i<sizeof($rev_svn_ref_from);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$rev_svn_ref_from[$i]->getRefSourceUrl()."'>";
+	    			$display.="#".$rev_svn_ref_from[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($rev_svn_ref_from)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($rev_svn_ref_to)>0){
+    			$display.="<br>-> : ";
+    			for($i=0;$i<sizeof($rev_svn_ref_to);$i++){		
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$rev_svn_ref_to[$i]->getRefTargetUrl()."'>";
+	    			$display.="#".$rev_svn_ref_to[$i]->getRefTargetId()."</a>";
+	    			if($i!=(sizeof($rev_svn_ref_to)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		$display.="</p>";
+    	}
+    	
+    	if((sizeof($cvsCommitCrossArray)+sizeof($cvs_commit_ref_from)+sizeof($cvs_commit_ref_to))>0){
+    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','cvs_commit')."</B>";
+    		if(sizeof($cvsCommitCrossArray)>0){
+    			$display.="<br><-> : ";
+    			for($i=0;$i<sizeof($cvsCommitCrossArray);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvsCommitCrossArray[$i]->getRefSourceUrl()."'>";
+	    			$display.= "#".$cvsCommitCrossArray[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($cvsCommitCrossArray)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($cvs_commit_ref_from)>0){
+    			$display.="<br><- : ";
+    			for($i=0;$i<sizeof($cvs_commit_ref_from);$i++){
+    				
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_from[$i]->getRefSourceUrl()."'>";
+	    			$display.="#".$cvs_commit_ref_from[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($cvs_commit_ref_from)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		if(sizeof($cvs_commit_ref_to)>0){
+    			$display.="<br>-> : ";
+    			for($i=0;$i<sizeof($cvs_commit_ref_to);$i++){		
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_to[$i]->getRefSourceUrl()."'>";
+	    			$display.="#".$cvs_commit_ref_to[$i]->getRefSourceId()."</a>";
+	    			if($i!=(sizeof($cvs_commit_ref_to)-1)){
+	    				$display.= " , ";
+	    			}
+	    		}
+	    		$display.="</br>";
+    		}
+    		$display.="</p>";
+    	}
+    	
+    	
     	return $display;
     }
     

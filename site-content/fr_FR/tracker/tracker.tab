@@ -286,6 +286,7 @@ tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;et&nbsp;attacher le fi
 tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)</span>
 tracker_include_artifact	upload_file_desc	<P><B>Description du fichier&nbsp;:</B>&nbsp;
 tracker_include_artifact	dependencies	Dépendances	
+tracker_include_artifact	references	Références
 tracker_include_artifact	aids	IDs Artefact&nbsp;:
 tracker_include_artifact	fill	(Remplissez la liste en utilisant la virgule comme séparateur)
 tracker_include_artifact	dependent_on	Dépendant de&nbsp;:
@@ -331,6 +332,7 @@ tracker_include_artifact	what	Champ
 tracker_include_artifact	removed	Enlevé
 tracker_include_artifact	added	Ajouté
 tracker_include_artifact	dep_list_empty	La liste des dépendances est vide
+tracker_include_artifact	ref_list_empty	Cet artefact n'est pas référencé, et n'est pas source de références.
 tracker_include_artifact	dep_list	Liste des dépendances
 tracker_include_artifact	del_dep	Détruire cette dépendance ?
 tracker_include_artifact	no_depend	Aucun artefact ne dépend de celui-ci

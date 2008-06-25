@@ -153,11 +153,9 @@ class ArtifactHtml extends Artifact {
             
             $html .= '<tr><td><p><font color="red">*</font>: '.
                  $Language->getText('tracker_include_type','fields_requ').
-                 '</p></td></tr>';
+                 '</p></td></tr></TABLE>';
 			
-			$crossref_fact= new CrossReferenceFactory($this->getID(),'tracker',$group_id);
-			$crossref_fact->fetchDatas();
-            $html.='<tr<td>'.$crossref_fact->getHTMLDisplayCrossRefs().'</td></tr></TABLE>';
+			
             
             echo $this->_getSection(
                 'artifact_section_details',
@@ -299,7 +297,7 @@ class ArtifactHtml extends Artifact {
                 db_numrows($this->getAttachedFiles()),
                 db_numrows($this->getAttachedFiles()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</div>'
             );
-
+			
             //
             // Artifact dependencies
             //
@@ -323,7 +321,20 @@ class ArtifactHtml extends Artifact {
                 db_numrows($this->getDependencies()),
                 db_numrows($this->getDependencies()) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
             );
-            
+            //
+            // Artifact Cross References
+            //
+            $html='';
+            $crossref_fact= new CrossReferenceFactory($this->getID(),'artifact',$group_id);
+			$crossref_fact->fetchDatas();
+            $html.=$crossref_fact->getHTMLDisplayCrossRefs();
+            echo $this->_getSection(
+                'artifact_section_references',
+                $Language->getText('tracker_include_artifact','references').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactDependencies') : ''),
+                $html,
+                $crossref_fact->getNbReferences(),
+                $html ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
+            );
             //
             // History
             //

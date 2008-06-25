@@ -548,7 +548,7 @@ class Artifact extends Error {
 
 		//Add Cross Reference
 		for($i=0;$i<sizeof($text_value_list);$i++){
-			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,'tracker',$ath->getGroupID());
+			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,'artifact',$ath->getGroupID());
 		}
         // All ok then reload the artifact data to make sure it is cached
         // correctly in memory
@@ -608,34 +608,37 @@ class Artifact extends Error {
      * @param canned_response (IN) : the id of the canned response
      */
     function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes) {
-      global $art_field_fact,$Language;
-      if ($canned_response && $canned_response != 100) {
+    	global $art_field_fact,$Language;
+      	if ($canned_response && $canned_response != 100) {
 	
-	$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($canned_response) ."'";
-	$res3=db_query($sql);
-	
-	if ($res3 && db_numrows($res3) > 0) {
-	  $comment = util_unconvert_htmlspecialchars(db_result($res3,0,'body'));
-	  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','canned_used'));
-	} else {
-	  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','unable_canned'));
-	  $GLOBALS['Response']->addFeedback('error', db_error());
-	}
-      }
+			$sql="SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='". db_ei($canned_response) ."'";
+			$res3=db_query($sql);
+			
+			if ($res3 && db_numrows($res3) > 0) {
+			  $comment = util_unconvert_htmlspecialchars(db_result($res3,0,'body'));
+			  $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_common_artifact','canned_used'));
+			} else {
+			  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','unable_canned'));
+			  $GLOBALS['Response']->addFeedback('error', db_error());
+			}
+      	}
       
-      if ($comment != '') {
-          $this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
-          $changes['comment']['add'] = stripslashes($comment);
+      	if ($comment != '') {
+        	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
+          	$changes['comment']['add'] = stripslashes($comment);
 
-	$field = $art_field_fact->getFieldFromName("comment_type_id");
-	if ( $field && isset($comment_type_id) && $comment_type_id) {
-	  $changes['comment']['type'] =
-	    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
-	} 
-    return true;
-      } else {
-          return false;
-      }
+			$field = $art_field_fact->getFieldFromName("comment_type_id");
+			if ( $field && isset($comment_type_id) && $comment_type_id) {
+			  $changes['comment']['type'] =
+			    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
+			} 
+			$reference_manager =& ReferenceManager::instance();
+        	$reference_manager->extractCrossRef($comment,$this->getID(),'artifact',$this->ArtifactType->getGroupID());    
+			
+    		return true;
+      	} else {
+        	return false;
+      	}
     }
         
     /**
@@ -646,32 +649,32 @@ class Artifact extends Error {
      *  @return boolean
      */
     function addFollowUpComments($parsed_comments,&$changes) {
-      global $Language;
+    	global $Language;
 
-        while (list(,$arr) = each($parsed_comments)) {        
-	    $by = $arr['by'];
-	    if ($by == "100") {
-	      //this case should not exist in new trackers but
-	      //can appear if we parse legacy bugs or tasks
-	      $email = $Language->getText('global','none');
-	      $user_id = 100;
-	    } else if (user_getname($by)) {
-		$user_id = $by;
-		$email = "";
-	    } else {
-		$email = $by;
-		$user_id = 100;
-	    }	
+      	while (list(,$arr) = each($parsed_comments)) {        
+		  	$by = $arr['by'];
+			if ($by == "100") {
+				//this case should not exist in new trackers but
+			    //can appear if we parse legacy bugs or tasks
+			    $email = $Language->getText('global','none');
+			    $user_id = 100;
+			} else if (user_getname($by)) {
+				$user_id = $by;
+				$email = "";
+			} else {
+				$email = $by;
+				$user_id = 100;
+			}	
+		
+			$sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
+		    	"VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
+				
+		    db_query($sql);
 
-	    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-            		"VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
-	    //echo $sql."<br>\n";
-
-            db_query($sql);
-
-	}
-
-	return true;
+		}
+		
+		
+		return true;
     }
         
     /**
@@ -707,6 +710,9 @@ class Artifact extends Error {
                 $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt),false,false,$comment_id);
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
+                $reference_manager =& ReferenceManager::instance();
+        		$reference_manager->extractCrossRef($comment_txt,$this->getID(),'artifact',$this->ArtifactType->getGroupID());    
+                
                 return true;
             } else {
                 return false;
@@ -927,7 +933,7 @@ class Artifact extends Error {
         } // while
 
 		for($i=0;$i<sizeof($text_value_list);$i++){
-			$reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),'tracker',$this->ArtifactType->getGroupID());
+			$reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),'artifact',$this->ArtifactType->getGroupID());
 		}
 
 		$request = HTTPRequest::instance();
@@ -956,7 +962,6 @@ class Artifact extends Error {
 
 	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes);
             
-        $reference_manager->extractCrossRef($comment,$this->getID(),'tracker',$this->ArtifactType->getGroupID());    
         //
         //  Enter the timestamp if we are changing to closed or declined
         //

@@ -280,7 +280,8 @@ tracker_include_artifact	upload_checkbox	<B>Check to Upload&hellip;</b>
 tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;and&nbsp;attach File:</B>
 tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)</span>
 tracker_include_artifact	upload_file_desc	<P><B>File Description:</B>&nbsp;
-tracker_include_artifact	dependencies	Dependencies	
+tracker_include_artifact	dependencies	Dependencies
+tracker_include_artifact	references	References
 tracker_include_artifact	aids	Artifact IDs:
 tracker_include_artifact	fill	(Fill your list using the comma as separator)
 tracker_include_artifact	dependent_on	Is Dependent on:
@@ -326,6 +327,7 @@ tracker_include_artifact	what	What
 tracker_include_artifact	removed	Removed
 tracker_include_artifact	added	Added
 tracker_include_artifact	dep_list_empty	Dependencies list is empty
+tracker_include_artifact	ref_list_empty	References list is empty
 tracker_include_artifact	dep_list	Dependencies List
 tracker_include_artifact	del_dep	Delete this dependency?
 tracker_include_artifact	no_depend	No other artifacts are dependent on this artifact
