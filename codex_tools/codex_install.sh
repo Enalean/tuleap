@@ -469,6 +469,14 @@ cd ${RPMS_DIR}/highlight
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
 
+# -> JPGraph
+$RPM -e jpgraph jpgraphs-docs 2>/dev/null
+echo "Installing JPGraph RPM for CodeX...."
+cd ${RPMS_DIR}/jpgraph
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
+$RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
+
 # -> ViewVC
 echo "Removing installed viewcvs/viewvc if any .."
 $RPM -e --nodeps viewcvs 2>/dev/null
@@ -710,10 +718,6 @@ substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd"
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
-
-# replace string patterns in ssl.conf
-substitute '/etc/httpd/conf/ssl.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf/ssl.conf' '%sys_ip_address%' "$sys_ip_address"
 
 if [ "$disable_subdomains" != "y" ]; then
   # replace string patterns in codex_full.zone
@@ -1283,17 +1287,6 @@ and responsibilities.
 EOM
 EOF
 
-
-##############################################
-# Generate Documentation
-#
-echo "Generating the CodeX Manuals. This will take a few minutes."
-$INSTALL_DIR/src/utils/generate_doc.sh -f
-$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
-$INSTALL_DIR/src/utils/generate_cli_package.sh -f
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/downloads
-
 ##############################################
 # Make sure all major services are on
 #
@@ -1329,6 +1322,16 @@ java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+
+##############################################
+# Generate Documentation
+#
+echo "Generating the CodeX Manuals. This will take a few minutes."
+$INSTALL_DIR/src/utils/generate_doc.sh -f
+$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
+$INSTALL_DIR/src/utils/generate_cli_package.sh -f
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
+$CHOWN -R codexadm.codexadm $INSTALL_DIR/downloads
 
 ##############################################
 # End of installation
@@ -1367,9 +1370,6 @@ exit 0
 
 
 todo:
-OK? Apache tomcat missing?
-OK? utilities/ missing (fileforge...)
-
 salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
 Missing SELinux RPM
 Can t initialize salome DB: Access denied to user root with password: no
@@ -1384,10 +1384,11 @@ ERRORS:
 
 failed to link /usr/lib/jvm/jre -> /etc/alternatives/jre: No such file or directory
 
+[root@dhcp-45 subversion-1.5.0-1]# rpm -ivh subversion-tools-1.5.0-1.i386.rpm
 error: Failed dependencies:
         perl(File::Path) >= 1.0404 is needed by subversion-tools-1.5.0-1.i386
-
-OK? ERROR 1054 (42S22) at line 151: Unknown column 'register_purpose' in 'field list'
+[root@dhcp-45 ~]# rpm -q --whatprovides /usr/lib/perl5/5.8.8/File/Path.pm
+perl-5.8.8-10.el5_2.3
 
 Creating the SalomeTMF database...
 ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
@@ -1399,4 +1400,4 @@ java.lang.Exception: Error generating key.
         at com.xerox.xrce.codex.salome.tools.keygen.KeyGen.main(Unknown Source)
 Caused by: java.io.FileNotFoundException: /usr/share/codex/plugins/salome/webapps/jdbc_client/cfg/key.txt (No such file or directory)
 
-OK? ERROR 1054 (42S22) at line 11: Unknown column 'pie' in 'field list'
+service iptables stop
