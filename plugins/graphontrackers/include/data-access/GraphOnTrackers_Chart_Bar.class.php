@@ -112,5 +112,16 @@ class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
 	    	return true;
     	}else{return false;}
     }
+    
+    public function getChartType() {
+        return 'bar';
+    }
+    
+    public function getSpecificRow() {
+        return array(
+            'field_base'  => $this->getField_base(), 
+            'field_group' => $this->getField_group(),
+        );
+    }
 }
 ?>

@@ -109,6 +109,17 @@ abstract class GraphOnTrackers_Chart {
     	}
     }
     
+    public function getRow() {
+        return array_merge(array(
+            'id'          => $this->getId(),
+            'rank'        => $this->getRank(), 
+            'title'       => $this->getTitle(), 
+            'description' => $this->getDescription(),
+            'width'       => $this->getWidth(), 
+            'height'      => $this->getHeight(),
+        ), $this->getSpecificRow());
+    }
+    
     /**
      * Stroke the chart.
      * Build the image and send it to the client
@@ -205,7 +216,18 @@ abstract class GraphOnTrackers_Chart {
         return '';
     }
     
-   
+    /**
+     * Return the specific properties as a row
+     * array('prop1' => 'value', 'prop2' => 'value', ...)
+     * @return array
+     */
+    abstract public function getSpecificRow();
+    
+    /**
+     * Return the chart type (gantt, bar, pie, ...)
+     */
+    abstract public function getChartType();
+    
     /**
      * Delete the chart from its report
      */

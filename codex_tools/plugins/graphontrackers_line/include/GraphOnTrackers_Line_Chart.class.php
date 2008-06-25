@@ -154,5 +154,21 @@ class GraphOnTrackers_Line_Chart extends GraphOnTrackers_Chart {
         $artifact_field_base->fetchData($GLOBALS['ath']->getID(),$this->field_base);
         return $artifact_field_base->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(),user_getid());
     }
+    
+    public function getChartType() {
+        return 'line';
+    }
+    
+    public function getSpecificRow() {
+        return array(
+            'field_base'     => $this->getField_base(), 
+            'state_source'   => $this->getState_source(), 
+            'state_target'   => $this->getState_target(), 
+            'date_min'       => $this->getDate_min(), 
+            'date_max'       => $this->getDate_max(), 
+            'date_reference' => $this->getDate_reference(), 
+            'method'         => $this->getMethod()
+        );
+    }
 }
 ?>

@@ -99,6 +99,16 @@ class GraphOnTrackers_Chart_Pie extends GraphOnTrackers_Chart {
     	}else{return false;}
     }
     
+    
+    public function getChartType() {
+        return 'pie';
+    }
+    
+    public function getSpecificRow() {
+        return array(
+            'field_base'  => $this->getField_base(), 
+        );
+    }
 
 }
 ?>

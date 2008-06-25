@@ -130,7 +130,7 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
         $db_update_needed = false;
         foreach(array('field_start', 'field_due', 'field_finish', 'field_percentage', 'field_righttext', 'scale', 'as_of_date', 'summary') as $prop) {
             if (isset($row[$prop]) && $this->$prop != $row[$prop]) {
-                if ($prop == 'as_of_date') {
+                if ($prop == 'as_of_date' && strtotime($row[$prop])) {
                     $this->$prop = strtotime($row[$prop]);
                 } else {
                     $this->$prop = $row[$prop];
@@ -214,6 +214,23 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     	return true;
     	
     	
+    }
+    
+    public function getChartType() {
+        return 'gantt';
+    }
+    
+    public function getSpecificRow() {
+        return array(
+            'field_start'      => $this->getField_start(), 
+            'field_due'        => $this->getField_due(), 
+            'field_finish'     => $this->getField_finish(), 
+            'field_percentage' => $this->getField_percentage(), 
+            'field_righttext'  => $this->getField_righttext(), 
+            'scale'            => $this->getScale(), 
+            'as_of_date'       => $this->getAs_of_date(),
+            'summary'          => $this->getSummary(),
+        );
     }
 }
 ?>

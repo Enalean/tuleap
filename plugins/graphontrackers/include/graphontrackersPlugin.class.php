@@ -27,6 +27,7 @@ require_once('data-access/GraphOnTrackers_Chart_Bar.class.php');
 require_once('data-access/GraphOnTrackers_Chart_Pie.class.php');
 require_once('data-access/GraphOnTrackers_Chart_Gantt.class.php');
 require_once('data-access/GraphOnTrackers_Report.class.php');
+require_once('data-access/GraphOnTrackers_ReportFactory.class.php');
 
 class GraphOnTrackersPlugin extends Plugin {
 
@@ -356,89 +357,10 @@ class GraphOnTrackersPlugin extends Plugin {
         $atid_source=$params['atid_source'];
         $atid_dest=$params['atid_dest'];
 
-
-        $sql = "SELECT report_graphic_id, user_id, name, description, scope FROM plugin_graphontrackers_report_graphic WHERE group_artifact_id='".db_ei($atid_source)."' AND scope!='I' ";
-        $res = db_query($sql);
-        while ($report_array = db_fetch_array($res)) {
-            
-            $sql_insert = 'INSERT INTO plugin_graphontrackers_report_graphic (group_artifact_id,user_id,name,description,scope) VALUES ('. db_ei($atid_dest) .','. db_ei($report_array["user_id"]) .
-                          ',"'. db_escape_string($report_array["name"]) .'","'. db_escape_string($report_array["description"]) .'","'. db_escape_string($report_array["scope"]) .'")';
-                          
-            $res_insert = db_query($sql_insert);
-            if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-                
-                exit_error($Language->getText('global','error'),$Language->getText('plugin_graphontrackers_graphreportcopy','ins_err',array($report_array["report_graphic_id"],$atid_dest,db_error())));
-            }
-            $report_id_source = db_ei($report_array["report_graphic_id"]);
-            $report_id_dest = db_insertid($res_insert,'plugin_graphontrackers_report_graphic','report_graphic_id');
-            
-            $sql_chart = 'SELECT * FROM plugin_graphontrackers_chart WHERE report_graphic_id="'.$report_id_source.'"';
-            $res_chart=db_query($sql_chart);
-            while ($rep_chart_array=db_fetch_array($res_chart)) {
-                $id_source = $rep_chart_array["id"];
-                $rank = $rep_chart_array["rank"];
-                $chart_type    = $rep_chart_array["chart_type"];
-                $title = $rep_chart_array["title"] ;
-                $description =    $rep_chart_array["description"] ;
-                $width = $rep_chart_array["width"];
-                $height = $rep_chart_array["height"];    
-                            
-                $sql_insert_chart = 'INSERT INTO plugin_graphontrackers_chart (report_graphic_id,rank,chart_type,title,description,width, height) VALUES'.
-                                    '('.db_ei($report_id_dest).','.db_ei($rank).',"'.db_escape_string($chart_type).'","'.db_escape_string($title).'","'.db_escape_string($description).'",'.db_ei($width).','.db_ei($height).')';
-                
-                $res_insert_chart = db_query($sql_insert_chart);
-                if (!$res_insert_chart || db_affected_rows($res_insert_chart) <= 0) {
-                    
-                    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart',array($report_array["report_graphic_id"],$report_id_dest,db_error())));
-                }
-                $id_dest = db_insertid($res_insert_chart,'plugin_graphontrackers_chart','id');
-                
-                if($chart_type=='pie'){
-                    $sql_pie_chart='SELECT * FROM plugin_graphontrackers_pie_chart WHERE id='.db_ei($id_source) ;
-                    $res_pie_chart=db_query($sql_pie_chart);
-                    $res_pie_chart_array=db_fetch_array($res_pie_chart);
-                    $field_base=$res_pie_chart_array["field_base"];
-                    $sql_insert_pie = 'INSERT INTO plugin_graphontrackers_pie_chart (id,field_base) VALUES ('.db_ei($id_dest).',"'.db_escape_string($field_base).'")';
-                    echo $sql_insert_pie;
-                    $res_insert_pie = db_query($sql_insert_pie);                
-                    if (!$res_insert_pie || db_affected_rows($res_insert_pie) < 1) {    
-                        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_pie',array($id_dest,$report_id_dest,db_error())));                
-                    }
-                }else if($chart_type=='bar'){
-                    $sql_bar_chart='SELECT * FROM plugin_graphontrackers_bar_chart WHERE id='.db_ei($id_source) ;
-                    $res_bar_chart=db_query($sql_bar_chart);
-                    $res_bar_chart_array=db_fetch_array($res_bar_chart);
-                    $field_base=$res_bar_chart_array["field_base"];
-                    $field_group=$res_bar_chart_array["field_group"] ;
-                    $sql_insert_bar = 'INSERT INTO plugin_graphontrackers_bar_chart (id,field_base,field_group) VALUES ('.db_ei($id_dest).',"'.db_escape_string($field_base).'","'.db_escape_string($field_group).'")';
-                    $res_insert_bar = db_query($sql_insert_bar);                
-                    if (!$res_insert_bar || db_affected_rows($res_insert_bar) < 1) {                        
-                        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_bar',array($id_dest,$report_id_dest,db_error())));                
-                    }
-                    
-                }else if($chart_type=='gantt'){
-                    $sql_gantt_chart='SELECT * FROM plugin_graphontrackers_gantt_chart WHERE id='.db_ei($id_source) ;
-                    $res_gantt_chart=db_query($sql_gantt_chart);
-                    $res_gantt_chart_array=db_fetch_array($res_gantt_chart);
-                    $field_start=$res_gantt_chart_array["field_start"];
-                    $field_due=$res_gantt_chart_array["field_due"] ;
-                    $field_finish=$res_gantt_chart_array["field_finish"];
-                    $field_percentage=$res_gantt_chart_array["field_percentage"] ;
-                    $field_righttext=$res_gantt_chart_array["field_righttext"] ;
-                    $scale=$res_gantt_chart_array["scale"] ;
-                    $as_of_date=$res_gantt_chart_array["as_of_date"] ;
-                    $summary=$res_gantt_chart_array["summary"] ;
-                    $sql_insert_gantt = 'INSERT INTO plugin_graphontrackers_gantt_chart (id,field_start,field_due, field_finish,field_percentage,field_righttext,scale,as_of_date,summary)' .
-                                        'VALUES ('.db_ei($id_dest).',"'.db_escape_string($field_start).'","'.db_escape_string($field_due).'","'.db_escape_string($field_finish)
-                                        .'","'.db_escape_string($field_percentage).'","'.db_escape_string($field_righttext).'","'.db_escape_string($scale).'",'.db_ei($as_of_date).',"'.db_escape_string($summary).'")';
-                    $res_insert_gantt = db_query($sql_insert_gantt);                
-                    if (!$res_insert_gantt || db_affected_rows($res_insert_gantt) < 1) {
-                        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('plugin_graphontrackers_graphreportcopy','ins_err_chart_gantt',array($id_dest,$report_id_dest,db_error())));                
-                    }
-                }
-            }
-        }
+        $rf = new GraphOnTrackers_ReportFactory();
+        $rf->copyReports($atid_source, $atid_dest);
     }
+    
     /**
      *  Hook to delete graphic reports afer tracker reports are deleted, when trackers are deleted.
      *  Used in src/common/tracker/ArtifactTypeFactory.class.php
