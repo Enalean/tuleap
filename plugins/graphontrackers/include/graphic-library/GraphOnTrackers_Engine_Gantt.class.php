@@ -237,7 +237,7 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
                     'end' => 'due', 
                     'caption' => ""));
                 $bar = $this->addLateBar($i, $this->data[$i], false, array(
-                    'start' => 'due', 
+                    'start' => date($format, $this->data[$i]['due'] + $one_day), 
                     'end' => 'finish', 
                     'label' => ""));
             }
