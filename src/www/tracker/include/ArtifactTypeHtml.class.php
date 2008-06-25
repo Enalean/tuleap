@@ -2255,7 +2255,7 @@ EOS;
          *
          * @return void
          */
-        function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch) {
+        function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=false) {
             global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
             $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
