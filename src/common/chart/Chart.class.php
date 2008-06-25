@@ -64,7 +64,7 @@ class Chart {
         $this->_jpgraph_instance->title->SetColor($this->getMainColor());
         $this->_jpgraph_instance->title->SetMargin(15);
         
-        $this->_jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL,8);
+        $this->_jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL,9);
         $this->_jpgraph_instance->subtitle->SetColor($this->getMainColor());
         $this->_jpgraph_instance->subtitle->SetAlign('left', 'top', 'left');
         $this->_jpgraph_instance->subtitle->SetMargin(20);

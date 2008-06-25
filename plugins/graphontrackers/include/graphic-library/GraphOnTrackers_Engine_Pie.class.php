@@ -56,10 +56,8 @@ class GraphOnTrackers_Engine_Pie extends GraphOnTrackers_Engine {
         if (is_null($this->description)) {
             $this->description = "";
         }
-        $caption = new Text($this->description,30,40);
-        $caption->setFont($this->graph->getFont());
-        $caption->setColor($this->graph->getMainColor());
-        $this->graph->AddText($caption); 
+        $this->graph->subtitle->Set($this->description);
+        
                 
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);

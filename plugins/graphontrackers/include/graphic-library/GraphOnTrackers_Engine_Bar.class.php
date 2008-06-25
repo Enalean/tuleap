@@ -56,12 +56,7 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
         if (is_null($this->description)) {
             $this->description = "";
         }
-        $caption = new Text($this->description,30,40);
-        $caption->setFont($this->graph->getFont(), FS_NORMAL, 9);
-        $caption->setColor($this->graph->getMainColor());
-        $this->graph->AddText($caption); 
-        
-        
+        $this->graph->subtitle->Set($this->description);
         
         // x axis formating
         $this->graph->xaxis->SetTickSide(SIDE_DOWN);
@@ -78,41 +73,16 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
         
         if (is_null($this->xaxis)) {
             if ((is_array($this->data)) && (array_sum($this->data)>0)) {
-                $b = new BarPlot($this->data);
-                //parameters hard coded for the moment
-                $b->SetAbsWidth(10);
-                $b->value->HideZero();
-                $b->value->Show(true);
-                $b->value->SetColor($this->graph->getMainColor());
-                $b->value->SetFormat("%d");
-                $b->value->HideZero();
-                $b->value->SetMargin(2);
-                
-                $b->SetWidth(0.4);
-                $b->SetColor($colors[0].':0.7');
-                $b->SetFillColor($colors[0]);
-                // end hard coded parameter
-                $this->graph->add($b);
+                $this->graph->add($this->getBarPlot($this->data, $colors[0]));
             }
                 
         } else {
             $l = 0; 
             for ($i=0;$i<count($this->data);$i++) {
                 if ((is_array($this->data[$i])) && (array_sum($this->data[$i])>0)) {
-                    $b[$l] = new BarPlot($this->data[$i]);
-                    //parameters hard coded for the moment
-                    $b[$l]->SetAbsWidth(10); 
-                    $b[$l]->value->Show(true);
-                    $b[$l]->value->SetColor($this->graph->getMainColor());
-                    $b[$l]->value->SetFormat("%d");
-                    $b[$l]->value->HideZero();
-                    $b[$l]->value->SetMargin(2);   
+                    $b[$l] = $this->getBarPlot($this->data[$i], $colors[$l]);
                     $b[$l]->SetLegend($this->legend[$i]);
-                    $b[$l]->SetWidth(0.4);
-                    $b[$l]->SetColor($colors[$l].':0.7');
-                    $b[$l]->SetFillColor($colors[$l]);
                     $l++;
-                    // end hard coded parameter
                 }
                 
             }
@@ -122,8 +92,26 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
                 $right_margin = 150;
             }
         }
-        $this->graph->img->SetMargin(50,$right_margin,100,100);
+        $this->graph->SetMargin(50,$right_margin,$this->graph->getTopMargin() + 40,100);
         return $this->graph;
+    }
+    
+    function getBarPlot($data, $color) {
+        $b = new BarPlot($data);
+        //parameters hard coded for the moment
+        $b->SetAbsWidth(10);
+        $b->value->Show(true);
+        $b->value->SetColor($this->graph->getMainColor());
+        $b->value->SetFormat("%d");
+        $b->value->HideZero();
+        $b->value->SetMargin(4);
+        $b->value->SetFont($this->graph->getFont(), FS_NORMAL, 7);
+        
+        $b->SetWidth(0.4);
+        $b->SetColor($color.':0.7');
+        $b->SetFillColor($color);
+        // end hard coded parameter
+        return $b;
     }
 }
 ?>

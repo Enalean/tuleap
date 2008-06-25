@@ -54,10 +54,7 @@ class GraphOnTrackers_Line_Engine extends GraphOnTrackers_Engine {
         if (is_null($this->description)) {
             $this->description = "";
         }
-        $caption = new Text($this->description,30,40);
-        $caption->setFont($this->graph->getFont(), FS_NORMAL, 9);
-        $caption->setColor($this->graph->getMainColor());
-        $this->graph->AddText($caption); 
+        $this->graph->subtitle->Set($this->description);
 
         if( is_null($this->xaxis) || (count($this->xaxis)==0 )) {
             $this->graph->xaxis->SetTickLabels(array(""));
