@@ -30,9 +30,9 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
-export SSL_KEY='/etc/httpd/conf/ssl.key/server.key'
-SSL_CERT='/etc/httpd/conf/ssl.crt/server.crt'
-SSL_CSR='/etc/httpd/conf/ssl.csr/server.csr'
+export SSL_KEY='/etc/pki/tls/private/localhost.key'
+SSL_CERT='/etc/pki/tls/certs/localhost.crt'
+SSL_CSR='/etc/pki/tls/certs/localhost.csr'
 # Remove existing key and certificate
 if [ -f $SSL_CSR ]; then 
   $TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
