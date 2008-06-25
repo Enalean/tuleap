@@ -2,11 +2,7 @@
 # This is the Apache server configuration file providing SSL support.
 # It contains the configuration directives to instruct the server how to
 # serve pages over an https connection. For detailing information about these 
-# directives see <URL:http://httpd.apache.org/docs-2.0/mod/mod_ssl.html>
-#
-#   For the moment, see <URL:http://www.modssl.org/docs/> for this info. 
-#   The documents are still being prepared from material donated by the
-#   modssl project.
+# directives see <URL:http://httpd.apache.org/docs/2.2/mod/mod_ssl.html>
 # 
 # Do NOT simply read the instructions in here without understanding
 # what they do.  They're here only as hints or reminders.  If you are unsure
@@ -15,25 +11,11 @@
 
 LoadModule ssl_module modules/mod_ssl.so
 
-#   Until documentation is completed, please check http://www.modssl.org/
-#   for additional config examples and module docmentation.  Directives
-#   and features of mod_ssl are largely unchanged from the mod_ssl project
-#   for Apache 1.3.
-
 #
 # When we also provide SSL we have to listen to the 
-# standard HTTP port (see above) and to the HTTPS port
+# the HTTPS port in addition.
 #
-# To allow connections to IPv6 addresses add "Listen [::]:443"
-#
-Listen %sys_ip_address%:443
-
-#
-# Dynamic Shared Object (DSO) Support
-#
-# To be able to use the functionality of a module which was built as a DSO you
-#    ErrorLog logs/dummy-host.example.com-error_log
-#    CustomLog logs/dummy-host.example.com-access_log common
+Listen 443
 
 ##
 ##  SSL Global Context
@@ -57,15 +39,14 @@ SSLPassPhraseDialog  builtin
 #   Inter-Process Session Cache:
 #   Configure the SSL Session Cache: First the mechanism 
 #   to use and second the expiring timeout (in seconds).
-#SSLSessionCache        none
-#SSLSessionCache        dbm:/var/cache/mod_ssl/scache(512000)
+#SSLSessionCache        dc:UNIX:/var/cache/mod_ssl/distcache
 SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
 SSLSessionCacheTimeout  300
 
 #   Semaphore:
 #   Configure the path to the mutual exclusion semaphore the
 #   SSL engine uses internally for inter-process synchronization. 
-SSLMutex  default
+SSLMutex default
 
 #   Pseudo Random Number Generator (PRNG):
 #   Configure one or more sources to seed the PRNG of the 
@@ -77,10 +58,9 @@ SSLMutex  default
 #   platforms additionally provide a /dev/urandom device which doesn't
 #   block. So, if available, use this one instead. Read the mod_ssl User
 #   Manual for more details.
-SSLRandomSeed startup builtin
+SSLRandomSeed startup file:/dev/urandom  256
 SSLRandomSeed connect builtin
 #SSLRandomSeed startup file:/dev/random  512
-#SSLRandomSeed startup file:/dev/urandom 512
 #SSLRandomSeed connect file:/dev/random  512
 #SSLRandomSeed connect file:/dev/urandom 512
 
@@ -98,46 +78,44 @@ SSLCryptoDevice builtin
 ## SSL Virtual Host Context
 ##
 
-NameVirtualHost %sys_ip_address%:443
+<VirtualHost _default_:443>
 
-<VirtualHost %sys_ip_address%:443>
+# General setup for the virtual host, inherited from global configuration
+#DocumentRoot "/var/www/html"
+#ServerName www.example.com:443
 
-#  General setup for the virtual host; inherited from global configuration.
-# DocumentRoot "/var/www/html"
-# ServerAdmin you@your.address
-ServerName %sys_default_domain%:443
-
-# Use same log files fro SSL traffic to preserve CodeX statistics:
+# Use same log files for SSL traffic to preserve CodeX statistics:
 ErrorLog logs/error_log
 TransferLog logs/access_log
+LogLevel warn
 
 #   SSL Engine Switch:
 #   Enable/Disable SSL for this virtual host.
 SSLEngine on
 
+#   SSL Protocol support:
+# List the enable protocol levels with which clients will be able to
+# connect.  Disable SSLv2 access by default:
+SSLProtocol all -SSLv2
+
 #   SSL Cipher Suite:
-#   List the ciphers that the client is permitted to negotiate.
-#   See the mod_ssl documentation for a complete list.
-SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+# List the ciphers that the client is permitted to negotiate.
+# See the mod_ssl documentation for a complete list.
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
 
 #   Server Certificate:
-#   Point SSLCertificateFile at a PEM encoded certificate.  If
-#   the certificate is encrypted, then you will be prompted for a
-#   pass phrase.  Note that a kill -HUP will prompt again. A test
-#   certificate can be generated with `make certificate' under
-#   built time. Keep in mind that if you've both a RSA and a DSA
-#   certificate you can configure both in parallel (to also allow
-#   the use of DSA ciphers, etc.)
-SSLCertificateFile /etc/httpd/conf/ssl.crt/server.crt
-#SSLCertificateFile /etc/httpd/conf/ssl.crt/server-dsa.crt
+# Point SSLCertificateFile at a PEM encoded certificate.  If
+# the certificate is encrypted, then you will be prompted for a
+# pass phrase.  Note that a kill -HUP will prompt again.  A new
+# certificate can be generated using the genkey(1) command.
+SSLCertificateFile /etc/pki/tls/certs/localhost.crt
 
 #   Server Private Key:
 #   If the key is not combined with the certificate, use this
 #   directive to point at the key file.  Keep in mind that if
 #   you've both a RSA and a DSA private key you can configure
 #   both in parallel (to also allow the use of DSA ciphers, etc.)
-SSLCertificateKeyFile /etc/httpd/conf/ssl.key/server.key
-#SSLCertificateKeyFile /etc/httpd/conf/ssl.key/server-dsa.key
+SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
 
 #   Server Certificate Chain:
 #   Point SSLCertificateChainFile at a file containing the
@@ -146,27 +124,13 @@ SSLCertificateKeyFile /etc/httpd/conf/ssl.key/server.key
 #   the referenced file can be the same as SSLCertificateFile
 #   when the CA certificates are directly appended to the server
 #   certificate for convinience.
-#SSLCertificateChainFile /etc/httpd/conf/ssl.crt/ca.crt
+#SSLCertificateChainFile /etc/pki/tls/certs/server-chain.crt
 
 #   Certificate Authority (CA):
 #   Set the CA certificate verification path where to find CA
 #   certificates for client authentication or alternatively one
 #   huge file containing all of them (file must be PEM encoded)
-#   Note: Inside SSLCACertificatePath you need hash symlinks
-#         to point to the certificate files. Use the provided
-#         Makefile to update the hash symlinks after changes.
-#SSLCACertificatePath /etc/httpd/conf/ssl.crt
-#SSLCACertificateFile /usr/share/ssl/certs/ca-bundle.crt
-
-#   Certificate Revocation Lists (CRL):
-#   Set the CA revocation path where to find CA CRLs for client
-#   authentication or alternatively one huge file containing all
-#   of them (file must be PEM encoded)
-#   Note: Inside SSLCARevocationPath you need hash symlinks
-#         to point to the certificate files. Use the provided
-#         Makefile to update the hash symlinks after changes.
-#SSLCARevocationPath /etc/httpd/conf/ssl.crl
-#SSLCARevocationFile /etc/httpd/conf/ssl.crl/ca-bundle.crl
+#SSLCACertificateFile /etc/pki/tls/certs/ca-bundle.crt
 
 #   Client Authentication (Type):
 #   Client certificate verification type and depth.  Types are
@@ -218,7 +182,7 @@ SSLCertificateKeyFile /etc/httpd/conf/ssl.key/server.key
 #   o OptRenegotiate:
 #     This enables optimized SSL connection renegotiation handling when SSL
 #     directives are used in per-directory context. 
-#SSLOptions +FakeBasicAuth +ExportCertData +CompatEnvVars +StrictRequire
+#SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
 <Files ~ "\.(cgi|shtml|phtml|php3?)$">
     SSLOptions +StdEnvVars
 </Files>
