@@ -66,6 +66,8 @@ class Chart {
         
         $this->_jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL,8);
         $this->_jpgraph_instance->subtitle->SetColor($this->getMainColor());
+        $this->_jpgraph_instance->subtitle->SetAlign('left', 'top', 'left');
+        $this->_jpgraph_instance->subtitle->SetMargin(20);
     }
         
     protected function _getGraphClass() {
@@ -122,6 +124,10 @@ class Chart {
     
     public function getThemedColors() {
         return $GLOBALS['HTML']->getChartColors();
+    }
+    
+    public function getTopMargin() {
+        return 20 + $this->_jpgraph_instance->title->getTextHeight($this->_jpgraph_instance->img) + $this->_jpgraph_instance->subtitle->getTextHeight($this->_jpgraph_instance->img);
     }
 }
 ?>

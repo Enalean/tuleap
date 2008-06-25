@@ -142,19 +142,17 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         require_once('common/chart/Chart_Gantt.class.php');
               
         $this->graph = new Chart_Gantt($this->width,$this->height,"auto");
+
+        // title setup
+        $this->graph->title->Set($this->title);
         
         if (is_null($this->description)) {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
         
-        if ($this->description) {
-            $this->graph->SetMargin(20,20,20 + $this->graph->title->getTextHeight($this->graph->img) + $this->graph->subtitle->getTextHeight($this->graph->img),30);
-        }
+        $this->graph->SetMargin(20, 20, $this->graph->getTopMargin(), 30);
         
-        // title setup
-        $this->graph->title->Set($this->title);
-                        
         // asOfDate setup 
         if ($this->asOfDate == 0) {
             $dateRep  = date("Y-m-d",strtotime('now'));
