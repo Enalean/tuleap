@@ -391,7 +391,9 @@ class ReferenceManager {
 	    		if ($reskey && db_numrows($reskey) >0) {
 	    			$key_array = db_fetch_array($reskey);
 	    			$target_type= $key_array['link'];
-	    			if($target_type=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id' || $target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
+	    			if($target_type=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id' || 
+	    				$target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id' ||
+	    				$target_type=='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id'){
 		    			$target_id=$match[3];
 		            	$target_gid=$ref_gid;
 		            	if ($user_id==0){

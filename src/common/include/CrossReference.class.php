@@ -49,11 +49,15 @@ class CrossReference extends Error{
            $this->refTargetType='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id';
        }else if($this->refTargetType=='artifact'){
            $this->refTargetType='/tracker/?func=detail&aid=$1&group_id=$group_id';
+       }else if($this->refTargetType=='commit_cvs'){
+           $this->refTargetType='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id';
        }
        if($this->refSourceType=='revision_svn'){
            $this->refSourceType='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id';
        }else if($this->refSourceType=='artifact'){
            $this->refSourceType='/tracker/?func=detail&aid=$1&group_id=$group_id';
+       }else if($this->refSourceType=='commit_cvs'){
+           $this->refSourceType='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id';
        }
        
        $sqlkey = 'SELECT keyword from reference r,reference_group rg where link="'.$this->refSourceType.'" AND r.id = rg.reference_id AND rg.group_id='.$refSourceGid;

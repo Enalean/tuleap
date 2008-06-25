@@ -585,10 +585,11 @@ sub extract_xrefs {
       $group_id=100;
     }
     $text=join("\n",@log);
+    $cvstype="cvs_commit";
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
-    my $req = POST "$codex_http_srv/api/reference/extract",
-      [ group_id => "$group_id", text => "$text" ];
-
+    my $req = POST "$codex_http_srv/api/reference/extractCross",
+      [ group_id => "$group_id", text => "$text", rev_id=>"$commit_id", login=>"$login", type=>"$cvstype" ];
+   
     my $response = $ua->request($req);
     if ($response->is_success) {
       my $desc="";
@@ -1114,7 +1115,7 @@ if ($debug) {
 push(@text, &build_header());
 push(@text, "");
 
-my ($commit_id);
+local ($commit_id);
 
 if ($db_track) {
   $commit_id = db_get_commit($debug);
