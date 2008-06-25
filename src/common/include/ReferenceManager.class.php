@@ -12,7 +12,7 @@ require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/include/Reference.class.php');
 require_once('common/include/ReferenceInstance.class.php');
 require_once('common/include/GroupFactory.class.php');
-
+require_once('common/include/CrossReference.class.php');
 
 /**
  * Reference Manager
@@ -343,7 +343,7 @@ class ReferenceManager {
         return $referencesInstances;
     }
     
-    function extractCrossRef($html,$source_id, $source_type, $source_gid){
+    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0){
 		$referencesInstances=array();
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
@@ -386,16 +386,18 @@ class ReferenceManager {
          
         
 		    	//Cross reference
-	            $sqlkey='SELECT service_short_name from reference where keyword="'.$match[1].'"';
+	            $sqlkey='SELECT link from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
 	            $reskey = db_query($sqlkey);
 	    		if ($reskey && db_numrows($reskey) >0) {
 	    			$key_array = db_fetch_array($reskey);
-	    			$target_type= $key_array['service_short_name'];
-	    			if($target_type=="svn" || $target_type=="tracker"){
+	    			$target_type= $key_array['link'];
+	    			if($target_type=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id' || $target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
 		    			$target_id=$match[3];
 		            	$target_gid=$ref_gid;
-		            	$user_id=user_getid();
-		            	if($target_type=="tracker"){
+		            	if ($user_id==0){
+		            		$user_id=user_getid();
+		            	}
+		            	if($target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
 		            		$sql='SELECT group_id FROM artifact_group_list agl,artifact at WHERE agl.group_artifact_id = at.group_artifact_id AND at.artifact_id='.$target_id;
 		            		$res = db_query($sql);
 							if (!$res || db_numrows($res) < 1) {
@@ -413,6 +415,7 @@ class ReferenceManager {
 	    		}
 	        }
         }
+        return true;
     }
 
     /**
