@@ -166,6 +166,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec perl-Time-HiRes
 # compat-libstdc++-33 -> CVSnt
 # apr apr-util -> svn
+# xinetd -> cvs
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd  apr apr-util mod_ssl vsftpd \
@@ -180,7 +181,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    dump \
    dejavu-lgc-fonts \
    compat-libstdc++-33 \
-   zip unzip enscript
+   zip unzip enscript xinetd
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -625,7 +626,7 @@ echo "***************************************"
 cd ${nonRPMS_DIR}/utilities
 for f in *
 do
-  $CP -a $f /usr/lib/codex/bin
+  $CP $f /usr/lib/codex/bin
   $CHOWN codexadm.codexadm /usr/lib/codex/bin/$f
 done
 $CHOWN root.root /usr/lib/codex/bin/fileforge
@@ -938,7 +939,8 @@ $TOUCH /etc/cvs_root_allow
 $CHOWN codexadm.codexadm /etc/cvs_root_allow
 $CHMOD 644 /etc/cvs_root_allow
 
-make_backup /etc/xinetd.d/cvs
+$CP /etc/xinetd.d/cvs /root/cvs.xinetd.ori
+
 $CAT <<'EOF' >/etc/xinetd.d/cvs
 service cvspserver
 {
@@ -1368,36 +1370,3 @@ $CAT $TODO_FILE
 
 exit 0
 
-
-todo:
-salome_init.sql is missing, plus should be initialiased by Salome Mysql user?
-Missing SELinux RPM
-Can t initialize salome DB: Access denied to user root with password: no
-
-SELinux rpms:
-selinux-policy-devel ?
-selinux-policy-XYZ.src.rpm.
-policycoreutils
-
-ERRORS:
-=======
-
-failed to link /usr/lib/jvm/jre -> /etc/alternatives/jre: No such file or directory
-
-[root@dhcp-45 subversion-1.5.0-1]# rpm -ivh subversion-tools-1.5.0-1.i386.rpm
-error: Failed dependencies:
-        perl(File::Path) >= 1.0404 is needed by subversion-tools-1.5.0-1.i386
-[root@dhcp-45 ~]# rpm -q --whatprovides /usr/lib/perl5/5.8.8/File/Path.pm
-perl-5.8.8-10.el5_2.3
-
-Creating the SalomeTMF database...
-ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
-ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
-
-Error generating key.
-java.lang.Exception: Error generating key.
-        at com.xerox.xrce.codex.salome.tools.keygen.KeyGen.generateKey(Unknown Source)
-        at com.xerox.xrce.codex.salome.tools.keygen.KeyGen.main(Unknown Source)
-Caused by: java.io.FileNotFoundException: /usr/share/codex/plugins/salome/webapps/jdbc_client/cfg/key.txt (No such file or directory)
-
-service iptables stop
