@@ -1,0 +1,288 @@
+<!--
+/**
+* Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+*
+* This file is licensed under the GNU General Public License version 2. See the file COPYING.
+*/
+-->
+<chapter id="TestManagerPlugin">
+  <title>Test Manager</title>
+
+  <para>Testing is an important task in the project lifecycle.
+    &SYS_PRODUCT_NAME; provides a specific service to manage your tests.</para>
+
+  <para>The test manager used in &SYS_PRODUCT_NAME; is SalomeTMF, a well known
+   open-source Test Management Framework.
+   For a extensive documentation of SalomeTMF, please visit the SalomeTMF project 
+   web page : <ulink url="https://wiki.objectweb.org/salome-tmf/">https://wiki.objectweb.org/salome-tmf/</ulink>
+  </para>
+  
+  <section id="SalomeOverview">
+    <title>Salome Overview</title>
+    
+      <para>The Test Manager features are as follows:</para>
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para>Tests creation. Tests can be organized in campaign, family, suite, 
+          following ISO 9646 norm.</para>
+        </listitem>
+    
+        <listitem>
+          <para>Tests execution. Tests can be associated with environmentss, actions, 
+          executions, and dataset.</para>
+        </listitem>
+    
+        <listitem>
+          <para>Tests can be executed manualy or can be automated (with SalomeTMF plugins.)</para>
+        </listitem>
+    
+        <listitem>
+          <para>SalomeTMF is integrated in &SYS_PRODUCT_NAME;, which means that you
+          don't need to create your projects in SalomeTMF. Your &SYS_PRODUCT_NAME; 
+          projects will be automatically availble in SalomeTMF, the project member
+          as well.</para>
+        </listitem>
+        
+        <listitem>
+          <para>SalomeTMF is integrated in &SYS_PRODUCT_NAME; then you can add a bug 
+          in &SYS_PRODUCT_NAME; tracker after a test execution that failed.</para>
+        </listitem>
+    
+      </itemizedlist>
+  </section>
+  
+  <section id="SalomeConfigurationAndAdminisitration">
+    <title>Configuration and Administration</title>
+    
+    <section id="SalomeBugTrackerConfiguration">
+        <title>Salome Bug Tracker</title>
+        <para>Salome can interact with &SYS_PRODUCT_NAME; trackers.
+        The usual way of using Salome is to add bugs in the bug tracker, when a 
+        test failed. But you can use Salome with any tracker you want.
+        </para>
+        <para>You only need to add and/or link some "special" field required by Salome.
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem><para>environment</para></listitem>
+            <listitem><para>campaign</para></listitem>
+            <listitem><para>family</para></listitem>
+            <listitem><para>suite</para></listitem>
+            <listitem><para>test</para></listitem>
+            <listitem><para>action</para></listitem>
+            <listitem><para>execution</para></listitem>
+            <listitem><para>dataset</para></listitem>
+        </itemizedlist>
+        <para>All these fields must <emphasis role="bold">text fields</emphasis>.</para>
+        <para>If you want to use Salome with one of your existing tracker, 
+        you have two options:
+         <itemizedlist mark="bullet">
+            <listitem>
+             <para>
+              You already have fields that could match the Salome 
+              "special" fields, then see <xref linkend="LinkSpecialFieldsForSalome" /> to link your fields to Salome,
+             </para>
+            </listitem>
+            <listitem>
+             <para>
+              The fields of your tracker doesn't match the Salome "special" fields,
+              or you don't want to use your existing fields for this usage: then,
+              you just have to create new fields of type "text field" (
+              see <xref linkend="CreationandModificationofaTrackerField" /> for details), 
+              and then see <xref linkend="LinkSpecialFieldsForSalome" /> to link them to Salome.
+             </para>
+            </listitem>
+         </itemizedlist>
+        </para>
+        <para>If you want to use a new tracker for Salome interaction, you can use
+        the Salome Bug Tracker template, or create a new tracker using the Salome
+        Bug Tracker template (see <xref linkend="TrackerCreation" />
+        for details about creating trackers using templates)
+        </para>
+        </para>
+        
+        <section id="LinkSpecialFieldsForSalome">
+          <title>Salome tracker configuration</title>
+            <para>
+                To launch and use SalomeTMF with &SYS_PRODUCT_NAME;, you need 
+                to indicate which tracker you want to use with Salome.
+            </para>
+            <para>
+                To do that, please select the Administration link of the Test Manager
+                service, and select the link "manage tracker for Salome".
+                Then, 
+                <procedure>
+                 <step>
+                    <para>
+                    select the tracker you want to use with Salome.
+                    It will refresh the other fields.
+                    </para>
+                 </step>
+                 <step>
+                    <para>
+                    Select the report you want to use with Salome (this report
+                    will be use in Salome to browse and search the artifacts of your tracker).
+                    </para>
+                 </step>
+                 <step>
+                    <para>
+                    Then associate each Salome "special field" with one of your tracker's field.
+                    </para>
+                 </step>
+                 <step>
+                    <para>
+                    Then click on Validate button.
+                    </para>
+                 </step>
+                </procedure>
+                
+                <figure id="FigureLinkSalomeCodeXTracker">
+                  <title>Salome tracker configuration</title>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata format="PNG"
+                        fileref="../../screenshots/en_US/sc_salometrackerconfiguration.png" width="13cm" />
+                    </imageobject>
+                  </mediaobject>
+                </figure>
+                
+                Error can happens, and you should be noticed about it, for instance, if
+                you used two times a same field, or didn't assign a field.
+            </para>
+        </section>
+    
+    </section>
+    
+    <section id="SalomePermissionsConfiguration">
+        <title>Permissions</title>
+        <para>SalomeTMF permissions can be set in the &SYS_PRODUCT_NAME; Test Manager
+        Administration (Administration -> Permissions).</para>
+        <para>Project admin can configure permissions for project members, project
+        admins, and for every ugroup.</para>
+        <para>The permissions to configure are :
+            <itemizedlist mark="bullet">
+                <listitem><para>Test Suite:</para>
+                <itemizedlist mark="bullet">
+                    <listitem><para>Add: if the user can add a test suite or not.</para></listitem>
+                    <listitem><para>Modify: if a user can modify a test suite or not.</para></listitem>
+                    <listitem><para>Delete: if a user can delete a test suite or not.</para></listitem>
+                </itemizedlist>
+                </listitem>
+            </itemizedlist>
+            <itemizedlist mark="bullet">
+                <listitem><para>Test Campaign:</para>
+                <itemizedlist mark="bullet">
+                    <listitem><para>Add: if the user can add a test campaign or not.</para></listitem>
+                    <listitem><para>Modify: if a user can modify a test campaign or not.</para></listitem>
+                    <listitem><para>Delete: if a user can delete a test campaign or not.</para></listitem>
+                    <listitem><para>Execute: if a user can execute a test campaign or not.</para></listitem>
+                </itemizedlist>
+                </listitem>
+            </itemizedlist>
+            
+            <figure id="FigureSalomePermissionsConfiguration">
+              <title>Salome permissions configuration</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_salomepermissions.png" width="13cm" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+                
+        </para>
+    </section>
+    
+    <section id="SalomePluginsConfiguration">
+        <title>Salome plug-ins</title>
+        <para>SalomeTMF can be extended with plug-ins.
+        Each projet admin can choose the plug-in the project Salome instance will
+        use.
+        </para>
+        <para>To select the plug-ins to use with a project, select the link 
+        Your Project -> Test Manager -> Administration -> Manage Salome Plugins,
+        check the plugins you want, and then validate the button.</para>
+        
+        <figure id="FigureSalomePluginsConfiguration">
+          <title>Salome plug-ins configuration</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/en_US/sc_salomeplugins.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+         </figure>
+        
+    </section>
+    
+    <section id="SalomePreferencesConfiguration">
+        <title>Salome Preferences</title>
+        <para>Project admins can select some Salome preferences for each project.
+        Select Your project -> Test Manager -> Administration -> Manage Salome Configuration,
+        Then select the options:</para>
+        <itemizedlist mark="bullet">
+            <listitem>
+             <para>Include ICAL options: ICAL is a quality indicator, developped 
+             by Orange Labs. If you don't use this indicator for your project, you 
+             don't need to activate it.             
+             </para>
+            </listitem>
+            <listitem>
+             <para>
+                Lock test plan if a campaign is being executed: check this option
+                if you want the test plan to be locked once a campaign has been 
+                executed.
+             </para>
+            </listitem>
+            <listitem>
+             <para>
+                Lock test modification if the test has been executed: check this 
+                option if you want your test to be locked once it has been executed.
+                Note: this implies that you can not replay a test.
+             </para>
+            </listitem>
+        </itemizedlist>
+        
+        <figure id="FigureSalomePreferencesConfiguration">
+          <title>Salome preferences configuration</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata format="PNG"
+                fileref="../../screenshots/en_US/sc_salomepreferences.png" width="13cm" />
+            </imageobject>
+          </mediaobject>
+         </figure>
+         
+    </section>
+    
+  </section>
+  
+  <section id="SalomeUsage">
+    <title>Launching SalomeTMF</title>
+    
+    <para>
+        Once your project is weel configured (see <xref linkend="SalomeConfigurationAndAdministration" />
+        for details) you can launch the SalomeTMF application by pressing the "Launch Salome"
+        button.
+    </para>
+    
+    <figure id="FigureLaunch">
+      <title>Launch Salome</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+            fileref="../../screenshots/en_US/sc_salomelaunch.png" width="13cm" />
+        </imageobject>
+      </mediaobject>
+     </figure>
+     
+     When clicking on the button, the system will ask you if you want to open
+     with javaws (Java Web Start), answer yes, and accept all the certificates.
+     SalomeTMF application will be launched after.
+    
+  </section>
+  
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+End:
+-->
