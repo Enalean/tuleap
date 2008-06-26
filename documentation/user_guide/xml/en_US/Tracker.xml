@@ -870,6 +870,10 @@
       code commits, documents, files, etc. Please refer to 
       <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
 
+      <para>Furthemore references concerning artifacts, svn revisions and
+       cvs commits are stored in the database. They are displayed in the next section, ordered 
+       by type and initial reference direction.</para>
+
     </section>
 
     <section id="ArtifactHistory">

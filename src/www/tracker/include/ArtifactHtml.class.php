@@ -330,7 +330,7 @@ class ArtifactHtml extends Artifact {
             $html.=$crossref_fact->getHTMLDisplayCrossRefs();
             echo $this->_getSection(
                 'artifact_section_references',
-                $Language->getText('tracker_include_artifact','references').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactDependencies') : ''),
+                $Language->getText('tracker_include_artifact','references').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactCrossReferencing') : ''),
                 $html,
                 $crossref_fact->getNbReferences(),
                 $html ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'

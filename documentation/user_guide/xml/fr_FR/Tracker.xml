@@ -929,17 +929,16 @@
       linkend="ArtifactDependencies"/>, CodeX permet de créer une
       référence sur n'importe quel artefact ou autre objet CodeX dans un commentaire.</para>
 
-      <para>Lorsque vous tapez un commentaire, tout morceau de texte
-      qui suit le patron &#34;XXX #NNN&#34; est interprété comme une
-      référence à l'artefact XXX numéro NNN, où XXX est le nom court
-      de l'artefact et NNN l'identifiant unique (ID) (exemple :
-      &#34;bug #123&#34;, &#34;tache #321&#34;, &#34;req #12&#34;,
-      etc...). Si vous ne connaissez pas le nom court de l'outil de suivi ou si
-      vous souhaitez ne pas le spécifier vous pouvez utiliser le
-      patron générique &#34;art #NNN&#34;. Lorsque CodeX affiche un
-      commentaire contenant une référence, elle est automatiquement
-      transformée en hyperlien vers la page de CodeX donnant toutes
-      les informations sur cet artefact.</para>
+      <para>Lorsque vous tapez du text dans n'importe quel champ texte ou commentaire
+      d'un artefact, tout morceau de texte qui suit le patron &#34;XXX #NNN&#34; est 
+      interprété comme une référence à l'item XXX numéro NNN, où XXX est le nom court
+      de l'item (qui peut être un artefact, un commit cvs, une révision svn...) et NNN 
+      l'identifiant unique (ID) (exemple : &#34;bug #123&#34;, &#34;tache #321&#34;, 
+      &#34;req #12&#34;, etc...). Si vous ne connaissez pas le nom court de l'outil de 
+      suivi ou si vous souhaitez ne pas le spécifier vous pouvez utiliser le
+      patron générique &#34;art #NNN&#34;. Lorsque CodeX affiche un commentaire contenant 
+      une référence, elle est automatiquement transformée en hyperlien vers la page de 
+      CodeX donnant toutes les informations sur cet artefact.</para>
 
       <para>Un commentaire peut contenir un référence à un artefact de
       n'importe quel type appartenant à n'importe quel projet. Ce
@@ -951,7 +950,10 @@
       <para>Les patrons de référence de CodeX peuvent etre utilisees pour référencer des artifacts,
       mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
       <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans CodeX.</para>
-
+    
+      <para>De plus les références vers les outils de suivi, les révision SVN et les 
+      commits CVS sont stockées en base de données, et sont résumées dans la section suivante, 
+      classées par type puis par sens de référence initial.</para>
 
     </section>
 
