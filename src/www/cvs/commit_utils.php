@@ -12,7 +12,7 @@
 	By Thierry Jacquin, Nov 2003
 
 */
-
+require_once('common/include/CrossReferenceFactory.class.php');
 $GLOBALS['Language']->loadLanguageMsg('cvs/cvs');
 
 function uniformat_date($format, $date) {
@@ -421,6 +421,15 @@ function show_commit_details ($result) {
 	}
 	echo '<h2>'.$hdr.uniformat_date($sys_datefmt, db_result($result, 0, 'c_when')).'</h2></h2>';
 	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
+	
+	$crossref_fact= new CrossReferenceFactory($commit_id,'commit_cvs',$group_id);
+	$crossref_fact->fetchDatas();
+	if($crossref_fact->getNbReferences()>0){
+		
+		echo '<h3> '.$Language->getText('cvs_commit_utils','references').'</h3>';
+		$crossref_fact->DisplayCrossRefs();
+	}
+	
 	echo '<h3>'.$Language->getText('cvs_commit_utils', 'impacted_file').'</h3>';
 	$title_arr=array();
 	$title_arr[]=$Language->getText('cvs_commit_utils', 'file');

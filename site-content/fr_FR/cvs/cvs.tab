@@ -88,6 +88,7 @@ cvs_commit_utils	sort_msg	Cliquer sur une entête de colonne pour trier les rés
 cvs_commit_utils	activate	activer	
 cvs_commit_utils	deactivate	désactiver	
 cvs_commit_utils	description	Description
+cvs_commit_utils	references	Références
 cvs_commit_utils	id	ID
 cvs_commit_utils	who	Soumis par
 cvs_commit_utils	date	Date

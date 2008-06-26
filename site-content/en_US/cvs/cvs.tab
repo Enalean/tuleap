@@ -83,6 +83,7 @@ cvs_commit_utils	sort_msg	Click a column heading to sort results (up or down), o
 cvs_commit_utils	activate	activate	
 cvs_commit_utils	deactivate	deactivate	
 cvs_commit_utils	description	Description
+cvs_commit_utils	references	References
 cvs_commit_utils	id	ID
 cvs_commit_utils	who	Submitted by
 cvs_commit_utils	date	Date
