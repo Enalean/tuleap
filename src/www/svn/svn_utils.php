@@ -345,10 +345,14 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
 
-	echo '<h3> '.$Language->getText('svn_utils','references').'</h3>';
+	
 	$crossref_fact= new CrossReferenceFactory($revision,'revision_svn',$group_id);
 	$crossref_fact->fetchDatas();
-	$crossref_fact->DisplayCrossRefs();
+	if($crossref_fact->getNbReferences()>0){
+		
+		echo '<h3> '.$Language->getText('svn_utils','references').'</h3>';
+		$crossref_fact->DisplayCrossRefs();
+	}
                 
 
     echo '<h3> '.$Language->getText('svn_utils','impacted_files').'</h3>';

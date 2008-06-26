@@ -333,7 +333,7 @@ class ArtifactHtml extends Artifact {
                 $Language->getText('tracker_include_artifact','references').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactCrossReferencing') : ''),
                 $html,
                 $crossref_fact->getNbReferences(),
-                $html ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
+                $crossref_fact->getNbReferences() ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
             );
             //
             // History
