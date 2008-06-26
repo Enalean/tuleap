@@ -35,4 +35,5 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 `$CHCON -R -h $context $grpdir_prefix`;
 
 `$CHCON -h $context /svnroot`;
-`$CHCON -h $context /cvsroot`;
+`$CHCON -h system_u:object_r:cvs_data_t /cvsroot`;
+`$CHCON -R -h system_u:object_r:cvs_data_t /cvsroot/`;
