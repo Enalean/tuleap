@@ -94,15 +94,15 @@ INSERT INTO group_desc SET \
 		desc_required='1' , \
 		desc_name='project_desc_name:full_desc' , \
 		desc_description='project_desc_desc:full_desc' , \
-		desc_rank='1' , \
+		desc_rank='10' , \
 		desc_type='text';
 		
 INSERT INTO group_desc SET \
 		group_desc_id='104' , \
-		desc_required='1' , \
+		desc_required='0' , \
 		desc_name='project_desc_name:other_comments' , \
 		desc_description='project_desc_desc:other_comments' , \
-		desc_rank='1' , \
+		desc_rank='100' , \
 		desc_type='text';
 
 #
