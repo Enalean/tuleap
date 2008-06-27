@@ -170,6 +170,6 @@ forum_thread	choose_thread_first	Veuillez d'abord choisir un fil de discussion
 # Script: src/www/forum/monitor_thread.php
 #
 forum_monitor_thread	tmonitor	Surveiller?
-forum_monitor_thread	notice	Vous surveiller Tout le forum. Si vous souhaitez seulement surveiller certains fils de discussion, arrêtez de surveiller le forum.
+forum_monitor_thread	notice	Vous surveillez tout le forum. Si vous souhaitez seulement surveiller certains fils de discussion, stoppez la surveillance du forum.
 forum_monitor_thread	monitor_success	Mise à jour de la surveillance des fils de discussion.
 forum_monitor_thread	monitor_fail	Echec de la mise à jour de la surveillance des fils de discussion.
