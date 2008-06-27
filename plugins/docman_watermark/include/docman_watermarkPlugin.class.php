@@ -56,7 +56,7 @@ class Docman_watermarkPlugin extends Plugin {
                 exit(0);
             }
         } catch (Zend_pdf_exception $e) {
-            
+            exit(0);
         }
     }
 }

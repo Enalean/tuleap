@@ -70,19 +70,20 @@ class Docman_watermark_Stamper {
         $md     = $mdf->findByName('Confidentiality');
         $mdlvef = new Docman_MetadataListOfValuesElementFactory();
         $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
-        foreach ($this->pdf->pages as $page) {
+        foreach ($this->pdf->pages as $index => $page) {
             $width  = $page->getWidth();
             $height = $page->getHeight();
-            $color  = new Zend_Pdf_Color_Html('silver');
-            $stylen  = new Zend_Pdf_Style();
+            $color  = new Zend_Pdf_Color_Html('blue');
+            $stylen = new Zend_Pdf_Style();
             $stylen->setFillColor($color);
+            $stylen->setLineColor($color);
             $stylen->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 32);
             $page->setStyle($stylen);
             $page->rotate(50,150,45);
-            $page->drawRectangle(10, 65, 360, 145,SHAPE_DRAW_STROKE);
-            $page->drawText($this->user->getRealName(), 10, 125);
-            $page->drawText(date("Y-m-d H:I:s", time()), 10, 95);
-            $page->drawText($values[0]->getName(), 10, 65);
+            $page->drawRectangle(40, 40, 390, 145,SHAPE_DRAW_STROKE);
+            $page->drawText($this->user->getRealName(), 40, 125);
+            $page->drawText(date("Y-m-d H:I:s", time()), 40, 95);
+            $page->drawText($values[0]->getName(), 40, 65);
         }
     }
 }
