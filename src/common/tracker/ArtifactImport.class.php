@@ -12,6 +12,7 @@
   //$Language->loadLanguageMsg('tracker/tracker');
   //$Language->loadLanguageMsg('include/include');
 require_once('common/include/Error.class.php');
+require_once('common/include/CodeX_HTMLPurifier.class.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
@@ -185,7 +186,7 @@ function getUsedFields() {
       }
       
       $field = $this->used_fields[$field_label];
-      if ($field != "") {
+      if ($field) {
 	$field_name = $field->getName();
 	if ($field_name == "artifact_id") $this->aid_column = $c; 
 	if ($field_name == "submitted_by") $this->submitted_by_column = $c;
@@ -298,7 +299,7 @@ function getUsedFields() {
       $label = $this->parsed_labels[$c];
       $val = $data[$c];
       $field = $this->used_fields[$label];
-      if ($field != "") $field_name = $field->getName();
+      if ($field) $field_name = $field->getName();
       
       // check if val in predefined vals (if applicable)
       unset($predef_vals);
@@ -310,7 +311,7 @@ function getUsedFields() {
       }
       
       // check whether we specify None for a field which is mandatory
-      if ($field != "" && !$field->isEmptyOk() &&
+      if ($field && !$field->isEmptyOk() &&
 	  $field_name != "artifact_id") {
 	if ($field_name == "submitted_by" ||
 	    $field_name == "open_date") {
@@ -333,7 +334,7 @@ function getUsedFields() {
       }
       
       // for date fields: check format
-      if ($field != "" && $field->isDateField()) {
+      if ($field && $field->isDateField()) {
 	if ($field_name == "open_date" && $val == "") {
 	  //is ok.
 	} else {
@@ -369,9 +370,9 @@ function getUsedFields() {
 
       
       while (list($label,$field) = each($this->used_fields)) {
-	if ($field != "") $field_name = $field->getName();
+	if ($field) $field_name = $field->getName();
 	
-	if ($field != "") {
+	if ($field) {
           if ($field_name != "artifact_id" &&
               $field_name != "open_date" &&
               $field_name != "submitted_by" &&
@@ -591,7 +592,7 @@ function getUsedFields() {
     for ($c=0; $c < sizeof($this->parsed_labels); $c++) {
       $field_label = $this->parsed_labels[$c];
       $field = $this->used_fields[$field_label];
-      if ($field != "") {
+      if ($field) {
 	$this->setPredefinedValue($field,$c);
       }
     }
@@ -602,7 +603,7 @@ function getUsedFields() {
    */
   function setPredefinedValue($field,$column_number) {
     
-    if ($field != "" && 
+    if ($field && 
 	($field->getDisplayType() == "SB" || $field->getDisplayType() == "MB")) {
       
       //special case for submitted by
