@@ -32,7 +32,7 @@ class ArtifactTest extends UnitTestCase {
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', true);
         $a->setReturnValue('existDependency', false);
-        $change = null;
+        $changes = null;
         $this->assertTrue($a->addDependencies("171",&$changes,false), "It should be possible to add a dependency like 171");
     }
 
@@ -42,9 +42,9 @@ class ArtifactTest extends UnitTestCase {
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', false);
         //$a->setReturnValue('existDependency', false);
-        $change = null;
+        $changes = null;
         $this->assertFalse($a->addDependencies("99999",&$changes,false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
-	$GLOBALS['Response']->expectCallCount('addFeedback', 2);
+        $GLOBALS['Response']->expectCallCount('addFeedback', 2);
 
     }
 
@@ -55,7 +55,7 @@ class ArtifactTest extends UnitTestCase {
         $a->setReturnValue('existDependency', false);
         $a->setReturnValueAt(0, 'existDependency', false);
         $a->setReturnValueAt(1, 'existDependency', true);
-        $change = null;
+        $changes = null;
         $this->assertTrue($a->addDependencies("171, 171",&$changes,false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
     
