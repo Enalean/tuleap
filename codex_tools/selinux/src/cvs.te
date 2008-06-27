@@ -1,5 +1,5 @@
 
-module mycvs 1.0;
+module cvs 1.0;
 
 require {
 	type var_lock_t;
@@ -16,8 +16,6 @@ require {
 
 #============= cvs_t ==============
 allow cvs_t httpd_sys_content_t:dir { read search };
-#allow cvs_t httpd_sys_content_t:file { read getattr };
-#allow cvs_t httpd_sys_content_t:lnk_file read;
 allow cvs_t lib_t:file execute_no_trans;
 allow cvs_t user_home_dir_t:dir search;
 allow cvs_t user_home_t:dir search;
