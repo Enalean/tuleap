@@ -13,7 +13,7 @@
 
   <para>The test manager used in &SYS_PRODUCT_NAME; is SalomeTMF, a well known
    open-source Test Management Framework.
-   For a extensive documentation of SalomeTMF, please visit the SalomeTMF project 
+   For an extensive documentation of SalomeTMF, please visit the SalomeTMF project 
    web page : <ulink url="https://wiki.objectweb.org/salome-tmf/">https://wiki.objectweb.org/salome-tmf/</ulink>
   </para>
   
@@ -28,7 +28,7 @@
         </listitem>
     
         <listitem>
-          <para>Tests execution. Tests can be associated with environmentss, actions, 
+          <para>Tests execution. Tests can be associated with environments, actions, 
           executions, and dataset.</para>
         </listitem>
     
@@ -39,13 +39,13 @@
         <listitem>
           <para>SalomeTMF is integrated in &SYS_PRODUCT_NAME;, which means that you
           don't need to create your projects in SalomeTMF. Your &SYS_PRODUCT_NAME; 
-          projects will be automatically availble in SalomeTMF, the project member
-          as well.</para>
+          projects will be automatically availble in SalomeTMF, as well as the 
+          project members.</para>
         </listitem>
         
         <listitem>
           <para>SalomeTMF is integrated in &SYS_PRODUCT_NAME; then you can add a bug 
-          in &SYS_PRODUCT_NAME; tracker after a test execution that failed.</para>
+          in a &SYS_PRODUCT_NAME; tracker after a test execution failure.</para>
         </listitem>
     
       </itemizedlist>
@@ -58,9 +58,9 @@
         <title>Salome Bug Tracker</title>
         <para>Salome can interact with &SYS_PRODUCT_NAME; trackers.
         The usual way of using Salome is to add bugs in the bug tracker, when a 
-        test failed. But you can use Salome with any tracker you want.
+        test fails. But you can use Salome with any tracker you want.
         </para>
-        <para>You only need to add and/or link some "special" field required by Salome.
+        <para>You only need to add and/or link some "special" fields required by Salome.
         <itemizedlist mark="bullet" spacing="compact">
             <listitem><para>environment</para></listitem>
             <listitem><para>campaign</para></listitem>
@@ -83,7 +83,7 @@
             </listitem>
             <listitem>
              <para>
-              The fields of your tracker doesn't match the Salome "special" fields,
+              Your tracker's fields doesn't match the Salome "special" fields,
               or you don't want to use your existing fields for this usage: then,
               you just have to create new fields of type "text field" (
               see <xref linkend="CreationandModificationofaTrackerField" /> for details), 
@@ -107,7 +107,7 @@
             </para>
             <para>
                 To do that, please select the Administration link of the Test Manager
-                service, and select the link "manage tracker for Salome".
+                service, and select the link "Manage Tracker for Salome".
                 Then, 
                 <procedure>
                  <step>
@@ -119,7 +119,7 @@
                  <step>
                     <para>
                     Select the report you want to use with Salome (this report
-                    will be use in Salome to browse and search the artifacts of your tracker).
+                    will be used in Salome to browse and search the artifacts of your tracker).
                     </para>
                  </step>
                  <step>
@@ -129,7 +129,7 @@
                  </step>
                  <step>
                     <para>
-                    Then click on Validate button.
+                    Then click on Submit button.
                     </para>
                  </step>
                 </procedure>
@@ -194,8 +194,7 @@
     <section id="SalomePluginsConfiguration">
         <title>Salome plug-ins</title>
         <para>SalomeTMF can be extended with plug-ins.
-        Each projet admin can choose the plug-in the project Salome instance will
-        use.
+        Projet admin can choose the plug-ins loaded in Salome for this project.
         </para>
         <para>To select the plug-ins to use with a project, select the link 
         Your Project -> Test Manager -> Administration -> Manage Salome Plugins,
@@ -259,7 +258,7 @@
     <title>Launching SalomeTMF</title>
     
     <para>
-        Once your project is weel configured (see <xref linkend="SalomeConfigurationAndAdministration" />
+        Once your project is weel configured (see <xref linkend="SalomeBugTrackerConfiguration" />
         for details) you can launch the SalomeTMF application by pressing the "Launch Salome"
         button.
     </para>

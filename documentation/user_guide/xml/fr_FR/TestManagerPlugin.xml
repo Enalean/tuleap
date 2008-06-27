@@ -8,7 +8,7 @@
 <chapter id="TestManagerPlugin">
   <title>Gestionnaire de Tests</title>
 
-  <para>Le test est une activité importante dansle cycle de vie d'un projet.
+  <para>Le test est une activité importante dans le cycle de vie d'un projet.
     &SYS_PRODUCT_NAME; fournit un service spécifique pour gérer vos tests.</para>
 
   <para>Le gestionnaire de tests utilisé dans &SYS_PRODUCT_NAME; est SalomeTMF, 
@@ -29,17 +29,17 @@
     
         <listitem>
           <para>Exécution des tests. Les tests peuvent être associés à des environnements,
-          des actions, des exécutions et des jeu de données.</para>
+          des actions, des exécutions et des jeux de données.</para>
         </listitem>
     
         <listitem>
           <para>Les tests peuvent être exécutés manuellement ou de manière automatique
-          (à l'aide desplugins SalomeTMF).</para>
+          (à l'aide des plugins SalomeTMF).</para>
         </listitem>
     
         <listitem>
-          <para>SalomeTMF est intégéré à &SYS_PRODUCT_NAME;, ce qui signifie 
-          que vous n'avez pas besoin de créer vos projets dans SalomTMF. Vos projets
+          <para>SalomeTMF est intégré à &SYS_PRODUCT_NAME;, ce qui signifie 
+          que vous n'avez pas besoin de créer vos projets dans SalomeTMF. Vos projets
           &SYS_PRODUCT_NAME; seront automatiquement disponibles dans SalomeTMF,
           ainsi que les membres du projet.</para>
         </listitem>
@@ -99,7 +99,7 @@
         
         <para>Si vous souhaitez utiliser un nouvel outil de suivi pour interagir avec
         Salome, vous pouvez utiliser le patron Salome Bug Tracker, ou créer vous-même un 
-        nouvel outil de suivi en se basant sur le patron Salome Bug Tracker 
+        nouvel outil de suivi en vous basant sur le patron Salome Bug Tracker 
         (voir  <xref linkend="TrackerCreation" /> pour plus de détails sur la
         création d'outils de suivi à partir de patrons)
         </para>
@@ -126,7 +126,7 @@
                  <step>
                     <para>
                     Choisissez le rapport que vous souhaitez utiliser avec Salome
-                    (ce rapport vous servira à parcourir et à rechercher les artifacts
+                    (ce rapport vous servira à parcourir et à rechercher les artefacts
                     depuis Salomé).
                     </para>
                  </step>
@@ -205,7 +205,7 @@
         <title>Plugins Salome</title>
         <para>SalomeTMF est extensible grâce à ses plugins.
         Chaque administrateur projet peut choisir les plugins Salome qui seront 
-        lancés depuis son projet.
+        chargés depuis son projet.
         </para>
         <para>Pour choisir les plugins à utiliser pour votre projet, suivez le lien 
         Votre projet -> Gestionnaire de Tests -> Administration -> Gestion des plugins Salome,
@@ -247,7 +247,7 @@
                 Vérouiller la modification du tests si le test a été exécuté :
                 sélectionnez cette option si vous souhaitez que le test soit 
                 vérouillé après son exécution.
-                Note : ceci implique que vous ne pourrez rejouer l'exécution du test.
+                Note : ceci implique que vous ne pourrez pas rejouer l'exécution du test.
              </para>
             </listitem>
         </itemizedlist>
@@ -257,7 +257,7 @@
           <mediaobject>
             <imageobject>
               <imagedata format="PNG"
-                fileref="../../screenshots/en_US/sc_salomepreferences.png" width="13cm" />
+                fileref="../../screenshots/fr_FR/sc_salomepreferences.png" width="13cm" />
             </imageobject>
           </mediaobject>
          </figure>
@@ -271,7 +271,7 @@
     
     <para>
         Une fois que votre projet est configuré correctement 
-        (voir <xref linkend="SalomeConfigurationAndAdministration" />
+        (voir <xref linkend="SalomeBugTrackerConfiguration" />
         pour plus de détails) vous pouvez lancer l'application SalomeTMF en appuyant 
         sur le bouton "Lancer Salome".
     </para>
