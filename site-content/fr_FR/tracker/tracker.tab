@@ -340,7 +340,6 @@ tracker_include_artifact	copy_art	Dupliquer Cet Artifact
 tracker_include_artifact	is_copy	ce $1 est une copie de $2
 tracker_include_artifact	copy_of	Copie de $1
 tracker_include_artifact	copy	Copie
-tracker_include_artifact	references	Références :
 tracker_include_artifact	flup_hidden	[Non enregistré]
 tracker_include_artifact	del	supp
 tracker_include_artifact	last_edited	Dernière édition par:
