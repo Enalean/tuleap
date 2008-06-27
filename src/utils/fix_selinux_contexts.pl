@@ -25,8 +25,19 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 # /etc/codex -> for licence, site-content...
 `$CHCON -R -h $context $sys_custom_dir`;
 
-# /var/lib/codex -> for ftp, etc.
+# /var/lib/codex
 `$CHCON -R -h $context $sys_data_dir`;
+
+# FTP directories
+`$CHCON -R -h system_u:object_r:public_content_t $sys_data_dir/ftp`;
+`$CHCON -R -h system_u:object_r:public_content_rw_t  $sys_data_dir/ftp/incoming`;
+# Releases must be accessed from httpd
+`$CHCON -R -h $context $sys_data_dir/ftp/codex`;
+
+# Allow anonymous FTP writes
+`setsebool -P allow_ftpd_anon_write=1`;
+# Allow access to user's home with FTP
+`setsebool -P ftp_home_dir 1`
 
 # /home/codexadm. Apache needs access to '.subversion' (Server update plugin), '.cvs' (Passerelle plugin)
 `$CHCON -R -h $context /home/$sys_http_user`;
