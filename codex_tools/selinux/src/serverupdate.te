@@ -1,0 +1,11 @@
+
+module svn 1.0;
+
+require {
+	type httpd_t;
+	type soundd_port_t;
+	class tcp_socket name_connect;
+}
+
+#============= httpd_t ==============
+allow httpd_t soundd_port_t:tcp_socket name_connect;

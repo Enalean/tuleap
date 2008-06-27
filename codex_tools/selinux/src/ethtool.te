@@ -1,0 +1,11 @@
+
+module ethtool 1.0;
+
+require {
+	type ifconfig_t;
+	type initrc_t;
+	class tcp_socket { read write };
+}
+
+#============= ifconfig_t ==============
+allow ifconfig_t initrc_t:tcp_socket { read write };
