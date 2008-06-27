@@ -135,7 +135,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this._initItemHighlight(document.body);
     },
     _initItemHighlight:function(parent_element) {
-        document.getElementsByClassName('docman_item_title', parent_element).each(function (element) {
+        $A(parent_element.getElementsByClassName('docman_item_title')).each(function (element) {
             var item_ = new RegExp("^item_.*");
             //We search the first parent which has id == "item_%"
             var node = element.parentNode;
@@ -371,7 +371,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     });*/
                 } else {
                     if (Element.visible(properties.panel)) {
-			Element.hide(properties.panel);
+                        Element.hide(properties.panel);
                         /*new Effect.SlideUp(properties.panel, {
                             duration:0.25
                         });*/
@@ -399,7 +399,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 if (element.className.match(docman_item_type_folder)) {         //collapse --> expand
                     Element.removeClassName(element, 'docman_item_type_folder');
                     Element.addClassName(element, 'docman_item_type_folder_open');
-                    var icon = document.getElementsByClassName('docman_item_icon', element)[0];
+                    var icon = element.getElementsByClassName('docman_item_icon')[0];
                     icon.src = icon.src.replace('folder.png', 'folder-open.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
@@ -447,7 +447,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 } else {           //expand --> collapse
                     Element.removeClassName(element, 'docman_item_type_folder_open');
                     Element.addClassName(element, 'docman_item_type_folder');
-                    var icon = document.getElementsByClassName('docman_item_icon', element)[0];
+                    var icon = element.getElementsByClassName('docman_item_icon')[0];
                     icon.src = icon.src.replace('folder-open.png', 'folder.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
