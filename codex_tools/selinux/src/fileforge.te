@@ -1,0 +1,24 @@
+module fileforge 1.0;
+
+require {
+	type httpd_t;
+        type lib_t;
+        type public_content_t;
+        type public_content_rw_t;
+	class capability fowner;
+        class file execute_no_trans;
+	class file rename;
+        class file setattr;
+        class dir { write remove_name };
+        class dir add_name;
+}
+
+#============= httpd_t ==============
+allow httpd_t self:capability fowner;
+allow httpd_t lib_t:file execute_no_trans;
+allow httpd_t public_content_rw_t:file setattr;
+allow httpd_t public_content_t:dir write;
+allow httpd_t public_content_rw_t:dir { write remove_name };
+allow httpd_t public_content_rw_t:file rename;
+allow httpd_t public_content_rw_t:dir add_name;
+
