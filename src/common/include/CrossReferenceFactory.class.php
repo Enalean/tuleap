@@ -9,8 +9,6 @@
 
 require_once('common/include/CrossReference.class.php');
 
-$Language->loadLanguageMsg('references/references');
-
 class CrossReferenceFactory {
     
     var $entity_id;
@@ -91,7 +89,9 @@ class CrossReferenceFactory {
     
     function getHTMLDisplayCrossRefs() {
     	global $Language;
-    	
+        
+    	$Language->loadLanguageMsg('references/references');
+        
     	$artifact_ref_from=array();
     	$artifact_ref_to=array();
     	$rev_svn_ref_from=array();
