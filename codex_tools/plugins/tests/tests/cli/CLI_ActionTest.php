@@ -7,7 +7,6 @@
 
 require_once('cli_constants.php');
 
-require_once(CODEX_CLI_DIR .'/nusoap/nusoap.php');
 require_once(CODEX_CLI_DIR .'/include/CodeXSOAP.class.php');
 Mock::generate('CodeXSOAP');
 
