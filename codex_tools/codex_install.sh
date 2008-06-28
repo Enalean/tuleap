@@ -420,7 +420,7 @@ $RPM -e j2re 2>/dev/null
 echo "Installing Java JRE RPMs for CodeX...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/jre-*i?86.rpm
+$RPM -ivh ${newest_rpm}/jre-*i?86.rpm
 cd /usr/java
 newest_jre=`$LS -1d jre* | $TAIL -1`
 $LN -sf $newest_jre jre
@@ -442,18 +442,12 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> subversion
-echo "Removing RedHat subversion .."
-$RPM -e `rpm -qa 'subversion*' neon neon-devel mod_dav_svn` 2>/dev/null
-echo "Installing Subversion and Neon RPMs for CodeX...."
+# Neon is used by other RPMS (cadaver...)
+echo "Installing Subversion and Neon RPMs for CodeX.... In case of conflict with neon, re-install the RPMs with --nodeps or remove neon dependencies"
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/neon-0.*.i386.rpm
-$RPM -Uvh ${newest_rpm}/neon-devel*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-1.*.i386.rpm
-$RPM -Uvh ${newest_rpm}/mod_dav_svn*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-perl*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-python*.i386.rpm
-$RPM -Uvh ${newest_rpm}/subversion-tools*.i386.rpm
+cd ${newest_rpm}
+$RPM -Uvh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm subversion-tools*.i386.rpm
 
 
 # -> cvsgraph 
