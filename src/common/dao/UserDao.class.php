@@ -8,6 +8,7 @@
 require_once('include/DataAccessObject.class.php');
 require_once('UserFilter.php');
 
+
 /**
  *  Data Access Object for User 
  */
@@ -40,12 +41,26 @@ class UserDao extends DataAccessObject {
     }
 
     /**
+     * Searches All information related to a user by UserId
+     * @return DataAccessResult
+     */
+    function searchAllByUserId($userid) {
+
+        $sql = sprintf("SELECT * FROM user WHERE user_id = %d",
+                       $this->da->escapeInt($userid));
+
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Searches information about user and user's group(s) by UserId
      * @return DataAccessResult
      */
     function searchGroupByUserId($userId) {
+
         $sql = sprintf("SELECT * FROM user JOIN user_group ON (user.user_id = user_group.user_id) LEFT JOIN groups ON (user_group.group_id = groups.group_id) WHERE user.user_id IN (%s)",
-            $this->da->quoteSmart($userId));
+            $this->da->escapeInt($userId));
+
         return $this->retrieve($sql);
     }
     
@@ -370,6 +385,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
 
     /**
      * search user by filter
+     * @return DataAccessResult
      *
      */
     function & searchUserByFilter($ca, $offset, $limit) {
@@ -431,39 +447,85 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
     /**
      * search group by id
      * This function is used to check the existance of a group before adding user in it
+     * @return DataAccessResult
      *
      */
     function searchGroupById($groupid) {
 
         $sql = sprintf("SELECT * FROM groups WHERE group_id=%d",
-            $this->da->quoteSmart($groupid));
+            $this->da->escapeInt($groupid));
 
         return $this->retrieve($sql);
     }
 
-
     /**
      * search user in the user_group table
+     * @return DataAccessResult
      *
      */
     function searchUserInUserGroup($userid, $groupid) {
 
         $sql = sprintf("SELECT user_id FROM user_group WHERE user_id=%d AND group_id=%d",
-            $this->da->quoteSmart($userid),
-            $this->da->quoteSmart($groupid));
+            $this->da->escapeInt($userid),
+            $this->da->escapeInt($groupid));
 
         return $this->retrieve($sql);
     }
 
     /**
      * add user to group
+     * @return DataAccessResult
      *
      */
     function addUserToGroup($userid, $groupid) {
 
         $sql = sprintf("INSERT INTO user_group (user_id,group_id) VALUES (%d, %d)",
-                       $this->da->quoteSmart($userid),
-                       $this->da->quoteSmart($groupid));
+                       $this->da->escapeInt($userid),
+                       $this->da->escapeInt($groupid));
+
+        return $this->update($sql);
+    }
+
+    /**
+     * Check if the unix uid of a specific user exists
+     * @return DataAccessResult
+     *
+     */
+    function checkUnixUid($userid) {
+
+        $sql = sprintf("SELECT unix_uid FROM user WHERE user_id = %d",
+                       $this->da->escapeInt($userid));
+      
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Create unix uid for specific user if he doesn't have one
+     * @return DataAccessResult
+     *
+     */
+    function createUnixUid($userid) {
+
+        $sql = sprintf("UPDATE user SET unix_uid = ".acount_nextuid()." WHERE user_id = %d",
+                       $this->da->escapeInt($userid));
+
+        return $this->update($sql);
+    }
+
+    /**
+     * update user infromations
+     * @return DataAccessResult
+     *
+     */
+    function updateUser($userid, $shell, $codexstatus, $unixstatus, $email, $expirydate) {
+
+        $sql = sprintf("UPDATE user SET shell = %s, status = %s, unix_status = %s, email = %s, expiry_date = %d WHERE user_id = %d",
+                       $this->da->quoteSmart($shell),
+                       $this->da->quoteSmart($codexstatus),
+                       $this->da->quoteSmart($unixstatus),
+                       $this->da->quoteSmart($email),
+                       $this->da->escapeInt($expirydate),
+                       $this->da->escapeInt($userid));
 
         return $this->update($sql);
     }

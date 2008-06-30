@@ -235,12 +235,12 @@ class UserControler extends Controler {
 
         if(is_array($userid)) {
             foreach($userid as $uid) {
-                $dar = $dao->searchByUserId($uid);
+                $dar = $dao->searchAllByUserId($uid);
                 $userparam[] = $dar->getRow();
             }
         }
         else {
-            $dar = $dao->searchByUserId($userid);
+            $dar = $dao->searchAllByUserId($userid);
             $userparam = $dar->getRow();
         }
         
@@ -402,6 +402,108 @@ class UserControler extends Controler {
             }
         }
     }
+
+    /**
+     * update user
+     */
+    function updateUser() {
+
+        $request =& HTTPRequest::instance();
+        //valid parameters
+
+        //valid shell
+        $shellWhiteList = array('/bin/sh', '/bin/bash', '/sbin/nologin', '/bin/bash2', '/bin/ash', '/bin/bsh', '/bin/tcsh', '/bin/csh', '/bin/zsh');
+
+        $validShell = new Valid('shell');
+        $validShell->addRule(new Rule_WhiteList($shellWhiteList));
+
+
+        if ($request->valid($validShell)) {
+            $shell = $request->get('shell');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+        //valid codex status
+        $codexStatusWhiteList = array('A', 'R', 'V', 'P', 'D', 'S');
+
+        $validCodexStatus = new Valid('codexstatus');
+        $validCodexStatus->addRule(new Rule_WhiteList($codexStatusWhiteList));
+
+        if ($request->valid($validCodexStatus)) {
+            $codexstatus = $request->get('codexstatus');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+        //valid unix status
+        $unixStatusWhiteList = array('N', 'A', 'S', 'D');
+
+        $validUnixStatus = new Valid('unixstatus');
+        $validUnixStatus->addRule(new Rule_WhiteList($unixStatusWhiteList));
+
+        if ($request->valid($validUnixStatus)) {
+            $unixstatus = $request->get('unixstatus');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+        //valid email
+        $validEmail = new Valid('email');
+
+        if ($request->valid($validEmail)) {
+            $email = $request->get('email');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+        }
+
+
+        //valid date
+        $validExpiryDate = new Valid('expiry_date');
+        $validExpiryDate->addRule(new Rule_Date());
+
+        if ($request->valid($validExpiryDate)) {
+            $expirydate = $request->get('expiry_date');
+        }
+        else {           
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','data_not_parsed'));
+        }
+
+        $dao = new UserDao(CodexDataAccess::instance());
+
+        if ($shell && $codexstatus && $unixstatus && $email && isset($expirydate)) {
+
+            $date = util_date_to_unixtime($expirydate);
+
+            //check if unix uid exists
+            if ($unixstatus != 'N' ){
+
+                $dao->checkUnixUid($this->userid);
+               
+                $unixuidexist = $dao->getFoundRows();
+
+                // create unix uid if it doesn't exists
+                if ($unixuidexist <= 0) {
+
+                    $dao->createUnixUid($this->userid);
+                }
+            }
+            //update
+            $dao->updateUser($this->userid, $shell, $codexstatus, $unixstatus, $email, $date[0]);
+
+            // Update in plugin
+            require_once('common/event/EventManager.class.php');
+            $em =& EventManager::instance();
+            $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
+                                                        'user_id' => $this->userid )); 
+
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
+        }
+    }
     
 
     /**
@@ -455,7 +557,13 @@ class UserControler extends Controler {
                 $this->addUserToGroup();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);
-            }
+          }
+          elseif($this->task == 'update_user') {
+                $this->updateUser();
+                $this->setUserParam($this->userid);
+                $this->setGroupParam($this->userid);
+
+          }
         }
 
         $this->setOffset();        

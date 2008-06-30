@@ -1,7 +1,7 @@
 function autochangeStatus(form) {
 
-    var codexstatus = form.form_codexstatus;
-    var unixstatus = form.form_unixstatus;
+    var codexstatus = form.codexstatus;
+    var unixstatus = form.unixstatus;
     
     if (codexstatus.value == 'S') {
 

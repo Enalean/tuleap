@@ -26,6 +26,7 @@ require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/admin/view/AdminEditDisplay.class.php');
 
+
 /**
  * UserEditDisplay
  *
@@ -65,8 +66,9 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayHeader() {
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
-        
-        session_require(array('group'=>'1','admin_flag'=>'A'));
+      
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
+        session_require(array('group'=>'1','admin_flags'=>'A'));
         
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
 
@@ -88,22 +90,31 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayUnixAccountInformation() {
 
-        $shell = array('/bin/sh', '/bin/bash', 'sbin/nologin', '/bin/bash2', '/bin/ash', '/bin/bsh', '/bin/ksh', '/bin/tcsh', '/bin/csh', '/bin/zsh');
+        $shell = array('/bin/sh', '/bin/bash', '/sbin/nologin', '/bin/bash2', '/bin/ash', '/bin/bsh', '/bin/ksh', '/bin/tcsh', '/bin/csh', '/bin/zsh');
+
+
+        if ($this->userparam['expiry_date'] != '') {
+            $expirydate = date('Y-n-j',$this->userparam['expiry_date']);
+        }
+        else {
+            $expirydate = '';
+        }
 
         print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</h3>';
 
-      
 
-        print '<form method="post" name="update_user" action="/admin/usergroup.php">';
+        print '<form method="post" name="update_user" action="index.php">';
 
+        print '<input type="hidden" name="task" value="update_user" />';
 
         //clic on user link
         if(isset($this->userparam['user_id'])) {
-
-
+            
+            print '<input type="hidden" name="user_id" value="'.$this->userparam['user_id'].'" />';
+            
             print '<p>Shell:';
 
-            print '<select name="form_shell">';
+            print '<select name="shell">';
 
             for ($i = 0; $i < count($shell); $i++) {
                 print '<option value="'.$shell[$i].'" ';
@@ -116,7 +127,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<p>Codex Account Status:';
 
-            print '<select name="form_codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
+            print '<select name="codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
             
             print '<option value="A"';
             if ($this->userparam['status'] == 'A') print 'selected="selected"';
@@ -147,7 +158,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
         
-            print '<select name="form_unixstatus">';
+            print '<select name="unixstatus">';
         
             print '<option value="N"';
             if($this->userparam['unix_status'] == 'N') print 'selected="selected"';
@@ -174,7 +185,9 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<p>Expiry Date:';
 
-            print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
+
+
+            print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
                 
@@ -185,6 +198,8 @@ class UserEditDisplay extends AdminEditDisplay {
         // select one user
         elseif(count($this->userparam) == 1 ) {
             
+            print '<input type="hidden" name="user_id" value="'.$this->userparam[0]['user_id'].'" />';
+
             print '<p>Shell:';
             
             print '<select name="form_shell">';
@@ -258,7 +273,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<p>Expiry Date:';
             
-            print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
+            print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
             
@@ -316,7 +331,7 @@ class UserEditDisplay extends AdminEditDisplay {
 
             print '<p>Expiry Date:';
             
-            print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
+            print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
             
