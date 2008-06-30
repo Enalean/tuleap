@@ -259,7 +259,7 @@ if ( $project->usesTracker()&&$at_arr ) {
 	}
 }
 
-userperms_add_header('<TD class="boxtitle">'.$Language->getText('project_admin_userperms','member_ug').'</TD>');
+$head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','member_ug').'</TD>';
 
 $head .= '</tr>';
 
