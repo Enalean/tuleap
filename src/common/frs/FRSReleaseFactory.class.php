@@ -258,7 +258,7 @@ class FRSReleaseFactory {
      *
      * @return Object{FRSPackageFactory} a FRSPackageFactory Object.
      */
-    function &_getFRSPackageFactory() {
+    function _getFRSPackageFactory() {
         return new FRSPackageFactory();
     }
     
@@ -267,7 +267,7 @@ class FRSReleaseFactory {
      *
      * @return Object{FRSFileFactory} a FRSFileFactory Object.
      */
-    function &_getFRSFileFactory() {
+    function _getFRSFileFactory() {
         return new FRSFileFactory();
     }
 	
