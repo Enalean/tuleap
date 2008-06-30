@@ -202,7 +202,11 @@ class Layout extends Response {
     function includeJavascriptSnippet($snippet) {
         $this->javascript[] = array('snippet' => $snippet);
     }
-    
+    function includeCalendarScripts() {
+        $this->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
+        $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
+    }
+
     function addFeed($title, $href) {
         $this->feeds[] = array('title' => $title, 'href' => $href);
     }
@@ -335,6 +339,7 @@ class Layout extends Response {
         <style type="text/css">
         <!--
         <?php
+        $em = EventManager::instance();
             $em->processEvent("cssstyle", null);
         ?>
         //-->
@@ -390,7 +395,7 @@ class Layout extends Response {
     function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
         $hp = CodeX_HTMLPurifier::instance();
         return '<input type="text" 
-                       class="highlight-days-67 format-y-m-d divider-slash no-transparency" 
+                       class="highlight-days-67 format-y-m-d divider-dash no-transparency" 
                        id="'.  $hp->purify($id, CODEX_PURIFIER_CONVERT_HTML)  .'" 
                        name="'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'" 
                        size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" 

@@ -42,13 +42,13 @@ class FRSPackageFactory {
         
     }
 
-    function &getFRSPackageFromArray(&$array) {
+    function getFRSPackageFromArray(&$array) {
         $frs_package = null;
         $frs_package = new FRSPackage($array);
         return $frs_package;
     }
 
-    function &getFRSPackageFromDb($package_id = null, $group_id=null) {
+    function getFRSPackageFromDb($package_id = null, $group_id=null) {
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
         if($group_id){
@@ -70,7 +70,7 @@ class FRSPackageFactory {
         return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
-    function &getFRSPackageByFileIdFromDb($file_id){
+    function getFRSPackageByFileIdFromDb($file_id){
     	$_id = (int) $file_id;
         $dao =& $this->_getFRSPackageDao();
         $dar = $dao->searchByFileId($_id);
@@ -88,7 +88,7 @@ class FRSPackageFactory {
         return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
-    function &getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
+    function getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
@@ -107,7 +107,7 @@ class FRSPackageFactory {
         return(FRSPackageFactory::getFRSPackageFromArray($data_array));
     }
     
-    function &getFRSPackagesFromDb($group_id, $status_id=null) {
+    function getFRSPackagesFromDb($group_id, $status_id=null) {
         $_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();
         if($status_id){
@@ -164,7 +164,7 @@ class FRSPackageFactory {
     
     
     var $dao;
-    function &_getFRSPackageDao() {
+    function _getFRSPackageDao() {
         if (!$this->dao) {
             $this->dao =& new FRSPackageDao(CodexDataAccess::instance(), $this->STATUS_DELETED);
         }

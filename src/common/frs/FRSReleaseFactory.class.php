@@ -43,13 +43,13 @@ class FRSReleaseFactory {
 
 	}
 
-	function & getFRSReleaseFromArray(& $array) {
+	function  getFRSReleaseFromArray(& $array) {
 		$frs_release = null;
 		$frs_release = new FRSRelease($array);
 		return $frs_release;
 	}
 
-	function & getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null) {
+	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null) {
 		$_id = (int) $release_id;
 		$dao = & $this->_getFRSReleaseDao();
 		if($group_id && $package_id){
@@ -77,7 +77,7 @@ class FRSReleaseFactory {
 		return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
 	}
 
-	function & getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
+	function  getFRSReleasesFromDb($package_id, $status_id=null, $group_id=null) {
 		$_id = (int) $package_id;
 		$dao = & $this->_getFRSReleaseDao();
 		if(isset($status_id) && $status_id == $this->STATUS_ACTIVE && isset($group_id) && $group_id){
@@ -180,27 +180,27 @@ class FRSReleaseFactory {
     
 	var $dao;
 
-	function & _getFRSReleaseDao() {
+	function  _getFRSReleaseDao() {
 		if (!$this->dao) {
-			$this->dao = & new FRSReleaseDao(CodexDataAccess :: instance(), $this->STATUS_DELETED);
+			$this->dao =  new FRSReleaseDao(CodexDataAccess :: instance(), $this->STATUS_DELETED);
 		}
 		return $this->dao;
 	}
 
 	function update($data_array) {
-		$dao = & $this->_getFRSReleaseDao();
+		$dao =  $this->_getFRSReleaseDao();
 		return $dao->updateFromArray($data_array);
 	}
 
 	function create($data_array) {
-		$dao = & $this->_getFRSReleaseDao();
+		$dao = $this->_getFRSReleaseDao();
 		$id = $dao->createFromArray($data_array);
 		return $id;
 	}
 	
 	function _delete($release_id){
     	$_id = (int) $release_id;
-    	$dao =& $this->_getFRSReleaseDao();
+    	$dao = $this->_getFRSReleaseDao();
     	return $dao->delete($_id,$this->STATUS_DELETED);
     }
 

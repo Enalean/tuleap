@@ -160,16 +160,11 @@ echo '<FORM name="commit_form" ACTION="'. $PHP_SELF .'" METHOD="GET">
                       <TD><b>'.$Language->getText('cvs_browse_commit', 'branch').'</b></TD>
                       <TD><b>'.$Language->getText('cvs_browse_commit', 'who').'</b></TD>
                       <TD><b>'.$Language->getText('cvs_browse_commit', 'keyword').'</b></TD>'.
-        ##'<TD><b>'.$Language->getText('cvs_browse_commit', 'date').'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" SIZE=5 NAME=_commit_id VALUE='.$_commit_id.'></TD><TD><FONT SIZE="-1">'. commits_branches_box($group_id,'_branch',$_branch, 'Any') .'</TD>
 	<TD><FONT SIZE="-1">'. $tech_box .
         '</TD><TD><FONT SIZE="-1">'. '<INPUT type=text size=35 name=_srch value='.$_srch.
         '></TD>'.
-        ##'<TD nowrap><font SIZE="-1"><select name="_commit_date_op">'.
-        ##'<option VALUE=">" SELECTED>&gt;</option><option VALUE="=">=</option>'.
-        ##'<option VALUE="<">&lt;</option></select>'.
-        ##'<input TYPE="text" name="_commit_date" size="10" MAXLENGTH="15" VALUE="'.$_commit_date.'"><a href="javascript:show_calendar(\'document.commit_form._commit_date\', document.commit_form._commit_date.value,'.util_get_css_theme().','.util_get_dir_image_theme().);"><img src=".util_get_image_theme('calendar/cal.png')." width="16" height="16" border="0" alt="'.$Language->getText('cvs_browse_commit', 'pick_date').'"></a></TD>'.
        '</TR></TABLE>'.
 	
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global', 'btn_browse').'">'.
