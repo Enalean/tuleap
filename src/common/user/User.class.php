@@ -85,10 +85,11 @@ class User {
         
         //set the locale
         if (!isset($this->data_array['language_id']) || !$this->data_array['language_id']) {
-            $this->data_array['language_id'] = $GLOBALS['sys_lang'];
+            $locale = $GLOBALS['sys_lang'];
+        } else {
+            $lm =& $this->_getLanguageManager();
+            $locale = $lm->getLanguageCodeFromLanguageId($this->data_array['language_id']);
         }
-        $lm =& $this->_getLanguageManager();
-        $locale = $lm->getLanguageCodeFromLanguageId($this->data_array['language_id']);
         $this->setLocale($locale);
     }
     
