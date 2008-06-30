@@ -28,6 +28,8 @@ AddType application/x-httpd-php .php
 # PHP variables
 php_flag register_globals on
 php_flag magic_quotes_gpc on
+# Needed by trackers and phpWiki
+php_flag register_long_arrays on
 php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."
 php_value memory_limit 196M
 php_value post_max_size 128M
