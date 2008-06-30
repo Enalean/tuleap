@@ -61,7 +61,7 @@ class Layout extends Response {
 		$this->Response();
         
         $this->feeds = array();
-        $this->javascript_files = array();
+        $this->javascript = array();
         
 		/*
 	        Set up the priority color array one time only
@@ -197,7 +197,10 @@ class Layout extends Response {
     }
     
     function includeJavascriptFile($file) {
-        $this->javascript_files[] = $file;
+        $this->javascript[] = array('file' => $file);
+    }
+    function includeJavascriptSnippet($snippet) {
+        $this->javascript[] = array('snippet' => $snippet);
     }
     
     function addFeed($title, $href) {
@@ -311,19 +314,7 @@ class Layout extends Response {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
     <TITLE><?php echo $params['title']; ?></TITLE>
-    <?php
-        $em =& EventManager::instance();
-        $em->processEvent("javascript_file", null);
-        
-        foreach ($this->javascript_files as $file) {
-            echo '<script type="text/javascript" src="'. $file .'"></script>'."\n";
-        }
-    ?>
-    <script type="text/javascript">
-    <?php
-        $em->processEvent("javascript", null);
-    ?>
-    </script>
+    <?php $this->displayJavascriptElements() ?>
         <SCRIPT language="JavaScript">
         <!--
         function help_window(helpurl) {
@@ -375,6 +366,37 @@ class Layout extends Response {
             echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
         }
 	}
+    
+    function displayJavascriptElements() {
+        $em =& EventManager::instance();
+        $em->processEvent("javascript_file", null);
+        
+        foreach ($this->javascript as $js) {
+            reset($js);
+            list($type, $content) = each($js);
+            if ($type == 'file') {
+                echo '<script type="text/javascript" src="'. $content .'"></script>'."\n";
+            } else {
+                echo '<script type="text/javascript">'. $content .'</script>';
+            }
+        }
+        echo '<script type="text/javascript">
+        ';
+        $em->processEvent("javascript", null);
+        echo '
+        </script>';
+    }
+    
+    function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
+        $hp = CodeX_HTMLPurifier::instance();
+        return '<input type="text" 
+                       class="highlight-days-67 format-y-m-d divider-slash no-transparency" 
+                       id="'.  $hp->purify($id, CODEX_PURIFIER_CONVERT_HTML)  .'" 
+                       name="'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'" 
+                       size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" 
+                       maxlength="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" 
+                       value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'">';
+    }
     
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
         $project=project_get_object($group_id);

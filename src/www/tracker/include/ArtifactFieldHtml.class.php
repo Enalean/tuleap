@@ -216,14 +216,12 @@ class ArtifactFieldHtml extends ArtifactField {
 				if (!$size || !$maxlength)
 				    list($size, $maxlength) = $this->getGlobalDisplaySize();
 		
-				$html = $Language->getText('tracker_include_field','start').'<INPUT TYPE="text" name="'. $hp->purify($this->getName(), CODEX_PURIFIER_CONVERT_HTML) .
-				'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($date_begin, CODEX_PURIFIER_CONVERT_HTML) .'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'\', document.artifact_form.'.$this->getName().'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up start date"></a><br>'.
-				$Language->getText('tracker_include_field','end').'<INPUT TYPE="text" name="'. $hp->purify($this->getName(), CODEX_PURIFIER_CONVERT_HTML) .'_end'.
-				'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($date_end, CODEX_PURIFIER_CONVERT_HTML) .'">'.
-				'<a href="javascript:show_calendar(\'document.artifact_form.'.$this->getName().'_end\', document.artifact_form.'.$this->getName().'_end.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-				'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
+				
+                $html = $Language->getText('tracker_include_field','start');
+                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->getName(), "", $size, $maxlength);
+                $html .= "<br />";
+                $html .= $Language->getText('tracker_include_field','end');
+                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id."_end", $this->getName()."_end", "", $size, $maxlength);
 		    }
 	
 	    return($html);
@@ -272,12 +270,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if ($ro)
 			$html = $value;
 	    else {
-		$timeval = ($today ? 'null' : 'document.'.$form_name.'.'.$this->field_name.'.value'); 
-	
-		$html = '<INPUT TYPE="text" name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
-		'" size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" MAXLENGTH="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'">'.
-		'<a href="javascript:show_calendar(\'document.'.$form_name.'.'.$this->field_name.'\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-		'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$Language->getText('tracker_include_field','pick_date').'"></a>';
+            $html = $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->field_name, $value, $size, $maxlength);
 	    }
 	    return($html);
 	

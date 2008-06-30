@@ -49,7 +49,8 @@ class ArtifactTypeHtml extends ArtifactType {
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");
-                
+        $GLOBALS['HTML']->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/datepicker/datepicker.js");
         
 		//required by new site_project_header
 		$params['group']=$group_id;

@@ -115,12 +115,7 @@ class TabbedLayout extends Layout {
     ?>
     <link rel="SHORTCUT ICON" href="<?php echo $this->imgroot; ?>favicon.ico">
     <?php
-        $em =& EventManager::instance();
-        $em->processEvent("javascript_file", null);
-        
-        foreach ($this->javascript_files as $file) {
-            echo '<script type="text/javascript" src="'. $file .'"></script>'."\n";
-        }
+        $this->displayJavascriptElements();
     ?>
     <script language="JavaScript" type="text/javascript">
 	<!--
@@ -128,9 +123,6 @@ class TabbedLayout extends Layout {
 	function help_window(helpurl) {
 		HelpWin = window.open( helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000');
 	}
-	<?php 
-        $em->processEvent("javascript",false); 
-    ?>
 	// -->
 	</script>
 <?php
@@ -165,6 +157,7 @@ class TabbedLayout extends Layout {
     <style type="text/css">
 	<!--
     <?php 
+        $em = EventManager::instance();
         $em->processEvent("cssstyle",null);
     ?>
 	-->
