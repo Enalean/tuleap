@@ -14,6 +14,7 @@ class UTF8Test extends UnitTestCase {
         $exclude_wholename = array(
             '.svn',
             'simpletest',
+            'tiny_mce',
         );
         $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso-8859 -B 1';
         $handle = popen($cmd, 'r');
