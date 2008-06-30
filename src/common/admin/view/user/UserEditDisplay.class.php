@@ -413,7 +413,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<p><input name="Submit" value="Submit" type="submit"></p>';
 
-            print '<p><a href="user_changepw.php?user_id=101">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
+            print '<p><a href="/admin/user_changepw.php?user_id='.$this->userparam['user_id'].'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
 
             print '</form>';
         }
@@ -432,7 +432,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<p><input name="Submit" value="Submit" type="submit"></p>';
             
-            print '<p><a href="user_changepw.php?user_id=101">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
+            print '<p><a href="/admin/user_changepw.php?user_id='.$this->userparam[0]['user_id'].'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
 
             print '</form>';  
         }
