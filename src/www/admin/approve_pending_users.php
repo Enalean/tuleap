@@ -12,6 +12,7 @@ require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
+$GLOBALS['HTML']->includeCalendarScripts();
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -161,10 +162,9 @@ if (db_numrows($res) < 1) {
             if($row['expiry_date'] != 0){
                 $exp_date = format_date('Y-m-d',$row['expiry_date']); 
             }
-            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
-            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="<?php echo $exp_date;?>">
-            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
+            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", $exp_date);
+            ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
                 '<p><select name="action_select" size="1">
@@ -195,10 +195,9 @@ if (db_numrows($res) < 1) {
 
         echo '<TD>
             <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
-            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
-            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="">
-            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
+            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
                 '<p><select name="action_select" size="1">
@@ -222,10 +221,9 @@ if (db_numrows($res) < 1) {
         if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
             echo '<TD>
             <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
-            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; ?>
-            <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="">
-            <a href="<?php echo 'javascript:show_calendar(\'document.pending_user'.$row['user_id'].'.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
+            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            ?>
             <BR>
              <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
                 '<p><select name="action_select" size="1">

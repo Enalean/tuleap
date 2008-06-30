@@ -32,7 +32,8 @@ $Language->loadLanguageMsg('tracker/tracker');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-
+$request = HTTPRequest::instance();
+$func = $request->get('func');
 	switch ( $func ) {
 	case 'restore':
 	    if ($group = group_get_object($request->getValidated('group_id', 'GroupId'))) {
@@ -98,7 +99,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 	} // switch
 $group = group_get_object(1);	
 $ath = new ArtifactTypeHtml($group);
-
+$HTML->includeCalendarScripts();
 $HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions')));
 $atf = new ArtifactTypeFactory($group);
 $ath->displayPendingTrackers();

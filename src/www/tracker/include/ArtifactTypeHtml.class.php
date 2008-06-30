@@ -103,6 +103,7 @@ class ArtifactTypeHtml extends ArtifactType {
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
+        $GLOBALS['HTML']->includeCalendarScripts();
 
 		//required by new site_project_header
 		$params['group']=$group_id;
@@ -181,7 +182,6 @@ class ArtifactTypeHtml extends ArtifactType {
 		
 
 		echo '<form name="cal">';
-        echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';		
 		// Get the artfact type list
 		$at_arr = $atf->getPendingArtifactTypes();
 		echo '<H2>'.$Language->getText('tracker_include_type','pending_removal').'</H2>';
@@ -209,11 +209,11 @@ class ArtifactTypeHtml extends ArtifactType {
 					    $hp->purify($arr['group_artifact_id'], CODEX_PURIFIER_CONVERT_HTML) ,
 					    $hp->purify($arr['project_name'], CODEX_PURIFIER_CONVERT_HTML) ,
 					    $hp->purify(SimpleSanitizer::unsanitize($arr['name']), CODEX_PURIFIER_CONVERT_HTML) ,
-					    '<input type="text" name="delay_date" value="'.date("Y-m-d",$arr['deletion_date']).'"><a href="javascript:show_calendar(\'document.cal.delay_date\',document.cal.delay_date.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');"><img src="'.util_get_image_theme("calendar/cal.png").'"  border="0"></a>',
+                        $GLOBALS['HTML']->getDatePicker("delay_date_".$i, "delay_date", date("Y-m-d",$arr['deletion_date'])),
 					    '<a href="javascript: var delay = document.cal.delay_date.value; document.location=\'/tracker/admin/restore.php?func=delay&group_id='.$arr['group_id'].'&atid='.$arr['group_artifact_id'].'&delay_date=\'+delay;"><img src="'.util_get_image_theme("ic/save16b.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','delay_deletion').'\')"></a>',
 					    '<a href="/tracker/admin/restore.php?func=restore&group_id='.(int)$arr['group_id']."&atid=".(int)$arr['group_artifact_id'].'"><img src="'.util_get_image_theme("ic/convert.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','restore_tracker').'\')"></a>',
 					    '<a href="/tracker/admin/restore.php?func=delete&group_id='.(int)$arr['group_id']."&atid=".(int)$arr['group_artifact_id'].'"><img src="'.util_get_image_theme("ic/trash.png").'" border="0" onClick="return confirm(\''.$Language->getText('tracker_include_type','warning').'\')"></a>' );
-			$i=0;
+			$i++;
 			}
 		    // final touch...
 		    echo "</TABLE></form>";
@@ -2150,8 +2150,7 @@ EOS;
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
 	      <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.(int)$field_id.'">
 	      <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$this->Group->getID().'">
-	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->getID().'">
-		  <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+	      <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->getID().'">';
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			echo $Language->getText('tracker_include_type','val').': ';
@@ -2159,9 +2158,8 @@ EOS;
 		} else if ( $field->isDateField() ) {
             echo '<input type="radio" name="default_date_type" value="current_date"'.($default_value==""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','current_date').'</input><br />';
             echo '<input type="radio" name="default_date_type" value="selected_date"'.($default_value!=""?" checked=\"checked\"":"").'>'.$Language->getText('tracker_include_type','date_value').'</input> ';
-            echo '<INPUT TYPE="text" name="default_value" size="10" MAXLENGTH="10" VALUE="'.($default_value?format_date("Y-m-j",$default_value,''):'').'">'.
-			'<a href="javascript:show_calendar(\'document.artifact_form.default_value\', document.artifact_form.default_value.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-			'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a><br />';
+            echo $GLOBALS['HTML']->getDatePicker("default_value_id", "default_value", ($default_value?format_date("Y-m-j",$default_value,''):''));
+            echo '<br />';
 		} else if($field->isTextArea()){
 			echo $Language->getText('tracker_include_type','val').': ';
 			echo '<BR><TEXTAREA NAME="default_value" wrap="virtual" cols="90" rows="12" >'.$hp->purify($default_value, CODEX_PURIFIER_CONVERT_HTML).' </TEXTAREA></BR>';

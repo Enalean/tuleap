@@ -10,6 +10,7 @@ require_once('pre.php');
 require_once('account.php');
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
+$GLOBALS['HTML']->includeCalendarScripts();
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -164,9 +165,7 @@ if($row_user['expiry_date'] != 0){
 }
 
 ?>:
-<INPUT TYPE="TEXT" id="expiry_date" NAME="expiry_date" VALUE="<?php echo $exp_date; ?>" SIZE="15" MAXLENGTH="10">
-<a href="<?php echo 'javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-                    '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+<?php echo $GLOBALS['HTML']->getDatePicker("expiry_date", "expiry_date", $exp_date); ?>
 <P>
 <?php 
 require_once('common/event/EventManager.class.php');
