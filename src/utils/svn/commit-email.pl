@@ -798,7 +798,7 @@ sub extract_xrefs {
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
     my $req = POST "$codex_http_srv/api/reference/extractCross",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
-    
+  
 
     my $response = $ua->request($req);
     if ($response->is_success) {
