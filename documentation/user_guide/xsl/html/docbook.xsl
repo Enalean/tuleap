@@ -11,9 +11,8 @@
 
 <!--
 //
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
-// http://codex.xerox.com
+// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 // $Id: 
 //
