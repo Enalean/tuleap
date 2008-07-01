@@ -20,7 +20,7 @@ For more information on CodeX please visit our websites:
 our Site Documentation corner at http://codex.xerox.com/docs/site
 
 - For Xerox customers using the CodeX platform please visit
-http://codex.partners.xrce.xerox.com/
+http://partners.xrce.xerox.com/
 
 LICENSE
 =======
@@ -30,19 +30,13 @@ make this possible.
 
 LICENSE
 =======
-We want to draw your attention on the fact that the CodeX software is
-made of both Open Source software components (mostly under the GNU
-Public License - see the COPYING file) and Xerox Owned Extensions.
-
-The Xerox owned extensions can only be used if you have acquired the
-proper license from Xerox. If you have not acquired such a license
-from Xerox then you are only allowed to use the Open Source software
-components.
+CodeX is distributed under the GPL v2 Licence. See the file COPYING 
+for details.
 
 INSTALLATION
 ============
 For information on how to install this package please read the CodeX
-Installation Guide provided as part of the Xerox Owned Extensions.
+Installation Guide provided.
 
 If you need assistance use our support request manager at
 http://codex.xerox.com/support/?group_id=1. Or contact us at
@@ -61,7 +55,7 @@ http://codex.xerox.com/support/?group_id=1. Or contact us at
 codex-contact@codex.xerox.com.
 
 - Xerox customers using the CodeX platform must visit
-http://codex.partners.xrce.xerox.com/ and follow the instructions.
+http://partners.xrce.xerox.com/ and follow the instructions.
 
 
 BUG REPORT
@@ -72,7 +66,7 @@ If you find any bugs please feel free use our bug tracker.
 http://codex.xerox.com/bugs/?group_id=1. 
 
 - Xerox customers using the CodeX platform must visit
-http://codex.partners.xrce.xerox.com/ and follow the instructions.
+http://partners.xrce.xerox.com/ and follow the instructions.
 
 
 FUTURE RELEASES
