@@ -840,7 +840,11 @@ tracker_common_fieldset	fieldset_default_slmbugs_desc_key	Détails du bug salom�
 tracker_common_fieldset	fieldset_salome_slmbugs_lbl_key	Salomé
 tracker_common_fieldset	fieldset_salome_slmbugs_desc_key	Ensemble des champs Salomé
 tracker_common_fieldset	fieldset_status_slmbugs_lbl_key	Etat
-tracker_common_fieldset	fieldset_status_slmbugs_desc_key	Etat d'avancement du bug salomé
+tracker_common_fieldset	fieldset_status_slmbugs_desc_key	Etat d'avancement du bug salomé$
+tracker_common_fieldset	fieldset_scrum_status_lbl_key	Status
+tracker_common_fieldset	fieldset_scrum_status_desc_key	Status, en rapport avec le SCRUM
+tracker_common_fieldset	fieldset_scrum_description_lbl_key	Description
+tracker_common_fieldset	fieldset_scrum_description_desc_key	Description de la fonctionnalité
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class.php

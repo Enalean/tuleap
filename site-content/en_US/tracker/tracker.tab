@@ -849,6 +849,10 @@ tracker_common_fieldset	fieldset_salome_slmbugs_lbl_key	Salomé
 tracker_common_fieldset	fieldset_salome_slmbugs_desc_key	Salomé field set
 tracker_common_fieldset	fieldset_status_slmbugs_lbl_key	Status
 tracker_common_fieldset	fieldset_status_slmbugs_desc_key	Status of the Salomé bug
+tracker_common_fieldset	fieldset_scrum_status_lbl_key	Status
+tracker_common_fieldset	fieldset_scrum_status_desc_key	Status, related to SCRUM
+tracker_common_fieldset	fieldset_scrum_description_lbl_key	Description
+tracker_common_fieldset	fieldset_scrum_description_desc_key	Description of the story
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldSetFactory.class.php
