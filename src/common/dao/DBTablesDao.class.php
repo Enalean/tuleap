@@ -39,7 +39,7 @@ class DBTablesDao extends DataAccessObject {
                 }
                 $sql = "ALTER TABLE ". $name ." CHANGE ". $field['Field'] ." ". 
                         $field['Field'] ." ". 
-                        $filed['Type'] ." CHARACTER SET utf8 COLLATE utf8_". $collate ." ".
+                        $field['Type'] ." CHARACTER SET utf8 COLLATE utf8_". $collate ." ".
                         ($field['Null'] == 'No' ? 'NOT NULL' : 'NULL') ." ".
                         ($field['Default'] ? "DEFAULT '". $field['Default'] ."'" : '');
                 echo $sql."\n";
