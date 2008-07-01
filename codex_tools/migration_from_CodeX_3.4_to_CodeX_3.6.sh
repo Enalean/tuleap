@@ -56,6 +56,7 @@ CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
+PHP='/usr/bin/php'
 
 CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
@@ -367,31 +368,31 @@ echo "Starting DB update for CodeX 3.6 This might take a few minutes."
 ##########
 # Migrate all CodeX databases to UTF-8
 echo "- Migrate all CodeX databases to UTF-8"
-$CAT <<EOF | php
+$CAT <<EOF | $PHP
 <?php
 
-require_once('src/common/dao/DBTablesDao.class.php');
-require_once('src/common/dao/DBDatabasesDao.class.php');
-require_once('src/common/dao/include/DataAccess.class.php');
+require_once('$INSTALL_DIR/src/common/dao/DBTablesDao.class.php');
+require_once('$INSTALL_DIR/src/common/dao/DBDatabasesDao.class.php');
+require_once('$INSTALL_DIR/src/common/dao/include/DataAccess.class.php');
 
-$da = new DataAccess('', 'root', '$old_passwd', 'codex');
-$tables_dao = new DBTablesDao($da);
+\$da = new DataAccess('', 'root', '$old_passwd', 'codex');
+\$tables_dao = new DBTablesDao(\$da);
 
-$db_dao = new DBDatabasesDao($da);
-foreach($db_dao->searchAll() as $db) {
-    $db = $db['Database'];
-    if ($db == 'codex' || preg_match('/^cx_/', $db)) {
-        echo " + ". $db;
-        $tables_dao->update('USE '. $db);
-        foreach($tables_dao->searchAll() as $row) {
-            $tables_dao->convertToUTF8($row['Tables_in_'. $db]);
+\$db_dao = new DBDatabasesDao(\$da);
+foreach(\$db_dao->searchAll() as \$db) {
+    \$db = \$db['Database'];
+    if (\$db == 'codex' || preg_match('/^cx_/', \$db)) {
+        echo " + ". \$db;
+        \$tables_dao->update('USE '. \$db);
+        foreach(\$tables_dao->searchAll() as \$row) {
+            \$tables_dao->convertToUTF8(\$row['Tables_in_'. \$db]);
             echo ".";
             flush();
         }
-        $db_dao->setDefaultCharsetUTF8($db);
+        \$db_dao->setDefaultCharsetUTF8(\$db);
         echo " done\n";
     } else {
-        echo ' ! Ignoring '. $db ."\n";
+        echo ' ! Ignoring '. \$db ."\n";
     }
 }
 ?>
