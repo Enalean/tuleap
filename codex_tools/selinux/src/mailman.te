@@ -1,0 +1,14 @@
+
+module mailman 1.0;
+
+require {
+	type mailman_mail_t;
+	type lib_t;
+	class dir { write remove_name };
+        class capability kill;
+
+}
+
+#============= mailman_mail_t ==============
+allow mailman_mail_t lib_t:dir { write remove_name };
+allow mailman_mail_t self:capability kill;
