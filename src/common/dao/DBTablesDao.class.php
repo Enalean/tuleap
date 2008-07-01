@@ -29,6 +29,7 @@ class DBTablesDao extends DataAccessObject {
     }
     
     function convertToUTF8($name) {
+        $field_changes = array();
         $sql = "SHOW FULL COLUMNS FROM ".$name;
         foreach($this->retrieve($sql) as $field) {
             if ($field['Collation']) {
@@ -37,16 +38,18 @@ class DBTablesDao extends DataAccessObject {
                 } else {
                     $collate = 'general_ci';
                 }
-                $sql = "ALTER TABLE ". $name ." CHANGE ". $field['Field'] ." ". 
+                $field_changes[] = " CHANGE ". $field['Field'] ." ". 
                         $field['Field'] ." ". 
                         $field['Type'] ." CHARACTER SET utf8 COLLATE utf8_". $collate ." ".
                         ($field['Null'] == 'No' ? 'NOT NULL' : 'NULL') ." ".
                         ($field['Default'] ? "DEFAULT '". $field['Default'] ."'" : '');
-                echo $sql."\n";
-                $this->update($sql);
             }
         }
-        $sql = "ALTER TABLE ". $name ." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
+        $sql = "ALTER TABLE ". $name ." ";
+        if (count($field_changes)) {
+            $sql .= implode(",\n", $field_changes).",\n";
+        }
+        $sql .= " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
         echo $sql."\n";
         return $this->update($sql);
     }
