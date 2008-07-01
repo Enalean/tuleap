@@ -50,7 +50,6 @@ class DBTablesDao extends DataAccessObject {
             $sql .= implode(",\n", $field_changes).",\n";
         }
         $sql .= " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
-        echo $sql."\n";
         return $this->update($sql);
     }
     
