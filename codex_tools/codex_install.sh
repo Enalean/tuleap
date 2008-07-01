@@ -166,7 +166,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring php-gd \
+   mysql MySQL-python php-mbstring php-gd php-soap \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    libart_lgpl  \
@@ -513,6 +513,22 @@ cd ${RPMS_DIR}/htmlpurifier
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
+
+#####
+# CodeX RPMS
+
+# -> codex-jri
+echo "Installing CodeX JRI RPM...."
+cd ${RPMS_DIR}/codex-jri
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codex-jri-*noarch.rpm
+
+
+# -> codex-eclipse
+echo "Installing Eclipse plugin RPM...."
+cd ${RPMS_DIR}/codex-eclipse
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codex-eclipse-*noarch.rpm
 
 
 # Create an http password file
