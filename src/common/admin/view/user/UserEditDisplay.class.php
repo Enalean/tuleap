@@ -404,7 +404,7 @@ class UserEditDisplay extends AdminEditDisplay {
             $userid = $this->userparam['user_id'];
         }
         elseif(count($this->userparam) == 1) {
-            $userid = $this->userparam[0];
+            $userid = $this->userparam[0]['user_id'];
         }
 
       
