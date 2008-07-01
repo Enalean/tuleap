@@ -143,8 +143,6 @@ CodeX is originally based on SourceForge 2.0 and for the most part the numerous
 enhancements brought to the original software are under the GNU General Public
 License (GPL).
 
-Some portion of the CodeX software are however under the CodeX Component
-Software License and can only be used with a commercial license of CodeX.
 
 Contact
 -------
