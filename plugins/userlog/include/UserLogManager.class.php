@@ -130,6 +130,7 @@ class UserLogManager {
 
         //
         // Start display
+        $GLOBALS['Response']->includeCalendarScripts();
         $GLOBALS['Response']->header(array('title' => 'userlog'));
 
         echo '<form name="userlog_form" method="get" action="?">';
@@ -174,7 +175,7 @@ class UserLogManager {
                 $day = date('d', $row['time']);
                 $hour = date('H', $row['time']);
                 echo '<tr'.$classStyle.'>';
-                $nexthour = date('H', mktime($hour+1, 0, 0, $month, $day, $year));
+                $nexthour = date('H', mktime($hour+1, 0, 0, (int)$month, (int)$day, (int)$year));
                 echo '<td colspan="9">'.$day.' '.$month.' '.$year.' between '.$hour.' and '.$nexthour.' hour</td>';
                 $this->initPval($pval);
                 echo '</tr>';

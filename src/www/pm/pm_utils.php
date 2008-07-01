@@ -896,18 +896,13 @@ function pm_field_textarea($field_name,$value='',$cols=0,$rows=0) {
 
 function pm_field_date($field_name,$value='',$size=0,$maxlength=0,$ro=false) {
 
-    // CAUTION!!!! The Javascript below assumes that the date always appear
-    // in a form called 'task_form'
     if ($ro)
 	$html = $value;
     else {
 	if (!$size || !$maxlength)
 	    list($size, $maxlength) = pm_data_get_display_size($field_name);
 
-	$html = '<INPUT TYPE="text" name="'.$field_name.
-	'" size="'.$size.'" MAXLENGTH="'.$maxlength.'" VALUE="'.$value.'">'.
-	'<a href="javascript:show_calendar(\'document.task_form.'.$field_name.'\', document.task_form.'.$field_name.'.value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-	'<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="Click Here to Pick up a date"></a>';
+	$html = $GLOBALS['HTML']->getDatePicker('field_'. $field_name, $field_name, $value, $size, $maxlength);
     }
     return($html);
 

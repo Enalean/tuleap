@@ -5,7 +5,7 @@
 // http://sourceforge.net
 //
 // 
-
+$GLOBALS['HTML']->includeCalendarScripts();
 pm_header(array('title'=>'Add a New Task',
 		'help'=>'TaskSubmission.html'));
 
@@ -23,7 +23,6 @@ echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'pm_preamble'));
 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="group_project_id" VALUE="<?php echo $group_project_id; ?>">
 <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
-<script language="JavaScript" src="/scripts/calendar.js"></script>
 
 <TABLE BORDER="0" WIDTH="100%">
 	<TR>

@@ -527,7 +527,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $hp = CodeX_HTMLPurifier::instance();
             global $ath,$art_field_fact,$Language;
                 
-            $html_result = '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+            $html_result = '';
 
                 // Display browse informations if any
                 if ( $ath->getBrowseInstructions() && $pv == 0) {

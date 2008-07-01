@@ -2318,8 +2318,7 @@ EOS;
             <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_type','submit_mass_change').'"></TD>';
             	echo '
             </TR>
-            <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>
-            <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+            <TR><TD COLSPAN="'.($fields_per_line*2).'">&nbsp</TD></TR>';
         
         
                 // Now display the variable part of the field list (depend on the project)

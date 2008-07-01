@@ -604,14 +604,7 @@ function html_field_date($field_name='',
         $html = $value;
     }
     else {
-		$timeval = ($today ? 'null' : 'document.'.$form_name.'.elements[\''.$field_name.'\'].value'); 
-        
-		$html = '<input type="text" name="'.$field_name.'"'.
-            ' size="'.$size.'"'.
-            ' maxlength="'.$maxlength.'"'.
-            ' value="'.$value.'" />'.
-            '<a href="javascript:show_calendar(\'document.'.$form_name.'.elements[\\\''.$field_name.'\\\']\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="pick_date"></a>';
+        $html = $GLOBALS['HTML']->getDatePicker('field_'.$field_name, $field_name, $value, $size, $maxlength);
     }
     return($html);
 }

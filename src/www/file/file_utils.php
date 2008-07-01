@@ -370,7 +370,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         }
         $release =& new FRSRelease($release);
     }
-    $GLOBALS['HTML']->includeCalendarScripts();
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'

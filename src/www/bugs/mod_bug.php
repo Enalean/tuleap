@@ -31,7 +31,7 @@ if (db_numrows($result) > 0) {
     // Insert a reference to the originating bug in the task description
     $url = '/bugs/?func=detailbug&bug_id='.$bug_id.'&group_id='.$group_id;
     $task_details = db_result($result,0,'details')."\n\nSee bug #$bug_id";
-
+    $GLOBALS['HTML']->includeCalendarScripts();
     bug_header(array ('title'=>'Modify a Bug',
                       'create_task'=>'Create task',
                       'summary' => db_result($result,0,'summary'),
@@ -68,7 +68,6 @@ if (db_numrows($result) > 0) {
           <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
       </TR>
       <TR><TD COLSPAN="<?php echo 2*$fields_per_line; ?>">&nbsp</TD></TR>
-      <script language="JavaScript" src="/scripts/calendar.js"></script>
 
 <?php
       // Now display the variable part of the field list (depend on the project)

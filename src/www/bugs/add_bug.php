@@ -5,7 +5,7 @@
 // http://sourceforge.net
 //
 // 
-
+$GLOBALS['HTML']->includeCalendarScripts();
 bug_header(array ('title'=>'Submit a Bug',
 		  'help' => 'BugSubmission.html'));
 $fields_per_line=2;
@@ -35,8 +35,7 @@ echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" N
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE cellpadding="0">
 	<TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
-                  <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>
-                 <script language="JavaScript" src="/scripts/calendar.js"></script>';
+                  <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
 
 
 

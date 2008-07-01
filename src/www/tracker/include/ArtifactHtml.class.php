@@ -63,7 +63,6 @@ class ArtifactHtml extends Artifact {
             
             // First display some  internal fields 
             $summary = $this->getValue('summary');
-            echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
             echo '
             <FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'. $sys_max_size_attachment.'">';
@@ -497,8 +496,7 @@ class ArtifactHtml extends Artifact {
                 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postcopy">
                 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
                 <INPUT TYPE="HIDDEN" NAME="group_artifact_id" VALUE="'.(int)$group_artifact_id.'">
-                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">
-                <script type="text/javascript" src="/scripts/calendar_js.php"></script>';
+                <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">';
         echo '<TABLE><TR><TD class="artifact">';
         $summary = $this->getValue('summary');
           
@@ -893,7 +891,6 @@ class ArtifactHtml extends Artifact {
                 <INPUT TYPE="HIDDEN" NAME="func" VALUE="postadd">
                 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
                 <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">';
-        echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         echo '<TABLE><TR><TD class="artifact">';
 
         $html = '';

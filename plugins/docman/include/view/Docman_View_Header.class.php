@@ -31,6 +31,7 @@ require_once('Docman_View_View.class.php');
             $GLOBALS['HTML']->pv_header($htmlParams);
         }
         else {
+            $GLOBALS['HTML']->includeCalendarScripts();
             site_header($htmlParams);
         }
     }

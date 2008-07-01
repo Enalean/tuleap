@@ -33,15 +33,7 @@ class HTML_Element_Input_Date extends HTML_Element_Input_Text {
         
         parent::__construct($label, $name, $value, 10, $desc);
         $this->params['maxlength'] = 10;
-    }
-    
-    public function renderValue() {
-        $html = parent::renderValue();
-        $today = date('Y-m-d', date('now'));
-        $timeval  = ($today ? 'null' : "document.edit_chart_form['".$this->name."'].value");
-        $html .= '<a href="javascript:show_calendar(\'document.'. 'edit_chart_form' .'[\\\''.$this->name.'\\\']\','.$timeval.',\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-            '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('global','pick_date').'"></a>';
-        return $html;
+        $this->params['class'] = 'highlight-days-67 format-y-m-d divider-dash no-transparency';
     }
 }
 

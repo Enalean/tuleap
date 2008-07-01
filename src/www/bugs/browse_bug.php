@@ -437,15 +437,11 @@ $result=db_query($sql);
 /* ==================================================
    Display the HTML search form
   ================================================== */
-
+$GLOBALS['HTML']->includeCalendarScripts();
 $params=array('title'=>'Bug Report '.$hdr,
               'help' => 'BugBrowsing.html',
               'pv'=>$pv);
 bug_header($params);
-
-if ($load_cal) {
-    echo "\n<script language=\"JavaScript\" src=\"/scripts/calendar.js\"></script>\n";
-}
 
 echo '<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="5">
           <FORM ACTION="'.$PHP_SELF .'" METHOD="GET" NAME="bug_form">

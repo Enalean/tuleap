@@ -13,7 +13,6 @@ require_once('timezones.php');
 
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $Language->loadLanguageMsg('account/account');
 $request =& HTTPRequest:: instance();
@@ -156,9 +155,7 @@ function display_account_form($register_error)	{
 <?php print $Language->getText('account_register', 'email_directions'); ?>
 <?php if($page == "admin_creation"){ ?>    
     <P><?php print $Language->getText('account_register', 'expiry_date')?>:<BR>
-    <INPUT size=10  maxlength=10 type="text" id="form_expiry" name="form_expiry" value="<?php echo $form_expiry; ?>">
-    <a href="<?php echo 'javascript:show_calendar(\'document.new_user.form_expiry\', $(\'form_expiry\').value,\''.util_get_css_theme().'\',\''.util_get_dir_image_theme().'\');">'.
-                        '<img src="'.util_get_image_theme("calendar/cal.png").'" width="16" height="16" border="0" alt="'.$GLOBALS['Language']->getText('tracker_include_field','pick_date');?> "></a>
+    <?php echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", $form_expiry); ?>
     <BR>
     <?php print $Language->getText('account_register', 'expiry_date_directions'); ?>
 <?php } ?>

@@ -225,7 +225,6 @@ class graphicEngineHtml extends Error {
                 $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_chart', array($hp->purify($chart->getTitle())));
         echo ' '.help_button('TrackerAdministration.html#GraphTrackerReportSetting').'</H2>';
         echo '<script type="text/javascript" src="/plugins/graphontrackers/dependencies.js"></script>';
-        echo '<script type="text/javascript" src="/scripts/calendar_js.php"></script>';
         
         $url = '/tracker/admin/?func=reportgraphic&amp;group_id='. $group_id .'&amp;atid='. $atid .'&amp;report_graphic_id='. (int)$chart->getGraphicReport()->getId();
         echo '<p><a href="'. $url .'">&laquo; '. $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','return_report').' '. $chart->getgraphicReport()->getName() .'</a></p>';
