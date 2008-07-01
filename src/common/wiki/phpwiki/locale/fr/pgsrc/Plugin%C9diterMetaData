@@ -6,18 +6,18 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ce plugin vous permet d'ajouter/éditer/effacer des paires clé/valeur 
-pour une page donnée. Vous devez être connecté comme administrateur 
-pour le faire. La page de métadonnées contient des choses comme le 
-compteur de visite, la date de dernière édition et d'autre chose.
+Ce plugin vous permet d'ajouter/Ã©diter/effacer des paires clÃ©/valeur 
+pour une page donnÃ©e. Vous devez Ãªtre connectÃ© comme administrateur 
+pour le faire. La page de mÃ©tadonnÃ©es contient des choses comme le 
+compteur de visite, la date de derniÃ¨re Ã©dition et d'autre chose.
 
-Éditer les métadonnées pour la page d'accueil devrait ressembler à :
+Ã‰diter les mÃ©tadonnÃ©es pour la page d'accueil devrait ressembler Ã  :
 ------
 <?plugin EditMetaData page="PageAccueil" ?>
 ------
-Sans argument, la page par défaut est la page courante :
+Sans argument, la page par dÃ©faut est la page courante :
 ------
 <?plugin EditMetaData ?>

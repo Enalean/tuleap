@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-__Télécharger un fichier qui sera accessible avec la syntaxe:__
+__TÃ©lÃ©charger un fichier qui sera accessible avec la syntaxe:__
 <verbatim>
 Upload:num_rev/nom_fichier
 </verbatim>

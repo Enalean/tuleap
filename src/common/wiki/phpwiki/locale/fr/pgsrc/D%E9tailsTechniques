@@ -6,26 +6,26 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.3 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-PhpWiki est écrit en PHP, langage de scripting côté serveur, disponible 
-sur http://www.php.net/. PHP ressemble au C et à Perl dans sa syntaxe, et 
+PhpWiki est Ã©crit en PHP, langage de scripting cÃ´tÃ© serveur, disponible 
+sur http://www.php.net/. PHP ressemble au C et Ã  Perl dans sa syntaxe, et 
 fonctionne comme ASP, ~EmbPerl ou JSP.
 
-PhpWiki est constitué d'une douzaine de fichiers environ de PHP mélangé à du HTML. 
-Les pages web qui forment un WikiWikiWeb basé sur PHP sont stockées dans un fichier 
-DBM avec des copies de sauvegarde des versions précédentes stockées dans un second 
+PhpWiki est constituÃ© d'une douzaine de fichiers environ de PHP mÃ©langÃ© Ã  du HTML. 
+Les pages web qui forment un WikiWikiWeb basÃ© sur PHP sont stockÃ©es dans un fichier 
+DBM avec des copies de sauvegarde des versions prÃ©cÃ©dentes stockÃ©es dans un second 
 fichier DBM.
 
-Chaque fois qu'un utilisateur utilise le site, la page demandée est extraite de la DBM 
-et rendue à la volé. L'utilisateur nde demande jamais que le fichier index.php, qui 
-décide alors quels sont les fichiers php à inclure.
+Chaque fois qu'un utilisateur utilise le site, la page demandÃ©e est extraite de la DBM 
+et rendue Ã  la volÃ©. L'utilisateur nde demande jamais que le fichier index.php, qui 
+dÃ©cide alors quels sont les fichiers php Ã  inclure.
 
-Les liens vers des pages au sein du wiki sont ajoutés automatiquement : PhpWiki. 
-Ceci peut être l'aspect le plus intéressant d'un wiki, la capacité à ajouter des 
-pages simplement en créant des liens vers elles. L'autre caractéristique la plus 
-intéressante est la facilité avec laquelle on peut créer des URL externes tels que :
+Les liens vers des pages au sein du wiki sont ajoutÃ©s automatiquement : PhpWiki. 
+Ceci peut Ãªtre l'aspect le plus intÃ©ressant d'un wiki, la capacitÃ© Ã  ajouter des 
+pages simplement en crÃ©ant des liens vers elles. L'autre caractÃ©ristique la plus 
+intÃ©ressante est la facilitÃ© avec laquelle on peut crÃ©er des URL externes tels que :
 
 # http://www.wcsb.org/
 # ftp://ftp.redhat.com/
@@ -33,10 +33,10 @@ intéressante est la facilité avec laquelle on peut créer des URL externes tels q
 # http://www.slashdot.com/
 # http://theregister.co.uk/
 
-Combiné avec un seul espace de noms et un système de marquage simple, un Wiki exhibe 
-nombre des caractéristiques du WabiSabi.
+CombinÃ© avec un seul espace de noms et un systÃ¨me de marquage simple, un Wiki exhibe 
+nombre des caractÃ©ristiques du WabiSabi.
 
-PhpWiki est publié sous Licence Publique Générale GNU (GNU GPL), que vous devriez 
+PhpWiki est publiÃ© sous Licence Publique GÃ©nÃ©rale GNU (GNU GPL), que vous devriez 
 pouvoir lire ici : http://www.gnu.org/copyleft/gpl.txt.
 ----
 DocumentationDePhpWiki

@@ -6,9 +6,9 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Voici la liste des catégories :
+Voici la liste des catÃ©gories :
 
-<?plugin TitleSearch s=Catégorie noheader=1 exclude=CatégorieCatégorie?>
+<?plugin TitleSearch s=CatÃ©gorie noheader=1 exclude=CatÃ©gorieCatÃ©gorie?>

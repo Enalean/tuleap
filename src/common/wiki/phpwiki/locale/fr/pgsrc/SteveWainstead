@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Salut. J'ai démarré la construction de ce WikiWikiWeb mais beaucoup
-d'autres m'aident maintenant. Je suis à [http://www.panix.com/~swain/].
+Salut. J'ai dÃ©marrÃ© la construction de ce WikiWikiWeb mais beaucoup
+d'autres m'aident maintenant. Je suis Ã  [http://www.panix.com/~swain/].
 
-S'il vous plait, rapportez les bugs à [mailto:phpwiki-talk@lists.sourceforge.net].
+S'il vous plait, rapportez les bugs Ã  [mailto:phpwiki-talk@lists.sourceforge.net].

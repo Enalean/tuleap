@@ -5,21 +5,21 @@ Content-Type: application/x-phpwiki;
   pagename=TestGroupeDePages%2FTrois;
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Vous êtes presque arrivé !
+Vous Ãªtes presque arrivÃ© !
 
 %%% %%% %%% %%% %%% %%% %%%
 
 <?plugin PageGroup
          label="Allons-y !"
          parent=TestGroupeDePages
-         section="Table des matières"
+         section="Table des matiÃ¨res"
 ?>
 
-Remarquez que la barre de navigation peut être partout et pas 
-nécessairement en haut ou au même endroit sur chaque page. 
-L'étiquette peut également varier (pas sûr que ce soit une bonne chose).
+Remarquez que la barre de navigation peut Ãªtre partout et pas 
+nÃ©cessairement en haut ou au mÃªme endroit sur chaque page. 
+L'Ã©tiquette peut Ã©galement varier (pas sÃ»r que ce soit une bonne chose).
 
 Cliquez sur la page suivante.

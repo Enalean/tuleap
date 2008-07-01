@@ -6,12 +6,12 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !! Descrition
 
-Le PluginRechercheExterne crée un formulaire pour interroger les
+Le PluginRechercheExterne crÃ©e un formulaire pour interroger les
 InterWiki~s ou autres sites Internet.
 
 !! Usage
@@ -26,22 +26,22 @@ InterWiki~s ou autres sites Internet.
 
 !! Arguments
 __url__:
-  Spécifie un wiki depuis la CarteInterWiki ou une url. N'importe quel
-  texte saisi par l'utilisateur sera ajouté à l'url de recherche. La 
-  chaîne '__=%s=__' peut être utilisée pour insérer une requête de 
-  recherche dans l'url plutôt que de l'ajouter.
+  SpÃ©cifie un wiki depuis la CarteInterWiki ou une url. N'importe quel
+  texte saisi par l'utilisateur sera ajoutÃ© Ã  l'url de recherche. La 
+  chaÃ®ne '__=%s=__' peut Ãªtre utilisÃ©e pour insÃ©rer une requÃªte de 
+  recherche dans l'url plutÃ´t que de l'ajouter.
 
 __name__:
-  Texte à afficher dans le bouton de validation. Pour les sites 
-  InterWiki, c'est le nom wiki par défaut. Pour les autres url, 
-  c'est le texte "External Search" par défaut.
+  Texte Ã  afficher dans le bouton de validation. Pour les sites 
+  InterWiki, c'est le nom wiki par dÃ©faut. Pour les autres url, 
+  c'est le texte "External Search" par dÃ©faut.
 
 __formsize__:
-  Spécifie la taille de la zone de saisie (30 caractères par défaut)
+  SpÃ©cifie la taille de la zone de saisie (30 caractÃ¨res par dÃ©faut)
 
 __debug__:
-  Ne redirige pas réellement vers le site externe mais affiche juste 
-  l'url vers lequel il devrait l'être.
+  Ne redirige pas rÃ©ellement vers le site externe mais affiche juste 
+  l'url vers lequel il devrait l'Ãªtre.
 
 !! Exemples
 
@@ -53,10 +53,10 @@ __debug__:
   url=PhpWiki
 </verbatim>
 
-Effectue une recherche en texte intégral sur les wiki multiples :
+Effectue une recherche en texte intÃ©gral sur les wiki multiples :
 <?plugin ExternalSearch url="http://sunir.org/apps/meta.pl?" name="Recherche Metawiki" ?>
 
-Effectue une recherche en texte intégral sur [MeatBall|MeatBall:SiteSearch] wiki:
+Effectue une recherche en texte intÃ©gral sur [MeatBall|MeatBall:SiteSearch] wiki:
 <?plugin ExternalSearch url="http://www.usemod.com/cgi-bin/mb.pl?" name="Recherche MeatBall" ?>
 
 Recherche sur le site web PHP pour une fonction :

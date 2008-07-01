@@ -6,8 +6,8 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Je suis le dernier traducteur de PhpWiki en français. 
-Vous pouvez me contacter à [mailto:meignen.pierrick@wanadoo.fr]
+Je suis le dernier traducteur de PhpWiki en franÃ§ais. 
+Vous pouvez me contacter Ã  [mailto:meignen.pierrick@wanadoo.fr]

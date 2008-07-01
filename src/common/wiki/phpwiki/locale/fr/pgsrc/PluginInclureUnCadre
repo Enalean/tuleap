@@ -6,16 +6,16 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ce plugin créera un cadre HTML qui remplira complètement la surface de la 
-page (c'est-à-dire toute la surface que l'utilisateur peut éditer). Tout 
-autre texte sera rejeté quand la page est affichée (tout ce qui est en 
-dehors de l'appel du plugin). Dans le langage de l'hypertexte, ça s'appelle 
+Ce plugin crÃ©era un cadre HTML qui remplira complÃ¨tement la surface de la 
+page (c'est-Ã -dire toute la surface que l'utilisateur peut Ã©diter). Tout 
+autre texte sera rejetÃ© quand la page est affichÃ©e (tout ce qui est en 
+dehors de l'appel du plugin). Dans le langage de l'hypertexte, Ã§a s'appelle 
 la <i>transclusion</i>.
 
-Vous pouvez être intéressé également par PluginInclureUnePage.
+Vous pouvez Ãªtre intÃ©ressÃ© Ã©galement par PluginInclureUnePage.
 
 Exemples: pour inclure une page depuis un autre site, utilisez l'argument <b>src</b> :
 
@@ -29,8 +29,8 @@ Pour inclure une page depuis ce wiki, utilisez l'argument <b>page</b> :
 <?plugin FrameInclude page=PageAccueil ?>
 </verbatim>
 
-Pour plus d'informations sur ce plugin, lisez s'il vous plaît, la source
-PHP dans le répertoire /lib/plugin.
+Pour plus d'informations sur ce plugin, lisez s'il vous plaÃ®t, la source
+PHP dans le rÃ©pertoire /lib/plugin.
 
 
 

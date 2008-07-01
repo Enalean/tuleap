@@ -6,9 +6,9 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="1 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin RedirectTo page=PageAccueil ?>
 
-(C'est une démonstration du PluginRedirection.)
+(C'est une dÃ©monstration du PluginRedirection.)

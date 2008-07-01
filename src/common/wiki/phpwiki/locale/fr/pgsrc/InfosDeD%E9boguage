@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Vue détaillée d'une page, ce qui est probablement plus utile que n'importe 
-quoi d'autre pour le déboguage.
+Vue dÃ©taillÃ©e d'une page, ce qui est probablement plus utile que n'importe 
+quoi d'autre pour le dÃ©boguage.
 
 <?plugin _BackendInfo page||='' ?>

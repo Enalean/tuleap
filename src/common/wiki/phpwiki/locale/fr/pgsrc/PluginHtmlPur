@@ -6,18 +6,18 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Avec ce plugin vous pouvez insérer du pur html non filtré dans la source de votre page wiki. Par exemple si vous voulez faire des tableaux compliqués pour afficher des données. Par défaut insérer de l'html est interdit dans la plupart des wikis pour des raisons de sécurité (un utilisateur malicieux peut insérer des redirections, du javascript, etc...)
+Avec ce plugin vous pouvez insÃ©rer du pur html non filtrÃ© dans la source de votre page wiki. Par exemple si vous voulez faire des tableaux compliquÃ©s pour afficher des donnÃ©es. Par dÃ©faut insÃ©rer de l'html est interdit dans la plupart des wikis pour des raisons de sÃ©curitÃ© (un utilisateur malicieux peut insÃ©rer des redirections, du javascript, etc...)
 
-Pour que le plugin fonctionne, la page doit être vérouillée par l'administrateur. Si vous voyez de l'html pur ci-dessous au lieu du rendu, essayez de vérouiller la page (connectez-vous comme administrateur d'abord).
+Pour que le plugin fonctionne, la page doit Ãªtre vÃ©rouillÃ©e par l'administrateur. Si vous voyez de l'html pur ci-dessous au lieu du rendu, essayez de vÃ©rouiller la page (connectez-vous comme administrateur d'abord).
 
 <?plugin RawHtml
 
-<!-- Garder les liens sur 72 caractères ou lynx les cassera maladroitement. -->
-<!-- Bien évidemment, nous affichons SEULEMENT les liens les plus utiles/importants. -->
-<!-- Gardez-les court et agréable : 3 lignes and 2 colonnes est déjà assez -->
+<!-- Garder les liens sur 72 caractÃ¨res ou lynx les cassera maladroitement. -->
+<!-- Bien Ã©videmment, nous affichons SEULEMENT les liens les plus utiles/importants. -->
+<!-- Gardez-les court et agrÃ©able : 3 lignes and 2 colonnes est dÃ©jÃ  assez -->
 
 <table border="1" cellpadding="10">
 <tr><td>Exemples d'html depuis www.gnu.org</td>
@@ -33,7 +33,7 @@ Pour que le plugin fonctionne, la page doit être vérouillée par l'administrateur
     <ul>
       <li><a href="http://www.gnu.org//provide.html"></a>Que proposons-nous ?</li>
       <li><a href="http://www.gnu.org//philosophy/philosophy.html">Pourquoi nous existons ?</a></li>
-      <li><a href="http://www.gnu.org//gnu/gnu-history.html">Où allons-nous ?</a></li>
+      <li><a href="http://www.gnu.org//gnu/gnu-history.html">OÃ¹ allons-nous ?</a></li>
     </ul>
     </td>
     <td>

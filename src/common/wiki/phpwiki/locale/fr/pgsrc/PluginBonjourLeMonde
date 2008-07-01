@@ -6,7 +6,7 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Un simple exemple de plugin :
@@ -20,13 +20,13 @@ Depuis la source de cette page :
 </verbatim>
 
 -----
-L'architecture d'un plugin vous permet d'ajouter des éléments personnalisé à votre wiki.
-Tout ce que vous avez à faire est d'étendre la classe ~WikiPlugin et créer une sortie via 
-la méthode run() dépendant du Wiki- ou des arguments de requête,
+L'architecture d'un plugin vous permet d'ajouter des Ã©lÃ©ments personnalisÃ© Ã  votre wiki.
+Tout ce que vous avez Ã  faire est d'Ã©tendre la classe ~WikiPlugin et crÃ©er une sortie via 
+la mÃ©thode run() dÃ©pendant du Wiki- ou des arguments de requÃªte,
 
-* soit avec les classes HTML prédéfinis pour créer du XHTML valide
-* ou en utilisant les modèles (templates) qui sont plus facilement personnalisables mais
-généralement plus sale à utiliser et plus facile pour créer du XHTML non valide.
+* soit avec les classes HTML prÃ©dÃ©finis pour crÃ©er du XHTML valide
+* ou en utilisant les modÃ¨les (templates) qui sont plus facilement personnalisables mais
+gÃ©nÃ©ralement plus sale Ã  utiliser et plus facile pour crÃ©er du XHTML non valide.
 
 <?plugin PhpHighlight
 

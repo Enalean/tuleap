@@ -6,12 +6,12 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
 
-PluginWiki pour afficher des expressions mathématiques dans une page
+PluginWiki pour afficher des expressions mathÃ©matiques dans une page
 Wiki.
 
 !!Usage
@@ -26,19 +26,19 @@ donne
 
 !!Arguments
 
-L'unique argument est le texte de l'expression. Ce texte *doit* être encadré
+L'unique argument est le texte de l'expression. Ce texte *doit* Ãªtre encadrÃ©
 par un dollar simple pour une expression en ligne et par un dollar
-double pour une expression isolé et centrée sur une seule ligne.
+double pour une expression isolÃ© et centrÃ©e sur une seule ligne.
 
-La syntaxe pour écrire le texte mathématique est celle de [LaTeX | http://www.latex-project.org].
+La syntaxe pour Ã©crire le texte mathÃ©matique est celle de [LaTeX | http://www.latex-project.org].
 
 !!Avertissements
 
-Ce plugin a été conçu uniquement pour faire apparaitre des expressions
-mathématiques dans une page de façon lisible. Par conséquent tout autre
-expression (comme du texte simple) est refusée : une expression qui n'est
-pas encadrée de dollar n'est pas validée. Elle est remplacée à l'affichage
-par le texte en rouge. Il est malgré tout possible d'afficher du texte
+Ce plugin a Ã©tÃ© conÃ§u uniquement pour faire apparaitre des expressions
+mathÃ©matiques dans une page de faÃ§on lisible. Par consÃ©quent tout autre
+expression (comme du texte simple) est refusÃ©e : une expression qui n'est
+pas encadrÃ©e de dollar n'est pas validÃ©e. Elle est remplacÃ©e Ã  l'affichage
+par le texte en rouge. Il est malgrÃ© tout possible d'afficher du texte
 comme <?plugin TeX2png text="$\textrm{\LaTeX}$" ?> en utilisant :
 
 <verbatim>
@@ -46,24 +46,24 @@ comme <?plugin TeX2png text="$\textrm{\LaTeX}$" ?> en utilisant :
 </verbatim>
 
 
-Ce plugin n'est pas adapté à la production de documents mathématiques Web
-sophistiqués. Pour ça, il existe d'autres outils comme LaTeX2html.
+Ce plugin n'est pas adaptÃ© Ã  la production de documents mathÃ©matiques Web
+sophistiquÃ©s. Pour Ã§a, il existe d'autres outils comme LaTeX2html.
 
 !!Exemples
 
 Quelques lettres grecques : <?plugin TeX2png text="$\alpha$" ?>, <?plugin TeX2png text="$\beta$" ?>, ... et une formule <?plugin TeX2png text="$\sum_{i=1}^n \frac1{i^2}=\frac{\pi^2}{6}$" ?> pour tester l'affichage en ligne.
 
-*Exercice 1* On considère <?plugin TeX2png text="$$f(x)=(x^2-4x+3)^{1/2}$$" ?>
+*Exercice 1* On considÃ¨re <?plugin TeX2png text="$$f(x)=(x^2-4x+3)^{1/2}$$" ?>
 
-#Déterminer le domaine de définition de f.
-#Déterminer un domaine sur lequel f est bijective. Déterminer la réciproque <?plugin TeX2png text="$f^{-1}(x)$" ?> de f sur ce domaine.
-#Calculer la dérivée f'(x).
+#DÃ©terminer le domaine de dÃ©finition de f.
+#DÃ©terminer un domaine sur lequel f est bijective. DÃ©terminer la rÃ©ciproque <?plugin TeX2png text="$f^{-1}(x)$" ?> de f sur ce domaine.
+#Calculer la dÃ©rivÃ©e f'(x).
 
-*Exercice 2* On considère la fonction suivante :
+*Exercice 2* On considÃ¨re la fonction suivante :
 
 <?plugin TeX2png text="$$f(x) = \int_0^x e^{-t^2}\,dt, x\in\mathbb R$$" ?>
-#Montrer que pour tout r positif, on a <?plugin TeX2png text="$$\frac{\pi}{2}\int_0^r t  e^{-t^2}\,dt \leq \int_0^r e^{-x^2}\,dx \int_0^r e^{-y^2}\,dy \leq \frac{\pi}{2} \int_0^{\sqrt{2} r} t e^{-t^2}\,dt$$" ?> *Indication* : passer en coordonnées polaires.
-#En déduire la limite de <?plugin TeX2png text="$f(x)$" ?> lorsque x tend <?plugin TeX2png text="vers $\infty$" ?>.
+#Montrer que pour tout r positif, on a <?plugin TeX2png text="$$\frac{\pi}{2}\int_0^r t  e^{-t^2}\,dt \leq \int_0^r e^{-x^2}\,dx \int_0^r e^{-y^2}\,dy \leq \frac{\pi}{2} \int_0^{\sqrt{2} r} t e^{-t^2}\,dt$$" ?> *Indication* : passer en coordonnÃ©es polaires.
+#En dÃ©duire la limite de <?plugin TeX2png text="$f(x)$" ?> lorsque x tend <?plugin TeX2png text="vers $\infty$" ?>.
 
 -----
 

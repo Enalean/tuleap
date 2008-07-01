@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Les titres de toutes les pages sont parcourus à la recherche de ceux qui s'écrivent ou sonnent de façon similaire (mais en anglais). Par exemple :
+Les titres de toutes les pages sont parcourus Ã  la recherche de ceux qui s'Ã©crivent ou sonnent de faÃ§on similaire (mais en anglais). Par exemple :
 
 <verbatim>
 <?plugin FuzzyPages s="WikkiWikkeaWebb"?>
@@ -24,7 +24,7 @@ donne :
 <?plugin FullTextSearch ?>
 
 
-Recherche supplémentaires :
+Recherche supplÃ©mentaires :
 
 <?plugin-form TitleSearch?>
 <?plugin-form FullTextSearch?>

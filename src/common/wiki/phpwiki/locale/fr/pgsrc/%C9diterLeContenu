@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Toute les pages (sauf les résultats de recherche) ont un lien Éditer en bas. 
-Vous pouvez éditer la page que vous lisez en cliquant sur ce lien.
+Toute les pages (sauf les rÃ©sultats de recherche) ont un lien Ã‰diter en bas. 
+Vous pouvez Ã©diter la page que vous lisez en cliquant sur ce lien.
 ----
 DocumentationDePhpWiki

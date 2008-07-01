@@ -6,39 +6,39 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
 
-PluginInsérer peut être utilisé pour embarquer en inclusion
-des pages (extérieures) dans une page wiki.
+PluginInsÃ©rer peut Ãªtre utilisÃ© pour embarquer en inclusion
+des pages (extÃ©rieures) dans une page wiki.
 
 !!Arguments
 
 =src= |
-  URL de la page à importer
+  URL de la page Ã  importer
 =height= |
   la hauteur initiale du cadre d'importation. Si possible,
-  après que la page à inclure soit chargée, la cadre est
-  re-dimensionné via javascript de telle sorte qu'il remplisse
-  entièrement la page d'importation (voir plus bas pour plus d'info).
+  aprÃ¨s que la page Ã  inclure soit chargÃ©e, la cadre est
+  re-dimensionnÃ© via javascript de telle sorte qu'il remplisse
+  entiÃ¨rement la page d'importation (voir plus bas pour plus d'info).
 
 !! Bugs / Avertissements
 
-o Les pages sont incorporées en utilisant les balises =<iframe>=. Les anciens 
+o Les pages sont incorporÃ©es en utilisant les balises =<iframe>=. Les anciens 
   navigateurs ne supportent pas les ''iframe''. Dans ce cas l'utilisateur 
-  sera averti par un lien vers les données à importer.
+  sera averti par un lien vers les donnÃ©es Ã  importer.
 
-o Quand c'est possible, du code javascript est utilisé pour ajuster la
-  hauteur du _iframe_ de telle sorte qu'il remplisse entièrement la page 
+o Quand c'est possible, du code javascript est utilisÃ© pour ajuster la
+  hauteur du _iframe_ de telle sorte qu'il remplisse entiÃ¨rement la page 
   qui l'accueille. Malheureusement, cela semble possible quand la page
-  à incorporer vient du même serveur que la page wiki (cette restriction
-  est due à des impératifs de sécurité du langage javascript).
+  Ã  incorporer vient du mÃªme serveur que la page wiki (cette restriction
+  est due Ã  des impÃ©ratifs de sÃ©curitÃ© du langage javascript).
 
-o Le code de détection de récursivité ne fonctionne pas encore. Soyez prudent
-  en évitant les imporation récusives ou vous serez désolé (ou au moins
-  amusé).
+o Le code de dÃ©tection de rÃ©cursivitÃ© ne fonctionne pas encore. Soyez prudent
+  en Ã©vitant les imporation rÃ©cusives ou vous serez dÃ©solÃ© (ou au moins
+  amusÃ©).
 
 ! Exemple
 

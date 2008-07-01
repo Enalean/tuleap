@@ -6,15 +6,15 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin CreateToc jshide||=1 ?>
 
 !!Descrition
 
-PluginCréerUneTdm vous permet (depuis v1.3.8) de créer automatiquement 
-une *Table des matières* dynamique de tous les en-têtes (titres et sous-titres). 
+PluginCrÃ©erUneTdm vous permet (depuis v1.3.8) de crÃ©er automatiquement 
+une *Table des matiÃ¨res* dynamique de tous les en-tÃªtes (titres et sous-titres). 
 
 !!Usage
 
@@ -26,24 +26,24 @@ une *Table des matières* dynamique de tous les en-têtes (titres et sous-titres).
 !!Arguments
 
 __jshide__: |
-  Booléen si la table doit être initialement cachée puis montrée par un clique. Par défaut : 0
+  BoolÃ©en si la table doit Ãªtre initialement cachÃ©e puis montrÃ©e par un clique. Par dÃ©faut : 0
 __with_toclink__:  |
-  Booléen si les en-têtes doivent être liés à la table. Par défaut : 0
+  BoolÃ©en si les en-tÃªtes doivent Ãªtre liÃ©s Ã  la table. Par dÃ©faut : 0
 __headers__:  |
-  Quels en-têtes inclure. Par défaut : !!!,!!,!    1,2,3 également permis
+  Quels en-tÃªtes inclure. Par dÃ©faut : !!!,!!,!    1,2,3 Ã©galement permis
 __noheader__:  |
-  Booléen si le titre h2 "Table des matières" doit être omis. Par défaut : 0
+  BoolÃ©en si le titre h2 "Table des matiÃ¨res" doit Ãªtre omis. Par dÃ©faut : 0
 __liststyle__:  |
-  dl ou ol ou ul. Par défaut : dl
+  dl ou ol ou ul. Par dÃ©faut : dl
 __indentstr__:  |
-  Par défaut : &nbsp;&nbsp;
+  Par dÃ©faut : &nbsp;&nbsp;
 __pagename__:  |
-  Table pour quelle page ? Par défaut : page courante.
+  Table pour quelle page ? Par dÃ©faut : page courante.
 
-!!Problèmes connus
+!!ProblÃ¨mes connus
 
-Si un en-tête contient un lien ou un ~WikiWord ou des caractères d'échappement, ~CreateToc 
-affichera un message d'avertissement et refusera de lier cet en-tête.
+Si un en-tÃªte contient un lien ou un ~WikiWord ou des caractÃ¨res d'Ã©chappement, ~CreateToc 
+affichera un message d'avertissement et refusera de lier cet en-tÃªte.
 
 !!Exemples
 

@@ -6,14 +6,14 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 * Qu'est-ce qu'un WikiWikiWeb ? Description courte de cette application.
 * Apprenez CommentUtiliserUnWiki et comment AjouterDesPages.
-* Le [Bac¿Sable] est l‡ pour jouer et expÈrimenter.
+* Le [Bac√ÄSable] est l√† pour jouer et exp√©rimenter.
 * Signez la page des DerniersVisiteurs.
-* Visitez DerniËresModifs pour voir les additions et les modifications les plus rÈcentes.
-* DÈcouvrez quelles pages sont LesPlusVisitÈes.
+* Visitez Derni√®resModifs pour voir les additions et les modifications les plus r√©centes.
+* D√©couvrez quelles pages sont LesPlusVisit√©es.
 * Lisez les NotesDeVersion.
-* Ce Wiki est gÈrÈ par l'intermÈdiaire de la page d'AdministrationDePhpWiki.
+* Ce Wiki est g√©r√© par l'interm√©diaire de la page d'AdministrationDePhpWiki.

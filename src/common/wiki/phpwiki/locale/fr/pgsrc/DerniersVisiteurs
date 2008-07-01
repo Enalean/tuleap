@@ -6,11 +6,11 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Ajoutez votre nom ici, et datez votre visite !
 
 Arno Hollosi, Aredridel Stauck, Jeff Dairiki, Steve Wainstead, les auteurs de PhpWiki.
 
-Julien Pierre De La Brière et Pierrick Meignen, deux traducteurs pour la version française.
+Julien Pierre De La BriÃ¨re et Pierrick Meignen, deux traducteurs pour la version franÃ§aise.

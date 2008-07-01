@@ -6,11 +6,11 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="3 $Revision: 1.6 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-_*Note :*_ _La plupart des actions sur cette page nécessitent des privilèges 
-d'administrateur. Elles ne fonctionneront pas à moins que vous ayez défini un 
+_*Note :*_ _La plupart des actions sur cette page nÃ©cessitent des privilÃ¨ges 
+d'administrateur. Elles ne fonctionneront pas Ã  moins que vous ayez dÃ©fini un 
 nom d'administrateur et un mot de passe dans le fichier de configuration de 
 PhpWiki_
 
@@ -19,7 +19,7 @@ PhpWiki_
 ----
 !!! Explorateur de pages
 
-D'abord choississez une ou plusieurs pages et ensuite définissez une action :
+D'abord choississez une ou plusieurs pages et ensuite dÃ©finissez une action :
 
 <?plugin-form WikiAdminSelect s="nom de la page" ?>
 
@@ -33,31 +33,31 @@ ou appelez directement les actions ~WikiAdmin disponibles :
 ----
 !!! Nettoyage
 
-Le [BacÀSable] Wiki est très simple à nettoyer. Vous pouvez ici le restaurer 
-dans un état virginal en chargeant sa version par défaut depuis pgsrc:
+Le [BacÃ€Sable] Wiki est trÃ¨s simple Ã  nettoyer. Vous pouvez ici le restaurer 
+dans un Ã©tat virginal en chargeant sa version par dÃ©faut depuis pgsrc:
 
-[ Râtisser le BacÀSable | phpwiki:?action=loadfile&source=pgsrc/SandBox ]
+[ RÃ¢tisser le BacÃ€Sable | phpwiki:?action=loadfile&source=pgsrc/SandBox ]
 
 ----------
 !!! Sauvegarde des pages
 
-!! Récupération des fichiers
+!! RÃ©cupÃ©ration des fichiers
 
-Ces liens mènent à des fichiers compressés au format ZIP, générés à la volée et contenant toutes les pages de votre Wiki. Le fichier zip sera téléchargé sur votre ordinateur.
+Ces liens mÃ¨nent Ã  des fichiers compressÃ©s au format ZIP, gÃ©nÃ©rÃ©s Ã  la volÃ©e et contenant toutes les pages de votre Wiki. Le fichier zip sera tÃ©lÃ©chargÃ© sur votre ordinateur.
 
-Cette __[Sauvegarde ZIP | phpwiki:?action=zip]__ ne contient que la dernière version de chaque page, tandis que cet __[Archivage ZIP | phpwiki:?action=zip&include=all]__ contient toutes les versions archivées.
+Cette __[Sauvegarde ZIP | phpwiki:?action=zip]__ ne contient que la derniÃ¨re version de chaque page, tandis que cet __[Archivage ZIP | phpwiki:?action=zip&include=all]__ contient toutes les versions archivÃ©es.
 
-Si le PhpWiki est configuré pour le permettre, n'importe qui peut télécharger un fichier zip.
+Si le PhpWiki est configurÃ© pour le permettre, n'importe qui peut tÃ©lÃ©charger un fichier zip.
 
-Si votre php supporte la ''zlib'', les fichiers dans l'archive seront compressés, sinon ils seront simplement stockés.
+Si votre php supporte la ''zlib'', les fichiers dans l'archive seront compressÃ©s, sinon ils seront simplement stockÃ©s.
 
-!! Sauvegarde dans un répertoire
+!! Sauvegarde dans un rÃ©pertoire
 
-Ici vous pouvez enregistrer les pages de votre Wiki dans le répertoire de votre choix.
+Ici vous pouvez enregistrer les pages de votre Wiki dans le rÃ©pertoire de votre choix.
 
 <?plugin WikiForm action=dumpserial?>
 
-La version la plus récente de chaque page sera écrite dans le répertoire, à raison d'une page par fichier. Votre serveur doit avoir le droit d'écrire dans le répertoire !
+La version la plus rÃ©cente de chaque page sera Ã©crite dans le rÃ©pertoire, Ã  raison d'une page par fichier. Votre serveur doit avoir le droit d'Ã©crire dans le rÃ©pertoire !
 
 
 ----
@@ -66,22 +66,22 @@ La version la plus récente de chaque page sera écrite dans le répertoire, à rais
 
   <?plugin WikiForm action=dumphtml?>
 
-Ceci génèrera un répertoire de pages statiques convenables pour une distribution sur disque où des serveurs web ne sont pas disponible. Les liens variés pour les fonctions d'édition et de navigation sont enlevés de ces pages.
+Ceci gÃ©nÃ¨rera un rÃ©pertoire de pages statiques convenables pour une distribution sur disque oÃ¹ des serveurs web ne sont pas disponible. Les liens variÃ©s pour les fonctions d'Ã©dition et de navigation sont enlevÃ©s de ces pages.
 
-La collection de fichiers XHTML peut aussi être téléchargée comme une __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
+La collection de fichiers XHTML peut aussi Ãªtre tÃ©lÃ©chargÃ©e comme une __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
 
 ----
 
 !!! Le coeur de phpwiki
 
-Tout ceci surtout pour des déboguages (au moins c'est ce que j'espère).
+Tout ceci surtout pour des dÃ©boguages (au moins c'est ce que j'espÃ¨re).
 
-En utilisation normale, vous ne devriez par les utiliser mais ça ne devrait 
+En utilisation normale, vous ne devriez par les utiliser mais Ã§a ne devrait 
 pas vous faire de mal.
 
 !! Purger le cache
 
-Si votre wiki est ainsi configuré, le contenu transformé (presque HTML) de la plus récente version des pages est mis en cache. Ceci accélère la vitesse de chargement dans le navigateur car transformer le texte wiki prend du temps.
+Si votre wiki est ainsi configurÃ©, le contenu transformÃ© (presque HTML) de la plus rÃ©cente version des pages est mis en cache. Ceci accÃ©lÃ¨re la vitesse de chargement dans le navigateur car transformer le texte wiki prend du temps.
 
 Une pression sur ce bouton effacera tout le cache. Le contenu de chaque page sera transformer et remis en cache la prochaine fois que quelqu'un la verra.
 
@@ -90,21 +90,21 @@ Une pression sur ce bouton effacera tout le cache. Le contenu de chaque page ser
            label="Purge du cache"
    ?>
    
-!! Suppression des pages vides et non référencées
+!! Suppression des pages vides et non rÃ©fÃ©rencÃ©es
 
- *Attention!* en appuyant sur ce bouton toutes les pages vides et non référencées seront supprimées sans aucune possiblité de les restaurer.
- Ceci supprimera toute possibilité de retrouver les page ainsi supprimées.
+ *Attention!* en appuyant sur ce bouton toutes les pages vides et non rÃ©fÃ©rencÃ©es seront supprimÃ©es sans aucune possiblitÃ© de les restaurer.
+ Ceci supprimera toute possibilitÃ© de retrouver les page ainsi supprimÃ©es.
  
  <?plugin WikiAdminUtils
            action=purge-empty-pages
            label="Purge all empty unreferenced pages"
    ?>
 
-!! Suppression des pages indésirables dans la base des données wiki
+!! Suppression des pages indÃ©sirables dans la base des donnÃ©es wiki
 
-Les pages dont le nom commence avec un séparateur de sous-page (habituellement un slash =/=) ne sont pas autorisées. Elles sont parfois crées par un plugin mal écrit...
+Les pages dont le nom commence avec un sÃ©parateur de sous-page (habituellement un slash =/=) ne sont pas autorisÃ©es. Elles sont parfois crÃ©es par un plugin mal Ã©crit...
 
-Ce bouton effacera toutes les pages dont le nom est illégal.
+Ce bouton effacera toutes les pages dont le nom est illÃ©gal.
   <?plugin WikiAdminUtils
            action=purge-bad-pagenames
            label="Nettoyage de WikiDB"

@@ -6,7 +6,7 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
@@ -16,20 +16,20 @@ en utilisant la fonction php-function: highlight-string
 
 !!Usage
 
-Vous devez spécifier les options de ce plugin sur la même ligne que 
-=<?plugin= puis écrire le code sur les lignes suivantes jusqu'au 
+Vous devez spÃ©cifier les options de ce plugin sur la mÃªme ligne que 
+=<?plugin= puis Ã©crire le code sur les lignes suivantes jusqu'au 
 =?>= final :
 
 <verbatim>
 <?plugin PhpHighlight [wrap?] [color options]
-code devant être coloré
+code devant Ãªtre colorÃ©
 ?>
 </verbatim>
 
-Dépendant de l'option =wrap=, le code prendra soin d'ajouter =<?php=
-et =?>= au code avant de la passer à la fonction highlight-string. Si 
-les délimiteurs php sont déjà présents alors le plugin les enlèvera
-encore de la chaîne colorée avant de les afficher.
+DÃ©pendant de l'option =wrap=, le code prendra soin d'ajouter =<?php=
+et =?>= au code avant de la passer Ã  la fonction highlight-string. Si 
+les dÃ©limiteurs php sont dÃ©jÃ  prÃ©sents alors le plugin les enlÃ¨vera
+encore de la chaÃ®ne colorÃ©e avant de les afficher.
 
 !!Options
 
@@ -37,19 +37,19 @@ Enveloppement automatique :
 
   Si vous ne voulez pas que le plugin enveloppe automatiquement le code
   source dans =<?php= et =?>= alors positionnez =wrap= sur =0=. La valeur
-  par défaut est =1=, ce qui signifie que le plugin prendra soin d'ajouter
+  par dÃ©faut est =1=, ce qui signifie que le plugin prendra soin d'ajouter
   ou d'enlver =<?php= et =?>= automatiquement.
 
-  Si vous mettez =wrap= à =0= alors vous aurez la possibilité de mélanger
+  Si vous mettez =wrap= Ã  =0= alors vous aurez la possibilitÃ© de mÃ©langer
   du PHPO avec de l'HTML. Le plugin transformera '=< ?php=' en =<?php=' et
-  '=? >=' en '=?>=' pour vous permettre de démarrer et d'arrêter le mode 
+  '=? >=' en '=?>=' pour vous permettre de dÃ©marrer et d'arrÃªter le mode 
   PHP dans votre code.
 
 Options des couleurs :
 
   Le plugin accepte des arguments optionnels pour les couleurs qui correspondent
-  à la coloration définie dans *php.ini*. Les couleurs doivent être spécifiées
-  par des valeurs hexadécimales ou des
+  Ã  la coloration dÃ©finie dans *php.ini*. Les couleurs doivent Ãªtre spÃ©cifiÃ©es
+  par des valeurs hexadÃ©cimales ou des
   [noms de couleur HTML 4|http://www.w3.org/TR/REC-html40/types.html#h-6.5]
   en minuscules comme ='#0f0344'= ou =blue=. Vous pouvez utiliser les options 
   suivantes :
@@ -58,7 +58,7 @@ Options des couleurs :
 
 !!Exemples
 
-!Code PHP avec les couleurs par défaut de =php.ini= :
+!Code PHP avec les couleurs par dÃ©faut de =php.ini= :
 
 <?plugin PhpHighlight
 function hello() {
@@ -68,7 +68,7 @@ function hello() {
 
 !HTML avec PHP inclus
 
-Ici nous devons utiliser =wrap=0= pour prévenir l'enveloppement automatique
+Ici nous devons utiliser =wrap=0= pour prÃ©venir l'enveloppement automatique
 et fermer '=?>=' comme '=? >=' :
 
 <?plugin PhpHighlight wrap=0 html='#000000' bg='#dddddd'
@@ -84,7 +84,7 @@ et fermer '=?>=' comme '=? >=' :
 
 !Source en C
 
-Bien que =highlight_string()= ait été conçu avec du code PHP à l'esprit,
+Bien que =highlight_string()= ait Ã©tÃ© conÃ§u avec du code PHP Ã  l'esprit,
 il est utilisable pour des colorations syntaxique de code C car les deux 
 syntaxe sont similaires.
 

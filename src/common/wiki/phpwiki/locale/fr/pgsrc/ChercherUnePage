@@ -5,32 +5,32 @@ Content-Type: application/x-phpwiki;
   pagename=ChercherUnePage;
   pgsrc_version="2 $Revision: 1.3 $";
   flags=PAGE_LOCKED;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Voici quelques bons points de départ pour la navigation.
+Voici quelques bons points de dÃ©part pour la navigation.
 
 * CommentUtiliserUnWiki vous donne quelques informations rapides sur le marquage Wiki.
-* Les DernièresModifs sont enregistrées automatiquement.
-* DétailsTechniques sur la navigation et l'édition sur ce serveur.
+* Les DerniÃ¨resModifs sont enregistrÃ©es automatiquement.
+* DÃ©tailsTechniques sur la navigation et l'Ã©dition sur ce serveur.
 
 Voici une recherche sur les titres. Essayez quelque chose comme ''wiki'' ou ''sandwich''.
 
 <?plugin-form TitleSearch?>
 
-Utilisez ce qui suit pour une recherche en texte intégral. Ceci prend quelques secondes. 
-Les résultats montreront toutes les lignes de chaque page contenant une correspondance.
+Utilisez ce qui suit pour une recherche en texte intÃ©gral. Ceci prend quelques secondes. 
+Les rÃ©sultats montreront toutes les lignes de chaque page contenant une correspondance.
 
 <?plugin-form FullTextSearch?>
 
-Dans une recherche !PagesFloues les titres de toutes les pages sont examinés pour trouver 
-ceux qui s'épellent ou sonnent de façon similaire (en anglais).
+Dans une recherche !PagesFloues les titres de toutes les pages sont examinÃ©s pour trouver 
+ceux qui s'Ã©pellent ou sonnent de faÃ§on similaire (en anglais).
 
 <?plugin-form FuzzyPages?>
 ------
 ! Trucs
-Séparez les mots par des espaces.
+SÃ©parez les mots par des espaces.
 __Tous__ les mots doivent correspondre (c'est le ET logique)%%%
-Pour exclure un mot, faites-le précéder d'un '-'.%%%
+Pour exclure un mot, faites-le prÃ©cÃ©der d'un '-'.%%%
 Exemple : 'wiki text -php' recherche toutes les pages contenant les mots 'wiki'
 __et__ 'text', mais ne contenant __pas__ le mot 'php'.

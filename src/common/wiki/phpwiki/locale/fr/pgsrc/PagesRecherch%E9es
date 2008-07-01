@@ -6,18 +6,18 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Voici la liste des pages qui ont été citées sur ce wiki mais qui n'ont 
-pas encore été écrites. Bien qu'elles soient apparemment recherchées,
-elles peuvent correspondre à des noms mal orthographiés ou à des pages
-si triviales qu'elles ne méritent pas d'être créées.
+Voici la liste des pages qui ont Ã©tÃ© citÃ©es sur ce wiki mais qui n'ont 
+pas encore Ã©tÃ© Ã©crites. Bien qu'elles soient apparemment recherchÃ©es,
+elles peuvent correspondre Ã  des noms mal orthographiÃ©s ou Ã  des pages
+si triviales qu'elles ne mÃ©ritent pas d'Ãªtre crÃ©Ã©es.
 
-Le mieux n'est pas forcément de créer ces pages. Il est souvent préférable
-de changer les références pour ne plus avoir de ~WikiNoms. Lorsque c'est 
-possible, vous pouvez juste changer la casse ou insérer le caractère 
-d'échappement ~~.
+Le mieux n'est pas forcÃ©ment de crÃ©er ces pages. Il est souvent prÃ©fÃ©rable
+de changer les rÃ©fÃ©rences pour ne plus avoir de ~WikiNoms. Lorsque c'est 
+possible, vous pouvez juste changer la casse ou insÃ©rer le caractÃ¨re 
+d'Ã©chappement ~~.
 
 ----
 

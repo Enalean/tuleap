@@ -6,7 +6,7 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.8 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !! Sommaire
@@ -19,7 +19,7 @@ Content-Transfer-Encoding: binary
          firstreversed=1
 ?>
 
-! Pages dans cette catégorie :
+! Pages dans cette catÃ©gorie :
 
 <?plugin BackLinks
          exclude||=''

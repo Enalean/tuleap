@@ -6,7 +6,7 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
@@ -31,32 +31,32 @@ un fichier de texte avec des descriptions optionnelles.
 
 !!Arguments
 
-''='src'= est le seul paramètre obligatoire.''
+''='src'= est le seul paramÃ¨tre obligatoire.''
 
 __src__:
-  Url ou chemin local pour un fichier CSV où chaque ligne est un nom de 
+  Url ou chemin local pour un fichier CSV oÃ¹ chaque ligne est un nom de 
   fichier de photo et une description de la photo. Les photos sont dans le 
-  même répertoire que le fichier. Les descriptions sont facultatives. Si
-  le chemin local est un répertoire relatif à PHPWIKI_DIR et que le script 
+  mÃªme rÃ©pertoire que le fichier. Les descriptions sont facultatives. Si
+  le chemin local est un rÃ©pertoire relatif Ã  PHPWIKI_DIR et que le script 
   principal est dans PHPWIKI_DIR, alors la localisation des fichiers ne 
-  doit pas être donnée et toutes les images du répertoire sont affichées.
+  doit pas Ãªtre donnÃ©e et toutes les images du rÃ©pertoire sont affichÃ©es.
 
 __weblocation__:
-  Chemin optionnel si les sources pointent vers un répertoire local et 
+  Chemin optionnel si les sources pointent vers un rÃ©pertoire local et 
   que les liens vers les photos ne fonctionnent pas.
 
 __mode__:
-  Spécifie comment les images sont rangées : ='column'= signifie 
-  verticalement, ='row'= signifie horizontalement . Par défaut : ='row'=.
+  SpÃ©cifie comment les images sont rangÃ©es : ='column'= signifie 
+  verticalement, ='row'= signifie horizontalement . Par dÃ©faut : ='row'=.
 
 __align__:
-  Seulement applicable au mode colonne. Par défaut : ='center'=.
+  Seulement applicable au mode colonne. Par dÃ©faut : ='center'=.
 
 __desc__:
-  Affiche les descriptions données dans le fichier. Vrai par défaut.
+  Affiche les descriptions donnÃ©es dans le fichier. Vrai par dÃ©faut.
 
 __sort__:
-  Tri les images par nom de fichier. Par défaut, c'est l'ordre dans le 
+  Tri les images par nom de fichier. Par dÃ©faut, c'est l'ordre dans le 
   fichier texte qui est suivi.
 
 __height__, __width__:
@@ -72,7 +72,7 @@ Contenu possible d'une fichier texte valide :
 <verbatim>
 photo-01.jpg; Ma femme et moi !
 photo-02.jpg
-jn.gif; Joyeux Noël !
+jn.gif; Joyeux NoÃ«l !
 </verbatim>
 
 !Exemple d'album
@@ -80,7 +80,7 @@ Dossier local :
 <?plugin PhotoAlbum
          src="themes/Hawaiian/images/pictures/"
 ?>
-ou par une adresse extérieure :
+ou par une adresse extÃ©rieure :
 <verbatim>
 <?plugin PhotoAlbum
          src="http://phpwiki.sourceforge.net/demo/themes/Hawaiian/images/pictures/PhotoAlbum.csv"

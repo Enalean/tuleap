@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-La quantité de pages aléatoires est un nombre entre 1 et 20.
+La quantitÃ© de pages alÃ©atoires est un nombre entre 1 et 20.
 
 ----
 <?plugin RandomPage pages||=10 info||=''?>

@@ -6,14 +6,14 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Vous utilisez PhpWiki en ce moment même. Incroyable, n'est-ce pas ?
+Vous utilisez PhpWiki en ce moment mÃªme. Incroyable, n'est-ce pas ?
 
 Visitez notre page d'accueil (en anglais) sur http://phpwiki.sourceforge.net/ 
 et voyez PhpWiki en action sur http://phpwiki.sourceforge.net/phpwiki/ 
-(et bien sûr, ici aussi :-)).
+(et bien sÃ»r, ici aussi :-)).
 
 ----
 

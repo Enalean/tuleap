@@ -5,7 +5,7 @@ Content-Type: application/x-phpwiki;
   pagename=QuiEstEnLigne;
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin WhoIsOnline allow_detail=1 ?>

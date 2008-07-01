@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="3 $Revision: 1.4 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Voici une liste des pages récemment modifiées dans ce wiki (voir ÉditionsRécentes 
+Voici une liste des pages rÃ©cemment modifiÃ©es dans ce wiki (voir Ã‰ditionsRÃ©centes 
 pour obtenir la liste des modifications mineures).
 
 --------

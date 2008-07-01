@@ -6,13 +6,13 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin AllUsers include_empty=0 ?>
 
 ----
 
-CatégorieCatégorie
+CatÃ©gorieCatÃ©gorie
 
 

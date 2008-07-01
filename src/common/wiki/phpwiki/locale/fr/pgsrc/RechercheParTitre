@@ -6,12 +6,12 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin TitleSearch ?>
 ----
-Recherches supplémentaires :
+Recherches supplÃ©mentaires :
 <?plugin-form TitleSearch auto_redirect=0?>
 <?plugin-form FullTextSearch?>
 <?plugin-form FuzzyPages?>

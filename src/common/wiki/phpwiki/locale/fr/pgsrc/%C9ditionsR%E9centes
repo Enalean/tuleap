@@ -6,13 +6,13 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Voici une liste des pages récemment éditées sur ce wiki. __Toutes__ les 
-modifications __mineures__ sont montrées, et pas uniquement les plus 
-récentes (voir DernièresModifs pour les modifications non-mineures les 
-plus récentes).
+Voici une liste des pages rÃ©cemment Ã©ditÃ©es sur ce wiki. __Toutes__ les 
+modifications __mineures__ sont montrÃ©es, et pas uniquement les plus 
+rÃ©centes (voir DerniÃ¨resModifs pour les modifications non-mineures les 
+plus rÃ©centes).
 
 --------
 <?plugin RecentChanges days||=3 show_all||=1 show_minor=1 daylist=1,3,7,30,90,0 ?>

@@ -6,14 +6,14 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !! Description
 
 RSS (Really Simple Syndication) est un moyen pour extraire d'un site web 
-du contenu régulièrement mis à jour. Un fichier RSS est un simple fichier 
-texte comportant la description synthétique du contenu.
+du contenu rÃ©guliÃ¨rement mis Ã  jour. Un fichier RSS est un simple fichier 
+texte comportant la description synthÃ©tique du contenu.
 
 PluginRessourcesRss est un plugin wiki pour afficher des ressources RSS.
 
@@ -27,7 +27,7 @@ PluginRessourcesRss est un plugin wiki pour afficher des ressources RSS.
 
 !! Arguments
 Argument|
-  Valeur par défaut|
+  Valeur par dÃ©faut|
     Description
 
 url|
@@ -44,11 +44,11 @@ description|
 
 maxitem|
   0|
-    nombre maximum d'entrées (0 = illimitée)
+    nombre maximum d'entrÃ©es (0 = illimitÃ©e)
 
 !! Code source (depuis v1.3.8):
 * [PhpWikiCvs:lib/plugin/RssFeed.php]
-* [PhpWikiCvs:lib/RssParser.php] _révisé pour allow_url_fopen=Off_
+* [PhpWikiCvs:lib/RssParser.php] _rÃ©visÃ© pour allow_url_fopen=Off_
 
 !! Exemples
 

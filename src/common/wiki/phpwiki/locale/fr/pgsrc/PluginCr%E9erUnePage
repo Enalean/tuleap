@@ -6,21 +6,21 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
 
-PluginCréerUnePage vous permet (depuis v1.3.8) de créer facilement de nouvelles 
-pages, éventuellement avec un contenu par défaut
+PluginCrÃ©erUnePage vous permet (depuis v1.3.8) de crÃ©er facilement de nouvelles 
+pages, Ã©ventuellement avec un contenu par dÃ©faut
 
-Il vous permet de créer une page avec un nouveau nom depuis un formulaire et éventuellement
-avec un contenu initial à partir d'un modèle.
+Il vous permet de crÃ©er une page avec un nouveau nom depuis un formulaire et Ã©ventuellement
+avec un contenu initial Ã  partir d'un modÃ¨le.
 
 !!Usage
 
 Mettez un "<~?plugin-form ~CreatePage ?~>" sur une page, affichez cette page, entrez le nom
-de la page à créer puis cliquez sur le bouton.
+de la page Ã  crÃ©er puis cliquez sur le bouton.
 
 <verbatim>
      <?plugin-form CreatePage ?>
@@ -29,16 +29,16 @@ de la page à créer puis cliquez sur le bouton.
 
 !!Arguments
 __s__: |
-  Le nom de la page qui sera passé au plugin. Par défaut : ""
+  Le nom de la page qui sera passÃ© au plugin. Par dÃ©faut : ""
 __initial_content__:  |
-  La nouvelle page sera pré-remplie avec ce contenu. Par défaut : "" 
+  La nouvelle page sera prÃ©-remplie avec ce contenu. Par dÃ©faut : "" 
 __template__:  |
-  La nouvelle page sera pré-remplie avec ce contenu de cette page. Par défaut : "" 
+  La nouvelle page sera prÃ©-remplie avec ce contenu de cette page. Par dÃ©faut : "" 
 
 
 !!Projets
 
-Le contenu peut avoir des variables qui seront déployées lors de la création. 
+Le contenu peut avoir des variables qui seront dÃ©ployÃ©es lors de la crÃ©ation. 
 La syntaxe n'est pas encore claire.
 
 !!Auteur

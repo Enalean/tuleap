@@ -6,13 +6,13 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
 
-PluginInfosSystème donne l'accès à des informations de niveau inférieur
-concernant PhpWiki relativement au système sur lequel il est installé.
+PluginInfosSystÃ¨me donne l'accÃ¨s Ã  des informations de niveau infÃ©rieur
+concernant PhpWiki relativement au systÃ¨me sur lequel il est installÃ©.
 
 !!Usage
 

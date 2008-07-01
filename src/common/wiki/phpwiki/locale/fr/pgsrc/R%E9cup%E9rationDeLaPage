@@ -6,17 +6,17 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 
-Voir une page wiki dans le format MIME ou la télécharger comme copie
+Voir une page wiki dans le format MIME ou la tÃ©lÃ©charger comme copie
 d'une page unique. _Un vidage complet de toutes les pages est possible 
 avec AdministrationDePhpWiki._
 
 <?plugin PageDump?>
 ----
-Entrer le nom exact de la page à vider :
+Entrer le nom exact de la page Ã  vider :
 <?plugin-form PageDump?>
 
 RechercheParTitre :

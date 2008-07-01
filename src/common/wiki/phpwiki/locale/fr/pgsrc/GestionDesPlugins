@@ -6,21 +6,21 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-PhpWiki vous permet d'étendre PhpWiki avec de nouvelles fonctionnalités via
-un mécanisme de plugins. Pour faire bref, vous étendez une classe PHP
+PhpWiki vous permet d'Ã©tendre PhpWiki avec de nouvelles fonctionnalitÃ©s via
+un mÃ©canisme de plugins. Pour faire bref, vous Ã©tendez une classe PHP
 que nous fournissons et vous la personnalisez pour qu'elle affiche le
 contenu que vous voulez. Pour plus d'informations, voyez PluginWiki, 
 PluginBonjourLeMonde, et regardez les sources des fichiers dans lib/plugin.
 
 S'il n'y a pas d'exemple de page pour ce plugin ou que vous souhaitez plus 
 d'informations, le meilleur endroit est la source de ce plugin. Sous le 
-répertoire racine de votre wiki, le dossier lib/plugin contient tous les
+rÃ©pertoire racine de votre wiki, le dossier lib/plugin contient tous les
 fichiers PHP des plugins.
 
-Certains plugins nécessitent des bibliothèques externes non fournies 
+Certains plugins nÃ©cessitent des bibliothÃ¨ques externes non fournies 
 avec PhpWiki ou PHP comme par exemple la librairie GD pour les 
 graphiques.
 -----

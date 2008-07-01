@@ -6,11 +6,11 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ce plugin vous permet d'afficher l'historique des éditions d'un auteur particulier. 
-Vous pouvez aussi bien spécifier le nom de la page (page courante par défaut).
+Ce plugin vous permet d'afficher l'historique des Ã©ditions d'un auteur particulier. 
+Vous pouvez aussi bien spÃ©cifier le nom de la page (page courante par dÃ©faut).
 
 <verbatim>
 <?plugin AuthorHistory user="test" ?>
@@ -18,6 +18,6 @@ Vous pouvez aussi bien spécifier le nom de la page (page courante par défaut).
 <?plugin AuthorHistory page=HomePage ?>
 </verbatim>
 
-Le second exemple aura la page courante par défaut. Nous ne pouvons vous fournir 
+Le second exemple aura la page courante par dÃ©faut. Nous ne pouvons vous fournir 
 d'autres exemples puisque nous ne connaissons par les noms d'utilisateurs potentiels
 de votre wiki.

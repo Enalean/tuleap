@@ -6,13 +6,13 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Tous les liens de cette page seront utilisés pour trouver les
-groupes d'utilisateurs pour la méthode de gestion des groupes
+Tous les liens de cette page seront utilisÃ©s pour trouver les
+groupes d'utilisateurs pour la mÃ©thode de gestion des groupes
 par WIKIPAGE. Les pages de groupe d'utilisateurs doivent contenir
-une liste de noms d'utilisateurs et ensuite, par souci de cohésion,
+une liste de noms d'utilisateurs et ensuite, par souci de cohÃ©sion,
 un lien vers cette page tous les quatre items.
 
 * [Administrateurs]

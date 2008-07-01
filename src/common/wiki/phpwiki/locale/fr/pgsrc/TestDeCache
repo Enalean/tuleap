@@ -6,7 +6,7 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 TestDeCache est un simple test de la classe ~WikiPluginCached

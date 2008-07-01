@@ -6,12 +6,12 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Ce plugin inclura d'autres pages dans ce wiki. Dans le langage de l'hypertexte, 
-ça s'appelle la <i>transclusion</i>. Les pages iront dans des tables distinctes.
-Vous pouvez aussi charger des pages externes sur un mode plus limité avec 
+Ã§a s'appelle la <i>transclusion</i>. Les pages iront dans des tables distinctes.
+Vous pouvez aussi charger des pages externes sur un mode plus limitÃ© avec 
 PluginInclureUnCadre. Par exemple, les lignes suivantes :
 
 <verbatim>

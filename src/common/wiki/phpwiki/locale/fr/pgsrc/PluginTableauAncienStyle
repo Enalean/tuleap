@@ -6,11 +6,11 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
-PluginTableauAncienStyle peut être utilisé pour inclure des 
+PluginTableauAncienStyle peut Ãªtre utilisÃ© pour inclure des 
 tableaux dans une page wiki avec la syntaxe de l'ancien style
 des marques pour les tableaux.
 
@@ -18,9 +18,9 @@ des marques pour les tableaux.
 
 <verbatim>
 <?plugin OldStyleTable caption="Tableau ancien style" border||=2
-||^  *Identité*             |v *Prix*       |v *Notes*
-| *Prénom*     | *Nom*
-|> Jeff        |< Dairiki   |^ Bon marché   |< Sans valeur
+||^  *IdentitÃ©*             |v *Prix*       |v *Notes*
+| *PrÃ©nom*     | *Nom*
+|> Jeff        |< Dairiki   |^ Bon marchÃ©   |< Sans valeur
 |> Marco       |< Polo      |  Moins cher   |< Pas disponible
 ?>
 </verbatim>
@@ -28,46 +28,46 @@ des marques pour les tableaux.
 affichera
 
 <?plugin OldStyleTable caption="Tableau ancien style" border||=2
-||^  *Identité*             |v *Prix*       |v *Notes*
-| *Prénom*     | *Nom*
-|> Jeff        |< Dairiki   |^ Bon marché   |< Sans valeur
+||^  *IdentitÃ©*             |v *Prix*       |v *Notes*
+| *PrÃ©nom*     | *Nom*
+|> Jeff        |< Dairiki   |^ Bon marchÃ©   |< Sans valeur
 |> Marco       |< Polo      |  Moins cher   |< Pas disponible
 ?>
 
-Remarquez que de multiple __|__ conduisent à des colonnes étendus
-et que des__v__ peuvent être utilisé pour étendre des lignes. Un 
-__>__ engendre une colonne justifiée à droite, __<__ une colonne 
-justifiée à gauche et __^__ une colonne centrée (position par 
-défaut).
+Remarquez que de multiple __|__ conduisent Ã  des colonnes Ã©tendus
+et que des__v__ peuvent Ãªtre utilisÃ© pour Ã©tendre des lignes. Un 
+__>__ engendre une colonne justifiÃ©e Ã  droite, __<__ une colonne 
+justifiÃ©e Ã  gauche et __^__ une colonne centrÃ©e (position par 
+dÃ©faut).
 
 !!Arguments
 
 __caption__:
 
-  une chaîne. Par défaut : ""
+  une chaÃ®ne. Par dÃ©faut : ""
 
 __border__:
 
-  un nombre. Par défaut : 1
+  un nombre. Par dÃ©faut : 1
 
 __cellspacing__:
 
-  un nombre. Par défaut : 1
+  un nombre. Par dÃ©faut : 1
 
 __cellpadding__:
 
-  un nombre. Par défaut : 1
+  un nombre. Par dÃ©faut : 1
 
 __summary__:
 
-  une chaîne. Par défaut : ""
+  une chaÃ®ne. Par dÃ©faut : ""
 
 ----
 
-Notez que dans chaque cellule du tableau, le _nouveau style_ est utilisé.
+Notez que dans chaque cellule du tableau, le _nouveau style_ est utilisÃ©.
 Vous pouvez seulement utiliser les marques en ligne --- des groupes de marques 
-par niveau sont autorisés dans les cellules.
+par niveau sont autorisÃ©s dans les cellules.
 
 Utiliser l'ancien style ne devrait pas avoir beaucoup plus de sens puisqu'on 
 ne peut pas inclure d'appels de plugin sur plusieurs lignes en utilisant
-les anciennes règles.
+les anciennes rÃ¨gles.

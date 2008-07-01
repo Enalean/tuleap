@@ -5,23 +5,23 @@ Content-Type: application/x-phpwiki;
   pagename=TestGroupeDePages%2FDeux;
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 <?plugin PageGroup
          parent=TestGroupeDePages
-         section="Table des matières"
+         section="Table des matiÃ¨res"
 ?>
 
 ----
 
 %%% %%% %%% %%% %%% %%% %%%
 
-Bienvenu sur la deuxième page.
+Bienvenu sur la deuxiÃ¨me page.
 
-Ce serait bien si ce plugin pouvait fonctionner avec RétroLiens, de 
-telle sorte que sa présence sur une page serait détectée par le plugin
-des rétro-liens sans avoir à ajouter comme maintenant un lien vers le
+Ce serait bien si ce plugin pouvait fonctionner avec RÃ©troLiens, de 
+telle sorte que sa prÃ©sence sur une page serait dÃ©tectÃ©e par le plugin
+des rÃ©tro-liens sans avoir Ã  ajouter comme maintenant un lien vers le
 parent : TestGroupeDePages.
 
 Cliquez sur la page suivante.

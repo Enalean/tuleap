@@ -5,17 +5,17 @@ Content-Type: application/x-phpwiki;
   pagename=TestGroupeDePages%2FUn;
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ok, c'est la première page du groupe
+Ok, c'est la premiÃ¨re page du groupe
 
-Il y a un bug. Quand la boucle est activée (et c'est la cas seulement pour
-cette première page -- un autre défaut possible) et si le titre du sommaire
-n'est pas le premier item dans la page de la table des matières et s'il y a
-autre chose dans la table des matières après la liste actuelle alors les 
-choses tournent mal. Notez que le lien __Précédent :__ ci-dessous pointe vers 
-la dernière page. Cliquez sur le suivant.
+Il y a un bug. Quand la boucle est activÃ©e (et c'est la cas seulement pour
+cette premiÃ¨re page -- un autre dÃ©faut possible) et si le titre du sommaire
+n'est pas le premier item dans la page de la table des matiÃ¨res et s'il y a
+autre chose dans la table des matiÃ¨res aprÃ¨s la liste actuelle alors les 
+choses tournent mal. Notez que le lien __PrÃ©cÃ©dent :__ ci-dessous pointe vers 
+la derniÃ¨re page. Cliquez sur le suivant.
 
 %%% %%% %%% %%% %%% %%% %%%
 
@@ -23,7 +23,7 @@ la dernière page. Cliquez sur le suivant.
          label="Autres pages du groupe"
          loop=1
          parent=TestGroupeDePages
-         section="Table des matières"
+         section="Table des matiÃ¨res"
 ?>
 
 ----

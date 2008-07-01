@@ -6,11 +6,11 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Le contenu de toutes les pages est parcouru pour trouver des liens vers la page courante. 
-La fonction RétroLiens répond aussi à la question : "Quelles pages contiennent le 
+La fonction RÃ©troLiens rÃ©pond aussi Ã  la question : "Quelles pages contiennent le 
 titre de cette page ?"
 
 ----

@@ -5,13 +5,13 @@ Content-Type: application/x-phpwiki;
   pagename=LienGoogle;
   pgsrc_version="2 $Revision: 1.1 $";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !! LienGoogle
 
-Une nouvelle option PréférencesUtilisateurs pour ajouter un lien [G] aux pages
-inconnues avec un lien vers Google:[pagename]. Par défaut : Off
+Une nouvelle option PrÃ©fÃ©rencesUtilisateurs pour ajouter un lien [G] aux pages
+inconnues avec un lien vers Google:[pagename]. Par dÃ©faut : Off
 
 Voir MeatBall::GooglePrompt
 ----

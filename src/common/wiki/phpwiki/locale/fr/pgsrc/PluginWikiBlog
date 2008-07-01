@@ -6,18 +6,18 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Un blog (ou weblog ou carnet Web ou blogue ou weblogue) est un type de publication 
 Web dynamique par articles qui s'affichent sur une page Web. Ces articles sont 
-archivés au fur et à mesure. Chaque article peut-être modifié à souhait voire supprimé 
-par son auteur après sa publication. Un système de commentaires est effectif 
-sur chaque blog et permet d'apporter des compléments d'information ou des réactions 
-après chaque article (ou billet).
+archivÃ©s au fur et Ã  mesure. Chaque article peut-Ãªtre modifiÃ© Ã  souhait voire supprimÃ© 
+par son auteur aprÃ¨s sa publication. Un systÃ¨me de commentaires est effectif 
+sur chaque blog et permet d'apporter des complÃ©ments d'information ou des rÃ©actions 
+aprÃ¨s chaque article (ou billet).
 
-PluginWikiBlog est un plugin simple qui permet les entrées dans le style blog sur 
-une page. Essayez quelques entrées puis jeter un coup d'oeil sur les DernièresModifs
-pour vous faire une idée de la façon dont ça fonctionne.
+PluginWikiBlog est un plugin simple qui permet les entrÃ©es dans le style blog sur 
+une page. Essayez quelques entrÃ©es puis jeter un coup d'oeil sur les DerniÃ¨resModifs
+pour vous faire une idÃ©e de la faÃ§on dont Ã§a fonctionne.
 
 <?plugin WikiBlog ?>

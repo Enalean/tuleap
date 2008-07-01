@@ -5,42 +5,42 @@ Content-Type: application/x-phpwiki;
   pagename=CommentUtiliserUnWiki;
   pgsrc_version="2 $Revision: 1.5 $";
   flags="";
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-''"Wiki wiki"'' signifie "vite" en hawaïien.
+''"Wiki wiki"'' signifie "vite" en hawaÃ¯ien.
 
 __Ce qu'il est suffisant de savoir :__
 
-* Pour éditer n'importe quelle page autorisée, cliquez sur le lien Éditer au bas de la page. Vous devriez faire cela tout de suite et lire le code source de cette page, cela aura plus de sens.
+* Pour Ã©diter n'importe quelle page autorisÃ©e, cliquez sur le lien Ã‰diter au bas de la page. Vous devriez faire cela tout de suite et lire le code source de cette page, cela aura plus de sens.
 * Vous obtenez de l'italique en encadrant les mots par des paires d'apostrophes ''comme ceci''.
-* Vous obtenez du __texte en gras__ en utilisant deux symboles souligné (underscore) de chaque côté.
+* Vous obtenez du __texte en gras__ en utilisant deux symboles soulignÃ© (underscore) de chaque cÃ´tÃ©.
 * Et l'__''italique gras''__ en combinant les deux.
-* Vous aurez des puces en utilisant un astérisque * en début de ligne.
-* Pour avoir une police à chasse fixe, indentez avec une espace :
+* Vous aurez des puces en utilisant un astÃ©risque * en dÃ©but de ligne.
+* Pour avoir une police Ã  chasse fixe, indentez avec une espace :
 
- ceci est certainement un poème
+ ceci est certainement un poÃ¨me
  au sujet de la chasse fixe
- je l'éditai de velours blême
+ je l'Ã©ditai de velours blÃªme
  sans trouver de rime pour fixe
 
-* Vous pouvez séparer les paragraphes à l'aide d'une ligne blanche. Exemple :
+* Vous pouvez sÃ©parer les paragraphes Ã  l'aide d'une ligne blanche. Exemple :
 
 Je suis un paragraphe.
 
 Je suis moi aussi un paragraphe. Nous sommes juste deux petits paragraphes.
 
 
-* Vous pouvez obtenir des règles horizontales à l'aide de quatre tirets (ou plus) comme ceci :
+* Vous pouvez obtenir des rÃ¨gles horizontales Ã  l'aide de quatre tirets (ou plus) comme ceci :
 ---------
-* Pour créer des hyperliens, vous n'avez qu'à capitaliser les initiales des mots et les coller ensemble. Supposons que vous voulez créer une page sur la façon dont Steve Wainstead mange des vers, alors vous mettez les initiales en majuscules et collez les mots ensemble comme ceci : SteveWainsteadMangeDesVersVivants. Si la page n'existe pas encore, un point d'interrogation apparaît après le lien, vous invitant à créer cette page : CettePageNeDevraitPasExister (et s'il-vous-plaît, ne détruisez pas l'exemple en la créant).
-* Pour lier des pages hors du Wiki, vous pouvez simplement taper l'URL et Wiki créera le lien pour vous : http://www.lemonde.fr/
-* Pour insérer des images, fournissez juste le lien entre crochets comme ceci : __[[!http://www.votremachine.votredomaine/images/photo.png]__. Les URL d'image qui ne sont pas entre crochets apparaissent juste comme des hyperliens vers l'image.
-* Maintenant vous êtes prêt pour AjouterDesPages.
+* Pour crÃ©er des hyperliens, vous n'avez qu'Ã  capitaliser les initiales des mots et les coller ensemble. Supposons que vous voulez crÃ©er une page sur la faÃ§on dont Steve Wainstead mange des vers, alors vous mettez les initiales en majuscules et collez les mots ensemble comme ceci : SteveWainsteadMangeDesVersVivants. Si la page n'existe pas encore, un point d'interrogation apparaÃ®t aprÃ¨s le lien, vous invitant Ã  crÃ©er cette page : CettePageNeDevraitPasExister (et s'il-vous-plaÃ®t, ne dÃ©truisez pas l'exemple en la crÃ©ant).
+* Pour lier des pages hors du Wiki, vous pouvez simplement taper l'URL et Wiki crÃ©era le lien pour vous : http://www.lemonde.fr/
+* Pour insÃ©rer des images, fournissez juste le lien entre crochets comme ceci : __[[!http://www.votremachine.votredomaine/images/photo.png]__. Les URL d'image qui ne sont pas entre crochets apparaissent juste comme des hyperliens vers l'image.
+* Maintenant vous Ãªtes prÃªt pour AjouterDesPages.
 
 ----
-Un WikiWikiWeb est conçu pour être édité vite et facilement. Il dispose d'un marquage très simple décrit dans RèglesDeFormatageDesTextes.
+Un WikiWikiWeb est conÃ§u pour Ãªtre Ã©ditÃ© vite et facilement. Il dispose d'un marquage trÃ¨s simple dÃ©crit dans RÃ¨glesDeFormatageDesTextes.
 ----
-Si vous n'aimez pas la taille de la fenêtre d'édition de texte que vous obtenez, vous pouvez la changer. Voir PréférencesUtilisateurs.
+Si vous n'aimez pas la taille de la fenÃªtre d'Ã©dition de texte que vous obtenez, vous pouvez la changer. Voir PrÃ©fÃ©rencesUtilisateurs.
 ----
 DocumentationDePhpWiki

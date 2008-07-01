@@ -6,12 +6,12 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags=PAGE_LOCKED;
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Vous pouvez désormais définir quelques préférences utilisateur. 
-Les valeurs de ces préférences sont actuellement stockées dans un 
-cookie (vous devez donc avoir validé les cookies pour pouvoir 
-utiliser cette fonctionnalité).
+Vous pouvez dÃ©sormais dÃ©finir quelques prÃ©fÃ©rences utilisateur. 
+Les valeurs de ces prÃ©fÃ©rences sont actuellement stockÃ©es dans un 
+cookie (vous devez donc avoir validÃ© les cookies pour pouvoir 
+utiliser cette fonctionnalitÃ©).
 
 <?plugin UserPreferences ?>

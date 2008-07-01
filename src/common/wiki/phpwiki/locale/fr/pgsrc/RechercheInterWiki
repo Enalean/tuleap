@@ -6,13 +6,13 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 Interroge chaque Wiki apparaissant dans la CarteInterWiki en entrant 
-un nom de page souhaité ci-dessous.
+un nom de page souhaitÃ© ci-dessous.
 
-Pour ajouter une de ces recherches à une autre page, utiliser 
+Pour ajouter une de ces recherches Ã  une autre page, utiliser 
 PluginRechercheExterne.
 
 <?plugin InterWikiSearch?>

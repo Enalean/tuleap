@@ -6,10 +6,10 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ein einfaches Beispiel für das PluginListeDePages. Hauptsächlich für ein wikilens Thema benutzt, 
+Ein einfaches Beispiel fÃ¼r das PluginListeDePages. HauptsÃ¤chlich fÃ¼r ein wikilens Thema benutzt, 
 um Ratings Info anzuzeigen.
 
 <?plugin ListPages pages=HomePage,FindPage,WikiWikiWeb ?>

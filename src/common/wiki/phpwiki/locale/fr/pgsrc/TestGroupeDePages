@@ -6,30 +6,30 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 TestGroupeDePages est un test pour le plugin ~PageGroup
 
-Cliquez sur la première page pour lancer la visite de ce plugin
-expérimental.
+Cliquez sur la premiÃ¨re page pour lancer la visite de ce plugin
+expÃ©rimental.
 
-!Table des matières
+!Table des matiÃ¨res
 # [TestGroupeDePages/Un]
 # [TestGroupeDePages/Deux]
 # [TestGroupeDePages/Trois]
 # [TestGroupeDePages/Quatre]
 
-!À faire
+!Ã€ faire
 
 * Accepter les liens ~[ nom | page ~]
-* Accepter  Précédent, Suivant... et les boutons images.
+* Accepter  PrÃ©cÃ©dent, Suivant... et les boutons images.
 
 %%% %%% %%% %%%
 
 ----
 
-Pour référence, voici toutes les pages qui sont liées à TestGroupeDePages
+Pour rÃ©fÃ©rence, voici toutes les pages qui sont liÃ©es Ã  TestGroupeDePages
 (notez qu'une seule est absente) :
 
 <?plugin BackLinks page=TestGroupeDePages?>

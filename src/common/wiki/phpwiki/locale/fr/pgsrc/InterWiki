@@ -6,42 +6,42 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.6 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-Ce wiki accepte les liens InterWiki dans un style copié sur celui du wiki 
-[UseMod:]. Les liens vers des pages d'autres wikis peuvent être réalisés 
-sans avoir à connaître ou taper les URL complets, par exemple : 
-MeatBall:InterWiki produira un lien vers la page nommée "~InterWiki" sur 
+Ce wiki accepte les liens InterWiki dans un style copiÃ© sur celui du wiki 
+[UseMod:]. Les liens vers des pages d'autres wikis peuvent Ãªtre rÃ©alisÃ©s 
+sans avoir Ã  connaÃ®tre ou taper les URL complets, par exemple : 
+MeatBall:InterWiki produira un lien vers la page nommÃ©e "~InterWiki" sur 
 MeatballWiki.
 
 La carte InterWiki est extraite du bloc <verbatim> dans la CarteInterWiki, 
-mais cette page doit être verrouillée pour que cela fonctionne. 
+mais cette page doit Ãªtre verrouillÃ©e pour que cela fonctionne. 
 Ceci interdit aux hackers potentiels de pouvoir changer abominablement 
 tous les liens ~InterWiki pour qu'ils pointent vers un URL diabolique. 
-Si aucune carte n'est trouvée dans la CarteInterWiki (ou si la page n'est 
-pas verrouillée), PhpWiki utilisera à la place le fichier lib/interwiki.map
+Si aucune carte n'est trouvÃ©e dans la CarteInterWiki (ou si la page n'est 
+pas verrouillÃ©e), PhpWiki utilisera Ã  la place le fichier lib/interwiki.map
 de votre distribution phpwiki. Le fichier de la carte ~Interwiki est 
-utilisée sur PhpWiki : vous pouvez la voir sur [http://phpwiki.sf.net/interwiki.map].
+utilisÃ©e sur PhpWiki : vous pouvez la voir sur [http://phpwiki.sf.net/interwiki.map].
 
-Le fichier de la carte est mis à jour à la main. Il est basé sur et 
-périodiquement synchronisé avec [l'InterMap de UseMod|http://usemod.com/intermap.txt] 
-mais il n'est pas tout à fait identique. Une différence notable par rapport 
-à [UseMod:] est que PhpWiki supporte les '%s' au sein des URL dans la 
-carte -- voir l'entrée RFC pour un exemple de son fonctionnement.
+Le fichier de la carte est mis Ã  jour Ã  la main. Il est basÃ© sur et 
+pÃ©riodiquement synchronisÃ© avec [l'InterMap de UseMod|http://usemod.com/intermap.txt] 
+mais il n'est pas tout Ã  fait identique. Une diffÃ©rence notable par rapport 
+Ã  [UseMod:] est que PhpWiki supporte les '%s' au sein des URL dans la 
+carte -- voir l'entrÃ©e RFC pour un exemple de son fonctionnement.
 
-Toutes les entrées de la carte InterWiki ne sont pas forcément des wikis. 
+Toutes les entrÃ©es de la carte InterWiki ne sont pas forcÃ©ment des wikis. 
 Par exemple, celles-ci sont juste des sites web 
 normaux : Dictionary:fungible, [JargonFile:Alderson loop], [IMDB:Roman Holiday], 
 RFC:2822, et ISBN:020171499X.
 
-Le mot-clé "Category" est une entrée spéciale qui permet de créer des liens 
-entre une page et une page de catégorie sans créer de référence inverse. 
-Ainsi [Category:Category] crée un lien vers la page CategoryCategory, et 
-pourtant cette page n'apparaîtra pas dans la liste des rétroliens de 
+Le mot-clÃ© "Category" est une entrÃ©e spÃ©ciale qui permet de crÃ©er des liens 
+entre une page et une page de catÃ©gorie sans crÃ©er de rÃ©fÃ©rence inverse. 
+Ainsi [Category:Category] crÃ©e un lien vers la page CategoryCategory, et 
+pourtant cette page n'apparaÃ®tra pas dans la liste des rÃ©troliens de 
 CategoryCategory.
 
-Le terme "InterWiki" se réfère aussi à un concept plus large. Voir 
+Le terme "InterWiki" se rÃ©fÃ¨re aussi Ã  un concept plus large. Voir 
 PhpWiki:InterWikiSearch pour plus de liens.
 ----
 DocumentationDePhpWiki

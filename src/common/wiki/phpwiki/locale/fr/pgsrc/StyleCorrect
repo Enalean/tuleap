@@ -6,14 +6,14 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.2 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
-"Les jeunes auteurs supposent souvent que le style est une garniture pour la chair de la prose, une sauce grâce à laquelle un plat fade devient agréable au goût. Le style n'a pas de telles entités séparées ; il n'est pas détachable, il n'est pas filtrable. Le débutant devrait approcher le style avec crainte, en comprenant que c'est lui-même qu'il approche, et personne d'autre ; et il devrait commencer par se détourner résolument de tous les appareils considérés populairement comme indiquant le style -- tout maniérisme, artifice, ornement. L'approche du style se fait par la sobriété, la simplicité, l'ordre et la sincérité".
+"Les jeunes auteurs supposent souvent que le style est une garniture pour la chair de la prose, une sauce grÃ¢ce Ã  laquelle un plat fade devient agrÃ©able au goÃ»t. Le style n'a pas de telles entitÃ©s sÃ©parÃ©es ; il n'est pas dÃ©tachable, il n'est pas filtrable. Le dÃ©butant devrait approcher le style avec crainte, en comprenant que c'est lui-mÃªme qu'il approche, et personne d'autre ; et il devrait commencer par se dÃ©tourner rÃ©solument de tous les appareils considÃ©rÃ©s populairement comme indiquant le style -- tout maniÃ©risme, artifice, ornement. L'approche du style se fait par la sobriÃ©tÃ©, la simplicitÃ©, l'ordre et la sincÃ©ritÃ©".
 
---Strunk et White, "Les Éléments du Style"
+--Strunk et White, "Les Ã‰lÃ©ments du Style"
 
-''Et ainsi un manuel américain, lecture typiquement requise auprès d'étudiants de 10e niveau en anglais, exalte sans le savoir certaines vertus du WabiSabi''
+''Et ainsi un manuel amÃ©ricain, lecture typiquement requise auprÃ¨s d'Ã©tudiants de 10e niveau en anglais, exalte sans le savoir certaines vertus du WabiSabi''
 
 --scummings
 ----

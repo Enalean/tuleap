@@ -6,19 +6,19 @@ Content-Type: application/x-phpwiki;
   pgsrc_version="2 $Revision: 1.1 $";
   flags="";
   markup=2;
-  charset=iso-8859-1
+  charset=utf-8
 Content-Transfer-Encoding: binary
 
 !!Description
 
-PluginListeSousPages est utilisé pour afficher le contenu d'une partie ou 
-de toutes les sous-pages de la page courante ou d'une page donnée. Ceci peut 
-être utilisé pour obtenir un aperçu pour PluginWikiBlog, PluginCalendrier
+PluginListeSousPages est utilisÃ© pour afficher le contenu d'une partie ou 
+de toutes les sous-pages de la page courante ou d'une page donnÃ©e. Ceci peut 
+Ãªtre utilisÃ© pour obtenir un aperÃ§u pour PluginWikiBlog, PluginCalendrier
 ou des ensembles de sous-pages similaires.
 
 !!Avertissements
 
-Ne pas l'utiliser avec des sous-pages où PluginRedirection est utilisé 
+Ne pas l'utiliser avec des sous-pages oÃ¹ PluginRedirection est utilisÃ© 
 ou avec des sections non-existantes ! L'extracteur de partie est encore
 un peu instable
 
@@ -37,38 +37,38 @@ un peu instable
 !!Arguments
 
 __pagename__:
-  Un nom de page ou le page courante lorsque le nom est vide : Par défaut : ""
+  Un nom de page ou le page courante lorsque le nom est vide : Par dÃ©faut : ""
 __quiet__:
-  N'affiche pas d'en-tête. Par défaut : false
+  N'affiche pas d'en-tÃªte. Par dÃ©faut : false
 __sortby__:
   Trier par + (ASC) ou - (DESC) et sur une colonne. Multiples colonnes comme 
-  sortby="-hits,-mtime" pas encore implémenté. colonnes acceptées : 
-  ~[+|-]pagename, ~[+|-]mtime, ~[+|-]hits. Par défaut : "pagename"
+  sortby="-hits,-mtime" pas encore implÃ©mentÃ©. colonnes acceptÃ©es : 
+  ~[+|-]pagename, ~[+|-]mtime, ~[+|-]hits. Par dÃ©faut : "pagename"
 __maxpages__:
-  Nombre maximum de pages à inclure ou toutes lorsque ce n'est précisé. Par 
-  défaut : false
+  Nombre maximum de pages Ã  inclure ou toutes lorsque ce n'est prÃ©cisÃ©. Par 
+  dÃ©faut : false
 __sections__:
-  Nombre maximum de parties par pages à inclure toutes lorsque ce n'est précisé.
-  Par défaut : false
+  Nombre maximum de parties par pages Ã  inclure toutes lorsque ce n'est prÃ©cisÃ©.
+  Par dÃ©faut : false
 __section__:
-  Inclure cette section par page seulement lorsque c'est défini. Par défaut : false
+  Inclure cette section par page seulement lorsque c'est dÃ©fini. Par dÃ©faut : false
 __sectionhead__:
-  Montre l'en-tête lorsqu'on inclus une partie nommée. Par défaut : false
+  Montre l'en-tÃªte lorsqu'on inclus une partie nommÃ©e. Par dÃ©faut : false
 __smalltitle__:
-  Si c'est validé, cache le titre d'importation, affiche seulement un petit lien
-  au début de la page. Par défaut : false
+  Si c'est validÃ©, cache le titre d'importation, affiche seulement un petit lien
+  au dÃ©but de la page. Par dÃ©faut : false
 __words__:
-  Nombre maximum de mots par pages à inclure. Par défaut : false
+  Nombre maximum de mots par pages Ã  inclure. Par dÃ©faut : false
 __lines__:
-  Nombre maximum de lignes par pages à inclure. Par défaut : false
+  Nombre maximum de lignes par pages Ã  inclure. Par dÃ©faut : false
 __bytes__:
-  Nombre maximum d'octets par pages à inclure. Par défaut : false
+  Nombre maximum d'octets par pages Ã  inclure. Par dÃ©faut : false
 
-!!Arguments obsolètes
+!!Arguments obsolÃ¨tes
 __pages__:
-  obsolète, renommé en maxpages
+  obsolÃ¨te, renommÃ© en maxpages
 __sort__:
-  'asc' ou 'desc'. Obsolète : utiliser "+" ou "-" avant le nom de la 
+  'asc' ou 'desc'. ObsolÃ¨te : utiliser "+" ou "-" avant le nom de la 
   colonne avec sortby.
 
 !!Exemple
@@ -79,7 +79,7 @@ La ligne
 <?plugin UnfoldSubpages pagename=AdministrationDePhpWiki ?>
 </verbatim>
 
-affiche toutes les pages qui dépendent de AdministrationDePhpWiki :
+affiche toutes les pages qui dÃ©pendent de AdministrationDePhpWiki :
 
 <?plugin UnfoldSubpages pagename=AdministrationDePhpWiki ?>
 
