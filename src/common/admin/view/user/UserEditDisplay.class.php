@@ -398,45 +398,31 @@ class UserEditDisplay extends AdminEditDisplay {
      */
     function displayAddUser() {
 
+
         //clic on user link
         if(isset($this->userparam['user_id'])) {
-            
-            print '<form action="index.php" method="post">';
-            
-            print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
-
-            print '<input type="hidden" name="task" value="add_user_to_group" />';
-
-            print '<input type="hidden" name="user_id" value="'.$this->userparam['user_id'].'" />';
-            
-            print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
-            
-            print '<p><input name="Submit" value="Submit" type="submit"></p>';
-
-            print '<p><a href="/admin/user_changepw.php?user_id='.$this->userparam['user_id'].'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
-
-            print '</form>';
+            $userid = $this->userparam['user_id'];
         }
-        // select one user
-        elseif(count($this->userparam) == 1 ) {
-
-            print '<form action="index.php" method="post">';
-            
-            print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
-
-            print '<input type="hidden" name="task" value="add_user_to_group" />';
-
-            print '<input type="hidden" name="user_id" value="'.$this->userparam[0]['user_id'].'" />';
-            
-            print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
-            
-            print '<p><input name="Submit" value="Submit" type="submit"></p>';
-            
-            print '<p><a href="/admin/user_changepw.php?user_id='.$this->userparam[0]['user_id'].'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
-
-            print '</form>';  
+        elseif(count($this->userparam) == 1) {
+            $userid = $this->userparam[0];
         }
-        //select several user => display nothing
+
+      
+        print '<form action="index.php" method="post">';
+        
+        print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
+        
+        print '<input type="hidden" name="task" value="add_user_to_group" />';
+        
+        print '<input type="hidden" name="user_id" value="'.$userid.'" />';
+        
+        print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
+            
+        print '<p><input name="Submit" value="Submit" type="submit"></p>';
+        
+        print '<p><a href="/admin/user_changepw.php?user_id='.$userid.'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
+
+        print '</form>';
     }
 
     /**
