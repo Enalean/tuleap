@@ -2914,9 +2914,9 @@ CREATE TABLE artifact_watcher (
   INDEX user_id_idx (user_id,artifact_group_id)  
 );
 
----
---- Table structure for user interface supported languages
----
+#
+# Table structure for user interface supported languages
+#
 CREATE TABLE supported_languages (
   language_id int(11) NOT NULL auto_increment,
   name text,
@@ -2964,9 +2964,9 @@ CREATE TABLE snippet_language (
 
 
 
---
--- Service table
---
+#
+# Service table
+#
 CREATE TABLE service (
 	service_id int(11) NOT NULL auto_increment,
 	group_id int(11) NOT NULL,
@@ -2987,9 +2987,9 @@ CREATE TABLE service (
 
 
 
---
--- ugroup table, used to store the description of groups of users (see also ugroup_user table)
---
+#
+# ugroup table, used to store the description of groups of users (see also ugroup_user table)
+#
 CREATE TABLE ugroup (  
   ugroup_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
@@ -2999,19 +2999,19 @@ CREATE TABLE ugroup (
 );
 
 
---
--- ugroup_user table
--- Contains the ugroup members (users)
---
+#
+# ugroup_user table
+# Contains the ugroup members (users)
+#
 CREATE TABLE ugroup_user (
   ugroup_id int(11) NOT NULL,
   user_id int(11) NOT NULL
 );
 
 
---
--- permissions table, used to store specific access rights (for packages, releases, documentation, etc.)
---
+#
+# permissions table, used to store specific access rights (for packages, releases, documentation, etc.)
+#
 CREATE TABLE permissions (
   permission_type VARCHAR(255) NOT NULL,
   object_id VARCHAR(255) NOT NULL,
@@ -3020,10 +3020,10 @@ CREATE TABLE permissions (
 );
 
 
---
--- permissions_values table, used to store the list of default ugroups available by permission_type.
--- ugroups are selected from the special ugroups, so their ID should be less than 100.
---
+#
+# permissions_values table, used to store the list of default ugroups available by permission_type.
+# ugroups are selected from the special ugroups, so their ID should be less than 100.
+#
 CREATE TABLE permissions_values (
   permission_type text NOT NULL,
   ugroup_id int(11) NOT NULL,
@@ -3033,9 +3033,9 @@ CREATE TABLE permissions_values (
 
 
 
----
---- Wiki Service
----
+#
+# Wiki Service
+#
 
 CREATE TABLE wiki_group_list (
 	id int(11) NOT NULL auto_increment,
@@ -3048,7 +3048,7 @@ CREATE TABLE wiki_group_list (
 	PRIMARY KEY (id)	
 ) TYPE=MyISAM;
 
--- Table for Wiki access logs
+# Table for Wiki access logs
 CREATE TABLE wiki_log (
   user_id int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
@@ -3060,7 +3060,7 @@ CREATE TABLE wiki_log (
 ) TYPE=MyISAM;
 
 
--- Tables for Wiki attachments support
+# Tables for Wiki attachments support
 CREATE TABLE wiki_attachment (
   id INT( 11 ) NOT NULL AUTO_INCREMENT ,
   group_id INT( 11 ) NOT NULL ,
@@ -3090,9 +3090,9 @@ CREATE TABLE wiki_attachment_log (
   KEY group_id_idx (group_id)
 );
 
---
--- PHP Wiki tables
---
+#
+# PHP Wiki tables
+#
 CREATE TABLE wiki_page (
 	id              INT NOT NULL AUTO_INCREMENT,
     pagename        VARCHAR(100) BINARY NOT NULL,
@@ -3138,8 +3138,8 @@ CREATE TABLE wiki_link (
         INDEX (linkto)
 );
 
--- Plugin tables
--- {{{
+# Plugin tables
+# {{{
 CREATE TABLE priority_plugin_hook (
 plugin_id INT NOT NULL,
 hook VARCHAR(100) NOT NULL,
@@ -3167,11 +3167,11 @@ CREATE TABLE user_plugin (
 user_id INT NOT NULL ,
 plugin_id INT NOT NULL
 );
--- }}}
+# }}}
 
 
--- DynamicFields tables
--- {{{
+# DynamicFields tables
+# {{{
 
 DROP TABLE IF EXISTS artifact_rule;
 CREATE TABLE artifact_rule (
@@ -3186,16 +3186,16 @@ CREATE TABLE artifact_rule (
   KEY group_artifact_id (group_artifact_id)
 );
 
--- }}}
+# }}}
 
------
--- Table structure for table 'reference'
---
--- Notes: 
---   - scope='S' means a reference available to all projects
--- (defined by site administrators, group_id =100)
---   - scope='P' means a reference available to one project
---
+#
+# Table structure for table 'reference'
+#
+# Notes: 
+#   - scope='S' means a reference available to all projects
+# (defined by site administrators, group_id =100)
+#   - scope='P' means a reference available to one project
+#
 CREATE TABLE reference (
   id int(11) NOT NULL auto_increment,
   keyword varchar(25) NOT NULL,
@@ -3259,9 +3259,9 @@ CREATE TABLE notifications (
   PRIMARY KEY  (user_id,object_id,type)
 );
 
--- 
--- Structure de la table 'layouts'
--- 
+# 
+# Structure de la table 'layouts'
+# 
 
 DROP TABLE IF EXISTS layouts;
 CREATE TABLE IF NOT EXISTS layouts (
@@ -3272,11 +3272,11 @@ CREATE TABLE IF NOT EXISTS layouts (
   PRIMARY KEY  (id)
 );
 
--- --------------------------------------------------------
+# --------------------------------------------------------
 
--- 
--- Structure de la table 'layouts_rows'
--- 
+# 
+# Structure de la table 'layouts_rows'
+# 
 
 DROP TABLE IF EXISTS layouts_rows;
 CREATE TABLE IF NOT EXISTS layouts_rows (
@@ -3287,11 +3287,11 @@ CREATE TABLE IF NOT EXISTS layouts_rows (
   KEY layout_id (layout_id)
 );
 
--- --------------------------------------------------------
+# --------------------------------------------------------
 
--- 
--- Structure de la table 'layouts_rows_columns'
--- 
+# 
+# Structure de la table 'layouts_rows_columns'
+# 
 
 DROP TABLE IF EXISTS layouts_rows_columns;
 CREATE TABLE IF NOT EXISTS layouts_rows_columns (
@@ -3302,11 +3302,11 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
   KEY layout_row_id (layout_row_id)
 );
 
--- --------------------------------------------------------
+# --------------------------------------------------------
 
--- 
--- Structure de la table 'owner_layouts'
--- 
+# 
+# Structure de la table 'owner_layouts'
+# 
 
 DROP TABLE IF EXISTS owner_layouts;
 CREATE TABLE IF NOT EXISTS owner_layouts (
@@ -3317,11 +3317,11 @@ CREATE TABLE IF NOT EXISTS owner_layouts (
   PRIMARY KEY  (owner_id, owner_type, layout_id)
 );
 
--- --------------------------------------------------------
+# --------------------------------------------------------
 
--- 
--- Structure de la table 'layouts_contents'
--- 
+# 
+# Structure de la table 'layouts_contents'
+# 
 
 DROP TABLE IF EXISTS layouts_contents;
 CREATE TABLE IF NOT EXISTS layouts_contents (
@@ -3351,9 +3351,9 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 
 
 
--- 
--- Structure de la table 'layouts_contents'
--- 
+# 
+# Structure de la table 'layouts_contents'
+# 
 DROP TABLE IF EXISTS cross_references;
 CREATE TABLE IF NOT EXISTS cross_ref (
   id int(11) unsigned NOT NULL AUTO_INCREMENT, 
