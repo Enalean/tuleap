@@ -1,11 +1,7 @@
 <!--
 //
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX, 2001-2004. All Rights Reserved
-// This file is licensed under the CodeX Component Software License
-// http://codex.xerox.com
-//
-// 
+// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
 // Originally written by Marc Nazarian 2006, CodeX Team, Xerox
 //
@@ -26,11 +22,11 @@
     <copyright>
       <year>2006</year>
 
-      <holder>The Document Company - Xerox. All rights reserved.</holder>
+      <holder>Xerox Corporation, CodeX, Codendi.</holder>
     </copyright>
 
     <legalnotice>
-      <para>This document is licensed under the Codex Component Software License</para>
+      <para>This document is licensed under the GNU General Public License version 2.</para>
 
       <para>Portion of this documentation is inspired from the  GForge Command-line Interface documentation contained in GForge.</para>
       <para>Copyright 2005 GForge, LLC</para>
