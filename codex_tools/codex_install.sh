@@ -439,8 +439,9 @@ echo "Installing Subversion and Neon RPMs for CodeX.... In case of conflict with
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
-$RPM -Uvh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm subversion-tools*.i386.rpm
-
+$RPM -Uvh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
+# Dependency error with Perl ??
+$RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
 # -> cvsgraph 
 $RPM -e cvsgraph 2>/dev/null
@@ -812,7 +813,7 @@ fi
 ##############################################
 # Installing the SalomeTMF database
 #
-echo "Creating the SalomeTMF database... $pass_opt"
+echo "Creating the SalomeTMF database..."
 
 yn="-"
 freshdb=0
@@ -838,8 +839,7 @@ fi
 if [ $freshdb -eq 1 ]; then
 echo "Populating the SalomeTMF database..."
 cd $INSTALL_DIR/plugins/salome/db
-# XXX not ready yet 
-#$MYSQL -u codexadm codex --password=$codexadm_passwd < salome_init.sql   # create the DB
+$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_init.sql   # create the DB
 fi
 
 
@@ -1321,7 +1321,14 @@ $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex
 
 # salome plugin
 $CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/webapps/jdbc_client/cfg/
+build_dir /etc/codex/plugins/salome/etc codexadm codexadm 755
+$CP $INSTALL_DIR/plugins/salome/etc/salome.inc.dist /etc/codex/plugins/salome/etc/salome.inc
+$CP $INSTALL_DIR/plugins/salome/etc/database_salome.inc.dist /etc/codex/plugins/salome/etc/database_salome.inc
+substitute '/etc/codex/plugins/salome/etc/database_salome.inc' '%sys_salomedbpasswd%' "$slm_passwd" 
+$CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/*
+$CHMOD 644 /etc/codex/plugins/docman/etc/*
+java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
+java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/soap_client/cfg/
 
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
