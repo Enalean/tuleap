@@ -8,16 +8,18 @@
   <para>Le test est une activité importante dans le cycle de vie d'un projet.
     &SYS_PRODUCT_NAME; fournit un service spécifique pour gérer vos tests.</para>
 
-  <para>Le gestionnaire de tests utilisé dans &SYS_PRODUCT_NAME; est SalomeTMF, 
-   un framework de gestion de tests opensource bien connu.
+  <para>Le gestionnaire de tests utilisé dans &SYS_PRODUCT_NAME; est SalomeTMF (Test Management Framework), 
+   un outil de gestion de tests open source bien connu.
    Pour une documentation plus complète de SalomeTMF, merci de visiter la page web
    du projet SalomeTMF <ulink url="https://wiki.objectweb.org/salome-tmf/">https://wiki.objectweb.org/salome-tmf/</ulink>
+   et en particulier la <ulink url="https://wiki.objectweb.org/salome-tmf/Wiki.jsp?page=DocumentationPages">
+   section documentation</ulink>.
   </para>
   
   <section id="SalomeOverview">
     <title>Présentation de Salome</title>
     
-      <para>Les fonctionalités du gestionnaire de tests sont les suivantes :</para>
+      <para>Les fonctionnalités du gestionnaire de tests sont les suivantes :</para>
       <itemizedlist mark="bullet" spacing="compact">
         <listitem>
           <para>Création des tests. Les tests peuvent être organisés en campagne,
@@ -58,7 +60,8 @@
         <para>Salome peut interagir avec les outils de suivi de &SYS_PRODUCT_NAME;.
         Un cas d'utilisation typique est l'ajout d'anomalie ou de bug dans un 
         outil de suivi lorsqu'un test a échoué.
-        Mais vous pouvez utiliser Salome avec l'outil de suivi de votre choix.
+        Vous pouvez utiliser le modèle d'outil de suivi fourni (Salome Bug), mais 
+        vous pouvez aussi utiliser Salome avec l'outil de suivi de votre choix.
         </para>
         <para>Vous devez simplement ajouter et/ou lier les champs "spéciaux" suivants nécessaires à Salome :
         <itemizedlist mark="bullet" spacing="compact">
@@ -79,7 +82,7 @@
              <para>
               Vous disposez déjà de champs qui peuvent correspondre aux champs "spéciaux"
               de Salome, il vous suffit alors simplement de lier ces champs 
-              (voir <xref linkend="LinkSpecialFieldsForSalome" /> pour lier les champs),
+              (voir "Configuration de l'outil de suivi Salome" ci-dessous pour lier les champs),
              </para>
             </listitem>
             <listitem>
@@ -88,7 +91,7 @@
               requis par Salomé, ou vous ne souhaitez pas utiliser des champs existant pour 
               cet usage: il vous suffit donc d'ajouter de nouveaux champs de type "champ texte"
               (voir <xref linkend="CreationandModificationofaTrackerField" /> pour plus de détails), 
-              et ensuite de les lier (voir <xref linkend="LinkSpecialFieldsForSalome" />).
+              et ensuite de les lier (voir ci-dessous).
              </para>
             </listitem>
          </itemizedlist>
@@ -117,7 +120,7 @@
                  <step>
                     <para>
                     Choisissez l'outil de suivi que vous souhaitez utiliser avec Salome.
-                    Cette action va rafraîchir la liste des autres champs.
+                    Cette action va rafraichir la liste des autres champs.
                     </para>
                  </step>
                  <step>
@@ -163,7 +166,7 @@
         <para>Les permissions de SalomeTMF peuvent être configurées dans l'administration
         du Gestionnaire de Tests de &SYS_PRODUCT_NAME; (Administration -> Permissions).</para>
         <para>L'administrateur du projet peut configurer les permissions pour les 
-        membres du projet, pour les administrateurs du projets, et pour chaque ugroup.</para>
+        membres du projet, pour les administrateurs du projets, et pour chaque groupe d'utilisateurs défini dans le projet.</para>
         <para>Les permissions disponibles sont :
             <itemizedlist mark="bullet">
                 <listitem><para>Suite de Test:</para>
@@ -184,7 +187,7 @@
                 </itemizedlist>
                 </listitem>
             </itemizedlist>
-            
+            Notez par ailleurs qu'il existe des dépendances entre permissions. Par exemple, si un groupe peut "Ajouter" une suite de test, il pourra aussi "Modifier".
             <figure id="FigureSalomePermissionsConfiguration">
               <title>Configuration des permissions Salome</title>
               <mediaobject>
@@ -206,7 +209,9 @@
         </para>
         <para>Pour choisir les plugins à utiliser pour votre projet, suivez le lien 
         Votre projet -> Gestionnaire de Tests -> Administration -> Gestion des plugins Salome,
-        sélectionnez alors les plugins désirés, puis valider en cliquant sur le bouton Valider.</para>
+        sélectionnez alors les plugins désirés, puis validez en cliquant sur le bouton Valider.</para>
+        <para>Il faut noter qu'en focntion de la configuration du serveur, certains plugins Salome
+        peuvent ne pas être disponibles</para>
         
         <figure id="FigureSalomePluginsConfiguration">
           <title>Configuration des plugins Salome</title>
@@ -222,8 +227,8 @@
     
     <section id="SalomePreferencesConfiguration">
         <title>Préférences Salome</title>
-        <para>Les administrateurs project peuvent choisir certaines préférences pour Salome
-        pour chaque projet.
+        <para>Les administrateurs projet peuvent choisir certaines préférences pour Salome
+        par projet.
         Suivez le lien Votre projet -> Gestionnaire de Tests -> Administration -> Gestion de la configuration Salome,
         puis sélectionnez les options :</para>
         <itemizedlist mark="bullet">
@@ -234,16 +239,16 @@
             </listitem>
             <listitem>
              <para>
-                Vérouiller un plan de test si une campagne a été exécutée : 
+                Verrouiller un plan de test si une campagne a été exécutée : 
                 sélectionnez cette option si vous souhaitez que les plans de tests
-                soient vérouillées après l'exécution d'une campagne de tests.
+                soient verrouillées après l'exécution d'une campagne de tests.
              </para>
             </listitem>
             <listitem>
              <para>
-                Vérouiller la modification du tests si le test a été exécuté :
+                Verrouiller la modification du tests si le test a été exécuté :
                 sélectionnez cette option si vous souhaitez que le test soit 
-                vérouillé après son exécution.
+                verrouillé après son exécution.
                 Note : ceci implique que vous ne pourrez pas rejouer l'exécution du test.
              </para>
             </listitem>
@@ -283,9 +288,11 @@
       </mediaobject>
      </figure>
      
-     En cliquant sur le bouton le système vous demandera si vous souhaitez ouvrir 
-     l'application avec javaws (Java Web Start), répondez oui, et acceptez ensuite
-     tous les certificats.
+     En cliquant sur le bouton le système peut vous demander si vous souhaitez ouvrir 
+     l'application avec javaws (Java Web Start), répondez oui.
+     De même, acceptez ensuite tous les certificats.
+     Par contre, si Java Web Start vous propose de créer un raccourci sur votre bureau,
+     refusez: il faut toujours lancer Salome depuis &SYS_PRODUCT_NAME;.
      L'application SalomeTMF se lancera après.
     
   </section>
