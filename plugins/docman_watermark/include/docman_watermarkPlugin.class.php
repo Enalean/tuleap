@@ -50,7 +50,6 @@ class Docman_watermarkPlugin extends Plugin {
         $stamper = new Docman_watermark_Stamper($params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
         try {
             if ($stamper->check()) {
-                $stamper->load();
                 $stamper->stamp();
                 $stamper->render();
                 exit(0);

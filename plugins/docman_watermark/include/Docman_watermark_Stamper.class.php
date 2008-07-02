@@ -24,19 +24,20 @@
  * 
  */
 
-require_once("Zend/Pdf.php");
-require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
-require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
+define('FPDF_FONTPATH','/prj/codex/maalejm/tun00396/tun00396_xerox_devtrunk/usr/share/zendframework/fpdf/font/');
+require_once('fpdf/fpdf.php');
+require_once('fpdf/fpdi.php');
+require_once('fpdf/rotation.php');
 
-class Docman_watermark_Stamper {
+class Docman_watermark_Stamper extends PDF_Rotate {
     
     var $group_id;
     var $path;
+    
     var $mime_type;
     var $headers;
     var $item;
     var $user;
-    var $pdf;
     
     public function Docman_watermark_Stamper($path,$headers,$group_id,$item, $user) {
         $this->item     = $item;
@@ -44,16 +45,19 @@ class Docman_watermark_Stamper {
         $this->group_id = $group_id;
         $this->path     = $path;
         $this->headers  = $headers;
+        parent::PDF_Rotate();
     }
     
-    public function load() {
-        $this->pdf = Zend_Pdf::load($this->path);
+   function RotatedText($x,$y,$txt,$angle) {
+        $this->Rotate($angle,$x,$y);
+        $this->Text($x,$y,$txt);
+        $this->Rotate(0);
     }
-   
+    
     public function render() {
         header('Content-Type: '. $this->headers['mime_type']);
         header('Content-Disposition: filename="'. $this->headers['file_name'] .'"');
-        echo $this->pdf->render();
+        $this->output();
     }
 
     public function check() {
@@ -64,27 +68,27 @@ class Docman_watermark_Stamper {
         }
     }
 
-    
+    public function createTemplate() {
+        
+        return 'Template.pdf';
+    }
+
+
     public function stamp() {
-        $mdf    = new Docman_MetadataFactory($this->group_id);
-        $md     = $mdf->findByName('Confidentiality');
-        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
-        $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
-        foreach ($this->pdf->pages as $index => $page) {
-            $width  = $page->getWidth();
-            $height = $page->getHeight();
-            $color  = new Zend_Pdf_Color_Html('blue');
-            $stylen = new Zend_Pdf_Style();
-            $stylen->setFillColor($color);
-            $stylen->setLineColor($color);
-            $stylen->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 32);
-            $page->setStyle($stylen);
-            $page->rotate(50,150,45);
-            $page->drawRectangle(40, 40, 390, 145,SHAPE_DRAW_STROKE);
-            $page->drawText($this->user->getRealName(), 40, 125);
-            $page->drawText(date("Y-m-d H:I:s", time()), 40, 95);
-            $page->drawText($values[0]->getName(), 40, 65);
+        $pagecount = $this->setSourceFile($this->path);
+        for($i=1;$i<=$pagecount;$i++) {
+            $tplidx = $this->importPage($i, '/MediaBox');
+            $this->addPage();
+            $size = $this->getTemplateSize($tplidx);
+            $this->useTemplate($tplidx, 0, 0, $size['h'], $size['w']);
         }
+        $this->close();
+    }
+    
+    function Header() {
+        $this->SetFont('Arial','B',50);
+        $this->SetTextColor(255,192,203);
+        $this->RotatedText(30,190,'W a t e r m a r k   d e m o',45);
     }
 }
 ?>
