@@ -26,6 +26,8 @@ extends WikiDB_backend_PearDB
             }
             // esp. needed for utf databases
             if ($this->_serverinfo['version'] > 401.0) {
+                /* The following statements don't work in Codendi since the switch to utf-8. 
+                   They break character encoding. (why?)
                 global $charset;
                 $aliases = array('iso-8859-1' => 'latin1',
                                  'utf-8'      => 'utf8');
@@ -36,6 +38,7 @@ extends WikiDB_backend_PearDB
                 } else {
                     mysql_query("SET NAMES '$charset'");
                 }
+                /**/
             }
         }
     }
