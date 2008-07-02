@@ -1043,9 +1043,11 @@ function LoadFile (&$request, $filename, $text = false, $mtime = false)
     $default_pagename = rawurldecode($basename);
     if ( ($parts = ParseMimeifiedPages($text)) ) {
         usort($parts, 'SortByPageVersion');
-        foreach ($parts as $pageinfo)
+        foreach ($parts as $pageinfo) {
+            $pageinfo['pagename'] = $default_pagename;
             SavePage($request, $pageinfo, sprintf(_("MIME file %s"),
                                                   $filename), $basename);
+        }
     }
     else if ( ($pageinfo = ParseSerializedPage($text, $default_pagename,
                                                $request->getUser())) ) {
