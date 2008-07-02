@@ -24,20 +24,19 @@
  * 
  */
 
-define('FPDF_FONTPATH','/prj/codex/maalejm/tun00396/tun00396_xerox_devtrunk/usr/share/zendframework/fpdf/font/');
-require_once('fpdf/fpdf.php');
-require_once('fpdf/fpdi.php');
-require_once('fpdf/rotation.php');
+require_once("Zend/Pdf.php");
+require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
 
-class Docman_watermark_Stamper extends PDF_Rotate {
+class Docman_watermark_Stamper {
     
     var $group_id;
     var $path;
-    
     var $mime_type;
     var $headers;
     var $item;
     var $user;
+    var $pdf;
     
     public function Docman_watermark_Stamper($path,$headers,$group_id,$item, $user) {
         $this->item     = $item;
@@ -45,19 +44,16 @@ class Docman_watermark_Stamper extends PDF_Rotate {
         $this->group_id = $group_id;
         $this->path     = $path;
         $this->headers  = $headers;
-        parent::PDF_Rotate();
     }
     
-   function RotatedText($x,$y,$txt,$angle) {
-        $this->Rotate($angle,$x,$y);
-        $this->Text($x,$y,$txt);
-        $this->Rotate(0);
+    public function load() {
+        $this->pdf = Zend_Pdf::load($this->path);
     }
-    
+   
     public function render() {
         header('Content-Type: '. $this->headers['mime_type']);
         header('Content-Disposition: filename="'. $this->headers['file_name'] .'"');
-        $this->output();
+        echo $this->pdf->render();
     }
 
     public function check() {
@@ -68,27 +64,21 @@ class Docman_watermark_Stamper extends PDF_Rotate {
         }
     }
 
-    public function createTemplate() {
-        
-        return 'Template.pdf';
-    }
-
-
-    public function stamp() {
-        $pagecount = $this->setSourceFile($this->path);
-        for($i=1;$i<=$pagecount;$i++) {
-            $tplidx = $this->importPage($i, '/MediaBox');
-            $this->addPage();
-            $size = $this->getTemplateSize($tplidx);
-            $this->useTemplate($tplidx, 0, 0, $size['h'], $size['w']);
-        }
-        $this->close();
-    }
     
-    function Header() {
-        $this->SetFont('Arial','B',50);
-        $this->SetTextColor(255,192,203);
-        $this->RotatedText(30,190,'W a t e r m a r k   d e m o',45);
+    public function stamp() {
+        $mdf    = new Docman_MetadataFactory($this->group_id);
+        $md     = $mdf->findByName('Confidentiality');
+        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
+        $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
+        foreach ($this->pdf->pages as $page) {
+            $width  = $page->getWidth();
+            $height = $page->getHeight();
+            $page->drawRectangle(10, 10, $width-10, 50 +10,SHAPE_DRAW_STROKE);
+            $style = new Zend_Pdf_Style();
+            $style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 14);
+            $page->setStyle($style);
+            $page->drawText("Downloaded on :".date("Y-m-d H:I:s", time())."  by(".$this->user->getRealName().")    ".$values[0]->getName(), 10, 25+10);
+        }      
     }
 }
 ?>
