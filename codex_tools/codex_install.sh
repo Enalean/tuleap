@@ -515,6 +515,17 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
+
+# -> OpenFire
+echo "Installing OpenFire Jabber Server...."
+cd ${RPMS_DIR}/openfire
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/openfire-*.i386.rpm
+
+echo "Installing OpenFire plugins"
+cd ${newest_rpm}
+$CP helga.jar presence.jar subscription.jar /opt/openfire/plugins
+
 #####
 # CodeX RPMS
 
@@ -581,14 +592,28 @@ dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
 # -> Tomcat (for SalomeTMF)
+echo "Installing tomcat...."
 cd /usr/share
-$RM -rf apache-tomcat-6*
+#$RM -rf apache-tomcat-6*
 $TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tar.gz
 dir_entry=`$LS -1d apache-tomcat-6.*`
+$RM -f apache-tomcat-6
 $LN -sf ${dir_entry} apache-tomcat-6
-$CHOWN -R codexadm.codexadm /usr/share/apache-tomcat-6/
+TOMCAT_DIR=/usr/share/apache-tomcat-6
+$CHOWN -R codexadm.codexadm $TOMCAT_DIR
 echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
-echo "export CATALINA_HOME=/usr/share/apache-tomcat-6" >> /home/codexadm/.profile
+echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codexadm/.profile
+
+echo "Creating tomcat config file..."
+TOMCAT_USERS_XML=$TOMCAT_DIR/conf/tomcat-users.xml
+$CAT <<'EOF' > $TOMCAT_USERS_XML
+<?xml version='1.0' encoding='utf-8'?>
+<tomcat-users>
+  <role rolename="manager"/>
+  <user username="codexadm" password="$codexadm_passwd" roles="manager"/>
+</tomcat-users>
+EOF
+$CHMOD 0600 $TOMCAT_USERS_XML
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -1305,6 +1330,7 @@ $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG smb on
 $CHKCONFIG vsftpd on
+$CHKCONFIG openfire on
 
 ##############################################
 # *Last* step: install plugins
@@ -1328,7 +1354,8 @@ substitute '/etc/codex/plugins/salome/etc/database_salome.inc' '%sys_salomedbpas
 $CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/*
 $CHMOD 644 /etc/codex/plugins/docman/etc/*
 java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
-java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/soap_client/cfg/
+java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $TOMCAT_DIR/webapps/salome_tmf-soap-server-3/cfg
+## XXX why -3 ??
 
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
