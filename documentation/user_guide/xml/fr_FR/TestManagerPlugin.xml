@@ -211,7 +211,7 @@
         Votre projet -> Gestionnaire de Tests -> Administration -> Gestion des plugins Salome,
         sélectionnez alors les plugins désirés, puis validez en cliquant sur le bouton Valider.</para>
         <para>Il faut noter qu'en focntion de la configuration du serveur, certains plugins Salome
-        peuvent ne pas être disponibles</para>
+        peuvent ne pas être disponibles.</para>
         
         <figure id="FigureSalomePluginsConfiguration">
           <title>Configuration des plugins Salome</title>

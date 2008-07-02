@@ -32,13 +32,13 @@
         </listitem>
     
         <listitem>
-          <para>Tests can be executed manualy or can be automated (with SalomeTMF plugins.)</para>
+          <para>Tests can be executed manually or can be automated (with SalomeTMF plugins.)</para>
         </listitem>
     
         <listitem>
           <para>SalomeTMF is integrated in &SYS_PRODUCT_NAME;, which means that you
           don't need to create your projects in SalomeTMF. Your &SYS_PRODUCT_NAME; 
-          projects will be automatically availble in SalomeTMF, as well as the 
+          projects will be automatically available in SalomeTMF, as well as the 
           project members.</para>
         </listitem>
         
@@ -155,7 +155,7 @@
         <para>SalomeTMF permissions can be set in the &SYS_PRODUCT_NAME; Test Manager
         Administration (Administration -> Permissions).</para>
         <para>Project administrators can configure permissions for project members, project
-        admins, and for every other user group defined in the project.</para>
+        administrators, and for every other user group defined in the project.</para>
         <para>The available permissions are :
             <itemizedlist mark="bullet">
                 <listitem><para>Test Suite:</para>
@@ -195,7 +195,7 @@
     <section id="SalomePluginsConfiguration">
         <title>Salome plug-ins</title>
         <para>SalomeTMF can be extended with plug-ins.
-        Projet administrators can choose the plug-ins loaded in Salome for this project.
+        Project administrators can choose the plug-ins loaded in Salome for this project.
         </para>
         <para>To select the plug-ins to use in your project, select the link 
         Your Project -> Test Manager -> Administration -> Manage Salome Plugins,
@@ -216,12 +216,12 @@
     
     <section id="SalomePreferencesConfiguration">
         <title>Salome Preferences</title>
-        <para>Project administratorss can select some Salome preferences for each project.
+        <para>Project administrators can select some Salome preferences for each project.
         Select Your project -> Test Manager -> Administration -> Manage Salome Configuration,
         Then select the options:</para>
         <itemizedlist mark="bullet">
             <listitem>
-             <para>Include ICAL options: ICAL is a quality indicator, developped 
+             <para>Include ICAL options: ICAL is a quality indicator, developed 
              by Orange Labs. If you don't use this indicator for your project, you 
              don't need to activate it.             
              </para>
