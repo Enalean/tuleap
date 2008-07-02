@@ -21,7 +21,8 @@ function db_connect() {
     unset($sys_dbpasswd);
     if (!$conn) {
         die('Database Error - Could not connect. ' . mysql_error());
-    }    
+    }
+    mysql_query("SET NAMES 'utf8'", $conn);
     $db_selected= mysql_select_db($sys_dbname, $conn);
     if (!$db_selected) {
         die ("Database Error - Can't use database $sys_dbname: " . mysql_error());
