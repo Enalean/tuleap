@@ -56,10 +56,10 @@ class UserDao extends DataAccessObject {
      * Searches information about user and user's group(s) by UserId
      * @return DataAccessResult
      */
-    function searchGroupByUserId($userId) {
+    function searchGroupByUserId($userid) {
 
         $sql = sprintf("SELECT * FROM user JOIN user_group ON (user.user_id = user_group.user_id) LEFT JOIN groups ON (user_group.group_id = groups.group_id) WHERE user.user_id IN (%s)",
-            $this->da->escapeInt($userId));
+            $this->da->quoteSmart($userid));
 
         return $this->retrieve($sql);
     }
@@ -491,10 +491,23 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      * @return DataAccessResult
      *
      */
-    function checkUnixUid($userid) {
+    function checkUnixUid($useridarray) {
 
-        $sql = sprintf("SELECT unix_uid FROM user WHERE user_id = %d",
-                       $this->da->escapeInt($userid));
+        if(is_array($useridarray)) {
+
+            foreach ($useridarray as $uarray) {
+                $cleanuserid[] = db_escape_int($uarray);
+            }
+            
+            $userid= implode(",", $cleanuserid); 
+        }
+        else {
+            $userid = db_escape_int($useridarray);
+        }
+
+        $sql = 'SELECT unix_uid '.
+            'FROM user '.
+            'WHERE user_id IN ('.$userid.') ';
       
         return $this->retrieve($sql);
     }
@@ -506,7 +519,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      */
     function createUnixUid($userid) {
 
-        $sql = sprintf("UPDATE user SET unix_uid = ".acount_nextuid()." WHERE user_id = %d",
+        $sql = sprintf("UPDATE user SET unix_uid = ".account_nextuid()." WHERE user_id = %d",
                        $this->da->escapeInt($userid));
 
         return $this->update($sql);
@@ -526,6 +539,35 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
                        $this->da->quoteSmart($email),
                        $this->da->escapeInt($expirydate),
                        $this->da->escapeInt($userid));
+
+        return $this->update($sql);
+    }
+
+    function updateUsers($useridarray, $shell, $codexstatus, $unixstatus, $expirydate) {
+
+        if(is_array($useridarray)) {
+
+            foreach ($useridarray as $uarray) {
+                $cleanuserid[] = db_escape_int($uarray);
+            }
+            
+            $userid= implode(",", $cleanuserid); 
+        }
+        else {
+            $userid = db_escape_int($useridarray);
+        }
+
+        $cleanshell = db_escape_string($shell);
+        $cleancodexstatus = db_escape_string($codexstatus);
+        $cleanunixstatus = db_escape_string($unixstatus);
+        $cleanexpirydate = db_escape_int($expirydate);
+
+        $sql = 'UPDATE user '.
+               'SET shell = "'.$cleanshell.'", '.
+               'status = "'.$cleancodexstatus.'", '.
+               'unix_status = "'.$cleanunixstatus.'", '.
+               'expiry_date = '.$cleanexpirydate.' '.
+               'WHERE user_id IN ('.$userid.')';
 
         return $this->update($sql);
     }

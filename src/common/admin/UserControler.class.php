@@ -232,7 +232,7 @@ class UserControler extends Controler {
     function setUserParam($userid) {
 
         $dao = new UserDao(CodexDataAccess::instance());
-
+      
         if(is_array($userid)) {
             foreach($userid as $uid) {
                 $dar = $dao->searchAllByUserId($uid);
@@ -407,7 +407,7 @@ class UserControler extends Controler {
      * update user
      */
     function updateUser() {
-
+       
         $request =& HTTPRequest::instance();
         //valid parameters
 
@@ -475,8 +475,10 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
-        if ($shell && $codexstatus && $unixstatus && $email && isset($expirydate)) {
 
+        //update one user
+        if ($shell && $codexstatus && $unixstatus && $email && isset($expirydate)) {
+         
             $date = util_date_to_unixtime($expirydate);
 
             //check if unix uid exists
@@ -488,21 +490,36 @@ class UserControler extends Controler {
 
                 // create unix uid if it doesn't exists
                 if ($unixuidexist <= 0) {
-
                     $dao->createUnixUid($this->userid);
                 }
             }
             //update
             $dao->updateUser($this->userid, $shell, $codexstatus, $unixstatus, $email, $date[0]);
-
-            // Update in plugin
-            require_once('common/event/EventManager.class.php');
-            $em =& EventManager::instance();
-            $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
-                                                        'user_id' => $this->userid )); 
-
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
         }
+        //update several users
+         elseif ($shell && $codexstatus && $unixstatus && isset($expirydate)) {
+             
+             $date = util_date_to_unixtime($expirydate);
+
+             $dao->checkUnixUid($this->userid);
+
+             $unixuidexist = $dao->getFoundRows();
+
+             if ($unixuidexist <= 0) {
+                 $dao->createUnixUid($this->userid);
+             }
+
+             //update
+            $dao->updateUsers($this->userid, $shell, $codexstatus, $unixstatus, $email, $date[0]);
+
+         }
+
+         //Update in plugin
+         require_once('common/event/EventManager.class.php');
+         $em =& EventManager::instance();
+         $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
+                                                     'user_id' => $this->userid )); 
+         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
     }
     
 
@@ -562,7 +579,6 @@ class UserControler extends Controler {
                 $this->updateUser();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);
-
           }
         }
 

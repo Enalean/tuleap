@@ -121,28 +121,21 @@ class UserEditDisplay extends AdminEditDisplay {
                 $expirydate = '';
             }
         }
-        else {
-          //   if ($this->userparam[$i]['expiry_date'] != '') {
-//                 $expirydate = date('Y-n-j',$this->userparam['expiry_date']);
-//             }
-//             else {
-//                 $expirydate = '';
-//             }
-        }
        
-
-        if(isset($this->userparam['user_id']) || count($this->userparam) == 1 ) {
+        print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</h3>';
         
 
-            print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','account_info').'</h3>';
+        print '<form method="post" name="update_user" action="index.php">';
+        
+        print '<input type="hidden" name="task" value="update_user" />';
 
+    
+        
+        if(isset($this->userparam['user_id']) || count($this->userparam) == 1 ) {
             
-            print '<form method="post" name="update_user" action="index.php">';
-            
-            print '<input type="hidden" name="task" value="update_user" />';
-            
+
             print '<input type="hidden" name="user_id" value="'.$userid.'" />';
-            
+
             print '<p>Shell:';
             
             print '<select name="shell">';
@@ -188,7 +181,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             
             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
-        
+            
             print '<select name="unixstatus">';
             
             print '<option value="N"';
@@ -216,8 +209,6 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<p>Expiry Date:';
             
-            
-            
             print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
@@ -225,88 +216,20 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
             
             print '</form><hr>';
-
-            
-//             print '<select name="form_shell">';
-            
-//             for ($i = 0; $i < count($shellarray); $i++) {
-//                 print '<option value="'.$shellarray[$i].'" ';
-//                 if($this->userparam[0]['shell'] == $shellarray[$i]) print 'selected="selected"';
-//                 print ' >'.$shellarray[$i].'</option>';
-//             }
-         
-//             print '</select></p>';
-
-        
-//             print '<p>Codex Account Status:';
-
-//             print '<select name="form_codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
-
-//             print '<option value="A"';
-//             if ($this->userparam[0]['status'] == 'A') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
-            
-//             print '<option value="R"';
-//             if ($this->userparam[0]['status'] == 'R' || $this->userparam[0]['status'] == 'W') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_userlist','restricted').'</option>';
-            
-//             print '<option value="V"';
-//             if ($this->userparam[0]['status'] == 'V') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
-            
-//             print '<option value="P"';
-//             if ($this->userparam[0]['status'] == 'P') print 'selected="selected"';
-//             print '>Pending</option>';
-            
-//             print '<option value="D"';
-//             if ($this->userparam[0]['status'] == 'D') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>'; 
-            
-//             print '<option value="S"';
-//             if ($this->userparam[0]['status'] == 'S') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_userlist','suspended').'</option>';
-            
-//             print '</select></p>';
-          
-
-//             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
-            
-//             print '<select name="form_unixstatus">';
-            
-//             print '<option value="N"';
-//             if($this->userparam[0]['unix_status'] == 'N') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_usergroup','no_account').'</option>';
-
-//             print '<option value="A"';
-//             if($this->userparam[0]['unix_status'] == 'A') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_usergroup','active').'</option>';
-        
-//             print '<option value="S"';
-//             if($this->userparam[0]['unix_status'] == 'S') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_usergroup','suspended').'</option>';
-            
-//             print '<option value="D"';
-//             if($this->userparam[0]['unix_status'] == 'D') print 'selected="selected"';
-//             print '>'.$GLOBALS['Language']->getText('admin_usergroup','deleted').'</option>';
-            
-//             print '</select></p>';
-
-
-//             print '<p>Email:';
-//             print '<input name="email" value="'.$this->userparam[0]['email'].'" size="35" maxlength="55" type="text"></p>';
-        
-
-//             print '<p>Expiry Date:';
-            
-//             print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
-//             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
-         }
-         //select several user
+        }
+        //select several user
         else {
+
+            $userid = array();            
+            for($i = 0; $i < count($this->userparam); $i++) {
+                $userid[] = $this->userparam[$i]['user_id'];
+                print '<input type="hidden" name="user_id[]" value="'.$userid[$i].'" />';
+            }
+
 
             print '<p>Shell:';
             
-            print '<select name="form_shell">';
+            print '<select name="shell">';
             
             for ($i = 0; $i < count($shellarray); $i++) {
                 print '<option value="'.$shellarray[$i].'">'.$shellarray[$i].'</option>';
@@ -317,7 +240,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<p>Codex Account Status:';
             
-            print '<select name="form_codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
+            print '<select name="codexstatus" id="codexstatus" onChange="autochangeStatus(this.form)">';
             
             print '<option value="A">'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
             
@@ -336,10 +259,10 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','unix_status').':';
             
-            print '<select name="form_unixstatus">';
+            print '<select name="unixstatus">';
             
             print '<option value="N">'.$GLOBALS['Language']->getText('admin_usergroup','no_account').'</option>';
-
+            
             print '<option value="A">'.$GLOBALS['Language']->getText('admin_usergroup','active').'</option>';
             
             print '<option value="S">'.$GLOBALS['Language']->getText('admin_usergroup','suspended').'</option>';
@@ -350,23 +273,8 @@ class UserEditDisplay extends AdminEditDisplay {
             
             
             print '<p>Expiry Date:';
-
-
-//             echo '<pre>';
-//             var_dump($this->userparam[$i);
-//             echo '</pre>';
-
-            for ($i = 0; $i < count($this->userparam); $i++) {
-                if ($this->userparam[$i]['expiry_date'] != '') {
-                    $expirydate = date('Y-n-j',$this->userparam[$i]['expiry_date']);
-                }
-                else {
-                    $expirydate = '';
-                }
-            }
-
             
-            print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
+            print '<input id="expiry_date" name="expiry_date" value="" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
             
@@ -417,7 +325,6 @@ class UserEditDisplay extends AdminEditDisplay {
             print '</tr>';
 
             }
-
 
             print '</table>';
 
