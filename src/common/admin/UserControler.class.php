@@ -518,7 +518,7 @@ class UserControler extends Controler {
          //Update in plugin
          require_once('common/event/EventManager.class.php');
          $em =& EventManager::instance();
-         $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
+         $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $_POST,
                                                      'user_id' => $this->userid )); 
          $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
          $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
