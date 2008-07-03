@@ -521,21 +521,28 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
 
         if(is_array($useridarray)) {
 
+            $sql = '';
+            $update = '';
             foreach ($useridarray as $uarray) {
-                $cleanuserid[] = db_escape_int($uarray);
+                $cleanuserid = db_escape_int($uarray);
+       
+                $sql = 'UPDATE user '.
+                       'SET unix_uid = '.account_nextuid().' '.
+                       'WHERE user_id = '.$cleanuserid;
+       
+                $update .= $this->update($sql);
             }
-            
-            $userid= implode(",", $cleanuserid); 
         }
         else {
             $userid = db_escape_int($useridarray);
+        
+            $sql = 'UPDATE user '.
+                   'SET unix_uid = '.account_nextuid().' '.
+                   'WHERE user_id = '.$userid;
+
+            $update = $this->update($sql);
         }
-
-        $sql = 'UPDATE user '.
-               'SET unix_uid = '.account_nextuid().' '
-               'WHERE user_id IN ('.$userid.')';
-
-        return $this->update($sql);
+        return $update;
     }
 
     /**
@@ -556,6 +563,11 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         return $this->update($sql);
     }
 
+    /**
+     * update users informations
+     * @return DataAccessResult
+     *
+     */
     function updateUsers($useridarray, $shell, $codexstatus, $unixstatus, $expirydate) {
 
         if(is_array($useridarray)) {
