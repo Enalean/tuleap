@@ -394,6 +394,7 @@ class UserControler extends Controler {
                     } 
                     else {
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_add_ug'));
+                        $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
                     }
                 } 
                 else {
@@ -489,7 +490,7 @@ class UserControler extends Controler {
                 $unixuidexist = $dao->getFoundRows();
 
                 // create unix uid if it doesn't exists
-                if ($unixuidexist <= 0) {
+                if ($unixuidexist > 0) {
                     $dao->createUnixUid($this->userid);
                 }
             }
@@ -520,6 +521,8 @@ class UserControler extends Controler {
          $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $HTTP_POST_VARS,
                                                      'user_id' => $this->userid )); 
          $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
+         $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
+
     }
     
 
@@ -564,6 +567,8 @@ class UserControler extends Controler {
 
 
         if ($this->userid) {
+            //            header('Location:/admin/user/index.php?userid='.$this->user_id);
+            
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
         }
