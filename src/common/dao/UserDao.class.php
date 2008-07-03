@@ -517,10 +517,23 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      * @return DataAccessResult
      *
      */
-    function createUnixUid($userid) {
+    function createUnixUid($useridarray) {
 
-        $sql = sprintf("UPDATE user SET unix_uid = ".account_nextuid()." WHERE user_id = %d",
-                       $this->da->escapeInt($userid));
+        if(is_array($useridarray)) {
+
+            foreach ($useridarray as $uarray) {
+                $cleanuserid[] = db_escape_int($uarray);
+            }
+            
+            $userid= implode(",", $cleanuserid); 
+        }
+        else {
+            $userid = db_escape_int($useridarray);
+        }
+
+        $sql = 'UPDATE user '.
+               'SET unix_uid = '.account_nextuid().' '
+               'WHERE user_id IN ('.$userid.')';
 
         return $this->update($sql);
     }
