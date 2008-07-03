@@ -560,6 +560,15 @@ INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
 
+#########
+# Clear phpwiki cache (To force regeneration in utf8)
+echo "- Clear phpwiki cache"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+UPDATE wiki_page SET cached_html = '';
+
+EOF
+
 ###############################################################################
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
