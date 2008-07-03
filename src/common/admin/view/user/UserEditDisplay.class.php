@@ -100,7 +100,7 @@ class UserEditDisplay extends AdminEditDisplay {
             $unixstatus = $this->userparam['unix_status'];
             $email = $this->userparam['email'];
 
-            if ($this->userparam['expiry_date'] != '') {
+            if ($this->userparam['expiry_date'] != 0) {
                 $expirydate = date('Y-n-j',$this->userparam['expiry_date']);
             }
             else {
@@ -129,7 +129,6 @@ class UserEditDisplay extends AdminEditDisplay {
         
         print '<input type="hidden" name="task" value="update_user" />';
 
-    
         
         if(isset($this->userparam['user_id']) || count($this->userparam) == 1 ) {
             
