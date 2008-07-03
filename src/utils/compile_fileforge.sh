@@ -1,9 +1,7 @@
 #!/bin/bash
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2004. All Rights Reserved
-# This file is licensed under the CodeX Component Software License
-# http://codex.xerox.com
+# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
 #    How to compile the fileforge file. This script must be executed from root account !!

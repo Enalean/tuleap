@@ -1,13 +1,7 @@
 #!/bin/bash
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX/CodeX Team, 2004. All Rights Reserved
-# This file is licensed under the CodeX Component Software License
-# http://codex.xerox.com
-#
-# THIS FILE IS THE PROPERTY OF XEROX AND IS ONLY DISTRIBUTED WITH A
-# COMMERCIAL LICENSE OF CODEX. IT IS *NOT* DISTRIBUTED UNDER THE GNU
-# PUBLIC LICENSE.
+# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 #  $Id$
 #
