@@ -154,7 +154,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     $_question_id = (int) $question_id;
     $_choice_id = (int) $choice_id;
     $_rank = (int) $rank;
-    $_radio = htmlentities($radio);
+    $_radio = htmlentities($radio, ENT_QUOTES, 'UTF-8');
     
     $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
     $res1=db_query($qry1);
@@ -195,7 +195,7 @@ function survey_data_radio_create($question_id, $radio, $rank) {
     // cast inputs
     $_question_id = (int) $question_id;    
     $_rank = (int) $rank;
-    $_radio = htmlentities($radio);
+    $_radio = htmlentities($radio, ENT_QUOTES, 'UTF-8');
     
     if (check_for_duplicata($_question_id,$_radio)) {	
 	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.

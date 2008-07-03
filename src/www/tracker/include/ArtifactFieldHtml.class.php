@@ -367,7 +367,7 @@ class ArtifactFieldHtml extends ArtifactField {
         if (!$ro) {
             $request =& HTTPRequest::instance();
             if ($request->get('func') == 'add' && $request->exist($this->field_name)) {
-                $value = htmlentities($request->get($this->field_name), ENT_QUOTES);
+                $value = htmlentities($request->get($this->field_name), ENT_QUOTES, 'UTF-8');
             }
         }
         

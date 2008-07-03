@@ -178,7 +178,7 @@ extends Docman_ReportColumn {
                                      false,
                                      true);
         $html .= '<a href="'.$url.'">';
-        $html .=  htmlentities($item->getTitle(), ENT_QUOTES);
+        $html .=  htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
         $html .=  '</a>';
         $html .= $view->getItemMenu($item, $params);
         $html .= '</span>';

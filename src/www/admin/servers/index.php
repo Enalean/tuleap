@@ -32,14 +32,14 @@ class ServerAdmin {
             $row_num = 0;
             foreach($servers as $key => $nop) {
                 $html .= '<tr class="'. util_get_alt_row_color($row_num++) .'">';
-                $html .= '<td><a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_edit', array(htmlentities($servers[$key]->getName(), ENT_QUOTES))) .'" href="/admin/servers/edit/'. $servers[$key]->getId() .'">'. $servers[$key]->getId() .'. '. $servers[$key]->getName() .'</a></td>';
+                $html .= '<td><a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_edit', array(htmlentities($servers[$key]->getName(), ENT_QUOTES, 'UTF-8'))) .'" href="/admin/servers/edit/'. $servers[$key]->getId() .'">'. $servers[$key]->getId() .'. '. $servers[$key]->getName() .'</a></td>';
                 $html .= '<td>'. $servers[$key]->getDescription() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttp() .'</td>';
                 $html .= '<td>'. $servers[$key]->getHttps() .'</td>';
                 $html .= '<td style="text-align:center">'. ($servers[$key]->isMaster() ? $GLOBALS['Language']->getText('admin_servers', 'all_master') : '-') .'</td>';
                 $html .= '<td>';
                 if (!$servers[$key]->isMaster()) {
-                    $html .= '<a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_delete', array(htmlentities($servers[$key]->getName(), ENT_QUOTES))) .'" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a>';
+                    $html .= '<a title="'. $GLOBALS['Language']->getText('admin_servers', 'all_delete', array(htmlentities($servers[$key]->getName(), ENT_QUOTES, 'UTF-8'))) .'" href="/admin/servers/delete/'. $servers[$key]->getId() .'">'. $GLOBALS['Response']->getImage('ic/trash.png', array('alt' => 'Delete server')) .'</a>';
                 } else {
                     $html .= '-';
                 }
@@ -144,10 +144,10 @@ class ServerAdmin {
         $html  = '<form action="'. $action .'" method="POST">';
         $html .= '<table>';
         $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_id') .'</td><td><input type="text" name="server[id]" value="'. $server->getID() .'" /></td></tr>';
-        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_name') .'</td><td><input type="text" name="server[name]" value="'. htmlentities($server->getName(), ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_descr') .'</td><td><input type="text" name="server[description]" value="'. htmlentities($server->getDescription(), ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_http') .'</td><td><input type="text" name="server[http]" value="'. htmlentities($server->getHttp(), ENT_QUOTES) .'" /></td></tr>';
-        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_https') .'</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES) .'" /></td></tr>';
+        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_name') .'</td><td><input type="text" name="server[name]" value="'. htmlentities($server->getName(), ENT_QUOTES, 'UTF-8') .'" /></td></tr>';
+        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_descr') .'</td><td><input type="text" name="server[description]" value="'. htmlentities($server->getDescription(), ENT_QUOTES, 'UTF-8') .'" /></td></tr>';
+        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_http') .'</td><td><input type="text" name="server[http]" value="'. htmlentities($server->getHttp(), ENT_QUOTES, 'UTF-8') .'" /></td></tr>';
+        $html .= '<tr><td>'. $GLOBALS['Language']->getText('admin_servers', 'form_https') .'</td><td><input type="text" name="server[https]" value="'. htmlentities($server->getHttps(), ENT_QUOTES, 'UTF-8') .'" /></td></tr>';
         
         $html .= '<tr><td></td><td><input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>';
         $html .= '</table>';

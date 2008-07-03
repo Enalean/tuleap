@@ -21,8 +21,9 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
         );
     }
     function display($data) {
-        $full_name = htmlentities(isset($data['project']['form_full_name']) ? $data['project']['form_full_name'] : '', ENT_QUOTES);
-        $unix_name = htmlentities(isset($data['project']['form_unix_name']) ? $data['project']['form_unix_name'] : '', ENT_QUOTES);
+        $hp = CodeX_HTMLPurifier::instance();
+        $full_name =  $hp->purify(isset($data['project']['form_full_name']) ? $data['project']['form_full_name'] : '', CODEX_PURIFIER_CONVERT_HTML) ;
+        $unix_name =  $hp->purify(isset($data['project']['form_unix_name']) ? $data['project']['form_unix_name'] : '', CODEX_PURIFIER_CONVERT_HTML) ;
         include($GLOBALS['Language']->getContent('project/projectname'));
     }
     function onLeave($request, &$data) {

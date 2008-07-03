@@ -66,7 +66,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $email = $atsm->getNotifReviewer($owner);
         $html .= Docman::txt('details_approval_email_subject').' '.$email->getSubject()."\n";
         $html .= '<p class="docman_approval_email">';
-        $html .= htmlentities($email->getBody());
+        $html .= htmlentities($email->getBody(), ENT_COMPAT, 'UTF-8');
         $html .= '</p>';
         $backurl = $this->url.'&action=approval_create&id='.$this->item->getId();
         $html .= '<a href="'.$backurl.'">'.Docman::txt('details_approval_email_back').'</a>';

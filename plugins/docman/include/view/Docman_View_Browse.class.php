@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
         // default one
         if(isset($params['filter']) && $params['filter'] !== null) {
             if($params['filter']->getTitle() !== null && trim($params['filter']->getTitle()) != '') {
-                return htmlentities($params['filter']->getTitle());
+                return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
             }
         } 
         return parent::_getTitle($params);

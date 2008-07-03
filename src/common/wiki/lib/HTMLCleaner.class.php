@@ -43,7 +43,7 @@ class HTMLCleaner {
   }
 
   function &_cleanFull($html) {
-    return htmlentities($html);
+    return htmlentities($html, ENT_QUOTES, 'UTF-8');
   }
 
   function &clean($html, $level=HTMLCLEANER_LOW) {

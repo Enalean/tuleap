@@ -105,7 +105,7 @@ echo '</tr><tr>';
 echo '<td style="text-align:center">';
 echo '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('register_form', 'cancel') .'" /> ';
 echo '<input type="hidden" name="current_step" value="'. $current_step .'" />';
-echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES) .'" />';
+echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES, 'UTF-8') .'" />';
 echo '<input type="submit" name="next" id="project_register_next" value="'. ($current_step < count($steps) - 1 ? $GLOBALS['Language']->getText('register_form', 'next') : $GLOBALS['Language']->getText('register_title', 'intro')) .'" />';
 echo '</td></tr>';
 //{{{ Debug
