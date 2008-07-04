@@ -135,7 +135,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this._initItemHighlight(document.body);
     },
     _initItemHighlight:function(parent_element) {
-        $A(parent_element.getElementsByClassName('docman_item_title')).each(function (element) {
+        parent_element.select('.docman_item_title').each(function (element) {
             var item_ = new RegExp("^item_.*");
             //We search the first parent which has id == "item_%"
             var node = element.parentNode;
@@ -399,7 +399,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 if (element.className.match(docman_item_type_folder)) {         //collapse --> expand
                     Element.removeClassName(element, 'docman_item_type_folder');
                     Element.addClassName(element, 'docman_item_type_folder_open');
-                    var icon = element.getElementsByClassName('docman_item_icon')[0];
+                    var icon = element.select('.docman_item_icon').first();
                     icon.src = icon.src.replace('folder.png', 'folder-open.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
@@ -447,7 +447,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                 } else {           //expand --> collapse
                     Element.removeClassName(element, 'docman_item_type_folder_open');
                     Element.addClassName(element, 'docman_item_type_folder');
-                    var icon = element.getElementsByClassName('docman_item_icon')[0];
+                    var icon = element.select('.docman_item_icon').first();
                     icon.src = icon.src.replace('folder-open.png', 'folder.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
