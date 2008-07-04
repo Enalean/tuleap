@@ -82,6 +82,7 @@ class CLI_Module_Tracker extends CLI_Module {
             'submitted_by',
             'open_date',
             'close_date',
+            'last_update_date',
             'summary',
             'details',
             'severity'

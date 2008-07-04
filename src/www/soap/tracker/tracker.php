@@ -300,6 +300,7 @@ $server->wsdl->addComplexType(
         'submitted_by' => array('name'=>'submitted_by', 'type' => 'xsd:int'),
         'open_date' => array('name'=>'open_date', 'type' => 'xsd:int'),
         'close_date' => array('name'=>'close_date', 'type' => 'xsd:int'),
+        'last_update_date' => array('name'=>'last_update_date', 'type' => 'xsd:int'),
         'summary' => array('name'=>'summary', 'type' => 'xsd:string'),
         'details' => array('name'=>'details', 'type' => 'xsd:string'),
         'severity'=>array('name'=>'severity', 'type' => 'xsd:int'),
@@ -1831,7 +1832,7 @@ function artifact_to_soap($artifact) {
             }
         }
         
-        // Check Permissions on standard fields (status_id, submitted_by, open_date, close_date, summary, details, severity)
+        // Check Permissions on standard fields (status_id, submitted_by, open_date, close_date, last_update_date, summary, details, severity)
         // artifact_id
         $field_artifact_id = $art_field_fact->getFieldFromName('artifact_id');
         if ($field_artifact_id && $field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
@@ -1858,6 +1859,11 @@ function artifact_to_soap($artifact) {
         $field_close_date = $art_field_fact->getFieldFromName('close_date');
         if ($field_close_date && $field_close_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                 $return['close_date'] = $artifact->getCloseDate();
+        }
+        // last_update_date
+        $field_last_update_date = $art_field_fact->getFieldFromName('last_update_date');
+        if ($field_last_update_date && $field_last_update_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
+                $return['last_update_date'] = $artifact->getLastUpdateDate();
         }
         // summary
         $field_summary = $art_field_fact->getFieldFromName('summary');
@@ -2056,8 +2062,8 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
             // We only check the field the user is allowed to submit
             // because the Artifact create function expect only these fields in the array $vfl
             if ($used_field->userCanSubmit($group_id, $group_artifact_id, session_get_userid())) {
-                // We skip these 3 fields, because their value is automatically filled
-                if ($used_field->getName() == 'open_date' || $used_field->getName() == 'submitted_by' || $used_field->getName() == 'artifact_id') {
+                // We skip these 4 fields, because their value is automatically filled
+                if ($used_field->getName() == 'open_date' || $used_field->getName() == 'last_update_date' || $used_field->getName() == 'submitted_by' || $used_field->getName() == 'artifact_id') {
                     continue;
                 }
                 
