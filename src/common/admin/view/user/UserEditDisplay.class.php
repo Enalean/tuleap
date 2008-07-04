@@ -52,6 +52,7 @@ class UserEditDisplay extends AdminEditDisplay {
      *
      * @type string $task
      */
+    private $task;
 
     function __construct($userparam, $groupparam, $task) {
         parent::__construct();
@@ -147,7 +148,6 @@ class UserEditDisplay extends AdminEditDisplay {
             }
             
             print '</select></p>';
-            
             
             print '<p>Codex Account Status:';
             
@@ -361,10 +361,13 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
             
             print '<p><input name="Submit" value="Submit" type="submit"></p>';
+
+            print '</form>';
             
             print '<p><a href="/admin/user_changepw.php?user_id='.$userid.'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
             
-            print '</form>';
+          
+            print '<p><a href="index.php?user_id='.$userid.'&task=change_user_name">Change User Name</a></p>';
         }
     }
 

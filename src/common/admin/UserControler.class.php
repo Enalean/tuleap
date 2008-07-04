@@ -26,6 +26,7 @@ require_once('pre.php');
 require_once('common/admin/view/AdminSearchDisplay.class.php');
 require_once('common/admin/view/user/UserSearchDisplay.class.php');
 require_once('common/admin/view/user/UserEditDisplay.class.php');
+require_once('common/admin/view/user/UserChangeNameDisplay.class.php');
 require_once('www/admin/user/UserAutocompletionForm.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/dao/UserDao.class.php');
@@ -147,7 +148,12 @@ class UserControler extends Controler {
     function viewsManagement() {
      
         if ($this->userid) {
-            $view = new UserEditDisplay($this->userparam, $this->groupparam, $this->task);
+            if ($this->task = 'change_user_name') {
+                $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task);
+            }
+            else {
+                $view = new UserEditDisplay($this->userparam, $this->groupparam, $this->task);
+            }
         }
         else {
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
@@ -584,6 +590,9 @@ class UserControler extends Controler {
                 $this->updateUser();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);
+          }
+          elseif($this->task == 'change_user_name') {
+
           }
         }
 
