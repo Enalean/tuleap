@@ -42,7 +42,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 
 			 
 		if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]])){
-			echo "' value='".$hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_LIGHT);
+			echo "' value='".$hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_CONVERT_HTML);
 		}
 		echo "'></BR>" ; ;
 		
@@ -52,7 +52,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 "' wrap='virtual' cols='70' rows='8'>";
 			 
 		if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]])){
-			echo $hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_LIGHT);
+			echo $hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_CONVERT_HTML);
 		}
 		echo "</TEXTAREA></BR>" ;
 	}
