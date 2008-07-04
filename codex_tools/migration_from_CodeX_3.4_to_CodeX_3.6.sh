@@ -549,6 +549,15 @@ ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER las
 EOF
 
 ##########
+# Add column is_default in artifact_report table
+echo "- Add column is_default in artifact_report table. See SR #1160 and revision #8009 "
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+ALTER TABLE artifact_report ADD COLUMN is_default INT(11) NOT NULL DEFAULT 0 AFTER scope
+
+EOF
+
+##########
 # Install GraphOnTrackers plugin
 echo "- Add GraphonTrackers plugin schema"
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL $pass_opt codex
@@ -559,6 +568,7 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
+
 
 #########
 # Clear phpwiki cache (To force regeneration in utf8)
