@@ -79,7 +79,8 @@ class UserEditDisplay extends AdminEditDisplay {
             parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam[0]['user_name'].' (ID '.$this->userparam[0]['user_id'].')</h2>');
         }
         ?>
-            <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
+            <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>           
+                 <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
                  
                  <?php
                  }
