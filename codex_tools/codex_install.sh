@@ -40,6 +40,7 @@ TAR='/bin/tar'
 MKDIR='/bin/mkdir'
 RPM='/bin/rpm'
 CHOWN='/bin/chown'
+CHGRP='/bin/chgrp'
 CHMOD='/bin/chmod'
 FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
@@ -159,11 +160,12 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # compat-libstdc++-33 -> CVSnt
 # apr apr-util -> svn
 # xinetd -> cvs
+#    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux -> SELinux 
 rpms_ok=1
 for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd  apr apr-util mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
-   sendmail telnet bind bind-chroot ntp samba python perl-suidperl \
+   sendmail telnet bind bind-chroot caching-nameserver ntp samba python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql MySQL-python php-mbstring php-gd php-soap \
@@ -173,6 +175,7 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    dump \
    dejavu-lgc-fonts \
    compat-libstdc++-33 \
+   policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
    zip unzip enscript xinetd
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -351,6 +354,8 @@ $TOUCH /var/lib/codex/ftp/incoming/.delete_files.work
 $CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files.work
 $CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files.work
 build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
+
+$TOUCH /etc/httpd/conf.d/codex_svnroot.conf
 
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
@@ -542,6 +547,12 @@ cd ${RPMS_DIR}/codex-eclipse
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codex-eclipse-*noarch.rpm
 
+# -> codex-salome-tmf
+echo "Installing SalomeTMF plugin RPM...."
+cd ${RPMS_DIR}/codex-salome-tmf
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codex-salome-tmf-*noarch.rpm
+
 
 # Create an http password file
 $TOUCH /etc/httpd/conf/codex_htpasswd
@@ -592,28 +603,27 @@ dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
 # -> Tomcat (for SalomeTMF)
-echo "Installing tomcat...."
-cd /usr/share
-#$RM -rf apache-tomcat-6*
-$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tar.gz
-dir_entry=`$LS -1d apache-tomcat-6.*`
-$RM -f apache-tomcat-6
-$LN -sf ${dir_entry} apache-tomcat-6
-TOMCAT_DIR=/usr/share/apache-tomcat-6
-$CHOWN -R codexadm.codexadm $TOMCAT_DIR
+#echo "Installing tomcat...."
+#cd /usr/share
+#$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tar.gz
+#dir_entry=`$LS -1d apache-tomcat-6.*`
+#$RM -f apache-tomcat-6
+#$LN -sf ${dir_entry} apache-tomcat-6
+#TOMCAT_DIR=/usr/share/apache-tomcat-6
+#$CHOWN -R codexadm.codexadm $TOMCAT_DIR
 echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
-echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codexadm/.profile
+#echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codexadm/.profile
 
-echo "Creating tomcat config file..."
-TOMCAT_USERS_XML=$TOMCAT_DIR/conf/tomcat-users.xml
-$CAT <<'EOF' > $TOMCAT_USERS_XML
-<?xml version='1.0' encoding='utf-8'?>
-<tomcat-users>
-  <role rolename="manager"/>
-  <user username="codexadm" password="$codexadm_passwd" roles="manager"/>
-</tomcat-users>
-EOF
-$CHMOD 0600 $TOMCAT_USERS_XML
+#echo "Creating tomcat config file..."
+#TOMCAT_USERS_XML=$TOMCAT_DIR/conf/tomcat-users.xml
+#$CAT <<'EOF' > $TOMCAT_USERS_XML
+#<?xml version='1.0' encoding='utf-8'?>
+#<tomcat-users>
+#  <role rolename="manager"/>
+#  <user username="codexadm" password="$codexadm_passwd" roles="manager"/>
+#</tomcat-users>
+#EOF
+#$CHMOD 0600 $TOMCAT_USERS_XML
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -690,7 +700,15 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codex_full.zone 
     $CHOWN codexadm.codexadm $f
     $CHMOD 640 $f
 done
-    
+
+$CHOWN root:named /var/named/chroot/var/named/codex_full.zone
+$LN -s /var/named/chroot/etc/named.conf /etc
+$CHGRP named /var/named/chroot/etc/named.conf
+$CHGRP named /etc/named.conf
+if [ $SELINUX_ENABLED ]; then
+    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codex_full.zone
+    $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+fi
 
 # CodeX User Guide
 # a) copy the local parameters file in custom area and customize it
@@ -1332,6 +1350,15 @@ $CHKCONFIG smb on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
 
+
+##############################################
+# Set SELinux contexts and load policies
+#
+if [ $SELINUX_ENABLED ]; then
+    echo "Set SELinux contexts and load policies"
+    $INSTALL_DIR/src/utils/fix_selinux_contexts.pl
+fi
+
 ##############################################
 # *Last* step: install plugins
 #
@@ -1351,11 +1378,10 @@ build_dir /etc/codex/plugins/salome/etc codexadm codexadm 755
 $CP $INSTALL_DIR/plugins/salome/etc/salome.inc.dist /etc/codex/plugins/salome/etc/salome.inc
 $CP $INSTALL_DIR/plugins/salome/etc/database_salome.inc.dist /etc/codex/plugins/salome/etc/database_salome.inc
 substitute '/etc/codex/plugins/salome/etc/database_salome.inc' '%sys_salomedbpasswd%' "$slm_passwd" 
-$CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/*
-$CHMOD 644 /etc/codex/plugins/docman/etc/*
+$CHOWN codexadm.codexadm /etc/codex/plugins/salome/etc/*
+$CHMOD 644 /etc/codex/plugins/salome/etc/*
 java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
-java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $TOMCAT_DIR/webapps/salome_tmf-soap-server-3/cfg
-## XXX why -3 ??
+#java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $TOMCAT_DIR/webapps/salome_tmf-soap-server-3/cfg
 
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
