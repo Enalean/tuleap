@@ -439,7 +439,7 @@ class ArtifactTypeFactory extends Error {
 	 *	@param	itemname: the itemname of the new tracker
 	 *	@return id on success, false on failure.
 	 */
-	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false) {
+	function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false,&$report_mapping=array()) {
 		global $Language;
 
 		if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
@@ -529,7 +529,7 @@ class ArtifactTypeFactory extends Error {
 		// Create field factory
 		$art_report_fact = new ArtifactReportFactory();
 		
-		if ( !$art_report_fact->copyReports($atid_template,$id) ) {
+		if ( !$report_mapping = $art_report_fact->copyReports($atid_template,$id) ) {
 		  $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
 		  return false;
 		}

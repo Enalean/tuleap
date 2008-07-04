@@ -280,12 +280,15 @@ function create_project($data, $do_not_exit = false) {
         //$tracker_error = "";
         // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
         $res = $atf->getTrackerTemplatesForNewProjects();
+        $tracker_mapping = array();
+        $report_mapping = array();
         while ($arr_template = db_fetch_array($res)) {
             $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
-            $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping);
+            $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping);
             if ( !$new_at_id ) {
                 $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
             } else {
+                $tracker_mapping[$ath_temp->getID()] = $new_at_id;
                 
                 // Copy all the artifacts from the template tracker to the new tracker
                 $ath_new = new ArtifactType($group,$new_at_id);
@@ -308,15 +311,15 @@ function create_project($data, $do_not_exit = false) {
            }
         }
         
-	// Clone wiki from the template
-	$clone = new WikiCloner($template_id, $group_id);
+        // Clone wiki from the template
+        $clone = new WikiCloner($template_id, $group_id);
 
         // check if the template project has a wiki initialised
         if ($clone->templateWikiExists() and $clone->newWikiIsUsed()){
-	    //clone wiki.  
-	    $clone->CloneWiki();
-	}
-	
+            //clone wiki.  
+            $clone->CloneWiki();
+        }
+        
         //Create the summary page
         $lm =& new WidgetLayoutManager();
         $lm->createDefaultLayoutForProject($group_id, $template_id);
@@ -330,6 +333,8 @@ function create_project($data, $do_not_exit = false) {
         // Raise an event for plugin configuration
         $em =& EventManager::instance();
         $em->processEvent('register_project_creation', array(
+            'reportMapping'  => $report_mapping,
+            'trackerMapping' => $tracker_mapping,
             'ugroupsMapping' => $ugroup_mapping,
             'group_id'       => $group_id
         ));

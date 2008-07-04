@@ -55,11 +55,11 @@ class ArtifactReportFactory extends Error {
 	 */
 	function copyReports($atid_source,$atid_dest) {
 	  global $Language;
-
+        $report_mapping = array(100 => 100); //The system report 'Default' (sic)
 		//
 		// Copy artifact_report records which are not individual/personal
 		//
-	    $sql="SELECT report_id,user_id,name,description,scope ".
+	    $sql="SELECT report_id,user_id,name,description,scope,is_default ".
 		"FROM artifact_report ".
 		"WHERE group_artifact_id='". db_ei($atid_source) ."'" .
 	        "AND scope != 'I'";
@@ -69,8 +69,8 @@ class ArtifactReportFactory extends Error {
 	    $res = db_query($sql);
 	
 	    while ($report_array = db_fetch_array($res)) {
-	    	$sql_insert = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope) VALUES ('. db_ei($atid_dest) .','. db_ei($report_array["user_id"]) .
-	    				  ',"'. db_es($report_array["name"]) .'","'. db_es($report_array["description"]) .'","'. db_es($report_array["scope"]) .'")';
+	    	$sql_insert = 'INSERT INTO artifact_report (group_artifact_id,user_id,name,description,scope,is_default) VALUES ('. db_ei($atid_dest) .','. db_ei($report_array["user_id"]) .
+	    				  ',"'. db_es($report_array["name"]) .'","'. db_es($report_array["description"]) .'","'. db_es($report_array["scope"]) .'","'. db_es($report_array["is_default"]) .'")';
 	    				  
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
@@ -79,7 +79,7 @@ class ArtifactReportFactory extends Error {
 			}
 			
 			$report_id = db_insertid($res_insert,'artifact_report','report_id');
-
+            $report_mapping[$report_array["report_id"]] = $report_id;
 			//
 			// Copy artifact_report_field records
 			//
@@ -112,7 +112,7 @@ class ArtifactReportFactory extends Error {
 
 		} // while
 			
-		return true;
+		return $report_mapping;
 
 	}
 
