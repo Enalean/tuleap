@@ -16,7 +16,7 @@ $Language->loadLanguageMsg('admin/admin');
 $HTML->header(array('title'=>$Language->getText('admin_show_license','title')));
 
 // display the license
-include($Language->getContent('admin/codex_license_terms'));
+include($Language->getContent('admin/license_terms'));
 
 $HTML->footer(array());
 

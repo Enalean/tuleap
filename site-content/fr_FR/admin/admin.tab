@@ -80,7 +80,7 @@ admin_utils	menu	Accueil admin. site
 # Script: SF/www/admin/approve_license.php
 #
 admin_approve_license	title	Termes de la licence $1 - Approbation
-admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Décliner" et en cliquant sur le bouton "Continuer" en bas de page.
+admin_approve_license	msg_accept	Merci d'indiquer si vous acceptez ou non les termes de la licence en choisissant soit l'option "Accepter" ou bien l'option "Décliner" et en cliquant sur le bouton "Continuer" en bas de page. Vous pouvez aussi accéder à une <a href="http://fsffrance.org/gpl/gpl-fr.fr.html">traduction en français de la licence GPL v2</a>
 admin_approve_license	accept	Accepter
 admin_approve_license	decline	Décliner
 admin_approve_license	continue	Continuer

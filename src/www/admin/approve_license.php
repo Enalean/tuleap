@@ -40,7 +40,7 @@ $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title'
 	echo '<p>'.$Language->getText('admin_approve_license', 'msg_accept');
  
 	// display the license and the agree/disagree buttons
-	include($Language->getContent('admin/codex_license_terms'));
+	include($Language->getContent('admin/license_terms'));
 
         echo '</td></tr>
              <tr VALIGN="MIDDLE" class="boxtitle">
