@@ -1206,7 +1206,7 @@ INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description,
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (3, 100, 'Support Requests', 'Support Requests Tracker', 'SR', 0, NULL, NULL, 1, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (4, 100, 'Empty', 'Empty Tracker', '', 0, NULL, NULL, 0, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (5, 100, 'Patches', 'Patch Tracker', 'patch', 0,NULL, NULL, 0, 0);
-INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (6, 100, 'Salome Bug', 'Salome Bug Tracker', 'slmbug', 1, NULL, NULL, 0, 0);
+INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (6, 100, 'Salome Bug', 'Salome Bug Tracker', 'slmbug', 1, NULL, NULL, 1, 0);
 INSERT INTO artifact_group_list (group_artifact_id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions, instantiate_for_new_projects, stop_notification) VALUES (7, 100, 'Scrum Backlog', 'Scrum backlog used to store user stories and to plan sprints', 'story', 1, NULL, NULL, 1, 0);
 --
 -- This tracker has the id 100 to force the next id to be greater than 100
@@ -1830,7 +1830,7 @@ INSERT INTO artifact_report VALUES (100,100,100,'Default','The system default ar
 INSERT INTO artifact_report VALUES (2,2,100,'Tasks','Tasks Report','P',0);
 INSERT INTO artifact_report VALUES (3,3,100,'SR','Support Requests Report','P',0);
 INSERT INTO artifact_report VALUES (4,1,100,'Bugs','Bugs Report','P',0);
-INSERT INTO artifact_report VALUES (5,6,100,'Salome Bugs','Salome Bugs Report','P',0);
+INSERT INTO artifact_report VALUES (5,6,100,'Salome Bugs','Salome Bugs Report','P',1);
 INSERT INTO artifact_report VALUES (6,7,100,'Scrum','Scrum Report','P',1);
 
 --
