@@ -579,6 +579,22 @@ UPDATE wiki_page SET cached_html = '';
 
 EOF
 
+##############################################
+# Scrum Backlog tracker install
+
+read -p "Install the Scrum Backlog tracker ? [yn]: " yn
+if [ "$yn" = "n" ]; then
+    echo "Scrum Backlog tracker's installation skiped !"
+else
+    echo "Installing Scrum Backlog tracker ..."
+    $CAT <<EOF | $PHP
+    <?php
+    require_once('$INSTALL_DIR/codex_tools/tracker_migration_from_CodeX_34_to_36.php');
+    ?>
+    EOF
+    echo "Scrum Backlog tracker installation completed !"
+fi
+
 ###############################################################################
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
