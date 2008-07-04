@@ -230,7 +230,7 @@ account_register	realname_directions	&nbsp;
 account_register	email	Email Address
 account_register	email_directions	<em><strong>Remark:</strong> This email address will be verified before account activation. Please use approved email address only.</em>
 account_register	expiry_date	Expiration Date
-account_register	expiry_date_directions	<em><strong>Remark:</strong> Once this date passed, the account will be suspended.Leave it blanck if you don't want an expiration date.</em>
+account_register	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when the date is reached. Leave blank if you don't want an expiration date.</em>
 account_register	data_not_parsed	       Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format. 
 account_register	tz	Timezone
 account_register	mandatory	Fields marked with $1 are mandatory.
