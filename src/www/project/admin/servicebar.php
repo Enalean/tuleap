@@ -248,6 +248,7 @@ if ($func=='do_update') {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
     }
     $set_server_id = '';
+    $server_id = $request->getValidated('server_id', 'uint');
     if (user_is_super_user() && $server_id) {
         $set_server_id = ", location = 'satellite', server_id = ". (int)$server_id .' ';
     }
