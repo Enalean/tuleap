@@ -415,6 +415,7 @@ class Layout extends Response {
             case 'file':
             case 'tracker':
             case 'wiki':
+            case 'salome':
                 break;
             default:
                 $this->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
