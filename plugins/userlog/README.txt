@@ -1,4 +1,3 @@
-This is the readme of the plugin.
-You should put here any useful information about 
-the plugin : install, configuration, ...
+UserLog Plugin:
+Advanced user activity logging. To answer to question "Who did what, and when".
 
