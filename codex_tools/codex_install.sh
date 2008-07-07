@@ -627,6 +627,9 @@ echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
+[client]
+default-character-set=utf8
+
 [mysqld]
 default-character-set=utf8
 log-bin=codex-bin
