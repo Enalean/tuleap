@@ -70,7 +70,7 @@ $desc_rank= trim($request->get('form_rank'));
 $desc_required= $request->get('form_required');
 
 if ($add_desc || $update) {
-	
+
 	//data validation
 	$valid_data=1;
 	if (!$desc_name||!$desc_description||!$desc_rank) {
@@ -141,6 +141,7 @@ $hp = CodeX_HTMLPurifier::instance();
 
 $update_fields_desc_id=$request->get('update_fields_desc_id');
 if($update_fields_desc_id){
+	
 	$sql = "SELECT * FROM group_desc WHERE group_desc_id='".$update_fields_desc_id."'";
 	$result_update = db_query($sql);
 	$row_update = db_fetch_array($result_update);
@@ -204,11 +205,11 @@ if($update_fields_desc_id){
 	
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		
-		$desc_name=$descfieldsinfos[$i]["desc_name"];
-		if(preg_match('/(.*):(.*)/', $desc_name, $matches)) {
+		$desc_name_inst=$descfieldsinfos[$i]["desc_name"];
+		if(preg_match('/(.*):(.*)/', $desc_name_inst, $matches)) {
 			
 			if ($Language->hasText($matches[1], $matches[2])) {
-	    		$desc_name = $Language->getText($matches[1], $matches[2]);
+	    		$desc_name_inst = $Language->getText($matches[1], $matches[2]);
 			}
 		}
 		$desc_desc=$descfieldsinfos[$i]["desc_description"];
@@ -222,7 +223,7 @@ if($update_fields_desc_id){
 	
 		echo "<TR class='".util_get_alt_row_color($i)."'>";
 	
-		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name,CODEX_PURIFIER_LIGHT)."</a></TD>";
+		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODEX_PURIFIER_LIGHT)."</a></TD>";
 		echo "<TD align='center'>".$hp->purify($desc_desc,CODEX_PURIFIER_LIGHT)."</TD>";
 		if($descfieldsinfos[$i]['desc_required']==0){
 			echo "<TD align='center'><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
