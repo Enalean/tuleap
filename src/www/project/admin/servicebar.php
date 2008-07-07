@@ -60,6 +60,7 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
         case 'docman':
         case 'file':
         case 'forum':
+        case 'salome':
         case 'cvs':
         case 'tracker':
             echo $Language->getText('project_admin_editservice','conf_inherited_yes');;
