@@ -388,7 +388,7 @@ admin_servers	info_notupdated	Server <em>$1</em> has not been updated
 #
 admin_desc_fields	title	Description Fields Edition
 admin_desc_fields	header	Description Fields Edition
-admin_desc_fields	header_add	Add a Description Fields 
+admin_desc_fields	header_add	Add a Description Field 
 admin_desc_fields	desc_name	Field Name
 admin_desc_fields	desc_description	Field Description
 admin_desc_fields	desc_required	Is Required
