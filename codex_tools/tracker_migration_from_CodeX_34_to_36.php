@@ -227,6 +227,10 @@ $sql= 'INSERT INTO artifact_report_field VALUES ('.$artifact_report_id.',"status
 mysql_query($sql);
 
 //table permissions
+
+$sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("TRACKER_ACCESS_FULL","'.$artifact_group_id.'",1)';
+mysql_query($sql);
+
 $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("TRACKER_FIELD_READ","'.$artifact_group_id.'#1",1)';
 mysql_query($sql);
 $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("TRACKER_FIELD_READ","'.$artifact_group_id.'#2",1)';
