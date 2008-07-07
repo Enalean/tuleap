@@ -151,12 +151,13 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 #
 # gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
 # xorg-x11-deprecated-libs -> docbook/java
-# libart_lgpl perl-Time-HiRes -> munin
+# libart_lgpl perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 -> munin
 # zip, unzip -> CLI client
 # dump -> backup_job
 # dejavu-lgc-fonts -> jpgraph
 #rpm -Uvh cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
-# Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec perl-Time-HiRes
+# php-xml -> jabbex
+# Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec
 # compat-libstdc++-33 -> CVSnt
 # apr apr-util -> svn
 # xinetd -> cvs
@@ -166,9 +167,9 @@ for rpm in openssh-server openssh openssh-clients openssh-askpass \
    httpd  apr apr-util mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind bind-chroot caching-nameserver ntp samba python perl-suidperl \
-   python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset \
+   python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring php-gd php-soap \
+   mysql MySQL-python php-mbstring php-gd php-soap php-xml \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    libart_lgpl  \
@@ -426,8 +427,8 @@ $LN -sf $newest_jre jre
 # default priority for gcj seems(?) 1420 -> use 10000 for Sun JRE.
 /usr/sbin/alternatives --install /usr/bin/java java /usr/java/jre/bin/java 10000 \
     --slave /usr/bin/rmiregistry rmiregistry /usr/java/jre/bin/rmiregistry \
-    --slave /usr/bin/keytool keytool /usr/java/jre/bin/keytool \
-    --slave /usr/lib/jvm/jre jre /usr/java/jre
+    --slave /usr/bin/keytool keytool /usr/java/jre/bin/keytool
+#    --slave /usr/lib/jvm/jre jre /usr/java/jre
 # Note: /usr/sbin/alternatives --set java /usr/java/jre/bin/java seems useless??
 
 # -> cvs
@@ -439,8 +440,13 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> subversion
-# Neon is used by other RPMS (cadaver...)
-echo "Installing Subversion and Neon RPMs for CodeX.... In case of conflict with neon, re-install the RPMs with --nodeps or remove neon dependencies"
+# Neon is used by other RPMS (cadaver...) that will conflict when upgrading the RPM
+$RPM --quiet -q cadaver
+if [ $? -eq 0 ]; then
+  echo "Removing Cadaver RPM (conflicts with newer Neon libs)"
+  $RPM -e cadaver
+fi
+echo "Installing Subversion and Neon RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
@@ -844,6 +850,8 @@ GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
 fi
+# Password has changed
+pass_opt="--password=$rt_passwd"
 
 if [ $freshdb -eq 1 ]; then
 echo "Populating the CodeX database..."
@@ -885,7 +893,8 @@ fi
 if [ $freshdb -eq 1 ]; then
 echo "Populating the SalomeTMF database..."
 cd $INSTALL_DIR/plugins/salome/db
-$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_init.sql   # create the DB
+$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_structure.sql   # create the DB
+$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_initvalues.sql  # init the DB
 fi
 
 
