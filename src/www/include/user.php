@@ -387,7 +387,7 @@ function user_get_language() {
 	$result=user_get_result_set(user_getid());
 	$lang_id = db_result($result,0,'language_id');
     }
-    if (!$lang_id) { $lang_id = $GLOBALS['sys_lang']; }
+    if (!isset($lang_id) || !$lang_id) { $lang_id = $GLOBALS['sys_lang']; }
     return $lang_id;
 }
 
