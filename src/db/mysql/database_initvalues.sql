@@ -1353,14 +1353,14 @@ INSERT INTO artifact_field VALUES (27,6,11,'originator_email',1,'TF','20/40','Or
 INSERT INTO artifact_field VALUES (28,6,11,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (29,6,12,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
 INSERT INTO artifact_field VALUES (30,6,12,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
-INSERT INTO artifact_field VALUES (31,6,13,'slm_environment',1,'TF','60/150','Environment','Associated Salomé TMF environment','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (32,6,13,'slm_campaign',1,'TF','60/150','Campaign','Associated Salomé TMF campaign','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (33,6,13,'slm_family',1,'TF','60/150','Family','Associated Salomé TMF family','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (34,6,13,'slm_suite',1,'TF','60/150','Suite','Associated Salomé TMF suite','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (35,6,13,'slm_test',1,'TF','60/150','Test','Associated Salomé TMF test','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (36,6,13,'slm_action',1,'TF','60/150','Action','Associated Salomé TMF action','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (37,6,13,'slm_execution',1,'TF','60/150','Execution','Associated Salomé TMF execution','',0,0,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (38,6,13,'slm_dataset',1,'TF','60/150','Data Set','Associated Salomé TMF data set','',0,0,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (31,6,13,'slm_environment',1,'TF','60/150','Environment','Associated Salomé TMF environment','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (32,6,13,'slm_campaign',1,'TF','60/150','Campaign','Associated Salomé TMF campaign','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (33,6,13,'slm_family',1,'TF','60/150','Family','Associated Salomé TMF family','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (34,6,13,'slm_suite',1,'TF','60/150','Suite','Associated Salomé TMF suite','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (35,6,13,'slm_test',1,'TF','60/150','Test','Associated Salomé TMF test','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (36,6,13,'slm_action',1,'TF','60/150','Action','Associated Salomé TMF action','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (37,6,13,'slm_execution',1,'TF','60/150','Execution','Associated Salomé TMF execution','',0,1,1,0,NULL,'');
+INSERT INTO artifact_field VALUES (38,6,13,'slm_dataset',1,'TF','60/150','Data Set','Associated Salomé TMF data set','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (39,6,11,'slm_priority',2,'SB','','Salome Priority','Salome Priority involved in QSScore calculation. Please do not modify it.','',0,1,1,0,NULL,'2');
 -- Scrum Backlog tracker
 INSERT INTO artifact_field VALUES (1,7,14,'submitted_by',5,'SB', '', 'Submitted by','User who originally submitted the artifact','',0,1,1,1,'artifact_submitters','');
@@ -2383,6 +2383,15 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#8',2);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#9',2);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#20',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#31',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#32',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#33',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#34',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#35',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#36',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#37',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#38',2);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','6#39',2);
 
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#1',1);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_READ','6#2',1);
@@ -2450,6 +2459,14 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#29',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#30',3);
 
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#31',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#32',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#33',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#34',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#35',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#36',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#37',3);
+INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#38',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','6#39',3);
 
 -- SCRUM
