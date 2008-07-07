@@ -3355,7 +3355,7 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 # Structure de la table 'layouts_contents'
 # 
 DROP TABLE IF EXISTS cross_references;
-CREATE TABLE IF NOT EXISTS cross_ref (
+CREATE TABLE IF NOT EXISTS cross_references (
   id int(11) unsigned NOT NULL AUTO_INCREMENT, 
   created_at INT(11) NOT NULL DEFAULT '0',
   user_id INT(11) unsigned NOT NULL DEFAULT '0',

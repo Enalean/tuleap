@@ -569,6 +569,29 @@ INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
 
+##########
+# Create table for Cross references 
+echo "- Create Table in DB for Cross References (see rev # ) "
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+CREATE TABLE IF NOT EXISTS cross_references (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT, 
+  created_at INT(11) NOT NULL DEFAULT '0',
+  user_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  source_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  target_id INT(11) unsigned NOT NULL DEFAULT '0',
+  target_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (id)
+  
+) TYPE=MyISAM;
+
+
+
+EOF
+
 
 #########
 # Clear phpwiki cache (To force regeneration in utf8)
