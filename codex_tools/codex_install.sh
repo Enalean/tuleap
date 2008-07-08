@@ -711,12 +711,16 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codex_full.zone 
 done
 
 $CHOWN root:named /var/named/chroot/var/named/codex_full.zone
-$LN -s /var/named/chroot/etc/named.conf /etc
-$CHGRP named /var/named/chroot/etc/named.conf
-$CHGRP named /etc/named.conf
+#$LN -s /var/named/chroot/etc/named.conf /etc
+if [ -f "/var/named/chroot/etc/named.conf" ]; then
+   $CHGRP named /var/named/chroot/etc/named.conf
+fi
+
 if [ $SELINUX_ENABLED ]; then
     $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codex_full.zone
-    $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+    if [ -f "/var/named/chroot/etc/named.conf" ]; then
+        $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+    fi
 fi
 
 # CodeX User Guide
@@ -919,7 +923,8 @@ echo "Configuring Mailman..."
 #$LN -sf $MAILMAN_DIR /usr/local/mailman ???
 
 # Update Mailman config
-$CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+if [ "$disable_subdomains" != "y" ]; then
+    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
 DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
 DEFAULT_URL_HOST = 'lists.$sys_default_domain'
 add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
@@ -932,6 +937,18 @@ IMAGE_LOGOS = 0
 #PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
 
 EOF
+else
+    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+# Remove images from Mailman pages (GNU, Python and Mailman logos)
+IMAGE_LOGOS = 0
+
+# Uncomment to run Mailman on secure server only
+#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
+#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
+
+EOF
+fi
+
 # Compile file
 `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
 
