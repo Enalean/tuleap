@@ -70,6 +70,29 @@ class Rule_EmailTest extends UnitTestCase {
         $this->assertFalse($r->isValid("user@codex.domain.com\0user@codex.domain.com"));
     }
 
+    function testMultipleEmails() {
+        $r = new Rule_Email(',');
+
+        $this->assertTrue($r->isValid("user@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codex.domain.com, user2@codex.domain.com"));
+
+        $this->assertFalse($r->isValid("user@codex.domain.com; user2@codex.domain.com"));
+        $this->assertFalse($r->isValid("user@codex.domain.com, toto l'asticot"));
+        $this->assertFalse($r->isValid("toto l'asticot, user@codex.domain.com"));
+        $this->assertFalse($r->isValid("toto l'asticot"));
+    }
+
+    function testMultipleEmailsMultipleSeparator() {
+        $r = new Rule_Email('[,;]');
+
+        $this->assertTrue($r->isValid("user@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codex.domain.com, user2@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codex.domain.com; user2@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codex.domain.com; user2@codex.domain.com, user3@codex.domain.com"));
+
+        $this->assertFalse($r->isValid("user@codex.domain.com; toto l'asticot, user3@codex.domain.com"));
+    }
+
 }
 
 ?>

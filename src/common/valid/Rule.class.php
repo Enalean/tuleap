@@ -220,9 +220,31 @@ extends Rule {
  * This rule is influenced by a global variable 'sys_disable_subdomain'. If
  * this variable is set (no subdomain for codex) and only in this case, emails
  * like 'user@codex' are allowed.
+ *
+ * The faulty email address is available with $this->getErrorMessage();
  */
 class Rule_Email
 extends Rule {
+    var $separator;
+
+    function Rule_Email($separator = null) {
+        $this->separator = $separator;
+    }
+
+    function isValid($val) {
+        if($this->separator !== null) {
+            // If separator is defined, split the string and check each email.
+            $emails = split($this->separator, $val);
+            $valid = true;
+            while((list($key,$email) = each($emails)) && $valid) {
+                $valid = $valid & $this->validEmail(trim(rtrim($email)));
+            }
+        } else {
+            // $val must contains only one email address
+            $valid = $this->validEmail($val);
+        }
+        return $valid;
+    }
 
     /**
      * Check email validity
@@ -230,17 +252,19 @@ extends Rule {
      * Important note: this is very important to keep the 'D' regexp modifier
      * as this is the only way not to be bothered by injections of \n into the
      * email address.
+     *
+     * Spaces are allowed at the beginning and the end of the address.
      */
-    function isValid($val) {
+    function validEmail($email) {
         $valid_chars='-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
         if (array_key_exists('sys_disable_subdomains', $GLOBALS)
             && $GLOBALS['sys_disable_subdomains']) {
-            $valid_domain='['.$valid_chars.']+$';
+            $valid_domain='['.$valid_chars.']+';
         } else {
-            $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+$';
+            $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+';
         }
-        $regexp = '/^['.$valid_chars.']+'.'@'.$valid_domain.'/D';
-        return preg_match($regexp, $val);
+        $regexp = '/^['.$valid_chars.']+'.'@'.$valid_domain.'$/D';
+        return preg_match($regexp, $email);
     }
 }
 

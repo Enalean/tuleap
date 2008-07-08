@@ -19,18 +19,23 @@ $Language->loadLanguageMsg('svn/svn');
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
-    $vML = new Valid_Email('form_mailing_list');
+    $vML = new Valid_Email('form_mailing_list', ',');
     $vHeader = new Valid_String('form_mailing_header');
-    if($request->valid($vML) && $request->valid($vHeader)) {
-        $form_mailing_list = $request->get('form_mailing_list');
-        $form_mailing_header = $request->get('form_mailing_header');
-        $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
-        if ($ret) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+    if($request->valid($vML)) {
+        if($request->valid($vHeader)) {
+            $form_mailing_list = $request->get('form_mailing_list');
+            $form_mailing_header = $request->get('form_mailing_header');
+            $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
+            if ($ret) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
+            }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
         }
     } else {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
         $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
     }
 }

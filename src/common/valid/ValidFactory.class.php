@@ -122,8 +122,19 @@ extends Valid_String {
  */
 class Valid_Email
 extends Valid_String {
+    var $separator;
+
+    function Valid_Email($key=null, $separator=null) {
+        if(is_string($separator)) {
+            $this->separator = $separator;
+        } else {
+            $this->separator = null;
+        }
+        parent::Valid_String($key);
+    }
+
     function validate($value) {
-        $this->addRule(new Rule_Email());
+        $this->addRule(new Rule_Email($this->separator));
         return parent::validate($value);
     }
 }
