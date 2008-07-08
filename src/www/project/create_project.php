@@ -284,10 +284,12 @@ function create_project($data, $do_not_exit = false) {
         $report_mapping = array();
         while ($arr_template = db_fetch_array($res)) {
             $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
-            $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping);
+            $report_mapping_for_this_tracker = array();
+            $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
             if ( !$new_at_id ) {
                 $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
             } else {
+                $report_mapping = $report_mapping + $report_mapping_for_this_tracker
                 $tracker_mapping[$ath_temp->getID()] = $new_at_id;
                 
                 // Copy all the artifacts from the template tracker to the new tracker
