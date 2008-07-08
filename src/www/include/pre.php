@@ -199,6 +199,8 @@ $sys_datefmt_short = $Language->getText('system','datefmt_short');
 
 $Language->loadLanguageMsg('include/include');
 
+EventManager::instance()->processEvent('plugin_load_language_file', null);
+
 //insert this page view into the database
 if(!IS_SCRIPT) {
     require_once('logger.php');

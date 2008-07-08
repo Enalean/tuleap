@@ -52,6 +52,13 @@ if (isset($func)) {
 	
         if ($res) {
             group_add_history('added_user',$form_unix_name,$group_id,array($form_unix_name));
+           	//zak added
+            // Raise an event for plugin configuration
+	        $em =& EventManager::instance();
+	        $em->processEvent('added_user_to_project', array(
+            'user_unix_name' => $form_unix_name,
+            'group_id'       => $group_id
+       		 ));
         }
 
     } else if ($func=='rmuser') {
@@ -290,14 +297,22 @@ $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name,user.stat
 		     "AND user_group.group_id=$group_id");
 
 print '<TABLE WIDTH="100%" BORDER="0">';
-
+$em =& EventManager::instance();
+$user_helper = new UserHelper();
 while ($row_memb=db_fetch_array($res_memb)) {
-    $showname=$row_memb['realname'];
+    $display_name = '';
+    $em->processEvent('get_user_display_name', array(
+        'user_id'           => $row_memb['user_id'],
+        'user_display_name' => &$display_name
+    ));
+    if (!$display_name) {
+        $display_name = $user_helper->getDisplayNameFromUserId($row_memb['user_id']);
+    }
     print '<FORM ACTION="'. $PHP_SELF .'" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
-	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $hp->purify($showname, CODEX_PURIFIER_CONVERT_HTML) .'&nbsp;&nbsp;('.$row_memb['user_name'].') </A></TD></TR>';
+	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A></TD></TR>';
 }
 
 print '</TABLE> <HR NoShade SIZE="1">';

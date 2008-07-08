@@ -11,7 +11,7 @@ require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/include/TemplateSingleton.class.php');
-
+require_once('common/event/EventManager.class.php');
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -44,6 +44,23 @@ if ($Update) {
 	$feedback .= $Language->getText('admin_groupedit','feedback_info');
 
 	$group = group_get_object($group_id,false,true);
+	
+	//***********zak added to
+	// Raise an event for group update 
+        $em =& EventManager::instance();
+        if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
+	        $em->processEvent('project_is_suspended_or_pending', array(
+	            'group_id'       => $group_id
+	        ));
+        }else if(isset($form_status) && $form_status && $form_status=="A" ){
+        	$em->processEvent('project_is_active', array(
+	            'group_id'       => $group_id
+	        ));
+        }else if(isset($form_status) && $form_status && $form_status=="D"){
+        	$em->processEvent('delete_project', array('group_id' => $group_id ));
+        }
+        
+      //**************  
 
 }
 

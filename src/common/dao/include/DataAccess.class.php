@@ -18,6 +18,11 @@ class DataAccess {
     var $db;
     
     /**
+     * store the database name used to instantiate the connection
+     */
+    public $db_name;
+    
+    /**
     * Constucts a new DataAccess object
     * @param $host string hostname for dbserver
     * @param $user string dbserver user
@@ -30,6 +35,7 @@ class DataAccess {
         mysql_query("SET NAMES 'utf8'", $this->db);
         if ($this->db) {
             mysql_select_db($db,$this->db);
+            $this->db_name = $db;
         }
     }
     var $store;

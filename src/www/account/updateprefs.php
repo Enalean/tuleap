@@ -81,6 +81,11 @@ if($username_display !== null) {
     user_set_preference("username_display", $username_display);
 }
 
+
+//plugins specific preferences
+$em = EventManager::instance();
+$em->processEvent('update_user_preferences_appearance', array('request' => $request));
+
 //
 // Output
 //

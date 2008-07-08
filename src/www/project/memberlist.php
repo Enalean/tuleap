@@ -49,22 +49,31 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 
 $title_arr=array();
 $title_arr[]=$Language->getText('project_memberlist','developer');
-$title_arr[]=$Language->getText('project_memberlist','username');
 $title_arr[]=$Language->getText('project_export_artifact_history_export','email');
 $title_arr[]=$Language->getText('project_memberlist','skills');
+
+$em = EventManager::instance();
+$user_helper = new UserHelper();
 
 echo html_build_list_table_top ($title_arr);
 
 $res_memb = db_query($query);
 while ( $row_memb=db_fetch_array($res_memb) ) {
+    $display_name = '';
+    $em->processEvent('get_user_display_name', array(
+        'user_id'           => $row_memb['user_id'],
+        'user_display_name' => &$display_name
+    ));
+    if (!$display_name) {
+        $display_name = $user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']);
+    }
 	print "\t<tr>\n";
 	print "\t\t";
 	if ( $row_memb['admin_flags']=='A' ) {
-		print '<td><b><A href="/users/'. $row_memb['user_name'] .'/">'. $hp->purify($row_memb['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</A></b></td>\n";
+		print '<td><b><A href="/users/'. $row_memb['user_name'] .'/">'. $display_name ."</A></b></td>\n";
 	} else {
-		print "\t\t<td>".  $hp->purify($row_memb['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</td>\n";
+		print "\t\t<td>".  $display_name ."</td>\n";
 	}
-	print "\t\t<td align=\"center\"><A href=\"/users/$row_memb[user_name]/\">$row_memb[user_name]</A></td>\n";
 
 	print "\t\t<td align=\"center\"><A href=\"mailto:".$row_memb['email']."\">".$row_memb['email']."</A></td>\n";
 

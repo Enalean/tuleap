@@ -1,0 +1,72 @@
+plugin_im	description	Instant Messaging Plugin. Provides the possibility exchange instant messaging.
+plugin_im	name	Instant Messaging
+plugin_im	version	1.0
+plugin_im	link_im_admin_title Instant	Messaging 
+
+plugin_im	no_other_member	No other members in this group
+
+plugin_im	my_roster	My LM Roster .
+plugin_im	service_used	Available service (IM) .
+plugin_im	service_not_used	IM services are not available . 
+plugin_im	toolbar_admin	Administration
+plugin_im	toolbar_test	Test
+plugin_im	toolbar_index	Home
+plugin_im	toolbar_shared_group	Install Shared Group.
+plugin_im	toolbar_muc_room	Install muc Room. 
+plugin_im	confirm_muc_installation	Confirm multiple chat room installation !!!
+plugin_im	im_user_login	Instant Messaging Login
+plugin_im	desc	to be updated after !!
+plugin_im	menu_title	Instant Messaging menu
+plugin_im	im_cient_title	You have the pssibility to choice several Instant messaging clients
+plugin_im	im_roster_member	Roster members
+
+plugin_im	title	Instant Messaging administration
+plugin_im	im_user_login	Login Instant Messaging:
+plugin_im	muc_delete	is delete from Instant Messaging
+plugin_im	muc_locked	is locked now for Instant Messaging!!!
+plugin_im	muc_unlocked	is unlocked now for Instant Messaging!!!
+plugin_im	muc-add-member	is now member of the multiple chat room 
+plugin_im	muc-remove-member	is removed now to the muc room 
+
+plugin_im	service_lbl_key	CodeX Instant Messaging.
+plugin_im	service_desc_key	Instant Messaging for CodeX
+
+plugin_im	link_im_admin_title	Instant Messaging
+plugin_im	confirm_install	Confirmer IM intallation
+plugin_im	projectadmin_title	Project administration
+
+
+plugin_im_admin	im_admin_title	Instant Messaging plugin administration .
+plugin_im_admin	im_admin_synchro_muc	synchronize project.
+
+plugin_im_admin	im_admin_synchro_all	Synchronize all project.
+
+plugin_im_admin	synchronise_muc_only_msg	is synchronize with his multiple chat room .
+plugin_im_admin	synchronise_grp_only_msg	is synchronize with his shared group.
+plugin_im_admin	synchronise_muc_and_grp_msg	is synchronize with his shared group and his multiple chat room. 
+plugin_im_admin	synchronise_all_msg	All projects are synchronized with instant messaging .
+plugin_im_admin	choise_action	Chose an action .
+plugin_im_admin	no_project_to_synchronized	All projects are synchronized with instant messaging !!!
+
+plugin_im_admin	 unix_group_name_label	Project name : 
+plugin_im_admin	group_description_label	Description : 
+plugin_im_admin	group_Owner_name_label	Owner : 
+plugin_im_admin	action_label	Action ON : 
+plugin_im_admin	unix_group_name_label 	Project Name :
+plugin_im_admin	action_on_muc_and_grp	Shared group and muc room.
+plugin_im_admin	action_on_muc	Muc room.
+plugin_im_admin	action_on_grp	Shared group.
+plugin_im_admin	unix_group_name_label	Unix project name :
+
+# for user status
+plugin_im_status	available	available for chat;
+plugin_im_status	unavailable	user is/seems to be offline.
+plugin_im_status	away	I'm away
+plugin_im_status	dnd	user is busy (do not disturb)
+plugin_im_status	chat	user is chatty
+plugin_im_status	xa	 user is extended away
+plugin_im_status	forbidden	You do not have permission to check user's status
+
+plugin_im	user_appearance_pref_name	Instant messaging:
+plugin_im	user_appearance_pref_display_users_presence	Display users presence
+

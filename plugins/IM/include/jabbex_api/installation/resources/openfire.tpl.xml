@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This file stores bootstrap properties needed by Openfire.
+    Property names must be in the format: "prop.name.is.blah=value"
+    That will be stored as:
+        <prop>
+            <name>
+                <is>
+                    <blah>value</blah>
+                </is>
+            </name>
+        </prop>
+
+    Most properties are stored in the Openfire database. A
+	property viewer and editor is included in the admin console.
+-->
+<!-- root element, all properties must be under this element -->
+<jive> 
+  <adminConsole> 
+    <!-- Disable either port by setting the value to -1 -->  
+  </adminConsole>  
+  <admin> 
+    <!-- Use this section to define users that will have admin privileges. Below,
+          you will find two ways to specify which users are admins. Admins will
+          have access to the admin console (only local users) and may have also access
+          to other functionalities like ad-hoc commands. -->  
+    <!-- By default, only the user with the username "admin" can login
+         to the admin console. Alternatively, you can specify a comma-delimitted
+         list usernames that should be authorized to login to the admin console
+         by setting the <authorizedUsernames> field below. -->  
+    <!-- <authorizedUsernames></authorizedUsernames> -->  
+    <!-- Comma-delimitted list of bare JIDs. The JIDs may belong to local
+         or remote users. -->  
+    <!-- <authorizedJIDs></authorizedJIDs> --> 
+  </admin>  
+  <locale>en</locale>  
+  <!-- Network settings. By default, Openfire will bind to all network interfaces.
+      Alternatively, you can specify a specific network interfaces that the server
+      will listen on. For example, 127.0.0.1. This setting is generally only useful
+       on multi-homed servers. -->  
+  <!--
+    <network>
+        <interface></interface>
+    </network>
+    -->  
+  <connectionProvider> 
+    <className>org.jivesoftware.database.DefaultConnectionProvider</className> 
+  </connectionProvider>  
+  <database> 
+    <defaultProvider> 
+      <minConnections>5</minConnections>  
+      <maxConnections>15</maxConnections>  
+      <connectionTimeout>1.0</connectionTimeout> 
+    </defaultProvider> 
+  </database>  
+  <setup>true</setup>  
+  
+  
+  <!--
+	CodeX DB Integration
+  -->  
+  <jdbcProvider> 
+  </jdbcProvider>  
+  <provider> 
+    <auth> 
+      <className>org.jivesoftware.openfire.auth.JDBCAuthProvider</className> 
+    </auth>  
+    <user> 
+      <className>org.jivesoftware.openfire.user.JDBCUserProvider</className> 
+    </user>  
+    <group> 
+      <className>org.jivesoftware.openfire.group.JDBCGroupProvider</className> 
+    </group> 
+  </provider>  
+
+  <!-- Authentication  -->  
+  <jdbcAuthProvider> 
+    <passwordSQL>SELECT LOWER(user_pw) FROM user WHERE user_name=?</passwordSQL>  
+    <passwordType>md5</passwordType> 
+  </jdbcAuthProvider>  
+
+  <!-- Users info  -->  
+  <jdbcUserProvider> 
+    <loadUserSQL>SELECT realname , email FROM user WHERE user_name=?</loadUserSQL>  
+    <userCountSQL>SELECT COUNT(*) FROM user WHERE status = "A"</userCountSQL>  
+    <allUsersSQL>SELECT LOWER(user_name) FROM user WHERE status = "A"</allUsersSQL>  
+    <searchSQL>SELECT LOWER(user_name) FROM user WHERE</searchSQL>  
+    <usernameField>user_name</usernameField>  
+    <nameField>realname</nameField>  
+    <emailField>email</emailField> 
+  </jdbcUserProvider>  
+
+  <!-- Groups info   -->  
+  <jdbcGroupProvider> 
+    <groupCountSQL>SELECT count(*) FROM groups WHERE status = "A"</groupCountSQL>  
+    <allGroupsSQL>SELECT LOWER(unix_group_name) FROM groups WHERE status = "A"</allGroupsSQL>  
+    <userGroupsSQL>SELECT LOWER(groups.unix_group_name) FROM groups, user, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.status = "A" AND user.user_name=?</userGroupsSQL>  
+    <descriptionSQL>SELECT short_description FROM groups WHERE unix_group_name=?</descriptionSQL>  
+    <loadMembersSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags NOT LIKE 'A'</loadMembersSQL>  
+    <loadAdminsSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags='A'</loadAdminsSQL> 
+  </jdbcGroupProvider> 
+
+</jive>

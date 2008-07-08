@@ -12,7 +12,7 @@ require_once('account.php');
 require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
-
+require_once('common/event/EventManager.class.php');
 $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -21,7 +21,7 @@ $action = '';
 if (isset($_REQUEST['action'])) {
     $action = $_REQUEST['action'];
 }
-
+	$em =& EventManager::instance();//this event manager is used several times in this file
 // group public choice
 if ($action=='activate') {
 	/*
@@ -29,8 +29,11 @@ if ($action=='activate') {
 	*/
 	db_query("UPDATE groups SET status='A'"
 		. " WHERE group_id IN ($list_of_groups)");
-
-
+		
+        $em->processEvent('approve_pending_project', array(
+            'group_id'       => $list_of_groups
+        ));
+        
 	/*
 		now activate the admin's unix account if it isn't already
 	*/
@@ -77,6 +80,8 @@ if ($action=='activate') {
 	group_add_history ('deleted','x',$group_id);
 	db_query("UPDATE groups SET status='D'"
 		. " WHERE group_id='$group_id'");
+		
+		$em->processEvent('delete_project', array('group_id' => $group_id));
 }
 
 

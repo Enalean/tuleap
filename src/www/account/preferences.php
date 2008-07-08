@@ -155,7 +155,18 @@ echo html_get_language_popup($Language,'language_id',$Language->getLanguageId())
                  print '>'.$Language->getText('account_options','real_name').'</option>';
                  print '</select>';
  	  	 ?>
-                    </tr>                </table>
+                    </tr>
+                <?php
+                $plugins_prefs = array();
+                $em = EventManager::instance();
+                $em->processEvent('user_preferences_appearance', array('preferences' => &$plugins_prefs));
+                if (is_array($plugins_prefs)) {
+                    foreach($plugins_prefs as $pref) {
+                        echo '<tr><td>'. $pref['name'] .'</td><td>'. $pref['value'] .'</td></tr>';
+                    }
+                }
+                ?>
+                </table>
             </fieldset>
             <fieldset>
                 <legend>Import/export</legend>
