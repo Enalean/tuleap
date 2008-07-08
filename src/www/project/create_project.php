@@ -289,7 +289,7 @@ function create_project($data, $do_not_exit = false) {
             if ( !$new_at_id ) {
                 $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
             } else {
-                $report_mapping = $report_mapping + $report_mapping_for_this_tracker
+                $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
                 $tracker_mapping[$ath_temp->getID()] = $new_at_id;
                 
                 // Copy all the artifacts from the template tracker to the new tracker
