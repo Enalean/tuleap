@@ -89,8 +89,8 @@ $dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_h
 
 $eol = "\n";
 
-$result = extract_history($sql);
-$rows = db_numrows($result);       
+$result = extract_history($atid);
+$rows = db_numrows($result);      
 
 if ($export == 'artifact_history') {
 
