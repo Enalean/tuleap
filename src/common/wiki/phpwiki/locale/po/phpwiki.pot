@@ -6,12 +6,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PhpWiki-1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-30 16:25+0100\n"
+"POT-Creation-Date: 2008-07-08 19:05+0200\n"
 "PO-Revision-Date: 2002-12-14 17:51-0500\n"
 "Last-Translator: Reini Urban <rurban@users.sf.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../lib/Captcha.php:32
@@ -42,85 +42,79 @@ msgstr ""
 msgid "Set USE_DB_SESSION to false."
 msgstr ""
 
-#: ../lib/diff.php:259 ../lib/plugin/Diff.php:72
+#: ../lib/diff.php:257 ../lib/plugin/Diff.php:72
 #, php-format
 msgid "version %s"
 msgstr ""
 
-#: ../lib/diff.php:262 ../lib/plugin/Diff.php:75 ../lib/Theme.php:470
-#: ../lib/Theme.php:472
-#, php-format
-msgid "by %s"
-msgstr ""
-
-#: ../lib/diff.php:266 ../lib/plugin/Diff.php:77
+#: ../lib/diff.php:264 ../lib/plugin/Diff.php:77
 #: ../lib/wikilens/PageListColumns.php:350
 msgid "None"
 msgstr ""
 
-#: ../lib/diff.php:289 ../lib/plugin/Diff.php:94
+#: ../lib/diff.php:287 ../lib/plugin/Diff.php:94
 #: ../lib/plugin/PageHistory.php:315 ../lib/plugin/PageInfo.php:59
 #, php-format
 msgid "I'm sorry, there is no such page as %s."
 msgstr ""
 
-#: ../lib/diff.php:292 ../lib/diff.php:394
+#: ../lib/diff.php:290 ../lib/diff.php:392
 #, php-format
 msgid "Diff: %s"
 msgstr ""
 
-#: ../lib/diff.php:299 ../lib/diff.php:309 ../lib/plugin/Diff.php:102
+#: ../lib/diff.php:297 ../lib/diff.php:307 ../lib/plugin/Diff.php:102
 #: ../lib/plugin/Diff.php:112
 #, php-format
 msgid "version %d"
 msgstr ""
 
-#: ../lib/diff.php:303 ../lib/plugin/Diff.php:106
+#: ../lib/diff.php:301 ../lib/plugin/Diff.php:106
 msgid "current version"
 msgstr ""
 
-#: ../lib/diff.php:320 ../lib/plugin/Diff.php:123
+#: ../lib/diff.php:318 ../lib/plugin/Diff.php:123
 msgid "revision by previous author"
 msgstr ""
 
-#: ../lib/diff.php:326 ../lib/plugin/Diff.php:129
+#: ../lib/diff.php:324 ../lib/plugin/Diff.php:129
 msgid "previous revision"
 msgstr ""
 
-#: ../lib/diff.php:336 ../lib/plugin/Diff.php:139
+#: ../lib/diff.php:334 ../lib/plugin/Diff.php:139
 msgid "predecessor to the previous major change"
 msgstr ""
 
-#: ../lib/diff.php:347 ../lib/plugin/Diff.php:149
+#: ../lib/diff.php:345 ../lib/plugin/Diff.php:149
 #, php-format
 msgid "Differences between %s and %s of %s."
 msgstr ""
 
-#: ../lib/diff.php:350 ../lib/plugin/Diff.php:152
+#: ../lib/diff.php:348 ../lib/plugin/Diff.php:152
 msgid "Other diffs:"
 msgstr ""
 
-#: ../lib/diff.php:351 ../lib/plugin/Diff.php:153
+#: ../lib/diff.php:349 ../lib/plugin/Diff.php:153
 msgid "Previous Major Revision"
 msgstr ""
 
-#: ../lib/diff.php:352 ../lib/plugin/Diff.php:154
+#: ../lib/diff.php:350 ../lib/plugin/Diff.php:154
 msgid "Previous Revision"
 msgstr ""
 
-#: ../lib/diff.php:353 ../lib/plugin/Diff.php:155
+#: ../lib/diff.php:351 ../lib/plugin/Diff.php:155
 msgid "Previous Author"
 msgstr ""
 
-#: ../lib/diff.php:370 ../lib/plugin/Diff.php:172
+#: ../lib/diff.php:368 ../lib/plugin/Diff.php:172
 msgid "Newer page:"
 msgstr ""
 
-#: ../lib/diff.php:372 ../lib/plugin/Diff.php:174
+#: ../lib/diff.php:370 ../lib/plugin/Diff.php:174
 msgid "Older page:"
 msgstr ""
 
-#: ../lib/diff.php:380 ../lib/plugin/Diff.php:182
+#: ../lib/diff.php:378 ../lib/plugin/Diff.php:182
 msgid "Versions are identical"
 msgstr ""
 
@@ -143,7 +137,7 @@ msgstr ""
 msgid "%s: %s"
 msgstr ""
 
-#: ../lib/display.php:114 ../lib/display.php:121
+#: ../lib/display.php:119 ../lib/display.php:131
 #: ../lib/plugin/BackLinks.php:31 ../lib/plugin/_WikiTranslation.php:53
 #: ../themes/CodeX-lite/templates/navbar.tmpl:34
 #: ../themes/CodeX/templates/navbar.tmpl:34
@@ -152,25 +146,25 @@ msgstr ""
 msgid "BackLinks"
 msgstr ""
 
-#: ../lib/display.php:117 ../lib/display.php:124
+#: ../lib/display.php:122 ../lib/display.php:134
 #, php-format
 msgid "BackLinks for %s"
 msgstr ""
 
-#: ../lib/display.php:132
+#: ../lib/display.php:145
 #, php-format
 msgid "(Redirected from %s)"
 msgstr ""
 
-#: ../lib/display.php:172
+#: ../lib/display.php:185
 msgid "You searched for: "
 msgstr ""
 
-#: ../lib/editpage.php:134 ../lib/editpage.php:469
+#: ../lib/editpage.php:134 ../lib/editpage.php:470
 msgid "Your version"
 msgstr ""
 
-#: ../lib/editpage.php:134 ../lib/editpage.php:470
+#: ../lib/editpage.php:134 ../lib/editpage.php:471
 msgid "Other version"
 msgstr ""
 
@@ -214,48 +208,48 @@ msgstr ""
 msgid "Too many external links."
 msgstr ""
 
-#: ../lib/editpage.php:379
+#: ../lib/editpage.php:380
 msgid "SpamAssassin reports: "
 msgstr ""
 
-#: ../lib/editpage.php:396
+#: ../lib/editpage.php:397
 msgid "External links contain blocked domains:"
 msgstr ""
 
-#: ../lib/editpage.php:397
+#: ../lib/editpage.php:398
 #, php-format
 msgid "%s is listed at %s"
 msgstr ""
 
-#: ../lib/editpage.php:418
+#: ../lib/editpage.php:419
 msgid "Spam Prevention"
 msgstr ""
 
-#: ../lib/editpage.php:419
+#: ../lib/editpage.php:420
 msgid "This page edit seems to contain spam and was therefore not saved."
 msgstr ""
 
-#: ../lib/editpage.php:421 ../lib/editpage.php:455
+#: ../lib/editpage.php:422 ../lib/editpage.php:456
 msgid "Sorry for the inconvenience."
 msgstr ""
 
-#: ../lib/editpage.php:452
+#: ../lib/editpage.php:453
 msgid "Page Locked"
 msgstr ""
 
-#: ../lib/editpage.php:453
+#: ../lib/editpage.php:454
 msgid ""
 "This page has been locked by the administrator so your changes can not be "
 "saved."
 msgstr ""
 
-#: ../lib/editpage.php:454
+#: ../lib/editpage.php:455
 msgid ""
 "(Copy your changes to the clipboard. You can try editing a different page or "
 "save your text in a text editor.)"
 msgstr ""
 
-#: ../lib/editpage.php:468 ../lib/editpage.php:757
+#: ../lib/editpage.php:469 ../lib/editpage.php:758
 #, php-format
 msgid ""
 "Some of the changes could not automatically be combined.  Please look for "
@@ -263,47 +257,47 @@ msgid ""
 "those sections by hand before you click Save."
 msgstr ""
 
-#: ../lib/editpage.php:472 ../lib/editpage.php:760
+#: ../lib/editpage.php:473 ../lib/editpage.php:761
 msgid "Please check it through before saving."
 msgstr ""
 
-#: ../lib/editpage.php:483
+#: ../lib/editpage.php:484
 msgid "Conflicting Edits!"
 msgstr ""
 
-#: ../lib/editpage.php:484
+#: ../lib/editpage.php:485
 msgid ""
 "In the time since you started editing this page, another user has saved a "
 "new version of it."
 msgstr ""
 
-#: ../lib/editpage.php:485
+#: ../lib/editpage.php:486
 msgid ""
 "Your changes can not be saved as they are, since doing so would overwrite "
 "the other author's changes. So, your changes and those of the other author "
 "have been combined. The result is shown below."
 msgstr ""
 
-#: ../lib/editpage.php:555
+#: ../lib/editpage.php:556
 msgid "Convert"
 msgstr ""
 
-#: ../lib/editpage.php:563 ../lib/EditToolbar.php:214
+#: ../lib/editpage.php:564 ../lib/EditToolbar.php:214
 #: ../lib/EditToolbar.php:216
 msgid "Preview"
 msgstr ""
 
-#: ../lib/editpage.php:567 ../lib/EditToolbar.php:210
+#: ../lib/editpage.php:568 ../lib/EditToolbar.php:210
 #: ../lib/EditToolbar.php:212
 msgid "Save"
 msgstr ""
 
-#: ../lib/editpage.php:588
+#: ../lib/editpage.php:589
 #, php-format
 msgid "Author will be logged as %s."
 msgstr ""
 
-#: ../lib/editpage.php:731
+#: ../lib/editpage.php:732
 #, php-format
 msgid "Merge and Edit: %s"
 msgstr ""
@@ -339,12 +333,12 @@ msgstr ""
 msgid "Replace with"
 msgstr ""
 
-#: ../lib/EditToolbar.php:63 ../lib/upgrade.php:375 ../lib/upgrade.php:384
-#: ../lib/upgrade.php:393 ../lib/upgrade.php:412 ../lib/upgrade.php:440
-#: ../lib/upgrade.php:485 ../lib/upgrade.php:488 ../lib/upgrade.php:519
-#: ../lib/upgrade.php:521 ../lib/upgrade.php:548 ../lib/upgrade.php:601
-#: ../lib/upgrade.php:714 ../lib/upgrade.php:717 ../lib/upgrade.php:768
-#: ../lib/upgrade.php:826 ../lib/upgrade.php:836
+#: ../lib/EditToolbar.php:63 ../lib/upgrade.php:381 ../lib/upgrade.php:390
+#: ../lib/upgrade.php:399 ../lib/upgrade.php:418 ../lib/upgrade.php:446
+#: ../lib/upgrade.php:491 ../lib/upgrade.php:494 ../lib/upgrade.php:525
+#: ../lib/upgrade.php:527 ../lib/upgrade.php:554 ../lib/upgrade.php:607
+#: ../lib/upgrade.php:720 ../lib/upgrade.php:723 ../lib/upgrade.php:774
+#: ../lib/upgrade.php:832 ../lib/upgrade.php:842
 msgid "OK"
 msgstr ""
 
@@ -487,7 +481,7 @@ msgstr ""
 msgid "An unnamed PhpWiki"
 msgstr ""
 
-#: ../lib/IniConfig.php:732 ../lib/upgrade.php:149
+#: ../lib/IniConfig.php:732 ../lib/upgrade.php:155
 #: ../themes/CodeX-lite/templates/userprefs.tmpl:121
 #: ../themes/CodeX/templates/userprefs.tmpl:121
 #: ../themes/default/templates/userprefs.tmpl:123
@@ -543,7 +537,7 @@ msgstr ""
 msgid "PhpWikiAdministration"
 msgstr ""
 
-#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1050 ../lib/WikiDB.php:1075
+#: ../lib/loadsave.php:93 ../lib/WikiDB.php:1051 ../lib/WikiDB.php:1076
 #, php-format
 msgid "Edited by: %s"
 msgstr ""
@@ -552,14 +546,14 @@ msgstr ""
 msgid "LoadDump"
 msgstr ""
 
-#: ../lib/loadsave.php:99 ../lib/WikiDB.php:243 ../lib/WikiDB.php:1056
-#: ../lib/WikiDB.php:1083
+#: ../lib/loadsave.php:99 ../lib/WikiDB.php:243 ../lib/WikiDB.php:1057
+#: ../lib/WikiDB.php:1084
 #, php-format
 msgid "PageChange Notification of %s sent to %s"
 msgstr ""
 
-#: ../lib/loadsave.php:102 ../lib/WikiDB.php:246 ../lib/WikiDB.php:1059
-#: ../lib/WikiDB.php:1086
+#: ../lib/loadsave.php:102 ../lib/WikiDB.php:246 ../lib/WikiDB.php:1060
+#: ../lib/WikiDB.php:1087
 #, php-format
 msgid "PageChange Notification Error: Couldn't send %s to %s"
 msgstr ""
@@ -664,7 +658,7 @@ msgid "from %s"
 msgstr ""
 
 #: ../lib/loadsave.php:787 ../lib/plugin/RecentChanges.php:107
-#: ../lib/WikiDB.php:1045
+#: ../lib/WikiDB.php:1046
 msgid "New page"
 msgstr ""
 
@@ -672,7 +666,7 @@ msgstr ""
 msgid "has edit conflicts - overwriting anyway"
 msgstr ""
 
-#: ../lib/loadsave.php:798 ../lib/loadsave.php:1251 ../lib/loadsave.php:1254
+#: ../lib/loadsave.php:798 ../lib/loadsave.php:1253 ../lib/loadsave.php:1256
 msgid "The PhpWiki programming team"
 msgstr ""
 
@@ -690,17 +684,17 @@ msgstr ""
 msgid "- saved to database as version %d"
 msgstr ""
 
-#: ../lib/loadsave.php:834 ../lib/loadsave.php:1047
+#: ../lib/loadsave.php:834 ../lib/loadsave.php:1048
 #, php-format
 msgid "MIME file %s"
 msgstr ""
 
-#: ../lib/loadsave.php:835 ../lib/loadsave.php:1052
+#: ../lib/loadsave.php:835 ../lib/loadsave.php:1054
 #, php-format
 msgid "Serialized file %s"
 msgstr ""
 
-#: ../lib/loadsave.php:836 ../lib/loadsave.php:1066
+#: ../lib/loadsave.php:836 ../lib/loadsave.php:1068
 #, php-format
 msgid "plain file %s"
 msgstr ""
@@ -764,41 +758,41 @@ msgstr ""
 msgid "Loading InterWikiMap from external file %s."
 msgstr ""
 
-#: ../lib/loadsave.php:1081 ../lib/loadsave.php:1094
+#: ../lib/loadsave.php:1083 ../lib/loadsave.php:1096
 msgid "Skipping"
 msgstr ""
 
-#: ../lib/loadsave.php:1195
+#: ../lib/loadsave.php:1197
 #, php-format
 msgid "Unable to load: %s"
 msgstr ""
 
-#: ../lib/loadsave.php:1202
+#: ../lib/loadsave.php:1204
 #, php-format
 msgid "Bad file type: %s"
 msgstr ""
 
-#: ../lib/loadsave.php:1219
+#: ../lib/loadsave.php:1221
 #, php-format
 msgid "Loading '%s'"
 msgstr ""
 
-#: ../lib/loadsave.php:1257
+#: ../lib/loadsave.php:1259
 msgid ""
 "Loading up virgin wiki. Please wait until the end of the process, this will "
 "take few minutes."
 msgstr ""
 
-#: ../lib/loadsave.php:1308
+#: ../lib/loadsave.php:1310
 msgid "No uploaded file to upload?"
 msgstr ""
 
-#: ../lib/loadsave.php:1312
+#: ../lib/loadsave.php:1314
 #, php-format
 msgid "Uploading %s"
 msgstr ""
 
-#: ../lib/loadsave.php:1317 ../lib/plugin/RecentChanges.php:270
+#: ../lib/loadsave.php:1319 ../lib/plugin/RecentChanges.php:270
 #: ../lib/plugin/RecentChanges.php:285 ../lib/plugin/RecentChanges.php:388
 #: ../lib/plugin/RecentChanges.php:464 ../lib/plugin/RecentChanges.php:600
 #: ../lib/plugin/RecentChanges.php:734 ../lib/RSSWriter091.php:113
@@ -1072,7 +1066,7 @@ msgid "FullTextSearch"
 msgstr ""
 
 #: ../lib/main.php:1017 ../lib/plugin/RecentChanges.php:591
-#: ../lib/plugin/TitleSearch.php:43 ../lib/Theme.php:1188
+#: ../lib/plugin/TitleSearch.php:43 ../lib/Theme.php:1194
 #: ../themes/CodeX-lite/templates/navbar.tmpl:6
 #: ../themes/CodeX-lite/templates/navbar.tmpl:24
 #: ../themes/CodeX-lite/templates/search.tmpl:3
@@ -1143,7 +1137,7 @@ msgstr ""
 msgid "Click to de-/select all pages"
 msgstr ""
 
-#: ../lib/PageList.php:366 ../lib/plugin/UnfoldSubpages.php:132
+#: ../lib/PageList.php:366 ../lib/plugin/IncludePage.php:145
 #, php-format
 msgid " ... first %d bytes"
 msgstr ""
@@ -1154,7 +1148,7 @@ msgid " ... around %s"
 msgstr ""
 
 #: ../lib/PageList.php:402 ../lib/plugin/AppendText.php:57
-#: ../lib/upgrade.php:796
+#: ../lib/upgrade.php:802
 #, php-format
 msgid "%s not found"
 msgstr ""
@@ -1364,8 +1358,8 @@ msgstr ""
 msgid "Click to display all comments"
 msgstr ""
 
-#: ../lib/plugin/AddComment.php:111 ../lib/plugin/CreateToc.php:370
-#: ../lib/plugin/CreateToc.php:375
+#: ../lib/plugin/AddComment.php:111 ../lib/plugin/CreateToc.php:381
+#: ../lib/plugin/CreateToc.php:401
 msgid "Click to display"
 msgstr ""
 
@@ -1648,11 +1642,11 @@ msgstr ""
 msgid "No Blog Entries"
 msgstr ""
 
-#: ../lib/plugin/CalendarList.php:22 ../lib/plugin/CalendarList.php:26
+#: ../lib/plugin/CalendarList.php:51 ../lib/plugin/CalendarList.php:55
 msgid "CalendarList"
 msgstr ""
 
-#: ../lib/plugin/CalendarList.php:84 ../lib/plugin/Calendar.php:168
+#: ../lib/plugin/CalendarList.php:135 ../lib/plugin/Calendar.php:168
 #, php-format
 msgid "Edit %s"
 msgstr ""
@@ -1707,7 +1701,7 @@ msgstr ""
 msgid "Automatically create a Bibtex file from linked pages"
 msgstr ""
 
-#: ../lib/plugin/CreateBib.php:121 ../lib/plugin/CreateToc.php:300
+#: ../lib/plugin/CreateBib.php:121 ../lib/plugin/CreateToc.php:306
 #: ../lib/plugin/IncludePage.php:77 ../lib/plugin/Template.php:102
 msgid "no page specified"
 msgstr ""
@@ -1737,23 +1731,27 @@ msgstr ""
 msgid "Automatically link headers at the top"
 msgstr ""
 
-#: ../lib/plugin/CreateToc.php:311
+#: ../lib/plugin/CreateToc.php:317
 msgid "CreateToc disabled for old markup"
 msgstr ""
 
-#: ../lib/plugin/CreateToc.php:367
+#: ../lib/plugin/CreateToc.php:377
 msgid "Click to hide the TOC"
 msgstr ""
 
-#: ../lib/plugin/CreateToc.php:377 ../lib/plugin/CreateToc.php:380
+#: ../lib/plugin/CreateToc.php:386 ../lib/plugin/CreateToc.php:403
 msgid "Table Of Contents"
+msgstr ""
+
+#: ../lib/plugin/CreateToc.php:392
+msgid "Click to display to TOC"
 msgstr ""
 
 #: ../lib/plugin/DeadEndPages.php:24
 msgid "DeadEndPages"
 msgstr ""
 
-#: ../lib/plugin/Diff.php:36 ../lib/Theme.php:934
+#: ../lib/plugin/Diff.php:36 ../lib/Theme.php:940
 msgid "Diff"
 msgstr ""
 
@@ -1763,6 +1761,11 @@ msgstr ""
 
 #: ../lib/plugin/Diff.php:52
 msgid "World"
+msgstr ""
+
+#: ../lib/plugin/Diff.php:75 ../lib/Theme.php:476 ../lib/Theme.php:478
+#, php-format
+msgid "by %s"
 msgstr ""
 
 #: ../lib/plugin/EditMetaData.php:45 ../lib/plugin/_WikiTranslation.php:61
@@ -1785,7 +1788,7 @@ msgid ""
 "remove a key by leaving the value-box empty."
 msgstr ""
 
-#: ../lib/plugin/EditMetaData.php:149 ../lib/upgrade.php:672
+#: ../lib/plugin/EditMetaData.php:149 ../lib/upgrade.php:678
 msgid "Submit"
 msgstr ""
 
@@ -2020,6 +2023,11 @@ msgstr ""
 msgid "Included from %s"
 msgstr ""
 
+#: ../lib/plugin/IncludePage.php:136
+#, php-format
+msgid " ... first %d lines"
+msgstr ""
+
 #: ../lib/plugin/IncludePages.php:35
 msgid "IncludePages"
 msgstr ""
@@ -2149,8 +2157,8 @@ msgstr ""
 msgid "SubPages of %s:"
 msgstr ""
 
-#: ../lib/plugin/ListSubpages.php:99 ../lib/plugin/UnfoldSubpages.php:101
-#: ../lib/plugin/UnfoldSubpages.php:116
+#: ../lib/plugin/ListSubpages.php:99 ../lib/plugin/UnfoldSubpages.php:107
+#: ../lib/plugin/UnfoldSubpages.php:123
 #, php-format
 msgid "recursive inclusion of page %s ignored"
 msgstr ""
@@ -3174,7 +3182,7 @@ msgstr ""
 #: ../lib/plugin/WikiAdminSelect.php:218 ../lib/plugin/WikiAdminSelect.php:239
 #: ../lib/plugin/WikiAdminSetAcl.php:190 ../lib/plugin/WikiAdminUtils.php:265
 #: ../lib/plugin/WikiFormRich.php:317 ../lib/removepage.php:24
-#: ../lib/upgrade.php:674 ../themes/CodeX-lite/templates/login.tmpl:80
+#: ../lib/upgrade.php:680 ../themes/CodeX-lite/templates/login.tmpl:80
 #: ../themes/CodeX-lite/templates/userprefs.tmpl:183
 #: ../themes/CodeX/templates/login.tmpl:80
 #: ../themes/CodeX/templates/userprefs.tmpl:183
@@ -3183,17 +3191,12 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ../lib/plugin/UnfoldSubpages.php:36
+#: ../lib/plugin/UnfoldSubpages.php:42
 msgid "UnfoldSubpages"
 msgstr ""
 
-#: ../lib/plugin/UnfoldSubpages.php:40
+#: ../lib/plugin/UnfoldSubpages.php:46
 msgid "Includes the content of all SubPages of the current page."
-msgstr ""
-
-#: ../lib/plugin/UnfoldSubpages.php:126
-#, php-format
-msgid " ... first %d lines"
 msgstr ""
 
 #: ../lib/plugin/UnfoldSubpages.php:151
@@ -4409,7 +4412,7 @@ msgstr ""
 msgid "Sorry, this page is not in the database."
 msgstr ""
 
-#: ../lib/removepage.php:23 ../lib/removepage.php:67 ../lib/Theme.php:939
+#: ../lib/removepage.php:23 ../lib/removepage.php:67 ../lib/Theme.php:945
 msgid "Remove Page"
 msgstr ""
 
@@ -4616,38 +4619,38 @@ msgstr ""
 msgid "yesterday"
 msgstr ""
 
-#: ../lib/Theme.php:456 ../lib/Theme.php:458
+#: ../lib/Theme.php:460 ../lib/Theme.php:462
 #, php-format
 msgid "Owner: %s"
 msgstr ""
 
-#: ../lib/Theme.php:564
+#: ../lib/Theme.php:570
 #, php-format
 msgid "Empty link to: %s"
 msgstr ""
 
-#: ../lib/Theme.php:579
+#: ../lib/Theme.php:585
 #, php-format
 msgid "Create: %s"
 msgstr ""
 
-#: ../lib/Theme.php:598
+#: ../lib/Theme.php:604
 #, php-format
 msgid "Google:%s"
 msgstr ""
 
-#: ../lib/Theme.php:623
+#: ../lib/Theme.php:629
 #, php-format
 msgid "'%s': Bad page name"
 msgstr ""
 
-#: ../lib/Theme.php:933 ../themes/CodeX-lite/templates/actionbar.tmpl:33
+#: ../lib/Theme.php:939 ../themes/CodeX-lite/templates/actionbar.tmpl:33
 #: ../themes/CodeX/templates/actionbar.tmpl:33
 #: ../themes/default/templates/actionbar.tmpl:15
 msgid "Edit"
 msgstr ""
 
-#: ../lib/Theme.php:935 ../themes/CodeX-lite/templates/signin.tmpl:16
+#: ../lib/Theme.php:941 ../themes/CodeX-lite/templates/signin.tmpl:16
 #: ../themes/CodeX-lite/templates/signin.tmpl:27
 #: ../themes/CodeX/templates/signin.tmpl:16
 #: ../themes/CodeX/templates/signin.tmpl:27
@@ -4658,31 +4661,31 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: ../lib/Theme.php:936 ../lib/WikiUserNew.php:473 ../lib/WikiUser.php:221
+#: ../lib/Theme.php:942 ../lib/WikiUserNew.php:473 ../lib/WikiUser.php:221
 #: ../themes/CodeX-lite/templates/login.tmpl:78
 #: ../themes/CodeX/templates/login.tmpl:78
 #: ../themes/default/templates/login.tmpl:76
 msgid "Sign In"
 msgstr ""
 
-#: ../lib/Theme.php:937
+#: ../lib/Theme.php:943
 msgid "Lock Page"
 msgstr ""
 
-#: ../lib/Theme.php:938
+#: ../lib/Theme.php:944
 msgid "Unlock Page"
 msgstr ""
 
-#: ../lib/Theme.php:1347
+#: ../lib/Theme.php:1353
 #, php-format
 msgid "Plugin %s: undefined"
 msgstr ""
 
-#: ../lib/Theme.php:1370
+#: ../lib/Theme.php:1376
 msgid "Related Links"
 msgstr ""
 
-#: ../lib/Theme.php:1390
+#: ../lib/Theme.php:1396
 msgid "External Links"
 msgstr ""
 
@@ -4694,189 +4697,185 @@ msgstr ""
 msgid " replace "
 msgstr ""
 
-#: ../lib/upgrade.php:81
-msgid "older than the existing page."
-msgstr ""
-
-#: ../lib/upgrade.php:82 ../lib/upgrade.php:86 ../lib/upgrade.php:153
+#: ../lib/upgrade.php:88 ../lib/upgrade.php:159
 msgid " skipped"
 msgstr ""
 
-#: ../lib/upgrade.php:89
+#: ../lib/upgrade.php:91
 #, php-format
 msgid "%s does not exist"
 msgstr ""
 
-#: ../lib/upgrade.php:112
+#: ../lib/upgrade.php:116
 msgid "check for necessary ActionPage updates"
 msgstr ""
 
-#: ../lib/upgrade.php:136
+#: ../lib/upgrade.php:142
 msgid "check for necessary pgsrc updates"
 msgstr ""
 
-#: ../lib/upgrade.php:152
+#: ../lib/upgrade.php:158
 msgid "always skip the HomePage."
 msgstr ""
 
-#: ../lib/upgrade.php:172
+#: ../lib/upgrade.php:178
 msgid "MISSING"
 msgstr ""
 
-#: ../lib/upgrade.php:208 ../lib/upgrade.php:227 ../lib/upgrade.php:246
-#: ../lib/upgrade.php:267 ../lib/upgrade.php:295 ../lib/upgrade.php:341
+#: ../lib/upgrade.php:214 ../lib/upgrade.php:233 ../lib/upgrade.php:252
+#: ../lib/upgrade.php:273 ../lib/upgrade.php:301 ../lib/upgrade.php:347
 msgid "CREATED"
 msgstr ""
 
-#: ../lib/upgrade.php:356
+#: ../lib/upgrade.php:362
 msgid "check for necessary database updates"
 msgstr ""
 
-#: ../lib/upgrade.php:362
+#: ../lib/upgrade.php:368
 msgid "CANCEL"
 msgstr ""
 
-#: ../lib/upgrade.php:368
+#: ../lib/upgrade.php:374
 msgid "Backend type: "
 msgstr ""
 
-#: ../lib/upgrade.php:371 ../lib/upgrade.php:380 ../lib/upgrade.php:389
+#: ../lib/upgrade.php:377 ../lib/upgrade.php:386 ../lib/upgrade.php:395
 #, php-format
 msgid "check for table %s"
 msgstr ""
 
-#: ../lib/upgrade.php:387
+#: ../lib/upgrade.php:393
 msgid "RateIt"
 msgstr ""
 
-#: ../lib/upgrade.php:401
+#: ../lib/upgrade.php:407
 msgid "check for new session.sess_ip column"
 msgstr ""
 
-#: ../lib/upgrade.php:408 ../lib/upgrade.php:510 ../lib/upgrade.php:704
+#: ../lib/upgrade.php:414 ../lib/upgrade.php:516 ../lib/upgrade.php:710
 msgid "ADDING"
 msgstr ""
 
-#: ../lib/upgrade.php:418
+#: ../lib/upgrade.php:424
 msgid "check for mysql session.sess_id sanity"
 msgstr ""
 
-#: ../lib/upgrade.php:432 ../lib/upgrade.php:437 ../lib/upgrade.php:469
-#: ../lib/upgrade.php:478
+#: ../lib/upgrade.php:438 ../lib/upgrade.php:443 ../lib/upgrade.php:475
+#: ../lib/upgrade.php:484
 msgid "fixed"
 msgstr ""
 
-#: ../lib/upgrade.php:446
+#: ../lib/upgrade.php:452
 msgid "check for mysql LOCK TABLE privilege"
 msgstr ""
 
-#: ../lib/upgrade.php:480 ../lib/upgrade.php:517 ../lib/upgrade.php:770
-#: ../lib/upgrade.php:795 ../lib/upgrade.php:804 ../lib/upgrade.php:811
+#: ../lib/upgrade.php:486 ../lib/upgrade.php:523 ../lib/upgrade.php:776
+#: ../lib/upgrade.php:801 ../lib/upgrade.php:810 ../lib/upgrade.php:817
 msgid "FAILED"
 msgstr ""
 
-#: ../lib/upgrade.php:492
+#: ../lib/upgrade.php:498
 #, php-format
 msgid "version <em>%s</em> not affected"
 msgstr ""
 
-#: ../lib/upgrade.php:500
+#: ../lib/upgrade.php:506
 msgid "check for mysql page.id auto_increment flag"
 msgstr ""
 
-#: ../lib/upgrade.php:537
+#: ../lib/upgrade.php:543
 msgid "check for mysql 4.1.x/5.0.0 binary search on windows problem"
 msgstr ""
 
-#: ../lib/upgrade.php:540 ../lib/upgrade.php:556 ../lib/upgrade.php:577
+#: ../lib/upgrade.php:546 ../lib/upgrade.php:562 ../lib/upgrade.php:583
 #, php-format
 msgid "version <em>%s</em>"
 msgstr ""
 
-#: ../lib/upgrade.php:541
+#: ../lib/upgrade.php:547
 msgid "not affected"
 msgstr ""
 
-#: ../lib/upgrade.php:557 ../lib/upgrade.php:578 ../lib/upgrade.php:599
-#: ../lib/upgrade.php:802
+#: ../lib/upgrade.php:563 ../lib/upgrade.php:584 ../lib/upgrade.php:605
+#: ../lib/upgrade.php:808
 msgid "FIXED"
 msgstr ""
 
-#: ../lib/upgrade.php:588
+#: ../lib/upgrade.php:594
 msgid "check for ACCESS_LOG_SQL passwords in POST requests"
 msgstr ""
 
-#: ../lib/upgrade.php:654
+#: ../lib/upgrade.php:660
 msgid ""
 "Upgrade requires database privileges to CREATE and ALTER the phpwiki "
 "database."
 msgstr ""
 
-#: ../lib/upgrade.php:656
+#: ../lib/upgrade.php:662
 msgid ""
 "And on windows at least the privilege to SELECT FROM mysql, and possibly "
 "UPDATE mysql"
 msgstr ""
 
-#: ../lib/upgrade.php:660
+#: ../lib/upgrade.php:666
 msgid "DB admin user:"
 msgstr ""
 
-#: ../lib/upgrade.php:666
+#: ../lib/upgrade.php:672
 msgid "DB admin password:"
 msgstr ""
 
-#: ../lib/upgrade.php:698
+#: ../lib/upgrade.php:704
 msgid "check for extra page.cached_html column"
 msgstr ""
 
-#: ../lib/upgrade.php:711
+#: ../lib/upgrade.php:717
 msgid "CONVERTING"
 msgstr ""
 
-#: ../lib/upgrade.php:752
+#: ../lib/upgrade.php:758
 msgid "check for necessary plugin argument updates"
 msgstr ""
 
-#: ../lib/upgrade.php:753
+#: ../lib/upgrade.php:759
 msgid "change RandomPage pages => numpages"
 msgstr ""
 
-#: ../lib/upgrade.php:805
+#: ../lib/upgrade.php:811
 #, php-format
 msgid "couldn't move %s to %s"
 msgstr ""
 
-#: ../lib/upgrade.php:812
+#: ../lib/upgrade.php:818
 #, php-format
 msgid "%s is not writable"
 msgstr ""
 
-#: ../lib/upgrade.php:818
+#: ../lib/upgrade.php:824
 msgid "check for necessary config updates"
 msgstr ""
 
-#: ../lib/upgrade.php:819
+#: ../lib/upgrade.php:825
 msgid "check for old CACHE_CONTROL = NONE"
 msgstr ""
 
-#: ../lib/upgrade.php:822
+#: ../lib/upgrade.php:828
 msgid "CACHE_CONTROL is set to 'NONE', and must be changed to 'NO_CACHE'"
 msgstr ""
 
-#: ../lib/upgrade.php:829
+#: ../lib/upgrade.php:835
 msgid "check for GROUP_METHOD = NONE"
 msgstr ""
 
-#: ../lib/upgrade.php:832
+#: ../lib/upgrade.php:838
 msgid "GROUP_METHOD is set to NONE, and must be changed to \"NONE\""
 msgstr ""
 
-#: ../lib/upgrade.php:870
+#: ../lib/upgrade.php:876
 msgid "Upgrade disabled: user != isAdmin"
 msgstr ""
 
-#: ../lib/upgrade.php:876
+#: ../lib/upgrade.php:882
 msgid "Upgrading this PhpWiki"
 msgstr ""
 
@@ -4925,12 +4924,12 @@ msgstr ""
 msgid "Page change"
 msgstr ""
 
-#: ../lib/WikiDB.php:1077
+#: ../lib/WikiDB.php:1078
 #, php-format
 msgid "Page rename %s to %s"
 msgstr ""
 
-#: ../lib/WikiDB.php:1637 ../lib/WikiDB.php:1641
+#: ../lib/WikiDB.php:1638 ../lib/WikiDB.php:1642
 #: ../themes/CodeX-lite/templates/homepage.tmpl:7
 #: ../themes/CodeX/templates/homepage.tmpl:7
 #: ../themes/default/templates/homepage.tmpl:7
@@ -4938,7 +4937,7 @@ msgstr ""
 msgid "Describe %s here."
 msgstr ""
 
-#: ../lib/WikiDB.php:1676
+#: ../lib/WikiDB.php:1677
 #, php-format
 msgid "Oops! Revision %s of %s seems to have been deleted!"
 msgstr ""

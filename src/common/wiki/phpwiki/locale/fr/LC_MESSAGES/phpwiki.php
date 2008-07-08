@@ -2270,8 +2270,6 @@ $locale["not authenticated"] =
    "non authentifié";
 $locale["not yet"] =
    "pas encore";
-$locale["older than the existing page."] =
-   "plus vieux que la page existante.";
 $locale["only %d pages displayed"] =
    "Seulement %d pages affichées";
 $locale["optional label | PageName"] =
