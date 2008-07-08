@@ -154,7 +154,54 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
         <?php 
-        if($GLOBALS['sys_user_approval'] != 1 || $page!='pending'){
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
+            // Can select Activate/validate
+            echo '<TD>
+            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
+            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            ?>
+            <BR>
+             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
+                '<p><select name="action_select" size="1">
+                <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
+                <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'
+                <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
+                </select>
+            '.$Language->getText('admin_approve_pending_users','account').'          
+            <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+            <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
+            </FORM>
+            </TD>';
+
+        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users']){
+           // Can select Std/Restricted and Activate/validate
+           echo '<TD>
+            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
+            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
+            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
+            ?>
+            <BR>
+             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
+                '<p><select name="action_select" size="1">
+                <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
+                <option value="activate" >'.$Language->getText('admin_approve_pending_users','activate').'
+                <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
+                </select>
+            '.$Language->getText('admin_approve_pending_users','account').' '.'          
+            '.$Language->getText('admin_approve_pending_users','status').'
+            <select name="status" size="1">
+                <option value="standard">'.$Language->getText('admin_approve_pending_users','status_standard').'
+                <option value="restricted">'.$Language->getText('admin_approve_pending_users','status_restricted').'        
+            </select>
+            <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
+            <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
+            </FORM>
+            </TD>';        
+        } else {
+           // Can select Std/Restricted but only Activate
+           // We don't take into account the fact that we may have sys_user_approval=0 and sys_allow_restricted_users=1
+           // which is not coherent (users may activate their account as standard themselves).
             echo '<TD>
             <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
             $exp_date='';
@@ -186,56 +233,6 @@ if (db_numrows($res) < 1) {
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
             </FORM>
             </TD>';
-        }
-        ?>
-        
-    <?php
-    if ($GLOBALS['sys_allow_restricted_users'] && $page=='pending') {
-
-        echo '<TD>
-            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
-            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
-            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
-            ?>
-            <BR>
-             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
-                '<p><select name="action_select" size="1">
-                <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
-                <option value="activate" >'.$Language->getText('admin_approve_pending_users','activate').'
-                <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
-                </select>
-            '.$Language->getText('admin_approve_pending_users','account').' '.'          
-            '.$Language->getText('admin_approve_pending_users','status').'
-            <select name="status" size="1">
-                <option value="standard">'.$Language->getText('admin_approve_pending_users','status_standard').'
-                <option value="restricted">'.$Language->getText('admin_approve_pending_users','status_restricted').'        
-            </select>
-            <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
-            <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
-            </FORM>
-            </TD>';        
-    }
-    ?>
-    <?php 
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
-            echo '<TD>
-            <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
-            echo $Language->getText('admin_approve_pending_users', 'expiry_date').'<BR>'; 
-            echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", "");
-            ?>
-            <BR>
-             <?php echo $Language->getText('admin_approve_pending_users', 'expiry_date_directions').
-                '<p><select name="action_select" size="1">
-                <option value="validate" selected>'.$Language->getText('admin_approve_pending_users','validate').'
-                <option value="activate">'.$Language->getText('admin_approve_pending_users','activate').'
-                <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
-                </select>
-            '.$Language->getText('admin_approve_pending_users','account').'          
-            <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
-            <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
-            </FORM>
-            </TD>';
-
         }
         ?>
 
