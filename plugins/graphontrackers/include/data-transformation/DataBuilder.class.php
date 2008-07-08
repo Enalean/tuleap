@@ -80,7 +80,7 @@ class DataBuilder {
             $group_by .= "afvl.value_id ";
             $order_by .= "afvl.value_id ASC";
         } else if ($af_x->isStandardField() && ($af_x->isUsername())) {
-            $select   .= "u.realName AS field1 ";
+            $select   .= "u.realName AS field1, u.user_id AS id1 ";
             $from     .= "artifact a ";
             $from     .= "JOIN user u ";
             $where    .= "a.artifact_id IN (".implode($this->artifacts,',').") ";
@@ -100,7 +100,7 @@ class DataBuilder {
             $group_by .= "afvl.value_id ";
             $order_by .= "afvl.order_id ASC";
         } else { //if (!$af_x->isStandardField() && ($af_x->isUsername()))
-            $select   .= "u.realName AS field1 ";
+            $select   .= "u.realName AS field1, u.user_id AS id1 ";
             $from     .= "artifact_field_value afv ";
             $from     .= "JOIN user u ";
             $where    .= "afv.artifact_id IN (".implode($this->artifacts,',').") ";
@@ -133,7 +133,7 @@ class DataBuilder {
                 $group_by .= ",afvl1.value_id ";
                 $order_by .= ",afvl1.value_id ASC";
             } else if ($af_y->isStandardField() && ($af_y->isUsername())) {
-                $select   .= ",u1.realName AS field2 ";
+                $select   .= ",u1.realName AS field2, u1.user_id AS id2 ";
                 if (!$af_x->isStandardField()) {
                     $from     .= "JOIN artifact a  ";
                     $where    .= "AND a.artifact_id=afv.artifact_id ";
@@ -165,7 +165,7 @@ class DataBuilder {
                $group_by .= ",afvl1.value_id ";
                $order_by .= ",afvl1.value_id ASC";
             } else { //if (!$af_y->isStandardField() && ($af_y->isUsername()))
-                $select .= ",u1.realName AS field2 ";
+                $select .= ",u1.realName AS field2, u1.user_id AS id2 ";
                 $from   .= "JOIN artifact_field_value afv1 ";
                 $from   .= "JOIN user u1 ";
                 $where  .= "AND afv1.artifact_id IN (".implode($this->artifacts,',').") ";
@@ -196,8 +196,17 @@ class DataBuilder {
         for($i=0;$i<db_numrows($res);$i++) {
             $r[$i] = db_fetch_array($res);
             $result['field1'][$i] = $r[$i]['field1'];
+      
+            if ($af_x->isUsername() && $r[$i]['id1']==100){
+           	 	$result['field1'][$i]=$GLOBALS['Language']->getText('global','none');
+           	 	
+             }
             if (!is_null($this->field_Y)) {
                 $result['field2'][$i] = $r[$i]['field2'];
+              	if ($af_y->isUsername() && $r[$i]['id2']==100){
+           	 		$result['field2'][$i]=$GLOBALS['Language']->getText('global','none');
+           	 	
+             	}  
             }
             $result['c'][$i] = $r[$i]['c'];
         }
