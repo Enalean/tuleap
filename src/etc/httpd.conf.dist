@@ -993,6 +993,7 @@ NameVirtualHost %sys_ip_address%:80
 <VirtualHost %sys_ip_address%:80>
  ServerName %sys_default_domain%
  ServerAlias www.%sys_default_domain%
+ ServerAlias lists.%sys_default_domain%
 
  # Include all configuration files from conf.d (php, subversion, etc.)
  # (also included from conf/ssl.conf)
