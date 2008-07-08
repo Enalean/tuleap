@@ -128,11 +128,16 @@ yn="y"
 ## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4 (?)
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
+  $RPM -q centos-release-${RH_RELEASE}* 2>/dev/null 1>&2
+  if [ $? -eq 1 ]; then
     cat <<EOF
-This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
+This machine is not running RedHat Enterprise Linux ${RH_RELEASE} or CentOS  ${RH_RELEASE}. Executing this install
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [y|n]: " yn
+  else
+    echo "Running on CentOS ${RH_RELEASE}... good!"
+  fi
 else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
