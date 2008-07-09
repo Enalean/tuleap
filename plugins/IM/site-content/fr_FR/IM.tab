@@ -3,36 +3,10 @@ plugin_im	name	Messagerie instantanée
 plugin_im	version	V1.0
 
 plugin_im	title	Messagerie instantanée
-
 plugin_im	my_roster	Ma liste de contact IM
-plugin_im	link_im_admin_title 	Messagerie Instantanée 
-plugin_im	no_other_member	Vous êtes le seul membre de ce groupe
-plugin_im	desc	<marquee direction="left"> <b> Ici la description de la IM </b> </marquee> 
-plugin_im	service_used	Le service de la messagerie instantanée est disponible pour ce projet.
-plugin_im	service_not_used	<pre><b>Le service de la messagerie instantanée n'est pas encore disponible pour ce projet.</b></pre>.
-
-plugin_im	toolbar_admin	Administration
-plugin_im	toolbar_test	Tester
-plugin_im	toolbar_index	Index
-plugin_im	toolbar_shared_group	Installer GroupesPartagés.
-plugin_im	toolbar_muc_room	Installer Salon. 
-plugin_im	confirm_muc_installation	Confirmez l'installation des salons partagés de la plate forme 
-
-plugin_im	menu_title	Menu de la messagerie Instanée
-plugin_im	im_cient_title	Vous avez le choix entre plusieurs clients de messagerie instanée .
 plugin_im	im_roster_member	Membres de ta liste IM
+plugin_im	link_im_admin_title	Messagerie Instantanée
 
-
-plugin_im	service_lbl_key	Messagerie Instantanée
-plugin_im	service_desc_key	Messagerie Instantanée pour CodeX (service_desc_key of IM.tab)
-
-plugin_im	link_im_admin_title	 Messagerie Instantanée
-
-plugin_im	confirm_install	Confirmer IM intallation
-
-plugin_im	projectadmin_title	Administration du projet
-
-#plugin_im	jabber_id	Login Messagerie Instantanée :
 plugin_im	im_user_login	Login Messagerie Instantanée:
 plugin_im	muc_delete	est supprimer de la Messagerie Instantanée
 plugin_im	muc_locked	 est désormais indisponible pour la Messagerie Instantanée !!!
@@ -45,13 +19,9 @@ plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instant
 plugin_im_admin	im_admin_synchro_muc	Synchroniser le projet.
 
 plugin_im_admin	im_admin_synchro_all	Synchroniser tous les projets.
-plugin_im_admin	im_admin_synchro_grp	Les groupes sont bien 
 
 plugin_im_admin	synchronise_muc_only_msg	est synchronisé avec son salon de discution partagé. 
 plugin_im_admin	synchronise_grp_only_msg	est désormais synchronisé avec son groupe partagé.
-plugin_im_admin	synchronise_muc_and_grp_msg	est synchronisé avec son groupe partagé et son salon de discution. 
-plugin_im_admin	synchronise_all_msg	        Tous les projets ont été synchronisés avec leur messagerie instantanée .
-plugin_im_admin	choise_action	Choisissez une action .
 
 plugin_im_admin	no_project_to_synchronized	Tous les projets sont synchronisés à la messagerie instantanée .
 
