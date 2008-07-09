@@ -18,8 +18,8 @@ class IMViews extends Views{
         $request =$this->request;
         $group_id=$request->get('group_id');
 	        $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'IM','selected_top_tab' => 'admin'));
-	       	$title = $GLOBALS['Language']->getText('plugin_im_admin','im_admin_title');
-	       	echo '<h2><b>'.$title.'</b></h2>';
+	       	echo '<h2><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_title').'</b></h2>';
+	       	echo '<h3><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_warning').'</b></h3>';
     }
     
     function _getHelp($section = '') {

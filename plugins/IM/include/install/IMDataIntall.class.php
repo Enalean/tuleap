@@ -103,9 +103,9 @@ class IMDataIntall {
 		try{
 			$im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
 			$this->muc_member_build($group_id);
-			$GLOBALS['Response']->addFeedback('info', 'synchronize muc sucessfuly !!!');
+			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', '####### muc creation : '.$e->getMessage().'#######');
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error: ').$e->getMessage());
 		}
 	}
 	
@@ -120,9 +120,9 @@ class IMDataIntall {
 		$im_object=$this->_get_im_object();
 		try{
 			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
-			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_only_msg'));
+			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', $e->getMessage().'synchronize group not sucessful !!!');
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error: ').$e->getMessage());
 		}
 	}
 	
@@ -143,15 +143,15 @@ class IMDataIntall {
 		try{
 			$im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
 			$this->muc_member_build($group_id);
-			$GLOBALS['Response']->addFeedback('info', 'synchronize muc and grp sucessfuly !!!');
+			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', 'synchronize muc not sucessful !!!');
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error: ').$e->getMessage());
 		}
 		try{
 			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
-			$GLOBALS['Response']->addFeedback('info', 'synchronize muc and grp sucessfuly !!!');
+			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', 'synchronize muc not sucessful !!!');
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error: ').$e->getMessage());
 		}
 	}
 	 
