@@ -47,6 +47,7 @@ $ENV{LANG} = 'en_US.UTF-8';
 use Carp;
 use Time::Local;
 use File::Basename;
+use Encode;
 
 ######################################################################
 # Configuration section.
@@ -578,6 +579,8 @@ foreach my $project (@project_settings_list)
     $subject = $svnmailheader.$subject;
     # Remove newlines from subject:
     $subject =~ s/\n//g;
+    #Encode subject
+    $subject = encode("MIME-Header", decode("UTF-8", $subject));
 
     my $mail_from = $mailname;
 
