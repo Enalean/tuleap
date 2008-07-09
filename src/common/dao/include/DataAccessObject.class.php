@@ -41,12 +41,12 @@ class DataAccessObject {
     function &retrieve($sql) {
         $result =& $this->da->fetch($sql);
         if ($error = $result->isError()) {
-            trigger_error($error .' ==> '. $sql);
+            $trace = debug_backtrace();
+            $i = isset($trace[1]) ? 1 : 0;
+            trigger_error($error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
             $result = false;
-            return $result;
-        } else {
-            return $result;
         }
+        return $result;
     }
 
     //! An accessor
@@ -58,7 +58,9 @@ class DataAccessObject {
     function update($sql) {
         $result = $this->da->fetch($sql);
         if ($error = $result->isError()) {
-            trigger_error($error .' ==> '. $sql);
+            $trace = debug_backtrace();
+            $i = isset($trace[1]) ? 1 : 0;
+            trigger_error($error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
             return false;
         } else {
             return true;
