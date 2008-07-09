@@ -5,6 +5,9 @@
 # include.pl - Include file for all the perl scripts that contains reusable functions
 #
 
+#Codendi is full utf-8
+$ENV{LANG} = 'en_US.UTF-8';
+
 ##############################
 # Global Variables
 ##############################
