@@ -40,6 +40,9 @@
 #    $^W = 1;
 #  }
 
+#Codendi is full utf-8
+$ENV{LANG} = 'en_US.UTF-8';
+
 #use strict;
 use Carp;
 use Time::Local;
