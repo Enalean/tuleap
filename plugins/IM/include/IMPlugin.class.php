@@ -347,9 +347,6 @@ class IMPlugin extends Plugin {
         
 		try{
 			$this->_get_im_object()->lock_muc_room($unix_project_name);
-			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-				$GLOBALS['Response']->addFeedback('info', $project_name."  ".$GLOBALS['Language']->getText('plugin_im','muc_locked'));
-			}
 			$this->last_im_datas["name_last_muc_locked"]=$unix_project_name;
 		} catch(Exception $e){
 			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
@@ -372,9 +369,6 @@ class IMPlugin extends Plugin {
 		
 		try{
 			$this->_get_im_object()->unlock_muc_room($unix_project_name);
-			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-				$GLOBALS['Response']->addFeedback('info', $project_name."  ".$GLOBALS['Language']->getText('plugin_im','muc_unlocked'));
-			}
 			$this->last_im_datas["name_last_muc_unlocked"]=$unix_project_name;
 		} catch(Exception $e){
 			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
@@ -396,9 +390,6 @@ class IMPlugin extends Plugin {
         try{
         $this->_get_im_object()->delete_muc_room($unix_project_name);
         $this->last_im_datas_remove['muc']=$unix_project_name;
-        if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-				$GLOBALS['Response']->addFeedback('info', $unix_project_name.$GLOBALS['Language']->getText('plugin_im','muc_delete'));
-			}
         }catch(Exception $e){
         	if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 				$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
@@ -418,9 +409,6 @@ class IMPlugin extends Plugin {
         $group_name = $project->getUnixName();
 		try{
 			$this->_get_im_object()->muc_add_member($group_name, $user_unix_name);
-			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-				$GLOBALS['Response']->addFeedback('info', $user_unix_name.'  '.$GLOBALS['Language']->getText('plugin_im','muc-add-member').' '.$group_name);
-			}
 			$this->last_im_datas["names_last_member_in_muc"]=$user_unix_name." is added in the muc :".$group_name;
 		} catch(Exception $e){
 			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
@@ -445,9 +433,6 @@ class IMPlugin extends Plugin {
         
         try{
 			$this->_get_im_object()->muc_remove_member($unix_group_name,$user_unix_name);
-			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-				$GLOBALS['Response']->addFeedback('info',$user_unix_name.'  '.$GLOBALS['Language']->getText('plugin_im','muc-remove-member').' '.$unix_group_name );
-			}
 			$this->last_im_datas["names_remove_member_from_muc"]=$user_unix_name." is remove from the muc :".$unix_group_name;
 		} catch(Exception $e){
 			if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
