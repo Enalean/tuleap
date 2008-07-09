@@ -17,7 +17,7 @@ OldTextFormattingRules%%%
 <strong>Footnotes:</strong> Use ~[1],~[2],~[3],...%%%
 <strong>Preventing linking:</strong> Prefix with "~!": ~!~DoNotHyperlink, name links like ~[~[text | URL] (double up on the "[").%%%
 <strong>Misc:</strong> "~!", "~!~!", "~!~!~!" make headings, "%%<em></em>%" makes a linebreak, "-<em></em>-<em></em>-<em></em>-" makes a horizontal rule.%%%
-<strong>Tables:</strong> »|« as first char, »|« for more columns, »|>« align right, »|<« align left, »|^« centered (default), »||« span columns, »|v« span rows
+<strong>Tables:</strong> Â»|Â« as first char, Â»|Â« for more columns, Â»|>Â« align right, Â»|<Â« align left, Â»|^Â« centered (default), Â»||Â« span columns, Â»|vÂ« span rows
 
 ----
 ! Paragraphs
