@@ -23,8 +23,8 @@ plugin_im_admin	im_admin_synchro_all	Synchroniser tous les projets.
 
 plugin_im_admin	synchronise_muc_msg	est désormais synchronisé avec son salon de discussion partagé. 
 plugin_im_admin	synchronise_grp_msg	est désormais synchronisé avec son groupe partagé.
-plugin_im_admin	synchronise_muc_error	Impossible de synchroniser le salon de discussion partagé. 
-plugin_im_admin	synchronise_grp_error	Impossible de synchroniser le groupe partagé.
+plugin_im_admin	synchronise_muc_error	Impossible de synchroniser le salon de discussion partagé : 
+plugin_im_admin	synchronise_grp_error	Impossible de synchroniser le groupe partagé :
 plugin_im_admin	synchronise_all_msg	        Tous les projets ont été synchronisés avec leur messagerie instantanée.
 plugin_im_admin	choise_action	Choisissez une action .
 

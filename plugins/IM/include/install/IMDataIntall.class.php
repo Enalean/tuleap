@@ -105,7 +105,7 @@ class IMDataIntall {
 			$this->muc_member_build($group_id);
 			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error: ').$e->getMessage());
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error').$e->getMessage());
 		}
 	}
 	
@@ -122,7 +122,7 @@ class IMDataIntall {
 			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
 			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error: ').$e->getMessage());
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error').$e->getMessage());
 		}
 	}
 	
@@ -145,13 +145,13 @@ class IMDataIntall {
 			$this->muc_member_build($group_id);
 			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error: ').$e->getMessage());
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error').$e->getMessage());
 		}
 		try{
 			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
 			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
 		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error: ').$e->getMessage());
+			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error').$e->getMessage());
 		}
 	}
 	 
