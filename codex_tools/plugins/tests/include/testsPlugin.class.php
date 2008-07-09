@@ -25,14 +25,14 @@ class testsPlugin extends Plugin {
     }
     
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/">tests</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/">tests</a></li>';
     }
     
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the tests pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
     

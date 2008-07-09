@@ -15,68 +15,72 @@ class Plugin {
     var $id;
     var $pluginInfo;
     var $hooks;
-    var $_scope;
+    protected $_scope;
     
-    var $SCOPE_SYSTEM;
-    var $SCOPE_PROJECT;
-    var $SCOPE_USER;
+    const SCOPE_SYSTEM  = 0;
+    const SCOPE_PROJECT = 1;
+    const SCOPE_USER    = 2;
     
-    function Plugin($id = -1) {
+    public function Plugin($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();
         
-        $this->SCOPE_SYSTEM  = 0;
-        $this->SCOPE_PROJECT = 1;
-        $this->SCOPE_USER    = 2;
-        
-        $this->_scope = $this->SCOPE_SYSTEM;
+        $this->_scope = Plugin::SCOPE_SYSTEM;
     }
     
-    function getId() {
+    public function getId() {
         return $this->id;
     }
     
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginInfo')) {
             $this->pluginInfo =& new PluginInfo($this);
         }
         return $this->pluginInfo;
     }
     
-    function getHooks() {
+    public function getHooks() {
         return $this->hooks->getKeys();
     }
     
-    function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks() {
         return $this->hooks->getValues();
     }
     
-    function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
+    protected function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
         $value = array();
         $value['hook']       = $hook;
         $value['callback']   = $callback;
         $value['recallHook'] = $recallHook;
         $this->hooks->put( $hook, $value);
     }
-    function _removeHook($hook) {
+    
+    protected function _removeHook($hook) {
         $this->hooks->removeKey( $hook);
     }
-    function CallHook($hook, $param) {
+    
+    public function CallHook($hook, $param) {
     }
     
-    function getScope() {
+    public function getScope() {
         return $this->_scope;
     }
 
-    function setScope($s) {
+    public function setScope($s) {
         $this->_scope = $s;
     }
 
-    function getPluginEtcRoot() {
+    public function getPluginEtcRoot() {
         $pm = $this->_getPluginManager();
         return $GLOBALS['sys_custompluginsroot'] . '/' . $pm->getNameForPlugin($this) .'/etc';
     }
-    function _getPluginPath() {
+    
+    public function _getPluginPath() {
+        $trace = debug_backtrace();
+        trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
+        return $this->getPluginPath();
+    }
+    public function getPluginPath() {
         $pm = $this->_getPluginManager();
         if (isset($GLOBALS['sys_pluginspath']))
             $path = $GLOBALS['sys_pluginspath'];
@@ -86,7 +90,13 @@ class Plugin {
         }
         return $path.'/'.$pm->getNameForPlugin($this);
     }
-    function _getThemePath() {
+    
+    public function _getThemePath() {
+        $trace = debug_backtrace();
+        trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
+        return $this->getThemePath();
+    }
+    public function getThemePath() {
         $pm = $this->_getPluginManager();
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
@@ -105,16 +115,18 @@ class Plugin {
         }
         return $found;
     }
-    function _getPluginManager() {
+    
+    protected function _getPluginManager() {
         $pm = PluginManager::instance();
         return $pm;
     }
+    
     /**
      * Function called when a plugin is set as available or unavailable
      *
      * @param boolean $available true if the plugin is available, false if unavailable
      */
-    function /*abstract*/ setAvailable($available) {
+    public function setAvailable($available) {
     }
 }
 ?>

@@ -209,7 +209,7 @@ class PluginsAdministrationViews extends Views {
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
                 $output .=     '<td>'.$link_to_hooks.'</td>';
                 $output .=   '</tr>';
-                if($plugin->getScope() == $plugin->SCOPE_PROJECT) {
+                if($plugin->getScope() == Plugin::SCOPE_PROJECT) {
                     $output .=   '<tr>';
                     $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_projects:').' </td>';
                     $output .=     '<td>';
@@ -286,7 +286,7 @@ EOS;
                     $output .=   '<tr><td colspan="2"><hr /></td></tr>';
                     $output .=   $props;
                 }
-                if(($props !== '') || ($plugin->getScope() == $plugin->SCOPE_PROJECT)) {
+                if(($props !== '') || ($plugin->getScope() == Plugin::SCOPE_PROJECT)) {
                     $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" value="Change Properties" /></td></tr>';
                 }
                 $output .= '</tbody>';

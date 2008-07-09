@@ -29,7 +29,7 @@ class ServerUpdatePlugin extends Plugin {
     
     function siteAdminHooks($hook, $params) {
         $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
-        $site_url  = $this->_getPluginPath().'/';
+        $site_url  = $this->getPluginPath().'/';
         $site_name = $GLOBALS['Language']->getText('plugin_serverupdate','descriptor_name');
         switch ($hook) {
             case 'site_admin_menu_hook':
@@ -47,8 +47,8 @@ class ServerUpdatePlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the PluginsAdministration pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
     
@@ -99,7 +99,7 @@ class ServerUpdatePlugin extends Plugin {
     
     function process() {
         require_once('ServerUpdate.class.php');
-        $controler =& new ServerUpdate($this->_getThemePath());
+        $controler =& new ServerUpdate($this->getThemePath());
         $controler->process();
     }
 }

@@ -59,7 +59,7 @@ class graphontrackers_linePlugin extends Plugin {
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackers_Line_Chart',
             //The icon used for the button 'Add a chart'
-            'icon'            => $this->_getThemePath().'/images/chart_line.png',
+            'icon'            => $this->getThemePath().'/images/chart_line.png',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_line', 'add_title'),
         );

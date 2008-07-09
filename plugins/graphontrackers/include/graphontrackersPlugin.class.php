@@ -51,7 +51,7 @@ class GraphOnTrackersPlugin extends Plugin {
      */
     function GraphOnTrackersPlugin($id) {
         $this->Plugin($id);
-        $this->setScope($this->SCOPE_PROJECT);
+        $this->setScope(Plugin::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
@@ -106,7 +106,7 @@ class GraphOnTrackersPlugin extends Plugin {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], '/tracker/admin/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />'."\n";
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
     
@@ -114,19 +114,19 @@ class GraphOnTrackersPlugin extends Plugin {
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackers_Chart_Pie',
-            'icon'            => $this->_getThemePath().'/images/chart_pie.png',
+            'icon'            => $this->getThemePath().'/images/chart_pie.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','pie'),
         );
         $params['factories']['bar'] = array(
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackers_Chart_Bar',
-            'icon'            => $this->_getThemePath().'/images/chart_bar.png',
+            'icon'            => $this->getThemePath().'/images/chart_bar.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','bar'),
         );
         $params['factories']['gantt'] = array(
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackers_Chart_Gantt',
-            'icon'            => $this->_getThemePath().'/images/chart_gantt.png',
+            'icon'            => $this->getThemePath().'/images/chart_gantt.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','gantt'),
         );
     }
@@ -200,7 +200,7 @@ class GraphOnTrackersPlugin extends Plugin {
     function tracker_after_report($params){
        if($this->isAllowed()) {
            require_once('html-generators/GraphicEngineHtml.class.php');
-           $eng = new graphicEngineHtml($this->atid,user_getid(),$this->_getThemePath());
+           $eng = new graphicEngineHtml($this->atid,user_getid(),$this->getThemePath());
            $eng->displayReportGraphic($this->report_graphic_id, $params['group_id'], $params['atid'], $params['url']);
        }
     }
@@ -228,7 +228,7 @@ class GraphOnTrackersPlugin extends Plugin {
                 }
                 
                 $user_id = UserManager::instance()->getCurrentUser()->getId();
-                $geh = new graphicEngineHtml($atid, $user_id, $this->_getThemePath());
+                $geh = new graphicEngineHtml($atid, $user_id, $this->getThemePath());
                 if ($request->exist('create_report_graphic') && $request->get('rep_name')) {
                     if ($GLOBALS['ath']->userIsAdmin() && $request->valid(new Valid_WhiteList('rep_scope', array('P', 'I')))) {
                         $rep_scope = $request->get('rep_scope');

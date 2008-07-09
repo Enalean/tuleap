@@ -213,7 +213,7 @@ class PluginManager {
 
     function getAllowedProjects($plugin) {
         $prjIds = null;
-        //if($plugin->getScope() == $plugin->SCOPE_PROJECT) {
+        //if($plugin->getScope() == Plugin::SCOPE_PROJECT) {
         $plugin_factory = $this->_getPluginFactory();
         $prjIds = $plugin_factory->getProjectsByPluginId($plugin);
         //}

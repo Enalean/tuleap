@@ -18,7 +18,7 @@ class ThemediffPlugin extends Plugin {
     }
 
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/">Themediff</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/">Themediff</a></li>';
     }
 }
 

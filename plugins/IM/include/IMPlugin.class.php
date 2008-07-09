@@ -151,7 +151,7 @@ class IMPlugin extends Plugin {
 	 * 
 	 */
 	 function get_icon_path () {
-		$themes_dir=$this->_getThemePath();
+		$themes_dir=$this->getThemePath();
 		$icon_path=$themes_dir.'/images/icons/';
 		return $icon_path;
 	}
@@ -469,7 +469,7 @@ class IMPlugin extends Plugin {
        global $Language;
 	   $Language->loadLanguageMsg('IM','IM');
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
-        echo '<li><a href="'.$this->_getPluginPath().'/?view=codex_im_admin">'.$link_title.'</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/?view=codex_im_admin">'.$link_title.'</a></li>';
     }
  	
  	 function im_process_display_jabber_id ($eParams) {

@@ -109,9 +109,9 @@ class PluginTest extends UnitTestCase {
     }
     function testScope() {
         $p =& new Plugin();
-        $this->assertIdentical($p->getScope(), $p->SCOPE_SYSTEM);
-        $this->assertNotEqual($p->getScope(), $p->SCOPE_PROJECT);
-        $this->assertNotEqual($p->getScope(), $p->SCOPE_USER);
+        $this->assertIdentical($p->getScope(), Plugin::SCOPE_SYSTEM);
+        $this->assertNotEqual($p->getScope(), Plugin::SCOPE_PROJECT);
+        $this->assertNotEqual($p->getScope(), Plugin::SCOPE_USER);
     }
     function testGetPluginEtcRoot() {
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
@@ -136,8 +136,8 @@ class PluginTest extends UnitTestCase {
         $p->setReturnReference('_getPluginManager', $pm);
         $p->Plugin();
         
-        $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
-        $this->assertEqual($p->_getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
+        $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
+        $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
     }
     function testGetThemePath() {
         $GLOBALS['sys_user_theme']        = 'current_theme';
@@ -163,7 +163,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
@@ -175,7 +175,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
@@ -187,7 +187,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
@@ -199,7 +199,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/default');
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/default');
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_pluginspath'].'/'.$shortname.'/themes/default');
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/default');
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_pluginsroot'].$shortname.'/www/');
@@ -213,7 +213,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/'.$GLOBALS['sys_user_theme']);
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
@@ -225,7 +225,7 @@ class PluginTest extends UnitTestCase {
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         mkdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
-        $this->assertEqual($p->_getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
+        $this->assertEqual($p->getThemePath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname.'/themes/default');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/default');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/themes/');
         rmdir($GLOBALS['sys_custompluginsroot'].$shortname.'/www/');

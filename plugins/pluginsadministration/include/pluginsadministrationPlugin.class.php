@@ -28,7 +28,7 @@ class PluginsAdministrationPlugin extends Plugin {
     
     function siteAdminHooks($hook, $params) {
         $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
-        $site_url  = $this->_getPluginPath().'/';
+        $site_url  = $this->getPluginPath().'/';
         $site_name = $GLOBALS['Language']->getText('plugin_pluginsadministration','descriptor_name');
         switch ($hook) {
             case 'site_admin_menu_hook':
@@ -46,8 +46,8 @@ class PluginsAdministrationPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the PluginsAdministration pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
     

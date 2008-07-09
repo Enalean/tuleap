@@ -29,15 +29,15 @@ class <?=$class_name?>Plugin extends Plugin {
     
 <?php if ($use_web_space) { ?>
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/"><?=$class_name?></a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/"><?=$class_name?></a></li>';
     }
     
 <?php   if ($use_css) { ?>
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the <?=$class_name?> pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
     

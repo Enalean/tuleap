@@ -24,7 +24,7 @@ class CreateDAOPlugin extends Plugin {
     }
     
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/">CreateDAO</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/">CreateDAO</a></li>';
     }
     
     function process() {

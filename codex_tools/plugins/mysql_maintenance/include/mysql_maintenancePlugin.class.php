@@ -24,7 +24,7 @@ class mysql_maintenancePlugin extends Plugin {
 	}
     
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/">MySQL Maintenance</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/">MySQL Maintenance</a></li>';
     }
 }
 

@@ -132,7 +132,7 @@ class DocmanPlugin extends Plugin {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                     require_once('Docman.class.php');
-                    $docman =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+                    $docman =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
                     switch($params['permission_type']) {
                         case 'PLUGIN_DOCMAN_READ':
                         case 'PLUGIN_DOCMAN_WRITE':
@@ -159,19 +159,19 @@ class DocmanPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />'."\n";
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
     
     function jsFile($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->_getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->_getPluginPath().'/scripts/docman.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/docman.js"></script>'."\n";
         }
     }
 
@@ -181,14 +181,14 @@ class DocmanPlugin extends Plugin {
 
     function logsDaily($params) {
         require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
         $controler->logsDaily($params);
     }
     
     function service_public_areas($params) {
         if ($params['project']->usesService('docman')) {
             $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
-                '<img src="'. $this->_getThemePath() .'/images/ic/text.png" />&nbsp;' .
+                '<img src="'. $this->getThemePath() .'/images/ic/text.png" />&nbsp;' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>';
@@ -204,7 +204,7 @@ class DocmanPlugin extends Plugin {
     }
     function installNewDocman($params) {
         require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
         $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
     }
     function service_is_used($params) {
@@ -221,7 +221,7 @@ class DocmanPlugin extends Plugin {
     function myPageBox($params) {
         if ($params['widget'] == 'mydocman') {
             require_once('Docman_Widget_MyDocman.class.php');
-            $params['instance'] = new Docman_Widget_MyDocman($this->_getPluginPath());
+            $params['instance'] = new Docman_Widget_MyDocman($this->getPluginPath());
         }
     }
     function widgets($params) {
@@ -247,18 +247,18 @@ class DocmanPlugin extends Plugin {
      */
     function codexDaily() {
         require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
         $controler->notifyFuturObsoleteDocuments();
     }
 
     function process() {
         require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->_getPluginPath(), $this->_getThemePath());
+        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
         $controler->process();
     }
     function processSOAP(&$request) {
         require_once('SOAPDocman.class.php');
-        $controler =& new SOAPDocman($this, $this->_getPluginPath(), $this->_getThemePath(), $request);
+        $controler =& new SOAPDocman($this, $this->getPluginPath(), $this->getThemePath(), $request);
         return $controler->process();
     }
 }

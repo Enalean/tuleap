@@ -19,14 +19,14 @@ class PluginCreationWizardPlugin extends Plugin {
     }
     
     function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->_getPluginPath().'/">PluginCreationWizard</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/">PluginCreationWizard</a></li>';
     }
     
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the PluginsAdministration pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/plugincreationwizard/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->_getThemePath().'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
     
