@@ -164,12 +164,30 @@ function display_account_form($register_error)	{
 <?php 
     echo html_get_timezone_popup ('timezone',$timezone); ?>
 <P>
+<?php
+if($request->isPost() && $request->exist('Register') && !($request->get('form_mail_site')==1)){
 
-<P><INPUT type="checkbox" name="form_mail_site" value="1" checked="checked">
-<?php print $Language->getText('account_register', 'siteupdate'); ?>
+	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" >';
+	
+}else{
+	
+	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" checked>';
 
-<P><INPUT type="checkbox" name="form_mail_va" value="1">
-<?php print $Language->getText('account_register', 'communitymail'); ?>
+}	
+print $Language->getText('account_register', 'siteupdate');
+
+if($request->isPost() && $request->exist('Register') && ($request->get('form_mail_va')==1)){
+
+	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" checked>';
+	
+}else{
+	
+	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" >';
+
+}
+print $Language->getText('account_register', 'communitymail');
+
+?>
 
 <P>
 <?
@@ -190,19 +208,42 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
 <p>
 <?php print $Language->getText('account_register', 'mandatory', $star); ?>
 </p>
-<?php if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users']){
-?>    
-<P><INPUT type="checkbox" name="form_restricted" value="1" checked>
-<?php print $Language->getText('account_register', 'restricted_user'); }?>
+<?php
+
+if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users']){
+
+	if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
+
+		echo '<INPUT type="checkbox" name="form_restricted" value="1" >';
+		
+	}else{
+		
+		echo '<INPUT type="checkbox" name="form_restricted" value="1" checked>';
+	
+	}	
+
+	print $Language->getText('account_register', 'restricted_user'); 
+}
+?>
 
 
 
 <P>
 <p><input type="submit" name="Register" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register'); 
 else print $Language->getText('account_register', 'btn_activate');?>">
-<?php if($page == "admin_creation") {?>
-<INPUT type="checkbox" name="form_send_email" value="1" >
-<?php print $Language->getText('account_register', 'send_email'); }?>
+<?php
+if($page == "admin_creation") {
+	if($request->isPost() && $request->exist('Register') && ($request->get('form_send_email')==1)){
+
+		echo '<INPUT type="checkbox" name="form_send_email" value="1" checked>';
+		
+	}else{
+		
+		echo '<INPUT type="checkbox" name="form_send_email" value="1" >';
+	
+	}
+	print $Language->getText('account_register', 'send_email'); 
+}?>
 
 </form>
 <?
