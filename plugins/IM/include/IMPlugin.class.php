@@ -226,8 +226,8 @@ class IMPlugin extends Plugin {
 	 *  @param array params data from the shared CodeX event
 	 */
 	function im_process ($params) {
-		//$this->muc_room_creation($params);
-		//$this->create_im_shared_group($params);
+		$this->muc_room_creation($params);
+		$this->create_im_shared_group($params);
 		if($this->debug){
 			echo "\nPass !!!<br>";
 		}
