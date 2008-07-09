@@ -21,7 +21,6 @@ plugin_im	im_cient_title	You have the pssibility to choice several Instant messa
 plugin_im	im_roster_member	Roster members
 
 plugin_im	title	Instant Messaging administration
-plugin_im	im_user_login	Login Instant Messaging:
 plugin_im	muc_delete	is delete from Instant Messaging
 plugin_im	muc_locked	is locked now for Instant Messaging!!!
 plugin_im	muc_unlocked	is unlocked now for Instant Messaging!!!
