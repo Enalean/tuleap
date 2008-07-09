@@ -276,6 +276,10 @@ print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
 print "<p>DBG: user_isloggedin= ".user_isloggedin();
 print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
 */
+$anonymous_allowed=false;
+$params = array('script_name'=>$_SERVER['SCRIPT_NAME'], 'anonymous_allowed'=>&$anonymous_allowed);
+$em =& EventManager::instance();
+$em->processEvent('anonymous_access_to_script_allowed', $params);
 
 if (!IS_SCRIPT &&
     $_SERVER['SERVER_NAME'] != 'localhost' &&
@@ -292,7 +296,8 @@ if (!IS_SCRIPT &&
     $_SERVER['SCRIPT_NAME'] != '/account/verify.php' &&
     $_SERVER['SCRIPT_NAME'] != '/scripts/check_pw.js.php' &&
     strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0 &&
-    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 ) {
+    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 && 
+    !$anonymous_allowed ) {
 
     $return_to = urlencode((($_SERVER['REQUEST_URI'] === "/")?"/my/":$_SERVER['REQUEST_URI']));
 
