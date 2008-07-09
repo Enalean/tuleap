@@ -293,9 +293,6 @@ class IMPlugin extends Plugin {
 			
 			try{
 				$this->_get_im_object()->create_shared_group($unix_project_name,$project_name);
-				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('info', $project_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_only_msg'));
-				}
 				$this->last_im_datas["grp"]=$project_name;
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
@@ -329,10 +326,6 @@ class IMPlugin extends Plugin {
 	        
 			try{
 				$this->_get_im_object()->create_muc_room($unix_group_name, $group_name, $group_description, $group_Owner_name);
-				//echo $unix_group_name.'  ('.$group_name.') << '. $group_description.'>>'.$group_Owner_name;
-				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-					$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_only_msg'));
-				}
 				$this->last_im_datas["muc"]=$group_name;
 			} catch(Exception $e){
 				if(!$this->debug){
