@@ -48,4 +48,5 @@ plugin_im_status	forbidden	Status forbidden
 
 plugin_im	user_appearance_pref_name	Instant messaging:
 plugin_im	user_appearance_pref_display_users_presence	Display users presence
+plugin_im	link_im_admin_tool	OpenFire Jabber server administration (login with 'admin' user)
 

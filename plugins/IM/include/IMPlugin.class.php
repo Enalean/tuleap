@@ -42,15 +42,17 @@ class IMPlugin extends Plugin {
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
        	$this->_addHook('approve_pending_project', 'im_process', false);
         $this->_addHook('project_is_suspended_or_pending', 'im_process_lock_muc_room', false);//can process several function
-		$this->_addHook('confirme_account_register', 'account_register', false);
-		$this->_addHook('added_user_to_project', 'im_process_muc_add_member', false);
-		$this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-		$this->_addHook('project_is_active', 'im_process_unlock_muc_room', false);//unlock_muc_room
-		$this->_addHook('delete_project', 'im_process_delete_muc_room', false);
-		$this->_addHook('project_admin_remove_user', 'im_process_muc_remove_member', false);//im_process_muc_remove_member
-		$this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
-		$this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
-		$this->_addHook('get_user_display_name', 'im_process_display_presence', false);
+        $this->_addHook('confirme_account_register', 'account_register', false);
+        $this->_addHook('added_user_to_project', 'im_process_muc_add_member', false);
+        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
+        $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
+        $this->_addHook('project_is_active', 'im_process_unlock_muc_room', false);//unlock_muc_room
+        $this->_addHook('delete_project', 'im_process_delete_muc_room', false);
+        $this->_addHook('project_admin_remove_user', 'im_process_muc_remove_member', false);//im_process_muc_remove_member
+        $this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
+        $this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
+        $this->_addHook('get_user_display_name', 'im_process_display_presence', false);
         $this->_addHook('widget_instance', 'myPageBox', false);
         $this->_addHook('widgets', 'widgets', false);
         $this->_addHook('user_preferences_appearance', 'user_preferences_appearance', false);
@@ -472,6 +474,21 @@ class IMPlugin extends Plugin {
         echo '<li><a href="'.$this->getPluginPath().'/?view=codex_im_admin">'.$link_title.'</a></li>';
     }
  	
+        function site_admin_external_tool_hook($params) {
+            global $Language;
+            $Language->loadLanguageMsg('IM','IM');
+            echo '<li><A href="externaltools.php?tool=openfire">'.
+                $GLOBALS['Language']->getText('plugin_im','link_im_admin_tool').
+                '</A></li>';
+
+        }
+        function site_admin_external_tool_selection_hook($params) {
+            if ($params['tool']=='openfire') {
+                $params['title']="OpenFire Administration";
+                $params['src']='http://'.$GLOBALS['sys_default_domain'].':9090';
+            }
+        }
+
  	 function im_process_display_jabber_id ($eParams) {
 	    global $Language;
 	    $Language->loadLanguageMsg('IM','IM');

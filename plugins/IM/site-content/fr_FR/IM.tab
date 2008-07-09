@@ -50,3 +50,4 @@ plugin_im_status	forbidden	Statut interdit
 
 plugin_im	user_appearance_pref_name	Messagerie Instantanée :
 plugin_im	user_appearance_pref_display_users_presence	Afficher la présence des utilisateurs
+plugin_im	link_im_admin_tool	Administration du serveur Jabber OpenFire (login 'admin')

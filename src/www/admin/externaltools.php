@@ -32,6 +32,9 @@ switch($request->get('tool')) {
     default:
         break;
 }
+$params = array('tool'=>$request->get('tool'), 'title'=>&$title, 'src'=>&$src);
+$em =& EventManager::instance();
+$em->processEvent('site_admin_external_tool_selection_hook', $params);
 
 $HTML->header(array('title'=>$title));
 

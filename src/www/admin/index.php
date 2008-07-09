@@ -232,6 +232,10 @@ if ($GLOBALS['sys_use_trove'] != 0) {
 <LI><A href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</A>
 <LI><A href="externaltools.php?tool=munin">munin</A>
 <LI><A href="externaltools.php?tool=info">PHP info</A>
+<?php
+    $em =& EventManager::instance();
+    $em->processEvent('site_admin_external_tool_hook', null);
+?>
 </ul>
 
 <h3><?php echo $Language->getText('admin_main', 'header_plugins'); ?></h3>
