@@ -716,6 +716,7 @@ function fixup_dynamic_configs($file) {
             $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
         }
         textdomain("phpwiki");
+        bind_textdomain_codeset("phpwiki", "UTF-8");
         if ($chback) { // change back
             chdir($bindtextdomain_real . (isWindows() ? "\\.." : "/.."));
         }
