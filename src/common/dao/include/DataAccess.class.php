@@ -34,7 +34,10 @@ class DataAccess {
         $this->db = mysql_connect($host,$user,$pass, true, $opt) or die('Unable to access the CodeX database. Please contact your administrator.');
         mysql_query("SET NAMES 'utf8'", $this->db);
         if ($this->db) {
-            mysql_select_db($db,$this->db);
+            if (!mysql_select_db($db,$this->db)) {
+                trigger_error(mysql_error(), E_USER_ERROR);
+                die();
+            }
             $this->db_name = $db;
         }
     }
