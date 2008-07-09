@@ -623,7 +623,7 @@ foreach my $project (@project_settings_list)
     # think that is the proper solution.
 
     push(@head, "Content-Type: text/plain; charset=UTF-8\n");
-    #push(@head, "Content-Transfer-Encoding: 8bit\n");
+    push(@head, "Content-Transfer-Encoding: 8bit\n");
     
     push(@head, "\n");
 
