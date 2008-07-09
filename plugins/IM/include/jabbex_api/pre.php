@@ -1,10 +1,10 @@
 <?php
 
-define("JABBER_LOG_FILE","/tmp/jabbex/jabbex_log"); /* CHANGE TO /var/log/codex/jabbex_log */
+define("JABBER_LOG_FILE",$GLOBALS['codex_log']."/jabbex_log"); 
 
 require_once(dirname(__FILE__)."/local.inc.php");
 
-define("DEBUG_ON",true); // Set this flag true to enable debug mode. ___This flag must be false in production environments___
+define("DEBUG_ON",false); // Set this flag true to enable debug mode. ___This flag must be false in production environments___
 
 define("JABBER_SERVER_CONF_FILE",dirname(__FILE__)."/etc/jabbex_conf.xml");
 
