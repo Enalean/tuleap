@@ -53,6 +53,7 @@ CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
+PHP='/usr/bin/php'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
@@ -262,6 +263,14 @@ while [ "$slm_passwd" != "$slm_passwd2" ]; do
     read -s -p "Password for Salome DB user: " slm_passwd
     echo
     read -s -p "Retype password for Salome DB user: " slm_passwd2
+    echo
+done
+
+openfire_passwd="a"; openfire_passwd2="b";
+while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
+    read -s -p "Password for Openfire DB user: " openfire_passwd
+    echo
+    read -s -p "Retype password for Openfire DB user: " openfire_passwd2
     echo
 done
 
@@ -855,6 +864,10 @@ if [ ! -d "/var/lib/mysql/codex" ]; then
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
+GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
+GRANT SELECT ON codex.user to openfireadm@localhost;
+GRANT SELECT ON codex.groups to openfireadm@localhost;
+GRANT SELECT ON codex.user_group to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -1419,6 +1432,16 @@ java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+
+# IM plugin
+# Initialize Jabbex
+IM_ADMIN_GROUP='imadmingroup'
+IM_ADMIN_USER='imadmin'
+IM_ADMIN_USER_PW='1M@dm1n'
+IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
+$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codex -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+# Install plugin
+$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 ##############################################
 # Generate Documentation
