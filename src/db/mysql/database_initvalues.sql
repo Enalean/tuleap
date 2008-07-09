@@ -2565,6 +2565,9 @@ INSERT INTO plugin (name, available) VALUES ('salome', '1');
 -- install and enable graphontracker plugin
 INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
+-- install and enable instant messaging plugin
+INSERT INTO plugin (name, available) VALUES ('IM', '1');
+
 
 --
 -- Insert default references
