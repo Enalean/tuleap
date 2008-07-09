@@ -50,6 +50,11 @@ sub db_connect {
 	    $dbopt = ';mysql_ssl=1';
 	}
 	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost$dbopt", "$sys_dbuser", "$sys_dbpasswd");
+
+        #Connect with UTF-8 encoding
+        $query = "SET NAMES 'utf8'";
+        $sth = $dbh->prepare($query);
+        $sth->execute();
 }
 
 ##############################
