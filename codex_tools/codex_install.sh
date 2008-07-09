@@ -644,7 +644,6 @@ default-character-set=utf8
 [mysqld]
 default-character-set=utf8
 log-bin=codex-bin
-skip-innodb
 skip-bdb
 # file attachment can be 16M in size so take a bit of slack
 # on the mysql packet size
