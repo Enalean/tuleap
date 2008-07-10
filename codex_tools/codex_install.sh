@@ -864,10 +864,6 @@ if [ ! -d "/var/lib/mysql/codex" ]; then
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
-GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
-GRANT SELECT ON codex.user to openfireadm@localhost;
-GRANT SELECT ON codex.groups to openfireadm@localhost;
-GRANT SELECT ON codex.user_group to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -1434,6 +1430,14 @@ $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm co
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 # IM plugin
+# Create openfireadm MySQL user
+$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
+GRANT SELECT ON codex.user to openfireadm@localhost;
+GRANT SELECT ON codex.groups to openfireadm@localhost;
+GRANT SELECT ON codex.user_group to openfireadm@localhost;
+FLUSH PRIVILEGES;
+EOF
 # Initialize Jabbex
 IM_ADMIN_GROUP='imadmingroup'
 IM_ADMIN_USER='imadmin-bot'
