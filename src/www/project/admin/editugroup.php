@@ -118,7 +118,7 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</table>';
     echo '</form>';
     
-    echo '<hr /><p><b>Group members</b></p>';
+    echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
     echo '<div style="padding-left:10px">';
     
     // Get existing members from group
@@ -142,12 +142,12 @@ if (($func=='edit')||($func=='do_create')) {
         echo '</table>';
         echo '</form>';
     } else {
-        echo 'Nobody yet';
+        echo $Language->getText('project_admin_editugroup','nobody_yet');
     }
-    echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/group_add.png') .'Add users to this group'.'</a></p>';
+    echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup','add_user').'</a></p>';
     echo '</div>';
 
-    echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; Go back to the user groups list</a></p>';
+    echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup','go_back').'</a></p>';
         
     // Display associated permissions
     $sql="SELECT * FROM permissions WHERE ugroup_id=$ugroup_id ORDER BY permission_type";

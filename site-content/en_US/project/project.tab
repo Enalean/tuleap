@@ -137,6 +137,10 @@ project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Wiki Page
 project_admin_editugroup	tracker	Tracker
 project_admin_editugroup	tracker_field	Fields from tracker 
+project_admin_editugroup	group_members	Group Members
+project_admin_editugroup	nobody_yet	Nobody yet
+project_admin_editugroup	go_back	Go back to the user groups list
+project_admin_editugroup	add_user	Add users to this group
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

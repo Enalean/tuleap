@@ -131,6 +131,10 @@ project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Page Wiki
 project_admin_editugroup	tracker	Outil de suivi
 project_admin_editugroup	tracker_field	Champs de l'outil de suivi 
+project_admin_editugroup	group_members	Membres du groupe
+project_admin_editugroup	nobody_yet	Personne
+project_admin_editugroup	go_back	Retourner à la liste des groupes d'utilisateurs
+project_admin_editugroup	add_user	Ajouter des utilisateurs à ce groupe
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
