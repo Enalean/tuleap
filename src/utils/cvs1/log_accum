@@ -45,6 +45,7 @@
 # Use LWP for CodeX HTTP API
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
+use Encode;
 
 # DB connection
 use DBI;
@@ -420,6 +421,7 @@ sub mail_notification {
     local($names, $subject, @text) = @_;
 
     print STDERR "mail_notification: to $names, subject $subject\n" if ($debug);
+    $subject = encode("MIME-Header", decode("UTF-8", $subject));
     if ($SENDMAIL ne '')
     {
 	my ($comma_names) = join (', ', split (/\s+/, $names));
