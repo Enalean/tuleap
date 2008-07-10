@@ -129,7 +129,7 @@ if ($ugroup_id) {
             'group'=>$group_id,
             'help' => 'UserGroups.html#UGroupCreation')
         );
-        echo '<P><h2>'. 'Add users to '.  $hp->purify($ugroup_name, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
+        echo '<P><h2>'. $Language->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
         
         //Display the form
         $selected = 'selected="selected"';
@@ -137,7 +137,7 @@ if ($ugroup_id) {
         echo '<table><tr valign="top"><td>';
         
         //Display existing members
-        echo '<fieldset><legend>'. 'Members' .'</legend>';
+        echo '<fieldset><legend>'. $Language->getText('project_admin_editugroup','members').'</legend>';
         $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
         $res_members = db_query($sql_members);
         if (db_numrows($res_members)>0) {
@@ -155,7 +155,7 @@ if ($ugroup_id) {
             echo '</tbody></table>';
             echo '</fieldset>';
         } else {
-            echo 'The group is empty';
+            echo $Language->getText('project_admin_editugroup','group_empty');
         }
         
         echo '</td><td>';
@@ -165,19 +165,18 @@ if ($ugroup_id) {
         echo '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
 
         //Filter
-        echo '<fieldset><legend>'. 'Users' .'</legend>';
-        echo '<p>'. 'Search in ';
+        echo '<fieldset><legend>'.$Language->getText('project_admin_editugroup','users').'</legend>';
+        echo '<p>'. $Language->getText('project_admin_editugroup','search_in').' ';
         echo '<select name="in_project">';
-        echo '<option value="0" '. ( !$in_project ? $selected : '') .'>'. 'any project' .'</option>';
-        echo '<option value="'. (int)$group_id .'" '. ($in_project == $group_id ? $selected : '') .'>'. 'this project' .'</option>';
+        echo '<option value="0" '. ( !$in_project ? $selected : '') .'>'. $Language->getText('project_admin_editugroup','any_project') .'</option>';
+        echo '<option value="'. (int)$group_id .'" '. ($in_project == $group_id ? $selected : '') .'>'. $Language->getText('project_admin_editugroup','this_project') .'</option>';
         echo '</select>';
-        echo ' users ';
+        echo $Language->getText('project_admin_editugroup','name_contains').' ';
         
         //contains
-        echo 'whose name or email contains ';
         echo '<input type="text" name="search" value="'.  $hp->purify($search, CODEX_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
         //begin
-        echo 'or begins with ';
+        echo $Language->getText('project_admin_editugroup','begins').' ';
         echo '<select name="begin">';
         echo '<option value="" '. (in_array($begin, $allowed_begin_values) ? $selected : '') .'></option>';
         foreach($allowed_begin_values as $b) {
@@ -186,7 +185,7 @@ if ($ugroup_id) {
         echo '</select>. ';
         
         //Display
-        echo '<span style="white-space:nowrap;">Show ';
+        echo '<span style="white-space:nowrap;">'.$Language->getText('project_admin_editugroup','show').' ';
         //number per page
         echo '<select name="number_per_page">';
         echo '<option '. ($number_per_page == 15 ? $selected : '') .'>15</option>';
@@ -196,7 +195,7 @@ if ($ugroup_id) {
             echo '<option '. $selected .'>'. (int)$number_per_page .'</option>';
         }
         echo '</select> ';
-        echo 'users per page. ';
+        echo $Language->getText('project_admin_editugroup','users_per_page').' ';
         
         
         echo '<input type="submit" name="browse" value="Browse" /></span>';
@@ -267,7 +266,7 @@ if ($ugroup_id) {
         echo '</td></tr></table>';
         
         echo '</form>';
-        echo '<p><a href="/project/admin/editugroup.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'&amp;func=edit">&laquo; Go back to the user group edition</a></p>';
+        echo '<p><a href="/project/admin/editugroup.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'&amp;func=edit">&laquo;'.$Language->getText('project_admin_editugroup','go_back').'</a></p>';
         $GLOBALS['HTML']->footer(array());
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
