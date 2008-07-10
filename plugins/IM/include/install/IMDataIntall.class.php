@@ -8,10 +8,6 @@ require_once('common/dao/CodexDataAccess.class.php');
 class IMDataIntall {
     
     var $codexdata;
-    var $openfire_conexion;
-    var $codex_conexion;
-    var $openfire_db;
-    var $codex_bd;
     var $openfire_dao;
     var $codex_dao;
     /**
@@ -27,14 +23,14 @@ class IMDataIntall {
     
     function &_get_im_object () {
 		if(isset($this->im)&&$this->im){
-        	//class déjà instanciée
+        	//already intancied 
         	return $this->im;
         }else {
 			//
-			if(isset($this->session)&&($this->session)){//si la session courente est gardée 
+			if(isset($this->session)&&($this->session)){//if current session is saved 
 			$this->im= new Jabbex($this->session);
 			return $this->im;
-			}else{ //on recupére de nouveau les session ID !!
+			}else{ //we get a new session ID !!
 				$session=session_hash();
 				if((isset($session))&&$session){
 					$this->im=new Jabbex($session);
@@ -98,8 +94,6 @@ class IMDataIntall {
 		$group_description=$request->get('group_description');
 		$group_Owner_name=$request->get('group_Owner_name');
 		$im_object=$this->_get_im_object();
-		//var_dump($im_object);
-		//echo $unix_group_name.'  ( '.$group_name.') de '.$group_Owner_name ;
 		try{
 			$im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
 			$this->muc_member_build($group_id);
@@ -136,7 +130,6 @@ class IMDataIntall {
 		$unix_group_name=$request->get('unix_group_name');
 		$group_name=$request->get('group_name');
 		$group_id=$request->get('group_id');
-		//var_dump($group_id);
 		$group_description=$request->get('group_description');
 		$group_Owner_name=$request->get('group_Owner_name');
 		$im_object=$this->_get_im_object();
@@ -164,7 +157,7 @@ class IMDataIntall {
 		$action = '';
 		$nb_grp=0 ;
 		$nb_muc=0;					
-		$res_grp = $this->codex_dao->search_group_without_shared_group();//db_query($sqlshowInRoster);
+		$res_grp = $this->codex_dao->search_group_without_shared_group();
 		$res_grp=$res_grp->query;
 		$res_muc =$this->codex_dao->search_group_without_muc(); //
 		$res_muc=$res_muc->query;
@@ -184,7 +177,6 @@ class IMDataIntall {
 		if($nb_muc>0){
 			$array_muc=result_column_to_array($res_muc,0);
 		}
-		
 		
 		$array_muc_and_grp=array_intersect($array_grp,$array_muc);
 		
@@ -209,12 +201,11 @@ class IMDataIntall {
 			        $group_description = $project->getDescription();
 			        $grp=new Group($val);
 			        $group_id=$grp->getID();//$group_id=$val;
-			        //var_dump($group_id);
 			        $project_members_ids=$grp->getMembersId();
 			        foreach($project_members_ids as $key=>$id){
 			        	$group_Owner_object=new User($id);
 			        	if($group_Owner_object->isMember($val,'A')){
-			        		 $group_Owner_name =$group_Owner_object->getName();
+			        		 $group_Owner_name =trim($group_Owner_object->getName());
 			        	}
 			        }
 			        
