@@ -19,8 +19,8 @@
 
     <para>A cette fin, CodeX propose un ensemble de services de
     communication que l'équipe de projet peut personnaliser. Cela
-    inclut les listes de diffusion, le service d'annonces (news) et
-    les forums Web.</para>
+    inclut les listes de diffusion, le service d'annonces (news),
+    les forums Web et un plug-in de messagerie instantanée.</para>
 
     <section id="MailingLists">
       <title>Listes de distribution</title>
@@ -206,6 +206,133 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       statut du forum. Cette dernière fonctionnalité permet aux
       administrateurs de rendre un forum public ou privé, de modifier
       son nom ou sa description ou même de le détruire.</para>
+    </section>
+    
+    <section id="IM">
+        <title>Plug-in de messagerie instantanée</title>
+        
+        <para>CodeX est associé à un serveur Jabber et contient un plug-in de 
+        messagerie instantanée (IM) permettant un certain niveau d'interaction
+        entre eux.</para>
+        
+        <para>Si le plug-in est actif, un compte de messagerie instantanée sera
+        automatiquement disponible pour chaque utilisateur CodeX, et ceux-ci pourront
+        se connecter sur le serveur Jabber en utilisant leurs identifiants CodeX.
+        De plus, les utilisateurs membres d'un même projet seront regroupés ensembles
+        sur le serveur Jabber, qui ajoutera automatiquement ce groupe dans la liste de
+        contacts de chacun des membres.</para>
+        
+        <para>Pour chaque projet, le plug-in crée un salon de discussion multi-utilisateurs
+        (MUC) où les membres d'un projet peuvent discuter ensemble. Seuls les membres d'un projet
+        peuvent rejoindre le salon lui correspondant, mais un membre présent dans un salon peut
+        inviter des utilisateurs externes au projet.</para>
+        
+        <para>Le plug-in IM de CodeX ne contient pas de client Jabber, chaque utilisateur
+        est libre d'utiliser le client qui correspond le mieux a ses besoins. Un certain
+        nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
+        plateformes, une liste non-exhaustive est disponible à l'url http://www.jabber.org/clients.</para>
+        
+        <para>Le status d'un utilisateur utilisant un client Jabber (en ligne, occupé, absent)
+        est affiché dans CodeX.</para>
+        
+        <section id="JabberClientConfiguration">
+            <title>Configuration d'un client Jabber</title>
+            
+            <para>La configuration d'un client Jabber pour utiliser votre compte CodeX
+            est simple. Si vous utilisez un client qui accèpte plusieurs protocoles de 
+            communication, la première chose à faire est de choisir le protocole Jabber 
+            (ou XMPP). Trois autres informations sont nécessaires pour vous connecter :
+            votre nom d'utilisateur, votre mot de passe et l'adresse du serveur Jabber
+            auquel vous allez vous connecter. Certains clients Jabber utilisent le terme de JID
+            (ou Jabber ID) qui fait simplement référence au nom d'utilisateur associé à l'adresse
+            du serveur par un symbole @ (i.e. nomd'utilisateur@serveurJabber.com), d'autres
+            demandent explicitement le nom et l'adresse du serveur. Votre JID est disponible
+            dans votre espace personnel sur le site web CodeX en vous authentifiant, et en
+            cliquant sur le lien "Mon compte" sur la page "Ma page personnelle", ou tout simplement
+            en accedant à votre "Profil développeur". Vous pourrez ainsi trouver votre 
+            "Login Messagerie Instantanée" qui est composé de votre nom d'utilisateur et de
+            l'adresse du serveur Jabber associé à CodeX. Utilisez le même mot de passe pour
+            vous authentifier sur le serveur Jabber que pour vous connecter à CodeX.
+            </para>
+            
+            <para>En plus de ces paramètres, le client peut vous demander le nom de la
+            ressource que vous utilisez pour vous connecter sur votre compte Jabber.
+            Ceci peut être pratique si vous vous connectez au même compte Jabber depuis
+            différents matériels. Par exemple, un message peut vous être adressé à 
+            vous@serveur.com/pda à la place de vous@serveur.com/bureau (dans ce cas, "pda"
+            et "bureau" sont les ressources).Vous pouvez remplir ce champ avec une chaine alpha numérique.
+            </para>
+            <para>Pour finir, le client a besoin de connaitre le numéro de port que le
+            serveur Jabber écoute. Par defaut, cette valeur est le 5222, et la plupart
+            des clients Jabber l'utilise par defaut.</para>
+            
+            <para>D'autres paramètres "avancés" peuvent être configurés, mais ce n'est pas
+            l'objet de ce guide de détailler l'utilisation d'un client Jabber. Pour plus
+            d'informations, consultez la documentation fournie avec votre client.</para>
+            
+        </section>
+        <section id="JoiningAMUC">
+            <title>Rejoindre un salon de discussion multi-utilisateurs (MUC)</title>
+            <para>Comme il a été spécifié précédement,le plug-in de messagerie
+            instantanée crée un salon de discussion multi-utilisateurs pour chaque projet.
+            Ce salon porte le nom du projet, et n'est accessible qu'aux membres du projet.
+            </para>
+            
+            <para>Vous devez paramètrer votre client Jabber avec l'adresse du serveur de
+            conférence pour qu'il sache où récupérer les informations concernant les salons
+            de discussion. Cette adresse est simplement conference.serveurJabber.com, c'est
+            à dire le mot "conference", un ".", et l'adresse du serveur Jabber. A partir de là
+            vous avez accès à la liste des salons, et vous pouvez vous connectez à ceux
+            correspondant à vos projets.</para>
+            
+            <para>Chaque client Jabber a sa propre manière de gérer les salons de discussion, 
+            il est possible que l'étape décrite précédement soit différentes en fonction
+            des clients. En cas de besoin, consultez la documentation concernant votre
+            client Jabber à propos des salons de discussion (MUC).</para>
+            
+            <para>Une fois connecté au salon, vous pouvez inviter des utilisateurs non-membres
+            du projet à le rejoindre. Une fois qu'un utilisateur a accepté une invitation, il
+            devient membre du salon de discussion.</para>
+            
+            <para>Pour plus d'informations sur l'invitation d'utilisateurs exétieurs dans un
+            salon de discussion, consultez la documentation de votre client Jabber.</para>
+        </section>
+        
+        <section id="JabberOnCodexWebPage">
+        <title>Intégration de la messagerie instantanée dans CodeX</title>
+        
+        <para>Un certain nombre d'informations concernant la messagerie instantanée 
+        sont disponibles directement depuis CodeX. Ainsi, chaque utilisateur peut voir sa 
+        liste de contact ainsi que leur status directement depuis son espace personnel. 
+        Pour ce faire, il suffit de se rendre sur la page "Ma Page Personnelle". Si le 
+        widget affichant la liste de contact n'est pas visible, il faut l'ajouter. Pour ce 
+        faire, cliquez sur le lien "Ajouter des widgets" , et ajouter le widget correspondant 
+        à "Ma liste de contact IM".</para>
+        
+        <para>Chaque nom d'utilisateur affiché dans CodeX s'accompagne d'une icone de couleur 
+        (gris,vert, jaune ou rouge) indiquant le status de l'utilisateur : gris pour 
+        "non connecté", vert pour "en ligne", jaune pour "absent" et rouge pour "occupé". 
+        Les utilisateurs peuvent modifier leur status à l'aide de leur client Jabber.</para>
+        
+        <para>Tout nouveau projet approuvé implique la création d'un groupe partagé et 
+        d'un salon de discussion correspondant au projet.</para>
+        
+        <para>Tout nouveau membre ajouté au projet est également ajouté au groupe partagé 
+        et au salon de discussion correspondant. Ce nouveau membre sera automatiquement invité 
+        à rejoindre le salon de discussion du projet dès sa prochaine connection sur le serveur 
+        Jabber.</para>
+        
+        <para>Si un membre est supprimé dans un projet alors il sera supprimé du groupe 
+        partagé et du salon de discussions correspondant .</para>
+        
+        <para>Si un projet est suspendu ou en attente de validation, le salon de discutions
+         sera rendue indisponible (vérouillé) et le groupe partagé ne sera pas visible sur 
+         la liste de contacts des membres du projet.</para>
+         
+         <para>Si un projet est détruit, son salon de discutions sera détruit et son 
+         groupe partagé n'existera plus .</para>
+        
+        </section>
     </section>
   </chapter>
 <!--

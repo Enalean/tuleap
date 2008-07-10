@@ -18,7 +18,7 @@
 
     <para>To this end, CodeX offers a series of communication services that
     can be customized by the project team. These include mailing lists, the
-    News service and the Web Forums.</para>
+    News service, the Web Forums and a Instant Messaging Plug-in.</para>
 
     <section id="MailingLists">
       <title>Mailing Lists</title>
@@ -178,6 +178,131 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       forums public or private, edit the name and description of the forum, or
       even delete the forum.</para>
     </section>
+    
+    <section id="IM">
+        <title>Instant Messaging Plug-in</title>
+        
+        <para>CodeX is bundled with a Jabber server and an Instant Messaging (IM)
+        Plug-In that allows a certain level of integration between them.</para>
+        
+        <para>If this plug-in is active, an IM account will be automatically
+        available to each CodeX user and they will be able to log into the Jabber
+        server using their CodeX credentials. Furthermore, users participating in
+        a project will be grouped together in the Jabber server, whose will 
+        automatically add this group to each of the participants' roster.</para>
+        
+        <para>For each project the plug-in will create a multi-user chat room (MUC)
+        where the members of a project can chat together. Only members of a project
+        can join its respective MUC, but once a member has joined the room he or she
+        can invite external users.</para>
+        
+        <para>The CodeX IM plug-in does not come bundled with any Jabber client, 
+        thus each user can choose the client that best fits his or her needs. Several
+        open source (and/or free) clients are available for the most common platforms,
+        and you can find a list (non-exhaustive) of them at http://www.jabber.org/clients.
+        </para>
+        
+        <para>The status of a user using a Jabber client (online, busy, away) is 
+        displayed in CodeX.</para>
+        
+        <section id="JabberClientConfiguration">
+            <title>Jabber Client Configuration</title>
+            
+            <para>Configuring a Jabber client to use your CodeX account is 
+            straightforward. In case you are using a multi protocol client the first 
+            thing you need to do is setting the communication protocol to Jabber (or XMPP). 
+            Three other pieces of information are essential for connecting to your Jabber 
+            account: your username, your password, and the address of the Jabber server you 
+            will connect to. Some Jabber clients refer to the JID (or Jabber ID) which is 
+            simply your username and the Jabber server address connected by a @ sign 
+            (eg. username@jabberhost.com), others ask explicitly for your username and the 
+            Jabber server address. You can find your JID at your personal area on the CodeX 
+            web page by logging into CodeX and clicking on the link “Account Maintenance” on 
+            the tab  “My Personal Page”, or simply by accessing your “Developer Profile”. 
+            There you can find your “Instant Messaging Login”, which is  formed by your CodeX 
+            username and the CodeX Jabber server address. Use the same password you use to 
+            sign in to your CodeX account.</para>
+            
+            <para>In addition to these parameters the client may ask you a name for 
+            the resource you are using to connect to your Jabber account. This is handy 
+            when you are connected to the same Jabber account through different devices 
+            and so, for example, a message can be delivered to you@yourhost.com/pda instead 
+            of you@yourhost.com/office (in this case “pda” and “office” are the resources).
+            You can fill it with any alpha-numeric string.</para>
+            
+            <para>Finally, the client needs to know the port number the Jabber server 
+            is listening to. The default value for this parameter is 5222, and most of 
+            the Jabber clients use it by default.</para>
+            
+            <para>Some other “advanced” parameters can be configured, but it is out 
+            of the scope of this guide to talk about them, so please refer to your Jabber 
+            client documentation for further information on this topic.      
+            </para>
+            
+        </section>
+        <section id="JoiningAMUC">
+            <title>Joining a Multi-User Chat Room (MUC)</title>
+            <para>As stated before, the IM plug-in creates a multi-user chat
+            room for each project. This room is named after the project name 
+            and is opened only for project members.</para>
+            
+            <para>You need to inform your Jabber client the address of the conference
+            server it must query for chat rooms. This address is simply 
+            conference.server_address, i.e. the word “conference”, a dot, and the 
+            Jabber server address. Then you will be able to retrieve the list of available
+            chat rooms on the server. Just find the chat room corresponding to your project
+            and join it.</para>
+            
+            <para>Of course the steps described above are very generic, and each 
+            Jabber client has its own specific process. Please check your Jabber client 
+            documentation for further information about its support on multi-user chat 
+            (group chat, conferences, or simply chat rooms).</para>
+            
+            <para>Once inside the room you can invite non-members to join it.
+            Once the user accepts the invitation he or she becomes member of
+             the chat room.</para>
+            
+            <para>For further information on how to invite external users to chat
+            rooms using your Jabber client please refer to its documentation.</para>
+        </section>
+        
+        <section id="JabberOnCodexWebPage">
+        <title>Jabber Related Information on the CodeX Web Page</title>
+        
+        <para>CodeX provides several bits of information regarding the Instant 
+        Messaging on its web interface. Thus, each user has access to his roster 
+        (contact list) and the status of each of his contacts directly on his personal page.
+        In order to do this, simply visit the page "My Personal Page". If the widget 
+        displaying the contact list is not visible it must be added. To do so, click on the 
+        link "Add widgets" and add the widget corresponding to "My IM Roster".
+        </para>
+        
+        <para>Next to each user name CodeX displays a colored icon (gray, green, yellow 
+        or red) that indicates the status of the user: gray for "offline", green for "online",
+        yellow for "away", and red for "busy". Users can change their status through their 
+        Jabber client.</para>
+        
+        <para>Any new approved project implies the creation of a corresponding shared group
+        and chat room.</para>
+        
+        <para>Any new member added to the project is also added to the corresponding shared
+        group and chat room. This new member will be automatically invited to join the 
+        project's chat room as soon as he or she connects to the Jabber server.</para>
+        
+        <para>If a member is removed from a project then he or she will also be removed 
+        from its corresponding shared group and chat room.</para>
+        
+        <para>If a project is suspended or awaiting validation, its corresponding chat 
+        room will be made unavailable (locked) and the shared group will not be visible on 
+        the roster of project members.</para>
+        
+        <para>If a project is deleted, the corresponding chat room and shared group will 
+        be destroyed as well.</para>
+        
+        </section>
+        
+    </section>
+    
   </chapter>
 <!--
 Local Variables:
