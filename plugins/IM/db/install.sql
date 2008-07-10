@@ -24,12 +24,13 @@ insert into service (group_id, label, description, short_name, link, is_active, 
 insert into service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (47, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20);
 
 
-# imadmin user
+
+# imadmin-bot user
 # This is a "bot": do not try to log on the Web interface with this user!
 # His passwd is "1M@dm1n" (needed by openfire)
 INSERT INTO user SET \
         user_id = '47', \
-        user_name = 'imadmin', \
+        user_name = 'imadmin-bot', \
         email = '', \
         user_pw = '5127685c3da658593e6bac55e441c175', \
         realname = 'IM Administrator (do not delete)', \
