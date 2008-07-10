@@ -30,7 +30,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		}
 	}
 	
-	echo "<P><B><u>".$hp->purify($desc_name,CODEX_PURIFIER_LIGHT);
+	echo "<P><B><u>".$hp->purify($desc_name,CODEX_PURIFIER_BASIC);
 	if($descfieldsinfos[$i]["desc_required"]==1){
 		echo "<font color='red'>*</font>";
 	}

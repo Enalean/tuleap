@@ -63,17 +63,17 @@ if($remove_required_desc_id){
 
 $update=$request->get('Update');
 $add_desc=$request->get('Add_desc');
-$desc_name= trim($request->get('form_name'));
-$desc_description= trim($request->get('form_desc'));
+$desc_name= $request->get('form_name');
+$desc_description= $request->get('form_desc');
 $desc_type= $request->get('form_type');
-$desc_rank= trim($request->get('form_rank'));
+$desc_rank= $request->get('form_rank');
 $desc_required= $request->get('form_required');
 
 if ($add_desc || $update) {
 
 	//data validation
 	$valid_data=1;
-	if (!$desc_name||!$desc_description||!$desc_rank) {
+	if (!trim($desc_name) || !trim($desc_description)) {
 	    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_desc_fields', 'info_missed'));
 		$valid_data=0;
 	}
@@ -223,7 +223,7 @@ if($update_fields_desc_id){
 	
 		echo "<TR class='".util_get_alt_row_color($i)."'>";
 	
-		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODEX_PURIFIER_LIGHT)."</a></TD>";
+		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODEX_PURIFIER_BASIC)."</a></TD>";
 		echo "<TD align='center'>".$hp->purify($desc_desc,CODEX_PURIFIER_LIGHT)."</TD>";
 		if($descfieldsinfos[$i]['desc_required']==0){
 			echo "<TD align='center'><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
@@ -249,13 +249,13 @@ if($update_fields_desc_id){
 	
 	echo "<form action='desc_fields_edit.php' method='post'>";
 	echo "<p>".$Language->getText('admin_desc_fields','desc_name')." : ";
-	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='".$desc_name."'></br></p>";
+	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='". $hp->purify($desc_name, CODEX_CONVERT_HTML) ."'></br></p>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_description')." : ";
-	echo "<br><TEXTAREA name='form_desc' wrap='virtual' cols='70' rows='5'>".$desc_description."</TEXTAREA></br></p>";
+	echo "<br><TEXTAREA name='form_desc' wrap='virtual' cols='70' rows='5'>". $hp->purify($desc_description, CODEX_CONVERT_HTML) ."</TEXTAREA></br></p>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','rank_on_screen')." : ";
-	echo "<input type='text' size='5'  maxlen='5' name='form_rank'' value='".$desc_rank."'></p>";
+	echo "<input type='text' size='5'  maxlen='5' name='form_rank'' value='". $hp->purify($desc_rank, CODEX_CONVERT_HTML) ."'></p>";
 	echo "<p>".$Language->getText('admin_desc_fields','desc_type')." : ";
 	
 	echo "<SELECT name='form_type'>";
