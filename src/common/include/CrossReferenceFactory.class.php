@@ -316,7 +316,7 @@ class CrossReferenceFactory {
     				 	'title' => $Language->getText('cross_ref_fact_include','reference_to')));
 
     			for($i=0;$i<sizeof($cvs_commit_ref_to);$i++){		
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_to[$i]->getRefSourceUrl()."'>";
+    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_to[$i]->getRefTargetUrl()."'>";
 	    			$display.="#".$cvs_commit_ref_to[$i]->getRefTargetId()."</a>";
 	    			if($i!=(sizeof($cvs_commit_ref_to)-1)){
 	    				$display.= " , ";
