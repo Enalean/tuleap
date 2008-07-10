@@ -108,6 +108,7 @@ INSERT INTO group_desc SET \
 #
 # Default Data for 'groups'
 #
+# Note: if you change the 'group' structure, do not forget to update the IM group (no 47) in the IM plugin.
 
 INSERT INTO groups SET \
   group_id = '1', \
@@ -1362,6 +1363,7 @@ INSERT INTO artifact_field VALUES (36,6,13,'slm_action',1,'TF','60/150','Action'
 INSERT INTO artifact_field VALUES (37,6,13,'slm_execution',1,'TF','60/150','Execution','Associated Salomé TMF execution','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (38,6,13,'slm_dataset',1,'TF','60/150','Data Set','Associated Salomé TMF data set','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (39,6,11,'slm_priority',2,'SB','','Salome Priority','Salome Priority involved in QSScore calculation. Please do not modify it.','',0,1,1,0,NULL,'2');
+INSERT INTO artifact_field VALUES (40,6,11,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Scrum Backlog tracker
 INSERT INTO artifact_field VALUES (1,7,14,'submitted_by',5,'SB', '', 'Submitted by','User who originally submitted the artifact','',0,1,1,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,7,14,'open_date',4,'DF', '', 'Submitted on','Date and time for the initial artifact submission','',0,0,0,1,NULL,'');
@@ -1385,6 +1387,7 @@ INSERT INTO artifact_field VALUES (19,7,15,'iteration',2,'TF', '', 'Iteration','
 INSERT INTO artifact_field VALUES (20,7,15,'rank',2,'TF', '', 'Rank','Rank of story in current sprint (i.e priority)','',0,1,1,0,NULL,'0');
 INSERT INTO artifact_field VALUES (21,7,15,'backlog',2,'SB', '', 'Backlog','Sprint or Product backlog?','',0,0,1,0,NULL,'101');
 INSERT INTO artifact_field VALUES (22,7,15,'remaining_effort',2,'TF', '', 'Remaining Effort','Remaining Effort','',0,1,1,0,NULL,'0');
+INSERT INTO artifact_field VALUES (23,7,14,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 
 
 --
@@ -2036,11 +2039,8 @@ insert into service (service_id, group_id, label, description, short_name, link,
 -- Group 46 - SiteNews
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (51, 46, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/sitenews/', 1, 1, 'system', 10);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (52, 46, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=46', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (53, 46, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://sitenews._DOMAIN_NAME_', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (54, 46, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=46', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (55, 46, 'service_news_lbl_key', 'service_news_desc_key', 'news', '/news/?group_id=46', 1, 1, 'system', 120);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (56, 46, 'service_file_lbl_key', 'service_file_desc_key', 'file', '/file/showfiles.php?group_id=46', 1, 1, 'system', 140);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (57, 46, 'service_tracker_lbl_key', 'service_tracker_desc_key', 'tracker', '/tracker/index.php?group_id=46', 1, 1, 'system', 150);
 
 --
 --
