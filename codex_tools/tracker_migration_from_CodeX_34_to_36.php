@@ -343,6 +343,7 @@ $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("T
 mysql_query($sql);
 $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("TRACKER_FIELD_UPDATE","'.$artifact_group_id.'#9",3)';
 mysql_query($sql);
-
+$sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ("TRACKER_FIELD_UPDATE","'.$artifact_group_id.'#6",3)';
+mysql_query($sql);
 
 ?>
