@@ -1,0 +1,45 @@
+
+module others 1.0;
+
+require {
+	type iso9660_t;
+	type system_mail_t;
+	type fs_t;
+	type user_home_dir_t;
+	type httpd_t;
+	type procmail_t;
+	type mailman_archive_t;
+	type httpd_log_t;
+	type tmp_t;
+	type cvs_t;
+	type cvs_data_t;
+	type httpd_sys_content_t;
+	type httpd_sys_script_t;
+	type logwatch_t;
+	class unix_stream_socket { read write };
+	class lnk_file read;
+	class dir { search getattr };
+	class file { read ioctl write getattr append };
+	class filesystem associate;
+}
+
+#============= httpd_sys_script_t ==============
+allow httpd_sys_script_t tmp_t:file { write ioctl getattr append };
+
+#============= httpd_t ==============
+allow httpd_t cvs_data_t:lnk_file read;
+allow httpd_t httpd_log_t:file write;
+
+#============= iso9660_t ==============
+allow iso9660_t fs_t:filesystem associate;
+
+#============= logwatch_t ==============
+allow logwatch_t user_home_dir_t:dir getattr;
+
+#============= procmail_t ==============
+allow procmail_t httpd_sys_content_t:dir search;
+
+#============= system_mail_t ==============
+allow system_mail_t cvs_t:unix_stream_socket { read write };
+allow system_mail_t httpd_t:file read;
+allow system_mail_t tmp_t:file write;

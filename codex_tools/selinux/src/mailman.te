@@ -3,8 +3,10 @@ module mailman 1.0;
 
 require {
 	type mailman_mail_t;
+        type mailman_archive_t;
 	type lib_t;
-	class dir { write remove_name };
+	class dir { write remove_name search add_name getattr };
+        class file { read create getattr append };
         class capability kill;
 
 }
@@ -12,3 +14,6 @@ require {
 #============= mailman_mail_t ==============
 allow mailman_mail_t lib_t:dir { write remove_name };
 allow mailman_mail_t self:capability kill;
+allow mailman_mail_t mailman_archive_t:dir { write search add_name getattr };
+allow mailman_mail_t mailman_archive_t:file { read create getattr append };
+
