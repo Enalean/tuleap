@@ -26,12 +26,23 @@ require_once('common/plugin/Plugin.class.php');
 
 class Docman_watermarkPlugin extends Plugin {
     
+    
+    /**
+     *  constructor of Docman_watermarkPlugin class
+     *  @param int id : the plugin id
+     *  @return void
+     */
     function Docman_watermarkPlugin($id) {
         $this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('docman_file_before_download', 'stampFile', false);
     }
 
+    /**
+     *  method to get the plugin info to be displayed in the plugin administration
+     *  @param void
+     *  @return void
+     */
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'Docman_watermarkPluginInfo')) {
             require_once('Docman_watermarkPluginInfo.class.php');
@@ -40,11 +51,20 @@ class Docman_watermarkPlugin extends Plugin {
         return $this->pluginInfo;
     }
     
-
+    /**
+     *  hook method to load the plugin language file
+     *  @param array params
+     *  @return void 
+     */
     function loadPluginLanguageFile($params) {
         $GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
     }
 
+    /**
+     *  hook method to perform the PDF version stamping
+     *  @param array params
+     *  @return void
+     */
     function stampFile($params) {
         require_once('Docman_watermark_Stamper.class.php');
         $stamper = new Docman_watermark_Stamper($params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
@@ -56,6 +76,8 @@ class Docman_watermarkPlugin extends Plugin {
                 exit(0);
             }
         } catch (Zend_pdf_exception $e) {
+            //the application should not be able to download a file 
+            //if some problem occure during stamping process
             exit(0);
         }
     }
