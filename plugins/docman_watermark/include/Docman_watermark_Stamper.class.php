@@ -38,6 +38,16 @@ class Docman_watermark_Stamper {
     var $user;
     var $pdf;
     
+    /**
+     *  constructor of Docman_watermark_Stamper class
+     *  @param String path: the PDF item path
+     *  @param array('mime_type','file_name') headers: the PDF item properties
+     *  @param int group_id: the project id
+     *  @param int item: the PDF item id
+     *  @param int user: the user id
+     *  @return void
+     */
+    
     public function Docman_watermark_Stamper($path,$headers,$group_id,$item, $user) {
         $this->item     = $item;
         $this->user     = $user; 
@@ -46,15 +56,33 @@ class Docman_watermark_Stamper {
         $this->headers  = $headers;
     }
     
+    /**
+     *  method to load the pdf document in zend_framework
+     *  @param  void
+     *  @return void
+     */
+    
     public function load() {
         $this->pdf = Zend_Pdf::load($this->path);
     }
    
+    /**
+     *  method to render the content of the pdf file to the browser
+     *  @param  void
+     *  @return void
+     */
+     
     public function render() {
         header('Content-Type: '. $this->headers['mime_type']);
         header('Content-Disposition: filename="'. $this->headers['file_name'] .'"');
         echo $this->pdf->render();
     }
+    
+    /**
+     *  method to check if the current item is a pdf using the item mime type
+     *  @param  void
+     *  @return void
+     */
 
     public function check() {
         if ($this->headers['mime_type'] == 'application/pdf') {
@@ -64,7 +92,11 @@ class Docman_watermark_Stamper {
         }
     }
 
-    
+    /**
+     *  method to stam each pdf page (add a banner with timestamp user real name and  confidentiality level)
+     *  @param  void
+     *  @return void
+     */
     public function stamp() {
         $mdf    = new Docman_MetadataFactory($this->group_id);
         $md     = $mdf->findByName('Confidentiality');
