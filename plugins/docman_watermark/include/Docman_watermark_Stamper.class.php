@@ -32,7 +32,6 @@ class Docman_watermark_Stamper {
     
     var $group_id;
     var $path;
-    var $mime_type;
     var $headers;
     var $item;
     var $user;
