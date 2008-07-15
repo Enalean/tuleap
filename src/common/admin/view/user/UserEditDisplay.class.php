@@ -370,10 +370,10 @@ class UserEditDisplay extends AdminEditDisplay {
 
         if(isset($this->userparam['user_id']) || count($this->userparam) == 1) {      
 
+            print '<h3>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':</h3>';
+            
             print '<form action="index.php" method="post">';
-            
-            print '<p>'.$GLOBALS['Language']->getText('admin_usergroup','add_ug').':<br />';
-            
+                       
             print '<input type="hidden" name="task" value="add_user_to_group" />';
             
             print '<input type="hidden" name="user_id" value="'.$userid.'" />';
