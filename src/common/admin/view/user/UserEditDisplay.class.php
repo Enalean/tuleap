@@ -80,12 +80,32 @@ class UserEditDisplay extends AdminEditDisplay {
             parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam[0]['user_name'].' (ID '.$this->userparam[0]['user_id'].')</h2>');
         }
         ?>
-            <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>           
+            <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>  
+                 <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>         
                  <script type="text/javascript" src="/scripts/autoselectlist.js"></script>
-                 
-                 <?php
-                 }
 
+ <script type="text/javascript">
+                        
+                 Event.observe(window, 'load', function () {
+                         var ori = $('user_group');
+                         if (ori) {
+                             var update = Builder.node('div', {id:'user_group_choices', style:'background:white', class:'autocompletion'});
+                             
+                             Element.hide(update);
+                             
+                             ori.parentNode.appendChild(update);
+                             new Ajax.Autocompleter('user_group', update, '/project/autocompletion.php', {
+                                 tokens: ',', paramName: 'value'
+                                         });
+                         }
+                     }); 
+                       
+        </script>
+              
+              
+              <?php
+              }
+    
     /**
      * displayUnixAccountInformation()
      *
@@ -357,9 +377,11 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<input type="hidden" name="task" value="add_user_to_group" />';
             
             print '<input type="hidden" name="user_id" value="'.$userid.'" />';
-            
-            print '<input name="group_id" length="4" maxlength="5" type="text"></p>';
-            
+
+            print '<input type="text" class="autocompletion" name="group_id" id="user_group" />';
+            print '<input type="hidden" name="user_group_search_id" id="group_id" />';
+
+        
             print '<p><input name="Submit" value="Submit" type="submit"></p>';
 
             print '</form>';

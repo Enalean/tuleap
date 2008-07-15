@@ -148,7 +148,7 @@ class UserControler extends Controler {
     function viewsManagement() {
      
         if ($this->userid) {
-            if ($this->task = 'change_user_name') {
+            if ($this->task == 'change_user_name') {
                 $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task);
             }
             else {
@@ -572,9 +572,7 @@ class UserControler extends Controler {
         }
 
 
-        if ($this->userid) {
-            //            header('Location:/admin/user/index.php?userid='.$this->user_id);
-            
+        if ($this->userid) {            
             $this->setUserParam($this->userid);
             $this->setGroupParam($this->userid);
         }
