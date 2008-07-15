@@ -112,4 +112,21 @@ class GroupShortcutFilter implements iStatement {
     function getGroupBy() {}
 }
 
+class GroupIdFilter implements iStatement {
+
+    private $groupid;
+
+    function __construct($groupid) {
+        $this->groupid = $groupid;
+    }
+
+    function getJoin() {}
+
+    function getWhere() {
+        return '(groups.group_id = '.$this->groupid.')';
+    }
+
+    function getGroupBy() {}
+}
+
 ?>

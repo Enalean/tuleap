@@ -389,7 +389,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<p><a href="/admin/user_changepw.php?user_id='.$userid.'">['.$GLOBALS['Language']->getText('admin_usergroup','change_passwd').']</a></p>';
             
           
-            print '<p><a href="index.php?user_id='.$userid.'&task=change_user_name">Change User Name</a></p>';
+            print '<p><a href="index.php?user_id='.$userid.'&task=change_user_name">[Change User Name]</a></p>';
         }
     }
 

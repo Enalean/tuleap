@@ -11,6 +11,7 @@ require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/include/TemplateSingleton.class.php');
+require_once('common/dao/GroupDao.class.php');
 
 $Language->loadLanguageMsg('admin/admin');
 
@@ -18,7 +19,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 $group = group_get_object($group_id,false,true);
 
 // group public choice
-if ($Update) {
+if (isset($Update)) {
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 	//audit trail
@@ -69,12 +70,45 @@ if (db_numrows($res_grp) < 1) {
 
 $row_grp = db_fetch_array($res_grp);
 
+//get project admin's email
+$dao = new GroupDao(CodexDataAccess::instance());
+
+$filter = array();
+
+$filter[] = new GroupIdFilter($group_id);
+
+$adminEmailIterator = $dao->searchAdminEmailByFilter($filter); 
+
+$email = null;
+do {
+    $groupMatch = true;
+    $valaEmail = $adminEmailIterator->current();
+    if($valaEmail['group_id'] == $group_id) {
+        $email .= $valaEmail['email'].';';
+        $adminEmailIterator->next();
+    } else {
+        $groupMatch = false;
+    }
+ } while ($adminEmailIterator->valid() && $groupMatch);
+
+$email = substr($email,0,strlen($email) - 1);
+
+
 site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
 
 echo '<H2>'.$row_grp['group_name'].'</H2>' ;?>
 
 <p>
-<A href="/project/admin/?group_id=<?php print $group_id; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</H3></A>
+<h3><A href="/project/admin/?group_id=<?php print $group_id; ?>">[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>] </A>
+
+<?php
+    if ($email) {
+        print '<a href="mailto:'.$email.'">[Mail to project admin]</a></h3>';
+    }
+    else {
+        print '</h3>';
+    }
+?>
 
 <P>
 <A href="userlist.php?group_id=<?php print $group_id; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</H3></A>
