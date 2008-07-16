@@ -39,7 +39,7 @@ class Widget_MyMonitoredFp extends Widget {
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
-            $html_my_monitored_fp .= db_error();
+            trigger_error(db_error(),E_USER_WARNING);
         } else {
             $html_my_monitored_fp .= '<table style="width:100%">';
             $request =& HTTPRequest::instance();

@@ -39,7 +39,8 @@ class Widget_MyMonitoredForums extends Widget {
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
-            $html_my_monitored_forums .= db_error();
+            trigger_error(db_error(),E_USER_WARNING);
+         
         } else {
             $request =& HTTPRequest::instance();
             $html_my_monitored_forums .= '<table style="width:100%">';
