@@ -346,24 +346,7 @@ class UserControler extends Controler {
 
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
 
-        if ($this->view == 'ajax_projects') {
-
-            $dao = new UserDao(CodexDataAccess::instance());
-            $filter = array();
-            $request =& HTTPRequest::instance();
-            $vuName = new Valid_String('user_name_search');
-
-            if ($request->valid($vuName)) {
-                $name = $request->get('user_name_search');
-                $filter[] = new UserNameFilter($name);
-            }
-            else {
-                $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
-            }
-            $this->userIterator = $dao->searchUserByFilter($filter, 0, 10);
-        }
      }
-
 
     /**
      * add user to a group
