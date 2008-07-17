@@ -200,9 +200,7 @@ class UserControler extends Controler {
         //valid parameters
 
         //valid limit
-        $validLimit = new Valid('limit');
-        $validLimit->addRule(new Rule_Int());
-
+        $validLimit = new Valid_UInt('limit');
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
         }
@@ -211,8 +209,7 @@ class UserControler extends Controler {
         }
 
         //valid nbtodisplay
-        $validNbToDisplay = new Valid('nbtodisplay');
-        $validNbToDisplay->addRule(new Rule_Int());
+        $validNbToDisplay = new Valid_UInt('nbtodisplay');
 
         if($request->valid($validNbToDisplay)) {
             $nbtodisplay = $request->get('nbtodisplay');
