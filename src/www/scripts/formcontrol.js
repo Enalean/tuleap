@@ -13,3 +13,7 @@ function checkAll(check) {
 	}
     }
 }
+
+function initField(val) {
+    document.getElementById('nbemail').value = val;
+}

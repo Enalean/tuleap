@@ -17,7 +17,7 @@ session_require(array('group'=>1,'admin_flags'=>'A'));
 
 // LJ The to_name variable has been added here to be used
 // LJ in the mail command later in this script
-switch ($destination) {
+switch (isset($destination)) {
 	case 'comm': 
 		$res_mail = db_query("SELECT email,user_name FROM user WHERE ( status='A' OR status='R' ) AND mail_va=1 GROUP BY lcase(email)");
 		$to_name = 'Additional Community Mailings Subcribers';
