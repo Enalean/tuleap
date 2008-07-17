@@ -6,7 +6,7 @@ class TemplatePlugin extends Plugin {
 	
 	function TemplatePlugin($id) {
 		$this->Plugin($id);
-        $this->_scope = $this->SCOPE_PROJECT; //ligne a supprimer avant le commit
+
         $this->_addHook('hook_name');
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
 	}
