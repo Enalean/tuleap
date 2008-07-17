@@ -6,7 +6,6 @@ class TemplatePlugin extends Plugin {
 	
 	function TemplatePlugin($id) {
 		$this->Plugin($id);
-
         $this->_addHook('hook_name');
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
 	}
