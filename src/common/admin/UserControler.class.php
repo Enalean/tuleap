@@ -209,6 +209,7 @@ class UserControler extends Controler {
         }
 
         //valid nbtodisplay
+        $nbtodisplay = '';
         $validNbToDisplay = new Valid_UInt('nbtodisplay');
 
         if($request->valid($validNbToDisplay)) {
