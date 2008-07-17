@@ -157,15 +157,6 @@ class GroupDao extends DataAccessObject {
             return false;
         }
     }
-    
-    /**
-     * count the number of row of a resource
-     * @return int
-     */
-    function & count($function) {   
-        $count = db_numrows($this->function);
-        return $count;
-    }
 }
 
 
