@@ -41,7 +41,7 @@ class UserControler extends Controler {
      * @type mixed $userIterator
      */
     private $userIterator;
-    
+
     /** 
      * $limit
      *
@@ -146,7 +146,7 @@ class UserControler extends Controler {
      * viewManagement()
      */
     function viewsManagement() {
-     
+
         if ($this->userid) {
             if ($this->task == 'change_user_name') {
                 $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task);
@@ -158,7 +158,7 @@ class UserControler extends Controler {
         else {
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
         }
-    
+
         $view->display();
     }
 
@@ -174,13 +174,13 @@ class UserControler extends Controler {
      * setOffset()
      */
     function setOffset() {
-        
+
         $request =& HTTPRequest::instance();
 
         $validoffset = new valid('offset');
         $validoffset->required();
         $validoffset->addRule(new Rule_Int());
-        
+
         if ($request->valid($validoffset)) {
             $offset = $request->get('offset');
             $this->offset = $offset;
@@ -194,7 +194,7 @@ class UserControler extends Controler {
      * setLimit()
      */
     function setLimit() {
-        
+
         $request =& HTTPRequest::instance();
 
         //valid parameters
@@ -202,7 +202,7 @@ class UserControler extends Controler {
         //valid limit
         $validLimit = new Valid('limit');
         $validLimit->addRule(new Rule_Int());
-                
+
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
         }
@@ -231,14 +231,14 @@ class UserControler extends Controler {
             $this->limit = 50;
         }
     }
- 
+
     /**
      * setUserParam
      */
     function setUserParam($userid) {
 
         $dao = new UserDao(CodexDataAccess::instance());
-      
+
         if(is_array($userid)) {
             foreach($userid as $uid) {
                 $dar = $dao->searchAllByUserId($uid);
@@ -249,10 +249,10 @@ class UserControler extends Controler {
             $dar = $dao->searchAllByUserId($userid);
             $userparam = $dar->getRow();
         }
-        
+
         $this->userparam = $userparam;
     }
-    
+
     /**
      * setGroupParam
      */
@@ -263,7 +263,7 @@ class UserControler extends Controler {
         if(is_array($userid)) {
             $userid = implode(",", $userid);
         }
-        
+
         $groupparam = $dao->searchGroupByUserId($userid);
         $this->groupparam = $groupparam;
     }
@@ -287,7 +287,7 @@ class UserControler extends Controler {
         //valid shortcut
         $validShortcut = new Valid('user_shortcut_search');
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
-                
+
         if($request->valid($validShortcut)) {
             $this->shortcut = $request->get('user_shortcut_search');
         }
@@ -297,7 +297,7 @@ class UserControler extends Controler {
 
         //valid user name
         $validUserName = new Valid_String('user_name_search');
-      
+
         if ($request->valid($validUserName)) {
             $this->username = $request->get('user_name_search');
         }
@@ -307,12 +307,12 @@ class UserControler extends Controler {
 
         //valid user group
         $validUserGroup = new Valid_String('user_group_search');
-                
+
         if ($request->valid($validUserGroup)) {
             $this->group = $request->get('user_group_search');
             $this->group = explode(',', $this->group);
             $this->group = $this->group[0];
-            
+
             if ( preg_match('#^.*\((.*)\)$#',$this->group, $matches)) {
                 $this->group = $matches[1];
             }
@@ -320,7 +320,7 @@ class UserControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-    
+
         //valid status
         $validStatus = new Valid('user_status_search');                
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList), 'Your (status) data are not valid');
@@ -344,16 +344,16 @@ class UserControler extends Controler {
         if ($this->status != '' && $this->status != 'all') {
             $filter[] = new UserStatusFilter($this->status);
         }
-        
+
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
 
         if ($this->view == 'ajax_projects') {
-         
+
             $dao = new UserDao(CodexDataAccess::instance());
             $filter = array();
             $request =& HTTPRequest::instance();
             $vuName = new Valid_String('user_name_search');
-            
+
             if ($request->valid($vuName)) {
                 $name = $request->get('user_name_search');
                 $filter[] = new UserNameFilter($name);
@@ -370,7 +370,7 @@ class UserControler extends Controler {
      * add user to a group
      */
     function addUserToGroup() {
-        
+
         $dao = new UserDao(CodexDataAccess::instance());
 
         if(!$this->userid) {
@@ -389,11 +389,11 @@ class UserControler extends Controler {
             }
             else {
                 $dao->searchUserInUserGroup($this->userid, $this->groupid);
-                
+
                 //if user doesn't belong to this group
                 if (!$dao || $dao->getFoundRows() < 1) {
                     $dao->addUserToGroup($this->userid, $this->groupid);
-                
+
                     //if there is problem in adding user to this group
                     if (!$dao || $dao->getFoundRows() < 1) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));
@@ -414,7 +414,7 @@ class UserControler extends Controler {
      * update user
      */
     function updateUser() {
-       
+
         $request =& HTTPRequest::instance();
         //valid parameters
 
@@ -459,7 +459,8 @@ class UserControler extends Controler {
         }
 
         //valid email
-        $validEmail = new Valid('email');
+        $email = '';
+        $validEmail = new Valid_Email('email');
 
         if ($request->valid($validEmail)) {
             $email = $request->get('email');
@@ -467,7 +468,6 @@ class UserControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-
 
         //valid date
         $validExpiryDate = new Valid('expiry_date');
@@ -482,55 +482,39 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
+        if ($shell && $codexstatus && $unixstatus && ($email != '' || is_array($this->userid)) && isset($expirydate)) {
 
-        //update one user
-        if ($shell && $codexstatus && $unixstatus && $email && isset($expirydate)) {
-         
             $date = util_date_to_unixtime($expirydate);
 
-            //check if unix uid exists
-            if ($unixstatus != 'N' ){
+            $dao->checkUnixUid($this->userid);
 
-                $dao->checkUnixUid($this->userid);
-               
-                $unixuidexist = $dao->getFoundRows();
+            $unixuidexist = $dao->getFoundRows();
 
-                // create unix uid if it doesn't exists
-                if ($unixuidexist > 0) {
-                    $dao->createUnixUid($this->userid);
-                }
+            // create unix uid if it doesn't exists
+            if ($unixuidexist <= 0 && $unixstatus != 'N') {
+                $dao->createUnixUid($this->userid);
             }
+
             //update
             $dao->updateUser($this->userid, $shell, $codexstatus, $unixstatus, $email, $date[0]);
-        }
-        //update several users
-         elseif ($shell && $codexstatus && $unixstatus && isset($expirydate)) {
-             
-             $date = util_date_to_unixtime($expirydate);
 
-             $dao->checkUnixUid($this->userid);
-
-             $unixuidexist = $dao->getFoundRows();
-
-             if ($unixuidexist <= 0) {
-                 $dao->createUnixUid($this->userid);
-             }
-
-             //update
-            $dao->updateUsers($this->userid, $shell, $codexstatus, $unixstatus, $email, $date[0]);
-
-         }
-
-         //Update in plugin
-         require_once('common/event/EventManager.class.php');
-         $em =& EventManager::instance();
-         $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $_POST,
+            //Update in plugin
+            require_once('common/event/EventManager.class.php');
+            $em =& EventManager::instance();
+            $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $_POST,
                                                      'user_id' => $this->userid )); 
-         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
-         $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
 
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
+        }
+
+        if (is_array($this->userid)) {
+            $GLOBALS['Response']->redirect('/admin/user/index.php');
+        }
+        else {
+            $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
+        }
     }
-    
+
 
     /**
      * request()
@@ -543,7 +527,7 @@ class UserControler extends Controler {
 
         //valid user id
         $validUserId = new Valid_UInt('user_id');
-        
+
         if ($request->validArray($validUserId) || $this->userid == '') {
             $this->userid = $request->get('user_id');
         }
@@ -597,9 +581,9 @@ class UserControler extends Controler {
         $this->setOffset();        
 
         $this->setLimit();
-            
+
         $this->setUserIterator();
-        
+
         $this->setNbUser();
     }
 }

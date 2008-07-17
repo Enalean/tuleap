@@ -389,10 +389,10 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
      *
      */
     function & searchUserByFilter($ca, $offset, $limit) {
-     
+
         $cleanoffset = db_escape_int($offset);
         $cleanlimit = db_escape_int($limit);
-   
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 
@@ -405,14 +405,14 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
             $groupby = null;
 
             foreach($ca as $c) {
-                
+
                 if ($c->getJoin()) {
                     if ($ijoin < 1) {
                         $join .= $c->getJoin();
                         $ijoin++;
                     }
                 }
- 
+
                 if ($iwhere >= 1) {
                     $where .= ' AND '.$c->getWhere();
                     $iwhere++;
@@ -421,23 +421,23 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
                     $where .= $c->getWhere();
                     $iwhere++;
                 }
-                
+
                 if ($c->getGroupBy() !== null) {
                     $groupby .= $c->getGroupBy();
                 }
             }  
-            
+
             if ($join !== null) {
                 $sql .= ' JOIN '.$join;
             }
-            
+
             $sql .= ' WHERE '.$where;
-            
+
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
         }
-   
+
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
         $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
 
@@ -498,7 +498,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
             foreach ($useridarray as $uarray) {
                 $cleanuserid[] = db_escape_int($uarray);
             }
-            
+
             $userid= implode(",", $cleanuserid); 
         }
         else {
@@ -508,7 +508,7 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         $sql = 'SELECT unix_uid '.
             'FROM user '.
             'WHERE user_id IN ('.$userid.') ';
-      
+
         return $this->retrieve($sql);
     }
 
@@ -525,17 +525,17 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
             $update = '';
             foreach ($useridarray as $uarray) {
                 $cleanuserid = db_escape_int($uarray);
-       
+
                 $sql = 'UPDATE user '.
                        'SET unix_uid = '.account_nextuid().' '.
                        'WHERE user_id = '.$cleanuserid;
-       
+
                 $update .= $this->update($sql);
             }
         }
         else {
             $userid = db_escape_int($useridarray);
-        
+
             $sql = 'UPDATE user '.
                    'SET unix_uid = '.account_nextuid().' '.
                    'WHERE user_id = '.$userid;
@@ -546,36 +546,17 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
     }
 
     /**
-     * update user infromations
+     * update user informations
      * @return DataAccessResult
      *
      */
-    function updateUser($userid, $shell, $codexstatus, $unixstatus, $email, $expirydate) {
-
-        $sql = sprintf("UPDATE user SET shell = %s, status = %s, unix_status = %s, email = %s, expiry_date = %d WHERE user_id = %d",
-                       $this->da->quoteSmart($shell),
-                       $this->da->quoteSmart($codexstatus),
-                       $this->da->quoteSmart($unixstatus),
-                       $this->da->quoteSmart($email),
-                       $this->da->escapeInt($expirydate),
-                       $this->da->escapeInt($userid));
-
-        return $this->update($sql);
-    }
-
-    /**
-     * update users informations
-     * @return DataAccessResult
-     *
-     */
-    function updateUsers($useridarray, $shell, $codexstatus, $unixstatus, $expirydate) {
+    function updateUser($useridarray, $shell, $codexstatus, $unixstatus, $email=null, $expirydate) {
 
         if(is_array($useridarray)) {
 
             foreach ($useridarray as $uarray) {
                 $cleanuserid[] = db_escape_int($uarray);
             }
-            
             $userid= implode(",", $cleanuserid); 
         }
         else {
@@ -585,14 +566,24 @@ il_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_s
         $cleanshell = db_escape_string($shell);
         $cleancodexstatus = db_escape_string($codexstatus);
         $cleanunixstatus = db_escape_string($unixstatus);
+
+        if ($email != null) {
+            $cleanemail = db_escape_string($email);
+        }
+
         $cleanexpirydate = db_escape_int($expirydate);
 
-        $sql = 'UPDATE user '.
-               'SET shell = "'.$cleanshell.'", '.
-               'status = "'.$cleancodexstatus.'", '.
-               'unix_status = "'.$cleanunixstatus.'", '.
-               'expiry_date = '.$cleanexpirydate.' '.
-               'WHERE user_id IN ('.$userid.')';
+        $sql = 'UPDATE user'.
+               ' SET shell = "'.$cleanshell.'",'.
+               ' status = "'.$cleancodexstatus.'",'.
+               ' unix_status = "'.$cleanunixstatus.'",';
+
+        if ($email != null) {
+            $sql .= ' email = "'.$cleanemail.'",';
+        }
+
+        $sql .= ' expiry_date = '.$cleanexpirydate.''.
+                ' WHERE user_id IN ('.$userid.')';
 
         return $this->update($sql);
     }
