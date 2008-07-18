@@ -53,7 +53,7 @@ class GroupControler extends Controler {
      * @type Array $groupArray
      */
     private $groupArray;
-    
+
     /** 
      * $limit
      *
@@ -142,11 +142,10 @@ class GroupControler extends Controler {
     function setOffset() {
 
         $request =& HTTPRequest::instance();
-            
-        $validoffset = new valid('offset');
+
+        $validoffset = new Valid_UInt('offset');
         $validoffset->required();
-        $validoffset->addRule(new Rule_Int());
-            
+
         if ($request->valid($validoffset)) {
             $offset = $request->get('offset');
             $this->offset = $offset;
