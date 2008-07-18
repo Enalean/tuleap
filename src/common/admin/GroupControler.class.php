@@ -165,6 +165,7 @@ class GroupControler extends Controler {
         //valid parameters
 
         //valid limit
+        $limit = '';
         $validLimit = new Valid_UInt('limit');
 
         if($request->valid($validLimit)) {
@@ -175,11 +176,9 @@ class GroupControler extends Controler {
         }
 
         //valid nbrows
-        
+        $nbrows = '';
         $validNbRows = new Valid_UInt('nbrows');
-        //$validNbRows = new Valid('nbrows');
-        //$validNbRows->addRule(new Rule_Int());
-        
+
         if($request->valid($validNbRows)) {
             $nbrows = $request->get('nbrows');
         }
