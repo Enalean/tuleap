@@ -461,6 +461,36 @@ table.release tr td img {
 }
 
 
+/* {{{ admin  */
+
+/* User table */
+.user_highlight { background-color:yellow; }
+.user_active { /*background-color: */}
+.user_restricted { /*background-color: */}
+.user_validated { /*background-color: */}
+.user_suspended { /*background-color: */}
+.user_pending { /*background-color: */}
+.user_deleted { /*background-color: */}
+.user_validated_restricted { /*background-color: */}
+
+/* Group table */
+.group_highlight { background-color:yellow; }
+.group_active { /*background-color: */ }
+.group_suspended { /*background-color: */}
+.group_pending { /*background-color: */}
+.group_holding { /*background-color: */}
+.group_deleted { /*background-color: */}
+.group_incomplete { /*background-color: */}
+
+/* Browse part */
+.browse_left { text-align:left; }
+.browse_center { text-align:center; }
+.browse_right { text-align:right; }
+
+
+/* }}} */
+
+
 /* {{{ autocompletion field */
 .autocompletion {
     background:white;
