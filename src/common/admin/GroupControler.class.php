@@ -159,17 +159,13 @@ class GroupControler extends Controler {
      * setLimit()
      */
     function setLimit() {
-        
+
         $request =& HTTPRequest::instance();
-        
-   
+
         //valid parameters
 
         //valid limit
-
-        $validLimit = new Valid('limit');
-        $validLimit->addRule(new Rule_Int());
-
+        $validLimit = new Valid_UInt('limit');
 
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
@@ -177,7 +173,6 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-
 
         //valid nbrows
         
