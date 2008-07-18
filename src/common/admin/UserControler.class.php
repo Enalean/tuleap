@@ -344,7 +344,6 @@ class UserControler extends Controler {
         }
 
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
-
      }
 
     /**
@@ -400,6 +399,7 @@ class UserControler extends Controler {
         //valid parameters
 
         //valid shell
+        $shell = '';
         $shellWhiteList = array('/bin/sh', '/bin/bash', '/sbin/nologin', '/bin/bash2', '/bin/ash', '/bin/bsh', '/bin/tcsh', '/bin/csh', '/bin/zsh');
 
         $validShell = new Valid('shell');
@@ -414,6 +414,7 @@ class UserControler extends Controler {
         }
 
         //valid codex status
+        $cidexstatus = '';
         $codexStatusWhiteList = array('A', 'R', 'V', 'P', 'D', 'S');
 
         $validCodexStatus = new Valid('codexstatus');
@@ -427,6 +428,7 @@ class UserControler extends Controler {
         }
 
         //valid unix status
+        $unixstatus = '';
         $unixStatusWhiteList = array('N', 'A', 'S', 'D');
 
         $validUnixStatus = new Valid('unixstatus');
@@ -463,7 +465,7 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
-        if ($shell && $codexstatus && $unixstatus && ($email != '' || is_array($this->userid)) && isset($expirydate)) {
+        if ($shell != '' && $codexstatus != '' && $unixstatus != '' && ($email != '' || is_array($this->userid)) && isset($expirydate)) {
 
             $date = util_date_to_unixtime($expirydate);
 
@@ -495,7 +497,6 @@ class UserControler extends Controler {
             $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
         }
     }
-
 
     /**
      * request()
@@ -535,7 +536,6 @@ class UserControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-
 
         if ($this->userid) {            
             $this->setUserParam($this->userid);
