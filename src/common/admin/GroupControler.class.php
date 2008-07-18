@@ -176,8 +176,9 @@ class GroupControler extends Controler {
 
         //valid nbrows
         
-        $validNbRows = new Valid('nbrows');
-        $validNbRows->addRule(new Rule_Int());
+        $validNbRows = new Valid_UInt('nbrows');
+        //$validNbRows = new Valid('nbrows');
+        //$validNbRows->addRule(new Rule_Int());
         
         if($request->valid($validNbRows)) {
             $nbrows = $request->get('nbrows');

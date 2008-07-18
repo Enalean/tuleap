@@ -199,7 +199,7 @@ class UserControler extends Controler {
         //valid parameters
 
         //valid limit
-        $limit = "";
+        $limit = '';
         $validLimit = new Valid_UInt('limit');
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
