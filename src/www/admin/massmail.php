@@ -12,8 +12,6 @@ $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->includeJavascriptFile('/scripts/formcontrol.js');
-
 $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
 
 // get numbers of users for each mailing
@@ -38,29 +36,25 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 <P>'.$Language->getText('admin_massmail','warning').'
 
 <FORM ACTION="massmail_valid_form.php" METHOD="POST">
-<INPUT type="radio" onclick="initField('.$count_comm.');" name="destination" value="comm">
+<INPUT type="radio" name="destination" value="comm">
 '.$Language->getText('admin_massmail','to_additional').' ('
 .$count_comm
-.' users)<BR><INPUT type="radio" onclick="initField('.$count_sf.');" name="destination" value="sf">
+.' users)<BR><INPUT type="radio" name="destination" value="sf">
 '.$Language->getText('admin_massmail','to_update').' ('
 .$count_sf
-.' users)<BR><INPUT type="radio" onclick="initField('.$count_devel.');" name="destination" value="devel">
+.' users)<BR><INPUT type="radio" name="destination" value="devel">
 '.$Language->getText('admin_massmail','to_devel').' ('
 .$count_devel
-.' users)<BR><INPUT type="radio" onclick="initField('.$count_admin.');" name="destination" value="admin">
+.' users)<BR><INPUT type="radio" name="destination" value="admin">
 '.$Language->getText('admin_massmail','to_proj_admin').' ('
 .$count_admin
-.' users)<BR><INPUT type="radio" onclick="initField('.$count_sfadmin.');" name="destination" value="sfadmin">
+.' users)<BR><INPUT type="radio" name="destination" value="sfadmin">
 '.$Language->getText('admin_massmail','to_site_admin').' ('
 .$count_sfadmin
-.' users)<BR><INPUT type="radio" onclick="initField('.$count_all.');" name="destination" value="all">
+.' users)<BR><INPUT type="radio" name="destination" value="all">
 '.$Language->getText('admin_massmail','to_all').' ('
 .$count_all
 .' users)';
-
-print '<input id="nbemail" "type="hidden" name="nbemail" value="" />';
-
-
 
 print '<P>'.$Language->getText('admin_massmail','subject').'
 <BR><INPUT type="text" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">

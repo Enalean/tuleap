@@ -26,7 +26,6 @@ require_once('pre.php');
 require_once('common/dao/GroupDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
-
 /**
  * GroupAutocompletionControler()
  */
@@ -47,21 +46,20 @@ class GroupAutocompletionControler {
        
     }
 
-   
     /**
      * initGroupIterator()
      *
      */
     function initGroupIterator() {
-        
+
         $dao = new GroupDao(CodexDataAccess::instance());
-        
+
         $filter = array();
-        
+
         $request =& HTTPRequest::instance();
 
         $validGroupName = new Valid_String('value');
-        
+
         if ($request->valid($validGroupName)) {
             
             $name = $request->get('value');
