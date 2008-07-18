@@ -196,7 +196,6 @@ class GroupControler extends Controler {
             $this->limit = 50;
         }
     }
- 
 
     /**
      * setMainGroupIterator()
@@ -222,9 +221,8 @@ class GroupControler extends Controler {
 
         //valid shortcut
         $validShortcut = new Valid('group_shortcut_search');
-       
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
-                
+
         if($request->valid($validShortcut)) {
             $this->shortcut = $request->get('group_shortcut_search');
         }
@@ -232,24 +230,21 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         //valid group name
         $validGroupName = new Valid_String('group_name_search');
-      
+
         if ($request->valid($validGroupName)) {
             $this->name = $request->get('group_name_search');
             $this->name = explode(',', $this->name);
             $this->name = $this->name[0];
-                     
+
             if ( preg_match('#^.*\((.*)\)$#',$this->name, $matches)) {
                 $this->name = $matches[1];
             }
-
         }
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
         }
-
 
         //valid status
         $validStatus = new Valid('group_status_search');
@@ -262,7 +257,6 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         //valid state
         $validState = new Valid('group_state_search');
         $validState->addRule(new Rule_WhiteList($stateWhiteList));
@@ -274,7 +268,6 @@ class GroupControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
 
-
         //valid type
         $validType = new Valid('group_type_search');
         $validType->addRule(new Rule_WhiteList($typeWhiteList));
@@ -285,7 +278,6 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-
 
         if ($this->shortcut != '') {
                 $filter[] = new GroupShortcutFilter($this->shortcut);        
@@ -326,12 +318,11 @@ class GroupControler extends Controler {
         $typeWhiteList = array('any', '1', '2', '3');
 
         //valid parameters
-        
+
         //valid shortcut
         $validShortcut = new Valid('group_shortcut_search');
-       
         $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
-                
+
         if($request->valid($validShortcut)) {
             $this->shortcut = $request->get('group_shortcut_search');
         }
@@ -341,13 +332,12 @@ class GroupControler extends Controler {
 
         //valid group name
         $validGroupName = new Valid_String('group_name_search');
-      
+
         if ($request->valid($validGroupName)) {
-            $this->name = $request->get('group_name_search');
             $this->name = $request->get('group_name_search');
             $this->name = explode(',', $this->name);
             $this->name = $this->name[0];
-            
+
             if ( preg_match('#^.*\((.*)\)$#',$this->name, $matches)) {
                 $this->name = $matches[1];
             }
@@ -366,7 +356,7 @@ class GroupControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-       
+
         //valid state
         $validState = new Valid('group_state_search');
         $validState->addRule(new Rule_WhiteList($stateWhiteList));
@@ -407,20 +397,19 @@ class GroupControler extends Controler {
         $this->adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
     }
 
-
     /**
      * request()
      */
     function request() {
-        
+
         $this->setOffset();
-        
+
         $this->setLimit();
 
         $this->setAdminEmailIterator();
-        
+
         $this->setMainGroupIterator();
-        
+
         $this->setNbGroup();
     }
 }
