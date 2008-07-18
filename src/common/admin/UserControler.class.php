@@ -177,9 +177,8 @@ class UserControler extends Controler {
 
         $request =& HTTPRequest::instance();
 
-        $validoffset = new valid('offset');
+        $validoffset = new Valid_UInt('offset');
         $validoffset->required();
-        $validoffset->addRule(new Rule_Int());
 
         if ($request->valid($validoffset)) {
             $offset = $request->get('offset');
@@ -365,7 +364,7 @@ class UserControler extends Controler {
 
             $dao->searchGroupById($this->groupid);
 
-            //if the doesn't group exist
+            //if the group doesn't exist
             if(!$dao || $dao->getFoundRows() <1) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_userlist','error_noadd'));
             }
