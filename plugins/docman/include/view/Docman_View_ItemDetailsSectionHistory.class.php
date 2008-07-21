@@ -65,12 +65,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         $content .= '<td>'. format_date($GLOBALS['sys_datefmt'], $versions[$key]->getDate()) .'</td>';
                         $content .= '<td>'. $user                                                  .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
-                        $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_BASIC) .'</td>';
-                        $event_manager =& EventManager::instance();
-                        $event_manager->processEvent('docman_file_add_version_property_table_cell', array(
-                            'html'  =>  &$content,
-                            'type'  => PLUGIN_DOCMAN_ITEM_TYPE_FILE));
-                        $content .= '</tr>';
+                        $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_BASIC) .'</td></tr>';
                     }
                     $content .= '</table>';
                 } else {

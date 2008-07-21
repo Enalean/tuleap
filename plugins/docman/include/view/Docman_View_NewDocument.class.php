@@ -85,12 +85,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $fields = $specific['obj']->accept($get_specific_fields, array('request' => &$this->controller->request));
             $html .= '<table>';
             foreach($fields as $field) {
-                $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td>';
-                $event_manager =& EventManager::instance();
-                $event_manager->processEvent('docman_file_after_display_property', array(
-                    'html'  => &$html,
-                    'type'  => $specific['type']));
-                $html .= '</tr>';
+                $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
             }
             $html .= '</table>';
             $html .= '</div>';
