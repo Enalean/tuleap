@@ -111,8 +111,8 @@ class Docman_watermark_Stamper {
             $page->setStyle($style);
             $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
             $page->rotate(20, 20, 1.57);
-            $page->drawText("Downloaded on :".date("Y-m-d H:I:s", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
-                            "Downloaded on :".date("Y-m-d H:I:s", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
+            $page->drawText("Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
+                            "Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
         }      
     }
 }
