@@ -66,7 +66,7 @@ if($request->valid($validResMail)) {
     $res_mail = $request->get('res_mail');
  }
 else {
-     $Response->addFeedback('error', 'An error occured (si on ne recupere pas res_mail dans massmail_execute.php)');
+     $Response->addFeedback('error', 'An error occured');
  }
 
 //valid to_name
@@ -76,7 +76,7 @@ if($request->valid($validResMail)) {
     $to_name = $request->get('to_name');
  }
  else {
-     $Response->addFeedback('error', 'An error occured (si on ne recupere pas to_name dans massmail_execute.php)');
+     $Response->addFeedback('error', 'An error occured');
  }
 
 //valid submit
