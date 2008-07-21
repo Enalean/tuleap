@@ -36,9 +36,6 @@ class Docman_watermarkPlugin extends Plugin {
         $this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('docman_file_before_download', 'stampFile', false);
-        $this->_addHook('docman_file_after_display_property', 'fileWatermark', false);
-        $this->_addHook('docman_file_add_version_property_table_header', 'addWatermarkTableHeader', false);
-        $this->_addHook('docman_file_add_version_property_table_cell', 'addWatermarkTableCell', false);
     }
 
     /**
@@ -84,27 +81,6 @@ class Docman_watermarkPlugin extends Plugin {
             exit(0);
         }
     }
-    
-    /**
-     *  hook method to add extra property (watermark on new docment creation)
-     */
-     function fileWatermark($params) {
-        if ($params['type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-            $params['html'] .= '<br><input type="checkbox"> <b>Use watermark</b> <i>(available only for PDF files)</i>';
-        }
-     }
-     
-     function addWatermarkTableHeader($params){
-     	if ($params['type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-            $params['titles'][] = 'Watermark';
-        }
-     }
-     
-     function addWatermarkTableCell($params){
-        if ($params['type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-            $params['html'] .= '<td align="center"><a href="">Enabled</a></td>';
-        }
-     }     
     
 }
 
