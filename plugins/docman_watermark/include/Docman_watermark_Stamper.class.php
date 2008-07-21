@@ -105,11 +105,14 @@ class Docman_watermark_Stamper {
             $width  = $page->getWidth();
             $height = $page->getHeight();
             $style = new Zend_Pdf_Style();
-            $style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 14);
-            $style->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 1));
+            $style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 10);
+            $style->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
+            $style->setLineColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
             $page->setStyle($style);
-            $page->drawRectangle(10, 10, $width-10, 50 +10,SHAPE_DRAW_STROKE);
-            $page->drawText("Downloaded on :".date("Y-m-d H:I:s", time())."  by(".$this->user->getRealName().")    ".$values[0]->getName(), 10, 25+10);
+            $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
+            $page->rotate(20, 20, 1.57);
+            $page->drawText("Downloaded on :".date("Y-m-d H:I:s", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
+                            "Downloaded on :".date("Y-m-d H:I:s", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
         }      
     }
 }
