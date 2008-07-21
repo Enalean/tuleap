@@ -29,13 +29,60 @@ $Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
+$request =& HTTPRequest::instance();
+
+//define white lists for parameters
+$destinationWhiteList = array('comm', 'sf', 'all', 'admin', 'sfadmin', 'devel');
+$submitWhiteList = array('Submit', 'Cancel');
+
+//valid parameters
+
+//valid destination
+$validDestination = new Valid('destination');
+$validDestination->addRule(new Rule_WhiteList($destinationWhiteList));
+
 $destination = '';
-$validDestination = new Valid_String('destination');
 if($request->valid($validDestination)) {
     $destination = $request->get('destination');
  }
  else {
-     $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+     exit_error($Response->addFeedback('error', 'A destination is requied'), '');
+ }
+
+//valid mail subject
+
+$validMailSubject = new Valid_String('mail_subject');
+$validMailSubject->required();
+$mailSubject = '';
+if($request->valid($validMailSubject)) {
+    $mailSubject = $request->get('mail_subject');
+    $mailSubject = htmlentities($mailSubject);
+ }
+ else {
+     exit_error($Response->addFeedback('error', 'A subject is requied'), '');
+ }
+
+//valid mail message
+$validMailMessage = new Valid('mail_message');
+$validMailMessage->required();
+$mailMessage = '';
+if($request->valid($validMailMessage)) {
+    $mailMessage = $request->get('mail_message');
+    $mailMessage = htmlentities($mailMessage);
+ }
+ else {
+       exit_error($Response->addFeedback('error', 'A message is requied'), '');
+ }
+
+//valid submit
+$validSubmit = new Valid('Submit');
+$validSubmit->addRule(new Rule_WhiteList($submitWhiteList));
+
+if($request->valid($validSubmit)) {
+    $submit = $request->get('Submit');
+ }
+ else {
+     $Response->addFeedback('error','Your data are not valid');
  }
 
 switch ($destination) {
@@ -72,11 +119,30 @@ switch ($destination) {
 		$to_name = 'Project Developers';
 		break;
 	default:
-		exit_error('Unrecognized Post','cannot execute');
-}
+        exit_error($Response->addFeedback('error', 'A destination is requied'), '');
+ }
 
-$nbemail = db_numrows($res_mail);
+if($destination != '' && $mailSubject != '' && $mailMessage != '') {
 
-echo 'You are about to send '.$nbemail.' emails';
+    $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
+
+    $nbemail = db_numrows($res_mail);
+
+    echo 'You are about to send '.$nbemail.' emails';
+
+    print '<form action="massmail_execute.php" method="post">';
+
+    print '<input type="hidden" name="destination" value="'.$destination.'" />';
+    print '<input type="hidden" name="mail_subject" value="'.$mailSubject.'" />';
+    print '<input type="hidden" name="mail_message" value="'.$mailMessage.'" />';
+    print '<input type="hidden" name="res_mail" value="'.$res_mail.'" />';
+    print '<input type="hidden" name="to_name" value="'.$to_name.'"/>';
+
+    print '<input type="submit" name="Submit" value="'.$Language->getText('global','btn_submit').'">';
+    print '<input type="submit" name="Submit" value="Cancel">';
+
+    print '</form>';
+    $HTML->footer(array());
+ }
 
 ?>
