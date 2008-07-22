@@ -141,8 +141,7 @@ if ($submit == $Language->getText('global','btn_submit')) {
                 print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
             }
         }
-        //        $Response->addFeedback('info', '$Language->getText(\'admin_massmail_execute\',\'done\')');
-        //flush();
+     
         print "\n".$Language->getText('admin_massmail_execute','done')."\n";
         flush();
         

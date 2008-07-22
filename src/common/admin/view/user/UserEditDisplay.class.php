@@ -298,7 +298,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
             
-            print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
+            print '<p><input name="Update_Unix" value="'.$GLOBALS['Language']->getText('global','btn_update').'" type="submit"></p>';
             
             print '</form>';
         }
@@ -382,7 +382,7 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<input type="hidden" name="user_group_search_id" id="group_id" />';
 
         
-            print '<p><input name="Submit" value="Submit" type="submit"></p>';
+            print '<p><input name="Submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" type="submit"></p>';
 
             print '</form>';
             

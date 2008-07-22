@@ -74,7 +74,7 @@ class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit e
 
         print '<p>New Codex Name : <input type="text" name="new_codex_name" id="new_codex_name" /></p>';
 
-        print '<p><input type="submit" name="submit" value="Submit" /></p>';
+        print '<p><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" /></p>';
 
     }
 

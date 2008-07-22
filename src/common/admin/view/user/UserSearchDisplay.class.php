@@ -266,7 +266,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '</tr>';
         print '<table>';
 
-        print '<p><input type="submit" value="Browse" name="SUBMIT"/> <input type="text" value="'.$this->nbrows.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
+        print '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_browse').'" name="SUBMIT"/> <input type="text" value="'.$this->nbrows.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
         
         print '</form>';
 
@@ -336,7 +336,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '</table>';       
         print '<p><a onClick="checkAll(1);">Check all items</a> - <a onClick="checkAll(0);">Clear all items</a></p>';
 
-        print '<input type="submit" value="Submit" name="submit">';
+        print '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" name="submit">';
 
     print '</form>';
     }
