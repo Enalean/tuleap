@@ -36,6 +36,7 @@ class Docman_watermarkPlugin extends Plugin {
         $this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('docman_file_before_download', 'stampFile', false);
+        $this->_addHook('docman_after_admin_menu', 'addAdminMenuWatermark', false);
     }
 
     /**
@@ -81,6 +82,19 @@ class Docman_watermarkPlugin extends Plugin {
             exit(0);
         }
     }
+    
+    /**
+     *  hook method to add the admin menu to watermarking management
+     *  @param array params
+     *  @return void
+     */
+     function addAdminMenuWatermark($params) {
+         require_once(dirname(__FILE__).'/../../docman/include/view/Docman_View_Extra.class.php');
+         $dve = new Docman_View_Extra($params);
+         $params['html'] .= '<h3><a href="'. $dve->buildUrl($params['default_url'], array('action' => 'admin_watermark')) .'">'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</a></h3>';
+         $params['html'] .= '<p>'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_descr') .'</p>';
+     }
+    
     
 }
 

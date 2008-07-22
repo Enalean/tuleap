@@ -32,6 +32,8 @@ class Docman_View_Admin extends Docman_View_Extra {
         $html .= '<h3><a href="'. $this->buildUrl($params['default_url'], array('action' => 'admin_obsolete')) .'">'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_title') .'</a></h3>';
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_docman', 'admin_obsolete_descr') .'</p>';
         
+        $event_manager =& EventManager::instance();
+        $event_manager->processEvent('docman_after_admin_menu', array('html' => &$html, 'default_url' => $params['default_url']));
         echo $html;
     }
 }
