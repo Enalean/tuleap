@@ -529,7 +529,7 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
                 return new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease');
             } else {
                 $dao =& $release_fact->_getFRSReleaseDao();
-                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 0, $release_date);
+                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 1, $release_date);
                 if (!$dar) {
                     return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
                 } else {
