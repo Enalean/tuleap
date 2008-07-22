@@ -1,4 +1,4 @@
-plugin_ldap	descriptor_description	CodeX LDAP Plugin. Provides LDAP information as well as LDAP authentication.
+plugin_ldap	descriptor_description	LDAP Plugin. Provides LDAP information as well as LDAP authentication.
 plugin_ldap	people_ldap	Enterprise Directory
 plugin_ldap	err_sync	Unable to fetch user data from Enterprise Directory.
 plugin_ldap	dir_user_notfound	User not found in Enterprise Directory.

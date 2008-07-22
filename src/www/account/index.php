@@ -52,7 +52,7 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 </TR>
 
 <TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'login_name'); ?>: </TD>
+<TD><?php echo $Language->getText('account_options', 'login_name', $GLOBALS['sys_name']); ?>: </TD>
 <TD><B><?php echo $purifier->purify($row_user['user_name']); ?></B></td>
 <td>
 <?php

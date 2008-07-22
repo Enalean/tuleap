@@ -8,6 +8,6 @@
 //
 ?>
 
-<h3>CodeX JRI documentation</h3>
+<h3>Codendi JRI documentation</h3>
 
-<a href="documentation/index.html">CodeX JRI documentation</a> (javadoc)
+<a href="documentation/index.html">Codendi JRI documentation</a> (javadoc)

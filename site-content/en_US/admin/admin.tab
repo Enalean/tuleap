@@ -38,7 +38,7 @@ admin_main	header_ref	Reference Administration
 admin_main	configure_ref	Configuration of predefined references
 admin_main	header_tracker	Trackers Administration
 admin_main	tracker_remove	Pending Trackers Removal
-admin_main	tracker_template	Configuration of predefined CodeX templates
+admin_main	tracker_template	Configuration of predefined tracker templates
 admin_main	header_stat	Statistics
 admin_main	stat_login	View Most Recent Logins
 admin_main	stat_spu	Generate Site/Projects/Users Statistics
@@ -249,11 +249,11 @@ admin_user_changepw	error_nopasswd	You must supply a password.
 admin_user_changepw	error_passwd	Passwords do not match.
 admin_user_changepw	error_update	Internal error: Could not update password.
 admin_user_changepw	title_changed	Successfully Changed Password	
-admin_user_changepw	header_changed	CodeX Change Confirmation
+admin_user_changepw	header_changed	Password Change Confirmation
 admin_user_changepw	msg_changed	The user's password has been changed. This change is immediate on the web site, but will not take effect on the user's shell/cvs account until the next cron update, which will happen in <span class=\"highlight\"><b>$1 h $2 minutes</b></span> from now.
 admin_user_changepw	title	Change Password
 admin_user_changepw	ldap_warning	WARNING: Changing the password here won't change the LDAP password!
-admin_user_changepw	header	CodeX Password Change
+admin_user_changepw	header	Password Change
 admin_user_changepw	new_passwd	New Password
 admin_user_changepw	new_passwd2	New Password (repeat)
 #

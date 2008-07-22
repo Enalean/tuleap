@@ -281,7 +281,7 @@ project_reference	edit_s_for	Editing Reference Patterns for <B>$1</B>
 project_reference	edit_system_s	Editing System Reference Patterns
 project_reference	enabled	Enabled
 project_reference	enabled_desc	Automatically extract this keyword?
-project_reference	force	Bypass filters <em>(CodeX administrators only)</em>:
+project_reference	force	Bypass filters <em>(Site administrators only)</em>:
 project_reference	force_desc	Force reference pattern creation
 project_reference	fields_required	fields required
 project_reference	id	Reference ID
@@ -301,7 +301,7 @@ project_reference	r_keyword_desc	Keyword that will trigger a reference creation
 project_reference	r_link	Link
 project_reference	r_scope	Scope of the reference pattern: project only or system-wide
 project_reference	r_service	Bound to Service
-project_reference	r_service_desc	If the reference pattern is specific to one CodeX service, select it here
+project_reference	r_service_desc	If the reference pattern is specific to one service, select it here
 project_reference	ref_scope_P	Project
 project_reference	ref_scope_S	System
 project_reference	scope	Scope
@@ -527,14 +527,14 @@ project_admin_userimport	success_import	Users Successfully Imported
 project_admin_userimport	fail_import	User Import Failed.
 project_admin_userimport	format_hdr	User Import Format
 project_admin_userimport	missing_file	Missing or unreadable file.
-project_admin_userimport	username	CodeX username
+project_admin_userimport	username	username
 project_admin_userimport	mail_addr	Email address
 project_admin_userimport	invalid_mail_or_username	Parse error : '$1' is not a valid email address or username.
 project_admin_userimport	unknown_user	Parse error : User '$1' does not exist.
 project_admin_userimport	special_user	Warning : There are more than 1 username corresponding to this mail address or username '$1'. User Import will not continue.
 project_admin_userimport	member_user	Parse error : User '$1' is already a member of this project.
 project_admin_userimport	active_user	Parse error : User '$1' account is not active.
-project_admin_userimport	import_format	To import users, you need to provide a simple text file, containing in each line the email address or the username of the user.<BR>You can include empty lines in the import file. <P>Please make sure the users, who will be imported, are already registered in Codex and have an active account.<P><B>Sample import file</B> : <BR><BR>john.doe@xerox.com<BR>jacques.dupont@xerox.com<BR>durandb<BR><BR> $1
+project_admin_userimport	import_format	To import users, you need to provide a simple text file, containing in each line the email address or the username of the user.<BR>You can include empty lines in the import file. <P>Please make sure the users, who will be imported, are already registered and have an active account.<P><B>Sample import file</B> : <BR><BR>john.doe@xerox.com<BR>jacques.dupont@xerox.com<BR>durandb<BR><BR> $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_deps_export.php
@@ -835,7 +835,7 @@ project_showdetails	back_main	[Back to Main Page]
 # Script: 
 #
 project_ugroup	ugroup_anonymous_users_desc_key	All Users
-project_ugroup	ugroup_registered_users_desc_key	Registered CodeX Users
+project_ugroup	ugroup_registered_users_desc_key	Registered Users
 project_ugroup	ugroup_project_members_desc_key	Project Members
 project_ugroup	ugroup_project_admins_desc_key	Project Administrators
 project_ugroup	ugroup_file_manager_admin_desc_key	File Manager Administrators

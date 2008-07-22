@@ -12,7 +12,7 @@ account_options	member_since	Membre depuis
 account_options	view_developer_profile	Voir mon profil de développeur
 account_options	edit_skills_profile	Voir mon profil de compétences
 account_options	user_id	Id utilisateur
-account_options	login_name	Nom CodeX
+account_options	login_name	Nom $1
 account_options	ldap_name	Login LDAP
 account_options	change_password	Changer le mot de passe
 account_options	real_name	Nom complet
@@ -209,7 +209,7 @@ account_register	title_confirm	Confirmation de création de compte
 account_register	title	Création d'un nouveau compte utilisateur
 account_register	login	Nom de login
 account_register	ldap_login	Nom de login LDAP
-account_register	ldap_unix_login	Nom CodeX <strong>(minuscules uniquement, pas d'espace)</strong>
+account_register	ldap_unix_login	Nom $1 <strong>(minuscules uniquement, pas d'espace)</strong>
 account_register	ldap_email_help	<em><strong>Remarque&nbsp;:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
 account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
 account_register	login_directions	<strong>(minuscules uniquement !)</strong>

@@ -1,4 +1,4 @@
-plugin_ldap	descriptor_description	Plugin LDAP pour CodeX. Permet l'affichage des information LDAP des utilisateurs, ainsi que l'authentification LDAP.
+plugin_ldap	descriptor_description	Plugin LDAP. Permet l'affichage des information LDAP des utilisateurs, ainsi que l'authentification LDAP.
 plugin_ldap	people_ldap	Annuaire d'entreprise
 plugin_ldap	err_sync	Impossible de récupérer les données de l'utilisateur de l'annuaire.
 plugin_ldap	dir_user_notfound	Utilisateur inconnu dans l'annuaire.

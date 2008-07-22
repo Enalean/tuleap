@@ -109,13 +109,13 @@ include_layout	template_warning	Beware this project is a template project
 # Script: SF/www/include/license.php
 #
 include_license	cannot_open_acc	Cannot open license acceptance in file: $1 
-include_license	license_accepted	CodeX Core Software License accepted on 
+include_license	license_accepted	Codendi License accepted on 
 include_license	cannot_write_acc	Cannot write license acceptance in file: $1
 include_license	cannot_open_decl	Cannot open license declination file: $1
-include_license	license_declined	CodeX Core Software License declined on 
+include_license	license_declined	Codendi License declined on 
 include_license	cannot_write_decl	Cannot write license declination in file: $1
-include_license	msg_accept	Thanks for accepting the terms and conditions of the CodeX \nlicense. You can now enjoy the CodeX site
-include_license	msg_declined	You have chosen to decline the terms and conditions of the \nCodeX Software License. You must return all the CodeX Software and \nDocumentation to Xerox and remove it from all your machines
+include_license	msg_accept	Thanks for accepting the terms and conditions of the Codendi \nlicense. You can now enjoy the Codendi site
+include_license	msg_declined	You have chosen to decline the terms and conditions of the \nCodendi License. You must return all the Codendi Software and \nDocumentation to Xerox and remove it from all your machines
 #
 #-----------------------------------------------
 # Script: SF/www/include/logger.php
@@ -180,7 +180,7 @@ include_menu	auth_nb_failure	Number of bad attempts:
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
 #
-include_pre	site_admin_declines_license	Your site administrator declined the CodeX Software License. \nThe CodeX site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
+include_pre	site_admin_declines_license	Your site administrator declined the Codendi License. \nThe Codendi site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/include/project.php
@@ -362,7 +362,7 @@ include_user_home	subject	Subject
 include_user_home	message	Message
 include_user_home	cc	CC
 include_user_home	add_cc	Add CC
-include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
+include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> for $1 users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
 #
 #-----------------------------------------------
 # Script: SF/www/include/user.php
@@ -376,7 +376,7 @@ include_user	invalid_u_id	Invalid User ID
 #
 include_utils	prio_colors	Priority Colors
 include_utils	address_problem	There are problems with the following addresses
-include_utils	email_explain	Email addresses must either be valid CodeX user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+include_utils	email_explain	Email addresses must either be valid user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
 include_utils	invalid_email	Email format invalid
 include_utils	time_ago	$1 ago
 include_utils	1_minute	1 minute

@@ -131,13 +131,13 @@ wiki_views_wkserviews	wkpage_admin	<h3>$1Admin pages</h3>
 wiki_views_wkserviews	wkpage_adm_all	<p>The table bellow lists all administration pages. You can use these pages for management purpose. <strong>Please use it carefully</strong>. In case of doubt, backup your wiki before deleting/renaming/replacing a page.</p>
 wiki_views_wkserviews	wkpage_intern	<h3>$1Internal pages</h3>
 wiki_views_wkserviews	wkpage_int_all	<p>Following pages are for wiki engine <strong>internal reserved use</strong>. Please use it carefully. You should <strong>not use or modify these pages</strong> if don't know well PhpWiki. In case of doubt, do not touch these pages.</p>
-wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Wiki Permissions</h2><p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any CodeX registered user.</p><p>Select user groups who are granted access to this Wiki:<p>
+wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' - Wiki Permissions</h2><p>You can set specific permissions on $2. These permissions apply to <strong>whole wiki service</strong>.</p><p>By default, Wiki have no specific permissions: access (both <strong>read</strong> and <strong>write</strong>) to all Wiki Pages is granted to any registered user.</p><p>Select user groups who are granted access to this Wiki:<p>
 wiki_views_wkserviews	attachment_name	Name
 wiki_views_wkserviews	attachment_revisions	Revisions
 wiki_views_wkserviews	attachment_permissions	Permissions
 wiki_views_wkserviews	attachment_title	<h2>Wiki '$1' - Wiki Attachments</h2>
 wiki_views_wkserviews	perm_attachment_title	<h2>Wiki '$1' - Wiki Attachment Permissions</h2>
-wiki_views_wkserviews	wiki_attachment_perm	<p>You can set specific permissions on $1. These permissions apply to <strong>all revisions of this attachment</strong>.</p><p>By default, WikiAttachment have no specific permissions: access is granted to any CodeX registered user.</p> <p>Any granted user can:<ul><li>Browse each revision of this WikiAttachment.</li><li>Add a new revision of this WikiAttachment.</li></ul></p><p>Select user groups who are granted access to this WikiAttachment:<p>
+wiki_views_wkserviews	wiki_attachment_perm	<p>You can set specific permissions on $1. These permissions apply to <strong>all revisions of this attachment</strong>.</p><p>By default, WikiAttachment have no specific permissions: access is granted to any registered user.</p> <p>Any granted user can:<ul><li>Browse each revision of this WikiAttachment.</li><li>Add a new revision of this WikiAttachment.</li></ul></p><p>Select user groups who are granted access to this WikiAttachment:<p>
 wiki_views_wkserviews	browse_attachment_title	<h2>Wiki '$1' - Wiki Attachments $2</h2>
 wiki_views_wkserviews	attachment_revision	Revision
 wiki_views_wkserviews	attachment_date	Date

@@ -15,7 +15,7 @@ plugin_im	muc-add-member	est maintenant membre du salon de discussion
 plugin_im	muc-remove-member	est désormais supprimé du salon de discussion 
 
 
-plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instantanée de CodeX .
+plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instantanée.
 plugin_im_admin	im_admin_warning	ATTENTION: Si vous synchronisez un ou plusieurs groupes, il faut impérativement rédemarrer ensuite le server Openfire avec la commande "service openfire reload" exécutée en tant que root sur le serveur. Cela interrompera toutes les discussions en cours!
 plugin_im_admin	im_admin_synchro_muc	Synchroniser le projet.
 

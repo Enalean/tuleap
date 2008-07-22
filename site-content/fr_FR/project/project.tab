@@ -275,7 +275,7 @@ project_reference	edit_s_for	Edition des patrons de référence de <B>$1</B>
 project_reference	edit_system_s	Edition des patrons de référence système
 project_reference	enabled	Actif
 project_reference	enabled_desc	Extrait automatiquement ce mot-clé ?
-project_reference	force	Ignore les filtres <em>(Administrateurs CodeX seulement)</em>&nbsp;:
+project_reference	force	Ignore les filtres <em>(Administrateurs Site seulement)</em>&nbsp;:
 project_reference	force_desc	Force la création du patron de la référence
 project_reference	fields_required	champs obligatoires
 project_reference	id	Identifiant
@@ -295,7 +295,7 @@ project_reference	r_keyword_desc	Mot clé qui déclenche la création d'une réf
 project_reference	r_link	Lien
 project_reference	r_scope	Portée du patron de référence&nbsp;: projet seulement ou système
 project_reference	r_service	Lié au service
-project_reference	r_service_desc	Si le patron de référence est spécifique à un service de CodeX, le spécifier ici
+project_reference	r_service_desc	Si le patron de référence est spécifique à un service, le spécifier ici
 project_reference	ref_scope_P	Projet
 project_reference	ref_scope_S	Système
 project_reference	scope	Portée
@@ -521,14 +521,14 @@ project_admin_userimport	success_import	Utilisateurs importés avec succès
 project_admin_userimport	fail_import	Importation des utilisateurs non réussie.
 project_admin_userimport	format_hdr	Format d'import des utilisateurs
 project_admin_userimport	missing_file	Fichier manquant ou non lisible.
-project_admin_userimport	username	Nom d'utilisateur CodeX
+project_admin_userimport	username	Nom d'utilisateur
 project_admin_userimport	mail_addr	Adresse Email
 project_admin_userimport	invalid_mail_or_username	Erreur de syntaxe : '$1' n'est pas une adresse email ou un nom d'utilisateur valide.
 project_admin_userimport	unknown_user	Erreur d'importation : L'utilisateur '$1' n'existe pas.
 project_admin_userimport	special_user	Attention : Il y a plusieurs utilisateurs correspondant au nom ou à l'adresse email '$1'. L'import des utilisateur ne se poursuivra pas.
 project_admin_userimport	member_user	Erreur d'importation : L'utilisateur '$1' est déjà membre du projet.
 project_admin_userimport	active_user	Erreur d'importation : Le compte de l'utilisateur '$1' est inactif.
-project_admin_userimport	import_format	Pour importer des utilisateurs, vous devez disposer d'un fichier au format texte, contenant sur chaque ligne l'adresse email ou le login de l'utilisateur.<br />Le fichier peut contenir des lignes vides. <p>Veuillez vous assurer au préalable que les utilisateurs à importer sont déjà enregistrés dans CodeX et que leurs comptes sont actifs.</p><p><strong>Exemple de fichier d'import</strong> : <br /><br />john.doe@xerox.com<BR>jacques.dupont@xerox.com<br />bdurand<br /><br /> $1
+project_admin_userimport	import_format	Pour importer des utilisateurs, vous devez disposer d'un fichier au format texte, contenant sur chaque ligne l'adresse email ou le login de l'utilisateur.<br />Le fichier peut contenir des lignes vides. <p>Veuillez vous assurer au préalable que les utilisateurs à importer sont déjà enregistrés et que leurs comptes sont actifs.</p><p><strong>Exemple de fichier d'import</strong> : <br /><br />john.doe@xerox.com<BR>jacques.dupont@xerox.com<br />bdurand<br /><br /> $1
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_deps_export.php

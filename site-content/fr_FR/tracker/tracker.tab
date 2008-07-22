@@ -264,7 +264,7 @@ tracker_include_artifact	cc_list	Destinataires en copie (CC)
 tracker_include_artifact	use_canned	Utiliser une réponse type&nbsp;:
 tracker_include_artifact	define_canned	ou définir une nouvelle réponse type
 tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>Vous n'êtes PAS connecté</H2><P>Veuillez <A HREF="$1">vous connecter,</A> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></B><P>Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
-tracker_include_artifact	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateurs CodeX utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
+tracker_include_artifact	fill_cc_list_msg	<b><u>Note&nbsp;:</b></u> pour les utilisateurs utilisez plutôt leur nom de login plutôt que leur adresse e-mail.<br>Remplissez la liste en utilisant la virgule ou le point-virgule comme séparateur.
 tracker_include_artifact	fill_cc_list_lbl	<p><B>Ajouter en CC&nbsp;:&nbsp;</b>
 tracker_include_artifact	fill_cc_list_cmt	Commentaire
 tracker_include_artifact	attachment	Fichiers attachés
@@ -439,7 +439,7 @@ tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</
 tracker_include_type	short_name	Nom court
 tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
 tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
-tracker_include_type	from_tmpl	A partir d'un patron prédéfini par CodeX&nbsp;:
+tracker_include_type	from_tmpl	A partir d'un patron prédéfini&nbsp;:
 tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant&nbsp;:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>
 tracker_include_type	proj_id	ID du projet&nbsp;:
 tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
@@ -463,7 +463,7 @@ tracker_include_type	ff	Champ flottant
 tracker_include_type	if	Champ entier
 tracker_include_type	create_field	Créer un nouveau champ
 tracker_include_type	upd_label	Modifier le champ '$1'	
-tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des outils de suivi de CodeX. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
+tracker_include_type	imp_note	<b>** NOTE IMPORTANTE **</b> '$1' est un champ standard des outils de suivi. Son rôle est global à l'ensemble des outils de suivi et nous vous recommandons vivement de ne changer ni son nom ni sa description à moins qu'ils aient une signification identique ce qui préservera le rôle du champ.
 tracker_include_type	field_ident	Identification et description du champ
 tracker_include_type	field_type	Type du champ
 tracker_include_type	display_info	Informations d'affichage
@@ -483,7 +483,7 @@ tracker_include_type	techicians	Techniciens de l'outil de suivi
 tracker_include_type	bind	Associer
 tracker_include_type	create_value	Créer une nouvelle valeur de champ
 tracker_include_type	update_value	Modifier la valeur de champ
-tracker_include_type	note_standard	<b>**NOTE IMPORTANT**</b> Vous êtes en train de modifier une valeur permanente. Les valeurs de champ permanentes ont très souvent une signification <b>très</b> particulière dans le système CodeX et nous vous recommandons vivement de ne changer ni son label/n ni sa description à moins que leur significations ne soient identiques.
+tracker_include_type	note_standard	<b>**NOTE IMPORTANT**</b> Vous êtes en train de modifier une valeur permanente. Les valeurs de champ permanentes ont très souvent une signification <b>très</b> particulière pour le système et nous vous recommandons vivement de ne changer ni son label/n ni sa description à moins que leur significations ne soient identiques.
 tracker_include_type	permanent	Permanente
 tracker_include_type	active	Active
 tracker_include_type	hidden	Cachée

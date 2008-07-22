@@ -8,5 +8,5 @@
 //
 ?>
 
-CodeX JRI (Java Remote Interface) est l'API Java pour CodeX.<br />
+Codendi JRI (Java Remote Interface) est l'API Java pour Codendi.<br />
 Cette API vous permet d'accéder aux outils de suivi.

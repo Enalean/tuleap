@@ -272,7 +272,7 @@ tracker_include_artifact	cc_list	CC List
 tracker_include_artifact	use_canned	Use a Canned Response:
 tracker_include_artifact	define_canned	Or define a new Canned Response
 tracker_include_artifact	not_logged_in	<B><span class="highlight"><H2>You Are NOT Logged In</H2><P>Please <A HREF="$1">log in,</A> so update notifications can be emailed to you.</span></B><P>If don't have a user account, then enter your email address instead:
-tracker_include_artifact	fill_cc_list_msg	<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
+tracker_include_artifact	fill_cc_list_msg	<b><u>Note:</b></u> for users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
 tracker_include_artifact	fill_cc_list_lbl	<p><B>Add CC:&nbsp;</b>
 tracker_include_artifact	fill_cc_list_cmt	Comment
 tracker_include_artifact	attachment	Attachments
@@ -447,7 +447,7 @@ tracker_include_type	create_tracker	<h2>Create a new tracker:</h2><p>Please, fil
 tracker_include_type	short_name	Short name
 tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names
 tracker_include_type	choose_creation	Choose a creation method:
-tracker_include_type	from_tmpl	From a predefined CodeX template:
+tracker_include_type	from_tmpl	From a predefined template:
 tracker_include_type	from_exist	<b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i>
 tracker_include_type	proj_id	Project ID:
 tracker_include_type	tracker_id	Tracker ID:
@@ -471,7 +471,7 @@ tracker_include_type	ff	Float Field
 tracker_include_type	if	Integer Field
 tracker_include_type	create_field	Create a new field
 tracker_include_type	upd_label	Update Field '$1'	
-tracker_include_type	imp_note	<b>** IMPORTANT NOTE **</b> '$1' is a standard field of the CodeX Tracker. Its purpose is global to all trackers and we strongly advise you not to change its label and description unless they have a similar meaning which preserves the role of the field.
+tracker_include_type	imp_note	<b>** IMPORTANT NOTE **</b> '$1' is a standard field of the tracker. Its purpose is global to all trackers and we strongly advise you not to change its label and description unless they have a similar meaning which preserves the role of the field.
 tracker_include_type	field_ident	Field Identification and Description
 tracker_include_type	field_type	Field Type
 tracker_include_type	display_info	Display information
@@ -491,7 +491,7 @@ tracker_include_type	techicians	Artifact technicians
 tracker_include_type	bind	Bind
 tracker_include_type	create_value	Create a new field value
 tracker_include_type	update_value	Update the field value
-tracker_include_type	note_standard	<b>**IMPORTANT NOTE**</b> You are editing a permanent field value. Permanent field values often have a <b>very</b> specific meaning to the CodeX system and we strongly advise you not to change its label and/ndescription unless they have a similar meaning.
+tracker_include_type	note_standard	<b>**IMPORTANT NOTE**</b> You are editing a permanent field value. Permanent field values often have a <b>very</b> specific meaning to the system and we strongly advise you not to change its label and/ndescription unless they have a similar meaning.
 tracker_include_type	permanent	Permanent
 tracker_include_type	active	Active
 tracker_include_type	hidden	Hidden

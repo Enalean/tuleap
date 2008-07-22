@@ -20,7 +20,7 @@ account_options	member_since	Member since
 account_options	view_developer_profile	View My Developer Profile
 account_options	edit_skills_profile	Edit My Skills Profile
 account_options	user_id	User Id
-account_options	login_name	CodeX Name
+account_options	login_name	$1 Name
 account_options	ldap_name	LDAP Login
 account_options	change_password	Change Password
 account_options	real_name	Real Name
@@ -217,7 +217,7 @@ account_register	title_confirm	Registration Confirmation
 account_register	title	New Account Registration
 account_register	login	Login Name
 account_register	ldap_login	LDAP Login Name
-account_register	ldap_unix_login	CodeX Name <strong>(Lower case only, no spaces)</strong>
+account_register	ldap_unix_login	$1 Name <strong>(Lower case only, no spaces)</strong>
 account_register	ldap_email_help	<em><strong>Remark:</strong> This email address was retrieved from the directory. Please do not change it.</em>
 account_register	codex_login_help	This login was generated from your email address. You may change it if needed.
 account_register	login_directions	<strong>(Lower case only!)</strong>

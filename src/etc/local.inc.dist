@@ -80,7 +80,7 @@ $sys_fullname = "%sys_fullname%";
 
 //This is used for cookie authentication. If you have distributed servers, 
 //please use same cookie prefix for a "cluster"
-$sys_cookie_prefix = "CODEX";
+$sys_cookie_prefix = "CODENDI";
 
 
 //
@@ -270,7 +270,7 @@ $sys_ldap_auth_filter = 'uid=%ldap_name%';
 
 
 // System name to be used in Web pages, documentation,etc.
-$sys_name = 'CodeX';
+$sys_name = 'Codendi';
 
 // Company/Organization running the system (short and long)
 $sys_org_name      = '%sys_org_name%';

@@ -203,7 +203,7 @@ class WidgetLayoutManager {
         echo '<h3>'. $GLOBALS['Language']->getText('widget_add', 'title') .'</h3>';
         echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;layout_id='. $layout_id .'" method="POST">';
         echo '<table cellpadding="2" cellspacing="0">';
-        $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets'), Widget::getCodeXWidgets($owner_type), $used_widgets);
+        $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets', $GLOBALS['sys_name']), Widget::getCodeXWidgets($owner_type), $used_widgets);
         echo '<tr><td>&nbsp;</td><td></td></tr>';
         $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
         echo '</table>';

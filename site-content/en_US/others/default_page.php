@@ -14,7 +14,7 @@ $default_domain = join('.',$pieces);
 ?>
 <HTML>
 <HEAD>
-<TITLE>CodeX: Welcome</TITLE>
+<TITLE>Codendi: Welcome</TITLE>
 <LINK rel="stylesheet" href="http://<? echo $default_domain; ?>/codex.css" type="text/css" >
 </HEAD>
 
@@ -37,7 +37,7 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
   <TR valign="top" bgcolor="#ece9e5">
     <TD valign="center">
-      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codex_logo.png" vspace="" hspace="7" border=0 alt="CodeX Site"></A>
+      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codex_logo.png" vspace="" hspace="7" border=0 alt="Codendi Site"></A>
     </TD>
     <TD width="99%"><!-- right of logo -->
       <IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/organization_logo.png" align="right" alt="Organization" hspace="5" vspace="7" border=0 width="51" height="48">
@@ -54,7 +54,7 @@ $default_domain = join('.',$pieces);
       <CENTER><BR>
       <H2>Welcome to http://<?php print $headers[Host]; ?>/</H2>
       <h3>This Project hasn't yet set up its personal web site.<BR>
-      Please check back soon for updates or visit the <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Project Summary</a> page on CodeX<BR></h3>
+      Please check back soon for updates or visit the <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Project Summary</a> page on Codendi<BR></h3>
       </CENTER>
     </TD>
   </TR>
@@ -65,7 +65,7 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#BCBCAD">
   <TR>
     <TD align="center"><FONT color="#ffffff"><B><SPAN class="maintitlebar">
-     This web site is hosted on CodeX.
+     This web site is hosted on Codendi.
     </SPAN></B></FONT>
     </TD>
   </TR>
