@@ -37,6 +37,7 @@ class Docman_watermarkPlugin extends Plugin {
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('docman_file_before_download', 'stampFile', false);
         $this->_addHook('docman_after_admin_menu', 'addAdminMenuWatermark', false);
+        $this->_addHook('docman_after_dispacher', 'dispachToAdminSection', false);
     }
 
     /**
@@ -67,8 +68,8 @@ class Docman_watermarkPlugin extends Plugin {
      *  @return void
      */
     function stampFile($params) {
-        require_once('Docman_watermark_Stamper.class.php');
-        $stamper = new Docman_watermark_Stamper($params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
+        require_once('DocmanWatermark_Stamper.class.php');
+        $stamper = new DocmanWatermark_Stamper($params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
         try {
             if ($stamper->check()) {
                 $stamper->load();
@@ -94,8 +95,21 @@ class Docman_watermarkPlugin extends Plugin {
          $params['html'] .= '<h3><a href="'. $dve->buildUrl($params['default_url'], array('action' => 'admin_watermark')) .'">'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</a></h3>';
          $params['html'] .= '<p>'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_descr') .'</p>';
      }
-    
-    
+    /**
+     *  hook method to dispach to watermark admin view
+     *  @param array params
+     *  @return void
+     */
+    function dispachToAdminSection($params) {
+        switch ($params['view']) {
+            case 'admin_watermark':
+                require_once('view/DocmanWatermark_View_Admin_Watermark.class.php');
+                $dwv = new DocmanWatermark_View_Admin_Watermark();
+                $dwv->display();
+                exit(0);
+                break;
+        }
+    }
 }
 
 ?>
