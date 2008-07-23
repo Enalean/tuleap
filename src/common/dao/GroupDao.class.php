@@ -59,6 +59,9 @@ class GroupDao extends DataAccessObject {
      */
     function searchGroupByFilter($ca, $offset=null, $limit=null) {
 
+        $cleanoffset = db_escape_int($offset);
+        $cleanlimit = db_escape_int($limit);
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '. 
                'FROM group_type JOIN groups ON group_type.type_id = groups.type '.
                'LEFT JOIN user_group ON groups.group_id = user_group.group_id '.
@@ -106,7 +109,7 @@ class GroupDao extends DataAccessObject {
         $sql .= ' ORDER BY groups.group_id,groups.group_name';
 
         if($offset != null && $limit != null) {
-            $sql .= ' LIMIT '.$offset.', '.$limit;
+            $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
         }
 
         return $this->retrieve($sql);
@@ -161,6 +164,5 @@ class GroupDao extends DataAccessObject {
         }
     }
 }
-
 
 ?>
