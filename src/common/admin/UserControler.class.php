@@ -30,6 +30,7 @@ require_once('common/admin/view/user/UserChangeNameDisplay.class.php');
 require_once('www/admin/user/UserAutocompletionForm.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/dao/UserDao.class.php');
+require_once('common/dao/GroupDao.class.php');
 require_once('common/mvc/Controler.class.php');
 
 
@@ -366,6 +367,9 @@ class UserControler extends Controler {
 
         $dao = new UserDao(CodexDataAccess::instance());
 
+        $groupdao = new GroupDao(CodexDataAccess::instance());
+        $filter = array();
+
         if(!$this->userid) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nouid'));
         }        
@@ -373,20 +377,21 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nogid'));
         }
         else {
-
-            $dao->searchGroupById($this->groupid);
-
+            //look for group that match with this groupid
+            $filter[] = new GroupIdFilter($this->groupid);
+            $groupdao->searchGroupByFilter($filter);
+            
             //if the group doesn't exist
             if(!$dao || $dao->getFoundRows() <1) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_userlist','error_noadd'));
             }
             else {
                 $dao->searchUserInUserGroup($this->userid, $this->groupid);
-
+                
                 //if user doesn't belong to this group
                 if (!$dao || $dao->getFoundRows() < 1) {
                     $dao->addUserToGroup($this->userid, $this->groupid);
-
+                    
                     //if there is problem in adding user to this group
                     if (!$dao || $dao->getFoundRows() < 1) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));

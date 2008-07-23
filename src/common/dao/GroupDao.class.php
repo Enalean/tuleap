@@ -57,7 +57,7 @@ class GroupDao extends DataAccessObject {
      * 
      *
      */
-    function searchGroupByFilter($ca, $offset, $limit) {
+    function searchGroupByFilter($ca, $offset=null, $limit=null) {
 
         $sql = 'SELECT SQL_CALC_FOUND_ROWS groups.group_id, group_name, unix_group_name, groups.status, type, is_public, license, count(user.user_id) as c, name '. 
                'FROM group_type JOIN groups ON group_type.type_id = groups.type '.
@@ -72,11 +72,11 @@ class GroupDao extends DataAccessObject {
             $groupby = null;
 
             foreach($ca as $c) {
-            
+
                 if ($c->getJoin()) {
                     $join .= $c->getJoin();
                 }
-   
+
                 if ($iwhere >= 1) {
                     $where .= ' AND '.$c->getWhere();
                     $iwhere++;
@@ -85,7 +85,7 @@ class GroupDao extends DataAccessObject {
                     $where .= $c->getWhere();
                     $iwhere++;
                 }
-                
+
                 if ($c->getGroupBy() !== null) {
                     $groupby .= $c->getGroupBy();
                 }
@@ -94,18 +94,21 @@ class GroupDao extends DataAccessObject {
             if ($join !== null) {
                 $sql .= ' JOIN '.$join;
             }
-            
+
             $sql .= ' WHERE '.$where;
-            
+
             if ($groupby !== null) {
                 $sql .= ' GROUP BY '.$groupby;
             }
         }
-   
+
         $sql .= ' GROUP BY groups.group_id';
         $sql .= ' ORDER BY groups.group_id,groups.group_name';
-        $sql .= ' LIMIT '.$offset.', '.$limit;
-        
+
+        if($offset != null && $limit != null) {
+            $sql .= ' LIMIT '.$offset.', '.$limit;
+        }
+
         return $this->retrieve($sql);
     }
 
