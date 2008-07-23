@@ -32,12 +32,40 @@ require_once('common/admin/view/AdminEditDisplay.class.php');
  */
 class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit etendre UserEditDisplay
 
+    /**
+     * $userparam an array that contains the params of a user (for the editing mode)
+     *
+     * @type array $userparam
+     */
+    private $userparam;
 
-    function __construct($userparam, $groupparam, $task) {
+    /**
+     * $groupparam
+     *
+     * @type mixed $groupparam
+     */
+    private $groupparam;
+
+    /**
+     * $task
+     *
+     * @type string $task
+     */
+    private $task;
+
+    /**
+     * $displayDirection
+     *
+     * @type boolean $displayDirection
+     */
+    private $displayDirection;
+
+
+    function __construct($userparam, $groupparam, $task, $displayDirection) {
         $this->userparam = $userparam;
         $this->groupparam = $groupparam;
         $this->task = $task;
-        
+        $this->displayDirection = $displayDirection;
     }
 
     /**
@@ -67,13 +95,35 @@ class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit e
      */
     function displayForm() {
 
-        print '<p>New Codex Name : <input type="text" name="new_codex_name" id="new_codex_name" /></p>';
+        //clic on user link
+        if(isset($this->userparam['user_id'])) {
+            $userid = $this->userparam['user_id'];
+        }
+        elseif(count($this->userparam) == 1) {
+            $userid = $this->userparam[0]['user_id'];
+        }
+        
+        print '<form action="index.php" method="post" >';
+
+        print '<input type="hidden" name="task" value="change_user_name" />';
+        print '<input type="hidden" name="user_id" value="'.$userid.'" />';
+
+        print '<p>New Codex Name : <input type="text" name="new_user_name" id="new_user_name" /></p>';
 
         print '<p><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" /></p>';
 
+        print '</form>';
+
     }
 
-
+    /**
+     * displayInstruction()
+     * This method display the instruction the admin has to follow to change user name
+     *
+     */
+    function displayChangeNameDirection() {
+       
+    }
 
     /**
      * displayFooter()
@@ -82,8 +132,6 @@ class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit e
     function displayFooter() {
         $GLOBALS['HTML']->footer(array());
     }
-    
-
 
     /**
      * display()
@@ -93,13 +141,13 @@ class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit e
 
         $this->displayHeader();
         $this->displayForm();
+
+        if($this->displayDirection == true) {
+            $this->displayChangeNameDirection();
+        }
+
         $this->displayFooter();
    
     }
-
-
 }
-
-
-
 ?>

@@ -387,7 +387,7 @@ class UserDao extends DataAccessObject {
      * @return DataAccessResult
      *
      */
-    function & searchUserByFilter($ca, $offset, $limit) {
+    function & searchUserByFilter($ca, $offset=null, $limit=null) {
 
         $cleanoffset = db_escape_int($offset);
         $cleanlimit = db_escape_int($limit);
@@ -437,9 +437,11 @@ class UserDao extends DataAccessObject {
             }
         }
 
+        
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
-        $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
-
+        if($limit != null && $offset != null) {
+            $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
+        }
         return $this->retrieve($sql);
     }
 

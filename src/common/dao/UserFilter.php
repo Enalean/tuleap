@@ -133,4 +133,33 @@ class UserShortcutFilter implements iStatement {
     function getGroupBy() {}
 }
 
+/**
+ * init SQL request to search a user by his user_name
+ * I call this method FullUserNameFilter because the whole name has to match with the parameter
+ */
+ class FullUserNameFilter implements iStatement {
+
+    /**
+     * $name
+     *
+     * @type string $name
+     */
+    private $name;
+
+    function __construct($name) {
+        $cleanname = db_escape_string($name);
+        $this->name = $cleanname;
+    }
+
+    function getJoin() {}
+
+    function getWhere() {
+        return '(user_name = \''.$this->name.'\')';
+    }
+
+    function getGroupBy() {}
+}
+
+
+
 ?>

@@ -69,7 +69,7 @@ class UserControler extends Controler {
      * @type array $userparam
      */
     private $userparam;
-
+    
     /**
      * $userid 
      *
@@ -85,9 +85,9 @@ class UserControler extends Controler {
     private $groupid;
 
     /**
-     * $action
+     * $task
      *
-     * @type string $action
+     * @type string $task
      */
     private $task;
 
@@ -133,6 +133,20 @@ class UserControler extends Controler {
      */
     private $groupparam;
 
+    /**
+     * $newUserName
+     *
+     * @type string $newUserName
+     */
+    private $newUserName;
+
+    /**
+     * $displayDirection
+     *
+     * @type boolean $displayDirection
+     */
+    private $displayDirection;
+
 
     /**
      * constructor
@@ -149,7 +163,7 @@ class UserControler extends Controler {
 
         if ($this->userid) {
             if ($this->task == 'change_user_name') {
-                $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task);
+                $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task, $this->displayDirection);
             }
             else {
                 $view = new UserEditDisplay($this->userparam, $this->groupparam, $this->task);
@@ -247,7 +261,6 @@ class UserControler extends Controler {
             $dar = $dao->searchAllByUserId($userid);
             $userparam = $dar->getRow();
         }
-
         $this->userparam = $userparam;
     }
 
@@ -405,7 +418,6 @@ class UserControler extends Controler {
         $validShell = new Valid('shell');
         $validShell->addRule(new Rule_WhiteList($shellWhiteList));
 
-
         if ($request->valid($validShell)) {
             $shell = $request->get('shell');
         }
@@ -499,6 +511,43 @@ class UserControler extends Controler {
     }
 
     /**
+     * This method check if the new user name doesn't exist yet
+     */
+    function checkUserNameExist() {
+
+        $dao = new UserDao(CodexDataAccess::instance());        
+        $filter = array();
+        $request =& HTTPRequest::instance();
+
+        //valid new user name
+        $validNewUserName = new Valid_String('new_user_name');
+
+        $this->newUserName = '';
+        if ($request->valid($validNewUserName)) {
+            $this->newUserName = $request->get('new_user_name');
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('error', 'This name already exist');
+        }
+
+        if($this->newUserName != '') {
+            $filter[] = new FullUserNameFilter($this->newUserName);
+            $dao->searchUserByFilter($filter);
+            $newUserNameExist = $dao->getFoundRows();
+
+            if($newUserNameExist == 0) {
+                $this->displayDirection = true;
+            }
+            else {
+                $this->displayDirection = false;
+            }
+        }
+        else {
+            $GLOBALS['Response']->addFeedback('warning','Please enter a valid name');
+        }
+    }
+    
+    /**
      * request()
      */
     function request() {
@@ -543,29 +592,31 @@ class UserControler extends Controler {
         }
 
         if ($this->task) {
-
-          if($this->task == 'add_user_to_group') {
+            
+            if($this->task == 'add_user_to_group') {
                 $this->addUserToGroup();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);
-          }
-          elseif($this->task == 'update_user') {
+            }
+            elseif($this->task == 'update_user') {
                 $this->updateUser();
                 $this->setUserParam($this->userid);
                 $this->setGroupParam($this->userid);
-          }
-          elseif($this->task == 'change_user_name') {
-
-          }
+            }
+            elseif($this->task == 'change_user_name') {
+                $this->checkUserNameExist();
+            }
         }
 
-        $this->setOffset();        
+        if ($this->task != 'change_user_name') {
+            $this->setOffset();        
 
-        $this->setLimit();
+            $this->setLimit();
 
-        $this->setUserIterator();
+            $this->setUserIterator();
 
-        $this->setNbUser();
+            $this->setNbUser();
+        }
     }
 }
 
