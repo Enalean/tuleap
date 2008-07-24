@@ -245,11 +245,11 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<select name="group_status_search" id="status_id">';
         print '<option value="all">All</options>';
-        print '<option value="I">Incomplete</option>';
-        print '<option value="A">Active</option>';
-        print '<option value="P">Pending</option>';
-        print '<option value="H">Holding</option>';
-        print '<option value="D">Deleted</option>';
+        print '<option value="I">'.$GLOBALS['Language']->getText('admin_groupedit','incomplete').'</option>';
+        print '<option value="A">'.$GLOBALS['Language']->getText('admin_groupedit','active').'</option>';
+        print '<option value="P">'.$GLOBALS['Language']->getText('admin_groupedit','pending').'</option>';
+        print '<option value="H">'.$GLOBALS['Language']->getText('admin_groupedit','holding').'</option>';
+        print '<option value="D">'.$GLOBALS['Language']->getText('admin_groupedit','deleted').'</option>';
         print '</select>';
         
         print '</td>';
@@ -259,9 +259,9 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<b>Public? </b><br />';
         
         print '<select name="group_state_search" id="state_id">';
-        print '<option value="any">Any</option>';
-        print '<option value="1">Yes</option>';
-        print '<option value="0">No</option>';
+        print '<option value="any">'.$GLOBALS['Language']->getText('global','any').'</option>';
+        print '<option value="1">'.$GLOBALS['Language']->getText('global','yes').'</option>';
+        print '<option value="0">'.$GLOBALS['Language']->getText('global','no').'</option>';
         print '</select>';
     
         print '</td>';
@@ -270,10 +270,10 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         print '<b>Project type </b><br />';
         
         print '<select name="group_type_search" id="type_id">';
-        print '<option value="any">Any</option>';
-        print '<option value="1">Project</option>';
-        print '<option value="2">Template</option>';
-        print '<option value="3">Test Projet</option>';
+        print '<option value="any">'.$GLOBALS['Language']->getText('global','any').'</option>';
+        print '<option value="1">'.$GLOBALS['Language']->getText('include_common_template','project').'</option>';
+        print '<option value="2">'.$GLOBALS['Language']->getText('include_common_template','template').'</option>';
+        print '<option value="3">'.$GLOBALS['Language']->getText('include_common_template','test_project').'</option>';
         print '</select>';
         
         print '</td>';
@@ -329,7 +329,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
         
         print '<th>'.$GLOBALS['Language']->getText('admin_grouplist','members').'</th>';
         
-        print '<th>Mailto</th></tr>';
+        print '<th>'.$GLOBALS['Language']->getText('admin_user_search','mailto').'</th></tr>';
 
         
         if ($this->nbgroup != 0) {  
@@ -369,7 +369,7 @@ class GroupSearchDisplay extends AdminSearchDisplay {
                 $email = substr($email,0,strlen($email) - 1);
 
                 if ($email) {
-                    print '<td><a href="mailto:'.$email.'">Mailto</a></td></tr>';
+                    print '<td><a href="mailto:'.$email.'">'.$GLOBALS['Language']->getText('admin_user_search','mailto').'</a></td></tr>';
                 } else {
                     print '<td></td></tr>';
                 }

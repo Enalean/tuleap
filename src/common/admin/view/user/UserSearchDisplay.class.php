@@ -255,7 +255,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
         print '<option value="A">'.$GLOBALS['Language']->getText('admin_userlist','active').'</option>';
         print '<option value="R">'.$GLOBALS['Language']->getText('admin_userlist','restricted').'</option>';
         print '<option value="V">'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
-        print '<option value="P">Pending</option>';
+        print '<option value="P">'.$GLOBALS['Language']->getText('admin_groupedit','pending').'</option>';
         print '<option value="D">'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>';
         print '<option value="W">Validated as Restricted</option>';
         print '<option value="S">'.$GLOBALS['Language']->getText('admin_userlist','suspended').'</option>';
@@ -296,20 +296,20 @@ class UserSearchDisplay extends AdminSearchDisplay {
 
         $odd_even = array('boxitem', 'boxitemalt');
         $i = 1;
-        
+
         print '<table width=100% cellspacing=0 cellpadding=0 border="1" align="center">';
-        
-        print '<tr><th>Select?</th>';
-        
+
+        print '<tr><th>'.$GLOBALS['Language']->getText('global','select').'?</th>';
+
         print '<th>'.$GLOBALS['Language']->getText('include_user_home','login_name').'</th>';
-        
+
         print '<th>'.$GLOBALS['Language']->getText('include_user_home','real_name').'</th>';
-        
+
         print '<th>Profile</th>';
-        
-        print '<th>Status</th>';
-        
-        print '<th>Mail to</th></tr>';   
+
+        print '<th>'.$GLOBALS['Language']->getText('global','status').'</th>';
+
+        print '<th>'.$GLOBALS['Language']->getText('admin_user_search','mailto').'</th></tr>';   
 
 
         print '<form name="userdisplay action="index.php" method="POST">';
@@ -326,7 +326,7 @@ class UserSearchDisplay extends AdminSearchDisplay {
             if ($u['status'] == 'A') print $GLOBALS['Language']->getText('admin_userlist','active');
             if ($u['status'] == 'R') print $GLOBALS['Language']->getText('admin_userlist','restricted');
             if ($u['status'] == 'V') print $GLOBALS['Language']->getText('admin_userlist','validated');
-            if ($u['status'] == 'P') print 'Pending';
+            if ($u['status'] == 'P') print $GLOBALS['Lamguage']->getText('admin_groupedit','pending');
             if ($u['status'] == 'D') print $GLOBALS['Language']->getText('admin_userlist','deleted');
             if ($u['status'] == 'W') print $GLOBALS['Language']->getText('admin_userlist','restricted');
             if ($u['status'] == 'S') print $GLOBALS['Language']->getText('admin_userlist','suspended');   

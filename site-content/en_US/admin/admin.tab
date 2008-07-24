@@ -412,6 +412,10 @@ admin_user_controler	wrong_task	    This task do not exist
 #-----------------------------------------------
 # Script: src/common/admin/GroupControler.class.php
 #
+admin_user_search	mailto	Mail to
+#-----------------------------------------------
+# Script: src/common/admin/GroupControler.class.php
+#
 admin_group_controler	wrong_limit	    Limit is not valid
 admin_group_controler	wrong_shortcut	    Shortcut is not valid
 admin_group_controler	wrong_group_name	    Group name is not valid

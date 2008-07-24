@@ -30,7 +30,7 @@ require_once('common/admin/view/AdminEditDisplay.class.php');
  * UserChangeNameDisplay
  *
  */
-class UserChangeNameDisplay extends AdminEditDisplay { //ou est-ce que ca doit etendre UserEditDisplay
+class UserChangeNameDisplay extends AdminEditDisplay {
 
     /**
      * $userparam an array that contains the params of a user (for the editing mode)

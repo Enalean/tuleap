@@ -416,6 +416,10 @@ admin_user_controler	wrong_task	    Cette action n'existe pas
 #-----------------------------------------------
 # Script: src/common/admin/GroupControler.class.php
 #
+admin_user_search	mailto	Ecrire à
+#-----------------------------------------------
+# Script: src/common/admin/GroupControler.class.php
+#
 admin_group_controler	wrong_limit	    Cette limite n'est pas valide
 admin_group_controler	wrong_shortcut	    Ce raccourcis n'est pas valide
 admin_group_controler	wrong_group_name	    Ce nom de groupe n'est pad valide

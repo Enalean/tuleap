@@ -187,7 +187,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<option value="P"';
             if ($codexstatus == 'P') print 'selected="selected"';
-            print '>Pending</option>';
+            print '>'.$GLOBALS['Lamguage']->getText('admin_groupedit','pending').'</option>';
             
             print '<option value="D"';
             if ($codexstatus == 'D') print 'selected="selected"';
@@ -232,7 +232,6 @@ class UserEditDisplay extends AdminEditDisplay {
             print '<input id="expiry_date" name="expiry_date" value="'.$expirydate.'" size="15" maxlength="10" type="text">';
             print '<a href="javascript:show_calendar(\'document.update_user.expiry_date\', $(\'expiry_date\').value,\'/themes/CodeXTab/css/CodeXTab_normal.css\',\'/themes/CodeXTab/images/\');"><img src="/themes/CodeXTab/images/calendar/cal.png" alt="Click Here to Pick up a date " border="0" height="16" width="16"></a></p>';
             
-            
             print '<p><input name="Update_Unix" value="Update" type="submit"></p>';
             
             print '</form><hr>';
@@ -268,7 +267,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<option value="V">'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
             
-            print '<option value="P">Pending</option>';
+            print '<option value="P">'.$GLOBALS['Lamguage']->getText('admin_groupedit','pending').'</option>';
             
             print '<option value="D">'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>'; 
             
