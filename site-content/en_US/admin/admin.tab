@@ -409,3 +409,12 @@ admin_user_controler	user_new_name	    Please enter a valid name
 admin_user_controler	wrong_uid	    User Id is not valid
 admin_user_controler	wrong_gid	    Group Id is not valid
 admin_user_controler	wrong_task	    This task do not exist
+#-----------------------------------------------
+# Script: src/common/admin/GroupControler.class.php
+#
+admin_group_controler	wrong_limit	    Limit is not valid
+admin_group_controler	wrong_shortcut	    Shortcut is not valid
+admin_group_controler	wrong_group_name	    Group name is not valid
+admin_group_controler	wrong_status	    Group status is not valid
+admin_group_contoler	wrong_state	    Group state (public ?) is not valid
+admin_group_controler	wrong_type	    Group type is not valid

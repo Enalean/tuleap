@@ -172,7 +172,7 @@ class GroupControler extends Controler {
             $limit = $request->get('limit');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_limit'));
         }
 
         //valid nbrows
@@ -183,7 +183,7 @@ class GroupControler extends Controler {
             $nbrows = $request->get('nbrows');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_limit'));
         }
 
         if ($limit != '') {
@@ -227,7 +227,7 @@ class GroupControler extends Controler {
             $this->shortcut = $request->get('group_shortcut_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_shortcut'));
         }
 
         //valid group name
@@ -243,7 +243,7 @@ class GroupControler extends Controler {
             }
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_group_name'));
         }
 
         //valid status
@@ -254,7 +254,7 @@ class GroupControler extends Controler {
             $this->status = $request->get('group_status_search');                
         }
         else{
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_status'));
         }
 
         //valid state
@@ -265,7 +265,7 @@ class GroupControler extends Controler {
             $this->state = $request->get('group_state_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_state'));
         }
 
         //valid type
@@ -276,7 +276,7 @@ class GroupControler extends Controler {
             $this->type = $request->get('group_type_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_type'));
         }
 
         if ($this->shortcut != '') {
@@ -327,7 +327,7 @@ class GroupControler extends Controler {
             $this->shortcut = $request->get('group_shortcut_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_shortcut'));
         }
 
         //valid group name
@@ -343,7 +343,7 @@ class GroupControler extends Controler {
             }
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_group_name'));
         }
 
         //valid status
@@ -354,7 +354,7 @@ class GroupControler extends Controler {
             $this->status = $request->get('group_status_search');                
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_status'));
         }
 
         //valid state
@@ -365,7 +365,7 @@ class GroupControler extends Controler {
             $this->state = $request->get('group_state_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_state'));
         }
 
         //valid type
@@ -376,7 +376,7 @@ class GroupControler extends Controler {
             $this->type = $request->get('group_type_search');
         }
         else  {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_group_controler','wrong_type'));
         }
 
         if ($this->shortcut != '') {
