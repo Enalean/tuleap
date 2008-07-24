@@ -385,3 +385,27 @@ admin_servers	info_updated	Server <em>$1</em> has been updated
 admin_servers	info_notcreated	Server has not been created
 admin_servers	info_notdeleted	Server <em>$1</em> has not been deleted
 admin_servers	info_notupdated	Server <em>$1</em> has not been updated
+#-----------------------------------------------
+# Script: src/common/admin/UserControler.class.php
+#
+admin_user_controler	wrong_limit	    Limit is not valid
+admin_user_controler	wrong_shortcut	    Shortcut is not valid
+admin_user_controler	wrong_user_name	    User name is not valid
+admin_user_controler	wrong_group_name	    Group name is not valid
+admin_user_controler	wrong_status	    User status is not valid
+admin_user_controler	error_nouid	    User ID is missing!
+admin_user_controler	error_nogid	    Group ID is missing!
+admin_user_controler	error_noadd	    Error - Can't add user to group
+admin_user_controler	error_add_ug	    Error adding User to group
+admin_user_controler	success_add_ug	    Successfully added user to group
+admin_user_controler	error_member	    User is already a member of group $1
+admin_user_controler	wrong_shell	    Shell is not valid
+admin_user_controler	wrong_unix_status	    Unix status is not valid
+admin_user_controler	wrong_email	    Email is not valid
+admin_user_controler	data_not_parsed	    Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format.
+admin_user_controler	success_upd_u	    Successfully updated user
+admin_user_controler	user_name_exists	    This name already exists
+admin_user_controler	user_new_name	    Please enter a valid name
+admin_user_controler	wrong_uid	    User Id is not valid
+admin_user_controler	wrong_gid	    Group Id is not valid
+admin_user_controler	wrong_task	    This task do not exist

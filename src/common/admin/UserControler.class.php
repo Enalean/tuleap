@@ -220,7 +220,7 @@ class UserControler extends Controler {
             $limit = $request->get('limit');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_limit'));
         }
 
         //valid nbtodisplay
@@ -231,7 +231,7 @@ class UserControler extends Controler {
             $nbtodisplay = $request->get('nbtodisplay');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_limit'));
         }
 
         if ($nbtodisplay != '') {
@@ -304,7 +304,7 @@ class UserControler extends Controler {
             $this->shortcut = $request->get('user_shortcut_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_shortcut'));
         }
 
         //valid user name
@@ -314,7 +314,7 @@ class UserControler extends Controler {
             $this->username = $request->get('user_name_search');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');            
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_username'));
         }
 
         //valid user group
@@ -330,18 +330,18 @@ class UserControler extends Controler {
             }
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_group_name'));
         }
 
         //valid status
         $validStatus = new Valid('user_status_search');                
-        $validStatus->addRule(new Rule_WhiteList($statusWhiteList), 'Your (status) data are not valid');
+        $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
 
         if ($request->valid($validStatus)) {
             $this->status = $request->get('user_status_search');                
         }
         else{
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('admin_user_controler','wrong_status'));
         }
 
         if ($this->shortcut != '') {
@@ -371,10 +371,10 @@ class UserControler extends Controler {
         $filter = array();
 
         if(!$this->userid) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nouid'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_nouid'));
         }        
         elseif(!$this->groupid) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup', 'error_nogid'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_nogid'));
         }
         else {
             //look for group that match with this groupid
@@ -383,7 +383,7 @@ class UserControler extends Controler {
             
             //if the group doesn't exist
             if(!$dao || $dao->getFoundRows() <1) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_userlist','error_noadd'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','error_noadd'));
             }
             else {
                 $dao->searchUserInUserGroup($this->userid, $this->groupid);
@@ -394,15 +394,15 @@ class UserControler extends Controler {
                     
                     //if there is problem in adding user to this group
                     if (!$dao || $dao->getFoundRows() < 1) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_add_ug'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','error_add_ug'));
                     } 
                     else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup','success_add_ug'));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_user_controler','success_add_ug'));
                         $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->userid);
                     }
                 } 
                 else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','error_member',$this->groupid));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','error_member',$this->groupid));
                 }
             }
         }
@@ -427,7 +427,7 @@ class UserControler extends Controler {
             $shell = $request->get('shell');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_shell'));
         }
 
         //valid codex status
@@ -441,7 +441,7 @@ class UserControler extends Controler {
             $codexstatus = $request->get('codexstatus');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_status'));
         }
 
         //valid unix status
@@ -455,7 +455,7 @@ class UserControler extends Controler {
             $unixstatus = $request->get('unixstatus');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_unix_status'));
         }
 
         //valid email
@@ -466,7 +466,7 @@ class UserControler extends Controler {
             $email = $request->get('email');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_email'));
         }
 
         //valid date
@@ -477,7 +477,7 @@ class UserControler extends Controler {
             $expirydate = $request->get('expiry_date');
         }
         else {           
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_usergroup','data_not_parsed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','data_not_parsed'));
         }
 
         $dao = new UserDao(CodexDataAccess::instance());
@@ -504,7 +504,7 @@ class UserControler extends Controler {
             $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $_POST,
                                                      'user_id' => $this->userid )); 
 
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_usergroup', 'success_upd_u'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_user_controler', 'success_upd_u'));
         }
 
         if (is_array($this->userid)) {
@@ -532,7 +532,7 @@ class UserControler extends Controler {
             $this->newUserName = $request->get('new_user_name');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'This name already exist');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','user_name_exists'));
         }
 
         if($this->newUserName != '') {
@@ -548,7 +548,7 @@ class UserControler extends Controler {
             }
         }
         else {
-            $GLOBALS['Response']->addFeedback('warning','Please enter a valid name');
+            $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('admin_user_controler','wrong_new_name'));
         }
     }
     
@@ -568,7 +568,7 @@ class UserControler extends Controler {
             $this->userid = $request->get('user_id');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_uid'));
         }
 
         //valid group id
@@ -578,7 +578,7 @@ class UserControler extends Controler {
             $this->groupid = $request->get('group_id');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_gid'));
         }
 
         //valid task
@@ -588,7 +588,7 @@ class UserControler extends Controler {
             $this->task = $request->get('task');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_task'));
         }
 
         if ($this->userid) {            

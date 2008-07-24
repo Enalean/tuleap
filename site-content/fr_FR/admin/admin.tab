@@ -389,4 +389,27 @@ admin_servers	info_updated	Le serveur <em>$1</em> a été modifié
 admin_servers	info_notcreated	Le serveur n'a pas été créé
 admin_servers	info_notdeleted	Le serveur <em>$1</em> n'a pas été supprimé
 admin_servers	info_notupdated	Le serveur <em>$1</em> n'a pas été modifié
-
+#-----------------------------------------------
+# Script: src/common/admin/UserControler.class.php
+#
+admin_user_controler	wrong_limit	    Cette limite n'est pas valide
+admin_user_controler	wrong_shortcut	    Ce raccourcis n'est pas valide
+admin_user_controler	wrong_user_name	    Ce nom d'utilisateur n'est pas valide
+admin_user_controler	wrong_group_name	    Ce nom de projet n'est pas valide
+admin_user_controler	wrong_status	    Ce status n'est pas valide
+admin_user_controler	error_nouid	    ID utilisateur manquant !
+admin_user_controler	error_nogid	    ID groupe manquant !
+admin_user_controler	error_noadd	    Erreur - Impossibilité d'ajouter l'utilisateur au groupe
+admin_user_controler	error_add_ug	    Erreur lors de l'ajout d'un utilisateur au groupe
+admin_user_controler	success_add_ug	    Utilisateur ajouté au groupe avec succès
+admin_user_controler	error_member	    L'utilisateur est déjà membre du groupe $1
+admin_user_controler	wrong_shell	    Ce shell n'est pas valide
+admin_user_controler	wrong_unix_status	    Ce status unix n'est pas valide
+admin_user_controler	wrong_email	    Email non valide
+admin_user_controler	data_not_parsed	    Désolé, le format de la date d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
+admin_user_controler	success_upd_u	    Utilisateur mis à jour avec succès
+admin_user_controler	user_name_exists	    Ce nom d'utilisateur existe déjà
+admin_user_controler	user_new_name	    Entrez un nom d'utilisateur valide
+admin_user_controler	wrong_uid	    L'ID de l'utilisateur n'est pas valide
+admin_user_controler	wrong_gid	    L'ID du groupe n'est pas valide
+admin_user_controler	wrong_task	    Cette action n'existe pas
