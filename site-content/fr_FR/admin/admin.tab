@@ -414,7 +414,7 @@ admin_user_controler	wrong_uid	    L'ID de l'utilisateur n'est pas valide
 admin_user_controler	wrong_gid	    L'ID du groupe n'est pas valide
 admin_user_controler	wrong_task	    Cette action n'existe pas
 #-----------------------------------------------
-# Script: src/common/admin/GroupControler.class.php
+# Script: src/common/admin/GroupSearchDisplay.class.php
 #
 admin_user_search	mailto	Ecrire à
 #-----------------------------------------------

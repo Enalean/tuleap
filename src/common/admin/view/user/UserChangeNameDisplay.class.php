@@ -122,7 +122,7 @@ class UserChangeNameDisplay extends AdminEditDisplay {
      *
      */
     function displayChangeNameDirection() {
-       
+        echo $GLOBALS['Language']->getText('admin_user_change_name','direction');
     }
 
     /**

@@ -532,7 +532,7 @@ class UserControler extends Controler {
             $this->newUserName = $request->get('new_user_name');
         }
         else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','user_name_exists'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','user_new_name'));
         }
 
         if($this->newUserName != '') {
@@ -545,13 +545,11 @@ class UserControler extends Controler {
             }
             else {
                 $this->displayDirection = false;
+                $GLOBALS['Response']->addFeedBack('error', $GLOBALS['Language']->getText('admin_user_controler','user_name_exists'));
             }
         }
-        else {
-            $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('admin_user_controler','wrong_new_name'));
-        }
     }
-    
+
     /**
      * request()
      */
