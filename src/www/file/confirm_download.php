@@ -89,7 +89,7 @@ if (user_isloggedin()) {
         }
     }
 
-    if (!$request->exist('popup')) {
+    if ($request->exist('popup')) {
         $dlscript='opener.download';
         $cancelscript='window.close()';
     } else {
