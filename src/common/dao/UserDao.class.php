@@ -34,17 +34,7 @@ class UserDao extends DataAccessObject {
     * Searches User by UserId 
     * @return DataAccessResult
     */
-    function & searchByUserId($userId) {
-        $sql = sprintf("SELECT user_id, user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id FROM user WHERE user_id = %s",
-            $this->da->quoteSmart($userId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * Searches All information related to a user by UserId
-     * @return DataAccessResult
-     */
-    function searchAllByUserId($userid) {
+    function searchByUserId($userid) {
 
         $sql = sprintf("SELECT * FROM user WHERE user_id = %d",
                        $this->da->escapeInt($userid));

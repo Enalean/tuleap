@@ -254,12 +254,12 @@ class UserControler extends Controler {
 
         if(is_array($userid)) {
             foreach($userid as $uid) {
-                $dar = $dao->searchAllByUserId($uid);
+                $dar = $dao->searchByUserId($uid);
                 $userparam[] = $dar->getRow();
             }
         }
         else {
-            $dar = $dao->searchAllByUserId($userid);
+            $dar = $dao->searchByUserId($userid);
             $userparam = $dar->getRow();
         }
         $this->userparam = $userparam;

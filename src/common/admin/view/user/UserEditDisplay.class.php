@@ -187,7 +187,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<option value="P"';
             if ($codexstatus == 'P') print 'selected="selected"';
-            print '>'.$GLOBALS['Lamguage']->getText('admin_groupedit','pending').'</option>';
+            print '>'.$GLOBALS['Language']->getText('admin_groupedit','pending').'</option>';
             
             print '<option value="D"';
             if ($codexstatus == 'D') print 'selected="selected"';
@@ -267,7 +267,7 @@ class UserEditDisplay extends AdminEditDisplay {
             
             print '<option value="V">'.$GLOBALS['Language']->getText('admin_userlist','validated').'</option>';
             
-            print '<option value="P">'.$GLOBALS['Lamguage']->getText('admin_groupedit','pending').'</option>';
+            print '<option value="P">'.$GLOBALS['Language']->getText('admin_groupedit','pending').'</option>';
             
             print '<option value="D">'.$GLOBALS['Language']->getText('admin_userlist','deleted').'</option>'; 
             
