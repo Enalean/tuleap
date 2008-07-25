@@ -3352,7 +3352,7 @@ CREATE TABLE IF NOT EXISTS widget_rss (
 
 
 # 
-# Structure de la table 'layouts_contents'
+# Structure de la table 'cross_references'
 # 
 DROP TABLE IF EXISTS cross_references;
 CREATE TABLE IF NOT EXISTS cross_references (

@@ -403,7 +403,7 @@ EOF
 echo "- Add Project Description custom fields. See revision #8610"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
-CREATE TABLE codex.group_desc (
+CREATE TABLE group_desc (
 group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
 desc_required BOOL NOT NULL DEFAULT FALSE,
 desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -414,7 +414,7 @@ PRIMARY KEY ( group_desc_id ),
 UNIQUE (desc_name)
 ) CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
-CREATE TABLE codex.group_desc_value (
+CREATE TABLE group_desc_value (
 desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
 group_id INT( 11 ) NOT NULL ,
 group_desc_id INT( 11 ) NOT NULL ,
@@ -422,7 +422,7 @@ value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 PRIMARY KEY ( desc_value_id )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
-INSERT INTO codex.group_desc (
+INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
 desc_name ,
@@ -435,7 +435,7 @@ VALUES (
 '1', 'text'
 );
 
-INSERT INTO codex.group_desc (
+INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
 desc_name ,
@@ -448,7 +448,7 @@ VALUES (
 '5', 'text'
 );
 
-INSERT INTO codex.group_desc (
+INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
 desc_name ,
@@ -461,7 +461,7 @@ VALUES (
 '5', 'text'
 );
 
-INSERT INTO codex.group_desc (
+INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
 desc_name ,
@@ -507,6 +507,23 @@ WHERE group_desc.desc_name = 'project_desc_name:other_comments'
 AND groups.other_comments != ''
 ) ;
 
+ALTER TABLE groups 
+    DROP register_purpose text,
+    DROP required_software text,
+    DROP patents_ips text,
+    DROP other_comments;
+EOF
+##########
+# SR #147
+echo "- SR #147"
+$CAT <<EOF | $MYSQL $pass_opt codex
+CREATE TABLE IF NOT EXISTS forum_monitored_threads (
+  thread_monitor_id int(11) NOT NULL auto_increment,
+  forum_id int(11) NOT NULL default '0',
+  thread_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  PRIMARY KEY (thread_monitor_id)
+);
 EOF
 
 ##########
@@ -554,6 +571,54 @@ echo "- Add column is_default in artifact_report table. See SR #1160 and revisio
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 ALTER TABLE artifact_report ADD COLUMN is_default INT(11) NOT NULL DEFAULT 0 AFTER scope
+
+EOF
+
+##########
+# Add fields in user table (already in 3.4 security)
+echo "- Add fields in user table (already in 3.4 security)"
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q prev_auth_success
+SHOW COLUMNS FROM user LIKE 'prev_auth_success';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user ADD COLUMN prev_auth_success INT(11) NOT NULL DEFAULT 0;
+EOF
+fi
+
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_auth_success
+SHOW COLUMNS FROM user LIKE 'last_auth_success';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user ADD COLUMN last_auth_success INT(11) NOT NULL DEFAULT 0;
+EOF
+fi
+
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q last_auth_failure
+SHOW COLUMNS FROM user LIKE 'last_auth_failure';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user ADD COLUMN last_auth_failure INT(11) NOT NULL DEFAULT 0;
+EOF
+fi
+
+$CAT <<EOF | $MYSQL $pass_opt codex | grep -q nb_auth_failure
+SHOW COLUMNS FROM user LIKE 'nb_auth_failure';
+EOF
+if [ $? -ne 0 ]; then
+  $CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0;
+EOF
+fi
+
+##########
+# add expiry_date field in user table
+echo "- Add expiry_date field in user table"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+ALTER TABLE user ADD COLUMN expiry_date int(11)
 
 EOF
 
