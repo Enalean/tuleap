@@ -54,6 +54,13 @@ class UserChangeNameDisplay extends AdminEditDisplay {
     private $task;
 
     /**
+     * $newUserName
+     *
+     * @type string $newUserName
+     */
+    private $newUserName;
+
+    /**
      * $displayDirection
      *
      * @type boolean $displayDirection
@@ -61,11 +68,12 @@ class UserChangeNameDisplay extends AdminEditDisplay {
     private $displayDirection;
 
 
-    function __construct($userparam, $groupparam, $task, $displayDirection) {
+    function __construct($userparam, $groupparam, $task, $displayDirection, $newUserName) {
         $this->userparam = $userparam;
         $this->groupparam = $groupparam;
         $this->task = $task;
         $this->displayDirection = $displayDirection;
+        $this->newUserName = $newUserName;
     }
 
     /**
@@ -122,7 +130,26 @@ class UserChangeNameDisplay extends AdminEditDisplay {
      *
      */
     function displayChangeNameDirection() {
-        echo $GLOBALS['Language']->getText('admin_user_change_name','direction');
+
+        //clic on user link
+        if(isset($this->userparam['user_id'])) {
+            $userid = $this->userparam['user_id'];
+        }
+        elseif(count($this->userparam) == 1) {
+            $userid = $this->userparam[0]['user_id'];
+        }
+
+        print $GLOBALS['Language']->getText('admin_user_change_name','direction');
+
+        print '<form action="index.php" method="post">';
+
+        print '<input type="hidden" name="task" value="check_instruction" />';
+        print '<input type="hidden" name="user_id" value="'.$userid.'" />';
+        print '<input type="hidden" name="new_user_name" value="'.$this->newUserName.'" />';
+
+        print '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" /></p>';
+
+        print '</form>';
     }
 
     /**

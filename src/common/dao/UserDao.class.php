@@ -565,6 +565,141 @@ class UserDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * replace the old name by the new name in the user table
+     * @return DataAccessResult
+     *
+     */
+    function changeName($oldname, $newname) {
+
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+
+        $sql = 'UPDATE user'.
+               ' SET user_name=\''.$cleannewname.'\''.
+               ' WHERE user_name=\''.$cleanoldname.'\'';
+
+        return $this->update($sql);
+    }
+
+    /**
+     * replace the old name by the new name in the artifact_cc table
+     * @return DataAccessResult
+     *
+     */
+    function changeEmail($oldname, $newname) {
+
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+
+        $sql = 'UPDATE artifact_cc'.
+               ' SET email=\''.$cleannewname.'\''.
+               ' WHERE email=\''.$cleanoldname.'\'';
+
+        return $this->update($sql);
+    }
+
+    /**
+     * replace the old name by the new name in the artifact_global_notification table
+     * @return DataAccessResult
+     *
+     */
+    function changeArtifact($oldname, $newname) {
+
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+
+        $sql = 'SELECT * FROM artifact_global_notification'.
+               ' WHERE addresses LIKE \'%'.$cleanoldname.'%\''; 
+
+        $result = $this->retrieve($sql);
+
+        foreach($result as $res) {
+
+            $addressesArray = split('[,;]',$res['addresses']);
+
+            foreach($addressesArray as $key => $val) {
+                if($addressesArray[$key] == $cleanoldname) {
+                    $addressesArray[$key] = $cleannewname;
+                }
+            }
+            $addressesString = implode(',',$addressesArray);
+
+            $sql = 'UPDATE artifact_global_notification SET addresses = \''.$addressesString.'\''.
+                ' WHERE id = '.$res['id'];
+
+            $this->update($sql);
+        }
+    }
+
+    /**
+     * replace the old name by the new name in the wiki_page table
+     * @return DataAccessResult
+     *
+     */
+    function changeWikiPage($oldname, $newname) {
+
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+
+        $sql = 'UPDATE wiki_page'.
+               ' SET pagename = \''.$cleannewname.'\''.
+               ' WHERE pagename = \''.$cleanoldname.'\'';
+
+        return $this->update($sql);
+    }
+
+    /**
+     * replace the old name by the new name in the support_messages table
+     * @return DataAccessResult
+     *
+     */
+    function changeSupportMessage($oldname, $newname) {
+
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+
+        $sql = 'UPDATE support_messages'.
+               ' SET from_email=\''.$cleannewname.'\''.
+               ' WHERE from_email=\''.$cleanoldname.'\'';
+
+        return $this->update($sql);
+    }
+
+    /**
+     * replace the old name by the new name in the bug_cc table
+     * @return DataAccessResult
+     *
+     */
+    function changeBug($oldname, $newname) {
+        
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+        
+        $sql = 'UPDATE bug_cc '.
+               ' SET email=\''.$cleannewname.'\''.
+               ' WHERE email=\''.$cleanoldname.'\'';
+ 
+        return $this->update($sql);
+    }
+
+    /**
+     * replace the old name by the new name in the project_cc table
+     * @return DataAccessResult
+     *
+     */
+    function changeProject($oldname, $newname) {
+        
+        $cleanoldname = db_escape_string($oldname);
+        $cleannewname = db_escape_string($newname);
+        
+        $sql = 'UPDATE project_cc'.
+               ' SET email=\''.$cleannewname.'\''.
+               ' WHERE email=\''.$cleanoldname.'\'';
+
+        return $this->update($sql);
+    }
+
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);
@@ -575,7 +710,7 @@ class UserDao extends DataAccessObject {
             return false;
         }
     }
-    
+
     /**
      * count the number of row of a resource
      * @return int

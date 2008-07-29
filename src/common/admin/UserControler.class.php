@@ -164,7 +164,7 @@ class UserControler extends Controler {
 
         if ($this->userid) {
             if ($this->task == 'change_user_name') {
-                $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task, $this->displayDirection);
+                $view = new UserChangeNameDisplay($this->userparam, $this->groupparam, $this->task, $this->displayDirection, $this->newUserName);
             }
             else {
                 $view = new UserEditDisplay($this->userparam, $this->groupparam, $this->task);
@@ -173,7 +173,6 @@ class UserControler extends Controler {
         else {
             $view = new UserSearchDisplay($this->userIterator,$this->offset,$this->limit, $this->nbuser, $this->shortcut, $this->username, $this->group, $this->status);
         }
-
         $view->display();
     }
 
@@ -516,12 +515,9 @@ class UserControler extends Controler {
     }
 
     /**
-     * This method check if the new user name doesn't exist yet
+     * This method init the new user name
      */
-    function checkUserNameExist() {
-
-        $dao = new UserDao(CodexDataAccess::instance());        
-        $filter = array();
+    function setNewUserName() {
         $request =& HTTPRequest::instance();
 
         //valid new user name
@@ -534,6 +530,16 @@ class UserControler extends Controler {
         else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','user_new_name'));
         }
+    }
+
+
+    /**
+     * This method check if the new user name doesn't exist yet
+     */
+    function checkUserNameExist() {
+
+        $dao = new UserDao(CodexDataAccess::instance());        
+        $filter = array();
 
         if($this->newUserName != '') {
             $filter[] = new FullUserNameFilter($this->newUserName);
@@ -548,6 +554,36 @@ class UserControler extends Controler {
                 $GLOBALS['Response']->addFeedBack('error', $GLOBALS['Language']->getText('admin_user_controler','user_name_exists'));
             }
         }
+    }
+
+    /**
+     * This method replace the old user name by the new one in the database
+     */
+    function changeUserNameInDB() {
+
+        if(isset($this->userparam['user_name'])) {
+            $oldusername = $this->userparam['user_name'];
+        }
+        elseif(count($this->userparam) == 1) {
+            $oldusername = $this->userparam[0]['user_name'];
+        }
+
+        $dao = new UserDao(CodexDataAccess::instance());
+        $dao->changeName($oldusername, $this->newUserName);
+        $dao->changeEmail($oldusername, $this->newUserName);
+        $dao->changeArtifact($oldusername, $this->newUserName);
+        $dao->changeWikiPage($oldusername, $this->newUserName);
+        $dao->changeSupportMessage($oldusername, $this->newUserName);
+        $dao->changeBug($oldusername, $this->newUserName);
+        $dao->changeProject($oldusername, $this->newUserName);
+    }
+
+    /**
+     * This method call other methods that check one specific point of the direction to change user name
+     */
+    function changeUserName() {
+
+        $this->changeUserNameInDB();
     }
 
     /**
@@ -579,6 +615,7 @@ class UserControler extends Controler {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler','wrong_gid'));
         }
 
+
         //valid task
         $validTask = new Valid_String('task');
 
@@ -595,7 +632,7 @@ class UserControler extends Controler {
         }
 
         if ($this->task) {
-            
+
             if($this->task == 'add_user_to_group') {
                 $this->addUserToGroup();
                 $this->setUserParam($this->userid);
@@ -607,7 +644,12 @@ class UserControler extends Controler {
                 $this->setGroupParam($this->userid);
             }
             elseif($this->task == 'change_user_name') {
+                $this->setNewUserName();
                 $this->checkUserNameExist();
+            }
+            elseif($this->task == 'check_instruction') {            
+                $this->setNewUserName();
+                $this->changeUserName();
             }
         }
 
