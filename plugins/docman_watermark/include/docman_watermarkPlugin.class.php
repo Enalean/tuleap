@@ -37,7 +37,7 @@ class Docman_watermarkPlugin extends Plugin {
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('docman_file_before_download', 'stampFile', false);
         $this->_addHook('docman_after_admin_menu', 'addAdminMenuWatermark', false);
-        $this->_addHook('docman_after_dispacher', 'dispachToAdminSection', false);
+        $this->_addHook('docman_after_dispacher', 'dispachToController', false);
     }
 
     /**
@@ -89,26 +89,34 @@ class Docman_watermarkPlugin extends Plugin {
      *  @param array params
      *  @return void
      */
-     function addAdminMenuWatermark($params) {
-         require_once(dirname(__FILE__).'/../../docman/include/view/Docman_View_Extra.class.php');
-         $dve = new Docman_View_Extra($params);
-         $params['html'] .= '<h3><a href="'. $dve->buildUrl($params['default_url'], array('action' => 'admin_watermark')) .'">'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</a></h3>';
-         $params['html'] .= '<p>'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_descr') .'</p>';
-     }
+    function addAdminMenuWatermark($params) {
+        require_once(dirname(__FILE__).'/../../docman/include/view/Docman_View_Extra.class.php');
+        $dve = new Docman_View_Extra($params);
+        $params['html'] .= '<h3><a href="'. $dve->buildUrl($params['default_url'], array('action' => 'admin_watermark')) .'">'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</a></h3>';
+        $params['html'] .= '<p>'. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_descr') .'</p>';
+    }
+    
     /**
-     *  hook method to dispach to watermark admin view
+     *  method to process the plugin controller 
+     *  @param void
+     *  @return void 
+     */
+    
+    function process() {
+        require_once('DocmanWatermark.class.php');
+        $controler =& new DocmanWatermark($this, $this->_getPluginPath().'/../../plugins/docman',$this->_getPluginPath(), $this->_getThemePath());
+        $controler->process();
+    }
+     
+     
+    /**
+     *  hook method to dispach to watermark Controller
      *  @param array params
      *  @return void
      */
-    function dispachToAdminSection($params) {
-        switch ($params['view']) {
-            case 'admin_watermark':
-                require_once('view/DocmanWatermark_View_Admin_Watermark.class.php');
-                $dwv = new DocmanWatermark_View_Admin_Watermark();
-                $dwv->display();
-                exit(0);
-                break;
-        }
+    function dispachToController($params) {
+        $this->process();
+        exit(0);
     }
 }
 
