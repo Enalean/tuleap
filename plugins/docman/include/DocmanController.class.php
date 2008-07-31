@@ -1310,6 +1310,8 @@ class DocmanController extends Controler {
             break;
                                     
         default:
+            $event_manager =& EventManager::instance();
+            $event_manager->processEvent('docman_after_dispacher', array('view' => $view));
             die(htmlspecialchars($view) .' is not supported');
             break;
         }
