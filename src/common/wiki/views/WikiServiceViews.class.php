@@ -37,12 +37,13 @@ class WikiServiceViews extends WikiViews {
    * WikiServiceViews - Constructor
    */
   function WikiServiceViews(&$controler, $id=0, $view=null) {
+      $hp = CodeX_HTMLPurifier::instance();
     $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     parent::WikiView($controler, $id, $view);
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',
-                                                          array($_REQUEST['pagename'],
+                                                          array( $hp->purify($_REQUEST['pagename'], CODEX_PURIFIER_CONVERT_HTML) ,
                                                                 group_getname($this->gid)));
     }
     else {
