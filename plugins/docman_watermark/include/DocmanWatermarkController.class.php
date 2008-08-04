@@ -56,7 +56,7 @@ class DocmanWatermarkController extends Controler {
         $this->feedback       = false;
         
         $event_manager =& $this->_getEventManager();
-        
+        $this->feedback =& $GLOBALS['Response']->_feedback;
     }
 
     /**
@@ -175,6 +175,15 @@ class DocmanWatermarkController extends Controler {
             //$this->action = $view;
             $this->view   = 'Admin_Watermark';
             break;
+        case 'admin_set_watermark_metadata':
+            $this->_actionParams['group_id'] = $this->request->get('group_id');
+            $this->_actionParams['md_id']    = $this->request->get('md_id');
+            $this->action = 'setup_metadata';
+            
+            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
+            $this->_viewParams['md_id'] = $this->request->get('md_id');
+            $this->view   = 'Admin_Watermark';
+            break;    
         default:
             die(htmlspecialchars($view) .' is not supported');
             break;

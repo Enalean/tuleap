@@ -2,6 +2,10 @@ plugin_docmanwatermark	admin_watermark	Manage Watermarking
 plugin_docmanwatermark	admin_watermark_descr	Configure watermarking properties
 plugin_docmanwatermark	admin_confidentiality_field	Define Confidentiality Level Field
 plugin_docmanwatermark	admin_watermark_desc	First select the field which will be used to add watermark to PDF files, then select the respective values to enable it
-plugin_docmanwatermark	admin_select_field	<b>Select Field:</b>
+plugin_docmanwatermark	admin_select_field	<b>Select Field:  </b>
 plugin_docmanwatermark	admin_confidentiality_field_values	Configure Watermarking Values
 plugin_docmanwatermark	admin_import_settings	Import Settings From Project
+plugin_docmanwatermark	admin_update	Update
+plugin_docmanwatermark	admin_none	--Disable--
+plugin_docmanwatermark	admin_update_metadata	Metadata field setup
+plugin_docmanwatermark	admin_select_field_values	Select Values wich will be watermarked

@@ -28,13 +28,15 @@ require_once('DocmanWatermark_MetadataDao.class.php');
 class DocmanWatermark_MetadataFactory {
     
     var $dao;
+    var $groupId;
     
-    public function DocmanWatermark_MetadataFactory() {
+    public function DocmanWatermark_MetadataFactory($groupId) {
+        $this->groupId = $groupId;
     }
     
-    public function create($row) {
-        $dao =& $this->_getVersionDao();
-        return $dao->createFromRow($row);
+    public function update($wmd) {
+        $dao =& $this->_getWatermarkMetadataDao();
+        
     }
     
     public function &_getWatermarkMetadataDao() {

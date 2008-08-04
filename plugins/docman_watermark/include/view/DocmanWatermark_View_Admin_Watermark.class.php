@@ -1,5 +1,5 @@
 <?php
-/* 
+/** 
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2008
@@ -37,21 +37,65 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         echo '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_desc').'</p>';
     }
 
-    function getMetaDataForm($group_id) {
-        require_once(dirname(__FILE__).'/../DocmanWatermark_MetadataFactory.class.php');
-        $wmd   = new DocmanWatermark_MetadataFactory();
-        //$field = $wmd->searchByGroupId($group_id);
-        
+    function getMetaDataForm($groupId,$mdId) {
+        require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataFactory.class.php');
+        $mdf    = new Docman_MetadataFactory($groupId);
+        $mdIter = $mdf->getMetadataForGroup(true);
         $html  = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_confidentiality_field').'</h3>';
-        $html .= $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_select_field'); 
-        $html .= '<select name="fields">';
-        $html .= '<option></option>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_select_field');
+        $html .= '<form name="metadata_field" method="post" action="?group_id='.$groupId.'&action=admin_set_watermark_metadata">'; 
+        $html .= '<select name="md_id" onchange="javascript:document.metadata_field.submit()">';
+        $html .= '<option value="none">'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_none').'</option>';
+        $mdIter->rewind();
+        while ($mdIter->valid()) {
+            $md   = $mdIter->current();
+            if ($md->getType()== PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                $id   = $md->getId();
+                if ($id == "") {
+                    $id = $md->getLabel();
+                }
+             
+                $html .= '<option ';
+                if ($mdId == $id) {
+                    $html .= 'selected '; 
+                }
+                $html .= 'value="'.$id.'">'.$md->getName().'</option>';       
+            }
+            $mdIter->next();
+        }
         $html .= '</select>';
+        $html .= '<input name="submit_metadatafield" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update').'">';
+        $html .= '</form></p>';
         return $html;
     }
 
-    function getMetaDataValuesTable() {
-        $html = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_confidentiality_field_values').'</h3>';
+    function getMetaDataValuesTable($groupId,$mdName) {
+        require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
+        require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataFactory.class.php');
+        $mdf   = new Docman_MetadataFactory($groupId);
+        $mdLabel = $mdf->getLabelFromId($mdName);
+        $mlvef = new Docman_MetadataListOfValuesElementFactory($mdName);
+        $mlveIter = $mlvef->getIteratorByFieldId($mdName, $mdLabel, true);
+        $html  = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_confidentiality_field_values').'</h3>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_select_field_values');
+        $html .= '<form name="metadata_field_values" method="post" action="?group_id='.$groupId.'&action=admin_set_watermark_metadata_values">';
+        $html .= '<table>';
+        $mlveIter->rewind();
+        while ($mlveIter->valid()) {
+            $mdv   = $mlveIter->current();
+            if (!$mdv->isSpecial) {
+                $id   = $mdv->getId();
+                if ($id == "") {
+                    $id = $mdv->getLabel();
+                }
+                $html .= '<tr><td><input type="checkbox" name="chk_"'.$id.'/></td>';
+                $html .= '<td><b>'.$mdv->getName().'</b></td>';
+                $html .= '</tr>';
+            }
+            $mlveIter->next();
+        }
+        $html .= '</table>';
+        $html .= '</form>';
         return $html;
     }
 
@@ -62,8 +106,8 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
     
     function _content($params) {
         $html = '';
-        $html .= $this->getMetaDataForm($params['group_id']);
-        $html .= $this->getMetaDataValuesTable();
+        $html .= $this->getMetaDataForm($params['group_id'], $params['md_id']);
+        $html .= $this->getMetaDataValuesTable($params['group_id'],$params['md_id']);
         $html .= $this->getImportForm($params['group_id']);
         echo $html;
     }

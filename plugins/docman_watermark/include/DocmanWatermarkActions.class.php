@@ -30,31 +30,23 @@ require_once('common/include/HTTPRequest.class.php');
 
 class DocmanWatermarkActions extends Actions {
     
-    var $event_manager;
-    
+
     public function DocmanWatermarkActions(&$controler, $view=null) {
         parent::Actions($controler);
-        $this->event_manager =& $this->_getEventManager();
     }
     
-    public function &_getEventManager() {
-        $em =& EventManager::instance();
-        return $em;
-    }
-    
-    public function setup_confidentiality_field() {
-        $f_confid = $this->_controler->_actionParams['f_confid'];
-        $mf       = new DocmanWatermarkMetadataFactory();
+    public function setup_metadata() {
+        require_once(dirname(__FILE__).'/DocmanWatermark_MetadataFactory.class.php');
+        $md_id    = $this->_controler->_actionParams['md_id'];
+        $group_id = $this->_controler->_actionParams['group_id'];
+        $mf       = new DocmanWatermark_MetadataFactory($group_id);
         
     }
     
-    public function setup_confidentiality_values() {
+    public function setup_metadata_values() {
         $values = $this->_controler->_actionParams['values'];
         $mvf    = new DocmanWatermarkMetadataValueFactory();
-        
     }
-    
-    
     
 }
 
