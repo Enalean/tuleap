@@ -183,7 +183,25 @@ class DocmanWatermarkController extends Controler {
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
             $this->_viewParams['md_id'] = $this->request->get('md_id');
             $this->view   = 'Admin_Watermark';
-            break;    
+            break;
+        case 'admin_set_watermark_metadata_values':
+            $this->_actionParams['group_id'] = $this->request->get('group_id');
+            $this->_actionParams['md_id']    = $this->request->get('md_id');
+            $this->action = 'setup_metadata_values';
+            
+            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
+            $this->_viewParams['md_id'] = $this->request->get('md_id');
+            $this->view   = 'Admin_Watermark';            
+            break;
+        case 'admin_import_from_project':
+            $this->_actionParams['group_id'] = $this->request->get('group_id');
+            $this->_actionParams['md_id']    = $this->request->get('md_id');
+            $this->action = 'import_from_project';
+            
+            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_from_project'));
+            $this->_viewParams['md_id'] = $this->request->get('md_id');
+            $this->view   = 'Admin_Watermark';
+            break;
         default:
             die(htmlspecialchars($view) .' is not supported');
             break;

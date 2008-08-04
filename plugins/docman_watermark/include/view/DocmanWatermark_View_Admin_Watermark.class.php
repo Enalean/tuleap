@@ -33,7 +33,7 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
     }
 
     function _title($params) {
-        echo '<h2>'.' - '. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</h2>';
+        echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark') .'</h2>';
         echo '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_watermark_desc').'</p>';
     }
 
@@ -79,28 +79,47 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         $html  = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_confidentiality_field_values').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_select_field_values');
         $html .= '<form name="metadata_field_values" method="post" action="?group_id='.$groupId.'&action=admin_set_watermark_metadata_values">';
-        $html .= '<table>';
+        
+        $titles = array();
+        $titles[] = $GLOBALS['Language']->getText('plugin_docmanwatermark','admin_use_watermark');
+        $titles[] = $GLOBALS['Language']->getText('plugin_docmanwatermark','admin_values');
+        $html .= html_build_list_table_top($titles, false, false, false);
         $mlveIter->rewind();
+        $iter_empty = 1;
         while ($mlveIter->valid()) {
             $mdv   = $mlveIter->current();
             if (!$mdv->isSpecial) {
                 $id   = $mdv->getId();
-                if ($id == "") {
+                if ($id == '') {
                     $id = $mdv->getLabel();
                 }
-                $html .= '<tr><td><input type="checkbox" name="chk_"'.$id.'/></td>';
-                $html .= '<td><b>'.$mdv->getName().'</b></td>';
+                $name = $mdv->getName();
+                if ($mdv->getName() == 'love_special_none_name_key') {
+                    $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
+                }
+                $html .= '<tr><td align="center"><input type="checkbox" name="chk_"'.$id.'/></td>';
+                $html .= '<td><b>'.$name.'</b></td>';
                 $html .= '</tr>';
+             
+                $iter_empty = 0;
             }
             $mlveIter->next();
         }
         $html .= '</table>';
+        if (!$iter_empty) {
+            $html .= '<input name="submit_metadatafield_value" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_save_settings').'">';
+        }
         $html .= '</form>';
         return $html;
     }
 
-    function getImportForm($group_id){
-        $html = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_settings').'</h3>';
+    function getImportForm($groupId){
+        $html  = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_settings').'</h3>';
+        $html .= $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_from_project');
+        $html .= '<form name="metadata_import" method="post" action="?group_id='.$groupId.'&action=admin_import_from_project">';
+        $html .= '<input type="text" name="project"/>';
+        $html .= '<input name="submit_import" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import').'">';
+        $html .= '</form>';
         return $html;        
     }
     

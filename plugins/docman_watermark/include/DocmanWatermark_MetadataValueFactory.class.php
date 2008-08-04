@@ -33,7 +33,7 @@ class DocmanWatermark_MetadataValueFactory {
     }
     
     public function create($row) {
-        $dao =& $this->_getVersionDao();
+        $dao =& $this->_getWatermarkMetadataValueDao();
         return $dao->createFromRow($row);
     }
     
