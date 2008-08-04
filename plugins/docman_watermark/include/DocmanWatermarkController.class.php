@@ -189,7 +189,7 @@ class DocmanWatermarkController extends Controler {
             $this->_actionParams['md_id']    = $this->request->get('md_id');
             $this->action = 'setup_metadata_values';
             
-            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
+            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata_values'));
             $this->_viewParams['md_id'] = $this->request->get('md_id');
             $this->view   = 'Admin_Watermark';            
             break;
