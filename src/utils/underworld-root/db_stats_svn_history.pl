@@ -124,7 +124,7 @@ while (<LOGFILE>) {
   #print "line: $_\n";
   #print "file: $filepath\n";
 
-  if ( $filepath =~ m:$svn_prefix/([^ /]+):) {
+  if ( $filepath =~ m:/svnroot/([^ /]+):) {
     $gname = $1;
     $group_id = $groups{$gname};
 
