@@ -69,13 +69,13 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         return $html;
     }
 
-    function getMetaDataValuesTable($groupId,$mdName) {
+    function getMetaDataValuesTable($groupId,$mdId) {
         require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
         require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataFactory.class.php');
         $mdf   = new Docman_MetadataFactory($groupId);
-        $mdLabel = $mdf->getLabelFromId($mdName);
-        $mlvef = new Docman_MetadataListOfValuesElementFactory($mdName);
-        $mlveIter = $mlvef->getIteratorByFieldId($mdName, $mdLabel, true);
+        $mdLabel = $mdf->getLabelFromId($mdId);
+        $mlvef = new Docman_MetadataListOfValuesElementFactory($mdId);
+        $mlveIter = $mlvef->getIteratorByFieldId($mdId, $mdLabel, true);
         $html  = '<h3>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_confidentiality_field_values').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_select_field_values');
         $html .= '<form name="metadata_field_values" method="post" action="?group_id='.$groupId.'&action=admin_set_watermark_metadata_values">';

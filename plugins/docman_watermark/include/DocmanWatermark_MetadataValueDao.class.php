@@ -47,7 +47,7 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     }
     
     /**
-    * Searches Docmanwatermark_MetadataValueDao by value_id 
+    * Searches DocmanWatermark_MetadataValueDao by value_id 
     * @return DataAccessResult
     */
     function searchByValueId($value_id) {
@@ -61,7 +61,7 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($value_id, $watermark) {
-		$sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_love_extension (value_id, watermark VALUES (%s, %s)",
+		$sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_love_extension (value_id, watermark) VALUES (%s, %s)",
 				$this->da->quoteSmart($value_id),
 				$this->da->quoteSmart($watermark));
         return $this->_createAndReturnId($sql);
