@@ -67,7 +67,12 @@ class DataBuilder {
         $result['field2']=array();
         $result['c']=array();
 
-        if ($af_x->isUsed()) {
+        if (!is_null($this->field_Y)) {
+            $af_y = new ArtifactField();
+            $af_y->fetchData($this->atid,$this->field_Y);
+        }
+        
+        if ($af_x->isUsed() && (!$af_y || $af_y->isUsed())) {
             $select   = "SELECT ";
             $from     = "FROM ";
             $where    = "WHERE ";
