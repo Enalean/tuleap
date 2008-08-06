@@ -172,9 +172,9 @@ class DocmanWatermarkController extends Controler {
 
         switch ($view) {
         case 'admin_watermark':
-            $this->action = $view;
+            require('DocmanWatermark_MetadataFactory.class.php');
             $group_id = $this->request->get('group_id');
-            $dwmdf = new DocmanWatermark_MetadataFacory();
+            $dwmdf = new DocmanWatermark_MetadataFactory();
             $md_id = $dwmdf->getMetadataIdFromGroupId($group_id);
             $this->_viewParams['md_id']    = $md_id;
             $this->_viewParams['group_id'] = $group_id;
