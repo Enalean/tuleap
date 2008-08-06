@@ -38,15 +38,6 @@ class DocmanWatermark_MetadataDao extends DataAccessObject {
     }
     
     /**
-    * Gets all tables of the db
-    * @return DataAccessResult
-    */
-    function searchAll() {
-        $sql = "SELECT * FROM plugin_docmanwatermark_metadata_extension";
-        return $this->retrieve($sql);
-    }
-    
-    /**
     * Searches Docmanwatermark_MetadataDao by group_id 
     * @return DataAccessResult
     */
@@ -56,35 +47,28 @@ class DocmanWatermark_MetadataDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function updateByGroupId($group_id, $field_id) {
+        $sql = sprintf("UPDATE plugin_docmanwatermark_metadata_extension SET field_id = %s WHERE group_id = %s",
+                $this->da->quoteSmart($field_id),
+                $this->da->quoteSmart($group_id));
+        return $this->retrieve($sql);        
+    }
+
     /**
     * create a row in the table plugin_docmanwatermark_metadata_extension 
     * @return 
     */
-    function create($group_id, $field_id) {
-        $sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_extension (group_id, field_id VALUES (%s, %s)",
+    function createByGroupId($group_id, $field_id) {
+        $sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_extension (group_id, field_id) VALUES (%s, %s)",
                 $this->da->quoteSmart($group_id),
                 $this->da->quoteSmart($field_id));
-        return $this->_createAndReturnId($sql);
+        return $this->retrieve($sql);
     }
 
-    function createFromRow($row) {
-        $arg    = array();
-        $values = array();
-        $cols   = array('group_id', 'field_id');
-        foreach ($row as $key => $value) {
-            if (in_array($key, $cols)) {
-                $arg[]    = $key;
-                $values[] = $this->da->quoteSmart($value);
-            }
-        }
-        if (count($arg)) {
-            $sql = 'INSERT INTO plugin_docmanwatermark_Metadata_extension '
-                .'('.implode(', ', $arg).')'
-                .' VALUES ('.implode(', ', $values).')';
-            return $this->_createAndReturnId($sql);
-        } else {
-            return false;
-        }
+    function deleteByGroupId($group_id) {
+        $sql = sprintf("DELETE FROM plugin_docmanwatermark_metadata_extension WHERE group_id = %s",
+                $this->da->quoteSmart($group_id));
+        return $this->retrieve($sql);        
     }
 
 }
