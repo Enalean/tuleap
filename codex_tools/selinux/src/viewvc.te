@@ -7,11 +7,12 @@ require {
 	type cvs_data_t;
 	class lnk_file read;
 	class dir { read getattr search };
-	class file { read getattr };
+	class file { read getattr ioctl };
 }
 
 #============= httpd_sys_script_t ==============
 allow httpd_sys_script_t cvs_data_t:dir { read getattr search };
-allow httpd_sys_script_t cvs_data_t:file getattr;
+allow httpd_sys_script_t cvs_data_t:file { read ioctl getattr};
 allow httpd_sys_script_t cvs_data_t:lnk_file read;
 allow httpd_sys_script_t httpd_t:file read;
+allow httpd_t cvs_data_t:file getattr;
