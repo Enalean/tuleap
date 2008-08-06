@@ -56,11 +56,6 @@ class DocmanWatermark_Metadata {
 
     ///}}} Accessors
 
-    function initFromRow($row) {
-        if(isset($row['field_id'])) $this->id = $row['field_id'];
-        if(isset($row['group_id'])) $this->groupId = $row['group_id'];
-    }
-
 }
 
 ?>
