@@ -172,12 +172,23 @@ class DocmanWatermarkController extends Controler {
 
         switch ($view) {
         case 'admin_watermark':
-            //$this->action = $view;
+            $this->action = $view;
+            $group_id = $this->request->get('group_id');
+            $dwmdf = new DocmanWatermark_MetadataFacory();
+            $md_id = $dwmdf->getMetadataIdFromGroupId($group_id);
+            $this->_viewParams['md_id']    = $md_id;
+            $this->_viewParams['group_id'] = $group_id;
             $this->view   = 'Admin_Watermark';
             break;
         case 'admin_set_watermark_metadata':
-            $this->_actionParams['group_id'] = $this->request->get('group_id');
-            $this->_actionParams['md_id']    = $this->request->get('md_id');
+            require('DocmanWatermark_Metadata.class.php');
+            $group_id = $this->request->get('group_id');
+            $id       = $this->request->get('md_id');
+            $this->_actionParams['group_id'] = $group_id;
+            $this->_actionParams['md_id']    = $id;
+            $dwm = new DocmanWatermark_Metadata();
+            $dwm->setId($id);
+            $dwm->setGroupId($group_id);
             $this->action = 'setup_metadata';
             
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));

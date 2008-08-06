@@ -39,8 +39,11 @@ class DocmanWatermarkActions extends Actions {
         require_once(dirname(__FILE__).'/DocmanWatermark_MetadataFactory.class.php');
         $md_id    = $this->_controler->_actionParams['md_id'];
         $group_id = $this->_controler->_actionParams['group_id'];
-        $mf       = new DocmanWatermark_MetadataFactory($group_id);
-        
+        $wmd       = new DocmanWatermark_Metadata();
+        $wmd->setGroupId($group_id);
+        $wmd->setId($md_id);
+        $mf = new DocmanWatermark_MetadataFactory();
+        $mf->setField($wmd);
     }
     
     public function setup_metadata_values() {
