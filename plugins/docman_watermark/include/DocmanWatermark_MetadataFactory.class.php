@@ -22,21 +22,15 @@
  *
  * 
  */
+
 require_once('DocmanWatermark_MetadataDao.class.php');
-//require_once('DocmanWatermark_Metadata.class.php');
 
 class DocmanWatermark_MetadataFactory {
     
     var $dao;
-    var $groupId;
     
-    public function DocmanWatermark_MetadataFactory($groupId) {
-        $this->groupId = $groupId;
-    }
-    
-    public function update($wmd) {
-        $dao =& $this->_getWatermarkMetadataDao();
-        
+    public function DocmanWatermark_MetadataFactory() {
+        $this->dao =& $this->_getWatermarkMetadataDao();
     }
     
     public function &_getWatermarkMetadataDao() {
@@ -44,6 +38,28 @@ class DocmanWatermark_MetadataFactory {
             $this->dao =& new DocmanWatermark_MetadataDao(CodexDataAccess::instance());
         }
         return $this->dao;
+    }
+    
+    public function setField($wmd) {
+        $dar = $this->dao->searchByGroupId($wmd->getGroupId());
+        if ($dar->valid()) {
+            $this->dao->updateByGroupId($wmd->getGroupId(), $wmd->getId());
+        } else {
+            $this->dao->createByGroupId($wmd->getGroupId(), $wmd->getId());
+        }
+    }
+    
+    public function unsetField($wmd) {
+        $dar = $this->deleteByGroupId($wmd->getGroupId());
+    }
+    
+    public function getMetadataIdFromGroupId($group_id) {
+        $dar = $this->dao->searchByGroupId($group_id);
+        if ($dar->rowCount() >0) {
+            $row = $dar->current();
+            return $row['field_id'];
+        }
+        return false;
     }
     
 }
