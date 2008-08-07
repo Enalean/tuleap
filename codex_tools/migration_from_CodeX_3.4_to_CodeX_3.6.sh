@@ -388,9 +388,9 @@ AND groups.other_comments != ''
 ) ;
 
 ALTER TABLE groups 
-    DROP register_purpose text,
-    DROP required_software text,
-    DROP patents_ips text,
+    DROP register_purpose,
+    DROP required_software,
+    DROP patents_ips,
     DROP other_comments;
 EOF
 ##########
