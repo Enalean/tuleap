@@ -205,7 +205,7 @@ todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 ##############################################
 # Stop some services before upgrading
 #
-echo "Stopping crond, httpd, sendmail, and postfix ..."
+echo "Stopping crond, httpd, sendmail, mailman and smb ..."
 $SERVICE crond stop
 $SERVICE httpd stop
 $SERVICE mysqld stop
@@ -327,38 +327,6 @@ EOF
 echo "- Add Project Description custom fields. See revision #8610"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
-CREATE TABLE group_desc (
-group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
-desc_required BOOL NOT NULL DEFAULT FALSE,
-desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-desc_description text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
-desc_rank INT( 11 ) NOT NULL DEFAULT '0',
-desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
-PRIMARY KEY ( group_desc_id ),
-UNIQUE (desc_name)
-) CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
-CREATE TABLE group_desc_value (
-desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
-group_id INT( 11 ) NOT NULL ,
-group_desc_id INT( 11 ) NOT NULL ,
-value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-PRIMARY KEY ( desc_value_id )
-) CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
-INSERT INTO group_desc (
-group_desc_id ,
-desc_required ,
-desc_name ,
-desc_description ,
-desc_rank ,
-desc_type
-)
-VALUES (
-'101' , '1', 'project_desc_name:full_desc', 'project_desc_desc:full_desc',
-'1', 'text'
-);
-
 INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
@@ -369,7 +337,7 @@ desc_type
 )
 VALUES (
 '102' , '0', 'project_desc_name:int_prop', 'project_desc_desc:int_prop',
-'5', 'text'
+'20', 'text'
 );
 
 INSERT INTO group_desc (
@@ -382,21 +350,9 @@ desc_type
 )
 VALUES (
 '103' , '0', 'project_desc_name:req_soft', 'project_desc_desc:req_soft',
-'5', 'text'
+'30', 'text'
 );
 
-INSERT INTO group_desc (
-group_desc_id ,
-desc_required ,
-desc_name ,
-desc_description ,
-desc_rank ,
-desc_type
-)
-VALUES (
-'104' , '0', 'project_desc_name:other_comments', 'project_desc_desc:other_comments',
-'5', 'text'
-);
 
 INSERT INTO group_desc_value( group_desc_id, group_id, value ) 
 (
