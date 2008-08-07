@@ -234,16 +234,6 @@ if [ "$removed" != "" ]; then
   echo "$removed"
 fi
 
-modified=`$DIFF -q -r \
-            $BACKUP_INSTALL_DIR/site-content/ \
-            $INSTALL_DIR/site-content/        \
-            | grep -v '.svn'  \
-            | sed             \
-            -e "s|^Files $BACKUP_INSTALL_DIR/site-content/\(.*\) and $INSTALL_DIR/site-content/\(.*\) differ|@\1|g" \
-            -e "/^[^@]/ d"  \
-            -e "s/@//g"     \
-            -e '/^$/ d'`
-            
 #Differ => modified
 one_has_been_found=0
 for i in `$DIFF -q -r \
@@ -256,14 +246,10 @@ for i in `$DIFF -q -r \
             -e "s/@//g"     \
             -e '/^$/ d'` 
 do
-    j=`echo "$modified" | grep $i`
-    if [ "$j" != "" ]; then
-       if [ $one_has_been_found -eq 0 ]; then
-          echo "  The following files differ from the site-content of CodeX:"
-          one_has_been_found=1
-       fi
-       echo "    $j"
-    fi
+   if [ $one_has_been_found -eq 0 ]; then
+      echo "  The following files differ from the site-content of CodeX:"
+      one_has_been_found=1
+   fi
 done
 
 echo "Analysis done."
