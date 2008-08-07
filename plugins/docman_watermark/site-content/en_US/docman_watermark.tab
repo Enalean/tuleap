@@ -11,7 +11,7 @@ plugin_docmanwatermark	admin_import	Import
 plugin_docmanwatermark	admin_none	--Disable--
 plugin_docmanwatermark	admin_update_metadata	Metadata field setup
 plugin_docmanwatermark	admin_update_metadata_values	Metadata values setup
-plugin_docmanwatermark	admin_select_field_values	Select Values wich will be watermarked
+plugin_docmanwatermark	admin_select_field_values	Select Values which will be watermarked
 plugin_docmanwatermark	admin_use_watermark	Use Watermark
 plugin_docmanwatermark	admin_values	Values
 plugin_docmanwatermark	admin_import_from_project	<b>Project:</b>
