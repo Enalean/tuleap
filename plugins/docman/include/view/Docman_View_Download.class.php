@@ -29,7 +29,7 @@ class Docman_View_Download extends Docman_View_View {
                     'version'  => $version->getNumber(),
                     'user'     => &$params['user']
                 ));
-                $event_manager->processEvent('docman_file_before_download', array(
+                $event_manager->processEvent('plugin_docman_file_before_download', array(
                     'group_id'  => $params['group_id'],
                     'item'      => &$params['item'],
                     'user'      => &$params['user'],

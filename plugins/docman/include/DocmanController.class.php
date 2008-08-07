@@ -1311,7 +1311,7 @@ class DocmanController extends Controler {
                                     
         default:
             $event_manager =& EventManager::instance();
-            $event_manager->processEvent('docman_after_dispacher', array('view' => $view));
+            $event_manager->processEvent('plugin_docman_after_dispacher', array('view' => $view));
             die(htmlspecialchars($view) .' is not supported');
             break;
         }

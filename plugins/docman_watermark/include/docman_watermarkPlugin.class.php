@@ -35,9 +35,9 @@ class Docman_watermarkPlugin extends Plugin {
     function Docman_watermarkPlugin($id) {
         $this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
-        $this->_addHook('docman_file_before_download', 'stampFile', false);
-        $this->_addHook('docman_after_admin_menu', 'addAdminMenuWatermark', false);
-        $this->_addHook('docman_after_dispacher', 'dispachToController', false);
+        $this->_addHook('plugin_docman_file_before_download', 'stampFile', false);
+        $this->_addHook('plugin_docman_after_admin_menu', 'addAdminMenuWatermark', false);
+        $this->_addHook('plugin_docman_after_dispacher', 'dispachToController', false);
     }
 
     /**
