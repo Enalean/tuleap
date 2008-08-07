@@ -207,7 +207,6 @@ todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 #
 echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
 $SERVICE crond stop
-$SERVICE apache stop
 $SERVICE httpd stop
 $SERVICE mysqld stop
 $SERVICE sendmail stop
