@@ -168,11 +168,16 @@ RH_RELEASE="5"
 yn="y"
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
+  $RPM -q centos-release-${RH_RELEASE}* 2>/dev/null 1>&2
+  if [ $? -eq 1 ]; then
     cat <<EOF
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE}. Executing this install
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
+  else
+    echo "Running on CentOS ${RH_RELEASE}... good!"
+  fi
 else
     echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
 fi
@@ -734,16 +739,6 @@ cd $INSTALL_DIR/src/utils
 
 
 ##############################################
-# Update ParametersLocal.dtd
-#
-$CAT <<'EOF' >>/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-<!ENTITY SYS_UPDATE_SITE "http://$sys_default_domain/plugins/eclipse/updatesite/">
-EOF
-todo "If only HTTPS is enabled on the CodeX server:"
-todo " * update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
-todo " * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work."
-	
-##############################################
 # Restarting some services
 #
 echo "Starting services..."
@@ -763,28 +758,15 @@ $INSTALL_DIR/src/utils/generate_cli_package.sh -f
 $CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
 
 
-todo "Add proxy setting in /etc/codex/conf/local.inc if the CodeX server needs to use a proxy to access the Internet. This is used for external RSS feeds."
-todo "Add Eclipse plugin documentation in the site documentation (links available from /plugins/eclipse/). Documentation is available in French and English."
-todo "Update the site-content/<language>/homepage.tab to promote the Eclipse plugin and CodeX JRI (Java Runtime Environnement)"
-todo "SSL certificate has changed on Partners. In order to enable the subversion update, you need to type the following commands (as codexadm):"
-todo "     cd /usr/share/codex/"
-todo "     svn status -u --username <your_login_on_partners>"
-todo "   Accept the new certificate permanently, and type in your password."
-todo "Warn your users who use exported DB that the project database name is now prefixed by 'cx_' (SR #948)"
-todo "Rename, copy or regenerate projects DB to take into account the new 'cx_' prefix (e.g. use phpMyAdmin)"
-todo "Warn your users of the SOAP API changes in functions getArtifacts, getAttachedFiles (that does not return the content of the files anymore for performance reasons), and of the new docman API function getRootFolder)"
-todo "If you have custom themes:"
-todo "  -New icons: add.png, close.png, comment.png, cross.png, group.png, quote.png, tick.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic"
-todo "  -New image: widget-header.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
-todo "  -Updated CSS: Everything below the line '/* {{{ Widgets */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css (except the 'password validator' section if it is already present)."
-todo "  -If you redefined generic_header_start() in your theme layout class, you should add a call to warning_for_services_which_configuration_is_not_inherited() (see Layout.class.php)"
 todo "The new Graphontrackers Plugin is available, no graphical reports for your site has presently been created"
-todo "You can create your own reports for each (template) tracker via the trackers administration menu.
-todo "To use the Gannt graph with the task tracker, you will have to :
-todo "  - rename the old "end date" field into a "close date" or so on.
-todo "  - create an "end date" and a "due date" field for the task tracker
-todo "  - create a "progress" field, type INT and display TextField for the task tracker, with value between 0-100 (percentage of completion) 
-todo "
+todo "You can create your own reports for each (template) tracker via the trackers administration menu."
+todo "To use the Gannt graph with the task tracker, you will have to :"
+todo "  - rename the old 'end date' field into 'close date' or so on."
+todo "  - create an 'end date' and a 'due date' field for the task tracker"
+todo "  - create a 'progress' field, type INT and display TextField for the task tracker, with value between 0-100 (percentage of completion)" 
+todo ""
+todo "CodeX is now UTF-8. You must convert your ISO-8859-1 language file or theme script into UTF-8 :"
+todo "  - iconv -f iso-8859-1 -t utf-8 file.tab > file.tab.utf8 && mv file.tab.utf8 file.tab"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
