@@ -205,12 +205,11 @@ todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 ##############################################
 # Stop some services before upgrading
 #
-echo "Stopping crond, apache and httpd, sendmail, and postfix ..."
+echo "Stopping crond, httpd, sendmail, and postfix ..."
 $SERVICE crond stop
 $SERVICE httpd stop
 $SERVICE mysqld stop
 $SERVICE sendmail stop
-$SERVICE postfix stop
 $SERVICE mailman stop
 $SERVICE smb stop
 
@@ -479,18 +478,6 @@ GROUP BY agl.group_artifact_id;
 EOF
 
 ##########
-# Add info about user login
-echo "- Add info about user login. See revision #7319"
-$CAT <<EOF | $MYSQL $pass_opt codex
-
-ALTER TABLE user ADD COLUMN prev_auth_success INT(11) NOT NULL DEFAULT 0 AFTER last_access_date
-ALTER TABLE user ADD COLUMN last_auth_success INT(11) NOT NULL DEFAULT 0 AFTER prev_auth_success
-ALTER TABLE user ADD COLUMN last_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_success
-ALTER TABLE user ADD COLUMN nb_auth_failure INT(11) NOT NULL DEFAULT 0 AFTER last_auth_failure
-
-EOF
-
-##########
 # Add column is_default in artifact_report table
 echo "- Add column is_default in artifact_report table. See SR #1160 and revision #8009 "
 $CAT <<EOF | $MYSQL $pass_opt codex
@@ -604,7 +591,7 @@ else
     <?php
     require_once('$INSTALL_DIR/codex_tools/tracker_migration_from_CodeX_34_to_36.php');
     ?>
-    EOF
+EOF
     echo "Scrum Backlog tracker installation completed !"
 fi
 
