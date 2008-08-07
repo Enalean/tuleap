@@ -250,7 +250,12 @@ do
       echo "  The following files differ from the site-content of CodeX:"
       one_has_been_found=1
    fi
+   echo "    $i"
 done
+
+if [ $one_has_been_found -eq 1 ]; then
+   echo "  Please check those files"
+fi
 
 echo "Analysis done."
 
