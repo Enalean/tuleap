@@ -37,21 +37,15 @@ class DocmanWatermarkController extends Controler {
     var $request;
     var $user;
     var $groupId;
-    var $themePath;
     var $plugin;
     var $feedback;
     var $user_can_admin;
-    var $docmanPath;
     
-    public function DocmanWatermarkController(&$plugin, $docmanPath,$pluginPath, $themePath, &$request) {
+    public function DocmanWatermarkController(&$plugin, &$request) {
         $this->request        =& $request;
         $this->user           = null;
         $this->groupId        = null;
         $this->user_can_admin = null;
-        $this->pluginPath     = $pluginPath;
-        $this->docmanPath     = $docmanPath;
-        $this->themePath      = $themePath;
-        $this->plugin         = $plugin;
         $this->view           = null;
         $this->feedback       = false;
         

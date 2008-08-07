@@ -104,7 +104,7 @@ class Docman_watermarkPlugin extends Plugin {
     
     function process() {
         require_once('DocmanWatermark.class.php');
-        $controler =& new DocmanWatermark($this, $this->_getPluginPath().'/../../plugins/docman',$this->_getPluginPath(), $this->_getThemePath());
+        $controler =& new DocmanWatermark($this);
         $controler->process();
     }
      
