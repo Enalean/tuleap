@@ -216,85 +216,6 @@ $SERVICE smb stop
 
 
 ##############################################
-# Now install/update CodeX specific RPMS 
-#
-
-# SELinux CodeX-specific policy
-if [ $SELINUX_ENABLED ]; then
-    echo "Removing existing SELinux policy .."
-    $RPM -e selinux-policy-targeted-sources 2>/dev/null
-    $RPM -e selinux-policy-targeted 2>/dev/null
-    echo "Installing New SELinux targeted policy for CodeX...."
-    cd ${RPMS_DIR}/selinux-policy-targeted
-    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
-fi
-
-
-echo "Installing Highlight RPMs for CodeX...."
-# -> highlight
-$RPM -e highlight 2>/dev/null
-echo "Installing highlight RPM for CodeX...."
-cd ${RPMS_DIR}/highlight
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
-
-# -> HTML Purifier
-echo "Removing installed htmlpurifier if any .."
-$RPM -e htmlpurifier 2>/dev/null
-$RPM -e htmlpurifier-docs 2>/dev/null
-echo "Installing htmlpurifier RPM for CodeX...."
-cd ${RPMS_DIR}/htmlpurifier
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/htmlpurifier-2*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
-
-
-# -> subversion
-# backup config file for apache
-$MV /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/subversion.conf.3.6.codex
-echo "Installing Subversion 1.4.4 RPMs for CodeX...."
-cd ${RPMS_DIR}/subversion
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/apr-0*.i386.rpm ${newest_rpm}/apr-util-0*.i386.rpm \
-     ${newest_rpm}/subversion-1.*.i386.rpm  ${newest_rpm}/mod_dav_svn*.i386.rpm \
-     ${newest_rpm}/subversion-perl*.i386.rpm ${newest_rpm}/subversion-python*.i386.rpm \
-     ${newest_rpm}/subversion-tools*.i386.rpm
-
-$CP -a /etc/httpd/conf.d/subversion.conf.3.6.codex /etc/httpd/conf.d/subversion.conf
-
-
-##############################################
-# Install the CodeX software 
-#
-echo "Installing the CodeX software..."
-$MV $INSTALL_DIR $BACKUP_INSTALL_DIR
-$MKDIR $INSTALL_DIR;
-cd $INSTALL_DIR
-$TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R codexadm.codexadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
-$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
-
-# Add FollowSymLinks option to directory /usr/share/codex/downloads
-for f in /etc/httpd/conf.d/codex_aliases.conf; do
-    yn="0"
-    fn=`basename $f`
-    [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
-
-    if [ "$yn" = "y" ]; then
-	$CP -f $f $f.orig
-    fi
-
-    if [ "$yn" != "n" ]; then
-	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
-    fi
-
-    $CHOWN codexadm.codexadm $f
-    $CHMOD 640 $f
-done
-
-##############################################
 # Analyze site-content 
 #
 echo "Analysing your site-content (in $ETC_DIR/site-content/)..."
@@ -711,24 +632,6 @@ fi
 
 
 ##############################################
-# Update codexadm crontab: add codex_daily.php at 00:15
-#
-
-echo "Backing up codexadm crontab in /tmp/crontab.codexadm.bak"
-crontab -u codexadm -l > /tmp/crontab.codexadm.bak
-echo "Installing new codexadm user crontab..."
-$CAT <<'EOF' >/tmp/cronfile
-# Daily CodeX PHP cron (obsolete documents...)
-10 0 * * * /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/src/utils/codex_daily.php
-# Re-generate the CodeX User Guides on a daily basis
-00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
-30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
-45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
-EOF
-crontab -u codexadm /tmp/cronfile
-
-
-##############################################
 # Fix SELinux contexts if needed
 #
 echo "Update SELinux contexts if needed"
@@ -746,16 +649,6 @@ $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
-
-##############################################
-# Generate Documentation
-#
-echo "Generating the CodeX Manuals. This will take a few minutes."
-$INSTALL_DIR/src/utils/generate_doc.sh -f
-$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
-$INSTALL_DIR/src/utils/generate_cli_package.sh -f
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
-
 
 todo "The new Graphontrackers Plugin is available, no graphical reports for your site has presently been created"
 todo "You can create your own reports for each (template) tracker via the trackers administration menu."
