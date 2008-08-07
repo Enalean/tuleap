@@ -575,7 +575,8 @@ class IMPlugin extends Plugin {
  	 * @param array $params:contains the data which comes from the envent listened.
  	 */
 	function im_process_display_presence ($params) {
-        if ( ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
+        if ( user_isloggedin() &&
+            ( ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence'))) {
             $params['user_display_name'] = $this->getDisplayPresence($params['user_id']);
         }
 	}
