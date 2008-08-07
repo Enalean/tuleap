@@ -37,15 +37,21 @@ class DocmanWatermarkController extends Controler {
     var $request;
     var $user;
     var $groupId;
+    var $themePath;
     var $plugin;
     var $feedback;
     var $user_can_admin;
+    var $docmanPath;
     
-    public function DocmanWatermarkController(&$plugin, &$request) {
+    function DocmanWatermarkController(&$plugin, $docmanPath,$pluginPath, $themePath, &$request) {
         $this->request        =& $request;
         $this->user           = null;
         $this->groupId        = null;
         $this->user_can_admin = null;
+        $this->pluginPath     = $pluginPath;
+        $this->docmanPath     = $docmanPath;
+        $this->themePath      = $themePath;
+        $this->plugin         = $plugin;
         $this->view           = null;
         $this->feedback       = false;
         
@@ -57,24 +63,24 @@ class DocmanWatermarkController extends Controler {
      * Wrapper to i18n string call for docmanWatermark.
      * static
      */
-    public function txt($key, $vars = array()) {
+    function txt($key, $vars = array()) {
         return $GLOBALS['Language']->getText('plugin_docmanwatermark', $key, $vars);
     }
 
     // Franlky, this is not at all the best place to do this.
-    public function installDocmanWatermark($ugroupsMapping, $group_id = false) {
+    function installDocmanWatermark($ugroupsMapping, $group_id = false) {
         
     }
 
-    public function _cloneDocmanWatermark($srcGroupId, $dstGroupId, $ugroupsMapping) {
+    function _cloneDocmanWatermark($srcGroupId, $dstGroupId, $ugroupsMapping) {
         
     }
 
-    public function &_getEventManager() {
+    function &_getEventManager() {
         return EventManager::instance();
     }
     
-    public function &getUser() {
+    function &getUser() {
         if($this->user === null) {
             $um =& UserManager::instance();
             $this->user = $um->getCurrentUser();
@@ -82,19 +88,18 @@ class DocmanWatermarkController extends Controler {
         return $this->user;
     }
     
-    public function userCanManage($item_id) {
+    function userCanManage($item_id) {
         $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
         $user =& $this->getUser();
         return $dPm->userCanManage($user, $item_id);
     }
-    
-    public function userCanAdmin() {
+    function userCanAdmin() {
         $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
         $user =& $this->getUser();
         return $dPm->userCanAdmin($user);
     }
     
-    public function getGroupId() {
+    function getGroupId() {
         if($this->groupId === null) {
             $_gid = (int) $this->request->get('group_id');
             if($_gid > 0) {
@@ -104,14 +109,35 @@ class DocmanWatermarkController extends Controler {
         return $this->groupId;
     }
 
+    function getDefaultUrl() {
+        $_gid = $this->getGroupId();
+        return $this->docmanPath.'/?group_id='.$_gid;
+    }
 
-    private function _checkBrowserCompliance() {
+    function getAdminUrl() {
+        $_gid = $this->getGroupId();
+        return $this->docmanPath.'/admin/?group_id='.$_gid;
+    }
+
+    function getAdminWatermarkUrl() {
+        $_gid = $this->getGroupId();
+        return $this->pluginPath.'/admin/?group_id='.$_gid;
+    }
+    
+    
+    function getThemePath() {
+        return $this->themePath;
+    }
+    
+
+    /*private*/ function _checkBrowserCompliance() {
         if($this->request_type == 'http' && $this->request->browserIsNetscape4()) {
             $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'docman_browserns4'));
         }
     }
 
-    public function request() {
+
+    function request() {
         if (!$this->request->exist('group_id')) {
             $this->feedback->log('error', 'Project is missing.');
             $this->_setView('Error');
@@ -127,7 +153,12 @@ class DocmanWatermarkController extends Controler {
             // Browser alert
             $this->_checkBrowserCompliance();
             
-            $this->_viewParams['group_id'] = (int) $this->request->get('group_id');                
+            $this->_viewParams['docmanwatermark']     =& $this;
+            $this->_viewParams['user']                =& $this->getUser();
+            $this->_viewParams['default_url']         =  $this->getDefaultUrl();
+            $this->_viewParams['watermark_admin_url'] =  $this->getAdminWatermarkUrl();
+            $this->_viewParams['theme_path']          =  $this->getThemePath();
+            $this->_viewParams['group_id']            = (int) $this->request->get('group_id');                
            
             $view = $this->request->exist('action') ? $this->request->get('action') : 'admin_watermark';
             $this->_viewParams['action'] = $view;
@@ -135,7 +166,7 @@ class DocmanWatermarkController extends Controler {
         }
     }
 
-    public function _dispatch($view) {
+    function _dispatch($view) {
         $user =& $this->getUser();
         $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
 
@@ -187,8 +218,13 @@ class DocmanWatermarkController extends Controler {
             break;
         }
     }
+
+    function getProperty($name) {
+        $info =& $this->plugin->getPluginInfo();
+        return $info->getPropertyValueForName($name);
+    }
     
-    public function viewsManagement() {
+    function viewsManagement() {
         if ($this->view !== null) {
             $className = $this->_includeView();
             if (class_exists($className)) {
