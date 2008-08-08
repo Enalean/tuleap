@@ -41,9 +41,6 @@ if ($request->get('help')) {
     exit;
 }
 $text = $request->get('text');
-if (isset($_SERVER['CONTENT_TYPE']) && (strpos(strtolower($_SERVER['CONTENT_TYPE']), 'utf-8') !== FALSE)) {
-    $text = utf8_decode($text);
-}
 echo nl2br(util_make_links(htmlentities($text, ENT_QUOTES, 'UTF-8'), $group_id)."\n");
 exit;
 
