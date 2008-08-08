@@ -501,7 +501,7 @@ $CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL $pass_opt codex
 echo "- Install Salomé plugin"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
-INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
+INSERT INTO plugin (name, available) VALUES ('salome', '1');
 
 EOF
 
