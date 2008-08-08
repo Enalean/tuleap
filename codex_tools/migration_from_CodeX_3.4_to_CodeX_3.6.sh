@@ -494,6 +494,30 @@ INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 EOF
 
 ##########
+# Install Salomé plugin
+echo "- Add Salomé plugin schema"
+$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL $pass_opt codex
+
+echo "- Install Salomé plugin"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
+
+EOF
+
+##########
+# Install IM plugin
+echo "- Add IM plugin schema"
+$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL $pass_opt codex
+
+echo "- Install IM plugin"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+INSERT INTO plugin (name, available) VALUES ('IM', '1');
+
+EOF
+
+##########
 # Create table for Cross references 
 echo "- Create Table in DB for Cross References (see rev # ) "
 $CAT <<EOF | $MYSQL $pass_opt codex
@@ -593,6 +617,16 @@ todo "  - create a 'progress' field, type INT and display TextField for the task
 todo ""
 todo "CodeX is now UTF-8. You must convert your ISO-8859-1 language file or theme script into UTF-8 :"
 todo "  - iconv -f iso-8859-1 -t utf-8 file.tab > file.tab.utf8 && mv file.tab.utf8 file.tab"
+todo ""
+todo "Salomé and Instant Messaging have been installed. If you don't want to use them, please uninstall corresponding plugins through the PluginsAdministration."
+todo ""
+todo "If you have custom themes:"
+todo "  -New icons: add.png, monitor_forum.png, monitor_thread.png, right_arrow.png, left_arrow.png, both_arrows.png, cal.png, delete.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic"
+todo "  -New image: backstripes.gif. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
+todo "  -Updated CSS: Everything below the line '/* {{{ Date Picker */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css."
+todo "  -Please update your theme layout class according to the modifications done in Layout.class.php and TabbedLayout.class.php"
+todo "    > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/Layout.class.php?r1=9106&r2=7209&roottype=svn&root=codex&diff_format=l"
+todo "    > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/TabbedLayout.class.php?r1=9068&r2=7209&roottype=svn&root=codex&diff_format=l"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
 
