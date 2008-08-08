@@ -621,6 +621,7 @@ todo "Docman embedded files must also been converted to utf-8. Please use the fo
 todo "  - SELECT v.path "
 todo "    FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) "
 todo "    WHERE i.item_type = 4;"
+todo "Please remember that us-ascii is fully compatible with utf-8 encoding. Only others encoding like iso-8859-1 must be converted to utf-8."
 todo ""
 todo "Salomé and Instant Messaging have been installed. If you don't want to use them, please uninstall corresponding plugins through the PluginsAdministration."
 todo ""
