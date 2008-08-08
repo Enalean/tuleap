@@ -620,6 +620,8 @@ todo "  - iconv -f iso-8859-1 -t utf-8 file.tab > file.tab.utf8 && mv file.tab.u
 todo ""
 todo "Salomé and Instant Messaging have been installed. If you don't want to use them, please uninstall corresponding plugins through the PluginsAdministration."
 todo ""
+todo "Groups has not been synchronized for Instant Messaging. Please go to admin > Instant Messaging and synchronize groups."
+todo ""
 todo "If you have custom themes:"
 todo "  -New icons: add.png, monitor_forum.png, monitor_thread.png, right_arrow.png, left_arrow.png, both_arrows.png, cal.png, delete.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic"
 todo "  -New image: backstripes.gif. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
