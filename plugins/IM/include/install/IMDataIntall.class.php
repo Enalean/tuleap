@@ -262,7 +262,7 @@ class IMDataIntall {
 			        $action_on=$GLOBALS["Language"]->getText('plugin_im_admin','action_on_grp');
 			        echo'<fieldset>';
 			            echo'<legend style="font-size:1.3em; font-weight: bold;">'.$group_name.'</legend>';
-			            echo $unix_group_name_label.$unix_group_name.'<br>';
+			            echo $unix_group_name_label. '<a href="/projects/'. $unix_group_name .'">'. $unix_group_name.'</a><br>';
 			            echo $group_description_label.$group_description.'<br>';
 			            echo $group_Owner_name_label.$group_Owner_name.'<br>';
 			            echo $action_label.$action_on.'<br>';
@@ -308,7 +308,7 @@ class IMDataIntall {
 			        $action_on=$GLOBALS["Language"]->getText('plugin_im_admin','action_on_muc');
 			        echo'<fieldset>';
 			            echo'<legend style="font-size:1.3em; font-weight: bold;">'.$group_name.'</legend>';
-			            echo $unix_group_name_label.$unix_group_name.'<br>';
+			            echo $unix_group_name_label. '<a href="/projects/'. $unix_group_name .'">'. $unix_group_name.'</a><br>';
 			            echo $group_description_label.$group_description.'<br>';
 			            echo $group_Owner_name_label.$group_Owner_name.'<br>';
 			            echo $action_label.$action_on.'<br>';
