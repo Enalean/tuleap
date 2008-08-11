@@ -2,25 +2,28 @@
 module others 1.0;
 
 require {
-	type iso9660_t;
-	type system_mail_t;
-	type fs_t;
-	type user_home_dir_t;
-	type httpd_t;
-	type procmail_t;
-	type mailman_archive_t;
-	type httpd_log_t;
-	type tmp_t;
-	type cvs_t;
-	type cvs_data_t;
-	type httpd_sys_content_t;
-	type httpd_sys_script_t;
-	type logwatch_t;
-	class unix_stream_socket { read write };
-	class lnk_file read;
-	class dir { search getattr };
-	class file { read ioctl write getattr append };
-	class filesystem associate;
+        type crond_t;
+        type cvs_data_t;
+        type cvs_t;
+        type fs_t;
+        type httpd_log_t;
+        type httpd_sys_content_t;
+        type httpd_sys_script_t;
+        type httpd_t;
+        type iso9660_t;
+        type logwatch_t;
+        type mailman_archive_t;
+        type procmail_t;
+        type restorecon_t;
+        type system_mail_t;
+        type tmp_t;
+        type user_home_dir_t;
+        class dir { search getattr };
+        class fifo_file read;
+        class file { read ioctl write getattr append };
+        class filesystem associate;
+        class lnk_file read;
+        class unix_stream_socket { read write };
 }
 
 #============= httpd_sys_script_t ==============
@@ -43,3 +46,7 @@ allow procmail_t httpd_sys_content_t:dir search;
 allow system_mail_t cvs_t:unix_stream_socket { read write };
 allow system_mail_t httpd_t:file read;
 allow system_mail_t tmp_t:file write;
+
+#============= restorecon_t ==============
+allow restorecon_t crond_t:fifo_file read;
+
