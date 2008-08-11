@@ -519,7 +519,7 @@ EOF
 
 ##########
 # Create table for Cross references 
-echo "- Create Table in DB for Cross References (see rev # ) "
+echo "- Create Table in DB for Cross References "
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 CREATE TABLE IF NOT EXISTS cross_references (
