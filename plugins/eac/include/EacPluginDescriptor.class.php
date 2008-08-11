@@ -2,12 +2,11 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('template', 'template');
-
-class TemplatePluginDescriptor extends PluginDescriptor {
+class EacPluginDescriptor extends PluginDescriptor {
     
-    function TemplatePluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_template', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
+    function EacPluginDescriptor() {
+        $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_eac', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_eac', 'descriptor_description'));
     }
 }
 ?>

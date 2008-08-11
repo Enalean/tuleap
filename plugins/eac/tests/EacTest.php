@@ -1,12 +1,7 @@
 <?php
-/**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
-*
-* 
-*/
 
-class TemplatePluginTest extends UnitTestCase {
-    function TemplatePluginTest($name = 'Template Plugin test') {
+class EacPluginTest extends UnitTestCase {
+    function EacPluginTest($name = 'Eac Plugin test') {
         $this->UnitTestCase($name);
     }
     

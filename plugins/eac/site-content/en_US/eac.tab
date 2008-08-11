@@ -1,2 +1,2 @@
-plugin_template	descriptor_description	Base to develop Codendi Plugins.
-plugin_template	descriptor_name	Template
+plugin_eac	descriptor_description	Complex view of permissions and access rights
+plugin_eac	descriptor_name	Extract Access Control

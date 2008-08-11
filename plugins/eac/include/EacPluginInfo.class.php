@@ -1,13 +1,13 @@
 <?php
 
 require_once('common/plugin/PluginInfo.class.php');
-require_once('TemplatePluginDescriptor.class.php');
+require_once('EacPluginDescriptor.class.php');
 
-class TemplatePluginInfo extends PluginInfo {
+class EacPluginInfo extends PluginInfo {
     
-    function TemplatePluginInfo(&$plugin) {
+    function EacPluginInfo(&$plugin) {
         $this->PluginInfo($plugin);
-        $this->setPluginDescriptor(new TemplatePluginDescriptor());
+        $this->setPluginDescriptor(new EacPluginDescriptor());
     }
     
 }
