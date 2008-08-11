@@ -596,6 +596,20 @@ echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
+##############################################
+# Convert to utf8 existing content
+#
+echo "Convert embedded files to utf8"
+mysql -u codexadm --password=g7loi9re codex \
+  -e "SELECT v.path FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) WHERE i.item_type = 4" | \
+  sed -e "/^path$/d" | \
+  awk '{ system("/usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh "$0) }'
+
+echo "Convert your site-content to utf-8"
+find /etc/codex/ -type f 
+                 -wholename "*/site-content/*" 
+                 -not -wholename "*/.svn/*" 
+                 -exec /usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh {} \;
 
 
 ##############################################
@@ -615,13 +629,7 @@ todo "  - rename the old 'end date' field into 'close date' or so on."
 todo "  - create an 'end date' and a 'due date' field for the task tracker"
 todo "  - create a 'progress' field, type INT and display TextField for the task tracker, with value between 0-100 (percentage of completion)" 
 todo ""
-todo "CodeX is now UTF-8. You must convert your ISO-8859-1 language file or theme script into UTF-8 :"
-todo "  - iconv -f iso-8859-1 -t utf-8 file.tab > file.tab.utf8 && mv file.tab.utf8 file.tab"
-todo "Docman embedded files must also been converted to utf-8. Please use the following statement to check the encoding of the file and convert to utf-8:"
-todo "  - SELECT v.path "
-todo "    FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) "
-todo "    WHERE i.item_type = 4;"
-todo "Please remember that us-ascii is fully compatible with utf-8 encoding. Only others encoding like iso-8859-1 must be converted to utf-8."
+todo "CodeX is now UTF-8. Please check that your iso-8859-1 files have been properly converted to utf-8 (site-content, themes, docman embedded files)."
 todo ""
 todo "Salomé and Instant Messaging have been installed. If you don't want to use them, please uninstall corresponding plugins through the PluginsAdministration. Or with the following statement:"
 todo "  - DELETE FROM plugin WHERE name = 'IM'"
