@@ -9,7 +9,7 @@ if [ -f $file ]; then
 
   if [ "$charset" = "iso-8859-1" ]; then 
     iconv -f iso-8859-1 -t utf-8 "$file" > "$file$tmp"
-    mv "$file$tmp" "$1"
+    mv -f "$file$tmp" "$1"
   else 
     if [ "$charset" = "us-ascii" ] || [ "$charset" = "utf-8" ]
     then
