@@ -89,7 +89,11 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         while ($mlveIter->valid()) {
             $mdv   = $mlveIter->current();
             $id   = $mdv->getId();
-            $posValue = array_search($id, $vals['value_id']);
+            if (isset($vals['value_id'])) {
+                $posValue = array_search($id, $vals['value_id']);
+            } else {
+                $posValue = false;
+            }
             if (($id != '') && ($mdv->getName() != 'Status')) {
                 $name = $mdv->getName();
                 if ($mdv->getName() == 'love_special_none_name_key') {
