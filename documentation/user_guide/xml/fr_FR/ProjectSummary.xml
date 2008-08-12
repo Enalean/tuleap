@@ -13,7 +13,7 @@
 
     <para>La page de Sommaire du Projet est le point d'entrée d'un
     projet hébergé sur CodeX et c'est véritablement la seule page dont
-    vous ayez à vous souvenir ou à conserver dans vos signets. A
+    vous ayez à vous souvenir ou que vous ayez à conserver dans vos signets. A
     partir de cette page les utilisateurs enregistrés, les membres du
     projet ou les administrateurs peuvent accéder à l'ensemble des
     ressources et des services qui leur sont
@@ -29,7 +29,7 @@
       d'accéder à la page de sommaire consiste à se rendre sur la page
       personnelle et à cliquer sur le nom de projet approprié.</para>
 
-      <para>Pour les autres utilisateurs il existe plusieurs façons de
+      <para>Pour les autres utilisateurs, il existe plusieurs façons de
       se rendre sur le page de sommaire d'un projet :</para>
 
       <procedure>
@@ -61,11 +61,11 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
       </procedure>
 
       <para>Si vous devez consulter régulièrement des projets dont
-      vous n'êtes pas membre de, nous vous conseillons de faire
+      vous n'êtes pas membre, nous vous conseillons de faire
       apparaître l'URL de la page de sommaire dans votre page
       personnelle CodeX en utilisant la fonction &#34;Cette page en
       signet&#34; du menu de CodeX (voir <xref
-      linkend="LoginAndPersonalPage" />)</para>
+      linkend="LoginAndPersonalPage" />).</para>
 
       <tip>
         <title>Le Sommaire du Projet n'est pas sa Page d'Accueil !</title>
@@ -78,7 +78,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         accueillir vos visiteurs, les informer et les orienter vers les
         différents services de CodeX. (voir <xref
         linkend="ProjectWebSite" /> pour plus d'information sur
-        l'élaboration du site Web de votre projet)</para>
+        l'élaboration du site Web de votre projet).</para>
       </tip>
 
       <para></para>
@@ -142,7 +142,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
       peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
       
       <para>Les utilisateurs autres qu'administrateurs du projet verront une page statique. 
-      Les widgets seront les même, organisés de la même façon, mais les utilisateurs ne pourrront pas modifier la page.</para>
+      Les widgets seront les mêmes, organisés de la même façon, mais les utilisateurs ne pourrront pas modifier la page.</para>
       
       <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
       Voici une liste non-exhaustive de widgets disponible pour les projets :</para>
@@ -190,7 +190,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           ainsi.</para>
         </listitem>
         <listitem>
-          <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques. Par exemple le lecteur peut afficher un flux publié par un outil externe utilisé par le projet (ex: intégration continue)</para>
+          <para><emphasis role="bold">RSS Reader</emphasis> vous permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques. Par exemple le lecteur peut afficher un flux publié par un outil externe utilisé par le projet (ex: intégration continue).</para>
         </listitem>
       </itemizedlist>
     </section>

@@ -77,7 +77,7 @@
           <para>Si vous visitez le site en tant qu'utilisateur
           anonyme, la partie supérieure du menu vous invite à vous
           connecter au système ou bien à créer un compte si vous n'en
-          avez pas. Si vous êtes connecté d'autres entrées deviendront
+          avez pas. Si vous êtes connecté, d'autres entrées deviendront
           visibles dans le menu comme Se déconnecter, Mon compte, Ma
           page personnelle, etc&hellip;</para>
         </listitem>
@@ -196,7 +196,7 @@
         de la description. Notez qu'à côté de chaque valeur d'un
         critère figure un lien hypertexte appelé [Filtre]. Cliquer sur
         l'un de ces liens a pour effet de n'afficher que les projets
-        qui correspondent à cette valeur du critère.Les projets de type
+        qui correspondent à cette valeur du critère. Les projets de type
 	patron et les projets de test (voir <xref linkend="ProjectType" />) 
 	ne sont pas listés dans l'arbre des projets.</para>
 
@@ -212,7 +212,7 @@
 
         <para>En appliquant ces multiples critères de sélection,
         l'utilisatrice réduit le nombre de projets potentiellement
-        intéressant à neuf et elle peut donc les examiner un par un
+        intéressants à neuf et elle peut donc les examiner un par un
         (seul le premier projet est montré sur la <xref
         linkend="FigureSoftwareMapSampleBrowsing" />). Les filtres ont
         une autre propriété intéressante : ils sont persistants. Cela
@@ -271,7 +271,7 @@
 
             <listitem>
               <para>Utiliser la boîte de recherche par mots-clés
-              situés en bas à gauche ou en haut à droite de
+              située en bas à gauche ou en haut à droite de
               l'écran. La recherche s'effectue dans le titre et la
               description des échantillons.</para>
             </listitem>
@@ -303,7 +303,7 @@
           la boîte à outils situé en haut de la page. Remplissez les
           champs titre et description (tout pointeur Web - ou URL -
           tapé dans le champ description sera automatiquement
-          transformé en hyperliens par CodeX), le type de
+          transformé en hyperlien par CodeX), le type de
           l'échantillon, sa catégorie et son langage de
           programmation. Si une catégorie ou un langage de
           programmation venait à manquer, veuillez contacter l'équipe
@@ -380,7 +380,7 @@
 
           <para>Si vous avez soumis des échantillons qui ont un
           rapport entre eux il peut être intéressant de les regrouper
-          un sein d'un paquet d'échantillons.</para>
+          au sein d'un paquet d'échantillons.</para>
 
           <para>Pour créer un paquet d'échantillons, cliquez sur
           &#34;Créer un paquet&#34; dans le menu situé en haut de la
@@ -389,13 +389,13 @@
           avoir soumis le formulaire, une nouvelle fenêtre apparaît
           vous demandant d'indiquer les identifiants uniques (ID) des
           échantillons à placer dans le paquet. Veillez à avoir cette
-          liste d'identifiant à portée de main lors de la création
+          liste d'identifiants à portée de main lors de la création
           d'un paquet.</para>
 			
 			
 			<para>Veuillez noter qu'il existe un indentifiant d'échantillon ainsi qu'un
 				identifiant de version d'échantillon. Si vous téléchargez une nouvelle
-				version d'un échantillon, l'identifiant de l'échantillon ne change pas
+				version d'un échantillon, l'identifiant de l'échantillon ne change pas,
 				contrairement à l'identifiant de la version de l'échantillon. Ainsi
 				lorsque vous créez des paquets d'échantillons, assurez-vous d'utiliser
 				l'identifiant de la nouvelle version.</para>
@@ -406,7 +406,7 @@
 
 			<para>Comme un échantillon, un paquet peut être mis à jour. Pour se faire,
 				procédez comme pour un échantillon, Il faut tout d'abord le rechercher dans
-				la boîte à outils, le sélectionner et enfin, cliquez sur l'icône d'édition.
+				la boîte à outils, le sélectionner et enfin, cliquer sur l'icône d'édition.
 				A partir de là vous pouvez ajouter ou supprimer des échantillons. Si vous
 				voulez mettre à jour le paquet en y intégrant une nouvelle version d'un
 				échantillon, détruisez d'abord l'ancienne version puis ajoutez la
@@ -441,7 +441,7 @@
         l'ensemble du site CodeX. Son contenu est variable mais il
         comporte en général le guide utilisateur, des présentations et
         d'autres documents importants maintenus par l'équipe
-        CodeX. Lisez les attentivement.</para>
+        CodeX. Lisez-les attentivement.</para>
 
       </section>
 
@@ -453,7 +453,7 @@
         soit l'organisation à laquelle ils appartiennent.</para>
 
         <para>C'est pour cette raison que CodeX propose une série de
-        listes de distribution (appelée Canaux Développeurs) où toute
+        listes de distribution (appelée Canaux Développeurs) auxquelles toute
         personne, y compris un utilisateur non enregistré de CodeX,
         peut souscrire. Chaque canal est dédié à un sujet
         particulier. La création de nouveaux canaux est sous la
@@ -461,14 +461,14 @@
         à <email>&SYS_EMAIL_CONTACT;</email> si vous souhaitez faire
         une demande de création.</para>
 
-        <para>Le Canaux Développeurs de CodeX présente un certain
+        <para>Les Canaux Développeurs de CodeX présentent un certain
         nombre de caractéristiques intéressantes :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
             <para>Les opérations d'abonnement et le désabonnement au
-            canal peuvent être effectuées par l'utilisateur lui-même à
+            canal peuvent être effectués par l'utilisateur lui-même à
             travers l'interface Web de CodeX.</para>
           </listitem>
 
@@ -503,7 +503,7 @@
         <para>Ces forums sont entièrement basés web ce qui implique
         d'utiliser l'interface web de CodeX pour lire ou poster un
         message. Toutefois l'utilisateur a la possibilité de placer un
-        forum sous surveillance afin de recevoir par email tout les
+        forum sous surveillance afin de recevoir par email tous les
         échanges qui ont lieu sur le forum.</para>
 
       </section>
@@ -526,7 +526,7 @@
         <title>La fonction de recherche</title>
 
         <para>CodeX vous permet d'effectuer une recherche par
-        mots-clés dans quasiment toutes les informations disponibles
+        mots-clés sur quasiment toutes les informations disponibles
         sur le site. Lorsque vous vous trouvez sur la page d'accueil
         de CodeX vous pouvez rechercher des informations dans les
         ressources suivantes :</para>
@@ -549,7 +549,7 @@
             CodeX (voir <xref linkend="TheCodeSnippetLibrary" />). La
             recherche porte sur le nom et la description. Vous pouvez
             ainsi trouver facilement des échantillons de code qui
-            répondent à vos problèmes.</para>
+            répondent à vos besoins.</para>
           </listitem>
 
           <listitem>
@@ -611,7 +611,7 @@
           souhaitez connaître les dernières versions disponibles vous
           pouvez visiter la page d'accueil régulièrement. CodeX vous
           offre aussi le moyen de surveiller l'apparition de nouvelles
-          versions pour un projet donné. Pour se faire vous devez vous
+          versions pour un projet donné. Pour ce faire vous devez vous
           rendre sur la page de Sommaire du Projet (ou page d'accueil)
           et sélectionner ensuite l'icône de surveillance
           (<inlinemediaobject><imageobject><imagedata format="PNG"
@@ -625,7 +625,7 @@
 
         <listitem>
           <para><emphasis role="bold">Projets récents</emphasis> : les
-          10 derniers projets enregistrés. En listant cette liste de
+          10 derniers projets enregistrés. En affichant cette liste de
           façon régulière vous pouvez être tenu informé de la création
           de tout nouveau projet CodeX.</para>
         </listitem>
@@ -639,7 +639,7 @@
           prend en compte de nombreux indicateurs : le nombre de
           transactions CVS/Subversion, le nombre d'artefacts (bugs,
           tâches...) soumis ou modifiés, le nombre de versions de
-          logiciel postés, etc&hellip; En consultant cette liste vous
+          logiciel postées, etc&hellip; En consultant cette liste vous
           aurez une bonne idée du degré d'activité des projets.</para>
         </listitem>
       </itemizedlist>

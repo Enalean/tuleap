@@ -67,7 +67,7 @@
 	<para><emphasis role="bold">Les administrateurs d'un
 	projet</emphasis> : les utilisateurs enregistrés qui créent un
 	nouveau projet sur CodeX héritent du rôle d'administrateur de
-	ce projet.Les administrateurs d'un projet disposent des pleins
+	ce projet. Les administrateurs d'un projet disposent des pleins
 	pouvoirs sur ce projet sauf en ce qui concerne la suppression
 	complète d'un projet - une chose très rare - que seuls les
 	administrateurs du site peuvent faire. A n'importe quel moment
@@ -81,7 +81,7 @@
 	restreints</emphasis> : il s'agit là de membres ou
 	d'administrateurs de projet dont les droits d'accès sont
 	restreints : ils n'ont accès qu'aux projets dont ils sont
-	membres et ne voient pas les autres projets quels qu'ils
+	membres et ne voient pas les autres projets, quels qu'ils
 	soient. Ce rôle particulier est en général activé sur les
 	sites CodeX mêlant utilisateurs internes et externes sur le
 	même serveur dans le but de cantonner les utilisateurs
@@ -106,7 +106,7 @@
 
     <procedure>
       <step>
-	<para>Sélectionner le lien &#34;Nouveau compte&#34;.</para>
+	<para>Sélectionnez le lien &#34;Nouveau compte&#34;.</para>
       </step>
 
       <step>
@@ -129,13 +129,13 @@
 
 	  <step>
 	    <para><emphasis role="bold">Nom complet</emphasis> :
-	    rappelez-moi votre nom&hyphen; s'il vous plaît.</para>
+	    rappelez-moi votre nom &hyphen; s'il vous plaît.</para>
 	  </step>
 
 	  <step>
 	    <para><emphasis role="bold">Adresse email</emphasis> :
-	    suivant la configuration du site les adresses emails
-	    considérés comme valides peuvent se limiter au domaine
+	    suivant la configuration du site, les adresses emails
+	    considérées comme valides peuvent se limiter au domaine
 	    &SYS_ORG_NAME; ou à l'un de ses sous-domaines. Vérifiez
 	    bien que votre adresse email est correcte faute de quoi
 	    vous ne recevriez pas la demande de confirmation de votre
@@ -160,7 +160,7 @@
 	    de cocher cette case. Les notifications reçues traitent
 	    des nouvelles fonctionnalités disponibles, des plages
 	    d'indisponibilité pour raison de maintenance, des
-	    évènements importants dans la vie du site,
+	    événements importants dans la vie du site,
 	    etc&hellip;</para>
 	  </step>
 
@@ -270,7 +270,7 @@
     
     <itemizedlist mark="bullet">
       <listitem>
-        <para><emphasis role="bold">Fichiers sous surveillance</emphasis> liste les fichiers que vous surveillez, par projet. Pour interrompre la surveillance il vous suffit de
+        <para><emphasis role="bold">Fichiers sous surveillance</emphasis> liste les fichiers que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de
     cliquer sur la corbeille
     (<inlinemediaobject><imageobject><imagedata format="PNG"
     fileref="../../icons/trash.png"
@@ -278,7 +278,7 @@
     concerné.</para>
       </listitem>
       <listitem>
-        <para><emphasis role="bold">Forums sous surveillance</emphasis> liste les forums que vous surveillez, par projet. Pour interrompre la surveillance il vous suffit de
+        <para><emphasis role="bold">Forums sous surveillance</emphasis> liste les forums que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de
     cliquer sur la corbeille
     (<inlinemediaobject><imageobject><imagedata format="PNG"
     fileref="../../icons/trash.png"
@@ -333,9 +333,9 @@
 
       <listitem>
 	<para><emphasis role="bold">&#34;Souviens-toi de
-	moi&#34;</emphasis> : par défaut , votre session de travail
+	moi&#34;</emphasis> : par défaut, votre session de travail
 	courante sur CodeX s'achève dès que vous stoppez votre
-	navigateur Web. Au prochain démarrage vous devrez à nouveau
+	navigateur Web. Au prochain démarrage, vous devrez à nouveau
 	vous identifier. En cochant cette case vous demandez à CodeX
 	de se souvenir de votre identité entre deux sessions de
 	travail à moins, bien sûr, que vous ne vous déconnectiez
@@ -355,8 +355,8 @@
           Les différents séparateurs disponibles sont :
           <itemizedlist mark="bullet">
             <listitem><para>la virgule (,) : le séparateur par défaut.</para></listitem>
-            <listitem><para>le point-virgule (;) : utilisé par défaut par la version française d'Excel.</para></listitem>
-            <listitem><para>tab (tabulation).</para></listitem>
+            <listitem><para>Le point-virgule (;) : utilisé par défaut par la version française d'Excel.</para></listitem>
+            <listitem><para>Tab (tabulation).</para></listitem>
           </itemizedlist></para>
       </listitem>
       
@@ -370,7 +370,7 @@
 	clé publique SSH avec CodeX. Ainsi vous vous éviterez la
 	saisie systématique d'un nom d'utilisateur et d'un mot de
 	passe. Plus de détails sur <xref linkend="ShellAccount"
-	/></para>
+	/>.</para>
       </listitem>
     </itemizedlist>
   </section>

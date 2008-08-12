@@ -24,7 +24,7 @@
 
       <para>Sous le menu principal du projet que nous avons présenté
       lors du passage en revue de la page de sommaire, figure le menu
-      d'administration du projet. A l'exception d'un ou deux éléments
+      d'administration du projet. A l'exception d'un ou deux éléments,
       ce menu d'administration et le contenu de la page d'accueil de
       la section administration ne sont pas redondants. Ils donnent
       accès à des fonctions d'administration distinctes. Dans les
@@ -78,11 +78,11 @@ smith3
 john.smith@xerox.com</programlisting>
           </example>
           <para>Le processus d'import se déroule alors en deux temps.
-          Une première vérification du fichier est effectuée, qui donne lui
+          Une première vérification du fichier est effectuée, qui donne lieu
           à un compte-rendu des utilisateurs détectés. Après validation,
           les utilisateurs sont effectivement ajoutés au projet.
           Le système n'effectuera pas l'import en cas d'erreur (utilisateur inconnu,
-          non enregistré sur CodeX, utilisateur non actif, adresse mail inconnue, etc.).
+          non enregistré sur CodeX, utilisateur non actif, adresse mail inconnue, etc...).
           Les doublons ne produisent pas d'erreur. Un seul utilisateur est ajouté dans
           ce cas.</para>
       </section>
@@ -99,23 +99,23 @@ john.smith@xerox.com</programlisting>
           n'a absolument aucun effet sur l'historique ou l'intégrité des
           données du projet. En d'autres termes tous les artefacts des
           outils de suivi soumis par ou assignés à cette personne restent
-          présents et inchangés dans la base de données. Seul la capacité
+          présents et inchangés dans la base de données. Seule la capacité
           de cette personne à gérer le projet est affectée. Notez aussi
           que pour supprimer un administrateur de la liste des membres du
           projet, un autre administrateur doit d'abord lui ôter son statut
           d'administrateur en positionnant la valeur de la permission
-          &#34;Admin. Projet&#34; à &#34;Non&#34; dans la table d'édition
+          &#34;Admin.Projet&#34; à &#34;Non&#34; dans la table d'édition
           des permissions utilisateurs. En d'autres termes, un
           administrateur de projet ne peut être supprimé de la liste des
           membres tant qu'il a le statut d'administrateur.</para>
       </section>
       
       <note><para>Vous avez probablement remarqué que tous les noms
-      d'utilisateurs figurant sur la la page d'administration sont en
+      d'utilisateurs figurant sur la page d'administration sont en
       fait des liens hypertextes. Sur cette page comme sur beaucoup
       d'autres, un clic sur un nom d'utilisateur vous mène sur une
       page d'information le concernant (y compris son lieu de travail,
-      téléphone, fax... extraits de l'annuaire d'entreprise) qui vous
+      téléphone, fax, ... extraits de l'annuaire d'entreprise) qui vous
       permet aussi de lui envoyer un email par le biais d'un
       formulaire Web.</para></note>
 
@@ -134,7 +134,7 @@ john.smith@xerox.com</programlisting>
     <section id="ProjectPublicInformation">
       <title>Informations publiques du projet</title>
 
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+      <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>L'item &#34;&Eacute;dition Infos Publiques&#34; du menu
       d'administration permet à un administrateur de mettre à jour les
@@ -146,7 +146,7 @@ john.smith@xerox.com</programlisting>
     <section id="ProjectCategorization">
       <title>Catégorisation du projet</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
       <para>C'est ici que vous pouvez définir la catégorisation de
       votre projet. Vous pouvez définir au plus trois valeurs pour
@@ -159,26 +159,26 @@ john.smith@xerox.com</programlisting>
     <section id="ProjectType">
       <title>Type de projet</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
-      <para>CodeX propose trois types de projets:</para>
+      <para>CodeX propose trois types de projets :</para>
         
       <itemizedlist mark="bullet">
           <listitem> 
-	    <para><emphasis role="bold">Projet</emphasis>:
+	    <para><emphasis role="bold">Projet</emphasis> :
 	      C'est le type des projets standards sur CodeX.
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="bold">Patron de projet</emphasis>:
-	      Si vous utilisez ce type de projet, des nouveaux projets
+	    <para><emphasis role="bold">Patron de projet</emphasis> :
+	      Si vous utilisez ce type de projet, de nouveaux projets
 	      peuvent réutiliser la configuration des services de ce 
 	      projet. En enrégistrant un nouveau projet
-	      (voir <xref linkend="ProjectRegistration" />) votre patron
+	      (voir <xref linkend="ProjectRegistration" />), votre patron
 	      de projet est listé comme patron disponible. Quand vous
 	      choisissez votre projet comme patron le nouveau projet
-	      utilisera exactement la même configuration. Cela enclut
-	      que
+	      utilisera exactement la même configuration. Cela inclut
+	      que :
 	      
 	      <itemizedlist spacing="compact">
 	        <listitem>
@@ -187,14 +187,14 @@ john.smith@xerox.com</programlisting>
 		  (voir <xref linkend="SoftwareMap" />).</para>
 	        </listitem>
 	        <listitem>
-	          <para>les mêmes services sont activés (voir 
+	          <para>Les mêmes services sont activés (voir 
 		  <xref linkend="ServiceConfiguration" />). Les services non 
           disponibles ne seront pas présents. Les services désactivés seront 
           également désactivés par défaut.
             </para>
 	        </listitem>
 	        <listitem>
-	          <para>les mêmes references sont définies (voir 
+	          <para>les mêmes références sont définies (voir 
 		  <xref linkend="ReferenceConfiguration" />).</para>
 	        </listitem>
 		<listitem>
@@ -202,7 +202,7 @@ john.smith@xerox.com</programlisting>
 		  (voir <xref linkend="UserGroups" />).</para>
 		</listitem>
 		<listitem>
-	          <para>tous les outils de suivi ayant l'option "instantier dans les nouveaux projets"
+	          <para>tous les outils de suivi ayant l'option "instancier dans les nouveaux projets"
 		  sont copiés avec les champs associés, leurs valeurs, leurs dépendances ainsi 
 		  que les rapports de recherche et les permissions (voir <xref linkend="TrackerAdministration" />).</para>
 		</listitem>
@@ -221,7 +221,7 @@ john.smith@xerox.com</programlisting>
         </listitem>
         <listitem>
             <para>les paramètres d'administration SVN seront copiés (préambule, suivi SVN),
-            mais les adresses emails et les permissions SVN ne sont pas copiés.
+            mais les adresses emails et les permissions SVN ne sont pas copiées.
             </para>
         </listitem>
         <listitem>
@@ -236,12 +236,12 @@ john.smith@xerox.com</programlisting>
 	      Un projet de patron n'apparaît plus dans l'arbre des projets
 	      et est exclu des statistiques de projets du tableau de bord 
 	      de CodeX (see <xref linkend="TheCodeXDashboard" />) comme 
-	      les projets récents, les projets les plus actifs, etc.
+	      les projets récents, les projets les plus actifs, etc...
 	    </para>
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="bold">Projet de test</emphasis>:
+	    <para><emphasis role="bold">Projet de test</emphasis> :
 	      Si vous voulez juste essayer tout ce qui est faisable avec
 	      un projet CodeX vous pouvez utiliser le type projet de test.
 	      En utilisant ce type de projet votre projet n'apparaît plus 
@@ -257,20 +257,20 @@ john.smith@xerox.com</programlisting>
     <section id="ServiceConfiguration">
       <title>Configuration des services</title>
 
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+      <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>L'entrée &#34;Configuration des services&#34; dans le menu
       d'administration donne accès à la liste de tous les services
       activés pour le projet courant. Les services sont les items qui
       apparaissent dans la &#34;Barre de Services&#34;, à savoir le
-      menu qui apparaît en haut de chaque page du projet: outils de
+      menu qui apparaît en haut de chaque page du projet : outils de
       suivi, documentation, CVS, Page d'accueil, etc... La page de
       configuration des services permet à l'administrateur du projet
       de modifier, activer, désactiver ou même créer des services dans
       la barre de services.
       </para>
 
-      <para>Il existe deux sortes de services:</para>
+      <para>Il existe deux sortes de services :</para>
  
       <itemizedlist mark="bullet">
         <listitem>
@@ -309,7 +309,7 @@ john.smith@xerox.com</programlisting>
     <section id="ServiceCreation">
       <title>Créer ou modifier un service</title> <para>Lors de la
       création ou de la modification d'un service, vous devez fournir
-      les informations suivantes:</para>
+      les informations suivantes :</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Label du service</emphasis> : Il
@@ -326,7 +326,7 @@ john.smith@xerox.com</programlisting>
           </para>
           <para>Quelques mots-clés particuliers peuvent être utilisés
           dans l'URL; ils seront automatiquement remplacés par leur
-          valeur avant d'être insérés dans la barre de service:
+          valeur avant d'être insérés dans la barre de service :
           <itemizedlist mark="bullet">
             <listitem>
               <para><emphasis role="bold">$projectname</emphasis> :
@@ -387,9 +387,9 @@ john.smith@xerox.com</programlisting>
           nombre entier arbitraire permet de définir la position de ce
           service relativement aux autres dans la barre de
           service. Les services ayant la valeur de rang la plus faible
-          appraitra en premier dans la barre de service (en partant de
+          apparaîtra en premier dans la barre de services (en partant de
           la gauche). Il est recommandé d'utiliser des nombres comme
-          10, 20, 30,... pour pouvoir insérer de futurs services sans
+          10, 20, 30, ... pour pouvoir insérer de futurs services sans
           avoir à renuméroter tous les services existants.</para>
         </step>
       </procedure>
@@ -398,7 +398,7 @@ john.smith@xerox.com</programlisting>
     <section id="ServiceDeletion">
       <title>Suppression d'un service</title>
 
-      <para>les services peuvent aussi être détruits si l'icône
+      <para>Les services peuvent aussi être détruits si l'icône
       corbeille figure à proximité du nom du service. Un clic sur
       cette icône supprime définitivement le service de la liste. Les
       données du service correspondant sont cependant préservées.
@@ -413,7 +413,7 @@ john.smith@xerox.com</programlisting>
     <section id="ServicesAdministration">
       <title>Administration des services</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
       <para>La page d'administration du projet donne aussi un accès
       direct à l'ensemble des modules d'administration de chaque
@@ -447,7 +447,7 @@ john.smith@xerox.com</programlisting>
       <para>Certains patrons de référence peuvent nécessiter plusieurs paramètres. Dans ce cas, utilisez le caractère '/' comme séparateur entre les paramètres. Par exemple, 'wiki #Accueil/2' crée une référence vers la page wiki 'Accueil' à la version 2.
       </para>
 
-      <para>Il existe deux types de patrons de référence:</para>
+      <para>Il existe deux types de patrons de référence :</para>
 
  
       <itemizedlist mark="bullet">
@@ -517,7 +517,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source comme ClearCase.
       </para>
 
-   <para><tip><title>Coup de pouce: référencez les artefacts et les
+   <para><tip><title>Coup de pouce : référencez les artefacts et les
    commits</title><para>C'est une excellente pratique que de
    toujours référencer les tâches, anomalies, demande d'assistance
    appropriées dans le message de commit CVS ou Subversion. De la même façon,
@@ -551,10 +551,10 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           <para><emphasis role="bold">Lien</emphasis> :
           C'est l'URL vers lequel pointe la référence. L'utilisateur sera automatiquement
           redirigé vers cette adresse s'il clique sur la référence.
-          L'URL ne pointe pas nécessairement vers le serveur CodeX: on peut créer des patrons de référence qui pointent vers des pages externes. 
+          L'URL ne pointe pas nécessairement vers le serveur CodeX : on peut créer des patrons de référence qui pointent vers des pages externes. 
           La nouvelle page sera chargée dans le fenêtre courante.
           </para>
-          <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence:
+          <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence :
           </para>
           <itemizedlist mark="bullet">
             <listitem>
@@ -604,7 +604,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           <listitem><para><emphasis role="bold">google #codex/xerox</emphasis> : '$0' vaut 'google', '$1' vaut 'codex', '$2' vaut 'xerox'. Si vous avez défini le patron de référence 'google', avec un lien pointant vers <emphasis role="bold">http://www.google.com/search?hl=en&amp;q=$1+$2</emphasis>, cliquer sur la référence 'google #codex/xerox' lancera une recherche Google de 'codex xerox'.</para></listitem>
           <listitem><para><emphasis role="bold">ds #123</emphasis> : '$0' vaut 'ds', '$1' vaut '123'. Si vous avez défini le patron de référence 'ds', avec un lien pointant vers <emphasis role="bold">http://docushare/dsweb/Get/Document-$1</emphasis>, cliquer sur la référence 'ds #123' lancera le téléchargement du document '123' de votre serveur Docushare local.</para></listitem>
           </itemizedlist>
-          <para>Il faut noter que le nombre de paramètres est important: si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans le patron de référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs patrons de référence avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes: 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
+          <para>Il faut noter que le nombre de paramètres est important : si le nombre de paramètres dans le texte ne correspond pas au nombre de paramètres définis dans le patron de référence, la référence ne sera pas extraite. Ceci permet de créer plusieurs patrons de référence avec le même mot-clé, mais un nombre de paramètres différent. Voyez par exemple les références suivantes : 'wiki #Accueil' est une référence à un seul paramètre pointant vers la page Wiki 'Accueil', alors que la référence 'wiki #Accueil/2' est une autre référence à deux paramètres pointant vers la page Wiki 'Accueil' à la version '2'.</para>
         </step>
 
         <step>
@@ -622,7 +622,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     <section id="ReferenceDeletion">
       <title>Suppression d'un patron de référence</title>
 
-      <para>les patrons de référence projet peuvent aussi être détruits. Un clic sur
+      <para>Les patrons de référence projet peuvent aussi être détruits. Un clic sur
       l'icône corbeille figurant à proximité du nom du patron de référence supprime définitivement ce dernier.
       Un patron de référence détruit devra être recréé pour être à nouveau utilisable.
       </para>
@@ -771,7 +771,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
         <title>Rappel !</title>
 
         <para>N&#39;oubliez pas de cliquer sur le bouton &#34;Mettre à
-        jour les permissions&#34; en bas de page après avoir effectuer
+        jour les permissions&#34; en bas de page après avoir effectué
         des modifications dans la table des permissions.</para>
       </important>
     </section>
@@ -779,7 +779,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
   <section id="UserGroups">
     <title>Groupes d'utilisateurs</title>
     
-    <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+    <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
     
     <para>Un groupe d'utilisateurs, aussi appelé &#34;ugroup&#34;, est
     tout simplement un regroupement d'utilisateurs CodeX. Les groupes
@@ -797,7 +797,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       <para>La fonction d'&#34;Administration des groupes
       d'utilisateurs&#34; donne accès à la liste de tous les groupes
       d'utilisateurs définis pour ce projet et permet d'en créer de
-      nouveau.</para>
+      nouveaux.</para>
 
       <figure id="FigureUserGroupManagementPage">
         <title>Page de gestion des groupes d'utilisateurs</title>
@@ -810,21 +810,21 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       </figure>
 
       <para>Dans la liste figure deux types de groupes (voir par
-      exemple <xref linkend="FigureUserGroupManagementPage" />):
+      exemple <xref linkend="FigureUserGroupManagementPage" />) :
       </para>
 
      <procedure>
         <step>
           <para><emphasis role="bold">Les groupes d'utilisateurs
           prédéfinis</emphasis> : Ces groupes sont automatiquement
-          définis pour chaque projet. Il s'agit par exemple de:
+          définis pour chaque projet. Il s'agit par exemple de :
           <emphasis role="bold">membres_projet, admins_projet,
           utilisateurs_enregistres, personne,
           admins_gestionnaire_fichier</emphasis>, etc... Ces groupes
           sont dynamiques c'est à dire que CodeX maintient la liste
           des membres de ce groupe pour vous. Ainsi si un nouveau
           membre du projet se voit accorder les droits
-          d'administrateur il sera automatiquement ajouté au groupe
+          d'administrateur, il sera automatiquement ajouté au groupe
           'admins_projet' et disposera des mêmes permissions que
           celles déjà accordées à ce groupe.</para>
         </step>
@@ -848,7 +848,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       <title>Créer un groupe d'utilisateurs </title>
 
       <para>Lors de la création d'un groupe d'utilisateurs, les
-      informations suivantes doivent être fournies:</para>
+      informations suivantes doivent être fournies :</para>
      <procedure>
         <step>
           <para><emphasis role="bold">Nom</emphasis> : Il s'agit du nom
@@ -866,7 +866,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
         <step>
           <para><emphasis role="bold">Créer à partir de</emphasis> :
-          c'est un moyen de présélection rapide des membres du groupe:
+          c'est un moyen de présélection rapide des membres du groupe :
           vous pouvez créer un groupe à partir de rien (Groupe vide)
           ou bien en partant de la liste des membres du projet ou des
           administrateurs du projet. Les membres de ces groupes seront
@@ -892,7 +892,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       peut sélectionner les membres du groupe nouvellement
       créé.</para>
 
-      <para>Deux colonnes sont visibles: celle de gauche contient la
+      <para>Deux colonnes sont visibles : celle de gauche contient la
       liste de tous les utilisateurs enregistrés sur le site et celle
       de droite présente la liste des utilisateurs déjà admis dans le
       groupe. Vous devez utiliser les flèches situées entre les deux
@@ -917,7 +917,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     </section>
 
       <tip>
-        <title>Coup de pouce: combiner les groupes pré-définis avec des utilisateurs supplémentaires ?</title>
+        <title>Coup de pouce : combiner les groupes pré-définis avec des utilisateurs supplémentaires ?</title>
 
         <para>Il se peut que vous souhaitiez accorder certaines
         permissions à tous les membres du projet plus quelques
@@ -976,7 +976,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
       <para>Il est possible de connaître l'ensemble des groupes auquel
       appartient un membre du projet en accédant à la page de
-      définition des permissions des membres(<xref
+      définition des permissions des membres (<xref
       linkend="UserPermissions" />). Veuillez noter cependant que
       seuls sont affichés les groupes définis pour le projet
       courant. L'utilisateur peut effectivement appartenir à d'autres
@@ -1096,7 +1096,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     Néanmoins, vous avez la possibilité de changer le séparateur CSV 
     (voir <xref linkend="AccountMaintenance" />) si le séparateur par 
     défaut ne correspond pas au séparateur par défaut de votre version d'Excel
-    <footnote><para>Par exemple, le séparateur par défaut de la version française
+    <footnote><para> Par exemple, le séparateur par défaut de la version française
     d'Excel est le point-virgule au lieu de la virgule.</para></footnote>.</para>
       </section>
 
@@ -1109,7 +1109,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
 	<itemizedlist mark="bullet" spacing="compact">
 	  <listitem>
-	    <para>Sélectionnez <literal>Menu Fichier -> Accès au données externes -> Importer</literal></para>
+	    <para>Sélectionnez <literal>Menu Fichier -> Accès aux données externes -> Importer</literal></para>
 	  </listitem>
 	  <listitem>
 	    <para>Choisissez le fichier CSV que vous venez juste de
@@ -1138,7 +1138,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	    CodeX.</para>
 
 	    <note><para><emphasis role="bold">Remarque
-	    importante</emphasis> : vous pouvez conserver les noms de
+	    importante</emphasis> : vous pouvez conserver les noms des
 	    champs par défaut (Champ1,....ChampN) ainsi que les types
 	    par défaut proposés par MS Access. La seule exception
 	    concerne les champs texte longs comme les champs
@@ -1147,7 +1147,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	    spécifique, MS Access va corrompre les données
 	    importées.</para> <para>Si vous rencontrez des difficultés
 	    à l'importation du fichier CSV, veuillez consulter la
-	    <xref linkend="ExcelAndRegionals"/> </para></note>
+	    <xref linkend="ExcelAndRegionals"/>. </para></note>
 	  </listitem>
 	</itemizedlist>
 
@@ -1158,7 +1158,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	specification.-->
         Après avoir spécifié les paramètres de l'importation, vous pouvez
         les enregistrer en cliquant sur le bouton 
-        <literal>Sauvegarder sous...</literal>.Pour de futures importations
+        <literal>Sauvegarder sous...</literal>. Pour de futures importations
         sur la même table, cliquez simplement sur le bouton Specs... et
         rechargez vos paramètres d'importation.</para>
       </section>
@@ -1198,7 +1198,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
 	<note><para><emphasis role="bold">Remarque</emphasis> : si la
 	base de données de votre projet contient plusieurs milliers
-	d'enregistrements (tâches, bugs&hellip;) le processus de
+	d'enregistrements (tâches, bugs&hellip;), le processus de
 	génération de la base de données peut prendre plusieurs
 	minutes.</para></note>
       </section>
@@ -1215,7 +1215,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	  <step>
 	    <para>Lancez l'exécution du programme setup et parcourez
 	    les étapes du processus d'installation.<emphasis
-	    role="bold">Remarque importante</emphasis> : sur Windows
+	    role="bold"> Remarque importante</emphasis> : sur Windows
 	    NT/2000/XP vous devez être administrateur pour pouvoir
 	    installer le pilote.</para>
 	  </step>
@@ -1232,15 +1232,15 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 		<para>Cliquez sur <literal>menu Démarrer ->
 		Configuration -> Panneau de Configuration -> Outils
 		d'administration -> Sources de données
-		(ODBC)</literal></para>
+		(ODBC).</literal></para>
 	      </listitem>
 	      <listitem>
 		<para>Sélectionnez l'onglet "DSN Utilisateur" et cliquez sur le bouton 
-		"Ajouter"</para>
+		"Ajouter".</para>
 	      </listitem>
 	      <listitem>
 		<para>Sélectionnez l'item "MySQL" dans la liste puis
-		cliquez sur le bouton "Terminer"</para>
+		cliquez sur le bouton "Terminer".</para>
 	      </listitem>
 	      
 	      <listitem>
@@ -1256,7 +1256,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 		    exemple.</para>
 		  </listitem>
 		  <listitem>
-		    <para><emphasis>MySQL Host(IP ou nom)</emphasis> : &SYS_DEFAULT_DOMAIN;</para>
+		    <para><emphasis>MySQL Host(IP ou nom)</emphasis> : &SYS_DEFAULT_DOMAIN;.</para>
 		  </listitem>
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis> : le
@@ -1307,7 +1307,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
 	<para>Avant d'utiliser MS-Access pour vous connecter à la base
 	de données de votre projet, assurez-vous que le pilote ODBC de
-	MySQL est correctement installé sur votre ordinateur( voir
+	MySQL est correctement installé sur votre ordinateur (voir
 	<xref linkend="InstallingandConfiguringtheMySQLODBCDriver" />)
 	et que vous avez généré la base de données elle-même (voir
 	<xref linkend="GeneratingYourProjectDatabase" />). Ensuite
@@ -1351,22 +1351,22 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
    <section id="TrackerImport">
       <title>Importation d'artefacts dans les outils de suivi</title>
 
-      <para><emphasis>Emplacement: contenu de la page d'administration</emphasis></para>
-      <para>Reportez vous à la <xref linkend="ArtifactImport" /></para>
+      <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
+      <para>Reportez vous à la <xref linkend="ArtifactImport" />.</para>
     </section>
 
 
     <section id="ProjectHistory">
       <title>Historique du projet</title>
 
-      <para><emphasis>Emplacement: Menu d'administration</emphasis></para>
+      <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
       <para>L'historique du projet fournit une fonction d'audit aux
       membres du projet. Un clic sur cet item montre une liste de
       l'ensemble des changements opérés dans le module
       d'administration du projet depuis sa création. La liste décrit
       la nature du changement intervenu (modification des infos
-      publiques, modification des permissions,...), la valeur de
+      publiques, modification des permissions, ...), la valeur de
       l'information avant le changement, l'auteur et la date de la
       modification.</para>
     </section>
@@ -1414,7 +1414,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
       <para>L'affichage du journal d'accès peut être filtré pour
       présenter soit l'accès de tous les utilisateurs, soit ceux des
-      membres du projet ou encore ceux des non membres (défaut). La
+      membres du projet ou encore ceux des non-membres (défaut). La
       fenêtre de temps peut aussi être ajustée pour montrer une portion
       plus ou moins grande de l'historique.</para>
 

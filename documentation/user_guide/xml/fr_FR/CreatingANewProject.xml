@@ -73,7 +73,7 @@
           <para>Indiquez le nom court et le nom complet du
           projet. Lisez attentivement les instructions fournies. Le
           nom complet peut être modifié à tout moment dans la vie du
-          projet mais pas le nom court.<footnote><para>En fait il peut
+          projet mais pas le nom court.<footnote><para> En fait il peut
           l'être mais cela nécessite l'intervention des
           administrateurs du site.</para></footnote>. Réfléchissez
           donc bien avant de choisir !</para>
@@ -97,8 +97,8 @@
           <para><emphasis role="bold">Description du projet</emphasis></para>
 
           <para>C'est là que tout commence véritablement ! En
-          commençant par une description de votre projet. Il est
-          important d'en donner une description aussi précise que
+          donnant une description de votre projet. Il est
+          important que cette description soit aussi précise que
           possible pour que tous les intervenants sachent de quoi il
           est question. Vous pouvez aussi fournir des informations
           liées à la propriété intellectuelle comme des propositions
@@ -112,8 +112,8 @@
         <listitem>
           <para><emphasis role="bold">Services du projet</emphasis></para>
 
-          <para>Vous pouvez sélectionner les service que vous voulez activer. 
-          Notez que vous pourres changer ces préférences par la suite, une fois 
+          <para>Vous pouvez sélectionner les services que vous voulez activer. 
+          Notez que vous pourrez changer ces préférences par la suite, une fois 
           votre projet créé.</para>
         </listitem>
 
@@ -121,9 +121,9 @@
           <para><emphasis role="bold">Catégorisation du projet</emphasis></para>
 
           <para>Veuillez sélectionner jusqu'à trois valeurs pour chaque catégorie de ce projet. 
-          Cela permettra aux utilisateurs de trouver rapidement votre projet. 
-          Si votre projet n'a pas besoin de toutes les catégories, sélectionner simplement "Aucune sélection".
-          Si vous avez utilisé un patron de projet qui a déjà été classifié vous allez retrouver
+          Cela permettra aux utilisateurs de retrouver rapidement votre projet. 
+          Si votre projet n'a pas besoin de toutes les catégories, sélectionnez simplement "Aucune sélection".
+          Si vous avez utilisé un patron de projet qui a déjà été classifié, vous allez retrouver
 	  ses catégories ici. 
 	  Vous pourrez à nouveau modifier cette classification quand vous le souhaitez.
           Vous pouvez catégoriser votre projet suivant sept critères qui sont 
@@ -148,7 +148,7 @@
         <listitem>
           <para><emphasis role="bold">Confirmation finale</emphasis></para>
 
-          <para>Lors de cette dernière étape un récapitulatif des
+          <para>Lors de cette dernière étape, un récapitulatif des
           différentes informations saisies vous est présenté pour
           approbation. Mais ne vous inquiétez pas : vous pourrez encore
           modifier ces informations une fois votre projet approuvé.</para>
@@ -171,8 +171,8 @@
       <title>Configuration post-enregistrement</title>
 
       <para>La première chose à faire après avoir reçu confirmation de
-      l'enregistrement du projet consiste à se rendre sur le page de
-      &#34;Sommaire du Projet&#34; (URL inclut dans le message de
+      l'enregistrement du projet consiste à se rendre sur le page du
+      &#34;Sommaire du Projet&#34; (URL inclus dans le message de
       notification) et à achever la configuration. Il y au minimum
       deux actions à prendre :</para>
 
@@ -209,7 +209,7 @@
         lourdes et complexes pour chacun des sept critères de
         classification de l'arbre des projets, l'équipe CodeX a décidé
         de faire évoluer cette hiérarchie au fur et à mesure de
-        l'apparition de nouveaux projets. si vous ne trouvez pas la
+        l'apparition de nouveaux projets. Si vous ne trouvez pas la
         valeur qui vous convient dans l'un des critères de
         catégorisation, n'hésitez pas à contacter l'équipe CodeX via
         le lien &#34;Contactez-nous&#34; situé dans la section Aide du

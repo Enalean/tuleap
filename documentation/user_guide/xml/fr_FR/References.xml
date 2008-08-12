@@ -110,20 +110,6 @@
       <releaseinfo>Disponible sur <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
     </biblioentry>
 
-    <biblioentry id="bib.cug.xosp">
-      <abbrev id="bib.cug.xosp.abbrev">XOSP</abbrev>
-
-      <title>Xerox and Open Source White Paper</title>
-
-      <author>
-        <firstname>Laurent</firstname>
-
-        <surname>Julliard</surname>
-      </author>
-
-      <releaseinfo>Disponible sur <ulink
-      url="http://opensource.codex.xerox.com/xerox/resources.html">http://opensource.codex.xerox.com/xerox/resources.html</ulink></releaseinfo>
-    </biblioentry>
 
   </bibliography>
 <!--
