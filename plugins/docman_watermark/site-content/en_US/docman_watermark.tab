@@ -15,3 +15,4 @@ plugin_docmanwatermark	admin_select_field_values	Select Values which will be wat
 plugin_docmanwatermark	admin_use_watermark	Use Watermark
 plugin_docmanwatermark	admin_values	Values
 plugin_docmanwatermark	admin_import_from_project	<b>Project:</b>
+plugin_docmanwatermark	admin_disabled	The Watermarking is disabled or there is no value related to the selected MetaData field

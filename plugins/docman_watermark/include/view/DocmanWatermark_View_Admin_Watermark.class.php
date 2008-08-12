@@ -83,9 +83,12 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         $titles = array();
         $titles[] = $GLOBALS['Language']->getText('plugin_docmanwatermark','admin_use_watermark');
         $titles[] = $GLOBALS['Language']->getText('plugin_docmanwatermark','admin_values');
-        $html .= html_build_list_table_top($titles, false, false, false);
         $mlveIter->rewind();
         $iter_empty = 1;
+        if ($mlveIter->valid()) {
+            $iter_empty = 0;
+            $html .= html_build_list_table_top($titles, false, false, false);
+        }
         while ($mlveIter->valid()) {
             $mdv   = $mlveIter->current();
             $id   = $mdv->getId();
@@ -106,13 +109,15 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
                 $html .= '/></td>';
                 $html .= '<td><b>'.$name.'</b></td>';
                 $html .= '</tr>';
-                $iter_empty = 0;
             }
             $mlveIter->next();
         }
-        $html .= '</table>';
+        
         if (!$iter_empty) {
+            $html .= '</table>';
             $html .= '<input name="submit_metadatafield_value" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_save_settings').'">';
+        } else {
+            $html .= '<b>'.$GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_disabled').'</b>';
         }
         $html .= '</form>';
         return $html;
