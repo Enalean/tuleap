@@ -48,8 +48,10 @@ class DocmanWatermarkActions extends Actions {
     
     public function setup_metadata_values() {
         require_once(dirname(__FILE__).'/DocmanWatermark_MetadataValueFactory.class.php');
-        $values = $this->_controler->_actionParams['values'];
+        $wmdv     = $this->_controler->_actionParams['md_values'];
+        $group_id = $this->_controler->_actionParams['group_id'];
         $mvf    = new DocmanWatermark_MetadataValueFactory();
+        $mvf->updateMetadataValues($wmdv, $group_id);
     }
     
     public function import_from_project() {

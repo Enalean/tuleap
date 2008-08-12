@@ -23,26 +23,48 @@
  * 
  */
 require_once('DocmanWatermark_MetadataValueDao.class.php');
-//require_once('DocmanWatermark_MetadataValue.class.php');
 
 class DocmanWatermark_MetadataValueFactory {
     
     var $dao;
     
     public function DocmanWatermark_MetadataValueFactory() {
+        $this->_getWatermarkMetadataValueDao();
     }
     
-    public function create($row) {
-        $dao =& $this->_getWatermarkMetadataValueDao();
-        return $dao->createFromRow($row);
-    }
-    
-    public function &_getWatermarkMetadataValueDao() {
+    private function &_getWatermarkMetadataValueDao() {
         if (!$this->dao) {
             $this->dao =& new DocmanWatermark_MetadataValueDao(CodexDataAccess::instance());
         }
         return $this->dao;
     }
+    
+    public function updateMetadataValues($wmdvIter, $groupId) {
+        $this->dao->remove($groupId);
+        $wmdvIter->rewind();
+        while ($wmdvIter->valid()) {
+            $mdv   = $wmdvIter->current();
+            $this->dao->update($mdv, $groupId);
+            $wmdvIter->next();
+        }
+    }
+    
+    public function getMetadataValuesIterator($fieldId) {
+        require_once ('DocmanWatermark_MetadataValue.class.php');
+        $dar = $this->dao->searchByFieldId($fieldId);
+        $valuesArr = array();
+        $dar->rewind();
+        while($dar->valid()) {
+            $row = $dar->current();
+            $wmdv = new DocmanWatermark_MetadataValue();
+            $wmdv->setValueId($row['value_id']);
+            $wmdv->setWatermark($row['watermark']);
+            $valuesArr[] = $wmdv;
+            $dar->next();
+        }
+        return new ArrayIterator($valuesArr);
+    }
+    
 }
 
 ?>

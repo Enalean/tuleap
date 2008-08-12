@@ -69,7 +69,7 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         return $html;
     }
 
-    function getMetaDataValuesTable($groupId,$mdId) {
+    function getMetaDataValuesTable($groupId,$mdId,$vals) {
         require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
         require_once(dirname(__FILE__).'/../../../docman/include/Docman_MetadataFactory.class.php');
         $mdf   = new Docman_MetadataFactory($groupId);
@@ -88,19 +88,20 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
         $iter_empty = 1;
         while ($mlveIter->valid()) {
             $mdv   = $mlveIter->current();
-            if (!$mdv->isSpecial) {
-                $id   = $mdv->getId();
-                if ($id == '') {
-                    $id = $mdv->getLabel();
-                }
+            $id   = $mdv->getId();
+            $posValue = array_search($id, $vals['value_id']);
+            if (($id != '') && ($mdv->getName() != 'Status')) {
                 $name = $mdv->getName();
                 if ($mdv->getName() == 'love_special_none_name_key') {
                     $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
                 }
-                $html .= '<tr><td align="center"><input type="checkbox" name="chk_"'.$id.'/></td>';
+                $html .= '<tr><td align="center"><input type="checkbox" name="chk_'.$id.'"';
+                if (($vals['watermark'][$posValue] == 1) && ($posValue !== false)) {
+                    $html .= ' checked ';    
+                }
+                $html .= '/></td>';
                 $html .= '<td><b>'.$name.'</b></td>';
                 $html .= '</tr>';
-             
                 $iter_empty = 0;
             }
             $mlveIter->next();
@@ -126,7 +127,7 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
     function _content($params) {
         $html = '';
         $html .= $this->getMetaDataForm($params['group_id'], $params['md_id']);
-        $html .= $this->getMetaDataValuesTable($params['group_id'],$params['md_id']);
+        $html .= $this->getMetaDataValuesTable($params['group_id'],$params['md_id'],$params['md_values']);
         $html .= $this->getImportForm($params['group_id']);
         echo $html;
     }

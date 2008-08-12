@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS plugin_docmanwatermark_metadata_love_extension;
-CREATE TABLE plugin_docmanwatermark_metadata_love_extension (
+DROP TABLE IF EXISTS plugin_docmanwatermark_metadata_love_md_extension;
+CREATE TABLE plugin_docmanwatermark_metadata_love_md_extension (
   value_id INT(11) UNSIGNED NOT NULL,
   watermark INT(1) UNSIGNED DEFAULT 0,
   PRIMARY KEY(value_id)

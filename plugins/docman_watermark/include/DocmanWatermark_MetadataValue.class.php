@@ -56,11 +56,6 @@ class DocmanWatermark_MetadataValue {
 
     ///}}} Accessors
 
-    function initFromRow($row) {
-        if(isset($row['value_id'])) $this->valueId = $row['value_id'];
-        if(isset($row['watermark'])) $this->watermark = $row['watermark'];
-    }
-
 }
 
 ?>

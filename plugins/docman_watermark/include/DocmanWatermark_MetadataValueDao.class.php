@@ -33,16 +33,17 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * Constructs the DocmanWatermark_MetadataValueDao
     * @param $da instance of the DataAccess class
     */
-    function DocmanWatermark_MetadataValueDao( & $da ) {
+    public function DocmanWatermark_MetadataValueDao( & $da ) {
         DataAccessObject::DataAccessObject($da);
     }
     
     /**
-    * Gets all tables of the db
+    * Gets all values for field
     * @return DataAccessResult
     */
-    function searchAll() {
-        $sql = "SELECT * FROM plugin_docmanwatermark_metadata_love_extension";
+    public function searchByFieldId($field_id) {
+        $sql = sprintf("SELECT value_id, watermark FROM plugin_docmanwatermark_metadata_love_md_extension JOIN (plugin_docman_metadata_love_md) USING (value_id) WHERE field_id= %s ",
+            $this->da->quoteSmart($field_id));
         return $this->retrieve($sql);
     }
     
@@ -50,43 +51,43 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * Searches DocmanWatermark_MetadataValueDao by value_id 
     * @return DataAccessResult
     */
-    function searchByValueId($value_id) {
+    public function searchByValueId($value_id) {
         $sql = sprintf("SELECT value_id, watermark FROM plugin_docmanwatermark_metadata_love_extension WHERE value_id = %s",
 				$this->da->quoteSmart($value_id));
         return $this->retrieve($sql);
     }
 
+
+
     /**
-    * create a row in the table plugin_docmanwatermark_metadata_love_extension 
-    * @return true or id(auto_increment) if there is no error
+    * update row value in the table plugin_docmanwatermark_metadata_love_md_extension
+    * @param wmdvs: array of DocmanWatermark_MetadataValue objects
+    * @return void
     */
-    function create($value_id, $watermark) {
-		$sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_love_extension (value_id, watermark) VALUES (%s, %s)",
-				$this->da->quoteSmart($value_id),
-				$this->da->quoteSmart($watermark));
-        return $this->_createAndReturnId($sql);
+    public function update($wmdv) {
+        $sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_love_md_extension (value_id, watermark) VALUES (%s, %s)",
+                        $this->da->quoteSmart($wmdv->getValueId()),
+                        $this->da->quoteSmart($wmdv->getWatermark()));
+        $this->retrieve($sql);
     }
-
-    function createFromRow($row) {
-        $arg    = array();
-        $values = array();
-        $cols   = array('value_id', 'watermark');
-        foreach ($row as $key => $value) {
-            if (in_array($key, $cols)) {
-                $arg[]    = $key;
-                $values[] = $this->da->quoteSmart($value);
-            }
-        }
-        if (count($arg)) {
-            $sql = 'INSERT INTO plugin_docmanwatermark_Metadata_love_extension '
-                .'('.implode(', ', $arg).')'
-                .' VALUES ('.implode(', ', $values).')';
-            return $this->_createAndReturnId($sql);
-        } else {
-            return false;
-        }
+    
+    /**
+    * remove row value in the table plugin_docmanwatermark_metadata_love_md_extension
+    * @param groupId: project id
+    * @return void
+    */
+    public function remove($groupId) {
+        $sql = sprintf("DELETE FROM plugin_docmanwatermark_metadata_love_md_extension " .
+                       "WHERE value_id IN (" .
+                       "    SELECT DISTINCT value_id " .
+                       "    FROM plugin_docmanwatermark_metadata_extension " .
+                       "    JOIN plugin_docman_metadata_love_md USING (field_id) " .
+                       "    WHERE group_id = %s" .
+                       ")",
+               $this->da->quoteSmart($groupId));
+        $this->retrieve($sql);        
     }
-
+    
 }
 
 
