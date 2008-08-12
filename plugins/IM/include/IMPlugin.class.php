@@ -513,20 +513,19 @@ class IMPlugin extends Plugin {
 	}
 	
 
-    function getDisplayPresence($user_id) {
+    function getDisplayPresence($user_id, $user_name, $realname) {
         $user_helper = new UserHelper();
         $im_object = $this->_get_im_object();
         $jabberConf = $im_object->get_server_conf();
         
         $server_dns = $jabberConf['server_dns'];
-        $user_login = user_getname($user_id);
         
-        $jid_value = $user_login.'@'.$server_dns;
+        $jid_value = $user_name.'@'.$server_dns;
         $adm_port_im = $jabberConf['webadmin_unsec_port'];
         
         $presence = $this->_get_presence_status ($jid_value);
         
-        return $presence . $user_helper->getDisplayNameFromUserId($user_id);
+        return $presence . $user_helper->getDisplayName($user_name, $realname);
     }
 
         function myPageBox($params) {
@@ -577,7 +576,7 @@ class IMPlugin extends Plugin {
 	function im_process_display_presence ($params) {
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isloggedIn() && (! $user->getPreference('plugin_im_hide_users_presence'))) { 
-            $params['user_display_name'] = $this->getDisplayPresence($params['user_id']);
+            $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
         }
 	}
     
