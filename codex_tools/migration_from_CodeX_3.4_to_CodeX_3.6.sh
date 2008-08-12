@@ -600,8 +600,8 @@ cd $INSTALL_DIR/src/utils
 # Convert to utf8 existing content
 #
 echo "Convert embedded files to utf8"
-mysql -u codexadm --password=g7loi9re codex \
-  -e "SELECT v.path FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) WHERE i.item_type = 4" | \
+echo "SELECT v.path FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) WHERE i.item_type = 4" | \
+  $MYSQL $pass_opt codex \
   sed -e "/^path$/d" | \
   awk '{ system("/usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh "$0) }'
 
