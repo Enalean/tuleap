@@ -111,6 +111,23 @@ class ShowPermsVisitor
         $docmanItem[$Id] = $Title;
         $this->allTreeItems[] = $docmanItem;
        
+    } 
+     /**
+     * Short desc:
+     * visitFile memorize File  id and title
+     * 
+     * @param Tree $item is the Link
+     * @param Array $docmanItem is the array containing information about each Docman items
+     *
+     * @return null
+     */
+    function visitFile($item ,$docmanItem)
+    {
+        $Id = $item->getId();
+        $Title = $item->getTitle(); 
+        $docmanItem[$Id] = $Title;
+        $this->allTreeItems[] = $docmanItem;
+       
     }
     /**
      * Short desc:
