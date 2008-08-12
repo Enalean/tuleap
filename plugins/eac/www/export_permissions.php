@@ -204,15 +204,15 @@ class ShowPermsVisitor
     {
         if($permissionType == 'PLUGIN_DOCMAN_MANAGE')
             {
-                return '1,1,1';
+                return 'yes'.$this->sep.'yes'.$this->sep.'yes';
             }
         else if ($permissionType == 'PLUGIN_DOCMAN_READ')
             {
-                return '1,0,0';
+                return 'yes'.$this->sep.'no'.$this->sep.'no';
             }
         else if($permissionType == 'PLUGIN_DOCMAN_WRITE')
             {
-                return '1,1,0';
+                return 'yes'.$this->sep.'yes'.$this->sep.'no';
             }
 
     }
