@@ -611,6 +611,11 @@ find /etc/codex/ -type f
                  -not -wholename "*/.svn/*" 
                  -exec /usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh {} \;
 
+##############################################
+# Upgrade to SVN 1.5
+#
+echo "Upgrade repositories to SVN 1.5"
+svnadmin upgrade /svnroot/*
 
 ##############################################
 # Restarting some services
