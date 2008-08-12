@@ -2,6 +2,8 @@
 
 require_once('pre.php');
 
+define('LOG_SOAP_REQUESTS', true);
+
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
     $protocol = "https";
@@ -40,7 +42,11 @@ try {
 // if POST was used to send this request, we handle it
 // else, we display a list of available methods
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$server -> handle();
+    if (LOG_SOAP_REQUESTS) {
+        error_log('SOAP Request :');
+        error_log($HTTP_RAW_POST_DATA);
+    }
+    $server -> handle();
 } else {
 	echo '<strong>This SOAP server can handle following functions : </strong>';    
     echo '<ul>';
