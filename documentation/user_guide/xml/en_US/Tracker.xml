@@ -4,22 +4,22 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-//	Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
 //
 -->
       
 <chapter id="TrackerService">
   <title>Tracker Service</title>
 
-  <para>The CodeX Tracker is one of the most powerful and versatile
-  services offered to CodeX hosted projects. It allows for the tracking 
+  <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile
+  services offered to &SYS_PRODUCT_NAME; hosted projects. It allows for the tracking 
   of various artifacts like bugs, tasks, requirements, etc... and a 
   project can create as many trackers as necessary.</para>
 
   <para>All trackers, whether predefined at the site level or created
   by a project can be fully customized. </para>
 
-  <section id="CodeXTrackerPrinciples">
+  <section id="CodendiTrackerPrinciples">
     <title>Terminology and common features</title>
 
     <para>Before we explain the features of the tracker service, it's
@@ -59,7 +59,7 @@
       <listitem>
 	<para><emphasis role="bold">CC list</emphasis>: any number
 	    of users can be notified of modification to an
-	    artifact by including their CodeX user name or email
+	    artifact by including their &SYS_PRODUCT_NAME; user name or email
 	    address in the CC list.</para>
       </listitem>
 
@@ -114,7 +114,7 @@
     screen (see <xref linkend="FigureASampleTrackerBrowsingScreen"
 	/>).</para>
 
-    <figure id="ArtifactSubmissionScreenFromTheCodeXProject">
+    <figure id="ArtifactSubmissionScreenFromTheCodendiProject">
       <title>A sample artifact submission screen (the artifact is of type &#34;bug&#34; here)</title>
 
       <mediaobject>
@@ -125,16 +125,16 @@
       </mediaobject>
     </figure>
 
-    <para><xref linkend="ArtifactSubmissionScreenFromTheCodeXProject"
-	/> shows a sample submission screen from one of the CodeX hosted
-    projects. Because of the CodeX Tracker high level of
+    <para><xref linkend="ArtifactSubmissionScreenFromTheCodendiProject"
+	/> shows a sample submission screen from one of the &SYS_PRODUCT_NAME; hosted
+    projects. Because of the &SYS_PRODUCT_NAME; Tracker high level of
     customizability no two submission screens look alike. Depending on
     the project more or less fields may appear on the tracker
     submission form and the name of artifact managed by the tracker
     may change as well.</para>
 
     <para>In the example provided on <xref
-    linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> the
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> the
     artifact type is a bug (also know as &#34;defect&#34; in corporate
     language). The user is asked to choose a bug Category, a bug
     Group, a Priority and an Assignee from a series of pull down
@@ -151,7 +151,7 @@
     Description to the person in charge. A unique ID is automatically
     assigned to the submitted artifact.</para>
 
-    <para>The values proposed by a field could depend upon other field value. If javascript is activated in your browser, fields will be filtered dynamically. Otherwise, CodeX will ensure that the values you submit are correct.</para>
+    <para>The values proposed by a field could depend upon other field value. If javascript is activated in your browser, fields will be filtered dynamically. Otherwise, &SYS_PRODUCT_NAME; will ensure that the values you submit are correct.</para>
 
     <para>As explained above, artifact submission forms vary from one
     project to another depending on the fields used by the
@@ -159,7 +159,7 @@
     permission level. Depending whether you are a project member or an
     ordinary registered user the artifact fields displayed on the
     screen may differ. As an example, on <xref
-    linkend="ArtifactSubmissionScreenFromTheCodeXProject" />, the bug
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" />, the bug
     submitter using the form is probably a project member because
     giving access to the &#34;Assigned to&#34; field to an ordinary
     registered user doesn&#39;t make much sense. It is very unlikely
@@ -174,10 +174,10 @@
 
     <para><tip><title>Tip: make sure your artifact hasn&#39;t yet been
     submitted</title><para>About to submit a bug or a support request
-    to a CodeX Project? Before you do that, make sure that others
+    to a &SYS_PRODUCT_NAME; Project? Before you do that, make sure that others
     haven&#39;t yet submitted a similar artifact. To do so you can
     either browse the artifact database through the Artifact Selection
-    and Browsing facility or you can use the search box in the CodeX
+    and Browsing facility or you can use the search box in the &SYS_PRODUCT_NAME;
     Main Menu and search by keywords.</para></tip></para>
 
   </section>
@@ -185,7 +185,7 @@
   <section id="ArtifactBrowsing">
     <title>Artifact Browsing</title>
 
-    <para>CodeX offers the ability to browse the artifact database
+    <para>&SYS_PRODUCT_NAME; offers the ability to browse the artifact database
     according to a variable set of criteria.</para>
 
     <section id="ArtifactSelectionCriteria">
@@ -383,10 +383,10 @@
         later re-use. To do this: select the appropriate tracker report, then
         choose your search criteria, click on the &#34;Browse&#34; button to
         run the query. Finally click on the &#34;Bookmark this Page&#34; item
-        in the CodeX Main Menu. A new bookmark will show up in your Personal
+        in the &SYS_PRODUCT_NAME; Main Menu. A new bookmark will show up in your Personal
         Page. A click on this bookmark will run the exact same query again.</para></tip></para>
 
-      <para>Your favorite queries can be saved via the CodeX
+      <para>Your favorite queries can be saved via the &SYS_PRODUCT_NAME;
       bookmark mechanism as explained in the Tip box but there are
       also shortcuts in the Tracker Menu Bar for the most common
       queries. They are:</para>
@@ -399,13 +399,13 @@
 
 	<listitem>
 	  <para><emphasis role="bold">My Artifacts</emphasis>: display the artifacts
-            assigned to you (based on the CodeX account you are currently
+            assigned to you (based on the &SYS_PRODUCT_NAME; account you are currently
             using)</para>
 	</listitem>
       </itemizedlist>
 
-      <para>Also notice that CodeX always keeps track of the last run
-      query. Next time you enter the tracker welcome screen, CodeX will
+      <para>Also notice that &SYS_PRODUCT_NAME; always keeps track of the last run
+      query. Next time you enter the tracker welcome screen, &SYS_PRODUCT_NAME; will
       use the same set of selection criteria in the selection fields
       and display the list of matching artifacts accordingly.</para>
 
@@ -423,7 +423,7 @@
     <section id="TrackerSearchResults">
       <title>Tracker Search Results</title> 
       
-      <para>Based on your selection of search criteria, CodeX runs a
+      <para>Based on your selection of search criteria, &SYS_PRODUCT_NAME; runs a
       query against the tracker database, selects the matching
       artifacts, and displays them right below the selection
       criteria. Columns displayed in the artifact list are entirely
@@ -444,7 +444,7 @@
       </figure>
 
       <para>Artifact severity is color coded. Colors associated with
-      severity levels may vary from one CodeX site to another and it
+      severity levels may vary from one &SYS_PRODUCT_NAME; site to another and it
       is therefore shown at the bottom of the list of results generated
       by the search.  Finally, results are listed by chunks of N
       artifacts where N is user-definable. If more than N artifacts
@@ -460,7 +460,7 @@
 
 	<para>By default, artifacts are sorted by ID which happens to
 	be the chronological order in which they have been submitted
-	and stored in the CodeX database.</para>
+	and stored in the &SYS_PRODUCT_NAME; database.</para>
 
 	<para>The list of artifacts can be sorted by any of the
 	columns displayed on the screen by clicking on the column
@@ -497,7 +497,7 @@
 	to export all artifacts of your search result into CSV format. 
 	Using this facility you can easily select the tracker
 	artifacts that you want to process with other tools outside 
-	CodeX. </para>
+	&SYS_PRODUCT_NAME;. </para>
       </section>
 
       <section id="ArtifactPrinterFriendlyVersion">
@@ -531,10 +531,10 @@
 	may enjoy the ability to choose from several tracker reports
 	by using the upper pull-down menu of the artifact browsing
 	screen. If no project or user specific tracker report has been
-	defined, the CodeX &#39;Default&#39; report is the only one
+	defined, the &SYS_PRODUCT_NAME; &#39;Default&#39; report is the only one
 	available.</para>
 
-	<para>Any CodeX user with access to the tracker can define her
+	<para>Any &SYS_PRODUCT_NAME; user with access to the tracker can define her
 	own personal report. In this case the report is a personal one
 	and is only visible to this particular user. On the contrary,
 	tracker administrators have the ability to define project-wide
@@ -551,7 +551,7 @@
 	 choose from several graphical tracker reports by using the upper
  	 pull-down menu of the &#39;Charts&#39; section</para>
 
-     <para>Any CodeX user with access to the tracker can define her
+     <para>Any &SYS_PRODUCT_NAME; user with access to the tracker can define her
 	 own personal graphical report. In this case the report is a personal one
 	 and is only visible to this particular user. On the contrary,
 	 tracker administrators have the ability to define project-wide
@@ -631,7 +631,7 @@
 	  originator, a request for the originator to provide commonly
 	  missing information like version numbers or type of machine
 	  used, etc. Rather than typing the same comments all the
-	  time, CodeX allows project members to create a predefined
+	  time, &SYS_PRODUCT_NAME; allows project members to create a predefined
 	  set of responses. Each canned response is defined by a name
 	  and by the body of the response.</para>
 
@@ -646,7 +646,7 @@
 	<listitem>
 	  <para><emphasis role="bold">Comment Types</emphasis>: in
 	  order to avoid the exponential growth of new artifact fields
-	  to store all sorts of free text information, CodeX offers an
+	  to store all sorts of free text information, &SYS_PRODUCT_NAME; offers an
 	  interesting mechanism called Comment Types. The project team
 	  has the ability to define a list of labels that can be used
 	  to characterize the nature of a follow-up comment. This is a
@@ -695,7 +695,7 @@
       <title>CC List</title>
 
       <para>As explained later in this chapter (see <xref
-	  linkend="TrackerEmailNotification" />) the CodeX Tracker offers
+	  linkend="TrackerEmailNotification" />) the Codendi Tracker offers
       a powerful email notification system for those users who, at
       some point, were involved in the life of the artifact whether as
       a submitter, an assignee or as a person who posted a follow-up
@@ -715,14 +715,14 @@
         <title>CC Names</title>
 
         <para>The CC names can be either email addresses or a
-        CodeX login name if the user has a CodeX account.</para>
+        &SYS_PRODUCT_NAME; login name if the user has a &SYS_PRODUCT_NAME; account.</para>
 
         <itemizedlist mark="bullet">
 	  <listitem>
-            <para><emphasis role="bold">CodeX login name</emphasis>:
+            <para><emphasis role="bold">&SYS_PRODUCT_NAME; login name</emphasis>:
             when the person you want involve in the notification
-            process has a CodeX account use it in place of her email
-            address. Using the CodeX login name give to the recipient
+            process has a &SYS_PRODUCT_NAME; account use it in place of her email
+            address. Using the &SYS_PRODUCT_NAME; login name give to the recipient
             the ability to customize the kind of update events they
             want to receive. For more information on how to customize
             notification preferences for a given project see <xref
@@ -756,7 +756,7 @@
         <itemizedlist mark="bullet">
           <listitem>
             <para>Adding a CC name: Anonymous users cannot add CC
-            names. Any other CodeX user who is logged in can add CC
+            names. Any other &SYS_PRODUCT_NAME; user who is logged in can add CC
             names and the CC list will clearly show who added this
             entry and when.</para>
           </listitem>
@@ -768,7 +768,7 @@
             CC list for any artifact of this tracker. All other users can
             delete CC entries that were either added by themselves or
             entries where the CC name matches their own name or email
-            address in any CodeX projects. In other words a CodeX user
+            address in any &SYS_PRODUCT_NAME; projects. In other words a &SYS_PRODUCT_NAME; user
             has the right to undo what they have done or remove themselves
             from a CC list in any tracker. </para>
           </listitem>
@@ -780,7 +780,7 @@
     <section id="ArtifactAttachments">
       <title>Artifact Attachments</title>
 
-      <para>In addition to comments, the CodeX Tracker 
+      <para>In addition to comments, the &SYS_PRODUCT_NAME; Tracker 
       allows you to attach virtually any piece of information to an artifact
       in the form of a file. Typical examples of artifact attachments are
       application screen shots in PNG, GIF, JPEG or whatever image
@@ -800,14 +800,14 @@
 
       <para>The next section on the artifact update screen deals with
       artifact dependencies (see <xref
-	  linkend="FigureArtifactDependencies" />). CodeX users have the
+	  linkend="FigureArtifactDependencies" />). Codendi users have the
       ability to establish a dependency link from an artifact to one
       or several other artifacts belonging to any of the tracker of
-      any CodeX project. This is made possible by the fact that
-      artifacts have a unique ID across the entire CodeX
+      any &SYS_PRODUCT_NAME; project. This is made possible by the fact that
+      artifacts have a unique ID across the entire &SYS_PRODUCT_NAME;
       system.</para>
 
-      <para>The CodeX system does not impose any semantic on the
+      <para>The &SYS_PRODUCT_NAME; system does not impose any semantic on the
       nature of these dependency links. As a project team, you are
       free to agree on a specific meaning for these links. It can be a
       cause-effect type of relationship, a duplication of information
@@ -847,8 +847,8 @@
 
       <para>In addition to the rather formal way of expressing a
       dependency between two artifacts presented in
-      <xref linkend="ArtifactDependencies"/>, CodeX offers the ability to
-      cross-reference any artifact, or any other CodeX object from within a follow-up
+      <xref linkend="ArtifactDependencies"/>, Codendi offers the ability to
+      cross-reference any artifact, or any other &SYS_PRODUCT_NAME; object from within a follow-up
       comment.</para>
 
       <para>When typing a follow-up comment, any text that follows the
@@ -858,13 +858,13 @@
       &#34;req #12&#34;, etc.).
       If you don't know the tracker short name or don't want to specify it, you
       may simply use  &#34;art #NNN&#34;.
-      Each time CodeX displays a piece of text that follows this pattern it will
+      Each time &SYS_PRODUCT_NAME; displays a piece of text that follows this pattern it will
       auto-magically create an hyperlink to the web page showing all
       the details of the artifact.</para>
 
-      <para>CodeX reference patterns may be used to reference artifacts, as well as source
+      <para>&SYS_PRODUCT_NAME; reference patterns may be used to reference artifacts, as well as source
       code commits, documents, files, etc. Please refer to 
-      <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
+      <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
 
       <para>Furthemore references concerning artifacts, svn revisions and
        cvs commits are stored in the database. They are displayed in the next section, ordered 
@@ -903,7 +903,7 @@
   <section id="ArtifactMassChange">
     <title>Artifact Mass Change</title>
   
-    <para>CodeX provides project and tracker administrators with the
+    <para>&SYS_PRODUCT_NAME; provides project and tracker administrators with the
     possibility to update several artifacts in one step: delete/add
     the same CC name entry or file attachment to a set of artifacts,
     assign a list of artifacts to a person, etc... A typical
@@ -1021,7 +1021,7 @@ width="14.5cm" />
   <section id="TrackerEmailNotification">
     <title>E-mail Notification</title>
 
-    <para>The CodeX Tracker is equipped with a powerful and flexible
+    <para>The &SYS_PRODUCT_NAME; Tracker is equipped with a powerful and flexible
     e-mail notification system. Unless otherwise instructed by the
     project administrators or the users themselves, the e-mail
     notification system follows simple default rules. Whenever an
@@ -1052,15 +1052,15 @@ width="14.5cm" />
     </itemizedlist>
 
     <para>Beside these simple rules, the Administration module of the
-    CodeX Tracker allows CodeX users to customize the email notification
+    &SYS_PRODUCT_NAME; Tracker allows &SYS_PRODUCT_NAME; users to customize the email notification
     process. For further information see <xref
 	linkend="TrackerEmailNotificationSettings" />). </para>
 
-    <para>The e-mail message generated by the CodeX Tracker first
+    <para>The e-mail message generated by the &SYS_PRODUCT_NAME; Tracker first
     shows the most recent changes that occurred on the artifact in
     case of an update. It is then followed by a complete snapshot of
     the artifact. Web pointers are also included in the message to
-    quickly and easily access the artifact form on CodeX.</para>
+    quickly and easily access the artifact form on &SYS_PRODUCT_NAME;.</para>
 
   </section>
 
@@ -1068,13 +1068,13 @@ width="14.5cm" />
     <title>Tracker Reporting</title>
 
     <para>As explained earlier in this document (<xref
-	linkend="ProjectDataExport" />), CodeX can export your project data
-      outside of the CodeX system for re-use in another tool or document.
+	linkend="ProjectDataExport" />), Codendi can export your project data
+      outside of the &SYS_PRODUCT_NAME; system for re-use in another tool or document.
       However for simple statistics, you can also use the Tracker Reporting
       module. This function can be accessed from the Tracker Menu Bar via the item
       &#34;Reporting&#34;.</para>
 
-    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject">
+    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject">
       <title>Sample value distribution of the Category field for a specific tracker</title>
 
       <mediaobject>
@@ -1091,7 +1091,7 @@ width="14.5cm" />
     select-box. For instance you might want to see how your artifacts
     are distributed across the status, category or resolution values
     (see <xref
-    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject"
+    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject"
     /> for an example of how the artifacts of an ods are distributed
     across the various values of the Category field).</para>
   </section>
@@ -1100,12 +1100,12 @@ width="14.5cm" />
     <title>Tracker Artifact Import</title>
 
       <para>Project Administrators have the means to import
-    artifacts into CodeX trackers using the well known
+    artifacts into &SYS_PRODUCT_NAME; trackers using the well known
     CSV (Comma Separated Value) format supported by all
     of the major office productivity suites. The artifact
     import functionality greatly facilitates the migration
     and integration of external project tracking and management
-    tools into CodeX trackers. </para>
+    tools into &SYS_PRODUCT_NAME; trackers. </para>
 
     <para>The import is divided into three steps:
 
@@ -1142,10 +1142,10 @@ width="14.5cm" />
 
 	<itemizedlist mark="bullet" spacing="compact">
 	<listitem><para>Initial import from a project management software
-	  to your CodeX task tracker.</para></listitem>
+	  to your &SYS_PRODUCT_NAME; task tracker.</para></listitem>
 	<listitem><para>Migration of your legacy defect tracking system
-	  into your new CodeX defect tracker.</para></listitem>
-	<listitem><para>Migration of artifacts from one CodeX tracker
+	  into your new &SYS_PRODUCT_NAME; defect tracker.</para></listitem>
+	<listitem><para>Migration of artifacts from one &SYS_PRODUCT_NAME; tracker
 	  to another.</para></listitem>
 	</itemizedlist>
 	</para>
@@ -1274,23 +1274,23 @@ width="14.5cm" />
 	
     <para>
     The updated date format might not be compatible with the 
-    CodeX date format and potentially cause troubles when 
-    importing such updated CSV files back into CodeX.
-    On the other hand CodeX-exported CSV files might not open correctly
+    &SYS_PRODUCT_NAME; date format and potentially cause troubles when 
+    importing such updated CSV files back into &SYS_PRODUCT_NAME;.
+    On the other hand &SYS_PRODUCT_NAME;-exported CSV files might not open correctly
     under Excel in certain Regionals.
     </para>
     
     <para>
     If you have a .csv file that either will not open correctly under 
     Excel or was opened in Excel and will not import 
-	into CodeX please try the following:
+	into &SYS_PRODUCT_NAME; please try the following:
 	Make sure all applications are closed. Change your system's 
         regional settings (Start > Settings > Control Panel > Regional 
 	Options) to use the English with the following formats: 
 	Date = MM/dd/YYYY Time = hh:mm. Using Excel, open the 
 	.csv files that don't import, make a column width change, 
 	save the files and exit Excel. Go back and restore your 
-	original regional settings. Import the "fixed" .csv file into CodeX.
+	original regional settings. Import the "fixed" .csv file into &SYS_PRODUCT_NAME;.
     </para>
     </tip></para>
 
@@ -1302,7 +1302,7 @@ width="14.5cm" />
 
     <para>Depending on the class of citizen a user belongs to and the
     level of permissions granted as a project member, the various
-    features of the CodeX Tracker may or may not be accessible. Please
+    features of the &SYS_PRODUCT_NAME; Tracker may or may not be accessible. Please
     note that the default access permissions listed below may change
     for a particular tracker if the tracker administrator modifies the
     access permission settings. For more information on how to
@@ -1327,11 +1327,11 @@ width="14.5cm" />
 	<tbody>
 	  <row>
 	    <entry><link linkend="ArtifactSubmission">New Artifact
-	      Submission</link></entry> <entry>By default any CodeX
+	      Submission</link></entry> <entry>By default any &SYS_PRODUCT_NAME;
 	      visitor, whether logged in or not, has the ability to
 	      submit a new artifact to a tracker. The tracker
 	      administrator has the ability to limit the scope of this
-	      feature to CodeX registered users (anonymous users are
+	      feature to &SYS_PRODUCT_NAME; registered users (anonymous users are
 	      requested to login first) or to the project members if
 	      the tracker is made private.</entry>
 	  </row>
@@ -1339,7 +1339,7 @@ width="14.5cm" />
 	    <entry><link linkend="ArtifactBrowsing">Artifact
 	      Browsing</link></entry> <entry>Searching the Artifact
 	      database and browsing the results is available to all
-	      CodeX visitors (whether registered or not) unless the
+	      &SYS_PRODUCT_NAME; visitors (whether registered or not) unless the
 	      tracker has been made private by the project
 	      administrator. If so the tracker is only visible to
 	      project members.</entry>
@@ -1400,7 +1400,7 @@ width="14.5cm" />
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can define project
 	        wide tracker reports that will be available to
-	        all users. All other CodeX users (except anonymous
+	        all users. All other &SYS_PRODUCT_NAME; users (except anonymous
 	        users) can define personal tracker reports.</entry>
 	  </row>
 	  <row>
@@ -1410,7 +1410,7 @@ width="14.5cm" />
 	      Settings</link></entry> <entry>Only Project
 	      administrators can add email addresses in the global
 	      email notification field. Project members can watch artifacts
-	      of other team members. Any registered CodeX user can
+	      of other team members. Any registered &SYS_PRODUCT_NAME; user can
 	      customize her notification preferences.</entry>
 	  </row>
 
@@ -1430,7 +1430,7 @@ width="14.5cm" />
     Tracker Administration section.</para>
 
     <para><tip><title>Tip: Use the predefined trackers
-      first!</title> <para>When a new project is created on CodeX a
+      first!</title> <para>When a new project is created on &SYS_PRODUCT_NAME; a
       number of trackers are automatically created for this
       project. This would typically be a bug tracker, a task tracker
       and a support request tracker. If your project manages this type
@@ -1447,7 +1447,7 @@ width="14.5cm" />
 	<para><emphasis role="bold">Name</emphasis>: this is the
 	  name of your tracker. A tracker is typically named after the
 	  type of artifact it is going to manage. This name will be
-	  used by CodeX in the title of the various screens of the
+	  used by &SYS_PRODUCT_NAME; in the title of the various screens of the
 	  trackers. Typical examples of tracker names are: Action
 	  Requests, Support Requests, Requirements, Defects,
 	  Bugs&hellip;</para>
@@ -1462,7 +1462,7 @@ width="14.5cm" />
 	<para><emphasis role="bold">Short name</emphasis>: this is a
 	  short name that best describe the type of artifact managed
 	  in this tracker. This name must be quite short as it is used
-	  in various screens of the CodeX Tracker like the artifact
+	  in various screens of the &SYS_PRODUCT_NAME; Tracker like the artifact
 	  update form where it appears in the tracker menu and also 
           next to the artifact ID. Following the examples
 	  given for the Name field above, short names can be: AR for
@@ -1485,9 +1485,9 @@ width="14.5cm" />
     <para>The next step is to decide upon the set of fields
       available for this tracker. In order to avoid the pain of
       defining the most common type of trackers again and again
-      (e.g. Bug tracker, Support Request tracker, etc.) CodeX offers
+      (e.g. Bug tracker, Support Request tracker, etc.) &SYS_PRODUCT_NAME; offers
       the ability to create a new tracker from a set of
-      templates. Those templates are either CodeX-wide templates (also
+      templates. Those templates are either &SYS_PRODUCT_NAME;-wide templates (also
       known as site templates) or project specific templates.</para>
 
     <para><emphasis role="bold">Remark</emphasis>: using a template
@@ -1496,19 +1496,19 @@ width="14.5cm" />
       fields or fine-tune the field settings afterwards.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerCreationFromCodeXTemplate">
-	<para><emphasis role="bold">CodeX-wide Template</emphasis>:
+      <listitem id="TrackerCreationFromCodendiTemplate">
+	<para><emphasis role="bold">&SYS_PRODUCT_NAME;-wide Template</emphasis>:
 	  these are templates that have been defined by the
-	  administrators of the CodeX site because it is expected that
+	  administrators of the &SYS_PRODUCT_NAME; site because it is expected that
 	  most project needs them. It is also a way to ensure a
 	  certain level of harmonization across projects that will
 	  make developers' life easier. The list of available
-	  templates may vary from one CodeX site to another but you
+	  templates may vary from one &SYS_PRODUCT_NAME; site to another but you
 	  will typically find templates for Bugs, Tasks, etc. A
 	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
 	  minimal set of required fields. See <xref
-          linkend="CodeXTrackerTemplates" /> for more explanations
+          linkend="CodendiTrackerTemplates" /> for more explanations
           on the semantic of those templates.</para>
       </listitem>
 
@@ -1530,10 +1530,10 @@ width="14.5cm" />
   </section>
 
 
-  <section id="CodeXTrackerTemplates">
-    <title>CodeX-wide Tracker Templates</title>
+  <section id="CodendiTrackerTemplates">
+    <title>&SYS_PRODUCT_NAME;-wide Tracker Templates</title>
 
-    <para>The standard trackers provided for each new CodeX project are:
+    <para>The standard trackers provided for each new &SYS_PRODUCT_NAME; project are:
 	<itemizedlist mark="bullet" spacing="compact">
 	<listitem><para>Bugs</para></listitem>
 	<listitem><para>Patch</para></listitem>
@@ -1543,7 +1543,7 @@ width="14.5cm" />
 	Each of those templates have predefined fields that correspond
 	to the specific work processes around bugs, patches etc. In
 	the following, we give a short overview of these different
-	work processes. For each of those templates, the CodeX Team
+	work processes. For each of those templates, the &SYS_PRODUCT_NAME; Team
 	also tried to maintain a fair balance between sophistication
 	and ease of use. As a consequence, fairly simple and
 	straightforward templates are configured by default for all
@@ -1563,7 +1563,7 @@ width="14.5cm" />
 
       <para>The template Bug Tracker comes pre-configured with a set
       of fields (used or not) that are probably enough for the
-      majority of projects hosted on CodeX. You can either decide that
+      majority of projects hosted on &SYS_PRODUCT_NAME;. You can either decide that
       the template is lacking some critical fields that you can create
       or, on the contrary, switch some fields to the "Unused" status
       to make the tracker simpler.</para>
@@ -1584,13 +1584,13 @@ width="14.5cm" />
 
       <note><para><emphasis role="underline">A note to the project
       team</emphasis></para> <para>Receiving source code modifications
-      or other contributions from other CodeX users does not imply
+      or other contributions from other &SYS_PRODUCT_NAME; users does not imply
       that you have to accept the new code and insert it in your main
       source tree. It is up to the project team to decide what to do
       with it. One of the interesting features of the Patch tracker is
       that submitted patches are available to anybody at all time
       regardless of the final decision of the project team. Therefore
-      any CodeX visitor is free to download any submitted patch and
+      any &SYS_PRODUCT_NAME; visitor is free to download any submitted patch and
       apply it onto its own version of the software even if the
       project team has decided not to apply the patch on the main
       source tree.</para></note>
@@ -1602,10 +1602,10 @@ width="14.5cm" />
 
       <para>The Support Request (SR) tracker is one of the
       communication mechanisms that your project should offer to the
-      project community. It allows any CodeX user to ask question to
+      project community. It allows any &SYS_PRODUCT_NAME; user to ask question to
       the project team and call for assistance.</para>
 
-      <para>CodeX users who have access to the tracker can follow the
+      <para>&SYS_PRODUCT_NAME; users who have access to the tracker can follow the
       thread of discussions between the other users and the project
       team. It is also possible to review all the SRs that were posted
       in the past and the answer given by the project team. With the
@@ -1617,23 +1617,23 @@ width="14.5cm" />
     <section id="TaskTemplate">
       <title>The Task Tracker Template</title>
 
-      <para>The CodeX Task tracker is a task manager and not a project
+      <para>The &SYS_PRODUCT_NAME; Task tracker is a task manager and not a project
       management software like CA-SuperProject, MS-Project or other
       powerful and complex desktop products available on the
-      market. The CodeX Task Tracker cannot build a Pert
+      market. The &SYS_PRODUCT_NAME; Task Tracker cannot build a Pert
       chart, it doesn&#39;t have any planning capabilities. It is
       rather a time sheet tool which allows project members to track
       their time and manage other things like weekly TODO list for
       instance.</para>
 
-      <para>However the CodeX Task Tracker offer a number of
+      <para>However the &SYS_PRODUCT_NAME; Task Tracker offer a number of
     	  features that makes it very complementary with the above
     	  mentioned project planning tools:</para>
 
       <itemizedlist mark="bullet"
 	spacing="compact">
 	<listitem>
-	  <para>Like all CodeX tools, the Task Tracker is entirely web
+	  <para>Like all &SYS_PRODUCT_NAME; tools, the Task Tracker is entirely web
 	  based.  Therefore any project member can update his/her time
 	  sheet regardless of its physical location.</para>
 	</listitem>
@@ -1653,7 +1653,7 @@ width="14.5cm" />
 
 	<listitem>
 	  <para>Task data can be collected by the project leader(s) at
-	  any point in time and exported out of the CodeX project
+	  any point in time and exported out of the &SYS_PRODUCT_NAME; project
 	  thanks to the Project Data Export facility (see <xref
 	  linkend="ProjectDataExport" />). This allows for an easy
 	  generation of progress reports or project
@@ -1669,7 +1669,7 @@ width="14.5cm" />
   <section id="TrackerAdministration">
     <title>Tracker Administration</title>
 
-    <para>As we went through the description of the CodeX Tracker
+    <para>As we went through the description of the &SYS_PRODUCT_NAME; Tracker
     features, we referred several times to the flexibility of this
     system and how easy it is to customize your own tracker. This can
     be done through the Tracker Administration module available under
@@ -1747,7 +1747,7 @@ width="14.5cm" />
 	  <para><emphasis role="bold">Name</emphasis>: this is the
 	  name of your tracker. More precisely you want to name your
 	  tracker after the type of artifact that are going to be
-	  managed in your tracker. This name will be used by CodeX in
+	  managed in your tracker. This name will be used by &SYS_PRODUCT_NAME; in
 	  the title of the various screens of the trackers. Typical
 	  example of tracker names are: Action Requests, Support Requests,
 	  Requirements, Defects or Bugs&hellip;</para>
@@ -1763,7 +1763,7 @@ width="14.5cm" />
 	  <para><emphasis role="bold">Short name</emphasis>: this is a
 	  short name that best describe the type of artifact managed
 	  in this tracker. This name must be quite short as it is used
-	  in various screens of the CodeX Tracker like the artifact
+	  in various screens of the &SYS_PRODUCT_NAME; Tracker like the artifact
 	  update form next to the artifact ID. Following the examples
 	  given for the Name field above, short names can be: AR for
 	  Action Request, SR for Support Requests, Reqt for
@@ -1845,7 +1845,7 @@ width="14.5cm" />
         along with their access permissions. The user group list first
         shows groups of users defined at the system level like
         all_users, registered_users, project_members, etc. These are
-        groups that CodeX manages for you so you don't have to keep
+        groups that &SYS_PRODUCT_NAME; manages for you so you don't have to keep
         them up to date when new users subscribe to the site or become
         member of your project. The second part of the user group list
         shows all groups of users defined at the project level (see
@@ -2035,8 +2035,8 @@ width="14.5cm" />
         select the item &#34;Manage field sets&#34; on the welcome page 
         of any Tracker Administration screen. 
         The Field Set screen (<xref
-        linkend="FigureTrackerFieldSetScreenOfACodeXHostedProject"
-        />) shows you a sample list of field sets available in the tracker of a CodeX project. The
+        linkend="FigureTrackerFieldSetScreenOfACodendiHostedProject"
+        />) shows you a sample list of field sets available in the tracker of a &SYS_PRODUCT_NAME; project. The
         screen is divided in 2 parts:</para>
 
         <procedure>
@@ -2081,7 +2081,7 @@ width="14.5cm" />
           </listitem>
         </itemizedlist>
 
-        <figure id="FigureTrackerFieldSetScreenOfACodeXHostedProject">
+        <figure id="FigureTrackerFieldSetScreenOfACodendiHostedProject">
           <title>Field Set screen of a project tracker</title>
 
           <mediaobject>
@@ -2140,11 +2140,11 @@ width="14.5cm" />
 
       <para>When a tracker is first created, it comes pre-configured
       with a set of fields inherited form the template that was used
-      to create it. For the majority of projects hosted on CodeX it is
+      to create it. For the majority of projects hosted on &SYS_PRODUCT_NAME; it is
       very likely that the standard Tracker templates (e.g Bugs,
       Tasks, Support Requests) will cover most of the needs.</para>
 
-      <para> However CodeX gives you the ability to customize the list
+      <para> However &SYS_PRODUCT_NAME; gives you the ability to customize the list
       of fields for your trackers. It can be a variation on an
       existing template with some field addition or removal or it can
       be an entirely new tracker created from an empty
@@ -2225,9 +2225,9 @@ width="14.5cm" />
 	<para>To decide what field to use and what field not to use
 	select the item &#34;Manage Field Usage&#34; on the welcome
 	page of any Tracker Administration screen. The Field Usage screen
-	(<xref linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+	(<xref linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
 	    />) shows you a sample list of fields available in the tracker
-	of a CodeX project. The screen is divided in 3 parts:</para>
+	of a &SYS_PRODUCT_NAME; project. The screen is divided in 3 parts:</para>
 
 	<procedure>
 	  <step>
@@ -2237,14 +2237,14 @@ width="14.5cm" />
 	  <step>
 	    <para>the list of unused tracker fields (not shown on
 	      <xref
-		linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+		linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
 		/>)</para>
 	  </step>
 	  
 	  <step>
 	    <para>a form to create new tracker fields (not shown on
 	      <xref
-		linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+		linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
 		/>)</para>
 	  </step>
 	</procedure>
@@ -2313,7 +2313,7 @@ width="14.5cm" />
 	</itemizedlist>
 
 
-	<figure id="FigureTrackerFieldUsageScreenOfACodeXHostedProject">
+	<figure id="FigureTrackerFieldUsageScreenOfACodendiHostedProject">
 	  <title>Field Usage screen of a project tracker</title>
 
 	  <mediaobject>
@@ -2346,7 +2346,7 @@ width="14.5cm" />
 	before you decide to create a new field make sure that there
 	isn't a predefined field that already plays the same role. By
 	using predefined fields whenever possible, you'll contribute
-	to keep the global CodeX environment consistent and make it
+	to keep the global &SYS_PRODUCT_NAME; environment consistent and make it
 	easier for visitors, contributors or new team members to
 	switch from project to another.</para></tip></para>
 
@@ -2641,12 +2641,12 @@ width="14.5cm" />
 	<para>The <xref linkend="FigureListOfValuesForTrackerFieldResolution"
 	/> shows the list of available values for the Resolution field of
 	tracker managing &#34;Bugs&#34; artifacts. The Resolution field
-	comes with set of predefined values that are available to all CodeX 
+	comes with set of predefined values that are available to all &SYS_PRODUCT_NAME; 
     projects. By default 8 values are active (Accepted, Analyzed, etc.).</para>
 
 	<para>Of course you are free to add your own values to the
 	Resolution field. However, in order to
-	keep a certain harmony from one CodeX tracker to another, we
+	keep a certain harmony from one &SYS_PRODUCT_NAME; tracker to another, we
 	highly recommend that you use the list of predefined resolution
 	values as much as you can before creating new ones.</para>
 
@@ -2690,13 +2690,13 @@ width="14.5cm" />
       <section id="TrackerBindingFieldToValueList">
 	<title>Binding a Field to a List of Values</title>
 	
-	<para>Not only does the CodeX Tracker allow you to create a
+	<para>Not only does the &SYS_PRODUCT_NAME; Tracker allow you to create a
 	list of values for a select box but it also offers the ability
 	to associate a select box with a list of predefined values
-	that is actually dynamically generated by the CodeX system. A
+	that is actually dynamically generated by the &SYS_PRODUCT_NAME; system. A
 	typical example of this is when one would like to create a new
 	select box showing the list of project members. Instead of
-	creating and maintaining the list of values manually, CodeX
+	creating and maintaining the list of values manually, &SYS_PRODUCT_NAME;
 	builds this list for you and allows you to bind it to a field
 	of type select box.</para>
 
@@ -2757,7 +2757,7 @@ width="14.5cm" />
             first. When the &#34;None&#34; value is available for this bug
             field it has a rank number of 10. This number is deliberately
             small because by convention &#34;None&#34; always appear at the
-            top of the pull-down menu. Please be a good CodeX citizen and
+            top of the pull-down menu. Please be a good &SYS_PRODUCT_NAME; citizen and
             choose rank numbers higher than 10 for your own values.</para>
 	  </listitem>
 	  
@@ -2930,7 +2930,7 @@ width="14.5cm" />
 	  linkend="FigureTrackerCannedResponses" /></para>
 
       <para>Rather than repeatedly typing the same follow-up
-	comments, CodeX allows project members to create a predefined
+	comments, &SYS_PRODUCT_NAME; allows project members to create a predefined
 	set of responses. After these canned responses have been
 	defined, posting a follow-up comment is just a matter of
 	selecting the appropriate response from the pull down menu in
@@ -2958,8 +2958,8 @@ width="14.5cm" />
       <title>Tracker Report Management</title>
 
       <para>Knowing that project administrators, project members and other
-        CodeX users may have different needs in searching the tracker 
-        database, CodeX offers the ability to define project or user specific
+        &SYS_PRODUCT_NAME; users may have different needs in searching the tracker 
+        database, &SYS_PRODUCT_NAME; offers the ability to define project or user specific
         tracker reports.</para>
 
       <para>Creating a tracker report consists in deciding what fields
@@ -2980,7 +2980,7 @@ width="14.5cm" />
       search criteria but not the values of this search criteria. This
       is on purpose. Defining a report template and filling out the
       search template with content (values) are 2 distinct operations
-      on CodeX. Once a report template has been defined in the
+      on &SYS_PRODUCT_NAME;. Once a report template has been defined in the
       administration module (e.g &#39;Simple Report&#39;, &#39;QA
       report&#39;, &#39;Daily report&#39; ...)  you can go to the
       tracker searching and browsing module and use the report
@@ -2988,7 +2988,7 @@ width="14.5cm" />
       from the pull-down menu, fill out the search form with the
       values you are interested in and click on the browse
       button. Then you can save the entire query (report plus values)
-      with the CodeX bookmarking mechanism (see tip in <xref
+      with the &SYS_PRODUCT_NAME; bookmarking mechanism (see tip in <xref
 	      linkend="ArtifactSelectionCriteria" />). And voila!</para></tip></para>
 
       <section id="TrackerReportBrowsing">
@@ -3316,7 +3316,7 @@ width="14.5cm" />
       <title>Email Notification Settings</title>
 
       <para>As explained earlier in <xref
-	  linkend="TrackerEmailNotification" /> the CodeX Tracker comes
+	  linkend="TrackerEmailNotification" /> the Codendi Tracker comes
       with a predefined set of rules to keep relevant people aware of
       the artifact life. The default rules can however be complemented
       or tuned in a number of ways:</para>
@@ -3343,14 +3343,14 @@ width="14.5cm" />
 	    <title>Tip: Create a Distribution List to notify several people</title>
 	    
 	    <para>If you want to notify many people at once, we suggest
-	  that you use the CodeX Mailing Lists service to create a
+	  that you use the &SYS_PRODUCT_NAME; Mailing Lists service to create a
 	  distribution lists (see <xref linkend="MailingLists"
 		/>). Once the Mailing List is up and running type the e-mail
 	  address in the Global Email Notification field.</para>
 
-	    <para>Creating a Mailing List on CodeX has several
+	    <para>Creating a Mailing List on &SYS_PRODUCT_NAME; has several
 	  advantages: first individuals can (un)subscribe by
-	  themselves and second all messages sent to a CodeX mailing
+	  themselves and second all messages sent to a &SYS_PRODUCT_NAME; mailing
 	  list are kept in an archive that can serve as an audit
 	  trail for your tracker.</para>
 	  </tip>
@@ -3362,7 +3362,7 @@ width="14.5cm" />
       <section id="TrackerWatchers">
 	<title>Tracker Watchers</title>
 
-	<para>The CodeX Tracker offers to all project members the
+	<para>The &SYS_PRODUCT_NAME; Tracker offers to all project members the
 	ability to be carbon-copied on all email notifications sent to
 	some other project members.</para>
 
@@ -3395,7 +3395,7 @@ width="14.5cm" />
 
 	<note><para>Remark: The goal of the tracker watch feature is not
 	to spy on you. To make sure that you are only watched by
-	authorized persons, CodeX always shows you the list of CodeX
+	authorized persons, &SYS_PRODUCT_NAME; always shows you the list of &SYS_PRODUCT_NAME;
 	users who are currently watching your email 
 	notifications. </para></note>
 
@@ -3444,11 +3444,11 @@ width="14.5cm" />
 	  </listitem>
 	</itemizedlist>
 
-	<para>For each of these roles you can instruct the CodeX
+	<para>For each of these roles you can instruct the &SYS_PRODUCT_NAME;
 	Tracker to send email notifications to you only when some
 	specific events occur. Nine different events (see the right
 	most column on <xref linkend="FigureTrackerNotificationMatrix"
-	    />) are monitored by the CodeX Tracker. The description of the
+	    />) are monitored by the &SYS_PRODUCT_NAME; Tracker. The description of the
 	events is self explanatory and only appeal one comment: the
 	first 8 events in the list can only occur on artifact
 	updates. Only the last event relates to the submission of a
@@ -3467,7 +3467,7 @@ width="14.5cm" />
 	   only interested in receiving email notification when the
 	  status of the artifact goes to &#34;Closed&#34; or when any of the fields
 	  Priority, Status and Severity is modified. All other events
-	  will be ignored by the CodeX tracker and no notification
+	  will be ignored by the &SYS_PRODUCT_NAME; tracker and no notification
 	  will be sent to this user.</para></listitem>
 
 	  <listitem><para>Second, looking at the matrix by row, one
@@ -3532,7 +3532,7 @@ width="14.5cm" />
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

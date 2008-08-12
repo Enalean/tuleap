@@ -4,9 +4,6 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
-//
 -->
   <bookinfo>
  <!--   <authorgroup>
@@ -16,7 +13,7 @@
 //        <surname>Julliard</surname>
 //
 //        <affiliation>
-//          <orgname>Xerox/XGS/BPS - CodeX Team, Laurent.Julliard@crt.xerox.com</orgname>
+//          <orgname>Xerox/XGS/BPS - &SYS_PRODUCT_NAME; Team, Laurent.Julliard@crt.xerox.com</orgname>
 //        </affiliation>
 //      </author>
 //    </authorgroup>
@@ -92,7 +89,7 @@
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
         <revremark>Mise à jour des chapitres Vue d'ensemble du site
-	CodeX, Créer un nouveau projet et Administration d'un projet
+	&SYS_PRODUCT_NAME;, Créer un nouveau projet et Administration d'un projet
 	pour les patron de projets.
         </revremark>
       </revision>
@@ -125,9 +122,9 @@
 
         <date>03-Avr-2007</date>
 
-        <authorinitials>Equipe CodeX</authorinitials>
+        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
 
-        <revremark>Mise à jour pour la version 3.2 de CodeX :
+        <revremark>Mise à jour pour la version 3.2 de &SYS_PRODUCT_NAME; :
         Documentation du nouveau service Fichiers, documentation 
         des templates, documentation du mode CVS Watch, nombreuses 
         corrections (voir SR #337).
@@ -138,17 +135,25 @@
 
         <date>6-May-2008</date>
 
-        <authorinitials>Equipe CodeX</authorinitials>
+        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
 
         <revremark>Corrections mineures, mise à jour de certaines sections et
         réparation de liens.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>3.6</revnumber>
+        <date>12-August-2008</date>
+        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <revremark>CodeX vers Codendi
+        </revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

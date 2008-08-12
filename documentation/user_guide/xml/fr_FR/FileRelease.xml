@@ -4,8 +4,6 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-//
 -->
 
   <chapter id="FileRelease">
@@ -15,7 +13,7 @@
       <title>Publication du code source : conseils</title>
 
       <para>Il existe deux façons pour un administrateur de projet de
-      donner accès au code source d'un projet hébergé sur CodeX : le
+      donner accès au code source d'un projet hébergé sur &SYS_PRODUCT_NAME; : le
       système de contrôle de version (CVS ou Subversion) et le système
       de publication de fichiers. A première vue, le fait d'avoir deux
       systèmes de livraison du code source peut paraître
@@ -34,7 +32,7 @@
           d'un logiciel particulier sur le poste client. Certains
           utilisateurs ne peuvent pas ou ne souhaitent pas le
           faire. L'accès au SCV est particulièrement adapté aux
-          utilisateurs de CodeX qui souhaitent approfondir le code,
+          utilisateurs de &SYS_PRODUCT_NAME; qui souhaitent approfondir le code,
           ajouter de nouvelles extensions, corriger des anomalies et
           proposer des modifications à l'équipe de projet. A noter que
           certains projets n'autorisent pas l'accès de leur SCV aux
@@ -47,7 +45,7 @@
           fichiers</emphasis> permet de livrer le logiciel (source,
           binaire ou documentation) sous forme de fichiers d'archive
           (zip, tar, jar...) qu'un utilisateur autorisé peut
-          facilement télécharger depuis le site Web de CodeX. Aucun
+          facilement télécharger depuis le site Web de &SYS_PRODUCT_NAME;. Aucun
           outil ni connaissance particulière n'est nécessaire. En
           complément de la fourniture éventuelle du code source,
           fournir des versions binaires prêtes à utiliser de vos
@@ -63,7 +61,7 @@
       les   utiliser  tous les   deux. Dans  le  but  de  vous aider à
       comprendre pourquoi ces outils sont complémentaires,  le cycle de vie
       typique d'un projet est illustré sur la  <xref
-      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX"
+      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodendi"
       />.</para>
     </section>
 
@@ -159,8 +157,8 @@
       paquets et versions en cliquant sur le lien &#34;Voir tous les
       fichiers du projet&#34;.</para>
 
-      <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
-        <title>L'écran de publication des fichiers du projet CodeX Administration Project</title>
+      <figure id="FigureTheFileReleaseScreenOfTheCodendiProject">
+        <title>L'écran de publication des fichiers du projet &SYS_PRODUCT_NAME; Administration Project</title>
 
         <mediaobject>
           <imageobject>
@@ -171,9 +169,9 @@
       </figure>
 
       <para>Le premier exemple illustré sur la <xref
-      linkend="FigureTheFileReleaseScreenOfTheCodeXProject" /> 
+      linkend="FigureTheFileReleaseScreenOfTheCodendiProject" /> 
       montre l'écran de publication des fichiers du projet
-      &#34;CodeX Administration Project.&#34;
+      &#34;&SYS_PRODUCT_NAME; Administration Project.&#34;
       </para>
       
       <section id="FileReleaseBrowsingPackages">
@@ -181,8 +179,8 @@
         <para>
         Comme expliqué dans la <xref linkend="FileReleaseJargon" />, les projets 
         peuvent contenir plusieurs paquets. Dans l'exemple, 
-        le projet comporte trois paquets, nommés &#34;CodeX Installation ISO Image&#34;,
-        &#34;CodeX specifics themes&#34; et &#34;CodeX CLI&#34;.
+        le projet comporte trois paquets, nommés &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34;,
+        &#34;&SYS_PRODUCT_NAME; specifics themes&#34; et &#34;&SYS_PRODUCT_NAME; CLI&#34;.
         </para>
         <para>
         Le contenu de chaque paquet peut être caché en cliquant sur l'icône 
@@ -194,7 +192,7 @@
         Par défaut, tous les paquets sont visibles.
         </para>
         <para>
-        CodeX vous permet également de surveiller des paquets. De cette manière, 
+        &SYS_PRODUCT_NAME; vous permet également de surveiller des paquets. De cette manière, 
         vous serez averti lors de la parution d'une nouvelle version ou lors de 
         la modification d'une version existante.
         Pour surveiller un paquet, il suffit de cliquer sur l'icône représentant 
@@ -210,7 +208,7 @@
         <title>Navigation dans les versions</title>
         <para>
         Un paquet peut contenir plusieurs versions. Dans l'exemple, 
-        le paquet &#34;CodeX Installation ISO Image&#34; contient 8 versions 
+        le paquet &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34; contient 8 versions 
         de 2.4 à 3.0.1, listées dans l'ordre chronologique. Chaque version 
         contient un certain nombre de fichiers.
         </para>
@@ -280,9 +278,9 @@
       service fichier de votre projet, vous remarquerez que l'interface des 
       fichiers contient certains lien supplémentaires, vous permettant de 
       réaliser les actions d'administration sur le service Fichier (Voir 
-      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />
-          <figure id="FigureTheFileReleaseAdminScreenOfTheCodeXProject">
-            <title>L'écran du service Fichier du projet &#34;CodeX Administration project&#34;, si vous êtes administrateur</title>
+      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject" />
+          <figure id="FigureTheFileReleaseAdminScreenOfTheCodendiProject">
+            <title>L'écran du service Fichier du projet &#34;&SYS_PRODUCT_NAME; Administration project&#34;, si vous êtes administrateur</title>
     
             <mediaobject>
               <imageobject>
@@ -344,10 +342,10 @@
         chaque nom de paquet. Ensuite, le formulaire de modification est identique 
         à celui de création, à l'exception près que vous pouvez maintenant définir 
         des permissions sur le paquet (see 
-        <xref linkend="FigureAPartOfThePackageAdministrationScreenCodeXProject" />).
+        <xref linkend="FigureAPartOfThePackageAdministrationScreenCodendiProject" />).
         </para>
-        <figure id="FigureAPartOfThePackageAdministrationScreenCodeXProject">
-          <title>Ecran de modification du paquet CLI du projet &#34;CodeX Administration&#34;</title>
+        <figure id="FigureAPartOfThePackageAdministrationScreenCodendiProject">
+          <title>Ecran de modification du paquet CLI du projet &#34;&SYS_PRODUCT_NAME; Administration&#34;</title>
     
           <mediaobject>
             <imageobject>
@@ -385,18 +383,18 @@
         nouvelles versions immédiatement. Pour ce faire, cliquez sur
         le lien [Créer une version] situé en regard du paquet
         approprié (voir <xref
-        linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject"
+        linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject"
         />).</para>
 
         <para>Le processus de création et de modification de versions est vraiment 
         très simple à utiliser. Il peut se décomposer en 6 étapes, mais certaines 
         sont optionnelles.
-        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodeXProject" />).
+        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodendiProject" />).
         Dans tous les cas, vous pouvez modifier les versions a posteriori.
         </para>
         
-        <figure id="FigureTheReleaseModificationScreenOfTheCodeXProject">
-          <title>Ecran de modification d'une version du projet CodeX</title>
+        <figure id="FigureTheReleaseModificationScreenOfTheCodendiProject">
+          <title>Ecran de modification d'une version du projet &SYS_PRODUCT_NAME;</title>
 
           <mediaobject>
             <imageobject>
@@ -443,7 +441,7 @@
                 &#34;Liste des fichiers FTP/SCP&#34;.</para>
                 <para>
                     <tip><title>Astuce: Comment télécharger vos fichiers avec FTP ou SCP</title>
-                    <para>CodeX vous permet de télécharger vos fichiers par FTP (ou SCP).
+                    <para>&SYS_PRODUCT_NAME; vous permet de télécharger vos fichiers par FTP (ou SCP).
                     Pour ce faire, suivez les indications qui vous sont données 
                     lorsque vous cliquez sur le <emphasis>?</emphasis> situé après 
                     le lien [ajouter un fichier].
@@ -474,7 +472,7 @@
             
                 <para><tip><title>Coup de pouce : compressez toujours vos
                 délivrables</title><para>Pour économiser l'espace de
-                stockage sur le serveur CodeX ainsi que sur les machines
+                stockage sur le serveur &SYS_PRODUCT_NAME; ainsi que sur les machines
                 des utilisateurs et pour minimiser l'utilisation de la
                 bande passante du réseau, veillez à compresser les
                 fichiers livrés. utilisez Winzip sur Windows et compress,
@@ -564,8 +562,8 @@
             <para><emphasis role="bold">Step 6 - Envoyer une notification par email (facultatif)</emphasis></para>
             <para>Cette étape est optionnelle, c'est à dire qu'elle peut
             ne pas apparaître à l'écran. Si certains utilisateurs
-            CodeX ont activé la surveillance de l'un de vos paquets,
-            l'étape 4 vous indiquera combien l'ont fait. CodeX vous
+            &SYS_PRODUCT_NAME; ont activé la surveillance de l'un de vos paquets,
+            l'étape 4 vous indiquera combien l'ont fait. &SYS_PRODUCT_NAME; vous
             donne alors la possibilité de leur envoyer (ou pas) une
             notification email les avertissant de la publication d'une
             nouvelle version conformément à leur demande. Nous vous
@@ -584,10 +582,10 @@
             dans le répertoire de pluReleasePropertiess haut niveau de votre archive un
             fichier LISEZMOI (ou README). Ce fichier doit comporter
             toutes les informations utiles concernant votre projet
-            telles que l'adresse de votre site Web sur CodeX, les
+            telles que l'adresse de votre site Web sur &SYS_PRODUCT_NAME;, les
             listes de distributions destinées aux utilisateurs, comment
             soumettre un bug ou une demande d'assistance à l'équipe de
-            projet (via CodeX bien sûr)</para></tip></para>
+            projet (via &SYS_PRODUCT_NAME; bien sûr)</para></tip></para>
             
           </listitem>
         </itemizedlist>
@@ -618,7 +616,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

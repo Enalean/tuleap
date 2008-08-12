@@ -133,7 +133,7 @@
                  </step>
                 </procedure>
                 
-                <figure id="FigureLinkSalomeCodeXTracker">
+                <figure id="FigureLinkSalomeCodendiTracker">
                   <title>Salome tracker configuration</title>
                   <mediaobject>
                     <imageobject>
@@ -286,6 +286,6 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->

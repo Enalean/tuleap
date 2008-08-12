@@ -3,13 +3,13 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="CreatingANewProject">
     <title>Creating a New Project</title>
 
-    <para>So - you are a freshly registered CodeX user and you want to make
+    <para>So - you are a freshly registered &SYS_PRODUCT_NAME; user and you want to make
     your developer or project leader life easier. In other words you want to:</para>
 
     <itemizedlist mark="bullet"
@@ -38,7 +38,7 @@
     </itemizedlist>
 
     <para>If any of these points is appealing to you then you should
-    definitely host your software project on CodeX. Let&#39;s see how you can
+    definitely host your software project on &SYS_PRODUCT_NAME;. Let&#39;s see how you can
     do that.</para>
 
     <section id="ProjectRegistration">
@@ -46,7 +46,7 @@
 
       <para>Before you create a new project you must be a registered user (see
       <xref linkend="ClassesOfCitizens" />). You then login and select the
-      item &#34;Register New Project&#34; in the upper part of the CodeX Main
+      item &#34;Register New Project&#34; in the upper part of the &SYS_PRODUCT_NAME; Main
       Menu.</para>
 
       <para>The project registration is an easy process:</para>
@@ -55,7 +55,7 @@
         <listitem>
           <para><emphasis role="bold">Project Registration</emphasis></para>
 
-          <para>Some information about CodeX Services. Just read it.</para>
+          <para>Some information about &SYS_PRODUCT_NAME; Services. Just read it.</para>
           <para>Do not forget to read and agree the Terms of Services Agreement.</para>
         </listitem>
 
@@ -67,20 +67,20 @@
           before you type anything. The full name can be changed at
           any time in the life of the project. The short name
           cannot<footnote><para>Actually it can but you have to ask
-          the CodeX Team to do it for you.</para></footnote>. So think
+          the &SYS_PRODUCT_NAME; Team to do it for you.</para></footnote>. So think
           about it twice before you make a decision!</para>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Project Template</emphasis></para>
         
-          <para>You already registered a CodeX project and would now like to reuse
+          <para>You already registered a &SYS_PRODUCT_NAME; project and would now like to reuse
           the same configuration (services, trackers, documents, references, ...) ? 
           Make your old project a template project (see <xref linkend="ProjectType" />) 
           and you will find it here in the list of available 
           project templates. Check your old project as template and your new registered
           project will be staffed as you are used to. If you don't want to reuse
-          a specific template just keep the Default CodeX Template checked and go on.</para>
+          a specific template just keep the Default &SYS_PRODUCT_NAME; Template checked and go on.</para>
         </listitem>
 
         <listitem>
@@ -124,9 +124,9 @@
 
           <para>Most of the time the only valid choice here is the
           default one: &#34;&SYS_ORG_NAME; Code eXchange
-          Policy&#34;. As explained earlier in this document the CodeX
+          Policy&#34;. As explained earlier in this document the &SYS_PRODUCT_NAME;
           Team assisted by &SYS_ORG_NAME; lawyers have carefully
-          crafted the CodeX Policy and it is very unlikely that you
+          crafted the &SYS_PRODUCT_NAME; Policy and it is very unlikely that you
           need to create your own. If you do you&#39;ll have to talk
           to us and to the &SYS_ORG_NAME; Legal Department to validate
           it. A number of truly Open Source licenses are also
@@ -138,17 +138,17 @@
           <para><emphasis role="bold">Final Confirmation</emphasis></para>
 
           <para>Last chance to review the submitted information before you
-          send it to the CodeX Team for validation. Don&#39;t worry: the
+          send it to the &SYS_PRODUCT_NAME; Team for validation. Don&#39;t worry: the
           project members can later update all pieces of information shown on
           this page.</para>
         </listitem>
       </itemizedlist>
 
-      <para>After you validate the project registration, the CodeX Team
+      <para>After you validate the project registration, the &SYS_PRODUCT_NAME; Team
       reviews the information you submitted and decides to approve it or not.
       This process can take up to 24 hours but in most cases it&#39;s less
       than a couple of hours. So far all projects have been accepted so there
-      is little to fear ... Shortly after the CodeX Team approval you&#39;ll
+      is little to fear ... Shortly after the &SYS_PRODUCT_NAME; Team approval you&#39;ll
       receive an e-mail summarizing the characteristics of your project
       including a pointer to your new &#34;Project Summary&#34; page. Bookmark
       it in a safe place!</para>
@@ -202,11 +202,11 @@
         <title>Tip: Cannot find an appropriate Topic? Contact us</title>
 
         <para>Rather than putting in place a heavy hierarchy of project topics
-        and sub-topics, the CodeX Team has decided to start small and create
+        and sub-topics, the &SYS_PRODUCT_NAME; Team has decided to start small and create
         only a handful of top-level topics in the hierarchy. As time goes and
-        as more and more projects register on CodeX we&#39;ll refine the
+        as more and more projects register on &SYS_PRODUCT_NAME; we&#39;ll refine the
         hierarchy. If you cannot find the appropriate topic for your project,
-        please contact us through the &#34;Contact Us&#34; link in the CodeX
+        please contact us through the &#34;Contact Us&#34; link in the &SYS_PRODUCT_NAME;
         Main Menu or submit a request in the appropriate Discussion Forum.</para>
       </tip>
     </section>

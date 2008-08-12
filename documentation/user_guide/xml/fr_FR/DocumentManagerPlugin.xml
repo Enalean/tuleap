@@ -4,18 +4,15 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
-//
 -->
 <chapter id="DocumentManagerPlugin">
   <title>Gestionnaire de Documents</title>
 
   <para>La documentation est probablement le délivrable le plus
-  important d'un projet après le logiciel lui-même. CodeX propose un
+  important d'un projet après le logiciel lui-même. &SYS_PRODUCT_NAME; propose un
   service spécifique pour la gestion de la documentation.</para>
 
-  <para>Bien que le gestionnaire de documents de CodeX ne soit pas
+  <para>Bien que le gestionnaire de documents de &SYS_PRODUCT_NAME; ne soit pas
   comparable à un système de gestion documentaire dédié, il est
   cependant extrêmement pratique pour gérer les documents critiques
   pour votre communauté d'utilisateurs. Quelques exemples : manuel
@@ -282,7 +279,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

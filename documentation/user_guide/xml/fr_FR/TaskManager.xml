@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 
@@ -11,28 +11,28 @@
     <title>Task Manager (deprecated)</title>
 
   <para><tip><title>** The Task Manager is DEPRECATED **</title>
-  <para>In CodeX version 1.7 and above, the Task Manager has been
-  discontinued. It is now replaced by the CodeX Tracker Service (see
+  <para>In &SYS_PRODUCT_NAME; version 1.7 and above, the Task Manager has been
+  discontinued. It is now replaced by the &SYS_PRODUCT_NAME; Tracker Service (see
   <xref linkend="TrackerService"/>). This chapter is included in the
-  CodeX User Guide for projects that originally used the legacy Task
+  &SYS_PRODUCT_NAME; User Guide for projects that originally used the legacy Task
   Manager.</para></tip></para>
 
-  <para>The CodeX Task Manager can be seen as a light weight project
+  <para>The &SYS_PRODUCT_NAME; Task Manager can be seen as a light weight project
   manager. By light weight we mean that it is nowhere near a project
   management software like CA-SuperProject, MS-Project or other
   powerful and complex desktop products available on the market. The
-  CodeX Task Manager cannot build a Gantt or Pert chart, it
+  &SYS_PRODUCT_NAME; Task Manager cannot build a Gantt or Pert chart, it
   doesn&#39;t have any planning capabilities. It is rather a time
   sheet tool which allows project members to track their time and
   manage other things like weekly TODO list for instance.</para>
 
-    <para>However the CodeX Task Manager offer a number of features that makes
+    <para>However the &SYS_PRODUCT_NAME; Task Manager offer a number of features that makes
     it very complementary with the above mentioned project planning tools:</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
       <listitem>
-        <para>Like all CodeX tools, the Task Manager is entirely web based.
+        <para>Like all &SYS_PRODUCT_NAME; tools, the Task Manager is entirely web based.
         Therefore any project member can update his/her time sheet regardless
         of its physical location.</para>
       </listitem>
@@ -50,20 +50,20 @@
 
       <listitem>
         <para>Task data can be collected by the project leader(s) at any point
-        in time and exported out of the CodeX project thanks to the Project
+        in time and exported out of the &SYS_PRODUCT_NAME; project thanks to the Project
         Data Export facility (see <xref linkend="ProjectDataExport" />). This
         allows for easy generation of progress reports or project re-planning.</para>
       </listitem>
     </itemizedlist>
 
-    <para>As mentioned earlier in this document, the CodeX Bug Tracking system
+    <para>As mentioned earlier in this document, the &SYS_PRODUCT_NAME; Bug Tracking system
     has undergone a number of modifications and enhancements derived from the
-    CodeX users feedback. We expect the CodeX Task Manager to evolve in the
+    &SYS_PRODUCT_NAME; users feedback. We expect the &SYS_PRODUCT_NAME; Task Manager to evolve in the
     same way in the near future. We have as an objective to keep it simple
     while providing a better integration with other tools that project teams
     are using for project planning activities. Therefore we value your
     comments on the way you work and how we could make your life easier with
-    CodeX.</para>
+    &SYS_PRODUCT_NAME;.</para>
 
     <section id="TaskManagerPrinciples">
       <title>Task Manager Principles</title>
@@ -76,22 +76,22 @@
 
       <para>Tasks are grouped under subprojects. The experience shows that
       Subprojects generally correspond to high level tasks or modules in the
-      project. Note that, in its current version, the CodeX Task Manager
+      project. Note that, in its current version, the &SYS_PRODUCT_NAME; Task Manager
       offers a one level only hierarchy where to organize your tasks. In other
       words, you cannot create a subproject in an subprojects only tasks.</para>
 
-      <para>As you already know the general rule in CodeX is that, by default,
-      all information is visible to the CodeX community. This principle also
-      applies to the CodeX Task Manager and by default all your project task
-      are visible to the entire CodeX community. If you want some of your
+      <para>As you already know the general rule in &SYS_PRODUCT_NAME; is that, by default,
+      all information is visible to the &SYS_PRODUCT_NAME; community. This principle also
+      applies to the &SYS_PRODUCT_NAME; Task Manager and by default all your project task
+      are visible to the entire &SYS_PRODUCT_NAME; community. If you want some of your
       tasks to be visible only to the project members you can create a private
       subproject and assign the private tasks to it.</para>
 
-      <para><tip><title>The CodeX Task Manager is not a project planning tool</title><para>This
-      is best illustrated by the fact that CodeX does not maintain any kind of
+      <para><tip><title>The &SYS_PRODUCT_NAME; Task Manager is not a project planning tool</title><para>This
+      is best illustrated by the fact that &SYS_PRODUCT_NAME; does not maintain any kind of
       dependency between the task fields that are time related. Starts date,
       end date, percentage complete and total efforts are not inter-dependent.
-      In other words changing any of these values will not cause CodeX to
+      In other words changing any of these values will not cause &SYS_PRODUCT_NAME; to
       compute new values for the other ones. It is entirely up to the project
       members to keep the time related fields in sync.</para></tip></para>
     </section>
@@ -125,7 +125,7 @@
       <para>Also note that, when more than one subproject have been defined by
       the project team, a special subproject item called &#34;All tasks in all
       subprojects&#34; appears at the bottom of the list. This item is
-      generated by CodeX and allows you to access all tasks of all subprojects
+      generated by &SYS_PRODUCT_NAME; and allows you to access all tasks of all subprojects
       at once.</para>
 
       <para>By clicking on one of the subproject label you will then be
@@ -134,8 +134,8 @@
       better define what set of tasks you are interested in. The Task Manager
       doesn&#39;t have the degree of customizability found in the Bug Tracking
       System. As a consequence all the screenshots used in this document that
-      have been taken from a particular project on CodeX will look very
-      similar for any other CodeX hosted project.</para>
+      have been taken from a particular project on &SYS_PRODUCT_NAME; will look very
+      similar for any other &SYS_PRODUCT_NAME; hosted project.</para>
 
       <para>The Task selection and browsing screen offers a set of 3 criteria
       to choose from:</para>
@@ -233,7 +233,7 @@
     <section id="TaskSubmission">
       <title>Task Submission</title>
 
-      <para>First of all it is worth mentioning that unlike most other CodeX
+      <para>First of all it is worth mentioning that unlike most other &SYS_PRODUCT_NAME;
       services, new tasks can only be created by project members with
       appropriate permissions on the Task Manager, not by ordinary registered
       users. To create a new task in a given project, first go to the Project
@@ -245,7 +245,7 @@
       upper part of the screen.</para>
 
       <para><xref linkend="FigureTaskSubmissionScreen" /> shows the task
-      submission screen from one of the CodeX hosted project (the CodeX
+      submission screen from one of the &SYS_PRODUCT_NAME; hosted project (the &SYS_PRODUCT_NAME;
       project itself actually). Let&#39;s review the task fields in order:</para>
 
       <itemizedlist mark="bullet"
@@ -288,7 +288,7 @@
           <para><emphasis role="bold">Dependent on Task</emphasis>: List of
           task(s) the new task depends on. Note that the Task Manager does not
           associate any semantic to the dependency link. It is a very common
-          practice in CodeX to use this dependency relation as a time
+          practice in &SYS_PRODUCT_NAME; to use this dependency relation as a time
           dependency but it can be any kind of dependency you see relevant for
           your own project.</para>
         </listitem>
@@ -328,7 +328,7 @@
       Tasks&#34; shortcut in the Task Manager menu if it&#39;s one of your
       task).</para>
 
-      <para>All the screenshots used in this section assumes that the CodeX
+      <para>All the screenshots used in this section assumes that the &SYS_PRODUCT_NAME;
       user is part of the project team. For non project members the screen
       layout is roughly the same but information shown on the screen cannot be
       changed.</para>
@@ -369,7 +369,7 @@
                           spacing="compact">
               <listitem>
                 <para><emphasis role="underline">None</emphasis>: this value
-                is normally not used in the CodeX system because all new tasks
+                is normally not used in the &SYS_PRODUCT_NAME; system because all new tasks
                 are automatically set to Open (see below). However it is
                 perfectly ok to use it e.g. for tasks that have not yet been
                 assigned or for pending tasks</para>
@@ -440,7 +440,7 @@
       <section id="TaskCCList">
 	      <title>CC List</title>
 	
-	      <para>As the CodeX BTS, the Task Manager offers the same powerful email 
+	      <para>As the &SYS_PRODUCT_NAME; BTS, the Task Manager offers the same powerful email 
 	      notification system (refer to the BTS for more details <xref
 	      linkend="BugCCList" />).</para>
       </section>
@@ -459,12 +459,12 @@
 
         <para>The next section on the task update screen deals with
         task-to-task dependencies (see <xref
-        linkend="FigureTaskUpdateScreenTheTaskDependencies" />). CodeX users
+        linkend="FigureTaskUpdateScreenTheTaskDependencies" />). Codendi users
         have the ability to establish a dependency link from a task to one or
         several other tasks.</para>
 
-        <para>The CodeX system does not impose any semantic on the nature of
-        the dependency links between tasks. However it is a common CodeX
+        <para>The &SYS_PRODUCT_NAME; system does not impose any semantic on the nature of
+        the dependency links between tasks. However it is a common &SYS_PRODUCT_NAME;
         practice to assume a time dependency between the task displayed on the
         screen and the selected tasks in the dependency list. In other words,
         the task in the dependency list must be completed first.</para>
@@ -611,7 +611,7 @@
       <title>Other Configuration Settings</title>
 
         <para>This module allows you to define the following
-        configuration parameters for the CodeX Bug Tracking
+        configuration parameters for the &SYS_PRODUCT_NAME; Bug Tracking
         System:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -635,7 +635,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

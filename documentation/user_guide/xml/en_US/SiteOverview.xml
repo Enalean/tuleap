@@ -3,73 +3,73 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
-  <chapter id="CodeXSiteOverview">
-    <title>CodeX Site Overview</title>
+  <chapter id="CodendiSiteOverview">
+    <title>&SYS_PRODUCT_NAME; Site Overview</title>
 
-    <para>CodeX is a &SYS_ORG_NAME; Web
+    <para>&SYS_PRODUCT_NAME; is a &SYS_ORG_NAME; Web
     Site available at <ulink url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>.
-    To browse the CodeX site use your favorite Web Browser
-    <footnote><para>CodeX uses standard HTML and only a little bit of
+    To browse the &SYS_PRODUCT_NAME; site use your favorite Web Browser
+    <footnote><para>&SYS_PRODUCT_NAME; uses standard HTML and only a little bit of
     Javascript. It is known to work well with Netscape 6.x and 7.x,
     Mozilla/Firefox as well as IE 5 or 6. Other Web Browsers like Opera or Konqueror
-    work as well. CodeX uses very little graphic material and is therefore
+    work as well. &SYS_PRODUCT_NAME; uses very little graphic material and is therefore
     browsable by specific text only browser like those used by visually
-    impaired people.</para></footnote>. CodeX is a rich site and the CodeX
-    User Guide is going to guide you through all the services that the CodeX
-    site has to offer. In order to help you find your way in the CodeX
-    services gallery, <xref linkend="FigureCodeXWebPageFlowChart" /> gives a
+    impaired people.</para></footnote>. &SYS_PRODUCT_NAME; is a rich site and the &SYS_PRODUCT_NAME;
+    User Guide is going to guide you through all the services that the &SYS_PRODUCT_NAME;
+    site has to offer. In order to help you find your way in the &SYS_PRODUCT_NAME;
+    services gallery, <xref linkend="FigureCodendiWebPageFlowChart" /> gives a
     broad overview of the services available as well as a flow chart showing
     how to access a given service.</para>
 
-    <section id="CodeXHomePage">
-      <title>CodeX Home Page</title>
+    <section id="CodendiHomePage">
+      <title>&SYS_PRODUCT_NAME; Home Page</title>
 
       <para>The Home Page is divided in 4 parts (see <xref
-      linkend="FigureTheCodeXHomePage" />):</para>
+      linkend="FigureTheCodendiHomePage" />):</para>
 
       <procedure>
         <step>
-          <para><emphasis role="bold">The CodeX Main Menu</emphasis>:
+          <para><emphasis role="bold">The &SYS_PRODUCT_NAME; Main Menu</emphasis>:
           on the left hand side of the screen or at the top depending
           on the graphical theme in use.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">CodeX Short Introduction</emphasis>: the
+          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Short Introduction</emphasis>: the
           upper central part gives you a brief but pivotal introduction to the
-          CodeX initiative and a series of links to must read documents</para>
+          &SYS_PRODUCT_NAME; initiative and a series of links to must read documents</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">CodeX Latest News</emphasis>: The lower
-          central part shows the last 10 pieces of news related to CodeX
-          hosted projects or to the CodeX site.</para>
+          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Latest News</emphasis>: The lower
+          central part shows the last 10 pieces of news related to &SYS_PRODUCT_NAME;
+          hosted projects or to the &SYS_PRODUCT_NAME; site.</para>
         </step>
 
         <step>
-          <para><emphasis role="bold">The CodeX Dashboard</emphasis>: The
+          <para><emphasis role="bold">The &SYS_PRODUCT_NAME; Dashboard</emphasis>: The
           right hand side of the home page shows a series of statistics about
-          the overall activity of the CodeX Site.</para>
+          the overall activity of the &SYS_PRODUCT_NAME; Site.</para>
         </step>
       </procedure>
     </section>
 
-    <section id="TheCodeXMainMenu">
-      <title>The CodeX Main Menu</title>
+    <section id="TheCodendiMainMenu">
+      <title>The &SYS_PRODUCT_NAME; Main Menu</title>
 
-      <para>The CodeX main menu is a permanent piece of information that
-      you&#39;ll always see on your screen wherever you are in the CodeX site.
+      <para>The &SYS_PRODUCT_NAME; main menu is a permanent piece of information that
+      you&#39;ll always see on your screen wherever you are in the &SYS_PRODUCT_NAME; site.
       Its content can vary according to where you and who you are. In other
       words it is context sensitive. Let&#39;s take 2 examples:</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para>If you are visiting the CodeX site as an anonymous user the
+          <para>If you are visiting the &SYS_PRODUCT_NAME; site as an anonymous user the
           upper part of the menu invites you to login or to create a new
           account whereas if you are logged in you&#39;ll be given access to
           other functions like Logout, Account Maintenance, Personal Page,
@@ -78,7 +78,7 @@
 
         <listitem>
           <para>Similarly if you decide to visit a given project
-          hosted on CodeX, the menu at the top of the screen will also
+          hosted on &SYS_PRODUCT_NAME;, the menu at the top of the screen will also
           show you the list of services available for this
           project.</para>
         </listitem>
@@ -88,8 +88,8 @@
       permanent and context independent. Other menu items are described later
       in the document in the related service description.</para>
 
-      <figure id="FigureCodeXWebPageFlowChart">
-        <title>CodeX Web Page Flow Chart</title>
+      <figure id="FigureCodendiWebPageFlowChart">
+        <title>&SYS_PRODUCT_NAME; Web Page Flow Chart</title>
 
         <mediaobject>
           <imageobject>
@@ -103,7 +103,7 @@
       <section id="SoftwareMap">
         <title>Software Map (or Project Tree)</title>
 
-        <para>The Software Map is a pivotal service in CodeX that you can
+        <para>The Software Map is a pivotal service in &SYS_PRODUCT_NAME; that you can
         (should) use to determine if there are some pieces of software that
         you can re-use for your own work. The Software Map is one of the 2
         ways by which you can search for existing software projects. The other
@@ -171,10 +171,10 @@
         values defined by the site administrator. The &#34;Topic&#34;
         criterion reflects the domain covered by your project (Printing,
         Scanning, Information Technology, etc.) and it follows a hierarchy of
-        domains and sub-domains that the CodeX Team constantly refines as more
+        domains and sub-domains that the &SYS_PRODUCT_NAME; Team constantly refines as more
         projects are coming.</para>
 
-        <para>Using the Software Map you can browse CodeX hosted projects
+        <para>Using the Software Map you can browse &SYS_PRODUCT_NAME; hosted projects
         according to any of these criteria. As you explore the map, projects
         matching the criteria are listed on the screen with their name,
         description, creation date, activity percentile, and other
@@ -182,7 +182,7 @@
         listed right after the project name and description. Notice that next
         to each criteria value is a [Filter] hyperlink. Clicking on any of
         these filters will result in restricting the project list to those
-        that match the filter. CodeX project templates or test projects 
+        that match the filter. &SYS_PRODUCT_NAME; project templates or test projects 
 	(see <xref linkend="ProjectType" />) are not listed in the Software Map.</para>
 
         <para>A Software Map browsing sample is shown on <xref
@@ -209,7 +209,7 @@
         browsing operation on the Software Map you can save it in your
         Personal Page. To do this, first execute your software map request as
         explained above and when you are happy with the selection criteria,
-        click on the Bookmark This Page item in the CodeX Main Menu. This will
+        click on the Bookmark This Page item in the &SYS_PRODUCT_NAME; Main Menu. This will
         make a new link appear in your Personal Page that you can then edit to
         give it an appropriate description.</para></tip></para>
       </section>
@@ -217,15 +217,15 @@
       <section id="TheCodeSnippetLibrary">
         <title>The Code Snippet Library</title>
 
-        <para>A project hosted on CodeX has the ability to use a large
+        <para>A project hosted on &SYS_PRODUCT_NAME; has the ability to use a large
         spectrum of services. However not all pieces of software worth sharing
         require such a rich environment. Sharing a very short piece of source
         code like a macro, a function or a shell script has to be quick and
         easy. This is precisely the role of the Code Snippet Library.</para>
 
-        <para>The Code Snippet Library can be accessed via the CodeX Main Menu
+        <para>The Code Snippet Library can be accessed via the &SYS_PRODUCT_NAME; Main Menu
         on the left hand side of the screen under the Software section (see
-        <xref linkend="FigureTheCodeXHomePage" />)</para>
+        <xref linkend="FigureTheCodendiHomePage" />)</para>
 
         <section id="CodeSnippetBrowsing">
           <title>Code Snippet Browsing</title>
@@ -246,7 +246,7 @@
             </listitem>
 
             <listitem>
-              <para>Use the Search box in the CodeX Main menu on the left hand
+              <para>Use the Search box in the &SYS_PRODUCT_NAME; Main menu on the left hand
               side or on the upper right corner of the screen. Keywords typed are 
               search in the code snippet title and in the code snippet description.
               </para>
@@ -280,19 +280,19 @@
           a new Snippet&#34; link in the Code Snippet Menu at the
           top of the screen. Provide the code snippet title and
           description. You can use Web locations (URLs) in the
-          description field. CodeX will automatically turn them into
+          description field. &SYS_PRODUCT_NAME; will automatically turn them into
           hyperlinks in the final version. Also provide the code
           snippet type, programming language and category as
           requested.  Should a category or a programming language be
           missing when you submit a new code snippet please contact
-          the CodeX team.</para>
+          the &SYS_PRODUCT_NAME; team.</para>
 
           <para>It is highly recommended that you provide a version number as
           well. This version number is a free text field and can have any kind
           of value. Using a version number is useful if you want to post a
           newer version in the future. We also recommend that you indicate the
           same version number in the source code associated with the snippet
-          so that CodeX users can determine whether they already have the
+          so that &SYS_PRODUCT_NAME; users can determine whether they already have the
           latest version the next time they visit the Code Snippet Library.</para>
 
           <para>The code snippet itself can be submitted either by simply
@@ -308,7 +308,7 @@
           use proprietary and non human readable format for their source
           files. In any case <emphasis role="underline">do not</emphasis>
           post pure binary code like compiled C, C++,Java,... The Code Snippet
-          Library, like CodeX, is about sharing and reusing software code not
+          Library, like &SYS_PRODUCT_NAME;, is about sharing and reusing software code not
           binary.</para>
         </section>
 
@@ -324,7 +324,7 @@
           associated with the new version.</para>
 
           <note><para>Please note that even though this is still the
-          same code snippet, CodeX assigns a new code snippet version ID number to
+          same code snippet, &SYS_PRODUCT_NAME; assigns a new code snippet version ID number to
           each version. So referencing a new version in a Code Snippet Package
           (see section Grouping Code Snippets below) will require that you
           delete the old version and add the new one.</para></note>
@@ -382,12 +382,12 @@
       <section id="HelpIndex">
         <title>Help Index</title>
 
-        <para>CodeX comes with a comprehensive User Guide that fully
-        describes all the CodeX tools and services. A click on the
+        <para>&SYS_PRODUCT_NAME; comes with a comprehensive User Guide that fully
+        describes all the &SYS_PRODUCT_NAME; tools and services. A click on the
         &#34;Help Index&#34; link will direct you to the table of
-        content of the CodeX User Guide. The same user guide is used
-        throughout the CodeX site in the &#34;Help&#34; links that you'll find
-        in almost every menu appearing on CodeX. A PDF version of the
+        content of the &SYS_PRODUCT_NAME; User Guide. The same user guide is used
+        throughout the &SYS_PRODUCT_NAME; site in the &#34;Help&#34; links that you'll find
+        in almost every menu appearing on &SYS_PRODUCT_NAME;. A PDF version of the
         integral user guide is also available in the &#34;Site
         Documentation&#34; section.</para>
       </section>
@@ -396,38 +396,38 @@
         <title>Site Documentation</title>
 
         <para>The &#34;Site Documentation&#34; pointer is the entry point to the
-        CodeX documentation. The CodeX documentation is entirely
+        &SYS_PRODUCT_NAME; documentation. The &SYS_PRODUCT_NAME; documentation is entirely
         managed via the Document Manager (see <xref
-        linkend="DocumentManager" />) service of the CodeX project,
-        which is of course hosted on CodeX. The documents on this page
-        cover all the CodeX site. It includes presentation material,
+        linkend="DocumentManager" />) service of the Codendi project,
+        which is of course hosted on &SYS_PRODUCT_NAME;. The documents on this page
+        cover all the &SYS_PRODUCT_NAME; site. It includes presentation material,
         the user guide and other important documents. Read them
         carefully.</para>
       </section>
 
       <section>
-        <title>CodeX Developers Channels</title>
+        <title>&SYS_PRODUCT_NAME; Developers Channels</title>
 
-        <para>One of the top priority objectives of the CodeX site is
+        <para>One of the top priority objectives of the &SYS_PRODUCT_NAME; site is
         to become a discussion forum for the software developers
         regardless of the organization they belong to and the country
         they work in.</para>
 
-        <para>To this end the CodeX Team has created a series of mailing lists
-        (called Developers Channels) where anybody, including non-CodeX users,
+        <para>To this end the &SYS_PRODUCT_NAME; Team has created a series of mailing lists
+        (called Developers Channels) where anybody, including non-&SYS_PRODUCT_NAME; users,
         can subscribe. Each channel is dedicated to a given software related
         topic. The creation of a new channel is under the responsibility of
-        the CodeX Team. If you want to create a new developers channel please
-        contact the CodeX Team at <email>&SYS_EMAIL_CONTACT;</email>.</para>
+        the &SYS_PRODUCT_NAME; Team. If you want to create a new developers channel please
+        contact the &SYS_PRODUCT_NAME; Team at <email>&SYS_EMAIL_CONTACT;</email>.</para>
 
-        <para>The Developers Channels managed on CodeX offer a number
+        <para>The Developers Channels managed on &SYS_PRODUCT_NAME; offer a number
         of interesting features:</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
           <listitem>
             <para>Subscription and Un-subscription are entirely user driven
-            and it can be done through the CodeX Web interface without any
+            and it can be done through the &SYS_PRODUCT_NAME; Web interface without any
             assistance.</para>
           </listitem>
 
@@ -444,17 +444,17 @@
         </itemizedlist>
       </section>
 
-      <section id="CodeXDiscussionForums">
-        <title>CodeX Discussion Forums</title>
+      <section id="CodendiDiscussionForums">
+        <title>&SYS_PRODUCT_NAME; Discussion Forums</title>
 
         <para>Discussion Forums are an alternate way to keep in touch with the
-        CodeX community. The CodeX Discussion Forums were created primarily as
-        a communication vehicle between the CodeX users and the CodeX Team.
+        &SYS_PRODUCT_NAME; community. The &SYS_PRODUCT_NAME; Discussion Forums were created primarily as
+        a communication vehicle between the &SYS_PRODUCT_NAME; users and the &SYS_PRODUCT_NAME; Team.
         These are general purpose Forums where you can ask for Help with
-        CodeX, suggest new features, new categories for the software map, etc.</para>
+        &SYS_PRODUCT_NAME;, suggest new features, new categories for the software map, etc.</para>
 
         <para>These Forums are entirely Web based which means that you have to
-        use the CodeX Web interface to post and read user messages. However
+        use the &SYS_PRODUCT_NAME; Web interface to post and read user messages. However
         Forums also offer the ability to be monitored, which means that all
         traffic will be sent to you via e-mail.</para>
 
@@ -464,7 +464,7 @@
         <title>Contact Us</title>
 
         <para>In addition to the Discussion Forums, you can always use
-        the &#34;Contact Us&#34; link to get in touch with the CodeX
+        the &#34;Contact Us&#34; link to get in touch with the &SYS_PRODUCT_NAME;
         Team.</para>
 
         <para>Do not hesitate to bug the &#34;Contact Us&#34; link. We are
@@ -475,8 +475,8 @@
       <section id="TheSearchFacility">
         <title>The Search Facility</title>
 
-        <para>CodeX allows you to search almost any piece of CodeX information
-        through a keyword search mechanism. When you are on the CodeX Home
+        <para>&SYS_PRODUCT_NAME; allows you to search almost any piece of &SYS_PRODUCT_NAME; information
+        through a keyword search mechanism. When you are on the &SYS_PRODUCT_NAME; Home
         Page you can search for keywords in the following resources:</para>
 
         <itemizedlist mark="bullet"
@@ -491,7 +491,7 @@
 
           <listitem>
             <para><emphasis role="bold">Code Snippet Library</emphasis>: Code
-            snippets are small pieces of code that you can post on CodeX (see
+            snippets are small pieces of code that you can post on &SYS_PRODUCT_NAME; (see
             <xref linkend="TheCodeSnippetLibrary" />) along with a
             description. You can search this description by keywords are see
             if there are code snippets that you can re-use to ease your job.</para>
@@ -499,7 +499,7 @@
 
           <listitem>
             <para role=""><emphasis role="bold">People</emphasis>: keywords
-            will be searched in the CodeX user database and matched against
+            will be searched in the &SYS_PRODUCT_NAME; user database and matched against
             the user&#39;s login name, real name and e-mail address.</para>
           </listitem>
           
@@ -511,7 +511,7 @@
 
           <listitem>
             <para><emphasis role="bold">This tracker</emphasis>: If
-            you enter any tracker in any CodeX project, the &#34;This
+            you enter any tracker in any &SYS_PRODUCT_NAME; project, the &#34;This
             Tracker&#34; item will show up in the search box, allowing
             you to actually search this tracker database.</para>
           </listitem>
@@ -519,22 +519,22 @@
       </section>
     </section>
 
-    <section id="TheCodeXDashboard">
-      <title>The CodeX Dashboard</title>
+    <section id="TheCodendiDashboard">
+      <title>The &SYS_PRODUCT_NAME; Dashboard</title>
 
-      <para>The CodeX Dashboard resides on the right hand side of the CodeX
-      Home Page. It is a sort of a fish-eye view of the global CodeX activity.
+      <para>The &SYS_PRODUCT_NAME; Dashboard resides on the right hand side of the &SYS_PRODUCT_NAME;
+      Home Page. It is a sort of a fish-eye view of the global &SYS_PRODUCT_NAME; activity.
       Several indicators are available:</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para><emphasis role="bold">CodeX Statistics</emphasis>: give the
+          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Statistics</emphasis>: give the
           total number of hosted projects (excluding those that have a private
           status, as well as template and test projects), the total number 
 	  of registered users, the total number of
           software packages downloaded and the total number of Web pages
-          browsed by CodeX users since the site opening.</para>
+          browsed by &SYS_PRODUCT_NAME; users since the site opening.</para>
         </listitem>
 
         <listitem>
@@ -546,9 +546,9 @@
         <listitem>
           <para><emphasis role="bold">Newest Releases</emphasis>: shows
           a list of the most recent software releases (also known as
-          new versions) that have been posted on the CodeX site by the
+          new versions) that have been posted on the &SYS_PRODUCT_NAME; site by the
           various projects. If you want to keep aware of new incoming
-          releases visit this page on a regular basis. CodeX also
+          releases visit this page on a regular basis. &SYS_PRODUCT_NAME; also
           allows you to monitor the new software releases posted by a
           given project. To do so go to the Project Summary page of
           this project by clicking on the project title and then
@@ -565,7 +565,7 @@
           <para><emphasis role="bold">Newest Projects</emphasis>: the last 10
           registered projects. Looking at this part of the dashboard on a
           regular basis will help you to keep informed on the new projects
-          hosted on CodeX.</para>
+          hosted on &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
         <listitem>
@@ -577,21 +577,21 @@
           CVS/Subversion transactions, the number of bugs and tasks
           submitted or modified, the number of file releases, etc. Looking at
           this list is an excellent way to see which projects are actively
-          working on CodeX.</para>
+          working on &SYS_PRODUCT_NAME;.</para>
         </listitem>
       </itemizedlist>
 
-      <para>As a conclusion, we strongly advise you to visit the CodeX Home
+      <para>As a conclusion, we strongly advise you to visit the &SYS_PRODUCT_NAME; Home
       Page on a regular basis for it gives you an excellent idea of what is
       going on in terms of software development across &SYS_ORG_NAME;.</para>
 
-      <para><emphasis role="underline">Bookmark This Page</emphasis>: Make CodeX your
+      <para><emphasis role="underline">Bookmark This Page</emphasis>: Make &SYS_PRODUCT_NAME; your
       browser home page :-)</para>
     </section>
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

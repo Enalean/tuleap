@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 
@@ -11,19 +11,19 @@
     <title>Patch Manager (deprecated)</title>
 
     <para><tip><title>** The Patch Manager is DEPRECATED
-      **</title> <para>In CodeX version 2.4 and above, the Patch Manager
-      has been discontinued. It is now replaced by the CodeX
+      **</title> <para>In &SYS_PRODUCT_NAME; version 2.4 and above, the Patch Manager
+      has been discontinued. It is now replaced by the &SYS_PRODUCT_NAME;
       Tracker Service (see <xref linkend="TrackerService"/>). This chapter
-      is included in the CodeX User Guide for projects that originally
+      is included in the &SYS_PRODUCT_NAME; User Guide for projects that originally
       used the legacy Patch Manager.</para></tip></para>
 
 
     <section id="HowToSubmitSourceCodeContribution">
       <title>How To Submit Source Code Contribution</title>
 
-      <para>CodeX gives you an unparalleled ability to learn from the source
+      <para>&SYS_PRODUCT_NAME; gives you an unparalleled ability to learn from the source
       code of others by making source code sharing a common practice at &SYS_ORG_NAME;.
-      When you re-use a piece of code from CodeX, the Code eXchange Policy
+      When you re-use a piece of code from &SYS_PRODUCT_NAME;, the Code eXchange Policy
       specifies that any modification you&#39;ve made to the original source
       code must be returned to the original team.</para>
 
@@ -32,7 +32,7 @@
 
       <procedure>
         <step>
-          <para>The submission of source code modifications by CodeX users</para>
+          <para>The submission of source code modifications by &SYS_PRODUCT_NAME; users</para>
         </step>
 
         <step>
@@ -45,12 +45,12 @@
 
       <note><para><emphasis role="underline">A note to the project team</emphasis></para>
       <para>Receiving
-      source code modifications or other contributions from other CodeX users
+      source code modifications or other contributions from other &SYS_PRODUCT_NAME; users
       does not imply that you have to accept the new code and insert it in
       your main source tree. It is up to the project team to decide what to do
       with it. One of the interesting features of the Patch Manager is that
       submitted patches are available to anybody at all time regardless of the
-      final decision of the project team. Therefore any CodeX visitor is free
+      final decision of the project team. Therefore any &SYS_PRODUCT_NAME; visitor is free
       to download any submitted patch and apply it onto its own version of the
       software even if the project team has decided not to apply the patch on
       the main source tree.</para></note>
@@ -59,7 +59,7 @@
     <section id="PatchBrowsing">
       <title>Patch Browsing</title>
 
-      <para><emphasis>Audience: project members and CodeX users</emphasis></para>
+      <para><emphasis>Audience: project members and &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>To access the Patch Manager select the &#34;Patches&#34; item from
       the Project Menu at the top of the screen of the Project Summary page.
@@ -88,7 +88,7 @@
             <listitem>
               <para><emphasis role="underline">Deleted</emphasis>: the project
               team rejected the patch. It is marked as deleted but it is still
-              visible to the CodeX users and it can be downloaded</para>
+              visible to the &SYS_PRODUCT_NAME; users and it can be downloaded</para>
             </listitem>
 
             <listitem>
@@ -137,7 +137,7 @@
     <section id="PatchSubmission">
       <title>Patch Submission</title>
 
-      <para><emphasis>Audience: project members and CodeX users</emphasis></para>
+      <para><emphasis>Audience: project members and &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>In most cases, registered users who are not part of the project
       team submit source code patches. However this service can also be used
@@ -204,7 +204,7 @@
     <section id="PatchManagerE-mailNotification">
       <title>E-mail Notification</title>
 
-      <para>Like other CodeX services the CodeX Patch Manager is equipped with
+      <para>Like other &SYS_PRODUCT_NAME; services the &SYS_PRODUCT_NAME; Patch Manager is equipped with
       an e-mail notification system. The e-mail notification system follows
       very simple rules. Each time a patch is submitted or updated - whether
       with an additional follow-up comment, with a change in any of the patch
@@ -228,7 +228,7 @@
           Settings&#34; screen of the Patch Administration module (see <xref
           linkend="PatchManagerOtherConfigurationSettings" />). These e-mail
           addresses can be any email address you want including a distribution
-          list that was created with the CodeX Mailing List manager (see <xref
+          list that was created with the &SYS_PRODUCT_NAME; Mailing List manager (see <xref
           linkend="MailingLists" />) or via MS-Exchange.</para>
         </listitem>
       </itemizedlist>
@@ -287,7 +287,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

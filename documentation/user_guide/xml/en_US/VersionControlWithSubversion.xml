@@ -3,15 +3,15 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="VersionControlWithSubversion">
   <title>Version Control with Subversion</title>
 
   <para>This chapter is not a Subversion Tutorial. It focuses on the
-  integration of Subversion with CodeX and how to use it in an optimal
+  integration of Subversion with &SYS_PRODUCT_NAME; and how to use it in an optimal
   way in this context. If you are not familiar with Subversion we
   warmly advise you to first read some of the documents listed in the
   references section (see <xref linkend="SubversionReferences" />).</para>
@@ -84,7 +84,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Atomic commits</emphasis>: although
-	CodeX provides an additional layer on top of CVS which gives
+	&SYS_PRODUCT_NAME; provides an additional layer on top of CVS which gives
 	an atomic view of the commits, CVS itself has no notion of the
 	fact that you may have committed a dozen file at the same time
 	to fix a single bug. Subversion on the contrary stamps the
@@ -137,10 +137,10 @@
 
       <listitem>
 	<para><emphasis role="bold">Fine grain access
-	control</emphasis>: in its CodeX incarnation, your Subversion
+	control</emphasis>: in its &SYS_PRODUCT_NAME; incarnation, your Subversion
 	repository operates on top of the HTTP (or HTTPS) protocol and
 	it therefore take advantage of the rich HTTP authentication
-	mechanism. As a result CodeX allows you to fine tune who has
+	mechanism. As a result &SYS_PRODUCT_NAME; allows you to fine tune who has
 	access to which part of your Subversion repository whether for
 	read, write or no access at all.</para>
       </listitem>
@@ -160,9 +160,9 @@
       <title>Subversion Clients</title>
 
       <para>Subversion has a client-server architecture. In other
-      words, CodeX developers who want to interact with the Subversion
+      words, &SYS_PRODUCT_NAME; developers who want to interact with the Subversion
       repository of their project must have Subversion installed on
-      their desktop machine, hereafter called client. The CodeX server
+      their desktop machine, hereafter called client. The &SYS_PRODUCT_NAME; server
       permanently runs a Subversion server in the background to which
       Subversion clients talk to to act upon the Subversion
       repository. Subversion clients come in various flavors for all
@@ -196,15 +196,15 @@
 	those graphical clients.</para>
       </section>
 
-      <section id="SettingUprapidSVNforCodeX">
-	<title>Setting up rapidSVN for CodeX</title>
+      <section id="SettingUprapidSVNforCodendi">
+	<title>Setting up rapidSVN for &SYS_PRODUCT_NAME;</title>
 
         <para>As mentioned above, rapidSVN is the graphical user
         interface that comes with Subversion for Linux and
         Windows. Below are all the instructions needed to get rapidSVN
-        running on a CodeX project. In the instructions below,
-        "username" is the CodeX user login name, and "projectname" is
-        the CodeX short project name the user is working on.</para>
+        running on a &SYS_PRODUCT_NAME; project. In the instructions below,
+        "username" is the &SYS_PRODUCT_NAME; user login name, and "projectname" is
+        the &SYS_PRODUCT_NAME; short project name the user is working on.</para>
 
         <itemizedlist mark="bullet">
         <listitem>
@@ -225,7 +225,7 @@
 
         <listitem>
 	  <para>Click on the new bookmark corresponding to your
-	  repository and type you CodeX user name and password when
+	  repository and type you &SYS_PRODUCT_NAME; user name and password when
 	  asked to. You should now be able to browse the repository
 	  and see the file status and revision history.
           </para>
@@ -290,13 +290,13 @@
     </section>
   </section>
 
-  <section id="SubversionIntegrationinCodeX">
-    <title>Subversion Integration in CodeX</title>
+  <section id="SubversionIntegrationinCodendi">
+    <title>Subversion Integration in &SYS_PRODUCT_NAME;</title>
 
     <section id="TheSubversionRepository">
       <title>The Subversion Repository</title>
 
-      <para>Whenever a new project is hosted on CodeX, a new
+      <para>Whenever a new project is hosted on &SYS_PRODUCT_NAME;, a new
       Subversion repository is automatically created and properly
       initialized. Each project has its own Subversion repository as
       opposed to what happens in most Subversion servers, where
@@ -309,8 +309,8 @@
 
       <note><para>All interactions with a Subversion repository should
       normally happen through a Subversion client. However if need be
-      and if this feature is available on your CodeX server, you can
-      get access to your Subversion repository via your CodeX shell
+      and if this feature is available on your &SYS_PRODUCT_NAME; server, you can
+      get access to your Subversion repository via your &SYS_PRODUCT_NAME; shell
       account (see <xref linkend="ShellAccount" />). Once the shell
       session is active you'll find your subversion repository under
       <literal>/svnroot/projectname</literal> you should never do that
@@ -331,7 +331,7 @@
       that you follow this best practice.</para>
 
 
-      <para>If you expect your CodeX project to manage only one
+      <para>If you expect your &SYS_PRODUCT_NAME; project to manage only one
       project deliverable then you can create the following top-level
       directories in your repository:</para>
 
@@ -346,7 +346,7 @@
       and <literal>/tags</literal> contains tag copies of your source
       code that generally correspond to a given release.</para>
 
-      <para>If you expect your CodeX project to manage several
+      <para>If you expect your &SYS_PRODUCT_NAME; project to manage several
       software deliverables that are managed independently one from
       each other, then it is often a good idea to first create
       top-level directories that carry the name of the sub-project and
@@ -374,7 +374,7 @@
   <section id="SubversionBrowsingInterface">
     <title>The Subversion Browsing Interface</title>
 
-    <para>CodeX offers a number a facilities that allow you to
+    <para>&SYS_PRODUCT_NAME; offers a number a facilities that allow you to
     interact with your Subversion repository through the Web
     interface. The Subversion Web interface does not intend to replace
     the Subversion client that you should normally use on your desktop
@@ -384,14 +384,14 @@
     <para>The Subversion Web interface can be accessed via the
     &#34;Subversion&#34; item in the Project Main Menu or via the
     Subversion service listed in the Public Area (see <xref
-    linkend="FigureASampleProjectSummaryPage" />). The CodeX
-    Subversion Web interface provides the following features to CodeX
+    linkend="FigureASampleProjectSummaryPage" />). The Codendi
+    Subversion Web interface provides the following features to &SYS_PRODUCT_NAME;
     end-users:</para>
 
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Accessing the Subversion
-	repository</emphasis>: The welcome page of the CodeX
+	repository</emphasis>: The welcome page of the &SYS_PRODUCT_NAME;
 	Subversion service gives you all the information you need to
 	access the Subversion repository from your Subversion
 	client. Among other things it tells you what the Subversion
@@ -412,7 +412,7 @@
 	<para><emphasis role="bold">Querying Subversion </emphasis>:
 	If the Subversion tracking feature has been activated for your
 	project all Subversion events (commit, file addition or
-	deletion) are tracked down in the CodeX database. This audit
+	deletion) are tracked down in the &SYS_PRODUCT_NAME; database. This audit
 	trail can be searched using several criteria.</para>
       </listitem>
 
@@ -420,7 +420,7 @@
 	<para><emphasis role="bold">Subversion Administration
 	</emphasis>: this service allows project administrator to
 	perform the most common Subversion administration and
-	configuration tasks from the CodeX Web interface (for more
+	configuration tasks from the &SYS_PRODUCT_NAME; Web interface (for more
 	details see <xref
 	linkend="SubversionAdministrationInterface"/>).</para>
       </listitem>
@@ -432,8 +432,8 @@
     <title>Browsing The Subversion Repository</title>
 
     <para>In order to interact with the Subversion repository of any
-    CodeX-hosted project, you normally need to have Subversion installed on
-    your machine.  However CodeX also offers a built-in Web browsing
+    &SYS_PRODUCT_NAME;-hosted project, you normally need to have Subversion installed on
+    your machine.  However &SYS_PRODUCT_NAME; also offers a built-in Web browsing
     interface to the Subversion repository which allows you to navigate in
     the source code, download it, view a file history or compare two
     revisions of the same file.</para>
@@ -532,10 +532,10 @@
       when reading the artifact description it is also very helpful to
       immediately see how the change was implemented.</para>
 
-      <para>The integration of Subversion in CodeX precisely provides
-      CodeX users with this bi-directional cross-referencing
+      <para>The integration of Subversion in &SYS_PRODUCT_NAME; precisely provides
+      &SYS_PRODUCT_NAME; users with this bi-directional cross-referencing
       mechanism. This is achieved through the use of reference patterns
-      that are automatically detected by CodeX in either the follow-up
+      that are automatically detected by &SYS_PRODUCT_NAME; in either the follow-up
       comments of the project artifacts or in the messages attached to
       a Subversion commit.</para>
       
@@ -551,7 +551,7 @@
 	  #12&#34;, etc.).  If you don't know the tracker short name
 	  or don't want to specify it, you may simply use &#34;art
 	  #NNN&#34;. When browsing a message containing this pattern
-	  anywhere in CodeX, the pattern will be automatically
+	  anywhere in &SYS_PRODUCT_NAME;, the pattern will be automatically
 	  transformed into an hyperlink to the artifact
 	  description.</para>
 	</listitem>
@@ -560,7 +560,7 @@
 	  <para><emphasis role="bold">revision #YYY or 
 	  rev #YYY</emphasis>: this pattern refers to the commit YYY where
 	  YYY is the commit revision number. When browsing a message
-	  containing this pattern anywhere in CodeX, the pattern will
+	  containing this pattern anywhere in &SYS_PRODUCT_NAME;, the pattern will
 	  be automatically transformed into an hyperlink to the commit
 	  description which include log messages, impacted files,
 	  versions and author of the change(see <xref
@@ -568,7 +568,7 @@
 	</listitem>
 
         <listitem>
-        <para>The CodeX reference mechanism allows cross-referencing with any CodeX object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
+        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
         </listitem>
       </itemizedlist>
 
@@ -600,7 +600,7 @@
   <section id="SubversionAdministrationInterface">
     <title>Subversion Administration Interface</title>
 
-    <para>Through the CodeX Web interface, project administrators can
+    <para>Through the &SYS_PRODUCT_NAME; Web interface, project administrators can
     perform the most common administration and configuration tasks on
     their Subversion repository. The administration functions can be
     accessed through the <literal>SVN Admin</literal> menu item in the
@@ -622,8 +622,8 @@
 	    interface.</para>
 
 	    <para>If you activate the Subversion tracking (default)
-	    for your project CodeX will also keep track of all the
-	    code changes in the CodeX database. This will give you
+	    for your project &SYS_PRODUCT_NAME; will also keep track of all the
+	    code changes in the &SYS_PRODUCT_NAME; database. This will give you
 	    extra capabilities on your Subversion repository as
 	    explained in <xref linkend="QueryingSubversion" />.</para>
 	  </listitem>
@@ -633,8 +633,8 @@
 	    Preamble</emphasis>: In some cases (e.g. when your project
 	    already has its own subversion server in place), the
 	    project Subversion repository might not be hosted by the
-	    CodeX server. In this case, the Subversion information
-	    displayed in the welcome page of the CodeX Subversion
+	    &SYS_PRODUCT_NAME; server. In this case, the Subversion information
+	    displayed in the welcome page of the &SYS_PRODUCT_NAME; Subversion
 	    service are inadequate. Fortunately, the project
 	    administrator can customize the Subversion Information
 	    page here.</para>
@@ -666,7 +666,7 @@
 
 	  <listitem>
 	    <para><emphasis role="bold">Anonymous Users</emphasis>:
-	    users who have not registered with CodeX (or are not
+	    users who have not registered with &SYS_PRODUCT_NAME; (or are not
 	    logged in) have <emphasis role="underline">no access at
 	    all</emphasis> to the Subversion repositories.</para>
 	  </listitem>
@@ -686,7 +686,7 @@
 	    linkend="ClassesOfCitizens" />), then there is no 
         access for non project members by default.</para></note>
         <note><para><emphasis role="bold">Note</emphasis>: all
-	    source code accesses are recorded by CodeX. Project
+	    source code accesses are recorded by &SYS_PRODUCT_NAME;. Project
 	    administrators always have access to the list of people
 	    who accessed the source code (see <xref
 	    linkend="SourceCodeAccessLogs" />).</para></note>
@@ -694,7 +694,7 @@
 
 	  <listitem>
 	    <para><emphasis role="bold">Project Members</emphasis>:
-	    members of a CodeX hosted project are granted a password
+	    members of a &SYS_PRODUCT_NAME; hosted project are granted a password
 	    protected read/write access. As mentioned above in the
 	    section about private projects, it is also possible to
 	    grant read-only access to the project members.</para>
@@ -710,9 +710,9 @@
       <section id="CustomizedSubversionAccessPermissions">
 	<title>Customized Access Permissions</title>
 
-	<para>Thanks to the integration of Subversion in the CodeX
+	<para>Thanks to the integration of Subversion in the &SYS_PRODUCT_NAME;
 	environment, project administrators can redefine access
-	permissions for some or all CodeX users.</para>
+	permissions for some or all &SYS_PRODUCT_NAME; users.</para>
 
 	<para>This can be achieved by specifying access permission
 	rules that will complement or even override the default
@@ -734,7 +734,7 @@ name = permission
 	  permissions.</para></listitem>
 
 	  <listitem>
-	    <para><literal>name</literal> is either a CodeX login name
+	    <para><literal>name</literal> is either a &SYS_PRODUCT_NAME; login name
 	    or group name. The name * (star) means any registered
 	    user.</para>
 
@@ -750,7 +750,7 @@ groupname = username1,username2,...
       </programlisting>
 
 	    <para>All project defined user groups (see <xref linkend="UserGroups" />) are 
-		also defined in the CodeX default permissions settings and ready to use
+		also defined in the &SYS_PRODUCT_NAME; default permissions settings and ready to use
 		if you wish to redefine access permissions.</para>
 
 	  </listitem>
@@ -762,7 +762,7 @@ groupname = username1,username2,...
 	</itemizedlist>
 
 	<para>As an illustration, the default permission settings of a
-	CodeX repository as explained in the previous section are
+	&SYS_PRODUCT_NAME; repository as explained in the previous section are
 	expressed through the following set of rules:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -775,7 +775,7 @@ members = member1,member2,...,memberN
       </programlisting>
 
 	<para>where <literal>member1,member2,...,memberN</literal> are
-	the CodeX login name of the CodeX project members.</para>
+	the &SYS_PRODUCT_NAME; login name of the &SYS_PRODUCT_NAME; project members.</para>
         <para>Additionally, all existing
         user groups defined in this project are listed in this section.</para>
         <para>These default permission settings are automatically generated, and cannot
@@ -799,7 +799,7 @@ members = member1,member2,...,memberN
 @members = rw
       </programlisting>
       <para>will indeed prevent registered users from reading the '/secret' directory.</para>
-      <para>If you really need to prevent access to the whole repository, you should contact a CodeX administrator (s/he will create a .CODEX_PRIVATE file in the repository).</para>
+      <para>If you really need to prevent access to the whole repository, you should contact a &SYS_PRODUCT_NAME; administrator (s/he will create a .CODEX_PRIVATE file in the repository).</para>
 	<para>For more information about the format of this file you
 	should refer to the Subversion Book (see <xref
 	linkend="SubversionReferences" />).</para>
@@ -811,8 +811,8 @@ members = member1,member2,...,memberN
       <section id="SubversionEmailNotification">
 	<title>Subversion Email Notification</title>
 
-	<para>In addition to tracking the changes in the CodeX
-	database, CodeX can also send a nicely formatted email message
+	<para>In addition to tracking the changes in the &SYS_PRODUCT_NAME;
+	database, &SYS_PRODUCT_NAME; can also send a nicely formatted email message
 	to individual email addresses or mailing lists each time there
 	is a change in the source code. The email message contains
 	the log message, the author of the change, the list of
@@ -849,10 +849,10 @@ members = member1,member2,...,memberN
 	generate email notification for the changes made in your
 	Subversion repository, it is a good practice to create a
 	specific mailing list called
-	<literal>projectname-svnevents</literal>. By doing so, CodeX
+	<literal>projectname-svnevents</literal>. By doing so, &SYS_PRODUCT_NAME;
 	users and project members interested in receiving the email
 	notification just need to subscribe to the mailing list. In
-	addition, the CodeX mailing list manager will archive all the
+	addition, the &SYS_PRODUCT_NAME; mailing list manager will archive all the
 	email messages which can prove very useful for future
 	reference.  See <xref linkend="MailingLists" /> for mailing
 	list creation.</para></tip></para>
@@ -867,7 +867,7 @@ members = member1,member2,...,memberN
     <para>As stated earlier, the intent of this chapter is not to give
     a formal Subversion training but rather to explain what are the
     steps a project team typically goes through when using Subversion
-    and, more generally, all the CodeX tools involved in a Software
+    and, more generally, all the &SYS_PRODUCT_NAME; tools involved in a Software
     release process.</para>
 
     <para>It also deals with the problem of contributing source code
@@ -876,8 +876,8 @@ members = member1,member2,...,memberN
     transposing them to graphical front-ends should be relatively
     straightforward.</para>
 
-    <figure id="FigureATypicalSubversionSoftwareDevelopmentLifeCycleOnCodeX">
-      <title>A Typical Software Development Life Cycle on CodeX</title>
+    <figure id="FigureATypicalSubversionSoftwareDevelopmentLifeCycleOnCodendi">
+      <title>A Typical Software Development Life Cycle on &SYS_PRODUCT_NAME;</title>
 
       <mediaobject>
 	<imageobject>
@@ -890,7 +890,7 @@ members = member1,member2,...,memberN
     <section id="SubversionLoggingIn">
       <title>Logging In</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>Unlike CVS when used with the pserver protocol there is no
       explicit login command to issue to start working with a
@@ -905,7 +905,7 @@ members = member1,member2,...,memberN
 
       <para><emphasis>Audience: project members</emphasis></para>
 
-      <para>As the happy administrator of a new CodeX project, the
+      <para>As the happy administrator of a new &SYS_PRODUCT_NAME; project, the
       first thing to do is to populate your freshly brewed Subversion
       repository with your project source code. To do so, first create
       a new directory <literal>topdirectory</literal> on your
@@ -930,9 +930,9 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname
 	</listitem>
 
 	<listitem>
-	  <para><literal>loginname</literal> is your CodeX login (all
+	  <para><literal>loginname</literal> is your &SYS_PRODUCT_NAME; login (all
 	  lowercase). The --username option is only needed if your
-	  CodeX login name is different from the Unix or Windows login
+	  &SYS_PRODUCT_NAME; login name is different from the Unix or Windows login
 	  name you are currently working with.</para>
 	</listitem>
 
@@ -949,27 +949,27 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname
       repository especially for new users.  Typical mistakes are
       directories placed at the wrong level or with the wrong
       name. Nothing to fear though... If you want to start again from
-      a fresh Subversion repository contact the CodeX Team to get your
+      a fresh Subversion repository contact the &SYS_PRODUCT_NAME; Team to get your
       Subversion repository reinitialized. Alternatively you can
       easily delete or move directories and files with any subversion
       client afterwards.</para></tip></para>
 
       <note><para>Note that if you already have a Subversion
-      repository available, the CodeX Team can help you migrate this
-      repository on CodeX and preserve all of your project history. We
+      repository available, the &SYS_PRODUCT_NAME; Team can help you migrate this
+      repository on &SYS_PRODUCT_NAME; and preserve all of your project history. We
       just need a dump of your Subversion tree generated with the
       <literal>svnadmin dump</literal> command. With this dump the
-      CodeX Team will re-install everything for you on the CodeX
+      &SYS_PRODUCT_NAME; Team will re-install everything for you on the &SYS_PRODUCT_NAME;
       server. Contact us for more information.</para></note>
     </section>
 
     <section id="SubversionCheckingCodeOut">
       <title>Checking Code Out</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>Once a Subversion repository has been populated other
-      CodeX users can checkout the source code and place it on their
+      &SYS_PRODUCT_NAME; users can checkout the source code and place it on their
       own workstation. The result is called a working copy in the
       Subversion jargon. Note that &#39;checkout&#39; in the
       Subversion world does not mean that the user has acquired any
@@ -1015,7 +1015,7 @@ svn checkout http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname
     <section id="SubversionUpdatingtheSourceCode">
       <title>Updating the Source Code</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>Running an update command from within a working copy has
       the effect of updating the working copy (or a subpart of it)
@@ -1131,7 +1131,7 @@ svn commit -m&#34;Explain the nature of the change here...&#34; filenames
     <section id="SubversionContributingyourChanges">
       <title>Contributing your Changes (other users)</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>This is a variant of the previous section for those of you
       who do not have write access to the Subversion repository of a
@@ -1218,7 +1218,7 @@ svn diff -r 9398
 
       <para>In both cases, you should redirect the output of the diff
       or svn diff command in a text file. Compress the output file if
-      it&#39;s a large one and use the CodeX Patch Tracker (see <xref
+      it&#39;s a large one and use the &SYS_PRODUCT_NAME; Patch Tracker (see <xref
       linkend="PatchTemplate" />) to submit your patch to the project
       team.</para>
 
@@ -1231,7 +1231,7 @@ svn diff -r 9398
       <para><emphasis>Audience: project members</emphasis></para>
 
       <para>There is a quick and easy way to release a pre-packaged
-      version of your source file and make it available to all CodeX
+      version of your source file and make it available to all &SYS_PRODUCT_NAME;
       users through the File Release mechanism (see <xref
       linkend="FileRelease" />).</para>
 
@@ -1298,7 +1298,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
 
 	<step>
 	  <para>Done! Nice job...Take a break. And remember to
-	  announce the availability of your new version via the CodeX
+	  announce the availability of your new version via the &SYS_PRODUCT_NAME;
 	  News service (see <xref linkend="NewsService" />).</para>
 	</step>
       </procedure>
@@ -1312,17 +1312,17 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
     <section id="SubversionHookScripts">
       <title>Subversion Hook Scripts</title>
 
-      <para>CodeX offers an easy to use Web interface to administrate
+      <para>&SYS_PRODUCT_NAME; offers an easy to use Web interface to administrate
       the common settings of your Subversion repository like access
       control and email notification. In case project administrators
-      want to go deeper in customizing the behavior of their CodeX
+      want to go deeper in customizing the behavior of their &SYS_PRODUCT_NAME;
       repository, they can get access to the Subversion hook
       scripts.</para>
 
       <para>In order to access those hook scripts, you must be
-      granted the right to log into the CodeX server with your Shell
+      granted the right to log into the &SYS_PRODUCT_NAME; server with your Shell
       Account (see <xref linkend="ShellAccount" />)<footnote><para>The
-      Shell Account may have been deactivated by your CodeX site
+      Shell Account may have been deactivated by your &SYS_PRODUCT_NAME; site
       administrators.</para></footnote>.</para>.
 
       <para>Once logged in, type the following commands at the shell
@@ -1351,11 +1351,11 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
 	</listitem>
       </itemizedlist>
 
-      <para><tip><title>***Important Note***: Mind the CodeX
+      <para><tip><title>***Important Note***: Mind the &SYS_PRODUCT_NAME;
       Hooks!</title><para>If you decide to customize the Subversion
       hook scripts for your repository make sure to preserve the
-      statements that could have been inserted by CodeX in the first
-      place. The CodeX statements are clearly marked with a
+      statements that could have been inserted by &SYS_PRODUCT_NAME; in the first
+      place. The &SYS_PRODUCT_NAME; statements are clearly marked with a
       recognizable header and trailer. </para></tip></para>
 
     </section>
@@ -1365,7 +1365,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

@@ -76,7 +76,7 @@ if (user_isloggedin()) {
     }
 	snippet_header(array('title'=>$Language->getText('snippet_add_snippet_to_package','submit_snippet'),
 			     'header'=>$Language->getText('snippet_submit','submit_s'),
-			     'help' => 'TheCodeXMainMenu.html#CodeSnippetSubmission'));
+			     'help' => 'TheCodendiMainMenu.html#CodeSnippetSubmission'));
 
 	echo '
 	<P>

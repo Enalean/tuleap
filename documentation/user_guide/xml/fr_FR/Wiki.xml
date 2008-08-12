@@ -4,15 +4,15 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Nicolas Guerin 2005, CodeX Team, Xerox
+//
 //
 -->
 
   <chapter id="WikiService">
     <title>Service Wiki</title>
 
-    <para>CodeX offre un service Wiki à chaque projet. Le wiki utilisé
-    dans CodeX s'appuie sur l'outil <ulink
+    <para>&SYS_PRODUCT_NAME; offre un service Wiki à chaque projet. Le wiki utilisé
+    dans &SYS_PRODUCT_NAME; s'appuie sur l'outil <ulink
     url="http://phpwiki.sourceforge.net">phpWiki</ulink>.
     </para>
 
@@ -32,7 +32,7 @@
       utilisant uniquement un navigateur Web. Une page d'un wiki est
       appelée "page wiki" alors que l'ensemble des pages
       interconnectées par le biais d'hyperliens sont collectivement
-      baptisées "le wiki". CodeX offre en complément la notion de
+      baptisées "le wiki". &SYS_PRODUCT_NAME; offre en complément la notion de
       "Document Wiki" : il s'agit d'une page wiki directement
       accessible depuis la page d'accueil du service Wiki du
       projet.</para>
@@ -40,14 +40,14 @@
       <para>Une propriété caractéristique de la technologie Wiki est
       la facilité avec laquelle des pages peuvent être créées ou
       modifiées. Il n'y pas de mécanisme de revue ou d'approbation des
-      modifications effectuées et les Wikis CodeX sont ouverts à tous
+      modifications effectuées et les Wikis &SYS_PRODUCT_NAME; sont ouverts à tous
       les utilisateurs enregistrés.</para>
     </section>
 
     <section id="WikiPageFormatting">
       <title>Wiki Page Formatting</title>
 
-      <para>Dans les Wikis de CodeX, une page possède trois
+      <para>Dans les Wikis de &SYS_PRODUCT_NAME;, une page possède trois
       représentations : le code HTML, la page résultant du rendu par le
       navigateur et le code source de la page éditable par
       l'utilisateur à partir duquel la version HTML est générée. Le
@@ -74,7 +74,7 @@
       en utilisant une syntaxe particulière appelée "patron de
       lien".</para>
 
-      <para>Les wikis CodeX utilisent le "patron de lien" appelé
+      <para>Les wikis &SYS_PRODUCT_NAME; utilisent le "patron de lien" appelé
       CasseChameau (CamelCase en anglais), qui consiste à considérer
       comme hyperlien une série de mots collés ensemble dont la
       première lettre est une majuscule (les mots "CamelCase",
@@ -99,16 +99,16 @@
     <section id="WikiSearching">
       <title>Rechercher</title>
 
-      <para>Les Wikis CodeX permettent d'effectuer des recherches par
+      <para>Les Wikis &SYS_PRODUCT_NAME; permettent d'effectuer des recherches par
       mots-clés aussi bien dans le titre que dans le contenu des
       pages.</para>
     </section>
   </section>
 
-  <section id="CodeXWikis">
-    <title>Les Wikis de CodeX</title>
+  <section id="CodendiWikis">
+    <title>Les Wikis de &SYS_PRODUCT_NAME;</title>
 
-    <para>Les Wikis de CodeX sont spécifiques à chaque projet. Ainsi
+    <para>Les Wikis de &SYS_PRODUCT_NAME; sont spécifiques à chaque projet. Ainsi
     deux projets distincts peuvent utiliser les mêmes noms de pages
     sans risque de conflit.</para>
 
@@ -134,12 +134,12 @@
     <section id="WikiPermissions">
       <title>Permissions du Wiki</title>
 
-      <para>Par défaut, les Wikis de CodeX sont lisibles et
+      <para>Par défaut, les Wikis de &SYS_PRODUCT_NAME; sont lisibles et
       modifiables par n'importe quel utilisateur enregistré.</para>
 
       <para>Bien que cette politique d'accès soit en général la
       meilleure, certains Wikis ne doivent pas être publics. Pour
-      répondre à ce besoin, CodeX offre un mécanisme de gestion des
+      répondre à ce besoin, &SYS_PRODUCT_NAME; offre un mécanisme de gestion des
       permissions basés sur les groupes d'utilisateurs comme pour le
       gestionnaire de fichiers et de documents (voir <xref
       linkend="UserGroups"/>, <xref linkend="PackageModification"/>
@@ -152,7 +152,7 @@
     <section id="ExamplesofWikiPages">
       <title>Exemples de pages Wiki</title>
 
-      <para>Les Wikis de projets hébergés sur CodeX peuvent être utilisés de maintes façons. Les exemples qui suivent sont juste des suggestions :</para>
+      <para>Les Wikis de projets hébergés sur &SYS_PRODUCT_NAME; peuvent être utilisés de maintes façons. Les exemples qui suivent sont juste des suggestions :</para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
@@ -165,7 +165,7 @@
 	</listitem>
 	<listitem>
 	  <para><emphasis role="bold">Calendrier de projet</emphasis> :
-	  les pages Wikis de CodeX peuvent inclure un calendrier
+	  les pages Wikis de &SYS_PRODUCT_NAME; peuvent inclure un calendrier
 	  partagé accessible et modifiable par tous les membres du
 	  projet (voir la page CalendarPlugin).</para>
 	</listitem>
@@ -184,7 +184,7 @@
     <section id="MoreWikiDocumentation">
       <title>En savoir plus</title>
 
-      <para>Tous les Wikis de CodeX sont initialisés avec un jeu de
+      <para>Tous les Wikis de &SYS_PRODUCT_NAME; sont initialisés avec un jeu de
       pages par défaut dont la documentation PhpWiki. Consultez la
       page PhpWikiDocumentation pour une description de toutes les
       fonctionnalités de PhpWiki : syntaxe du langage de marquage,
@@ -195,7 +195,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

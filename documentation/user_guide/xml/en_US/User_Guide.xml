@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002-2003, CodeX Team, Xerox
+//
 //
 -->
 <?xml-stylesheet type="text/css"
@@ -21,8 +21,8 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!-- Entities for inclusion of document chapters -->
 <!ENTITY BookInfo SYSTEM "BookInfo.xml">
 <!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
-<!ENTITY ChapterCodeXSiteOverview SYSTEM "CodeXSiteOverview.xml">
-<!ENTITY ChapterBecomingACodeXCitizen SYSTEM "BecomingACodeXCitizen.xml">
+<!ENTITY ChapterSiteOverview SYSTEM "SiteOverview.xml">
+<!ENTITY ChapterBecomingACitizen SYSTEM "BecomingACitizen.xml">
 <!ENTITY ChapterCreatingANewProject SYSTEM "CreatingANewProject.xml">
 <!ENTITY ChapterProjectSummary SYSTEM "ProjectSummary.xml">
 <!ENTITY ChapterProjectAdministration SYSTEM "ProjectAdministration.xml">
@@ -52,7 +52,7 @@ an entity cannot be redefined. Hence this particular order  -->
 ]>
 
 <book>
-  <title>CodeX User Guide</title>
+  <title>&SYS_PRODUCT_NAME; User Guide</title>
 
   <subtitle>&#34;Collaborative Software Development and Project Management for the enterprise&#34;</subtitle>
 
@@ -61,8 +61,8 @@ an entity cannot be redefined. Hence this particular order  -->
   &BookInfo;
 
   &ChapterIntroduction;
-  &ChapterCodeXSiteOverview;
-  &ChapterBecomingACodeXCitizen;
+  &ChapterSiteOverview;
+  &ChapterBecomingACitizen;
   &ChapterCreatingANewProject;
   &ChapterProjectSummary;
   &ChapterProjectAdministration;

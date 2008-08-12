@@ -344,7 +344,7 @@
                                  height="auto"
                                  content-height="auto"
                                  width="auto"
-                                 src="url(../../icons/codex.png)" />
+                                 src="url(../../icons/codendi.png)" />
           </fo:block>
 
   <xsl:choose>

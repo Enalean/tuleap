@@ -3,18 +3,18 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
 <chapter id="DocumentManagerPlugin">
   <title>Document Manager</title>
 
   <para>Documentation is probably the second most important deliverable in a
-    software project after the software work products themselves. CodeX
+    software project after the software work products themselves. &SYS_PRODUCT_NAME;
     provides a specific service to manage your project documents.</para>
 
-  <para>Although the CodeX Document Manager cannot be compared
+  <para>Although the &SYS_PRODUCT_NAME; Document Manager cannot be compared
     with dedicated document management systems, it
     is however very handy to publish documents that are critical to
     your community of users. Examples are: Installation, Administration
@@ -25,7 +25,7 @@
 
   <itemizedlist mark="bullet" spacing="compact">
     <listitem>
-      <para>The CodeX Document Manager can handle any type of
+      <para>The &SYS_PRODUCT_NAME; Document Manager can handle any type of
       document.</para>
     </listitem>
 
@@ -317,7 +317,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

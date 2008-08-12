@@ -4,8 +4,8 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="ProjectAdministration">
@@ -66,7 +66,7 @@
           On vous proposera alors de choisir un fichier texte comportant
           la liste des utilisateurs à importer. Le fichier doit comporter
           un utilisateur par ligne, soit en spécifiant son adresse email,
-          soit en spécifiant son nom de login CodeX.</para>
+          soit en spécifiant son nom de login &SYS_PRODUCT_NAME;.</para>
           <example>
             <title>Exemple de fichier pour l'import d'utilisateurs</title>
                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -82,7 +82,7 @@ john.smith@xerox.com</programlisting>
           à un compte-rendu des utilisateurs détectés. Après validation,
           les utilisateurs sont effectivement ajoutés au projet.
           Le système n'effectuera pas l'import en cas d'erreur (utilisateur inconnu,
-          non enregistré sur CodeX, utilisateur non actif, adresse mail inconnue, etc...).
+          non enregistré sur &SYS_PRODUCT_NAME;, utilisateur non actif, adresse mail inconnue, etc...).
           Les doublons ne produisent pas d'erreur. Un seul utilisateur est ajouté dans
           ce cas.</para>
       </section>
@@ -153,7 +153,7 @@ john.smith@xerox.com</programlisting>
       chacun des sept critères de catégorisation utilisé
       dans l'arbre des projets. Si vous ne trouvez pas de valeur
       correspondant à votre projet, n'hésitez pas à contacter l'équipe
-      CodeX.</para>
+      &SYS_PRODUCT_NAME;.</para>
     </section>
 
     <section id="ProjectType">
@@ -161,12 +161,12 @@ john.smith@xerox.com</programlisting>
 
       <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
 
-      <para>CodeX propose trois types de projets :</para>
+      <para>&SYS_PRODUCT_NAME; propose trois types de projets :</para>
         
       <itemizedlist mark="bullet">
           <listitem> 
 	    <para><emphasis role="bold">Projet</emphasis> :
-	      C'est le type des projets standards sur CodeX.
+	      C'est le type des projets standards sur &SYS_PRODUCT_NAME;.
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -235,7 +235,7 @@ john.smith@xerox.com</programlisting>
 	      automatiquement membres du nouveau projet.
 	      Un projet de patron n'apparaît plus dans l'arbre des projets
 	      et est exclu des statistiques de projets du tableau de bord 
-	      de CodeX (see <xref linkend="TheCodeXDashboard" />) comme 
+	      de &SYS_PRODUCT_NAME; (see <xref linkend="TheCodendiDashboard" />) comme 
 	      les projets récents, les projets les plus actifs, etc...
 	    </para>
 	  </listitem>
@@ -243,10 +243,10 @@ john.smith@xerox.com</programlisting>
 	  <listitem>
 	    <para><emphasis role="bold">Projet de test</emphasis> :
 	      Si vous voulez juste essayer tout ce qui est faisable avec
-	      un projet CodeX vous pouvez utiliser le type projet de test.
+	      un projet &SYS_PRODUCT_NAME; vous pouvez utiliser le type projet de test.
 	      En utilisant ce type de projet votre projet n'apparaît plus 
 	      dans l'arbre des projets ni dans les statistiques de projets 
-	      du tableau de bord de CodeX.
+	      du tableau de bord de &SYS_PRODUCT_NAME;.
 	    </para>
 	  </listitem>
        </itemizedlist>
@@ -293,8 +293,8 @@ john.smith@xerox.com</programlisting>
       <para>La seule exception concerne le service <emphasis
       role="bold">Site Web</emphasis>; il s'agit d'un service système
       mais il peut être personnalisé pour pointer sur l'URL de votre
-      choix. Chaque projet hébergé sur CodeX possède son propre
-      serveur Web virtuel sur le site CodeX. Par défaut le service
+      choix. Chaque projet hébergé sur &SYS_PRODUCT_NAME; possède son propre
+      serveur Web virtuel sur le site &SYS_PRODUCT_NAME;. Par défaut le service
       &#34;Site Web&#34; de la barre de services pointe sur ce site
       (voir le <xref linkend="ProjectWebSite" /> pour plus de
       détails). Vous pouvez remplacer l'URL par défaut avec un
@@ -336,7 +336,7 @@ john.smith@xerox.com</programlisting>
 
             <listitem>
               <para><emphasis role="bold">$sys_default_domain</emphasis> : 
-              le nom de domaine du serveur CodeX (ici &#34;&SYS_DEFAULT_DOMAIN;&#34;)
+              le nom de domaine du serveur &SYS_PRODUCT_NAME; (ici &#34;&SYS_DEFAULT_DOMAIN;&#34;)
               </para>
             </listitem>
 
@@ -350,7 +350,7 @@ john.smith@xerox.com</programlisting>
             <listitem>
               <para><emphasis
               role="bold">$sys_default_protocol</emphasis> : 'https' si
-              le serveur CodeX fonctionne en mode sécurisé, 'http'
+              le serveur &SYS_PRODUCT_NAME; fonctionne en mode sécurisé, 'http'
               dans le cas contraire.
               </para>
               <para></para>
@@ -438,9 +438,9 @@ john.smith@xerox.com</programlisting>
     <section id="ReferenceOverview">
       <title>Présentation des références</title>
 
-      <para>Les patrons de référence sont un outils puissant permettant de créer des références croisées entre objets de CodeX. En fonction d'un patron de texte, CodeX peut créer automatiquement un hyperlien vers l'objet souhaité.
+      <para>Les patrons de référence sont un outils puissant permettant de créer des références croisées entre objets de &SYS_PRODUCT_NAME;. En fonction d'un patron de texte, &SYS_PRODUCT_NAME; peut créer automatiquement un hyperlien vers l'objet souhaité.
       </para>
-      <para>Lorsque vous tapez un commentaire, ou un message de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et CodeX créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
+      <para>Lorsque vous tapez un commentaire, ou un message de commit, tout morceau de texte qui suit le patron "XXX #NNN" est interprété comme une référence à l'objet XXX numéro NNN. Ainsi, 'art #123' sera détecté comme une référence à l'artefact numéro 123, et &SYS_PRODUCT_NAME; créera automatiquement un hyperlien qui pointe sur la page décrivant précisément cet artefact.
       </para>
       <para>Vous pouvez également référencer un objet appartenant à un autre projet. A cette fin, utilisez soit 'XXX #num_projet:NNN', soit 'XXX #nom_projet:NNN' pour référencer l'objet XXX numéro NNN appartenant au projet numéro 'num_projet', ou dont le nom est 'nom_projet'. Par exemple, 'wiki #monproj:Accueil' est une référence à la page wiki 'Accueil' du projet 'monproj'.
       </para>
@@ -507,14 +507,14 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       il est très utile de voir quels changements il a engendré dans
       le code source.</para>
 
-      <para>L'intégration de CVS et de Subversion avec CodeX fournit précisément ce
+      <para>L'intégration de CVS et de Subversion avec &SYS_PRODUCT_NAME; fournit précisément ce
       mécanisme de références croisées. Ceci est rendu possible par
       l'utilisation des références à utiliser dans les
       commentaires des artefacts ou dans les messages de commits
-      que CodeX reconnaît automatiquement.</para>
+      que &SYS_PRODUCT_NAME; reconnaît automatiquement.</para>
 
 
-      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans CodeX. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source comme ClearCase.
+      <para>Le système n'est pas limité aux références à des commits ou a des artefact, puisqu'il est également possible de référencer un message posté dans un forum, une documentation, ou un fichier. Le système est suffisament flexible pour permettre le référencement d'objets qui ne sont pas dans &SYS_PRODUCT_NAME;. Il vous suffit de créer vos propres patrons de référence pour relier vos messages à un gestionnaire de document externe comme Docushare, ou à un outil de gestion de code source comme ClearCase.
       </para>
 
    <para><tip><title>Coup de pouce : référencez les artefacts et les
@@ -551,7 +551,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           <para><emphasis role="bold">Lien</emphasis> :
           C'est l'URL vers lequel pointe la référence. L'utilisateur sera automatiquement
           redirigé vers cette adresse s'il clique sur la référence.
-          L'URL ne pointe pas nécessairement vers le serveur CodeX : on peut créer des patrons de référence qui pointent vers des pages externes. 
+          L'URL ne pointe pas nécessairement vers le serveur &SYS_PRODUCT_NAME; : on peut créer des patrons de référence qui pointent vers des pages externes. 
           La nouvelle page sera chargée dans le fenêtre courante.
           </para>
           <para>Certaines chaînes de caractères seront interprétées lors de la création de la référence :
@@ -679,12 +679,12 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           projet ont les droits d'accès en écriture sur le dépôt CVS
           <footnote><para>CVS signifie Concurrent Version
           System. C'est l'un des systèmes de contrôle de version offert
-          par CodeX. CVS est utilisé par des centaines de milliers de
+          par &SYS_PRODUCT_NAME;. CVS est utilisé par des centaines de milliers de
           projets à travers le monde. Voir <ulink
           url="http://www.cvshome.org">http://www.cvshome.org</ulink>
           pour plus d'information.</para></footnote> du projet et cela
           ne peut être modifié depuis l'interface utilisateur de
-          CodeX. Nous verrons cependant comment désactiver l'accès en
+          &SYS_PRODUCT_NAME;. Nous verrons cependant comment désactiver l'accès en
           écriture au dépôt CVS dans le chapitre qui lui est consacré
           (<xref linkend="VersionControlWithCVS" />).</para>
         </listitem>
@@ -782,7 +782,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
     
     <para>Un groupe d'utilisateurs, aussi appelé &#34;ugroup&#34;, est
-    tout simplement un regroupement d'utilisateurs CodeX. Les groupes
+    tout simplement un regroupement d'utilisateurs &SYS_PRODUCT_NAME;. Les groupes
     d'utilisateurs sont utilisés dans le but de définir des
     permissions spécifiques sur certaines données du projet (certains
     paquets ou versions de fichiers par exemple - voir <xref
@@ -821,7 +821,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           <emphasis role="bold">membres_projet, admins_projet,
           utilisateurs_enregistres, personne,
           admins_gestionnaire_fichier</emphasis>, etc... Ces groupes
-          sont dynamiques c'est à dire que CodeX maintient la liste
+          sont dynamiques c'est à dire que &SYS_PRODUCT_NAME; maintient la liste
           des membres de ce groupe pour vous. Ainsi si un nouveau
           membre du projet se voit accorder les droits
           d'administrateur, il sera automatiquement ajouté au groupe
@@ -834,10 +834,10 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
           personnalisés</emphasis> sont définis par les
           administrateurs du projet. Ils sont composés d'une liste
           statique d'utilisateurs qui doivent tous être des
-          utilisateurs enregistrés de CodeX. Cette liste peut être
+          utilisateurs enregistrés de &SYS_PRODUCT_NAME;. Cette liste peut être
           modifiée à tout moment par l'administrateur. Elle n'est pas
           modifiée automatiquement sauf si un utilisateur est supprimé
-          de la liste des membres du projet ou si son compte CodeX est
+          de la liste des membres du projet ou si son compte &SYS_PRODUCT_NAME; est
           supprimé.
           </para>
         </step>
@@ -1007,27 +1007,27 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
       <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
-      <para>CodeX est particulièrement attractif pour de nombreuses
+      <para>&SYS_PRODUCT_NAME; est particulièrement attractif pour de nombreuses
       équipes de projet car il offre une série d'outils complets pour
       le développement et la gestion de projet. Un projet peut-être
-      géré quasiment intégralement depuis CodeX. Cependant il se peut
+      géré quasiment intégralement depuis &SYS_PRODUCT_NAME;. Cependant il se peut
       que l'équipe ressente le besoin d'effectuer certaines opérations
-      sur les données du projet en dehors de CodeX comme par exemple
+      sur les données du projet en dehors de &SYS_PRODUCT_NAME; comme par exemple
       rédiger un rapport sur l'état d'avancement du projet, ce qui se
       passe bien ou moins bien, actualiser la date de livraison
       prévue, dériver des données statistiques, etc...</para>
 
-      <para>Il n'est pas du ressort de CodeX de fournir ces outils de
+      <para>Il n'est pas du ressort de &SYS_PRODUCT_NAME; de fournir ces outils de
       reporting sophistiqués. Il existe de nombreux outils spécialisés
       sur le marché capable de générer des rapports d'activité et
       chaque équipe possède son outil préféré. Dans le but de
-      satisfaire la grande diversité de ces besoins, CodeX offre un
+      satisfaire la grande diversité de ces besoins, &SYS_PRODUCT_NAME; offre un
       mécanisme très efficace qui permet d'exporter les données hors
       du projet pour les utiliser dans des outils comme MS Access, MS
       Excel, Crystal Report, Open Office ou tout autre outil
       adapté.</para>
 
-      <para>CodeX offre 2 mécanismes d'exportation des données :</para>
+      <para>&SYS_PRODUCT_NAME; offre 2 mécanismes d'exportation des données :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -1057,8 +1057,8 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     <section id="ExportedData">
       <title>Données exportées</title>
 
-      <para>CodeX exporte les données suivantes (le détail des champs
-      exportés et de leur format est disponible sur la page CodeX) :
+      <para>&SYS_PRODUCT_NAME; exporte les données suivantes (le détail des champs
+      exportés et de leur format est disponible sur la page &SYS_PRODUCT_NAME;) :
       </para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -1135,7 +1135,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	    dans la partie inférieure de la boîte de
 	    dialogue. Souvenez-vous que ces informations sont
 	    disponibles sur la page d'exportation des données de
-	    CodeX.</para>
+	    &SYS_PRODUCT_NAME;.</para>
 
 	    <note><para><emphasis role="bold">Remarque
 	    importante</emphasis> : vous pouvez conserver les noms des
@@ -1168,7 +1168,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
     <section id="DirectDatabaseAccess">
       <title>Accès direct à la base de données</title>
 
-      <para>Dans le but d'offrir une flexibilité maximale CodeX offre
+      <para>Dans le but d'offrir une flexibilité maximale &SYS_PRODUCT_NAME; offre
       aussi un accès direct aux données du projet via un connexion
       ODBC ou JDBC. Une fois installé sur votre PC, le pilote ODBC (ou
       JDBC) de MySQL permet un accès transparent aux tables de votre
@@ -1376,7 +1376,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
       <para><emphasis>Emplacement : Menu d'administration</emphasis></para>
 
-      <para>Selon la configuration du site CodeX et la configuration
+      <para>Selon la configuration du site &SYS_PRODUCT_NAME; et la configuration
       de chaque projet, différentes populations d'utilisateurs sont
       susceptibles d'avoir accès au téléchargement de document, de
       code source et de fichiers.</para>
@@ -1395,13 +1395,13 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
         <listitem>
           <para>La liste des opérations de checkout ou d'update sur le
           dépôt CVS ainsi que la liste des personnes ayant navigué
-          dans l'arbre CVS via l'interface Web de CodeX.</para>
+          dans l'arbre CVS via l'interface Web de &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
         <listitem>
           <para>Quels utilisateurs ont accédé au dépôt Subversion soit
           via un client Subversion soit via l'interface Web de
-          CodeX.</para>
+          &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
         <listitem>
@@ -1418,7 +1418,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
       fenêtre de temps peut aussi être ajustée pour montrer une portion
       plus ou moins grande de l'historique.</para>
 
-      <figure id="FigureSourceCodeAccessLogsForACodeXProject">
+      <figure id="FigureSourceCodeAccessLogsForACodendiProject">
         <title>Exemple de journal d'accès</title>
 
         <mediaobject>
@@ -1433,7 +1433,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

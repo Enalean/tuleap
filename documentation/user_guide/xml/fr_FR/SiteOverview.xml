@@ -4,69 +4,69 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
-  <chapter id="CodeXSiteOverview">
-    <title>Vue d'ensemble du site CodeX</title>
+  <chapter id="CodendiSiteOverview">
+    <title>Vue d'ensemble du site &SYS_PRODUCT_NAME;</title>
 
-    <para>CodeX est un site Web de &SYS_ORG_NAME; accessible à l'URL
+    <para>&SYS_PRODUCT_NAME; est un site Web de &SYS_ORG_NAME; accessible à l'URL
     <ulink
     url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Pour
-    utiliser le site CodeX vous pouvez utiliser votre navigateur
-    favori<footnote><para>CodeX utilise du HTML standard et très peu
+    utiliser le site &SYS_PRODUCT_NAME; vous pouvez utiliser votre navigateur
+    favori<footnote><para>&SYS_PRODUCT_NAME; utilise du HTML standard et très peu
     de Javascript. Il est supporté sur Netscape 6/7, IE 5/6, Mozilla
     et Firefox. D'autres navigateurs comme Opera ou Konqueror
-    fonctionnent également. CodeX utilise peu de graphisme et il est
+    fonctionnent également. &SYS_PRODUCT_NAME; utilise peu de graphisme et il est
     donc utilisable par des navigateurs spécialisés comme ceux destinés
-    aux personnes malvoyantes.</para></footnote>. CodeX est un site
+    aux personnes malvoyantes.</para></footnote>. &SYS_PRODUCT_NAME; est un site
     riche et ce guide de l'utilisateur va vous accompagner dans la
     découverte de l'ensemble des services disponibles. Pour vous aider
     à retrouver votre chemin dans cette panoplie de services, la <xref
-    linkend="FigureCodeXWebPageFlowChart" /> vous en donne une vue
+    linkend="FigureCodendiWebPageFlowChart" /> vous en donne une vue
     d'ensemble et le chemin à emprunter pour accéder à un service
     particulier.</para>
 
-    <section id="CodeXHomePage">
-      <title>Page d'accueil CodeX</title>
+    <section id="CodendiHomePage">
+      <title>Page d'accueil &SYS_PRODUCT_NAME;</title>
 
       <para>La page d'accueil est divisée en quatre parties (voir la <xref
-      linkend="FigureTheCodeXHomePage" />) :</para>
+      linkend="FigureTheCodendiHomePage" />) :</para>
 
       <procedure>
         <step>
           <para><emphasis role="bold">Le menu principal de
-          CodeX</emphasis> : sur la partie gauche de l'écran ou au
+          &SYS_PRODUCT_NAME;</emphasis> : sur la partie gauche de l'écran ou au
           sommet selon le thème graphique employé.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Une courte introduction à
-          CodeX</emphasis> : la partie centrale supérieure présente le
-          site CodeX en quelques points clés et fournit des pointeurs
+          &SYS_PRODUCT_NAME;</emphasis> : la partie centrale supérieure présente le
+          site &SYS_PRODUCT_NAME; en quelques points clés et fournit des pointeurs
           vers des documents ou des services importants.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">Les dernières nouvelles de
-          CodeX</emphasis> : la partie centrale inférieure montre en
+          &SYS_PRODUCT_NAME;</emphasis> : la partie centrale inférieure montre en
           permanence les dix nouvelles les plus récentes concernant la
-          vie des projets hébergés ou du site CodeX.</para>
+          vie des projets hébergés ou du site &SYS_PRODUCT_NAME;.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">La tableau de bord
-          CodeX</emphasis> : La partie droite de la page d'accueil
+          &SYS_PRODUCT_NAME;</emphasis> : La partie droite de la page d'accueil
           montre une série d'indicateurs statistiques concernant
-          l'activité globale du site CodeX.</para>
+          l'activité globale du site &SYS_PRODUCT_NAME;.</para>
         </step>
       </procedure>
     </section>
 
-    <section id="TheCodeXMainMenu">
-      <title>Le menu principal de CodeX</title>
+    <section id="TheCodendiMainMenu">
+      <title>Le menu principal de &SYS_PRODUCT_NAME;</title>
 
-      <para>Le menu principal de CodeX est présent sur l'ensemble des
+      <para>Le menu principal de &SYS_PRODUCT_NAME; est présent sur l'ensemble des
       pages du site. Son contenu peut varier selon les pages visitées
       et suivant les droits qui vous sont octroyés. En d'autres termes
       il dépend du contexte. En voici deux exemples :</para>
@@ -94,8 +94,8 @@
       indépendantes du contexte. Les autres entrées liées aux projets
       seront décrites plus tard dans ce document.</para>
 
-      <figure id="FigureCodeXWebPageFlowChart">
-        <title>Vue d'ensemble du site CodeX</title>
+      <figure id="FigureCodendiWebPageFlowChart">
+        <title>Vue d'ensemble du site &SYS_PRODUCT_NAME;</title>
 
         <mediaobject>
           <imageobject>
@@ -109,7 +109,7 @@
       <section id="SoftwareMap">
         <title>Arbre des projets</title>
 
-        <para>L'arbre des projets est un important service de CodeX
+        <para>L'arbre des projets est un important service de &SYS_PRODUCT_NAME;
         que vous pouvez (ou devez !) utiliser pour déterminer si
         certains logiciels développés sur le site peuvent présenter un
         intérêt pour vos propres activités. L'arbre des projets est
@@ -155,7 +155,7 @@
           <listitem>
             <para><emphasis role="bold">Licence</emphasis> : la licence
             de distribution du logiciel. Dans la plupart des cas il
-            s'agira de la licence d'échange de CodeX de
+            s'agira de la licence d'échange de &SYS_PRODUCT_NAME; de
             &SYS_ORG_NAME;</para>
           </listitem>
 
@@ -185,7 +185,7 @@
         &#34;Domaine&#34; (ou &#34;Topic&#34; en anglais) reflète le
         domaine dont traite votre projet et se présente sous la forme
         d'une hiérarchie de domaines et de sous-domaines que l'équipe
-        d'administration de CodeX affine au fur et à mesure de
+        d'administration de &SYS_PRODUCT_NAME; affine au fur et à mesure de
         l'enregistrement des projets.</para>
 
         <para>En utilisant l'arbre des projets il est possible de
@@ -228,7 +228,7 @@
         enregistrer l'étape finale de ce parcours dans votre Page
         personnelle. Pour se faire, effectuez vos manipulations sur
         l'arbre comme expliqué ci-dessus puis cliquez sur le lien
-        "Cette page en signet" dans le menu principal CodeX. Une
+        "Cette page en signet" dans le menu principal &SYS_PRODUCT_NAME;. Une
         nouvelle entrée apparaîtra alors dans votre page personnelle
         que vous pouvez éditez afin de lui donner une description plus
         parlante.</para></tip></para>
@@ -237,7 +237,7 @@
       <section id="TheCodeSnippetLibrary">
         <title>La boîte à outils</title>
 
-        <para>Un projet hébergé sur CodeX a la possibilité d'utiliser
+        <para>Un projet hébergé sur &SYS_PRODUCT_NAME; a la possibilité d'utiliser
         de nombreux outils et services. Toutefois tous les logiciels
         ne nécessitent pas un environnement aussi riche. Pour partager
         ou sauvegarder un court échantillon de code comme une macro,
@@ -245,9 +245,9 @@
         adapté. C'est précisément le rôle de la boîte à outils.</para>
 
         <para>La boîte à outils est accessible depuis le menu
-        principal de CodeX sur la partie gauche ou la partie
+        principal de &SYS_PRODUCT_NAME; sur la partie gauche ou la partie
         supérieure de l'écran (voir la <xref
-        linkend="FigureTheCodeXHomePage" />)</para>
+        linkend="FigureTheCodendiHomePage" />)</para>
 
         <section id="CodeSnippetBrowsing">
           <title>Navigation dans les échantillons</title>
@@ -303,11 +303,11 @@
           la boîte à outils situé en haut de la page. Remplissez les
           champs titre et description (tout pointeur Web - ou URL -
           tapé dans le champ description sera automatiquement
-          transformé en hyperlien par CodeX), le type de
+          transformé en hyperlien par &SYS_PRODUCT_NAME;), le type de
           l'échantillon, sa catégorie et son langage de
           programmation. Si une catégorie ou un langage de
           programmation venait à manquer, veuillez contacter l'équipe
-          CodeX.</para>
+          &SYS_PRODUCT_NAME;.</para>
 
           <para>Il est vivement recommandé de fournir également un
           numéro de version. Il s'agit d'un champ de texte libre qui
@@ -355,7 +355,7 @@
           nouvel échantillon de code correspondant.</para>
 
           <note><para>Veuillez noter que bien qu'il s'agisse du même
-          échantillon, CodeX assigne un nouvel indentifiant à chaque
+          échantillon, &SYS_PRODUCT_NAME; assigne un nouvel indentifiant à chaque
           nouvelle version. Ainsi pour référencer la nouvelle version
           d'un échantillon dans un paquet d'échantillons (voir la
           section concernant le regroupement d'échantillons 
@@ -422,11 +422,11 @@
       <section id="HelpIndex">
         <title>Index de l'aide</title>
 
-        <para>CodeX est livré avec un guide de l'utilisateur très
+        <para>&SYS_PRODUCT_NAME; est livré avec un guide de l'utilisateur très
         complet décrivant l'ensemble des outils et services. Un clic
         sur le lien &#34;Index de l'aide&#34; dirige l'utilisateur vers
-        la table des matières du guide de l'utilisateur de CodeX. Ce
-        même guide est utilisé sur l'ensemble du site CodeX par les
+        la table des matières du guide de l'utilisateur de &SYS_PRODUCT_NAME;. Ce
+        même guide est utilisé sur l'ensemble du site &SYS_PRODUCT_NAME; par les
         liens &#34;Aide&#34; apparaissant dans quasiment tous les
         menus. Une version PDF de l'intégralité du guide de
         l'utilisateur est disponible dans la section
@@ -438,30 +438,30 @@
 
         <para>Le lien &#34;Documentation Site&#34; est le point
         d'entrée vers l'ensemble de la documentation relative à
-        l'ensemble du site CodeX. Son contenu est variable mais il
+        l'ensemble du site &SYS_PRODUCT_NAME;. Son contenu est variable mais il
         comporte en général le guide utilisateur, des présentations et
         d'autres documents importants maintenus par l'équipe
-        CodeX. Lisez-les attentivement.</para>
+        &SYS_PRODUCT_NAME;. Lisez-les attentivement.</para>
 
       </section>
 
       <section>
         <title>Canaux développeurs</title>
 
-        <para>L'un des objectifs prioritaires du site CodeX est de
+        <para>L'un des objectifs prioritaires du site &SYS_PRODUCT_NAME; est de
         devenir le forum d'échange des développeurs logiciels quelle que
         soit l'organisation à laquelle ils appartiennent.</para>
 
-        <para>C'est pour cette raison que CodeX propose une série de
+        <para>C'est pour cette raison que &SYS_PRODUCT_NAME; propose une série de
         listes de distribution (appelée Canaux Développeurs) auxquelles toute
-        personne, y compris un utilisateur non enregistré de CodeX,
+        personne, y compris un utilisateur non enregistré de &SYS_PRODUCT_NAME;,
         peut souscrire. Chaque canal est dédié à un sujet
         particulier. La création de nouveaux canaux est sous la
-        responsabilité des administrateurs du site CodeX. Contactez les
+        responsabilité des administrateurs du site &SYS_PRODUCT_NAME;. Contactez les
         à <email>&SYS_EMAIL_CONTACT;</email> si vous souhaitez faire
         une demande de création.</para>
 
-        <para>Les Canaux Développeurs de CodeX présentent un certain
+        <para>Les Canaux Développeurs de &SYS_PRODUCT_NAME; présentent un certain
         nombre de caractéristiques intéressantes :</para>
 
         <itemizedlist mark="bullet"
@@ -469,7 +469,7 @@
           <listitem>
             <para>Les opérations d'abonnement et le désabonnement au
             canal peuvent être effectués par l'utilisateur lui-même à
-            travers l'interface Web de CodeX.</para>
+            travers l'interface Web de &SYS_PRODUCT_NAME;.</para>
           </listitem>
 
           <listitem>
@@ -487,13 +487,13 @@
         </itemizedlist>
       </section>
 
-      <section id="CodeXDiscussionForums">
-        <title>Forums de discussion CodeX</title>
+      <section id="CodendiDiscussionForums">
+        <title>Forums de discussion &SYS_PRODUCT_NAME;</title>
 
-        <para>Les forums de discussion CodeX proposent une alternative
+        <para>Les forums de discussion &SYS_PRODUCT_NAME; proposent une alternative
         au Canaux Développeurs. Il s'agit de forums d'échange dont
         l'objectif est d'améliorer la communication entre les
-        utilisateurs de CodeX et l'équipe en charge de
+        utilisateurs de &SYS_PRODUCT_NAME; et l'équipe en charge de
         l'administration du site. On y trouve des forums où il est
         possible de demander de l'aide, d'envoyer des suggestions, des
         demandes de nouvelles fonctionnalités ou de nouvelles
@@ -501,7 +501,7 @@
         etc&hellip;</para>
 
         <para>Ces forums sont entièrement basés web ce qui implique
-        d'utiliser l'interface web de CodeX pour lire ou poster un
+        d'utiliser l'interface web de &SYS_PRODUCT_NAME; pour lire ou poster un
         message. Toutefois l'utilisateur a la possibilité de placer un
         forum sous surveillance afin de recevoir par email tous les
         échanges qui ont lieu sur le forum.</para>
@@ -512,10 +512,10 @@
         <title>Contactez-nous</title>
 
         <!-- <para>In addition to the Discussion Forums, you can always use
-        the &#34;Contact Us&#34; link to get in touch with the CodeX
+        the &#34;Contact Us&#34; link to get in touch with the &SYS_PRODUCT_NAME;
         Team.</para> -->
         <para>En plus des forums de discussion, vous pouvez toujours utiliser 
-        le lien &#34;Contactez-nous&#34; pour contacter l'équipe CodeX.</para>
+        le lien &#34;Contactez-nous&#34; pour contacter l'équipe &SYS_PRODUCT_NAME;.</para>
 
         <para>N'hésitez pas à faire usage de ce lien dès que vous en
         ressentez le besoin. Nous sommes là pour vous aider.</para>
@@ -525,10 +525,10 @@
       <section id="TheSearchFacility">
         <title>La fonction de recherche</title>
 
-        <para>CodeX vous permet d'effectuer une recherche par
+        <para>&SYS_PRODUCT_NAME; vous permet d'effectuer une recherche par
         mots-clés sur quasiment toutes les informations disponibles
         sur le site. Lorsque vous vous trouvez sur la page d'accueil
-        de CodeX vous pouvez rechercher des informations dans les
+        de &SYS_PRODUCT_NAME; vous pouvez rechercher des informations dans les
         ressources suivantes :</para>
 
         <itemizedlist mark="bullet"
@@ -546,7 +546,7 @@
             <para><emphasis role="bold">Boîte à outils</emphasis> :
             vous pouvez effectuer une recherche par mots-clés dans les
             échantillons de code disponibles dans la boîte à outils de
-            CodeX (voir <xref linkend="TheCodeSnippetLibrary" />). La
+            &SYS_PRODUCT_NAME; (voir <xref linkend="TheCodeSnippetLibrary" />). La
             recherche porte sur le nom et la description. Vous pouvez
             ainsi trouver facilement des échantillons de code qui
             répondent à vos besoins.</para>
@@ -568,7 +568,7 @@
 
           <listitem>
             <para><emphasis role="bold">Cet outil de suivi</emphasis> :
-            si vous utilisez un outil de suivi de CodeX, l'entrée
+            si vous utilisez un outil de suivi de &SYS_PRODUCT_NAME;, l'entrée
             &#34;Cet outil de suivi&#34; apparaît dans la boîte de
             recherche, permettant ainsi d'effectuer une recherche par
             mots-clés dans les artefacts de cet outil de suivi.</para>
@@ -577,10 +577,10 @@
       </section>
     </section>
 
-    <section id="TheCodeXDashboard">
-      <title>Le tableau de bord de CodeX</title>
+    <section id="TheCodendiDashboard">
+      <title>Le tableau de bord de &SYS_PRODUCT_NAME;</title>
 
-      <para>Par défaut, le tableau de bord de CodeX se trouve sur la
+      <para>Par défaut, le tableau de bord de &SYS_PRODUCT_NAME; se trouve sur la
       partie droite de la page d'accueil du site. Il donne une vue
       d'ensemble de l'activité du site à travers plusieurs
       indicateurs :</para>
@@ -588,8 +588,8 @@
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para><emphasis role="bold">Statistiques CodeX</emphasis> :
-          indique le nombre total de projets hébergés sur CodeX
+          <para><emphasis role="bold">Statistiques &SYS_PRODUCT_NAME;</emphasis> :
+          indique le nombre total de projets hébergés sur &SYS_PRODUCT_NAME;
 	  (à part ceux qui ont le statut privé ainsi que les projets 
 	  de patron et les projets de test), le
           nombre d'utilisateurs enregistrés, le nombre total de
@@ -609,7 +609,7 @@
           donne une liste des versions de logiciels les plus récentes
           postées sur le site par les différents projets. Si vous
           souhaitez connaître les dernières versions disponibles vous
-          pouvez visiter la page d'accueil régulièrement. CodeX vous
+          pouvez visiter la page d'accueil régulièrement. &SYS_PRODUCT_NAME; vous
           offre aussi le moyen de surveiller l'apparition de nouvelles
           versions pour un projet donné. Pour ce faire vous devez vous
           rendre sur la page de Sommaire du Projet (ou page d'accueil)
@@ -627,7 +627,7 @@
           <para><emphasis role="bold">Projets récents</emphasis> : les
           10 derniers projets enregistrés. En affichant cette liste de
           façon régulière vous pouvez être tenu informé de la création
-          de tout nouveau projet CodeX.</para>
+          de tout nouveau projet &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
         <listitem>
@@ -645,18 +645,18 @@
       </itemizedlist>
 
       <para>En conclusion, nous vous recommandons vivement de visiter
-      la page d'accueil de CodeX de façon régulière. Ce faisant vous
+      la page d'accueil de &SYS_PRODUCT_NAME; de façon régulière. Ce faisant vous
       aurez un excellent aperçu de ce qui se passe en matière de
       développement logiciel chez &SYS_ORG_NAME;.</para>
 
       <para><emphasis role="underline">En un mot comme en
-      cent</emphasis> : Faites de CodeX la page par défaut de votre
+      cent</emphasis> : Faites de &SYS_PRODUCT_NAME; la page par défaut de votre
       navigateur :-)</para>
     </section>
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

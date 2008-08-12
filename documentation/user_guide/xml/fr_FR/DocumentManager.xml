@@ -4,22 +4,22 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 <chapter id="DocumentManager">
   <title>Ancien Gestionnaire de documents (obsolète)</title>
 
   <para><tip><title>** The Document Manager is DEPRECATED
-  **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
-  is included in the CodeX User Guide for projects that originally
+  **</title> <para>In &SYS_PRODUCT_NAME; version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
+  is included in the &SYS_PRODUCT_NAME; User Guide for projects that originally
   used the legacy Document Manager.</para></tip></para>
 
   <para>La documentation est probablement le délivrable le plus
-  important d'un projet après le logiciel lui-même. CodeX propose un
+  important d'un projet après le logiciel lui-même. &SYS_PRODUCT_NAME; propose un
   service spécifique pour la gestion de la documentation.</para>
 
-  <para>Bien que le gestionnaire de documents de CodeX ne soit pas
+  <para>Bien que le gestionnaire de documents de &SYS_PRODUCT_NAME; ne soit pas
   comparable à un système de gestion documentaire dédié, il est
   cependant extrêmement pratique pour gérer les documents critiques
   pour votre communauté d'utilisateurs. Quelques exemples : manuel
@@ -87,13 +87,13 @@
       <title>Références croisées sur les documents</title>
 
       <para>A l'instar des artefacts, des commits CVS, des numéros de
-      révision Subversion et autres objets CodeX, les documents
+      révision Subversion et autres objets &SYS_PRODUCT_NAME;, les documents
       peuvent être référencés dans les commentaires associés aux
       artefacts ou aux messages de commit. L'utilisation du patron "doc
       #NNN" crée automatiquement un lien vers le document dont
       l'identifiant est NNN. L'identifiant d'un document est visible
       sur la page principale du gestionnaire de documents lorsqu'on
-      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.
+      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans Codendi.
     </para>
 
     </section>
@@ -121,15 +121,15 @@
     le bouton &#34;Valider&#34;.</para>
 
     <para>Un document doit toujours être attaché à un groupe. C'est
-    pour cette raison que CodeX propose un groupe par défaut pour
+    pour cette raison que &SYS_PRODUCT_NAME; propose un groupe par défaut pour
     chaque projet appelé 'Documents'. Il est possible de renommer ce
     groupe par défaut.</para>
 
     <para><tip><title>Coup de pouce : documents collés ou
     téléchargés</title> <para>Un document collé directement dans la
-    zone de texte sera affiché dans une page CodeX lors de la
+    zone de texte sera affiché dans une page &SYS_PRODUCT_NAME; lors de la
     consultation. S'il s'agit d'un document utilisant des balises HTML
-    son apparence suivra les styles CodeX et les balises HTML, TITLE
+    son apparence suivra les styles &SYS_PRODUCT_NAME; et les balises HTML, TITLE
     et HEAD d'origine seront ignorées. Un document téléchargé, au
     contraire, sera affiché tel quel dans une fenêtre séparée du
     navigateur. Les documents collés présente aussi l'avantage d'être
@@ -227,7 +227,7 @@
     <section id="DocumentGroupManagement">
       <title>Gestion des groupes de documents</title>
 
-      <para>Dans la terminologie CodeX, un groupe de documents est
+      <para>Dans la terminologie &SYS_PRODUCT_NAME;, un groupe de documents est
       équivalent à un dossier.</para>
 
       <figure id="FigureTheDocumentGroupsAdministrationScreen">
@@ -362,7 +362,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

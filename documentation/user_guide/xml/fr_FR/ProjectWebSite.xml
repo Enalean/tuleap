@@ -4,8 +4,8 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 
 -->
@@ -15,7 +15,7 @@
     <section id="VisitingaWebSite">
       <title>Visiter un site Web</title>
 
-		<para>Lorsqu'un projet est créé sur CodeX un site Web spécifique est initialisé.
+		<para>Lorsqu'un projet est créé sur &SYS_PRODUCT_NAME; un site Web spécifique est initialisé.
 			Vous pouvez accéder au site Web de deux façons différentes :</para>
 
       <itemizedlist mark="bullet">
@@ -26,7 +26,7 @@
           <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://nom_projet.&SYS_DEFAULT_DOMAIN;
           </programlisting>
-          <para>Ou si votre serveur CodeX est en mode sécurisé :</para>
+          <para>Ou si votre serveur &SYS_PRODUCT_NAME; est en mode sécurisé :</para>
           <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 https://nom_projet.&SYS_DEFAULT_DOMAIN;
           </programlisting>
@@ -42,7 +42,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
       <para>Si l'équipe de projet n'a pas créé ses propres pages Web,
       vous verrez apparaître la page d'accueil par défaut vous
       informant que le site sera bientôt disponible complétée d'un
-      lien de retour vers le site CodeX.</para>
+      lien de retour vers le site &SYS_PRODUCT_NAME;.</para>
     </section>
 
     <section id="WebSiteCreation">
@@ -62,7 +62,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
 
         <para>Si vous avez la possibilité d'utiliser votre compte
         Shell (voir <xref linkend="ShellAccount" />) pour vous
-        connecter au serveur CodeX et vous placer dans ce répertoire
+        connecter au serveur &SYS_PRODUCT_NAME; et vous placer dans ce répertoire
         en utilisant la commande Unix &#34;cd
         /home/groups/nom_projet&#34; vous verrez trois
         répertoires :</para>
@@ -154,7 +154,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
         <literal>/home/groups/nom_projet/htdocs</literal>.</para>
 
 <!-- We removed access to the pre_vhost.php include file for security reasons
-        <para>CodeX offers a system wide include file called
+        <para>&SYS_PRODUCT_NAME; offers a system wide include file called
         &#34;pre_vhosts.php&#34; that you should include at the very top of
         all your PHP pages if you want to be given access to the current user,
         session and group (project) information. This include file create
@@ -186,7 +186,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
                 <entry>Integer</entry>
 
                 <entry>ID of your project (as shown in the group_id argument
-                of many CodeX services)</entry>
+                of many &SYS_PRODUCT_NAME; services)</entry>
               </row>
 
               <row>
@@ -307,7 +307,7 @@ https://nom_projet.&SYS_DEFAULT_DOMAIN;
 
                 <entry>Boolean</entry>
 
-                <entry>Says whether the current visitor is logged in CodeX or
+                <entry>Says whether the current visitor is logged in &SYS_PRODUCT_NAME; or
                 not (anonymous user)</entry>
               </row>
 
@@ -423,7 +423,7 @@ if ( user_isloggedin() ) {
         <title>Publication du site Web</title>
 
         <para>Vous pouvez utiliser différentes méthodes pour publier les pages
-        de votre site Web sur le serveur CodeX :</para>
+        de votre site Web sur le serveur &SYS_PRODUCT_NAME; :</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -439,7 +439,7 @@ if ( user_isloggedin() ) {
 
           <listitem>
             <para>De petits changements peuvent aussi être effectués
-            depuis votre compte Shell CodeX en utilisant un éditeur
+            depuis votre compte Shell &SYS_PRODUCT_NAME; en utilisant un éditeur
             comme vi, emacs mais nous vous déconseillons d'effectuer
             des modifications lourdes par ce biais.</para>
           </listitem>
@@ -472,7 +472,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
 
             <listitem>
               <para>Login and Password : tapez votre nom d'utilisateur
-              et votre mot de passe CodeX. Cliquez sur la case à 
+              et votre mot de passe &SYS_PRODUCT_NAME;. Cliquez sur la case à 
               cocher pour éviter d'avoir à  taper le mot de passe à 
               chaque opération de sauvegarde.</para>
             </listitem>
@@ -490,7 +490,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
 				modifiées via FTP.</para>
 
 			<para>Les utilisateurs Windows ont aussi la possibilité de pointer directement
-				sur les répertoires des projets sur CodeX (voir <xref
+				sur les répertoires des projets sur &SYS_PRODUCT_NAME; (voir <xref
 					linkend="MSWindowsSharedResources"/>) et de travailler sur les
 				fichiers HTML comme s'ils étaient situés sur votre poste de travail. Dans ce
 				cas aucune action de publication n'est nécessaire.</para>
@@ -500,7 +500,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
           <title>Microsoft FrontPage</title>
 
 			<para>Vous ne pouvez pas utiliser les fonctions de publication de FrontPage car
-				CodeX ne supporte pas les extensions de Frontpage. De plus, la publication
+				&SYS_PRODUCT_NAME; ne supporte pas les extensions de Frontpage. De plus, la publication
 				via FTP ne fonctionne pas non plus car Frontpage ne permet pas de spécifier
 				complètement le chemin d'accès au site Web distant. L'une des solutions de
 				rechange consiste à mapper un disque réseau sur
@@ -521,7 +521,7 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
 				<literal>nom_projet.&SYS_DEFAULT_DOMAIN;</literal> en tant que
 				serveur hôte et <literal>/home/groups/nom_projet/htdocs</literal>
 				pour le répertoire de publication . Le nom d'utilisateur et le mot de passe
-				sont les mêmes que ceux de votre compte CodeX.</para>
+				sont les mêmes que ceux de votre compte &SYS_PRODUCT_NAME;.</para>
         </section>
 
         <section id="LocalEditingandRemoteTransfer">
@@ -535,10 +535,10 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
                         spacing="compact">
             <listitem>
 				<para><emphasis role="bold">FTP</emphasis> : c'est le moyen le plus
-					simple de transférer vos pages Web vers l'emplacement CodeX distant.
+					simple de transférer vos pages Web vers l'emplacement &SYS_PRODUCT_NAME; distant.
 					Utilisez un client ftp de votre choix pour vous connecter au serveur
 					<literal>nom_projet.&SYS_DEFAULT_DOMAIN;</literal> et
-					utilisez votre nom d'utilisateur et mot de passe CodeX. Une fois
+					utilisez votre nom d'utilisateur et mot de passe &SYS_PRODUCT_NAME;. Une fois
 					connecté, utilisez la commande suivante : </para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -559,7 +559,7 @@ cd /home/groups/nom_projet/htdocs
 scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
 </programlisting>
 
-				<para>où nom_utilisateur est votre nom d'utilisateur CodeX. L'option -r
+				<para>où nom_utilisateur est votre nom d'utilisateur &SYS_PRODUCT_NAME;. L'option -r
 					déclenche une copie récursive et copie donc tous les fichiers dans le
 					répertoire ainsi que tous les autres fichiers dans les sous-répertoires
                                         tout en préservant la même structure arborescente.</para>
@@ -569,26 +569,26 @@ scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
       </section>
     </section>
 
-    <section id="ReferencingtheCodeXSite">
-      <title>Référencer le site CodeX</title>
+    <section id="ReferencingtheCodendiSite">
+      <title>Référencer le site &SYS_PRODUCT_NAME;</title>
 
-		<para>L'équipe CodeX demande à ce que tous les sites Web des projets affichent le logo
-			CodeX sur leur page d'accueil. Ceci pour deux raisons :</para>
+		<para>L'équipe &SYS_PRODUCT_NAME; demande à ce que tous les sites Web des projets affichent le logo
+			&SYS_PRODUCT_NAME; sur leur page d'accueil. Ceci pour deux raisons :</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-			<para>Tout d'abord, en référençant le site CodeX sur votre page Web vous
-				permettez à vos utilisateurs d'être informé de l'existence de CodeX et vous
+			<para>Tout d'abord, en référençant le site &SYS_PRODUCT_NAME; sur votre page Web vous
+				permettez à vos utilisateurs d'être informé de l'existence de &SYS_PRODUCT_NAME; et vous
 				leur donnez une chance de le visiter et de prendre connaissance d'autres
-				projets hébergés sur CodeX. Ce faisant vous augmentez les opportunités de
+				projets hébergés sur &SYS_PRODUCT_NAME;. Ce faisant vous augmentez les opportunités de
 				réutilisation.</para>
         </listitem>
 
         <listitem>
-			<para>La seconde raison tient au fait que la présence du logo CodeX sur votre site
+			<para>La seconde raison tient au fait que la présence du logo &SYS_PRODUCT_NAME; sur votre site
 				Web déclenchera l'incrémentation automatique d'un compteur d'accès que
-				CodeX maintient pour vous. Le nombre d'accès à votre site est consultable
+				&SYS_PRODUCT_NAME; maintient pour vous. Le nombre d'accès à votre site est consultable
 				depuis la page de sommaire de votre projet en cliquant sur le lien
 				&#34;Statistiques&#34; situé sous la description du projet (voir <xref
 					linkend="FigureASampleProjectSummaryPage"/>). Ceci nous aidera
@@ -598,7 +598,7 @@ scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
         </listitem>
       </itemizedlist>
 
-      <para>Pour afficher le logo CodeX sur votre page Web utilisez l'URL suivant :</para>
+      <para>Pour afficher le logo &SYS_PRODUCT_NAME; sur votre page Web utilisez l'URL suivant :</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
@@ -627,7 +627,7 @@ d'un des services de votre projet et en cherchant la valeur du paramètre group_
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

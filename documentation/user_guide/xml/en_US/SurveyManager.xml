@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="SurveyManager">
@@ -12,12 +12,12 @@
     <para>The Survey Manager allows a project team to create surveys.
     Providing a survey service in an environment where most services are
     related to software development activities may seem a bit strange at first
-    glance. However if you remember that CodeX is about source code sharing
+    glance. However if you remember that &SYS_PRODUCT_NAME; is about source code sharing
     and community building, you&#39;ll soon realize that part of the game in
     building a strong community is to listen to the community feedback and
     make it happy.</para>
 
-    <para>Listening to your community can be done in various ways on CodeX:</para>
+    <para>Listening to your community can be done in various ways on &SYS_PRODUCT_NAME;:</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
@@ -36,7 +36,7 @@
       </listitem>
     </itemizedlist>
 
-    <para>All these communication channels allow CodeX users to push
+    <para>All these communication channels allow &SYS_PRODUCT_NAME; users to push
     spontaneous feedback on a topic that they wholeheartedly cherish. But what
     if you want to collect the opinion of your community on a precise number
     of subjects and you want the answers to be taken from a set of possible
@@ -81,14 +81,14 @@
 
       <para>You have been working hard to produce this perfectly polished
       survey and now you want to reach the broadest possible audience. With
-      CodeX you can make your survey visible in a number of ways:</para>
+      &SYS_PRODUCT_NAME; you can make your survey visible in a number of ways:</para>
 
       <procedure>
         <step>
           <para><emphasis role="bold">Through the Survey Manager itself</emphasis>:
           as soon as a survey is created it is visible in your Survey Manager
           Welcome screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />).
-          So any CodeX user visiting your Project Summary page will see that
+          So any &SYS_PRODUCT_NAME; user visiting your Project Summary page will see that
           surveys are available in the &#34;Public Area&#34; (survey count not
           null) and by clicking on &#34;Surveys&#34; she will be able to take
           whatever survey is available.</para>
@@ -100,20 +100,20 @@
           news about this survey: why you did it, who is expected to take it
           and type the Web location corresponding to the survey (see below).
           By publishing a piece of news you also have a chance to see it on
-          the CodeX front page if the CodeX Team decides so.</para>
+          the &SYS_PRODUCT_NAME; front page if the &SYS_PRODUCT_NAME; Team decides so.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">E-mail</emphasis>: the survey you have
           created can be accessed directly via a Web pointer (URL) on the
-          CodeX site. As a consequence you can push your survey to virtually
+          &SYS_PRODUCT_NAME; site. As a consequence you can push your survey to virtually
           anybody in the Corporation simply by referencing the survey Web
           pointer in an e-mail message, a web page or any kind of office
-          document. Even non CodeX Users will be able to take the survey.</para>
+          document. Even non &SYS_PRODUCT_NAME; Users will be able to take the survey.</para>
         </step>
       </procedure>
 
-      <para>All surveys created on CodeX can be accessed through the following
+      <para>All surveys created on &SYS_PRODUCT_NAME; can be accessed through the following
       Web pointer (URL):</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -128,7 +128,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <para>Taking a survey is just a matter of accessing the survey by one of
       the previously mentioned method, answer the questions and click on the
       &#34;Submit&#34; button at the bottom of the page. A sample survey is
-      shown on <xref linkend="FigureASampleSurveyTakenFromTheCodeXProject" />.</para>
+      shown on <xref linkend="FigureASampleSurveyTakenFromTheCodendiProject" />.</para>
 
       <para><tip><title>Important note: Survey Privacy</title><para>The
       information collected in these surveys are strictly internal to &SYS_ORG_NAME;.
@@ -138,8 +138,8 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       or third parties. The information gathered is used only in aggregate
       form, not to single out specific users or developers.</para></tip></para>
 
-      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
-        <title>A sample survey taken from the CodeX project</title>
+      <figure id="FigureASampleSurveyTakenFromTheCodendiProject">
+        <title>A sample survey taken from the &SYS_PRODUCT_NAME; project</title>
 
         <mediaobject>
           <imageobject>
@@ -236,7 +236,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         the page itself. Defining a question is simply a matter of typing the
         question itself and then choosing a response type. There are 5 types
         of possible responses (see <xref
-        linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> for some
+        linkend="FigureASampleSurveyTakenFromTheCodendiProject" /> for some
         sample questions):</para>
 
         <itemizedlist mark="bullet"
@@ -288,7 +288,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             <para><emphasis role="bold">None</emphasis>: Assigning this type
             to a question will result in the de-activation of the question.
             This question will disappear from all the surveys using it. As
-            usual in CodeX the question is not deleted and all the answers
+            usual in &SYS_PRODUCT_NAME; the question is not deleted and all the answers
             collected so far in the various survey where this question is used
             remain untouched.</para>
           </listitem>
@@ -345,7 +345,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             <para>The status of the survey: you can make it active or not. As
             long as a survey is inactive it doesn&#39;t show up in the welcome
             screen of the Survey Manager meaning that it is not visible to
-            CodeX users. Similarly accessing the survey directly via its Web
+            &SYS_PRODUCT_NAME; users. Similarly accessing the survey directly via its Web
             location will not work either.</para>
           </listitem>
           
@@ -405,7 +405,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       <para></para>
       <para><tip> <title>Export Your Survey Results for Finer Grain
       Analysis</title> <para>If you want to further massage the
-      results of your surveys remember that CodeX allows project
+      results of your surveys remember that &SYS_PRODUCT_NAME; allows project
       administrators to export project data including survey
       results. For more details see <xref linkend="ProjectDataExport"
       /> </para></tip></para>
@@ -417,7 +417,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

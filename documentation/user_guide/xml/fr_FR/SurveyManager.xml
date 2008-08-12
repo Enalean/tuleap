@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="SurveyManager">
@@ -14,13 +14,13 @@
     créer des sondages d'opinion. Fournir un service de sondage dans
     un environnement dédié aux activités de développement logiciel
     peut paraître un peu étrange au premier abord. Cependant, si vous
-    vous souvenez que CodeX est aussi un outil qui permet de rester en
+    vous souvenez que &SYS_PRODUCT_NAME; est aussi un outil qui permet de rester en
     contact avec votre communauté d'utilisateurs, vous réaliserez
     assez rapidement qu'être à l'écoute de cette communauté est le
     meilleur moyen de la faire croître et de la satisfaire.</para>
 
     <para>Rester à l'écoute de sa communauté peut se faire de
-    plusieurs façons sur CodeX :</para>
+    plusieurs façons sur &SYS_PRODUCT_NAME; :</para>
 
     <itemizedlist mark="bullet"
                   spacing="compact">
@@ -41,7 +41,7 @@
     </itemizedlist>
 
     <para>Tous ces moyens de communication permettent aux utilisateurs
-    de CodeX de "pousser" des avis et demandes spontanés vers le
+    de &SYS_PRODUCT_NAME; de "pousser" des avis et demandes spontanés vers le
     projet concernant un sujet qui leur tient vraiment à coeur. Mais
     que faire si vous souhaitez recueillir l'avis de votre communauté
     d'utilisateurs sur un certain nombre de sujets et que vous voulez
@@ -88,7 +88,7 @@
 
       <para>Vous avez travaillé dur pour créer ce sondage parfaitement
       peaufiné et vous désirez maintenant atteindre l'audience la plus
-      large possible. CodeX vous permet de rendre votre sondage
+      large possible. &SYS_PRODUCT_NAME; vous permet de rendre votre sondage
       visible de plusieurs façons :</para>
 
       <procedure>
@@ -111,23 +111,23 @@
           disponibilité, qui est supposé y répondre et le pointeur Web
           (URL) où se trouve le sondage (voir ci-dessous). En publiant
           une annonce vous avez aussi une chance de la voir apparaître
-          sur la page d'accueil du site si l'équipe CodeX en décide
+          sur la page d'accueil du site si l'équipe &SYS_PRODUCT_NAME; en décide
           ainsi.</para>
         </step>
 
         <step>
           <para><emphasis role="bold">E-mail</emphasis> : le sondage
           que vous avez créé est accessible directement via un
-          pointeur Web (URL) du site CodeX. En conséquence vous pouvez
+          pointeur Web (URL) du site &SYS_PRODUCT_NAME;. En conséquence vous pouvez
           informer votre communauté d'utilisateur en incluant ce
           pointeur Web dans tout document tel que message e-mail, page
           Web ou tout autre document. Même les personnes qui ne sont
-          pas enregistrées sur CodeX peuvent participer à un
+          pas enregistrées sur &SYS_PRODUCT_NAME; peuvent participer à un
           sondage.</para>
         </step>
       </procedure>
 
-      <para>Tous les sondages créés sur CodeX sont accessibles via un
+      <para>Tous les sondages créés sur &SYS_PRODUCT_NAME; sont accessibles via un
       pointeur Web (URL) comme celui-ci :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -145,7 +145,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       indiqué précédemment, puis en répondant à la série de questions
       et enfin en cliquant sur le bouton &#34;Valider&#34; situé au
       bas de la page. La <xref
-      linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> montre
+      linkend="FigureASampleSurveyTakenFromTheCodendiProject" /> montre
       un exemple de sondage.</para>
 
       <para><tip><title>Note importante : confidentialité des
@@ -159,8 +159,8 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       agrégée et non pas dans le but de mettre en évidence un ou
       plusieurs utilisateurs ou développeurs.</para></tip></para>
 
-      <figure id="FigureASampleSurveyTakenFromTheCodeXProject">
-        <title>Un exemple de sondage émanant du projet CodeX</title>
+      <figure id="FigureASampleSurveyTakenFromTheCodendiProject">
+        <title>Un exemple de sondage émanant du projet &SYS_PRODUCT_NAME;</title>
 
         <mediaobject>
           <imageobject>
@@ -261,7 +261,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         module d'administration. Pour définir une question il suffit
         de taper le texte et de choisir un type de question. Il existe
         5 types de réponses possibles (voir <xref
-        linkend="FigureASampleSurveyTakenFromTheCodeXProject" /> pour
+        linkend="FigureASampleSurveyTakenFromTheCodendiProject" /> pour
         quelques exemples de questions) :</para>
 
         <itemizedlist mark="bullet"
@@ -322,7 +322,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
             type de réponse pour une question revient à la
             désactiver. La question disparaît alors de tous les
             sondages qui l'utilisent. Comme souvent en pareil cas dans
-            CodeX, la question n'est pas détruite et toutes les
+            &SYS_PRODUCT_NAME;, la question n'est pas détruite et toutes les
             réponses associées émanant des divers sondages demeurent
             intactes.</para>
           </listitem>
@@ -447,7 +447,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
         <para><tip> <title>Exportez les résultats de vos sondages pour
         une analyse plus fine</title> <para>Si vous souhaitez procéder
         à des traitements plus poussés sur les réponses d'un sondage,
-        souvenez-vous que CodeX permet aux administrateurs du projet
+        souvenez-vous que &SYS_PRODUCT_NAME; permet aux administrateurs du projet
         d'exporter les données du projet y compris les résultats des
         sondages. Pour plus d'information voir <xref
         linkend="ProjectDataExport" /> </para></tip></para>
@@ -459,7 +459,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

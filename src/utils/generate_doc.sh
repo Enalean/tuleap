@@ -106,7 +106,7 @@ do
 
     mkdir -p ../../html/$lang
 
-    $CMDDIR/xml2html.sh CodeX_User_Guide.xml ../../html/$lang/ $lang >/tmp/log_xml2html_$$ 2>&1
+    $CMDDIR/xml2html.sh User_Guide.xml ../../html/$lang/ $lang >/tmp/log_xml2html_$$ 2>&1
     if [ $? != 0 ]
     then
         echo "CodeX documentation generation failed!"
@@ -126,7 +126,7 @@ do
     
     mkdir -p $BASEDIR/user_guide/pdf/$lang
 
-    $CMDDIR/xml2pdf.sh CodeX_User_Guide.xml $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
+    $CMDDIR/xml2pdf.sh User_Guide.xml $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
     if [ $? != 0 ]
     then
         echo "CodeX documentation generation failed!"

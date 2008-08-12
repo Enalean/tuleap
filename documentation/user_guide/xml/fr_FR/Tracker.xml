@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//
 //
 -->
       
@@ -13,7 +13,7 @@
 
   <para>Les outils de suivi (de l'anglais trackers) représentent l'un
   des services les plus puissants et les plus flexibles mis à la
-  disposition des projets hébergés sur CodeX. Ils assurent le suivi
+  disposition des projets hébergés sur &SYS_PRODUCT_NAME;. Ils assurent le suivi
   d'artefacts aussi variés que des bugs, des tâches, des fiches
   d'assistance, etc... et un projet peut créer autant d'outils de
   suivi que nécessaire.</para>
@@ -22,7 +22,7 @@
   site ou bien créés par chaque projet sont entièrement
   personnalisables.</para>
 
-  <section id="CodeXTrackerPrinciples">
+  <section id="CodendiTrackerPrinciples">
     <title>Terminologie et points commun</title>
 
     <para>Avant de présenter les fonctionnalités des outils de suivi,
@@ -121,7 +121,7 @@
     haut de l'écran (voir <xref
     linkend="FigureASampleTrackerBrowsingScreen" />).</para>
 
-    <figure id="ArtifactSubmissionScreenFromTheCodeXProject">
+    <figure id="ArtifactSubmissionScreenFromTheCodendiProject">
       <title>Un exemple d'écran de soumission d'artefact  (ici de type &#34;bug&#34;) </title>
 
       <mediaobject>
@@ -133,15 +133,15 @@
     </figure>
 
     <para>La <xref
-    linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> montre un
-    exemple de soumission d'écran provenant d'un projet CodeX. En
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> montre un
+    exemple de soumission d'écran provenant d'un projet &SYS_PRODUCT_NAME;. En
     raison du très haut niveau de personnalisation de service de l'outil de suivi de
-    CodeX, les écrans de soumission d'artefact varient énormément d'un
+    &SYS_PRODUCT_NAME;, les écrans de soumission d'artefact varient énormément d'un
     outil de suivi à l'autre. Suivant les cas les champs affichés et le nom des
     artefacts diffèrent.</para>
 
     <para>Dans l'exemple fourni sur la <xref
-    linkend="ArtifactSubmissionScreenFromTheCodeXProject" /> les
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> les
     artefacts sont des bugs (aussi connu sous le nom &#34;défauts&#34;
     ou &#34;anomalies&#34; dans un langage plus châtié). Ici
     l'utilisateur doit fournir une catégorie, un groupe, une priorité
@@ -152,7 +152,7 @@
     bouton Soumettre, un identifiant unique (ID) lui est
     automatiquement assigné.</para>
 
-    <para>Les valeurs proposées par un champ peuvent dépendre d'une valeur d'un autre champ. Si le javascript est activé dans votre navigateur, les champs seront alors filtrés dynamiquement. Sinon, CodeX s'assurera que les valeurs que vous soumettez sont correctes.</para>
+    <para>Les valeurs proposées par un champ peuvent dépendre d'une valeur d'un autre champ. Si le javascript est activé dans votre navigateur, les champs seront alors filtrés dynamiquement. Sinon, &SYS_PRODUCT_NAME; s'assurera que les valeurs que vous soumettez sont correctes.</para>
 
     <para>Comme expliqué plus haut, le formulaire de soumission d'un
     artefact peut varier considérablement d'un outil de suivi à l'autre en
@@ -161,7 +161,7 @@
     typique consiste à donner accès à plus de champs aux membres du
     projet qu'aux utilisateurs externes à l'équipe. A titre
     d'exemple, sur la <xref
-    linkend="ArtifactSubmissionScreenFromTheCodeXProject" />, la
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" />, la
     personne qui soumet le bug est probablement un membre du projet
     car donner une valeur au champ &#34;Assigné à&#34; n'est, en
     général, pas du ressort d'un utilisateur externe. Il est en effet
@@ -177,19 +177,19 @@
 
     <para><tip><title>Coup de pouce : assurez-vous que votre artefact
     n'a pas déjà été soumis</title><para>Vous êtes sur le point de
-    soumettre un bug ou une demande d'assistance à un projet CodeX ? 
+    soumettre un bug ou une demande d'assistance à un projet &SYS_PRODUCT_NAME; ? 
     Avant de vous lancer, assurez-vous qu'un artefact similaire n'est
     pas déjà présent. Pour ce faire, vous pouvez effectuer une
     recherche dans la base des artefacts soit par l'écran de
     sélection, soit en utilisant la boîte de recherche par mots-clés
-    située dans le menu principal de CodeX.</para></tip></para>
+    située dans le menu principal de &SYS_PRODUCT_NAME;.</para></tip></para>
 
   </section>
 
   <section id="ArtifactBrowsing">
     <title>Naviguer dans les artefacts</title>
 
-    <para>CodeX permet de naviguer dans la base des artefacts selon un
+    <para>&SYS_PRODUCT_NAME; permet de naviguer dans la base des artefacts selon un
     nombre de critères variables.</para>
 
     <section id="ArtifactSelectionCriteria">
@@ -416,7 +416,7 @@
       &#34;Afficher&#34; pour lancer la requête. Après exécution et
       affichage des résultats, il suffit de cliquez sur le lien
       &#34;Cette page en signet&#34; figurant dans le menu principal
-      de CodeX pour faire apparaître un nouveau signet dans votre page
+      de &SYS_PRODUCT_NAME; pour faire apparaître un nouveau signet dans votre page
       personnelle. En sélectionnant ce signet vous pouvez à tout
       moment relancer la même requête.</para></tip></para>
 
@@ -437,9 +437,9 @@
         </listitem>
       </itemizedlist>
 
-      <para>Vous noterez aussi que CodeX garde toujours la trace de la
+      <para>Vous noterez aussi que &SYS_PRODUCT_NAME; garde toujours la trace de la
       dernière requête effectuée. Lorsque vous vous présenterez à
-      nouveau sur l'écran de recherche et de navigation, CodeX
+      nouveau sur l'écran de recherche et de navigation, &SYS_PRODUCT_NAME;
       effectuera la même requête pour vous et vous présentera les
       résultats correspondants.</para>
 
@@ -459,7 +459,7 @@
     <section id="TrackerSearchResults">
       <title>Résultats de la recherche dans un outil de suivi</title> 
       
-      <para>Sur la base de vos critères de sélection, CodeX effectue
+      <para>Sur la base de vos critères de sélection, &SYS_PRODUCT_NAME; effectue
       une requête dans la base de données, sélectionne les artefacts
       correspondants et les affiche juste au dessous des critères de
       sélection. Le choix des colonnes affichées par la liste de
@@ -500,7 +500,7 @@
 
         <para>Par défaut, les artefacts sont triés par identifiant
         (ID) ce qui correspond à l'ordre chronologique de création des
-        artefacts dans la base de données de CodeX.</para>
+        artefacts dans la base de données de &SYS_PRODUCT_NAME;.</para>
 
         <para>La liste des artefacts peut être triée selon n'importe
         quelle colonne affichée à l'écran en cliquant sur l'entête de la
@@ -529,7 +529,7 @@
 
         <note><para>Note : les critères de tri, comme les critères de
         sélection, sont aussi sauvegardés dans vos préférences
-        utilisateurs et CodeX appliquera les mêmes critères de tri
+        utilisateurs et &SYS_PRODUCT_NAME; appliquera les mêmes critères de tri
         lors de votre prochaine requête.</para></note>
 
       </section>
@@ -542,7 +542,7 @@
         sélectionné au format CSV. En utilisant cette fonctionnalité
         vous pouvez aisément sélectionner les artefacts auxquels vous
         souhaitez appliquer des traitements supplémentaires avec des
-        outils externes à CodeX.</para>
+        outils externes à &SYS_PRODUCT_NAME;.</para>
 
       </section>
 
@@ -580,7 +580,7 @@
         rapport spécifique n'a été défini, le rapport appelé
         &#39;Défault&#39; est le seul disponible.</para>
 
-        <para>Tout utilisateur CodeX ayant accès à l'outil de suivi peut définir
+        <para>Tout utilisateur &SYS_PRODUCT_NAME; ayant accès à l'outil de suivi peut définir
         son propre rapport de recherche. Dans ce cas, le rapport est
         personnel et il est uniquement visible par l'utilisateur qui
         l'a créé. A l'inverse, les administrateurs du tracker peuvent
@@ -602,7 +602,7 @@
         rapport spécifique n'a été défini, le rapport appelé
         &#39;Défault&#39; est le seul disponible.</para>
 
-		<para>Tout utilisateur CodeX ayant accès à l'outil de suivi peut définir
+		<para>Tout utilisateur &SYS_PRODUCT_NAME; ayant accès à l'outil de suivi peut définir
         son propre rapport graphique de recherche. Dans ce cas, le rapport
         est personnel et il est uniquement visible par l'utilisateur 
         qui l'a créé. A l'inverse, les administrateurs du tracker peuvent
@@ -688,7 +688,7 @@
           manquantes comme un numéro de version ou le type de la
           machine, sont autant d'exemples de commentaires utilisés
           fréquemment. Plutôt que de retaper sans cesse le même texte,
-          CodeX permet de créer un ensemble de réponses prédéfinies
+          &SYS_PRODUCT_NAME; permet de créer un ensemble de réponses prédéfinies
           appelées réponses-type. Chaque réponse-type se compose d'un
           nom et d'un contenu.</para>
 
@@ -704,7 +704,7 @@
           <para><emphasis role="bold">Types de commentaire</emphasis> :
           dans le but d'éviter la croissance exponentielle du nombre
           de champs texte d'un outil de suivi destinés à recevoir du texte libre,
-          CodeX offre un mécanisme de typage des
+          &SYS_PRODUCT_NAME; offre un mécanisme de typage des
           commentaires. L'équipe de projet peut définir un certain
           nombre de labels qui peuvent servir à étiqueter un
           commentaire. C'est une fonctionnalité intéressante pour
@@ -755,7 +755,7 @@
 
       <para>Comme nous le verrons plus loin dans ce chapitre (voir
       <xref linkend="TrackerEmailNotification" />) les outils de suivi
-      de CodeX offrent un puissant mécanisme de notification par email
+      de &SYS_PRODUCT_NAME; offrent un puissant mécanisme de notification par email
       aux utilisateurs qui, à un moment ou à un autre, ont été
       impliqués dans le cycle de vie de l'artefact que se soit comme
       soumetteur, comme responsable ou simplement pour avoir poster un
@@ -777,13 +777,13 @@
 
         <para>Les noms des destinataires en copie peuvent être fournis
         soit sous la forme d'une adresse email soit comme un nom
-        d'utilisateur CodeX.</para>
+        d'utilisateur &SYS_PRODUCT_NAME;.</para>
 
         <itemizedlist mark="bullet">
           <listitem>
             <para><emphasis role="bold">Nom d'utilisateur
-            CodeX</emphasis> : lorsque la personne que vous souhaitez
-            notifier dispose d'un compte CodeX il est recommandé
+            &SYS_PRODUCT_NAME;</emphasis> : lorsque la personne que vous souhaitez
+            notifier dispose d'un compte &SYS_PRODUCT_NAME; il est recommandé
             d'utiliser ce nom plutôt que son adresse email. En
             utilisant son nom d'utilisateur vous permettez à
             l'utilisateur de définir finement le type de modification
@@ -826,7 +826,7 @@
           <listitem>
             <para>Ajout d'un destinataire : les utilisateurs anonymes
             ne peuvent ajouter de destinataire. Tout autre utilisateur
-            possédant un compte sur CodeX peut ajouter un destinataire
+            possédant un compte sur &SYS_PRODUCT_NAME; peut ajouter un destinataire
             et la liste des destinataires indiquera clairement qui a
             ajouté cette entrée et quand.</para>
           </listitem>
@@ -839,7 +839,7 @@
             autres utilisateurs peuvent détruire les destinataires
             ajoutés par leurs soins ou les entrées où le destinataire
             correspond à leur adresse email ou à leur nom
-            d'utilisateur. En d'autres termes, un utilisateur CodeX a
+            d'utilisateur. En d'autres termes, un utilisateur &SYS_PRODUCT_NAME; a
             le droit de défaire ce qu'il a fait ou de s'enlever
             lui-même de la liste des destinataires dans n'importe quel
             outil de suivi.</para>
@@ -873,14 +873,14 @@
       <para>La section qui suit les fichiers attachés sur l'écran de
       modification d'un artefact, concerne les dépendances entre
       artefacts.(voir la <xref linkend="FigureArtifactDependencies"
-      />). Les utilisateurs de CodeX ont la possibilité d'établir un
+      />). Les utilisateurs de &SYS_PRODUCT_NAME; ont la possibilité d'établir un
       lien de dépendance depuis un artefact vers un ou plusieurs
       autres artefacts appartenant à n'importe quel outil de suivi de n'importe
       quel projet. Ceci est rendu possible par le fait que les
       artefacts possèdent un identifiant (ID) unique sur l'ensemble du
-      système CodeX.</para>
+      système &SYS_PRODUCT_NAME;.</para>
 
-      <para>CodeX n'attache aucune sémantique aux liens qui unissent
+      <para>&SYS_PRODUCT_NAME; n'attache aucune sémantique aux liens qui unissent
       des artefacts. Votre équipe de projet est donc libre de
       s'entendre sur la signification d'un tel lien. Il peut s'agir
       d'une dépendance causale, d'une duplication de l'information ou
@@ -922,8 +922,8 @@
 
       <para>En complément de la façon plutôt formelle d'exprimer une
       dépendence entre deux artefacts présentée dans la <xref
-      linkend="ArtifactDependencies"/>, CodeX permet de créer une
-      référence sur n'importe quel artefact ou autre objet CodeX dans un commentaire.</para>
+      linkend="ArtifactDependencies"/>, Codendi permet de créer une
+      référence sur n'importe quel artefact ou autre objet &SYS_PRODUCT_NAME; dans un commentaire.</para>
 
       <para>Lorsque vous tapez du text dans n'importe quel champ texte ou commentaire
       d'un artefact, tout morceau de texte qui suit le patron &#34;XXX #NNN&#34; est 
@@ -932,20 +932,20 @@
       l'identifiant unique (ID) (exemple : &#34;bug #123&#34;, &#34;tache #321&#34;, 
       &#34;req #12&#34;, etc...). Si vous ne connaissez pas le nom court de l'outil de 
       suivi ou si vous souhaitez ne pas le spécifier vous pouvez utiliser le
-      patron générique &#34;art #NNN&#34;. Lorsque CodeX affiche un commentaire contenant 
+      patron générique &#34;art #NNN&#34;. Lorsque &SYS_PRODUCT_NAME; affiche un commentaire contenant 
       une référence, elle est automatiquement transformée en hyperlien vers la page de 
-      CodeX donnant toutes les informations sur cet artefact.</para>
+      &SYS_PRODUCT_NAME; donnant toutes les informations sur cet artefact.</para>
 
       <para>Un commentaire peut contenir un référence à un artefact de
       n'importe quel type appartenant à n'importe quel projet. Ce
       mécanisme <emphasis role="bold">n'est</emphasis> pas limité aux
       artefact appartenant aux outils de suivi du même projet. Cela
       est rendu possible par le fait qu'un artefact dispose d'un
-      identifiant unique sur tout le site CodeX.</para>
+      identifiant unique sur tout le site &SYS_PRODUCT_NAME;.</para>
 
-      <para>Les patrons de référence de CodeX peuvent etre utilisees pour référencer des artifacts,
+      <para>Les patrons de référence de &SYS_PRODUCT_NAME; peuvent etre utilisees pour référencer des artifacts,
       mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
-      <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans CodeX.</para>
+      <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans Codendi.</para>
     
       <para>De plus les références vers les outils de suivi, les révision SVN et les 
       commits CVS sont stockées en base de données, et sont résumées dans la section suivante, 
@@ -985,7 +985,7 @@
   <section id="ArtifactMassChange">
     <title>Mise à jour massive d'artefacts</title>
   
-    <para>CodeX permet aux administrateurs d'un outil de suivi ou du projet
+    <para>&SYS_PRODUCT_NAME; permet aux administrateurs d'un outil de suivi ou du projet
     d'effectuer la même modification sur un ensemble d'artefacts en
     une seule étape. Il est ainsi possible d'ajouter le même
     destinataire en copie ou le même fichier attaché à un ensemble
@@ -1112,7 +1112,7 @@ width="14.5cm" />
   <section id="TrackerEmailNotification">
     <title>Notification email</title>
 
-    <para>Les outil de suivi de CodeX sont munis d'un mécanisme de
+    <para>Les outil de suivi de &SYS_PRODUCT_NAME; sont munis d'un mécanisme de
     notification d'évènements par email puissant et flexible. A moins
     que l'administrateur de projet ou les utilisateurs eux-mêmes n'en
     décident autrement, le système de notification par email adopte un
@@ -1140,7 +1140,7 @@ width="14.5cm" />
     </itemizedlist>
 
     <para>En plus de ces règles simples, le module d'administration de
-    l'outil de suivi permet aux utilisateurs CodeX de personnaliser le processus
+    l'outil de suivi permet aux utilisateurs &SYS_PRODUCT_NAME; de personnaliser le processus
     de notification email. Pour plus d'information reportez-vous à la
     <xref linkend="TrackerEmailNotificationSettings" />). </para>
 
@@ -1149,7 +1149,7 @@ width="14.5cm" />
     l'artefact à l'occasion de la dernière mise à jour. A la suite se
     trouve un récapitulatif complet de l'artefact. Des pointeurs Web
     sont aussi présents dans le message pour vous permettre d'accéder
-    facilement et rapidement à l'artefact sur CodeX.</para>
+    facilement et rapidement à l'artefact sur &SYS_PRODUCT_NAME;.</para>
 
   </section>
 
@@ -1157,14 +1157,14 @@ width="14.5cm" />
     <title>Analyse statistique</title>
 
     <para>Comme expliqué plus tôt dans ce chapitre (voir
-    <xref linkend="ProjectDataExport" />), CodeX permet d'exporter les
+    <xref linkend="ProjectDataExport" />), Codendi permet d'exporter les
     données de votre projet afin de les réutiliser dans des outils
     externes comme des outils statistiques. Cependant pour des besoins
     simples vous pouvez aussi utiliser le module d'analyse statistique
     de l'outil de suivi. Cette fonction est accessible via l'entrée 'Analyse
     statistique' du menu de l'outil de suivi.</para>
 
-    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject">
+    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject">
       <title>Exemple de distribution des valeurs du champ Catégorie d'un outil de suivi</title>
 
       <mediaobject>
@@ -1181,7 +1181,7 @@ width="14.5cm" />
     différents champs de type boîte de sélection. Ainsi vous pouvez
     voir comment sont distribués sur les valeurs des champs Statut,
     Catégorie ou Résolution (voir <xref
-    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodeXProject"
+    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject"
     /> pour un exemple de distribution des artefacts sur les champ
     Catégorie d'un outil de suivi).</para>
   </section>
@@ -1190,12 +1190,12 @@ width="14.5cm" />
     <title>Importation d'artefacts</title>
 
       <para>Les administrateurs d'un projet ont la possibilité
-      d'importer des artefacts dans un outil de suivi de CodeX en utilisant des
+      d'importer des artefacts dans un outil de suivi de &SYS_PRODUCT_NAME; en utilisant des
       fichiers au format CSV (Comma Separated Values) qui est supporté
       par toutes les applications bureautiques du marché. L'importation
       d'artefact facilite énormément la migration de données en
       provenance d'autres outils de suivi dans les outils de suivi de
-      CodeX.</para>
+      &SYS_PRODUCT_NAME;.</para>
 
     <para>L'importation d'artefacts se déroule en trois étapes :
 
@@ -1229,9 +1229,9 @@ width="14.5cm" />
         <para>Vous trouverez ci-dessous quelques suggestions d'utilisation de la fonction d'importation de l'outil de suivi :
 
         <itemizedlist mark="bullet" spacing="compact">
-        <listitem><para>Importation des données en provenance d'un logiciel de gestion de projet externe vers un outil de suivi de tâches de CodeX.</para></listitem>
-        <listitem><para>Migration des données de votre ancien système de suivi dans le nouvel outil de suivi de CodeX.</para></listitem>
-        <listitem><para>Migration d'artefact d'un outil de suivi CodeX vers un autre.</para></listitem>
+        <listitem><para>Importation des données en provenance d'un logiciel de gestion de projet externe vers un outil de suivi de tâches de &SYS_PRODUCT_NAME;.</para></listitem>
+        <listitem><para>Migration des données de votre ancien système de suivi dans le nouvel outil de suivi de &SYS_PRODUCT_NAME;.</para></listitem>
+        <listitem><para>Migration d'artefact d'un outil de suivi &SYS_PRODUCT_NAME; vers un autre.</para></listitem>
         </itemizedlist>
         </para>
     </section>
@@ -1311,7 +1311,7 @@ width="14.5cm" />
 
         D'autres erreurs peuvent être détectées à l'occasion de
         l'inspection visuelle du rapport d'importation fourni par
-        CodeX.
+        &SYS_PRODUCT_NAME;.
         </para>
     </section>
 
@@ -1355,9 +1355,9 @@ width="14.5cm" />
         
     <para>
     Les changements de format de date effectués par Excel peuvent être
-    incompatibles avec le format attendu par CodeX et causer des
+    incompatibles avec le format attendu par &SYS_PRODUCT_NAME; et causer des
     erreurs durant l'importation des données. A l'inverse, des
-    fichiers CSV exportés depuis CodeX peuvent ne pas s'ouvrir
+    fichiers CSV exportés depuis &SYS_PRODUCT_NAME; peuvent ne pas s'ouvrir
     correctement sous Excel avec certaines valeurs des paramètres
     régionaux.
     </para>
@@ -1372,7 +1372,7 @@ width="14.5cm" />
     pose problème, ajustez la largeur d'une colonne quelconque,
     sauvegardez le fichier et fermez Excel. Remettez les paramètres
     régionaux à leur ancienne valeur et importez le fichier CSV
-    "corrigé" dans CodeX.
+    "corrigé" dans &SYS_PRODUCT_NAME;.
     </para>
     </tip></para>
 
@@ -1411,7 +1411,7 @@ width="14.5cm" />
           <row>
             <entry><link linkend="ArtifactSubmission">Soumission d'un
             nouvel artefact</link></entry> <entry>Par défaut tout
-            visiteur, connecté à CodeX ou pas, peut soumettre un
+            visiteur, connecté à &SYS_PRODUCT_NAME; ou pas, peut soumettre un
             nouvel artefact. L'administrateur de l'outil de suivi peut limiter
             l'usage de cette fonction aux utilisateurs enregistrés ou
             aux membres du projet si l'outil de suivi est privé.</entry>
@@ -1421,7 +1421,7 @@ width="14.5cm" />
             linkend="ArtifactBrowsing">Navigation/Recherche
             d'artefact</link></entry> <entry>La recherche et la
             navigation dans la base d'artefacts est accessible à tous
-            les visiteurs CodeX sauf si l'outil de suivi est privé auquel cas
+            les visiteurs &SYS_PRODUCT_NAME; sauf si l'outil de suivi est privé auquel cas
             seuls les membres de l'équipe y ont accès.</entry>
           </row>
           <row>
@@ -1508,7 +1508,7 @@ width="14.5cm" />
 
     <para><tip><title>Coup de pouce : utilisez de préférence les outils
     de suivi prédéfinis</title> <para>Quand un projet est créé sur
-    CodeX un certain nombre d'outils de suivi sont automatiquement
+    &SYS_PRODUCT_NAME; un certain nombre d'outils de suivi sont automatiquement
     créés pour ce projet. Il s'agit typiquement d'outils de suivi pour
     les bugs, les tâches et les demandes de support. Si votre projet
     est amené à gérer ce genre d'artefacts, utilisez de préférence les
@@ -1524,7 +1524,7 @@ width="14.5cm" />
       <listitem id="TrackerCreationName">
         <para><emphasis role="bold">Nom</emphasis> : il s'agit du nom
         de l'outil de suivi. Le nom d'un outil de suivi est classiquement calqué sur le nom
-        des artefacts qui sont gérés. Ce nom est utilisé par CodeX
+        des artefacts qui sont gérés. Ce nom est utilisé par &SYS_PRODUCT_NAME;
         dans le titre de plusieurs écrans de l'outil de suivi. Quelques exemples
         de noms d'outils de suivi : Demandes de fonctionnalités,
         Tâches, Anomalies,&hellip;</para>
@@ -1563,7 +1563,7 @@ width="14.5cm" />
     les champs à utiliser dans l'outil de suivi. Pour vous éviter d'avoir à
     redéfinir sans cesse les outils de suivi les plus fréquemment
     utilisés (par exemple un outil de suivi d'anomalies, de tâches, de demandes
-    d'assistance, etc...) CodeX offre un certain nombre de patrons
+    d'assistance, etc...) &SYS_PRODUCT_NAME; offre un certain nombre de patrons
     d'outils de suivi prédéfinis à partir desquels vous pouvez créer
     votre propre outil de suivi. Ces patrons sont définis soit au niveau du site
     (patrons-site) soit au niveau du projet.</para>
@@ -1575,9 +1575,9 @@ width="14.5cm" />
     initial.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerCreationFromCodeXTemplate">
+      <listitem id="TrackerCreationFromCodendiTemplate">
         <para><emphasis role="bold">Patrons-site</emphasis> : il s'agit
-        de patrons définis par les administrateurs du site CodeX qui
+        de patrons définis par les administrateurs du site &SYS_PRODUCT_NAME; qui
         sont en général utiles à de nombreux projets. C'est aussi un
         moyen d'assurer une certaine harmonie d'un projet à l'autre
         tout en facilitant la vie des équipes de projet. La liste des
@@ -1585,7 +1585,7 @@ width="14.5cm" />
         trouverez typiquement des outils de suivi pour les anomalies, les tâches,
         etc... Un patron particulier appelé &#34;Aucun&#34; permet de
         créer un tracker vierge de tout champ sauf certains qui restent
-        obligatoires. Voir <xref linkend="CodeXTrackerTemplates" />
+        obligatoires. Voir <xref linkend="CodendiTrackerTemplates" />
         pour plus d'information concernant ces patrons.</para>
       </listitem>
 
@@ -1606,7 +1606,7 @@ width="14.5cm" />
   </section>
 
 
-  <section id="CodeXTrackerTemplates">
+  <section id="CodendiTrackerTemplates">
     <title>Patrons d'outils de suivi du site</title>
 
     <para>Les outils de suivi standards fournis pour chaque projet
@@ -1621,10 +1621,10 @@ width="14.5cm" />
         qui correspondent à un processus de travail spécifique autour
         des correctifs, des bugs, etc... Dans les paragraphes qui
         suivent, nous donnons une présentation très générale de ces
-        processus de travail. Pour chaque outil de suivi, l'équipe CodeX a essayé
+        processus de travail. Pour chaque outil de suivi, l'équipe &SYS_PRODUCT_NAME; a essayé
         de maintenir un équilibre entre sophistication et facilité
         d'utilisation. En conséquence, les patrons proposés aux
-        projets hébergés sur CodeX sont simples. Les membres du projet
+        projets hébergés sur &SYS_PRODUCT_NAME; sont simples. Les membres du projet
         sont ensuite libres de décider par eux-mêmes des informations
         qu'un artefact doit comporter et de personnaliser la
         définition des champs en conséquence. </para>
@@ -1641,7 +1641,7 @@ width="14.5cm" />
 
       <para>L'outil de suivi Bug est pré-configuré avec un ensemble de champs
       (utilisés ou pas) qui sont probablement suffisant pour une grande
-      majorité des projets hébergés sur CodeX. Vous pouvez bien sûr
+      majorité des projets hébergés sur &SYS_PRODUCT_NAME;. Vous pouvez bien sûr
       décider que certains champs critiques doivent être créés ou, au
       contraire, passez le statut de certains champs à "Inutilisé"
       pour simplifier l'outil de suivi.</para>
@@ -1698,7 +1698,7 @@ width="14.5cm" />
     <section id="TaskTemplate">
       <title>L'outil de suivi de tâches</title>
 
-      <para>L'outil de suivi de tâches de CodeX est un gestionnaire de tâches et
+      <para>L'outil de suivi de tâches de &SYS_PRODUCT_NAME; est un gestionnaire de tâches et
       pas un logiciel de gestion de projet comme CA-SuperProject,
       MS-Project ou d'autres logiciels puissants et complexes qu'on
       peut trouver sur le marché. L'outil de suivi de tâches n'est pas capable de
@@ -1716,7 +1716,7 @@ width="14.5cm" />
       <itemizedlist mark="bullet"
         spacing="compact">
         <listitem>
-          <para>Comme tous les autres outils CodeX, l'outil de suivi de tâches
+          <para>Comme tous les autres outils &SYS_PRODUCT_NAME;, l'outil de suivi de tâches
           est entièrement basé Web. Ainsi n'importe quel membre du
           projet peut mettre à jour ses tâches où qu'il se
           trouve.</para>
@@ -1739,7 +1739,7 @@ width="14.5cm" />
         <listitem>
           <para>Les données concernant les tâches peuvent être
           collectées à tout moment par le chef de projet en utilisant
-          la fonction d'exportation des données de CodeX (voir <xref
+          la fonction d'exportation des données de &SYS_PRODUCT_NAME; (voir <xref
           linkend="ProjectDataExport" />). Ceci permet de générer très
           facilement des rapports d'activité et de progression des
           projets.</para>
@@ -1836,14 +1836,14 @@ width="14.5cm" />
           <para><emphasis role="bold">Nom</emphasis> : <!--this is a
           short name that best describe the type of artifact managed
           in this tracker. This name must be quite short as it is used
-          in various screens of the CodeX Tracker like the artifact
+          in various screens of the &SYS_PRODUCT_NAME; Tracker like the artifact
           update form next to the artifact ID. Following the examples
           given for the Name field above, short names can be: AR for
           Action Request, SR for Support Requests, Reqt for
           Requirements, bug for Bugs&hellip;-->
           il s'agit du nom de l'outil de suivi. Le nom d'un outil de
           suivi est classiquement calqué sur le nom des artefacts qui
-          sont gérés. Ce nom est utilisé par CodeX dans le titre de 
+          sont gérés. Ce nom est utilisé par &SYS_PRODUCT_NAME; dans le titre de 
           plusieurs écrans de l'outil de suivi. Quelques exemples de
           noms d'outils de suivi : Demandes de fonctionnalités, Tâches, 
           Anomalies, ...</para>
@@ -1943,9 +1943,9 @@ width="14.5cm" />
         <para>En pénétrant dans ce module, une liste de groupes
         d'utilisateurs apparaît ainsi que leur permissions d'accès. La
         liste des groupes montre tout d'abord les groupes définis au
-        niveau du système CodeX comme l'ensemble des utilisateurs, les
+        niveau du système &SYS_PRODUCT_NAME; comme l'ensemble des utilisateurs, les
         utilisateurs enregistrés, les membres du projet, etc... Il
-        s'agit de groupes que CodeX gère pour vous de telle façon que
+        s'agit de groupes que &SYS_PRODUCT_NAME; gère pour vous de telle façon que
         vous n'avez pas à les modifier lorsqu'un utilisateur crée un
         compte ou qu'il devient membre du projet. La seconde partie
         de la liste est constituée de groupes d'utilisateurs définis
@@ -2138,9 +2138,9 @@ width="14.5cm" />
         sélectionnez l'item &#34;Gérer les groupes de champs&#34; sur la page 
         d'accueil du module d'administration d'un outil de suivi. 
         L'écran de gestion des groupes de champs (<xref
-        linkend="FigureTrackerFieldSetScreenOfACodeXHostedProject"
+        linkend="FigureTrackerFieldSetScreenOfACodendiHostedProject"
         />) montre un exemple de groupes de champs disponibles dans un outil de suivi de
-        CodeX. Cet écran se divise en deux sections :</para>
+        &SYS_PRODUCT_NAME;. Cet écran se divise en deux sections :</para>
 
         <procedure>
           <step>
@@ -2193,7 +2193,7 @@ width="14.5cm" />
         </itemizedlist>
 
 
-        <figure id="FigureTrackerFieldSetScreenOfACodeXHostedProject">
+        <figure id="FigureTrackerFieldSetScreenOfACodendiHostedProject">
           <title>&Eacute;cran de gestion des groupes de champs dans un outil de suivi</title>
 
           <mediaobject>
@@ -2253,11 +2253,11 @@ width="14.5cm" />
 
       <para>Lorsqu'un outil de suivi est créé, il comprend un ensemble de
       champs préconfigurés qui proviennent du patron utilisé pour sa
-      création. Pour la majorité des projets hébergés sur CodeX il est
+      création. Pour la majorité des projets hébergés sur &SYS_PRODUCT_NAME; il est
       très probable que les patrons standards (bugs, tâches, demandes
       d'assistance) répondent à la plupart des besoins.</para>
 
-      <para>Toutefois CodeX vous permet de personnaliser les champs
+      <para>Toutefois &SYS_PRODUCT_NAME; vous permet de personnaliser les champs
       utilisés par vos outils de suivi. Il peut s'agir d'une
       variation autour d'un patron standard comprenant l'ajout ou la
       suppression de quelques champs mais cela peut aussi être une
@@ -2338,9 +2338,9 @@ width="14.5cm" />
         utiliser sélectionnez l'item &#34;Gérer l'utilisation des
         champs&#34; sur la page d'accueil du module d'administration
         d'un outil de suivi. L'écran d'utilisation des champs (<xref
-        linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+        linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
         />) montre un exemple de champs disponibles dans un outil de suivi de
-        CodeX. Cet écran se divise en trois sections :</para>
+        &SYS_PRODUCT_NAME;. Cet écran se divise en trois sections :</para>
 
         <procedure>
           <step>
@@ -2350,14 +2350,14 @@ width="14.5cm" />
           <step>
             <para>la liste des champs inutilisés (invisible sur la figure
               <xref
-                linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+                linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
                 />)</para>
           </step>
           
           <step>
             <para>un formulaire permettant de créer de nouveaux champs
             dans l'outil de suivi (invisible sur la figure <xref
-            linkend="FigureTrackerFieldUsageScreenOfACodeXHostedProject"
+            linkend="FigureTrackerFieldUsageScreenOfACodendiHostedProject"
             />)</para>
           </step>
         </procedure>
@@ -2431,7 +2431,7 @@ width="14.5cm" />
         </itemizedlist>
 
 
-        <figure id="FigureTrackerFieldUsageScreenOfACodeXHostedProject">
+        <figure id="FigureTrackerFieldUsageScreenOfACodendiHostedProject">
           <title>&Eacute;cran de gestion de l'utilisation des champs dans un outil de suivi</title>
 
           <mediaobject>
@@ -2778,12 +2778,12 @@ width="14.5cm" />
         liste des valeurs pour le champ Resolution d'un outil de suivi de
         &#34;Bugs&#34;. Le champ Resolution est proposé avec un certain
         nombre de valeurs prédéfinies qui sont communes à tous les
-        projets CodeX. Par défaut 8 valeurs sont disponibles (Accepted, Analyzed, etc.). 
+        projets &SYS_PRODUCT_NAME;. Par défaut 8 valeurs sont disponibles (Accepted, Analyzed, etc.). 
         </para>
 
         <para>Vous avez bien sûr la possibilité d'ajouter vos propres
         valeurs au champ Resolution. Cependant dans le but de conserver une certaine
-        harmonie entre les différents outils de suivi de CodeX, nous
+        harmonie entre les différents outils de suivi de &SYS_PRODUCT_NAME;, nous
         vous recommandons vivement d'utiliser la liste des valeurs
         prédéfinies autant que vous le pouvez avant d'en créer de
         nouvelles.</para>
@@ -2830,13 +2830,13 @@ width="14.5cm" />
       <section id="TrackerBindingFieldToValueList">
         <title>Association d'un champ avec une liste de valeurs</title>
         
-        <para>CodeX vous permet non seulement de créer une liste de
+        <para>&SYS_PRODUCT_NAME; vous permet non seulement de créer une liste de
         valeurs pour un champ de type boîte de sélection mais il offre
         aussi la possibilité d'associer un champ avec une liste de
         valeurs prédéfinies générées dynamiquement par
-        CodeX. L'exemple le plus classique consiste à montrer la liste
+        &SYS_PRODUCT_NAME;. L'exemple le plus classique consiste à montrer la liste
         des membres du projet dans une boîte de sélection. Au lieu
-        d'avoir à la créer et à la maintenir manuellement, CodeX
+        d'avoir à la créer et à la maintenir manuellement, &SYS_PRODUCT_NAME;
         construit cette liste pour vous et vous permet de l'associer à
         un champ.</para>
 
@@ -3079,7 +3079,7 @@ width="14.5cm" />
       linkend="FigureTrackerCannedResponses" />).</para>
 
       <para>Plutôt que de retaper sans cesse les mêmes commentaires,
-      CodeX permet aux membres du projet de définir un ensemble de
+      &SYS_PRODUCT_NAME; permet aux membres du projet de définir un ensemble de
       commentaires prédéfinis appelés réponses-type. Après avoir
       défini ces réponses-type, poster le commentaire correspondant
       nécessite simplement de choisir la réponse-type dans la boîte
@@ -3111,7 +3111,7 @@ width="14.5cm" />
       <para>Sachant que les administrateurs d'un projet, les membres
       ou les autres utilisateurs peuvent avoir des besoins très
       différents en matière de recherche dans la base des artefacts,
-      CodeX permet de définir des rapports de recherche valables pour
+      &SYS_PRODUCT_NAME; permet de définir des rapports de recherche valables pour
       l'ensemble du projet ou par un utilisateur en particulier.</para>
 
       <para>Créer un rapport de recherche consiste à choisir quels
@@ -3135,7 +3135,7 @@ width="14.5cm" />
       utiliser en tant que critère de recherche mais pas les valeurs à
       mettre dans ces champs pour la recherche. La définition de la
       structure d'un rapport et le remplissage des critères de
-      recherche sont deux opérations distinctes sur CodeX. Une fois le
+      recherche sont deux opérations distinctes sur &SYS_PRODUCT_NAME;. Une fois le
       rapport de recherche défini dans le module d'administration (par
       exemple : &#39;Rapport simple&#39;, &#39;Rapport Qualité&#39;,
       &#39;Rapport quotidien&#39;,&hellip;) vous pouvez vous rendre
@@ -3144,7 +3144,7 @@ width="14.5cm" />
       critères de recherche et lancer la requête. Ensuite vous pouvez
       sauvegarder la totalité de cette recherche (choix du rapport et
       des valeurs des critères) à l'aide du mécanisme de signets de
-      CodeX (voir le coup de pouce de la <xref
+      &SYS_PRODUCT_NAME; (voir le coup de pouce de la <xref
       linkend="ArtifactSelectionCriteria" />). Et
       voila !</para></tip></para>
 
@@ -3198,7 +3198,7 @@ width="14.5cm" />
               <listitem>
                 <para><emphasis role="underline">Système</emphasis> :
                 ce type de rapport est défini au niveau du système
-                CodeX et ne peut être supprimé. Le rapport de
+                &SYS_PRODUCT_NAME; et ne peut être supprimé. Le rapport de
                 recherche par défaut qui est préconfiguré à la
                 création de l'outil de suivi est un rapport de type
                 Système.</para>
@@ -3522,7 +3522,7 @@ width="14.5cm" />
             
             <para>Si vous souhaitez notifier de nombreuses personnes,
             nous vous suggérons d'utiliser les listes de distributions
-            de CodeX (voir <xref linkend="MailingLists" />). Une fois
+            de &SYS_PRODUCT_NAME; (voir <xref linkend="MailingLists" />). Une fois
             la liste de distribution en place, il vous suffit de taper
             l'adresse de la liste dans le champ de notification
             globale pour que toutes les personnes concernées soient
@@ -3543,7 +3543,7 @@ width="14.5cm" />
       <section id="TrackerWatchers">
         <title>Utilisateurs à suivre</title>
 
-        <para>Les outils de suivi de CodeX offrent à tous les membres
+        <para>Les outils de suivi de &SYS_PRODUCT_NAME; offrent à tous les membres
         du projet la possibilité de recevoir une copie de toutes les
         notifications envoyées à certaines autres personnes.</para>
 
@@ -3581,7 +3581,7 @@ width="14.5cm" />
 
         <note><para>Remarque : le but de cette fonctionnalité n'est pas
         de vous espionner. Ainsi, pour être sûr que personne ne suit
-        vos notifications email sans votre consentement, CodeX montre
+        vos notifications email sans votre consentement, &SYS_PRODUCT_NAME; montre
         sur cette page le nom des utilisateurs qui ont demandé à
         suivre vos notifications email.</para></note>
 
@@ -3730,7 +3730,7 @@ width="14.5cm" />
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

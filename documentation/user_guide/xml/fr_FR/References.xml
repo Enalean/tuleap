@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <bibliography id="References">
@@ -27,7 +27,7 @@
     <biblioentry id="bib.cug.ciat">
       <abbrev id="bib.cug.ciat.abbrev">CIAT</abbrev>
 
-      <title>CodeX: Introduction et Tutoriel</title>
+      <title>&SYS_PRODUCT_NAME;: Introduction et Tutoriel</title>
 
       <authorgroup>
         <author>
@@ -114,7 +114,7 @@
   </bibliography>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

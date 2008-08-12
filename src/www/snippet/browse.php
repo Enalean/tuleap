@@ -13,7 +13,7 @@ $Language->loadLanguageMsg('snippet/snippet');
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_browsing'),
-		     'help' => 'TheCodeXMainMenu.html#CodeSnippetBrowsing'));
+		     'help' => 'TheCodendiMainMenu.html#CodeSnippetBrowsing'));
 
 if ($by=='lang') {
 

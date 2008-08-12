@@ -3,22 +3,22 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 <chapter id="DocumentManager">
   <title>Legacy Document Manager (deprecated)</title>
 
   <para><tip><title>** The Document Manager is DEPRECATED
-  **</title> <para>In CodeX version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
-  is included in the CodeX User Guide for projects that originally
+  **</title> <para>In &SYS_PRODUCT_NAME; version 3.0 and above, the Document Manager has been discontinued. It is now replaced by the plugin Document Manager (see <xref linkend="DocumentManagerPlugin"/>). This chapter
+  is included in the &SYS_PRODUCT_NAME; User Guide for projects that originally
   used the legacy Document Manager.</para></tip></para>
 
   <para>Documentation is probably the second most important deliverable in a
-    software project after the software work products themselves. CodeX
+    software project after the software work products themselves. &SYS_PRODUCT_NAME;
     provides a specific service to manage your project documents.</para>
 
-  <para>Although the CodeX Document Manager cannot be compared
+  <para>Although the &SYS_PRODUCT_NAME; Document Manager cannot be compared
     with dedicated document management systems, it
     is however very handy to publish documents that are critical to
     your community of users. Examples are: Installation, Administration
@@ -30,7 +30,7 @@
   <itemizedlist mark="bullet"
 		spacing="compact">
     <listitem>
-      <para>The CodeX Document Manager can handle any type of
+      <para>The &SYS_PRODUCT_NAME; Document Manager can handle any type of
       document. However we strongly encourage editors to publish their
       documents in HTML and/or PDF to make it readable quickly and
       easily.</para>
@@ -80,13 +80,13 @@
     <section id="DocumentCrossReference">
       <title>Cross-Referencing documents</title>
 
-      <para>Like artifacts, CVS/Subversion commits, and other CodeX objects,
+      <para>Like artifacts, CVS/Subversion commits, and other &SYS_PRODUCT_NAME; objects,
       documents may be referenced in artifact comments or commit messages.
       Simply type the "doc #NNN" pattern to automatically create
       a link to the document with ID number NNN. Document IDs are
       visible in the 'Docs' main page by hovering over a document title
       with the mouse pointer. Please refer to <xref linkend="ReferenceOverview" /> 
-      for more details on CodeX references.</para>
+      for more details on &SYS_PRODUCT_NAME; references.</para>
 
     </section>
   </section>
@@ -108,11 +108,11 @@
       button.</para>
 
     <para>A document has to be attached to a group in any case. This is why
-      CodeX provides a default group called 'Documents' to each project. 
+      &SYS_PRODUCT_NAME; provides a default group called 'Documents' to each project. 
       This default group may be renamed.</para>
 
     <para><tip><title>Tip: Copy-pasted vs. uploaded documents</title>
-    <para>A copy-pasted document will be embedded in a CodeX page, so its 
+    <para>A copy-pasted document will be embedded in a &SYS_PRODUCT_NAME; page, so its 
       appearance will be modified, and some tags like HTML, TITLE, or HEAD
       will be ignored. An uploaded document, on the opposite, will be displayed
       "as-is" in the browser window. Another difference is that a copy-pasted
@@ -199,7 +199,7 @@
     <section id="DocumentGroupManagement">
       <title>Document Group Management</title>
 
-      <para>In the CodeX Terminology, a CodeX Document group is
+      <para>In the &SYS_PRODUCT_NAME; Terminology, a &SYS_PRODUCT_NAME; Document group is
       equivalent to a folder.</para>
 
       <figure id="FigureTheDocumentGroupsAdministrationScreen">
@@ -314,7 +314,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

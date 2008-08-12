@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="Introduction">
@@ -19,12 +19,12 @@
     composants, la productivité des équipes de projet tout en offrant
     un environnement de travail riche, attractif et efficace.</para>
 
-    <para>L'initiative CodeX est supportée par un site Web interne
+    <para>L'initiative &SYS_PRODUCT_NAME; est supportée par un site Web interne
     disponible sur <ulink
     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Ce
     site est ouvert aux équipes de développement de &SYS_ORG_NAME; qui
     souhaitent travailler de façon efficace en mode collaboratif. <!--
-    The CodeX web site is provided as a service to all &SYS_ORG_NAME;
+    The &SYS_PRODUCT_NAME; web site is provided as a service to all &SYS_ORG_NAME;
     software development teams who want to share their project source
     code with others.  While being well and alive the software
     community at &SYS_ORG_NAME; is also asking for more communication
@@ -33,24 +33,24 @@
     process and to develop more flexible, better quality and more
     usable software in less time. --></para>
 
-    <para>Le Guide de l'utilisateur CodeX décrit les services et les
-    fonctionnalités de CodeX mais il fournit aussi de nombreux
-    conseils pour vous aider à tirer le meilleur parti de CodeX à
+    <para>Le Guide de l'utilisateur &SYS_PRODUCT_NAME; décrit les services et les
+    fonctionnalités de &SYS_PRODUCT_NAME; mais il fournit aussi de nombreux
+    conseils pour vous aider à tirer le meilleur parti de &SYS_PRODUCT_NAME; à
     gérer vos projets de façon optimale.</para>
 
-    <para>Nous espérons que vous apprécierez CodeX. N'hésitez pas à en
+    <para>Nous espérons que vous apprécierez &SYS_PRODUCT_NAME;. N'hésitez pas à en
     parler à vos collègues programmeurs, chefs de projets ou
     responsables de groupe. Gardez aussi présent à l'esprit que ce
     guide de l'utilisateur est avant tout fait pour vous et que nous serons
     donc heureux de recevoir toutes vos suggestions de corrections ou
     d'améliorations.</para>
 
-    <para>Profitez de CodeX !</para>
+    <para>Profitez de &SYS_PRODUCT_NAME; !</para>
 
-    <para>L'équipe CodeX</para>
+    <para>L'équipe &SYS_PRODUCT_NAME;</para>
 
-    <figure id="FigureTheCodeXHomePage">
-      <title>La page d'accueil de CodeX</title>
+    <figure id="FigureTheCodendiHomePage">
+      <title>La page d'accueil de &SYS_PRODUCT_NAME;</title>
 
       <mediaobject>
         <imageobject>
@@ -60,8 +60,8 @@
       </mediaobject>
     </figure>
 
-    <figure id="FigureTheCodeXHomePageTabTheme">
-      <title>La page d'accueil de CodeX avec un thème différent (avec des onglets)</title>
+    <figure id="FigureTheCodendiHomePageTabTheme">
+      <title>La page d'accueil de &SYS_PRODUCT_NAME; avec un thème différent (avec des onglets)</title>
 
       <mediaobject>
         <imageobject>
@@ -75,7 +75,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

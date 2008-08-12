@@ -3,36 +3,36 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
-<chapter id="BecomingACodeXCitizen">
-  <title>Becoming a CodeX Citizen</title>
+<chapter id="BecomingACodendiCitizen">
+  <title>Becoming a &SYS_PRODUCT_NAME; Citizen</title>
 
   <section id="ClassesOfCitizens">
     <title>Classes of Citizens</title>
 
     <para>Before we go further into the user registration process it
-    is worth reviewing the various types of CodeX citizens. There are
+    is worth reviewing the various types of &SYS_PRODUCT_NAME; citizens. There are
     basically 4 of them:</para>
 
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Anonymous Users</emphasis>: when
-	you first visit the CodeX site you are typically an anonymous
-	user. Anonymous users can browse the CodeX site but
-	many of the CodeX services or CodeX resources cannot be used
+	you first visit the &SYS_PRODUCT_NAME; site you are typically an anonymous
+	user. Anonymous users can browse the &SYS_PRODUCT_NAME; site but
+	many of the &SYS_PRODUCT_NAME; services or &SYS_PRODUCT_NAME; resources cannot be used
 	or accessed by an anonymous user (e.g. source code access is
 	not possible, all the monitoring facilities aren&#39;t either,
 	etc.). So we strongly advise you to become a registered
-	user to take full advantage of the CodeX site.</para>
+	user to take full advantage of the &SYS_PRODUCT_NAME; site.</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">Registered Users</emphasis>: once
 	you have created your own account (see below) you can use your
-	login/password to authenticate yourself with CodeX. Registered
-	users have access to all CodeX projects including source code
+	login/password to authenticate yourself with &SYS_PRODUCT_NAME;. Registered
+	users have access to all &SYS_PRODUCT_NAME; projects including source code
 	unless the project administrators decided otherwise. And since
 	the system knows about you, it enables you to customize your
 	view of the system through your Personal Page, monitor Forums,
@@ -42,7 +42,7 @@
 
       <listitem>
 	<para><emphasis role="bold">Project Members</emphasis>: users
-	who are actively working on a CodeX hosted project. To become
+	who are actively working on a &SYS_PRODUCT_NAME; hosted project. To become
 	a project member, you must first become a registered user and
 	then ask a project administrator to include you in the project
 	members. Most of the time project members are part of the
@@ -56,10 +56,10 @@
 
       <listitem>
 	<para><emphasis role="bold">Project Administrators</emphasis>:
-	registered users who create a new CodeX project are elected as
+	registered users who create a new &SYS_PRODUCT_NAME; project are elected as
 	the first Project Administrators. Project Administrators have
 	full rights over their projects except project deletion - a
-	very unusual operation - that can only be done by a CodeX Team
+	very unusual operation - that can only be done by a &SYS_PRODUCT_NAME; Team
 	member. In the course of the project life, the initial project
 	administrator can grant (or revoke) the status of project
 	administrator to any project member.</para>
@@ -70,7 +70,7 @@
 	who are project members, or even project administrators, but
         with restricted access rights: they cannot access pages from 
         projects they are not member of.
-        This special role is only enabled on CodeX servers in heterogeneous 
+        This special role is only enabled on &SYS_PRODUCT_NAME; servers in heterogeneous 
         environments where corporate users and external consultants 
         share the same server.</para>
       </listitem>
@@ -82,13 +82,13 @@
     <title>User Registration</title>
 
     <para>As suggested above, the first thing to do for a newcomer is to
-      create her own account on CodeX. Becoming a registered CodeX user
+      create her own account on &SYS_PRODUCT_NAME;. Becoming a registered &SYS_PRODUCT_NAME; user
       doesn&#39;t imply any commitment on your part to host any of your
-      software projects on CodeX. It simply gives you more freedom when you
-      browse the site and allows CodeX to serve you with personalized
+      software projects on &SYS_PRODUCT_NAME;. It simply gives you more freedom when you
+      browse the site and allows &SYS_PRODUCT_NAME; to serve you with personalized
       information.</para>
 
-    <para>Registering on CodeX is quick and easy:</para>
+    <para>Registering on &SYS_PRODUCT_NAME; is quick and easy:</para>
 
     <procedure>
       <step>
@@ -102,7 +102,7 @@
 	<substeps>
 	  <step>
 	    <para><emphasis role="bold">Login Name</emphasis>: your
-	    user name. On some CodeX systems that are connected to an
+	    user name. On some &SYS_PRODUCT_NAME; systems that are connected to an
 	    enterprise directory you may have to use a pre-defined
 	    user name.</para>
 	  </step>
@@ -131,19 +131,19 @@
 	  <step>
 	    <para><emphasis role="bold">Time Zone</emphasis>: choose the time
               zone you live in. Choosing the correct time zone is really
-              important. Behind the scene CodeX stores all time stamps in GMT
-              time. Choosing the right time zone allow s CodeX to translate
+              important. Behind the scene &SYS_PRODUCT_NAME; stores all time stamps in GMT
+              time. Choosing the right time zone allow s &SYS_PRODUCT_NAME; to translate
               all time stamps to your local time on the Web pages.</para>
 	  </step>
 
 	  <step>
 	    <para><emphasis role="bold">Site Updates</emphasis>: check this
-              box if you want to receive site updates from the CodeX Team.
+              box if you want to receive site updates from the &SYS_PRODUCT_NAME; Team.
               This is a low traffic distribution list and we strongly advise
               you to check this box (default). You&#39;ll receive e-mail from
               us about the site maintenance, the important event in the life
-              of the site, CodeX presentation/training announcement and the
-              CodeX newsletter.</para>
+              of the site, &SYS_PRODUCT_NAME; presentation/training announcement and the
+              &SYS_PRODUCT_NAME; newsletter.</para>
 	  </step>
 
 	  <step>
@@ -159,16 +159,16 @@
       <step>
 	<para>Shortly after you validate the registration form you will
           receive a message in your mailbox which includes a URL. Clicking on
-          this URL will bring you to a CodeX form asking for your
+          this URL will bring you to a &SYS_PRODUCT_NAME; form asking for your
           login/password again. If they match then your account is validated
-          and you are now logged into the CodeX site.</para>
+          and you are now logged into the &SYS_PRODUCT_NAME; site.</para>
       </step>
     </procedure>
 
     <tip>
-      <title>Tip: CodeX servers with LDAP authentication</title>
+      <title>Tip: &SYS_PRODUCT_NAME; servers with LDAP authentication</title>
 
-      <para>Your CodeX server might be set up to use an external LDAP directory for 
+      <para>Your &SYS_PRODUCT_NAME; server might be set up to use an external LDAP directory for 
       authentication. In this case, the registration phase is even simpler: simply 
       type your LDAP login and password, and the system will automatically extract
       most of the required information from the LDAP directory: email 
@@ -179,15 +179,15 @@
       security reasons. Assuming people create their account with an alien
       e-mail address while they have access to the Intranet, they
       won&#39;t be able to validate their account from the outside because the
-      CodeX machine is behind the firewall. Therefore, an account cannot
+      &SYS_PRODUCT_NAME; machine is behind the firewall. Therefore, an account cannot
       be validated from outside.</para>
 
     <tip>
       <title>Tip: What if I loose my password or my login name?</title>
 
       <para>Don&#39;t Panic and, above all, do not create a new account! Go
-        to the CodeX Login Page and click on the [Lost your password?] link.
-        You&#39;ll be asked your login name and from that CodeX will send you
+        to the &SYS_PRODUCT_NAME; Login Page and click on the [Lost your password?] link.
+        You&#39;ll be asked your login name and from that &SYS_PRODUCT_NAME; will send you
         an e-mail message with an embedded URL. Click on this URL and give
         your new password.</para>
 
@@ -202,25 +202,25 @@
   <section id="LoginAndPersonalPage">
     <title>Login and Personal Page</title>
 
-    <para>To log into the CodeX site, go to the CodeX Site at <ulink
+    <para>To log into the &SYS_PRODUCT_NAME; site, go to the &SYS_PRODUCT_NAME; Site at <ulink
 								     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink> and click
       on the &#34;Login&#34; link. If
-      you typed your login and password OK, CodeX presents you with your
-      Personal Page (<xref linkend="FigureThePersonalPageOfACodeXUser" />). At
-      any point in time you can return to your CodeX Personal Page by
-      selecting the &#34;My Personal Page&#34; in the upper part of the CodeX
+      you typed your login and password OK, &SYS_PRODUCT_NAME; presents you with your
+      Personal Page (<xref linkend="FigureThePersonalPageOfACodendiUser" />). At
+      any point in time you can return to your &SYS_PRODUCT_NAME; Personal Page by
+      selecting the &#34;My Personal Page&#34; in the upper part of the &SYS_PRODUCT_NAME;
       Main Menu.</para>
 
     <para>Your Personal Page is a crossroad from which you can quickly
-    go to CodeX workplaces and information spaces. You'll see bugs and
+    go to &SYS_PRODUCT_NAME; workplaces and information spaces. You'll see bugs and
     tasks assigned to you in the various projects you belong to. In
     addition the bug section also shows those bugs that you have
-    submitted including to foreign projects. By doing so, CodeX allows
+    submitted including to foreign projects. By doing so, &SYS_PRODUCT_NAME; allows
     you to follow the evolution of bugs that you have reported and you
     might be impatient to see fixed.</para>
 
-    <figure id="FigureThePersonalPageOfACodeXUser">
-      <title>The Personal Page of a CodeX user</title>
+    <figure id="FigureThePersonalPageOfACodendiUser">
+      <title>The Personal Page of a &SYS_PRODUCT_NAME; user</title>
       
       <mediaobject>
 	<imageobject>
@@ -230,7 +230,7 @@
       </mediaobject>
     </figure>
 
-    <para>CodeX allows you to personalize your page to fit your needs. 
+    <para>&SYS_PRODUCT_NAME; allows you to personalize your page to fit your needs. 
     The content of your page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
     collapsed or closed (2). Some of them can provide an rss feed (3) or 
     preferences can be set (4).</para>
@@ -263,7 +263,7 @@
       </listitem>
       <listitem>
         <para><emphasis role="bold">My Bookmarks</emphasis> lists your favorite 
-        bookmarks (your favorite pages in CodeX or external). Note that in many cases CodeX uses
+        bookmarks (your favorite pages in &SYS_PRODUCT_NAME; or external). Note that in many cases &SYS_PRODUCT_NAME; uses
         URL with enough embedded information to bookmark sophisticated
         items like Software Map browsing, typical search in your project
         Bug or Task database, etc ... Bookmarked items can be edited which
@@ -289,8 +289,8 @@
   <section id="AccountMaintenance">
     <title>Account Maintenance</title>
 
-    <para>You provided a certain amount of demographic information to CodeX
-      when you first registered on the CodeX site. This and other information
+    <para>You provided a certain amount of demographic information to &SYS_PRODUCT_NAME;
+      when you first registered on the &SYS_PRODUCT_NAME; site. This and other information
       can be modified at any time by selecting the &#34;Account
       Maintenance&#34; item in the Codex Main Menu.</para>
 
@@ -301,26 +301,26 @@
     <itemizedlist mark="bullet">
       <listitem>
 	<para><emphasis role="bold">Edit My Skills Profile</emphasis>: a
-          user can make his resume available on CodeX. The intent here is to
+          user can make his resume available on &SYS_PRODUCT_NAME;. The intent here is to
           let people know about you, your technical background and your domain
           of expertise. Very useful to get to know each other.</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">Remember my Login/Password</emphasis>:
-          by default your current login session on CodeX is terminated
+          by default your current login session on &SYS_PRODUCT_NAME; is terminated
           whenever you stop your Web browser. When you restart your browser
-          and visit CodeX you will be asked for your login/password again. By
-          checking this box you ask CodeX to remember about your
+          and visit &SYS_PRODUCT_NAME; you will be asked for your login/password again. By
+          checking this box you ask &SYS_PRODUCT_NAME; to remember about your
           login/password forever or at least until you explicitly select the
-          &#34;Logout&#34; item in the CodeX Main Menu. For security reasons
+          &#34;Logout&#34; item in the &SYS_PRODUCT_NAME; Main Menu. For security reasons
           we do not recommend using this feature unless you are equipped with 
           a strictly personal desktop machine</para>
       </listitem>
 
       <listitem>
 	<para><emphasis role="bold">CSV separator</emphasis>:
-          CodeX provides you export and import functionalities
+          &SYS_PRODUCT_NAME; provides you export and import functionalities
           (See <xref linkend="ProjectDataExport" /> for details).
           The import/export format is CSV format. Like CSV norm is
           not implemented by the same way in each software, we allow you
@@ -337,10 +337,10 @@
       <listitem>
 	<para><emphasis role="bold">SSH shared keys</emphasis>: this one has
           to do with the Shell Account service. When you are a registered
-          user, the CodeX server gives you a personal shell account with the
+          user, the &SYS_PRODUCT_NAME; server gives you a personal shell account with the
           same login/password as for the Web interface. To automate the shell
-          login you can share a public encryption key with CodeX and use the
-          secure shell SSH to access CodeX instantly without having to type a
+          login you can share a public encryption key with &SYS_PRODUCT_NAME; and use the
+          secure shell SSH to access &SYS_PRODUCT_NAME; instantly without having to type a
           password. More on that in <xref linkend="ShellAccount" /></para>
       </listitem>
     </itemizedlist>
@@ -348,7 +348,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

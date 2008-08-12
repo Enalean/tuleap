@@ -4,14 +4,14 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="VersionControlWithCVS">
   <title>Contrôle de version avec CVS</title>
 
   <para>Ce chapitre n'est pas un tutoriel CVS. Il couvre l'intégration
-  de CVS avec CodeX et comment l'utiliser de façon optimale dans ce
+  de CVS avec &SYS_PRODUCT_NAME; et comment l'utiliser de façon optimale dans ce
   contexte. Si vous n'êtes pas familier avec le système de contrôle de
   version CVS, nous vous recommandons de consulter les références CVS
   (voir <xref linkend="CVSReferences" />).</para>
@@ -54,7 +54,7 @@
     devrait démarrer sans avoir choisi au préalable un outil de
     contrôle de version. CVS et Subversion (voir <xref
     linkend="VersionControlWithSubversion" />) sont les deux choix
-    proposés par CodeX.  <footnote><para>Il existe beaucoup d'autres
+    proposés par &SYS_PRODUCT_NAME;.  <footnote><para>Il existe beaucoup d'autres
     systèmes de contrôle de version sur le marché soient libres (SCCS,
     RCS, PKS, Arch, Monotone...) soient commerciaux (SourceSafe,
     ClearCase, TeamWare...)</para></footnote> Bien que Subversion soit
@@ -110,9 +110,9 @@
       <title>Clients CVS</title>
 
       <para>CVS suit une architecture client-serveur. En d'autres
-      termes, les développeurs CodeX qui souhaitent interagir avec le
+      termes, les développeurs &SYS_PRODUCT_NAME; qui souhaitent interagir avec le
       dépôt CVS de leur projet doivent installer CVS sur leur machine
-      que nous appellerons client dans la suite. Le serveur CodeX
+      que nous appellerons client dans la suite. Le serveur &SYS_PRODUCT_NAME;
       quant à lui fait fonctionner en arrière plan un serveur CVS qui
       communique avec les clients pour agir sur le dépôt. Il existe
       plusieurs types de clients CVS pour toutes les plateformes
@@ -156,14 +156,14 @@
       </section>
 
       <section id="SettingUpWinCVS">
-	<title>Configurer WinCVS pour CodeX</title>
+	<title>Configurer WinCVS pour &SYS_PRODUCT_NAME;</title>
 
         <para>Comme indiqué précédemment, WinCVS est l'un des clients
         CVS les plus populaires sur MS Windows.  Vous trouverez
         ci-dessous toutes les instructions nécessaires au bon
-        fonctionnement de WinCVS dans le cadre d'un projet CodeX. Dans
+        fonctionnement de WinCVS dans le cadre d'un projet &SYS_PRODUCT_NAME;. Dans
         les exemples ci-dessous, "nom_utilisateur" est le nom
-        d'utilisateur CodeX (login) et "nom_projet", le nom court du
+        d'utilisateur &SYS_PRODUCT_NAME; (login) et "nom_projet", le nom court du
         projet.</para>
 
         <itemizedlist mark="bullet" spacing="compact">
@@ -179,7 +179,7 @@
         </listitem>
 	
         <listitem>
-	  <para>Configurer la connexion vers le projet CodeX : 
+	  <para>Configurer la connexion vers le projet &SYS_PRODUCT_NAME; : 
           <literal>Admin->Preferences</literal>
           </para><para>Indiquez la valeur de CVSROOT :</para><para>
           <literal>:pserver:nom_utilisateur@cvs.nom_projet.&SYS_DEFAULT_DOMAIN;:/cvsroot/nom_projet</literal>
@@ -189,7 +189,7 @@
         </listitem>
 
         <listitem>
-	  <para>Connectez-vous au dépôt CVS : <literal>Admin->Login...</literal> et saisissez votre mot de passe CodeX.
+	  <para>Connectez-vous au dépôt CVS : <literal>Admin->Login...</literal> et saisissez votre mot de passe &SYS_PRODUCT_NAME;.
           </para>
         </listitem>
 	
@@ -200,7 +200,7 @@
         </listitem> 
 	
         <listitem>
-	  <para>Récupérez (checkout) le code source de votre projet CodeX depuis le dépôt CVS.</para>
+	  <para>Récupérez (checkout) le code source de votre projet &SYS_PRODUCT_NAME; depuis le dépôt CVS.</para>
           <para><literal>Create->Check out module</literal></para>
           <para><literal>Enter the module name and path on the server:</literal> indiquez le chemin du code source que vous souhaitez extraire du dépôt CVS. En général il s'agit du nom du dossier situé à la racine du dépôt CVS.</para>
           <para><literal>  nom_projet</literal></para>
@@ -250,8 +250,8 @@
 
       <para>Comme indiqué précédemment, ce chapitre n'est pas un
       manuel d'utilisation de CVS. Il se concentre sur l'intégration
-      de CVS dans CodeX et comment utiliser CVS dans le contexte de
-      CodeX. Si vous souhaitez en savoir plus sur CVS, référez-vous
+      de CVS dans &SYS_PRODUCT_NAME; et comment utiliser CVS dans le contexte de
+      &SYS_PRODUCT_NAME;. Si vous souhaitez en savoir plus sur CVS, référez-vous
       aux documents suivants :</para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -283,8 +283,8 @@
     </section>
   </section>
 
-  <section id="CVSIntegrationinCodeX">
-    <title>Intégration de CVS dans CodeX</title>
+  <section id="CVSIntegrationinCodendi">
+    <title>Intégration de CVS dans &SYS_PRODUCT_NAME;</title>
 
     <section id="TheCVSRepository">
       <title>Le dépôt CVS</title>
@@ -300,10 +300,10 @@
 
       <note><para>Les dépôts CVS sont accessibles sous le répertoire
       <literal>/cvsroot/nom_projet</literal> sur le serveur
-      CodeX. Toutes les interactions avec un dépôt CVS se font
+      &SYS_PRODUCT_NAME;. Toutes les interactions avec un dépôt CVS se font
       normalement via le client CVS de votre poste de travail. En cas
       de besoin et si cette fonction est activée sur votre serveur
-      CodeX, vous pouvez utiliser votre compte Shell (voir <xref
+      &SYS_PRODUCT_NAME;, vous pouvez utiliser votre compte Shell (voir <xref
       linkend="ShellAccount" />) pour interagir directement avec votre
       dépôt. Cependant nous vous recommandons de n'avoir recours à
       cette possibilité que si vous savez exactement ce que vous
@@ -338,7 +338,7 @@
 	  anonymes</emphasis> : les utilisateurs non enregistrés (ou
 	  non connectés) n'ont <emphasis role="underline">aucun
 	  accès</emphasis> aux dépôts CVS. Selon la configuration du
-	  serveur CodeX, il est même possible que les utilisateurs
+	  serveur &SYS_PRODUCT_NAME;, il est même possible que les utilisateurs
 	  anonymes n'aient aucun accès au site d'une façon
 	  générale.</para>
 	</listitem>
@@ -355,7 +355,7 @@
 	  <xref linkend="PatchTemplate" /> ).</para>
 
 	  <note><para><emphasis role="bold">Note</emphasis> : tous les
-	  accès au code source sur CodeX sont enregistrés. Les
+	  accès au code source sur &SYS_PRODUCT_NAME; sont enregistrés. Les
 	  administrateurs des projets peuvent à tout moment consulter
 	  la liste des utilisateurs qui ont accédé au code source
 	  (voir <xref linkend="SourceCodeAccessLogs"
@@ -364,9 +364,9 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Membres du projet</emphasis> :
-	  les membres d'un projet hébergé sur CodeX ont un droit
+	  les membres d'un projet hébergé sur &SYS_PRODUCT_NAME; ont un droit
 	  d'accès en lecture et en écriture au dépôt après s'être
-	  authentifié à l'aide de leur nom d'utilisateur CodeX et leur
+	  authentifié à l'aide de leur nom d'utilisateur &SYS_PRODUCT_NAME; et leur
 	  mot de passe. Comme expliqué plus haut dans le paragraphe
 	  concernant les projets privés, il est là aussi possible de
 	  restreindre l'accès en lecture seule pour les membres du
@@ -385,7 +385,7 @@
   <section id="CVSWebInterface">
     <title>L'interface de navigation Web de CVS</title>
 
-    <para>CodeX vous permet d'interagir avec votre dépôt CVS via
+    <para>&SYS_PRODUCT_NAME; vous permet d'interagir avec votre dépôt CVS via
     l'interface Web. Il ne s'agit pas de remplacer le véritable client
     CVS que vous utilisez normalement sur votre poste de
     travail. L'interface Web de CVS se concentre sur certaines
@@ -419,7 +419,7 @@
 	votre projet (c'est toujours le cas par défaut) tous les
 	évènements concernant la modification du dépôt (commit, ajout
 	ou suppression de fichiers) sont consignés dans la base de
-	données de CodeX. Il est ensuite possible d'effectuer des
+	données de &SYS_PRODUCT_NAME;. Il est ensuite possible d'effectuer des
 	recherches dans l'historique des changements selon différents
 	critères.</para>
       </listitem>
@@ -438,9 +438,9 @@
     <section id="BrowsingTheCVSRepository">
     <title>Naviguer dans le dépôt CVS</title>
 
-    <para>Pour interagir avec le dépôt CVS d'un projet CodeX, il est
+    <para>Pour interagir avec le dépôt CVS d'un projet &SYS_PRODUCT_NAME;, il est
     normalement nécessaire d'installer un client CVS sur votre poste
-    de travail. Cependant CodeX vous permet de naviguer dans le dépôt,
+    de travail. Cependant &SYS_PRODUCT_NAME; vous permet de naviguer dans le dépôt,
     de visualiser le code source, de le télécharger, de consulter
     l'historique d'un fichier ou de comparer deux révisions du même
     fichier.</para>
@@ -471,7 +471,7 @@
 	  de façon unique</emphasis> : tous les changements
 	  (modification, ajout ou suppression de fichiers) commités en
 	  une seule opération depuis votre poste client se verront
-	  assignés un identifiant unique de la part de CodeX. Toutes
+	  assignés un identifiant unique de la part de &SYS_PRODUCT_NAME;. Toutes
 	  les révisions de fichiers associés à cette modification sont
 	  stockées de façon atomique dans la base de suivi de CVS sous
 	  cet identifiant unique.</para>
@@ -485,7 +485,7 @@
 	  artefacts des différents outils de suivi (tâches, anomalies,
 	  demande d'assistance...) simplement en utilisant le patron
 	  <literal>commit #XXXX</literal> (où XXXX est l'identifiant
-	  unique généré par CodeX). Toute référence de ce type est
+	  unique généré par &SYS_PRODUCT_NAME;). Toute référence de ce type est
 	  automatiquement transformé en hyperlien vers la base de
 	  suivi de CVS. Ce mécanisme permet de naviguer facilement
 	  depuis un changement dans le code jusqu'à l'artefact qui lui
@@ -545,13 +545,13 @@
       il est très utile de voir quels changements il a engendré dans
       le code source.</para>
 
-      <para>L'intégration de CVS avec CodeX fournit précisément ce
+      <para>L'intégration de CVS avec &SYS_PRODUCT_NAME; fournit précisément ce
       mécanisme de références croisées. Ceci est rendu possible par
       l'utilisation de 'références', patrons de texte prédéfinis à utiliser dans les
       commentaires des artefacts ou dans les messages de commits de
-      CVS et que CodeX reconnaît automatiquement.</para>
+      CVS et que &SYS_PRODUCT_NAME; reconnaît automatiquement.</para>
 
-      <para>Les patrons de texte reconnus automatiquement par CodeX
+      <para>Les patrons de texte reconnus automatiquement par &SYS_PRODUCT_NAME;
       dans les messages de commit ou dans les commentaires des
       artefacts sont les suivants :</para>
 
@@ -564,7 +564,7 @@
 	#123&#34;, &#34;tâche #321&#34;, &#34;DA #12&#34;, etc.). Si
 	vous ne connaissez pas le nom court de l'outil de suivi ou que
 	vous ne souhaitez pas le préciser vous pouvez utiliser le
-	terme générique &#34;art #NNN&#34;. Lorsque CodeX affiche un
+	terme générique &#34;art #NNN&#34;. Lorsque &SYS_PRODUCT_NAME; affiche un
 	message contenant ce genre de patron, il le transforme
 	automatiquement en hyperlien vers la description de l'artefact
 	référencé.</para>
@@ -574,14 +574,14 @@
 	<para><emphasis role="bold">commit #YYY</emphasis> : ce patron
 	référence le commit YYY où YYY est l'identifiant unique du
 	commit tel qu'il apparaît dans la base de suivi CVS. Lorsque
-	CodeX affiche un message contenant ce genre de patron, il le
+	&SYS_PRODUCT_NAME; affiche un message contenant ce genre de patron, il le
 	transforme automatiquement en hyperlien vers la description du
 	commit référencé (message, fichiers impactés et leur
 	révisions, auteur de la modification).</para>
       </listitem>
 
       <listitem>
-	<para>Le mécanisme de références de CodeX permet les références croisées entre tous les objets de CodeX: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans CodeX.</para>
+	<para>Le mécanisme de références de &SYS_PRODUCT_NAME; permet les références croisées entre tous les objets de &SYS_PRODUCT_NAME;: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans Codendi.</para>
       </listitem>
    </itemizedlist>
 
@@ -601,7 +601,7 @@
     <section id="CVSAdministration">
       <title>Administration CVS</title>
 
-      <para>CodeX vous permet de configurer les paramètres suivants de
+      <para>&SYS_PRODUCT_NAME; vous permet de configurer les paramètres suivants de
       CVS depuis l'interface Web :</para>
       
       <itemizedlist mark="bullet">
@@ -615,9 +615,9 @@
 	  client CVS soit depuis l'interface Web de navigation dans le
 	  dépôt CVS.</para>
 
-	  <para>Si vous activez le suivi CVS pour votre projet CodeX
+	  <para>Si vous activez le suivi CVS pour votre projet &SYS_PRODUCT_NAME;
 	  conserve aussi une trace de tous les changements intervenus
-	  dans la base de données CodeX. Ceci vous donne des
+	  dans la base de données &SYS_PRODUCT_NAME;. Ceci vous donne des
 	  possibilités supplémentaires qui sont expliquées dans la
 	  <xref linkend="QueryingCVS" /></para>
 	</listitem>
@@ -651,7 +651,7 @@
 
 	<listitem>
 	  <para><emphasis role="bold">Notification e-mail de
-	  CVS</emphasis> : En complément des fonctions de suivi, CodeX
+	  CVS</emphasis> : En complément des fonctions de suivi, &SYS_PRODUCT_NAME;
 	  peut aussi expédier un courrier électronique proprement
 	  formaté à des individus ou à une liste de diffusion à
 	  chaque modification de code. Le courrier électronique
@@ -665,8 +665,8 @@
 	  <para><emphasis role="bold">Préambule CVS</emphasis> : dans
 	  certains cas (par ex. pour des projets existants), il se
 	  peut que le dépôt CVS d'un projet ne soit pas hébergé sur
-	  CodeX. Dans ce cas, les informations affichées sur la page
-	  d'accueil du service CVS de CodeX sont incorrectes. Fort
+	  &SYS_PRODUCT_NAME;. Dans ce cas, les informations affichées sur la page
+	  d'accueil du service CVS de &SYS_PRODUCT_NAME; sont incorrectes. Fort
 	  heureusement, l'administrateur du projet peut personnaliser
 	  le message d'accueil en tapant le texte de son choix dans
 	  cette zone de saisie.</para>
@@ -681,9 +681,9 @@
       CVS, nous vous recommandons de créer une liste de diffusion
       spécifique appelée
       <literal>nom_projet-cvsevents</literal>. Ainsi, les utilisateurs
-      CodeX et les membres du projet intéressés par les notifications
+      &SYS_PRODUCT_NAME; et les membres du projet intéressés par les notifications
       pourront s'inscrire sur la liste de diffusion. De plus, le
-      gestionnaire de liste de diffusion de CodeX se charge d'archiver
+      gestionnaire de liste de diffusion de &SYS_PRODUCT_NAME; se charge d'archiver
       tous les messages ce qui peut servir de référence
       ultérieurement. Voir <xref linkend="MailingLists" /> pour la
       création de liste de diffusion.</para></tip></para>
@@ -709,8 +709,8 @@
     transposition dans une interface graphique ne devrait pas poser de
     problèmes.</para>
 
-    <figure id="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX">
-      <title>Un cycle de développement logiciel typique sur CodeX</title>
+    <figure id="FigureATypicalSoftwareDevelopmentLifeCycleOnCodendi">
+      <title>Un cycle de développement logiciel typique sur &SYS_PRODUCT_NAME;</title>
 
       <mediaobject>
 	<imageobject>
@@ -723,11 +723,11 @@
     <section id="LoggingIn">
       <title>Se connecter</title>
 
-      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs &SYS_PRODUCT_NAME;</emphasis></para>
 
       <para>La première étape à franchir lorsque vous travaillez avec
       un dépôt CVS consiste à vous connecter au serveur CVS. Sur
-      CodeX, les utilisateurs anonymes ne peuvent accéder au code
+      &SYS_PRODUCT_NAME;, les utilisateurs anonymes ne peuvent accéder au code
       source d'aucun projet que ce soit par CVS ou par le service de
       publication de fichiers et ceci même si le projet est public. Il
       faut donc vous assurer que vous disposez d'un compte utilisateur
@@ -761,7 +761,7 @@ login
 
 	<listitem>
 	  <para><literal>nom_utilisateur</literal> est votre nom
-	  d'utilisateur CodeX</para>
+	  d'utilisateur &SYS_PRODUCT_NAME;</para>
 	</listitem>
       </itemizedlist>
 
@@ -778,7 +778,7 @@ login
 
       <para><emphasis>Audience : membres du projet</emphasis></para>
 
-      <para>En tant qu'administrateur d'un tout nouveau projet CodeX,
+      <para>En tant qu'administrateur d'un tout nouveau projet &SYS_PRODUCT_NAME;,
       la première chose à faire consiste à peupler votre tout nouveau dépôt
       CVS avec votre code source. Pour ce faire créez d'abord un
       répertoire <literal>racine</literal> sur votre poste de travail
@@ -808,7 +808,7 @@ import racine tag_vendeur start
 
 	<listitem>
 	  <para><literal>nom_utilisateur</literal> est votre nom
-	  d'utilisateur CodeX</para>
+	  d'utilisateur &SYS_PRODUCT_NAME;</para>
 	</listitem>
 
 	<listitem>
@@ -828,11 +828,11 @@ import racine tag_vendeur start
       source dans un nouveau dépôt CVS. Placer les répertoires au
       mauvais niveau ou avec un mauvais nom est une erreur typique. Ne
       vous en faites pas... Si vous souhaitez recommencer avec un
-      dépôt CVS vierge contactez simplement l'équipe CodeX et nous
+      dépôt CVS vierge contactez simplement l'équipe &SYS_PRODUCT_NAME; et nous
       réinitialiserons votre dépôt.</para></tip></para>
 
       <note><para>Notez que si vous disposez déjà d'un dépôt CVS,
-      l'équipe CodeX peut vous aider à le transférer en préservant la
+      l'équipe &SYS_PRODUCT_NAME; peut vous aider à le transférer en préservant la
       totalité de l'historique. Nous avons juste besoin d'une archive
       (zip ou tar) de votre dépôt actuel y compris le répertoire
       CVSROOT. A partir de là nous réinstallerons votre dépôt CVS pour
@@ -843,10 +843,10 @@ import racine tag_vendeur start
     <section id="CheckingCodeOut">
       <title>Créer une copie de travail (checkout)</title>
 
-      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs &SYS_PRODUCT_NAME;</emphasis></para>
 
       <para>Une fois le dépôt CVS en place, les membres du projet (ou
-      plus généralement les utilisateurs CodeX si l'accès leur est
+      plus généralement les utilisateurs &SYS_PRODUCT_NAME; si l'accès leur est
       permis) peuvent créer une copie de travail sur leur propre
       poste. A noter que cette opération dite &#34;checkout&#34; ne
       permet pas à l'utilisateur de verrouiller quelque fichier que ce
@@ -898,7 +898,7 @@ checkout répertoire
 
 	<listitem>
 	  <para><literal>nom_utilisateur</literal> est votre nom
-	  d'utilisateur CodeX</para>
+	  d'utilisateur &SYS_PRODUCT_NAME;</para>
 	</listitem>
 
 	<listitem>
@@ -915,7 +915,7 @@ checkout répertoire
     <section id="UpdatingtheSourceCode">
       <title>Mettre à jour le code source (update)</title>
 
-      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs &SYS_PRODUCT_NAME;</emphasis></para>
 
       <para>Lancer la commande &#34;<literal>cvs update</literal>&#34;
       depuis une copie de travail a pour effet de mettre à jour la
@@ -1026,7 +1026,7 @@ cvs commit -m&#34;Expliquez ici la nature de la modification...&#34; [nom_fichie
     <section id="ContributingyourChanges">
       <title>Proposer des modifications à l'équipe de projet</title>
 
-      <para><emphasis>Audience : tous les utilisateurs CodeX</emphasis></para>
+      <para><emphasis>Audience : tous les utilisateurs &SYS_PRODUCT_NAME;</emphasis></para>
 
       <para>Il s'agit d'une variante de la section précédente pour les
       utilisateurs qui n'ont pas d'accès en écriture au dépôt CVS d'un
@@ -1200,7 +1200,7 @@ export nom_projet-1.2
 	<step>
 	  <para>C'est fini ! Joli travail... Accordez-vous une pause. Et
 	  n'oubliez pas d'annoncer la disponibilité de cette nouvelle
-	  version en utilisant le service d'annonces de CodeX (voir
+	  version en utilisant le service d'annonces de &SYS_PRODUCT_NAME; (voir
 	  <xref linkend="NewsService" />).</para>
 	</step>
       </procedure>
@@ -1223,7 +1223,7 @@ export nom_projet-1.2
 
       <para>Un administrateur de projet peut cependant interdire
       l'accès en écriture à certains membres du projet. Ce n'est
-      actuellement pas faisable depuis l'interface Web de CodeX. Vous
+      actuellement pas faisable depuis l'interface Web de &SYS_PRODUCT_NAME;. Vous
       devez utiliser votre compte Shell pour vous connecter au serveur
       (voir <xref linkend="ShellAccount" />) et suivre les étapes
       suivantes :</para>
@@ -1259,7 +1259,7 @@ export nom_projet-1.2
       projet comme la possibilité de créer des modules virtuels à
       partir d'une collection de répertoires et de fichiers dispersés,
       de provoquer l'envoi d'email sur certaines opérations comme
-      commit ou add (note : CodeX le fait déjà pour vous - voir
+      commit ou add (note : &SYS_PRODUCT_NAME; le fait déjà pour vous - voir
       ci-dessous), vérifier le format d'un tag CVS avant de
       l'accepter, etc... (Voir la documentation CVS mentionnée dans la
       <xref linkend="CVSReferences" /> pour plus d'information sur les
@@ -1279,7 +1279,7 @@ export nom_projet-1.2
 
       <note><para>Si vous modifiez les fichiers d'administration de
       CVS, assurez-vous de garder intact les instructions spécifiques
-      déjà mises en place par CodeX dans les fichiers
+      déjà mises en place par &SYS_PRODUCT_NAME; dans les fichiers
       <literal>config</literal>, <literal>writers</literal> et
       <literal>loginfo</literal>. Veillez aussi à ne pas modifier les
       permissions du possesseur de ces fichiers à moins que vous ne
@@ -1290,7 +1290,7 @@ export nom_projet-1.2
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

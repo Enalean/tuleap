@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 
@@ -12,7 +12,7 @@
     <title>Sommaire du projet</title>
 
     <para>La page de Sommaire du Projet est le point d'entrée d'un
-    projet hébergé sur CodeX et c'est véritablement la seule page dont
+    projet hébergé sur &SYS_PRODUCT_NAME; et c'est véritablement la seule page dont
     vous ayez à vous souvenir ou que vous ayez à conserver dans vos signets. A
     partir de cette page les utilisateurs enregistrés, les membres du
     projet ou les administrateurs peuvent accéder à l'ensemble des
@@ -47,7 +47,7 @@
         <step>
           <para>Vous pouvez aussi cliquer sur le nom du projet s'il
           apparaît dans le tableau de bord de la page d'accueil de
-          CodeX.</para>
+          &SYS_PRODUCT_NAME;.</para>
         </step>
 
         <step>
@@ -63,8 +63,8 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
       <para>Si vous devez consulter régulièrement des projets dont
       vous n'êtes pas membre, nous vous conseillons de faire
       apparaître l'URL de la page de sommaire dans votre page
-      personnelle CodeX en utilisant la fonction &#34;Cette page en
-      signet&#34; du menu de CodeX (voir <xref
+      personnelle &SYS_PRODUCT_NAME; en utilisant la fonction &#34;Cette page en
+      signet&#34; du menu de &SYS_PRODUCT_NAME; (voir <xref
       linkend="LoginAndPersonalPage" />).</para>
 
       <tip>
@@ -76,7 +76,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         que la page d'accueil est le point d'entrée du site Web de
         votre projet. Le site Web d'un projet peut être utilisé pour
         accueillir vos visiteurs, les informer et les orienter vers les
-        différents services de CodeX. (voir <xref
+        différents services de &SYS_PRODUCT_NAME;. (voir <xref
         linkend="ProjectWebSite" /> pour plus d'information sur
         l'élaboration du site Web de votre projet).</para>
       </tip>
@@ -136,7 +136,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
             </mediaobject>
       </figure>
 
-      <para>CodeX permet aux administrateurs du projet de personnaliser la page sommaire du projet. 
+      <para>&SYS_PRODUCT_NAME; permet aux administrateurs du projet de personnaliser la page sommaire du projet. 
       Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
       Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
       peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
@@ -163,7 +163,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           fileref="../../icons/notification_stop.png"
           /></imageobject></inlinemediaobject>). La sélection de cette
           icône active la surveillance automatique de ce paquet
-          logiciel par CodeX. A chaque fois que l'équipe de projet
+          logiciel par &SYS_PRODUCT_NAME;. A chaque fois que l'équipe de projet
           dépose une nouvelle version du logiciel, un message de
           notification vous est envoyé. Tous les paquets sous
           surveillance se trouvent sur votre Page Personnelle et la
@@ -186,7 +186,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
           <para><emphasis role="bold">Dernières annonces</emphasis> :
           les dix dernières annonces publiées par les membres du
           projet. Certaines de ces annonces peuvent aussi apparaître
-          sur le page d'accueil du site si l'équipe CodeX en décide
+          sur le page d'accueil du site si l'équipe &SYS_PRODUCT_NAME; en décide
           ainsi.</para>
         </listitem>
         <listitem>
@@ -197,7 +197,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

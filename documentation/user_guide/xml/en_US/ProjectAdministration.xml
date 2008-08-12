@@ -3,8 +3,8 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="ProjectAdministration">
@@ -15,7 +15,7 @@
     Admin appears in the project menu.</para>
 
     <para>Only project members can access the Project Administration page. All
-    other CodeX users are denied access to this part of a project.</para>
+    other &SYS_PRODUCT_NAME; users are denied access to this part of a project.</para>
 
     <section id="ProjectAdministrationMenu">
       <title>Project Administration Menu</title>
@@ -35,7 +35,7 @@
 
       <para><emphasis>Location: Page Admin Content</emphasis></para>
 
-      <para>User administration in CodeX is easy. Regarding the number of
+      <para>User administration in &SYS_PRODUCT_NAME; is easy. Regarding the number of
       users to need to add, you can use one the two following ways:
       </para>
       
@@ -45,8 +45,8 @@
           project team one of the project administrator just has to type the login
           name of the invited member and click on the &#34;Add User&#34; button.
           If you don&#39;t know the login name of the new project member you want
-          to add, open a new browser window on CodeX and use the search box in the
-          CodeX Main Menu to search for the person&#39;s real name (first or last
+          to add, open a new browser window on &SYS_PRODUCT_NAME; and use the search box in the
+          &SYS_PRODUCT_NAME; Main Menu to search for the person&#39;s real name (first or last
           name or both) and don&#39;t forget to select &#34;People&#34; in the
           Search pull-down menu. The result list will show you the user real name
           and login name.</para>
@@ -61,7 +61,7 @@
           Then, you can browse your local directory to select a file
           containing the list of users you want to import. The file will 
           host one user per line, by specifying her email address, or her
-          CodeX username (login name).</para>
+          &SYS_PRODUCT_NAME; username (login name).</para>
           <example>
             <title>Sample of users import file</title>
                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -78,7 +78,7 @@ john.smith@xerox.com</programlisting>
           After a confirmation, the import is done and the users are added
           to the project.
           The system doesn't perform the import in case of error (unknown user,
-          user not recorded in CodeX, user not active, unknown email address, etc.)
+          user not recorded in &SYS_PRODUCT_NAME;, user not active, unknown email address, etc.)
           If a user is two times in the file, only one user is added and there is no
           error.</para>
       </section>
@@ -102,7 +102,7 @@ john.smith@xerox.com</programlisting>
 
       <note><para>You have probably noticed that project member&#39;s
       name on the Project Administration page are actually hyperlinks. On this
-      page as well as in many other pages throughout CodeX a click on a login
+      page as well as in many other pages throughout &SYS_PRODUCT_NAME; a click on a login
       name leads you to the user page where you can know more about the user
       (including its location, phone/fax number, etc. extracted from the LDAP 
       Directory in real time) and send an e-mail message to this person
@@ -139,7 +139,7 @@ john.smith@xerox.com</programlisting>
       <para>This is where you can categorize your project. You can define up
       to 3 values for each of the 7 criteria used in the Software Map. If you
       cannot find any matching value in the predefined list do not hesitate to
-      contact the CodeX Team.</para>
+      contact the &SYS_PRODUCT_NAME; Team.</para>
     </section>
 
 
@@ -148,12 +148,12 @@ john.smith@xerox.com</programlisting>
 
       <para><emphasis>Location: Page Admin Content</emphasis></para>
 
-      <para>CodeX proposes three types of projects:</para>
+      <para>&SYS_PRODUCT_NAME; proposes three types of projects:</para>
         
       <itemizedlist mark="bullet">
           <listitem> 
 	    <para><emphasis role="bold">Project</emphasis>:
-	      This is the type of standard projects hosted on CodeX.
+	      This is the type of standard projects hosted on &SYS_PRODUCT_NAME;.
 	    </para>
 	  </listitem>
 	  <listitem>
@@ -214,18 +214,18 @@ john.smith@xerox.com</programlisting>
 	      Just notice that the project members of the template projects will 
 	      not automatically be part of the newly registered project.
 	      A template project does not appear any more in the Software 
-	      Map and is excluded from project statistics on the CodeX Dashboard
-	      (see <xref linkend="TheCodeXDashboard" />) like the newest projects 
+	      Map and is excluded from project statistics on the &SYS_PRODUCT_NAME; Dashboard
+	      (see <xref linkend="TheCodendiDashboard" />) like the newest projects 
 	      listing, most active projects, etc.
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para><emphasis role="bold">Test Project</emphasis>:
-	      If you just need to test what is feasible with CodeX projects
+	      If you just need to test what is feasible with &SYS_PRODUCT_NAME; projects
 	      use the Test Project type for your project. Having defined
-	      that type, your project will not appear any more in the CodeX 
-	      Software Map nor on the CodeX Dashboard.
+	      that type, your project will not appear any more in the &SYS_PRODUCT_NAME; 
+	      Software Map nor on the &SYS_PRODUCT_NAME; Dashboard.
 	    </para>
 	  </listitem>
        </itemizedlist>
@@ -265,8 +265,8 @@ john.smith@xerox.com</programlisting>
       <para>There is one exception, the
           <emphasis role="bold">Home Page</emphasis> service is a
           system service but it can be customized with any URL. Each
-          project hosted on CodeX has its own virtual Web server available on
-          the CodeX site. By default the &#34;Home Page&#34; in the Project
+          project hosted on &SYS_PRODUCT_NAME; has its own virtual Web server available on
+          the &SYS_PRODUCT_NAME; site. By default the &#34;Home Page&#34; in the Project
           Service Bar links to this location (see <xref linkend="ProjectWebSite" /> for more details).
           If you want the Home Page of your project to link to some other
           locations on the Intranet or on the Web, simply replace
@@ -303,7 +303,7 @@ john.smith@xerox.com</programlisting>
 
             <listitem>
               <para><emphasis role="bold">$sys_default_domain</emphasis>: 
-              domain of your CodeX server (e.g. &#34;&SYS_DEFAULT_DOMAIN;&#34;)
+              domain of your &SYS_PRODUCT_NAME; server (e.g. &#34;&SYS_DEFAULT_DOMAIN;&#34;)
               </para>
             </listitem>
 
@@ -381,7 +381,7 @@ john.smith@xerox.com</programlisting>
       given project. This is available in the form of a series of
       pointers located on the lower left part of the project
       administration page. Only project members with appropriate
-      permission are allowed to access the CodeX services
+      permission are allowed to access the &SYS_PRODUCT_NAME; services
       administration pages (see <xref linkend="UserPermissions"
       />).</para>
 
@@ -402,14 +402,14 @@ john.smith@xerox.com</programlisting>
     <section id="ReferenceOverview">
       <title>Reference Overview</title>
 
-      <para>References are a powerful tool that allow cross-referencing of CodeX objects.
-      Based on a text pattern, CodeX automatically creates hyperlinks to the desired object.
+      <para>References are a powerful tool that allow cross-referencing of &SYS_PRODUCT_NAME; objects.
+      Based on a text pattern, &SYS_PRODUCT_NAME; automatically creates hyperlinks to the desired object.
       </para>
 
       <para>When typing a follow-up comment or a commit message, any text containing the
       pattern "XXX #NNN" will be interpreted as a reference to the object of type XXX with ID number NNN.
       For instance, 'artifact #123' is recognized as a reference to artifact number 123, and 
-      CodeX automatically creates a hyperlink that directly points to the details of artifact 123.
+      &SYS_PRODUCT_NAME; automatically creates a hyperlink that directly points to the details of artifact 123.
       </para>
       <para>You may also reference an object that belongs to another project. In that case, use 
       either 'XXX #group_id:NNN' or 'XXX #group_name:NNN' to reference object XXX number NNN 
@@ -478,9 +478,9 @@ john.smith@xerox.com</programlisting>
 <para>
 While working in the development or the maintenance phase of a software project, it is vital to keep track of the changes made to the source code. This is what Version Control systems like CVS and Subversion do. In addition to keeping track of the source code change history it is often critical to relate the changes to the artifact (a task, a defect or a support request) that led the developers to make a change in the code. And conversely, when reading the artifact description it is also very helpful to immediately see how the change was implemented.
 </para><para>
-The integration of CVS and Subversion in CodeX precisely provide the CodeX users with this bi-directional cross-referencing mechanism. This is achieved through the use of references that are automatically detected by CodeX in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
+The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide the &SYS_PRODUCT_NAME; users with this bi-directional cross-referencing mechanism. This is achieved through the use of references that are automatically detected by &SYS_PRODUCT_NAME; in either the follow-up comments of the project artifacts or in the messages attached to a CVS or SVN commit.
 </para>
-<para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in CodeX. So you may now create your own reference pattern to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
+<para>The system is not limited to artifact and commit references, so you may also reference the forum message where the bug was found, the documentation that describes an issue, or the file that fixes it. The system is flexible enough to allow referencing of items that are not stored in &SYS_PRODUCT_NAME;. So you may now create your own reference pattern to link to an external document manager like DocuShare, or source code management tool like ClearCase</para>
 
       <para><tip><title>Tip: cross-reference artifacts and Source Code
       commits</title><para>It is considered a best practice to always
@@ -515,7 +515,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           <para><emphasis role="bold">Reference Link</emphasis>:
           This is the URL pointed by the reference, i.e. the address the user will be 
           redirected to when clicking on a reference. 
-          The URL does not need to point to the CodeX server: you may create references pointing to external pages.
+          The URL does not need to point to the &SYS_PRODUCT_NAME; server: you may create references pointing to external pages.
           The page will be loaded in the current window.
           </para>
           <para>A few keywords can be inserted into the link: they will be automatically replaced by their value:
@@ -639,7 +639,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           always set to Yes. All project members have write permission over
           the CVS <footnote><para>CVS stands for Concurrent Versions System.
           It is one of the source code version control system offered on the
-          CodeX site. CVS is used by hundreds of thousands of software
+          &SYS_PRODUCT_NAME; site. CVS is used by hundreds of thousands of software
           projects all over the world. See <ulink url="http://www.cvshome.org">http://www.cvshome.org</ulink>
           for more information.</para></footnote>repository and this cannot be
           changed from the current version of the Web interface. However
@@ -727,7 +727,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
     <para><emphasis>Location: Project Administration Menu</emphasis></para>
     
     <para>A user group, sometimes called a &#34;ugroup &#34;, is
-    simply a group of CodeX users.  User groups are used to set
+    simply a group of &SYS_PRODUCT_NAME; users.  User groups are used to set
     specific permissions to some project data (e.g. software releases
     and packages - see <xref linkend="PackageModification" />).  A
     user group is always attached to a project, but the users
@@ -772,7 +772,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
           <para><emphasis role="bold">Custom User Groups</emphasis>
           are defined by project administrators. They are composed of
           a static list of users. The only requirement is that any
-          member must be a registered CodeX user. This list can be
+          member must be a registered &SYS_PRODUCT_NAME; user. This list can be
           modified at any time, but will not automatically be updated,
           except if a member is removed from the project or deleted
           from the system.
@@ -824,7 +824,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
       members of the new group.</para>
 
       <para>Two columns are displayed: the one on the left contains
-      the list of all CodeX registered users, while the one on the
+      the list of all &SYS_PRODUCT_NAME; registered users, while the one on the
       right contains the list of users already admitted to the
       group. Use the two arrows between the columns to move users from
       one column to the other. </para>
@@ -846,7 +846,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
         <title>Tip: Combining pre-defined groups with additional members</title>
 
         <para>Sometimes, you might want to grant some permissions to
-        all project members and some other CodeX users.  In this case,
+        all project members and some other &SYS_PRODUCT_NAME; users.  In this case,
         you might be tempted to build a user group from the list of
         project members and to add the other users to the group.  The
         issue with this solution is that if new members join the
@@ -925,26 +925,26 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>CodeX is very appealing to many project development teams
+      <para>&SYS_PRODUCT_NAME; is very appealing to many project development teams
       because it provides full-featured project development and
       management tools. A software project can be managed almost
-      entirely from within CodeX. However a project team may need to
+      entirely from within &SYS_PRODUCT_NAME;. However a project team may need to
       perform some additional processing on the project data. It may
       need to report about progress made, what goes well or wrong, how
       far you are from the end date, derive statistical data,
       etc.</para>
 
-      <para>It is far beyond the scope of CodeX to provide project
+      <para>It is far beyond the scope of &SYS_PRODUCT_NAME; to provide project
       teams with such reporting tools. There are many specialized
       tools on the market to generate progress reports and each
       project team has its favorite one. In order to satisfy this
-      diversity of needs, the CodeX Team has developed a very
+      diversity of needs, the &SYS_PRODUCT_NAME; Team has developed a very
       efficient system that allows the project team to export the
-      project data outside of CodeX for re-use in other tools like
+      project data outside of &SYS_PRODUCT_NAME; for re-use in other tools like
       MS Access, Excel, Crystal Report, Open Office,  or
       any other ad-hoc tools.</para>
 
-      <para>CodeX provides you with 2 kinds of Data Export:</para>
+      <para>&SYS_PRODUCT_NAME; provides you with 2 kinds of Data Export:</para>
 
       <itemizedlist mark="bullet">
         <listitem>
@@ -971,7 +971,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 
     <section id="ExportedData">
       <title>Exported Data</title>
-      <para>CodeX gives access to the following data (details on exported fields are listed on the CodeX page): </para>
+      <para>&SYS_PRODUCT_NAME; gives access to the following data (details on exported fields are listed on the &SYS_PRODUCT_NAME; page): </para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
@@ -1069,7 +1069,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
     <section id="DirectDatabaseAccess">
       <title>Direct Database Access</title>
 
-      <para>To offer maximum flexibility CodeX also provides a direct
+      <para>To offer maximum flexibility &SYS_PRODUCT_NAME; also provides a direct
       access to your project data via an ODBC or JDBC database
       connection. Once installed on your PC the MySQL
       ODBC (or JDBC) driver allows a transparent access to your
@@ -1159,7 +1159,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 		  <listitem>
 		    <para><emphasis>MySQL Database Name</emphasis>:
 		    the database name is your project shortname prefixed by 'cx_' as
-		    displayed by CodeX after you generated your
+		    displayed by &SYS_PRODUCT_NAME; after you generated your
 		    project database (see above)</para>
 		  </listitem>
 		  <listitem>
@@ -1271,7 +1271,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
-      <para>Depending on the configuration of the CodeX site and on
+      <para>Depending on the configuration of the &SYS_PRODUCT_NAME; site and on
       the configuration of each project, source code access, documents
       and file release download permissions may be granted to various
       populations.</para>
@@ -1289,19 +1289,19 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
         </listitem>
 
         <listitem>
-          <para>The CodeX users who used CVS to checkout or update the
+          <para>The &SYS_PRODUCT_NAME; users who used CVS to checkout or update the
           sources on their local desktop machine or who browsed source
           code via the CVS Web interface.</para>
         </listitem>
 
         <listitem>
-          <para>The CodeX users who accessed the source code through
+          <para>The &SYS_PRODUCT_NAME; users who accessed the source code through
           the Subversion repository or who browsed source code via the
           CVS Web interface.</para>
         </listitem>
 
         <listitem>
-          <para>The CodeX users who downloaded documents, except for
+          <para>The &SYS_PRODUCT_NAME; users who downloaded documents, except for
           those documents marked as being accessible to anonymous
           users in your Document Manager (see <xref
           linkend="DocumentAdministration"/>).</para>
@@ -1313,7 +1313,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
       (default). The time window can also be adjusted to show more or
       less access log history.</para>
 
-      <figure id="FigureSourceCodeAccessLogsForACodeXProject">
+      <figure id="FigureSourceCodeAccessLogsForACodendiProject">
         <title>Sample Access Log</title>
 
         <mediaobject>
@@ -1328,7 +1328,7 @@ The integration of CVS and Subversion in CodeX precisely provide the CodeX users
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

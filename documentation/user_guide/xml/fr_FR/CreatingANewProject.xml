@@ -4,13 +4,13 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="CreatingANewProject">
     <title>Créer un nouveau projet</title>
 
-    <para>Vous êtes désormais un utilisateur CodeX fraîchement
+    <para>Vous êtes désormais un utilisateur &SYS_PRODUCT_NAME; fraîchement
     enregistré et vous voulez vous simplifier la vie ainsi que celle
     de vos équipes de projet. En d'autre termes vous voulez :</para>
 
@@ -45,7 +45,7 @@
 
     <para>Si l'un de ces points vous paraît pertinent pour votre
     activité alors vous devriez absolument héberger vos projets sur
-    CodeX. Voyons comment faire.</para>
+    &SYS_PRODUCT_NAME;. Voyons comment faire.</para>
 
     <section id="ProjectRegistration">
       <title>Enregistrer un projet</title>
@@ -54,7 +54,7 @@
       statut d'utilisateur enregistré (voir <xref
       linkend="ClassesOfCitizens" />). Vous pouvez alors vous
       connecter et sélectionner le lien &#34;Enregistrer un
-      projet&#34; dans le menu de CodeX.</para>
+      projet&#34; dans le menu de &SYS_PRODUCT_NAME;.</para>
 
       <para>L'enregistrement d'un projet est un processus qui prend moins de 10 minutes :</para>
 
@@ -63,7 +63,7 @@
           <para><emphasis role="bold">Enregistrement d'un projet</emphasis></para>
   
           <para>Il s'agit d'informations à propos des services
-          CodeX. Lisez les attentivement.</para>
+          &SYS_PRODUCT_NAME;. Lisez les attentivement.</para>
           <para>N'oubliez pas de lire et d'accepter les Conditions générales d'utilisation.</para>
         </listitem>
 
@@ -82,14 +82,14 @@
         <listitem> 
           <para><emphasis role="bold">Patron de projet</emphasis></para>
           
-          <para>Vous avez déjà soumis un projet CodeX et voudriez réutiliser la 
+          <para>Vous avez déjà soumis un projet &SYS_PRODUCT_NAME; et voudriez réutiliser la 
           même configuration (services, outils de suivi, documents, références, ...) ? 
           Vous pouvez convertir votre ancien projet en patron de projet 
           (voir <xref linkend="ProjectType" />) et vous le retrouverez sur cette page 
           dans la liste des patrons de projet disponible. Choisissez votre ancien
           projet comme patron et votre nouveau projet aura les mêmes services configurés
           de la même manière que votre ancien projet. Si vous ne voulez pas réutiliser
-          un patron spécifique gardez simplement le Patron CodeX par défault coché
+          un patron spécifique gardez simplement le Patron &SYS_PRODUCT_NAME; par défault coché
           et continuez l'enregistrement.</para>
         </listitem>
 
@@ -138,7 +138,7 @@
           projet public. Si c'est le cas, le choix par défaut est
           celui que vous devez conserver à savoir la &#34;Politique
           d'Echange de &SYS_ORG_NAME;&#34;. Comme expliqué plus haut,
-          l'équipe CodeX assistée du département légal de
+          l'équipe &SYS_PRODUCT_NAME; assistée du département légal de
           &SYS_ORG_NAME; ont créé et validé ces règles d'échange. Un
           certain nombre de licences Open Source sont aussi
           mentionnées. Enfin vous pouvez aussi spécifier vos propres
@@ -156,7 +156,7 @@
       </itemizedlist>
 
       <para>Après validation de l'enregistrement du projet, l'équipe
-      CodeX doit le revoir et l'approuver, le rejeter ou vous demander
+      &SYS_PRODUCT_NAME; doit le revoir et l'approuver, le rejeter ou vous demander
       plus d'information. Ce processus ne prend pas plus de 24 heures
       dans le pire des cas et moins d'une heure la plupart du
       temps. Rares sont les projets rejetés donc il y a peu de crainte
@@ -207,13 +207,13 @@
 
         <para>Plutôt que de mettre en place une hiérarchie de valeurs
         lourdes et complexes pour chacun des sept critères de
-        classification de l'arbre des projets, l'équipe CodeX a décidé
+        classification de l'arbre des projets, l'équipe &SYS_PRODUCT_NAME; a décidé
         de faire évoluer cette hiérarchie au fur et à mesure de
         l'apparition de nouveaux projets. Si vous ne trouvez pas la
         valeur qui vous convient dans l'un des critères de
-        catégorisation, n'hésitez pas à contacter l'équipe CodeX via
+        catégorisation, n'hésitez pas à contacter l'équipe &SYS_PRODUCT_NAME; via
         le lien &#34;Contactez-nous&#34; situé dans la section Aide du
-        menu principal de CodeX ou en soumettant une demande dans l'un
+        menu principal de &SYS_PRODUCT_NAME; ou en soumettant une demande dans l'un
         des forums de discussion du site.</para>
       </tip>
     </section>

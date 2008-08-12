@@ -3,14 +3,14 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
   <chapter id="VersionControlWithCVS">
   <title>Version Control with CVS</title>
 
   <para>This chapter is not a CVS Tutorial. It focuses on the integration of
-    CVS with CodeX and how to use it in an optimal way in this context. If you
+    CVS with &SYS_PRODUCT_NAME; and how to use it in an optimal way in this context. If you
     are not familiar with the CVS version control system look at the CVS
     references (see <xref linkend="CVSReferences" />).</para>
 
@@ -42,7 +42,7 @@
     <para>No good software project should be started without making a
     decision on which version control tool is going to be used. CVS
     and Subversion (see <xref linkend="VersionControlWithSubversion"
-    />) are the two possible choices offered by CodeX
+    />) are the two possible choices offered by &SYS_PRODUCT_NAME;
     <footnote><para>There are many version control software available
     on the market whether Free Software (SCCS, RCS, PKS, Arch,
     Monotone......) or Commercial (SourceSafe, ClearCase,
@@ -95,9 +95,9 @@
       <title>CVS Clients</title>
 
       <para>CVS has a client-server architecture. In other words,
-      CodeX developers who want to interact with the CVS repository of
+      &SYS_PRODUCT_NAME; developers who want to interact with the CVS repository of
       their project must have CVS installed on their desktop machine,
-      hereafter called client. The CodeX server permanently runs a CVS
+      hereafter called client. The &SYS_PRODUCT_NAME; server permanently runs a CVS
       server in the background to which CVS clients talk to to act
       upon the CVS repository. CVS clients come in various flavors for
       all sorts of platforms (Windows, Mac and all Unix): command line
@@ -140,11 +140,11 @@
       </section>
 
       <section id="SettingUpWinCVS">
-        <title>Setting up WinCVS for CodeX</title>
+        <title>Setting up WinCVS for &SYS_PRODUCT_NAME;</title>
 
         <para>As mentioned above, WinCVS is one of the most popular CVS clients
         on Windows. Below are all the instructions needed to get WinCVS running on
-        a CodeX project. In the examples, "username" is the user login name, and "projectname"
+        a &SYS_PRODUCT_NAME; project. In the examples, "username" is the user login name, and "projectname"
         is the short project name.</para>
 
         <itemizedlist mark="bullet" spacing="compact">
@@ -231,8 +231,8 @@
       <title>CVS References</title>
 
       <para>As stated earlier in this chapter, this document is not a
-      CVS Tutorial. It focuses on the integration of CVS in CodeX and
-      how to use CVS in the CodeX context. If you want to learn more
+      CVS Tutorial. It focuses on the integration of CVS in &SYS_PRODUCT_NAME; and
+      how to use CVS in the &SYS_PRODUCT_NAME; context. If you want to learn more
       about CVS refer to the following documents:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -262,13 +262,13 @@
     </section>
   </section>
 
-  <section id="CVSIntegrationinCodeX">
-    <title>CVS Integration in CodeX</title>
+  <section id="CVSIntegrationinCodendi">
+    <title>CVS Integration in &SYS_PRODUCT_NAME;</title>
 
     <section id="TheCVSRepository">
       <title>The CVS Repository</title>
 
-      <para>Whenever a new project is hosted on CodeX, a new CVS
+      <para>Whenever a new project is hosted on &SYS_PRODUCT_NAME;, a new CVS
       repository is automatically created and properly
       initialized. Each project has its own CVS repository. Having its
       own repository has a certain number of advantages: your CVS
@@ -278,7 +278,7 @@
       repository.</para>
 
       <note><para>All CVS repositories are available under the
-      <literal>/cvsroot/projectname</literal> directory on the CodeX
+      <literal>/cvsroot/projectname</literal> directory on the &SYS_PRODUCT_NAME;
       server. All interactions with the CVS repository take place from
       a CVS client through the cvs program. If need be and if this
       feature is active on your server, you can also use your shell
@@ -311,10 +311,10 @@
       <itemizedlist mark="bullet" spacing="compact">
         <listitem>
           <para><emphasis role="bold">Anonymous Users</emphasis>:
-          users who have not registered with CodeX (or are not logged
+          users who have not registered with &SYS_PRODUCT_NAME; (or are not logged
           in) have <emphasis role="underline">no access at
           all</emphasis> to the CVS repositories. Depending on the
-          configuration of the CodeX server, anonymous user may even
+          configuration of the &SYS_PRODUCT_NAME; server, anonymous user may even
           be denied access to the entire site.</para>
         </listitem>
         
@@ -329,14 +329,14 @@
               linkend="PatchTemplate" /> ).</para>
 
           <note><para><emphasis role="bold">Note</emphasis>: all source code
-          accesses are recorded by CodeX. Project administrators
+          accesses are recorded by &SYS_PRODUCT_NAME;. Project administrators
           always have access to the list of people who accessed the
           source code (see <xref linkend="SourceCodeAccessLogs" />).</para></note>
         </listitem>
 
         <listitem>
           <para><emphasis role="bold">Project Members</emphasis>:
-          members of a CodeX hosted project are granted a password
+          members of a &SYS_PRODUCT_NAME; hosted project are granted a password
           protected read/write access. As mentioned above in the
           section about private projects, it is also possible to grant
           read-only access to the project members.</para>
@@ -353,7 +353,7 @@
   <section id="CVSWebInterface">
     <title>The CVS Web Interface</title>
 
-    <para>CodeX offers a number of facilities that allow you to
+    <para>&SYS_PRODUCT_NAME; offers a number of facilities that allow you to
     interact with your CVS repository through the Web interface. The
     CVS Web interface does not intend to replace the CVS client that
     you should normally use on your desktop computer. It rather
@@ -361,13 +361,13 @@
     clients. The CVS Web interface can be accessed via the
     &#34;CVS&#34; item in the Project Main Menu or via the CVS service
     listed in the Public Area (see <xref
-    linkend="FigureASampleProjectSummaryPage" />). The CodeX CVS Web
+    linkend="FigureASampleProjectSummaryPage" />). The Codendi CVS Web
     interface provides the following features:</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
         <para><emphasis role="bold">Accessing the CVS
-        repository</emphasis>: The welcome page of the CodeX CVS
+        repository</emphasis>: The welcome page of the &SYS_PRODUCT_NAME; CVS
         service gives you all the information you need to access the
         CVS repository from your CVS client. Among other things it
         tells you what the CVS root path is and how to log in and
@@ -384,7 +384,7 @@
         <para><emphasis role="bold">Querying CVS </emphasis>: if the
         CVS tracking feature has been activated for your project
         (default) all CVS events (commit, file addition or deletion)
-        are tracked down in the CodeX database. This audit trail can
+        are tracked down in the &SYS_PRODUCT_NAME; database. This audit trail can
         be searched using several criteria.</para>
       </listitem>
       <listitem>
@@ -401,8 +401,8 @@
     <title>Browsing The CVS Repository</title>
 
     <para>In order to interact with the CVS repository of any
-    CodeX-hosted project, you normally need to have CVS installed on
-    your machine.  However CodeX also offers a built-in Web browsing
+    &SYS_PRODUCT_NAME;-hosted project, you normally need to have CVS installed on
+    your machine.  However &SYS_PRODUCT_NAME; also offers a built-in Web browsing
     interface to the CVS repository which allows you to navigate in
     the source code, download it, view a file history or compare two
     revisions of the same file.</para>
@@ -445,7 +445,7 @@
           commits, or in the follow-up comments of project artifacts
           like bugs/tasks/support requests simply by using the pattern
           <literal>commit #XXXX</literal> (where XXXX is the unique ID
-          generated by CodeX). Any reference of that kind will be
+          generated by &SYS_PRODUCT_NAME;). Any reference of that kind will be
           automatically transformed into an hyperlink to the CVS
           tracking database. This mechanism makes it very easy to go
           from project artifacts like bugs, support requests or tasks
@@ -509,10 +509,10 @@
       reading the artifact description it is also very helpful to
       immediately see how the change was implemented.</para>
 
-      <para>The integration of CVS in CodeX precisely provide the
-      CodeX users with this bi-directional cross-referencing
+      <para>The integration of CVS in &SYS_PRODUCT_NAME; precisely provide the
+      &SYS_PRODUCT_NAME; users with this bi-directional cross-referencing
       mechanism. This is achieved through the use of reference patterns
-      that are automatically detected by CodeX in either the follow-up
+      that are automatically detected by &SYS_PRODUCT_NAME; in either the follow-up
       comments of the project artifacts or in the messages attached to
       a CVS commit.</para>
       
@@ -526,7 +526,7 @@
         #123&#34;, &#34;task #321&#34;, &#34;req #12&#34;, etc.).
         If you don't know the tracker short name or don't want to specify it, you
         may simply use  &#34;art #NNN&#34;. When browsing a message containing this
-        pattern anywhere in CodeX, the pattern will be automatically
+        pattern anywhere in &SYS_PRODUCT_NAME;, the pattern will be automatically
         transformed into an hyperlink to the artifact
         description.</para>
       </listitem>
@@ -535,14 +535,14 @@
         <para><emphasis role="bold">commit #YYY</emphasis>: this
         pattern refers to the commit YYY where YYY is the commit unique
         ID as listed when querying the CVS tracking database. When
-        browsing a message containing this pattern anywhere in CodeX,
+        browsing a message containing this pattern anywhere in &SYS_PRODUCT_NAME;,
         the pattern will be automatically transformed into an
         hyperlink to the commit description (log messages,
         impacted files, versions and author of the change.</para>
       </listitem>
 
       <listitem>
-        <para>The CodeX reference mechanism allows cross-referencing with any CodeX object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on CodeX references.</para>
+        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
       </listitem>
    </itemizedlist>
 
@@ -560,7 +560,7 @@
 
     <section id="CVSAdministration">
       <title>CVS Administration</title>
-      <para>Through the Web interface, CodeX allows you to configure the following settings:</para>
+      <para>Through the Web interface, &SYS_PRODUCT_NAME; allows you to configure the following settings:</para>
       
       <itemizedlist mark="bullet">
         <listitem>
@@ -572,8 +572,8 @@
           or through the CVS Web Browsing interface.</para>
 
           <para>If you activate the CVS tracking for your project
-          CodeX will also keep track of all the code changes in the
-          CodeX database. This will give you extra capabilities on
+          &SYS_PRODUCT_NAME; will also keep track of all the code changes in the
+          &SYS_PRODUCT_NAME; database. This will give you extra capabilities on
           your CVS repository as explained in <xref
           linkend="QueryingCVS" /></para>
 
@@ -608,7 +608,7 @@
         <listitem>
           <para><emphasis role="bold">CVS E-mail
         Notification</emphasis>: In addition to tracking the changes
-        in the CodeX database, CodeX can also send a nicely formatted
+        in the &SYS_PRODUCT_NAME; database, &SYS_PRODUCT_NAME; can also send a nicely formatted
         email message to individual email addresses or mailing lists
         each time there is a change in your source code. The email
         message contains the log message, the author of the change,
@@ -619,8 +619,8 @@
         <listitem>
           <para><emphasis role="bold">CVS Preamble</emphasis>: In some
           cases (e.g. for legacy projects), the project CVS repository
-          might not be hosted by the CodeX server. In this case, the
-          CVS information displayed in the welcome page of the CodeX
+          might not be hosted by the &SYS_PRODUCT_NAME; server. In this case, the
+          CVS information displayed in the welcome page of the &SYS_PRODUCT_NAME;
           CVS service is incorrect. Fortunately, the project
           administrator can customize the CVS preamble here.</para>
         </listitem>
@@ -631,10 +631,10 @@
       events notification</title><para>If you intend to generate email
       notification for the changes made in your CVS repository, it is a
       good practice to create a specific mailing list called
-      <literal>projectname-cvsevents</literal>. By doing so, CodeX
+      <literal>projectname-cvsevents</literal>. By doing so, &SYS_PRODUCT_NAME;
       users and project members interested in receiving the email
       notification just need to subscribe to the mailing list. In
-      addition, the CodeX mailing list manager will archive all the
+      addition, the &SYS_PRODUCT_NAME; mailing list manager will archive all the
       email messages which can prove very useful for future reference. 
       See <xref linkend="MailingLists" /> for mailing list
       creation.</para></tip></para>
@@ -649,7 +649,7 @@
     <para>Again the intent of this section is not to give formal CVS
       training but rather to explain what are the steps a project team
       typically goes through to efficiently use CVS and, more generally, all
-      the CodeX tools involved in a Software release process.</para>
+      the &SYS_PRODUCT_NAME; tools involved in a Software release process.</para>
 
     <para> It also deals with the problem of contributing source code
     when you are not part of a project team. In this section all
@@ -657,8 +657,8 @@
     transposing them to graphical front-ends should not be a
     problem.</para>
 
-    <figure id="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX">
-      <title>A Typical Software Development Life Cycle on CodeX</title>
+    <figure id="FigureATypicalSoftwareDevelopmentLifeCycleOnCodendi">
+      <title>A Typical Software Development Life Cycle on &SYS_PRODUCT_NAME;</title>
 
       <mediaobject>
         <imageobject>
@@ -671,16 +671,16 @@
     <section id="LoggingIn">
       <title>Logging In</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
-      <para>The first step when dealing with a CodeX-hosted CVS repository
-        is to authenticate yourself with the CVS server. In CodeX, anonymous
+      <para>The first step when dealing with a &SYS_PRODUCT_NAME;-hosted CVS repository
+        is to authenticate yourself with the CVS server. In &SYS_PRODUCT_NAME;, anonymous
         users cannot access the source code of any project whether be it
         through the CVS repository or through the File Release mechanism. So
-        make sure you have created your own account on CodeX before
+        make sure you have created your own account on &SYS_PRODUCT_NAME; before
         interacting with a CVS repository.</para>
 
-      <para>Assuming that you have your CodeX login/password ok, you can now
+      <para>Assuming that you have your &SYS_PRODUCT_NAME; login/password ok, you can now
         use them to authenticate yourself with the CVS repository. To connect
         to the CVS repository of a given project type the following command
         (in one line):</para>
@@ -707,7 +707,7 @@ login
 
         <listitem>
           <para><literal>loginname</literal> is your
-            CodeX login</para>
+            &SYS_PRODUCT_NAME; login</para>
         </listitem>
       </itemizedlist>
 
@@ -723,7 +723,7 @@ login
 
       <para><emphasis>Audience: project members</emphasis></para>
 
-      <para>As the happy administrator of a new CodeX project, the
+      <para>As the happy administrator of a new &SYS_PRODUCT_NAME; project, the
       first thing to do is to populate your freshly brewed CVS
       repository with your project source code. To do so, first create
       a new directory <literal>topdirectory</literal> on your
@@ -755,7 +755,7 @@ import topdirectory vendor_tag start
 
         <listitem>
           <para><literal>loginname</literal> is your
-            CodeX login (all lowercase)</para>
+            &SYS_PRODUCT_NAME; login (all lowercase)</para>
         </listitem>
 
         <listitem>
@@ -774,24 +774,24 @@ import topdirectory vendor_tag start
         your source code into a fresh CVS repository especially for new users.
         Typical mistakes are directories placed at the wrong level or with the
         wrong name. Nothing to fear though... if you want to start again on a
-        new CVS repository contact the CodeX Team and we&#39;ll do that for
+        new CVS repository contact the &SYS_PRODUCT_NAME; Team and we&#39;ll do that for
         you.</para></tip></para>
 
       <note><para>Note that if you already have a CVS repository
-        available, the CodeX Team can help you transfer this repository on
-        CodeX and preserve all of your project history. We just need an
+        available, the &SYS_PRODUCT_NAME; Team can help you transfer this repository on
+        &SYS_PRODUCT_NAME; and preserve all of your project history. We just need an
         archive (zip or tar) of your entire CVS tree including the CVSROOT
         directory. From there we&#39;ll re-install everything for you on the
-        CodeX server. Contact us for more information.</para></note>
+        &SYS_PRODUCT_NAME; server. Contact us for more information.</para></note>
     </section>
 
     <section id="CheckingCodeOut">
       <title>Checking Code Out</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>Once a CVS repository has been populated project members
-      (or CodeX users at large if they are granted access) can
+      (or &SYS_PRODUCT_NAME; users at large if they are granted access) can
       checkout the source code and place it on their own
       workstation. The result is called a working copy in the CVS
       jargon. Note that &#39;checkout&#39; in the CVS world does not
@@ -839,7 +839,7 @@ checkout directory
 
         <listitem>
           <para><literal>loginname</literal> is your
-            CodeX login (all lowercase)</para>
+            &SYS_PRODUCT_NAME; login (all lowercase)</para>
         </listitem>
 
         <listitem>
@@ -855,7 +855,7 @@ checkout directory
     <section id="UpdatingtheSourceCode">
       <title>Updating the Source Code</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>Running a &#34;<literal>cvs update</literal>&#34; command
       from within a working copy has the effect of updating the
@@ -921,7 +921,7 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
       <para><tip><title>Tip: Include a bug or task number in your
       commit messages</title><para>In the ideal world, all
       modifications made to the source code of a project should be
-      related to either a bug logged in the CodeX BTS or to a task
+      related to either a bug logged in the &SYS_PRODUCT_NAME; BTS or to a task
       assign to a developer. If your project team lives in this
       wonderful world :-) then don&#39;t forget to include the related
       bug or task ID number at the beginning or at the end of your
@@ -953,7 +953,7 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
     <section id="ContributingyourChanges">
       <title>Contributing your Changes (other users)</title>
 
-      <para><emphasis>Audience: all CodeX users</emphasis></para>
+      <para><emphasis>Audience: all &SYS_PRODUCT_NAME; users</emphasis></para>
 
       <para>This is a variant of the previous section for those of you who
         do not have write access to the CVS repository of a project and,
@@ -1038,7 +1038,7 @@ cvs diff -c -r V1
 
       <para>In both cases, store the output of the diff or cvs diff
       command in a text file. Compress the output file if it&#39;s a
-      large one and use the CodeX Patch Tracker (see <xref
+      large one and use the &SYS_PRODUCT_NAME; Patch Tracker (see <xref
       linkend="PatchTemplate" />) to submit your patch to the project
       team).</para>
 
@@ -1114,7 +1114,7 @@ export projectname-1.2
 
         <step>
           <para>Done! Nice job...Take a break. And remember to announce the
-            availability of your new version via the CodeX News service (see
+            availability of your new version via the &SYS_PRODUCT_NAME; News service (see
             <xref linkend="NewsService" />).</para>
         </step>
       </procedure>
@@ -1138,7 +1138,7 @@ export projectname-1.2
         deny CVS write access to certain project members. Revoking CVS
         write access for project members is not (yet!) feasible from
         the Web interface. You must use your Shell Account to log into
-        the CodeX server (see <xref linkend="ShellAccount" />) and
+        the &SYS_PRODUCT_NAME; server (see <xref linkend="ShellAccount" />) and
         type the following commands at the shell prompt:</para>
 
       <itemizedlist mark="bullet"
@@ -1172,7 +1172,7 @@ export projectname-1.2
       directory.  These files gives project administrators all sorts
       of interesting capabilities like the creation of virtual modules
       from a collection of files and directories, trigger e-mail
-      notification on certain events like commit or add (note: CodeX
+      notification on certain events like commit or add (note: &SYS_PRODUCT_NAME;
       already does it for you - see below), check the format of a CVS
       tag before accepting it, etc. (See the CVS Documentation cited
       in <xref linkend="CVSReferences" /> for more information about
@@ -1180,14 +1180,14 @@ export projectname-1.2
 
       <para><tip><title>Tip: Never edit CVS Administrative files in place</title><para>Never-ever
         edit any CVS administrative files directly in the CVS repository by
-        using your CodeX Shell Account (except for <literal>readers</literal>
+        using your &SYS_PRODUCT_NAME; Shell Account (except for <literal>readers</literal>
         and <literal>writers</literal> files). Always use CVS itself to manage
         the changes you want to apply to these files. Proceed as usual by
         checking out a working copy of the CVSROOT directory. Edit the
         appropriate files and commit the changes to the repository.</para></tip></para>
 
       <note><para>When making changes to the administrative files make
-      sure you preserve the CodeX specific settings in the following
+      sure you preserve the &SYS_PRODUCT_NAME; specific settings in the following
       files: <literal>config</literal>, <literal>writers</literal> and
       <literal>loginfo</literal>. Also be very careful not to change
       directory or file ownership unless you know exactly what you are
@@ -1198,7 +1198,7 @@ export projectname-1.2
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

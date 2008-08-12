@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
 
@@ -14,10 +14,10 @@
       <title>Source Code Release: Guidelines</title>
 
       <para>There are 2 ways by which project administrators can
-      provide access to their project source code on CodeX: the
+      provide access to their project source code on &SYS_PRODUCT_NAME;: the
       software configuration management repository (CVS or Subversion)
       and the File Release mechanism. At first glance, having two
-      distinct CodeX services seems redundant. However both have been
+      distinct &SYS_PRODUCT_NAME; services seems redundant. However both have been
       developed with different objectives and target audience in mind
       and they are very much complementary. Providing both is
       definitely a plus for your visitors.</para>
@@ -27,9 +27,9 @@
           <para><emphasis role="bold">The SCM repository</emphasis>
           provides a full access to your source code including its
           entire version history. However accessing the source code
-          via SCM tools requires that the CodeX user installs specific
+          via SCM tools requires that the &SYS_PRODUCT_NAME; user installs specific
           software on his machine. Not everybody is capable or willing
-          to do so. SCM access is well suited for CodeX users who want
+          to do so. SCM access is well suited for &SYS_PRODUCT_NAME; users who want
           to get deeper in the project code, add some new extensions,
           fix bugs and contribute changes back to the project
           team. Please be aware that certain projects decide to
@@ -43,7 +43,7 @@
           mechanism</emphasis> allows you to deliver pre-packaged
           version of the source code and/or binaries in one or several
           archive file (zip, tar, jar,...) that an authorized user can
-          easily download from the CodeX Web site. No specific tools
+          easily download from the &SYS_PRODUCT_NAME; Web site. No specific tools
           or knowledge is required. Besides possibly providing
           pre-packaged source code it is also considered a very good
           practice to provide ready-to-use binary version of your
@@ -57,7 +57,7 @@
       and we strongly encourage project teams to use both of them. In order to
       help project teams understand why these two services are highly
       complementary a typical project life cycle is documented on <xref
-      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodeX" />.</para>
+      linkend="FigureATypicalSoftwareDevelopmentLifeCycleOnCodendi" />.</para>
     </section>
 
     <section id="FileReleaseJargon">
@@ -142,8 +142,8 @@
       complete list of packages and release by clicking on the &#34;[View ALL
       project files]&#34; link.</para>
 
-      <figure id="FigureTheFileReleaseScreenOfTheCodeXProject">
-        <title>The File Release screen of the CodeX Administration project</title>
+      <figure id="FigureTheFileReleaseScreenOfTheCodendiProject">
+        <title>The File Release screen of the &SYS_PRODUCT_NAME; Administration project</title>
 
         <mediaobject>
           <imageobject>
@@ -154,8 +154,8 @@
       </figure>
 
       <para>The first example given on <xref
-      linkend="FigureTheFileReleaseScreenOfTheCodeXProject" />
-      shows the File Release screen of the CodeX Administration project.
+      linkend="FigureTheFileReleaseScreenOfTheCodendiProject" />
+      shows the File Release screen of the &SYS_PRODUCT_NAME; Administration project.
       </para>
       
       <section id="FileReleaseBrowsingPackages">
@@ -163,8 +163,8 @@
         <para>
         As explained in the <xref linkend="FileReleaseJargon" />, projects 
         can contain several packages. In the example, 
-        the project has three packages called &#34;CodeX Installation ISO Image&#34;,
-        &#34;CodeX specifics themes&#34; and &#34;CodeX CLI&#34;.
+        the project has three packages called &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34;,
+        &#34;&SYS_PRODUCT_NAME; specifics themes&#34; and &#34;&SYS_PRODUCT_NAME; CLI&#34;.
         </para>
         <para>
         The content of each package can be hidden by clicking the 
@@ -176,7 +176,7 @@
         By default, all the packages are expanded.
         </para>
         <para>
-        CodeX gives you the opportunity to monitor the packages. Like this, 
+        &SYS_PRODUCT_NAME; gives you the opportunity to monitor the packages. Like this, 
         you will be notified when a new release is available, or if a release 
         is updated, etc.
         In order to monitor a package, click the <emphasis>bell</emphasis> icon 
@@ -191,7 +191,7 @@
         <title>Browsing releases</title>
         <para>
         A package can contain several releases. In the example,
-        the package &#34;CodeX Installation ISO Image&#34; contains 8 releases 
+        the package &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34; contains 8 releases 
         from 2.4 to 3.0.1 listed in chronological order. Each release contains a 
         certain number of files.
         </para>
@@ -247,9 +247,9 @@
       
       <para>When you are project admin or file admin, you are able to perform 
       the admin actions on the File Release System home page. (See 
-      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />
-          <figure id="FigureTheFileReleaseAdminScreenOfTheCodeXProject">
-            <title>The File Release screen of the CodeX Administration project, when you are admin</title>
+      <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject" />
+          <figure id="FigureTheFileReleaseAdminScreenOfTheCodendiProject">
+            <title>The File Release screen of the &SYS_PRODUCT_NAME; Administration project, when you are admin</title>
     
             <mediaobject>
               <imageobject>
@@ -308,10 +308,10 @@
         <para>To update a package, just click the [edit] icon located after each 
         package name. Then, the modification form is the same than the creation one, 
         except that you can set read permissions on the package 
-        (see <xref linkend="FigureAPartOfThePackageAdministrationScreenCodeXProject" />).
+        (see <xref linkend="FigureAPartOfThePackageAdministrationScreenCodendiProject" />).
         </para>
-        <figure id="FigureAPartOfThePackageAdministrationScreenCodeXProject">
-          <title>Package Edition Screen of the CLI package, in the CodeX Administration project</title>
+        <figure id="FigureAPartOfThePackageAdministrationScreenCodendiProject">
+          <title>Package Edition Screen of the CLI package, in the &SYS_PRODUCT_NAME; Administration project</title>
     
           <mediaobject>
             <imageobject>
@@ -346,17 +346,17 @@
         
         <para>Once a package has been created you can immediately start adding
         releases to it. Click on the [Add a Release] link of the appropriate 
-        package (see <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodeXProject" />).
+        package (see <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject" />).
         </para>
         
         <para>The release creation and modification process is really easy to 
         perform. It can be divided into 6 steps, but some are optional.
-        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodeXProject" />).
+        (see <xref linkend="FigureTheReleaseModificationScreenOfTheCodendiProject" />).
         In every case, you can update the release at any time
         </para>
         
-        <figure id="FigureTheReleaseModificationScreenOfTheCodeXProject">
-          <title>The release update screen of the CodeX project</title>
+        <figure id="FigureTheReleaseModificationScreenOfTheCodendiProject">
+          <title>The release update screen of the &SYS_PRODUCT_NAME; project</title>
 
           <mediaobject>
             <imageobject>
@@ -401,7 +401,7 @@
                 in the pull down menu.</para>
                 <para>
                     <tip><title>Tip: How to upload files using FTP or SCP</title>
-                    <para>CodeX server offers an upload mechanism via FTP (ou SCP). 
+                    <para>&SYS_PRODUCT_NAME; server offers an upload mechanism via FTP (ou SCP). 
                     To upload your files, follow the instructions given when you 
                     click the <emphasis>?</emphasis> next to the [add file] link.
                     Alternatively, if you are a MS Windows user, you can also
@@ -411,7 +411,7 @@
                     [Refresh File list] link to see your files.</para></tip>
                 </para>
                 <para>Before you upload the files make sure you gave them names
-                that will speak to CodeX users. Ideally the file names should
+                that will speak to &SYS_PRODUCT_NAME; users. Ideally the file names should
                 include the release label in it and any other extension telling
                 whether it is a source file or a binary file.</para>
                 </listitem>
@@ -424,7 +424,7 @@
                 useful to your visitors.</para>
             
                 <para><tip><title>Tip: Always compress your deliverables</title><para>
-                In order to save disk space on the CodeX server as well as on CodeX
+                In order to save disk space on the &SYS_PRODUCT_NAME; server as well as on &SYS_PRODUCT_NAME;
                 users&#39; machine and minimize network bandwidth consumption
                 always compress your deliverables. Use Winzip on Windows and compress, 
                 gzip or even better bzip2 on Linux/Unix machines.</para></tip></para>
@@ -469,7 +469,7 @@
           <listitem>
             <para><emphasis role="bold">Step 4 - Set permissions to the Release (optional)</emphasis></para>
             <para>By default, releases have no specific access permissions: 
-            access to all files is granted to any CodeX registered user 
+            access to all files is granted to any &SYS_PRODUCT_NAME; registered user 
             (anonymous users are not allowed to download release files). 
             However, in some cases, you might want to limit the users allowed 
             to download your software. In these specific cases, you can restrict 
@@ -520,8 +520,8 @@
           <listitem>
             <para><emphasis role="bold">Step 6 - Send e-mail notification (optional)</emphasis></para>
             <para>This step is optional in the sense that it may not show up
-            on your screen. If some CodeX users monitor your package, this step
-            will tell you how many of them are doing so. CodeX gives you the
+            on your screen. If some &SYS_PRODUCT_NAME; users monitor your package, this step
+            will tell you how many of them are doing so. &SYS_PRODUCT_NAME; gives you the
             freedom to send an e-mail notification or not to the users who
             expressed interest in your packages. Do not bypass this step,
             always inform your community of users and developers.</para>
@@ -535,9 +535,9 @@
             you prepare your files for release make sure that you include a
             README file in the top directory of each file that a user can
             download. And pack this README with useful information like the
-            address of your CodeX site, the Mailing list you have put in place
+            address of your &SYS_PRODUCT_NAME; site, the Mailing list you have put in place
             for your project, how to submit a bug or a support to the project
-            team (via CodeX of course)</para></tip></para>
+            team (via &SYS_PRODUCT_NAME; of course)</para></tip></para>
             
           </listitem>
         </itemizedlist>
@@ -566,7 +566,7 @@
  </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

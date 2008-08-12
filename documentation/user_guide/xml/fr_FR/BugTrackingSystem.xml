@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-//	Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
+//
 //
 -->
       
@@ -11,20 +11,20 @@
   <title>Bug Tracking System (deprecated)</title>
 
   <para><tip><title>** The Bug Tracking System is DEPRECATED
-  **</title> <para>In CodeX version 1.7 and above, the Bug Tracking
-  System has been discontinued. It is now replaced by the CodeX
+  **</title> <para>In &SYS_PRODUCT_NAME; version 1.7 and above, the Bug Tracking
+  System has been discontinued. It is now replaced by the &SYS_PRODUCT_NAME;
   Tracker Service (see <xref linkend="TrackerService"/>). This chapter
-  is included in the CodeX User Guide for projects that originally
+  is included in the &SYS_PRODUCT_NAME; User Guide for projects that originally
   used the legacy Bug Tracking System.</para></tip></para>
 
-  <para>The CodeX Bug Tracking System (BTS) is one of the most powerful
-    services offered to CodeX hosted projects. It is also one of the most
+  <para>The &SYS_PRODUCT_NAME; Bug Tracking System (BTS) is one of the most powerful
+    services offered to &SYS_PRODUCT_NAME; hosted projects. It is also one of the most
     popular along with CVS, the default Version Control System offered on
-    CodeX. The CodeX BTS has been improved over time based on the constant
-    flow of feedback received from CodeX users and we think that it is now on
+    &SYS_PRODUCT_NAME;. The &SYS_PRODUCT_NAME; BTS has been improved over time based on the constant
+    flow of feedback received from &SYS_PRODUCT_NAME; users and we think that it is now on
     the par with many expensive commercial products.</para>
 
-  <para>In improving the CodeX BTS, the CodeX Team also tried to maintain a
+  <para>In improving the &SYS_PRODUCT_NAME; BTS, the &SYS_PRODUCT_NAME; Team also tried to maintain a
     fair balance between sophistication and ease of use. As a consequence, a
     fairly simple and straightforward BTS is configured by default for all new
     hosted projects. Then it is up to the project members to decide how much
@@ -32,11 +32,11 @@
     configuration accordingly. The BTS Administration module is here to help
     in this respect.</para>
 
-  <section id="CodeXBTSPrinciples">
-    <title>CodeX BTS Principles</title>
+  <section id="CodendiBTSPrinciples">
+    <title>&SYS_PRODUCT_NAME; BTS Principles</title>
 
     <para>Before we enter into the bug submission process by itself
-      let&#39;s spend some time on some of the CodeX basic principles. CodeX
+      let&#39;s spend some time on some of the &SYS_PRODUCT_NAME; basic principles. &SYS_PRODUCT_NAME;
       is about source code sharing. It also has as an objective to make it
       easy for anybody in the Corporation to contribute something to software
       development projects. Contributions are diverse: it can be feedback from
@@ -47,11 +47,11 @@
       display your code to make your community of users grow and have as large
       as possible a beta-tester community. In order for this community to work
       efficiently they must be free to submit bugs to any project. And this is
-      the CodeX philosophy: bug submission is open to all users and it is up
+      the &SYS_PRODUCT_NAME; philosophy: bug submission is open to all users and it is up
       to the project team (also known as the Core Team) to decide what to do
       with this bug.</para>
 
-    <para>This is a pervasive principle throughout CodeX. Patches and
+    <para>This is a pervasive principle throughout &SYS_PRODUCT_NAME;. Patches and
       documentation contribution follows exactly the same principle: the
       community has the freedom to contribute, the Core Team then decide what
       to do with the contributions.</para>
@@ -80,8 +80,8 @@
       of the welcome screen (see <xref
 				       linkend="FigureASampleBugTrackingSystemWelcomeScreen" />).</para>
 
-    <figure id="BugSubmissionScreenFromTheCodeXProject">
-      <title>Bug submission screen from the CodeX project</title>
+    <figure id="BugSubmissionScreenFromTheCodendiProject">
+      <title>Bug submission screen from the &SYS_PRODUCT_NAME; project</title>
 
       <mediaobject>
 	<imageobject>
@@ -91,15 +91,15 @@
       </mediaobject>
     </figure>
 
-    <para><xref linkend="BugSubmissionScreenFromTheCodeXProject" /> shows a
-      sample submission screen from one of the CodeX hosted projects. Because
+    <para><xref linkend="BugSubmissionScreenFromTheCodendiProject" /> shows a
+      sample submission screen from one of the &SYS_PRODUCT_NAME; hosted projects. Because
       of the BTS high level of customizability no two bug submission screens
       look alike. Depending on the project more or less fields may appear on
       the bug submission form but expect most of them to be close to the one
-      shown on <xref linkend="BugSubmissionScreenFromTheCodeXProject" />.</para>
+      shown on <xref linkend="BugSubmissionScreenFromTheCodendiProject" />.</para>
 
     <para>In the example provided on <xref
-					   linkend="BugSubmissionScreenFromTheCodeXProject" />, the user is asked
+					   linkend="BugSubmissionScreenFromTheCodendiProject" />, the user is asked
       to choose a bug Category, a bug Group, a Priority and an Assignee from a
       series of pull down menus. Then comes a one-line description for the bug
       and a longer piece of text where you can fully characterize the bug.
@@ -115,7 +115,7 @@
       vary according to the citizen class the user belongs to. Depending
       whether you are a project member or an ordinary registered user the bug
       field displayed on the screen may differ. As an example, on <xref
-									linkend="BugSubmissionScreenFromTheCodeXProject" />, the bug submitter
+									linkend="BugSubmissionScreenFromTheCodendiProject" />, the bug submitter
       using the form is probably a project member because giving access to the
       &#34;Assigned to&#34; field to an ordinary registered user doesn&#39;t
       make much sense. It is very unlikely that users external to the project
@@ -128,17 +128,17 @@
       button when you are finished !</para>
 
     <para><tip><title>Tip: make sure your bug hasn&#39;t yet been submitted</title><para>About
-      to submit a bug to a CodeX Project? Before you do that, make sure that
+      to submit a bug to a &SYS_PRODUCT_NAME; Project? Before you do that, make sure that
       others haven&#39;t yet submitted a similar bug. To do so you can either
       browse the bug database through the Bug Selection and Browsing facility
-      or you can use the search box in the CodeX Main Menu and search by
+      or you can use the search box in the &SYS_PRODUCT_NAME; Main Menu and search by
       keywords.</para></tip></para>
   </section>
 
   <section id="BugBrowsing">
     <title>Bug Browsing</title>
 
-    <para>CodeX provides project members, ordinary registered users and even
+    <para>&SYS_PRODUCT_NAME; provides project members, ordinary registered users and even
       anonymous users with the ability to browse the bug database according to
       a variable set of criteria.</para>
 
@@ -316,10 +316,10 @@
         later re-use. To do this: select the appropriate bug report, then
         choose your search criteria, click on the &#34;Browse&#34; button to
         run the query. Finally click on the &#34;Bookmark this Page&#34; item
-        in the CodeX Main Menu. A new bookmark will show up in your Personal
+        in the &SYS_PRODUCT_NAME; Main Menu. A new bookmark will show up in your Personal
         Page. A click on this bookmark will run the exact same query again.</para></tip></para>
 
-      <para>Your favorite bug queries can be saved via the CodeX
+      <para>Your favorite bug queries can be saved via the &SYS_PRODUCT_NAME;
       bookmark mechanism as explained in the Tip box but there are
       also shortcuts in the Bug Menu Bar for the most common
       queries. They are:</para>
@@ -332,13 +332,13 @@
 
 	<listitem>
 	  <para><emphasis role="bold">My Bugs</emphasis>: display the bugs
-            assigned to you (based on the CodeX account you are currently
+            assigned to you (based on the &SYS_PRODUCT_NAME; account you are currently
             using)</para>
 	</listitem>
       </itemizedlist>
 
-      <para>Also notice that CodeX always keeps track of the last ran bug
-        query. Next time you enter the bug welcome screen, CodeX will use the
+      <para>Also notice that &SYS_PRODUCT_NAME; always keeps track of the last ran bug
+        query. Next time you enter the bug welcome screen, &SYS_PRODUCT_NAME; will use the
         same set of selection criteria in the selection boxes and update the
         bug report accordingly.</para>
 
@@ -356,7 +356,7 @@
     <section id="BugSearchResults">
       <title>Bug Search Results</title> 
       
-      <para>After you have submitted the bug selection, CodeX runs a
+      <para>After you have submitted the bug selection, &SYS_PRODUCT_NAME; runs a
       query against the bug database, select the matching bugs and
       displays them right below the selection criteria. Columns
       displayed in the bug list are entirely configurable by the
@@ -457,7 +457,7 @@
 	list. Depending on the project, users may enjoy the ability to
 	choose from several bug reports by using the upper pull-down
 	menu of the bug browsing screen. If no project or user
-	specific bug report has been defined, the CodeX
+	specific bug report has been defined, the &SYS_PRODUCT_NAME;
 	&#39;Default&#39; report is the only one available.</para>
 
 	<para>Project members and project administrators can define
@@ -482,7 +482,7 @@
       will appear as immutable text. Non-project members cannot edit any of
       the bug fields. They can only submit a follow-up comment to a bug.</para>
 
-    <para>All the screen shots used in this section assume that the CodeX
+    <para>All the screen shots used in this section assume that the &SYS_PRODUCT_NAME;
       user is part of the project team. For non-project members the screen
       layout is basically the same but the information shown on the screen
       cannot be changed.</para>
@@ -535,7 +535,7 @@
             comments are: a thank you message to the originator, a request for
             the originator to provide commonly missing information like
             version numbers or type of machine used, etc. Rather than typing
-            the same comments all the time, CodeX allows project members to
+            the same comments all the time, &SYS_PRODUCT_NAME; allows project members to
             create a predefined set of responses. After these canned responses
             have been defined, posting a follow-up comment is just a matter of
             selecting the appropriate response from the pull down menu and
@@ -547,7 +547,7 @@
 	<listitem>
 	  <para><emphasis role="bold">Comment Types</emphasis>: In order to
             avoid the exponential growth of new bug fields to store all sorts
-            of free text information, CodeX offers an interesting mechanism
+            of free text information, &SYS_PRODUCT_NAME; offers an interesting mechanism
             called Comment Types. The project team has the ability to define a
             list of labels that can then be used to categorize the nature of a
             follow-up comment. This is a very helpful feature to characterize
@@ -582,7 +582,7 @@
       <title>CC List</title>
 
       <para>As explained later in this chapter (see <xref
-      linkend="BugEmailNotification" />) the CodeX BTS offers a powerful
+      linkend="BugEmailNotification" />) the Codendi BTS offers a powerful
       email notification system for those users who, at some point,
       were involved in the life of the bug whether as a submitter, an
       assignee or as a person who posted a follow-up comment
@@ -601,14 +601,14 @@
         <title>CC Names</title>
 
         <para>The CC names can be either email addresses or a
-        CodeX login name if the user has a CodeX account.</para>
+        &SYS_PRODUCT_NAME; login name if the user has a &SYS_PRODUCT_NAME; account.</para>
 
         <itemizedlist mark="bullet">
 	  <listitem>
-            <para><emphasis role="bold">CodeX login name</emphasis>:
+            <para><emphasis role="bold">&SYS_PRODUCT_NAME; login name</emphasis>:
             when the person you want involve in the notification
-            process has a CodeX account use it in place of her email
-            address. Using the CodeX login name give to the recipient
+            process has a &SYS_PRODUCT_NAME; account use it in place of her email
+            address. Using the &SYS_PRODUCT_NAME; login name give to the recipient
             the ability to customize the kind of bug update events she
             wants to receive. For more information on how to customize
             notification preferences for a given project see <xref
@@ -641,7 +641,7 @@
         <itemizedlist mark="bullet">
           <listitem>
             <para>Adding a CC name: Anonymous users cannot add CC
-            names. Any other CodeX user who is logged in can add CC
+            names. Any other &SYS_PRODUCT_NAME; user who is logged in can add CC
             names and the CC list will clearly show who added this
             entry and when.</para>
           </listitem>
@@ -652,8 +652,8 @@
             the CC list for any bug of this project. All other users
             can delete CC entries that were either added by themselves
             or entries where the CC name matches their own name or
-            email address in any CodeX projects. In other words a
-            CodeX user has the right to undo what she has done or
+            email address in any &SYS_PRODUCT_NAME; projects. In other words a
+            &SYS_PRODUCT_NAME; user has the right to undo what she has done or
             remove herself from a CC list in any project. </para>
           </listitem>
         </itemizedlist>
@@ -664,7 +664,7 @@
     <section id="BugAttachments">
       <title>Bug Attachments</title>
 
-      <para>In addition to comments, the CodeX Bug Tracking System
+      <para>In addition to comments, the &SYS_PRODUCT_NAME; Bug Tracking System
       allows you to attach virtually any piece of information to a bug
       in the form of a file. Typical examples of bug attachments are
       application screen shots in PNG, GIF, JPEG or whatever image
@@ -683,13 +683,13 @@
 
       <para>The next section on the bug update screen deals with bug
       dependencies (see <xref linkend="FigureBugDependencies"
-      />). CodeX users have the ability to establish a dependency link
+      />). &SYS_PRODUCT_NAME; users have the ability to establish a dependency link
       from a bug to one or several other bugs or from a bug to one or
       several other tasks of the same project.</para>
 
-      <para>The CodeX system does not impose any semantic on the
+      <para>The &SYS_PRODUCT_NAME; system does not impose any semantic on the
       nature of these dependency links. However the following meanings
-      are commonly accepted and used by the CodeX community for
+      are commonly accepted and used by the &SYS_PRODUCT_NAME; community for
       dependency links:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
@@ -782,11 +782,11 @@
       <title>Deriving a New Task from a Bug</title>
 
       <para>When a bug submitted to a project happens to be a big work
-      to fix it is not unusual to create a new task in the CodeX Task
+      to fix it is not unusual to create a new task in the &SYS_PRODUCT_NAME; Task
       Manager to plan and track this work.</para>
 
-      <para>CodeX makes it very easy to derive a new task from an
-      existing bug. Just click on the 'Create Task' item in the CodeX
+      <para>&SYS_PRODUCT_NAME; makes it very easy to derive a new task from an
+      existing bug. Just click on the 'Create Task' item in the &SYS_PRODUCT_NAME;
       BTS menu bar at the top of the screen. A new task form will show
       up with  some fields  pre-filled with values derived from
       the bug form. You can then modify the proposed values, and
@@ -798,7 +798,7 @@
   <section id="BugEmailNotification">
     <title>E-mail Notification</title>
 
-    <para>The CodeX BTS is equipped with a powerful and flexible
+    <para>The &SYS_PRODUCT_NAME; BTS is equipped with a powerful and flexible
     e-mail notification system. Unless otherwise instructed by the
     project administrators or the users themselves, the e-mail
     notification system follows simple default rules. Whenever a bug
@@ -823,7 +823,7 @@
     </itemizedlist>
 
     <para>Beside these simple rules, the Administration module of the
-    CodeX BTS allows CodeX users to customize the email notification
+    &SYS_PRODUCT_NAME; BTS allows &SYS_PRODUCT_NAME; users to customize the email notification
     process. For further information see <xref
     linkend="BugEmailNotificationSettings" />). </para>
 
@@ -831,7 +831,7 @@
     recent changes that occurred on the bug if this is a bug update. It
     is then followed by a complete snapshot of the bug. Web pointers
     are also included in the message to quickly and easily access the
-    bug form on CodeX.</para>
+    bug form on &SYS_PRODUCT_NAME;.</para>
 
   </section>
 
@@ -839,14 +839,14 @@
     <title>Bug reporting</title>
 
     <para>As explained earlier in this document (<xref
-						       linkend="ProjectDataExport" />), CodeX can export your project data
-      outside of the CodeX system for re-use in another tool or document.
+						       linkend="ProjectDataExport" />), Codendi can export your project data
+      outside of the &SYS_PRODUCT_NAME; system for re-use in another tool or document.
       However for simple statistics, you can also use the Bug Reporting
       module. This function can be accessed from the Bug Menu Bar via the item
       &#34;Reporting&#34;.</para>
 
-    <figure id="FigureValueDistributionOfTheBugCategoryFieldForTheCodeXProject">
-      <title>Value distribution of the Bug Category field for the CodeX
+    <figure id="FigureValueDistributionOfTheBugCategoryFieldForTheCodendiProject">
+      <title>Value distribution of the Bug Category field for the &SYS_PRODUCT_NAME;
         project</title>
 
       <mediaobject>
@@ -862,15 +862,15 @@
       predefined values used in the various pull-down menu fields. For
       instance you might want to see how your bugs are distributed across the
       possible status, category or resolution values (see <xref
-								linkend="FigureValueDistributionOfTheBugCategoryFieldForTheCodeXProject" />
-      for an example of how the bugs of the CodeX project are distributed
-      across the various CodeX modules also known as the Bug Category field).</para>
+								linkend="FigureValueDistributionOfTheBugCategoryFieldForTheCodendiProject" />
+      for an example of how the bugs of the &SYS_PRODUCT_NAME; project are distributed
+      across the various &SYS_PRODUCT_NAME; modules also known as the Bug Category field).</para>
   </section>
 
   <section id="BTSAdministration">
     <title>BTS Administration</title>
 
-    <para>As we went through the description of the CodeX BTS features, we
+    <para>As we went through the description of the &SYS_PRODUCT_NAME; BTS features, we
       referred several times to the flexibility of this system and how easy it
       is to customize your own project Bug Tracking System. The BTS
       Administration is accessible by clicking on the item &#34;Admin&#34; in
@@ -913,7 +913,7 @@
 
 	        <entry>Only Project administrators can define project
 	        wide bug reports that will be available to
-	        all users. All other CodeX users (except anonymous
+	        all users. All other &SYS_PRODUCT_NAME; users (except anonymous
 	        users) can define personal bug reports.</entry>
               </row>
 
@@ -924,7 +924,7 @@
 	        addresses in the global email notification
 	        field. Project members must at least have Bug
 	        Tech. permission on the BTS to watch bugs of other
-	        team members. Any registered CodeX user can customize
+	        team members. Any registered &SYS_PRODUCT_NAME; user can customize
 	        her notification preferences.</entry>
               </row>
 
@@ -946,13 +946,13 @@
       <para>When a project is first created, its bug tracking system
       comes pre-configured with a set of bug fields
       that are probably enough for the majority of projects hosted on
-      CodeX. However CodeX has a much longer list of bug fields
+      &SYS_PRODUCT_NAME;. However &SYS_PRODUCT_NAME; has a much longer list of bug fields
       available for use in your own project BTS. Conversely you can
       also decide that the default BTS comes with too many fields and
       you can remove fields from your project BTS and make it even
       simpler.</para>
 
-      <para>The CodeX Bug Tracker offers a list of about 30 fields
+      <para>The &SYS_PRODUCT_NAME; Bug Tracker offers a list of about 30 fields
       that you can choose from to customize your project BTS. They are
       called 'Standard Fields'. Although the list of standard fields
       is quite rich, there might still be cases when one would like to
@@ -964,16 +964,16 @@
 	  <para><emphasis role="bold">Ask the Site
 	Administrator</emphasis>: if you think that the missing field
 	is not specific to your project and should be part of a good
-	bug tracking system, then we urge you to contact the CodeX
+	bug tracking system, then we urge you to contact the &SYS_PRODUCT_NAME;
 	Site Administrators and ask them to create the new field. By
-	doing so CodeX will over time offer a richer and more
+	doing so &SYS_PRODUCT_NAME; will over time offer a richer and more
 	pertinent set of standard fields.</para>
 	</step>
 	
 	<step>
 	  <para><emphasis role="bold">Use the Custom
 	Fields</emphasis>: in addition to the list of standard fields,
-	CodeX offers 'Custom fields'. These are generic fields
+	&SYS_PRODUCT_NAME; offers 'Custom fields'. These are generic fields
 	(either text, date or select box fields) that can be entirely
 	customized by the project team. If the fields you are thinking
 	of adding are really specific to your project then you should
@@ -988,9 +988,9 @@
 	<para>To decide what field to use and what field not to use
 	select the item &#34;Manage Field Usage&#34; on the welcome
 	page of the BTS Administration module. The Field Usage screen
-	(<xref linkend="FigureBugFieldUsageScreenOfACodeXHostedProject"
+	(<xref linkend="FigureBugFieldUsageScreenOfACodendiHostedProject"
 	/>) shows you the full list of bug fields available on
-	CodeX. The list is divided in 3 parts:</para>
+	&SYS_PRODUCT_NAME;. The list is divided in 3 parts:</para>
 
 	<procedure>
 	  <step>
@@ -1099,8 +1099,8 @@
 	</itemizedlist>
 
 
-	<figure id="FigureBugFieldUsageScreenOfACodeXHostedProject">
-	  <title>Field Usage screen of a CodeX hosted project</title>
+	<figure id="FigureBugFieldUsageScreenOfACodendiHostedProject">
+	  <title>Field Usage screen of a &SYS_PRODUCT_NAME; hosted project</title>
 
 	  <mediaobject>
 	    <imageobject>
@@ -1116,7 +1116,7 @@
       <section id="StandardBugFields">
 	<title>Standard Bug Fields</title>
 
-	<para>Standard bug fields are common to all CodeX
+	<para>Standard bug fields are common to all &SYS_PRODUCT_NAME;
 	projects. You can customize them to a certain extent but not
 	all standard fields have the same degree of
 	customizablity. For instance, fields with status
@@ -1247,7 +1247,7 @@
 	fields. However before you decide to use a custom field make
 	sure that there isn't a standard field that already plays the
 	same role. By using standard fields whenever possible, you'll
-	contribute to keep the global CodeX environment consistent and
+	contribute to keep the global &SYS_PRODUCT_NAME; environment consistent and
 	make it easier for visitors, contributors or new team members
 	to switch from project to another.</para></tip></para>
 	
@@ -1394,10 +1394,10 @@
 	      
 	      <listitem>
 		<para><emphasis role="underline">Permanent</emphasis>:
-		this value has been defined for the entire CodeX
+		this value has been defined for the entire &SYS_PRODUCT_NAME;
 		system and it cannot be hidden.  It is active for all
-		CodeX projects and will remain as is forever.  Well,
-		at least until the CodeX Team decides otherwise</para>
+		&SYS_PRODUCT_NAME; projects and will remain as is forever.  Well,
+		at least until the &SYS_PRODUCT_NAME; Team decides otherwise</para>
 	      </listitem>
 	    </itemizedlist>
 	  </listitem>
@@ -1407,9 +1407,9 @@
 	<para><xref linkend="FigureListOfValuesForBugFieldStatus" />
 	shows the list of available values for the Status bug
 	field. The status field was chosen on purpose. Not only is the
-	Status field a required field of the CodeX BTS, but it also
+	Status field a required field of the &SYS_PRODUCT_NAME; BTS, but it also
 	comes with set of predefined values that are available to all
-	CodeX projects. By default only &#34;Open&#34; and
+	&SYS_PRODUCT_NAME; projects. By default only &#34;Open&#34; and
 	&#34;Closed&#34; values are active (and permanent in this
 	case) but there is a series of 7 other values (Accepted,
 	Analyzed, etc.)  that you can choose from if you want to have
@@ -1419,7 +1419,7 @@
 	Status field. This is actually what has been done for this
 	particular project: the Status value &#34;Assigned&#34; as
 	been added to the list of active values. However, in order to
-	keep a certain harmony from one CodeX project to another, we
+	keep a certain harmony from one &SYS_PRODUCT_NAME; project to another, we
 	highly recommend that you use the list of predefined status
 	values as much as you can before creating new ones.</para>
 
@@ -1448,10 +1448,10 @@
       <section id="BugBindingFieldToValueList">
 	<title>Binding a Field to a List of Values</title>
 	
-	<para>Not only does the CodeX BTS allows you to create a list
+	<para>Not only does the &SYS_PRODUCT_NAME; BTS allows you to create a list
 	of values for a select box but it also offers the ability to
 	associate a select box with a list of predefined values that
-	is actually dynamically generated by the CodeX system. A
+	is actually dynamically generated by the &SYS_PRODUCT_NAME; system. A
 	typical example of this is when one would like to create a new
 	select box showing the list of project members. You could also
 	create it manually but such a list would be tedious to create
@@ -1459,7 +1459,7 @@
 
 	<para> So instead of creating your own set of values you can
 	bind a select box to such a list of predefined values that
-	CodeX will keep current for you. Note that if you decide to
+	&SYS_PRODUCT_NAME; will keep current for you. Note that if you decide to
 	bind a select box to a list of dynamically generatedc values
 	you can no longer create your own values. The following lists
 	are currently available (others may be added in the
@@ -1510,7 +1510,7 @@
             first. When the &#34;None&#34; value is available for this bug
             field it has a rank number of 10. This number is deliberately
             small because by convention &#34;None&#34; always appear at the
-            top of the pull-down menu. Please be a good CodeX citizen and
+            top of the pull-down menu. Please be a good &SYS_PRODUCT_NAME; citizen and
             choose rank numbers higher than 10 for your own values.</para>
 	  </listitem>
 	  
@@ -1552,8 +1552,8 @@
       <title>Bug Report Management</title>
 
       <para>Knowing that project administrators, project members and other
-        CodeX users may have different needs in searching the project bug
-        database, CodeX offers the ability to define project or user specific
+        &SYS_PRODUCT_NAME; users may have different needs in searching the project bug
+        database, &SYS_PRODUCT_NAME; offers the ability to define project or user specific
         bug reports.</para>
 
       <para>Choosing a bug report consists in deciding what bug fields you
@@ -1571,12 +1571,12 @@
         probably noticed that it does not allow you to define the values to
         match for the search criteria. This is on purpose. Defining a report
         template and filling the bug search template with content (values) are
-        2 distinct operations on CodeX. So once a bug report is defined (e.g
+        2 distinct operations on &SYS_PRODUCT_NAME;. So once a bug report is defined (e.g
         &#39;Simple Report&#39;, &#39;QA report&#39;, &#39;Daily report&#39;
         ...) you can go to the bug browsing module and use it for all sorts of
         queries. Select the bug report you want, fill the search criteria with
         the values you are interested in, click on the browse button and then
-        save the entire query with the CodeX bookmarking mechanism (see tip in
+        save the entire query with the &SYS_PRODUCT_NAME; bookmarking mechanism (see tip in
         <xref linkend="SelectionCriteria" />). And voila!</para></tip></para>
 
       <section id="BugReportBrowsing">
@@ -1633,7 +1633,7 @@
 	</itemizedlist>
 
 	<figure id="FigureBugReportBrowsing">
-	  <title>List of bug reports from the CodeX project</title>
+	  <title>List of bug reports from the &SYS_PRODUCT_NAME; project</title>
 	  <mediaobject>
 	    <imageobject>
 	      <imagedata format="PNG"
@@ -1782,14 +1782,14 @@
 	  <title>Tip: Create a Distribution List to notify several people</title>
 	  
 	  <para>If you want to notify many people at once, we suggest
-	  that you use the CodeX Mailing Lists service to create a
+	  that you use the &SYS_PRODUCT_NAME; Mailing Lists service to create a
 	  distribution lists (see <xref linkend="MailingLists"
 	  />). Once the Mailing List is up and running type the e-mail
 	  address in the Global Email Notification field.</para>
 
-	  <para>Creating a Mailing List on CodeX has several
+	  <para>Creating a Mailing List on &SYS_PRODUCT_NAME; has several
 	  advantages: first individuals can (un)subscribe by
-	  themselves and second all messages sent to a CodeX mailing
+	  themselves and second all messages sent to a &SYS_PRODUCT_NAME; mailing
 	  list are kept in an archive that can serve as an audit
 	  trail for your bug tracking system.</para>
 
@@ -1837,7 +1837,7 @@
 
 	<note><para>Remark: The goal of the bug watch feature is not to spy on
 	you. To make sure that you are only watched by authorized persons,
-	CodeX always shows you the list of CodeX users who are
+	&SYS_PRODUCT_NAME; always shows you the list of &SYS_PRODUCT_NAME; users who are
 	currently watching your bug notifications.</para></note>
 
       </section>
@@ -1942,7 +1942,7 @@
       <title>Other Configuration Settings</title>
 
       <para>This module allows you to define the following configuration
-        parameters for the CodeX Bug Tracking System:</para>
+        parameters for the &SYS_PRODUCT_NAME; Bug Tracking System:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
@@ -1971,7 +1971,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

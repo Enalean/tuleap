@@ -3,8 +3,8 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
+//
+// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="ProjectWebSite">
@@ -13,7 +13,7 @@
     <section id="VisitingaWebSite">
       <title>Visiting a Web Site</title>
 
-      <para>When a new project is created on CodeX a project specific Web Site
+      <para>When a new project is created on &SYS_PRODUCT_NAME; a project specific Web Site
       is created as well. You can access a project Web site in 2 different
       ways:</para>
 
@@ -39,7 +39,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
 
       <para>If the project team has not yet created its own Web pages,
       you&#39;ll see the default project home page informing you that the site
-      will come soon as well as a link back to the CodeX site.</para>
+      will come soon as well as a link back to the &SYS_PRODUCT_NAME; site.</para>
     </section>
 
     <section id="WebSiteCreation">
@@ -58,7 +58,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
 </programlisting>
 
         <para>If you use your Shell Account (see <xref linkend="ShellAccount" />)
-        to log into the CodeX server and place yourself in this directory with
+        to log into the &SYS_PRODUCT_NAME; server and place yourself in this directory with
         the Unix command &#34;cd /home/groups/projectname&#34; you&#39;ll see
         3 subdirectories:</para>
 
@@ -101,7 +101,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
             </itemizedlist>
 
             <para>If your own home page is called index.php then rename the
-            default index.php file created by CodeX into something else by
+            default index.php file created by &SYS_PRODUCT_NAME; into something else by
             using the following commands from your Shell Account:</para>
 
             <para><literal>
@@ -144,7 +144,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
         <literal>/home/groups/projectname/htdocs</literal>).</para>
 
 <!-- We removed access to the pre_vhost.php include file for security reasons
-        <para>CodeX offers a system wide include file called
+        <para>&SYS_PRODUCT_NAME; offers a system wide include file called
         &#34;pre_vhosts.php&#34; that you should include at the very top of
         all your PHP pages if you want to be given access to the current user,
         session and group (project) information. This include file create
@@ -176,7 +176,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
                 <entry>Integer</entry>
 
                 <entry>ID of your project (as shown in the group_id argument
-                of many CodeX services)</entry>
+                of many &SYS_PRODUCT_NAME; services)</entry>
               </row>
 
               <row>
@@ -297,7 +297,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
 
                 <entry>Boolean</entry>
 
-                <entry>Says whether the current visitor is logged in CodeX or
+                <entry>Says whether the current visitor is logged in &SYS_PRODUCT_NAME; or
                 not (anonymous user)</entry>
               </row>
 
@@ -413,7 +413,7 @@ if ( user_isloggedin() ) {
         <title>Web Site Publishing</title>
 
         <para>You can use various methods to publish your Web pages on your
-        CodeX Web site:</para>
+        &SYS_PRODUCT_NAME; Web site:</para>
 
         <itemizedlist mark="bullet"
                       spacing="compact">
@@ -430,7 +430,7 @@ if ( user_isloggedin() ) {
 
           <listitem>
             <para>Small changes to web pages can be made from the shell
-            account on CodeX, using emacs or vi, but substantial editing is
+            account on &SYS_PRODUCT_NAME;, using emacs or vi, but substantial editing is
             discouraged.</para>
           </listitem>
         </itemizedlist>
@@ -445,7 +445,7 @@ if ( user_isloggedin() ) {
           local copy and then publish the pages via FTP as needed.</para>
 
           <para>As an alternative Windows users can also map a network drive
-          pointing directly to the Projects directory on CodeX (see <xref
+          pointing directly to the Projects directory on &SYS_PRODUCT_NAME; (see <xref
           linkend="MSWindowsSharedResources" />) and work with the HTML files
           as if they were located on the local machine. In this case no
           publishing is required.</para>
@@ -455,7 +455,7 @@ if ( user_isloggedin() ) {
           <title>Microsoft FrontPage</title>
 
           <para>You can&#39;t use the Publish feature of FrontPage because the
-          CodeX server doesn&#39;t support the FrontPage Web extensions. In
+          &SYS_PRODUCT_NAME; server doesn&#39;t support the FrontPage Web extensions. In
           addition, publishing through FTP won&#39;t work either because
           FrontPage does not allow you to fully specify the path to the remote
           of your project Web server. A work around consist in mounting the
@@ -474,7 +474,7 @@ if ( user_isloggedin() ) {
           root folder. For the remote information, choose FTP access and
           specify <literal>projectname.&SYS_DEFAULT_DOMAIN;</literal>
           as host and <literal>/home/groups/projectname/htdocs</literal>
-          as the host directory. The login is your CodeX login.</para>
+          as the host directory. The login is your &SYS_PRODUCT_NAME; login.</para>
         </section>
 
         <section id="LocalEditingandRemoteTransfer">
@@ -488,9 +488,9 @@ if ( user_isloggedin() ) {
                         spacing="compact">
             <listitem>
               <para><emphasis role="bold">FTP</emphasis>: this is the simplest
-              method for transferring your Web pages to the CodeX remote
+              method for transferring your Web pages to the &SYS_PRODUCT_NAME; remote
               location. Use ftp to connect to <literal>projectname.&SYS_DEFAULT_DOMAIN;</literal>
-              and use your CodeX username and password to login. Once logged
+              and use your &SYS_PRODUCT_NAME; username and password to login. Once logged
               in issue the following command:</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -510,7 +510,7 @@ cd /home/groups/projectname/htdocs
 scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
 </programlisting>
 
-              <para>where login is your CodeX login. The -r option stands for
+              <para>where login is your &SYS_PRODUCT_NAME; login. The -r option stands for
               recursive copy and will copy all the files in the directory as
               well as all others in subdirectory while preserving your
               directory structure.</para>
@@ -520,27 +520,27 @@ scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
       </section>
     </section>
 
-    <section id="ReferencingtheCodeXSite">
-      <title>Referencing the CodeX Site</title>
+    <section id="ReferencingtheCodendiSite">
+      <title>Referencing the &SYS_PRODUCT_NAME; Site</title>
 
-      <para>The CodeX Team is asking that all project Web sites hosted on
-      CodeX display the CodeX logo on their front page. And ideally it would
+      <para>The &SYS_PRODUCT_NAME; Team is asking that all project Web sites hosted on
+      &SYS_PRODUCT_NAME; display the &SYS_PRODUCT_NAME; logo on their front page. And ideally it would
       be great if you also cross-reference our site on other pages that are
       located on other servers. The rationale behind this request is twofold:</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para>First, by referencing the CodeX site on your Web page you will
-          allow your visitors to learn about the existence of the CodeX site,
+          <para>First, by referencing the &SYS_PRODUCT_NAME; site on your Web page you will
+          allow your visitors to learn about the existence of the &SYS_PRODUCT_NAME; site,
           give them a chance to visit it and also let them learn about other
-          projects hosted on CodeX. By doing so you will augment the
+          projects hosted on &SYS_PRODUCT_NAME;. By doing so you will augment the
           opportunity for re-use.</para>
         </listitem>
 
         <listitem>
-          <para>The second reason is that using the CodeX logo in your Web
-          site will automatically increase the Web access counter that CodeX
+          <para>The second reason is that using the &SYS_PRODUCT_NAME; logo in your Web
+          site will automatically increase the Web access counter that &SYS_PRODUCT_NAME;
           is maintaining for you. The number of accesses to your site can be
           viewed by visiting your Project Summary page and click on the
           &#34;Statistics&#34; link below the project description (see <xref
@@ -550,7 +550,7 @@ scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
         </listitem>
       </itemizedlist>
 
-      <para>To display the CodeX logo on your project Web page use the
+      <para>To display the &SYS_PRODUCT_NAME; logo on your project Web page use the
       following Web pointer:</para>
 
       <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -579,7 +579,7 @@ http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 

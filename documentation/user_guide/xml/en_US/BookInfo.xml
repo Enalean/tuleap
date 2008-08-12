@@ -3,9 +3,6 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard and Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
-//
 -->
   <bookinfo>
     
@@ -103,7 +100,7 @@
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>First final version published on the CodeX site</revremark>
+        <revremark>First final version published on the &SYS_PRODUCT_NAME; site</revremark>
       </revision>
 
       <revision>
@@ -190,7 +187,7 @@
         <revremark>Major Release. Bug Attachment, CC List, new
         notification process, type of search criteria, Custom fields
         documented in the bug tracking system. Merge with existing
-        on-line CodeX help.</revremark>
+        on-line &SYS_PRODUCT_NAME; help.</revremark>
       </revision>
 
       <revision>
@@ -247,7 +244,7 @@
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>New chapter about the CodeX generic tracker and modification in all impacted chapters.</revremark>
+        <revremark>New chapter about the &SYS_PRODUCT_NAME; generic tracker and modification in all impacted chapters.</revremark>
       </revision>
       <revision>
         <revnumber>2.6.1</revnumber>
@@ -283,7 +280,7 @@
 
         <authorinitials>Nicolas Guerin</authorinitials>
 
-        <revremark>Added information about setting up WinCVS for CodeX, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
+        <revremark>Added information about setting up WinCVS for &SYS_PRODUCT_NAME;, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
       </revision>
       <revision>
         <revnumber>2.6.5</revnumber>
@@ -439,7 +436,7 @@
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
         <revremark>Patch Manager chapter is now deprecated.
-	Add a whole section about CodeX tracker templates in the Tracker chapter.
+	Add a whole section about &SYS_PRODUCT_NAME; tracker templates in the Tracker chapter.
 	This section is a copy paste of main processes from the deprecated Bug, SR, Patch 
 	and Task Manager chapters. In CVS and Subversion chapters refer to the new
 	tracker template section instead of the Patch Manager chapter.
@@ -588,7 +585,7 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Update chapters CodeX Site Overview,
+        <revremark>Update chapters &SYS_PRODUCT_NAME; Site Overview,
 	Creating a new Project, and Project Administration
 	for project templates.
         </revremark>
@@ -621,9 +618,9 @@
 
         <date>3-Apr-2007</date>
 
-        <authorinitials>CodeX team</authorinitials>
+        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
 
-        <revremark>Update for the 3.2 CodeX release:
+        <revremark>Update for the 3.2 &SYS_PRODUCT_NAME; release:
         Documentation of the new File service, documentation of templates,
         documentation of CVS Watch, and many fixes (see SR #337).
         </revremark>
@@ -633,16 +630,23 @@
 
         <date>6-May-2008</date>
 
-        <authorinitials>CodeX team</authorinitials>
+        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
 
         <revremark>Minor corrections, updates and links fix.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.6</revnumber>
+        <date>12-August-2008</date>
+        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <revremark>CodeX to Codendi
         </revremark>
       </revision>
     </revhistory>
   </bookinfo>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
 End:
 -->
 
