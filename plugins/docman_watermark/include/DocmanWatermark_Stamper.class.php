@@ -88,6 +88,10 @@ class DocmanWatermark_Stamper {
         require_once('DocmanWatermark_MetadataValueFactory.class.php');
         $dwmdf  = new DocmanWatermark_MetadataFactory();
         $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
+        // the watermark is disabled (the field id = 0) no stamping
+        if ($id == 0) {
+            return false;
+        }
         $name   = $dwmdf->getMetadataNameFromId($id);
         $mdf    = new Docman_MetadataFactory($this->group_id);
         $md     = $mdf->findByName($name);
@@ -113,24 +117,27 @@ class DocmanWatermark_Stamper {
         require_once('DocmanWatermark_MetadataFactory.class.php');
         $dwmdf  = new DocmanWatermark_MetadataFactory();
         $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
-        $name   = $dwmdf->getMetadataNameFromId($id);
-        $mdf    = new Docman_MetadataFactory($this->group_id);
-        $md     = $mdf->findByName($name);
-        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
-        $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
-        foreach ($this->pdf->pages as $page) {
-            $width  = $page->getWidth();
-            $height = $page->getHeight();
-            $style = new Zend_Pdf_Style();
-            $style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 10);
-            $style->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
-            $style->setLineColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
-            $page->setStyle($style);
-            $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
-            $page->rotate(20, 20, 1.57);
-            $page->drawText("Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
-                            "Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
-        }      
+        // when the watermark is disabled (the field id = 0) no stamping
+        if ($id != 0) {
+            $name   = $dwmdf->getMetadataNameFromId($id);
+            $mdf    = new Docman_MetadataFactory($this->group_id);
+            $md     = $mdf->findByName($name);
+            $mdlvef = new Docman_MetadataListOfValuesElementFactory();
+            $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
+            foreach ($this->pdf->pages as $page) {
+                $width  = $page->getWidth();
+                $height = $page->getHeight();
+                $style = new Zend_Pdf_Style();
+                $style->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_COURIER_BOLD), 10);
+                $style->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
+                $style->setLineColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
+                $page->setStyle($style);
+                $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
+                $page->rotate(20, 20, 1.57);
+                $page->drawText("Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
+                                "Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
+            }      
+        }
     }
 }
 ?>
