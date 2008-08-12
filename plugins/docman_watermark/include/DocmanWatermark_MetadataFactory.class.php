@@ -62,6 +62,15 @@ class DocmanWatermark_MetadataFactory {
         return false;
     }
     
+    public function getMetadataNameFromId($field_id) {
+        $dar = $this->dao->searchNameByFieldId($field_id);
+        if ($dar->rowCount() >0) {
+            $row = $dar->current();
+            return $row['name'];
+        }
+        return false;        
+    } 
+    
 }
 
 ?>

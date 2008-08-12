@@ -65,6 +65,18 @@ class DocmanWatermark_MetadataValueFactory {
         return new ArrayIterator($valuesArr);
     }
     
+    public function isWatermarked($valueId) {
+        $dar = $this->dao->searchByValueId($valueId);
+        $dar->rewind();
+        if($dar->valid()) {
+            $row = $dar->current();
+            if ($row['watermark']) {
+                return 1;
+            }
+        }
+        return 0;            
+    }
+    
 }
 
 ?>

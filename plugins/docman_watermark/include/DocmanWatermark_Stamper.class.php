@@ -24,9 +24,6 @@
  * 
  */
 
-require_once("Zend/Pdf.php");
-require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
-require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
 
 class DocmanWatermark_Stamper {
     
@@ -62,6 +59,7 @@ class DocmanWatermark_Stamper {
      */
     
     public function load() {
+        require_once('Zend/Pdf.php');
         $this->pdf = Zend_Pdf::load($this->path);
     }
    
@@ -80,11 +78,23 @@ class DocmanWatermark_Stamper {
     /**
      *  method to check if the current item is a pdf using the item mime type
      *  @param  void
-     *  @return void
+     *  @return boolean (true when pdf will be watermarked, false when it will be not watermarked)
      */
 
     public function check() {
-        if ($this->headers['mime_type'] == 'application/pdf') {
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
+        require_once('DocmanWatermark_MetadataFactory.class.php');
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $dwmdf  = new DocmanWatermark_MetadataFactory();
+        $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
+        $name   = $dwmdf->getMetadataNameFromId($id);
+        $mdf    = new Docman_MetadataFactory($this->group_id);
+        $md     = $mdf->findByName($name);
+        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
+        $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
+        $dwmdvf = new DocmanWatermark_MetadataValueFactory(); 
+        if (($this->headers['mime_type'] == 'application/pdf') && ($dwmdvf->isWatermarked($values[0]->getId()))) {
             return true;
         } else {
             return false;
@@ -97,8 +107,15 @@ class DocmanWatermark_Stamper {
      *  @return void
      */
     public function stamp() {
+        require_once('Zend/Pdf.php');
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
+        require_once('DocmanWatermark_MetadataFactory.class.php');
+        $dwmdf  = new DocmanWatermark_MetadataFactory();
+        $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
+        $name   = $dwmdf->getMetadataNameFromId($id);
         $mdf    = new Docman_MetadataFactory($this->group_id);
-        $md     = $mdf->findByName('Confidentiality');
+        $md     = $mdf->findByName($name);
         $mdlvef = new Docman_MetadataListOfValuesElementFactory();
         $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
         foreach ($this->pdf->pages as $page) {

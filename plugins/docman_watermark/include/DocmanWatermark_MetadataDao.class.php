@@ -33,7 +33,7 @@ class DocmanWatermark_MetadataDao extends DataAccessObject {
     * Constructs the DocmanWatermark_MetadataDao
     * @param $da instance of the DataAccess class
     */
-    function DocmanWatermark_MetadataDao( & $da ) {
+    public function DocmanWatermark_MetadataDao( & $da ) {
         DataAccessObject::DataAccessObject($da);
     }
     
@@ -41,13 +41,13 @@ class DocmanWatermark_MetadataDao extends DataAccessObject {
     * Searches Docmanwatermark_MetadataDao by group_id 
     * @return DataAccessResult
     */
-    function searchByGroupId($group_id) {
+    public function searchByGroupId($group_id) {
         $sql = sprintf("SELECT field_id FROM plugin_docmanwatermark_metadata_extension WHERE group_id = %s",
                 $this->da->quoteSmart($group_id));
         return $this->retrieve($sql);
     }
 
-    function updateByGroupId($group_id, $field_id) {
+    public function updateByGroupId($group_id, $field_id) {
         $sql = sprintf("UPDATE plugin_docmanwatermark_metadata_extension SET field_id = %s WHERE group_id = %s",
                 $this->da->quoteSmart($field_id),
                 $this->da->quoteSmart($group_id));
@@ -58,19 +58,25 @@ class DocmanWatermark_MetadataDao extends DataAccessObject {
     * create a row in the table plugin_docmanwatermark_metadata_extension 
     * @return 
     */
-    function createByGroupId($group_id, $field_id) {
+    public function createByGroupId($group_id, $field_id) {
         $sql = sprintf("INSERT INTO plugin_docmanwatermark_metadata_extension (group_id, field_id) VALUES (%s, %s)",
                 $this->da->quoteSmart($group_id),
                 $this->da->quoteSmart($field_id));
         return $this->retrieve($sql);
     }
 
-    function deleteByGroupId($group_id) {
+    public function deleteByGroupId($group_id) {
         $sql = sprintf("DELETE FROM plugin_docmanwatermark_metadata_extension WHERE group_id = %s",
                 $this->da->quoteSmart($group_id));
         return $this->retrieve($sql);        
     }
-
+    
+    public function searchNameByFieldId($field_id) {
+        $sql = sprintf("SELECT name FROM plugin_docman_metadata WHERE field_id = %s",
+                $this->da->quoteSmart($field_id));
+        return $this->retrieve($sql);                
+    }
+    
 }
 
 

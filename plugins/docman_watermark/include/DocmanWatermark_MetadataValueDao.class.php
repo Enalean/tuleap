@@ -52,7 +52,7 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * @return DataAccessResult
     */
     public function searchByValueId($value_id) {
-        $sql = sprintf("SELECT value_id, watermark FROM plugin_docmanwatermark_metadata_love_extension WHERE value_id = %s",
+        $sql = sprintf("SELECT value_id, watermark FROM plugin_docmanwatermark_metadata_love_md_extension WHERE value_id = %s",
 				$this->da->quoteSmart($value_id));
         return $this->retrieve($sql);
     }
