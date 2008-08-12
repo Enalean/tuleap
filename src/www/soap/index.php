@@ -2,7 +2,7 @@
 
 require_once('pre.php');
 
-define('LOG_SOAP_REQUESTS', true);
+define('LOG_SOAP_REQUESTS', false);
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
