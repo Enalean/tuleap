@@ -89,6 +89,7 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
             $iter_empty = 0;
             $html .= html_build_list_table_top($titles, false, false, false);
         }
+        $i = 1;
         while ($mlveIter->valid()) {
             $mdv   = $mlveIter->current();
             $id   = $mdv->getId();
@@ -102,13 +103,14 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
                 if ($mdv->getName() == 'love_special_none_name_key') {
                     $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
                 }
-                $html .= '<tr><td align="center"><input type="checkbox" name="chk_'.$id.'"';
+                $html .= '<tr class="'.html_get_alt_row_color($i).'"><td align="center"><input type="checkbox" name="chk_'.$id.'"';
                 if (($vals['watermark'][$posValue] == 1) && ($posValue !== false)) {
                     $html .= ' checked ';    
                 }
                 $html .= '/></td>';
                 $html .= '<td><b>'.$name.'</b></td>';
                 $html .= '</tr>';
+                $i++;
             }
             $mlveIter->next();
         }
