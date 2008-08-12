@@ -15,6 +15,7 @@ require_once('www/tracker/include/ArtifactTypeHtml.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -373,6 +374,11 @@ echo '
 		}
 	}
         }
+
+    $em = EventManager::instance();
+    $params['group_id']  = $group_id;
+    $params['row_color'] = &$iu;
+    $em->processEvent("project_data_export_table", $params);
 
 	echo '</TABLE>';
 echo '
