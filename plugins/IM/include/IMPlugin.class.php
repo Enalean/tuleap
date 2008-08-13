@@ -171,11 +171,10 @@ class IMPlugin extends Plugin {
         return '<img src="'.$presence['icon'].'" title="'.$presence['status'].'"  alt="'.$presence['status'].'" border="0" height="16" width="16" style="vertical-align:top">';
 	}
     
-    protected $dynamicpresence_occurence;
     protected $dynamicpresence_alreadydisplayed;
     function getDynamicPresence($jid) {
         $id = md5($jid);
-        $html = '<img id="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" />';
+        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" />';
         if (!$this->dynamicpresence_alreadydisplayed) {
             $html .= '<script type="text/javascript">'. "
             var plugin_im_presence = [];
@@ -188,9 +187,11 @@ class IMPlugin extends Plugin {
                     var presences = eval(transport.responseText);
                     \$A(presences).each(function (presence) {
                         var html = '<img src=\"'+ presence.icon +'\" title=\"'+ presence.status +'\" />';
-                        $('jid_'+presence.id).src = presence.icon;
-                        $('jid_'+presence.id).alt = presence.status;
-                        $('jid_'+presence.id).title = presence.status;
+                        $$('.jid_'+presence.id).each(function (img) {
+                            img.src = presence.icon;
+                            img.alt = presence.status;
+                            img.title = presence.status;
+                        });
                     });
                 }
             });

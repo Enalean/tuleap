@@ -33,15 +33,15 @@ class IM_Widget_MyRoster extends Widget {
             $project = project_get_object($project_id);
             $project_unix_name=$project->getUnixName();
             $project_public_name=$project->getPublicName();
-            $members_id_array=$project->getMembersId();
+            $members_id_array=$project->getMembersUserNames();
             if(sizeof($members_id_array)>1){
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('im_group',$project_id,$request->get('hide_item_id'),count($members_id_array),$request->get('hide_im_group'));
                 $html .= $hide_url;
                 $html .= '<b>'. $project_public_name .'</b><br>';
                 if (!$hide_now) {
                     $html .= '<div style="padding-left:20px;">';
-                    foreach ($members_id_array as $member_id){
-                        $html .= $this->plugin->getDisplayPresence($member_id);
+                    foreach ($members_id_array as $member){
+                        $html .= $this->plugin->getDisplayPresence($member['user_id'], $member['user_name'], $member['realname']);
                         $html .= '<br>';
                     }
                     $html .= '</div>';
