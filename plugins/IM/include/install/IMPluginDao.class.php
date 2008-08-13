@@ -21,11 +21,8 @@ class IMPluginDao extends DataAccessObject {
 				if(isset($this->session)&&($this->session)){//if current session was saved .
 					$this->im= new Jabbex($this->session);
 				}else{ //we get new sessionID 
-					if($this->debug==true){
-						$this->session='debugsession123';
-					}else{
+					
 					$this->session=session_hash();
-					}
 					
 					if((isset($this->session))&&$this->session){
 						$this->im=new Jabbex($this->session);
