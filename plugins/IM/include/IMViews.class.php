@@ -14,12 +14,18 @@ class IMViews extends Views{
         $this->install=new IMDataIntall();
     }
     
+    function display($view='') {
+        if ($view == 'get_presence') {
+            $this->$view();
+        } else {
+            parent::display($view);
+        }
+    }
+    
     function header() {
         $request =$this->request;
         $group_id=$request->get('group_id');
-	        $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin'));
-	       	echo '<h2><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_title').'</b></h2>';
-	       	echo '<h3><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_warning').'</b></h3>';
+        $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin'));
     }
     
     function _getHelp($section = '') {
@@ -35,14 +41,29 @@ class IMViews extends Views{
     
     // {{{ Views
     function codex_im_admin () {
+	       	echo '<h2><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_title').'</b></h2>';
+	       	echo '<h3><b>'.$GLOBALS['Language']->getText('plugin_im_admin','im_admin_warning').'</b></h3>';
 		$this->install->admin_install_muc_and_grp();
 	}
+    
+    function get_presence() {
+        $request = HTTPRequest::instance();
+        if ($request->exist('jid')) {
+            $presence = $this->getControler()->getPlugin()->getPresence($request->get('jid'));
+            echo '({"icon":"'. $presence['icon'] .'","status":"'.$presence['status'].'"})';
+        } else if (is_array($request->get('jids'))) {
+            $presences = array();
+            foreach($request->get('jids') as $jid) {
+                $presence = $this->getControler()->getPlugin()->getPresence($jid);
+                $presences[] = '{"id":"'.md5($jid).'","icon":"'. $presence['icon'] .'","status":"'.$presence['status'].'"}';
+            }
+            echo '(['. implode(',', $presences) .'])';
+        }
+    }
     // }}}
     function _getTitle() {
         return $GLOBALS['Language']->getText('plugin_im','title');
     }
-    
-    
     
     /**
      * view for showing the roster's member for the shared groups corresponding th currente project

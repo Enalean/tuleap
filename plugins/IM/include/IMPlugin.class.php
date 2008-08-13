@@ -40,6 +40,7 @@ class IMPlugin extends Plugin {
     function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
+        $this->_addHook('javascript_file',                   'jsFile',                            false);
        	$this->_addHook('approve_pending_project', 'im_process', false);
         $this->_addHook('project_is_suspended_or_pending', 'im_process_lock_muc_room', false);//can process several function
         $this->_addHook('confirme_account_register', 'account_register', false);
@@ -66,6 +67,10 @@ class IMPlugin extends Plugin {
             $this->pluginInfo =& new IMPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+    
+    function jsFile($params) {
+        echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
     }
     
     /**
@@ -167,20 +172,54 @@ class IMPlugin extends Plugin {
 	 * 
 	 */
     function _get_presence_status ($jid) {
+        $presence = $this->getPresence($jid);
+        return '<img src="'.$presence['icon'].'" title="'.$presence['status'].'"  alt="'.$presence['status'].'" border="0" height="16" width="16" style="vertical-align:top">';
+	}
+    
+    protected $dynamicpresence_occurence;
+    protected $dynamicpresence_alreadydisplayed;
+    function getDynamicPresence($jid) {
+        $id = md5($jid);
+        $html = '<span id="jid_'. $id .'"></span>';
+        if (!$this->dynamicpresence_alreadydisplayed) {
+            $html .= '<script type="text/javascript">'. "
+            var plugin_im_presence = [];
+            document.observe('dom:loaded', function() {
+            new Ajax.Request('/plugins/IM/?action=get_presence', {
+                parameters: {
+                    'jids[]':plugin_im_presence
+                },
+                onSuccess: function(transport) {
+                    var presences = eval(transport.responseText);
+                    \$A(presences).each(function (presence) {
+                        var html = '<img src=\"'+ presence.icon +'\" title=\"'+ presence.status +'\" />';
+                        $('jid_'+presence.id).update(html);
+                    });
+                }
+            });
+            });
+            </script>";
+        }
+        $html .= '<script type="text/javascript">'. "
+        plugin_im_presence[plugin_im_presence.length] = '$jid';
+        </script>";
+        $this->dynamicpresence_alreadydisplayed = true;
+        return $html;
+    }
+    
+    function getPresence($jid) {
         if (!isset($this->_cache_presence[$jid])) {
             $status=$this->_get_im_object()->user_status($jid);
-            //var_dump($status);
             $img_src='';
             $img_title='';
-            $retunr_value = '';
             switch($status){
                 case "dnd":
                     $img_title= $GLOBALS['Language']->getText('plugin_im_status','dnd');
                     $img_src=$this->get_icon_path ().'busy.gif';
                     break;
                 case "away";
-                $img_title = $GLOBALS['Language']->getText('plugin_im_status','away');
-                $img_src=$this->get_icon_path ().'away.gif';
+                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','away');
+                    $img_src=$this->get_icon_path ().'away.gif';
                     break;
                 case "chat":
                     $img_title = $GLOBALS['Language']->getText('plugin_im_status','chat');
@@ -203,10 +242,14 @@ class IMPlugin extends Plugin {
                     $img_src=$this->get_icon_path ().'off_line.gif';
                     break;
             }
-            $this->_cache_presence[$jid] = '<img src="'.$img_src.'" title="'.$img_title.'"  alt="'.$img_title.'" border="0" height="16" width="16" style="vertical-align:top">';
+            $this->_cache_presence[$jid] = array(
+                'icon' => $img_src,
+                'status' => $img_title
+            );
         }
         return $this->_cache_presence[$jid];
-	}
+    }
+    
     function instance() {
         static $_plugin_instance;
         if (!$_plugin_instance) {
@@ -449,7 +492,7 @@ class IMPlugin extends Plugin {
        global $Language;
 	   $Language->loadLanguageMsg('IM','IM');
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
-        echo '<li><a href="'.$this->getPluginPath().'/?view=codex_im_admin">'.$link_title.'</a></li>';
+        echo '<li><a href="'.$this->getPluginPath().'/?action=codex_im_admin">'.$link_title.'</a></li>';
     }
  	
     function site_admin_external_tool_hook($params) {
@@ -523,7 +566,7 @@ class IMPlugin extends Plugin {
         $jid_value = $user_name.'@'.$server_dns;
         $adm_port_im = $jabberConf['webadmin_unsec_port'];
         
-        $presence = $this->_get_presence_status ($jid_value);
+        $presence = $this->getDynamicPresence ($jid_value);
         
         return $presence . $user_helper->getDisplayName($user_name, $realname);
     }

@@ -38,9 +38,14 @@ class IM extends Controler {
             		$this->action = 'synchronize_muc_and_grp';
                     $this->view = 'codex_im_admin';
             		break;
-		     default:
+            case 'get_presence':
+                    $this->view = 'get_presence';
+                    break;
+		    case 'codex_im_admin':
 					$this->view = 'codex_im_admin';
-		    	 break;
+                     break;
+             default:
+                     break;
          }
     }
     function getPlugin() {
