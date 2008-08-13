@@ -328,13 +328,13 @@
 <xsl:template name="book.titlepage.recto">
 
   <!-- CX-SBT: Add a block to draw a rectangle + the Codex logo -->
-  <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" border-after-color="black" 
+  <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" border-after-color="red" 
 		    border-after-width="0.1em" 
-		    border-before-color="black" 
+		    border-before-color="red" 
 		    border-before-width="0.1em" 
-        	border-end-color="black" 
+        	border-end-color="red" 
         	border-end-width="0.1em" 
-        	border-start-color="black" 
+        	border-start-color="red" 
         	border-start-width="0.1em"
         	border-style="solid" 
             margin-left="-1pc"
@@ -373,9 +373,10 @@
   <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" font-size="12pt" font-family="{$title.font.family}" text-align="center" space-before="23em">
       Version <xsl:call-template name="get.last.version.revision"/>
   </fo:block>
-  <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" font-size="12pt" font-family="{$title.font.family}" text-align="center" font-style="italic" space-after="5em">
+  <!-- Don't display date -->
+  <!-- <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" font-size="12pt" font-family="{$title.font.family}" text-align="center" font-style="italic" space-after="5em">
       <xsl:call-template name="get.last.date.revision"/>
-  </fo:block>
+  </fo:block> -->
 
   </fo:block>
     
