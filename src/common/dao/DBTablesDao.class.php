@@ -41,7 +41,7 @@ class DBTablesDao extends DataAccessObject {
                 $field_changes[] = " CHANGE ". $field['Field'] ." ". 
                         $field['Field'] ." ". 
                         $field['Type'] ." CHARACTER SET utf8 COLLATE utf8_". $collate ." ".
-                        ($field['Null'] == 'No' ? 'NOT NULL' : 'NULL') ." ".
+                        (strtolower($field['Null']) == 'no' ? 'NOT NULL' : 'NULL') ." ".
                         ($field['Default'] ? "DEFAULT '". $field['Default'] ."'" : '');
             }
         }
