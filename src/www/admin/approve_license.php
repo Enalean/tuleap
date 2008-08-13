@@ -17,6 +17,8 @@ if (!(user_isloggedin() && user_is_super_user())) {
     exit_error('ERROR',$Language->getText('admin_approve_license', 'error'));
 }
 
+if (!isset($legal_acceptance )) $legal_acceptance="unknown";
+
 $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name']))));
 
 
