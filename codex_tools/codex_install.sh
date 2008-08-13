@@ -458,13 +458,21 @@ $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 $RPM --quiet -q cadaver
 if [ $? -eq 0 ]; then
   echo "Removing Cadaver RPM (conflicts with newer Neon libs)"
-  $RPM -e cadaver
+  $RPM -e --allmatches cadaver
 fi
+echo "Removing existing Subversion and Neon RPMs if any...."
+$RPM -e --allmatches neon 2>/dev/null
+$RPM -e --allmatches subversion 2>/dev/null
+$RPM -e --allmatches subversion-devel 2>/dev/null
+$RPM -e --allmatches mod_dav_svn 2>/dev/null
+$RPM -e --allmatches subversion_perl 2>/dev/null
+$RPM -e --allmatches subversion_python 2>/dev/null
+$RPM -e --allmatches subversion_tools  2>/dev/null
 echo "Installing Subversion and Neon RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
-$RPM -Uvh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
+$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
