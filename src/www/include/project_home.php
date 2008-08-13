@@ -42,7 +42,7 @@ site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'
 <?php 
 
 // ########################################## top area, not in box 
-$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname as realname"
+$res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname as realname "
 	. "FROM user,user_group "
 	. "WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND "
 	. "user_group.admin_flags = 'A'");
@@ -89,8 +89,8 @@ if (! $project->hideMembers()) {
                       $display_name = '';
                       $em->processEvent('get_user_display_name', array(
                           'user_id'           => $row_admin['user_id'],
-                          'user_name'         => $row_memb['user_name'],
-                          'realname'          => $row_memb['realname'],
+                          'user_name'         => $row_admin['user_name'],
+                          'realname'          => $row_admin['realname'],
                           'user_display_name' => &$display_name
                       ));
                       if (!$display_name) {

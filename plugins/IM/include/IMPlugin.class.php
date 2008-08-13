@@ -40,7 +40,6 @@ class IMPlugin extends Plugin {
     function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
-        $this->_addHook('javascript_file',                   'jsFile',                            false);
        	$this->_addHook('approve_pending_project', 'im_process', false);
         $this->_addHook('project_is_suspended_or_pending', 'im_process_lock_muc_room', false);//can process several function
         $this->_addHook('confirme_account_register', 'account_register', false);
@@ -67,10 +66,6 @@ class IMPlugin extends Plugin {
             $this->pluginInfo =& new IMPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-    
-    function jsFile($params) {
-        echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
     }
     
     /**
