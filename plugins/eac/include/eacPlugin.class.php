@@ -23,10 +23,24 @@ class EacPlugin extends Plugin {
         $url = $this->getPluginPath();
         $url .= '/export_permissions?group_id='.$params['group_id'];
 
-        $link = '<td align="center"><a href="'.$url.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">- <br> - </td><td align="center">- <br> - </td> ';
+        $link = '<td align="center"><a href="'.$url.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td> ';
 
-        echo '<tr><td><b> Docman : Permissions information '.$link.'</tr>';
+        echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> Docman : Permissions information '.$link.'</tr>';
+        $url2 = $this->getPluginPath();
+        $url2 .= '/export_users_ugroups.php?group_id='.$params['group_id'];
+        $link2 = '<td align="center"><a href="'.$url2.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td> ';
+
+        echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> User groups : Members '.$link2.'</tr>';
     }
+
+
+    function  project_data_export_table_users($params)
+    {
+       
+    }
+
+
+
 
 }
 
