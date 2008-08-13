@@ -59,23 +59,6 @@ class DocmanWatermarkController extends Controler {
         $this->feedback =& $GLOBALS['Response']->_feedback;
     }
 
-    /**
-     * Wrapper to i18n string call for docmanWatermark.
-     * static
-     */
-    function txt($key, $vars = array()) {
-        return $GLOBALS['Language']->getText('plugin_docmanwatermark', $key, $vars);
-    }
-
-    // Franlky, this is not at all the best place to do this.
-    function installDocmanWatermark($ugroupsMapping, $group_id = false) {
-        
-    }
-
-    function _cloneDocmanWatermark($srcGroupId, $dstGroupId, $ugroupsMapping) {
-        
-    }
-
     function &_getEventManager() {
         return EventManager::instance();
     }
@@ -130,11 +113,6 @@ class DocmanWatermarkController extends Controler {
     }
     
 
-    /*private*/ function _checkBrowserCompliance() {
-        if($this->request_type == 'http' && $this->request->browserIsNetscape4()) {
-            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'docman_browserns4'));
-        }
-    }
 
 
     function request() {
@@ -149,10 +127,7 @@ class DocmanWatermarkController extends Controler {
                 $this->_setView('Error');
                 return;
             }
-            
-            // Browser alert
-            $this->_checkBrowserCompliance();
-            
+                        
             $this->_viewParams['docmanwatermark']     =& $this;
             $this->_viewParams['user']                =& $this->getUser();
             $this->_viewParams['default_url']         =  $this->getDefaultUrl();
