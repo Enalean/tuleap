@@ -1337,11 +1337,11 @@ cd $INSTALL_DIR/src/utils
 #
 echo "Convert embedded files to utf8"
 echo "SELECT v.path FROM plugin_docman_item i INNER JOIN plugin_docman_version v USING(item_id) WHERE i.item_type = 4" | \
-  $MYSQL $pass_opt codex \
+  $MYSQL $pass_opt codex | \
   sed -e "/^path$/d" | \
   awk '{ system("/usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh "$0) }'
 
-echo "Convert your site-content to utf-8" \
+echo "Convert your site-content to utf-8"
 find /etc/codex/ -type f  \
                  -wholename "*/site-content/*" \
                  -not -wholename "*/.svn/*" \
