@@ -374,11 +374,11 @@ echo '
 		}
 	}
         }
-
     $em = EventManager::instance();
     $params['group_id']  = $group_id;
     $params['row_color'] = &$iu;
     $em->processEvent("project_data_export_table", $params);
+    
 
 	echo '</TABLE>';
 echo '
