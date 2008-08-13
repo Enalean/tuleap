@@ -127,30 +127,32 @@ class IMPlugin extends Plugin {
         	//class was already instancied
         	return $this->im;
         }else {
-			//
-			if(isset($this->session)&&($this->session)){//if current session was saved .
-				$this->im= new Jabbex($this->session);
-				return $this->im;
-			}else{ //we get new sessionID 
-				if($this->debug==true){
-					$this->session='debugsession123';
-				}else{
-				$this->session=session_hash();
+			//Jabbex was never instancied in the current script
+			try{
+				if(isset($this->session)&&($this->session)){//if current session was saved .
+					$this->im= new Jabbex($this->session);
+				}else{ //we get new sessionID 
+					if($this->debug==true){
+						$this->session='debugsession123';
+					}else{
+					$this->session=session_hash();
+					}
+					
+					if((isset($this->session))&&$this->session){
+						$this->im=new Jabbex($this->session);
+					}else{
+						echo "<br> Unable to get session !!!";
+					}
 				}
-				
-				if((isset($this->session))&&$this->session){
-					$this->im=new Jabbex($this->session);
-					return $this->im;
-				}else{
-					echo "<br> Unable to get session !!!";
-					 return null; 
-				}
+			}catch(Exception $e){
+				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
 			}
 		}
+		return $this->im;
 	}
 	
 	/**
-	 * 
+	 * get icons for IM plugin
 	 */
 	 function get_icon_path () {
 		$themes_dir=$this->getThemePath();
