@@ -1341,10 +1341,10 @@ echo "SELECT v.path FROM plugin_docman_item i INNER JOIN plugin_docman_version v
   sed -e "/^path$/d" | \
   awk '{ system("/usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh "$0) }'
 
-echo "Convert your site-content to utf-8"
-find /etc/codex/ -type f 
-                 -wholename "*/site-content/*" 
-                 -not -wholename "*/.svn/*" 
+echo "Convert your site-content to utf-8" \
+find /etc/codex/ -type f  \
+                 -wholename "*/site-content/*" \
+                 -not -wholename "*/.svn/*" \
                  -exec /usr/share/codex/codex_tools/utils/iso-8859-1_to_utf-8.sh {} \;
 
 ##############################################
