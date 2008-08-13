@@ -33,15 +33,6 @@ class EacPlugin extends Plugin {
         echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> User groups : Members '.$link2.'</tr>';
     }
 
-
-    function  project_data_export_table_users($params)
-    {
-       
-    }
-
-
-
-
 }
 
 ?>

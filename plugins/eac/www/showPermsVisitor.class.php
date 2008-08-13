@@ -233,8 +233,6 @@ class showPermsVisitor
     }
 
     /**
-     * 
-     * 
      * Method listUgroup which extract user groups list for a given project
      * 
      * @param int $group_id project id
@@ -256,7 +254,6 @@ class showPermsVisitor
 
     }
     /**
-     * 
      * Method extractPermissions which extract permissions of a  user group on an item
      * 
      * @param int $group_id project id
