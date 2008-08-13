@@ -113,9 +113,9 @@ function identifyProject()
 }	  
 
 
-$group_id = identifyProject();
+//$group_id = identifyProject();
 $ugroups=array();	
-//  $group_id=$request->get('group_id');
+$group_id=$request->get('group_id');
 $MemberShower = new UserGroupExportMembers();
 $MemberShower->listUserFormatting($ugroups, $group_id);
 
