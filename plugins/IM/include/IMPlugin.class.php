@@ -180,7 +180,7 @@ class IMPlugin extends Plugin {
     protected $dynamicpresence_alreadydisplayed;
     function getDynamicPresence($jid) {
         $id = md5($jid);
-        $html = '<span id="jid_'. $id .'"><img src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" /></span>';
+        $html = '<img id="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" />';
         if (!$this->dynamicpresence_alreadydisplayed) {
             $html .= '<script type="text/javascript">'. "
             var plugin_im_presence = [];
@@ -193,7 +193,9 @@ class IMPlugin extends Plugin {
                     var presences = eval(transport.responseText);
                     \$A(presences).each(function (presence) {
                         var html = '<img src=\"'+ presence.icon +'\" title=\"'+ presence.status +'\" />';
-                        $('jid_'+presence.id).update(html);
+                        $('jid_'+presence.id).src = presence.icon;
+                        $('jid_'+presence.id).alt = presence.status;
+                        $('jid_'+presence.id).title = presence.status;
                     });
                 }
             });
