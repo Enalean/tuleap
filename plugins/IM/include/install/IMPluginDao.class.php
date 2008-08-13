@@ -7,28 +7,38 @@ class IMPluginDao extends DataAccessObject {
         DataAccessObject::DataAccessObject($da);
     }
     
+    /**
+     * To get an instance of jabdex
+     * @return Jabbex object class for im processing
+     */
     function &_get_im_object () {
 		if(isset($this->im)&&$this->im){
-        	//class déjà instanciée
+        	//class was already instancied
         	return $this->im;
         }else {
-			//
-			if(isset($this->session)&&($this->session)){//si la session courente est gardée 
-			$this->im= new Jabbex($this->session);
-			return $this->im;
-			}else{ //on recupére de nouveau les session ID !!
-				$session=session_hash();
-				if((isset($session))&&$session){
-					$this->im=new Jabbex($session);
-					return $this->im;
-				}else{
-					echo "<br> Unable to get session !!!";
-					 return null; 
+			//Jabbex was never instancied in the current script
+			try{
+				if(isset($this->session)&&($this->session)){//if current session was saved .
+					$this->im= new Jabbex($this->session);
+				}else{ //we get new sessionID 
+					if($this->debug==true){
+						$this->session='debugsession123';
+					}else{
+					$this->session=session_hash();
+					}
+					
+					if((isset($this->session))&&$this->session){
+						$this->im=new Jabbex($this->session);
+					}else{
+						echo "<br> Unable to get session !!!";
+					}
 				}
+			}catch(Exception $e){
+				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
 			}
 		}
+		return $this->im;
 	}
-	
 	
 	/**
     * Searches IMPluginGroup by CodeX GroupId 
