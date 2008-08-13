@@ -13,6 +13,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('project/project');
 
@@ -98,9 +99,11 @@ if ($group_id != 100) {
   }
 }
 
+$em = EventManager::instance();
+$em->processEvent("project_data_export_table_users", $group_id);
+ 
 echo '</TABLE>';
 echo '<P>'.$Language->getText('project_admin_ugroup','predef_g');
-
 
 project_admin_footer(array());
 
