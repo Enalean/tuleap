@@ -86,6 +86,17 @@ if (!IS_SCRIPT) {
 }
 //}}}
 
+
+// Force SSL mode if required except if request comes from localhost, or for api scripts
+// HTTP needed by fopen calls (e.g.  in www/include/cache.php)
+if (!IS_SCRIPT  
+     && ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') )
+     && $GLOBALS['sys_force_ssl'] == 1 
+     && ($_SERVER['SERVER_NAME'] != 'localhost') 
+     && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0) ) {
+        header("Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI']);
+}
+
 // Check URL for valid hostname and valid protocol
 if (!IS_SCRIPT &&
     ($_SERVER['HTTP_HOST'] != $GLOBALS['sys_default_domain'])
@@ -100,12 +111,6 @@ if (!IS_SCRIPT &&
         $location = "Location: http://".$GLOBALS['sys_default_domain'].$_SERVER['REQUEST_URI'];
     }
 
-    // Force SSL mode if required except if request comes from localhost, or for api scripts
-    // HTTP needed by fopen calls (e.g.  in www/include/cache.php)
-    if ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') && $GLOBALS['sys_force_ssl'] == 1 && ($_SERVER['SERVER_NAME'] != 'localhost') && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)) {
-        $location = "Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI'];
-    }
-    
     if (isset($location) && $location) {
         header($location);
         exit;
