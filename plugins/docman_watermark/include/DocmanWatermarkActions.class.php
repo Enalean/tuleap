@@ -55,7 +55,13 @@ class DocmanWatermarkActions extends Actions {
     }
     
     public function import_from_project() {
-    	
+        require_once('DocmanWatermark_MetadataImportFactory.class.php');
+        $src_group_id     = $this->_controler->_actionParams['group_id'];
+        $target_group_id  = $this->_controler->_actionParams['target_group_id'];
+    	$dwmi = new DocmanWatermark_MetadataImportFactory();
+        $dwmi->setSrcProjectId($src_group_id);
+        $dwmi->setTargetProjectId($target_group_id);
+        $dwmi->importSettings();
     }
     
 }
