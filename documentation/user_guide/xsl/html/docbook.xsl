@@ -14,11 +14,6 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// $Id: 
-//
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
-//
 -->
 
 <!-- ==================================================================== -->
@@ -26,14 +21,14 @@
 <xsl:template name="user.footer.navigation">
   <xsl:param name="node" select="."/>
   <br/><div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2008. All Rights Reserved</i></font>
+  Copyright &#169; Xerox Corporation, CodeX, Codendi 2001-2008. All Rights Reserved</i></font>
   </div>
 </xsl:template>
 
 <xsl:template name="user.header.navigation">
   <xsl:param name="node" select="."/>
   <div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, CodeX Team, 2001-2008. All Rights Reserved</i></font>
+  Copyright &#169; Xerox Corporation, CodeX, Codendi, 2001-2008. All Rights Reserved</i></font>
   </div><br/>
 </xsl:template>
 

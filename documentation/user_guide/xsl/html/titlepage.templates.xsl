@@ -5,15 +5,11 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// $Id: 
-//
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
-// Last edition by Benjamin Ninassi 2008, CodeX Team, Xerox
 //
 -->
 
 <xsl:template name="book.titlepage.recto">
-  <!-- CX-SBT: Add the CodeX logo + Version/Date -->
+  <!-- CX-SBT: Add the logo + Version/Date -->
   <div align="center">
     <img src="../../icons/codendi.png"/><br/><br/>
   <xsl:choose>

@@ -8,9 +8,6 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// $Id: 
-//
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
 <!-- ==================================================================== -->
@@ -406,7 +403,7 @@
 <xsl:template match="chapter|appendix" mode="running.head.mode">
   <xsl:param name="master-reference" select="'unknown'"/>
   <xsl:variable name="head">
-    <!-- CX-SBT: For the header, we draw a table with the XAT Logo + the "CodeX User Guide" label -->
+    <!-- CX-SBT: For the header, we draw a table with the XAT Logo + the "User Guide" label -->
     <fo:block font-size="{$body.font.size}" border-after-color="black" 
         	border-after-width="0.02em"
         	border-after-style="solid" 

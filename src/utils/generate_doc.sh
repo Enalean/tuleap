@@ -85,14 +85,14 @@ for lang in $LANGUAGES
 do
     cd $BASEDIR/user_guide/xml/$lang
 
-    if [ ! -e $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide.pdf ]; then
+    if [ ! -e $BASEDIR/user_guide/pdf/$lang/Codendi_User_Guide.pdf ]; then
         FORCE=1;
     fi
 
     if [ $FORCE != 1 ]
     then
         # check if some need some update
-        COUNT=`find $BASEDIR/user_guide/xml -newer $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide.pdf | wc -l`
+        COUNT=`find $BASEDIR/user_guide/xml -newer $BASEDIR/user_guide/pdf/$lang/Codendi_User_Guide.pdf | wc -l`
         if [ $COUNT == 0 ]
         then
             # No changes in the documentation
@@ -109,7 +109,7 @@ do
     $CMDDIR/xml2html.sh User_Guide.xml ../../html/$lang/ $lang >/tmp/log_xml2html_$$ 2>&1
     if [ $? != 0 ]
     then
-        echo "CodeX documentation generation failed!"
+        echo "Codendi documentation generation failed!"
             echo "See error log below:"
             echo ""
             cat /tmp/log_xml2html_$$
@@ -126,10 +126,10 @@ do
     
     mkdir -p $BASEDIR/user_guide/pdf/$lang
 
-    $CMDDIR/xml2pdf.sh User_Guide.xml $BASEDIR/user_guide/pdf/$lang/CodeX_User_Guide_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
+    $CMDDIR/xml2pdf.sh User_Guide.xml $BASEDIR/user_guide/pdf/$lang/Codendi_User_Guide_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
     if [ $? != 0 ]
     then
-        echo "CodeX documentation generation failed!"
+        echo "Codendi documentation generation failed!"
             echo "See error log below:"
         echo ""
         cat /tmp/log_xml2pdf_$$
@@ -143,10 +143,10 @@ do
     export PATH=${OLD_PATH}
 
     cd $BASEDIR/user_guide/pdf/$lang
-    if [ -f "CodeX_User_Guide.pdf" ]; then
-        cp -f CodeX_User_Guide.pdf CodeX_User_Guide_old.pdf > /dev/null
+    if [ -f "Codendi_User_Guide.pdf" ]; then
+        cp -f Codendi_User_Guide.pdf Codendi_User_Guide_old.pdf > /dev/null
     fi
-    mv CodeX_User_Guide_new.pdf CodeX_User_Guide.pdf
+    mv Codendi_User_Guide_new.pdf Codendi_User_Guide.pdf
 done
 cd "$CURRENTDIR"
 exit 0

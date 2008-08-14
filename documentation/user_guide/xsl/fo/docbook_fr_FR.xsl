@@ -9,16 +9,13 @@
 // Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// $Id: 
-//
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
 //
 -->
 
 <!-- CX-SBT: Import all the standard Docbook XSLT first -->
 <xsl:import href="/usr/local/docbook-xsl/fo/docbook.xsl"/>
 
-<!-- CX-SBT: And then import the specific CodeX XSLT -->
+<!-- CX-SBT: And then import the specific XSLT -->
 <xsl:import href="param.xsl"/>
 <xsl:import href="admon.xsl"/>
 <xsl:import href="pagesetup.xsl"/>
