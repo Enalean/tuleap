@@ -11,7 +11,15 @@ class IMPluginDao extends DataAccessObject {
      * To get an instance of jabdex
      * @return Jabbex object class for im processing
      */
-    function &_get_im_object () {
+    function _get_im_object () {
+		
+		try{
+			require_once(dirname(__FILE__)."../jabbex_api/Jabbex.php");
+		}catch(Exception $e){
+			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
+		  	return null;
+		}
+		
 		if(isset($this->im)&&$this->im){
         	//class was already instancied
         	return $this->im;
@@ -21,9 +29,7 @@ class IMPluginDao extends DataAccessObject {
 				if(isset($this->session)&&($this->session)){//if current session was saved .
 					$this->im= new Jabbex($this->session);
 				}else{ //we get new sessionID 
-					
 					$this->session=session_hash();
-					
 					if((isset($this->session))&&$this->session){
 						$this->im=new Jabbex($this->session);
 					}else{
@@ -32,6 +38,7 @@ class IMPluginDao extends DataAccessObject {
 				}
 			}catch(Exception $e){
 				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
+				return null;
 			}
 		}
 		return $this->im;

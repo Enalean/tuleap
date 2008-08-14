@@ -122,7 +122,15 @@ class IMPlugin extends Plugin {
      * To get an instance of jabdex
      * @return Jabbex object class for im processing
      */
-    function &_get_im_object () {
+    function _get_im_object () {
+		try{
+			require_once(dirname(__FILE__)."/jabbex_api/Jabbex.php");
+		}catch(Exception $e){
+			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
+			return null;
+		  
+		}
+		//var_dump(dirname(__FILE__)."/jabbex_api/Jabbex.php");
 		if(isset($this->im)&&$this->im){
         	//class was already instancied
         	return $this->im;
@@ -131,6 +139,7 @@ class IMPlugin extends Plugin {
 			try{
 				if(isset($this->session)&&($this->session)){//if current session was saved .
 					$this->im= new Jabbex($this->session);
+					return $this->im;
 				}else{ //we get new sessionID 
 					if($this->debug==true){
 						$this->session='debugsession123';
@@ -140,15 +149,18 @@ class IMPlugin extends Plugin {
 					
 					if((isset($this->session))&&$this->session){
 						$this->im=new Jabbex($this->session);
+						return $this->im;
 					}else{
 						echo "<br> Unable to get session !!!";
+						return null;
 					}
 				}
 			}catch(Exception $e){
 				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
+				return null;
 			}
 		}
-		return $this->im;
+		
 	}
 	
 	/**
