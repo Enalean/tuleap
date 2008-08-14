@@ -38,15 +38,17 @@ function news_header($params) {
     if (!isset($params['pv']) || !$params['pv']){
         echo '<P><B>';
         // 'Admin' tab is only displayed if the user is News admin or project admin
-        if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2')) {
-            echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
-	    } else if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
-		  // 'Submit News' tab is only displayed if the user is News writer, or project admin
-		  echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A>';
-	    }
-	    if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
-		    if (isset($params['help'])) {
-                echo ' | ';
+        if ($group_id) {
+            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2')) {
+                echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
+            } else if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
+              // 'Submit News' tab is only displayed if the user is News writer, or project admin
+              echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A>';
+            }
+            if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
+                if (isset($params['help'])) {
+                    echo ' | ';
+                }
             }
         }
         if (isset($params['help'])) {
