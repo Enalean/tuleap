@@ -17,3 +17,5 @@ plugin_docmanwatermark	admin_values	Values
 plugin_docmanwatermark	admin_import_from_project	<b>Project:</b>
 plugin_docmanwatermark	admin_imported_from_project	Watermark settings imported successfully
 plugin_docmanwatermark	admin_disabled	The Watermarking is disabled or there is no value related to the selected MetaData field
+plugin_docmanwatermark	admin_project_import_error	Could not find project to import.
+plugin_docmanwatermark	admin_project_import_same	You are trying to import watermark settings from the same project.

@@ -155,7 +155,11 @@ class DocmanWatermarkController extends Controler {
                 $_targetGroupId = (int) $this->request->get('project');
                 $targetProject = group_get_object($_targetGroupId);
                 if($targetProject == false) {
-                    $this->feedback->log('error', 'could not find project to import.');
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_project_import_error'));
+                    $this->view= 'Admin_Watermark';
+                    return;
+                } else if ($_targetGroupId == $_groupId) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_project_import_same'));
                     $this->view= 'Admin_Watermark';
                     return;
                 }

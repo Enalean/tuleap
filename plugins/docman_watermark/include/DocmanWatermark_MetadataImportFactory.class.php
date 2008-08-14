@@ -59,6 +59,7 @@ class DocmanWatermark_MetadataImportFactory  {
      */
     private function copyMetadata(){
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataDao.class.php');
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
         require_once('DocmanWatermark_MetadataFactory.class.php');
         $dwmf = new DocmanWatermark_MetadataFactory();
         $md_id = $dwmf->getMetadataIdFromGroupId($this->srcProjectId);
@@ -66,9 +67,11 @@ class DocmanWatermark_MetadataImportFactory  {
         $dar = $mdd->searchById($md_id);
         $dar->rewind();
         if ($dar->valid()) {
-            $md = $dar->current();
-            return $mdd->create($this->targetProjectId, $md['name'], $md['type'], $md['description'],
-                                $md['isRequired'], $md['isEmptyAllowed'], $md['mulValuesAllowed'], $md['isSpecial'], $md['isUsed']);
+            $mdt = $dar->current();
+            $dmf = new Docman_MetadataFactory($this->srcProjectId);
+            $md = $dmf->findByName($mdt['name']);
+            return $mdd->create($this->targetProjectId, $md[0]->getName(), $md[0]->getType(), $md[0]->getDescription(),
+                                $md[0]->getIsRequired(), $md[0]->getIsEmptyAllowed(), $md[0]->getIsMultipleValuesAllowed(), $md[0]->getSpecial(), $md[0]->getUseIt());
         } else {
             return false;
         }
