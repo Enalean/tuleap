@@ -151,6 +151,15 @@ class DocmanWatermarkController extends Controler {
             }
             $this->_viewParams['md_values'] = &$arrVals;
             $view = $this->request->exist('action') ? $this->request->get('action') : 'admin_watermark';
+            if ($this->request->exist('project') && ($this->request->exist('action') == 'admin_import_from_project')) {
+                $_targetGroupId = (int) $this->request->get('project');
+                $targetProject = group_get_object($_targetGroupId);
+                if($targetProject == false) {
+                    $this->feedback->log('error', 'could not find project to import.');
+                    $this->view= 'Admin_Watermark';
+                    return;
+                }
+            }
             $this->_viewParams['action'] = $view;
             $this->_dispatch($view);
         }
