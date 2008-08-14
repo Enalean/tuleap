@@ -1245,6 +1245,7 @@ EOF
 # Install IM plugin
 echo "- Add IM plugin schema"
 $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL $pass_opt codex
+# Don't need to initialize Jabbex: it should have been done during 3.6 install.
 
 echo "- Install IM plugin"
 $CAT <<EOF | $MYSQL $pass_opt codex
@@ -1378,6 +1379,12 @@ todo "Don't forget to remove also the rpms (openfire, salome)"
 todo ""
 todo "Groups has not been synchronized for Instant Messaging. Please go to admin > Instant Messaging and synchronize groups."
 todo ""
+todo "You should remove the sys_stay_in_ssl variable from /etc/codex/conf/local.inc: it is no longer used"
+todo ""
+todo "Check that /etc/my.cnf does not contain the line 'skip-innodb': InnoDB is now needed by Codendi (Salomé DB)"
+todo ""
+todo "Please note that project web site CGI scripts are no longer supported for security reasons. Please warn your projects if needed."
+todo ""
 todo "If you have custom themes:"
 todo "  -New icons: add.png, monitor_forum.png, monitor_thread.png, right_arrow.png, left_arrow.png, both_arrows.png, cal.png, delete.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic"
 todo "  -New image: backstripes.gif. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
@@ -1399,7 +1406,6 @@ exit 1;
 # TODO:
 # Delete or rename: /etc/httpd/conf/codex_vhosts.conf
 # Delete or rename: /etc/httpd/conf/codex_svnhosts.conf
-# Warn that project web site CGI are no longer supported.
 
 # DNS
 # Add wildcard at the end of codex_full.zone and

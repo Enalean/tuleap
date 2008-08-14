@@ -170,8 +170,7 @@ if($userStatusBox != '') {
 <?php
 // Only show the stay in SSL mode if the server is SSL enabled
 // and it is not forced to operate in SSL mode
-// and the stay in SSL check box can be shown
-if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 && $GLOBALS['sys_stay_in_ssl'] == 1 ) {
+if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
     $checked = '';
     $ieMsg = '';
     if(session_issecure()) {
