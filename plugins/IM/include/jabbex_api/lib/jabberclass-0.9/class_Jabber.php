@@ -276,7 +276,7 @@ class Jabber {
 		$this->_unique_counter = 0;
 		$this->_log_open();
 		
-		$this->xml = &new XMLParser();
+		$this->xml = &new Jabbex_XMLParser();
 		if (!empty($_SERVER['REMOTE_ADDR'])) {
 			$this->_remote_ip = $_SERVER['REMOTE_ADDR'];
 		} else {

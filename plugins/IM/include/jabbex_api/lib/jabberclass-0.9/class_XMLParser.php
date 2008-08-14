@@ -37,9 +37,9 @@
  * 
 */
 
-class XMLParser {
+class Jabbex_XMLParser {
 
-	function XMLParser() {
+	function Jabbex_XMLParser() {
 		$this->valid = false;
 	}
 	
