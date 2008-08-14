@@ -236,7 +236,7 @@ class IMDataIntall {
 			            echo $action_label.$action_on.'<br>';
 			            echo '
 					        <CENTER>
-					        <FORM action="/plugins/IM/?view=codex_im_admin" method="POST">
+					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
 					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_muc_and_grp">
 					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
 					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
@@ -281,7 +281,7 @@ class IMDataIntall {
 			            echo $action_label.$action_on.'<br>';
 			            echo '
 					        <CENTER>
-					        <FORM action="/plugins/IM/?view=codex_im_admin" method="POST">
+					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
 					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_grp_only">
 					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
 					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
@@ -327,7 +327,7 @@ class IMDataIntall {
 			            echo $action_label.$action_on.'<br>';
 			            echo '
 					        <CENTER>
-					        <FORM action="/plugins/IM/?view=codex_im_admin" method="POST">
+					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
 					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_muc_only">
 					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
 					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
@@ -345,7 +345,7 @@ class IMDataIntall {
 			 
 				 echo '
 					 <CENTER>
-					 <FORM action="/plugins/IM/?view=codex_im_admin" method="POST">
+					 <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
 					 <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_all"> 
 					 <INPUT type="submit" name="submit" value="'.$GLOBALS["Language"]->getText('plugin_im_admin','im_admin_synchro_all').'">
 					 </FORM>
