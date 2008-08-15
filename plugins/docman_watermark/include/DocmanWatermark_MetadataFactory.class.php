@@ -48,11 +48,7 @@ class DocmanWatermark_MetadataFactory {
             $this->dao->createByGroupId($wmd->getGroupId(), $wmd->getId());
         }
     }
-    
-    public function unsetField($wmd) {
-        $dar = $this->deleteByGroupId($wmd->getGroupId());
-    }
-    
+        
     public function getMetadataIdFromGroupId($group_id) {
         $dar = $this->dao->searchByGroupId($group_id);
         if ($dar->rowCount() >0) {
