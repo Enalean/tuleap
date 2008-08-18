@@ -198,6 +198,7 @@ class showPermsVisitor
             {
                 foreach($ugroups as $ugrp){
                     $resultat_permissions   = $this->extractPermissions($group_id,$ugrp['ugroup_id'],$item_id);
+                  
                     while ($row_permissions = db_fetch_array($resultat_permissions))
                         {
                             $permission = $this->permissionFormatting($row_permissions['permission_type']);
@@ -232,6 +233,7 @@ class showPermsVisitor
 
     }
 
+
     /**
      * Method listUgroup which extract user groups list for a given project
      * 
@@ -240,15 +242,15 @@ class showPermsVisitor
      * @return null
      */
     function listUgroups($group_id){
-        $requete_liste_ugroups = "SELECT Ugrp.ugroup_id, Ugrp.name".
-            "  FROM ugroup Ugrp".
-            "  WHERE Ugrp.group_id='".$group_id."'";
-
+        $requete_liste_ugroups =  sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
+                                 '  FROM ugroup Ugrp '.
+                                 '   WHERE Ugrp.group_id = %d',
+                                  $group_id);
         $resultat_liste_ugroups = db_query($requete_liste_ugroups);
         if($resultat_liste_ugroups && !db_error($resultat_liste_ugroups)){
             return $resultat_iste_ugroups;
         } else {
-            echo "DB error: ".db_error()."<br>";
+            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
         }
 
 
@@ -263,17 +265,18 @@ class showPermsVisitor
      * @return null
      */
     function extractPermissions($group_id, $ugroup_id, $item_id){
-        $requete_perms = "SELECT  Ugrp.name, P.permission_type, PDI.title".
-            "   FROM ugroup Ugrp ".
-            "   INNER JOIN permissions P ON(P.ugroup_id=Ugrp.ugroup_id and P.permission_type LIKE 'PLUGIN_DOCMAN%')".
-            "   INNER JOIN plugin_docman_item PDI ON(PDI.item_id=P.object_id AND PDI.group_id=Ugrp.group_id)".
-            " WHERE P.ugroup_id='".$ugroup_id."'AND Ugrp.group_id='".$group_id."' AND PDI.item_id='".$item_id."'";
+        $requete_perms = sprintf('SELECT  Ugrp.name, P.permission_type, PDI.title'.
+            '   FROM ugroup Ugrp '.
+            '   INNER JOIN permissions P ON(P.ugroup_id=Ugrp.ugroup_id and P.permission_type LIKE %s)'.
+            '   INNER JOIN plugin_docman_item PDI ON(PDI.item_id=P.object_id AND PDI.group_id=Ugrp.group_id)'.
+            ' WHERE P.ugroup_id= %d AND Ugrp.group_id= %d AND PDI.item_id= %d',DataAccess::quoteSmart('PLUGIN_DOCMAN%'),$ugroup_id,$group_id,$item_id);
+      
         $resultat_perms = db_query($requete_perms);  
         if($resultat_perms && !db_error($resultat_perms))
             {
                 return $resultat_perms;
             } else {
-            echo "DB error: ".db_error()."<br>";
+            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
         }
     }
  

@@ -43,14 +43,19 @@ Class userGroupExportMembers
     function userList($ugroup_id, $group_id)
     {
       
-        $requete_list = "SELECT  U.user_name, Ugrp.name, G.group_name".
-            " FROM user U".
-            "   INNER JOIN ugroup_user UU ON(U.user_id=UU.user_id)".
-            "   INNER JOIN ugroup Ugrp ON( UU.ugroup_id=Ugrp.ugroup_id)".
-            "   INNER JOIN groups G ON (Ugrp.group_id=G.group_id)  ".
-            " WHERE UU.ugroup_id='".$ugroup_id."'AND Ugrp.group_id='".$group_id."'";
+        $requete_list = sprintf('SELECT  U.user_name, Ugrp.name, G.group_name'.
+            ' FROM user U'.
+            '   INNER JOIN ugroup_user UU ON(U.user_id=UU.user_id)'.
+            '   INNER JOIN ugroup Ugrp ON( UU.ugroup_id=Ugrp.ugroup_id)'.
+            '   INNER JOIN groups G ON (Ugrp.group_id=G.group_id)  '.
+            ' WHERE UU.ugroup_id= %d AND Ugrp.group_id= %d',$ugroup_id,$group_id);
         $resultat_list = db_query($requete_list);
-        return  $resultat_list;
+      
+        if($resultat_list && !db_error($resultat_list)){
+            return  $resultat_list;
+        } else {
+            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
+        }
 	
     }
     /**
@@ -63,7 +68,7 @@ Class userGroupExportMembers
      */
     function listUserFormatting(&$ugroups, $group_id)
     {
-        header('Content-Disposition: filename=export_permissions.csv');
+        header('Content-Disposition: filename=export_userGroups_members.csv');
         header('Content-Type: text/csv');
         echo "User group,User name\n";
         $resultat_ugroups  = $this->listUgroups($group_id);
@@ -92,15 +97,15 @@ Class userGroupExportMembers
      */
     function listUgroups($group_id)
     {
-        $requete_liste_ugroups = "SELECT Ugrp.ugroup_id, Ugrp.name".
-            "  FROM ugroup Ugrp".
-            "  WHERE Ugrp.group_id='".$group_id."'";
+        $requete_liste_ugroups = sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
+            '  FROM ugroup Ugrp'.
+            '  WHERE Ugrp.group_id= %d',$group_id);
 
         $resultat_liste_ugroups = db_query($requete_liste_ugroups);
         if($resultat_liste_ugroups && !db_error($resultat_liste_ugroups)){
             return $resultat_iste_ugroups;
         } else {
-            echo "DB error: ".db_error()."<br>";
+            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
         }
     }
     

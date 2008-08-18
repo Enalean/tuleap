@@ -26,7 +26,7 @@ class EacPlugin extends Plugin {
 
         $link = '<td align="center"><a href="'.$url.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td> ';
 
-        echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> Docman : Permissions information '.$link.'</tr>';
+        echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> Docman : Project Access Permissions '.$link.'</tr>';
        
     }
 
@@ -36,9 +36,36 @@ class EacPlugin extends Plugin {
     {
         $url = $this->getPluginPath();
         $url .= '/export_users_ugroups.php?group_id='.$group_id;
-        echo '<TR><TD> </TD> <TD> </TD> <TD>';
-        echo '<br><TD align="right"><a href="'.$url.'"><B>Export Definitions</B></a></TD></TR>';
+        echo '<tr><td> </td> <td> </td> <td>';
+        echo '<br><td align="right"><a href="'.$url.'"><B>Export Definitions</B></a></td></tr>';
     }
+
+
+
+
+
+    //   function project_data_export_table($params)
+    //   {
+    //       $url  = $this->getPluginPath();
+    //       $url .= '/export_permissions?group_id='.$params['group_id'];
+
+    //          $link = '<td align="center"><a href="'.$url.'">'.$GLOBALS['Response']->get('plugin_eac','Export_perms').'</a><br><a href ="">'.$GLOBALS['Response']->get('plugin_eac','Show_format').'</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td>';
+
+    //         echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b>'.$GLOBALS['Response']->get('plugin_eac','Project_access_permission').''. $link.'</tr>';
+       
+    // }
+
+
+
+    //  function project_data_export_table_users($group_id)
+    //  {
+    //      $url  = $this->getPluginPath();
+    //      $url .= '/export_users_ugroups.php?group_id='.$group_id;
+    //      echo '<tr><td> </td> <td> </td> <td>';
+    //   echo '<br><td align="right"><a href="'.$url.'"><B>'.$GLOBALS['Response']->get('plugin_eac','export_definitions').'</B></a></td></tr >';
+    //  }
+
+    //}
 
 }
 

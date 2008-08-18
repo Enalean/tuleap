@@ -24,10 +24,18 @@
  */
 require_once ('userGroupExportMembers.class.php');
 require_once ('pre.php');
+require_once ('common/valid/ValidFactory.class.php');
 
 
-$ugroups=array();	
-$group_id=$request->get('group_id');
+$ugroups=array();
+$valueGroupId              = new Valid_UInt('group_id');
+if($valueGroupId->validate($group_id)){
+    $group_id              = $request->get('group_id'); 
+ }else {
+    echo 'no group_id choosen';
+    exit;
+ }
+
 $MemberShower = new UserGroupExportMembers();
 $MemberShower->listUserFormatting($ugroups, $group_id);
 

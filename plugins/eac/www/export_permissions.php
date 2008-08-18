@@ -26,19 +26,26 @@ require_once('pre.php');
 require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('showPermsVisitor.class.php'); 
+require_once ('common/valid/ValidFactory.class.php'); 
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+$valueGroupId              = new Valid_UInt('group_id');
+if($valueGroupId->validate($group_id)){
+    $group_id              = $request->get('group_id'); 
+ }else {
+    echo 'no group_id choosen';
+    exit;
+ }
 
-$group_id                  = $request->get('group_id');
 $docmanItem                = array();
 $um                        = UserManager::instance();
 $user                      = $um->getCurrentUser();
-$Params['user']            = $user;
-$Params['ignore_collapse'] = true;
-$Params['ignore_perms']    = true;
-$Params['ignore_obsolete'] = false;
+$params['user']            = $user;
+$params['ignore_collapse'] = true;
+$params['ignore_perms']    = true;
+$params['ignore_obsolete'] = false;
 $itemFactory               = new Docman_ItemFactory($group_id);
-$node                      = $itemFactory->getItemTree(0, $Params);
+$node                      = $itemFactory->getItemTree(0, $params);
 $visitor                   = new showPermsVisitor(); 
 $visitor->visitFolder($node, $docmanItem);
 $listItem                  = array();
