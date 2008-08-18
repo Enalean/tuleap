@@ -236,8 +236,8 @@ class DocmanWatermarkController extends Controler {
             $this->view   = 'Admin_Watermark';            
             break;
         case 'admin_import_from_project':
-            $this->_actionParams['group_id']        = $this->request->get('group_id');
-            $this->_actionParams['target_group_id'] = $this->request->get('project');
+            $this->_actionParams['src_group_id']    = $this->request->get('project');
+            $this->_actionParams['target_group_id'] = $this->request->get('group_id');
             $this->action = 'import_from_project';
             
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));

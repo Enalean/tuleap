@@ -51,15 +51,13 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
             $md   = $mdIter->current();
             if ($md->getType()== PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $id   = $md->getId();
-                if ($id == "") {
-                    $id = $md->getLabel();
-                }
-             
-                $html .= '<option ';
-                if ($mdId == $id) {
-                    $html .= 'selected '; 
-                }
-                $html .= 'value="'.$id.'">'.$md->getName().'</option>';       
+                if ( $md->getLabel() != 'status') {
+                    $html .= '<option ';
+                    if ($mdId == $id) {
+                        $html .= 'selected '; 
+                    }
+                    $html .= 'value="'.$id.'">'.$md->getName().'</option>';
+                }       
             }
             $mdIter->next();
         }
