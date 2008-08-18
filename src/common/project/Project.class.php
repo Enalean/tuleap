@@ -13,6 +13,9 @@ require_once('Group.class.php');
 require_once('common/project/Service.class.php');
 require_once('common/frs/ServiceFile.class.php');
 require_once('common/svn/ServiceSVN.class.php');
+
+require_once('ProjectManager.class.php');
+
 /*
 
 	An object wrapper for project data
@@ -36,23 +39,14 @@ require_once('common/svn/ServiceSVN.class.php');
 
 
 
-/*
-	associative array of group objects
-	helps prevent the same object from being created more than once
-	which would create unnecessary database calls
-*/
-$PROJECT_OBJ=array();
-
-function &project_get_object($group_id,$force_update=false) {
-	//create a common set of group objects
-	//saves a little wear on the database
-	global $PROJECT_OBJ;
-	if (!isset($PROJECT_OBJ["_".$group_id."_"]) || !$PROJECT_OBJ["_".$group_id."_"] || $force_update) {
-		$PROJECT_OBJ["_".$group_id."_"] =& new Project($group_id);
-		return $PROJECT_OBJ["_".$group_id."_"];
-	} else {
-		return $PROJECT_OBJ["_".$group_id."_"];
-	}
+function project_get_object($group_id,$force_update=false) {
+    $projects = ProjectManager::instance();
+    if ($force_update) {
+        //clear the cache
+        $projects->clear($group_id);
+    }
+    //fetch the instance of the project
+    return $projects->getProject($group_id);
 }
 
 // see getProjectsDescFieldsInfos
