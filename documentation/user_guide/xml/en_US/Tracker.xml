@@ -1539,6 +1539,7 @@ width="14.5cm" />
 	<listitem><para>Patch</para></listitem>
 	<listitem><para>Support Requests</para></listitem>
 	<listitem><para>Tasks</para></listitem>
+	<listitem><para>Scrum Backlog</para></listitem>
       </itemizedlist>
 	Each of those templates have predefined fields that correspond
 	to the specific work processes around bugs, patches etc. In
@@ -1660,6 +1661,37 @@ width="14.5cm" />
 	  re-planning.</para>
 	</listitem>
       </itemizedlist>
+
+    </section>
+    <section id="ScrumTemplate">
+      <title>The Scrum Backlog Template</title>
+
+      <para>Codendi makes it easy to implement the Scrum methodology, by providing
+      a Scrum Backlog tracker to each project. You will find a comprehensive
+      description of Scrum on <ulink url="http://en.wikipedia.org/wiki/Scrum_(development)">
+      Wikipedia</ulink>.</para>
+
+      <para>The Scrum Backlog tracker contains artifacts called "User Stories", that
+      describe needs expressed by the customers of the project. The tracker has
+      been customized to capture customer requirements: it is possible to 
+      define the customer value of each story, its acceptance criteria, its
+      effort, its current backlog (Product Backlog or Sprint Backlog), etc.
+      </para>
+    
+      <para>Other optional fields are available, and of course, each project may
+      customize the tracker to fit the way it implements the methodology</para>
+
+      <para>At the beginning of a Scrum project, each customer user story must 
+      be stored in the Product Backlog ('Backlog' field of the tracker). During
+      the first Sprint Meeting, a few stories are selected by the team to be implemented 
+      in the first iteration. They are moved to the "Sprint Backlog" ('Backlog' field),
+      and evaluated ('Initial Effort'), or even duplicated into smaller stories.
+      The team then affects the stories to team members ('Owner') and can start 
+      developing.</para>
+     
+      <para>At the end of the Sprint (after two to four weeks), the team meets
+      for the new Sprint Meeting. User stories selected in the past Sprint are updated, 
+      and new stories are selected for the next Sprint.</para> 
 
     </section>
 

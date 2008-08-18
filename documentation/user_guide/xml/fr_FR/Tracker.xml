@@ -1616,6 +1616,7 @@ width="14.5cm" />
         <listitem><para>Patch</para></listitem>
         <listitem><para>Support Requests</para></listitem>
         <listitem><para>Tasks</para></listitem>
+        <listitem><para>Scrum Backlog</para></listitem>
       </itemizedlist>
         Chacun de ces outils de suivi possède des champs prédéfinis
         qui correspondent à un processus de travail spécifique autour
@@ -1747,7 +1748,41 @@ width="14.5cm" />
       </itemizedlist>
 
     </section>
+    <section id="ScrumTemplate">
+      <title>L'outil de suivi des besoins de la méthodologie Scrum (Scrum Backlog)</title>
+
+      <para>Codendi facilite le déploiement de la méthodologie Scrum en permettant
+      de gérer le "backlog Scrum" (cahier de suivi des besoin) dans un outil de
+      suivi dédié. Vous pourrez trouver une description de la méthodologie sur
+      <ulink url="http://fr.wikipedia.org/wiki/Scrum">Wikipedia</ulink>.</para>
+
+      <para>L'outil de suivi du backlog Scrum est composée d'artefacts, appelées
+      "User Stories" qui décrivent les besoins exprimés par les clients du projet.
+      L'outil a été spécialisé pour proposer les champs permettant de capturer les
+      besoins: outre les champs "description", "catégories", etc., il est possible
+      de définir la valeur (Customer Value), les critères d'acceptation, l'effort
+      estimé ainsi que le backlog concerné (Product backlog ou Sprint backlog).</para>
     
+      <para>Certains champs optionnels sont également proposés, et bien sûr,
+      chaque projet est bien sûr libre de personnaliser l'outil de suivi en fonction 
+      de sa méthode de travail. 
+      </para>
+
+      <para>Au démarrage d'un projet utilisant la méthodologie Scrum, il convient
+      de modéliser les besoins des clients dans l'outil de suivi, en plaçant 
+      chaque besoin dans le "Product Backlog" (champ 'backlog'). Puis, lors du 
+      premier Sprint, l'équipe évalue les besoins qui vont être réalisés dans
+      la première itération. Ces besoins sont alors placés dans le "Sprint Backlog"
+      (champ 'backlog'), et évalués plus précisément (champ 'Initial Effort'), 
+      voire décomposés en besoins plus élémentaires. L'équipe se répartit alors
+      les besoins (champ 'Owner'), et peut démarrer l'implémentation.</para>
+ 
+      <para>A la fin du Sprint (d'une période de 4 semaines environ), l'équipe se
+      réunit à nouveau, modifie le statut des besoins du Sprint précédent, et sélectionne
+      les besoins qui seront traités dans le Sprint suivant.</para>
+
+    </section>
+
   </section>
 
   <section id="TrackerAdministration">
