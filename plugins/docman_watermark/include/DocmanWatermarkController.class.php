@@ -196,7 +196,7 @@ class DocmanWatermarkController extends Controler {
             
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
 
-            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->_viewParams['redirect_to'] = '?group_id='.$group_id.'&action=admin_watermark';
             $this->view   = 'RedirectAfterCrud';
             break;
         case 'admin_set_watermark_metadata_values':
@@ -233,7 +233,7 @@ class DocmanWatermarkController extends Controler {
             $this->action = 'setup_metadata_values';
 
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata_values'));
-            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_watermark';
             $this->view   = 'RedirectAfterCrud';            
             break;
         case 'admin_import_from_project':
@@ -243,7 +243,7 @@ class DocmanWatermarkController extends Controler {
             
             $this->_viewParams['md_id'] = $md_id;
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));
-            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_watermark';
             $this->view   = 'RedirectAfterCrud';
             break;
         default:
