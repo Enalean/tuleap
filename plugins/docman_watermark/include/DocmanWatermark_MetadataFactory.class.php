@@ -50,6 +50,7 @@ class DocmanWatermark_MetadataFactory {
     }
     
     public function createField($wmd) {
+        $this->dao->deleteByGroupId($wmd->getGroupId());
         $this->dao->createByGroupId($wmd->getGroupId(), $wmd->getId());
     }
     
