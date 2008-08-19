@@ -29,6 +29,7 @@ require_once('showPermsVisitor.class.php');
 require_once ('common/valid/ValidFactory.class.php'); 
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
 $valueGroupId              = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)){
     $group_id              = $request->get('group_id'); 

@@ -5,6 +5,7 @@ require_once('common/plugin/Plugin.class.php');
 class EacPlugin extends Plugin {
     
     function EacPlugin($id) {
+       
         $this->Plugin($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('project_data_export_table', 'project_data_export_table', false);
@@ -19,14 +20,40 @@ class EacPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    //   function project_data_export_table($params)
+        //   {
+        //  $url = $this->getPluginPath();
+        //  $url .= '/export_permissions?group_id='.$params['group_id'];
+
+        //   $link = '<td align="center"><a href="'.$url.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td> ';
+
+        //   echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> Docman : Project Access Permissions '.$link.'</tr>';
+       
+        //   }
+    
+
+
+    //  function project_data_export_table_users($group_id)
+    //  {
+    //     $url = $this->getPluginPath();
+    //    $url .= '/export_users_ugroups.php?group_id='.$group_id;
+    //    echo '<tr><td> </td> <td> </td> <td>';
+    //    echo '<br><td align="right"><a href="'.$url.'"><B>Export Definitions</B></a></td></tr>';
+    // }
+
+
+
+
+
     function project_data_export_table($params)
     {
-        $url = $this->getPluginPath();
+       
+        $url  = $this->getPluginPath();
         $url .= '/export_permissions?group_id='.$params['group_id'];
 
-        $link = '<td align="center"><a href="'.$url.'">Export</a><br><a href ="">Show Format</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td> ';
+           $link = '<td align="center"><a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_eac','Export_perms').'</a><br><a href ="">'.$GLOBALS['Language']->getText('plugin_eac','Show_format').'</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td>';
 
-        echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b> Docman : Project Access Permissions '.$link.'</tr>';
+            echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b>'.$GLOBALS['Language']->getText('plugin_eac','Project_access_permission').''. $link.'</tr>';
        
     }
 
@@ -34,38 +61,13 @@ class EacPlugin extends Plugin {
 
     function project_data_export_table_users($group_id)
     {
-        $url = $this->getPluginPath();
+       
+        $url  = $this->getPluginPath();
         $url .= '/export_users_ugroups.php?group_id='.$group_id;
         echo '<tr><td> </td> <td> </td> <td>';
-        echo '<br><td align="right"><a href="'.$url.'"><B>Export Definitions</B></a></td></tr>';
+        echo '<br><td align="right"><a href="'.$url.'"><B>'.$GLOBALS['Language']->getText('plugin_eac','export_definitions').'</B></a></td></tr >';
     }
 
-
-
-
-
-    //   function project_data_export_table($params)
-    //   {
-    //       $url  = $this->getPluginPath();
-    //       $url .= '/export_permissions?group_id='.$params['group_id'];
-
-    //          $link = '<td align="center"><a href="'.$url.'">'.$GLOBALS['Response']->get('plugin_eac','Export_perms').'</a><br><a href ="">'.$GLOBALS['Response']->get('plugin_eac','Show_format').'</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td>';
-
-    //         echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b>'.$GLOBALS['Response']->get('plugin_eac','Project_access_permission').''. $link.'</tr>';
-       
-    // }
-
-
-
-    //  function project_data_export_table_users($group_id)
-    //  {
-    //      $url  = $this->getPluginPath();
-    //      $url .= '/export_users_ugroups.php?group_id='.$group_id;
-    //      echo '<tr><td> </td> <td> </td> <td>';
-    //   echo '<br><td align="right"><a href="'.$url.'"><B>'.$GLOBALS['Response']->get('plugin_eac','export_definitions').'</B></a></td></tr >';
-    //  }
-
-    //}
 
 }
 

@@ -26,7 +26,7 @@ require_once ('userGroupExportMembers.class.php');
 require_once ('pre.php');
 require_once ('common/valid/ValidFactory.class.php');
 
-
+$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
 $ugroups=array();
 $valueGroupId              = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)){

@@ -54,7 +54,7 @@ Class userGroupExportMembers
         if($resultat_list && !db_error($resultat_list)){
             return  $resultat_list;
         } else {
-            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
+            echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
 	
     }
@@ -105,7 +105,7 @@ Class userGroupExportMembers
         if($resultat_liste_ugroups && !db_error($resultat_liste_ugroups)){
             return $resultat_iste_ugroups;
         } else {
-            echo 'DB error:'.$GLOBALS['Response']->get('plugin_eac','db_error');
+            echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
     }
     
