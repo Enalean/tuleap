@@ -40,7 +40,7 @@ class DocmanWatermark_MetadataValueFactory {
     }
     
     public function updateMetadataValues($wmdvIter, $groupId) {
-        $this->dao->remove($groupId);
+        $this->dao->deleteByGroupId($groupId);
         $wmdvIter->rewind();
         while ($wmdvIter->valid()) {
             $mdv   = $wmdvIter->current();
@@ -66,6 +66,10 @@ class DocmanWatermark_MetadataValueFactory {
             $dar->next();
         }
         return new ArrayIterator($valuesArr);
+    }
+    
+    public function cleanFieldValuesByGroupId($groupId) {
+        $this->dao->deleteByGroupId($groupId);
     }
     
     public function isWatermarked($valueId) {

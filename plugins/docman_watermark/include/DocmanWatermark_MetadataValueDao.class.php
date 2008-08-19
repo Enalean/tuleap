@@ -76,7 +76,7 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * @param groupId: project id
     * @return void
     */
-    public function remove($groupId) {
+    public function deleteByGroupId($groupId) {
         $sql = sprintf("DELETE FROM plugin_docmanwatermark_metadata_love_md_extension " .
                        "WHERE value_id IN (" .
                        "    SELECT DISTINCT value_id " .

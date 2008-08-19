@@ -41,6 +41,12 @@ class DocmanWatermark_MetadataFactory {
     }
     
     public function setField($wmd) {
+        
+        // remove the old field related watermarking values if any
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $dwmvf = new DocmanWatermark_MetadataValueFactory();
+        $dwmvf->cleanFieldValuesByGroupId($wmd->getGroupId());
+        // set the new metadata as confidentiality field
         $dar = $this->dao->searchByGroupId($wmd->getGroupId());
         if ($dar->valid()) {
             $this->dao->updateByGroupId($wmd->getGroupId(), $wmd->getId());
@@ -50,6 +56,11 @@ class DocmanWatermark_MetadataFactory {
     }
     
     public function createField($wmd) {
+        // remove the old field related watermarking values if any
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $dwmvf = new DocmanWatermark_MetadataValueFactory();
+        $dwmvf->cleanFieldValuesByGroupId($wmd->getGroupId());
+        
         $this->dao->deleteByGroupId($wmd->getGroupId());
         $this->dao->createByGroupId($wmd->getGroupId(), $wmd->getId());
     }
