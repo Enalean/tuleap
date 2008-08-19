@@ -94,11 +94,13 @@ class DocmanWatermark_MetadataImportFactory  {
                 $dwmvf = new DocmanWatermark_MetadataValueFactory();
                
                 $loveIter->rewind();
+                $i = 0;
                 while($loveIter->valid()){
                     $love = $loveIter->current();
                     if ($love->getId() != 100){
-                        $loves['value_id']  = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
-                        $loves['watermark'] = $dwmvf->isWatermarked($love->getId());
+                        $loves[$i]['value_id']  = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
+                        $loves[$i]['watermark'] = $dwmvf->isWatermarked($love->getId());
+                        $i++;
                     }
                     $loveIter->next();
                 }
@@ -136,10 +138,10 @@ class DocmanWatermark_MetadataImportFactory  {
         require_once('DocmanWatermark_MetadataValue.class.php');
         require_once('DocmanWatermark_MetadataValueFactory.class.php');
         $arrdwmv = array();
-        for($i=0;$i<count($loves['value_id']);$i++) {
+        for($i=0;$i<count($loves);$i++) {
             $dwmv = new DocmanWatermark_MetadataValue();
-            $dwmv->setValueId($loves['value_id'][$i]);
-            $dwmv->setWatermark($loves['watermark'][$i]);
+            $dwmv->setValueId($loves[$i]['value_id']);
+            $dwmv->setWatermark($loves[$i]['watermark']);
             $arrdwmv[] = $dwmv;
         }
         // update watermarking settings related to the source project
@@ -153,7 +155,7 @@ class DocmanWatermark_MetadataImportFactory  {
      * @return void
      */        
     public function importSettings() {
-        $mdMap = $md_id = $this->copyMetadata();
+        $mdMap = $this->copyMetadata();
         $this->copyWatermarkMetadata($mdMap['md']);
         $this->copyWatermarkMetadataValues($mdMap['love']);
     }
