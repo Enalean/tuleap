@@ -152,8 +152,8 @@ class DocmanWatermark_MetadataImportFactory  {
      * @return void
      */        
     public function importSettings() {
-        $md_id = $this->copyMetadata();
-        //$this->copyWatermarkMetadata($md_id);
+        $mdMap = $md_id = $this->copyMetadata();
+        $this->copyWatermarkMetadata($mdMap['md']);
         //$this->copyWatermarkMetadataValues($dwmvs);
     }
 }

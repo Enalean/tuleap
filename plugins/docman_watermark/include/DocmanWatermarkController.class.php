@@ -195,8 +195,9 @@ class DocmanWatermarkController extends Controler {
             $this->action = 'setup_metadata';
             
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata'));
-            $this->_viewParams['md_id'] = $this->request->get('md_id');
-            $this->view   = 'Admin_Watermark';
+
+            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->view   = 'RedirectAfterCrud';
             break;
         case 'admin_set_watermark_metadata_values':
             require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
@@ -231,17 +232,19 @@ class DocmanWatermarkController extends Controler {
             $this->_actionParams['md_values'] = &$iterValues;            
             $this->action = 'setup_metadata_values';
 
-            $this->_viewParams['md_values'] = &$arrVals;
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata_values'));
-            $this->view   = 'Admin_Watermark';            
+            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->view   = 'RedirectAfterCrud';            
             break;
         case 'admin_import_from_project':
             $this->_actionParams['src_group_id']    = $this->request->get('project');
             $this->_actionParams['target_group_id'] = $this->request->get('group_id');
             $this->action = 'import_from_project';
             
+            $this->_viewParams['md_id'] = $md_id;
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));
-            $this->view   = 'Admin_Watermark';
+            $this->_viewParams['redirect_to'] = '?group_id=102&action=admin_watermark';
+            $this->view   = 'RedirectAfterCrud';
             break;
         default:
             die(htmlspecialchars($view) .' is not supported');
