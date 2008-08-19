@@ -27,8 +27,7 @@
 /**
  * Metadata container
  *
- * This class aims to give all informations about docmanwatermark's metadata Values, even if
- * the metadata are hard coded (such as title, create_date, ...).
+ * This class aims to give all informations about docmanwatermark's metadata Values
  */
 class DocmanWatermark_MetadataValue {
     var $valueId;
