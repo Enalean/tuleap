@@ -44,7 +44,10 @@ class DocmanWatermark_MetadataValueFactory {
         $wmdvIter->rewind();
         while ($wmdvIter->valid()) {
             $mdv   = $wmdvIter->current();
-            $this->dao->update($mdv, $groupId);
+            // exclude None value
+            if ($mdv->getValueId() != 100) {
+                $this->dao->update($mdv, $groupId);
+            }
             $wmdvIter->next();
         }
     }

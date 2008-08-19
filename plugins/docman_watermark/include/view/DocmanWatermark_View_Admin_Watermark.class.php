@@ -51,7 +51,7 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
             $md   = $mdIter->current();
             if ($md->getType()== PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $id   = $md->getId();
-                if ( $md->getLabel() != 'status') {
+                if (( $md->getLabel() != 'status') && ($id != 100)) {
                     $html .= '<option ';
                     if ($mdId == $id) {
                         $html .= 'selected '; 
@@ -96,11 +96,9 @@ class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
             } else {
                 $posValue = false;
             }
-            if (($id != '') && ($mdv->getName() != 'Status')) {
+            // exclude status field and None Value
+            if (($id != 100) && ($mdv->getName() != 'Status')) {
                 $name = $mdv->getName();
-                if ($mdv->getName() == 'love_special_none_name_key') {
-                    $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_name_key');
-                }
                 $html .= '<tr class="'.html_get_alt_row_color($i).'"><td align="center"><input type="checkbox" name="chk_'.$id.'"';
                 if (($vals['watermark'][$posValue] == 1) && ($posValue !== false)) {
                     $html .= ' checked ';    
