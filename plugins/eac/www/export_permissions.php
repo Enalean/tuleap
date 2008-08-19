@@ -27,9 +27,14 @@ require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.p
 require_once('common/user/UserManager.class.php');
 require_once('showPermsVisitor.class.php'); 
 require_once ('common/valid/ValidFactory.class.php'); 
+require_once('common/event/EventManager.class.php');
+
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
-$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
+//$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
+$em   = EventManager::instance();
+$em->processEvent("loadPluginLanguageFile", null);
+    
 $valueGroupId              = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)){
     $group_id              = $request->get('group_id'); 
