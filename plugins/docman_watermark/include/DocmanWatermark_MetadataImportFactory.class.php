@@ -90,12 +90,15 @@ class DocmanWatermark_MetadataImportFactory  {
                 // create none value for the new metadata id in the target project
                 $dmlovenf = new Docman_MetadataListOfValuesElementFactory($newMdId);
                 $dmlovenf->createNoneValue();
-
+                
+                $dwmvf = new DocmanWatermark_MetadataValueFactory();
+               
                 $loveIter->rewind();
                 while($loveIter->valid()){
                     $love = $loveIter->current();
                     if ($love->getId() != 100){
-                        $loves[] = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
+                        $loves['value_id']  = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
+                        $loves['watermark'] = $dwmvf->isWatermarked($love->getId());
                     }
                     $loveIter->next();
                 }
@@ -129,21 +132,19 @@ class DocmanWatermark_MetadataImportFactory  {
      * @return void
      */     
     
-    private function copyWatermarkMetadataValues($dwmvs){
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+    private function copyWatermarkMetadataValues($loves){
         require_once('DocmanWatermark_MetadataValue.class.php');
-        $mdf   = new Docman_MetadataFactory($this->srcProjectId);
-        $dwmf = new DocmanWatermark_MetadataFactory();
-        $md_id = $dwmf->getMetadataIdFromGroupId($this->srcProjectId);
-        $mdLabel = $mdf->getLabelFromId($md_id);
-        $mlvef = new Docman_MetadataListOfValuesElementFactory($md_id);
-        $mlveIter = $mlvef->getIteratorByFieldId($md_id, $mdLabel, true);
-        while($dwmvs->valid()) {
-            $dwmv = $dwmvs->current();
-            $dwmv->updateMetadataValues();
-            $dwmvs->next();
-        }        
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $arrdwmv = array();
+        for($i=0;$i<count($loves['value_id']);$i++) {
+            $dwmv = new DocmanWatermark_MetadataValue();
+            $dwmv->setValueId($loves['value_id'][$i]);
+            $dwmv->setWatermark($loves['watermark'][$i]);
+            $arrdwmv[] = $dwmv;
+        }
+        // update watermarking settings related to the source project
+        $dwmvf = new DocmanWatermark_MetadataValueFactory();
+        $dwmvf->updateMetadataValues(new ArrayIterator($arrdwmv),$this->targetProjectId);     
     }
 
     /**
@@ -154,7 +155,7 @@ class DocmanWatermark_MetadataImportFactory  {
     public function importSettings() {
         $mdMap = $md_id = $this->copyMetadata();
         $this->copyWatermarkMetadata($mdMap['md']);
-        //$this->copyWatermarkMetadataValues($dwmvs);
+        $this->copyWatermarkMetadataValues($mdMap['love']);
     }
 }
 
