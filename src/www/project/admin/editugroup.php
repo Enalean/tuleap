@@ -160,6 +160,7 @@ if (($func=='edit')||($func=='do_create')) {
         $title_arr=array();
         $title_arr[]=$Language->getText('project_admin_editugroup','permission');
         $title_arr[]=$Language->getText('project_admin_editugroup','resource_name');
+	$title_arr[]=$Language->getText('project_admin_editugroup','action');
         echo html_build_list_table_top($title_arr,false,false,false);
         $row_num=0;
         
@@ -222,14 +223,29 @@ if (($func=='edit')||($func=='do_create')) {
                     'results'         => &$results
                 ));
                 if ($results) {
+		    
                     echo '<TD>'.$results.'</TD>';
+		    $em2 =& EventManager::instance();
+                    $em2->processEvent('permissions_ugroup_properties', array(
+                    'permission_type' => $row['permission_type'],
+                    'object_id'       => $row['object_id'],
+                    'group_id'        => $group_id,
+                    'results'         => &$results
+                ));
+		   
                 } else {
+		    $em2 =& EventManager::instance();
+                    $em2->processEvent('permissions_ugroup_properties', array(
+                    'permission_type' => $row['permission_type'],
+                    'object_id'       => $row['object_id'],
+                    'group_id'        => $group_id,
+                    'results'         => &$results
+                ));
                     echo '<TD>'.$row['object_id'].'</TD>';
                 }
             }
 
-            echo '</TR>
-';
+            echo '</TR>';
             $row_num++;
         }
         echo '</table><p>';

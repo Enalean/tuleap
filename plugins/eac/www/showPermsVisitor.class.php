@@ -177,30 +177,27 @@ class showPermsVisitor
      *
      * @return null
      */
-    function csvFormatting(&$ugroups ,&$listItem ,$group_id)
+    function csvFormatting(&$ugroups, &$listItem ,$group_id)
     {
         header('Content-Disposition: filename=export_permissions.csv');
         header('Content-Type: text/csv');
 
         echo "Document/Folder,User group,Read,Write,Manage\n";
-        $resultat_ugroups  = $this->listUgroups($group_id);
-        while($row_ugroups = db_fetch_array($resultat_ugroups))
-            {
-                $ugroup_id = $row_ugroups['ugroup_id'];
-                $ugroups[] = $row_ugroups;
-            }
+        $ugroups  = $this->listUgroups($group_id,$ugroups);
         foreach ($this->allTreeItems as $folder_id )
             {
                 $this->itemFullName($folder_id,$listItem);  
             }
 
         foreach($listItem as $item_id=>$item)
-            {
+            { 
+                $permission_type = 'PLUGIN_DOCMAN%';
                 foreach($ugroups as $ugrp){
-                    $resultat_permissions   = $this->extractPermissions($group_id,$ugrp['ugroup_id'],$item_id);
+                    $resultat_permissions   = $this->extractPermissions($group_id,$ugrp['ugroup_id'],$item_id, $permission_type);
                   
                     while ($row_permissions = db_fetch_array($resultat_permissions))
                         {
+                            echo $permission;
                             $permission = $this->permissionFormatting($row_permissions['permission_type']);
                             echo $item."".$this->sep."".$ugrp['name']."".$this->sep."".$permission."".PHP_EOL;
                         }
@@ -238,17 +235,23 @@ class showPermsVisitor
      * Method listUgroup which extract user groups list for a given project
      * 
      * @param int $group_id project id
-     *
+     * @param Array &$ugroups will memorize all ugroup's name and id
      * @return null
      */
-    function listUgroups($group_id){
+    function listUgroups($group_id,&$ugroups){
         $requete_liste_ugroups =  sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
                                  '  FROM ugroup Ugrp '.
                                  '   WHERE Ugrp.group_id = %d',
                                   $group_id);
         $resultat_liste_ugroups = db_query($requete_liste_ugroups);
         if($resultat_liste_ugroups && !db_error($resultat_liste_ugroups)){
-            return $resultat_iste_ugroups;
+         
+        while($row_liste_ugroups = db_fetch_array($resultat_liste_ugroups))
+            {
+                $ugroup_id = $row_liste_ugroups['ugroup_id'];
+                $ugroups[] = $row_liste_ugroups;
+            }
+        return $ugroups;
         } else {
             echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
@@ -264,12 +267,13 @@ class showPermsVisitor
      *
      * @return null
      */
-    function extractPermissions($group_id, $ugroup_id, $item_id){
-        $requete_perms = sprintf('SELECT  Ugrp.name, P.permission_type, PDI.title'.
+    function extractPermissions($group_id, $ugroup_id, $item_id, $permission_type){
+        
+        $requete_perms   = sprintf('SELECT  Ugrp.name, P.permission_type, PDI.title'.
             '   FROM ugroup Ugrp '.
             '   INNER JOIN permissions P ON(P.ugroup_id=Ugrp.ugroup_id and P.permission_type LIKE %s)'.
             '   INNER JOIN plugin_docman_item PDI ON(PDI.item_id=P.object_id AND PDI.group_id=Ugrp.group_id)'.
-            ' WHERE P.ugroup_id= %d AND Ugrp.group_id= %d AND PDI.item_id= %d',DataAccess::quoteSmart('PLUGIN_DOCMAN%'),$ugroup_id,$group_id,$item_id);
+            ' WHERE P.ugroup_id= %d AND Ugrp.group_id= %d AND PDI.item_id= %d',DataAccess::quoteSmart($permission_type),$ugroup_id,$group_id,$item_id);
       
         $resultat_perms = db_query($requete_perms);  
         if($resultat_perms && !db_error($resultat_perms))
