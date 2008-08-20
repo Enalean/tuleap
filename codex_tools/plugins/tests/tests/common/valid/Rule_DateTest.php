@@ -40,9 +40,9 @@ class Rule_DateTest extends UnitTestCase {
         $r = new Rule_Date();
         $this->assertFalse($r->isValid('2007-12'));
         $this->assertFalse($r->isValid('toto'));
-        $this->assertFalse($r->isValid('2007-01-01'));
-        $this->assertFalse($r->isValid('2007-01-1'));
-        $this->assertFalse($r->isValid('2007-1-01'));
+        $this->assertTrue($r->isValid('2007-01-01'));
+        $this->assertTrue($r->isValid('2007-01-1'));
+        $this->assertTrue($r->isValid('2007-1-01'));
     }
 
     function testGoodDate() {
