@@ -80,35 +80,91 @@ class DocmanWatermark_MetadataImportFactory  {
                 $mdloved = new Docman_MetadataListOfValuesElementDao(CodexDataAccess::instance());
                 // $md is the metadata selected as confidentiality field
                 $md = $mdIter->current();
-                // create the metadata and get the new metadata ID in the target project
-                $newMdId = $mdd->create($this->targetProjectId, $md->getName(), $md->getType(), $md->getDescription()
-                                        , $md->isRequired(), $md->isEmptyAllowed(), $md->isMultipleValuesAllowed(), $md->isSpecial(), $md->getUseIt());
-                
-                // get the list of love of the metadata in the source project
-                $dmlovef = new Docman_MetadataListOfValuesElementFactory($md->getId());
-                $loveIter = $dmlovef->getIteratorByFieldId($md->getId(), $md->getLabel(), true);
-                // create none value for the new metadata id in the target project
-                $dmlovenf = new Docman_MetadataListOfValuesElementFactory($newMdId);
-                $dmlovenf->createNoneValue();
-                
-                $dwmvf = new DocmanWatermark_MetadataValueFactory();
-               
-                $loveIter->rewind();
-                $i = 0;
-                while($loveIter->valid()){
-                    $love = $loveIter->current();
-                    if ($love->getId() != 100){
-                        $loves[$i]['value_id']  = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
-                        $loves[$i]['watermark'] = $dwmvf->isWatermarked($love->getId());
-                        $i++;
+                $m_map = $this->searchMetadata($md);
+                if($m_map['md'] == 0) { // the metadata does not exist in the target project
+                    // create the metadata and get the new metadata ID in the target project
+                    $newMdId = $mdd->create($this->targetProjectId, $md->getName(), $md->getType(), $md->getDescription()
+                                            , $md->isRequired(), $md->isEmptyAllowed(), $md->isMultipleValuesAllowed(), $md->isSpecial(), $md->getUseIt());
+                    
+                    // get the list of love of the metadata in the source project
+                    $dmlovef = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                    $loveIter = $dmlovef->getIteratorByFieldId($md->getId(), $md->getLabel(), true);
+                    // create none value for the new metadata id in the target project
+                    $dmlovenf = new Docman_MetadataListOfValuesElementFactory($newMdId);
+                    $dmlovenf->createNoneValue();
+                    
+                    $dwmvf = new DocmanWatermark_MetadataValueFactory();
+                    
+                    $loveIter->rewind();
+                    $i = 0;
+                    while($loveIter->valid()){
+                        $love = $loveIter->current();
+                        if ($love->getId() != 100){
+                            $loves[$i]['value_id']  = $mdloved->create($newMdId, $love->getName(), $love->getDescription(), $love->getRank(), $love->getStatus());
+                            $loves[$i]['watermark'] = $dwmvf->isWatermarked($love->getId());
+                            $i++;
+                        }
+                        $loveIter->next();
                     }
-                    $loveIter->next();
+                    return array ('md'   => $newMdId,
+                                  'love' => $loves);
+                } else {
+                    return $m_map;
                 }
-                return array ('md'   => $newMdId,
-                              'love' => $loves);
             }
         } else {
             return array();
+        }
+    }
+
+    /**
+     * Private Method to search a metadata in the target project (customized for the import purpose)
+     * @param  Docman_Metadata object dm: the metadata object to be checked
+     * @return array ('md' => int matched metadataId, 'love' => related loves)
+     */    
+    private function searchMetadata($md) {
+        // get the metadata iterator from target project
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataDao.class.php');
+        $dmd = new Docman_MetadataDao(CodexDataAccess::instance());
+        $dar = $dmd->searchByName($this->targetProjectId,$md->getName());
+        // if the name doesn't match then return md = 0
+        $dar->rewind();
+        if (!$dar->valid()) {
+            return array('md' => 0, 'love' => array ());
+        } else {
+            // check metadata properties type, useIt, AllowMultipleValue if it doesn't much then return md = 0
+            while($dar->valid()) {
+                $row = $dar->current();
+                if(($row['use_it'] == $md->isUsed()) && ($row['data_type'] == $md->getType()) && ($row['mul_val_ok'] == $md->isMultipleValuesAllowed())) {
+                    // it seams that the metadata is ok
+                    // check now if source Metadata values already exist
+                    $dmlovef = new Docman_MetadataListOfValuesElementFactory($md->getId());
+                    $loveIter = $dmlovef->getIteratorByFieldId($md->getId(), $md->getLabel(), true);
+                    
+                    $dmloveft = new Docman_MetadataListOfValuesElementFactory($row['field_id']);
+
+                    $loveIter->rewind();
+                    $i = 0;
+                    $loves = array();
+                    while($loveIter->valid()){
+                        $love = $loveIter->current();
+                        $lovetIter = $dmloveft->getByName($love->getName(), $row['field_id'], true);
+                        $lovetIter->rewind();
+                        if (!$lovetIter->valid()) {
+                            return array('md' => 0, 'love' => array ());;
+                        }
+                        $lovet = $lovetIter->current();
+                        $dwmdvf = new DocmanWatermark_MetadataValueFactory();
+                        $loves[$i]['value_id']  = $lovet->getId();
+                        $loves[$i]['watermark'] = $dwmdvf->isWatermarked($love->getId());
+                        $i++;
+                        $loveIter->next();
+                    }
+                    return array('md' => $row['field_id'], 'love' => $loves);
+                }
+                $dar->next();
+            }
+            return array('md' => 0, 'love' => array ());
         }
     }
 
