@@ -63,7 +63,7 @@ INSERT INTO user SET \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
         status = 'A', \
-        shell = '/bin/bash', \
+        shell = '/bin/false', \
         unix_pw = '$1$Sn;W@$PXu/wJEYCCN2.BmF2uSfT/', \
         unix_status = 'A', \
         unix_uid = 1, \
