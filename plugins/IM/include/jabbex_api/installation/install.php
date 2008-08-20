@@ -847,10 +847,14 @@ class JabbeXInstaller {
 		$this->_add_property("register.inband","false"); // Users can not automatically create new accounts.
 		$this->_add_property("register.password","false"); // Users are not allowed to change their password.
 		$this->_add_property("xmpp.auth.anonymous","false"); // Only registered users may login.
-		$this->_add_property("cache.group.size","0"); // Shorten cache to increase response time when.
-		$this->_add_property("cache.userCache.size","0"); // DB modifications take place.
-		$this->_add_property("cache.userGroup.size","0"); //
-		$this->_add_property("cache.username2roster.size","0"); //
+		
+		// The properties below were craping the performance of the jabber server.
+		// It's better to do a fine tune manually depending on the system the server is running over.
+		
+		//$this->_add_property("cache.group.size","0"); // Shorten cache to increase response time when.
+		//$this->_add_property("cache.userCache.size","0"); // DB modifications take place.
+		//$this->_add_property("cache.userGroup.size","0"); //
+		//$this->_add_property("cache.username2roster.size","0"); //
 	}
 }
 
