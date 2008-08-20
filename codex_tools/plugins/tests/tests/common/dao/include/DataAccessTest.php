@@ -30,7 +30,7 @@ class DataAccessTest extends UnitTestCase {
         require($GLOBALS['db_config_file']);
         $sys_dbname_2 = 'db that does not exist';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
-        $this->assertEqual($da->isError(), "Unknown database '".$sys_dbname_2."'");
+        $this->assertError("Unknown database '".$sys_dbname_2."'");
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertFalse($da->isError());
         $this->assertIsA($da->fetch("select *"),'DataAccessResult');

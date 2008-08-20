@@ -36,7 +36,6 @@ class DataAccess {
         if ($this->db) {
             if (!mysql_select_db($db,$this->db)) {
                 trigger_error(mysql_error(), E_USER_ERROR);
-                die();
             }
             $this->db_name = $db;
         }
