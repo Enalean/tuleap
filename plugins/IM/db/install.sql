@@ -26,7 +26,7 @@ insert into service (group_id, label, description, short_name, link, is_active, 
 
 
 # imadmin-bot user
-# This is a "bot": do not try to log on the Web interface with this user!
+# This is a "bot": do not try to log on the Web interface or a shell with this user!
 # His passwd is "1M@dm1n" (needed by openfire)
 INSERT INTO user SET 
         user_id = '47', 
@@ -36,11 +36,11 @@ INSERT INTO user SET
         realname = 'IM Administrator (do not delete)', 
         register_purpose = NULL, 
         status = 'A', 
-        shell = '0', 
-        unix_pw = '0', 
-        unix_status = '0', 
-        unix_uid = 0, 
-        unix_box = '0', 
+        shell = '/bin/false',
+        unix_pw = '***',
+        unix_status = 'A',
+        unix_uid = 47,
+        unix_box = 'shell1',
         ldap_id = NULL, 
         add_date = 940000000, 
         confirm_hash = NULL, 
