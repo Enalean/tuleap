@@ -280,6 +280,70 @@ done
 
 echo "Starting DB update for CodeX 3.6 This might take a few minutes."
 
+
+##########
+# Create new tables if needed
+echo "- Create new tables in DB"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+CREATE TABLE IF NOT EXISTS cross_references (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT, 
+  created_at INT(11) NOT NULL DEFAULT '0',
+  user_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  source_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  target_id INT(11) unsigned NOT NULL DEFAULT '0',
+  target_gid INT(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (id)
+  
+) TYPE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS forum_monitored_threads (
+  thread_monitor_id int(11) NOT NULL auto_increment,
+  forum_id int(11) NOT NULL default '0',
+  thread_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  PRIMARY KEY (thread_monitor_id)
+) TYPE=MyISAM;
+
+
+CREATE TABLE IF NOT EXISTS group_desc (
+  group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  desc_required BOOL NOT NULL DEFAULT FALSE,
+  desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  desc_description text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+  desc_rank INT( 11 ) NOT NULL DEFAULT '0',
+  desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
+  PRIMARY KEY (group_desc_id),
+  UNIQUE (desc_name)
+) TYPE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS group_desc_value (
+  desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
+  group_id INT( 11 ) NOT NULL ,
+  group_desc_id INT( 11 ) NOT NULL ,
+  value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  PRIMARY KEY (desc_value_id)
+) TYPE=MyISAM;
+
+EOF
+
+
+##########
+# Delete foundry tables
+echo "- Delete obsolete tables (foundries)"
+$CAT <<EOF | $MYSQL $pass_opt codex
+
+DROP TABLE foundry_data;
+DROP TABLE foundry_news;
+DROP TABLE foundry_preferred_projects;
+DROP TABLE foundry_projects;
+
+EOF
+
 ##########
 # Migrate all CodeX databases to UTF-8
 echo "- Migrate all CodeX databases to UTF-8"
@@ -1251,29 +1315,6 @@ echo "- Install IM plugin"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
 INSERT INTO plugin (name, available) VALUES ('IM', '1');
-
-EOF
-
-##########
-# Create table for Cross references 
-echo "- Create Table in DB for Cross References "
-$CAT <<EOF | $MYSQL $pass_opt codex
-
-CREATE TABLE IF NOT EXISTS cross_references (
-  id int(11) unsigned NOT NULL AUTO_INCREMENT, 
-  created_at INT(11) NOT NULL DEFAULT '0',
-  user_id INT(11) unsigned NOT NULL DEFAULT '0',
-  source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  source_id INT(11) unsigned NOT NULL DEFAULT '0',
-  source_gid INT(11) unsigned NOT NULL DEFAULT '0',
-  target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  target_id INT(11) unsigned NOT NULL DEFAULT '0',
-  target_gid INT(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (id)
-  
-) TYPE=MyISAM;
-
-
 
 EOF
 
