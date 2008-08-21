@@ -24,7 +24,7 @@ cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove
 RPMS_DIR=${TOP_DIR}/RPMS_CodeX
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
 CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/root/todo_codex_upgrade_3.6.txt
+#TODO_FILE=/root/todo_codex_upgrade_3.6.txt
 export INSTALL_DIR="/usr/share/codex"
 BACKUP_INSTALL_DIR="/usr/share/codex_34"
 ETC_DIR="/etc/codex"
@@ -115,7 +115,8 @@ substitute() {
 # CodeX 3.4 to 3.6 migration
 ##############################################
 echo "Migration script from CodeX 3.4 to CodeX 3.6"
-echo
+echo "Please Make sure you read migration_from_CodeX_3.4_to_Codendi_3.6.README"
+echo "*before* running this script!"
 yn="y"
 read -p "Continue? [yn]: " yn
 if [ "$yn" = "n" ]; then
@@ -140,7 +141,7 @@ yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
     $CAT <<EOF
-This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this install
+This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
@@ -152,14 +153,6 @@ if [ "$yn" = "n" ]; then
     echo "Bye now!"
     exit 1
 fi
-
-##############################################
-# Check that all command line tools we need are available
-#
-for cmd in `echo ${CMD_LIST}`
-do
-    [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
-done
 
 ##############################################
 # Check we are running on RHEL 5
@@ -187,19 +180,6 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
-
-##############################################
-# Ask for domain name and other installation parameters
-#
-sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
-if [ -z $sys_default_domain ]; then
-  read -p "CodeX Domain name: " sys_default_domain
-fi
-
-
-
-$RM -f $TODO_FILE
-todo "WHAT TO DO TO FINISH THE CODEX MIGRATION (see $TODO_FILE)"
 
 
 ##############################################
@@ -1353,7 +1333,7 @@ mysqlcheck -Aaos $pass_opt
 echo "Updating local.inc"
 
 # jpgraph
-$GREP -q ^\$htmlpurifier_dir  $ETC_DIR/conf/local.inc
+$GREP -q ^\$jpgraph_dir  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
   # Remove end PHP marker
   substitute '/etc/codex/conf/local.inc' '\?\>' ''
@@ -1361,6 +1341,82 @@ if [ $? -ne 0 ]; then
   $CAT <<EOF >> /etc/codex/conf/local.inc
 // 3rd Party libraries
 \$jpgraph_dir = "/usr/share/jpgraph";
+
+?>
+EOF
+fi
+
+# $sys_use_trove
+$GREP -q ^\$sys_use_trove  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+// Enable trove categorization (project tree/software map)
+// (1 to enable, 0 to disable)
+\$sys_use_trove = 1;
+
+?>
+EOF
+fi
+
+# $sys_use_snippet
+$GREP -q ^\$sys_use_snippet  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+// Enable code snippet library
+// (1 to enable, 0 to disable)
+\$sys_use_snippet = 1;
+
+?>
+EOF
+fi
+
+# Comment obsolete variables
+$GREP -q ^\$sys_cvs_host  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_cvs_host' '\/\/\$sys_cvs_host'
+fi
+$GREP -q ^\$sys_svn_host  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_svn_host' '\/\/\$sys_svn_host'
+fi
+$GREP -q ^\$sys_download_host  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_download_host' '\/\/\$sys_download_host'
+fi
+$GREP -q ^\$sys_shell_host  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_shell_host' '\/\/\$sys_shell_host'
+fi
+$GREP -q ^\$sys_users_host  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_users_host' '\/\/\$sys_users_host'
+fi
+$GREP -q ^\$sys_stay_in_ssl  $ETC_DIR/conf/local.inc
+if [ $? -eq 0 ]; then
+  substitute '/etc/codex/conf/local.inc' '\$sys_stay_in_ssl' '\/\/\$sys_stay_in_ssl'
+fi
+
+
+# database.inc
+$GREP -q ^\$sys_enablessl  $ETC_DIR/conf/database.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/database.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+
+// If set to 1 (one) connexions to DB are made through SSL.
+// Note: Mysql server must be properly configured to accept SSL
+// connexions (GRANT ... REQUIRE SSL). This is the only way to
+// guaranty that communications are encrypted.
+\$sys_enablessl="0";
+
 
 ?>
 EOF
@@ -1405,51 +1461,15 @@ $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
 
-todo "The new Graphontrackers Plugin is available, no graphical reports for your site has presently been created"
-todo "You can create your own reports for each (template) tracker via the trackers administration menu."
-todo "To use the Gannt graph with the task tracker, you will have to :"
-todo "  - rename the old 'end date' field into 'close date' or so on."
-todo "  - create an 'end date' and a 'due date' field for the task tracker"
-todo "  - create a 'progress' field, type INT and display TextField for the task tracker, with value between 0-100 (percentage of completion)" 
-todo ""
-todo "CodeX is now UTF-8. Please check that your iso-8859-1 files have been properly converted to utf-8 (site-content, themes, docman embedded files)."
-todo ""
-todo "Salomé and Instant Messaging have been installed. If you don't want to use them, please uninstall corresponding plugins through the PluginsAdministration. Or with the following statement:"
-todo "  - DELETE FROM plugin WHERE name = 'IM'"
-todo "Don't forget to remove also the rpms (openfire, salome)"
-todo ""
-todo "Groups has not been synchronized for Instant Messaging. Please go to admin > Instant Messaging and synchronize groups."
-todo ""
-todo "You should remove the sys_stay_in_ssl variable from /etc/codex/conf/local.inc: it is no longer used"
-todo ""
-todo "Check that /etc/my.cnf does not contain the line 'skip-innodb': InnoDB is now needed by Codendi (Salomé DB)"
-todo ""
-todo "Please note that project web site CGI scripts are no longer supported for security reasons. Please warn your projects if needed."
-todo ""
-todo "If you have custom themes:"
-todo "  -New icons: add.png, monitor_forum.png, monitor_thread.png, right_arrow.png, left_arrow.png, both_arrows.png, cal.png, delete.png. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images/ic"
-todo "  -New image: backstripes.gif. You may copy them from /usr/share/codex/src/www/themes/CodeXTab/images"
-todo "  -Updated CSS: Everything below the line '/* {{{ Date Picker */' in /usr/share/codex/src/www/themes/CodeXTab/css/style.css should be added to your style.css."
-todo "  -Please update your theme layout class according to the modifications done in Layout.class.php and TabbedLayout.class.php"
-todo "    > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/Layout.class.php?r1=9106&r2=7209&roottype=svn&root=codex&diff_format=l"
-todo "    > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/TabbedLayout.class.php?r1=9068&r2=7209&roottype=svn&root=codex&diff_format=l"
-todo "-----------------------------------------"
-todo "This TODO list is available in $TODO_FILE"
 
 
 # End of it
 echo "=============================================="
 echo "Migration completed succesfully!"
-$CAT $TODO_FILE
 
 exit 1;
 
-# TODO:
-# Delete or rename: /etc/httpd/conf/codex_vhosts.conf
-# Delete or rename: /etc/httpd/conf/codex_svnhosts.conf
 
 # DNS
 # Add wildcard at the end of codex_full.zone and
 # ask to cleanup all the entries.
-
-# SVN 1.5
