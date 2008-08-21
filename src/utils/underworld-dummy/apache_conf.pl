@@ -25,6 +25,10 @@ my $warn_noip=0;
 
 while(my ($unix_group_name,$group_name,$location,$server_id) = $c->fetchrow()) {
 
+  # Replace double quotes by single quotes in project name.
+  $group_name=~s/\"/\'/g;
+
+
     # Test if svn service for current project is located on this server
     if(service_available_on_server($server_is_master, $location, $server_id)) {
 	push @subversion_dir_zone,
