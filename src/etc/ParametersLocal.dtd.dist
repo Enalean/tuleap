@@ -20,6 +20,7 @@ For instance:
 <!ENTITY SYS_ORG_NAME "Your organization name here">
 etc...
 -->
+<!ENTITY SYS_PRODUCT_NAME "Codendi">
 <!ENTITY SYS_DEFAULT_DOMAIN "%sys_default_domain%">
 <!ENTITY SYS_CVS_HOST "cvs.%sys_default_domain%">
 <!ENTITY SYS_SVN_HOST "svn.%sys_default_domain%">
