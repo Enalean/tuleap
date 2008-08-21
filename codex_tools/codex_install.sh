@@ -169,7 +169,7 @@ todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
 # xinetd -> cvs
 #    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux -> SELinux 
 rpms_ok=1
-for rpm in openssh-server openssh openssh-clients openssh-askpass \
+for rpm in openssh-server openssh openssh-clients \
    httpd  apr apr-util mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
    sendmail telnet bind bind-chroot caching-nameserver ntp samba python perl-suidperl \
