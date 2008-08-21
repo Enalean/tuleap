@@ -18,8 +18,8 @@ $SEMODULE='/usr/sbin/semodule';
 $context="root:object_r:httpd_sys_content_t";
 
 if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=disabled' /etc/selinux/config`)) {
-   # SELinux not installed or disabled
-   $CHCON="echo ignored: chcon";
+   # SELinux not installed or disabled: nothing to do
+   exit;
 }
 
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
