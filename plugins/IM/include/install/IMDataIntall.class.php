@@ -105,6 +105,9 @@ class IMDataIntall {
 		$group_name=$request->get('group_name');
 		$group_id=$request->get('group_id');
 		$group_description=$request->get('group_description');
+		if(!(isset($group_description)&&$group_description!=null)){
+			$group_description='No description';
+		}
 		$group_Owner_name=$request->get('group_Owner_name');
 		$im_object=$this->_get_im_object();
 		try{
@@ -144,6 +147,9 @@ class IMDataIntall {
 		$group_name=$request->get('group_name');
 		$group_id=$request->get('group_id');
 		$group_description=$request->get('group_description');
+		if(!(isset($group_description)&&$group_description!=null)){
+			$group_description='No description';
+		}
 		$group_Owner_name=$request->get('group_Owner_name');
 		$im_object=$this->_get_im_object();
 		try{

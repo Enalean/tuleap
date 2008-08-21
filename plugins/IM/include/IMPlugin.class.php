@@ -370,6 +370,9 @@ class IMPlugin extends Plugin {
 	        $unix_group_name = $project->getUnixName();
 	        $group_name=$project->getPublicName();
 	        $group_description = $project->getDescription();
+	        if(!(isset($group_description)&&$group_description!=null)){
+				$group_description='No description';
+			}
 	        $um = UserManager::instance();
 	        //to get the current user who eventually create the project
 	        $approuver = $um->getCurrentUser();
