@@ -461,13 +461,14 @@ if [ $? -eq 0 ]; then
   $RPM -e --allmatches cadaver
 fi
 echo "Removing existing Subversion and Neon RPMs if any...."
-$RPM -e --allmatches neon 2>/dev/null
-$RPM -e --allmatches subversion 2>/dev/null
+$RPM -e --allmatches subversion-tools  2>/dev/null
 $RPM -e --allmatches subversion-devel 2>/dev/null
 $RPM -e --allmatches mod_dav_svn 2>/dev/null
-$RPM -e --allmatches subversion_perl 2>/dev/null
-$RPM -e --allmatches subversion_python 2>/dev/null
-$RPM -e --allmatches subversion_tools  2>/dev/null
+$RPM -e --allmatches subversion-perl 2>/dev/null
+$RPM -e --allmatches subversion-python 2>/dev/null
+$RPM -e --allmatches subversion 2>/dev/null
+$RPM -e --allmatches neon-devel 2>/dev/null
+$RPM -e --allmatches neon 2>/dev/null
 echo "Installing Subversion and Neon RPMs for CodeX...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
