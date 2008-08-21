@@ -97,7 +97,7 @@
     <allGroupsSQL>SELECT LOWER(unix_group_name) FROM groups WHERE status = "A"</allGroupsSQL>  
     <userGroupsSQL>SELECT LOWER(groups.unix_group_name) FROM groups, user, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.status = "A" AND user.user_name=?</userGroupsSQL>  
     <descriptionSQL>SELECT short_description FROM groups WHERE unix_group_name=?</descriptionSQL>  
-    <loadMembersSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags NOT LIKE 'A'</loadMembersSQL>  
+    <loadMembersSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags NOT LIKE 'A' AND user.status = 'A'</loadMembersSQL>  
     <loadAdminsSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags='A'</loadAdminsSQL> 
   </jdbcGroupProvider> 
 
