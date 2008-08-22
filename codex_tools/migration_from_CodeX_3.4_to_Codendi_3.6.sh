@@ -362,6 +362,20 @@ EOF
 echo "- Add Project Description custom fields. See revision #8610"
 $CAT <<EOF | $MYSQL $pass_opt codex
 
+
+INSERT INTO group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
+)
+VALUES (
+'101' , '1', 'project_desc_name:full_desc', 'project_desc_desc:full_desc',
+'10', 'text'
+);
+
 INSERT INTO group_desc (
 group_desc_id ,
 desc_required ,
@@ -386,6 +400,19 @@ desc_type
 VALUES (
 '103' , '0', 'project_desc_name:req_soft', 'project_desc_desc:req_soft',
 '30', 'text'
+);
+
+INSERT INTO group_desc (
+group_desc_id ,
+desc_required ,
+desc_name ,
+desc_description ,
+desc_rank ,
+desc_type
+)
+VALUES (
+'104' , '0', 'project_desc_name:other_comments', 'project_desc_desc:other_comments',
+'100', 'text'
 );
 
 
