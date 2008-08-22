@@ -165,7 +165,7 @@ Now, here are the step-by-step instructions for upgrading:
 
 * The new Graphontrackers Plugin is available, but no graphical reports for your 
   site has been created:
-  You can create your own reports for each (template) tracker via the trackers 
+  It is important that you create your own reports for each (template) tracker via the trackers 
   administration menu.
 
   To use the Gantt graph with the task tracker, you will have to :
@@ -184,6 +184,17 @@ Now, here are the step-by-step instructions for upgrading:
 * Salomé and Instant Messaging have been installed. If you don't want to use them, 
   please uninstall corresponding plugins through the PluginsAdministration.
   Don't forget to remove also the rpms (openfire, salome)
+
+* Salomé is available for all projects, but active only in the main template (project 100).
+  So only new projects created from the default template will instantly be able to
+  use Salomé.
+  For all other projects and templates, you need to:
+  - create a tracker from the "Salome Bugs" template
+  - activate the salomé service (in project administration -> service configuration)
+  - go in the Salomé administration menu and select the "Salomé Bugs" tracker.
+  - in the same page, you should map the existing tracker fields with salomé
+    fields (they have the same name).
+  - last, select the plugins you want to activate, and launch Salomé!
 
 * You need to synchronize your projects with the OpenFire DB to create chat rooms 
   for Instant Messaging. 
@@ -204,6 +215,8 @@ Now, here are the step-by-step instructions for upgrading:
     > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/Layout.class.php?r1=9106&r2=7209&roottype=svn&root=codex&diff_format=l
     > https://partners.xrce.xerox.com/svn/viewvc.php/dev/trunk/src/www/include/TabbedLayout.class.php?r1=9068&r2=7209&roottype=svn&root=codex&diff_format=l
 
+* You may want to regenerate the documentation at this point.
+  As "codexadm", run /usr/share/codex/src/utils/generate_doc.sh
 
 Please verify that the DNS is running properly (check e.g. project web sites or
 subversion access).

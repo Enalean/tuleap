@@ -1310,6 +1310,16 @@ $result->execute();
 $sql = "INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','$tracker_id#39',3)";
 $result = $dbh->prepare($sql);
 $result->execute();
+
+
+$sql = "UPDATE salome.CONFIG SET VALEUR = '$tracker_id' WHERE CONFIG.CLE = 'cx.trk.grp_art_id' AND CONFIG.id_projet =0000000100 AND CONFIG.id_personne =0000000000";
+$result = $dbh->prepare($sql);
+$result->execute();
+
+$sql = "UPDATE salome.CONFIG SET VALEUR = '$report_id' WHERE CONFIG.CLE = 'cx.trk.env.report_id' AND CONFIG.id_projet =0000000100 AND CONFIG.id_personne =0000000000";
+$result = $dbh->prepare($sql);
+$result->execute();
+
 EOF
 
 ##########
