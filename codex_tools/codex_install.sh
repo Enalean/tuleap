@@ -663,8 +663,6 @@ default-character-set=utf8
 default-character-set=utf8
 log-bin=codex-bin
 skip-bdb
-# file attachment can be 16M in size so take a bit of slack
-# on the mysql packet size
 set-variable = max_allowed_packet=128M
 datadir=/var/lib/mysql
 socket=/var/lib/mysql/mysql.sock

@@ -71,6 +71,12 @@ Now, here are the step-by-step instructions for upgrading:
   web browser.
   ***DON'T*** create new users or projects!
 
+*  You should also properly configure the DNS and emails. Please note that
+  bind/named configuration has changed in RHEL5, so you should not reuse your
+  existing files. The codex.zone file no longer exists, and we now use a wildcard
+  entry (look at codex_full.zone in /var/named/chroot/var/named)
+  
+
 * Restore your backed-up data. 
 
   Note: if you need to move directories and create links (e.g. because /var
@@ -110,17 +116,11 @@ Now, here are the step-by-step instructions for upgrading:
     directories.
     If you have created files in this directory, you can restore them.
 
-  * /var/named/codex.zone should be restored at the same location XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      /var/named/codex.zone  ---> /var/named/codex.zone
-    If you wish to restore other zone files, please note that they are now in a 
-    chroot jail (the codex_full.zone is now there). E.g.:
-      /var/named/root.cache.save ---> /var/named/chroot/var/named/root.cache.save
 
-
- * Restore other scripts or data (e.g. from /usr/local, /var/lib/codex/bin, /root, 
+ * Restore other scripts or data (e.g. from /usr/local, /usr/lib/codex/bin, /root, 
    /var/spool/cron, /etc/my.cnf,  etc.) if needed.
    Concerning my.cnf, please note that you should not re-add the "skip-innodb" line
-   (SalomeTMF needs InnoDB).
+   (SalomeTMF needs InnoDB), and you should keep the UTF-8 lines introduced in 3.6.
 
  * If you had a specific SSL certificate, you should also restore or regenerate it.
 
@@ -139,7 +139,7 @@ Now, here are the step-by-step instructions for upgrading:
         > exit;
   * Restore the database from CodeX 3.4
     > mysql -u codexadm -p codex < backup_dir/codex.3.4.sql
-    This might take some time! (30 min for Xerox codex server).
+    This might take some time! (30 min for the 13GB Xerox codex server DB).
   * You may also copy mysql users and privileges that may be specific to 
     your server.
 
