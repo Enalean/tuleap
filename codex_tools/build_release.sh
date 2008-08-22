@@ -1,9 +1,9 @@
 #!/bin/sh
 date
-#CX_VERSION='support/CX_3_4_SUP'
-#CX_SHORT_VERSION='3.4.sup'
-CX_VERSION='dev_server'
-CX_SHORT_VERSION='dev'
+CX_VERSION='support/CX_3_6_SUP'
+CX_SHORT_VERSION='3.6.sup'
+#CX_VERSION='dev_server'
+#CX_SHORT_VERSION='dev'
 PACKAGE_DIR=/root/CodeX_Packaging/$CX_VERSION/packages
 SOURCE_DIR=/root/CodeX_Packaging/$CX_VERSION/codex
 BUILD_DIR=/root/CodeX_Packaging/$CX_VERSION/build
@@ -59,8 +59,10 @@ $CHMOD +x $BUILD_DIR/codex_install.sh
 # Copy the migration script at the top directory
 echo "Copying the CodeX migration script..."
 cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.4_to_CodeX_3.6.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.4_to_CodeX_3.6.sh
+$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.4_to_Codendi_3.6.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.4_to_Codendi_3.6.sh
+$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.4_to_Codendi_3.6.README $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.4_to_Codendi_3.6.README
 
 # Copy the entire CodeX and nonRPMS_CodeX dir
 echo "Copying the CodeX software and nonRPMS packages... at:"
@@ -186,7 +188,7 @@ http://www.codendi.com
 - cd into the directory where the codex_install.sh script is located
 (probably /mnt/cdrom if you received the CodeX software on a CDROM)
 - For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 3.4 please read migration_from_CodeX_3.4_to_CodeX_3.6.txt.
+- For an update from 3.4 please read migration_from_CodeX_3.4_to_Codendi_3.6.README.
 - For an update from a prior release, please update to CodeX 3.4 first.
 
 -- The Codendi Team
