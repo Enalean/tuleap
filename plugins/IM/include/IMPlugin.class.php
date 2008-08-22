@@ -378,7 +378,7 @@ class IMPlugin extends Plugin {
 		foreach($group_ids as $val){
 	        $project = project_get_object($val);
 	        $unix_group_name = $project->getUnixName();
-	        $group_name=$project->getPublicName();
+	        $group_name=($project->getPublicName()?$project->getPublicName():$unix_group_name);
 	        $group_description = $project->getDescription();
 	        if(!(isset($group_description)&&$group_description!=null)){
 				$group_description='No description';

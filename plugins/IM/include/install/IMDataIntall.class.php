@@ -103,6 +103,9 @@ class IMDataIntall {
 		$request =& HTTPRequest::instance();
 		$unix_group_name=$request->get('unix_group_name');
 		$group_name=$request->get('group_name');
+		if(!(isset($group_name)&&$group_name!=null)){
+			$group_name=$unix_group_name;
+		}
 		$group_id=$request->get('group_id');
 		$group_description=$request->get('group_description');
 		if(!(isset($group_description)&&$group_description!=null)){
@@ -127,6 +130,9 @@ class IMDataIntall {
 		$request =& HTTPRequest::instance();
 		$unix_group_name=$request->get('unix_group_name');
 		$group_name=$request->get('group_name');
+		if(!(isset($group_name)&&$group_name!=null)){
+			$group_name=$unix_group_name;
+		}
 		$im_object=$this->_get_im_object();
 		try{
 			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
@@ -145,6 +151,9 @@ class IMDataIntall {
 		$request =& HTTPRequest::instance();
 		$unix_group_name=$request->get('unix_group_name');
 		$group_name=$request->get('group_name');
+		if(!(isset($group_name)&&$group_name!=null)){
+			$group_name=$unix_group_name;
+		}
 		$group_id=$request->get('group_id');
 		$group_description=$request->get('group_description');
 		if(!(isset($group_description)&&$group_description!=null)){
@@ -217,6 +226,9 @@ class IMDataIntall {
 					$project = project_get_object($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name=$project->getPublicName();
+			        if(!(isset($group_name)&&$group_name!=null)){
+						$group_name=$unix_group_name;
+					}
 			        $group_description = $project->getDescription();
 			        $grp=new Group($val);
 			        $group_id=$grp->getID();//$group_id=$val;
@@ -262,6 +274,9 @@ class IMDataIntall {
 					$project = project_get_object($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name=$project->getPublicName();
+			        if(!(isset($group_name)&&$group_name!=null)){
+						$group_name=$unix_group_name;
+					}
 			        $group_description = $project->getDescription();
 			        $grp=new Group($val);
 			        $group_id=$grp->getID();
@@ -308,6 +323,9 @@ class IMDataIntall {
 					$project = project_get_object($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name=$project->getPublicName();
+			        if(!(isset($group_name)&&$group_name!=null)){
+						$group_name=$unix_group_name;
+					}
 			        //$group_id=$val;
 			        $group_description = $project->getDescription();
 			        $grp=new Group($val);
