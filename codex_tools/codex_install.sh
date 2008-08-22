@@ -1437,6 +1437,7 @@ $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm co
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 
 # IM plugin
+build_dir /etc/codex/plugins/IM/etc codexadm codexadm 755
 # Create openfireadm MySQL user
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';

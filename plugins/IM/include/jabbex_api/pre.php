@@ -6,7 +6,7 @@ require_once(dirname(__FILE__)."/local.inc.php");
 
 define("DEBUG_ON",false); // Set this flag true to enable debug mode. ___This flag must be false in production environments___
 
-define("JABBER_SERVER_CONF_FILE",dirname(__FILE__)."/etc/jabbex_conf.xml");
+define("JABBER_SERVER_CONF_FILE",$GLOBALS['sys_custom_dir']."/plugins/IM/etc/jabbex_conf.xml"); // can we use $plugin->getPluginEtcRoot() here?
 
 $jabber_server_conf = new JabberServerConf();
 $jabber_server_conf->load_conf(JABBER_SERVER_CONF_FILE);

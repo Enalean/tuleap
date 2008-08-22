@@ -710,7 +710,7 @@ class JabbeXInstaller {
 			$conf_str = str_replace("{".$key."}",$value,$conf_str);
 		}
 
-		$target_dir = $curent_dir."/../etc/";
+		$target_dir = $GLOBALS['sys_custom_dir']."/plugins/IM/etc/"; // can we use $plugin->getPluginEtcRoot() here?
 		$file = $target_dir."jabbex_conf.xml";
 
 		if( $fp =  fopen($file,'w') ){
