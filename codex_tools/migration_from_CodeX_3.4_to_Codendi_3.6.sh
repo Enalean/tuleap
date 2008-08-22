@@ -1379,27 +1379,27 @@ fi
 # Comment obsolete variables
 $GREP -q ^\$sys_cvs_host  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_cvs_host' '\/\/\$sys_cvs_host'
+  substitute '/etc/codex/conf/local.inc' '\$sys_cvs_host' '//\$sys_cvs_host'
 fi
 $GREP -q ^\$sys_svn_host  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_svn_host' '\/\/\$sys_svn_host'
+  substitute '/etc/codex/conf/local.inc' '\$sys_svn_host' '//\$sys_svn_host'
 fi
 $GREP -q ^\$sys_download_host  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_download_host' '\/\/\$sys_download_host'
+  substitute '/etc/codex/conf/local.inc' '\$sys_download_host' '//\$sys_download_host'
 fi
 $GREP -q ^\$sys_shell_host  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_shell_host' '\/\/\$sys_shell_host'
+  substitute '/etc/codex/conf/local.inc' '\$sys_shell_host' '//\$sys_shell_host'
 fi
 $GREP -q ^\$sys_users_host  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_users_host' '\/\/\$sys_users_host'
+  substitute '/etc/codex/conf/local.inc' '\$sys_users_host' '//\$sys_users_host'
 fi
 $GREP -q ^\$sys_stay_in_ssl  $ETC_DIR/conf/local.inc
 if [ $? -eq 0 ]; then
-  substitute '/etc/codex/conf/local.inc' '\$sys_stay_in_ssl' '\/\/\$sys_stay_in_ssl'
+  substitute '/etc/codex/conf/local.inc' '\$sys_stay_in_ssl' '//\$sys_stay_in_ssl'
 fi
 
 
