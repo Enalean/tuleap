@@ -447,7 +447,7 @@ $LN -sf $newest_jre jre
 
 # -> cvs
 echo "Removing existing CVS .."
-$RPM -e cvs 2>/dev/null
+$RPM -e --allmatches cvs 2>/dev/null
 echo "Installing CVS RPMs for CodeX...."
 cd ${RPMS_DIR}/cvs
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -478,14 +478,14 @@ $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
 # -> cvsgraph 
-$RPM -e cvsgraph 2>/dev/null
+$RPM -e --allmatches cvsgraph 2>/dev/null
 echo "Installing cvsgraph RPM for CodeX...."
 cd ${RPMS_DIR}/cvsgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
 
 # -> highlight
-$RPM -e highlight 2>/dev/null
+$RPM -e --allmatches highlight 2>/dev/null
 echo "Installing highlight RPM for CodeX...."
 cd ${RPMS_DIR}/highlight
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -518,7 +518,7 @@ $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 
 # -> mailman
 echo "Removing installed mailman if any .."
-$RPM -e mailman 2>/dev/null
+$RPM -e --allmatches mailman 2>/dev/null
 echo "Installing mailman RPM for CodeX...."
 cd ${RPMS_DIR}/mailman
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -526,7 +526,7 @@ $RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
 
 # Munin
 echo "Removing installed Munin if any .."
-$RPM -e `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
+$RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
 echo "Installing Munin RPMs for CodeX...."
 cd ${RPMS_DIR}/munin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -551,6 +551,8 @@ $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
 
 # -> OpenFire
+echo "Removing installed OpenFire if any .."
+$RPM -e --allmatches openfire 2>/dev/null
 echo "Installing OpenFire Jabber Server...."
 cd ${RPMS_DIR}/openfire
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -564,6 +566,8 @@ $CP helga.jar presence.jar subscription.jar /opt/openfire/plugins
 # CodeX RPMS
 
 # -> codex-jri
+echo "Removing installed CodeX JRI if any .."
+$RPM -e --allmatches codex-jri 2>/dev/null
 echo "Installing CodeX JRI RPM...."
 cd ${RPMS_DIR}/codex-jri
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
@@ -571,12 +575,16 @@ $RPM -Uvh ${newest_rpm}/codex-jri-*noarch.rpm
 
 
 # -> codex-eclipse
+echo "Removing installed Eclipse plugin if any .."
+$RPM -e --allmatches codex-eclipse 2>/dev/null
 echo "Installing Eclipse plugin RPM...."
 cd ${RPMS_DIR}/codex-eclipse
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codex-eclipse-*noarch.rpm
 
 # -> codex-salome-tmf
+echo "Removing installed SalomeTMF plugin if any .."
+$RPM -e --allmatches codex-salome-tmf 2>/dev/null
 echo "Installing SalomeTMF plugin RPM...."
 cd ${RPMS_DIR}/codex-salome-tmf
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
