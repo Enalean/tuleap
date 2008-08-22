@@ -221,43 +221,53 @@ class IMPlugin extends Plugin {
     
     function getPresence($jid) {
         if (!isset($this->_cache_presence[$jid])) {
-            $status=$this->_get_im_object()->user_status($jid);
-            $img_src='';
-            $img_title='';
-            switch($status){
-                case "dnd":
-                    $img_title= $GLOBALS['Language']->getText('plugin_im_status','dnd');
-                    $img_src=$this->get_icon_path ().'busy.gif';
-                    break;
-                case "away";
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','away');
-                    $img_src=$this->get_icon_path ().'away.gif';
-                    break;
-                case "chat":
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','chat');
-                    $img_src=$this->get_icon_path ().'on_line.gif';
-                    break;
-                case "xa":
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','xa');
-                    $img_src=$this->get_icon_path ().'away.gif';
-                    break;
-                case "unavailable":
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','unavailable');
-                    $img_src=$this->get_icon_path ().'off_line.gif';
-                    break;
-                case "available":
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','available');
-                    $img_src=$this->get_icon_path ().'on_line.gif';
-                    break;
-                case "forbidden":
-                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','forbidden');
-                    $img_src=$this->get_icon_path ().'off_line.gif';
-                    break;
+           if($this->_get_im_object()){
+	            $status=$this->_get_im_object()->user_status($jid);
+	            $img_src='';
+	            $img_title='';
+	            
+	            $custom_msg = ($status["message"]) ? $status["message"] : '';
+	            
+	            switch($status["status"]){
+	                case "dnd":
+	                    $img_title= $GLOBALS['Language']->getText('plugin_im_status','dnd');
+	                    $img_src=$this->get_icon_path ().'busy.gif';
+	                    break;
+	                case "away";
+		                $img_title = $GLOBALS['Language']->getText('plugin_im_status','away');
+		                $img_src=$this->get_icon_path ().'away.gif';
+	                    break;
+	                case "chat":
+	                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','chat');
+	                    $img_src=$this->get_icon_path ().'on_line.gif';
+	                    break;
+	                case "xa":
+	                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','xa');
+	                    $img_src=$this->get_icon_path ().'away.gif';
+	                    break;
+	                case "unavailable":
+	                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','unavailable');
+	                    $img_src=$this->get_icon_path ().'off_line.gif';
+	                    break;
+	                case "available":
+	                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','available');
+	                    $img_src=$this->get_icon_path ().'on_line.gif';
+	                    break;
+	                case "forbidden":
+	                    $img_title = $GLOBALS['Language']->getText('plugin_im_status','forbidden');
+	                    $img_src=$this->get_icon_path ().'off_line.gif';
+	                    break;
+	            }
+	            
+	            if(!empty($custom_msg)){
+	            	$img_title = ($img_title == $custom_msg) ? $img_title : ($img_title.' - '.$custom_msg);
+	            }
+	            
+                $this->_cache_presence[$jid] = array(
+                    'icon' => $img_src,
+                    'status' => $img_title
+                );
             }
-            $this->_cache_presence[$jid] = array(
-                'icon' => $img_src,
-                'status' => $img_title
-            );
         }
         return $this->_cache_presence[$jid];
     }

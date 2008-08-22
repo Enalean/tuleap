@@ -522,12 +522,14 @@ class Jabbex implements JabbexInterface
 			return false;
 		}
 
+		$status = array('status' => NULL , 'message' => NULL);
+		
 		$valid = false;
 
 		// Check if the status is unavailable
 		foreach ($xml->attributes() as $attr => $value) {
 			if($attr == "type" && $value == "unavailable"){
-				return "unavailable";
+				return array('status' => "unavailable" , 'message' => NULL);
 			}
 			else if($attr == "type" && $value == "error"){
 				return false;
@@ -538,27 +540,38 @@ class Jabbex implements JabbexInterface
 			}
 		}
 
+		if( isset($xml->status[0]) ){
+			$status['message'] = (string) $xml->status[0];
+		}
 
 		// Check
 		switch($xml->show[0]){
 			case "dnd":
-				return "dnd";
+				$status['status'] = 'dnd';
+				return $status;
 			case "away";
-			return "away";
+				$status['status'] = "away";
+				return $status;
 			case "chat":
-				return "chat";
+				$status['status'] = "chat";
+				return $status;
 			case "xa":
-				return "xa";
+				$status['status'] = "xa";
+				return $status;
 			case "offline":
-				return "unavailable";
+				$status['status'] = "unavailable";
+				return $status;
 			case "available":
-				return "available";
+				$status['status'] = "available";
+				return $status;
 			case "forbidden":
-				return "forbidden";
+				$status['status'] = "forbidden";
+				return $status;
 		}
 
 		if($valid){
-			return "available";
+			$status['status'] = "available";
+			return $status;
 		}
 		else{
 			return false;
