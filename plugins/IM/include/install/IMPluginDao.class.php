@@ -14,7 +14,7 @@ class IMPluginDao extends DataAccessObject {
     function _get_im_object () {
 		
 		try{
-			require_once(dirname(__FILE__)."../jabbex_api/Jabbex.php");
+			require_once(dirname(__FILE__)."/../jabbex_api/Jabbex.php");
 		}catch(Exception $e){
 			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
 		  	return null;
