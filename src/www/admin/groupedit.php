@@ -45,10 +45,10 @@ if ($Update) {
 
 	$group = group_get_object($group_id,false,true);
 	
-	//***********zak added to
+	//***********zak: added to
 	// Raise an event for group update 
         $em =& EventManager::instance();
-        if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
+        if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P" || $form_status=="D" || $form_status=="I" )){
 	        $em->processEvent('project_is_suspended_or_pending', array(
 	            'group_id'       => $group_id
 	        ));
@@ -57,7 +57,8 @@ if ($Update) {
 	            'group_id'       => $group_id
 	        ));
         }else if(isset($form_status) && $form_status && $form_status=="D"){
-        	$em->processEvent('delete_project', array('group_id' => $group_id ));
+        	//$em->processEvent('delete_project', array('group_id' => $group_id ));
+        	//now the project muc room is locked (and not deleted) when the corresponding project is deleted.
         }
         
       //**************  
