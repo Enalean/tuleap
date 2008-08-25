@@ -382,6 +382,7 @@ class UserDao extends DataAccessObject {
         $cleanoffset = db_escape_int($offset);
         $cleanlimit = db_escape_int($limit);
 
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS * ';
         $sql .= 'FROM user ';
 
@@ -426,10 +427,9 @@ class UserDao extends DataAccessObject {
                 $sql .= ' GROUP BY '.$groupby;
             }
         }
-
-        
+ 
         $sql .= ' ORDER BY user.user_name, user.realname, user.status';
-        if($limit != null && $offset != null) {
+        if($cleanlimit != null && $cleanoffset != null) {
             $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
         }
         return $this->retrieve($sql);

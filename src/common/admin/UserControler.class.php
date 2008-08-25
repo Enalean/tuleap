@@ -215,6 +215,7 @@ class UserControler extends Controler {
         //valid limit
         $limit = '';
         $validLimit = new Valid_UInt('limit');
+
         if($request->valid($validLimit)) {
             $limit = $request->get('limit');
         }
@@ -355,7 +356,6 @@ class UserControler extends Controler {
         if ($this->status != '' && $this->status != 'all') {
             $filter[] = new UserStatusFilter($this->status);
         }
-
         $this->userIterator = $dao->searchUserByFilter($filter, $this->offset, $this->limit);    
      }
 
@@ -557,7 +557,90 @@ class UserControler extends Controler {
     }
 
     /**
-     * This method replace the old user name by the new one in the database
+     * check if user follow the direction to change user name
+     */
+    function checkUserNameDirection() {
+
+        if(isset($this->userparam['user_name'])) {
+            $oldusername = $this->userparam['user_name'];
+        }
+        elseif(count($this->userparam) == 1) {
+            $oldusername = $this->userparam[0]['user_name'];
+        }
+
+        //        $old = 'user4'; //ancien nom
+
+        //$new = 'user4'; //nouveau nom ils ont la meme valeur  pour mes tests car je ne fait pas le changement pour l'instant
+
+        //$group = 'Grtest4'; //nom du group
+
+        if($f = fopen('./../../../../../../../etc/group','r')) {
+
+          
+            //appelle au dao pour récupérer les groupe auquelle l'utiilsateur appartient
+            $dao = new UserDao(CodexDataAccess::instance());
+            $filter = array();
+
+            $filter[] = new UserGroupByNameFilter($oldusername);
+            $userGroup = $dao->searchUserByFilter($filter);
+
+                 
+
+            $line = file('./../../../../../../../etc/group');
+
+            $oldNamePattern = '#'.$oldusername.'#'; //pattern pour vérifié la présence de l'ancien nom dans le fichier
+
+            $newNamePattern = '#^'.$this->newUserName.'.*'.$this->newUserName.'$#'; //pattern pour vérifier la présence du user avec le group du meme nom
+
+           //  foreach ($line as $l) {
+//                 if(preg_match($oldNamePattern,$l)) {
+//                     $GLOBALS['Response']->addFeedBack('error','You must remove the old user name in file /etc/group');
+//                 }
+//                 else {
+//                     //echo 'OK plus d\'ancien nom<br />';
+//                 }
+//             }
+
+
+//             //Test if the new user name is uniaue in /etc/group
+//             $inewName = 0;
+//             foreach($line as $l) {
+//                 if(preg_match($newNamePattern, $l)) {
+//                     $inewName++;
+//                 }
+//             }
+//             if($inewName >1) {
+//                 $GLOBALS['Response']->addFeedBack('error','This user must be unique in file /etc/group');
+//             }
+
+            //test if the user belong to his group
+            foreach($line as $l) {
+
+                foreach($userGroup as $ug) {
+                    $userGroupPattern = '#^'.$ug['unix_group_name'].'.*'.$this->newUserName.'#';
+                    if(preg_match($userGroupPattern,$l)) {
+                        echo 'ce quon recupere '.$l.'<br />';
+                    }
+                    
+                    
+                }
+                if(preg_match('#[^'.$ug['unix_group_name'].'.]*'.$this->newUserName.'#',$l)) {
+                    echo $l.'<br />';
+                    $GLOBALS['Response']->addFeedBack('error','This user is contains in a group that he don\'t belong to');
+                    
+                }
+                
+                
+            }
+        }
+        else {
+            $GLOBALS['Response']->addFeedBack('error', 'This file cannot be opened');
+        }
+
+    }
+
+    /**
+     * replace the old user name by the new one in the database
      */
     function changeUserNameInDB() {
 
@@ -583,7 +666,9 @@ class UserControler extends Controler {
      */
     function changeUserName() {
 
-        $this->changeUserNameInDB();
+        $this->checkUserNameDirection();
+
+        //$this->changeUserNameInDB();
     }
 
     /**

@@ -160,6 +160,33 @@ class UserShortcutFilter implements iStatement {
     function getGroupBy() {}
 }
 
+/**
+ * init SQL request to search the groups a user belong to by his (user) name
+ *
+ */
+class UserGroupByNameFilter implements iStatement {
 
+    /**
+     * $name
+     *
+     * @type string $name
+     */
+    private $name;
+
+    function __construct($name) {
+        $cleanname = db_escape_string($name);
+        $this->name = $cleanname;
+    }
+
+    function getJoin() {
+        return 'user_group ON (user.user_id= user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
+    }
+
+    function getWhere() {
+        return '(user_name = \''.$this->name.'\')';
+    }
+
+    function getGroupBy() {}
+}
 
 ?>
