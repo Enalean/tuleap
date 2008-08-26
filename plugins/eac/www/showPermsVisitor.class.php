@@ -197,7 +197,7 @@ class showPermsVisitor
                   
                     while ($row_permissions = db_fetch_array($resultat_permissions))
                         {
-                            echo $permission;
+                        
                             $permission = $this->permissionFormatting($row_permissions['permission_type']);
                             echo $item."".$this->sep."".$ugrp['name']."".$this->sep."".$permission."".PHP_EOL;
                         }

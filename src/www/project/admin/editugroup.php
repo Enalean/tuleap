@@ -225,22 +225,8 @@ if (($func=='edit')||($func=='do_create')) {
                 if ($results) {
 		    
                     echo '<TD>'.$results.'</TD>';
-		    $em2 =& EventManager::instance();
-                    $em2->processEvent('permissions_ugroup_properties', array(
-                    'permission_type' => $row['permission_type'],
-                    'object_id'       => $row['object_id'],
-                    'group_id'        => $group_id,
-                    'results'         => &$results
-                ));
 		   
                 } else {
-		    $em2 =& EventManager::instance();
-                    $em2->processEvent('permissions_ugroup_properties', array(
-                    'permission_type' => $row['permission_type'],
-                    'object_id'       => $row['object_id'],
-                    'group_id'        => $group_id,
-                    'results'         => &$results
-                ));
                     echo '<TD>'.$row['object_id'].'</TD>';
                 }
             }
