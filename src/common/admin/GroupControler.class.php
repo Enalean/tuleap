@@ -138,7 +138,8 @@ class GroupControler extends Controler
                                                      $this->_status, 
                                                      $this->_state, 
                                                      $this->_type);
-        $groupSearchDisplay->display();       
+       
+        $groupSearchDisplay->display();
     }
 
     /**
@@ -212,6 +213,8 @@ class GroupControler extends Controler
         } else {
             $this->_limit = 50;
         }
+
+        echo "limit dans la methode setLimit = $this->_limit <br \>\n";
     }
 
     /**
@@ -260,8 +263,8 @@ class GroupControler extends Controler
             $this->_name = explode(',', $this->_name);
             $this->_name = $this->_name[0];
 
-            if ( preg_match('#^.*\((.*)\)$#', $this->name, $matches)) {
-                $this->name = $matches[1];
+            if ( preg_match('#^.*\((.*)\)$#', $this->_name, $matches)) {
+                $this->_name = $matches[1];
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', 
@@ -295,20 +298,20 @@ class GroupControler extends Controler
         $validType->addRule(new Rule_WhiteList($typeWhiteList));
 
         if ($request->valid($validType)) {
-            $this->type = $request->get('group_type_search');
+            $this->_type = $request->get('group_type_search');
         } else {
             $GLOBALS['Response']->addFeedback('error', 
                                               $GLOBALS['Language']->getText('admin_group_controler', 'wrong_type'));
         }
 
         if ($this->_shortcut != '') {
-                $filter[] = new GroupShortcutFilter($this->_shortcut);        
+                $filter[] = new GroupShortcutFilter($this->_shortcut);
         }
-        if ($this->name != '') {
-                $filter[] = new GroupNameFilter($this->name);
+        if ($this->_name != '') {
+                $filter[] = new GroupNameFilter($this->_name);
         }
-        if ($this->_status != '' && $this->status != 'all') {
-            $filter[] = new GroupStatusFilter($this->status);
+        if ($this->_status != '' && $this->_status != 'all') {
+            $filter[] = new GroupStatusFilter($this->_status);
         }
         if ($this->_state != '' && $this->_state != 'any') {
             $filter[] = new GroupStateFilter($this->_state);
@@ -316,6 +319,10 @@ class GroupControler extends Controler
         if ($this->_type != '' && $this->_type != 'any') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
+        echo "offset = $this->_offset <br \>\n";
+        echo "limit = $this->_limit <br \>\n";
+        echo "filter dans maingroupiterator = $filter";
+        var_dump($filter);
         $this->_mainGroupIterator = $dao->searchGroupByFilter($filter, 
                                                               $this->_offset, 
                                                               $this->_limit);
@@ -363,12 +370,12 @@ class GroupControler extends Controler
         $validGroupName = new Valid_String('group_name_search');
 
         if ($request->valid($validGroupName)) {
-            $this->name = $request->get('group_name_search');
-            $this->name = explode(',', $this->name);
-            $this->name = $this->name[0];
+            $this->_name = $request->get('group_name_search');
+            $this->_name = explode(',', $this->_name);
+            $this->_name = $this->_name[0];
 
-            if ( preg_match('#^.*\((.*)\)$#', $this->name, $matches)) {
-                $this->name = $matches[1];
+            if ( preg_match('#^.*\((.*)\)$#', $this->_name, $matches)) {
+                $this->_name = $matches[1];
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', 
@@ -380,7 +387,7 @@ class GroupControler extends Controler
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
 
         if ($request->valid($validStatus)) {
-            $this->status = $request->get('group_status_search');                
+            $this->_status = $request->get('group_status_search');                
         } else {
             $GLOBALS['Response']->addFeedback('error', 
                                               $GLOBALS['Language']->getText('admin_group_controler', 'wrong_status'));
@@ -411,19 +418,21 @@ class GroupControler extends Controler
         if ($this->_shortcut != '') {
                 $filter[] = new GroupShortcutFilter($this->_shortcut);
         }
-        if ($this->name != '') {
-            $filter[] = new GroupNameFilter($this->name);
+        if ($this->_name != '') {
+            $filter[] = new GroupNameFilter($this->_name);
         }
         if ($this->_status != '' && $this->_status != 'all') {
             $filter[] = new GroupStatusFilter($this->_status);
         }
         if ($this->_state != '' && $this->_state != 'any') {
-            $filter[] = new GroupStateFilter($this->state);
+            $filter[] = new GroupStateFilter($this->_state);
         }
         if ($this->_type != '' && $this->_type != 'any') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
+        var_dump($filter);
         $this->_adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
+        var_dump($this->_adminEmailIterator);
     }
 
     /**
