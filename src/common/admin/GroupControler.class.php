@@ -213,8 +213,6 @@ class GroupControler extends Controler
         } else {
             $this->_limit = 50;
         }
-
-        echo "limit dans la methode setLimit = $this->_limit <br \>\n";
     }
 
     /**
@@ -319,10 +317,6 @@ class GroupControler extends Controler
         if ($this->_type != '' && $this->_type != 'any') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
-        echo "offset = $this->_offset <br \>\n";
-        echo "limit = $this->_limit <br \>\n";
-        echo "filter dans maingroupiterator = $filter";
-        var_dump($filter);
         $this->_mainGroupIterator = $dao->searchGroupByFilter($filter, 
                                                               $this->_offset, 
                                                               $this->_limit);
@@ -430,9 +424,8 @@ class GroupControler extends Controler
         if ($this->_type != '' && $this->_type != 'any') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
-        var_dump($filter);
+
         $this->_adminEmailIterator = $dao->searchAdminEmailByFilter($filter);        
-        var_dump($this->_adminEmailIterator);
     }
 
     /**

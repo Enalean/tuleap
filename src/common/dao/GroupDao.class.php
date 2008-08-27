@@ -111,7 +111,6 @@ class GroupDao extends DataAccessObject {
         if($cleanoffset != null && $cleanlimit != null) {
             $sql .= ' LIMIT '.$cleanoffset.', '.$cleanlimit;
         }
-
         return $this->retrieve($sql);
     }
 
@@ -128,7 +127,7 @@ class GroupDao extends DataAccessObject {
                ' WHERE admin_flags = \'A\'';
 
         if (!empty($ca)) {
-            echo 'coucou';
+
             $where = null;
             $groupby = null;
 
@@ -151,7 +150,6 @@ class GroupDao extends DataAccessObject {
             $sql .= ' ORDER BY groups.group_id,groups.group_name';
             
         }
-        echo "sql = $sql <br />";
         return $this->retrieve($sql);
      }
 
