@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
@@ -48,13 +47,6 @@ class GroupControler extends Controler
      * @type Iterator $_adminEmailIterator
      */
     private $_adminEmailIterator;
-
-    /**
-     * $_groupArray
-     *
-     * @type mixed $_groupArray
-     */
-    //    private $_groupArray;
 
     /** 
      * $_limit
