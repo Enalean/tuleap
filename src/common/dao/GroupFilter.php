@@ -23,110 +23,311 @@
  * 
  */
 
-require_once('StatementInterface.php');
+require_once 'StatementInterface.php';
 
-class GroupNameFilter implements iStatement {
+/**
+ * return SQL statements to search group by name or unix group name
+ */
+class GroupNameFilter implements iStatement
+{
+    /**
+     * $_name
+     *
+     * @type string $_name
+     */
+    private $_name;
 
-    private $name;
-
-    function __construct($name) {
-        $this->name = $name;
+    /**
+     * constructor
+     *
+     * @param string $name a string that matches with a part of group name or unix group name
+     */
+    function __construct($name)
+    {
+        $this->_name = $name;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(group_name LIKE \'%'.$this->name.'%\' OR unix_group_name LIKE \'%'.$this->name.'%\')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(group_name LIKE \'%'.$this->_name.'%\' OR unix_group_name LIKE \'%'.$this->_name.'%\')';
+    }
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
+/**
+ * return SQL statements to search group by state
+ */
+class GroupStateFilter implements iStatement
+{
+    /**
+     * $_state
+     *
+     * @type string $_state
+     */
+    private $_state;
 
-class GroupStateFilter implements iStatement {
-
-    private $state;
-
-    function __construct($state) {
-        $this->state = $state;
+    /**
+     * constructor
+     *
+     * @param int $state an int that matches with group state
+     */
+    function __construct($state)
+    {
+        $this->_state = $state;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(is_public ='.$this->state.')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(is_public ='.$this->_state.')';
+    }
+
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
-class GroupTypeFilter implements iStatement {
+/**
+ * return SQL statements to search group by type
+ */
+class GroupTypeFilter implements iStatement
+{
+    /**
+     * $_type
+     *
+     * @type string $_type
+     */
+    private $_type;
 
-    private $type;
-
-    function __construct($type) {
-        $this->type = $type;
+     /**
+     * constructor
+     *
+     * @param int $type an int that matches with group type
+     */
+    function __construct($type)
+    {
+        $this->_type = $type;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(type = '.$this->type.')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(type = '.$this->_type.')';
+    }
+
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
+/**
+ * return SQL statements to search group by status
+ */
+class GroupStatusFilter implements iStatement
+{
+    /**
+     * $_status
+     *
+     * @type string $_status
+     */
+    private $_status;
 
-class GroupStatusFilter implements iStatement {
-
-    private $status;
-
-    function __construct($status) {
-        $this->status = $status;
+     /**
+     * constructor
+     *
+     * @param string $status a string that matches with group status
+     */
+    function __construct($status)
+    {
+        $this->_status = $status;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return 'groups.status = \''.$this->status.'\'';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return 'groups.status = \''.$this->_status.'\'';
+    }
+
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
-class GroupShortcutFilter implements iStatement {
+/**
+ * return SQL statements to search group by name shortcut
+ */
+class GroupShortcutFilter implements iStatement
+{
+    /**
+     * $_shortcut
+     *
+     * @type string $_shortcut
+     */
+    private $_shortcut;
 
-    private $shortcut;
-
-    function __construct($shortcut) {
-        $this->shortcut = $shortcut;
+     /**
+     * constructor
+     *
+     * @param string $shortcut a string that matches with group first letter
+     */
+    function __construct($shortcut)
+    {
+        $this->_shortcut = $shortcut;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(group_name LIKE \''.$this->shortcut.'%\')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere() 
+    {
+        return '(group_name LIKE \''.$this->_shortcut.'%\')';
+    }
+
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
-class GroupIdFilter implements iStatement {
+/**
+ * return SQL statements to search group by group id
+ */
+class GroupIdFilter implements iStatement
+{
+    /**
+     * $_groupid
+     *
+     * @type string $_groupid
+     */
+    private $_groupid;
 
-    private $groupid;
-
-    function __construct($groupid) {
-        $this->groupid = $groupid;
+     /**
+     * constructor
+     *
+     * @param int $groupid an int that matches with group id
+     */
+    function __construct($groupid)
+    {
+        $this->_groupid = $groupid;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(groups.group_id = '.$this->groupid.')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(groups.group_id = '.$this->_groupid.')';
+    }
+
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy() 
+    {
+    }
 }
 
 ?>
