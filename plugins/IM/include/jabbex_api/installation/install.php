@@ -74,6 +74,7 @@ class JabbeXInstaller {
 						"*\n".
 						"*	Optional arguments for automatic mode:\n".
 						"*		-dir	Openfire's installation directory (default: /opt/openfire).\n".
+						"*		-etcdir	Openfire's installation directory (default: /etc/codex/plugins/IM/etc/).\n".
 						"*		-ap		Unsecure web admin port (default: 9090).\n".
 						"*		-aps	Secure web admin port (default: 9091).\n".
 						"*		-odd	Openfire's DB driver (default: com.mysql.jdbc.Driver).\n".
@@ -312,11 +313,12 @@ class JabbeXInstaller {
 			$this->mode = "automatic";
 			$arguments = array("-orp","-uod","-pod","-ucd","-pcd","-odb","-cdb"
 			,"-ouri","-gjx","-ujx","-pjx","-pmuc");  // Requested arguments.
-			$opt_arguments = array("-dir","-ap","-aps","-odd","-cdd"
+			$opt_arguments = array("-dir","-etcdir","-ap","-aps","-odd","-cdd"
 			,"-op","-hbot","-hsv","-shrg");  // Optional arguments.
 
 			$default_val = array(
 						"-dir" => "/opt/openfire",
+						"-etcdir" => "/etc/codex/plugins/IM/etc/",
 						"-ap" => "9090",
 						"-aps" => "9091",
 						"-odd" => "com.mysql.jdbc.Driver",
@@ -362,6 +364,7 @@ class JabbeXInstaller {
 						// Name the arguments with more meaningful names
 						// *********************************************
 						$mapping = array(	"-dir" => "OPENFIRE_DIR",
+						"-etcdir" => "ETC_DIR",
 						"-orp" => "ROOT_OF_DB",
 						"-uod" => "USER_OF_DB",
 						"-pod" => "PWD_OF_DB",
@@ -710,8 +713,8 @@ class JabbeXInstaller {
 			$conf_str = str_replace("{".$key."}",$value,$conf_str);
 		}
 
-		$target_dir = $GLOBALS['sys_custom_dir']."/plugins/IM/etc/"; // can we use $plugin->getPluginEtcRoot() here?
-		$file = $target_dir."jabbex_conf.xml";
+		$target_dir =  $this->arguments["ETC_DIR"];
+		$file = $target_dir."/jabbex_conf.xml";
 
 		if( $fp =  fopen($file,'w') ){
 			if( fwrite($fp,$conf_str) ){
