@@ -295,7 +295,7 @@ class IMPlugin extends Plugin {
 	 * because we want to be able to go back to Active status (that will unlock the MUC Room).
 	 * 
 	 */
-	function projectIsDeleted($param) {
+	function projectIsDeleted($params) {
 		$this->im_lock_muc_room($params);
 	}
 	
