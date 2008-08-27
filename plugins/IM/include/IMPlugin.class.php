@@ -48,7 +48,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
         $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
         $this->_addHook('project_is_active', 'im_process_unlock_muc_room', false);//unlock_muc_room
-        $this->_addHook('delete_project', 'im_process_delete_muc_room', false);
+        $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         $this->_addHook('project_admin_remove_user', 'im_process_muc_remove_member', false);//im_process_muc_remove_member
         $this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
         $this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
@@ -286,6 +286,18 @@ class IMPlugin extends Plugin {
 	$info_register_new_user  =	'<br>'.$params['realname']."( ".$params['loginname']. ") "."[ ".$params['email']." ]<br>";
 	echo $info_register_new_user;  
 	} 
+	
+	/**
+	 * This function is called when the event "project_is_deleted" is called
+	 * @param array $param : contains the group_id ($params['group_id'])
+	 * 
+	 * Before, we deleted the MUC room, but now, we only lock it,
+	 * because we want to be able to go back to Active status (that will unlock the MUC Room).
+	 * 
+	 */
+	function projectIsDeleted($params) {
+		$this->im_lock_muc_room($params);
+	}
 	
 	/**
 	 * This function allow to create muc room and shared group when the corresponding project(s)

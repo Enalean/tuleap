@@ -45,8 +45,7 @@ if ($Update) {
 
 	$group = group_get_object($group_id,false,true);
 	
-	//***********zak added to
-	// Raise an event for group update 
+	// ZD: Raise an event for group update 
         $em =& EventManager::instance();
         if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
 	        $em->processEvent('project_is_suspended_or_pending', array(
@@ -57,10 +56,8 @@ if ($Update) {
 	            'group_id'       => $group_id
 	        ));
         }else if(isset($form_status) && $form_status && $form_status=="D"){
-        	$em->processEvent('delete_project', array('group_id' => $group_id ));
+        	$em->processEvent('project_is_deleted', array('group_id' => $group_id ));
         }
-        
-      //**************  
 
 }
 

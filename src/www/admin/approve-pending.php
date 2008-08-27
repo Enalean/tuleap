@@ -81,7 +81,7 @@ if ($action=='activate') {
 	db_query("UPDATE groups SET status='D'"
 		. " WHERE group_id='$group_id'");
 		
-		$em->processEvent('delete_project', array('group_id' => $group_id));
+		$em->processEvent('project_is_deleted', array('group_id' => $group_id));
 }
 
 
