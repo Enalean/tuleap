@@ -27,13 +27,25 @@
  * AdminDisplay
  *
  */
-class AdminDisplay {
-
-    function __construct() {
+class AdminDisplay
+{
+    /**
+     * Constructor
+     */
+    function __construct()
+    {
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
     }
 
-    function displayHeader($header) {
+    /**
+     * display header
+     *
+     * @param string $header the header of the page
+     *
+     * @return void
+     */
+    function displayHeader($header)
+    {
         print '<p>'.$header.'</p>';       
     }
 }
