@@ -23,16 +23,41 @@
  * 
  */
 
-
-
-interface iStatement {
-    
+/**
+ * iStatement
+ * this interface is implemented by filters
+ * (user filter and group filter)
+ * It defines a pattern to build SQL requests
+ */
+interface IStatement
+{
+    /**
+     * getJoin()
+     * The "JOIN" statement
+     * Must be implemented
+     *
+     * @return void
+     */
     public function getJoin();
-    
+
+    /**
+     * getWhere()
+     * The "WHERE" statement
+     * Must be implemented
+     *
+     * @return void
+     */
     public function getWhere();
 
+    /**
+     * getGroupBy()
+     * The "GROUP By" statement
+     * Must be implemented
+     *
+     * @return void
+     */
     public function getGroupBy();
-    
-  }
+
+}
 
 ?>

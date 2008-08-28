@@ -27,7 +27,7 @@ require_once 'StatementInterface.php';
 /**
  * init SQL request to search user by name
  */
-class UserNameFilter implements iStatement
+class UserNameFilter implements IStatement
 {
     /**
      * $_name
@@ -78,7 +78,7 @@ class UserNameFilter implements iStatement
 /**
  * init SQL request to search user by group name
  */
-class UserGroupFilter implements iStatement
+class UserGroupFilter implements IStatement
 {
     /**
      * $_group
@@ -132,7 +132,7 @@ class UserGroupFilter implements iStatement
 /**
  * init SQL request to search user by status
  */
-class UserStatusFilter implements iStatement
+class UserStatusFilter implements IStatement
 {
     /**
      * $_status
@@ -185,7 +185,7 @@ class UserStatusFilter implements iStatement
  * init SQL request to search user by shortcut
  *
  */
-class UserShortcutFilter implements iStatement
+class UserShortcutFilter implements IStatement
 {
     /**
      * $_shortcut
@@ -239,7 +239,7 @@ class UserShortcutFilter implements iStatement
  * I call this method FullUserNameFilter because the whole name
  * has to match with the parameter
  */
-class FullUserNameFilter implements iStatement
+class FullUserNameFilter implements IStatement
 {
 
     /**
@@ -293,7 +293,7 @@ class FullUserNameFilter implements iStatement
  * init SQL request to search the groups a user belong to by his (user) name
  *
  */
-class UserGroupByNameFilter implements iStatement
+class UserGroupByNameFilter implements IStatement
 {
     /**
      * $_name

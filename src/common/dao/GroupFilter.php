@@ -28,7 +28,7 @@ require_once 'StatementInterface.php';
 /**
  * return SQL statements to search group by name or unix group name
  */
-class GroupNameFilter implements iStatement
+class GroupNameFilter implements IStatement
 {
     /**
      * $_name
@@ -78,7 +78,7 @@ class GroupNameFilter implements iStatement
 /**
  * return SQL statements to search group by state
  */
-class GroupStateFilter implements iStatement
+class GroupStateFilter implements IStatement
 {
     /**
      * $_state
@@ -129,7 +129,7 @@ class GroupStateFilter implements iStatement
 /**
  * return SQL statements to search group by type
  */
-class GroupTypeFilter implements iStatement
+class GroupTypeFilter implements IStatement
 {
     /**
      * $_type
@@ -180,7 +180,7 @@ class GroupTypeFilter implements iStatement
 /**
  * return SQL statements to search group by status
  */
-class GroupStatusFilter implements iStatement
+class GroupStatusFilter implements IStatement
 {
     /**
      * $_status
@@ -231,7 +231,7 @@ class GroupStatusFilter implements iStatement
 /**
  * return SQL statements to search group by name shortcut
  */
-class GroupShortcutFilter implements iStatement
+class GroupShortcutFilter implements IStatement
 {
     /**
      * $_shortcut
@@ -282,7 +282,7 @@ class GroupShortcutFilter implements iStatement
 /**
  * return SQL statements to search group by group id
  */
-class GroupIdFilter implements iStatement
+class GroupIdFilter implements IStatement
 {
     /**
      * $_groupid
