@@ -102,7 +102,7 @@ class UserSearchDisplay extends AdminSearchDisplay
      * @type string $group
      */
     private $_group;
-    
+
     /**
      * $status
      *
@@ -127,13 +127,13 @@ class UserSearchDisplay extends AdminSearchDisplay
     {
         parent::__construct(); 
         $this->_userIterator = $userIterator;
-        $this->_offset = $offset;
-        $this->_nbrows = $nbrows;
-        $this->_nbuser = $nbuser;
-        $this->_shortcut = $shortcut;
-        $this->_username = $username;
-        $this->_group = $group;
-        $this->_status = $status;
+        $this->_offset       = $offset;
+        $this->_nbrows       = $nbrows;
+        $this->_nbuser       = $nbuser;
+        $this->_shortcut     = $shortcut;
+        $this->_username     = $username;
+        $this->_group        = $group;
+        $this->_status       = $status;
     }
 
     /**
@@ -184,60 +184,74 @@ class UserSearchDisplay extends AdminSearchDisplay
         session_require(array('group'=>'1','admin_flas'=>'A'));
 
         $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_userlist', 'title')));
+
         parent::displayHeader($GLOBALS['Language']->getText('admin_userlist', 'user_list').': <b>'.$GLOBALS['Language']->getText('admin_userlist', 'all_groups').'</b>');
 
-        
+
         ?>
             <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
                  <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
                  <script type="text/javascript" src="/scripts/formcontrol.js"></script>
                  <script type="text/javascript">
-                 
-                 
+
+
                  Event.observe(window, 'load', function () {
                          var ori = $('user_name');
                          if (ori) {
-                             var update = Builder.node('div', {id:'user_name_choices', style:'background:white', class:'autocompletion'});
+                             var update = Builder.node('div', 
+                                                       {id:'user_name_choices', 
+                                                               style:'background:white', 
+                                                               class:'autocompletion'});
                              Element.hide(update);
                              ori.parentNode.appendChild(update);
-                             new Ajax.Autocompleter('user_name', update, '/user/autocompletion.php', {
+                             new Ajax.Autocompleter('user_name', 
+                                                    update, 
+                                                    '/user/autocompletion.php', {
                                  tokens: ',', paramName: 'value'
                                          });
                          }
                      });
-    
-        
+
+
         Event.observe(window, 'load', function () {
                 var ori = $('user_group');
                 if (ori) {
-                    var update = Builder.node('div', {id:'user_group_choices', style:'background:white', class:'autocompletion'});
-                    
+                    var update = Builder.node('div', 
+                                              {id:'user_group_choices', 
+                                                      style:'background:white', 
+                                                      class:'autocompletion'});
+
                     Element.hide(update);
-                    
+
                     ori.parentNode.appendChild(update);
-                    new Ajax.Autocompleter('user_group', update, '/project/autocompletion.php', {
+                    new Ajax.Autocompleter('user_group', 
+                                           update, 
+                                           '/project/autocompletion.php', {
                         tokens: ',', paramName: 'value'
                                 });
                 }
             }); 
-        
-               
+
+
         </script>
-              
+
               <?php 
     }
-    
-    
+
+
     /**
-     *displaySearchFilter()
+     * displaySearchFilter()
      *
      * @return void
      */
     function displaySearchFilter()
     {
 
-        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main', 'display_user'), 'user_shortcut_search', $this->_offset, $this->_nbrows);
-        
+        parent::displaySearchFilter($GLOBALS['Language']->getText('admin_main', 'display_user'), 
+                                    'user_shortcut_search', 
+                                    $this->_offset, 
+                                    $this->_nbrows);
+
         print '<table width=100%>';
 
         print '<tr>';
@@ -246,25 +260,25 @@ class UserSearchDisplay extends AdminSearchDisplay
 
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php" method="POST">';
-        
+
         print '<input type="text" class="autocompletion" name="user_name_search" id="user_name" />';
 
         print '</td>';
 
         print '<td align="center" width=33%>';
-      
+
         print 'Search (GroupName, GroupUnixName):<br />';
         print '<input type="text" class="autocompletion" name="user_group_search" id="user_group" />';
         print '<input type="hidden" name="user_group_search_id" id="group_id" />';
 
         print '</td>';
-        
+
         print '<td align="center" width=33%>';
-        
+
         print '<b>Status <a href="javascript:help_window(\'/help/browse_tracker_query_field.php?helpid=101%7C101%7Cstatus_id\')"><b>[?]</b></a></b><br />';
-         
+
         print '<select name="user_status_search" id="status_id">';
-        
+
         print '<option value="all">All</option>';
         print '<option value="A">'.$GLOBALS['Language']->getText('admin_userlist', 'active').'</option>';
         print '<option value="R">'.$GLOBALS['Language']->getText('admin_userlist', 'restricted').'</option>';
@@ -274,13 +288,14 @@ class UserSearchDisplay extends AdminSearchDisplay
         print '<option value="W">Validated as Restricted</option>';
         print '<option value="S">'.$GLOBALS['Language']->getText('admin_userlist', 'suspended').'</option>';
         print '</select>'; 
-        
+
         print '</td>';
 
         print '</tr>';
         print '<table>';
 
-        print '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_browse').'" name="SUBMIT"/> <input type="text" value="'.$this->_nbrows.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
+        print '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_browse').'" name="SUBMIT"/> 
+<input type="text" value="'.$this->_nbrows.'" maxlength="5" size="3" name="nbtodisplay"/> users at once.</p>';
 
         print '</form>';
 
@@ -298,10 +313,15 @@ class UserSearchDisplay extends AdminSearchDisplay
         $this->initEnd();
         $this->initMaxOffset();
 
-
         $this->link = '&user_shortcut_search='.$this->_shortcut.'&user_name_search='.$this->_username.'&user_group_search='.$this->_group.'&user_status_search='.$this->_status;
    
-        parent::displayBrowse($this->_start, $this->_end, $this->_offset, $this->_nbrows, $this->_nbuser, $this->_offsetmax, $this->link);
+        parent::displayBrowse($this->_start, 
+                              $this->_end, 
+                              $this->_offset, 
+                              $this->_nbrows, 
+                              $this->_nbuser, 
+                              $this->_offsetmax, 
+                              $this->link);
     }
 
     /**
@@ -311,9 +331,8 @@ class UserSearchDisplay extends AdminSearchDisplay
      */
     function displaySearch() 
     {
-
         $odd_even = array('boxitem', 'boxitemalt');
-        $i = 1;
+        $i        = 1;
 
         print '<table width=100% cellspacing=0 cellpadding=0 border="1" align="center">';
 
@@ -344,10 +363,11 @@ class UserSearchDisplay extends AdminSearchDisplay
             if ($u['status'] == 'A') print $GLOBALS['Language']->getText('admin_userlist', 'active');
             if ($u['status'] == 'R') print $GLOBALS['Language']->getText('admin_userlist', 'restricted');
             if ($u['status'] == 'V') print $GLOBALS['Language']->getText('admin_userlist', 'validated');
-            if ($u['status'] == 'P') print $GLOBALS['Lamguage']->getText('admin_groupedit', 'pending');
+            if ($u['status'] == 'P') print $GLOBALS['Language']->getText('admin_groupedit', 'pending');
             if ($u['status'] == 'D') print $GLOBALS['Language']->getText('admin_userlist', 'deleted');
             if ($u['status'] == 'W') print $GLOBALS['Language']->getText('admin_userlist', 'restricted');
-            if ($u['status'] == 'S') print $GLOBALS['Language']->getText('admin_userlist', 'suspended');   
+            if ($u['status'] == 'S') print $GLOBALS['Language']->getText('admin_userlist', 'suspended');
+
             print '</td>
 <td><a href="'.$u['email'].'">'.$u['email'].'</a></td></tr>';
         }
