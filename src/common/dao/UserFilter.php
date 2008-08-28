@@ -22,60 +22,109 @@
  *
  * 
  */
-require_once('StatementInterface.php');
+require_once 'StatementInterface.php';
 
 /**
  * init SQL request to search user by name
  */
-class UserNameFilter implements iStatement {
+class UserNameFilter implements iStatement
+{
+    /**
+     * $_name
+     *
+     * @type string $_name
+     */
+    private $_name;
 
     /**
-     * $name
+     * Constructor
      *
-     * @type string $name
+     * @param string $name a part of a user name
      */
-    private $name;
-
-    function __construct($name) {
-        $cleanname = db_escape_string($name);
-        $this->name = $cleanname;
+    function __construct($name)
+    {
+        $cleanname   = db_escape_string($name);
+        $this->_name = $cleanname;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(user_name LIKE \'%'.$this->name.'%\' OR realname LIKE \'%'.$this->name.'%\')';
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
+    }
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(user_name LIKE \'%'.$this->_name.'%\' OR realname LIKE \'%'.$this->_name.'%\')';
     }
 
-    function getGroupBy() {}
+    /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
 /**
  * init SQL request to search user by group name
  */
-class UserGroupFilter implements iStatement {
-
+class UserGroupFilter implements iStatement
+{
     /**
-     * $group
+     * $_group
      *
-     * @type string $group
+     * @type string $_group
      */
-    private $group;
+    private $_group;
 
-    function __construct($group) {
-        $cleangroup = db_escape_string($group);
-        $this->group = $cleangroup;
+     /**
+     * Constructor
+     *
+     * @param string $group a part of a group name
+     */
+    function __construct($group)
+    {
+        $cleangroup   = db_escape_string($group);
+        $this->_group = $cleangroup;
     }
 
-    function getJoin() {
+    /**
+     * the "JOIN" statements
+     * 
+     * @return string
+     */
+    function getJoin()
+    {
         return  'user_group ON (user.user_id = user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
     }
 
-    function getWhere() {
-        return '(groups.group_name LIKE \'%'.$this->group.'%\' OR groups.unix_group_name LIKE \'%'.$this->group.'%\')';
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(groups.group_name LIKE \'%'.$this->_group.'%\' OR groups.unix_group_name LIKE \'%'.$this->_group.'%\')';
     }
 
-    function getGroupBy() {
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
         return 'user.user_id';
     }
 }
@@ -83,110 +132,215 @@ class UserGroupFilter implements iStatement {
 /**
  * init SQL request to search user by status
  */
-class UserStatusFilter implements iStatement {
+class UserStatusFilter implements iStatement
+{
+    /**
+     * $_status
+     *
+     * @type string $_status
+     */
+    private $_status;
+
+     /**
+     * Constructor
+     *
+     * @param string $status the user status
+     */
+    function __construct($status)
+    {
+        $cleanstatus   = db_escape_string($status);
+        $this->_status = $cleanstatus;
+    }
+
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
+    }
 
     /**
-     * $status
-     *
-     * @type string $status
+     * the "WHERE" statements
+     * 
+     * @return string
      */
-    private $status;
-
-    function __construct($status) {
-        $cleanstatus = db_escape_string($status);
-        $this->status = $cleanstatus;
+    function getWhere()
+    {
+        return 'user.status = \''.$this->_status.'\'';
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return 'user.status = \''.$this->status.'\'';
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
     }
-
-    function getGroupBy() {}
 }
 
 /**
  * init SQL request to search user by shortcut
  *
  */
-class UserShortcutFilter implements iStatement {
+class UserShortcutFilter implements iStatement
+{
+    /**
+     * $_shortcut
+     *
+     * @type string $_shortcut
+     */
+    private $_shortcut;
+
+     /**
+     * Constructor
+     *
+     * @param string $shortcut the user shortcut
+     */
+    function __construct($shortcut)
+    {
+        $cleanshortcut   = db_escape_string($shortcut);
+        $this->_shortcut = $cleanshortcut;
+    }
+
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
+    }
 
     /**
-     * $shortcut
-     *
-     * @type string $shortcut
+     * the "WHERE" statements
+     * 
+     * @return string
      */
-    private $shortcut;
-
-    function __construct($shortcut) {
-        $cleanshortcut = db_escape_string($shortcut);
-        $this->shortcut = $cleanshortcut;
+    function getWhere()
+    {
+        return '(user_name LIKE \''.$this->_shortcut.'%\')';
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(user_name LIKE \''.$this->shortcut.'%\')';
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
     }
-
-    function getGroupBy() {}
 }
 
 /**
  * init SQL request to search a user by his user_name
- * I call this method FullUserNameFilter because the whole name has to match with the parameter
+ * I call this method FullUserNameFilter because the whole name
+ * has to match with the parameter
  */
- class FullUserNameFilter implements iStatement {
+class FullUserNameFilter implements iStatement
+{
 
     /**
-     * $name
+     * $_name
      *
-     * @type string $name
+     * @type string $_name
      */
-    private $name;
+    private $_name;
 
-    function __construct($name) {
-        $cleanname = db_escape_string($name);
-        $this->name = $cleanname;
+     /**
+     * Constructor
+     *
+     * @param string $name the user name
+     */
+    function __construct($name)
+    {
+        $cleanname   = db_escape_string($name);
+        $this->_name = $cleanname;
     }
 
-    function getJoin() {}
-
-    function getWhere() {
-        return '(user_name = \''.$this->name.'\')';
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
     }
 
-    function getGroupBy() {}
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(user_name = \''.$this->_name.'\')';
+    }
+
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
 /**
  * init SQL request to search the groups a user belong to by his (user) name
  *
  */
-class UserGroupByNameFilter implements iStatement {
-
+class UserGroupByNameFilter implements iStatement
+{
     /**
-     * $name
+     * $_name
      *
-     * @type string $name
+     * @type string $_name
      */
-    private $name;
+    private $_name;
 
-    function __construct($name) {
-        $cleanname = db_escape_string($name);
-        $this->name = $cleanname;
+     /**
+     * Constructor
+     *
+     * @param string $name the user name
+     */
+    function __construct($name)
+    {
+        $cleanname   = db_escape_string($name);
+        $this->_name = $cleanname;
     }
 
-    function getJoin() {
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getJoin()
+    {
         return 'user_group ON (user.user_id= user_group.user_id) JOIN groups ON (user_group.group_id = groups.group_id)';
     }
 
-    function getWhere() {
-        return '(user_name = \''.$this->name.'\')';
+    /**
+     * the "WHERE" statements
+     * 
+     * @return string
+     */
+    function getWhere()
+    {
+        return '(user_name = \''.$this->_name.'\')';
     }
 
-    function getGroupBy() {}
+     /**
+     * not defined in the search
+     *
+     * @return void
+     */
+    function getGroupBy()
+    {
+    }
 }
 
 ?>
