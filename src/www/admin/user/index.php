@@ -22,7 +22,7 @@
  *
  * 
  */
-require_once('common/admin/UserControler.class.php');
+require_once 'common/admin/UserControler.class.php';
 
 $controler = new UserControler();
 $controler->process();
