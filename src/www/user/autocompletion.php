@@ -87,9 +87,9 @@ class UserAutocompletionControler
         $i = 0;
 
         foreach ($this->_userIterator as $u) {
-          
+
             //list only the 10 first results
-            if ($i >= 10){
+            if ($i >= 10) {
                 print '<li>...</li></ul>';
                 break;
             }
@@ -98,7 +98,6 @@ class UserAutocompletionControler
 
             print '</li>';   
 
-           
             $i++;
         }
         print '</ul>';

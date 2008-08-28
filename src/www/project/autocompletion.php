@@ -87,7 +87,7 @@ class GroupAutocompletionControler
         foreach ($this->_groupIterator as $g) {
 
             //list only the 10 first results
-            if ($i >= 10){
+            if ($i >= 10) {
                 print '<li>...</li></ul>';
                 break;
             }
