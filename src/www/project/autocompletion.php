@@ -82,11 +82,21 @@ class GroupAutocompletionControler
     {
         print '<ul class="autocompletion">'; 
 
+        $i = 0;
+
         foreach ($this->_groupIterator as $g) {
+
+            //list only the 10 first results
+            if ($i >= 10){
+                print '<li>...</li></ul>';
+                break;
+            }
 
             print '<li class="autocompletion"><div>'.$g['group_id'].' ('.$g['unix_group_name'].')<span class="informal"> '.$g['group_name'].'</span></div>';
 
             print '</li>';   
+
+            $i++;
         }
         print '</ul>';
     }
