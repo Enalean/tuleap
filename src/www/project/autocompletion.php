@@ -22,36 +22,37 @@
  *
  * 
  */
-require_once('pre.php');
-require_once('common/dao/GroupDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once 'pre.php';
+require_once 'common/dao/GroupDao.class.php';
+require_once 'common/dao/CodexDataAccess.class.php';
 
 /**
  * GroupAutocompletionControler()
  */
-class GroupAutocompletionControler {
-
+class GroupAutocompletionControler
+{
     /**
-     * $groupIterator
+     * $_groupIterator
      *
-     * @type iterator $groupIterator
+     * @type iterator $_groupIterator
      */
-    private $groupIterator;   
+    private $_groupIterator;   
 
 
     /**
      * constructor
      */    
-    function __construct() {
-       
+    function __construct()
+    {  
     }
 
     /**
      * initGroupIterator()
      *
+     * @return void
      */
-    function initGroupIterator() {
-
+    function initGroupIterator()
+    {
         $dao = new GroupDao(CodexDataAccess::instance());
 
         $filter = array();
@@ -61,40 +62,43 @@ class GroupAutocompletionControler {
         $validGroupName = new Valid_String('value');
 
         if ($request->valid($validGroupName)) {
-            
-            $name = $request->get('value');
+
+            $name     = $request->get('value');
             $filter[] = new GroupNameFilter($name);
-        }
-        else {
+
+        } else {
             $GLOBALS['Response']->addFeedback('error', 'Your data are not valid');
         }
-        
-        $this->groupIterator = $dao->searchGroupByFilter($filter, 0, 10);
+
+        $this->_groupIterator = $dao->searchGroupByFilter($filter, 0, 10);
     }
 
     /**
      * display()
      *
+     * @return void
      */
-    function display() {
-        
+    function display()
+    {
         print '<ul class="autocompletion">'; 
-        
-        foreach($this->groupIterator as $g) {
+
+        foreach ($this->_groupIterator as $g) {
 
             print '<li class="autocompletion"><div>'.$g['group_id'].' ('.$g['unix_group_name'].')<span class="informal"> '.$g['group_name'].'</span></div>';
-            
+
             print '</li>';   
         }
         print '</ul>';
     }
-  
+
 
     /**
      * request()
+     *
+     * @return void
      */
-    function request() {
-
+    function request()
+    {
         $this->initGroupIterator();
         $this->display();
     }
