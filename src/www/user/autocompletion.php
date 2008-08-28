@@ -84,11 +84,22 @@ class UserAutocompletionControler
     {
         print '<ul class="autocompletion">'; 
 
+        $i = 0;
+
         foreach ($this->_userIterator as $u) {
+          
+            //list only the 10 first results
+            if ($i >= 10){
+                print '<li>...</li></ul>';
+                break;
+            }
 
             print '<li class="autocompletion"><div><span class="informal">('.$u['user_id'].') </span>'.$u['user_name'].'<span class="informal"> '.$u['realname'].'</span></div>';
 
             print '</li>';   
+
+           
+            $i++;
         }
         print '</ul>';
     }
