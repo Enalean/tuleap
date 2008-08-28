@@ -22,95 +22,107 @@
  *
  * 
  */
-require_once('account.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('common/admin/view/AdminEditDisplay.class.php');
+require_once 'account.php';
+require_once 'www/project/admin/ugroup_utils.php';
+require_once 'common/admin/view/AdminEditDisplay.class.php';
 
 /**
  * UserChangeNameDisplay
  *
  */
-class UserChangeNameDisplay extends AdminEditDisplay {
+class UserChangeNameDisplay extends AdminEditDisplay
+{
+    /**
+     * $_userparam an array that contains the params of a user (for the editing mode)
+     *
+     * @type mixed $_userparam
+     */
+    private $_userparam;
 
     /**
-     * $userparam an array that contains the params of a user (for the editing mode)
+     * $_groupparam
      *
-     * @type array $userparam
+     * @type mixed $_groupparam
      */
-    private $userparam;
+    private $_groupparam;
 
     /**
-     * $groupparam
+     * $_task
      *
-     * @type mixed $groupparam
+     * @type string $_task
      */
-    private $groupparam;
+    private $_task;
 
     /**
-     * $task
+     * $_newUserName
      *
-     * @type string $task
+     * @type string $_newUserName
      */
-    private $task;
+    private $_newUserName;
 
     /**
-     * $newUserName
+     * $_displayDirection
      *
-     * @type string $newUserName
+     * @type boolean $_displayDirection
      */
-    private $newUserName;
+    private $_displayDirection;
 
     /**
-     * $displayDirection
+     * Constructor
      *
-     * @type boolean $displayDirection
+     * @param mixed   $userparam        an array that contains users' information
+     * @param mixed   $groupparam       an iterator that contains groups' information
+     * @param string  $task             the action that admin do (update user, change pwd...)
+     * @param boolean $displayDirection the direction to change name are display if true
+     * @param string  $newUserName      the new user name 
      */
-    private $displayDirection;
-
-
-    function __construct($userparam, $groupparam, $task, $displayDirection, $newUserName) {
-        $this->userparam = $userparam;
-        $this->groupparam = $groupparam;
-        $this->task = $task;
-        $this->displayDirection = $displayDirection;
-        $this->newUserName = $newUserName;
+    function __construct($userparam, $groupparam, $task, $displayDirection, $newUserName)
+    {
+        $this->_userparam        = $userparam;
+        $this->_groupparam       = $groupparam;
+        $this->_task             = $task;
+        $this->_displayDirection = $displayDirection;
+        $this->_newUserName      = $newUserName;
     }
 
     /**
      * displayHeader()
      *
+     * @return void
      */
-    function displayHeader() {
+    function displayHeader()
+    {
         $GLOBALS['Language']->loadLanguageMsg('admin/admin');
-      
+
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/calendar_js.php");
         session_require(array('group'=>'1','admin_flags'=>'A'));
-        
-        $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup','title')));
 
-        if(isset($this->userparam['user_id'])) {
-  parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam['user_name'].' (ID '.$this->userparam['user_id'].')</h2>');
-        }
-        elseif(count($this->userparam) == 1 ) {
-            parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup','header').': '.$this->userparam[0]['user_name'].' (ID '.$this->userparam[0]['user_id'].')</h2>');
+        $GLOBALS['HTML']->header(array('title'=>$GLOBALS['Language']->getText('admin_usergroup', 'title')));
+
+        if (isset($this->_userparam['user_id'])) {
+            parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup', 'header').': '.$this->_userparam['user_name'].' (ID '.$this->_userparam['user_id'].')</h2>');
+
+        } elseif (count($this->_userparam) == 1 ) {
+            parent::displayHeader('<h2>'.$GLOBALS['Language']->getText('admin_usergroup', 'header').': '.$this->_userparam[0]['user_name'].' (ID '.$this->_userparam[0]['user_id'].')</h2>');
         }
     }
 
-
     /**
-     * displayForm()
+     * displayForm() display the form to enter new user name
      *
+     * @return void
      */
-    function displayForm() {
+    function displayForm()
+    {
 
         //clic on user link
-        if(isset($this->userparam['user_id'])) {
-            $userid = $this->userparam['user_id'];
+        if (isset($this->_userparam['user_id'])) {
+            $userid = $this->_userparam['user_id'];
+
+        } elseif (count($this->_userparam) == 1) {
+            $userid = $this->_userparam[0]['user_id'];
         }
-        elseif(count($this->userparam) == 1) {
-            $userid = $this->userparam[0]['user_id'];
-        }
-        
+
         print '<form action="index.php" method="post" >';
 
         print '<input type="hidden" name="task" value="change_user_name" />';
@@ -118,7 +130,7 @@ class UserChangeNameDisplay extends AdminEditDisplay {
 
         print '<p>New Codex Name : <input type="text" name="new_user_name" id="new_user_name" /></p>';
 
-        print '<p><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" /></p>';
+        print '<p><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
 
         print '</form>';
 
@@ -126,28 +138,30 @@ class UserChangeNameDisplay extends AdminEditDisplay {
 
     /**
      * displayInstruction()
-     * This method display the instruction the admin has to follow to change user name
+     * This method display the instruction the admin 
+     * has to follow to change user name
      *
+     * @return void
      */
-    function displayChangeNameDirection() {
-
+    function displayChangeNameDirection()
+    {
         //clic on user link
-        if(isset($this->userparam['user_id'])) {
-            $userid = $this->userparam['user_id'];
-        }
-        elseif(count($this->userparam) == 1) {
-            $userid = $this->userparam[0]['user_id'];
+        if (isset($this->_userparam['user_id'])) {
+            $userid = $this->_userparam['user_id'];
+
+        } elseif (count($this->_userparam) == 1) {
+            $userid = $this->_userparam[0]['user_id'];
         }
 
-        print $GLOBALS['Language']->getText('admin_user_change_name','direction');
+        print $GLOBALS['Language']->getText('admin_user_change_name', 'direction');
 
         print '<form action="index.php" method="post">';
 
         print '<input type="hidden" name="task" value="check_instruction" />';
         print '<input type="hidden" name="user_id" value="'.$userid.'" />';
-        print '<input type="hidden" name="new_user_name" value="'.$this->newUserName.'" />';
+        print '<input type="hidden" name="new_user_name" value="'.$this->_newUserName.'" />';
 
-        print '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'" /></p>';
+        print '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
 
         print '</form>';
     }
@@ -155,26 +169,29 @@ class UserChangeNameDisplay extends AdminEditDisplay {
     /**
      * displayFooter()
      *
+     * @return void
      */
-    function displayFooter() {
+    function displayFooter()
+    {
         $GLOBALS['HTML']->footer(array());
     }
 
     /**
      * display()
      *
+     * @return void
      */
-    function display() {
-
+    function display()
+    {
         $this->displayHeader();
         $this->displayForm();
 
-        if($this->displayDirection == true) {
+        if ($this->_displayDirection == true) {
             $this->displayChangeNameDirection();
         }
 
         $this->displayFooter();
-   
+
     }
 }
 ?>
