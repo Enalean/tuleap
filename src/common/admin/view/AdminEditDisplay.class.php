@@ -27,19 +27,31 @@
  * AdminEditDisplay
  *
  */
-require_once('common/admin/view/AdminDisplay.class.php');
-class AdminEditDisplay extends AdminDisplay {
-    
-    function __construct() {
+require_once 'common/admin/view/AdminDisplay.class.php';
+
+/**
+ * AdminEditDisplay
+ */
+class AdminEditDisplay extends AdminDisplay
+{
+
+    /**
+     * Constructor
+     */    
+    function __construct()
+    {
         
     }
 
     /**
      * displayHeader()
      *
-     * @param $header
+     * @param string $header the header of the page
+     *
+     * @return void
      */
-    function displayHeader($header) {
+    function displayHeader($header)
+    {
         parent::displayHeader($header);        
     }
 }
