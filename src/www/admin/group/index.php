@@ -22,7 +22,7 @@
  *
  * 
  */
-require_once('common/admin/GroupControler.class.php');
+require_once 'common/admin/GroupControler.class.php';
 
 $controler = new GroupControler();
 $controler->process();
