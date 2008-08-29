@@ -569,6 +569,7 @@ INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 EOF
 
+
 ##########
 # Install Salomé plugin
 echo "- Add Salomé plugin schema"
@@ -1355,7 +1356,7 @@ EOF
 
 read -p "Install the Scrum Backlog tracker ? [yn]: " yn
 if [ "$yn" = "n" ]; then
-    echo "Scrum Backlog tracker's installation skiped !"
+    echo "Scrum Backlog tracker's installation skipped !"
 else
     echo "Installing Scrum Backlog tracker ..."
     $CAT <<EOF | $PHP
@@ -1365,6 +1366,117 @@ else
 EOF
     echo "Scrum Backlog tracker installation completed !"
 fi
+
+##############################################
+# Create default graphic reports
+
+
+read -p "Create default graphic reports for existing trackers ? [yn]: " yn
+if [ "$yn" = "n" ]; then
+    echo "No graphic report created !"
+else
+    echo "Installing Default graphic reports for existing trackers ..."
+
+$PERL <<'EOF'
+use DBI;
+use Sys::Hostname;
+use Carp;
+
+require $ENV{INSTALL_DIR}."/src/utils/include.pl";  # Include all the predefined functions
+
+&load_local_config();
+
+&db_connect;
+
+sub create_chart {
+    my ($report_graphic_id,$rank,$type,$title,$desc) = @_;
+    $chart_qy="INSERT INTO plugin_graphontrackers_chart (report_graphic_id, rank, chart_type, title, description, width, height)
+                                                 VALUES ($report_graphic_id, $rank, '$type', '$title', '$desc', 600, 400)";
+    $chart_c = $dbh->prepare($chart_qy);
+    $chart_c->execute();
+    # get last inserted ID
+    return $chart_c->{'mysql_insertid'};
+}
+
+sub create_pie {
+    my ($report_graphic_id,$rank,$field_name,$field_label) = @_;
+    $chart_id=create_chart($report_graphic_id,$rank,"pie",$field_label,"");
+    $pie_qy="INSERT INTO plugin_graphontrackers_pie_chart (id, field_base)
+                                                   VALUES ($chart_id, '$field_name')";
+    $pie_c = $dbh->prepare($pie_qy);
+    $pie_c->execute();
+}
+
+sub create_bar {
+    my ($report_graphic_id,$rank,$field_name1,$field_label1,$field_name2,$field_label2) = @_;
+    $chart_id=create_chart($report_graphic_id,$rank,"bar","$field_label1 by $field_label2","");
+    $bar_qy="INSERT INTO plugin_graphontrackers_bar_chart (id, field_base, field_group)
+                                                   VALUES ($chart_id, '$field_name1', '$field_name2')";
+    $bar_c = $dbh->prepare($bar_qy);
+    $bar_c->execute();
+}
+
+
+sub create_charts {
+    my ($group_artifact_id, $group_id) = @_;
+    # create chart report
+    $rep_qy="INSERT INTO plugin_graphontrackers_report_graphic (group_artifact_id, user_id, name, description, scope)
+                                                        VALUES ($group_artifact_id, 100, \"Default\", \"Default Graphic Report\", 'P')";
+    $rep_c = $dbh->prepare($rep_qy);
+    $rep_c->execute();
+    # get last inserted ID
+    $report_graphic_id = $rep_c->{'mysql_insertid'};
+
+    # severity
+    $field_qy="SELECT af.label FROM artifact_field_usage afu, artifact_field af WHERE af.group_artifact_id=$group_artifact_id and af.field_name='severity' AND af.data_type=2 AND afu.group_artifact_id=$group_artifact_id AND afu.field_id=af.field_id AND use_it=1";
+    $field_c = $dbh->prepare($field_qy);
+    $field_c->execute();
+    my ($label) = $field_c->fetchrow();
+    if ($label ne "") {
+            create_pie($report_graphic_id ,1,"severity",$label);
+    }
+    # Category by status
+    $field_qy="SELECT af.label FROM artifact_field_usage afu, artifact_field af WHERE af.group_artifact_id=$group_artifact_id and af.field_name='category_id' AND af.data_type=2 AND afu.group_artifact_id=$group_artifact_id AND afu.field_id=af.field_id AND use_it=1";
+    $field_c = $dbh->prepare($field_qy);
+    $field_c->execute();
+    my ($label) = $field_c->fetchrow();
+    if ($label ne "") {
+            create_bar($report_graphic_id ,2,"category_id",$label,"status_id","Status");
+    }
+
+    # Assigned to by status
+    $field_qy="SELECT af.label FROM artifact_field_usage afu, artifact_field af WHERE af.group_artifact_id=$group_artifact_id and af.field_name='assigned_to' AND af.data_type=5 AND afu.group_artifact_id=$group_artifact_id AND afu.field_id=af.field_id AND use_it=1";
+    $field_c = $dbh->prepare($field_qy);
+    $field_c->execute();
+    my ($label) = $field_c->fetchrow();
+    if ($label ne "") {
+            create_bar($report_graphic_id ,3,"assigned_to",$label,"status_id","Status");
+    }
+
+    # Multi-Assigned to by status
+    $field_qy="SELECT af.label FROM artifact_field_usage afu, artifact_field af WHERE af.group_artifact_id=$group_artifact_id and af.field_name='multi_assigned_to' AND af.data_type=5 AND afu.group_artifact_id=$group_artifact_id AND afu.field_id=af.field_id AND use_it=1";
+    $field_c = $dbh->prepare($field_qy);
+    $field_c->execute();
+    my ($label) = $field_c->fetchrow();
+    if ($label ne "") {
+            create_bar($report_graphic_id ,4,"multi_assigned_to",$label,"status_id","Status");
+    }
+}
+
+
+# For each tracker, create default charts for some fields
+$tracker_qy = "SELECT group_artifact_id, group_id from artifact_group_list WHERE status='A'";
+$tracker_c = $dbh->prepare($tracker_qy);
+$tracker_c->execute();
+while (my ($group_artifact_id, $group_id) = $tracker_c->fetchrow()) {
+        create_charts($group_artifact_id, $group_id);
+}
+
+
+EOF
+    echo "Graphic reports created !"
+fi
+
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB

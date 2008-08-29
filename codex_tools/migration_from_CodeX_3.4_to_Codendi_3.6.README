@@ -163,12 +163,13 @@ Now, here are the step-by-step instructions for upgrading:
   /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
   (see /usr/share/codex/src/etc/ParametersLocal.dtd.dist)
 
-* The new Graphontrackers Plugin is available, but no graphical reports for your 
-  site has been created:
-  It is important that you create your own reports for each (template) tracker via the trackers 
+* The new Graphontrackers Plugin is available, and default graphical reports for your 
+  site have been created:
+  Feel free to customize your own reports for each (template) tracker via the trackers 
   administration menu.
 
-  To use the Gantt graph with the task tracker, you will have to :
+  Gantt charts: to enbale them, you will have to update the task tracker
+  template, and any other existing tracker that would like to use a Gantt chart:
   - rename the old 'end date' field into 'close date'.
   - create an 'end date' and a 'due date' field for the task tracker
   - create a 'progress' field, type INT in the task tracker, with value between 
