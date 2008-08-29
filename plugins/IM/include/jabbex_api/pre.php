@@ -1,7 +1,6 @@
 <?php
 
-//define("JABBER_LOG_FILE",$GLOBALS['codex_log']."/jabbex_log"); 
-define("JABBER_LOG_FILE","/tmp/jabber_log");
+define("JABBER_LOG_FILE",$GLOBALS['codex_log']."/jabbex_log"); 
 
 require_once(dirname(__FILE__)."/local.inc.php");
 
