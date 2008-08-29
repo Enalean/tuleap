@@ -200,7 +200,7 @@ class IMPlugin extends Plugin {
     protected $dynamicpresence_alreadydisplayed;
     function getDynamicPresence($jid) {
         $id = md5($jid);
-        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" />';
+        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" style="vertical-align:top"/>';
         if (!$this->dynamicpresence_alreadydisplayed) {
             $html .= '<script type="text/javascript">'. "
             var plugin_im_presence = [];
