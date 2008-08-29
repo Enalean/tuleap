@@ -134,9 +134,9 @@ done
 
 
 ##############################################
-# Check the machine is running CodeX 3.4
+# Check the machine is running CodeX 3.6
 #
-OLD_CX_RELEASE='3.4'
+OLD_CX_RELEASE='3.6'
 yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
@@ -193,6 +193,11 @@ $SERVICE sendmail stop
 $SERVICE mailman stop
 $SERVICE smb stop
 
+
+#############################################
+# Make codexadm a member of the apache group
+# for phpMyAdmin (session, config files...)
+$USERMOD -a -G apache codexadm
 
 ##############################################
 # Analyze site-content 
