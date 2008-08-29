@@ -23,7 +23,7 @@
 
 require_once("../Jabbex.php");
 $jabex = new Jabbex("res_398671989");
-$jabex->create_shared_group("xingalab","Crossing Alabama");
-$jabex->create_muc_room("xingalab", "Crossing Alabama", "Here I put the description of my room (Projetc short description)", "bbking");
+$jabex->create_shared_group("genebio","Genebio paradigm shift finder");
+$jabex->create_muc_room("genebio", "Genebio paradigm shift finder", "Genebio paradigm shift finder (Projetc short description)", "genebio");
 
 ?>
