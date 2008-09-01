@@ -187,6 +187,59 @@ $rel = $dbh->prepare($sql);
 $rel->execute();
 
 
+#news
+$sql="INSERT INTO project_counts_tmp
+SELECT group_id,'news',log(10*count(id)) AS count
+FROM news_bytes
+WHERE is_approved <> 4 AND date > '$last_week'
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
+
+
+#survey answers
+$sql="INSERT INTO project_counts_tmp
+SELECT group_id, 'survey', log(3*count(user_id)) AS count
+FROM survey_responses
+WHERE date > '$last_week'
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
+
+
+#wiki access
+$sql="INSERT INTO project_counts_tmp
+SELECT group_id, 'wiki', log(count(user_id)) AS count 
+FROM wiki_log
+WHERE time > '$last_week'
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
+
+
+#docman items (without directories - item_type = 1)
+$sql="INSERT INTO project_counts_tmp
+SELECT group_id, 'docman', log(5*count(item_id)) AS count
+FROM plugin_docman_item
+WHERE item_type <> 1 AND update_date > '$last_week'
+GROUP BY group_id";
+
+#print "\n\n".$sql;
+
+$rel = $dbh->prepare($sql);
+$rel->execute();
+
+
+
 #create a new table to insert the final records into
 $sql="CREATE TABLE project_metric_weekly_tmp1 (ranking int not null primary key auto_increment,
 group_id int not null,
