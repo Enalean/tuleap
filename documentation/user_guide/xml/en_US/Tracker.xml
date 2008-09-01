@@ -1064,38 +1064,6 @@ width="14.5cm" />
 
   </section>
 
-  <section id="TrackerReporting">
-    <title>Tracker Reporting</title>
-
-    <para>As explained earlier in this document (<xref
-	linkend="ProjectDataExport" />), Codendi can export your project data
-      outside of the &SYS_PRODUCT_NAME; system for re-use in another tool or document.
-      However for simple statistics, you can also use the Tracker Reporting
-      module. This function can be accessed from the Tracker Menu Bar via the item
-      &#34;Reporting&#34;.</para>
-
-    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject">
-      <title>Sample value distribution of the Category field for a specific tracker</title>
-
-      <mediaobject>
-	<imageobject>
-	  <imagedata format="PNG"
-	    fileref="../../screenshots/en_US/sc_artifactreporting.png" width="13cm"/>
-	</imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>The Tracker Reporting mechanism allows you to see how your
-    artifacts (open only or all of them) are distributed across the
-    set of predefined values used in the various fields of type
-    select-box. For instance you might want to see how your artifacts
-    are distributed across the status, category or resolution values
-    (see <xref
-    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject"
-    /> for an example of how the artifacts of an ods are distributed
-    across the various values of the Category field).</para>
-  </section>
-
   <section id="ArtifactImport">
     <title>Tracker Artifact Import</title>
 
