@@ -242,10 +242,10 @@ A: This problem occurs when Codendi was installed using a different server name
 
 Q: I can't use CVS after the migration: the CVS client complains about a lock
    that can't be written
-A: You need to execute the Codendi cron job (/usr/share/codex/src/utix/xerox_crontab.sh)
+A: You need to execute the Codendi cron job (/usr/share/codex/src/util/xerox_crontab.sh)
    to regenerate the locks in /var/lock/cvs
 
-Q: Codendi cron job (/usr/share/codex/src/utix/xerox_crontab.sh) compalins about duplicate
+Q: Codendi cron job (/usr/share/codex/src/util/xerox_crontab.sh) compalins about duplicate
    entries 'admin' and 'imadmin-bot'.
 A: If you installed an empty Codendi 3.6 instance, it automatically created the
    'admin' and 'imadmin-bot' users. Once you recover your existing database and do
@@ -255,6 +255,12 @@ A: If you installed an empty Codendi 3.6 instance, it automatically created the
    with 'vipw') and remove the *first* occurence of each duplicate user in both
    files. Then, you may re-run the cron job.
 
+Q: The User/Admin/Install guide is no longer accessible
+A: First, check that the documentation was properly generated (i.e. file
+   /usr/share/codex/documentation/user_guide/pdf/en_US/Codendi_User_Guide.pdf
+   should exist). Otherwise, run "generate_doc.sh" as codexadm.
+   Then, please note that these guides were renamed from "CodeX" to "Codendi",
+   so please update your links accordingly.
 
 Enjoy Codendi 3.6!
 
