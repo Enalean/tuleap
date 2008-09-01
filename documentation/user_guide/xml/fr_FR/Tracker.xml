@@ -1153,39 +1153,6 @@ width="14.5cm" />
 
   </section>
 
-  <section id="TrackerReporting">
-    <title>Analyse statistique</title>
-
-    <para>Comme expliqué plus tôt dans ce chapitre (voir
-    <xref linkend="ProjectDataExport" />), Codendi permet d'exporter les
-    données de votre projet afin de les réutiliser dans des outils
-    externes comme des outils statistiques. Cependant pour des besoins
-    simples vous pouvez aussi utiliser le module d'analyse statistique
-    de l'outil de suivi. Cette fonction est accessible via l'entrée 'Analyse
-    statistique' du menu de l'outil de suivi.</para>
-
-    <figure id="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject">
-      <title>Exemple de distribution des valeurs du champ Catégorie d'un outil de suivi</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata format="PNG"
-            fileref="../../screenshots/fr_FR/sc_artifactreporting.png" width="13cm"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-    <para>Le module d'analyse statistique vous renseigne sur la façon
-    dont vos artefacts (ouverts seulement ou en totalité) sont
-    distribués sur l'ensemble des valeurs prédéfinies pour les
-    différents champs de type boîte de sélection. Ainsi vous pouvez
-    voir comment sont distribués sur les valeurs des champs Statut,
-    Catégorie ou Résolution (voir <xref
-    linkend="FigureValueDistributionOfTheCategoryFieldForTheCodendiProject"
-    /> pour un exemple de distribution des artefacts sur les champ
-    Catégorie d'un outil de suivi).</para>
-  </section>
-
   <section id="ArtifactImport">
     <title>Importation d'artefacts</title>
 
