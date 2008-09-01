@@ -182,10 +182,12 @@ function show_highest_ranked_projects() {
     if (!$result || db_numrows($result) < 1) {
         return db_error();
     } else {
+    	$rank=1;
         while ($row=db_fetch_array($result)) {
-            $return .= '<B>( '.$row['percentile'].'% )</B>'
+            $return .= '<B>'.$rank.'. </B>'
                 .' <A HREF="/projects/'.$row['unix_group_name'].
                 '/">'. $hp->purify(util_unconvert_htmlspecialchars($row['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'</A><BR>';
+            $rank++;
         }
         $return .= '<CENTER><A href="/top/mostactive.php?type=week">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
     }

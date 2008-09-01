@@ -46,7 +46,6 @@ print '<P><B><FONT size="+1">'.$title.'</FONT></B>
 <TR valign="top">
 <TD><B>'.$Language->getText('top_mostactive','rank').'</B></TD>
 <TD><B>'.$Language->getText('top_mostactive','name').'<BR>&nbsp;</B></TD>
-<TD align="right"><B>'.$Language->getText('top_mostactive','percentile').'</B></TD>
 </TR>
 ';
 
@@ -61,7 +60,7 @@ while ($row_top = db_fetch_array($res_top)) {
 	print '<TR class="'. util_get_alt_row_color($i) .'"><TD>&nbsp;&nbsp;'.$i
 		.'</TD><TD><A href="/projects/'. strtolower($row_top['unix_group_name']) .'/">'
 		.$row_top['group_name']."</A>"
-		.'</TD><TD align="right">'.$row_top['percentile'].'</TD></TR>';
+		.'</TR>';
 }
 
 print '<TR><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.($offset-50).'"><B><-- '.$Language->getText('top_mostactive','more').'</B></A>':'&nbsp;').'</TD>
