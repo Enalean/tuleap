@@ -278,7 +278,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		$rows=db_numrows($result);
 		if ($rows < 1) {
 			echo '
-				<H4>'.$Language->getText('news_admin_index','no_queued_item_found').'</H1>';
+				<H4>'.$Language->getText('news_admin_index','no_queued_item_found').'</H4>';
 		} else {
 			echo '
 				<H4>'.$Language->getText('news_admin_index','need_approve').'</H4>

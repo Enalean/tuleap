@@ -11,6 +11,18 @@
 	By Tim Perdue, Sourceforge, 12/99
 */
 
+/**
+ * Status of news (a.k.a meaning of is_approved field): 
+ * 0 => normal (nothing special, created, visible, no promtion asked)
+ * 1 => promoted on server homepage
+ * 2 => rejected for promotion on server homepage (by siteadmin)
+ * 3 => pending for promotion (on server homepage)
+ * 4 => deleted 
+ * 
+ * Status public/private is managed with PERMISSION 
+ * 
+ */
+
 require_once('www/project/admin/permissions.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/forum/forum_utils.php');
