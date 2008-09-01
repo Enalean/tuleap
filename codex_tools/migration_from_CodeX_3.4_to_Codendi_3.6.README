@@ -227,6 +227,34 @@ instructions from the Codendi Installation Guide.
 
 You are all set!
 
+Toubleshooting:
+--------------
+Here are a few tips in case of problems after the migration
+
+Q: Instant messaging does not seem to work: there is no presence icon next to
+   user names, and synchronizing projects returns an error.
+A: This problem occurs when Codendi was installed using a different server name
+   than the target name. During installation, the server name is stored in the 
+   OpenFire database, and it needs to be correct. In this case, we recommend 
+   'dropping' the 'openfire' DB, and re-executing the IM installation script. 
+   See the command "/plugins/IM/include/jabbex_api/installation/install.php" 
+   in codex-install for the command-line to use.
+
+Q: I can't use CVS after the migration: the CVS client complains about a lock
+   that can't be written
+A: You need to execute the Codendi cron job (/usr/share/codex/src/utix/xerox_crontab.sh)
+   to regenerate the locks in /var/lock/cvs
+
+Q: Codendi cron job (/usr/share/codex/src/utix/xerox_crontab.sh) compalins about duplicate
+   entries 'admin' and 'imadmin-bot'.
+A: If you installed an empty Codendi 3.6 instance, it automatically created the
+   'admin' and 'imadmin-bot' users. Once you recover your existing database and do
+   the migration, both users are also created in the new DB, but probably with
+   different IDs, so that the system think they are two new users.
+   If you encounter this issue, you should edit /etc/passwd and /etc/shadow (e.g. 
+   with 'vipw') and remove the *first* occurence of each duplicate user in both
+   files. Then, you may re-run the cron job.
+
 
 Enjoy Codendi 3.6!
 

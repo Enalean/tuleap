@@ -863,8 +863,8 @@ options {
         dump-file       "/var/named/data/cache_dump.db";
         statistics-file "/var/named/data/named_stats.txt";
         memstatistics-file "/var/named/data/named_mem_stats.txt";
-        query-source    port 53;
-        query-source-v6 port 53;
+        query-source    port *;
+        query-source-v6 port *;
         allow-query     { any; };
 
         forwarders {
