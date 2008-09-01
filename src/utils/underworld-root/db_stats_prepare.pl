@@ -7,7 +7,7 @@ use DBI;
 my $verbose = 1;
 
 require("../include.pl");
-$dbh = &db_connect();
+&db_connect();
 
 ## 
 ## Drop the tmp table.
