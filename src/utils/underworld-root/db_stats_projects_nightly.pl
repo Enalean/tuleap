@@ -8,7 +8,7 @@ use Time::Local;
 use POSIX qw( strftime );
 
 require("../include.pl");
-$dbh = &db_connect();
+&db_connect();
 
 my ($sql, $rel);
 my ($day_begin, $day_end, $mday, $year, $mon, $week, $day);
