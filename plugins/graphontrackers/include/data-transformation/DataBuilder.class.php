@@ -72,7 +72,7 @@ class DataBuilder {
             $af_y->fetchData($this->atid,$this->field_Y);
         }
         
-        if ($af_x->isUsed() && (!$af_y || $af_y->isUsed())) {
+        if ($af_x->isUsed() && (!isset($af_y) || $af_y->isUsed())) {
             $select   = "SELECT ";
             $from     = "FROM ";
             $where    = "WHERE ";
