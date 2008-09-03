@@ -304,7 +304,7 @@ class GroupIdFilter implements IStatement
      */
     function __construct($groupid)
     {
-        $cleanGroupId   = db_escape_int($cleanGroupId);
+        $cleanGroupId   = db_escape_int($groupid);
         $this->_groupid = $cleanGroupId;
     }
 

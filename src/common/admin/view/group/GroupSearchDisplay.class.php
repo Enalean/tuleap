@@ -378,13 +378,14 @@ class GroupSearchDisplay extends AdminSearchDisplay
                 print '<tr class="'.$odd_even[$i++ % count($odd_even)].'">
  <td align="center"><a href="/admin/groupedit.php?group_id='.$iGroup.'">'.$group_name.'</a></td>
  <td>'.$unix_group_name.'</td>
- <td >'.$status.'</td>
+ <td>'.$status.'</td>
  <td>'.$name.'</td>
  <td>'.$is_public.'</td>
  <td>'.$license.'</a></td>
  <td>'.$c.'</td>';
 
                 do {
+                    
                     $groupMatch = true;
                     $valaEmail  = $this->_adminEmailIterator->current();
                     if ($valaEmail['group_id'] == $iGroup) {
