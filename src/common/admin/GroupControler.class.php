@@ -110,7 +110,6 @@ class GroupControler extends Controler
      */    
     function __construct() 
     {
-
     }
 
     /**

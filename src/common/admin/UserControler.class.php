@@ -631,7 +631,7 @@ class UserControler extends Controler
                 }
                 if (preg_match('#[^'.$ug['unix_group_name'].'.]*'.$this->_newUserName.'#', $l)) {
                     echo $l.'<br />';
-                    $GLOBALS['Response']->addFeedBack('error', 'This user is contains in a group that he don\'t belong to'); 
+                    $GLOBALS['Response']->addFeedBack('error', 'This user is contained in a group that he doesn\'t belong to'); 
                 }
             }
         } else {

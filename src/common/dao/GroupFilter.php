@@ -40,11 +40,13 @@ class GroupNameFilter implements IStatement
     /**
      * constructor
      *
-     * @param string $name a string that matches with a part of group name or unix group name
+     * @param string $name a string that matches 
+     * with a part of group name or unix group name
      */
     function __construct($name)
     {
-        $this->_name = $name;
+        $cleanName   = db_escape_string($name);
+        $this->_name = $cleanName;
     }
 
     /**
@@ -94,7 +96,8 @@ class GroupStateFilter implements IStatement
      */
     function __construct($state)
     {
-        $this->_state = $state;
+        $cleanState   = db_escape_int($state);
+        $this->_state = $cleanState;
     }
 
     /**
@@ -134,7 +137,7 @@ class GroupTypeFilter implements IStatement
     /**
      * $_type
      *
-     * @type string $_type
+     * @type int $_type
      */
     private $_type;
 
@@ -145,7 +148,8 @@ class GroupTypeFilter implements IStatement
      */
     function __construct($type)
     {
-        $this->_type = $type;
+        $cleanType   = db_escape_int($type);
+        $this->_type = $cleanType;
     }
 
     /**
@@ -196,7 +200,8 @@ class GroupStatusFilter implements IStatement
      */
     function __construct($status)
     {
-        $this->_status = $status;
+        $cleanStatus   = db_escape_string($status);
+        $this->_status = $cleanStatus;
     }
 
     /**
@@ -247,7 +252,8 @@ class GroupShortcutFilter implements IStatement
      */
     function __construct($shortcut)
     {
-        $this->_shortcut = $shortcut;
+        $cleanShortcut   = db_escape_string($shortcut);
+        $this->_shortcut = $cleanShortcut;
     }
 
     /**
@@ -298,7 +304,8 @@ class GroupIdFilter implements IStatement
      */
     function __construct($groupid)
     {
-        $this->_groupid = $groupid;
+        $cleanGroupId   = db_escape_int($cleanGroupId);
+        $this->_groupid = $cleanGroupId;
     }
 
     /**
