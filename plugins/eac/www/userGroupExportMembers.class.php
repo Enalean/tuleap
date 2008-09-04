@@ -43,7 +43,7 @@ Class userGroupExportMembers
     function userList($ugroup_id, $group_id)
     {
       
-        $requete_list = sprintf('SELECT  U.user_name, Ugrp.name, G.group_name'.
+        $requete_list = sprintf('SELECT  U.user_name, U.user_id, Ugrp.name, G.group_name'.
             ' FROM user U'.
             '   INNER JOIN ugroup_user UU ON(U.user_id=UU.user_id)'.
             '   INNER JOIN ugroup Ugrp ON( UU.ugroup_id=Ugrp.ugroup_id)'.
