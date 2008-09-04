@@ -166,7 +166,7 @@ echo ")</b>";
 <p>
 
 <ul>
-<li><?php echo $Language->getText('admin_main', 'all_groups',array("grouplist.php")); ?></a></li>
+<li><?php echo $Language->getText('admin_main', 'all_groups',array("group/index.php")); ?></a></li>
 <LI><?php echo $Language->getText('admin_main', 'incomplete_group',array("grouplist.php?status=I")); ?>
 <LI><?php echo $Language->getText('admin_main', 'pending_group',array("approve-pending.php")); ?>
 <?php echo " <b>($pending_projects";
