@@ -121,9 +121,8 @@ echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
 <br>
 <?php echo $Language->getText('admin_main', 'search_user'); ?>
 <br>
-<form name="usersrch" action="search.php" method="POST">
-  <input type="text" name="search">
-  <input type="hidden" name="usersearch" value="1">
+<form name="usersrch" action="user/index.php" method="POST">
+  <input type="text" name="user_name_search">
   <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
 </form>
 <ul>
@@ -157,9 +156,8 @@ echo ")</b>";
 <br>
 <?php echo $Language->getText('admin_main', 'search_group'); ?>
 <br>
-<form name="gpsrch" action="search.php" method="POST">
-  <input type="text" name="search">
-  <input type="hidden" name="groupsearch" value="1">
+<form name="gpsrch" action="group/index.php" method="POST">
+  <input type="text" name="group_name_search">
   <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
 </form>
 
@@ -167,14 +165,14 @@ echo ")</b>";
 
 <ul>
 <li><?php echo $Language->getText('admin_main', 'all_groups',array("group/index.php")); ?></a></li>
-<LI><?php echo $Language->getText('admin_main', 'incomplete_group',array("grouplist.php?status=I")); ?>
+<LI><?php echo $Language->getText('admin_main', 'incomplete_group',array("group/index.php?group_status_search=I")); ?>
 <LI><?php echo $Language->getText('admin_main', 'pending_group',array("approve-pending.php")); ?>
 <?php echo " <b>($pending_projects";
 if ($pending_projects != 0) {
     print "&nbsp;-&nbsp; <a href=\"approve-pending.php\">".$Language->getText('admin_main', 'need_approval')."</a>";
 }
 echo ")</b>";?>
-<LI><?php echo $Language->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")); ?>
+<LI><?php echo $Language->getText('admin_main', 'deleted_group',array("group/index.php?group_status_search=D")); ?>
 </ul>
 </ul>
 
