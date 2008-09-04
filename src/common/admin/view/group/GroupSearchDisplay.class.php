@@ -385,7 +385,7 @@ class GroupSearchDisplay extends AdminSearchDisplay
  <td>'.$c.'</td>';
 
                 do {
-                    
+
                     $groupMatch = true;
                     $valaEmail  = $this->_adminEmailIterator->current();
                     if ($valaEmail['group_id'] == $iGroup) {
@@ -394,6 +394,7 @@ class GroupSearchDisplay extends AdminSearchDisplay
                     } else {
                         $groupMatch = false;
                     }
+
                 } while ($this->_adminEmailIterator->valid() && $groupMatch);
 
                 $email = substr($email, 0, strlen($email) - 1);
