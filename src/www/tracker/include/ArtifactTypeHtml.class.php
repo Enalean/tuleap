@@ -2253,7 +2253,7 @@ EOS;
          *
          * @return void
          */
-        function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=false) {
+        function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=0) {
             global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
             $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
@@ -2286,7 +2286,7 @@ EOS;
 		echo '
 	    <br><br>';
                 echo '
-            <FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="masschange_form">
+            <FORM ACTION="'. $_SERVER['PHP_SELF'] .'" METHOD="POST" enctype="multipart/form-data" NAME="masschange_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
             <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmasschange">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
