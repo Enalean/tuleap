@@ -31,10 +31,7 @@ require_once('common/event/EventManager.class.php');
 
 
 $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
-//$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
-$em   = EventManager::instance();
-$em->processEvent("loadPluginLanguageFile", null);
-    
+ 
 $valueGroupId              = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)){
     $group_id              = $request->get('group_id'); 
