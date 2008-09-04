@@ -7,10 +7,10 @@ class EacPlugin extends Plugin {
        
         $this->Plugin($id);
         $this->setScope(self::SCOPE_PROJECT);
+        $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('project_data_export_table', 'project_data_export_table', false);
         $this->_addHook('project_data_export_table_users', 'project_data_export_table_users', false);
-        $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
-        $this->_addHook('permissions_ugroup_properties', 'permissions_ugroup_properties', false);
+      
       
        
     }
@@ -23,7 +23,7 @@ class EacPlugin extends Plugin {
         return $this->pluginInfo;
     }
     function loadPluginLanguageFile() {
-        $GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
+        $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
     }
    
     function project_data_export_table($params)
@@ -46,15 +46,7 @@ class EacPlugin extends Plugin {
         echo '<tr><td> </td> <td> </td> <td>';
         echo '<br><td align="right"><a href="'.$url.'"><B>'.$GLOBALS['Language']->getText('plugin_eac','export_definitions').'</B></a></td></tr >';
     }
-    function permissions_ugroup_properties($params)
-    {
-        $url  = $this->getPluginPath();
-        $url2 =  $url.'/export_admin_permission_property.php?group_id='.$params['group_id'].'&object_id='.$params['object_id'].'&permission_type='.$params['permission_type'];
-        $url .= '/export_admin_item_property.php?group_id='.$params['group_id'].'&object_id='.$params['object_id']; 
-        
-        echo '<td  align="center"><a href='.$url.'>Export properties</a><br><a href='.$url2.'>Permission info</a></TD>';
-    }
-
+  
 
 }
 
