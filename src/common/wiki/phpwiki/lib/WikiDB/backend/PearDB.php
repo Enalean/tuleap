@@ -1029,7 +1029,12 @@ extends WikiDB_backend
      * Unserialize data
      */
     function _unserialize($data) {
-        return empty($data) ? array() : unserialize($data);
+        $s = empty($data) ? array() : @unserialize($data);
+        if ($s === false) {
+            //Fix errors due to utf8 . See http://php.net/unserialize comments
+            $s = unserialize(preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $data));
+        }
+        return $s;
     }
     
     /**
