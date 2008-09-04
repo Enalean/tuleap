@@ -27,7 +27,6 @@ require_once 'common/admin/view/AdminSearchDisplay.class.php';
 require_once 'common/admin/view/user/UserSearchDisplay.class.php';
 require_once 'common/admin/view/user/UserEditDisplay.class.php';
 require_once 'common/admin/view/user/UserChangeNameDisplay.class.php';
-require_once 'www/admin/user/UserAutocompletionForm.class.php';
 require_once 'common/dao/CodexDataAccess.class.php';
 require_once 'common/dao/UserDao.class.php';
 require_once 'common/dao/GroupDao.class.php';
