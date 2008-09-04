@@ -46,10 +46,6 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_author');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_label');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_changelog');
-                    $event_manager =& EventManager::instance();
-                    $event_manager->processEvent('docman_file_add_version_property_table_header', array(
-                        'titles'  => &$titles,
-                        'type'  => PLUGIN_DOCMAN_ITEM_TYPE_FILE));
                     $content .= html_build_list_table_top($titles, false, false, false);
                     $odd_even = array('boxitem', 'boxitemalt');
                     $i = 0;
@@ -65,7 +61,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         $content .= '<td>'. format_date($GLOBALS['sys_datefmt'], $versions[$key]->getDate()) .'</td>';
                         $content .= '<td>'. $user                                                  .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
-                        $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_BASIC) .'</td></tr>';
+                        $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_BASIC) .'</td>';
+                        $content .= '</tr>';
                     }
                     $content .= '</table>';
                 } else {
