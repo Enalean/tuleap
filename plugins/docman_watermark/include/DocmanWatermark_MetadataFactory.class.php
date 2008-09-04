@@ -29,13 +29,13 @@ class DocmanWatermark_MetadataFactory {
     
     var $dao;
     
-    public function DocmanWatermark_MetadataFactory() {
-        $this->dao =& $this->_getWatermarkMetadataDao();
+    public function __construct() {
+        $this->dao = $this->_getWatermarkMetadataDao();
     }
     
     public function &_getWatermarkMetadataDao() {
         if (!$this->dao) {
-            $this->dao =& new DocmanWatermark_MetadataDao(CodexDataAccess::instance());
+            $this->dao = new DocmanWatermark_MetadataDao(CodexDataAccess::instance());
         }
         return $this->dao;
     }

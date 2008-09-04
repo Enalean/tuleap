@@ -22,6 +22,14 @@
  *
  * 
  */
+ 
+ 
+ /**
+  *  Plugin to watermark PDF and made upon MVC framework
+  *  
+  */
+ 
+ 
 require_once('common/plugin/Plugin.class.php');
 
 class Docman_watermarkPlugin extends Plugin {
@@ -32,7 +40,7 @@ class Docman_watermarkPlugin extends Plugin {
      *  @param int id : the plugin id
      *  @return void
      */
-    function Docman_watermarkPlugin($id) {
+    function __construct($id) {
         $this->Plugin($id);
         $this->_addHook('plugin_load_language_file', 'loadPluginLanguageFile', false);
         $this->_addHook('plugin_docman_file_before_download', 'stampFile', false);
@@ -48,7 +56,7 @@ class Docman_watermarkPlugin extends Plugin {
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'Docman_watermarkPluginInfo')) {
             require_once('Docman_watermarkPluginInfo.class.php');
-            $this->pluginInfo =& new DocmanWatermarkPluginInfo($this);
+            $this->pluginInfo = new DocmanWatermarkPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -104,7 +112,7 @@ class Docman_watermarkPlugin extends Plugin {
     
     function process() {
         require_once('DocmanWatermark.class.php');
-        $controler =& new DocmanWatermark($this, $this->_getPluginPath().'/../../plugins/docman',$this->_getPluginPath(), $this->_getThemePath());
+        $controler = new DocmanWatermark($this, $this->_getPluginPath().'/../../plugins/docman',$this->_getPluginPath(), $this->_getThemePath());
         $controler->process();
     }
      

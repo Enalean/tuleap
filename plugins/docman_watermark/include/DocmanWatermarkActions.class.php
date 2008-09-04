@@ -31,7 +31,7 @@ require_once('common/include/HTTPRequest.class.php');
 class DocmanWatermarkActions extends Actions {
     
 
-    public function DocmanWatermarkActions(&$controler, $view=null) {
+    public function __construct($controler, $view=null) {
         parent::Actions($controler);
     }
     

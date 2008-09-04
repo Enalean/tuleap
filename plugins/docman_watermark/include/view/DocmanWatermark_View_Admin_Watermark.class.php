@@ -27,7 +27,7 @@ require_once(dirname(__FILE__).'/../../../docman/include/view/Docman_View_Extra.
 
 class DocmanWatermark_View_Admin_Watermark extends Docman_View_Extra {
 
-    public function DocmanWatermark_View_Admin_Watermark(&$controller) {
+    public function __construct($controller) {
     	$GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
         $this->_controller = $controller; 
     }

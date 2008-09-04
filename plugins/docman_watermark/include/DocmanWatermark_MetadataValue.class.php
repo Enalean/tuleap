@@ -33,7 +33,7 @@ class DocmanWatermark_MetadataValue {
     var $valueId;
     var $watermark;
 
-    function DocmanWatermark_MetadataValue() {
+    function __construct() {
         $this->valueId = null;
         $this->watermark = null;
     }

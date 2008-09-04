@@ -44,7 +44,7 @@ class DocmanWatermark_Stamper {
      *  @return void
      */
     
-    public function DocmanWatermark_Stamper($path,$headers,$group_id,$item, $user) {
+    public function __construct($path,$headers,$group_id,$item, $user) {
         $this->item     = $item;
         $this->user     = $user; 
         $this->group_id = $group_id;
@@ -134,8 +134,8 @@ class DocmanWatermark_Stamper {
                 $page->setStyle($style);
                 $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
                 $page->rotate(20, 20, 1.57);
-                $page->drawText("Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName()." ".
-                                "Downloaded on :".date("d M Y H:i", time())." by(".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
+                $page->drawText("Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName()." ".
+                                "Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
             }      
         }
     }

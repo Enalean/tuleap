@@ -33,7 +33,7 @@ class DocmanWatermark_MetadataValueDao extends DataAccessObject {
     * Constructs the DocmanWatermark_MetadataValueDao
     * @param $da instance of the DataAccess class
     */
-    public function DocmanWatermark_MetadataValueDao( & $da ) {
+    public function __construct($da) {
         DataAccessObject::DataAccessObject($da);
     }
     

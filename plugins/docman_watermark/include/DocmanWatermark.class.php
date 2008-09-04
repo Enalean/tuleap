@@ -26,8 +26,8 @@ require_once('DocmanWatermarkController.class.php');
 require_once('DocmanWatermarkActions.class.php');
 class DocmanWatermark extends DocmanWatermarkController {
 
-    function DocmanWatermark(&$plugin, $docmanPath,$pluginPath, $themePath) {
-        $this->DocmanWatermarkController($plugin, $docmanPath,$pluginPath, $themePath, HTTPRequest::instance());
+    public function __construct($plugin, $docmanPath,$pluginPath, $themePath) {
+        parent::__construct($plugin, $docmanPath,$pluginPath, $themePath, HTTPRequest::instance());
     }
 
 

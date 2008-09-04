@@ -30,7 +30,6 @@ require_once('common/user/UserManager.class.php');
 require_once('common/include/Feedback.class.php');
 require_once('common/event/EventManager.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
 
 class DocmanWatermarkController extends Controler {
     // variables
@@ -43,8 +42,9 @@ class DocmanWatermarkController extends Controler {
     var $user_can_admin;
     var $docmanPath;
     
-    function DocmanWatermarkController(&$plugin, $docmanPath,$pluginPath, $themePath, &$request) {
-        $this->request        =& $request;
+    function __construct($plugin, $docmanPath,$pluginPath, $themePath, $request) {
+        $GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
+        $this->request        = $request;
         $this->user           = null;
         $this->groupId        = null;
         $this->user_can_admin = null;
@@ -55,8 +55,8 @@ class DocmanWatermarkController extends Controler {
         $this->view           = null;
         $this->feedback       = false;
         
-        $event_manager =& $this->_getEventManager();
-        $this->feedback =& $GLOBALS['Response']->_feedback;
+        $event_manager  = $this->_getEventManager();
+        $this->feedback = $GLOBALS['Response']->_feedback;
     }
 
     function &_getEventManager() {
@@ -65,20 +65,20 @@ class DocmanWatermarkController extends Controler {
     
     function &getUser() {
         if($this->user === null) {
-            $um =& UserManager::instance();
+            $um = UserManager::instance();
             $this->user = $um->getCurrentUser();
         }
         return $this->user;
     }
     
     function userCanManage($item_id) {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
-        $user =& $this->getUser();
+        $dPm  = Docman_PermissionsManager::instance($this->getGroupId());
+        $user = $this->getUser();
         return $dPm->userCanManage($user, $item_id);
     }
     function userCanAdmin() {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
-        $user =& $this->getUser();
+        $dPm  = Docman_PermissionsManager::instance($this->getGroupId());
+        $user = $this->getUser();
         return $dPm->userCanAdmin($user);
     }
     
@@ -128,11 +128,11 @@ class DocmanWatermarkController extends Controler {
                 return;
             }
                         
-            $this->_viewParams['docmanwatermark']     =& $this;
-            $this->_viewParams['user']                =& $this->getUser();
-            $this->_viewParams['default_url']         =  $this->getDefaultUrl();
-            $this->_viewParams['watermark_admin_url'] =  $this->getAdminWatermarkUrl();
-            $this->_viewParams['theme_path']          =  $this->getThemePath();
+            $this->_viewParams['docmanwatermark']     = $this;
+            $this->_viewParams['user']                = $this->getUser();
+            $this->_viewParams['default_url']         = $this->getDefaultUrl();
+            $this->_viewParams['watermark_admin_url'] = $this->getAdminWatermarkUrl();
+            $this->_viewParams['theme_path']          = $this->getThemePath();
             $this->_viewParams['group_id']            = (int) $this->request->get('group_id');
             require_once('DocmanWatermark_MetadataFactory.class.php');                
             $dwmdf = new DocmanWatermark_MetadataFactory();
@@ -170,8 +170,8 @@ class DocmanWatermarkController extends Controler {
     }
 
     function _dispatch($view) {
-        $user =& $this->getUser();
-        $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
+        $user = $this->getUser();
+        $dpm  = Docman_PermissionsManager::instance($this->getGroupId());
 
         switch ($view) {
         case 'admin_watermark':
@@ -204,7 +204,7 @@ class DocmanWatermarkController extends Controler {
             require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
             require_once('DocmanWatermark_MetadataValue.class.php');
             $mdf   = new Docman_MetadataFactory($this->request->get('group_id'));
-            $dwmf = new DocmanWatermark_MetadataFactory();
+            $dwmf  = new DocmanWatermark_MetadataFactory();
             $md_id = $dwmf->getMetadataIdFromGroupId($this->request->get('group_id'));
             $mdLabel = $mdf->getLabelFromId($md_id);
             $mlvef = new Docman_MetadataListOfValuesElementFactory($md_id);

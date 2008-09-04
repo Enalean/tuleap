@@ -28,7 +28,7 @@ require_once('Docman_watermarkPluginDescriptor.class.php');
 
 class Docman_watermarkPluginInfo extends PluginInfo {
     
-    function Docman_watermarkPluginInfo(&$plugin) {
+    function __construct($plugin) {
         $this->PluginInfo($plugin);
         $this->setPluginDescriptor(new Docman_watermarkPluginDescriptor());
         $this->_conf_path = $plugin->getPluginEtcRoot() .'/docman_watermark.inc';
@@ -59,13 +59,13 @@ class Docman_watermarkPluginInfo extends PluginInfo {
     function saveProperties() {
         copy($this->_conf_path, $this->_conf_path .'.'. date('YmdHis'));
         $content = file_get_contents($this->_conf_path);
-        $descs =& $this->getPropertyDescriptors();
-        $keys  =& $descs->getKeys();
-        $iter  =& $keys->iterator();
+        $descs = $this->getPropertyDescriptors();
+        $keys  = $descs->getKeys();
+        $iter  = $keys->iterator();
         while($iter->valid()) {
-            $key   =& $iter->current();
-            $desc  =& $descs->get($key);
-            $desc_name =& $desc->getName();
+            $key   = $iter->current();
+            $desc  = $descs->get($key);
+            $desc_name = $desc->getName();
             if (is_bool($desc->getValue())) {
                 $replace = '$1'. ($desc->getValue() ? 'true' : 'false') .';';
             } else {

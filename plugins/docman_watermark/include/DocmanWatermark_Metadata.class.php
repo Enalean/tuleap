@@ -34,7 +34,7 @@ class DocmanWatermark_Metadata {
     var $id;
     var $groupId;
 
-    function DocmanWatermark_Metadata() {
+    function __construct() {
         $this->id = null;
         $this->groupId = null;
     }
