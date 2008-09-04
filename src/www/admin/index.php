@@ -115,7 +115,7 @@ echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
 <li><?php echo $Language->getText('admin_main', 'display_user');
 
 	for ($i=0; $i < count($abc_array); $i++) {
-        echo '<a href="userlist.php?user_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
+        echo '<a href="user/index.php?user_shortcut_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
 	}
 ?>
 <br>
@@ -127,7 +127,7 @@ echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
   <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
 </form>
 <ul>
-<li><?php echo $Language->getText('admin_main', 'all_users',array("userlist.php")); ?></a></li>
+<li><?php echo $Language->getText('admin_main', 'all_users',array("user/index.php")); ?></a></li>
 <LI><?php echo $Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")); ?>
 <?php echo " <b>($pending_users";
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
