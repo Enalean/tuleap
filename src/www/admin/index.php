@@ -151,7 +151,7 @@ echo ")</b>";
 
 <li><?php echo $Language->getText('admin_main', 'display_group');
 	for ($i=0; $i < count($abc_array); $i++) {
-		echo '<a href="grouplist.php?group_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
+		echo '<a href="group/index.php?group_shortcut_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
 	}
 ?>
 <br>
