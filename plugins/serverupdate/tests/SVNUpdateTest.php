@@ -30,7 +30,8 @@ class SVNUpdateTest extends UnitTestCase {
     
     function testGetSVNInfo() {
         $svn_infos = "Path: .\n";
-        $svn_infos .= "URL: https://partners.xrce.xerox.com/svnroot/codex/support/CX_2_6_SUP\n";
+        $svn_infos .= "URL: https://partners.xrce.xerox.com/svnroot/codex/support/CX_3_6_SUP\n";
+        $svn_infos .= "Repository Root: https://partners.xrce.xerox.com/svnroot/codex\n";
         $svn_infos .= "Repository UUID: df09dd2a-99fe-0310-ba0d-faeadf64de00\n";
         $svn_infos .= "Revision: 2599\n";
         $svn_infos .= "Node Kind: directory\n";
@@ -40,13 +41,13 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_infos .= "Last Changed Date: 2006-02-14 16:20:23 +0100 (Tue, 14 Feb 2006)";
         
         $this->assertEqual(SVNUpdate::_getSVNInfoRevision($svn_infos), 2599);
-        $repository = "https://partners.xrce.xerox.com/svnroot/codex/support/CX_2_6_SUP";
-        $this->assertEqual(SVNUpdate::_getSVNInfoRepository($svn_infos), $repository);
+        $repository = "https://partners.xrce.xerox.com/svnroot/codex/support/CX_3_6_SUP";
+        $this->assertEqual(SVNUpdate::_getSVNInfoRepository($svn_infos), $repository, "Repository should be : ".$repository." ; found: ".SVNUpdate::_getSVNInfoRepository($svn_infos));
         
     }
     
 
-    /*function testSetCommitsfromXML() {
+    function testSetCommitsfromXML() {
         $svn_log_xml = '<?xml version="1.0" encoding="utf-8"?>';
         $svn_log_xml .= '<log>';
         $svn_log_xml .= ' <logentry revision="2926">';
@@ -54,15 +55,15 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_log_xml .= '  <date>2006-04-11T16:14:52.159548Z</date>';
         $svn_log_xml .= '  <paths>';
         $svn_log_xml .= '   <path action="M">/dev/trunk/src/www/include/trove.php</path>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/src/www/softwaremap/trove_list.php</path>';
-        $svn_log_xml .= '   <path action="M">/dev/trunk/src/etc/local.inc.dist</path>';
+        $svn_log_xml .= '   <path action="A">/dev/trunk/src/www/softwaremap/trove_list.php</path>';
+        $svn_log_xml .= '   <path action="D">/dev/trunk/src/etc/local.inc.dist</path>';
         $svn_log_xml .= '  </paths>';
         $svn_log_xml .= '  <msg>Add parameter in local.inc to specify the default trove category displayed\n';
         $svn_log_xml .= '       in the Software Map welcome page.\n';
         $svn_log_xml .= '  </msg>';
         $svn_log_xml .= ' </logentry>';
         $svn_log_xml .= ' <logentry revision="2925">';
-        $svn_log_xml .= '  <author>guerin</author>';
+        $svn_log_xml .= '  <author>nterray</author>';
         $svn_log_xml .= '  <date>2006-04-11T16:03:41.273381Z</date>';
         $svn_log_xml .= '  <paths>';
         $svn_log_xml .= '   <path action="M">/dev/trunk/src/db/mysql/database_initvalues.sql</path>';
@@ -71,14 +72,39 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_log_xml .= ' </logentry>';
         $svn_log_xml .= '</log>';
         
-        $svnupdate =& new MockSVNUpdate($this);
+        $su =& new SVNUpdateTestVersion($this);
         
         $commits = array();
-        $commits = $svnupdate->_setCommitsFromXML($svn_log_xml);
+        $commits = $su->_setCommitsFromXML($svn_log_xml);
         
-        $this->assertEqual(count($commits), 2);
-        
-    }*/
+        $this->assertEqual(count($commits), 2, "Number of commits should be 2.");
+        $commit_1 = $commits[0];
+        $commit_2 = $commits[1];
+        $this->assertEqual($commit_1->getRevision(), 2926, "Revision of first commit should be 2926");
+        $this->assertEqual($commit_2->getRevision(), 2925, "Revision of second commit should be 2925");
+        $this->assertEqual($commit_1->getAuthor(), "guerin", "Revision of first commit should be guerin");
+        $this->assertEqual($commit_2->getAuthor(), "nterray", "Revision of second commit should be nterray");
+        $this->assertEqual($commit_1->getDate(), "2006-04-11T16:14:52.159548Z", "Date of first commit should be 2006-04-11T16:14:52.159548Z");
+        $this->assertEqual($commit_2->getDate(), "2006-04-11T16:03:41.273381Z", "Date of second commit should be 2006-04-11T16:03:41.273381Z");
+        $this->assertEqual(strlen($commit_1->getMessage()), 120, "Lenght of first commit message should be 120");
+        $this->assertEqual(strlen($commit_2->getMessage()), 10, "Lenght of second commit message should be 10");
+        $files_1 = $commit_1->getFiles();
+        $files_2 = $commit_2->getFiles();
+        $this->assertEqual(count($files_1), 3, "Number of files of first commit message should be 3");
+        $this->assertEqual(count($files_2), 1, "Number of files of first commit message should be 1");
+        $file_1_1 = $files_1[0];
+        $file_1_2 = $files_1[1];
+        $file_1_3 = $files_1[2];
+        $file_2_1 = $files_2[0];
+        $this->assertEqual($file_1_1->getAction(), "M", "Action of file should be M");
+        $this->assertEqual($file_1_1->getPath(), "/dev/trunk/src/www/include/trove.php", "Path of file should be /dev/trunk/src/www/include/trove.php");
+        $this->assertEqual($file_1_2->getAction(), "A", "Action of file should be A");
+        $this->assertEqual($file_1_2->getPath(), "/dev/trunk/src/www/softwaremap/trove_list.php", "Path of file should be /dev/trunk/src/www/softwaremap/trove_list.php");
+        $this->assertEqual($file_1_3->getAction(), "D", "Action of file should be D");
+        $this->assertEqual($file_1_3->getPath(), "/dev/trunk/src/etc/local.inc.dist", "Path of file should be /dev/trunk/src/etc/local.inc.dist");
+        $this->assertEqual($file_2_1->getAction(), "M", "Action of file should be M");
+        $this->assertEqual($file_2_1->getPath(), "/dev/trunk/src/db/mysql/database_initvalues.sql", "Path of file should be /dev/trunk/src/db/mysql/database_initvalues.sql");
+    }
     
     
     function testGetConflictedLines() {
