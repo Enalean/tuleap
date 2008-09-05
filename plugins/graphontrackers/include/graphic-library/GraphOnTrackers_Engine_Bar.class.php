@@ -80,7 +80,7 @@ class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
             $l = 0; 
             for ($i=0;$i<count($this->data);$i++) {
                 if ((is_array($this->data[$i])) && (array_sum($this->data[$i])>0)) {
-                    $b[$l] = $this->getBarPlot($this->data[$i], $colors[$l]);
+                    $b[$l] = $this->getBarPlot($this->data[$i], $colors[$l % count($colors)]);
                     $b[$l]->SetLegend($this->legend[$i]);
                     $l++;
                 }
