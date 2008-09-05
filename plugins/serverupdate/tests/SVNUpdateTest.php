@@ -40,9 +40,11 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_infos .= "Last Changed Rev: 2553\n";
         $svn_infos .= "Last Changed Date: 2006-02-14 16:20:23 +0100 (Tue, 14 Feb 2006)";
         
-        $this->assertEqual(SVNUpdate::_getSVNInfoRevision($svn_infos), 2599);
+        $su =& new SVNUpdateTestVersion($this);
+        
+        $this->assertEqual($su->_getSVNInfoRevision($svn_infos), 2599);
         $repository = "https://partners.xrce.xerox.com/svnroot/codex/support/CX_3_6_SUP";
-        $this->assertEqual(SVNUpdate::_getSVNInfoRepository($svn_infos), $repository, "Repository should be : ".$repository." ; found: ".SVNUpdate::_getSVNInfoRepository($svn_infos));
+        $this->assertEqual($su->_getSVNInfoRepository($svn_infos), $repository, "Repository should be : ".$repository." ; found: ".$su->_getSVNInfoRepository($svn_infos));
         
     }
     
@@ -70,6 +72,15 @@ class SVNUpdateTest extends UnitTestCase {
         $svn_log_xml .= '  </paths>';
         $svn_log_xml .= '  <msg>Fixed typo</msg>';
         $svn_log_xml .= ' </logentry>';
+        $svn_log_xml .= ' <logentry revision="9546">';
+        $svn_log_xml .= '  <author>mnazaria</author>';
+        $svn_log_xml .= '  <date>2008-08-22T16:40:18.197564Z</date>';
+        $svn_log_xml .= '  <paths>';
+        $svn_log_xml .= '   <path copyfrom-path="/dev/trunk" copyfrom-rev="9545" action="A">/support/CX_3_6_SUP</path>';
+  		$svn_log_xml .= '  </paths>';
+  		$svn_log_xml .= '  <msg>Codendi 3.6 support branch created.
+</msg>';
+		$svn_log_xml .= '  </logentry>';
         $svn_log_xml .= '</log>';
         
         $su =& new SVNUpdateTestVersion($this);
@@ -77,25 +88,33 @@ class SVNUpdateTest extends UnitTestCase {
         $commits = array();
         $commits = $su->_setCommitsFromXML($svn_log_xml);
         
-        $this->assertEqual(count($commits), 2, "Number of commits should be 2.");
+        $this->assertEqual(count($commits), 3, "Number of commits should be 3.");
         $commit_1 = $commits[0];
         $commit_2 = $commits[1];
+        $commit_3 = $commits[2];
         $this->assertEqual($commit_1->getRevision(), 2926, "Revision of first commit should be 2926");
         $this->assertEqual($commit_2->getRevision(), 2925, "Revision of second commit should be 2925");
+        $this->assertEqual($commit_3->getRevision(), 9546, "Revision of third commit should be 9546");
         $this->assertEqual($commit_1->getAuthor(), "guerin", "Revision of first commit should be guerin");
         $this->assertEqual($commit_2->getAuthor(), "nterray", "Revision of second commit should be nterray");
+        $this->assertEqual($commit_3->getAuthor(), "mnazaria", "Revision of third commit should be mnazaria");
         $this->assertEqual($commit_1->getDate(), "2006-04-11T16:14:52.159548Z", "Date of first commit should be 2006-04-11T16:14:52.159548Z");
         $this->assertEqual($commit_2->getDate(), "2006-04-11T16:03:41.273381Z", "Date of second commit should be 2006-04-11T16:03:41.273381Z");
+        $this->assertEqual($commit_3->getDate(), "2008-08-22T16:40:18.197564Z", "Date of third commit should be 2008-08-22T16:40:18.197564ZZ");
         $this->assertEqual(strlen($commit_1->getMessage()), 120, "Lenght of first commit message should be 120");
         $this->assertEqual(strlen($commit_2->getMessage()), 10, "Lenght of second commit message should be 10");
+        $this->assertEqual(strlen($commit_3->getMessage()), 36, "Lenght of third commit message should be 36");
         $files_1 = $commit_1->getFiles();
         $files_2 = $commit_2->getFiles();
+        $files_3 = $commit_3->getFiles();
         $this->assertEqual(count($files_1), 3, "Number of files of first commit message should be 3");
         $this->assertEqual(count($files_2), 1, "Number of files of first commit message should be 1");
+        $this->assertEqual(count($files_3), 1, "Number of files of third commit message should be 1");
         $file_1_1 = $files_1[0];
         $file_1_2 = $files_1[1];
         $file_1_3 = $files_1[2];
         $file_2_1 = $files_2[0];
+        $file_3_1 = $files_3[0];
         $this->assertEqual($file_1_1->getAction(), "M", "Action of file should be M");
         $this->assertEqual($file_1_1->getPath(), "/dev/trunk/src/www/include/trove.php", "Path of file should be /dev/trunk/src/www/include/trove.php");
         $this->assertEqual($file_1_2->getAction(), "A", "Action of file should be A");
@@ -104,6 +123,8 @@ class SVNUpdateTest extends UnitTestCase {
         $this->assertEqual($file_1_3->getPath(), "/dev/trunk/src/etc/local.inc.dist", "Path of file should be /dev/trunk/src/etc/local.inc.dist");
         $this->assertEqual($file_2_1->getAction(), "M", "Action of file should be M");
         $this->assertEqual($file_2_1->getPath(), "/dev/trunk/src/db/mysql/database_initvalues.sql", "Path of file should be /dev/trunk/src/db/mysql/database_initvalues.sql");
+        $this->assertEqual($file_3_1->getAction(), "A", "Action of file should be A");
+        $this->assertEqual($file_3_1->getPath(), "/support/CX_3_6_SUP", "Path of file should be /support/CX_3_6_SUP");
     }
     
     
@@ -114,7 +135,8 @@ class SVNUpdateTest extends UnitTestCase {
         $merge_output .= "G      /server/directory/path/path2/file2.class.php\n";
         $merge_output .= "Skipped missing target: 'foo.php'";
         
-        $conflictedLines = SVNUpdate::getConflictedLines($merge_output);
+        $su =& new SVNUpdateTestVersion($this);
+        $conflictedLines = $su->getConflictedLines($merge_output);
         
         $this->assertEqual(count($conflictedLines), 2);
         $this->assertEqual($conflictedLines[0], "C      /server/directory/path/file2.class.php");
