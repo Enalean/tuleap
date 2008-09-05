@@ -519,6 +519,8 @@ class ServerUpdateViews extends Views {
                 $titles[] = $Language->getText('plugin_serverupdate_update','Actions');
                 $output .= html_build_list_table_top($titles);
                 
+                $hp = CodeX_HTMLPurifier::instance();
+
                 $i=0; // for color alternance
                 foreach($commits as $commit) {
                     $metadata = $commit->getMetaData();
@@ -529,7 +531,7 @@ class ServerUpdateViews extends Views {
                     $output .= '<td class="pluginsadministration_plugin_descriptor">'.util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate())).'</td>';
                     //Message
                     $output .= '<td>';
-                    $output .= nl2br(htmlentities($commit->getMessage()), ENT_QUOTES, 'UTF-8');
+                    $output .= $hp->purify($commit->getMessage(), CODEX_PURIFIER_BASIC);
                     $output .= '<p><u>'.$Language->getText('plugin_serverupdate_update','ChangedFiles').'</u>';
                     $output .= '<ul>';
                     $files = $commit->getFiles();
