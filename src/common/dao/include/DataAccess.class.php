@@ -1,6 +1,7 @@
 <?php
 
 require_once('DataAccessResult.class.php');
+require_once('DataAccessException.class.php');
 
 $GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
 
@@ -31,13 +32,15 @@ class DataAccess {
     */
     function DataAccess($host,$user,$pass,$db,$opt='') {
         $this->store = array();
-        $this->db = mysql_connect($host,$user,$pass, true, $opt) or die('Unable to access the CodeX database. Please contact your administrator.');
-        mysql_query("SET NAMES 'utf8'", $this->db);
+        $this->db = mysql_connect($host,$user,$pass, true, $opt);
         if ($this->db) {
+            mysql_query("SET NAMES 'utf8'", $this->db);
             if (!mysql_select_db($db,$this->db)) {
                 trigger_error(mysql_error(), E_USER_ERROR);
             }
             $this->db_name = $db;
+        } else {
+            throw new DataAccessException('Unable to access the database. Please contact your administrator.');
         }
     }
     var $store;
