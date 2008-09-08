@@ -86,10 +86,12 @@ class PluginManager {
     }
     
     function availablePlugin($plugin) {
-        $plugin_factory = $this->_getPluginFactory();
-        $plugin_factory->availablePlugin($plugin);
+    	if ($plugin->canBeMadeAvailable()) {
+    		$plugin_factory = $this->_getPluginFactory();
+        	$plugin_factory->availablePlugin($plugin);
         
-        $plugin->setAvailable(true);
+        	$plugin->setAvailable(true);
+    	}
     }
     function unavailablePlugin($plugin) {
         $plugin_factory = $this->_getPluginFactory();
@@ -107,6 +109,7 @@ class PluginManager {
                     $plugin_factory = $this->_getPluginFactory();
                     $plugin = $plugin_factory->createPlugin($name);
                     $this->_createEtc($name);
+                    $plugin->postInstall();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
                 }
