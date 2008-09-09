@@ -39,13 +39,11 @@ function display_user_result_table($res) {
             }
             echo '<td width="'. round(100/$nb_cols) .'%">';
             echo '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
-            echo '<div style="">';
-            echo '<div style="float:right;">';
+            echo '<table width="100%"><tr><td><a href="/users/'. $data['user_name'] .'/">'. user_get_name_display_from_id($data['user_id']) .'</a></td>';
+            echo '<td style="text-align:right;">';
             project_admin_display_bullet_user($data['user_id'], $action);
-            echo '</div>';
-            echo '<div style=""><a href="/users/'. $data['user_name'] .'/">'. user_get_name_display_from_id($data['user_id']) .'</a></div>';
-            echo '<div style="color:#666">'. $data['email'] .'</div>';
-            echo '</div>';
+            echo '</td></tr></table>';
+            echo '<div style="color:#666; ">'. $data['email'] .'</div>';
             echo '</div>';
             echo '</td>';
         }
