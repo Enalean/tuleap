@@ -32,18 +32,17 @@ function display_user_result_table($res) {
                 echo '</tr><tr>';
             }
             $action     = 'add';
-            $icon       = '/ic/add.png';
             $background = 'eee';
             if ($data['is_on']) {
                 $action     = 'remove';
-                $icon       = '/ic/delete.png';
                 $background = 'dcf7c4';
             }
             echo '<td width="'. round(100/$nb_cols) .'%">';
             echo '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
-            //echo '<div style="float:left;padding-right:3px;"><input type="checkbox" name="user_id" value="'. $data['user_id'] .'" /></div>';
             echo '<div style="">';
-            echo '<div style="float:right;"><input type="image" src="'. util_get_dir_image_theme() . $icon .'" name="user['. $data['user_id'] .']" value="'. $action .'" /></div>';
+            echo '<div style="float:right;">';
+            project_admin_display_bullet_user($data['user_id'], $action);
+            echo '</div>';
             echo '<div style=""><a href="/users/'. $data['user_name'] .'/">'. user_get_name_display_from_id($data['user_id']) .'</a></div>';
             echo '<div style="color:#666">'. $data['email'] .'</div>';
             echo '</div>';
@@ -148,7 +147,7 @@ if ($ugroup_id) {
                 echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
                 echo '<td style="white-space:nowrap">'. user_get_name_display_from_id($data['user_id']) .'</td>';
                 echo '<td>';
-                echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/delete.png" name="user['. $data['user_id'] .']" value="remove" />';
+                project_admin_display_bullet_user($data['user_id'], 'remove');
                 echo '</td>';
                 echo '</tr>';
             }
