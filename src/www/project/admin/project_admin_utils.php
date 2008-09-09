@@ -187,7 +187,7 @@ function project_admin_display_bullet_user($user_id, $action, $url = null) {
     if ($action == 'add') {
         $icon       = '/ic/add.png';
     } else {
-        $icon       = '/ic/delete.png';
+        $icon       = '/ic/cross.png';
     }
     if (!$url) {
         $url = $_SERVER['REQUEST_URI'] .'&user['. $user_id .']='. $action;
