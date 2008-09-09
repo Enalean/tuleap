@@ -247,6 +247,10 @@ class PluginManagerTest extends UnitTestCase {
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
+        
+        // plugin manager must call postInstall 1 time on plugin after its creation
+        $plugin->expectCallCount('postInstall', 1);
+        
         $this->_remove_directory(dirname(__FILE__).'/test');
     }
     function testIsNameValide() {
