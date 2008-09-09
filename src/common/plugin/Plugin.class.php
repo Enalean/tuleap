@@ -122,11 +122,29 @@ class Plugin {
     }
     
     /**
+     * Function called before turning a plugin to available status
+     * Allow you to check required things (DB connection, etc...)
+     * and to forbid plugin to be made available if requirements are not met.
+     *
+     * @return boolean true if the plugin can be made available, false if not
+     */
+    public function canBeMadeAvailable() {
+    	return true;
+    }
+
+	/**
      * Function called when a plugin is set as available or unavailable
      *
      * @param boolean $available true if the plugin is available, false if unavailable
      */
     public function setAvailable($available) {
     }
+    
+    /**
+     * Function executed after plugin installation
+     */
+    public function postInstall() {
+    }
+    
 }
 ?>
