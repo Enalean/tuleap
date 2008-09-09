@@ -135,7 +135,7 @@ if (($func=='edit')||($func=='do_create')) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
             echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
             echo '<td>';
-            echo '<input type="image" src="'. util_get_dir_image_theme() .'/ic/delete.png" onclick="return confirm(\''.  $hp->purify(addslashes('Remove '. user_get_name_display_from_id($data['user_id']) .' from '. $ugroup_name .'?'), CODEX_PURIFIER_CONVERT_HTML)  .'\');" name="user_id" value="'. $data['user_id'] .'" />';
+            project_admin_display_bullet_user($data['user_id'], 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $data['user_id']);
             echo '</td>';
             echo '</tr>';
         }
