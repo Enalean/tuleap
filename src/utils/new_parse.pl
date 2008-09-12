@@ -783,6 +783,22 @@ while ($ln = pop(@groupdump_array)) {
 
     }
 
+# Create symbolic links in /home/groups for group names containing upper-case letters.
+# This is needed for project web site (URL is lowercase only)
+if($server_is_master) {
+    if (! $sys_disable_subdomains) {
+        opendir DIRHANDLE,"$grpdir_prefix";
+        while($groupdir=readdir DIRHANDLE) {
+            $dir_exists{$groupdir}=1;
+        }
+	foreach $groupname (sort(keys %dir_exists)) {
+	    $lower_case_groupname = lc($groupname);
+            if (! $dir_exists{$lower_case_groupname}) {
+                symlink("$grpdir_prefix/$groupname","$grpdir_prefix/$lower_case_groupname");
+            }
+        }
+    }
+}
 
 
 print ("\n      Groups processing Results\n\n");
@@ -1129,6 +1145,11 @@ sub delete_group {
         system("cd $grpdir_prefix ; /bin/tar -czf $tmp_dir/$this_group.tar.gz $this_group");
         chmod 0600, "$tmp_dir/$this_group.tar.gz";
         system("rm -fr $grpdir_prefix/$this_group");
+        # Remove lower-case symlink if it exists
+        $lc_group=lc($this_group);
+        if ($lc_group ne $this_group) {
+            unlink "$grpdir_prefix/$lc_group";
+        }
 
 
         # And do the same for the CVS, SVN, Files directories
