@@ -278,7 +278,8 @@ class graphicEngineHtml extends Error {
             echo '<p>'. $this->genGraphRepSelBox($report_graphic_id) .'</p>';
             $gr = new GraphOnTrackers_Report($report_graphic_id);
             foreach($gr->getCharts() as $chart) {
-                echo '<div style="float:left; padding:10px; text-align:right;">';
+                $overflow = $chart->getWidth() ? '' : 'overflow:auto;';
+                echo '<div style="float:left; padding:10px; text-align:right; '. $overflow .'">';
                 $chart->display();
                 echo '</div>';
             }
