@@ -1266,12 +1266,12 @@ INSERT INTO artifact_field VALUES (24,1,1,'release_id',2,'SB','','Release','The 
 INSERT INTO artifact_field VALUES (26,1,1,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (27,1,1,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (28,1,1,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (29,1,2,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (29,1,2,'close_date',4,'DF','','Close Date','Close Date','',0,1,0,0,NULL,0);
 -- Tasks tracker
 INSERT INTO artifact_field VALUES (2,2,4,'percent',2,'TF','3/3','Percentage of completion (1-100)','Integer value between 0-100','',0,0,1,0,NULL,'0');
 INSERT INTO artifact_field VALUES (4,2,4,'hours',3,'TF','5/5','Effort','Number of hours of work needed to fix the artifact (including testing)','',0,1,1,0,NULL,'0.00');
-INSERT INTO artifact_field VALUES (5,2,4,'start_date',4,'DF','','Start Date','Start Date','',0,0,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','Close Date','Close Date','',0,0,0,1,'','');
+INSERT INTO artifact_field VALUES (5,2,4,'start_date',4,'DF','','Start Date','Start Date','',0,1,1,0,NULL,0);
+INSERT INTO artifact_field VALUES (6,2,4,'close_date',4,'DF','','Close Date','Close Date','',0,0,0,1,NULL,0);
 INSERT INTO artifact_field VALUES (7,2,3,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (8,2,3,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (11,2,4,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1283,8 +1283,8 @@ INSERT INTO artifact_field VALUES (12,2,3,'subproject_id',2,'SB','','Subproject'
 INSERT INTO artifact_field VALUES (13,2,3,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (14,2,3,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (16,2,3,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (17,2,4,'due_date',4,'DF','','Due Date','Due Date','',0,0,0,0,NULL,'');
-INSERT INTO artifact_field VALUES (18,2,4,'end_date',4,'DF','','End Date','End Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (17,2,4,'due_date',4,'DF','','Due Date','Due Date','',0,1,1,0,NULL,0);
+INSERT INTO artifact_field VALUES (18,2,4,'end_date',4,'DF','','End Date','End Date','',0,1,1,0,NULL,0);
 -- SR tracker
 INSERT INTO artifact_field VALUES (9,3,5,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (7,3,6,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1295,13 +1295,13 @@ INSERT INTO artifact_field VALUES (4,3,5,'open_date',4,'DF','','Submitted on','D
 INSERT INTO artifact_field VALUES (3,3,5,'details',1,'TA','60/7','Original Submission','A full description of the artifact','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (2,3,5,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (1,3,5,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (10,3,6,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (10,3,6,'close_date',4,'DF','','Close Date','Close Date','',0,1,0,0,NULL,0);
 INSERT INTO artifact_field VALUES (11,3,5,'severity',2,'SB','','Priority','How quickly the artifact must be completed','',0,0,1,0,NULL,'5');
 INSERT INTO artifact_field VALUES (13,3,5,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','');
 -- Empty tracker
 INSERT INTO artifact_field VALUES (1,4,7,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,4,7,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','');
-INSERT INTO artifact_field VALUES (3,4,7,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (3,4,7,'close_date',4,'DF','','Close Date','Close Date','',0,1,0,0,NULL,0);
 INSERT INTO artifact_field VALUES (4,4,7,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (5,4,7,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (6,4,7,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1');
@@ -1352,7 +1352,7 @@ INSERT INTO artifact_field VALUES (24,6,11,'release_id',2,'SB','','Release','The
 INSERT INTO artifact_field VALUES (26,6,11,'originator_name',1,'TF','20/40','Originator Name','The name of the person who reported the artifact (if different from the submitter field)','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (27,6,11,'originator_email',1,'TF','20/40','Originator Email','Email address of the person who reported the artifact. Automatically included in the artifact email notification process.','S',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (28,6,11,'originator_phone',1,'TF','10/40','Originator Phone','Phone number of the person who reported the artifact','S',0,1,1,0,NULL,'');
-INSERT INTO artifact_field VALUES (29,6,12,'close_date',4,'DF','','End Date','End Date','',0,1,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (29,6,12,'close_date',4,'DF','','Close Date','Close Date','',0,1,0,0,NULL,0);
 INSERT INTO artifact_field VALUES (30,6,12,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','',0,0,1,0,NULL,'1');
 INSERT INTO artifact_field VALUES (31,6,13,'slm_environment',1,'TF','60/150','Environment','Associated Salomé TMF environment','',0,1,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (32,6,13,'slm_campaign',1,'TF','60/150','Campaign','Associated Salomé TMF campaign','',0,1,1,0,NULL,'');
@@ -1367,7 +1367,7 @@ INSERT INTO artifact_field VALUES (40,6,11,'last_update_date',4,'DF','','Last Mo
 -- Scrum Backlog tracker
 INSERT INTO artifact_field VALUES (1,7,14,'submitted_by',5,'SB', '', 'Submitted by','User who originally submitted the artifact','',0,1,1,1,'artifact_submitters','');
 INSERT INTO artifact_field VALUES (2,7,14,'open_date',4,'DF', '', 'Submitted on','Date and time for the initial artifact submission','',0,0,0,1,NULL,'');
-INSERT INTO artifact_field VALUES (3,7,14,'close_date',4,'DF', '', 'Close Date','Close Date','',0,0,0,0,NULL,'');
+INSERT INTO artifact_field VALUES (3,7,14,'close_date',4,'DF', '', 'Close Date','Close Date','',0,0,0,0,NULL,0);
 INSERT INTO artifact_field VALUES (4,7,14,'summary',1,'TF', '60/150', 'Summary','One line description of the artifact','',0,0,1,0,NULL,'');
 INSERT INTO artifact_field VALUES (5,7,14,'artifact_id',2,'TF', '6/10', 'Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'');
 INSERT INTO artifact_field VALUES (6,7,14,'severity',2,'SB', '', 'Priority','Customer priority','',0,0,1,0,NULL,'5');
@@ -2245,7 +2245,6 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_A
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#4',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#5',3);
-INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#6',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#7',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#8',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_SUBMIT','2#9',3);
@@ -2275,7 +2274,6 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#2',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#4',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#5',3);
-INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#6',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#7',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#8',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','2#9',3);
