@@ -71,11 +71,11 @@ class PluginDao extends DataAccessObject {
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
+                $inserted = (int) $row['id'];
             } else {
                 $inserted = $dar->isError();
             }
-        } 
+        }
         return $inserted;
     }
     
