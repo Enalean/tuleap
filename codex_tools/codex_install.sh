@@ -1141,7 +1141,7 @@ fi
 
 if [ "$disable_subdomains" = "y" ]; then
   echo "Use same-host project web sites"
-  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET link = '/www/$projectname' WHERE short_name = 'homepage'"
+  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET link = '/www/\$projectname' WHERE short_name = 'homepage'"
 fi
 
 todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
