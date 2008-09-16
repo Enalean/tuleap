@@ -46,7 +46,7 @@ class Docman_watermarkPlugin extends Plugin {
         $this->_addHook('plugin_docman_file_before_download', 'stampFile', false);
         $this->_addHook('plugin_docman_after_admin_menu', 'addAdminMenuWatermark', false);
         $this->_addHook('plugin_docman_after_dispacher', 'dispachToController', false);
-        $this->_addHook('plugin_docman_after_matadata_clone', 'importWatermarkMetadataSettings', false);
+        $this->_addHook('plugin_docman_after_metadata_clone', 'importWatermarkMetadataSettings', false);
     }
 
     /**
