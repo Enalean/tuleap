@@ -46,6 +46,7 @@ class Docman_watermarkPlugin extends Plugin {
         $this->_addHook('plugin_docman_file_before_download', 'stampFile', false);
         $this->_addHook('plugin_docman_after_admin_menu', 'addAdminMenuWatermark', false);
         $this->_addHook('plugin_docman_after_dispacher', 'dispachToController', false);
+        $this->_addHook('plugin_docman_after_matadata_clone', 'importWatermarkMetadataSettings', false);
     }
 
     /**
@@ -126,6 +127,23 @@ class Docman_watermarkPlugin extends Plugin {
         $this->process();
         exit(0);
     }
+    
+    /**
+     *  hook method to import watermark metadata settings
+     */
+    function importWatermarkMetadataSettings($params) {
+        require_once('DocmanWatermark_MetadataFactory.class.php');
+        $dwmf = new DocmanWatermark_MetadataFactory();
+        $mdId = $dwmf->getMetadataIdFromGroupId($params['srcProjectId']);
+        if ($mdId == $params['md']->getId()) {
+            require_once('DocmanWatermark_MetadataImportFactory.class.php');
+            $dwmif = new DocmanWatermark_MetadataImportFactory();
+            $dwmif->setSrcProjectId($params['srcProjectId']);
+            $dwmif->setTargetProjectId($params['targetProjectId']);
+            $dwmif->importSettings($params['md']);
+        }
+    }
+    
 }
 
 ?>

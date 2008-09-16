@@ -149,7 +149,7 @@ class DocmanWatermarkController extends Controler {
                 $arrVals['watermark'][] = $dwmv->getWatermark();
                 $iterValues->next();
             }
-            $this->_viewParams['md_values'] = &$arrVals;
+            $this->_viewParams['md_values'] = $arrVals;
             $view = $this->request->exist('action') ? $this->request->get('action') : 'admin_watermark';
             if ($this->request->exist('project') && ($this->request->exist('action') == 'admin_import_from_project')) {
                 $_targetGroupId = (int) $this->request->get('project');
@@ -229,7 +229,7 @@ class DocmanWatermarkController extends Controler {
             }
             $iterValues = new ArrayIterator($arrValues);
             $this->_actionParams['group_id'] = $this->request->get('group_id');
-            $this->_actionParams['md_values'] = &$iterValues;            
+            $this->_actionParams['md_values'] = $iterValues;            
             $this->action = 'setup_metadata_values';
 
             $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_update_metadata_values'));
@@ -239,11 +239,30 @@ class DocmanWatermarkController extends Controler {
         case 'admin_import_from_project':
             $this->_actionParams['src_group_id']    = $this->request->get('project');
             $this->_actionParams['target_group_id'] = $this->request->get('group_id');
-            $this->action = 'import_from_project';
-            
-            $this->_viewParams['md_id'] = $md_id;
-            $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));
-            $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_watermark';
+            require_once('DocmanWatermark_MetadataImportFactory.class.php');            
+            $dwmif = new DocmanWatermark_MetadataImportFactory();
+            $dwmif->setSrcProjectId    = $this->request->get('project');
+            $dwmif->setTargetProjectId = $this->request->get('group_id');
+            require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+            $dmf = new Docman_MetadataFactory($this->request->get('project'));
+            require_once('DocmanWatermark_MetadataFactory.class.php');
+            $dwmf = new DocmanWatermark_MetadataFactory();
+            $md_id = $dwmf->getMetadataIdFromGroupId($dwmif->setSrcProjectId);
+            $mdIter = $dmf->findByName($dwmf->getMetadataNameFromId($md_id));
+            $mdIter->rewind();
+            $md = $mdIter->current(); 
+            $mdMap = $dwmif->getWatermarkMetadataMap($md);
+            if ($mdMap['md'] != 0) {
+                $this->action = 'import_from_project';
+                $this->_viewParams['md_id'] = $md_id;
+                $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));
+                $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_watermark';                
+            } else {
+                $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_from_project_not_match'));
+                $this->_viewParams['sSrcGroupId'] = $this->request->get('project');
+                $this->_viewParams['group_id'] = $this->request->get('group_id');
+                $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_import_metadata_check';
+            }
             $this->view   = 'RedirectAfterCrud';
             break;
         default:
