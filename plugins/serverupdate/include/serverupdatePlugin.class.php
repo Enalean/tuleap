@@ -54,45 +54,22 @@ class ServerUpdatePlugin extends Plugin {
     
     function myPageBox($params) {
         if (user_is_super_user()) {
-            require_once('ServerUpdate.class.php');
-            $um =& UserManager::instance();
-            $user =& $um->getCurrentUser();
-            
-            $serverupdate = new ServerUpdate(null);
-            $svnupdate = $serverupdate->getSVNUpdate();
-            if ($svnupdate->getRepository() != "") {
-                $commits = $svnupdate->getCommits();
-                
-                $nb_commits = count($commits);
-                if ($nb_commits > 0) {
-                    $nb_critical_updates = 0;
-                    $critical_updates = false;
-                    foreach($commits as $commit) {
-                        if ($commit->getLevel() == 'critical') {
-                            $critical_updates = true;
-                            $nb_critical_updates++;
-                        }
-                    }
-                    
-                    if ($critical_updates) {
-                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_critical_updates', $nb_critical_updates);
-                        $bgcolor = 'red';
-                    } else {
-                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_updates', $nb_commits);
-                        $bgcolor = 'orange';
-                    }
-                } else {
-                    $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date');
-                    $bgcolor = 'green';
-                }
-            } else {
-                $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
-                $bgcolor = 'black';
-            }
+            $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
             $params['result'][] = array(
                 'text'    => '<a href="/plugins/serverupdate/">'. $GLOBALS['Language']->getText('plugin_serverupdate', 'descriptor_name') .'</a>',
-                'value'   => $value,
-                'bgcolor' => $bgcolor
+                'value'   => '<span id="widget_serverupdate_status">'. $GLOBALS['HTML']->getImage('ic/spinner.gif', array('alt' => 'Please wait...')) .'</span><script type="text/javascript">'."
+                document.observe('dom:loaded', function() {
+                    new Ajax.Request('/plugins/serverupdate/?view=widgetstatus', {
+                        onSuccess: function(transport) {
+                            var json = eval(transport.responseText);
+                            $('widget_serverupdate_status').parentNode.setStyle({backgroundColor:json.bgcolor});
+                            $('widget_serverupdate_status').update(json.value);
+                        }
+                    });
+                });
+                </script>".'
+                <noscript style="color:red">(javascript mandatory)</noscript>',
+                'bgcolor' => 'white'
             );
         }
     }

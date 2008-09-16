@@ -26,11 +26,14 @@ class ServerUpdate extends Controler {
     
     function ServerUpdate($themePath) {
         session_require(array('group'=>'1','admin_flags'=>'A'));
-        $this->svnupdate = new SVNUpdate($GLOBALS['codex_dir']);
+        $this->svnupdate = null;
         $this->themePath = $themePath;
     }
     
     function getSVNUpdate() {
+        if (!$this->svnupdate) {
+            $this->svnupdate = new SVNUpdate($GLOBALS['codex_dir']);
+        }
         return $this->svnupdate;
     }
     function setSVNUpdate($svnupdate) {
@@ -75,8 +78,45 @@ class ServerUpdate extends Controler {
                         $GLOBALS['opens'] = implode(",", $opens);
                     }
                     break;
+                case 'widgetstatus':
+                    //Do not display warnings for ajax calls
+                    $display_errors = ini_get('display_errors');
+                    ini_set('display_errors', 'off');
+                    $svnupdate = $this->getSVNUpdate();
+                    ini_set('display_errors', $display_errors);
+                    if ($svnupdate->getRepository() != "") {
+                        $commits = $svnupdate->getCommits();
+                        
+                        $nb_commits = count($commits);
+                        if ($nb_commits > 0) {
+                            $nb_critical_updates = 0;
+                            $critical_updates = false;
+                            foreach($commits as $commit) {
+                                if ($commit->getLevel() == 'critical') {
+                                    $critical_updates = true;
+                                    $nb_critical_updates++;
+                                }
+                            }
+                            
+                            if ($critical_updates) {
+                                $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_critical_updates', $nb_critical_updates);
+                                $bgcolor = 'red';
+                            } else {
+                                $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets','my_serverupdates_nb_updates', $nb_commits);
+                                $bgcolor = 'orange';
+                            }
+                        } else {
+                            $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date');
+                            $bgcolor = 'green';
+                        }
+                    } else {
+                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
+                        $bgcolor = 'black';
+                    }
+                    echo '({"value":"'. addslashes($value) .'","bgcolor":"'. $bgcolor .'"})';/**/
+                    break;
                 default:
-                    if ($this->svnupdate->getRepository() == "") {
+                    if ($this->getSVNUpdate->getRepository() == "") {
                         $this->view = 'norepository';
                     } else {
                         if ($request->exist('sort')) {
@@ -96,7 +136,7 @@ class ServerUpdate extends Controler {
                     break;
             }
         } else {
-            if ($this->svnupdate->getRepository() == "") {
+            if ($this->getSVNUpdate->getRepository() == "") {
                 $this->view = 'norepository';
             } else {
                 $this->view = 'browse';
@@ -109,7 +149,7 @@ class ServerUpdate extends Controler {
                     if ($request->exist('revision')) {
                         // We test if we are not going back (reverse to old revision)
                         // which is not allowed. To do this, it's better to use the console.
-                        if ($this->svnupdate->getWorkingCopyRevision() >= $request->get('revision')) {
+                        if ($this->getSVNUpdate->getWorkingCopyRevision() >= $request->get('revision')) {
                             exit_error($GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateFailed'), $GLOBALS['Language']->getText('plugin_serverupdate_update','NoReverseUpdate'));
                         } else {
                             $this->view = 'testUpdate';
@@ -120,7 +160,7 @@ class ServerUpdate extends Controler {
                     if ($request->exist('revision')) {
                         if (is_numeric($request->get('revision'))) {
                             // We check that a reverse update to a older revision is not attempted
-                            if ($this->svnupdate->getWorkingCopyRevision() >= $request->get('revision')) {
+                            if ($this->getSVNUpdate->getWorkingCopyRevision() >= $request->get('revision')) {
                                 exit_error($GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateFailed'), $GLOBALS['Language']->getText('plugin_serverupdate_update','NoReverseUpdate'));
                             } else {
                                 $this->view = 'processUpdate';

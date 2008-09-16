@@ -35,15 +35,19 @@ class ServerUpdateViews extends Views {
     }
     
     function header() {
-        $title = $GLOBALS['Language']->getText('plugin_serverupdate','title');
-        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
-        echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
-        echo '<b><a href="index.php">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','server_update').'</a></b> | ';
-        echo '<b><a href="?view=upgrades">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','script_upgrades').'</a></b> | ';
-        echo '<b><a href="?view=preferences">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','preferences').'</a></b>';
+        if ( ! HTTPRequest::instance()->isAjax()) {
+            $title = $GLOBALS['Language']->getText('plugin_serverupdate','title');
+            $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
+            echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
+            echo '<b><a href="index.php">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','server_update').'</a></b> | ';
+            echo '<b><a href="?view=upgrades">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','script_upgrades').'</a></b> | ';
+            echo '<b><a href="?view=preferences">'.$GLOBALS['Language']->getText('plugin_serverupdate_menu','preferences').'</a></b>';
+        }
     }
     function footer() {
-        $GLOBALS['HTML']->footer(array());
+        if ( ! HTTPRequest::instance()->isAjax()) {
+            $GLOBALS['HTML']->footer(array());
+        }
     }
     
     // {{{ Views
