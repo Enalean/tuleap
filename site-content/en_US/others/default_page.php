@@ -6,11 +6,15 @@
 // Purpose:
 //    Default Web Page for groups that haven't setup their page yet
 //   Please replace this file with your own website
+if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
+  $project_name = $matches[1];
+  $default_domain = $_SERVER['HTTP_HOST'];
+} else {
+  $pieces = explode('.', $_SERVER['HTTP_HOST']);
+  $project_name = array_shift($pieces);
+  $default_domain = join('.',$pieces);
+}
 
-$headers = getallheaders();
-$pieces = explode('.', $headers['Host']);
-$project_name = array_shift($pieces);
-$default_domain = join('.',$pieces);
 ?>
 <HTML>
 <HEAD>
@@ -52,7 +56,7 @@ $default_domain = join('.',$pieces);
   <TR>
     <TD>
       <CENTER><BR>
-      <H2>Welcome to http://<?php print $headers[Host]; ?>/</H2>
+      <H2>Welcome to http://<?php print $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?></H2>
       <h3>This Project hasn't yet set up its personal web site.<BR>
       Please check back soon for updates or visit the <A href="http://<? echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Project Summary</a> page on Codendi<BR></h3>
       </CENTER>
