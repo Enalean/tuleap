@@ -116,7 +116,7 @@ class ServerUpdate extends Controler {
                     echo '({"value":"'. addslashes($value) .'","bgcolor":"'. $bgcolor .'"})';/**/
                     break;
                 default:
-                    if ($this->getSVNUpdate->getRepository() == "") {
+                    if ($this->getSVNUpdate()->getRepository() == "") {
                         $this->view = 'norepository';
                     } else {
                         if ($request->exist('sort')) {
@@ -136,7 +136,7 @@ class ServerUpdate extends Controler {
                     break;
             }
         } else {
-            if ($this->getSVNUpdate->getRepository() == "") {
+            if ($this->getSVNUpdate()->getRepository() == "") {
                 $this->view = 'norepository';
             } else {
                 $this->view = 'browse';
@@ -149,7 +149,7 @@ class ServerUpdate extends Controler {
                     if ($request->exist('revision')) {
                         // We test if we are not going back (reverse to old revision)
                         // which is not allowed. To do this, it's better to use the console.
-                        if ($this->getSVNUpdate->getWorkingCopyRevision() >= $request->get('revision')) {
+                        if ($this->getSVNUpdate()->getWorkingCopyRevision() >= $request->get('revision')) {
                             exit_error($GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateFailed'), $GLOBALS['Language']->getText('plugin_serverupdate_update','NoReverseUpdate'));
                         } else {
                             $this->view = 'testUpdate';
@@ -160,7 +160,7 @@ class ServerUpdate extends Controler {
                     if ($request->exist('revision')) {
                         if (is_numeric($request->get('revision'))) {
                             // We check that a reverse update to a older revision is not attempted
-                            if ($this->getSVNUpdate->getWorkingCopyRevision() >= $request->get('revision')) {
+                            if ($this->getSVNUpdate()->getWorkingCopyRevision() >= $request->get('revision')) {
                                 exit_error($GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateFailed'), $GLOBALS['Language']->getText('plugin_serverupdate_update','NoReverseUpdate'));
                             } else {
                                 $this->view = 'processUpdate';
