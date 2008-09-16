@@ -114,6 +114,10 @@ class Docman_ReportColumn {
         }
         return '';
     }
+    
+    function getJavascript($item, $view) {
+        return '';
+    }
 }
 
 class Docman_ReportColumnLocation 
@@ -177,12 +181,16 @@ extends Docman_ReportColumn {
                                            'id' => $item->getId()), 
                                      false,
                                      true);
-        $html .= '<a href="'.$url.'">';
+        $html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
         $html .=  htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
         $html .=  '</a>';
         $html .= $view->getItemMenu($item, $params);
         $html .= '</span>';
         return $html;
+    }
+    
+    function getJavascript($item, $view) {
+        return $view->getActionForItem($item);
     }
 }
 

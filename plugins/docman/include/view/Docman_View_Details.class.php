@@ -79,7 +79,7 @@ class Docman_View_Details extends Docman_View_Display {
             $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager, $token));
         }
         
-        if ($user_can_read) {
+        if ($user_can_read && !is_a($params['item'], 'Docman_Empty')) {
             if ($view && $section == 'approval') {
                 $approval =& $view;
             } else {

@@ -95,6 +95,20 @@ class Docman_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Search in logs if user accessed the given item after the given date.
+     */
+    function searchUserAccessSince($userId, $itemId, $date) {
+        $sql = 'SELECT NULL'.
+            ' FROM plugin_docman_log'.
+            ' WHERE item_id = '.$this->da->escapeInt($itemId).
+            ' AND user_id = '.$this->da->escapeInt($userId).
+            ' AND type = '.PLUGIN_DOCMAN_EVENT_ACCESS.
+            ' AND time > '.$this->da->escapeInt($date).
+            ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        return ($dar && !$dar->isError() && $dar->rowCount() == 1);
+    }
 
     /**
     * create a row in the table plugin_docman_log 

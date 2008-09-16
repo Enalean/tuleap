@@ -22,9 +22,9 @@
  *
  * 
  */
-require_once('DocmanActions.class.php');
+require_once('Docman_Actions.class.php');
 
-class SOAPDocmanActions extends DocmanActions {
+class Docman_SOAPActions extends Docman_Actions {
 
 }
 

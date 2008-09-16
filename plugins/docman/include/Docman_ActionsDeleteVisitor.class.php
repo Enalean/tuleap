@@ -24,9 +24,9 @@
  */
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_VersionFactory.class.php');
-class DocmanActionsDeleteVisitor /* implements Visitor */ {
+class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     
-    function DocmanActionsDeleteVisitor(&$file_storage, &$docman) {
+    function Docman_ActionsDeleteVisitor(&$file_storage, &$docman) {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate   = time();
         $this->file_storage =& $file_storage;

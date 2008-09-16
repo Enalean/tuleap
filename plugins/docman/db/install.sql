@@ -206,29 +206,38 @@ CREATE TABLE plugin_docman_metadata_love_md (
 --
 -- Table structure for table 'plugin_docman_approval'
 --
+-- table_id    Id of the table
 -- item_id     Id of the item (FK plugin_docman_item (item_id))
+-- version_id  Id of the item version (FK plugin_docman_version (id))
+-- wiki_version_Id Id of the wiki page version (FK wiki_version(version))
 -- table_owner User who creates the table (FK user (user_id)) 
 -- date        Table creation date 
 -- description A text that describe why the approval is required.
 -- status      Table activation state: 0 - Disabled / 1 - Enabled / 2 - Closed
 -- notification Type of notification: 0 - Disabled / 1 - Once at all / 2 - Sequential
+-- auto_status  Does the table automaticaly change document status (0 - false / 1 true)
 --
 DROP TABLE IF EXISTS plugin_docman_approval;
 CREATE TABLE plugin_docman_approval (
-  item_id INT(11) UNSIGNED NOT NULL,
+  table_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  item_id INT(11) UNSIGNED NULL DEFAULT NULL,
+  version_id INT(11) UNSIGNED NOT NULL,
+  wiki_version_id INT(11) UNSIGNED NOT NULL,
   table_owner INT(11) UNSIGNED NOT NULL,
   date INT(11) UNSIGNED NULL,
   description TEXT NULL,
   status TINYINT(4) DEFAULT 0 NOT NULL,
   notification TINYINT(4) DEFAULT 0 NOT NULL,
-  INDEX item_id (item_id),
-  UNIQUE(item_id)
+  auto_status TINYINT(4) DEFAULT 0 NOT NULL,
+  PRIMARY KEY(table_id),
+  KEY item_wiki (item_id, wiki_version_id),
+  KEY version_id (version_id)
 );
 
 --
 -- Table structure for table 'plugin_docman_approval_user'
 --
--- item_id     Id of the item (FK plugin_docman_item (item_id))
+-- table_id    Id of the table the reviewer belong to (FK plugin_docman_approval (table_id))
 -- reviewer_id Id of user member of the table (FK user (user_id))
 -- date        Date of the decision.
 -- state       State of the review: 0 - Not Yet / 1 - Approved / 2 - Rejected
@@ -237,14 +246,14 @@ CREATE TABLE plugin_docman_approval (
 --
 DROP TABLE IF EXISTS plugin_docman_approval_user;
 CREATE TABLE plugin_docman_approval_user (
-  item_id INT(11) UNSIGNED NOT NULL,
+  table_id INT(11) UNSIGNED NOT NULL,
   reviewer_id INT(11) UNSIGNED NOT NULL,
   rank INT(11) DEFAULT 0 NOT NULL,
   date INT(11) UNSIGNED NULL,
   state TINYINT(4) DEFAULT 0 NOT NULL,
   comment TEXT NULL,
   version INT(11) UNSIGNED NULL,
-  PRIMARY KEY(item_id, reviewer_id),
+  PRIMARY KEY(table_id, reviewer_id),
   INDEX rank (rank)
 );
 

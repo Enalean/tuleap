@@ -93,7 +93,10 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         // ItemHighlight
         this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
         if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
-        
+
+        // Approval table
+        this.approvalTableCreateDetailsHidden = false;
+
 	// Table Report
 	// No longer toogle table report on page load: the page is too long to
 	// load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
@@ -155,17 +158,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     //}}}
     //{{{------------------------------ Actions
     addActionForItem: function(item_id, action) {
-        if (!this.actionsForItem[item_id]) {
-            this.actionsForItem[item_id] = {
-                actions:[],
-                interval:null,
-                effect:null
-            };
-        }
-        this.actionsForItem[item_id].actions.push({action:action,created:false});
-        if (this.initShowOptions_already_done) {
-            this.initShowOptions();
-        }
+        this.actionsForItem[item_id] = action;
     },
     initShowOptions: function() {
         this.initShowOptions_already_done = true;
@@ -191,7 +184,12 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     marginheight:0,
                     src:'/plugins/docman/blank.htm'
             });
-            document.body.appendChild(invisible_iframe);
+            // Without "dom:loaded" IE may crash when attempt to append
+            // the iframe to the document. See:
+            // http://www.garyharan.com/index.php/2008/04/22/internet-explorer-cannot-open-the-internet-site-operation-aborted/
+            document.observe("dom:loaded", function() {
+                document.body.appendChild(invisible_iframe);
+            });
         }
         //}}}
         $H(this.actionsForItem).keys().each((function (item_id) {
@@ -546,8 +544,39 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 		}
 	    }
 	}	
-    }
+    },
     //}}}
+    //{{{----------------------------- Approval table create
+    approvalTableCreate: function(form) {
+        var selected;
+        for(var i = 0; i < form['app_table_import'].length; i++) {
+            if(form['app_table_import'][i].checked) {
+                selected = form['app_table_import'][i].value;
+            }
+        }
+        switch(selected) {
+        case "copy":
+        case "reset":
+        case "empty":
+            if(!this.approvalTableCreateDetailsHidden) {
+                this.approvalTableCreateDetailsHidden = true;
+                Element.hide($('docman_approval_table_create_settings'));
+                Element.hide($('docman_approval_table_create_notification'));
+                Element.hide($('docman_approval_table_create_table'));
+                Element.hide($('docman_approval_table_create_add_reviewers'));
+            }
+            break;
+        default:
+            if(this.approvalTableCreateDetailsHidden) {
+                this.approvalTableCreateDetailsHidden = false;
+                Element.show($('docman_approval_table_create_settings'));
+                Element.show($('docman_approval_table_create_notification'));
+                Element.show($('docman_approval_table_create_table'));
+                Element.show($('docman_approval_table_create_add_reviewers'));
+            }
+            break;
+        }
+    }
 });
 
 com.xerox.codex.openedMenu = null;
@@ -557,94 +586,271 @@ Object.extend(com.xerox.codex.Menu.prototype, {
         this.item_id = item_id;
         this.docman = docman;
         this.close = options.close;
+        this.defaultUrl = this.docman.options.pluginPath+'/index.php?group_id='+this.docman.group_id+'&id='+item_id;
         Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
+    },
+    _createLi: function(element) {
+        var li = Builder.node('li');
+        li.appendChild(element);
+        return li;
+    },
+    _createQuickMoveIcon: function (icon) {
+        var im = Builder.node('img', {
+            'src':   this.docman.options.themePath+"/images/ic/"+icon+'.png',
+            'title': icon
+        });
+        
+        Event.observe(im, 'click', function (evt) {
+            if(icon) {
+                new Ajax.Request(this.defaultUrl+'&action=move&quick_move='+icon, {
+                    'onComplete': function() {
+                        window.location.href = window.location.href;
+                    }
+                });
+                Event.stop(evt);
+                return false;
+            }
+        }.bindAsEventListener(this));
+        return im;
+    },
+    _appendQuickMoveIcon: function (element, action) {
+        var sep = Builder.node('span');
+        sep.innerHTML = '&nbsp;&nbsp;';
+        element.appendChild(sep);
+        element.appendChild(this._createQuickMoveIcon(action));
+    },
+    _getNewFolder: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=newFolder',
+            'class': 'docman_item_option_newfolder',
+            'title': this.docman.options.language.action_newfolder});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newfolder);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNewDocument: function() {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=newDocument',
+            'class': 'docman_item_option_newdocument',
+            'title': this.docman.options.language.action_newdocument});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newdocument);
+        a.appendChild(title_txt);
+        return this._createLi(a);  
+    },
+    _getProperties: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details',
+            'class': 'docman_item_option_details',
+            'title': this.docman.options.language.action_details});
+        var title_txt = document.createTextNode(this.docman.options.language.action_details);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNewVersion: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_new_version',
+            'class': 'docman_item_option_newversion',
+            'title': this.docman.options.language.action_newversion});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newversion);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getMove: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=move',
+            'class': 'docman_item_option_move',
+            'title': this.docman.options.language.action_move});
+        var title_txt = document.createTextNode(this.docman.options.language.action_move);
+        a.appendChild(title_txt);
+        this._appendQuickMoveIcon(a, 'move-up');
+        this._appendQuickMoveIcon(a, 'move-down');
+        this._appendQuickMoveIcon(a, 'move-beginning');
+        this._appendQuickMoveIcon(a, 'move-end');
+        return this._createLi(a);
+    },
+    _getPermissions: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=permissions',
+            'class': 'docman_item_option_permissions',
+            'title': this.docman.options.language.action_permissions});
+        var title_txt = document.createTextNode(this.docman.options.language.action_permissions);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getHistory: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=history',
+            'class': 'docman_item_option_history',
+            'title': this.docman.options.language.action_history});
+        var title_txt = document.createTextNode(this.docman.options.language.action_history);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNotification: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=notifications',
+            'class': 'docman_item_option_notifications',
+            'title': this.docman.options.language.action_notifications});
+        var title_txt = document.createTextNode(this.docman.options.language.action_notifications);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getDelete: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=confirmDelete',
+            'class': 'docman_item_option_delete',
+            'title': this.docman.options.language.action_delete});
+        var title_txt = document.createTextNode(this.docman.options.language.action_delete);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getUpdate: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_update',
+            'class': 'docman_item_option_update',
+            'title': this.docman.options.language.action_update});
+        var title_txt = document.createTextNode(this.docman.options.language.action_update);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getCopy: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_copy',
+            'class': 'docman_item_option_copy',
+            'title': this.docman.options.language.action_copy});
+        var title_txt = document.createTextNode(this.docman.options.language.action_copy);
+        a.appendChild(title_txt);
+        Event.observe(a, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=action_copy&ajax_copy=true', {
+                'onComplete': function() {
+                    // Hide menu
+                    this.hide();
+
+                    // Display feedback message
+                    var li = Builder.node('li');
+
+                    // Search item title
+                    var title = $('docman_item_title_link_'+this.item_id).firstChild.nodeValue;
+                    li.innerHTML = '"'+title+'" '+this.docman.options.language.feedback_copy;
+
+                    if($('item_copied')) {
+                        $('item_copied').remove();
+                    }                    
+                    var ul = Builder.node('ul', {'class': 'feedback_info', 'id': 'item_copied'});
+                    ul.appendChild(li);
+                    var feedback = $('feedback');
+                    feedback.appendChild(ul);
+                    feedback.show();
+                    
+                    // There is sth to paste.
+                    this.docman.canPaste = true;
+                }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
+        return this._createLi(a);
+    },
+    _getPaste: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_paste',
+            'class': 'docman_item_option_paste',
+            'title': this.docman.options.language.action_paste});
+        var title_txt = document.createTextNode(this.docman.options.language.action_paste);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getApproval: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=approval',
+            'class': 'docman_item_option_approval',
+            'title': this.docman.options.language.action_approval});
+        var title_txt = document.createTextNode(this.docman.options.language.action_approval);
+        a.appendChild(title_txt);
+        return this._createLi(a);
     },
     show:function(evt) {
         var menu = 'docman_item_menu_'+this.item_id;
-        if (!$(menu)) {
+        // In the previous version of the menu, once a menu was built for an
+        // item, it was cached and re-used as is if user close and then re-open
+        // it later. As now copy/paste is done via an Ajax request, we must
+        // rebuild the menu to take this toogle into account.
+         
+        //if (!$(menu)) {
             //Save the offset
             Position.prepare();
             this.offset = Position.cumulativeOffset($('docman_item_show_menu_'+this.item_id));
             
             //Build the menu
             var actions_panel = Builder.node('div', {
-                style:'display:none;top:0px;left:0px;z-index:1001',
-                id:menu,
+                'style': 'display:none;top:0px;left:0px;z-index:1001',
+                'id': menu,
                 'class':'docman_item_menu'
             });
             
             document.body.appendChild(actions_panel);
             var ul = Builder.node('ul', {
-                id:'docman_item_menu_ul_'+this.item_id
+                'id':'docman_item_menu_ul_'+this.item_id
             });
             var li = Builder.node('li', {
                 'class':'docman_item_menu_close'
             });
             var close = Builder.node('a', {
-                href:'#close-menu'
+                'href':'#close-menu'
             });
-            var close_txt = document.createTextNode('['+this.close+']');
+            var close_txt = document.createTextNode('Id: '+this.item_id+' ['+this.close+']');
             close.appendChild(close_txt);
             li.appendChild(close);
             ul.appendChild(li);
             this.hideEvent = this.hide.bindAsEventListener(this);
             Event.observe(close, 'click', this.hideEvent, true);
-            docman.actionsForItem[this.item_id].actions.each((function (action) {
-                if (!action.created) {
-                    var li = Builder.node('li');
-                    var a = Builder.node('a', {
-                        href:action.action.href,
-                        'class':action.action.classes,
-                        title:action.action.title
-                    });
-                    var title_txt = document.createTextNode(action.action.title);
-                    a.appendChild(title_txt);
-                    if (action.action.other_icons.length) {
-                        var sep = Builder.node('span');
-                        sep.innerHTML = '&nbsp;&nbsp;';
-                        a.appendChild(sep);
-                        var ims = [];
-                        action.action.other_icons.each(function (ic) {
-                                var im = Builder.node('img', {
-                                        src:   ic.src,
-                                        title: ic.classe
-                                });
-                                var sep = Builder.node('span');
-                                sep.innerHTML = '&nbsp;&nbsp;';
-                                a.appendChild(sep);
-                                a.appendChild(im);
-                                ims.push({
-                                    classe:ic.classe,
-                                    url: ic.url,
-                                    img: im
-                                });
-                        });
-                        Event.observe(a, 'click', function (evt) {
-                            icon = ims.find(function (element) {
-                                return element.img == Event.element(evt);
-                            });
-                            if (icon) {
-                                new Ajax.Request(icon.url+'&quick_move='+icon.classe, {
-                                    onComplete: function() {
-                                        window.location.href = window.location.href;
-                                    }
-                                });
-                                Event.stop(evt);
-                                return false;
-                            }
-                        });
-                    }
-                    li.appendChild(a);
-                    ul.appendChild(li);
-                    action.created = true;
-                }
-            }).bind(this));
+            
+            //
+            // All the supported actions
+            //
+            
+            // New folder
+            if(this.docman.actionsForItem[this.item_id].canNewFolder)
+                ul.appendChild(this._getNewFolder(this.item_id));
+            // New document
+            if(this.docman.actionsForItem[this.item_id].canNewDocument)
+                ul.appendChild(this._getNewDocument(this.item_id));
+            // Properties
+            ul.appendChild(this._getProperties());
+            // New version (files)
+            if(this.docman.actionsForItem[this.item_id].canNewVersion)
+                ul.appendChild(this._getNewVersion());
+            // Update (empty, wiki, link)
+            if(this.docman.actionsForItem[this.item_id].canUpdate)
+               ul.appendChild(this._getUpdate());
+            // Notification
+            ul.appendChild(this._getNotification());
+            // History
+            ul.appendChild(this._getHistory());
+            // Permissions
+            if(this.docman.actionsForItem[this.item_id].canPermissions)
+                ul.appendChild(this._getPermissions());
+            // Approval table
+            if(this.docman.actionsForItem[this.item_id].canApproval)
+                ul.appendChild(this._getApproval());
+            // Move
+            if(this.docman.actionsForItem[this.item_id].canMove)
+                ul.appendChild(this._getMove());
+            // Copy
+            ul.appendChild(this._getCopy());
+            // Paste
+            if(this.docman.actionsForItem[this.item_id].canPaste)
+                ul.appendChild(this._getPaste());
+            // Delete
+            if(this.docman.actionsForItem[this.item_id].canDelete)
+                ul.appendChild(this._getDelete());
+                
             actions_panel.appendChild(ul);
             
             //dimensions
             this.dimensions = Element.getDimensions(actions_panel);
             
-        }
+        //}
         if (!com.xerox.codex.openedMenu || com.xerox.codex.openedMenu != menu) {
             this.hide();
             com.xerox.codex.openedMenu = menu;

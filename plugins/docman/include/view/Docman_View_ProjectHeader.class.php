@@ -18,6 +18,8 @@ require_once('Docman_View_Header.class.php');
         echo $this->phpArrayToJsArray(array_merge(array(
                 'folderSpinner' => $di->getFolderSpinner(),
                 'spinner'       => $di->getSpinner(),
+                'pluginPath'    => $this->_controller->pluginPath,
+                'themePath'     => $this->_controller->themePath,
                 'language'      => array(
                     'btn_close'                => $GLOBALS['Language']->getText('global','btn_close'),
                     'new_in'                   => $GLOBALS['Language']->getText('plugin_docman','new_in'),
@@ -30,6 +32,20 @@ require_once('Docman_View_Header.class.php');
                     'report_custom_fltr'       => $GLOBALS['Language']->getText('plugin_docman','report_custom_fltr'),
                     'report_name_new'          => $GLOBALS['Language']->getText('plugin_docman','report_name_new'),
                     'report_name_upd'          => $GLOBALS['Language']->getText('plugin_docman','report_name_upd'),
+                    'action_newfolder'         => $GLOBALS['Language']->getText('plugin_docman','action_newfolder'),
+                    'action_newdocument'       => $GLOBALS['Language']->getText('plugin_docman','action_newdocument'),
+                    'action_details'           => $GLOBALS['Language']->getText('plugin_docman','action_details'),
+                    'action_newversion'        => $GLOBALS['Language']->getText('plugin_docman','action_newversion'),
+                    'action_move'              => $GLOBALS['Language']->getText('plugin_docman','action_move'),
+                    'action_permissions'       => $GLOBALS['Language']->getText('plugin_docman','action_permissions'),
+                    'action_history'           => $GLOBALS['Language']->getText('plugin_docman','action_history'),
+                    'action_notifications'     => $GLOBALS['Language']->getText('plugin_docman','action_notifications'),
+                    'action_delete'            => $GLOBALS['Language']->getText('plugin_docman','action_delete'),
+                    'action_update'            => $GLOBALS['Language']->getText('plugin_docman','action_update'),
+                    'action_copy'              => $GLOBALS['Language']->getText('plugin_docman','action_copy'),
+                    'action_paste'             => $GLOBALS['Language']->getText('plugin_docman','action_paste'),
+                    'action_approval'          => $GLOBALS['Language']->getText('plugin_docman','action_approval'),
+                    'feedback_copy'            => $GLOBALS['Language']->getText('plugin_docman','info_copy_notify_cp')
                 )
             ),
             $this->_getJSDocmanParameters($params)
@@ -46,28 +62,6 @@ require_once('Docman_View_Header.class.php');
     
     /* protected */ function _getJSDocmanParameters($params) {
         return array();
-    }
-    
-    function phpArrayToJsArray($array) {
-        if (is_array($array)) {
-            if (count($array)) {
-                $output = '{';
-                reset($array);
-                $comma = '';
-                do {
-                    if(list($key, $value) = each($array)) {
-                        $output .= $comma . $key .': '. $this->phpArrayToJsArray($value);
-                        $comma = ', ';
-                    }
-                } while($key);
-                $output .= '}';
-            }
-        } else if (is_bool($array)) {
-            $output = $array?'true':'false';
-        } else {
-            $output = "'". addslashes($array) ."'";
-        }
-        return $output;
     }
 }
 

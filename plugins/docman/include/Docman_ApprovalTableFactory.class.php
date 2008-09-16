@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -19,448 +19,659 @@
  * You should have received a copy of the GNU General Public License
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
  */
 
 require_once('Docman_ApprovalTable.class.php');
-require_once('Docman_ApprovalTableNotificationCycle.class.php');
+require_once('Docman_ApprovalTableReviewerFactory.class.php');
 
-class Docman_ApprovalTableFactory {
+/**
+ * Define the global behaviour of the approval table.
+ *
+ * The class hierarchy of approval table is the following:
+ * Docman_ApprovalTableFactory
+ * |-- Docman_ApprovalTableItemFactory
+ * `-- Docman_ApprovalTableVersionnedFactory
+ *     |-- Docman_ApprovalTableFileFactory
+ *     `-- Docman_ApprovalTableWikiFactory
+ *
+ * This class define the common methods shared by the 3 concrete approval table
+ * factories plus the factory method (getFromItem) to get the right concrete
+ * object from the item that hold the table.
+ */
+/*abstract*/ class Docman_ApprovalTableFactory {
     var $item;
-    var $reviewerCache;
-    var $err;
-    var $warn;
+    var $table;
+    var $customizable;
 
     function Docman_ApprovalTableFactory($item) {
         $this->item = $item;
-        $this->reviewerCache = null;
-
-        // Cache of error messages
-        $this->err = array();
-        $this->err['db'] = array();
-        $this->err['perm'] = array();
-        $this->err['notreg'] = array();
-        $this->warn = array();
-        $this->warn['double'] = array();
+        $this->table = null;
+        $this->customizable = true;
     }
 
+    /**
+     * Return the right ApprovalTableFactory depending of the item.
+     */
+    /*static*/ function &getFromItem($item, $version=null) {
+        $appTableFactory = null;
+        if(is_a($item, 'Docman_File')) {
+            $appTableFactory =& new Docman_ApprovalTableFileFactory($item, $version);
+        }
+        elseif(is_a($item, 'Docman_Wiki')) {
+            $appTableFactory =& new Docman_ApprovalTableWikiFactory($item, $version);
+        }
+        elseif(is_a($item, 'Docman_Empty')) {
+            // there is no approval table for empty documents.
+        }
+        else {
+            $appTableFactory =& new Docman_ApprovalTableItemFactory($item);
+        }
+        return $appTableFactory;
+    }
+
+    /**
+     * Return the ApprovalTableReviewerFactory that correspond to the item.
+     */
+     /*static*/ function &getReviewerFactoryFromItem($item) {
+        $appTableFactory = Docman_ApprovalTableFactory::getFromItem($item);
+        if($appTableFactory !== null) {
+            $table =& $appTableFactory->getTable();
+            return $appTableFactory->_getReviewerFactory($table, $item);
+        }
+    }
+
+    /**
+     * Update dst table object with the id of the latest version of the doc.
+     */
+    /*abstract protected*/ function _updateTableWithLastId(&$dstTable) {}
+
+    /**
+     * Create a new entry in the database based on the given table
+     *
+     * @param $table ApprovalTable
+     * @return int new table id
+     */
+    /*abstract protected*/ function _createTable($table) {}
+
+    /**
+     * Create a new empty approbal table in database.
+     */
+    function newTableEmpty($userId) {
+        $table = $this->newTable();
+        $this->_updateTableWithLastId($table);
+        $table->setOwner($userId);
+        $table->setDescription('');
+        $table->setDate(time());
+        $table->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
+        $table->setNotification(PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED);
+        return $this->_createTable($table);
+    }
+
+    /**
+     * Create a new approval table
+     */
+    /*abstract public*/ function createTable($userId, $import) {}
+
+    /**
+     * Create a new table object based on $row content.
+     */
     function createTableFromRow($row) {
-        $table = new Docman_ApprovalTable();
+        $table = $this->newTable();
         $table->initFromRow($row);
         return $table;
     }
 
-    function createTable($userId) {
-        $dao =& $this->_getApprovalTableDao();
-        return $dao->createTable($this->item->getId(), $userId, '');
+    /**
+     * Return the table object that correspond to the factory defaults.
+     */
+    /*abstract protected*/ function _getTable() {}
+
+    /**
+     * Return true if their is an approval table for the item the approval
+     * table is based on.
+     */
+    function tableExistsForItem() {
+        return ($this->getTable() !== null);
     }
 
-    function tableExist() {
-        $dao =& $this->_getApprovalTableDao();
-        return $dao->tableExist($this->item->getId());
-    }
-
-    function createTableIfNotExist($userId) {
-        if($this->tableExist()) {
-            return true;
-        }
-        else {
-            return $this->createTable($userId);
-        }
-    }
-
+    /**
+     * Delete the approval table and all the reviewers that belong to.
+     */
     function deleteTable() {
-        $dao =& $this->_getApprovalTableDao();
-        $deleted = $dao->deleteTable($this->item->getId());
-        if($deleted) {
-            $deleted = $dao->truncateTable($this->item->getId());
+        $deleted = false;
+        $table =& $this->getTable();
+        if($table !== null) {
+            $reviewerFactory =& $this->_getReviewerFactory($table, $this->item);
+            $dao =& $this->_getDao();
+            $deleted = $dao->deleteTable($table->getId());
+            if($deleted) {
+                $deleted = $reviewerFactory->deleteTable();
+                $table = null;
+                $this->table = null;
+            }
         }
         return $deleted;
     }
 
     /**
-     * Update table settings:
+     * Update table in database
+     */
+    /*protected*/ function _updateTable($table) {
+        $dao =& $this->_getDao();
+        return $dao->updateTable($table->getId(),
+                                 $table->getDescription(),
+                                 $table->getStatus(),
+                                 $table->getNotification(),
+                                 $table->getOwner());
+    }
+
+    /**
+     * Update table in the database and the internal table object
      * - status
      * - notification
-     * This action triggers reviewer notification if the update succeed.
+     * - description
      */
-    function updateTable($status, $notification, $description) {
-        $dao =& $this->_getApprovalTableDao();
-        $updated = $dao->updateTable($this->item->getId(), '', $status, $notification, $description);
-        if($updated) {
-            // It will be great to have a generic feedback mecanism to report
-            // several messages (Here: report that the table was successfully
-            // updated and report things about review).
-            $this->notifyReviewers();
-            return true;
+    function updateTable($status, $notification, $description, $owner) {
+        $table =& $this->getTable();
+        if($table !== null) {
+            $table->setStatus($status);
+            $table->setNotification($notification);
+            $table->setDescription($description);
+            $table->setOwner($owner);
+            return $this->_updateTable($table);
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     /**
      * Return an ApprovalTable object. If the parameter is 'true' (default),
      * it appends the list of reviewers to the table.
      */
-    function getTable($withReviewers = true) {
-        $table = null;
-
-        $dao =& $this->_getApprovalTableDao();
-        
-        $dar = $dao->getTableById($this->item->getId());
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
-            $table = $this->createTableFromRow($row);
-        }
-
-        if($withReviewers && $table !== null) {
-            $dar = $dao->getReviewerList($this->item->getId());
-            $dar->rewind();
-            while($dar->valid()) {
-                $row = $dar->current();
-                $reviewer = $this->createReviewerFromRow($row);
-                $table->addReviewer($reviewer);
-                unset($reviewer);
-                $dar->next();
-            }
-        }
-        
-        return $table;
-    }
-
-    /**
-     * Call the right notification method regarding the notification type.
-     * @access: private
-     */
-    function _notifyReviewers($notification) {
-        $res = false;
-        $atsm =& $this->_getApprovalTableNotificationCycle(true);
-        switch($notification) {
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-            $res = $atsm->notifyAllAtOnce();
-            break;
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-            $res = $atsm->notifyNextReviewer();
-            break;
-        default:
-        }
-        return $res;
-    }
-
-    /**
-     * Handle table notification.
-     *
-     * Trigger notification if all the parameters allow it:
-     * - table exist.
-     * - table enabled.
-     * - notification not disabled.
-     */
-    function notifyReviewers() {
-        $table = $this->getTable(false);
-        if($table !== null
-           && $table->isEnabled() 
-           && $table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
-            return $this->_notifyReviewers($table->getNotification());
-        }
-        else {
-            return false;
-        }
-    }
-
-    //
-    // User Management
-    //
-
-    function createReviewerFromRow($row) {
-        $reviewer = new Docman_ApprovalReviewer();
-        $reviewer->initFromRow($row);
-        return $reviewer;
-    }
-
-    /**
-     * Return the list of ugroup selectable to fill the notification table.
-     *
-     * It contains: all dynamic ugroups plus project members and admins.
-     */
-    function getUgroupsAllowedForTable($groupId) {
-        $res = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        $ugroups = array();
-        while($row = db_fetch_array($res)) {
-            $r = array();
-            $r['value'] = $row['ugroup_id'];
-            $r['text'] = util_translate_name_ugroup($row['name']);
-            $ugroups[] = $r;
-        }
-
-        return $ugroups;
-    }
-
-    /**
-     * Create reviewer from database.
-     * This method update 'isReviewer' cache (see corresponding method)
-     * 
-     * @return: Docman_ApprovalReviewer object.
-     */
-    function getReviewer($userId) {
-        $reviewer = null;
-        $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getReviewerById($this->item->getId(), $userId);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
-            $reviewer = $this->createReviewerFromRow($row);
-            $this->reviewerCache[$row['reviewer_id']] = true;
-        }
-        return $reviewer;
-    }
-
-    /**
-     * Return true if given userid is member of the current table or not.
-     * There is a cache for this information (the membership of users).
-     */
-    function isReviewer($userId) {
-        if($this->reviewerCache === null) {
-            $dao =& $this->_getApprovalTableDao();
-            $dar = $dao->getReviewerList($this->item->getId());
-            $dar->rewind();
-            while($dar->valid()) {
-                $row = $dar->current();
-                $this->reviewerCache[$row['reviewer_id']] = true;
-                $dar->next();
-            }
-        }
-        if(isset($this->reviewerCache[$userId])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Add given user into the reviewer list if she's not already member.
-     *
-     * @access: private
-     */
-    function _addUser($userId) {
-        $dPm =& Docman_PermissionsManager::instance($this->item->getGroupId());
-        $um =& $this->_getUserManager();
-        $user =& $um->getUserById($userId);
-        if($dPm->userCanRead($user, $this->item->getId())) {
-            if(!$this->isReviewer($user->getId())) {
-                $dao =& $this->_getApprovalTableDao();
-                $added = $dao->addUser($this->item->getId(), $user->getId());
-                if($added) {
-                    $this->reviewerCache[$user->getId()] = true;
-                    return true;
-                } else {
-                    $this->err['db'][] = $user->getRealName();
+    function &getTable($withReviewers = true) {
+        if($this->table === null) {
+            $this->table = $this->_getTable();
+            if($this->table !== null) {
+                if($withReviewers)  {
+                    $reviewerFactory =& $this->_getReviewerFactory($this->table, $this->item);
+                    $reviewerFactory->appendReviewerList();
                 }
-            } else {
-                $this->warn['double'][] = $user->getRealName();
-            }
-        } else {
-            $this->err['perm'][] = $user->getRealName();
-        }
-        return false;
-    }
-
-    /**
-     * Add a list of user in the reviewer list.
-     *
-     * Note: we don't test if the user can read the document she has to review.
-     * @todo: Report users not found in the CodeX user list.
-     *
-     * @param Array of string $userArray this method try to find a matching
-     *   user in the given list. A matching user is a Active or Restricted
-     *   CodeX user.
-     * @return int number of users added.
-     */
-    function addUsers($userArray) {
-        $nbUserAdded = 0;
-        foreach($userArray as $user) {
-            $added = false;
-            $userName = util_user_finder($user, true);
-            if($userName != '') {
-                $res = user_get_result_set_from_unix($userName);
-                if($res) {
-                    $added = $this->_addUser(db_result($res, 0, 'user_id'));
-                    if($added) {
-                        $nbUserAdded++;
-                    }
-                }
-            } else {
-                $this->err['notreg'][] = $user;
+                $this->table->setCustomizable($this->customizable);
             }
         }
-        return $nbUserAdded;
+        return $this->table;
+
     }
 
     /**
-     * Add members of the given ugroup to the reviewer list.
-     *
-     * @return true if at least one user was added to the list.
+     * @return boolean
      */
-    function addUgroup($ugroupId) {
-        $nbUserAdded = 0;
-        $nbMembers = 0;
+    /*abstract*/function userAccessedSinceLastUpdate($user) {}
 
-        $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getUgroupMembers($ugroupId, $this->item->getGroupId());
-        if($dar && !$dar->isError()) {
-            $dar->rewind();
-            while($dar->valid()) {
-                $nbMembers++;
-                $row = $dar->current();
-                $added = $this->_addUser($row['user_id']);
-                if($added) {
-                    $nbUserAdded++;
-                }
-                $dar->next();
-            }
-        }
-        if($nbUserAdded == $nbMembers) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Update user rank in the reviewer list.
-     */
-    function updateUser($userId, $rank) {
-        $dao =& $this->_getApprovalTableDao();
-        return $dao->updateUser($this->item->getId(), $userId, $rank);
-    }
-
-    /**
-     * Delete user from reviewer list.
-     */
-    function delUser($userId) {
-        $dao =& $this->_getApprovalTableDao();
-        $deleted = $dao->delUser($this->item->getId(), $userId);
-        if($deleted) {
-            if(isset($this->reviewerCache[$userId])) {
-                unset($this->reviewerCache[$userId]);
-            }
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Update user review.
-     */
-    function updateReview($review) {
-        $dao =& $this->_getApprovalTableDao();
-        $updated = $dao->updateReview($this->item->getId(),
-                                  $review->getId(),
-                                  $review->getReviewDate(),
-                                  $review->getState(),
-                                  $review->getComment(),
-                                  $review->getVersion());
-        if($updated) {
-            $atsm =& $this->_getApprovalTableNotificationCycle();
-            $atsm->reviewUpdated($review);
-            return true;
-        }
-        return false;
-    }
 
     function getReviewStateName($state) {
-        return Docman::txt('approval_review_state_'.$state);
+        return $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$state);
     }
 
     function getNotificationTypeName($type) {
-        return Docman::txt('details_approval_notif_'.$type);
-    }
-
-    /**
-     * Return all the review where the user doesn't commit himself yet.
-     */
-    function getAllPendingReviewsForUser($userId) {
-        $reviewsArray = array();
-        $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
-        $docmanUrl = get_server_url().'/plugins/docman';
-        while($dar->valid()) {
-            $row = $dar->current();
-            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
-            $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'].'&review=1';
-            $reviewsArray[] = array('group' => $row['group_name'],
-                                    'group_id' => $row['group_id'],
-                                    'title' => $row['title'],
-                                    'date'  => $row['date'],
-                                    'url'   => $url);
-            $dar->next();
-        }
-        return $reviewsArray;
-    }
-
-    /**
-     * Return all the approval table not deleted and not closed where the user
-     * is the table owner.
-     */
-    function getAllApprovalTableForUser($userId) {
-        $reviewsArray = array();
-        $dao =& $this->_getApprovalTableDao();
-        $dar = $dao->getAllApprovalTableForUser($userId);
-        $docmanUrl = get_server_url().'/plugins/docman';
-        while($dar->valid()) {
-            $row = $dar->current();
-            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
-            $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'];
-            $reviewsArray[] = array('group' => $row['group_name'],
-                                    'group_id' => $row['group_id'],
-                                    'title' => $row['title'],
-                                    'date'  => $row['date'],
-                                    'url'   => $url);
-            $dar->next();
-        }
-        return $reviewsArray;
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$type);
     }
 
     //
     // Class accessor
     //
 
-    function &_getApprovalTableDao() {
+    function &_getDao() {
         $dao = new Docman_ApprovalTableDao(CodexDataAccess::instance());
         return $dao;
     }
 
-    function &_getMail() {
-        //require_once('common/mail/TestMail.class.php');
-        //$mail = new TestMail();
-        //$mail->_testDir = '/local/vm16/codev/servers/docman-2.0/var/spool/mail';
-        $mail = new Mail();
-        return $mail;
+    function &_getReviewerFactory(&$table, &$item) {
+        $reviewerFactory =& new Docman_ApprovalTableReviewerFactory($table, $item);
+        return $reviewerFactory;
     }
 
-    function &_getItemFactory() {
-        $i = new Docman_ItemFactory();
-        return $i;
+}
+
+/**
+ * ApprovalTableFactory for Items (neither File or Wiki).
+ *
+ * The approval table for non versionned items (only Links as of today because
+ * we don't support approval table for empty documents).
+ * It's pretty simple as there is only one approval table bound to one item.
+ */
+class Docman_ApprovalTableItemFactory
+extends Docman_ApprovalTableFactory {
+
+    function Docman_ApprovalTableItemFactory($item) {
+        parent::Docman_ApprovalTableFactory($item);
     }
 
-    function &_getUserManager() {
-        $um =& UserManager::instance();
-        return $um;
+    function newTable() {
+        $table = new Docman_ApprovalTableItem();
+        return $table;
     }
 
-    function &_getApprovalTableNotificationCycle($withReviewers=false) {
-        $atsm = new Docman_ApprovalTableNotificationCycle();
+    /*protected*/ function _updateTableWithLastId(&$dstTable) {
+        $dstTable->setItemId($this->item->getId());
+    }
 
-        $table = $this->getTable($withReviewers);
-        $atsm->setTable($table);
+    /**
+     * Create a new approval table
+     */
+    function createTable($userId, $import) {
+        return $this->newTableEmpty($userId);
+    }
 
-        $itemFactory = $this->_getItemFactory();
-        $item = $itemFactory->getItemFromDb($this->item->getId());
-        $atsm->setItem($item);
+    /**
+     * Create a new entry in the database based on the given table
+     *
+     * @param $table ApprovalTable
+     * @return int new table id
+     */
+    function _createTable($table) {
+        $dao =& $this->_getDao();
+        return $dao->createTable($table->getItemId(),
+                                 $table->getOwner(),
+                                 $table->getDescription(),
+                                 $table->getDate(),
+                                 $table->getStatus(),
+                                 $table->getNotification());
+    }
 
-        $um =& $this->_getUserManager();
-        $owner =& $um->getUserById($table->getOwner());
-        $atsm->setOwner($owner);
-        return $atsm;
+    function _getTable() {
+        $table = null;
+        $dao =& $this->_getDao();
+        $dar = $dao->getTableById($this->item->getId());
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            $table = $this->createTableFromRow($row);
+        }
+        return $table;
+    }
+
+    function userAccessedSinceLastUpdate($user) {
+        return true;
+    }
+
+    //
+    // Class accessor
+    //
+
+    function &_getDao() {
+        $dao = new Docman_ApprovalTableItemDao(CodexDataAccess::instance());
+        return $dao;
+    }
+}
+
+/**
+ * ApprovalTableFactory for item with several versions.
+ *
+ * The current docman design doesn't support "several active versions per
+ * documents" so the approval table.
+ *
+ * So the approval table evolves in this way:
+ * - As long as there is no approval table... nothing.
+ * - Once a table is created, there will always have an active approval table
+ *   attached to the document except if all the tables are deleted (back to
+ *   step 1).
+ * - A table can apply on several document versions.
+ * - When a table attached to a version is deleted, the previous one
+ *   automaticaly becomes active. Example approval v4 is deleted:
+ *   v1                             | v1
+ *   v2 -> approval v2              | v2 -> approval v2
+ *   v3 -'                          | v3 -'
+ *   v4 -> approval v4 (copy of v2) | v4 -'
+ */
+/*abstract*/ class Docman_ApprovalTableVersionnedFactory
+extends Docman_ApprovalTableFactory {
+
+    function Docman_ApprovalTableVersionnedFactory($item, $versionNumber=null) {
+        parent::Docman_ApprovalTableFactory($item);
+    }
+
+    /**
+     * Create $dstTable based on $srcTable.
+     *
+     * This method creates a new approval table as defined in $dstTable. If the
+     * $type is 'copy': it imports reviewers "as is" (the very same content).
+     * $type is 'reset': it imports reviewers only (not their comments).
+     * Finally, the source table is Closed.
+     */
+    /*protected*/ function importTable($srcTable, $dstTable, $type) {
+        if($srcTable->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED) {
+            $dstTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
+        }
+
+        $newTableId = $this->_createTable($dstTable);
+        if($newTableId) {
+            // Copy reviewers
+            $reviewerFactory =& $this->_getReviewerFactory($dstTable, $this->item);
+            if($type == 'copy') {
+                $reviewerFactory->newTableCopy($newTableId);
+            } elseif($type == 'reset') {
+                $reviewerFactory->newTableReset($newTableId);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Copy the current approval table into a new one.
+     *
+     * The new table share the same structure and the same users and the same
+     * reviews (comments and commitment)
+     * The new table should be transparent for reviewers, they should not see
+     * any difference between the 2 tables.
+     */
+    function newTableCopy($srcTable, $dstTable, $userId) {
+        $dstTable->setOwner($userId);
+        return $this->importTable($srcTable, $dstTable, 'copy');
+
+    }
+
+    /**
+     * Create a new approval table based on the current one.
+     *
+     * The new table share the same structure and the same users but the user
+     * commitment is deleted.
+     * It acts like if the table was 'reset' by the admin.
+     */
+    function newTableReset($srcTable, $dstTable, $userId) {
+        $dstTable->setOwner($userId);
+        $dstTable->setDate(time());
+        return $this->importTable($srcTable, $dstTable, 'reset');
+    }
+
+    /**
+     * Create a new approval table based on the last active one.
+     */
+    function createTable($userId, $import) {
+        $tableCreated = false;
+        if($import == 'copy' || $import == 'reset' || $import == 'empty') {
+            $srcTable = $this->getLastTableForItem();
+            if($import == 'copy' || $import == 'reset') {
+                $dstTable = clone $srcTable;
+                $this->_updateTableWithLastId($dstTable);
+                if($import == 'copy') {
+                    $tableCreated = $this->newTableCopy($srcTable, $dstTable, $userId);
+                } else {
+                    $tableCreated = $this->newTableReset($srcTable, $dstTable, $userId);
+                }
+            } else {
+                $tableCreated = $this->newTableEmpty($userId);
+            }
+            // Close source table
+            if(!$srcTable->isClosed()) {
+                $srcTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
+                $this->_updateTable($srcTable);
+            }
+        } else {
+            $tableCreated = $this->newTableEmpty($userId);
+        }
+        return $tableCreated;
+    }
+
+    /**
+     * Return the last created approval table for the item
+     *
+     * @return ApprovalTable object
+     */
+    function getLastTableForItem() {
+        $table = null;
+        $dao =& $this->_getDao();
+        $dar = $dao->getLatestTableByItemId($this->item->getId());
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            $table = $this->createTableFromRow($row);
+        }
+        return $table;
+    }
+
+    /**
+     * Return all the approval table of for the item
+     */
+    function getAllApprovalTable() {
+        $tableArray = array();
+        $dao =& $this->_getDao();
+        $dar = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
+        if($dar && !$dar->isError()) {
+            while($row = $dar->getRow()) {
+                $tableArray[] = $this->createTableFromRow($row);
+            }
+        }
+        return $tableArray;
+    }
+
+    /*abstract*/function getLastDocumentVersionNumber() {}
+}
+
+/**
+ * ApprovalTableFactory for Files and Embedded Files.
+ *
+ * The code is designed to handle an approval table per file version. Once you
+ * create an approval table for a File version, the next ones are, by default,
+ * proposed with an approval table. However, an approval owner can decide to
+ * delete one table (attached to a version).
+ */
+class Docman_ApprovalTableFileFactory
+extends Docman_ApprovalTableVersionnedFactory {
+    var $itemVersion;
+
+    /**
+     *
+     */
+    function Docman_ApprovalTableFileFactory($item, $versionNumber=null) {
+        parent::Docman_ApprovalTableVersionnedFactory($item);
+
+        $dao = $this->_getDao();
+        $vFactory =& new Docman_VersionFactory();
+
+        $dar = $dao->getLatestTableByItemId($item->getId(), 'ver.number');
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            $lastVersionNumber = $row['number'];
+            $lastItemVersion = $vFactory->getSpecificVersion($item, $lastVersionNumber);
+
+            if($versionNumber !== null
+               && $lastItemVersion->getNumber() != $versionNumber) {
+                $this->itemVersion = $vFactory->getSpecificVersion($item, $versionNumber);
+                $this->customizable = false;
+            } else {
+                $this->itemVersion = $lastItemVersion;
+            }
+        } else {
+            $this->itemVersion = $item->getCurrentVersion();
+        }
+    }
+
+    /**
+     * Create a new Docman_ApprovalTable object.
+     */
+    function newTable() {
+        $table = new Docman_ApprovalTableFile();
+        return $table;
+    }
+
+    /**
+     * Create a new entry in the database based on the given table
+     *
+     * @param $table ApprovalTable
+     * @return int new table id
+     */
+    function _createTable($table) {
+        $dao =& $this->_getDao();
+        return $dao->createTable($table->getVersionId(),
+                                 $table->getOwner(),
+                                 $table->getDescription(),
+                                 $table->getDate(),
+                                 $table->getStatus(),
+                                 $table->getNotification());
+    }
+
+    /*protected*/ function _updateTableWithLastId(&$dstTable) {
+        $currentVersion = $this->item->getCurrentVersion();
+        $dstTable->setVersionId($currentVersion->getId());
+    }
+
+    function _getTable() {
+        return $this->getTableFromVersion($this->itemVersion);
+    }
+
+    function getTableFromVersion($version) {
+        $table = null;
+        if($version !== null) {
+            $dao =& $this->_getDao();
+            $dar = $dao->getTableById($version->getId());
+            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $row = $dar->current();
+                $table = $this->createTableFromRow($row);
+                $table->setVersionNumber($version->getNumber());
+            }
+        }
+        return $table;
+    }
+
+    function getLastDocumentVersionNumber() {
+        $currentItemVersion = $this->item->getCurrentVersion();
+        return $currentItemVersion->getNumber();
+    }
+
+    function userAccessedSinceLastUpdate($user) {
+        $log = new Docman_Log();
+        return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
+    }
+
+    //
+    // Class accessor
+    //
+
+    function &_getDao() {
+        $dao = new Docman_ApprovalTableFileDao(CodexDataAccess::instance());
+        return $dao;
+    }
+
+}
+
+/**
+ * ApprovalTableFactory for wiki pages.
+ *
+ * Wiki pages are rather diffrent of files regarding versions. As there can be
+ * a lot of versions between 2 approval tables cycle (a lot of editions either
+ * minor or major), we cannot create an approval table per wiki page version.
+ *
+ * The approval tables are completly manually driven by the approval table
+ * owner and he decide when to create an new approval table. Once an approval
+ * table is created (and bound to a version of the page), the table is the
+ * default one until the admin decide to create a new one.
+ */
+class Docman_ApprovalTableWikiFactory
+extends Docman_ApprovalTableVersionnedFactory {
+    var $wikiVersionId;
+
+    /**
+     * Initialize the factory for the given item.
+     *
+     * If there is a versionNumber provided, just use it.
+     *
+     * If there is no versionNumber provided, the default wiki version id is
+     * the one of the latest approval table linked to the item.
+     * If there is no approval table linked to the item, pick-up the last
+     * version id of the wiki page.
+     * If there is no version for the given wiki page, default to 0.
+     */
+    function Docman_ApprovalTableWikiFactory($item, $versionNumber=null) {
+        parent::Docman_ApprovalTableVersionnedFactory($item);
+
+        $dao = $this->_getDao();
+        $lastTableVersionId = $dao->getLastTableVersionIdByItemId($item->getId());
+
+        if($versionNumber !== null) {
+            $this->wikiVersionId = $versionNumber;
+
+            if($versionNumber == $lastTableVersionId) {
+                $this->customizable = true;
+            } else {
+                $this->customizable = false;
+            }
+
+        } else {
+            // Works on the last available version, so is customizable.
+            $this->customizable = true;
+
+            if($lastTableVersionId !== false) {
+                $this->wikiVersionId = $lastTableVersionId;
+            } else {
+                // If there is no table attached to the item yet, just get the list version id.
+                $lastWikiVersion = $dao->getLastWikiVersionIdByItemId($item->getId());
+                if($lastWikiVersion !== false) {
+                    $this->wikiVersionId = $lastWikiVersion;
+                } else {
+                    // If the page doesn't exists yet, default to zero.
+                    $this->wikiVersionId = 0;
+                }
+            }
+        }
+    }
+
+    function newTable() {
+        $table = new Docman_ApprovalTableWiki();
+        return $table;
+    }
+
+    function _createTable($table) {
+        $dao =& $this->_getDao();
+        return $dao->createTable($table->getItemId(),
+                                 $table->getWikiVersionId(),
+                                 $table->getOwner(),
+                                 $table->getDescription(),
+                                 $table->getDate(),
+                                 $table->getStatus(),
+                                 $table->getNotification());
+    }
+
+    /*protected*/ function _updateTableWithLastId(&$dstTable) {
+        $dao =& $this->_getDao();
+        $wikiVersionId = $dao->getLastWikiVersionIdByItemId($this->item->getId());
+        $dstTable->setItemId($this->item->getId());
+        $dstTable->setWikiVersionId($wikiVersionId);
+    }
+
+    function _getTable() {
+        return $this->getTableFromVersion($this->item->getId(), $this->wikiVersionId);
+    }
+
+    function getTableFromVersion($itemId, $version) {
+        $table = null;
+        if($version !== null) {
+            $dao =& $this->_getDao();
+            $dar = $dao->getTableById($itemId, $version);
+            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $row = $dar->current();
+                $table = $this->createTableFromRow($row);
+            }
+        }
+        return $table;
+    }
+
+    function getLastDocumentVersionNumber() {
+        $dao =& $this->_getDao();
+        $lastVersionId = $dao->getLastWikiVersionIdByItemId($this->item->getId());
+        return $lastVersionId;
+    }
+
+    function userAccessedSinceLastUpdate($user) {
+        $dao =& $this->_getDao();
+        return $dao->userAccessedSince($user->getId(), $this->item->getPagename(), $this->item->getGroupId(), $this->wikiVersionId);
+    }
+
+    //
+    // Class accessor
+    //
+
+    function &_getDao() {
+        $dao = new Docman_ApprovalTableWikiDao(CodexDataAccess::instance());
+        return $dao;
     }
 }
 

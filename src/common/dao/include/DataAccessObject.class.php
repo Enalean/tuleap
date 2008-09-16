@@ -167,12 +167,14 @@ class DataAccessObject {
                 // that group all the items in one list.
                 $sql = sprintf('SELECT i1.'. $options['primary_key'] .' as id, i1.rank as rank'.
                                    ' FROM '. $this->table_name .' i1'.
-                                   '  INNER JOIN '. $this->table_name .' i2 USING('. $options['primary_key'] .')'.
+                                   '  INNER JOIN '. $this->table_name .' i2 USING('. $options['parent_key'] .')'.
                                    ' WHERE i2.'. $options['primary_key'] .' = %d'.
+                                   '   AND i1.'. $options['parent_key'] .' = %d'.
                                    '   AND i1.rank %s i2.rank'.
                                    ' ORDER BY i1.rank %s'.
                                    ' LIMIT 1',
                                    $id,
+                                   $parent_id,
                                    $op,
                                    $order);
                 $dar = $this->retrieve($sql);

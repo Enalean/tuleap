@@ -29,6 +29,7 @@ define('PLUGIN_DOCMAN_EVENT_DEL',         4);
 define('PLUGIN_DOCMAN_EVENT_ACCESS',      5);
 define('PLUGIN_DOCMAN_EVENT_NEW_VERSION', 6);
 define('PLUGIN_DOCMAN_EVENT_METADATA_UPDATE', 7);
+define('PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE', 8);
 
 define('PLUGIN_DOCMAN_VIEW_PREF',            'plugin_docman_view');
 define('PLUGIN_DOCMAN_EXPAND_FOLDER_PREF', 'plugin_docman_hide');

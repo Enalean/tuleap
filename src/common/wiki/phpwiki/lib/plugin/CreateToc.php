@@ -80,7 +80,7 @@ extends WikiPlugin
         $counter[$level]++;
         $level--;
         for($i = $level; $i > 0; $i--) {
-            $counter[$level] = 0;
+            $counter[$i] = 0;
         }
     }
 

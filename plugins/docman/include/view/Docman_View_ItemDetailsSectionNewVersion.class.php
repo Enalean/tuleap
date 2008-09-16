@@ -23,6 +23,7 @@
  * 
  */
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
+require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
 require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
 
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions {
@@ -37,7 +38,21 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     function getContent() {
         return $this->item->accept($this);
     }
-    
+
+    function _getApprovalTable() {
+        $html = '';
+
+        $atf =& Docman_ApprovalTableFactory::getFromItem($this->item);
+        if($atf->tableExistsForItem()) {
+            $html .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable') .'</dt><dd>';
+            $html .= '<dd>';
+            $html .= Docman_View_ItemDetailsSectionApprovalCreate::displayImportLastTable(false);
+            $html .= '</dd>';
+        }
+
+        return $html;
+    }
+
     function visitFolder(&$item, $params = array()) {
         return "";
     }
@@ -52,9 +67,10 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     }
     function visitFile(&$item, $params = array()) {
         $content = '';
-        $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data">';
-        
+
+        $content .= '<dl>';
+        $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
         $content .= '<table>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80"></textarea></td></tr>';
@@ -64,17 +80,23 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
             $content .= '<td><label>'. $field->getLabel().'</label></td>';
             $content .= '<td>'. $field->getField() .'</td></tr>';
         }
-        $content .= '<tr style="vertical-align:top"><td></td><td>';
+        $content .= '</table>';
+        $content .= '</dd>';
+
+        $content .= $this->_getApprovalTable();
+
+        $content .= '<p>';
         if ($this->token) {
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
         }
         $content .= '<input type="hidden" name="action" value="new_version" />';
         $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_button').'" />';
-        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel').'" /></td></tr>';
-        $content .= '</table>';
-        
+        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
+        $content .= '</p>';
+
+        $content .= '</dl>';
         $content .= '</form>';
-        $content .= '</dd></dl>';
+
         return $content;
     }
     function visitEmbeddedFile(&$item, $params = array()) {

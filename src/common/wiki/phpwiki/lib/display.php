@@ -3,7 +3,10 @@
 rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 
 require_once('lib/Template.php');
+require_once('common/include/CodeX_HTMLPurifier.class.php');
 
+define("DOCUMENT_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
+define("DOCUMENT_PEN_ICON", util_get_image_theme("ic/edit.png"));
 /**
  * Extract keywords from Category* links on page. 
  */
@@ -83,6 +86,7 @@ function actionPage(&$request, $action) {
 
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
+    $group_id = $request->getArg('group_id');
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
     $page = $request->getPage();
@@ -138,6 +142,20 @@ function displayPage(&$request, $template=false) {
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
     }
+    
+    // Wiki_before_content is a docman plugin hook that displays the list of documents that refer to
+    // current wiki page just before displaying its contents. 
+    // Document paths are linked to their respective locations in Docman.
+    $eM =& EventManager::instance();
+    $docman_md = HTML();
+    $additional_html = '';
+    $eM->processEvent('wiki_before_content', array(
+                    'action' => 'wiki_before_content',
+                    'html' => &$additional_html,
+                    'group_id' => $group_id,
+                    'wiki_page' => $pagename
+        ));
+    $docman_md->pushContent(HTML::strong($additional_html));
 
     $pagetitle = SplitPagename($pagename);
     if (($redirect_from = $request->getArg('redirectfrom'))) {
@@ -219,6 +237,9 @@ function displayPage(&$request, $template=false) {
     
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
+    if(isset($docman_md) && $docman_md) {
+        $toks['DOCMAN_METADATA'] = $docman_md; // Docman items metadata and properties sections if wiki page is referenced in docman.
+    }
     $toks['revision'] = $revision;
     if (!empty($redirect_message))
         $toks['redirected'] = $redirect_message;

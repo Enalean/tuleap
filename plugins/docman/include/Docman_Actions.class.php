@@ -20,14 +20,13 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
  */
 require_once('service.php');
 
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
-require_once('DocmanActionsDeleteVisitor.class.php');
+require_once('Docman_ActionsDeleteVisitor.class.php');
 require_once('Docman_FolderFactory.class.php');
 require_once('Docman_VersionFactory.class.php');
 require_once('Docman_FileStorage.class.php');
@@ -42,11 +41,11 @@ require_once('common/permission/PermissionsManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
 
-class DocmanActions extends Actions {
+class Docman_Actions extends Actions {
     
     var $event_manager;
     
-    function DocmanActions(&$controler, $view=null) {
+    function Docman_Actions(&$controler, $view=null) {
         parent::Actions($controler);
         $this->event_manager =& $this->_getEventManager();
     }
@@ -209,6 +208,23 @@ class DocmanActions extends Actions {
             $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION,
                                                $eArray);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
+
+            // Approval table
+            if($number > 0) {
+                $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+                $vImport->required();
+                $import = $request->getValidated('app_table_import', $vImport, false);
+                if($import) {
+                    // Approval table creation needs the item currentVersion to be set.
+                    $vArray['id'] = $vId;
+                    $vArray['date'] = time();
+                    $newVersion =& new Docman_Version($vArray);
+                    $item->setCurrentVersion($newVersion);
+
+                    $atf =& Docman_ApprovalTableFactory::getFromItem($item);
+                    $atf->createTable($user->getId(), $request->get('app_table_import'));
+                }
+            }
         }
         else {
             //TODO What should we do if upload failed ?
@@ -369,6 +385,16 @@ class DocmanActions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
+            //Check if wiki_page have changed. If true, propagate document permissions to new wiki page.
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI && isset($data['wiki_page']) ) {
+                //get the old wiki_page value
+                $old_wiki_page = $item_factory->getWikiPageName($data['id']);
+                if($old_wiki_page != $data['wiki_page']) {
+                    $dPM =& Docman_PermissionsManager::instance($request->get('group_id'));
+                    $dPM->propagatePermsForNewWikiPages($data['wiki_page'], $request->get('group_id'), $data['id']);
+                }
+            }
+
             $item_factory->update($data);
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
@@ -472,7 +498,7 @@ class DocmanActions extends Actions {
     var $item_factory;
     function &_getItemFactory($groupId=null) {
         if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory($groupId);
+            $this->item_factory = new Docman_ItemFactory($groupId);
         }
         return $this->item_factory;
     }
@@ -483,7 +509,13 @@ class DocmanActions extends Actions {
         }
         return $this->version_factory;
     }
-
+    var $permissions_manager;
+    function &_getPermissionsManagerInstance(){
+        if(!$this->permissions_manager){
+	    $this->permissions_manager =& PermissionsManager::instance(); 
+        }
+        return $this->permissions_manager;
+    }
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
@@ -527,9 +559,9 @@ class DocmanActions extends Actions {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                         $item->getGroupId(),
                         $old_parent->getId(), 
-                         $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
+                        $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
                         $new_parent->getId(), 
-                         $hp->purify($new_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) 
+                        $hp->purify($new_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML)
                     )), CODEX_PURIFIER_DISABLED);
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
@@ -562,7 +594,16 @@ class DocmanActions extends Actions {
     * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
     *           Pretty difficult to know if a user can update the permissions which does not exist for a new item...
     * 
-    * The asked permissions are given in the request, in the param 'permissions' as an array(ugroup => permission)
+    * The asked permissions are given in the request, in the param 'permissions' as an array (ugroup => permission)
+    *
+    * Once the permissions on the top item are set (thanks to
+    * Docman_Actions::_setPermissions) we can assume that those permissions are
+    * correct so the algorithm to apply them recursively is just a clone. This
+    * is done thanks to a callback.
+    *
+    * Docman_ItemFactory::breathFirst allows to navigate in children of
+    * top item. And for each child node, there is a callback to
+    * Docman_Actions::recursivePermission (see each method for details).
     */
     function permissions($params) {
         $request =& HTTPRequest::instance();
@@ -611,7 +652,7 @@ class DocmanActions extends Actions {
                 foreach($permissions as $ugroup_id => $wanted_permission) {
                     $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, $history, $force);
                 }
-                
+
                 $updated = false;
                 foreach($history as $perm => $put_in_history) {
                     if ($put_in_history) {
@@ -619,23 +660,74 @@ class DocmanActions extends Actions {
                         $updated = true;
                     }
                 }
+             
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+                
+                // Propagate item permissions to wiki.
+                $this->wikiPermissions($item->getGroupId(), $id);
+
+                // If requested by user, apply permissions recursively on sub items
                 if ($this->_controler->request->get('recursive')) {
                     //clone permissions for sub items
+                    // Recursive application via a callback of Docman_Actions::recursivePermissions in
+                    // Docman_ItemFactory::breathFirst
                     $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
                 }
             }
         }
     }
+
+    /**
+     * Apply permissions of the reference item on the target item.
+     *
+     * This method is used as a callback by Docman_ItemFactory::breathFirst. It
+     * aims to clone the permissions set on the reference item ($params['id'])
+     * on a given item ($data['item_id']).
+     *
+     * Current user must have 'manage' permissions on the item to update its permissions. 
+     * If the target is a wiki page, then we propagate the new perms to wiki service too.
+     *
+     * @see Docman_ItemFactory::breathFirst
+     *
+     * $params['id']    Reference item id.
+     * $data['item_id'] Item id on which permissions applies.
+     */
     function recursivePermissions($data, $params) {
         if ($this->_controler->userCanManage($data["item_id"])) {
-            $pm =& PermissionsManager::instance();
+            $pm =& $this->_getPermissionsManagerInstance();
             $pm->clonePermissions($params['id'], $data["item_id"], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+            if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+                $this->wikiPermissions($data['group_id'], $params['id']);
+            }
         } else {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
+
+    /**
+     * This method was added in order to propagate permissions set on wiki pages docman items to wiki service. 
+     *
+     * @param int $group_id project id
+     * @param int $item_id  docman item id
+     *
+     */
+    function wikiPermissions($group_id, $item_id) {
+        require_once('Docman_PermissionsManager.class.php');
+        $dPM =& Docman_PermissionsManager::instance($group_id);
+        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
+        if($id_in_wiki) {
+            $dPM->synchronizePermissionsInWiki($id_in_wiki, $item_id);
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_propagated_to_wiki'));
+        }
+    }
+
+    function getIdInWiki($group_id, $item_id){
+        $dIF =& $this->_getItemFactory($group_id);
+        $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($group_id, $item_id);
+		return $id_in_wiki;
+	}
+
     /**
     * Set the permission for a ugroup on an item.
     * 
@@ -728,7 +820,7 @@ class DocmanActions extends Actions {
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    permission_add_ugroup($group_id, $permission,  $item_id, $ugroup_id, $force);
+                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {
@@ -738,7 +830,7 @@ class DocmanActions extends Actions {
             }
         }
     }
-    
+
     /**
     * Return the parent (or grand parent) of ugroup $parent which has a bigger permission
     * @return integer the ugroup id which has been found or false
@@ -762,7 +854,7 @@ class DocmanActions extends Actions {
             }
         }
     }
-    
+	
     function change_view() {
         $request =& HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
@@ -802,11 +894,9 @@ class DocmanActions extends Actions {
             $dPm =& Docman_PermissionsManager::instance($_sGroupId);
             $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
             if($subItemsWritable) {
-                $item = $itemFactory->getItemSubTree($parentItem->getId(),
-                                                     array('user'            => &$user,
-                                                           'ignore_collapse' => true));
+                $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
                 if ($item) {
-                    $deletor =& new DocmanActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                    $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
                     if ($item->accept($deletor, array('user' => &$user, 'parent' => $itemFactory->getItemFromDb($item->getParentId())))) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                     }
@@ -1082,9 +1172,9 @@ class DocmanActions extends Actions {
             || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
             $dstMdFactory = new Docman_MetadataFactory($groupId);
             $dstMdFactory->importMetadataFrom($srcGo->getGroupId());
-            $this->_controler->feedback->log('info', Docman::txt('admin_md_import_success', array($srcGo->getPublicName())));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_success', array($srcGo->getPublicName())));
         } else {
-            $this->_controler->feedback->log('error', Docman::txt('error_perms_generic'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
         }
     }
 
@@ -1215,18 +1305,48 @@ class DocmanActions extends Actions {
     /**
      * @access private
      */
-    function _approval_update_settings($atf, $sStatus, $notification, $description) {
+    function _approval_update_settings(&$atf, $sStatus, $notification, $description, $owner) {
+        $table =& $atf->getTable();
+        $newOwner = false;
+        if(!$table->isCustomizable()) {
+            // Cannot set status of an old table to something else than 'close'
+            // or 'deleted'
+            if ($sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED &&
+                $sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
+                $sStatus = PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED;
+            }
+            // Ensure that, once the table belong to an old version, user
+            // cannot change the notification type.
+            $notification = $table->getNotification();
+            $newOwner = $table->getOwner();
+        }
+
+        // Change owner
+        if($newOwner === false) {
+            $_owner = util_user_finder($owner);
+            if($_owner == "") {
+                $newOwner = $table->getOwner();
+            } else {
+                $dbresults = user_get_result_set_from_unix($_owner);
+                $newOwner  = db_result($dbresults, 0, 'user_id');
+                $_owner_status = db_result($dbresults, 0, 'status');
+                if($newOwner === false || $newOwner < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
+                    $newOwner = $table->getOwner();
+                }
+            }
+        }
+
         // Update settings
-        $updated = $atf->updateTable($sStatus, $notification, $description);
+        $updated = $atf->updateTable($sStatus, $notification, $description, $newOwner);
         if($updated) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_tableupd_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
     }
 
     /**
      * @access private
      */
-    function _approval_update_add_users($atf, $usUserList, $sUgroups) {
+    function _approval_update_add_users($atrf, $usUserList, $sUgroups) {
         $noError = true;
         $userAdded = false;
 
@@ -1235,7 +1355,7 @@ class DocmanActions extends Actions {
             $usUserArray = explode(',', $usUserList);
             // First add individual users
             if(count($usUserArray) > 0) {
-                $nbUserAdded = $atf->addUsers($usUserArray);
+                $nbUserAdded = $atrf->addUsers($usUserArray);
                 if($nbUserAdded < count($usUserArray)) {
                     $noError = false;
                 } else {
@@ -1249,7 +1369,7 @@ class DocmanActions extends Actions {
             foreach($sUgroups as $ugroup) {
                 $ugroupAdded = false;
                 if($ugroup > 0 && $ugroup != 100) {
-                    if($atf->addUgroup($ugroup)) {
+                    if($atrf->addUgroup($ugroup)) {
                         $ugroupAdded = true;
                     } else {
                         $noError = false;
@@ -1260,60 +1380,60 @@ class DocmanActions extends Actions {
 
         $purifier =& CodeX_HTMLPurifier::instance();
 
-        if(count($atf->err['db']) > 0) {
-            $ua  = array_unique($atf->err['db']);
+        if(count($atrf->err['db']) > 0) {
+            $ua  = array_unique($atrf->err['db']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_db', $uas));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_db', $uas));
         }
-        if(count($atf->err['perm']) > 0) {
-            $ua  = array_unique($atf->err['perm']);
+        if(count($atrf->err['perm']) > 0) {
+            $ua  = array_unique($atrf->err['perm']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_perm', $uas));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_perm', $uas));
         }
-        if(count($atf->err['notreg']) > 0) {
-            $ua  = array_unique($atf->err['notreg']);
+        if(count($atrf->err['notreg']) > 0) {
+            $ua  = array_unique($atrf->err['notreg']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('error', Docman::txt('approval_useradd_err_notreg', $uas));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_notreg', $uas));
         }
-        if(count($atf->warn['double']) > 0) {
-            $ua  = array_unique($atf->warn['double']);
+        if(count($atrf->warn['double']) > 0) {
+            $ua  = array_unique($atrf->warn['double']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
-            $this->_controler->feedback->log('warning', Docman::txt('approval_useradd_warn_double', $uas));
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_warn_double', $uas));
         }
 
         if($userAdded && $noError) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_useradd_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_success'));
         }
     }
 
     /**
      * @access private
      */
-    function _approval_update_del_users($atf, $selectedUsers) {
+    function _approval_update_del_users($atrf, $selectedUsers) {
         $deletedUsers = 0;
         foreach($selectedUsers as $userId) {
-            if($atf->delUser($userId)) {
+            if($atrf->delUser($userId)) {
                 $deletedUsers++;
             }
         }
 
         if(count($selectedUsers) == $deletedUsers) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_userdel_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_success'));
         } else {
-            $this->_controler->feedback->log('error', Docman::txt('approval_userdel_failure'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_failure'));
         }
     }
 
     /**
      * @access private
      */
-    function _approval_update_notify_users($atf, $selectedUsers) {
+    function _approval_update_notify_users($atrf, $selectedUsers) {
         $notifiedUsers = 0;
-        $atnc = $atf->_getApprovalTableNotificationCycle(true);
+        $atnc = $atrf->_getApprovalTableNotificationCycle(true);
         // For each reviewer, if he is selected, notify it
         // This allow us to verify that we actully notify people
         // member of the table!
@@ -1329,19 +1449,19 @@ class DocmanActions extends Actions {
             $ri->next();
         }
         if(count($selectedUsers) == $notifiedUsers) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_force_notify_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_force_notify_success'));
         }
     }
 
     /**
      * @access private
      */
-    function _approval_update_notif_resend($atf) {
-        $res = $atf->notifyReviewers();
+    function _approval_update_notif_resend($atrf) {
+        $res = $atrf->notifyReviewers();
         if($res) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_notification_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_success'));
         } else {
-            $this->_controler->feedback->log('warning', Docman::txt('approval_notification_failure'));
+            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_failure'));
         }
     }
 
@@ -1357,41 +1477,64 @@ class DocmanActions extends Actions {
         $sSelUser   = $this->_controler->_actionParams['sel_user'];
         $sSelUserAct = $this->_controler->_actionParams['sel_user_act'];
         $resendNotif = $this->_controler->_actionParams['resend_notif'];
+        $version     = $this->_controler->_actionParams['version'];
+        $import = $this->_controler->_actionParams['import'];
+        $owner = $this->_controler->_actionParams['table_owner'];
 
-        $atf =& new Docman_ApprovalTableFactory($item);
-        if($atf->createTableIfNotExist($user->getId())) {
-            $this->_approval_update_settings($atf, $sStatus, $notification, $description);
-            $this->_approval_update_add_users($atf, $usUserList, $sUgroup);
-            if(is_array($sSelUser) && count($sSelUser) > 0) {
-                switch($sSelUserAct){
-                case 'del':
-                    $this->_approval_update_del_users($atf, $sSelUser);
-                    break;
-                case 'mail':
-                    $this->_approval_update_notify_users($atf, $sSelUser);
-                    break;
+        $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
+        $oldTable = clone $atf->getTable();
+
+        $tableEditable = false;
+        if($oldTable === null || ($import !== false && $import !== 'keep')) {
+            $created = $atf->createTable($user->getId(), $import);
+            if(!$created) {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableins_failure'));
+            }
+        }
+
+        if($import === false || $import == 'keep') {
+            // New table created "from scratch" (ie. without the import
+            // selector) are directly editable.
+            $tableEditable = true;
+        }
+
+        if($tableEditable) {
+            $this->_approval_update_settings($atf, $sStatus, $notification, $description, $owner);
+            $table =& $atf->getTable();
+            if(!$table->isClosed()) {
+                $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item);
+                $this->_approval_update_add_users($atrf, $usUserList, $sUgroup);
+                if(is_array($sSelUser) && count($sSelUser) > 0) {
+                    switch($sSelUserAct){
+                    case 'del':
+                        $this->_approval_update_del_users($atrf, $sSelUser);
+                        break;
+                    case 'mail':
+                        $this->_approval_update_notify_users($atrf, $sSelUser);
+                        break;
+                    }
+                }
+                // If needed, notify next reviewer
+                if(($oldTable !== null
+                    && $oldTable->getStatus() != PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED
+                    && $table->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED)
+                   || $resendNotif) {
+                    $this->_approval_update_notif_resend($atrf);
                 }
             }
-            // If needed, notify next reviewer
-            if($resendNotif) {
-                $this->_approval_update_notif_resend($atf);
-            }
-        } else {
-            $this->_controler->feedback->log('error', Docman::txt('approval_tableins_failure'));
         }
     }
 
     function approval_delete() {
         // Params
         $item = $this->_controler->_actionParams['item'];
-        $atf =& new Docman_ApprovalTableFactory($item);
-        if($atf->tableExist()) {
-            $deleted = $atf->deleteTable();
-            if($deleted) {
-                $this->_controler->feedback->log('info', Docman::txt('approval_tabledel_success'));
-            } else {
-                $this->_controler->feedback->log('error', Docman::txt('approval_tabledel_failure'));
-            }
+        $version = $this->_controler->_actionParams['version'];
+        $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
+        $deleted = $atf->deleteTable();
+        if($deleted) {
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_success'));
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_failure'));
         }
     }
 
@@ -1402,8 +1545,8 @@ class DocmanActions extends Actions {
         $usRank  = $this->_controler->_actionParams['rank'];
 
         // Action
-        $atf =& new Docman_ApprovalTableFactory($item);
-        $atf->updateUser($sUserId, $usRank);
+        $atrf =& Docman_ApprovalTableFactory::getReviewerFactoryFromItem($item);
+        $atrf->updateUser($sUserId, $usRank);
     }
 
     function approval_user_commit() {
@@ -1427,12 +1570,12 @@ class DocmanActions extends Actions {
             $review->setReviewDate(null);
         }
 
-        $atf =& new Docman_ApprovalTableFactory($item);
-        $updated = $atf->updateReview($review);
+        $atrf =& Docman_ApprovalTableFactory::getReviewerFactoryFromItem($item);
+        $updated = $atrf->updateReview($review);
         if($updated) {
-            $this->_controler->feedback->log('info', Docman::txt('approval_review_success'));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_success'));
         } else {
-            $this->_controler->feedback->log('error', Docman::txt('approval_review_failure'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_failure'));
         }
 
         $this->monitor($this->_controler->_actionParams);
@@ -1446,18 +1589,18 @@ class DocmanActions extends Actions {
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if($r == null) {
-            $this->_controler->feedback->log('error', Docman::txt('report_del_notfound'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notfound'));
         } else {
             if($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
-                $this->_controler->feedback->log('error', Docman::txt('report_del_notowner'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notowner'));
             } else {
                 if($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
-                    $this->_controler->feedback->log('error', Docman::txt('report_del_notadmin'));
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notadmin'));
                 } else {
                     if($reportFactory->deleteReport($r)) {
-                        $this->_controler->feedback->log('info', Docman::txt('report_del_success'));
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_del_success'));
                     } else {
-                        $this->_controler->feedback->log('warning', Docman::txt('report_del_failue'));
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'report_del_failue'));
                     }
                 }
             }
@@ -1476,10 +1619,10 @@ class DocmanActions extends Actions {
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if($r == null) {
-            $this->_controler->feedback->log('error', Docman::txt('report_upd_notfound'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_notfound'));
         } else {
             if($r->getGroupId() != $groupId) {
-                $this->_controler->feedback->log('error', Docman::txt('report_upd_groupmismatch'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_groupmismatch'));
             } else {
                 if($this->_controler->userCanAdmin()) {
                     $r->setScope($scope);
@@ -1506,10 +1649,26 @@ class DocmanActions extends Actions {
             || (!$go->isPublic() && $go->userIsMember()))) {
             $srcReportFactory = new Docman_ReportFactory($importGroupId);
 
-            // Get the mapping between src and current project.
+            // Get the mapping between src and current project metadata definition.
             $mdMap = array();
             $srcMdFactory = new Docman_MetadataFactory($importGroupId);
             $srcMdFactory->getMetadataMapping($groupId, $mdMap);
+
+            // Get the mapping between src and current project items definition for the item involved
+            // in the reports.
+            $itemMapping = array();
+            // Get involved items
+            $srcReportItems = $srcReportFactory->getReportsItems($importReportId);
+            if(count($srcReportItems) > 0) {
+                // Get the subtree from the original docman on which reports applies
+                $srcItemFactory = new Docman_ItemFactory($importGroupId);
+                $srcItemTree = $srcItemFactory->getItemTreeFromLeaves($srcReportItems, $user);
+                if($srcItemTree !== null) {
+                    // Final step: find in the current ($groupId) docman
+                    $dstItemFactory = new Docman_ItemFactory($groupId);
+                    $itemMapping = $dstItemFactory->getItemMapping($srcItemTree);
+                }
+            }
 
             // If user is admin he can create 'P' report otherwise everything is 'I'
             $forceScope = true;
@@ -1526,22 +1685,22 @@ class DocmanActions extends Actions {
                     if($report->getScope() == 'P' ||
                        ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
                         
-                        $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope);
+                        $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope, $itemMapping);
 
-                        $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
                     } else {
-                        $this->_controler->feedback->log('error', Docman::txt('report_err_clone_iorp'));
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_err_clone_iorp'));
                     }
                 } else {
-                    $this->_controler->feedback->log('error', Docman::txt('report_err_notfound', array($importReportId)));
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_err_notfound', array($importReportId)));
                 }
             } else {
                 // Import all personal and project reports from the given project.
-                $srcReportFactory->copy($groupId, $mdMap, $user, $forceScope);
-                $this->_controler->feedback->log('info', Docman::txt('report_clone_success'));
+                $srcReportFactory->copy($groupId, $mdMap, $user, $forceScope, $itemMapping);
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
             }
         } else {
-            $this->_controler->feedback->log('error', Docman::txt('error_perms_generic'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
         }
     }
 }

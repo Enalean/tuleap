@@ -77,8 +77,15 @@ class Docman_PermissionsManager {
         return $this->dao;
     }
 
+    /**
+     * Return an item factory
+     *
+     * @param Integer $groupId
+     * @return Docman_ItemFactory
+     */
     function &_getItemFactory($groupId=0) {
         if (!isset($this->item_factory[$groupId])) {
+            require_once('Docman_ItemFactory.class.php');
             $this->item_factory[$groupId] =& new Docman_ItemFactory($groupId);
         }
         return $this->item_factory[$groupId];
@@ -182,6 +189,7 @@ class Docman_PermissionsManager {
     * @access protected
     */
     function _isUserDocmanAdmin($user) {
+        require_once('www/project/admin/permissions.php');
         $has_permission = false;
 
         $permission_type = 'PLUGIN_DOCMAN_ADMIN';
@@ -264,10 +272,8 @@ class Docman_PermissionsManager {
      */
     function &_getItemTreeForPermChecking($itemId, $user) {
         $itemFactory = $this->_getItemFactory($this->groupId);
-        $item = $itemFactory->getItemSubTree($itemId,
-                                             array('user' => &$user,
-                                                   'ignore_perms' => true,
-                                                   'ignore_collapse' => true));
+        $srcItem = $itemFactory->findById($itemId);
+        $item =& $itemFactory->getItemSubTree($srcItem, $user, true, true);
         return $item;
     }
 
@@ -289,7 +295,66 @@ class Docman_PermissionsManager {
         $pm =& $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
+	
+    /**
+     * Called when a wiki page name is updated or a new wiki page is created in wiki service. It propagates the docman item perms to wiki 
+     * service by creating new perms for the new pagename or the new wiki page.
+     *
+     * If old perms exists -either setted from wiki or propagated from docman - they will be removed.
+     *
+     * @param string $wiki_page wiki page name.
+     * @param int $group_id project id.
+     * @param int $item_id id of docman item.
+     *
+     */
+    function propagatePermsForNewWikiPages($wiki_page, $group_id, $item_id) {
+        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
+        if ($id_in_wiki != null){
+            // get id in wiki of the new wiki page that docman item will point to.
+            $new_wiki_page_id = $this->getNewWikiPageId($wiki_page, $group_id);
+            
+            // Propagate perms only if the new wiki page exists in wiki !
+            if ($new_wiki_page_id != null) {
+                $this->synchronizePermissionsInWiki($new_wiki_page_id, $item_id);
+            }
+        }
+    }
+	
+    function synchronizePermissionsInWiki($wiki_page_id, $docman_item_id) {
+        $dao =& $this->getDao();
+        $dao->clearWikiPagePermissions($wiki_page_id);
+        $dao->synchronizePermissionsWithWiki($wiki_page_id, $docman_item_id);
+    }
 
+    /**
+     *
+     * Checks if item with $item_id is a wiki page. It is made by Docman_ItemFactory::getIdInWikiOfWikiPageItem() method.
+     *
+     * @param int $group_id project id
+     * @param int $item_id docman item id.
+     *
+     * @return wiki page id in wiki or null if the page do not exist in wiki.
+     */
+    function getIdInWiki($group_id, $item_id) {
+        $dIF =& $this->_getItemFactory($group_id);
+        return $dIF->getIdInWikiOfWikiPageItem($group_id, $item_id);
+    }
+
+    /**
+     *
+     * Looks for id in wiki of the wiki page identified by these params:
+     *
+     * @param string $pagename wiki page name
+     * @param int $group_id project id
+     *
+     * @return int $id_in_wiki or null if the page don't exist in wiki service. 
+     */
+    function getNewWikiPageId($pagename, $group_id){
+        $dIF =& $this->_getItemFactory($group_id);
+        $id = $dIF->getIdInWiki($pagename, $group_id);
+        return $id;
+    }
+	
     function setDefaultItemPermissions($itemId, $force=false) {
         $dao =& $this->getDao();
 
@@ -310,16 +375,14 @@ class Docman_PermissionsManager {
         $userId = $user->getId();
 
         // do not compute a perm twice
-        if(!isset($this->cache_read[$userId]) || count($this->cache_read[$userId]) > 0) {
-            $objIds = array();
-            foreach($itemsIds as $itemid) {
-                if(!isset($this->cache_read[$userId][$itemid])) {
-                    $objIds[] = $itemid;
-                }
+        $objIds = array();
+        foreach($itemsIds as $itemid) {
+            // Would be even better to check each perm level in order to fetch
+            // all permissions related to the item.
+            if(!isset($this->cache_read[$userId][$itemid])) {
+                $this->_setNoAccess($userId, $itemid);
+                $objIds[] = $itemid;
             }
-        }
-        else {
-            $objIds = $itemsIds;
         }
 
         if(count($objIds) > 0) {
@@ -328,20 +391,68 @@ class Docman_PermissionsManager {
             $dar->rewind();
             while($dar->valid()) {
                 $row = $dar->current();
-                
-                $oid = $row['object_id'];
                 switch($row['permission_type']) {
                 case 'PLUGIN_DOCMAN_MANAGE':
-                    $this->cache_manage[$userId][$oid] = true;
+                    $this->_setCanManage($userId, $row['object_id']);
+                    break;
                 case 'PLUGIN_DOCMAN_WRITE':
-                    $this->cache_write[$userId][$oid] = true;
+                    $this->_setCanWrite($userId, $row['object_id']);
+                    break;
                 case 'PLUGIN_DOCMAN_READ':
-                    $this->cache_read[$userId][$oid] = true;
+                    $this->_setCanRead($userId, $row['object_id']);
+                    break;
                 }
-                
                 $dar->next();
             }
         }
+    }
+
+    /**
+     * Revoke all access to the user if not already set.
+     */
+    function _setNoAccess($userId, $objectId) {
+        if(!isset($this->cache_read[$userId][$objectId])) {
+            $this->cache_read[$userId][$objectId] = false;
+        }
+        if(!isset($this->cache_write[$userId][$objectId])) {
+            $this->cache_write[$userId][$objectId] = false;
+        }
+        if(!isset($this->cache_manage[$userId][$objectId])) {
+            $this->cache_manage[$userId][$objectId] = false;
+        }
+    }
+    
+    /**
+     * Set READ access to the user. Block WRITE and MANAGE accesses if not set.
+     */
+    function _setCanRead($userId, $objectId) {
+        $this->cache_read[$userId][$objectId] = true;
+        if(!isset($this->cache_write[$userId][$objectId])) {
+            $this->cache_write[$userId][$objectId] = false;
+        }
+        if(!isset($this->cache_manage[$userId][$objectId])) {
+            $this->cache_manage[$userId][$objectId] = false;
+        }
+    }
+
+    /**
+     * Set WRITE and READ accesses to the user. Block MANAGE access if not set.
+     */
+    function _setCanWrite($userId, $objectId) {
+        $this->cache_read[$userId][$objectId] = true;
+        $this->cache_write[$userId][$objectId] = true;
+        if(!isset($this->cache_manage[$userId][$objectId])) {
+            $this->cache_manage[$userId][$objectId] = false;
+        }
+    }
+
+    /**
+     * Set MANAGE, WRITE and READ accesses to the user.
+     */
+    function _setCanManage($userId, $objectId) {
+        $this->cache_read[$userId][$objectId] = true;
+        $this->cache_write[$userId][$objectId] = true;
+        $this->cache_manage[$userId][$objectId] = true;
     }
 
     function oneFolderIsWritable($user) {

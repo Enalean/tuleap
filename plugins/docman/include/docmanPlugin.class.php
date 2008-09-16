@@ -46,7 +46,10 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
         $this->_addHook('widgets',                           'widgets',                           false);
         $this->_addHook('codex_daily_start',                 'codexDaily',                        false);
-        $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',       false);
+        $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
+        $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
+        $this->_addHook('propagate_new_wiki_page_perms',     'propagate_new_wiki_page_perms',     false);
+        $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -131,8 +134,8 @@ class DocmanPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
-                    require_once('Docman.class.php');
-                    $docman =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
+                    require_once('Docman_HTTPController.class.php');
+                    $docman =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
                     switch($params['permission_type']) {
                         case 'PLUGIN_DOCMAN_READ':
                         case 'PLUGIN_DOCMAN_WRITE':
@@ -180,8 +183,8 @@ class DocmanPlugin extends Plugin {
     }
 
     function logsDaily($params) {
-        require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
+        require_once('Docman_HTTPController.class.php');
+        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->logsDaily($params);
     }
     
@@ -203,8 +206,8 @@ class DocmanPlugin extends Plugin {
         }
     }
     function installNewDocman($params) {
-        require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
+        require_once('Docman_HTTPController.class.php');
+        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
     }
     function service_is_used($params) {
@@ -246,20 +249,50 @@ class DocmanPlugin extends Plugin {
      * Hook: called by daily codex script.
      */
     function codexDaily() {
-        require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
+        require_once('Docman_HTTPController.class.php');
+        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->notifyFuturObsoleteDocuments();
     }
 
     function process() {
-        require_once('Docman.class.php');
-        $controler =& new Docman($this, $this->getPluginPath(), $this->getThemePath());
+        require_once('Docman_HTTPController.class.php');
+        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->process();
     }
     function processSOAP(&$request) {
-        require_once('SOAPDocman.class.php');
-        $controler =& new SOAPDocman($this, $this->getPluginPath(), $this->getThemePath(), $request);
+        require_once('Docman_SOAPController.class.php');
+        $controler =& new Docman_SOAPController($this, $this->getPluginPath(), $this->getThemePath(), $request);
         return $controler->process();
+    }
+    function wiki_page_updated($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
+                                                'wiki_page' => $params['wiki_page'],
+                                                'diff_link'  => $params['diff_link'],
+                                                'group_id'  => $params['group_id'],
+                                                'user' => $params['user'],
+                                                'version' => $params['version']));
+        require_once('Docman_WikiController.class.php');
+        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
+        $controler->process();
+    }
+
+    function propagate_new_wiki_page_perms($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $request = new Docman_WikiRequest(array('action' => 'propagate_new_wiki_page_perms',
+                                                'wiki_page' => $params['wiki_page'],
+                                                'group_id'  => $params['group_id']));
+        require_once('Docman_WikiController.class.php');
+        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
+        $controler->process();
+    }
+
+    function wiki_before_content($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $request = new Docman_WikiRequest($params);
+        require_once('Docman_WikiController.class.php');
+        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
+        $controler->process();
     }
 }
 

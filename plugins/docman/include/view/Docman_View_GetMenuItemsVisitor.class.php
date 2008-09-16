@@ -9,53 +9,90 @@
 
 
 class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
-    var $items;
-    function Docman_View_GetMenuItemsVisitor() {
-        $this->items = array();
+    var $actions;
+    function Docman_View_GetMenuItemsVisitor(&$user, $groupId) {
+        $this->dPm =& Docman_PermissionsManager::instance($groupId);
+        $this->user =& $user;
+        $this->if =& Docman_ItemFactory::instance($groupId);
+        $this->actions = array();
     }
+    
     function visitItem(&$item, $params = array()) {
-        $this->items[30] =& new Docman_ItemActionDetails($item);
-        $this->items[40] =& new Docman_ItemActionNotifications($item);
-        $this->items[50] =& new Docman_ItemActionHistory($item);
-        $this->items[70] =& new Docman_ItemActionPermissions($item);
-        $this->items[80] =& new Docman_ItemActionMove($item);
-        $this->items[85] = new Docman_ItemActionCopy($item, $params);
-        $this->items[90] =& new Docman_ItemActionDelete($item);
-        ksort($this->items);
-        return $this->items;
+        if($this->dPm->userCanManage($this->user, $item->getId())) {
+            $this->actions['canPermissions'] = true;
+        }
+        // Permissions related stuff:
+        // There are 2 permissions to take in account to decide whether
+        // someone can move a file or not:
+        // - the permission to 'remove' the file from a folder.
+        //   - user need to have 'write' perm on both item and parent
+        //     folder.
+        // - and the permission to 'add' the file in another folder.
+        //   - check if there is at least one folder writable in the
+        //     docman.
+        // But as the first step requires to have one folder writable,
+        // we don't need specific test for the second one.
+        // The only case we don't take in account is the possibility to
+        // have only one file in only one writable folder (so it
+        // shouldn't be movable). But this case is not worth the time
+        // to develop and compute that case.
+        if($this->if->isMoveable($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
+            $this->actions['canMove'] = true;
+        }
+        if(!$this->if->isRoot($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
+            $this->actions['canDelete'] = true;
+        }
+        $this->actions['canApproval'] = true;
+        return $this->actions;
     }
+    
     function visitFolder(&$item, $params = array()) {
-        $this->items[10] =& new Docman_ItemActionNewDocument($item);
-        $this->items[20] =& new Docman_ItemActionNewFolder($item);
-        $this->items[86] = new Docman_ItemActionPaste($item, $params);
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canNewDocument'] = true;
+            $this->actions['canNewFolder']   = true;
+            if($this->if->getCopyPreference($this->user) != false) {
+                $this->actions['canPaste'] = true;
+            }
+        }
         return $this->visitItem($item, $params);
     }
+    
     function visitDocument($item, $params = array()) {
         return $this->visitItem($item, $params);
     }
+    
     function visitWiki(&$item, $params = array()) {
-        $this->_addUpdate($item, $params);
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canUpdate'] = true;
+        }
         return $this->visitDocument($item, $params);
     }
+    
     function visitLink(&$item, $params = array()) {
-        $this->_addUpdate($item, $params);
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canUpdate'] = true;
+        }
         return $this->visitDocument($item, $params);
     }
+    
     function visitFile(&$item, $params = array()) {
-        $this->items[60] =& new Docman_ItemActionNewVersion($item);
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canNewVersion'] = true;
+        }
         return $this->visitDocument($item, $params);
     }
+    
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
     function visitEmpty(&$item, $params = array()) {
-        $this->_addUpdate($item, $params);
-        return $this->visitDocument($item, $params);
-    }
-    
-    function _addUpdate(&$item, $params) {
-        $this->items[60] =& new Docman_ItemActionUpdate($item);
+        if($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canUpdate'] = true;
+        }
+        $actions = $this->visitDocument($item, $params);
+        unset($actions['canApproval']); // No approval table for empty docs
+        return $actions;
     }
 }
 ?>

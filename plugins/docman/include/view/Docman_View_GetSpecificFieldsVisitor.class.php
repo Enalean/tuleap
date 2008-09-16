@@ -23,7 +23,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     
     function getField() {
         $hp =& CodeX_HTMLPurifier::instance();
-        return '<input type="text" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> '. $GLOBALS['Language']->getText('plugin_docman', 'warn_wiki_perms');
+        return '<input type="text" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
     }
 
     function &getValidator() {
