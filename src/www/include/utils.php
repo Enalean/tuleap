@@ -1176,6 +1176,8 @@ function util_check_restricted_access($request_uri, $script_name) {
     // Currently, we don't restrict access to 'shownotes.php' and to tracker file attachment downloads
 
     if (user_isrestricted()) {
+        if (isset($GLOBALS['group_id'])) { $group_id=$GLOBALS['group_id']; }
+
         // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
 
@@ -1208,16 +1210,14 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
         $allow_access_to_codex_forums=false;   // CodeX help forums are accessible through the 'Discussion Forums' link
         $allow_access_to_codex_trackers=false; // CodeX trackers are used for support requests on CodeX
-        $allow_access_to_codex_docs=false; // CodeX documents (Note that the User Guide is always accessible)
+        $allow_access_to_codex_docs=false; // CodeX documents and wiki (Note that the User Guide is always accessible)
         $allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
 
 
         // Customizable security settings for restricted users:
-        include($Language->getContent('include/restricted_user_permissions'));
+        include($Language->getContent('include/restricted_user_permissions','en_US'));
         // End of customization
         
-
-
         foreach ($forbidden_url as $str) {
             $pos = strpos($req_uri,$str);
             if ($pos === false) {
@@ -1313,15 +1313,17 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
 
-        // CodeX documents
-        if ((strpos($req_uri,'/docman/') !== false) || (strpos($req_uri,'/plugins/docman/') !== false)) {
+        // CodeX documents and wiki
+        if ((strpos($req_uri,'/docman/') !== false) || 
+            (strpos($req_uri,'/plugins/docman/') !== false) ||
+            (strpos($req_uri,'/wiki/') !== false)) {
             if ($allow_access_to_codex_docs) {
                 if ($group_id==1) {
                     $user_is_allowed=true;
                 }
             }
         }
-        
+
         // CodeX mailing lists page
         if (strpos($req_uri,'/mail/') !== false) {
             if ($allow_access_to_codex_mail) {

@@ -30,7 +30,7 @@ $allow_news_browsing=false;     // Allow restricted users to read/comment news, 
 $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
 $allow_access_to_codex_forums=false;   // Codendi help forums are accessible through the 'Discussion Forums' link
 $allow_access_to_codex_trackers=false;// Codendi trackers are used for support requests on Codendi
-$allow_access_to_codex_docs=false; // Codendi documents (Note that the User Guide is always accessible)
+$allow_access_to_codex_docs=false; // Codendi documents and wiki (Note that the User Guide is always accessible)
 $allow_access_to_codex_mail=false; // Codendi mailing lists (Developers Channels)
 
 
