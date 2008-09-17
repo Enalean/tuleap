@@ -20,7 +20,6 @@
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('database.php');
 require_once('CodeXUpgrade.class.php');
 
 class Update_006 extends CodeXUpgrade {
@@ -277,7 +276,7 @@ class Update_006 extends CodeXUpgrade {
             $row = $dar->current();
             // check existance in wiki service.
             $pagename = $row['wiki_page'];
-            $sql1 = "SELECT id FROM wiki_page WHERE pagename='" . db_es($pagename) . "' AND group_id=". $group_id;
+            $sql1 = "SELECT id FROM wiki_page WHERE pagename=" . $this->da->quoteSmart($pagename) . " AND group_id=". $group_id;
             $dar1 = $this->retrieve($sql1);
             if($dar1 && !$dar1->isError() && $dar1->rowCount() == 1) { // The wiki page exists in wiki service
                 $dar1->rewind();
