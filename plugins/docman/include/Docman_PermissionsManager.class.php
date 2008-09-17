@@ -377,11 +377,16 @@ class Docman_PermissionsManager {
         // do not compute a perm twice
         $objIds = array();
         foreach($itemsIds as $itemid) {
-            // Would be even better to check each perm level in order to fetch
-            // all permissions related to the item.
-            if(!isset($this->cache_read[$userId][$itemid])) {
-                $this->_setNoAccess($userId, $itemid);
-                $objIds[] = $itemid;
+            // Docman admin has all rights
+            if($this->userCanAdmin($user)) {
+                $this->_setCanManage($userId, $itemid);
+            } else {
+                // Would be even better to check each perm level in order to fetch
+                // all permissions related to the item.
+                if(!isset($this->cache_read[$userId][$itemid])) {
+                    $this->_setNoAccess($userId, $itemid);
+                    $objIds[] = $itemid;
+                }
             }
         }
 
