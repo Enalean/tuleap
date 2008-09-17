@@ -150,22 +150,47 @@ class Docman_WikiController extends Docman_Controller {
                     }
                     $icon = HTML::img(array('id' => 'img_documents', 'src' => DOCUMENT_EXPANDED_ICON, 'title' => 'Open to see related documents'));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
+                    
+                    // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
+                    if (count($docman_item_id) > 1) {
+                        $title = "";
+                        if(isset($referrer_id) && $referrer_id) {
+                            $title = HTML::strong('Location: ');
+                        }
+                        else {
+                            $title = HTML::strong('Locations: ');
+                        }
+                    } else {
+                        $title = HTML::strong('Location: ');
+                    }
+                    
+                    //create Full legend of the section
                     $legend = HTML::legend(array('class' => 'docman_md_frame'), 
-                            $linked_icon, 
-                            isset($referrer_id) && $referrer_id ? HTML::strong('Location: ') : HTML::strong('Locations: '), 
+                            count($docman_item_id) > 1 ? $linked_icon : "", 
+                            $title, 
                             isset($referrer_id) && $referrer_id ? HTML($this->showReferrerPath($referrer_id, $group_id)) : "");
                     $details = HTML();
+
+                    // create section body.
                     if(isset($referrer_id) && $referrer_id) {
-                        $details->pushContent(HTML::H3("Other locations:"));
+                        if(count($docman_item_id) > 2){
+                            $details->pushContent(HTML::H3("Other locations:"));
+                        }
+                        else {
+                            $details->pushContent(HTML::H3("Other location:"));
+                        }
                     }
+                    // create Referencing documents linked paths.
                     foreach($docman_item_id as $index => $value) {
                             $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
                     }
                     $content->pushContent(HTML::div(array('id' => 'documents'), $details));
+
+                    // Display all the section.
                     $docman_references->pushContent(HTML::br());
                     $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
                 }
-                else {
+                else { 
                     if($dpm->userCanAccess($user, $docman_item_id)) {
                         $docman_references->pushContent(HTML::strong('Location: '));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
