@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
@@ -23,8 +22,6 @@
  */
 require_once('database.php');
 require_once('CodeXUpgrade.class.php');
-
-ini_set('max_execution_time', 0);
 
 class Update_006 extends CodeXUpgrade {
 
