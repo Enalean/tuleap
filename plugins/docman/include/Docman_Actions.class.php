@@ -1600,7 +1600,7 @@ class Docman_Actions extends Actions {
                     if($reportFactory->deleteReport($r)) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_del_success'));
                     } else {
-                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'report_del_failue'));
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'report_del_failure'));
                     }
                 }
             }
