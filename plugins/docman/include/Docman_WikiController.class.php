@@ -138,8 +138,16 @@ class Docman_WikiController extends Docman_Controller {
                 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
                 $content = HTML();
                 $script = HTML::script(array('type' => 'text/javascript'), "toggle_documents('documents');");
+                $user =& $this->getUser();
+                $dpm =& Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if(is_array($docman_item_id)) {
+                    foreach($docman_item_id as $idx => $id) {
+                        $can_read = $dpm->userCanAccess($user, $id);
+                        if(!$can_read){
+                            unset($docman_item_id[$idx]);
+                        } 
+                    }
                     $icon = HTML::img(array('id' => 'img_documents', 'src' => DOCUMENT_EXPANDED_ICON, 'title' => 'Open to see related documents'));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
                     $legend = HTML::legend(array('class' => 'docman_md_frame'), 
@@ -151,16 +159,14 @@ class Docman_WikiController extends Docman_Controller {
                         $details->pushContent(HTML::H3("Other locations:"));
                     }
                     foreach($docman_item_id as $index => $value) {
-                        if ($this->userCanRead($value)){
                             $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
-                        }
                     }
                     $content->pushContent(HTML::div(array('id' => 'documents'), $details));
                     $docman_references->pushContent(HTML::br());
                     $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
                 }
                 else {
-                    if($this->userCanRead($docman_item_id)) {
+                    if($dpm->userCanAccess($user, $docman_item_id)) {
                         $docman_references->pushContent(HTML::strong('Location: '));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
                         $docman_references->pushContent(HTML::br(), HTML::br());
