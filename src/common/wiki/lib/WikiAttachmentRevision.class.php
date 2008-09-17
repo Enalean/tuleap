@@ -333,7 +333,8 @@ class WikiAttachmentRevision {
             unset($war);
         }
 
-        return new ArrayIterator($warArray);
+        $ai =& new ArrayIterator($warArray);
+        return $ai;
     }
 
 }
