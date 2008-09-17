@@ -339,6 +339,7 @@ plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
+plugin_docman	docman_wiki_perms_notice	<strong>Attention: </strong>Pour une page wiki, un 'Lecteur' peut également editer le document.
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
@@ -384,6 +385,7 @@ plugin_docman	event_del	Suppression
 plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
 plugin_docman	event_metadataupdate	Mise à jour de propriété
+plugin_docman	event_wiki_page_updated	Nouvelle version de la page Wiki
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
@@ -553,7 +555,7 @@ plugin_docman	report_clear_filters	Tout effacer
 plugin_docman	report_clone_success	Rapport cloné
 plugin_docman	report_custom_fltr	Personnaliser les filtres
 plugin_docman	report_del_failure	Une erreur est apparue lors de la suppression d'un rapport
-plugindocman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
+plugin_docman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
 plugin_docman	report_del_notfound	Rapport non trouvé. Suppression annulée.
 plugin_docman	report_del_notowner	Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. Suppression annulée.
 plugin_docman	report_del_success	Rapport supprimé
