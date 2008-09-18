@@ -21,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once('common/collection/ArrayIterator.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
 require_once('common/wiki/lib/WikiAttachmentRevisionDao.class.php');
@@ -205,6 +206,12 @@ class WikiAttachmentRevision {
         return true;
     }
 
+	function setGid($gid) {
+		 if(is_numeric($gid)) {
+            $this->gid = (int) $gid;
+            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
+        }
+	}
 
     /**
      *
