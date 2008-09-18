@@ -1482,7 +1482,11 @@ class Docman_Actions extends Actions {
         $owner = $this->_controler->_actionParams['table_owner'];
 
         $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
-        $oldTable = clone $atf->getTable();
+        $table = $atf->getTable();
+        $oldTable = null;
+        if($table !== null) {
+            $oldTable = clone $atf->getTable();
+        }
 
         $tableEditable = false;
         if($oldTable === null || ($import !== false && $import !== 'keep')) {
