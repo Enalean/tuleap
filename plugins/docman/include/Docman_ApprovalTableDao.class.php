@@ -287,7 +287,11 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableDao {
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            return $row['version'];
+            if($row['version'] !== null) {
+                return $row['version'];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
