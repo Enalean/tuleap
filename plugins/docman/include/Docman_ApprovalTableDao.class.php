@@ -68,7 +68,7 @@ require_once('Docman_ItemDao.class.php');
         $groupBy = '';
         if($status) {
             $fields  .= ','.$this->getTableStatusFields();
-            $join    .= ' JOIN '.$this->getTableStatusJoin();
+            $join    .= ' LEFT JOIN '.$this->getTableStatusJoin();
             $groupBy  = ' GROUP BY '.$this->getTableStatusGroupBy();
         }
 
