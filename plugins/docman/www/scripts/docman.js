@@ -138,7 +138,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this._initItemHighlight(document.body);
     },
     _initItemHighlight:function(parent_element) {
-        parent_element.select('.docman_item_title').each(function (element) {
+        $$('.docman_item_title').each(function (element) {
             var item_ = new RegExp("^item_.*");
             //We search the first parent which has id == "item_%"
             var node = element.parentNode;
