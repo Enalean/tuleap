@@ -37,12 +37,12 @@ class DocmanWatermarkActions extends Actions {
     
     public function setup_metadata() {
         require_once(dirname(__FILE__).'/DocmanWatermark_MetadataFactory.class.php');
+        $mf = new DocmanWatermark_MetadataFactory();
         $md_id    = $this->_controler->_actionParams['md_id'];
         $group_id = $this->_controler->_actionParams['group_id'];
-        $wmd       = new DocmanWatermark_Metadata();
+        $wmd      = new DocmanWatermark_Metadata();
         $wmd->setGroupId($group_id);
         $wmd->setId($md_id);
-        $mf = new DocmanWatermark_MetadataFactory();
         $mf->setField($wmd);
     }
     
@@ -50,18 +50,19 @@ class DocmanWatermarkActions extends Actions {
         require_once(dirname(__FILE__).'/DocmanWatermark_MetadataValueFactory.class.php');
         $wmdv     = $this->_controler->_actionParams['md_values'];
         $group_id = $this->_controler->_actionParams['group_id'];
-        $mvf    = new DocmanWatermark_MetadataValueFactory();
+        $mvf      = new DocmanWatermark_MetadataValueFactory();
         $mvf->updateMetadataValues($wmdv, $group_id);
     }
     
     public function import_from_project() {
         require_once('DocmanWatermark_MetadataImportFactory.class.php');
+        $dwmi = new DocmanWatermark_MetadataImportFactory();
         $src_group_id     = $this->_controler->_actionParams['src_group_id'];
         $target_group_id  = $this->_controler->_actionParams['target_group_id'];
-    	$dwmi = new DocmanWatermark_MetadataImportFactory();
+        $md               = $this->_controler->_actionParams['md'];
         $dwmi->setSrcProjectId($src_group_id);
         $dwmi->setTargetProjectId($target_group_id);
-        $dwmi->importSettings();
+        $dwmi->importSettings($md);
     }
     
 }

@@ -241,27 +241,26 @@ class DocmanWatermarkController extends Controler {
             $this->_actionParams['target_group_id'] = $this->request->get('group_id');
             require_once('DocmanWatermark_MetadataImportFactory.class.php');            
             $dwmif = new DocmanWatermark_MetadataImportFactory();
-            $dwmif->setSrcProjectId    = $this->request->get('project');
-            $dwmif->setTargetProjectId = $this->request->get('group_id');
+            $dwmif->setSrcProjectId($this->request->get('project'));
+            $dwmif->setTargetProjectId($this->request->get('group_id'));
             require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
             $dmf = new Docman_MetadataFactory($this->request->get('project'));
             require_once('DocmanWatermark_MetadataFactory.class.php');
             $dwmf = new DocmanWatermark_MetadataFactory();
-            $md_id = $dwmf->getMetadataIdFromGroupId($dwmif->setSrcProjectId);
+            $md_id = $dwmf->getMetadataIdFromGroupId($dwmif->getTargetProjectId());
             $mdIter = $dmf->findByName($dwmf->getMetadataNameFromId($md_id));
             $mdIter->rewind();
-            $md = $mdIter->current(); 
+            $md = $mdIter->current();
+            $this->_actionParams['md'] = $md; 
             $mdMap = $dwmif->getWatermarkMetadataMap($md);
             if ($mdMap['md'] != 0) {
                 $this->action = 'import_from_project';
-                $this->_viewParams['md_id'] = $md_id;
                 $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_imported_from_project'));
+                $this->_viewParams['md_id'] = $md_id;
                 $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_watermark';                
             } else {
                 $this->feedback->log('info', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_import_from_project_not_match'));
-                $this->_viewParams['sSrcGroupId'] = $this->request->get('project');
-                $this->_viewParams['group_id'] = $this->request->get('group_id');
-                $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_import_metadata_check';
+                $this->_viewParams['redirect_to'] = '?group_id='.$this->request->get('group_id').'&action=admin_import_metadata_check&import_group_id='.$this->request->get('project');
             }
             $this->view   = 'RedirectAfterCrud';
             break;
