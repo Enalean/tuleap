@@ -442,12 +442,16 @@ extends Docman_View_ItemDetailsSection {
             $rowColorIdx = 1;
             foreach($allTables as $table) {
                 $html .= '<tr class="'.html_get_alt_row_color($rowColorIdx++).'">';
-                $url = Docman_View_View::buildUrl($this->url,
-                                       array('action'  => 'details',
+                if($this->table->getVersionNumber() != $table->getVersionNumber()) {
+                    $url = Docman_View_View::buildUrl($this->url,
+                    array('action'  => 'details',
                                              'section' => 'approval',
                                              'id'      => $this->item->getId(),
                                              'version' => $table->getVersionNumber()));
-                $href = '<a href="'.$url.'">'.$table->getVersionNumber().'</a>';
+                    $href = '<a href="'.$url.'">'.$table->getVersionNumber().'</a>';
+                } else {
+                    $href = $table->getVersionNumber();
+                }
                 $html .= '<td>'.$href.'</td>';
                 $html .= '<td>'.user_get_name_display_from_id($table->getOwner()).'</td>';
                 $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$table->getApprovalState()).'</td>';
