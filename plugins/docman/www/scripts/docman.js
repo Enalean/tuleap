@@ -89,12 +89,6 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         // Expand/Collapse
         this.initExpandCollapseEvent = this.initExpandCollapse.bindAsEventListener(this);
         if (this.options.action == 'browse') document.observe('dom:loaded', this.initExpandCollapseEvent);
-        
-        // ItemHighlight
-        if (!Prototype.Browser.IE) {
-            this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
-            if (this.options.action == 'browse') document.observe('dom:loaded', this.initItemHighlightEvent);
-        }
 
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
@@ -121,44 +115,18 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         });
         // Expand/Collapse
         document.stopObserving('dom:loaded', this.initExpandCollapseEvent);
-        
-        if (!Prototype.Browser.IE) {
-            // ItemHighlight
-            document.stopObserving('dom:loaded', this.initItemHighlightEvent);
-        }
+        // Expand/Collapse
+        document.stopObserving('dom:loaded', this.focusEvent);
         // Table Report
         if(this.initTableReportEvent) {
             document.stopObserving('dom:loaded', this.initTableReportEvent);
         }
     },
-    //{{{------------------------------ ItemHighlight
+    //{{{------------------------------ Focus
     focus: function() {
         if ($('docman_new_form')) {
             Form.focusFirstElement('docman_new_form');
         }
-    },
-    //}}}
-    //{{{------------------------------ ItemHighlight
-    initItemHighlight: function() {
-        this._initItemHighlight(document.body);
-    },
-    _initItemHighlight:function(parent_element) {
-        $$('.docman_item_title').each(function (element) {
-            var item_ = new RegExp("^item_.*");
-            //We search the first parent which has id == "item_%"
-            var node = element.parentNode;
-            while (!node.id.match(item_)) {
-                node = node.parentNode;
-            }
-            Event.observe(node, 'mouseover', function(event) {
-                Element.addClassName(node, 'docman_item_highlight');
-                Event.stop(event);
-            });
-            Event.observe(node, 'mouseout', function(event) {
-                Element.removeClassName(node, 'docman_item_highlight');
-                Event.stop(event);
-            });
-        });
     },
     //}}}
     //{{{------------------------------ Actions
@@ -203,6 +171,19 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             }
             if (!this.showOptions_Menus[item_id]) {
                 this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.btn_close});
+            }
+            
+            //ItemHighlight
+            if (Prototype.Browser.IE) {
+                var node = $('item_'+item_id);
+                Event.observe(node, 'mouseover', function(event) {
+                    Element.addClassName(node, 'docman_item_highlight');
+                    Event.stop(event);
+                });
+                Event.observe(node, 'mouseout', function(event) {
+                    Element.removeClassName(node, 'docman_item_highlight');
+                    Event.stop(event);
+                });
             }
         }).bind(this));
     },
