@@ -28,6 +28,9 @@ require_once 'Docman_ItemDao.class.php';
 require_once 'Docman_ItemFactory.class.php';
 require_once 'common/wiki/phpwiki/lib/HtmlElement.php';
 
+define("DOCUMENT_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
+define("DOCUMENT_PEN_ICON", util_get_image_theme("ic/edit.png"));
+
 class Docman_WikiController extends Docman_Controller {
 
     var $params;
@@ -128,7 +131,27 @@ class Docman_WikiController extends Docman_Controller {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
         $item_dao =& $this->_getItemDao();
+
         $docman_references = HTML();
+        // Add js part for toogling referencers section.
+        $js_code = '
+            function toggle_documents(id) {
+                Element.toggle(id);
+                toggle_image(id);
+            }
+            function toggle_image(id) {
+                var img_element = $(\'img_\' + id);
+                if (img_element.src.indexOf(\'' . util_get_image_theme("ic/toggle_plus.png") . '\') != -1) {
+                    img_element.src = \'' . util_get_image_theme("ic/toggle_minus.png") . '\';
+                    img_element.title = \'' . $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_hide_referencers') . '\';
+                } else {
+                    img_element.src = \'' . util_get_image_theme("ic/toggle_plus.png") . '\';
+                    img_element.title = \'' . $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers') . '\';
+                }
+            }
+                ';
+        $docman_references->pushContent(HTML::script(array('type' => 'text/javascript'), $js_code));
+
         if($item_dao->isWikiPageReferenced($wiki_page, $group_id)){
             $docman_item_id = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
             if($this->referrerIsDocument()) {
@@ -148,20 +171,24 @@ class Docman_WikiController extends Docman_Controller {
                             unset($docman_item_id[$idx]);
                         } 
                     }
-                    $icon = HTML::img(array('id' => 'img_documents', 'src' => DOCUMENT_EXPANDED_ICON, 'title' => 'Open to see related documents'));
+                    $icon = HTML::img(array('id' => 'img_documents', 'src' => DOCUMENT_EXPANDED_ICON, 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
                     
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
                     if (count($docman_item_id) > 1) {
                         $title = "";
                         if(isset($referrer_id) && $referrer_id) {
-                            $title = HTML::strong('Location: ');
+                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'));
                         }
                         else {
-                            $title = HTML::strong('Locations: ');
+                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_breadcrumbs_locations'));
                         }
-                    } else {
-                        $title = HTML::strong('Location: ');
+                    }
+                    else if(count($docman_item_id) == 1) {
+                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'));
+                    }
+                    else {
+                        $title = "";
                     }
                     
                     //create Full legend of the section
@@ -174,31 +201,38 @@ class Docman_WikiController extends Docman_Controller {
                     // create section body.
                     if(isset($referrer_id) && $referrer_id) {
                         if(count($docman_item_id) > 2){
-                            $details->pushContent(HTML::H3("Other locations:"));
+                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_locations')));
                         }
-                        else {
-                            $details->pushContent(HTML::H3("Other location:"));
+                        else if(count($docman_item_id) == 2) {
+                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_location')));
                         }
                     }
                     // create Referencing documents linked paths.
                     foreach($docman_item_id as $index => $value) {
-                            $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
+                        $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));                     
                     }
                     $content->pushContent(HTML::div(array('id' => 'documents'), $details));
 
-                    // Display all the section.
-                    $docman_references->pushContent(HTML::br());
-                    $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
+                    if(count($docman_item_id) == 1) {
+                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location')));
+                        $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id[0], $group_id)));
+                        $docman_references->pushContent(HTML::br());
+                    }
+                    else {
+                        $docman_references->pushContent(HTML::br());
+                        $docman_references->pushContent(HTML::fieldset(array('class' => 'docman_md_frame'), $legend, $content, $script));
+                    }
                 }
                 else { 
                     if($dpm->userCanAccess($user, $docman_item_id)) {
-                        $docman_references->pushContent(HTML::strong('Location: '));
+                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location')));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
-                        $docman_references->pushContent(HTML::br(), HTML::br());
+                        $docman_references->pushContent(HTML::br());
                     }
                 }
             }
         }
+
         // Write documents paths on wiki view.
         $this->request->params['html'] = $docman_references;
     }
@@ -228,7 +262,11 @@ class Docman_WikiController extends Docman_Controller {
     }
 
     function getReferrerId($ref) {
-        if(preg_match("/\&id\=([0-9]+)/", $ref, $match)) {
+        //Refferers are urls like this :  "plugins/docman/index.php?group_id=101&id=37&action=details"
+        if(preg_match("/\&action=details\&id\=([0-9]+)/", $ref, $match)) {
+            return $match[1];
+        }
+        if(preg_match("/\&id=([0-9])\&action=details/", $ref, $match)) {
             return $match[1];
         }
         else {

@@ -664,3 +664,8 @@ plugin_docman	warning_obsolete	The file is obsolete and no longer available in s
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
 plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.
 
+plugin_docman	docman_wiki_open_referencers	Open to see related documents
+plugin_docman	docman_wiki_hide_referencers	Hide related documents
+plugin_docman	docman_wiki_other_location	Other location:
+plugin_docman	docman_wiki_other_locations	Other locations:
+plugin_docman	docman_wiki_breadcrumbs_locations	Locations:

@@ -5,8 +5,6 @@ rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 require_once('lib/Template.php');
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
-define("DOCUMENT_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
-define("DOCUMENT_PEN_ICON", util_get_image_theme("ic/edit.png"));
 /**
  * Extract keywords from Category* links on page. 
  */

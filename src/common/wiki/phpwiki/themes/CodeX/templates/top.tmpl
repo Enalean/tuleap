@@ -14,26 +14,8 @@ if (!$HIDE_TOOLBARS && !$HIDE_NAVBAR) {
   </div>
 <?php } ?>
 
-<!-- Documents that point to this wiki page -->
+<!-- Documents that reference this wiki page -->
 <?php if($DOCMAN_METADATA) { ?>
-<SCRIPT language="JavaScript">
-
-function toggle_documents(id) {
-    Element.toggle(id);
-    toggle_image(id);
-}
-
-function toggle_image(id) {
-    var img_element = $('img_' + id);
-    if (img_element.src.indexOf('<?= util_get_image_theme("ic/toggle_plus.png") ?>') != -1) {
-        img_element.src = '<?= util_get_image_theme("ic/toggle_minus.png") ?>';
-        img_element.title = 'Hide related documents';
-    } else {
-        img_element.src = '<?= util_get_image_theme("ic/toggle_plus.png") ?>';
-        img_element.title = 'Open to see related documents';
-    }
-}
-</SCRIPT>
 <?= $DOCMAN_METADATA ?>
 <?php } ?>
 

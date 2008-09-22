@@ -661,3 +661,9 @@ plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide.
 plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
 plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.
+
+plugin_docman	docman_wiki_open_referencers	Ouvrir la liste des documents liés
+plugin_docman	docman_wiki_hide_referencers	Cacher les documents liés
+plugin_docman	docman_wiki_other_location	Autre chemin:
+plugin_docman	docman_wiki_other_locations	Autres chemins:
+plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
