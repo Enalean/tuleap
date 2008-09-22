@@ -79,20 +79,20 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this.actionsForItem = {};
         this.initShowOptions_already_done = false;
         this.initShowOptionsEvent    = this.initShowOptions.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initShowOptionsEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initShowOptionsEvent);
         
         // NewItem
         this.parentFoldersForNewItem = {};
         this.initNewItemEvent        = this.initNewItem.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initNewItemEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initNewItemEvent);
 
         // Expand/Collapse
         this.initExpandCollapseEvent = this.initExpandCollapse.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initExpandCollapseEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initExpandCollapseEvent);
         
         // ItemHighlight
         this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initItemHighlightEvent);
 
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
@@ -107,23 +107,23 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
-        Event.observe(window, 'load', this.focusEvent, true);
+        document.observe('dom:loaded', this.focusEvent, true);
     },
     dispose: function() {
         // ShowOptions
-        Event.stopObserving(window, 'load', this.initShowOptionsEvent, true);
+        document.stopObserving('dom:loaded', this.initShowOptionsEvent);
         // NewItem
-        Event.stopObserving(window, 'load', this.initNewItemEvent, true);
+        document.stopObserving('dom:loaded', this.initNewItemEvent);
         $H(this.newItem.specificProperties).values().each(function (properties) {
-	    Event.stopObserving(properties.checkbox, 'change', this.onNewItemCheckboxChangeEvent);
+            properties.checkbox.stopObserving('click', this.onNewItemCheckboxChangeEvent);
         });
         // Expand/Collapse
-        Event.stopObserving(window, 'load', this.initExpandCollapseEvent, true);
+        document.stopObserving('dom:loaded', this.initExpandCollapseEvent);
         // ItemHighlight
-        Event.stopObserving(window, 'load', this.initItemHighlightEvent, true);
+        document.stopObserving('dom:loaded', this.initItemHighlightEvent);
 	// Table Report
 	if(this.initTableReportEvent) {
-	    Event.stopObserving(window, 'load', this.initTableReportEvent, true);
+	    document.stopObserving('dom:loaded', this.initTableReportEvent);
 	}
     },
     //{{{------------------------------ ItemHighlight
@@ -803,7 +803,7 @@ Object.extend(com.xerox.codex.Menu.prototype, {
             li.appendChild(close);
             ul.appendChild(li);
             this.hideEvent = this.hide.bindAsEventListener(this);
-            Event.observe(close, 'click', this.hideEvent, true);
+            Event.observe(close, 'click', this.hideEvent);
             
             //
             // All the supported actions
