@@ -28,9 +28,6 @@ require_once 'Docman_ItemDao.class.php';
 require_once 'Docman_ItemFactory.class.php';
 require_once 'common/wiki/phpwiki/lib/HtmlElement.php';
 
-define("DOCUMENT_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
-define("DOCUMENT_PEN_ICON", util_get_image_theme("ic/edit.png"));
-
 class Docman_WikiController extends Docman_Controller {
 
     var $params;
@@ -171,7 +168,7 @@ class Docman_WikiController extends Docman_Controller {
                             unset($docman_item_id[$idx]);
                         } 
                     }
-                    $icon = HTML::img(array('id' => 'img_documents', 'src' => DOCUMENT_EXPANDED_ICON, 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
+                    $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
                     
                     // creating the title of the section regarding number of referencing documents and from where we arrived to this wiki page.
@@ -300,7 +297,7 @@ class Docman_WikiController extends Docman_Controller {
 
         $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $referrer_id;
 
-        $pen_icon = HTML::a(array('href' => $md_uri) ,HTML::img(array('src' => DOCUMENT_PEN_ICON)));
+        $pen_icon = HTML::a(array('href' => $md_uri) ,HTML::img(array('src' => util_get_image_theme("ic/edit.png"))));
 
         $html->pushContent(HTML::a(array('href' => $item_url . $reference->getId()), HTML::strong($reference->getTitle())));
         $html->pushContent($pen_icon);
@@ -333,7 +330,7 @@ class Docman_WikiController extends Docman_Controller {
             $md_uri = '/plugins/docman/?group_id=' . $group_id . '&action=details&id=' . $id;
 
             //Add a pen icon linked to document properties.
-            $pen_icon = HTML::a(array('href' => $md_uri) ,HTML::img(array('src' => DOCUMENT_PEN_ICON)));
+            $pen_icon = HTML::a(array('href' => $md_uri) ,HTML::img(array('src' => util_get_image_theme("ic/edit.png"))));
 
             $html->pushContent(HTML::a(array('href' => $item_url . $reference->getId()), HTML::strong($reference->getTitle())));
             $html->pushContent($pen_icon);
