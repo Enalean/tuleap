@@ -174,7 +174,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             }
             
             //ItemHighlight
-            if (Prototype.Browser.IE) {
+            if (!Prototype.Browser.IE) {
                 var node = $('item_'+item_id);
                 Event.observe(node, 'mouseover', function(event) {
                     Element.addClassName(node, 'docman_item_highlight');
