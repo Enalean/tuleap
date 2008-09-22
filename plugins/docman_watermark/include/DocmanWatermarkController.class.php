@@ -247,7 +247,7 @@ class DocmanWatermarkController extends Controler {
             $dmf = new Docman_MetadataFactory($this->request->get('project'));
             require_once('DocmanWatermark_MetadataFactory.class.php');
             $dwmf = new DocmanWatermark_MetadataFactory();
-            $md_id = $dwmf->getMetadataIdFromGroupId($dwmif->getTargetProjectId());
+            $md_id = $dwmf->getMetadataIdFromGroupId($dwmif->getSrcProjectId());
             $mdIter = $dmf->findByName($dwmf->getMetadataNameFromId($md_id));
             $mdIter->rewind();
             $md = $mdIter->current();
