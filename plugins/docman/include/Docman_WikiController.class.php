@@ -182,7 +182,7 @@ class Docman_WikiController extends Docman_Controller {
                         }
                     }
                     else if(count($docman_item_id) == 1) {
-                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'. " "));
+                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " ");
                     }
                     else {
                         $title = "";
@@ -206,12 +206,12 @@ class Docman_WikiController extends Docman_Controller {
                     }
                     // create Referencing documents linked paths.
                     foreach($docman_item_id as $index => $value) {
-                        $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));                     
+                        $details->pushContent($this->getDocumentPath($value, $group_id, isset($referrer_id) && $referrer_id ? $referrer_id : null));
                     }
                     $content->pushContent(HTML::div(array('id' => 'documents'), $details));
 
                     if(count($docman_item_id) == 1) {
-                        foreach($docman_item_id as $idx => $val) $id = $val;
+                        $id = array_pop($docman_item_id);
                         $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($id, $group_id)));
                         $docman_references->pushContent(HTML::br());
