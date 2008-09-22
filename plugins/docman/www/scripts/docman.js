@@ -91,19 +91,21 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         if (this.options.action == 'browse') document.observe('dom:loaded', this.initExpandCollapseEvent);
         
         // ItemHighlight
-        this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
-        if (this.options.action == 'browse') document.observe('dom:loaded', this.initItemHighlightEvent);
+        if (!Prototype.Browser.IE) {
+            this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
+            if (this.options.action == 'browse') document.observe('dom:loaded', this.initItemHighlightEvent);
+        }
 
         // Approval table
         this.approvalTableCreateDetailsHidden = false;
 
-	// Table Report
-	// No longer toogle table report on page load: the page is too long to
-	// load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
-        /*if (this.options.action == 'browse') {
-	    this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
-	    Event.observe(window, 'load', this.initTableReportEvent, true);
-	}*/
+        // Table Report
+        // No longer toogle table report on page load: the page is too long to
+        // load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
+            /*if (this.options.action == 'browse') {
+            this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
+            Event.observe(window, 'load', this.initTableReportEvent, true);
+        }*/
 
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
@@ -119,12 +121,15 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         });
         // Expand/Collapse
         document.stopObserving('dom:loaded', this.initExpandCollapseEvent);
-        // ItemHighlight
-        document.stopObserving('dom:loaded', this.initItemHighlightEvent);
-	// Table Report
-	if(this.initTableReportEvent) {
-	    document.stopObserving('dom:loaded', this.initTableReportEvent);
-	}
+        
+        if (!Prototype.Browser.IE) {
+            // ItemHighlight
+            document.stopObserving('dom:loaded', this.initItemHighlightEvent);
+        }
+        // Table Report
+        if(this.initTableReportEvent) {
+            document.stopObserving('dom:loaded', this.initTableReportEvent);
+        }
     },
     //{{{------------------------------ ItemHighlight
     focus: function() {
