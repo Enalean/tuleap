@@ -175,14 +175,14 @@ class Docman_WikiController extends Docman_Controller {
                     if (count($docman_item_id) > 1) {
                         $title = "";
                         if(isset($referrer_id) && $referrer_id) {
-                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'));
+                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " ");
                         }
                         else {
-                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_breadcrumbs_locations'));
+                            $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_breadcrumbs_locations') . " ");
                         }
                     }
                     else if(count($docman_item_id) == 1) {
-                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'));
+                        $title = HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location'. " "));
                     }
                     else {
                         $title = "";
@@ -198,10 +198,10 @@ class Docman_WikiController extends Docman_Controller {
                     // create section body.
                     if(isset($referrer_id) && $referrer_id) {
                         if(count($docman_item_id) > 2){
-                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_locations')));
+                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_locations') . " "));
                         }
                         else if(count($docman_item_id) == 2) {
-                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_location')));
+                            $details->pushContent(HTML::H3($GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_other_location') . " "));
                         }
                     }
                     // create Referencing documents linked paths.
@@ -211,8 +211,9 @@ class Docman_WikiController extends Docman_Controller {
                     $content->pushContent(HTML::div(array('id' => 'documents'), $details));
 
                     if(count($docman_item_id) == 1) {
-                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location')));
-                        $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id[0], $group_id)));
+                        foreach($docman_item_id as $idx => $val) $id = $val;
+                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
+                        $docman_references->pushContent(HTML($this->getDocumentPath($id, $group_id)));
                         $docman_references->pushContent(HTML::br());
                     }
                     else {
@@ -222,7 +223,7 @@ class Docman_WikiController extends Docman_Controller {
                 }
                 else { 
                     if($dpm->userCanAccess($user, $docman_item_id)) {
-                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location')));
+                        $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
                         $docman_references->pushContent(HTML::br());
                     }
