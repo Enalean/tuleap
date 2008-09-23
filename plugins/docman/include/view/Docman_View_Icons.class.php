@@ -27,15 +27,15 @@ class Docman_View_Icons extends Docman_View_Browse {
             $html .= '<table border="0" cellpadding="0" cellspacing="4" width="100%">';
             $folders   = array();
             $documents = array();
-            $it =& $items->iterator();
+            $it = $items->iterator();
             while($it->valid()) {
-                $o =& $it->current();
+                $o = $it->current();
                 $this->is_folder = false;
                 $o->accept($this);
                 if ($this->is_folder) {
-                    $folders[] =& $o;
+                    $folders[] = $o;
                 } else {
-                    $documents[] =& $o;
+                    $documents[] = $o;
                 }
                 $it->next();
             }
