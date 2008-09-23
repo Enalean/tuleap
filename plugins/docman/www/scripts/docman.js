@@ -96,12 +96,10 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         this.approvalTableCreateDetailsHidden = false;
 
         // Table Report
-        // No longer toogle table report on page load: the page is too long to
-        // load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
-            /*if (this.options.action == 'browse') {
+        if (this.options.action == 'browse') {
             this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
-            document.observe('dom:loaded', this.initTableReportEvent, true);
-        }*/
+            document.observe('dom:loaded', this.initTableReportEvent);
+        }
 
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);

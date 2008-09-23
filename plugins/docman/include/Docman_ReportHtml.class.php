@@ -303,10 +303,7 @@ class Docman_ReportHtml {
         $html .= '</form>';
         $html .= "</div>\n";
 
-        // Force toogle of report: cannot wait full page load as in 'New
-        // document' because it's way too long and the blinking is awful
-        $html .= "<script type=\"text/javascript\">docman.initTableReport();</script>\n";
-        $html .= "<!-- filter list-->\n";
+        $html .= "<!-- filter list -->\n";
 
         return $html;
     }
