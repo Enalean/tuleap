@@ -467,31 +467,16 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 	    }
 	}
     },
-    toggleReportImage: function() {
-	var icon = $('docman_toggle_filters');
-	if (icon.src.indexOf('toggle_plus.png') != -1) {
-	    icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-	} else {
-	    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-	}
-    },
-    toggleReportParam: function() {
-	if($('docman_report_show_filters')) {
-	    var input = $('docman_report_show_filters');
-	    if(input.value == 1) {
-		input.value = 0;
-	    } else {
-		input.value = 1;
-	    }
-	} else {
-	    new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
-	}
-    },
     toggleReport: function() {
-	// Toggle display
-	Element.toggle('docman_filters_fieldset');
-	this.toggleReportImage();
-	this.toggleReportParam();
+        // Toggle display
+        Element.toggle('docman_filters_fieldset');
+        // Change +/- image
+        var icon = $('docman_toggle_filters');
+        if (icon.src.indexOf('toggle_plus.png') != -1) {
+            icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
+        } else {
+            icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+        }
     },
     reportSavedSearchChange: function(form) {
 	var select = form['report_id'];
