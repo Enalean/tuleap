@@ -72,8 +72,8 @@ class Docman_ReportHtml {
         $current = $this->report->getId();
 
         $html = '';
-        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline;">';
-        $html .= '<select name="report_id" onchange="docman.reportSavedSearchChange(this.form);">';
+        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline;" id="plugin_docman_select_report_id" >';
+        $html .= '<select name="report_id" id="plugin_docman_select_saved_report">';
 
         // Project wide report
         $html .= $this->getSelectOption('-1', $GLOBALS['Language']->getText('plugin_docman', 'report_saved_prjreports'), $current);
@@ -166,7 +166,7 @@ class Docman_ReportHtml {
         //
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_add_filter');
         $html .= '&nbsp;';
-        $html .= '<select name="add_filter" onchange="docman.reportFiltersOptionsChange(this.form);">';
+        $html .= '<select name="add_filter" id="plugin_docman_report_add_filter">';
         $html .= $this->getSelectOption('--', '--');
 
         // Std metadata
@@ -227,7 +227,7 @@ class Docman_ReportHtml {
         //
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_save_report');
         $html .= '&nbsp;';
-        $html .= '<select name="save_report" onchange="docman.reportSaveOptionsChange(this.form);">';
+        $html .= '<select name="save_report" id="plugin_docman_report_save">';
 
         $reportFactory = new Docman_ReportFactory($this->report->getGroupId());
         // For docman admin, project reports
@@ -276,7 +276,7 @@ class Docman_ReportHtml {
         $html = '';
 
         $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" >';
-        $toggle   = '<a href="#" onclick="docman.toggleReport(); return false;" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
+        $toggle   = '<a href="#" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
         $title    = $GLOBALS['Language']->getText('plugin_docman', 'filters');
        
         $html .= "<div id=\"docman_filters_title\">\n";
@@ -286,7 +286,7 @@ class Docman_ReportHtml {
         $html .= "</div>\n";
 
         $html .= "<div id=\"docman_filters_fieldset\">\n";
-        $html .= '<form name="plugin_docman_filters" method="get" action="?">';
+        $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
         $html .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
         $html .= '<input type="hidden" name="action" value="search" />';

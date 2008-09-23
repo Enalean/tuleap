@@ -451,21 +451,23 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 
     //{{{----------------------------- Table report
     initTableReport: function() {
-	if($('docman_filters_fieldset')) {
-	    var url = location.href.parseQuery();
-	    if(url['show_filters'] == '1') {
-		var icon = $('docman_toggle_filters');
+        if($('docman_filters_fieldset')) {
+            // Setup event observe
+            var icon = $('docman_toggle_filters');
+            icon.observe('click', this.toggleReport);
+            $('plugin_docman_select_saved_report').observe('change', this.reportSelectSavedReport);
+            $('plugin_docman_report_add_filter').observe('change',   this.reportSelectAddFilter);
+            $('plugin_docman_report_save').observe('change',         this.reportSelectSave.bindAsEventListener(this));
+
+            var url = location.href.parseQuery();
+            if(url['del_filter'] || url['add_filter']) {
                 icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-		new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
-		Element.show('docman_filters_fieldset');
-	    } else {
-		Element.hide('docman_filters_fieldset');
-		var icon = $('docman_toggle_filters');
-		if (icon.src.indexOf('toggle_minus.png') != -1) {
-		    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-		}
-	    }
-	}
+                Element.show('docman_filters_fieldset');
+            } else {
+                icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+                Element.hide('docman_filters_fieldset');
+            }
+        }
     },
     toggleReport: function() {
         // Toggle display
@@ -478,39 +480,53 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
         }
     },
-    reportSavedSearchChange: function(form) {
-	var select = form['report_id'];
-	if($F(select) != '-1') {
-	    form.submit();
-	}
+    reportSelectSavedReport: function(event) {
+        var form = $('plugin_docman_select_report_id');
+        var select = form['report_id'];
+        if(select[select.selectedIndex].value != '-1') {
+            form.submit();
+        }
+        Event.stop(event);
+        return false;
     },
-    reportFiltersOptionsChange: function(form) {
-	var select = form['add_filter'];
-	if($F(select) != '--') {
-	    form.submit();
-	}
+    reportSelectAddFilter: function(event) {
+        var form = $('plugin_docman_report_form');
+        var select = form['plugin_docman_report_add_filter'];
+        if(select[select.selectedIndex].value != '-1') {
+            form.submit();
+        }
+        Event.stop(event);
+        return false;
     },
     // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
     // But I think this kind of attack cannot be used against codex.
-    reportSaveOptionsChange: function(form) {
-	var select = form['save_report'];
-	if(($F(select) == 'newp') || ($F(select) == 'newi')) {
-	    var name = window.prompt(this.options.language.report_name_new, '');
-	    if(name != null && name.strip() != '') {
-		new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
-		form.submit();
-	    }
-	}
-	else {
-	    var selectedValue = parseInt($F(select))
-	    if(selectedValue > 0) {
-		var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
-		if(name != null && name.strip() != '') {
-		    new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
-		    form.submit();
-		}
-	    }
-	}	
+    reportSelectSave: function(event) {
+        var form = $('plugin_docman_report_form');
+        var select = form['plugin_docman_report_save'];
+        var value = select[select.selectedIndex].value;
+        var nameField = Builder.node('input', {type: 'hidden', name: 'report_name'});
+        if((value == 'newp') || (value == 'newi')) {
+            // Create new report
+            var name = window.prompt(this.options.language.report_name_new, '');
+            if(name != null && name.strip() != '') {
+                nameField.value = name.escapeHTML().replace(/\"/, '&quot;');
+                form.appendChild(nameField);
+                form.submit();
+            }
+        } else {
+            // Update existing report
+            var selectedValue = parseInt(value)
+            if(selectedValue > 0) {
+                var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
+                if(name != null && name.strip() != '') {
+                    nameField.value = name.escapeHTML().replace(/\"/, '&quot;');
+                    form.appendChild(nameField);
+                    form.submit();
+                }
+            }
+        }
+        Event.stop(event);
+        return false;
     },
     //}}}
     //{{{----------------------------- Approval table create
