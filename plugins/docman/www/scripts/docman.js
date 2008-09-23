@@ -75,6 +75,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             img.src = this.options.spinner;
         }
         
+        this.itemHighlight = {};
+        
         // ShowOptions
         this.actionsForItem = {};
         this.initShowOptions_already_done = false;
@@ -98,7 +100,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         // load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
             /*if (this.options.action == 'browse') {
             this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
-            Event.observe(window, 'load', this.initTableReportEvent, true);
+            document.observe('dom:loaded', this.initTableReportEvent, true);
         }*/
 
         //Focus
@@ -121,6 +123,12 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         if(this.initTableReportEvent) {
             document.stopObserving('dom:loaded', this.initTableReportEvent);
         }
+        //itemHighlight
+        $H(this.itemHighlight).keys().each(function (item_id) {
+            var node = $('item_'+item_id);
+            node.stopObserving('mouseover', this.itemHighlight[item_id].mouseover);
+            node.stopObserving('mouseout', this.itemHighlight[item_id].mouseout);
+        });
     },
     //{{{------------------------------ Focus
     focus: function() {
@@ -165,25 +173,34 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             });
         }
         //}}}
+        if (!this.showOptions_Menus) {
+            this.showOptions_Menus = {};
+        }
+        if (!this.itemHighlight) {
+            
+        }
         $H(this.actionsForItem).keys().each((function (item_id) {
-            if (!this.showOptions_Menus) {
-                this.showOptions_Menus = {};
-            }
             if (!this.showOptions_Menus[item_id]) {
                 this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.btn_close});
             }
             
             //ItemHighlight
-            if (!Prototype.Browser.IE) {
+            if (!Prototype.Browser.IE && !this.itemHighlight[item_id]) {
                 var node = $('item_'+item_id);
-                Event.observe(node, 'mouseover', function(event) {
-                    Element.addClassName(node, 'docman_item_highlight');
-                    Event.stop(event);
-                });
-                Event.observe(node, 'mouseout', function(event) {
-                    Element.removeClassName(node, 'docman_item_highlight');
-                    Event.stop(event);
-                });
+                if (node) {
+                    this.itemHighlight[item_id] = {
+                        mouseover: (function(event) {
+                            node.addClassName('docman_item_highlight');
+                            event.stop();
+                        }).bindAsEventListener(this),
+                        mouseout: (function(event) {
+                            node.removeClassName('docman_item_highlight');
+                            event.stop();
+                        }).bindAsEventListener(this)
+                    };
+                    node.observe('mouseover', this.itemHighlight[item_id].mouseover);
+                    node.observe('mouseout', this.itemHighlight[item_id].mouseout);
+                }
             }
         }).bind(this));
     },
@@ -350,15 +367,9 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             if (properties.panel) {
                 if (properties.checkbox.id == selected_checkbox.id) {
                     Element.show(properties.panel);
-                    /*new Effect.SlideDown(properties.panel, {
-                        duration:0.25
-                    });*/
                 } else {
                     if (Element.visible(properties.panel)) {
                         Element.hide(properties.panel);
-                        /*new Effect.SlideUp(properties.panel, {
-                            duration:0.25
-                        });*/
                     }
                 }
             }
@@ -387,12 +398,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder.png', 'folder-open.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        Element.show(subitems);
-                        /*
-                        Effect.toggle(subitems, 'slide', {
-                            duration:0.25
-                        });
-                        /**/
+                        subitems.show();
                         new Ajax.Request('?group_id='+ this.group_id +'&action=expandFolder&view=none&id='+node.id.split('_')[1], {
                             asynchronous:true
                         });
@@ -419,11 +425,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                                 }
                                 this._expandCollapse(target);    //
                                 this.initShowOptions();          //register events for new loaded items
-                                this._initItemHighlight(target); //
                                 Element.setStyle(document.body, {cursor:'default'});
-                                new Effect.SlideDown(outer, {
-                                    duration:0.25
-                                });
+                                outer.show();
                                 icon.src = old_icon_src;
                             }).bind(this)
                         });
@@ -435,12 +438,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder-open.png', 'folder.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        Element.hide(subitems);
-                        /*
-                        Effect.toggle(subitems, 'slide', {
-                            duration:0.25
-                        });
-                        /**/
+                        subitems.hide();
                     }
                     new Ajax.Request('?group_id='+ this.group_id +'&action=collapseFolder&view=none&id='+node.id.split('_')[1], {
                         asynchronous:true
