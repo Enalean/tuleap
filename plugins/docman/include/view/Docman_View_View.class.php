@@ -193,7 +193,10 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
                     $ci->rewind();
                     while($ci->valid()) {
                         $c = $ci->current();
-                        if($c !== null) {
+                        // The second part of the test aims to avoid to add
+                        // sort_update_date=0 in the URL as it's the default
+                        // sort (no need to define it)
+                        if($c !== null && !($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
                             $sort = $c->getSort();
                             if($sort !== null) {
                                 $this->dfltSortParams[$c->getSortParameter()] = $sort;
