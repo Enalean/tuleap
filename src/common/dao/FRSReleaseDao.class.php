@@ -115,7 +115,7 @@ class FRSReleaseDao extends DataAccessObject {
     function searchReleaseByName($release_name, $package_id) {
         $_package_id = (int) $package_id;
         return $this->_search(' package_id=' . $_package_id .
-        ' AND name=' . $this->da->quoteSmart(htmlspecialchars($release_name)), '', '');
+        ' AND name=' . $this->da->quoteSmart(htmlspecialchars($release_name), array('force_string' => true)), '', '');
     }
 
     /**
@@ -135,7 +135,7 @@ class FRSReleaseDao extends DataAccessObject {
 
         if ($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name, array('force_string'=>true));
+            $values[] = $this->da->quoteSmart($name, array('force_string' => true));
         }
 
         if ($notes !== null) {
@@ -194,15 +194,8 @@ class FRSReleaseDao extends DataAccessObject {
                 if ($key == 'release_date') {
                     $is_date = true;
                 }
-                if($key == 'name'){
-                    $arg[] = $key;
-                    $values[] = $this->da->quoteSmart($value, array('force_string'=>true));
-                }else{
-                    $arg[] = $key;
-                    $values[] = $this->da->quoteSmart($value);
-                }
-                
-                
+                $arg[] = $key;
+                $values[] = $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
             }
         }
 
@@ -256,7 +249,7 @@ class FRSReleaseDao extends DataAccessObject {
         }
 
         if ($name !== null) {
-            $argArray[] = 'name=' . $this->da->quoteSmart($name);
+            $argArray[] = 'name=' . $this->da->quoteSmart($name, array('force_string' => true));
         }
 
         if ($notes !== null) {
