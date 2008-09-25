@@ -121,7 +121,7 @@ class FRSPackageDao extends DataAccessObject {
 
         if($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name, array('force_string'=>true));
+            $values[] = $this->da->quoteSmart($name, array('force_string' => true));
         }
 
         if($status_id !== null) {
@@ -154,13 +154,8 @@ class FRSPackageDao extends DataAccessObject {
                 $value = $this->prepareRanking(0, $data_array['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
             }
             if (in_array($key, $cols)) {
-                if($key == 'name'){
-                    $arg[] = $key;
-                    $values[] = $this->da->quoteSmart($value, array('force_string'=>true));
-                }else{
-                    $arg[] = $key;
-                    $values[] = $this->da->quoteSmart($value);
-                }
+                $arg[]    = $key;
+                $values[] = $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
             }
                 
         }
@@ -201,7 +196,7 @@ class FRSPackageDao extends DataAccessObject {
         }
 
         if($name !== null) {
-            $argArray[] = 'name='.$this->da->quoteSmart($name);
+            $argArray[] = 'name='.$this->da->quoteSmart($name, array('force_string' => true));
         }
 
         if($status_id !== null) {
@@ -240,7 +235,7 @@ class FRSPackageDao extends DataAccessObject {
                         if ($key == 'rank') {
                             $value = $this->prepareRanking($package_id, $current['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
                         }
-                        $set_array[] = $key .' = '. $this->da->quoteSmart($value);
+                        $set_array[] = $key .' = '. $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
                     }
                 }
                 if (count($set_array)) {
