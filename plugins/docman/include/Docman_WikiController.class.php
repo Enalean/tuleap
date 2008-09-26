@@ -55,9 +55,48 @@ class Docman_WikiController extends Docman_Controller {
                 break;
             case 'wiki_before_content':
                 $this->wiki_before_content();
+            case 'check_whether_wiki_page_is_referenced':
+                $this->isWikiPageReferenced();
+                break;
+            case 'check_whether_user_can_access':
+                $this->canAccess();
+                break;
             default:
                 break;
         }
+    }
+
+    function isWikiPageReferenced() {
+        $wiki_page = $this->request->get('wiki_page');
+        $group_id = $this->request->get('group_id');
+        $item_dao =& $this->_getItemDao();
+        if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
+            $this->request->params['referenced'] = true;
+        }
+        else {
+            $this->request->params['referenced'] = false;
+        }
+    }
+
+    function canAccess() {
+        $wiki_page = $this->request->get('wiki_page');
+        $group_id = $this->request->get('group_id');
+
+        require_once 'Docman_PermissionsManager.class.php';
+        $dPM =& Docman_PermissionsManager::instance($group_id);
+
+        $references = $this->_getDocmanReferences($wiki_page, $group_id);
+
+        require_once 'common/user/UserManager.class.php';
+        $uM =& UserManager::instance();
+
+        $can_access = true;
+        foreach($references as $key => $item) {
+            if (!$dPM->userCanAccess($uM->getCurrentUser(), $item->getId())) {
+                $can_access = false;
+            }
+        }
+        $this->request->params['canAccess'] = $can_access;
     }
 
     function wikiPageUpdated() {

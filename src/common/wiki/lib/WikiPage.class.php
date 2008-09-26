@@ -142,14 +142,39 @@ class WikiPage {
   /**
    * @access public
    */
-  function isAutorized($uid) {            
-    if($this->permissionExist()) {
-        if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
-	return false;
-      }
+    function isAutorized($uid) {            
+        //Check for Docman Perms 
+        $eM =& EventManager::instance();
+        $referenced = false;
+        $eM->processEvent('isWikiPageReferenced', array(
+                        'action'    => 'check_whether_wiki_page_is_referenced',
+                        'referenced' => &$referenced,
+                        'wiki_page'  => $this->pagename,
+                        'group_id' => $this->gid
+                        ));
+        if($referenced == true) {
+            $userCanAccess = false;
+            $eM->processEvent('userCanAccessWikiDocument', array(
+                            'action' => 'check_whether_user_can_access',
+                            'canAccess' => &$userCanAccess,
+                            'wiki_page'  => $this->pagename,
+                            'group_id' => $this->gid
+                            ));
+            if(!$userCanAccess) {
+                return false;
+            }
+        } else {
+            //1- Give the wiki page a wiki_admin permission.
+            permission_add_ugroup($this->gid, 'WIKIPAGE_READ', $this->id, 14, false);
+            //2- Check if user is authorized ()part of wiki_admins ugroup.
+            if($this->permissionExist()) {
+                if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    return true;
-  }
 
   
   /**
