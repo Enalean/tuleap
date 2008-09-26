@@ -664,7 +664,7 @@ class Docman_Actions extends Actions {
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
                 
                 // Propagate item permissions to wiki.
-                $this->wikiPermissions($item->getGroupId(), $id);
+                //$this->wikiPermissions($item->getGroupId(), $id);
 
                 // If requested by user, apply permissions recursively on sub items
                 if ($this->_controler->request->get('recursive')) {
@@ -697,9 +697,9 @@ class Docman_Actions extends Actions {
         if ($this->_controler->userCanManage($data["item_id"])) {
             $pm =& $this->_getPermissionsManagerInstance();
             $pm->clonePermissions($params['id'], $data["item_id"], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
-            if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            /*if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $this->wikiPermissions($data['group_id'], $params['id']);
-            }
+            }*/
         } else {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
@@ -712,7 +712,7 @@ class Docman_Actions extends Actions {
      * @param int $item_id  docman item id
      *
      */
-    function wikiPermissions($group_id, $item_id) {
+    /*function wikiPermissions($group_id, $item_id) {
         require_once('Docman_PermissionsManager.class.php');
         $dPM =& Docman_PermissionsManager::instance($group_id);
         $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
@@ -720,7 +720,7 @@ class Docman_Actions extends Actions {
             $dPM->synchronizePermissionsInWiki($id_in_wiki, $item_id);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_propagated_to_wiki'));
         }
-    }
+    }*/
 
     function getIdInWiki($group_id, $item_id){
         $dIF =& $this->_getItemFactory($group_id);
