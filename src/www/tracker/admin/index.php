@@ -206,8 +206,8 @@ if ($group_id && !$atid) {
 		}
         
         if ($request->getValidated('post_changes')) {
-            //Only project admin users can create 'P' scope reports
-            if (user_ismember($group_id,'A')) {
+            //Only tracker admin users can create 'P' scope reports
+            if ($ath->userIsAdmin()) {
                 $validScope = new Valid_WhiteList('rep_scope' ,array('I', 'P'));
             } else {
                 $validScope = new Valid_WhiteList('rep_scope' ,array('I'));
