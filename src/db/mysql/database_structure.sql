@@ -1025,20 +1025,6 @@ CREATE TABLE image (
   KEY group_id_idx (group_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'intel_agreement'
-#
-
-CREATE TABLE intel_agreement (
-  user_id int(11) NOT NULL default '0',
-  message text,
-  is_approved int(11) NOT NULL default '0',
-  PRIMARY KEY  (user_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'mail_group_list'
-#
 
 CREATE TABLE mail_group_list (
   group_list_id int(11) NOT NULL auto_increment,
@@ -1980,33 +1966,6 @@ CREATE TABLE user_bookmarks (
   KEY idx_user_bookmark_user_id (user_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'user_diary'
-#
-
-CREATE TABLE user_diary (
-  id int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  date_posted int(11) NOT NULL default '0',
-  summary text,
-  details text,
-  PRIMARY KEY  (id),
-  KEY idx_user_diary_user_date (user_id,date_posted),
-  KEY idx_user_diary_date (date_posted),
-  KEY idx_user_diary_user (user_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'user_diary_monitor'
-#
-
-CREATE TABLE user_diary_monitor (
-  monitor_id int(11) NOT NULL auto_increment,
-  user_monitored int(11) NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (monitor_id),
-  KEY idx_user_diary_monitor_user (user_id)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'user_group'
@@ -2036,50 +1995,6 @@ CREATE TABLE user_group (
   KEY admin_flags_idx (admin_flags)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'user_metric0'
-#
-
-CREATE TABLE user_metric0 (
-  ranking int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  times_ranked int(11) NOT NULL default '0',
-  avg_raters_importance float(10,8) NOT NULL default '0.00000000',
-  avg_rating float(10,8) NOT NULL default '0.00000000',
-  metric float(10,8) NOT NULL default '0.00000000',
-  percentile float(10,8) NOT NULL default '0.00000000',
-  importance_factor float(10,8) NOT NULL default '0.00000000',
-  PRIMARY KEY  (ranking),
-  KEY idx_user_metric0_user_id (user_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'user_metric1'
-#
-
-CREATE TABLE user_metric1 (
-  ranking int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  times_ranked int(11) NOT NULL default '0',
-  avg_raters_importance float(10,8) NOT NULL default '0.00000000',
-  avg_rating float(10,8) NOT NULL default '0.00000000',
-  metric float(10,8) NOT NULL default '0.00000000',
-  percentile float(10,8) NOT NULL default '0.00000000',
-  importance_factor float(10,8) NOT NULL default '0.00000000',
-  PRIMARY KEY  (ranking)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'user_metric_tmp1_1'
-#
-
-CREATE TABLE user_metric_tmp1_1 (
-  user_id int(11) NOT NULL default '0',
-  times_ranked int(11) NOT NULL default '0',
-  avg_raters_importance float(10,8) NOT NULL default '0.00000000',
-  avg_rating float(10,8) NOT NULL default '0.00000000',
-  metric float(10,8) NOT NULL default '0.00000000'
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'user_preferences'
@@ -2092,34 +2007,6 @@ CREATE TABLE user_preferences (
   PRIMARY KEY  (user_id,preference_name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'user_ratings'
-#
-
-CREATE TABLE user_ratings (
-  rated_by int(11) NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  rate_field int(11) NOT NULL default '0',
-  rating int(11) NOT NULL default '0',
-  KEY idx_user_ratings_rated_by (rated_by),
-  KEY idx_user_ratings_user_id (user_id)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'user_trust_metric'
-#
-
-CREATE TABLE user_trust_metric (
-  ranking int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  times_ranked int(11) NOT NULL default '0',
-  avg_raters_importance float(10,8) NOT NULL default '0.00000000',
-  avg_rating float(10,8) NOT NULL default '0.00000000',
-  metric float(10,8) NOT NULL default '0.00000000',
-  percentile float(10,8) NOT NULL default '0.00000000',
-  importance_factor float(10,8) NOT NULL default '0.00000000',
-  PRIMARY KEY  (ranking)
-) TYPE=MyISAM;
 
 #
 # Table structure for table 'doc_log'
