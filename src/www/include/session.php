@@ -12,7 +12,6 @@ require_once('common/user/UserManager.class.php');
 //$Language->loadLanguageMsg('include/include');
 
 $G_SESSION=array();
-$G_USER=array();
 
 $ALL_USERS_DATA = array();
 $ALL_USERS_GROUPS = array();
@@ -218,28 +217,6 @@ function session_require($req) {
 	}
 }
 
-function session_setglobals($user_id) {
-	global $G_USER;
-    $um =& UserManager::instance();
-
-//	unset($G_USER);
-
-	if ($user_id > 0) {
-		$result=db_query("SELECT user_id,user_name FROM user WHERE user_id=".db_ei($user_id));
-		if (!$result || db_numrows($result) < 1) {
-            $um->setCurrentUserId(0);
-			//echo db_error();
-			$G_USER = array();
-		} else {
-            $um->setCurrentUserId($user_id);
-			$G_USER = db_fetch_array($result);
-//			echo $G_USER['user_name'].'<BR>';
-		}
-	} else {
-        $um->setCurrentUserId($user_id);
-		$G_USER = array();
-	}
-}
 
 function session_set_new($user_id) {
   global $G_SESSION,$Language;
@@ -274,12 +251,12 @@ function session_set_new($user_id) {
         exit_error($Language->getText('global','error'),$Language->getText('include_session','hash_err'));
 	} else {
 		$G_SESSION = db_fetch_array($res);
-		session_setglobals($G_SESSION['user_id']);
+		UserManager::instance()->setCurrentUserId($G_SESSION['user_id']);
 	}
 }
 
 function session_set() {
-	global $G_SESSION,$G_USER;
+	global $G_SESSION;
 
 //	unset($G_SESSION);
 
@@ -304,23 +281,22 @@ function session_set() {
 	} // else (hash does not exist) or (session hash is bad)
 
 	if ($id_is_good) {
-		session_setglobals($G_SESSION['user_id']);
-                session_store_access();
+        UserManager::instance()->setCurrentUserId($G_SESSION['user_id']);
+		session_store_access();
 	} else {
 		unset($G_SESSION);
-		unset($G_USER);
 	}
 }
 
 /**
  *	session_get_userid() - Wrapper function to return the User object for the logged in user.
+ *  Should probably be deprecated!
  *	
  *	@return User
  *	@access public
  */
 function session_get_userid() {
-	global $G_USER;
-	return $G_USER['user_id'];
+    return UserManager::instance()->getCurrentUser()->getId();
 }
 
 /**

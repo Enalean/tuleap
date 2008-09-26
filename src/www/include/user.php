@@ -33,16 +33,15 @@ function user_ismember($group_id,$type=0) {
 
 //Deprecated. Use User->getId() instead
 function user_getid() {
-	global $G_USER;
-	return ($G_USER?$G_USER['user_id']:0);
+    return UserManager::instance()->getCurrentUser()->getId();
 }
 
 //Deprecated. Use User->getName() instead
 function user_getname($user_id = 0) {
-    global $G_USER,$USER_NAMES,$Language;
+    global $USER_NAMES,$Language;
 	// use current user if one is not passed in
 	if (!$user_id) {
-		return ($G_USER?$G_USER['user_name']:"NA");
+        return UserManager::instance()->getCurrentUser()->getUserName();
 	}
 	// else must lookup name
 	else {

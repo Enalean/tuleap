@@ -84,7 +84,7 @@ class UserManager {
      * @return User the user currently logged in (who made the request)
      */
     function &getCurrentUser() {
-        return $this->getUserById(user_getid());
+        return $this->getUserById($this->_currentuser_id);
     }
     
     /**
@@ -112,7 +112,7 @@ class UserManager {
      * Set the id of the user logged in
      */
     function setCurrentUserId($user_id) {
-        $this->currentuser_id = $user_id;
+        $this->_currentuser_id = $user_id;
     }
 }
 
