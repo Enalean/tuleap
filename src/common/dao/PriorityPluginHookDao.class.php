@@ -79,6 +79,17 @@ class PriorityPluginHookDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    /**
+     * Retrieve all the priorities.
+     */
+    function searchPrioritiesForAllPlugins() {
+        $sql = 'SELECT p.id, h.hook, h.priority '.
+               ' FROM priority_plugin_hook h'.
+               ' INNER JOIN plugin p ON (h.plugin_id = p.id)'.
+               ' WHERE p.available = 1';
+        return $this->retrieve($sql);
+    }
+    
     function setPriorityForHook_PluginId($hook, $pluginId, $priority) {
         $updated = false;
         //We search plugin/hook

@@ -10,16 +10,37 @@ require_once('common/dao/PriorityPluginHookDao.class.php');
  */
 class PluginHookPriorityManager {
     var $priorityPluginHookDao;
+    var $priorityCache;
 
     function PluginHookPriorityManager() {
+        $this->priorityCache = null;
+    }
+    
+    function cacheAllPrioritiesForPluginHook() {
+        $this->priorityCache = array();
+        $priority_dao = $this->_getPriorityPluginHookDao();
+        $dar = $priority_dao->searchPrioritiesForAllPlugins();
+        if($dar && !$dar->isError()) {
+            while($dar->valid()) {
+                $row = $dar->current();
+                $this->priorityCache[$row['id']][$row['hook']] = (int)$row['priority'];
+                $dar->next();
+            }
+        }
     }
     
     function getPriorityForPluginHook(&$plugin, $hook) {
-        $priority_dao = $this->_getPriorityPluginHookDao();
         $priority = 0;
-        if ($dar = $priority_dao->searchByHook_PluginId($hook, $plugin->getId())) {
-            if ($row = $dar->getRow()) {
-                $priority = (int)$row['priority'];
+        if($this->priorityCache !== null) {
+            if(isset($this->priorityCache[$plugin->getId()][$hook])) {
+                $priority = $this->priorityCache[$plugin->getId()][$hook];
+            }
+        } else {
+            $priority_dao = $this->_getPriorityPluginHookDao();
+            if ($dar = $priority_dao->searchByHook_PluginId($hook, $plugin->getId())) {
+                if ($row = $dar->getRow()) {
+                    $priority = (int)$row['priority'];
+                }
             }
         }
         return $priority;

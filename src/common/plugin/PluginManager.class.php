@@ -32,6 +32,7 @@ class PluginManager {
         $col_available_plugins = $plugin_factory->getAvailablePlugins();
         $available_plugins = $col_available_plugins->iterator();
         $priority_manager = $this->_getPluginHookPriorityManager();
+        $priority_manager->cacheAllPrioritiesForPluginHook();
         while($available_plugins->valid()) {
             $plugin = $available_plugins->current();
             $hooks = $plugin->getHooksAndCallbacks();
