@@ -164,9 +164,7 @@ class WikiPage {
                 return false;
             }
         } else {
-            //1- Give the wiki page a wiki_admin permission.
-            permission_add_ugroup($this->gid, 'WIKIPAGE_READ', $this->id, 14, false);
-            //2- Check if user is authorized ()part of wiki_admins ugroup.
+            // Check if user is authorized.
             if($this->permissionExist()) {
                 if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
                     return false;
