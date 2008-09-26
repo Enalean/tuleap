@@ -324,7 +324,7 @@ if (!IS_SCRIPT &&
 }
 
 if (!IS_SCRIPT &&
-    user_isrestricted()) {
+    UserManager::instance()->getCurrentUser()->isRestricted() ) {
     if (!util_check_restricted_access($_SERVER['REQUEST_URI'],$_SERVER['SCRIPT_NAME'])) {
         exit_restricted_user_permission_denied();
     }

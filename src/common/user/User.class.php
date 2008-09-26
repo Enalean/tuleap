@@ -392,6 +392,12 @@ class User {
         return $this->data_array['add_date'];
     }
     /**
+     * @return string the last access date of the user (timestamp format)
+     */
+    function getLastAccessDate() {
+        return $this->data_array['last_access_date'];
+    }
+    /**
      * @return string the timezone of the user (GMT, Europe/Paris, etc ...)
      */
     function getTimezone() {

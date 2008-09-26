@@ -8,190 +8,27 @@
 
   //$Language->loadLanguageMsg('include/include');
 
-unset($USER_IS_SUPER_USER);
 $USER_RES=array();
 
 
 //Deprecated. Use User->isLoggedIn() instead
 function user_isloggedin() {
-	global $G_USER;
-	if (isset($G_USER['user_id']) && $G_USER['user_id']) {
-		return true;
-	} else {
-		return false;
-	}
+	return UserManager::instance()->getCurrentUser()->isLoggedIn();
 }
 
 //Deprecated. Use User->isRestricted() instead
 function user_isrestricted() {
-	if (!user_isloggedin()) {
-		return false;
-	}
-	$user_id=user_getid();
-	$res = db_query("SELECT status FROM user WHERE user_id='".db_es($user_id)."' AND status='R'");
-	if (!$res || db_numrows($res) < 1) {
-		//matching row wasn't found
-		return false;
-	} else return true;
+	return UserManager::instance()->getCurrentUser()->isRestricted();
 }
 
 //Deprecated. Use User->isSuperUser() instead
 function user_is_super_user() {
-	global $USER_IS_SUPER_USER;
-	/*
-		members of group_id 1 who are admins have super-user privs site-wide
-	*/
-
-	if (isset($USER_IS_SUPER_USER)) {
-		return $USER_IS_SUPER_USER;
-	} else {
-		if (user_isloggedin()) {
-			$sql="SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='1' AND admin_flags='A'";
-			$result=db_query($sql);
-			if (!$result || db_numrows($result) < 1) {
-				$USER_IS_SUPER_USER=false;
-				return $USER_IS_SUPER_USER;
-			} else {
-				//matching row was found - set and save this knowledge for later
-				$USER_IS_SUPER_USER=true;
-				return $USER_IS_SUPER_USER;
-			}
-		} else {
-			$USER_IS_SUPER_USER=false;
-			return $USER_IS_SUPER_USER;
-		}
-	}
+	return UserManager::instance()->getCurrentUser()->isSuperUser();
 }
 
 //Deprecated. Use User->isMember() instead
 function user_ismember($group_id,$type=0) {
-	if (!user_isloggedin()) {
-		return false;
-	}
-	$user_id=user_getid(); //optimization
-
-	/*
-		CodeX admins always return true
-	*/
-	if (user_is_super_user()) {
-		return true;
-	}
-
-	/*
-		for everyone else, do a query
-	*/
-	$query = "SELECT user_id FROM user_group "
-		. "WHERE user_id='".db_es($user_id)."' AND group_id='".db_es($group_id)."'";
-
-	$type=strtoupper($type);
-
-	switch ($type) {
-		/*
-			list the supported permission types
-		*/
-		case 'B1' : {
-			//bug tech
-			$query .= ' AND bug_flags IN (1,2)';
-			break;
-		}
-		case 'B2' : {
-			//bug admin
-			$query .= ' AND bug_flags IN (2,3)';
-			break;
-		}
-		case 'P1' : {
-			//pm tech
-			$query .= ' AND project_flags IN (1,2)';
-			break;
-		}
-		case 'P2' : {
-			//pm admin
-			$query .= ' AND project_flags IN (2,3)';
-			break;
-		}
-		case 'C1' : {
-			//patch tech
-			$query .= ' AND patch_flags IN (1,2)';
-			break;
-		}
-		case 'C2' : {
-			//patch admin
-			$query .= ' AND patch_flags IN (2,3)';
-			break;
-		}
-		case 'F2' : {
-			//forum admin
-			$query .= ' AND forum_flags IN (2)';
-			break;
-		}
-		case 'S1' : {
-			//support tech
-			$query .= ' AND support_flags IN (1,2)';
-			break;
-		}
-		case 'S2' : {
-			//support admin
-			$query .= ' AND support_flags IN (2,3)';
-			break;
-		}
-		case '0' : {
-			//just in this group
-			break;
-		}
-		case 'A' : {
-			//admin for this group
-			$query .= " AND admin_flags = 'A'";
-			break;
-		}
-		case 'D1' : {
-			//document tech
-			$query .= " AND doc_flags IN (1,2)";
-			break;
-		}
-		case 'D2' : {
-			//document admin
-			$query .= " AND doc_flags IN (2,3)";
-			break;
-		}
-		case 'R2' : {
-			//file release admin
-			$query .= " AND file_flags = '2'";
-			break;
-                }
-	        case 'W2': {
-		        //wiki release admin
-			$query .= " AND wiki_flags = '2'";
-			break;
-		}
-		case 'N1': {
-			//News write perm
-			$query .= " AND news_flags = '1'";
-			break;
-		}
-		case 'N2': {
-			//News admin
-			$query .= " AND news_flags = '2'";
-			break;
-		}
-		case 'SVN_ADMIN': {
-			//svn release admin
-			$query .= " AND svn_flags = '2'";
-			break;
-		}
-		default : {
-			//fubar request
-			return false;
-		}
-	}
-
-	$res = db_query($query);
-	if (!$res || db_numrows($res) < 1) {
-		//matching row wasn't found
-		return false;
-	} else {
-		//matching row was found
-		return true;
-	}
+	return UserManager::instance()->getCurrentUser()->isMember($group_id,$type);
 }
 
 //Deprecated. Use User->getId() instead
@@ -391,10 +228,9 @@ function user_get_language() {
     return $lang_id;
 }
 
-//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead.
+//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead... or UserManager::instance()->getCurrentUser()->getLocale()?
 function user_get_languagecode() {
-    $res=db_query("SELECT * FROM supported_languages WHERE language_id='".user_get_language()."'");
-	return db_result($res,0,'language_code');
+    return UserManager::instance()->getCurrentUser()->getLocale();
 }
 
 //Deprecated. Use User->setPreference() instead.
