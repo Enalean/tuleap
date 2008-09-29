@@ -371,7 +371,6 @@ class WikiServiceAdminViews extends WikiViews {
             $eM =& EventManager::instance();
             $referenced = false;
             $eM->processEvent('isWikiPageReferenced', array(
-                            'action'    => 'check_whether_wiki_page_is_referenced',
                             'referenced' => &$referenced,
                             'wiki_page'  => $pagename,
                             'group_id' => $this->gid
@@ -382,7 +381,6 @@ class WikiServiceAdminViews extends WikiViews {
             if($referenced){
                 $label = '';
                 $eM->processEvent('getPermsLabelForWiki', array(
-                                  'action' => 'getPermsLabelForWiki',
                                   'label'  => &$label
                                 ));
                 print $label;

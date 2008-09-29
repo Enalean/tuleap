@@ -148,7 +148,6 @@ function displayPage(&$request, $template=false) {
     $docman_md = HTML();
     $additional_html = '';
     $eM->processEvent('wiki_before_content', array(
-                    'action' => 'wiki_before_content',
                     'html' => &$additional_html,
                     'group_id' => $group_id,
                     'wiki_page' => $pagename

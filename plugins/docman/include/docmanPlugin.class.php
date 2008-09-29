@@ -292,6 +292,7 @@ class DocmanPlugin extends Plugin {
 
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
+        $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
         require_once('Docman_WikiController.class.php');
         $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
@@ -300,6 +301,7 @@ class DocmanPlugin extends Plugin {
 
     function isWikiPageReferenced($params) {
         require_once('Docman_WikiRequest.class.php');
+        $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
         require_once('Docman_WikiController.class.php');
         $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
@@ -308,6 +310,7 @@ class DocmanPlugin extends Plugin {
 
     function userCanAccessWikiDocument($params) {
         require_once('Docman_WikiRequest.class.php');
+        $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
         require_once('Docman_WikiController.class.php');
         $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
@@ -316,6 +319,7 @@ class DocmanPlugin extends Plugin {
 
     function getPermsLabelForWiki($params) {
         require_once('Docman_WikiRequest.class.php');
+        $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
         require_once('Docman_WikiController.class.php');
         $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 

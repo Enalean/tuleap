@@ -147,7 +147,6 @@ class WikiPage {
         $eM =& EventManager::instance();
         $referenced = false;
         $eM->processEvent('isWikiPageReferenced', array(
-                        'action'    => 'check_whether_wiki_page_is_referenced',
                         'referenced' => &$referenced,
                         'wiki_page'  => $this->pagename,
                         'group_id' => $this->gid
@@ -155,7 +154,6 @@ class WikiPage {
         if($referenced == true) {
             $userCanAccess = false;
             $eM->processEvent('userCanAccessWikiDocument', array(
-                            'action' => 'check_whether_user_can_access',
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
                             'group_id' => $this->gid
