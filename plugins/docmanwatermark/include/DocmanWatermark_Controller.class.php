@@ -31,7 +31,7 @@ require_once('common/include/Feedback.class.php');
 require_once('common/event/EventManager.class.php');
 
 
-class DocmanWatermarkController extends Controler {
+class DocmanWatermark_Controller extends Controler {
     // variables
     var $request;
     var $user;
@@ -181,7 +181,7 @@ class DocmanWatermarkController extends Controler {
             $md_id = $dwmdf->getMetadataIdFromGroupId($group_id);
             $this->_viewParams['md_id']    = $md_id;
             $this->_viewParams['group_id'] = $group_id;
-            $this->view   = 'Admin_Watermark';
+            $this->view   = 'AdminWatermark';
             break;
         case 'admin_set_watermark_metadata':
             require_once('DocmanWatermark_Metadata.class.php');
