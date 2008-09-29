@@ -42,26 +42,6 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function synchronizePermissionsWithWiki($id_in_wiki, $docman_item_id) {
-        $sql = "SELECT * FROM permissions WHERE object_id=". db_ei($docman_item_id).
-               " AND permission_type IN ('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE')";
-        $dar = $this->retrieve($sql);
-        $dar->rewind();
-        while ($dar->valid()){
-            $row = $dar->current();
-            $sql_sync = "INSERT INTO permissions (permission_type, object_id, ugroup_id) ".
-                        " VALUES('WIKIPAGE_READ', " . db_ei($id_in_wiki) . ", " . $row['ugroup_id'] . ")";
-            $this->update($sql_sync);
-            $dar->next();
-        }
-    }
-	
-    function clearWikiPagePermissions($wiki_page_id) {
-        $sql = "DELETE FROM permissions WHERE object_id=".db_ei($wiki_page_id).
-               " AND permission_type='WIKIPAGE_READ'";
-        $this->update($sql);
-    }
-
     function setDefaultPermissions($objectId, $perm, $force=false) {
         require_once('www/project/admin/permissions.php');
         $res = permission_db_get_defaults($perm);

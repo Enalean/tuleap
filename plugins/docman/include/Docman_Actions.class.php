@@ -385,16 +385,6 @@ class Docman_Actions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            //Check if wiki_page have changed. If true, propagate document permissions to new wiki page.
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI && isset($data['wiki_page']) ) {
-                //get the old wiki_page value
-                $old_wiki_page = $item_factory->getWikiPageName($data['id']);
-                if($old_wiki_page != $data['wiki_page']) {
-                    $dPM =& Docman_PermissionsManager::instance($request->get('group_id'));
-                    $dPM->propagatePermsForNewWikiPages($data['wiki_page'], $request->get('group_id'), $data['id']);
-                }
-            }
-
             $item_factory->update($data);
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
                 $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
@@ -662,9 +652,6 @@ class Docman_Actions extends Actions {
                 }
              
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
-                
-                // Propagate item permissions to wiki.
-                //$this->wikiPermissions($item->getGroupId(), $id);
 
                 // If requested by user, apply permissions recursively on sub items
                 if ($this->_controler->request->get('recursive')) {
@@ -686,7 +673,6 @@ class Docman_Actions extends Actions {
      * on a given item ($data['item_id']).
      *
      * Current user must have 'manage' permissions on the item to update its permissions. 
-     * If the target is a wiki page, then we propagate the new perms to wiki service too.
      *
      * @see Docman_ItemFactory::breathFirst
      *
@@ -697,36 +683,10 @@ class Docman_Actions extends Actions {
         if ($this->_controler->userCanManage($data["item_id"])) {
             $pm =& $this->_getPermissionsManagerInstance();
             $pm->clonePermissions($params['id'], $data["item_id"], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
-            /*if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-                $this->wikiPermissions($data['group_id'], $params['id']);
-            }*/
         } else {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_recursive_perms', $data['title']));
         }
     }
-
-    /**
-     * This method was added in order to propagate permissions set on wiki pages docman items to wiki service. 
-     *
-     * @param int $group_id project id
-     * @param int $item_id  docman item id
-     *
-     */
-    /*function wikiPermissions($group_id, $item_id) {
-        require_once('Docman_PermissionsManager.class.php');
-        $dPM =& Docman_PermissionsManager::instance($group_id);
-        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
-        if($id_in_wiki) {
-            $dPM->synchronizePermissionsInWiki($id_in_wiki, $item_id);
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_propagated_to_wiki'));
-        }
-    }*/
-
-    function getIdInWiki($group_id, $item_id){
-        $dIF =& $this->_getItemFactory($group_id);
-        $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($group_id, $item_id);
-		return $id_in_wiki;
-	}
 
     /**
     * Set the permission for a ugroup on an item.

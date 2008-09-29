@@ -295,36 +295,6 @@ class Docman_PermissionsManager {
         $pm =& $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
-	
-    /**
-     * Called when a wiki page name is updated or a new wiki page is created in wiki service. It propagates the docman item perms to wiki 
-     * service by creating new perms for the new pagename or the new wiki page.
-     *
-     * If old perms exists -either setted from wiki or propagated from docman - they will be removed.
-     *
-     * @param string $wiki_page wiki page name.
-     * @param int $group_id project id.
-     * @param int $item_id id of docman item.
-     *
-     */
-    function propagatePermsForNewWikiPages($wiki_page, $group_id, $item_id) {
-        $id_in_wiki = $this->getIdInWiki($group_id, $item_id);
-        if ($id_in_wiki != null){
-            // get id in wiki of the new wiki page that docman item will point to.
-            $new_wiki_page_id = $this->getNewWikiPageId($wiki_page, $group_id);
-            
-            // Propagate perms only if the new wiki page exists in wiki !
-            if ($new_wiki_page_id != null) {
-                $this->synchronizePermissionsInWiki($new_wiki_page_id, $item_id);
-            }
-        }
-    }
-	
-    function synchronizePermissionsInWiki($wiki_page_id, $docman_item_id) {
-        $dao =& $this->getDao();
-        $dao->clearWikiPagePermissions($wiki_page_id);
-        $dao->synchronizePermissionsWithWiki($wiki_page_id, $docman_item_id);
-    }
 
     /**
      *

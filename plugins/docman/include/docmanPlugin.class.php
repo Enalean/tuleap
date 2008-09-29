@@ -280,16 +280,6 @@ class DocmanPlugin extends Plugin {
         $controler->process();
     }
 
-    function propagate_new_wiki_page_perms($params) {
-        require_once('Docman_WikiRequest.class.php');
-        $request = new Docman_WikiRequest(array('action' => 'propagate_new_wiki_page_perms',
-                                                'wiki_page' => $params['wiki_page'],
-                                                'group_id'  => $params['group_id']));
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
-    }
-
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
