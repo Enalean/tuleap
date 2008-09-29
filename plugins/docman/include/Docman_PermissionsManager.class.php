@@ -296,35 +296,6 @@ class Docman_PermissionsManager {
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
 
-    /**
-     *
-     * Checks if item with $item_id is a wiki page. It is made by Docman_ItemFactory::getIdInWikiOfWikiPageItem() method.
-     *
-     * @param int $group_id project id
-     * @param int $item_id docman item id.
-     *
-     * @return wiki page id in wiki or null if the page do not exist in wiki.
-     */
-    function getIdInWiki($group_id, $item_id) {
-        $dIF =& $this->_getItemFactory($group_id);
-        return $dIF->getIdInWikiOfWikiPageItem($group_id, $item_id);
-    }
-
-    /**
-     *
-     * Looks for id in wiki of the wiki page identified by these params:
-     *
-     * @param string $pagename wiki page name
-     * @param int $group_id project id
-     *
-     * @return int $id_in_wiki or null if the page don't exist in wiki service. 
-     */
-    function getNewWikiPageId($pagename, $group_id){
-        $dIF =& $this->_getItemFactory($group_id);
-        $id = $dIF->getIdInWiki($pagename, $group_id);
-        return $id;
-    }
-	
     function setDefaultItemPermissions($itemId, $force=false) {
         $dao =& $this->getDao();
 
