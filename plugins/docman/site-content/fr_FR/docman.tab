@@ -667,3 +667,4 @@ plugin_docman	docman_wiki_hide_referencers	Cacher les documents liés
 plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
+plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents

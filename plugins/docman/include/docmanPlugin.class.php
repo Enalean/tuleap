@@ -52,6 +52,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
         $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
+        $this->_addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -306,6 +307,14 @@ class DocmanPlugin extends Plugin {
     }
 
     function userCanAccessWikiDocument($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $request = new Docman_WikiRequest($params);
+        require_once('Docman_WikiController.class.php');
+        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
+        $controler->process();
+    }
+
+    function getPermsLabelForWiki($params) {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest($params);
         require_once('Docman_WikiController.class.php');

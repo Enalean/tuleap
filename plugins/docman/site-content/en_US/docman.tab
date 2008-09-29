@@ -669,3 +669,4 @@ plugin_docman	docman_wiki_hide_referencers	Hide related documents
 plugin_docman	docman_wiki_other_location	Other location:
 plugin_docman	docman_wiki_other_locations	Other locations:
 plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
+plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager

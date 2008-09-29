@@ -61,6 +61,9 @@ class Docman_WikiController extends Docman_Controller {
             case 'check_whether_user_can_access':
                 $this->canAccess();
                 break;
+            case 'getPermsLabelForWiki':
+                $this->getPermsLabelForWiki();
+                break;
             default:
                 break;
         }
@@ -122,6 +125,10 @@ class Docman_WikiController extends Docman_Controller {
             );
         }
         $event_manager->processEvent('send_notifications', array());
+    }
+
+    function getPermsLabelForWiki() {
+        $this->request->params['label'] = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_label');
     }
 
     function process() {
