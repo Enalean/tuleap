@@ -197,8 +197,8 @@ class graphicEngineHtml extends Error {
         $url_add = $url .'&amp;add_chart=';
         foreach($gr->getChartFactories() as $factory) {
             echo '<a href="'. $url_add . $factory['chart_type'] .'"  style="border:1px solid #ccc; margin:10px; padding:5px 10px; vertical-align:middle">';
-            echo '<img style="vertical-align:middle; margin-right:4px;" src="'. $factory['icon'] .'" /> ';
-            echo $factory['title'];
+            echo '<img style="vertical-align:middle; " src="'. $factory['icon'] .'" /> ';
+            echo '<label style="margin-left:4px;">'. $factory['title'] .'</label>';
             echo '</a>';
         }
         echo '</p>';
