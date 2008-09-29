@@ -48,7 +48,6 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('codex_daily_start',                 'codexDaily',                        false);
         $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
         $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
-        $this->_addHook('propagate_new_wiki_page_perms',     'propagate_new_wiki_page_perms',     false);
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
         $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);

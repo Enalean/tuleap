@@ -50,9 +50,6 @@ class Docman_WikiController extends Docman_Controller {
             case 'wiki_page_updated':
                 $this->wikiPageUpdated();
                 break;
-            case 'propagate_new_wiki_page_perms':
-                $this->propagatePermsToNewWikiPage();
-                break;
             case 'wiki_before_content':
                 $this->wiki_before_content();
             case 'check_whether_wiki_page_is_referenced':
@@ -156,20 +153,6 @@ class Docman_WikiController extends Docman_Controller {
         return $items;
     }
 
-    function propagatePermsToNewWikiPage() {
-        $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
-        $item_dao =& $this->_getItemDao();
-        if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
-            $docman_item_id = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
-            if(isset($docman_item_id) && $docman_item_id) {
-                require_once('Docman_PermissionsManager.class.php');
-                $dPM =& Docman_PermissionsManager::instance($group_id);
-                $dPM->propagatePermsForNewWikiPages($wiki_page, $group_id, $docman_item_id);
-            }
-        }
-    }
-
     function wiki_before_content() {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
@@ -208,12 +191,6 @@ class Docman_WikiController extends Docman_Controller {
                 $dpm =& Docman_PermissionsManager::instance($group_id);
                 // Wiki page could have many references in docman.
                 if(is_array($docman_item_id)) {
-                    foreach($docman_item_id as $idx => $id) {
-                        $can_read = $dpm->userCanAccess($user, $id);
-                        if(!$can_read){
-                            unset($docman_item_id[$idx]);
-                        } 
-                    }
                     $icon = HTML::img(array('id' => 'img_documents', 'src' => util_get_image_theme("ic/toggle_minus.png"), 'title' => $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_open_referencers')));
                     $linked_icon = HTML::a(array('href' => "#", 'onclick' => "javascript:toggle_documents('documents'); return false;"), $icon);
                     
