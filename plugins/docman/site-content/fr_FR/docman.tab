@@ -420,7 +420,6 @@ plugin_docman	info_item_updated	Elément mis à jour.
 plugin_docman	info_item_moved	Elément déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_news_created	News créée.
 plugin_docman	info_perms_updated	Permissions mises à jour.
-plugin_docman	info_perms_propagated_to_wiki	Permissions mises à jour dans le wiki.
 plugin_docman	info_perms_recursive_updated	Permissions pour les sous-éléments mises à jour.
 plugin_docman	info_settings_updated	Paramètres mis à jour.
 

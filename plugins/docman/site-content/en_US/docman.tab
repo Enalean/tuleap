@@ -420,7 +420,6 @@ plugin_docman	info_item_updated	Item successfully updated.
 plugin_docman	info_item_moved	Item successfully moved form <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> to <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_news_created	News successfully created.
 plugin_docman	info_perms_updated	Permissions successfully updated.
-plugin_docman	info_perms_propagated_to_wiki	Permissions successfully updated in wiki.
 plugin_docman	info_perms_recursive_updated	Permissions for sub-items successfully updated.
 plugin_docman	info_settings_updated	Settings have been updated.
 
