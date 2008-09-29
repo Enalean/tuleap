@@ -43,7 +43,7 @@ class DocmanWatermark_Controller extends Controler {
     var $docmanPath;
     
     function __construct($plugin, $docmanPath,$pluginPath, $themePath, $request) {
-        $GLOBALS['Language']->loadLanguageMsg('docman_watermark', 'docman_watermark');
+        $GLOBALS['Language']->loadLanguageMsg('docmanwatermark', 'docmanwatermark');
         $this->request        = $request;
         $this->user           = null;
         $this->groupId        = null;
@@ -160,7 +160,7 @@ class DocmanWatermark_Controller extends Controler {
                     return;
                 } else if ($_targetGroupId == $_groupId) {
                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'admin_project_import_same'));
-                    $this->view= 'Admin_Watermark';
+                    $this->view= 'AdminWatermark';
                     return;
                 }
             }
@@ -274,6 +274,16 @@ class DocmanWatermark_Controller extends Controler {
         $info =& $this->plugin->getPluginInfo();
         return $info->getPropertyValueForName($name);
     }
+    
+    
+    function actionsManagement() {
+        // Redefine actions classes names building.
+        $className = get_class($this);
+        $class = substr($className, 0, -(strlen("HTTPController"))) . 'Actions';
+        require_once($class.'.class.php');
+        $wa = new $class($this, $this->gid);
+        $wa->process($this->action, $this->_actionParams);
+    }   
     
     function viewsManagement() {
         if ($this->view !== null) {

@@ -28,7 +28,7 @@ require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 
-class DocmanWatermarkActions extends Actions {
+class DocmanWatermark_Actions extends Actions {
     
 
     public function __construct($controler, $view=null) {
