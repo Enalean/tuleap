@@ -155,7 +155,6 @@ class Docman_ItemFactory {
     * @return wiki page id or null if the page is not yet created in wiki.   
     */   
     function getIdInWikiOfWikiPageItem($pagename, $group_id){   
-
         // Get wiki id of the pagename   
         $wiki_dao =& $this->_getWikiDao();   
         $id_in_wiki = $wiki_dao->retrieveWikiPageId($pagename, $group_id);   
