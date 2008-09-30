@@ -154,37 +154,17 @@ class Docman_ItemFactory {
     *   
     * @return wiki page id or null if the page is not yet created in wiki.   
     */   
-    function getIdInWikiOfWikiPageItem($group_id, $item_id){   
-        // Get item pagename   
-        $wiki_page_name = $this->getWikiPageName($item_id);   
+    function getIdInWikiOfWikiPageItem($pagename, $group_id){   
 
         // Get wiki id of the pagename   
         $wiki_dao =& $this->_getWikiDao();   
-        $id_in_wiki = $wiki_dao->retrieveWikiPageId($wiki_page_name, $group_id);   
+        $id_in_wiki = $wiki_dao->retrieveWikiPageId($pagename, $group_id);   
         if ($id_in_wiki != null){   
             return $id_in_wiki;   
         }   
         else {   
             return null;   
         }   
-    } 
-
-    /**   
-    * Looks for pagename attribute for item with $id. Only used for wiki pages docman items   
-    *   
-    * @param int $id   
-    *   
-    * @return string $pagename   
-    */   
-    function getWikiPageName($id) {   
-        $pagename = null;   
-        $dao =& $this->_getItemDao();   
-        $dar = $dao->searchById($id);   
-        if($dar && !$dar->isError() && $dar->rowCount() == 1 ){   
-            $row =& $dar->current();   
-            $pagename = $row['wiki_page'];   
-        }   
-        return $pagename;   
     } 
 
     function &getItemFromDb($id, $params = array()) {
