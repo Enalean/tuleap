@@ -90,7 +90,34 @@ class UserHelper {
             break;
         }
         return $name;
-}
+    }
+    
+    /**
+     * getDisplayNameSQLOrder
+     * 
+     * Get SQL statement for sorting display name from the "user" table, according to the user prefs
+     * 
+     * Username display preference: see getDisplayName()
+     *
+     */
+    function getDisplayNameSQLOrder() {
+        $order = '';
+        switch($this->_username_display) {
+        case 1:
+            $order = "user.user_name";
+            break;
+        case 2:
+            $order = 'user.user_name';
+            break;
+        case 3:
+            $order = 'user.realname';
+            break;
+        default:
+            $order = "user.realname";
+            break;
+        }
+        return $order;
+    }
     
     /**
      * getDisplayNameFromUser
