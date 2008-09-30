@@ -64,7 +64,18 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         return $this->_deleteItem($item, $params);
     }
     function visitWiki(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
+        // get wiki page name and id in wiki before deleting the document.
+        $dIF =& $this->_getItemFactory();
+        $params['pagename'] = $dIF->getWikiPageName($item->getId());
+        $params['id_in_wiki'] = $dIF->getIdInWikiOfWikiPageItem($item->getGroupId(), $item->getId());
+
+        // delete the document.
+        $deleted = $this->visitDocument($item, $params);
+        if($deleted) {
+            // grant a wiki permission only to wiki admins on the corresponding wiki page.
+            $this->restrictAccess($item, $params);
+        }
+        return $deleted;
     }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
@@ -92,6 +103,22 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
 
     function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
+    }
+
+    function restrictAccess($item, $params = array()) {
+        //get pagename and group_id
+        $item_id = $item->getId(); print($item_id."<br>");
+        $group_id = $item->getGroupId(); print($group_id."<br>----");
+
+        // Check whether there is other references to this wiki page.
+        $dao =& $this->_getItemDao();
+        $referenced = $dao->isWikiPageReferenced($params['pagename'], $group_id);
+        if(!$referenced) {
+            // Restrict access to wiki admins.
+            print("<br> NOT REFERENCED !!!");
+            permission_clear_all($group_id, 'WIKIPAGE_READ', $params['id_in_wiki'], false);
+            permission_add_ugroup($group_id, 'WIKIPAGE_READ', $params['id_in_wiki'], 14);
+        }
     }
 
     function _deleteItem($item, $params) {
