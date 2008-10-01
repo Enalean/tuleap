@@ -48,6 +48,8 @@ class Docman_ItemFactory {
     var $copiedItem;
     var $groupId;
 
+    private static $instance;
+    
     function Docman_ItemFactory($groupId=null) {
         // Cache highly used info
         $this->rootItems[] = array();
@@ -58,12 +60,20 @@ class Docman_ItemFactory {
         $this->groupId = $groupId;
     }
 
-    function &instance($group_id) {
-        static $_instance_Docman_ItemFactory;
-        if(!isset($_instance_Docman_ItemFactory[$group_id])) {
-            $_instance_Docman_ItemFactory[$group_id] = new Docman_ItemFactory();
+    /**
+     * Return a single instance of Docman_ItemFactory per group.
+     * 
+     * This is useful when you need to cache information across method calls
+     * 
+     * @param Integer $group_id Project id
+     * 
+     * @return Docman_ItemFactory
+     */
+    public static function instance($group_id) {
+        if(!isset(self::$instance[$group_id])) {
+            self::$instance[$group_id] = new Docman_ItemFactory($group_id);
         }
-        return $_instance_Docman_ItemFactory[$group_id];
+        return self::$instance[$group_id];
     }
 
     function setGroupId($id) {
