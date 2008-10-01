@@ -68,6 +68,7 @@ class CLI_Action_Default_Login extends CLI_Action {
     }
     function before_soapCall($loaded_params) {
     	$GLOBALS['soap']->endSession();
+    	
         if (isset($loaded_params['others']['host'])) {
             if (isset($loaded_params['others']['host']) && $loaded_params['others']['secure']) {
                 $protocol = "https";
@@ -81,6 +82,10 @@ class CLI_Action_Default_Login extends CLI_Action {
             $GLOBALS['soap']->setProxy($proxy);
         }
         
+    }
+	function after_loadParams(&$loaded_params) {
+		// We add the WS API version here
+    	$loaded_params['soap']['version'] = $GLOBALS['soap']->getAPIVersion();
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);

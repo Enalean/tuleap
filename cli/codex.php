@@ -36,6 +36,8 @@ if (array_key_exists("CODEX_WSDL", $_ENV)) {
 
 $CLI_VERSION = "0.5.0";
 
+$API_VERSION = "3.6";
+
 error_reporting(E_ALL);
 
 /* Include common files */
@@ -92,6 +94,7 @@ for ($i = 1; $i <= $argc-1; $i++) {
             $display_help = true;
         }
     }
+    
 	// Unknown parameter
 	else {
 		exit_error('Unknown parameter: "'.$argv[$i].'"');
@@ -100,7 +103,7 @@ for ($i = 1; $i <= $argc-1; $i++) {
 
 define("WSDL_URL", $host);
 $LOG = new Log();
-$soap = new CodeXSOAP();
+$soap = new CodeXSOAP($API_VERSION);
 $modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
 
 if ($display_help || !$function_index) {		// No function was specified. Show the help.
