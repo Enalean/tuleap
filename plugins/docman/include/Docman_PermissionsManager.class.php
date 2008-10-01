@@ -58,10 +58,10 @@ class Docman_PermissionsManager {
      * The manager is a singleton
      */
     function instance($groupId) {
-        if(!isset(self::$instance[$group_id])) {
-            self::$instance[$group_id] = new Docman_PermissionsManager($groupId);
+        if(!isset(self::$instance[$groupId])) {
+            self::$instance[$groupId] = new Docman_PermissionsManager($groupId);
         }
-        return self::$instance[$group_id];
+        return self::$instance[$groupId];
     }
 
     public function __clone() {
