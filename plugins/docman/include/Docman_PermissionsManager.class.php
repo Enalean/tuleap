@@ -35,7 +35,6 @@ class Docman_PermissionsManager {
     var $cache_admin;
     var $dao;
     var $currentUser;
-    var $item_factory;
 
     // No cache, just convenient accessor.
     var $subItemsWritableVisitor;
@@ -51,7 +50,6 @@ class Docman_PermissionsManager {
         $this->cache_admin = array();
         $this->dao = null;
         $this->currentUser = null;
-        $this->item_factory = null;
 
         $this->subItemsWritableVisitor = null;
     }
@@ -88,12 +86,8 @@ class Docman_PermissionsManager {
      * @param Integer $groupId
      * @return Docman_ItemFactory
      */
-    function &_getItemFactory($groupId=0) {
-        if (!isset($this->item_factory[$groupId])) {
-            require_once('Docman_ItemFactory.class.php');
-            $this->item_factory[$groupId] =& new Docman_ItemFactory($groupId);
-        }
-        return $this->item_factory[$groupId];
+    function _getItemFactory($groupId=0) {
+        return Docman_ItemFactory::instance($groupId);
     }
 
     /**
