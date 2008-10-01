@@ -129,7 +129,7 @@ class Docman_Log { /* implements EventListener */
                             $old_version = $row['old_value'];
                             $new_version = $row['new_value'];
                             $dIF = $this->_getItemFactory($row['group_id']);
-                            $pagename = $dIF->getWikiPageName($item_id);
+                            $pagename = $dIF->getItemFromDb($item_id)->getPageName();
                             $difflink =  '/wiki/index.php?group_id=' . $row['group_id'];
                             $difflink .= '&pagename='.urlencode($pagename).'&action=diff';
                             $difflink .= '&versions%5b%5d=' . $old_version . '&versions%5b%5d=' . $new_version;
