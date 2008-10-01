@@ -2,6 +2,8 @@
 
 require_once('pre.php');
 
+define('CODENDI_WS_API_VERSION', '3.6');
+
 define('LOG_SOAP_REQUESTS', false);
 
 // Check if we the server is in secure mode or not.
