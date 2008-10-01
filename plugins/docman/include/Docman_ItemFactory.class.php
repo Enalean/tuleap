@@ -366,7 +366,7 @@ class Docman_ItemFactory {
         //
         // Build Folder List
         //
-        $parentItem = $this->findById($parentId);
+        $parentItem = $this->getItemFromDb($parentId);
         $dPm = Docman_PermissionsManager::instance($parentItem->getGroupId());
         $folderList = array($parentId => &$parentItem);
         $pathIdArray = array($parentId => array());
@@ -514,29 +514,6 @@ class Docman_ItemFactory {
     }
 
     /**
-     * @return Item
-     */
-    function &findById($id, $params = array()) {
-        $item_factory =& $this->_getItemFactory();
-        $item =& $item_factory->getItemFromDb($id);
-        if (is_a($item, 'Docman_Folder') && isset($params['recursive']) && $params['recursive']) {
-            $item =& $this->getItemSubTree($item->getId(), $params);
-        }
-        return $item;
-    }
-
-    /**
-     *
-     */
-    var $item_factory;
-    function &_getItemFactory() {
-        if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
-        }
-        return $this->item_factory;
-    }
-
-    /**
      *
      */
     function findByTitle($user, $title, $groupId) {
@@ -551,7 +528,7 @@ class Docman_ItemFactory {
 
             $item = $this->getItemFromRow($row);
             if($dPm->userCanRead($user, $item->getId())) {
-                $parentItem = $this->findById($item->getParentId());
+                $parentItem = $this->getItemFromDb($item->getParentId());
                 if($dPm->userCanRead($user, $parentItem->getId())) {
                     $ia[] = $item;
                 }
@@ -872,7 +849,7 @@ class Docman_ItemFactory {
         if($srcItemId == 0) {
             $srcItem = $this->getRoot($srcGroupId);
         } else {
-            $srcItem = $this->findById($srcItemId);
+            $srcItem = $this->getItemFromDb($srcItemId);
         }
         $itemTree = $itemFactory->getItemTree($srcItem, $user, false, true);
         

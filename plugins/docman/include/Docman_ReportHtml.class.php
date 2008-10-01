@@ -315,7 +315,7 @@ class Docman_ReportHtml {
             if($itemId > 0) {
                 // Get Item
                 $itemFactory = new Docman_ItemFactory($this->report->getGroupId());
-                $item = $itemFactory->findById($itemId);
+                $item = $itemFactory->getItemFromDb($itemId);
                 if($item !== null) {
                     // Check perms
                     $dPm =& Docman_PermissionsManager::instance($item->getGroupId());
