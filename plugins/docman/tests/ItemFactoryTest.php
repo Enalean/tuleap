@@ -32,35 +32,6 @@ class Docman_ItemFactoryTest extends UnitTestCase {
     function Docman_ItemFactoryTest ($name = 'Docman_ItemFactory test') {
 	    $this->UnitTestCase($name);	
 	}
-    
-    // Test no wiki page case.
-    function testNoWikiPage () {
-        $mockDao =& new MockDocman_ItemDao($this);
-        $mockDao->setReturnValue('searchById', null);
-		
-        $itemFactory =& new Docman_ItemFactoryTestVersion($this);
-        $itemFactory->setReturnReference('_getItemDao', $mockDao);
-		
-        $this->assertIdentical($itemFactory->getWikiPageName(50), null);
-        $this->assertIdentical($itemFactory->getWikiPageName(30), null);
-        $this->assertIdentical($itemFactory->getWikiPageName(0), null);
-    }
-	
-    // Test wiki page exist for docman item
-    function testWikiPageExists () {
-        $dar =& new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('rowCount', 1);
-        $dar->setReturnValue('current', array('wiki_page' => 'TranscludeTest'));
-
-        $mockDao = new MockDocman_ItemDao($this);
-        $mockDao->setReturnReference('searchById', $dar);
-
-        $itemFactory =& new Docman_ItemFactoryTestVersion($this);
-        $itemFactory->setReturnReference('_getItemDao', $mockDao);
-
-        $this->assertIdentical($itemFactory->getWikiPageName(25), 'TranscludeTest');
-    }
 
     /**
      * 140
