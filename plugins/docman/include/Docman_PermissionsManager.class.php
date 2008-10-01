@@ -40,7 +40,9 @@ class Docman_PermissionsManager {
     // No cache, just convenient accessor.
     var $subItemsWritableVisitor;
 
-    function Docman_PermissionsManager($groupId) {
+    private static $instance;
+    
+    private function Docman_PermissionsManager($groupId) {
         $this->groupId = $groupId;
         $this->cache_access = array();
         $this->cache_read = array();
@@ -57,14 +59,17 @@ class Docman_PermissionsManager {
     /**
      * The manager is a singleton
      */
-    function &instance($groupId) {
-        static $_docman_permissionmanager_instance;
-        if (!isset($_docman_permissionmanager_instance[$groupId])) {
-            $_docman_permissionmanager_instance[$groupId] = new Docman_PermissionsManager($groupId);
+    function instance($groupId) {
+        if(!isset(self::$instance[$group_id])) {
+            self::$instance[$group_id] = new Docman_PermissionsManager($groupId);
         }
-        return $_docman_permissionmanager_instance[$groupId];
+        return self::$instance[$group_id];
     }
 
+    public function __clone() {
+        trigger_error('Clone is not allowed.', E_USER_ERROR);
+    }
+    
     function &_getPermissionManagerInstance() {
         $pm =& PermissionsManager::instance();
         return $pm;
