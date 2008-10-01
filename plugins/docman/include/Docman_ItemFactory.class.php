@@ -53,7 +53,6 @@ class Docman_ItemFactory {
         $this->rootItems[] = array();
         $this->onlyOneChildForRoot[] = array();
         $this->copiedItem = array();
-        $this->dPm =& Docman_PermissionsManager::instance($groupId);
 
         // Parameter
         $this->groupId = $groupId;
@@ -227,22 +226,9 @@ class Docman_ItemFactory {
     }
     
     /**
-     *
-     */
-    function userHasPermission(&$user, &$item, $ignorePerms = false) {
-        $userCanRead = false;
-        if($ignorePerms === true) {
-            $userCanRead = true;
-        } else {
-            $userCanRead = $this->dPm->userCanRead($user, $item->getId());
-        }
-        return $userCanRead;
-    }
-    
-    /**
      * Preload item perms from a item result set
      */
-    function preloadItemPerms($dar, $user) {
+    function preloadItemPerms($dar, $user, $groupId) {
         // Preload perms
         $objectsIds = array();
         $dar->rewind();
@@ -253,7 +239,8 @@ class Docman_ItemFactory {
         }
         $dar->rewind();
 
-        $this->dPm->retreiveReadPermissionsForItems($objectsIds, $user);
+        $dPm = Docman_PermissionsManager::instance($groupId);
+        $dPm->retreiveReadPermissionsForItems($objectsIds, $user);
     }
 
     /**
@@ -284,6 +271,7 @@ class Docman_ItemFactory {
         // Treatment
         //
         $dao =& $this->_getItemDao();
+        $dPm = Docman_PermissionsManager::instance($rootItem->getGroupId());
         
         $itemList = array($rootItem->getId() => &$rootItem);
         $parentIds = array($rootItem->getId());
@@ -307,11 +295,11 @@ class Docman_ItemFactory {
                 }
                 
                 // Fetch all the permissions at the same time
-                $this->dPm->retreiveReadPermissionsForItems($itemIds, $user);
+                $dPm->retreiveReadPermissionsForItems($itemIds, $user);
 
                 // Build hierarchy: only keep displayable items
                 foreach($itemIds as $id) {
-                    if($ignorePerms || $this->dPm->userCanRead($user, $id)) {
+                    if($ignorePerms || $dPm->userCanRead($user, $id)) {
                         $itemList[$id] =& $this->getItemFromRow($itemRows[$id]);
                         $itemList[$itemList[$id]->getParentId()]->addItem($itemList[$id]);
                     } else {
@@ -364,11 +352,12 @@ class Docman_ItemFactory {
         }
 
         $dao =& $this->_getItemDao();
-
+        
         //
         // Build Folder List
         //
         $parentItem = $this->findById($parentId);
+        $dPm = Docman_PermissionsManager::instance($parentItem->getGroupId());
         $folderList = array($parentId => &$parentItem);
         $pathIdArray = array($parentId => array());
         $pathTitleArray = array($parentId => array());
@@ -392,11 +381,11 @@ class Docman_ItemFactory {
                 }
 
                 // Fetch all the permissions at the same time
-                $this->dPm->retreiveReadPermissionsForItems($itemIds, $user);
+                $dPm->retreiveReadPermissionsForItems($itemIds, $user);
 
                 // Build hierarchy: only keep displayable items
                 foreach($itemIds as $id) {
-                    if($this->dPm->userCanRead($user, $id)) {
+                    if($dPm->userCanRead($user, $id)) {
                         $folderList[$id] =& $this->getItemFromRow($itemRows[$id]);
                         // Update path
                         $pathIdArray[$id] = array_merge($pathIdArray[$folderList[$id]->getParentId()], array($id));
@@ -429,14 +418,14 @@ class Docman_ItemFactory {
 
         $nbItemsFound = 0;
         if($dar && !$dar->isError()) {
-            $this->preloadItemPerms($dar, $user);
+            $this->preloadItemPerms($dar, $user, $this->groupId);
             $dar->rewind();
             while($dar->valid()) {
                 $row = $dar->current();
                 // The document is not is one of the allowed subfolder so we
                 // can delete it. As a side effect decrease the number of
                 // document found.
-                if($this->dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
+                if($dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
                     if($nbItemsFound >= $start && $nbItemsFound < $end) {
                         $itemArray[$row['item_id']] =& $this->getItemFromRow($row);
 
@@ -540,19 +529,20 @@ class Docman_ItemFactory {
     /**
      *
      */
-    function findByTitle($user, $title) {
+    function findByTitle($user, $title, $groupId) {
         $ia = array();
 
         $dao =& $this->_getItemDao();
+        $dPm = Docman_PermissionsManager::instance($groupId);
         $dar = $dao->searchByTitle($title);
         $dar->rewind();
         while($dar->valid()) {
             $row = $dar->current();
 
             $item = $this->getItemFromRow($row);
-            if($this->userHasPermission($user, $item)) {
+            if($dPm->userCanRead($user, $item->getId())) {
                 $parentItem = $this->findById($item->getParentId());
-                if($this->userHasPermission($user, $parentItem)) {
+                if($dPm->userCanRead($user, $parentItem->getId())) {
                     $ia[] = $item;
                 }
             }
@@ -734,7 +724,7 @@ class Docman_ItemFactory {
         $dpm =& Docman_PermissionsManager::instance($this->groupId);
         $dpm->retreiveReadPermissionsForItems($itemIds, $user);
         foreach($itemArray as $item) {
-             if(!$this->userHasPermission($user, $item)) {
+             if(!$dPm->userCanRead($user, $item->getId())) {
                  unset($itemList[$item->getId()]);
                  unset($orphans[$item->getId()]);
              }
@@ -756,11 +746,11 @@ class Docman_ItemFactory {
             if(is_array($wantedItems) && count($wantedItems) > 0) {
                 $dar = $dao->searchByIdList($wantedItems);
                 if($dar && !$dar->isError()) {
-                    $this->preloadItemPerms($dar, $user);
+                    $this->preloadItemPerms($dar, $user, $this->groupId);
                     while ($dar->valid()) {
                         $row = $dar->current();
                         $item = $this->getItemFromRow($row);
-                        if($this->userHasPermission($user, $item)) {
+                        if($dPm->userCanRead($user, $item->getId())) {
                             $itemList[$item->getId()] = $item;
                             $orphans[$item->getId()] = $item->getId();
                         } else {
