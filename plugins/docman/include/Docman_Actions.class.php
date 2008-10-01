@@ -485,13 +485,11 @@ class Docman_Actions extends Actions {
         }
         return $this->filestorage;
     }
-    var $item_factory;
-    function &_getItemFactory($groupId=null) {
-        if (!$this->item_factory) {
-            $this->item_factory = new Docman_ItemFactory($groupId);
-        }
-        return $this->item_factory;
+
+    function _getItemFactory($groupId=null) {
+        return new Docman_ItemFactory($groupId);
     }
+    
     var $version_factory;
     function &_getVersionFactory() {
         if (!$this->version_factory) {
