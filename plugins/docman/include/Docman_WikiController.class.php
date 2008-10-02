@@ -98,6 +98,7 @@ class Docman_WikiController extends Docman_Controller {
         foreach($references as $key => $item) {
             if (!$dPM->userCanAccess($uM->getCurrentUser(), $item->getId())) {
                 $can_access = false;
+                break; //No need to continue the loop as we found at least one non-accessible reference
             }
         }
         // TODO: find another way to return a value. 
