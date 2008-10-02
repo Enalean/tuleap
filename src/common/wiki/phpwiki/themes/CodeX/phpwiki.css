@@ -16,44 +16,6 @@
 @import url(phpwiki-heavy.css);
 
 
-.docman_properties_navlist
-{
-    padding: 3px 0;
-    margin: 0;
-    border-bottom: 1px solid #bcbcad;
-    font: bold 12px Verdana, sans-serif;
-}
-
-.docman_properties_navlist li
-{
-    list-style: none;
-    margin: 0;
-    display: inline;
-}
-
-.docman_properties_navlist li a
-{
-    padding: 3px 0.5em;
-    margin-left: 3px;
-    border: 1px solid #bcbcad;
-    border-bottom: none;
-    background: #e8e8e0;
-    text-decoration: none;
-}
-
-
-.docman_properties_navlist li a:hover
-{
-    background-color:#e8e8e0;
-    color:#8b4020;
-}
-
-.docman_properties_navlist li a.docman_properties_navlist_current
-{
-    background: white;
-    border-bottom: 1px solid white;
-}
-
 /**
  * General
  */ 
