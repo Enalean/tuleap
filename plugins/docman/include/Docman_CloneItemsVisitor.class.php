@@ -232,8 +232,8 @@ class Docman_CloneItemsVisitor {
     
     function _metadataEnabled($srcGroupId, $mdLabel) {
         if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
-            $srcSettingsBo =& Docman_SettingsBo::instance($srcGroupId);
-            $dstSettingsBo =& Docman_SettingsBo::instance($this->dstGroupId);
+            $srcSettingsBo =& $this->_getSettingsBo($srcGroupId);
+            $dstSettingsBo =& $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel) 
                                                     && $dstSettingsBo->getMetadataUsage($mdLabel));
         }
@@ -276,6 +276,11 @@ class Docman_CloneItemsVisitor {
 
     function &_getMetadataFactory($groupId) {
         $o = new Docman_MetadataFactory($groupId);
+        return $o;
+    }
+    
+    function &_getSettingsBo($groupId) {
+        $o =& Docman_SettingsBo::instance($groupId);
         return $o;
     }
 }
