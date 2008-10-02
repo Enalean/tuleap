@@ -35,6 +35,7 @@ class Docman_Log { /* implements EventListener */
     }
     
     function log($event, $params) {
+        $event = constant(strtoupper($event));
         switch ($event) {
             case PLUGIN_DOCMAN_EVENT_EDIT:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, 'old', 'new');

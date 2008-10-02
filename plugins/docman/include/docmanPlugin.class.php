@@ -270,49 +270,51 @@ class DocmanPlugin extends Plugin {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
                                                 'wiki_page' => $params['wiki_page'],
-                                                'diff_link'  => $params['diff_link'],
+                                                'diff_link' => $params['diff_link'],
                                                 'group_id'  => $params['group_id'],
-                                                'user' => $params['user'],
-                                                'version' => $params['version']));
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
+                                                'user'      => $params['user'],
+                                                'version'   => $params['version']));
+        $this->_getWikiController($request)->process(); 
     }
 
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
+        $this->_getWikiController($request)->process(); 
     }
 
     function isWikiPageReferenced($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
+        $this->_getWikiController($request)->process(); 
     }
 
     function userCanAccessWikiDocument($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
+        $this->_getWikiController($request)->process(); 
     }
 
     function getPermsLabelForWiki($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
-        require_once('Docman_WikiController.class.php');
-        $controler =& new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request); 
-        $controler->process();
+        $this->_getWikiController($request)->process(); 
+    }
+    
+    protected $_wiki_controller;
+    protected function _getWikiController($request) {
+        if (!$this->_wiki_controller) {
+            require_once('Docman_WikiController.class.php');
+            $this->_wiki_controller = new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request);
+            
+        } else {
+            $this->_wiki_controller->setRequest($request);
+        }
+        return $this->_wiki_controller;
     }
 }
 

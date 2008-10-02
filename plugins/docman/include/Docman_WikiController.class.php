@@ -35,8 +35,8 @@ class Docman_WikiController extends Docman_Controller {
     function __construct(&$plugin, $pluginPath, $themePath, $request) {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
         $event_manager =& $this->_getEventManager();
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE, $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE, $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_wikipage_update', $this->notificationsManager, 'somethingHappen', true, 0);
     }
 
     function request() {
@@ -117,8 +117,7 @@ class Docman_WikiController extends Docman_Controller {
             // Update the item's update date attribute.
             $item_dao->updateById($document->getId(), null, null, null, null, null, $update_date=time(), 
                         null, null, null, null, null, null);
-            
-            $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE, array(
+            $event_manager->processEvent('plugin_docman_event_wikipage_update', array(
                             'group_id'  => $group_id,
                             'item'      => $document,
                             'user'      => $this->request->get('user'),

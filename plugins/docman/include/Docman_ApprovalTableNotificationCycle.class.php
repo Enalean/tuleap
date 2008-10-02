@@ -223,7 +223,7 @@ class Docman_ApprovalTableNotificationCycle {
                                    'new_value' => $status,
                                    'field'     => 'status');
             $event_manager =& $this->_getEventManager();
-            $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
+            $event_manager->processEvent('plugin_docman_event_metadata_update',
                                          $logEventParam);
                                          }*/
     }

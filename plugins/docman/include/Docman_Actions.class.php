@@ -106,7 +106,7 @@ class Docman_Actions extends Actions {
                                'old_value' => $old,
                                'new_value' => $new,
                                'field'     => 'owner');
-        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
+        $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                            $logEventParam);
     }
 
@@ -205,7 +205,7 @@ class Docman_Actions extends Actions {
                             'item'     => &$item, 
                             'version'  => $vId,
                             'user'     => &$user);
-            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_VERSION,
+            $this->event_manager->processEvent('plugin_docman_event_new_version',
                                                $eArray);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
 
@@ -279,7 +279,7 @@ class Docman_Actions extends Actions {
                         $pm =& PermissionsManager::instance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
                     }
-                    $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ADD, array(
+                    $this->event_manager->processEvent('plugin_docman_event_add', array(
                         'group_id' => $request->get('group_id'),
                         'parent'   => &$parent,
                         'item'     => &$new_item,
@@ -387,7 +387,7 @@ class Docman_Actions extends Actions {
 
             $item_factory->update($data);
             if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
-                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_EDIT, array(
+                $this->event_manager->processEvent('plugin_docman_event_edit', array(
                     'group_id' => $request->get('group_id'),
                     'item'     => &$item,
                     'user'     => &$user)
@@ -409,7 +409,7 @@ class Docman_Actions extends Actions {
                                        'old_value' => $old_st,
                                        'new_value' => $data['status'],
                                        'field'     => 'status');
-                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,
+                $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                                    $logEventParam);
             }
 
@@ -537,7 +537,7 @@ class Docman_Actions extends Actions {
                 $old_parent =& $item_factory->getItemFromDb($item->getParentId());
                 if ($item_factory->setNewParent($item->getId(), $new_parent_id, $ordering)) {
                     $new_parent =& $item_factory->getItemFromDb($new_parent_id);
-                    $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_MOVE, array(
+                    $this->event_manager->processEvent('plugin_docman_event_move', array(
                         'group_id' => $request->get('group_id'),
                         'item'    => &$item, 
                         'parent'  => &$new_parent,

@@ -25,7 +25,7 @@ class Docman_View_Embedded extends Docman_View_Display {
         if ($version) {
             if (file_exists($version->getPath())) {
                 $event_manager =& EventManager::instance();
-                $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_ACCESS, array(
+                $event_manager->processEvent('plugin_docman_event_access', array(
                     'group_id' => $params['group_id'],
                     'item'     => &$params['item'],
                     'version'  => $version->getNumber(),

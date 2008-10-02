@@ -140,14 +140,14 @@ class Docman_NotificationsManager extends NotificationsManager {
     function _buildMessage($event, $params, $user) {
         $type = '';
         switch($event) {
-            case PLUGIN_DOCMAN_EVENT_EDIT:
-            case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
+            case 'plugin_docman_event_edit':
+            case 'plugin_docman_event_metadata_update':
                 $type = $this->MESSAGE_MODIFIED;
                 break;
-            case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
+            case 'plugin_docman_event_new_version':
                 $type = $this->MESSAGE_NEWVERSION;
                 break;
-            case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
+            case 'plugin_docman_event_wikipage_update':
                 $type = $this->MESSAGE_WIKI_NEWVERSION;
                 break;
             default:

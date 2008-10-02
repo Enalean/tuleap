@@ -119,7 +119,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
             $em =& $this->_getEventManager();
-            $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
+            $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
                 'item'     => &$item,
                 'parent'   => &$params['parent'],

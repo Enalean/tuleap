@@ -91,27 +91,27 @@ class Docman_Controller extends Controler {
         $event_manager =& $this->_getEventManager();
         
         $this->logger  =& new Docman_Log();
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD,              $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,             $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE,             $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL,              $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ACCESS,           $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,      $this->logger, 'log', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE,  $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_add',              $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_edit',             $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_move',             $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_del',              $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_access',           $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_new_version',      $this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_metadata_update',  $this->logger, 'log', true, 0);
         
         $this->notificationsManager =& new Docman_NotificationsManager($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_EDIT,            $this->notificationsManager, 'somethingHappen', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_NEW_VERSION,     $this->notificationsManager, 'somethingHappen', true, 0);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_METADATA_UPDATE, $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_metadata_update', $this->notificationsManager, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',    $this->notificationsManager, 'sendNotifications', true, 0);
         $this->notificationsManager_Add =& new Docman_NotificationsManager_Add($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_ADD, $this->notificationsManager_Add, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true, 0);
         $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_DEL, $this->notificationsManager_Delete, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true, 0);
         $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
-        $event_manager->addListener(PLUGIN_DOCMAN_EVENT_MOVE, $this->notificationsManager_Move, 'somethingHappen', true, 0);
+        $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
     }
 
@@ -210,6 +210,10 @@ class Docman_Controller extends Controler {
         return $dPm->userCanAdmin($user);
     }
     /******************************************************/
+    
+    function setRequest($request) {
+        $this->request = $request;
+    }
     
     function getGroupId() {
         if($this->groupId === null) {

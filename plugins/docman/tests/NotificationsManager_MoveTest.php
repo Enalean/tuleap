@@ -297,7 +297,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         
         //C'est parti
         $dnmm->Docman_NotificationsManager_Move($group_id, 'my_url', $feedback);
-        $dnmm->somethingHappen(PLUGIN_DOCMAN_EVENT_MOVE, array(
+        $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,
             'item'    => &$d, 
             'parent'  => &$c,
