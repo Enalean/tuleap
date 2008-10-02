@@ -3,7 +3,6 @@
 rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 
 require_once('lib/Template.php');
-require_once('common/include/CodeX_HTMLPurifier.class.php');
 
 /**
  * Extract keywords from Category* links on page. 
@@ -84,7 +83,6 @@ function actionPage(&$request, $action) {
 
 function displayPage(&$request, $template=false) {
     global $WikiTheme, $pv;
-    $group_id = $request->getArg('group_id');
     $pagename = $request->getArg('pagename');
     $version = $request->getArg('version');
     $page = $request->getPage();
@@ -146,7 +144,7 @@ function displayPage(&$request, $template=false) {
     $additional_html = false;
     $eM->processEvent('wiki_before_content', array(
                     'html' => &$additional_html,
-                    'group_id' => $group_id,
+                    'group_id' => GROUP_ID,
                     'wiki_page' => $pagename
         ));
     if($additional_html) {
