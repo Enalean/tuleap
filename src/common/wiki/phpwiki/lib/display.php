@@ -234,7 +234,6 @@ function displayPage(&$request, $template=false) {
     
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
-    
     $toks['revision'] = $revision;
     if (!empty($redirect_message))
         $toks['redirected'] = $redirect_message;
