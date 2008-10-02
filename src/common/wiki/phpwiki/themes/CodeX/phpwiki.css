@@ -888,20 +888,6 @@ img.tex {
   font-weight: normal;
 }
 
-
-/********** Docman metadata inside wiki ************/
-
-fieldset.docman_md_frame {
-    margin-bottom: 20px;
-}
-
-fieldset.docman_md_frame legend {
-    font-size: larger;
-    padding-right: 10px;
-}
-
-/***************************************************/
-
 /* For emacs users
  *
  * Local Variables:
