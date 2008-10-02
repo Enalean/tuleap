@@ -141,18 +141,20 @@ function displayPage(&$request, $template=false) {
             $pageheader->setAttr('target', '_top');
     }
     
-    // Wiki_before_content is a docman plugin hook that displays the list of documents that refer to
-    // current wiki page just before displaying its contents. 
-    // Document paths are linked to their respective locations in Docman.
+    // {{{ Codendi hook to insert stuff between navbar and header
     $eM =& EventManager::instance();
-    $docman_md = HTML();
-    $additional_html = '';
+    $additional_html = false;
     $eM->processEvent('wiki_before_content', array(
                     'html' => &$additional_html,
                     'group_id' => $group_id,
                     'wiki_page' => $pagename
         ));
-    $docman_md->pushContent(HTML::strong($additional_html));
+    if($additional_html) {
+        $beforeHeader = HTML();
+        $beforeHeader->pushContent($additional_html);
+        $toks['BEFORE_HEADER'] = $beforeHeader;
+    }
+    // }}} /Codendi hook
 
     $pagetitle = SplitPagename($pagename);
     if (($redirect_from = $request->getArg('redirectfrom'))) {
@@ -234,9 +236,7 @@ function displayPage(&$request, $template=false) {
     
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
-    if(isset($docman_md) && $docman_md) {
-        $toks['DOCMAN_METADATA'] = $docman_md; // Docman items metadata and properties sections if wiki page is referenced in docman.
-    }
+    
     $toks['revision'] = $revision;
     if (!empty($redirect_message))
         $toks['redirected'] = $redirect_message;

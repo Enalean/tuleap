@@ -14,9 +14,9 @@ if (!$HIDE_TOOLBARS && !$HIDE_NAVBAR) {
   </div>
 <?php } ?>
 
-<!-- Documents that reference this wiki page -->
-<?php if($DOCMAN_METADATA) { ?>
-<?= $DOCMAN_METADATA ?>
+<?php if($BEFORE_HEADER) { ?>
+<!-- Codendi hook result -->
+<?= $BEFORE_HEADER ?>
 <?php } ?>
 
 <!-- Page title -->
