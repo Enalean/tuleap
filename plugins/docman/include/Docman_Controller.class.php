@@ -310,6 +310,15 @@ class Docman_Controller extends Controler {
             $this->setMetadataValuesFromUserInput($new_item,
                                                   $i,
                                                   $this->request->get('metadata'));
+            if ($i['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $tmp_path = tempnam($GLOBALS['tmp_dir'], 'embedded_file');
+                $f = fopen($tmp_path, 'w');
+                fwrite($f, $this->request->get('content'));
+                fclose($f);
+                $v = new Docman_Version();
+                $v->setPath($tmp_path);
+                $new_item->setCurrentVersion($v);
+            }
         }
         return $new_item;
     }
