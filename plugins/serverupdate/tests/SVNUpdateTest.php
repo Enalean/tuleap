@@ -143,6 +143,20 @@ class SVNUpdateTest extends UnitTestCase {
         $this->assertEqual($conflictedLines[1], "Skipped missing target: 'foo.php'");   
     }
     
+	function testGetPropertiesUpdatedLines() {
+        $merge_output = "U      /server/directory/path/file.txt\n";
+        $merge_output .= "A      /server/directory/path/path2\n";
+        $merge_output .= "G      /server/directory/path/path2/file2.class.php\n";
+        $merge_output .= " C     /ignore_directory\n";
+        $merge_output .= " U     .\n";
+        
+        $su =& new SVNUpdateTestVersion($this);
+        $conflictedLines = $su->getConflictedLines($merge_output);
+        
+        $this->assertEqual(count($conflictedLines), 1);   
+        $this->assertEqual($conflictedLines[0], " C     /ignore_directory");
+    }
+    
     function testGetSVNCommit() {
         $c1 =& new MockSVNCommit($this);
         $c1->setReturnValue('getRevision', 1);

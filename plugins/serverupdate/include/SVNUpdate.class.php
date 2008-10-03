@@ -720,7 +720,12 @@ class SVNUpdate {
                     case "D":
                     case "U":
                     case "G":
-                        break;
+                    	break;
+                    case " ":
+                    	if ($line[1] == 'C') {
+                    		$conflited_lines[] = $line;
+                    	}
+                    	break;
                     default:
                         $conflited_lines[] = $line;
                         break;
