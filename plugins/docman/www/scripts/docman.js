@@ -75,97 +75,69 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             img.src = this.options.spinner;
         }
         
+        this.itemHighlight = {};
+        
         // ShowOptions
         this.actionsForItem = {};
         this.initShowOptions_already_done = false;
         this.initShowOptionsEvent    = this.initShowOptions.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initShowOptionsEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initShowOptionsEvent);
         
         // NewItem
         this.parentFoldersForNewItem = {};
         this.initNewItemEvent        = this.initNewItem.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initNewItemEvent, true);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initNewItemEvent);
 
         // Expand/Collapse
         this.initExpandCollapseEvent = this.initExpandCollapse.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initExpandCollapseEvent, true);
-        
-        // ItemHighlight
-        this.initItemHighlightEvent = this.initItemHighlight.bindAsEventListener(this);
-        if (this.options.action == 'browse') Event.observe(window, 'load', this.initItemHighlightEvent, true);
-        
-	// Table Report
-	// No longer toogle table report on page load: the page is too long to
-	// load and the blinking (show + toogle) is awful. See Docman_Report::toHtml.
-        /*if (this.options.action == 'browse') {
-	    this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
-	    Event.observe(window, 'load', this.initTableReportEvent, true);
-	}*/
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.initExpandCollapseEvent);
+
+        // Approval table
+        this.approvalTableCreateDetailsHidden = false;
+
+        // Table Report
+        if (this.options.action == 'browse') {
+            this.initTableReportEvent = this.initTableReport.bindAsEventListener(this);
+            document.observe('dom:loaded', this.initTableReportEvent);
+        }
 
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
-        Event.observe(window, 'load', this.focusEvent, true);
+        document.observe('dom:loaded', this.focusEvent, true);
     },
     dispose: function() {
         // ShowOptions
-        Event.stopObserving(window, 'load', this.initShowOptionsEvent, true);
+        document.stopObserving('dom:loaded', this.initShowOptionsEvent);
         // NewItem
-        Event.stopObserving(window, 'load', this.initNewItemEvent, true);
+        document.stopObserving('dom:loaded', this.initNewItemEvent);
         $H(this.newItem.specificProperties).values().each(function (properties) {
-	    Event.stopObserving(properties.checkbox, 'change', this.onNewItemCheckboxChangeEvent);
+            properties.checkbox.stopObserving('click', this.onNewItemCheckboxChangeEvent);
         });
         // Expand/Collapse
-        Event.stopObserving(window, 'load', this.initExpandCollapseEvent, true);
-        // ItemHighlight
-        Event.stopObserving(window, 'load', this.initItemHighlightEvent, true);
-	// Table Report
-	if(this.initTableReportEvent) {
-	    Event.stopObserving(window, 'load', this.initTableReportEvent, true);
-	}
+        document.stopObserving('dom:loaded', this.initExpandCollapseEvent);
+        // Expand/Collapse
+        document.stopObserving('dom:loaded', this.focusEvent);
+        // Table Report
+        if(this.initTableReportEvent) {
+            document.stopObserving('dom:loaded', this.initTableReportEvent);
+        }
+        //itemHighlight
+        $H(this.itemHighlight).keys().each(function (item_id) {
+            var node = $('item_'+item_id);
+            node.stopObserving('mouseover', this.itemHighlight[item_id].mouseover);
+            node.stopObserving('mouseout', this.itemHighlight[item_id].mouseout);
+        });
     },
-    //{{{------------------------------ ItemHighlight
+    //{{{------------------------------ Focus
     focus: function() {
         if ($('docman_new_form')) {
             Form.focusFirstElement('docman_new_form');
         }
     },
     //}}}
-    //{{{------------------------------ ItemHighlight
-    initItemHighlight: function() {
-        this._initItemHighlight(document.body);
-    },
-    _initItemHighlight:function(parent_element) {
-        parent_element.select('.docman_item_title').each(function (element) {
-            var item_ = new RegExp("^item_.*");
-            //We search the first parent which has id == "item_%"
-            var node = element.parentNode;
-            while (!node.id.match(item_)) {
-                node = node.parentNode;
-            }
-            Event.observe(node, 'mouseover', function(event) {
-                Element.addClassName(node, 'docman_item_highlight');
-                Event.stop(event);
-            });
-            Event.observe(node, 'mouseout', function(event) {
-                Element.removeClassName(node, 'docman_item_highlight');
-                Event.stop(event);
-            });
-        });
-    },
-    //}}}
     //{{{------------------------------ Actions
     addActionForItem: function(item_id, action) {
-        if (!this.actionsForItem[item_id]) {
-            this.actionsForItem[item_id] = {
-                actions:[],
-                interval:null,
-                effect:null
-            };
-        }
-        this.actionsForItem[item_id].actions.push({action:action,created:false});
-        if (this.initShowOptions_already_done) {
-            this.initShowOptions();
-        }
+        this.actionsForItem[item_id] = action;
     },
     initShowOptions: function() {
         this.initShowOptions_already_done = true;
@@ -191,15 +163,42 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     marginheight:0,
                     src:'/plugins/docman/blank.htm'
             });
-            document.body.appendChild(invisible_iframe);
+            // Without "dom:loaded" IE may crash when attempt to append
+            // the iframe to the document. See:
+            // http://www.garyharan.com/index.php/2008/04/22/internet-explorer-cannot-open-the-internet-site-operation-aborted/
+            document.observe("dom:loaded", function() {
+                document.body.appendChild(invisible_iframe);
+            });
         }
         //}}}
+        if (!this.showOptions_Menus) {
+            this.showOptions_Menus = {};
+        }
+        if (!this.itemHighlight) {
+            
+        }
         $H(this.actionsForItem).keys().each((function (item_id) {
-            if (!this.showOptions_Menus) {
-                this.showOptions_Menus = {};
-            }
             if (!this.showOptions_Menus[item_id]) {
                 this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.btn_close});
+            }
+            
+            //ItemHighlight
+            if (!Prototype.Browser.IE && !this.itemHighlight[item_id]) {
+                var node = $('item_'+item_id);
+                if (node) {
+                    this.itemHighlight[item_id] = {
+                        mouseover: (function(event) {
+                            node.addClassName('docman_item_highlight');
+                            event.stop();
+                        }).bindAsEventListener(this),
+                        mouseout: (function(event) {
+                            node.removeClassName('docman_item_highlight');
+                            event.stop();
+                        }).bindAsEventListener(this)
+                    };
+                    node.observe('mouseover', this.itemHighlight[item_id].mouseover);
+                    node.observe('mouseout', this.itemHighlight[item_id].mouseout);
+                }
             }
         }).bind(this));
     },
@@ -366,15 +365,9 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             if (properties.panel) {
                 if (properties.checkbox.id == selected_checkbox.id) {
                     Element.show(properties.panel);
-                    /*new Effect.SlideDown(properties.panel, {
-                        duration:0.25
-                    });*/
                 } else {
                     if (Element.visible(properties.panel)) {
                         Element.hide(properties.panel);
-                        /*new Effect.SlideUp(properties.panel, {
-                            duration:0.25
-                        });*/
                     }
                 }
             }
@@ -403,12 +396,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder.png', 'folder-open.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        Element.show(subitems);
-                        /*
-                        Effect.toggle(subitems, 'slide', {
-                            duration:0.25
-                        });
-                        /**/
+                        subitems.show();
                         new Ajax.Request('?group_id='+ this.group_id +'&action=expandFolder&view=none&id='+node.id.split('_')[1], {
                             asynchronous:true
                         });
@@ -435,11 +423,8 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                                 }
                                 this._expandCollapse(target);    //
                                 this.initShowOptions();          //register events for new loaded items
-                                this._initItemHighlight(target); //
                                 Element.setStyle(document.body, {cursor:'default'});
-                                new Effect.SlideDown(outer, {
-                                    duration:0.25
-                                });
+                                outer.show();
                                 icon.src = old_icon_src;
                             }).bind(this)
                         });
@@ -451,12 +436,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
                     icon.src = icon.src.replace('folder-open.png', 'folder.png');
                     var subitems = $('subitems_'+node.id.split('_')[1]);
                     if (subitems) {
-                        Element.hide(subitems);
-                        /*
-                        Effect.toggle(subitems, 'slide', {
-                            duration:0.25
-                        });
-                        /**/
+                        subitems.hide();
                     }
                     new Ajax.Request('?group_id='+ this.group_id +'&action=collapseFolder&view=none&id='+node.id.split('_')[1], {
                         asynchronous:true
@@ -471,83 +451,115 @@ Object.extend(com.xerox.codex.Docman.prototype, {
 
     //{{{----------------------------- Table report
     initTableReport: function() {
-	if($('docman_filters_fieldset')) {
-	    var url = location.href.parseQuery();
-	    if(url['show_filters'] == '1') {
-		var icon = $('docman_toggle_filters');
+        if($('docman_filters_fieldset')) {
+            // Setup event observe
+            var icon = $('docman_toggle_filters');
+            icon.observe('click', this.toggleReport);
+            $('plugin_docman_select_saved_report').observe('change', this.reportSelectSavedReport);
+            $('plugin_docman_report_add_filter').observe('change',   this.reportSelectAddFilter);
+            $('plugin_docman_report_save').observe('change',         this.reportSelectSave.bindAsEventListener(this));
+
+            var url = location.href.parseQuery();
+            if(url['del_filter'] || url['add_filter']) {
                 icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-		new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
-		Element.show('docman_filters_fieldset');
-	    } else {
-		Element.hide('docman_filters_fieldset');
-		var icon = $('docman_toggle_filters');
-		if (icon.src.indexOf('toggle_minus.png') != -1) {
-		    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-		}
-	    }
-	}
-    },
-    toggleReportImage: function() {
-	var icon = $('docman_toggle_filters');
-	if (icon.src.indexOf('toggle_plus.png') != -1) {
-	    icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-	} else {
-	    icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-	}
-    },
-    toggleReportParam: function() {
-	if($('docman_report_show_filters')) {
-	    var input = $('docman_report_show_filters');
-	    if(input.value == 1) {
-		input.value = 0;
-	    } else {
-		input.value = 1;
-	    }
-	} else {
-	    new Insertion.Before('docman_report_submit', '<input id="docman_report_show_filters" type="hidden" name="show_filters" value="1">');
-	}
+                Element.show('docman_filters_fieldset');
+            } else {
+                icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+                Element.hide('docman_filters_fieldset');
+            }
+        }
     },
     toggleReport: function() {
-	// Toggle display
-	Element.toggle('docman_filters_fieldset');
-	this.toggleReportImage();
-	this.toggleReportParam();
+        // Toggle display
+        Element.toggle('docman_filters_fieldset');
+        // Change +/- image
+        var icon = $('docman_toggle_filters');
+        if (icon.src.indexOf('toggle_plus.png') != -1) {
+            icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
+        } else {
+            icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
+        }
     },
-    reportSavedSearchChange: function(form) {
-	var select = form['report_id'];
-	if($F(select) != '-1') {
-	    form.submit();
-	}
+    reportSelectSavedReport: function(event) {
+        var form = $('plugin_docman_select_report_id');
+        var select = form['report_id'];
+        if(select[select.selectedIndex].value != '-1') {
+            form.submit();
+        }
+        Event.stop(event);
+        return false;
     },
-    reportFiltersOptionsChange: function(form) {
-	var select = form['add_filter'];
-	if($F(select) != '--') {
-	    form.submit();
-	}
+    reportSelectAddFilter: function(event) {
+        var form = $('plugin_docman_report_form');
+        var select = form['plugin_docman_report_add_filter'];
+        if(select[select.selectedIndex].value != '-1') {
+            form.submit();
+        }
+        Event.stop(event);
+        return false;
     },
     // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
     // But I think this kind of attack cannot be used against codex.
-    reportSaveOptionsChange: function(form) {
-	var select = form['save_report'];
-	if(($F(select) == 'newp') || ($F(select) == 'newi')) {
-	    var name = window.prompt(this.options.language.report_name_new, '');
-	    if(name != null && name.strip() != '') {
-		new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
-		form.submit();
-	    }
-	}
-	else {
-	    var selectedValue = parseInt($F(select))
-	    if(selectedValue > 0) {
-		var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
-		if(name != null && name.strip() != '') {
-		    new Insertion.After('docman_report_submit', '<input type="hidden" name="report_name" value="'+name.escapeHTML().replace(/\"/, '&quot;')+'" />');
-		    form.submit();
-		}
-	    }
-	}	
-    }
+    reportSelectSave: function(event) {
+        var form = $('plugin_docman_report_form');
+        var select = form['plugin_docman_report_save'];
+        var value = select[select.selectedIndex].value;
+        var nameField = Builder.node('input', {type: 'hidden', name: 'report_name'});
+        if((value == 'newp') || (value == 'newi')) {
+            // Create new report
+            var name = window.prompt(this.options.language.report_name_new, '');
+            if(name != null && name.strip() != '') {
+                nameField.value = name.escapeHTML().replace(/\"/, '&quot;');
+                form.appendChild(nameField);
+                form.submit();
+            }
+        } else {
+            // Update existing report
+            var selectedValue = parseInt(value)
+            if(selectedValue > 0) {
+                var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
+                if(name != null && name.strip() != '') {
+                    nameField.value = name.escapeHTML().replace(/\"/, '&quot;');
+                    form.appendChild(nameField);
+                    form.submit();
+                }
+            }
+        }
+        Event.stop(event);
+        return false;
+    },
     //}}}
+    //{{{----------------------------- Approval table create
+    approvalTableCreate: function(form) {
+        var selected;
+        for(var i = 0; i < form['app_table_import'].length; i++) {
+            if(form['app_table_import'][i].checked) {
+                selected = form['app_table_import'][i].value;
+            }
+        }
+        switch(selected) {
+        case "copy":
+        case "reset":
+        case "empty":
+            if(!this.approvalTableCreateDetailsHidden) {
+                this.approvalTableCreateDetailsHidden = true;
+                Element.hide($('docman_approval_table_create_settings'));
+                Element.hide($('docman_approval_table_create_notification'));
+                Element.hide($('docman_approval_table_create_table'));
+                Element.hide($('docman_approval_table_create_add_reviewers'));
+            }
+            break;
+        default:
+            if(this.approvalTableCreateDetailsHidden) {
+                this.approvalTableCreateDetailsHidden = false;
+                Element.show($('docman_approval_table_create_settings'));
+                Element.show($('docman_approval_table_create_notification'));
+                Element.show($('docman_approval_table_create_table'));
+                Element.show($('docman_approval_table_create_add_reviewers'));
+            }
+            break;
+        }
+    }
 });
 
 com.xerox.codex.openedMenu = null;
@@ -557,94 +569,271 @@ Object.extend(com.xerox.codex.Menu.prototype, {
         this.item_id = item_id;
         this.docman = docman;
         this.close = options.close;
+        this.defaultUrl = this.docman.options.pluginPath+'/index.php?group_id='+this.docman.group_id+'&id='+item_id;
         Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
+    },
+    _createLi: function(element) {
+        var li = Builder.node('li');
+        li.appendChild(element);
+        return li;
+    },
+    _createQuickMoveIcon: function (icon) {
+        var im = Builder.node('img', {
+            'src':   this.docman.options.themePath+"/images/ic/"+icon+'.png',
+            'title': icon
+        });
+        
+        Event.observe(im, 'click', function (evt) {
+            if(icon) {
+                new Ajax.Request(this.defaultUrl+'&action=move&quick_move='+icon, {
+                    'onComplete': function() {
+                        window.location.href = window.location.href;
+                    }
+                });
+                Event.stop(evt);
+                return false;
+            }
+        }.bindAsEventListener(this));
+        return im;
+    },
+    _appendQuickMoveIcon: function (element, action) {
+        var sep = Builder.node('span');
+        sep.innerHTML = '&nbsp;&nbsp;';
+        element.appendChild(sep);
+        element.appendChild(this._createQuickMoveIcon(action));
+    },
+    _getNewFolder: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=newFolder',
+            'class': 'docman_item_option_newfolder',
+            'title': this.docman.options.language.action_newfolder});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newfolder);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNewDocument: function() {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=newDocument',
+            'class': 'docman_item_option_newdocument',
+            'title': this.docman.options.language.action_newdocument});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newdocument);
+        a.appendChild(title_txt);
+        return this._createLi(a);  
+    },
+    _getProperties: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details',
+            'class': 'docman_item_option_details',
+            'title': this.docman.options.language.action_details});
+        var title_txt = document.createTextNode(this.docman.options.language.action_details);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNewVersion: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_new_version',
+            'class': 'docman_item_option_newversion',
+            'title': this.docman.options.language.action_newversion});
+        var title_txt = document.createTextNode(this.docman.options.language.action_newversion);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getMove: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=move',
+            'class': 'docman_item_option_move',
+            'title': this.docman.options.language.action_move});
+        var title_txt = document.createTextNode(this.docman.options.language.action_move);
+        a.appendChild(title_txt);
+        this._appendQuickMoveIcon(a, 'move-up');
+        this._appendQuickMoveIcon(a, 'move-down');
+        this._appendQuickMoveIcon(a, 'move-beginning');
+        this._appendQuickMoveIcon(a, 'move-end');
+        return this._createLi(a);
+    },
+    _getPermissions: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=permissions',
+            'class': 'docman_item_option_permissions',
+            'title': this.docman.options.language.action_permissions});
+        var title_txt = document.createTextNode(this.docman.options.language.action_permissions);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getHistory: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=history',
+            'class': 'docman_item_option_history',
+            'title': this.docman.options.language.action_history});
+        var title_txt = document.createTextNode(this.docman.options.language.action_history);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getNotification: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=notifications',
+            'class': 'docman_item_option_notifications',
+            'title': this.docman.options.language.action_notifications});
+        var title_txt = document.createTextNode(this.docman.options.language.action_notifications);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getDelete: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=confirmDelete',
+            'class': 'docman_item_option_delete',
+            'title': this.docman.options.language.action_delete});
+        var title_txt = document.createTextNode(this.docman.options.language.action_delete);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getUpdate: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_update',
+            'class': 'docman_item_option_update',
+            'title': this.docman.options.language.action_update});
+        var title_txt = document.createTextNode(this.docman.options.language.action_update);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getCopy: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_copy',
+            'class': 'docman_item_option_copy',
+            'title': this.docman.options.language.action_copy});
+        var title_txt = document.createTextNode(this.docman.options.language.action_copy);
+        a.appendChild(title_txt);
+        Event.observe(a, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=action_copy&ajax_copy=true', {
+                'onComplete': function() {
+                    // Hide menu
+                    this.hide();
+
+                    // Display feedback message
+                    var li = Builder.node('li');
+
+                    // Search item title
+                    var title = $('docman_item_title_link_'+this.item_id).firstChild.nodeValue;
+                    li.innerHTML = '"'+title+'" '+this.docman.options.language.feedback_copy;
+
+                    if($('item_copied')) {
+                        $('item_copied').remove();
+                    }                    
+                    var ul = Builder.node('ul', {'class': 'feedback_info', 'id': 'item_copied'});
+                    ul.appendChild(li);
+                    var feedback = $('feedback');
+                    feedback.appendChild(ul);
+                    feedback.show();
+                    
+                    // There is sth to paste.
+                    this.docman.canPaste = true;
+                }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
+        return this._createLi(a);
+    },
+    _getPaste: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_paste',
+            'class': 'docman_item_option_paste',
+            'title': this.docman.options.language.action_paste});
+        var title_txt = document.createTextNode(this.docman.options.language.action_paste);
+        a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getApproval: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=details&section=approval',
+            'class': 'docman_item_option_approval',
+            'title': this.docman.options.language.action_approval});
+        var title_txt = document.createTextNode(this.docman.options.language.action_approval);
+        a.appendChild(title_txt);
+        return this._createLi(a);
     },
     show:function(evt) {
         var menu = 'docman_item_menu_'+this.item_id;
-        if (!$(menu)) {
+        // In the previous version of the menu, once a menu was built for an
+        // item, it was cached and re-used as is if user close and then re-open
+        // it later. As now copy/paste is done via an Ajax request, we must
+        // rebuild the menu to take this toogle into account.
+         
+        //if (!$(menu)) {
             //Save the offset
             Position.prepare();
             this.offset = Position.cumulativeOffset($('docman_item_show_menu_'+this.item_id));
             
             //Build the menu
             var actions_panel = Builder.node('div', {
-                style:'display:none;top:0px;left:0px;z-index:1001',
-                id:menu,
+                'style': 'display:none;top:0px;left:0px;z-index:1001',
+                'id': menu,
                 'class':'docman_item_menu'
             });
             
             document.body.appendChild(actions_panel);
             var ul = Builder.node('ul', {
-                id:'docman_item_menu_ul_'+this.item_id
+                'id':'docman_item_menu_ul_'+this.item_id
             });
             var li = Builder.node('li', {
                 'class':'docman_item_menu_close'
             });
             var close = Builder.node('a', {
-                href:'#close-menu'
+                'href':'#close-menu'
             });
-            var close_txt = document.createTextNode('['+this.close+']');
+            var close_txt = document.createTextNode('Id: '+this.item_id+' ['+this.close+']');
             close.appendChild(close_txt);
             li.appendChild(close);
             ul.appendChild(li);
             this.hideEvent = this.hide.bindAsEventListener(this);
-            Event.observe(close, 'click', this.hideEvent, true);
-            docman.actionsForItem[this.item_id].actions.each((function (action) {
-                if (!action.created) {
-                    var li = Builder.node('li');
-                    var a = Builder.node('a', {
-                        href:action.action.href,
-                        'class':action.action.classes,
-                        title:action.action.title
-                    });
-                    var title_txt = document.createTextNode(action.action.title);
-                    a.appendChild(title_txt);
-                    if (action.action.other_icons.length) {
-                        var sep = Builder.node('span');
-                        sep.innerHTML = '&nbsp;&nbsp;';
-                        a.appendChild(sep);
-                        var ims = [];
-                        action.action.other_icons.each(function (ic) {
-                                var im = Builder.node('img', {
-                                        src:   ic.src,
-                                        title: ic.classe
-                                });
-                                var sep = Builder.node('span');
-                                sep.innerHTML = '&nbsp;&nbsp;';
-                                a.appendChild(sep);
-                                a.appendChild(im);
-                                ims.push({
-                                    classe:ic.classe,
-                                    url: ic.url,
-                                    img: im
-                                });
-                        });
-                        Event.observe(a, 'click', function (evt) {
-                            icon = ims.find(function (element) {
-                                return element.img == Event.element(evt);
-                            });
-                            if (icon) {
-                                new Ajax.Request(icon.url+'&quick_move='+icon.classe, {
-                                    onComplete: function() {
-                                        window.location.href = window.location.href;
-                                    }
-                                });
-                                Event.stop(evt);
-                                return false;
-                            }
-                        });
-                    }
-                    li.appendChild(a);
-                    ul.appendChild(li);
-                    action.created = true;
-                }
-            }).bind(this));
+            Event.observe(close, 'click', this.hideEvent);
+            
+            //
+            // All the supported actions
+            //
+            
+            // New folder
+            if(this.docman.actionsForItem[this.item_id].canNewFolder)
+                ul.appendChild(this._getNewFolder(this.item_id));
+            // New document
+            if(this.docman.actionsForItem[this.item_id].canNewDocument)
+                ul.appendChild(this._getNewDocument(this.item_id));
+            // Properties
+            ul.appendChild(this._getProperties());
+            // New version (files)
+            if(this.docman.actionsForItem[this.item_id].canNewVersion)
+                ul.appendChild(this._getNewVersion());
+            // Update (empty, wiki, link)
+            if(this.docman.actionsForItem[this.item_id].canUpdate)
+               ul.appendChild(this._getUpdate());
+            // Notification
+            ul.appendChild(this._getNotification());
+            // History
+            ul.appendChild(this._getHistory());
+            // Permissions
+            if(this.docman.actionsForItem[this.item_id].canPermissions)
+                ul.appendChild(this._getPermissions());
+            // Approval table
+            if(this.docman.actionsForItem[this.item_id].canApproval)
+                ul.appendChild(this._getApproval());
+            // Move
+            if(this.docman.actionsForItem[this.item_id].canMove)
+                ul.appendChild(this._getMove());
+            // Copy
+            ul.appendChild(this._getCopy());
+            // Paste
+            if(this.docman.actionsForItem[this.item_id].canPaste)
+                ul.appendChild(this._getPaste());
+            // Delete
+            if(this.docman.actionsForItem[this.item_id].canDelete)
+                ul.appendChild(this._getDelete());
+                
             actions_panel.appendChild(ul);
             
             //dimensions
             this.dimensions = Element.getDimensions(actions_panel);
             
-        }
+        //}
         if (!com.xerox.codex.openedMenu || com.xerox.codex.openedMenu != menu) {
             this.hide();
             com.xerox.codex.openedMenu = menu;

@@ -205,6 +205,12 @@ class WikiAttachmentRevision {
         return true;
     }
 
+	function setGid($gid) {
+		 if(is_numeric($gid)) {
+            $this->gid = (int) $gid;
+            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
+        }
+	}
 
     /**
      *
@@ -333,7 +339,8 @@ class WikiAttachmentRevision {
             unset($war);
         }
 
-        return new ArrayIterator($warArray);
+        $ai =& new ArrayIterator($warArray);
+        return $ai;
     }
 
 }

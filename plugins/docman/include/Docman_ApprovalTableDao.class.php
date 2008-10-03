@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -19,56 +19,89 @@
  * You should have received a copy of the GNU General Public License
  * along with CodeX; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
  */
 
-//require_once('www/project/admin/ugroup_utils.php');
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('Docman_ItemDao.class.php');
 
-class Docman_ApprovalTableDao  extends DataAccessObject {
+/*abstract*/ class Docman_ApprovalTableDao extends DataAccessObject {
 
     function Docman_ApprovalTableDao(&$da) {
         DataAccessObject::DataAccessObject($da);
     }
 
-    //
-    // Table management
-    //
-
-    function getTableById($itemId, $fields='*') {
-        $sql = sprintf('SELECT '.$fields.
-                       ' FROM plugin_docman_approval'.
-                       ' WHERE item_id = %d',
-                       $itemId);
+    function getTableByTableId($tableId, $fields='*') {
+        $sql = 'SELECT '.$fields.
+            ' FROM plugin_docman_approval'.
+            ' WHERE table_id = '.$this->da->escapeInt($tableId);
         return $this->retrieve($sql);
     }
 
-    function tableExist($itemId) {
-        $dar = $this->getTableById($itemId, 'NULL');
+    function tableExist($tableId) {
+        $dar = $this->getTableById($tableId, 'NULL');
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return true;
         }
         return false;
     }
 
-    function createTable($itemId, $userId, $description) {
-        $sql = sprintf('INSERT INTO plugin_docman_approval'.
-                       '(item_id, table_owner, date, description)'.
-                       ' VALUES'.
-                       '(%d, %d, %d, %s)',
-                       $itemId, $userId, time(), $this->da->quoteSmart($description));
+    /*static*/ function getTableStatusFields($table='app_u') {
+        $fields = 'COUNT('.$table.'.reviewer_id) AS nb_reviewers, '.
+            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED.',1,NULL)) AS rejected, '.
+            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED.',1,NULL)) AS nb_approved, '.
+            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED.',1,NULL)) AS nb_declined';
+        return $fields;
+    }
+
+    /*static*/ function getTableStatusJoin($tableUser='app_u', $tableApproval='app') {
+        $join = 'plugin_docman_approval_user '.$tableUser
+            .' ON ('.$tableUser.'.table_id = '.$tableApproval.'.table_id) ';
+        return $join;
+    }
+
+    /*static*/ function getTableStatusGroupBy($table='app_u') {
+        $groupBy  = $table.'.table_id ';
+        return $groupBy;
+    }
+
+    function getTableWithStatus($status, $fields, $where, $join='', $orderBy='', $limit='') {
+        $groupBy = '';
+        if($status) {
+            $fields  .= ','.$this->getTableStatusFields();
+            $join    .= ' LEFT JOIN '.$this->getTableStatusJoin();
+            $groupBy  = ' GROUP BY '.$this->getTableStatusGroupBy();
+        }
+
+        $sql = ' SELECT '.$fields.
+            ' FROM plugin_docman_approval app'.
+            $join.
+            ' WHERE '.$where.
+            $groupBy.
+            $orderBy.
+            $limit;
+        return $this->retrieve($sql);
+    }
+
+    function createTable($field, $id, $userId, $description, $date, $status, $notification) {
+        $sql = 'INSERT INTO plugin_docman_approval'.
+            '('.$field.', table_owner, date, description, status, notification)'.
+            ' VALUES ('.
+            $this->da->escapeInt($id).', '.
+            $this->da->escapeInt($userId).', '.
+            $this->da->escapeInt($date).', '.
+            $this->da->quoteSmart($description).', '.
+            $this->da->escapeInt($status).', '.
+            $this->da->escapeInt($notification).')';
+        return $this->_createAndReturnId($sql);
+    }
+
+    function deleteTable($tableId) {
+        $sql = 'DELETE FROM plugin_docman_approval'.
+            ' WHERE table_id = '.$this->da->escapeInt($tableId);
         return $this->update($sql);
     }
 
-    function deleteTable($itemId) {
-        $sql = sprintf('DELETE FROM plugin_docman_approval'.
-                       ' WHERE item_id = %d',
-                       $itemId);
-        return $this->update($sql);
-    }
-
-    function updateTable($itemId, $description=null, $status=null, $notification=null, $description=null) {
+    function updateTable($tableId, $description=null, $status=null, $notification=null, $owner=null) {
         $_updStmt = '';
         if($description !== null) {
             $_updStmt .= sprintf('description = %s',
@@ -88,15 +121,15 @@ class Docman_ApprovalTableDao  extends DataAccessObject {
             $_updStmt .= sprintf('notification = %d', $notification); 
         }
 
-        if($description !== null) {
+        if($owner !== null) {
             if($_updStmt != '') {
                 $_updStmt .= ',';
             }
-            $_updStmt .= sprintf('description = %s', $this->da->quoteSmart($description)); 
+            $_updStmt .= 'table_owner = '.$this->da->escapeInt($owner);
         }
 
         if($_updStmt != '') {
-            $_whereStmt = sprintf('item_id = %d', $itemId);
+            $_whereStmt = 'table_id = '.$this->da->escapeInt($tableId);
 
             $sql = 'UPDATE plugin_docman_approval'.
                 ' SET '.$_updStmt.
@@ -114,244 +147,192 @@ class Docman_ApprovalTableDao  extends DataAccessObject {
         }
     }
 
-    //
-    // User management
-    // 
-
-    function getUgroupMembers($ugroupId, $groupId) {
-        if($ugroupId > 100) {
-            $sql = ugroup_db_get_members($ugroupId);
-        } else {
-            $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
-        }
-        return $this->retrieve($sql);
-    }
-
-    function getReviewerList($itemId) {
-        $sql = sprintf('SELECT * FROM plugin_docman_approval_user au'.
-                       ' WHERE item_id = %d'.
-                       ' ORDER BY rank',
-                       $itemId);
-        return $this->retrieve($sql);
-    }
-
-    function getReviewerById($itemId, $userId) {
-        $sql = sprintf('SELECT * '.
-                       ' FROM plugin_docman_approval_user au'.
-                       ' WHERE item_id = %d'.
-                       '  AND reviewer_id = %d',
-                       $itemId, $userId);
-        return $this->retrieve($sql);
-    }
-
-    function getFirstReviewerByStatus($itemId, $status) {
-        if(is_array($status)) {
-            $_status = array_map("intval", $status);
-            $state = 'state IN ('.implode(',', $status).')';
-        } else {
-            $state = 'state = '.intval($status);
-        }
-
-        $sql = sprintf('SELECT * '.
-                       ' FROM plugin_docman_approval_user au'.
-                       ' WHERE item_id = %d'.
-                       '  AND '.$state.
-                       ' ORDER BY rank'.
-                       ' LIMIT 1',
-                       $itemId);
-        return $this->retrieve($sql);
-    }
-
-    function prepareUserRanking($itemId, $userId, $rank) {
-        $newRank = null;
-
-        $sql = sprintf('SELECT NULL'.
-                       ' FROM plugin_docman_approval_user'.
-                       ' WHERE item_id = %d',
-                       $itemId);
-        $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            // Empty
-            $newRank = 0;
-        }
-        else {
-            switch($rank) {
-            case 'end':
-                $sql = sprintf('SELECT MAX(rank)+1 as rank'.
-                               ' FROM plugin_docman_approval_user'.
-                               ' WHERE item_id = %d',
-                               $itemId);
-                $dar = $this->retrieve($sql);
-                if($dar && !$dar->isError()) {
-                    $row = $dar->current();
-                    $newRank = $row['rank'];
-                }
-                break;
-
-            case 'up':
-            case 'down':
-                if ($rank == 'down') {
-                    $op    = '>';
-                    $order = 'ASC';
-                } else {
-                    $op    = '<';
-                    $order = 'DESC';
-                }
-                $sql = sprintf('SELECT au1.reviewer_id as reviewer_id, au1.rank as rank '.
-                               ' FROM  plugin_docman_approval_user au1'.
-                               '  INNER JOIN plugin_docman_approval_user au2 USING (item_id)'.
-                               ' WHERE au2.item_id = %d'.
-                               '  AND au2.reviewer_id = %d'.
-                               '  AND au1.rank %s au2.rank'.
-                               ' ORDER BY au1.rank %s'.
-                               ' LIMIT 1',
-                               $itemId,
-                               $userId,
-                               $op,
-                               $order);
-                $dar = $this->retrieve($sql);
-                if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                    $row = $dar->current();
-                    $sql = sprintf('UPDATE plugin_docman_approval_user au1, plugin_docman_approval_user au2'.
-                                   ' SET au1.rank = au2.rank, au2.rank = %d'.
-                                   ' WHERE au1.item_id = %d '.
-                                   '  AND au1.reviewer_id = %d'.
-                                   '  AND au2.item_id = au1.item_id'.
-                                   '  AND au2.reviewer_id = %d',
-                                   $row['rank'],
-                                   $itemId,
-                                   $row['reviewer_id'],
-                                   $userId);
-                    //print $sql;
-                    $this->update($sql);
-                    $newRank = false;
-                }
-                break;
-
-            case 'beg':
-                $sql = sprintf('SELECT MIN(rank) as rank'.
-                               ' FROM plugin_docman_approval_user'.
-                               ' WHERE item_id = %d',
-                               $itemId);
-                $dar = $this->retrieve($sql);
-                if($dar && !$dar->isError()) {
-                    $row = $dar->current();
-                    $rank = $row['rank'];
-                }
-                // no break;
-
-            default:
-                $sql = sprintf('UPDATE plugin_docman_approval_user'.
-                               ' SET rank = rank + 1'.
-                               ' WHERE item_id = %d'.
-                               '  AND rank >= %d',
-                               $itemId, $rank);
-                $updated = $this->update($sql);
-                if($updated) {
-                    $newRank = $rank;
-                }
+    function _createAndReturnId($sql) {
+        $inserted = $this->update($sql);
+        if ($inserted) {
+            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
             }
         }
-        return $newRank;
+        return $inserted;
+    }
+}
+
+/**
+ *
+ */
+class Docman_ApprovalTableItemDao extends Docman_ApprovalTableDao {
+
+    function Docman_ApprovalTableItemDao(&$da) {
+        parent::Docman_ApprovalTableDao($da);
     }
 
-    function addUser($itemId, $userId) {
-        $newRank = $this->prepareUserRanking($itemId, $userId, 'end');
-        $sql = sprintf('INSERT INTO plugin_docman_approval_user'.
-                       '(item_id, reviewer_id, rank)'.
-                       ' VALUES'.
-                       '(%d, %d, %d)',
-                       $itemId, $userId, $newRank);
-        return $this->update($sql);
-    }
-
-    function updateUser($itemId, $userId, $rank) {
-        $newRank = $this->prepareUserRanking($itemId, $userId, $rank);
-        if($newRank !== false) {
-            $sql = sprintf('UPDATE plugin_docman_approval_user'.
-                           ' SET rank = %d'.
-                           ' WHERE item_id = %d'.
-                           ' AND reviewer_id = %d',
-                           $newRank, $itemId, $userId);
-            return $this->update($sql);
-        }
-        else {
-            return true;
-        }
-    }
-
-    function delUser($itemId, $userId) {
-        $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
-                       ' WHERE item_id = %d'.
-                       ' AND reviewer_id = %d',
-                       $itemId, $userId);
-        return $this->update($sql);
-    }
-
-    function truncateTable($itemId) {
-        $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
-                       ' WHERE item_id = %d',
-                       $itemId);
-        return $this->update($sql);
-    }
-
-    function updateReview($itemId, $userId, $date, $state, $comment, $version) {
-        $_stmtDate = sprintf('date = %d,', $date);
-        if($date === null) {
-            $_stmtDate = 'date = NULL,';
-        }
-        $_stmtVersion = sprintf('version = %d', $version);
-        if($version === null) {
-            $_stmtVersion = 'version = NULL';
-        }
-
-        $sql = sprintf('UPDATE plugin_docman_approval_user'.
-                       ' SET state = %d,'.
-                       '  comment = %s,'.
-                       $_stmtDate.
-                       $_stmtVersion.
-                       ' WHERE item_id = %d'.
-                       '  AND reviewer_id = %d',
-                       $state, $this->da->quoteSmart($comment),
-                       $itemId, $userId);
-        return $this->update($sql);
-    }
-
-    function getAllReviewsForUserByState($userId, $state) {
-        $sql = sprintf('SELECT u.item_id, i.group_id, t.date, i.title, g.group_name'.
-                       ' FROM plugin_docman_approval_user AS u, '.
-                       '  plugin_docman_approval AS t, '.
-                       '  plugin_docman_item AS i, '.
-                       '  groups AS g'.
-                       ' WHERE u.reviewer_id = %d'.
-                       ' AND u.state = %d'.
-                       ' AND t.item_id = u.item_id'.
-                       ' AND t.status = %d'.
-                       ' AND i.item_id = u.item_id'.
-                       ' AND i.delete_date IS NULL '.
-                       ' AND g.group_id = i.group_id'.
-                       ' AND g.status = \'A\''.
-                       ' ORDER BY i.group_id ASC, t.date ASC',
-                       $userId, $state, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+    function getTableById($itemId, $fields='*') {
+        $sql = 'SELECT '.$fields.
+            ' FROM plugin_docman_approval'.
+            ' WHERE item_id = '.$this->da->escapeInt($itemId);
         return $this->retrieve($sql);
     }
 
-    function getAllApprovalTableForUser($userId) {
-        $sql = sprintf('SELECT i.item_id, i.group_id, a.date, i.title, g.group_name'.
-                       ' FROM plugin_docman_approval a'.
-                       '  JOIN plugin_docman_item i ON (i.item_id = a.item_id)'.
-                       '  JOIN groups g ON (g.group_id = i.group_id)'.
-                       ' WHERE a.table_owner = %d'.
-                       ' AND a.status IN (%d, %d)'.
-                       ' AND i.delete_date IS NULL'.
-                       ' AND g.status = \'A\''.
-                       ' ORDER BY i.group_id ASC, a.date ASC',
-                       $userId,
-                       PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED,
-                       PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+    function createTable($itemId, $userId, $description, $date, $status, $notification) {
+        return parent::createTable('item_id', $itemId, $userId, $description, $date, $status, $notification);
+    }
+}
+
+/**
+ *
+ */
+class Docman_ApprovalTableFileDao extends Docman_ApprovalTableDao {
+
+    function Docman_ApprovalTableFileDao(&$da) {
+        parent::Docman_ApprovalTableDao($da);
+    }
+
+    function getTableById($versionId, $fields='*') {
+        $sql = 'SELECT '.$fields.
+            ' FROM plugin_docman_approval'.
+            ' WHERE version_id = '.$this->da->escapeInt($versionId);
         return $this->retrieve($sql);
     }
 
+    function getTableByItemId($itemId, $fields='*') {
+        return $this->getLatestTableByItemId($itemId, $fields);
+    }
+
+    function getLatestTableByItemId($itemId, $fields='app.*') {
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+    }
+
+    function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {
+        $fields .= ', ver.number as version_number';
+        $where = ' ver.item_id = '.$this->da->escapeInt($itemId).
+            ' AND app.wiki_version_id IS NULL';
+        $join = ' JOIN plugin_docman_version ver ON (ver.id = app.version_id)';
+        $orderBy = ' ORDER BY ver.number DESC ';
+
+        return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
+    }
+    function createTable($versionId, $userId, $description, $date, $status, $notification) {
+        return parent::createTable('version_id', $versionId, $userId, $description, $date, $status, $notification);
+    }
+
+}
+
+/**
+ *
+ */
+class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableDao {
+
+    function Docman_ApprovalTableWikiDao(&$da) {
+        parent::Docman_ApprovalTableDao($da);
+    }
+
+    function getTableById($itemId, $wikiVersionId, $fields='*') {
+        $sql = 'SELECT '.$fields.
+            ' FROM plugin_docman_approval'.
+            ' WHERE item_id = '.$this->da->escapeInt($itemId).
+            ' AND wiki_version_id = '.$this->da->escapeInt($wikiVersionId);
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Last approval table created for the given itemId
+     */
+    function getLatestTableByItemId($itemId, $fields='app.*') {
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+    }
+
+    function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {
+        $where = 'app.item_id = '.$this->da->escapeInt($itemId).
+            ' AND app.wiki_version_id IS NOT NULL';
+        $join  = '';
+        $orderBy = ' ORDER BY app.wiki_version_id DESC ';
+        return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
+    }
+
+    /**
+     * Last wiki version id bound to an approval table for the given itemId
+     */
+    function getLastTableVersionIdByItemId($itemId) {
+        $sql = 'SELECT wiki_version_id '.
+            ' FROM plugin_docman_approval'.
+            ' WHERE item_id = '.$itemId.
+            ' AND wiki_version_id IS NOT NULL'.
+            ' ORDER BY wiki_version_id DESC'.
+            ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            return $row['wiki_version_id'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Last version for the wiki page referenced by the given item id.
+     */
+    function getLastWikiVersionIdByItemId($itemId) {
+        $sql = 'SELECT MAX(wv.version) version'.
+            ' FROM wiki_version wv'.
+            '   JOIN wiki_page wp'.
+            '     ON (wp.id = wv.id)'.
+            '   JOIN plugin_docman_item i'.
+            '     ON (i.wiki_page = wp.pagename'.
+            '         AND i.group_id = wp.group_id)'.
+            ' WHERE i.item_id = '.$itemId;
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            if($row['version'] !== null) {
+                return $row['version'];
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function createTable($itemId, $wikiVersionId, $userId, $description, $date, $status, $notification) {
+        $sql = 'INSERT INTO plugin_docman_approval'.
+            '(item_id, wiki_version_id, table_owner, date, description, status, notification)'.
+            ' VALUES ('.
+            $this->da->escapeInt($itemId).', '.
+            $this->da->escapeInt($wikiVersionId).', '.
+            $this->da->escapeInt($userId).', '.
+            $this->da->escapeInt($date).', '.
+            $this->da->quoteSmart($description).', '.
+            $this->da->escapeInt($status).', '.
+            $this->da->escapeInt($notification).')';
+        return $this->_createAndReturnId($sql);
+    }
+
+    /**
+     * Did user access the wiki since the given version was published.
+     */
+    function userAccessedSince($userId, $pageName, $groupId, $versionId) {
+        $sql  = 'SELECT NULL'.
+            ' FROM wiki_log wl'.
+            ' WHERE pagename = '.$this->da->quoteSmart($pageName).
+            ' AND group_id = '.$this->da->escapeInt($groupId).
+            ' AND user_id = '.$this->da->escapeInt($userId).
+            ' AND time > ('.
+            '   SELECT mtime '.
+            '   FROM wiki_version wv'.
+            '     JOIN wiki_page wp'.
+            '       ON (wp.id = wv.id)'.
+            '   WHERE wp.pagename = wl.pagename'.
+            '   AND wp.group_id = wl.group_id'.
+            '   AND wv.version = '.$this->da->escapeInt($versionId).
+            '   )'.
+            ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        return ($dar && !$dar->isError() && $dar->rowCount() == 1);
+    }
 }
 
 ?>

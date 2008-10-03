@@ -16,11 +16,13 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     var $dfltSearchParams = array();
 
     var $_controller;
+    var $javascript;
     var $hp;
 
     function Docman_View_View(&$controller) {
         $this->_controller = $controller;
         $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->javascript = "";
     }
     
     function display($params = array()) {
@@ -34,6 +36,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         $this->_mode($params);
         $this->_filter($params);
         $this->_content($params);
+        $this->_javascript($params);
         $this->_footer($params);
     }
     /* protected */ function _header($params) {
@@ -54,6 +57,15 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     }
     /* protected */ function _content($params) {
     }
+    /* protected */ function _javascript($params) {
+        if($this->javascript != "") {
+           echo "<script type=\"text/javascript\">\n".
+            "//<!--\n".
+            $this->javascript.
+            "//-->\n".
+            "</script>\n";
+        }
+    }
     /* protected */ function _footer($params) {
     }
     
@@ -67,7 +79,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         return $icons;
     }
     function &_getItemFactory($params) {
-        $f = new Docman_ItemFactory();
+        $f =& new Docman_ItemFactory();
         return $f;
     }
     /* static */ function buildUrl($prefix, $parameters, $amp = true) {
@@ -181,7 +193,10 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
                     $ci->rewind();
                     while($ci->valid()) {
                         $c = $ci->current();
-                        if($c !== null) {
+                        // The second part of the test aims to avoid to add
+                        // sort_update_date=0 in the URL as it's the default
+                        // sort (no need to define it)
+                        if($c !== null && !($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
                             $sort = $c->getSort();
                             if($sort !== null) {
                                 $this->dfltSortParams[$c->getSortParameter()] = $sort;
@@ -204,60 +219,21 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         return $this->dfltSortParams;
     }
 
-    function isActionAllowed($action, &$item) {
-        $if =& Docman_ItemFactory::instance($item->getGroupId());
-        switch ($action) {
-            case 'details&section=notifications':
-            case 'details&section=history':
-            case 'details':
-                $allowed = $this->_controller->userCanRead($item->getId());
-                break;
-            case 'move':
-                // Permissions related stuff:
-                // There are 2 permissions to take in account to decide whether
-                // someone can move a file or not: 
-                // - the permission to 'remove' the file from a folder.
-                //   - user need to have 'write' perm on both item and parent
-                //     folder.
-                // - and the permission to 'add' the file in another folder.
-                //   - check if there is at least one folder writable in the
-                //     docman.
-                // But as the first step requires to have one folder writable,
-                // we don't need specific test for the second one.
-                // The only case we don't take in account is the possibility to
-                // have only one file in only one writable folder (so it
-                // shouldn't be movable). But this case is not worth the time
-                // to develop and compute that case.
-                $allowed = $if->isMoveable($item) && $this->_controller->userCanWrite($item->getId()) && $this->_controller->userCanWrite($item->getParentId());
-                break;
-            case 'confirmDelete':
-                $allowed = !$if->isRoot($item) && $this->_controller->userCanWrite($item->getId()) && $this->_controller->userCanWrite($item->getParentId());
-                break;
-            case 'action_update':
-            case 'action_new_version':
-            case 'newFolder':
-            case 'newDocument':
-                $allowed = $this->_controller->userCanWrite($item->getId());
-                break;
-            case 'details&section=permissions':
-                $allowed = $this->_controller->userCanManage($item->getId());
-                break;
-
-            case 'action_copy':
-                $allowed = true;
-                break;
-                
-            case 'action_paste':
-                $allowed = ($this->_controller->userCanWrite($item->getId()) &&
-                            $if->getCopyPreference($this->_controller->getUser()) != false);
-                break;
-
-            default:
-                $allowed = false;
-                break;
-        }
-        return $allowed;
+    /**
+     * Get the JS action for the item/user couple
+     * 
+     * @param Docman_Item $item
+     */
+    function getActionForItem($item) {
+        $js = 'docman.addActionForItem('.$item->getId().', ';
+        $params = array();
+        $itemMenuVisitor =& new Docman_View_GetMenuItemsVisitor($this->_controller->getUser(), $item->getGroupId());
+        $user_actions = $item->accept($itemMenuVisitor, $params);
+        $js .= $this->phpArrayToJsArray($user_actions);
+        $js .= ");\n";
+        return $js;
     }
+
     function getItemMenu(&$item, $params, $bc = false) {
         
         $docman_icons =& $this->_getDocmanIcons($params);
@@ -267,20 +243,35 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_docman', 'tooltip_show_actions') .'" href="'. $params['default_url'] .'&amp;action=details&amp;id='. $item->getId() .'" id="docman_item_show_menu_'. $item->getId() .'">';
         $html .= '<img src="'. $docman_icons->getActionIcon('popup') .'" class="docman_item_icon" />';
         $html .= '</a>';
-        $html .= '<script type="text/javascript">
-        //<!--
-        ';
-        $user_actions = $item->accept(new Docman_View_GetMenuItemsVisitor(), $params);
-        foreach($user_actions as $key => $nop) {
-            if ($this->isActionAllowed($user_actions[$key]->action, $user_actions[$key]->item)) {
-                $html .= $user_actions[$key]->fetchAsJavascript(array_merge($params, array('docman_icons' => &$docman_icons, 'bc' => $bc)));
-            }
-        }
-        $html .= '
-        //-->
-        </script>';                
         $html .= '</span>';
         return $html;
+    }
+
+    /**
+     * Convert a php array to JSON encoding
+     */
+    function phpArrayToJsArray($array) {
+        if (is_array($array)) {
+            if (count($array)) {
+                $output = '{';
+                reset($array);
+                $comma = '';
+                do {
+                    if(list($key, $value) = each($array)) {
+                        $output .= $comma . $key .': '. $this->phpArrayToJsArray($value);
+                        $comma = ', ';
+                    }
+                } while($key);
+                $output .= '}';
+            } else {
+                $output = '{}';
+            }
+        } else if (is_bool($array)) {
+            $output = $array?'true':'false';
+        } else {
+            $output = "'". addslashes($array) ."'";
+        }
+        return $output;
     }
 }
 

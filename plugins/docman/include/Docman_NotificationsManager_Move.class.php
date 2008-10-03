@@ -34,7 +34,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         parent::Docman_NotificationsManager($group_id, $url, $feedback);
     }
     function somethingHappen($event, $params) {
-        if ($event == PLUGIN_DOCMAN_EVENT_MOVE) {
+        if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
                 $params['path'] =& $this->_getDocmanPath();
                 $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getId()), $this->MESSAGE_MOVED, $params);

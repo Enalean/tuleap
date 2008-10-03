@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright� STMicroelectronics, 2006
+ * Copyright (c) STMicroelectronics, 2006
  * Originally written by Manuel VACELET, STMicroelectronics, 2006
  *
  * This file is a part of CodeX.
@@ -78,6 +78,7 @@ class Docman_View_Table extends Docman_View_Browse {
                 $column = $ci->current();
                 $table .= "<td>";
                 $table .= $column->getTableBox($item, $this, $params);
+                $this->javascript .= $column->getJavascript($item, $this);
                 $table .= "</td>\n";
                 $ci->next();
             }

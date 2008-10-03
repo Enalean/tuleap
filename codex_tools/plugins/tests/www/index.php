@@ -141,7 +141,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
         }
         function init() {
             var plus = 0;
-            document.getElementsByClassName('categ').each(function (element) {
+            $$('li.categ').each(function (element) {
                     register_events(element);
                     plus++;
                     new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="minus.png" /></a>');

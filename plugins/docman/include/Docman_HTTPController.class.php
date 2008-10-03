@@ -22,12 +22,12 @@
  *
  * 
  */
-require_once('DocmanController.class.php');
-require_once('DocmanActions.class.php');
-class Docman extends DocmanController {
+require_once('Docman_Controller.class.php');
+require_once('Docman_Actions.class.php');
+class Docman_HTTPController extends Docman_Controller {
 
-    function Docman(&$plugin, $pluginPath, $themePath) {
-        $this->DocmanController($plugin, $pluginPath, $themePath, HTTPRequest::instance());
+    function Docman_HTTPController(&$plugin, $pluginPath, $themePath) {
+        $this->Docman_Controller($plugin, $pluginPath, $themePath, HTTPRequest::instance());
     }
 
 
@@ -75,10 +75,12 @@ class Docman extends DocmanController {
             $this->view = 'NewDocument';
         }
     }
-    /* protected */ function _set_doesnot_belong_to_project_error() {
-        $this->view = 'DocmanError';
+    /* protected */ function _set_doesnot_belong_to_project_error($item, $group) {
+        $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
+        $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
+        $this->view = 'Redirect';
     }
-    
+
     /**
      * Get the list of all futur obsolete documents and warn document owner
      * about this obsolescence.

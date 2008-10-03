@@ -1,3 +1,14 @@
+.docman_wiki_perms_notice {
+ width: 41em;
+ background:url(../images/ic/warning.png) no-repeat;
+ background-position: 5px center;
+ border: 1px solid #DDDDDD;
+ padding: 0.5em;
+ padding-left: 40px;
+ margin: 2em;
+ margin-left: 10em;
+}
+
 h3, h4 {
   border-bottom: 1px solid #999999;
 }
@@ -313,6 +324,10 @@ a img {
 
 .docman_item_option_paste {
     background-image:url('../images/ic/paste.png');
+}
+
+.docman_item_option_approval {
+    background-image:url('../images/ic/approval.png');
 }
 
 /**********/

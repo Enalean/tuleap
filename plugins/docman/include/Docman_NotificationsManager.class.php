@@ -32,6 +32,7 @@ class Docman_NotificationsManager extends NotificationsManager {
 
     var $MESSAGE_MODIFIED   = 'modified';
     var $MESSAGE_NEWVERSION = 'new_version';
+    var $MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
     
     var $_listeners;
     var $_feedback;
@@ -139,12 +140,15 @@ class Docman_NotificationsManager extends NotificationsManager {
     function _buildMessage($event, $params, $user) {
         $type = '';
         switch($event) {
-            case PLUGIN_DOCMAN_EVENT_EDIT:
-            case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
+            case 'plugin_docman_event_edit':
+            case 'plugin_docman_event_metadata_update':
                 $type = $this->MESSAGE_MODIFIED;
                 break;
-            case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
+            case 'plugin_docman_event_new_version':
                 $type = $this->MESSAGE_NEWVERSION;
+                break;
+            case 'plugin_docman_event_wikipage_update':
+                $type = $this->MESSAGE_WIKI_NEWVERSION;
                 break;
             default:
                 break;
@@ -176,6 +180,10 @@ class Docman_NotificationsManager extends NotificationsManager {
             case $this->MESSAGE_MODIFIED:
             case $this->MESSAGE_NEWVERSION:
                 $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
+                break;
+            case $this->MESSAGE_WIKI_NEWVERSION:
+                $msg .= 'New version of ' . $params['wiki_page'] . 'wiki page was created by ' . $user->getRealName() . ".\n";
+                $msg .= $params['url'] . "\n";
                 break;
             default:
                 $msg .= 'Something happen !';

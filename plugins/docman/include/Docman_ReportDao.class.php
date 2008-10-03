@@ -24,6 +24,7 @@
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('Docman_ItemDao.class.php');
 
 class Docman_ReportDao
 extends DataAccessObject {
@@ -61,6 +62,21 @@ extends DataAccessObject {
                        $userId);
         return $this->retrieve($sql);
     }
+
+    function searchItemsInReports($groupId, $reportId=null) {
+        $sql = 'SELECT i.*'.
+            ' FROM plugin_docman_report r'.
+            ' JOIN plugin_docman_item i ON (i.item_id = r.item_id)'.
+            ' WHERE r.group_id = '.$this->da->escapeInt($groupId).
+            ' AND r.item_id != 0 '.
+            ' AND r.item_id IS NOT NULL '.
+            ' AND '.Docman_ItemDao::getCommonExcludeStmt('i');
+        if($reportId !== null) {
+            $sql .= ' AND r.report_id = '.$this->da->escapeInt($reportId);
+        }
+        return $this->retrieve($sql);
+    }
+
 
     function create($name, $title, $groupId, $userId, $itemId, $scope, $isDefault, $advancedSearch, $description, $image) {
         $sql = sprintf('INSERT INTO plugin_docman_report'.

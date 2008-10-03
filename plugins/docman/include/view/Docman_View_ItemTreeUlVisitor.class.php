@@ -27,6 +27,7 @@ require_once('Docman_View_GetClassForLinkVisitor.class.php');
 
 class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     var $html;
+    var $js;
     var $stripFirstNode;
     var $firstNodeStripped;
     var $docmanIcons;
@@ -41,6 +42,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         $this->get_action_on_icon =& new Docman_View_GetActionOnIconVisitor();
         $this->get_class_for_link  =& new Docman_View_GetClassForLinkVisitor();
         $this->html                = '';
+        $this->js                  = '';
         $this->stripFirstNode      = true;
         $this->firstNodeStripped   = false;
         $this->hp                  =& CodeX_HTMLPurifier::instance();
@@ -54,6 +56,10 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         return $this->html;
     }
   
+    function getJavascript() {
+        return $this->js;
+    }
+    
     function _canDisplayItem($item) {
         return true;
     }
@@ -154,7 +160,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                                   'id' => $item->getId()),
                                                             false,
                                                             isset($params['popup_doc']) ? true : false);
-                    $this->html .= '<a href="'.$url.'">';
+                    $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
                 $this->html .=   $this->hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
                 if ($action) {
@@ -163,7 +169,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .=  '</span>';
                 
                 $this->html .= $this->view->getItemMenu($item, $this->params);
-                
+                $this->js .= $this->view->getActionForItem($item);
                 $this->html .= '</div>';
                 
                 if (trim($item->getDescription()) != '') {

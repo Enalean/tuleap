@@ -349,39 +349,54 @@ class WikiServiceAdminViews extends WikiViews {
   }
 
 
-  /**
-   * browsePages - private
-   */
-  function _browsePages(&$pageList) {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-    print html_build_list_table_top(array('Page', 'Permissions'));
+    /**
+    * browsePages - private
+    */
+    function _browsePages(&$pageList) {
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        print html_build_list_table_top(array('Page', 'Permissions'));
 
-    sort($pageList);
-    $i=0;
-    foreach($pageList as $pagename) {
-      print '
-            <tr class="'.html_get_alt_row_color($i).'">
-            ';
+        sort($pageList);
+        $i=0;
+        foreach($pageList as $pagename) {
+            print '            <tr class="'.html_get_alt_row_color($i).'">            ';
 
-      print '<td><a href="'.$this->wikiLink.'&pagename='.urlencode($pagename).'">'.$pagename.'</a></td>';
+            print '<td><a href="'.$this->wikiLink.'&pagename='.urlencode($pagename).'">'.$pagename.'</a></td>';
 
-      $page   = new WikiPage($this->gid, $pagename);
-      $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
-      if (permission_exist('WIKIPAGE_READ',$page->getId())) {
-	$status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
-      }
-      print '<td align="center">';
-      print '<a href="'.$this->wikiAdminLink.'&view=pagePerms&id='.$page->getId().'">['.$status.']</a>';
-      print '</td>';
+            $page   = new WikiPage($this->gid, $pagename);
+            $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
+            if (permission_exist('WIKIPAGE_READ',$page->getId())) {
+	            $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+            }
+            $eM =& EventManager::instance();
+            $referenced = false;
+            $eM->processEvent('isWikiPageReferenced', array(
+                            'referenced' => &$referenced,
+                            'wiki_page'  => $pagename,
+                            'group_id' => $this->gid
+                            ));
 
-      print '
-            </tr>
-            ';
-      
-      $i++;
+            print '<td align="center">';
+
+            if($referenced){
+                $label = '';
+                $eM->processEvent('getPermsLabelForWiki', array(
+                                  'label'  => &$label
+                                ));
+                print $label;
+            }
+            else {
+                print '<a href="'.$this->wikiAdminLink.'&view=pagePerms&id='.$page->getId().'">['.$status.']</a>';
+            }
+
+            print '</td>';
+
+            print '            </tr>            ';
+
+            $i++;
+        }
+        print '</TABLE>';
     }
-    print '</TABLE>';
-  }
 
   /**
    * wikiPerms - public View

@@ -816,6 +816,7 @@ extends WikiDB_backend
         else {
             $table = "$page_tbl, $recent_tbl";
             $join_clause = "$page_tbl.id=$recent_tbl.id";
+            $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
             $table .= ", $version_tbl";
             $join_clause .= " AND $version_tbl.id=$page_tbl.id";
             

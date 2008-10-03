@@ -1,3 +1,4 @@
+plugin_docman	action_approval	Approval table
 plugin_docman	action_copy	Copy
 plugin_docman	action_delete	Delete
 plugin_docman	action_details	Properties
@@ -51,7 +52,7 @@ plugin_docman	approval_tableupd_success	Table settings updated.
 plugin_docman	approval_tableupd_failure	Table settings was not updated.
 plugin_docman	approval_tableins_failure	An error occurred on approval table creation for this item.
 plugin_docman	approval_tabledel_success	Table successfully deleted.
-plugin_docman	approval_tabledel_failure	An error occurred on table deletion.
+plugin_docman	approval_tabledel_failure	An error occurred: the approval table was not deleted.
 
 plugin_docman	admin_md_detail_backtomenu	Back to Properties menu
 plugin_docman	admin_md_detail_param_title	Property parameters
@@ -185,14 +186,24 @@ plugin_docman	details_actions_paste_canpaste	You can <a href="$1">paste '$2' int
 plugin_docman	details_actions_update	Update
 plugin_docman	details_actions_update_can	You can <a href="$1">update</a> this document.
 plugin_docman	details_actions_update_cannot	You cannot update this document.
+plugin_docman	details_actions_update_apptable	Approval table
+plugin_docman	details_actions_update_apptable_desc	There is an approval table on the previous version of the document. You can either:
+plugin_docman	details_actions_update_apptable_default	Default
+plugin_docman	details_actions_update_apptable_keep	Keep the current table.
+plugin_docman	details_actions_update_apptable_copy	Copy the previous approval table (e.g. for small / typo updates).
+plugin_docman	details_actions_update_apptable_empty	Create an new empty table.
+plugin_docman	details_actions_update_apptable_reset	Reset the approval cycle (e.g. for major rewrite).
+plugin_docman	details_actions_update_apptable_help	<p>If you choose to:<ul><li><strong>Copy the previous approval table:</strong> A new approval table will be created from the previous one. Keeps reviewers, comments and commitments.</li><li><strong>Reset the approval cycle:</strong> Only the table structure will be kept (description, notification type, reviewer list.). Actually, the new table will be identical to the previous one, but without reviewer comments and commitements.</li><li><strong>Create an new empty table:</strong> Start over with a completly new approval table.</li></ul>In all cases, There is <strong>no automatic notification</strong> of the reviewers.</p>
 plugin_docman	details_approval	Approval Table
 plugin_docman	details_approval_approval_title	Approval cycle details
 plugin_docman	details_approval_admin	Admin
 plugin_docman	details_approval_comment	Comment
+plugin_docman	details_approval_create_import_title	Import an old approval table
 plugin_docman	details_approval_create_reviewers_title	Add reviewers
 plugin_docman	details_approval_create_reviewers_hand	Enter list by hand (separate by ','):
 plugin_docman	details_approval_create_reviewers_ugroup	Append the members to the table:
 plugin_docman	details_approval_create_reviewers_submit	Add to the table
+plugin_docman	details_approval_create_reviewers_oldver	You cannot add people to an old approval table.
 plugin_docman	details_approval_create_title	Approval table administration for $1
 plugin_docman	details_approval_create_settings	Approval table global settings
 plugin_docman	details_approval_create_no_reviewers	There are no reviewers for this document.
@@ -210,10 +221,16 @@ plugin_docman	details_approval_doc_review_version_na	Not applicable
 plugin_docman	details_approval_email_back	Back to the approval settings.
 plugin_docman	details_approval_email_subject	Subject:
 plugin_docman	details_approval_email_title	Notification email
+plugin_docman	details_approval_history_title	Approval table history
+plugin_docman	details_approval_history_table_version	Document version
+plugin_docman	details_approval_history_table_owner	Owner
+plugin_docman	details_approval_history_table_status	Status
+plugin_docman	details_approval_history_table_date	Start date
 plugin_docman	details_approval_table_delete_txt	<h3>Confirm deletion of approval table</h3><p>You are going to delete an approval table. Please note that all the data (reviewer list, current reviews, settings) will be deleted.</p><p>Are you sure that you want to continue?</p>
 plugin_docman	details_approval_no_table	No approval table for this document.
 plugin_docman	details_approval_no_table_create	Create a new one.
 plugin_docman	details_approval_not_available	The approval table is not yet available.
+plugin_docman	details_approval_no_table_for_empty	This is not possible to create approval table for Empty documents.
 plugin_docman	details_approval_notif_0	Disabled
 plugin_docman	details_approval_notif_1	All at once
 plugin_docman	details_approval_notif_2	Sequential
@@ -226,20 +243,24 @@ plugin_docman	details_approval_notif_reviewers_help	Send an email to selected pe
 plugin_docman	details_approval_notif_title	Notification
 plugin_docman	details_approval_notif_type	Notification Type:
 plugin_docman	details_approval_notif_submit	Update settings
+plugin_docman	details_approval_new_title	Create a new approval table
+plugin_docman	details_approval_new_desc	<big><strong>Warning:</strong></big> this table is linked to an old version of the document (version $1). The last document version is $2, you can either:
+plugin_docman	details_approval_oldver		This table is linked to an old version of the document.
 plugin_docman	details_approval_owner_comment	Requester comment:
 plugin_docman	details_approval_rank	Rank
 plugin_docman	details_approval_requester	Approval requester:
 plugin_docman	details_approval_review_comment	Add a comment:
 plugin_docman	details_approval_review_date	Review date:
 plugin_docman	details_approval_review_notif	Notification:
-plugin_docman	details_approval_review_help	Possible commitment are:<ul><li><strong>Not yet:</strong> Status quo. You can add comment but nobody will be notifed.</li><li><strong>Approve:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li><li><strong>Reject:</strong> Sends an email to the approval requester and stops the approval sequence if any.</li><li><strong>Comment only:</strong> Sends an email to the approval requester to inform there are comments. In <em>Sequential</em> notification type, the workflow is frozen.</li><li><strong>Will not review:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li></ul>
+plugin_docman	details_approval_review_help	Possible commitment are:<ul><li><strong>Not yet:</strong> Status quo. You can add comment but nobody will be notifed.</li><li><strong>Approve:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li><li><strong>Reject:</strong> Sends an email to the approval requester and stops the approval sequence if any.</li><li><strong>Comment only:</strong> Sends an email to the approval requester to inform there are comments. In <em>Sequential</em> notification type, the notification workflow is frozen.</li><li><strong>Will not review:</strong> Sends an email to the approval requester and notify next reviewer in sequence if any.</li></ul>
 plugin_docman	details_approval_review_review	Review:
 plugin_docman	details_approval_review_submit	Send my review
 plugin_docman	details_approval_review_table	Approval table:
 plugin_docman	details_approval_review_table_link	Click to see the approval table
 plugin_docman	details_approval_review_title	Review
 plugin_docman	details_approval_review_version	Version reviewed:
-plugin_docman	details_approval_review_version_not_upd	Warning: the version of the document you reviewed is not the most up to date.
+plugin_docman	details_approval_review_version_not_upd	You already <strong>reviewed an old version</strong> of the document.
+plugin_docman	details_approval_review_wo_access	You <strong>did not read this version</strong> of the document.
 plugin_docman	details_approval_reviewer	Name
 plugin_docman	details_approval_review	Review
 plugin_docman	details_approval_select	Select
@@ -252,6 +273,7 @@ plugin_docman	details_approval_table_status	Table status:
 plugin_docman	details_approval_table_title	Approval table
 plugin_docman	details_approval_table_description	Comment:
 plugin_docman	details_approval_table_help	Following table aims to organize the approval cycle:<ul><li>With <strong>Select</strong> you choose the reviewers on which you want to apply <strong>Actions</strong> (see below for available actions)</li><li>With <strong>Rank</strong> you select the order the emails will be sent to notify people (only in <em>Sequential</em> notification)</li><li>With <strong>Actions</strong> you can (with selected reviewers) either:<ul><li><strong>Remove from table</strong>. No history kept.</li><li>or <strong>Force notification</strong> to send the notification email regardless of their review state of the notififcation type.</li></ul></li></ul>
+plugin_docman	details_approval_table_version	Attached to document version:
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
 plugin_docman	details_delete	Delete
@@ -274,6 +296,7 @@ plugin_docman	details_history_logs_old_value	Old Value
 plugin_docman	details_history_logs_new_value	New Value
 plugin_docman	details_history_logs_change_field	Change <em>$1</em>
 plugin_docman	details_history_versions	Versions
+plugin_docman	details_history_versions_approval	Approval
 plugin_docman	details_history_versions_author	Author
 plugin_docman	details_history_versions_changelog	Change Log
 plugin_docman	details_history_versions_date	Date
@@ -281,6 +304,7 @@ plugin_docman	details_history_versions_error	Error while searching for old versi
 plugin_docman	details_history_versions_label	Label
 plugin_docman	details_history_versions_no	There is no version yet
 plugin_docman	details_history_versions_version	Version
+plugin_docman	details_history_versions_approval_show	Show
 plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
@@ -315,6 +339,7 @@ plugin_docman	details_update_recursion_warning	<h3>Confirm recursive application
 
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
+plugin_docman	docman_wiki_perms_notice	<strong>Warning: </strong>For wiki pages, a 'Document Reader' can update the page.
 plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
 plugin_docman	error_create_initversion	Error while creating initial version.
@@ -360,6 +385,7 @@ plugin_docman	event_del	Delete
 plugin_docman	event_access	Access
 plugin_docman	event_newversion	New version
 plugin_docman	event_metadataupdate	Property change
+plugin_docman	event_wiki_page_updated	Wiki page content change
 
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
@@ -384,9 +410,7 @@ plugin_docman	filters_ordering_ascending	Ascending
 plugin_docman	filters_ordering_descending	Descending
 plugin_docman	filters_ordering_message	Value of $1 should be either "Ascending" or "Descending"
 
-plugin_docman	info_copy_notify_cp	copied, you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while move does.
-plugin_docman	info_copy_notify_cp_doc	Document $1
-plugin_docman	info_copy_notify_cp_folder	Folder $1
+plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while move does.
 plugin_docman	info_create_initversion	Initial version successfully created.
 plugin_docman	info_create_newversion	New version successfully created.
 plugin_docman	info_document_created	Document successfully created.
@@ -639,3 +663,9 @@ plugin_docman	warning_obsolete	The file is obsolete and no longer available in s
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.
 plugin_docman	warning_recursive_perms	you cannot change permissions for sub-item $1 since you do not have sufficient permissions.
 
+plugin_docman	docman_wiki_open_referencers	Open to see related documents
+plugin_docman	docman_wiki_hide_referencers	Hide related documents
+plugin_docman	docman_wiki_other_location	Other location:
+plugin_docman	docman_wiki_other_locations	Other locations:
+plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
+plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager

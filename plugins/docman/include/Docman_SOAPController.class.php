@@ -22,12 +22,12 @@
  *
  * 
  */
-require_once('DocmanController.class.php');
-require_once('SOAPDocmanActions.class.php');
-class SOAPDocman extends DocmanController {
+require_once('Docman_Controller.class.php');
+require_once('Docman_SOAPActions.class.php');
+class Docman_SOAPController extends Docman_Controller {
 
-    function SOAPDocman(&$plugin, $pluginPath, $themePath, &$request) {
-        $this->DocmanController($plugin, $pluginPath, $themePath, $request);
+    function Docman_SOAPController(&$plugin, $pluginPath, $themePath, &$request) {
+        $this->Docman_Controller($plugin, $pluginPath, $themePath, $request);
     }
 
 
@@ -63,9 +63,9 @@ class SOAPDocman extends DocmanController {
     /* protected */ function _set_createItemView_afterCreate($view) {
         $this->_setView('SOAP');
     }
-    /* protected */ function _set_doesnot_belong_to_project_error() {
+    /* protected */ function _set_doesnot_belong_to_project_error($item, $group) {
+        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
         $this->_setView('SOAP');
     }
 }
 
-?>

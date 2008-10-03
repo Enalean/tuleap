@@ -59,9 +59,9 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         //}}}
         
         //{{{ Copy
-        $content .= '<dt>'.Docman::txt('details_actions_copy').'</dt><dd>';
+        $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_copy').'</dt><dd>';
         $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_copy', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()));
-        $content .= Docman::txt('details_actions_copy_cancopy_'.$folder_or_document, $copyurl);
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_copy_cancopy_'.$folder_or_document, $copyurl);
         $content .= '</dd>';
         //}}}
 
@@ -101,10 +101,12 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             $copiedItemId = $itemFactory->getCopyPreference($this->_controller->getUser());
             if($copiedItemId != false) {
                 $copiedItem = $itemFactory->getItemFromDb($copiedItemId);
-                $content .= '</dd>';
-                $content .= '<dt>'.Docman::txt('details_actions_paste').'</dt><dd>';
-                $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
-                $content .= Docman::txt('details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ));
+                if($copiedItem) {
+                    $content .= '</dd>';
+                    $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
+                    $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
+                    $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ));
+                }
             }
             //}}}
         }

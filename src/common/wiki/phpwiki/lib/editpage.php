@@ -271,6 +271,20 @@ class PageEditor
             // Save failed.  (Concurrent updates).
             return false;
         }
+        else {
+            // Save succeded. We raise an event.
+            $new = $this->version + 1; 
+            $difflink = WikiURL($page->getName(), array('action'=>'diff'), true);
+            $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
+            $eM =& EventManager::instance();
+            $uM =& UserManager::instance();
+            $user =& $uM->getCurrentUser();
+            $eM->processEvent("wiki_page_updated", array('group_id' => GROUP_ID, 
+                                                         'wiki_page' => $page->getName(),
+                                                         'diff_link' => $difflink,
+                                                         'user' => $user,
+                                                         'version' => $this->version));
+        }
         
         // New contents successfully saved...
         $this->updateLock();

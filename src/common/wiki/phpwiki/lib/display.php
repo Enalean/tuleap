@@ -138,6 +138,21 @@ function displayPage(&$request, $template=false) {
         if ($request->getArg('frame'))
             $pageheader->setAttr('target', '_top');
     }
+    
+    // {{{ Codendi hook to insert stuff between navbar and header
+    $eM =& EventManager::instance();
+    $additional_html = false;
+    $eM->processEvent('wiki_before_content', array(
+                    'html' => &$additional_html,
+                    'group_id' => GROUP_ID,
+                    'wiki_page' => $pagename
+        ));
+    if($additional_html) {
+        $beforeHeader = HTML();
+        $beforeHeader->pushContent($additional_html);
+        $toks['BEFORE_HEADER'] = $beforeHeader;
+    }
+    // }}} /Codendi hook
 
     $pagetitle = SplitPagename($pagename);
     if (($redirect_from = $request->getArg('redirectfrom'))) {

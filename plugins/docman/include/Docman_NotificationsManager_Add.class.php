@@ -36,7 +36,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     }
     function _buildMessage($event, $params, $user) {
         switch($event) {
-            case PLUGIN_DOCMAN_EVENT_ADD:
+            case 'plugin_docman_event_add':
                 $parent =& $this->_item_factory->getItemFromDb($params['item']->getParentId());
                 $this->_addMessage(
                     $user, 

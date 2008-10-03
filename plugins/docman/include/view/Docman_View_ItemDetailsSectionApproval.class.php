@@ -26,24 +26,49 @@
 require_once('Docman_View_ItemDetailsSection.class.php');
 
 require_once(dirname(__FILE__).'/../Docman_ApprovalTableFactory.class.php');
+require_once(dirname(__FILE__).'/../Docman_Log.class.php');
 
 class Docman_View_ItemDetailsSectionApproval
 extends Docman_View_ItemDetailsSection {
     var $table;
     var $atf;
     var $themePath;
+    var $version;
     var $notificationManager;
 
     function Docman_View_ItemDetailsSectionApproval(&$item, $url, $themePath, $notificationManager) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'approval', Docman::txt('details_approval'));
+        parent::Docman_View_ItemDetailsSection($item, $url, 'approval', $GLOBALS['Language']->getText('plugin_docman', 'details_approval'));
 
         $this->themePath = $themePath;
         $this->table = null;
         $this->atf   = null;
+        $this->version = null;
         $this->notificationsManager = $notificationManager;
     }
 
-    function _getItemVersionLink($version) {
+    function initDisplay() {
+        $request =& HTTPRequest::instance();
+
+        //
+        // User may request a specific table id
+        $vVersion = new Valid_UInt('version');
+        $vVersion->required();
+        if($request->valid($vVersion)) {
+            $this->version = $request->get('version');
+        }
+
+        $this->atf =& Docman_ApprovalTableFactory::getFromItem($this->item, $this->version);
+        $this->table =& $this->atf->getTable();
+    }
+
+    function buildUrl($prefix, $parameters, $amp = true) {
+        if($this->version !== null) {
+            $parameters['version'] = $this->version;
+        }
+        return Docman_View_View::buildUrl($prefix, $parameters, $amp);
+    }
+
+    function _getItemVersionLink($version, $noLink=false) {
         $html = '';
         if($version !== null) {
             $title = '';
@@ -67,8 +92,12 @@ extends Docman_View_ItemDetailsSection {
             elseif($itemType == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $url = '/wiki/index.php?group_id='.$this->item->getGroupId().'&pagename='.$this->item->getPagename().'&version='.$version;
             }
-            $title .= Docman::txt('details_approval_version_link').' '.$version;
-            $html .= '<a href="'.$url.'">'.$title.'</a>';
+            $title .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_version_link').' '.$version;
+            if($noLink) {
+                $html .= $title;
+            } else {
+                $html .= '<a href="'.$url.'">'.$title.'</a>';
+            }
         }
         return $html;
     }
@@ -78,29 +107,43 @@ extends Docman_View_ItemDetailsSection {
         
         $rIter = $this->table->getReviewerIterator();
         if($rIter !== null) {
-            $html .= '<h3>'.Docman::txt('details_approval_table_title').'</h3>';
+            $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_title').'</h3>';
+
+            if(!$this->table->isCustomizable()) {
+                $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_oldver').'</p>';
+            }
 
             $user =& $this->_getCurrentUser();
 
             $html .= '<table>';
 
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_requester').'</td>';
             $html .= '<td>';
             $html .= user_get_name_display_from_id($this->table->getOwner());
             $html .= '</td>';
             $html .= '</tr>';
 
+            // Version
+            if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+                $html .= '<tr>';
+                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_version').'</td>';
+                $html .= '<td>';
+                $html .= $this->table->getVersionNumber();
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+
             // Notification type
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_notif_type').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_type').'</td>';
             $html .= '<td>';
             $html .= $this->atf->getNotificationTypeName($this->table->getNotification());
             $html .= '</td>';
             $html .= '</tr>';
 
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_cycle_start_date').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_cycle_start_date').'</td>';
             $html .= '<td>';
             $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
             $html .= '</td>';
@@ -108,15 +151,15 @@ extends Docman_View_ItemDetailsSection {
 
             if($this->table->isClosed()) {
                 $html .= '<tr>';
-                $html .= '<td>'.Docman::txt('details_approval_table_status').'</td>';
+                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_status').'</td>';
                 $html .= '<td>';
-                $html .= Docman::txt('details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
                 $html .= '</td>';
                 $html .= '</tr>';
             }
 
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_owner_comment').'</td>';
             $html .= '<td>';
             $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
             $html .= '</td>';
@@ -124,11 +167,11 @@ extends Docman_View_ItemDetailsSection {
 
             $html .= '</table>';
 
-            $html .= html_build_list_table_top(array(Docman::txt('details_approval_reviewer'),
-                                                     Docman::txt('details_approval_state'),
-                                                     Docman::txt('details_approval_comment'),
-                                                     Docman::txt('details_approval_date'),
-                                                     Docman::txt('details_approval_version')));
+            $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_reviewer'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_state'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_comment'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_date'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_version')));
             $userIsInTable = false;
             $rowColorIdx = 1;
             $rIter->rewind();
@@ -151,7 +194,12 @@ extends Docman_View_ItemDetailsSection {
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
                 if(!$readOnly) {
-                    $_reviewHtml = '<a href="'.$this->url.'&action=details&id='.$this->item->getId().'&section=approval&review=1">'.$this->atf->getReviewStateName($reviewer->getState()).'</a>';
+                    $_reviewUrl = $this->buildUrl($this->url,
+                                                  array('action'  => 'details',
+                                                        'id'      => $this->item->getId(),
+                                                        'section' => 'approval',
+                                                        'review'  => '1'));
+                    $_reviewHtml = '<a href="'.$_reviewUrl.'">'.$this->atf->getReviewStateName($reviewer->getState()).'</a>';
                 }
                 $html .= '<td'.$_trClass.'>'.$_reviewHtml.'</td>';
 
@@ -175,7 +223,7 @@ extends Docman_View_ItemDetailsSection {
             
             $html .= '</table>';
 
-            $html .= '<div class="docman_help">'.Docman::txt('details_approval_review_help').'</div>';
+            $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_help').'</div>';
 
         }
         return $html;
@@ -203,15 +251,19 @@ extends Docman_View_ItemDetailsSection {
     function getReviewForm($user) {
         $html = '';
 
+        // Values
         $itemCurrentVersion = $this->_getReviewCurrentVersion();
+        $reviewer = $this->table->getReviewer($user->getId());
+        $reviewVersion = $reviewer->getVersion();
 
-        $html .= '<h3>'.Docman::txt('details_approval_doc_review_title').'</h3>';
+        // Output
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_title').'</h3>';
 
         $html .= '<table>';
         
         // Doc title
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_doc_review_name').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_name').'</td>';
         $html .= '<td>';
         $html .=  $this->hp->purify($this->item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
         if($itemCurrentVersion == null) {
@@ -219,31 +271,35 @@ extends Docman_View_ItemDetailsSection {
                                               array('action' => 'show',
                                                     'id'     => $this->item->getId()));
             $html .= ' - ';
-            $html .= '<a href="'.$url.'">'.Docman::txt('details_approval_doc_review_link').'</a>';
+            $html .= '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_link').'</a>';
         }
         $html .= '</td>';
         $html .= '</tr>';
 
         // Doc version
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_doc_review_version').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_version').'</td>';
         $html .= '<td>';
         if($itemCurrentVersion !== null) {
             $html .= $this->_getItemVersionLink($itemCurrentVersion);
+            if(!$this->atf->userAccessedSinceLastUpdate($user)) {
+                // Warn user if he didn't access the last version of document
+                $html .= '<span style="margin-left: 2em;">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_wo_access').'</span>';
+            }
         } else {
-            $html .= Docman::txt('details_approval_doc_review_version_na');
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_version_na');
         }
         $html .= '</td>';
         $html .= '</tr>';
 
         $html .= '</table>';
 
-        $html .= '<h3>'.Docman::txt('details_approval_approval_title').'</h3>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_approval_title').'</h3>';
         $html .= '<table>';
 
         // Requester name
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_requester').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_requester').'</td>';
         $html .= '<td>';
         $html .= user_get_name_display_from_id($this->table->getOwner());
         $html .= '</td>';
@@ -251,7 +307,7 @@ extends Docman_View_ItemDetailsSection {
 
         // Notification type
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_notif_type').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_type').'</td>';
         $html .= '<td>';
         $html .= $this->atf->getNotificationTypeName($this->table->getNotification());
         $html .= '</td>';
@@ -259,7 +315,7 @@ extends Docman_View_ItemDetailsSection {
 
         // Cycle start date
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_cycle_start_date').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_cycle_start_date').'</td>';
         $html .= '<td>';
         $html .= util_timestamp_to_userdateformat($this->table->getDate(), true);
         $html .= '</td>';
@@ -267,7 +323,7 @@ extends Docman_View_ItemDetailsSection {
 
         // Owner comment
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_owner_comment').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_owner_comment').'</td>';
         $html .= '<td>';
         $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
         $html .= '</td>';
@@ -275,11 +331,9 @@ extends Docman_View_ItemDetailsSection {
         
         $html .= '</table>';
 
-        $html .= '<h3>'.Docman::txt('details_approval_review_title').'</h3>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_title').'</h3>';
 
-        $html .= '<div class="docman_help">'.Docman::txt('details_approval_review_help').'</div>';
-
-        $reviewer = $this->atf->getReviewer($user->getId());
+        $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_help').'</div>';
 
         $html .= '<form name="docman_approval_review" method="post" action="?" class="docman_form">';
         $html .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
@@ -294,28 +348,28 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<table>';
 
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_review_table').'</td>';
-        $url = Docman_View_View::buildUrl($this->url, 
-                                          array('action'  => 'details',
-                                                'section' => 'approval',
-                                                'id'     => $this->item->getId()));
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_table').'</td>';
+        $url = $this->buildUrl($this->url,
+                               array('action'  => 'details',
+                                     'section' => 'approval',
+                                     'id'     => $this->item->getId()));
         $html .= '<td>';
-        $html .= '<a href="'.$url.'">'.Docman::txt('details_approval_review_table_link').'</a>';
+        $html .= '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_table_link').'</a>';
         $html .= '</td>';
         $html .= '</tr>';
 
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_review_review').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_review').'</td>';
         $vals = array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
                       PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED,
                       PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
-        $txts = array(Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET),
-                      Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
-                      Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED),
-                      Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED),
-                      Docman::txt('approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED));
+        $txts = array($GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED),
+                      $GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED));
         $html .= '<td>';
         $html .= html_build_select_box_from_arrays($vals, $txts, 'state', $reviewer->getState(), false);
         $html .= '</td>';
@@ -324,7 +378,7 @@ extends Docman_View_ItemDetailsSection {
         // If reviewer already approved or reject, display date
         if($reviewer->getReviewDate()) {
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_review_date').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_date').'</td>';
             $html .= '<td>';
             $html .= util_timestamp_to_userdateformat($reviewer->getReviewDate(), true);
             $html .= '</td>';
@@ -332,14 +386,13 @@ extends Docman_View_ItemDetailsSection {
         }   
 
         // Review version
-        $reviewVersion = $reviewer->getVersion();
         if($reviewVersion) {
             $html .= '<tr>';
-            $html .= '<td>'.Docman::txt('details_approval_review_version').'</td>';
+            $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_version').'</td>';
             $html .= '<td>';
-            $html .= $this->_getItemVersionLink($reviewVersion);
+            $html .= $this->_getItemVersionLink($reviewVersion, true);
             if($reviewVersion != $itemCurrentVersion) {
-                $html .= ' <strong>'.Docman::txt('details_approval_review_version_not_upd').'</strong>';
+                $html .= '<span style="margin-left: 2em;">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_version_not_upd').'</span>';
             }
             $html .= '</td>';
             $html .= '</tr>';
@@ -347,7 +400,7 @@ extends Docman_View_ItemDetailsSection {
 
         // Comment
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_review_comment').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_comment').'</td>';
         $html .= '<td>';
         $html .= '<textarea name="comment">'.$this->hp->purify($reviewer->getComment()).'</textarea>';
         $html .= '</td>';
@@ -356,16 +409,16 @@ extends Docman_View_ItemDetailsSection {
         // Notification
         $notifChecked  = !$user->isAnonymous() && $this->notificationsManager->exist($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $html .= '<tr>';
-        $html .= '<td>'.Docman::txt('details_approval_review_notif').'</td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_notif').'</td>';
         $html .= '<td>';
         $html .= '<input type="checkbox" name="monitor" value="1"'.$notifChecked.' />';
-        $html .= Docman::txt('details_notifications_sendemail');
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_sendemail');
         $html .= '</td>';
         $html .= '</tr>';
 
         $html .= '<tr>';
         $html .= '<td colspan="2">';
-        $html .= '<input type="submit" value="'.Docman::txt('details_approval_review_submit').'">';
+        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_submit').'">';
         $html .= '</td>';
         $html .= '</tr>';
 
@@ -376,14 +429,49 @@ extends Docman_View_ItemDetailsSection {
         return $html;
     }
 
+    function getTableHistory() {
+        $html = '';
+        if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+            $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_title').'</h3>';
+            $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_table_version'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_table_owner'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_table_status'),
+                                                     $GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_table_date'),
+                                                     ));
+            $allTables = $this->atf->getAllApprovalTable();
+            $rowColorIdx = 1;
+            foreach($allTables as $table) {
+                $html .= '<tr class="'.html_get_alt_row_color($rowColorIdx++).'">';
+                if($this->table->getVersionNumber() != $table->getVersionNumber()) {
+                    $url = Docman_View_View::buildUrl($this->url,
+                    array('action'  => 'details',
+                                             'section' => 'approval',
+                                             'id'      => $this->item->getId(),
+                                             'version' => $table->getVersionNumber()));
+                    $href = '<a href="'.$url.'">'.$table->getVersionNumber().'</a>';
+                } else {
+                    $href = $table->getVersionNumber();
+                }
+                $html .= '<td>'.$href.'</td>';
+                $html .= '<td>'.user_get_name_display_from_id($table->getOwner()).'</td>';
+                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$table->getApprovalState()).'</td>';
+                $html .= '<td>'.util_timestamp_to_userdateformat($table->getDate()).'</td>';
+                $html .= '</tr>';
+            }
+            $html .= '</table>';
+        }
+        return $html;
+    }
 
     function getToolbar() {
         $html = '';
         $user =& $this->_getCurrentUser();
         $dpm  =& $this->_getPermissionsManager();
         if($dpm->userCanWrite($user, $this->item->getId())) {
-            $url = $this->url.'&action=approval_create&id='.$this->item->getId();
-            $adminLink = '<a href="'.$url.'">'.Docman::txt('details_approval_admin').'</a>';
+            $url = $this->buildUrl($this->url,
+                                   array('action'  => 'approval_create',
+                                         'id'      => $this->item->getId()));
+            $adminLink = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_admin').'</a>';
             $html = '<strong>'.$adminLink.'</strong><br />';
         }
         return $html;
@@ -398,29 +486,42 @@ extends Docman_View_ItemDetailsSection {
             return $html;
         }
 
+        if(is_a($this->item, 'Docman_Empty')) {
+            $html = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table_for_empty');
+            return $html;
+        }
+
+        $this->initDisplay();
+
+        $request =& HTTPRequest::instance();
+
+        // Show toolbar
         $html .= $this->getToolbar();
 
-        $this->atf =& new Docman_ApprovalTableFactory($this->item);
-        $this->table = $this->atf->getTable();
+        // Show Content
         if($this->table === null) {
             $html .= '<p>';
-            $html .= Docman::txt('details_approval_no_table');
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table');
             if($dpm->userCanWrite($user, $this->item->getId())) {
-                $url = $this->url.'&action=approval_create&id='.$this->item->getId();
-                $adminLink = '<a href="'.$url.'">'.Docman::txt('details_approval_no_table_create').'</a>';
+                $url = $this->buildUrl($this->url,
+                                       array('action'  => 'approval_create',
+                                             'id'      => $this->item->getId()));
+                $adminLink = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table_create').'</a>';
                 $html .= ' <strong>'.$adminLink.'</strong><br />';
             }
             $html .= '</p>';
         }
         elseif($this->table->isDisabled()) {
             $html .= '<p>';
-            $html .= Docman::txt('details_approval_not_available');
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_not_available');
             $html .= '</p>';
+            $html .= $this->getTableHistory();
         }
         else {
-            $request =& HTTPRequest::instance();
-            if($request->exist('review') 
-                && $this->atf->isReviewer($user->getId())
+            // '&user_id=XX' was used in CX_3_4 to identify users. Now it's '&review=1'
+            // We should keep this part of the test until CX_3_8.
+            if(($request->exist('review') || $request->exist('user_id'))
+                && $this->table->isReviewer($user->getId())
                 && $this->table->isEnabled()) 
             {
                 $html .= $this->getReviewForm($user);
@@ -431,6 +532,7 @@ extends Docman_View_ItemDetailsSection {
                     $forceReadOnly = true;
                 }
                 $html .= $this->getReviewerTable($forceReadOnly);
+                $html .= $this->getTableHistory();
             }
         }
 

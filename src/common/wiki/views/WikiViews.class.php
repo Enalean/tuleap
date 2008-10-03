@@ -144,24 +144,39 @@ class WikiViews extends Views {
     $this->displayMenu();
   }
 
-  /**
-   * pagePerms - public View
-   */
-  function _pagePerms($postUrl='') { 
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
-    $wp = new WikiPage($_REQUEST['id']);
-    
-    print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
-    
-    $pagename=$wp->getPagename();
-    if(empty($pagename)) {
-        print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
+    /**
+    * pagePerms - public View
+    */
+    function _pagePerms($postUrl='') { 
+        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
+        $wp = new WikiPage($_REQUEST['id']);
+        $pagename = $wp->getPagename();
+
+        $eM =& EventManager::instance();
+        $referenced = false;
+        $eM->processEvent('isWikiPageReferenced', array(
+                          'referenced' => &$referenced,
+                          'wiki_page'  => $pagename,
+                          'group_id' => $this->gid
+                        ));
+        if($referenced){
+            $label = '';
+            $eM->processEvent('getPermsLabelForWiki', array(
+                              'label'  => &$label
+                            ));
+            print '<p align="center"><br><b>'.$label.'</b></p>';
+        }
+        else {
+            print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
+            if(empty($pagename)) {
+                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
+            }
+            else {
+                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
+                permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
+            }
+        }
     }
-    else {
-      print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
-      permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
-    }
-  }
 }
 
 ?>

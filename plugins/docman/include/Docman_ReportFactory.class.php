@@ -278,6 +278,24 @@ class Docman_ReportFactory {
         return $rai;
     }
 
+    /**
+     * Return the list of items associated to on or all reports.
+     *
+     * @param $reportId If null, consider all reports for the project.
+     * @return Array of Docma_Item
+     */
+    function getReportsItems($reportId=null) {
+        $itemArray = array();
+        $itemFactory = new Docman_ItemFactory($this->groupId);
+        $dao =& $this->getDao();
+        $dar = $dao->searchItemsInReports($this->groupId, $reportId);
+        while($dar->valid()) {
+            $itemArray[] = $itemFactory->getItemFromRow($dar->current());
+            $dar->next();
+        }
+        return $itemArray;
+    }
+
     function saveReport($report) {
         if($report->getId() !== null) {
             $this->updateReport($report);
@@ -327,18 +345,37 @@ class Docman_ReportFactory {
     }
     
     /**
+     * Clone reports of one project into another one
      *
+     * @param $srcReport       Original report.
+     * @param $dstGroupId      Id of the destination project.
+     * @param $metadataMapping Mapping between $srcReport project metadata and $dstGroupId metadata (for fields associated to reports).
+     * @param $user            User who will own the newly created reports.
+     * @param $forceScopeToI   Force scope of the new reports to I (individual).
+     * @param $itemMapping     Mapping between $srcReport project items and $dstGroupId items (for folders associated to report).
      */
-    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false) {
+    function cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScopeToI = false, $itemMapping=array()) {
         $dstReportFactory = new Docman_ReportFactory($dstGroupId);
         $srcFilterFactory = new Docman_FilterFactory($this->groupId);
 
         // Create new report
-        $dstReport = $srcReport;
+        // @php5: clone
+        $dstReport = clone $srcReport;
         $dstReport->setGroupId($dstGroupId);
         $dstReport->setUserId($user->getId());
         if($forceScopeToI) {
             $dstReport->setScope('I');
+        }
+
+        // Be carful with reports associated to an item.
+        if($srcReport->getGroupId() != $dstGroupId) {
+            if($srcReport->getItemId() !== null
+               && $srcReport->getItemId() != 0
+               && isset($itemMapping[$srcReport->getItemId()])) {
+                $dstReport->setItemId($itemMapping[$srcReport->getItemId()]);
+            } else {
+                $dstReport->setItemId(0);
+            }
         }
 
         // Save report
@@ -357,12 +394,12 @@ class Docman_ReportFactory {
     /**
      * Clone reports from a project to another one
      */
-    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false) {
+    function copy($dstGroupId, $metadataMapping, $user, $forceScope = false, $itemMapping=array()) {
         $ri = $this->getProjectReportsForGroup();
         $ri->rewind();
         while($ri->valid()) {
             $srcReport =& $ri->current();
-            $this->cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScope);
+            $this->cloneReport($srcReport, $dstGroupId, $metadataMapping, $user, $forceScope, $itemMapping);
             $ri->next();
         }
     }
