@@ -66,7 +66,6 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences=false) {
         $sqlname=$uh->getDisplayNameSQLQuery();
         $sqlorder=$uh->getDisplayNameSQLOrder();
     }
-    echo "SQL ORder is: $sqlorder\n";
 	  $sql="(SELECT user.user_id, ".$sqlname." ". 
     "FROM ugroup_user, user ".
     "WHERE user.user_id = ugroup_user.user_id ".
