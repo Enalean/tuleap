@@ -14,5 +14,10 @@ if (!$HIDE_TOOLBARS && !$HIDE_NAVBAR) {
   </div>
 <?php } ?>
 
+<?php if($BEFORE_HEADER) { ?>
+<!-- Codendi hook result -->
+<?= $BEFORE_HEADER ?>
+<?php } ?>
+
 <!-- Page title -->
 <h1><?= $HEADER ?></h1>

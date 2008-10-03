@@ -24,7 +24,7 @@ class Docman_Token {
         $user_id = $this->_getCurrentUserId();
         $referer = $this->_getReferer();
         $request =& $this->_getHTTPRequest();
-        if ($referer && $user_id && !$request->get('bc')) {
+        if ($referer && $user_id) {
             $url = parse_url($referer);
             if (isset($url['query'])) {
                 parse_str($url['query'], $args);

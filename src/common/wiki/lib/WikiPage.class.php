@@ -142,14 +142,35 @@ class WikiPage {
   /**
    * @access public
    */
-  function isAutorized($uid) {            
-    if($this->permissionExist()) {
-        if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
-	return false;
-      }
+    function isAutorized($uid) {            
+        //Check for Docman Perms 
+        $eM =& EventManager::instance();
+        $referenced = false;
+        $eM->processEvent('isWikiPageReferenced', array(
+                        'referenced' => &$referenced,
+                        'wiki_page'  => $this->pagename,
+                        'group_id' => $this->gid
+                        ));
+        if($referenced == true) {
+            $userCanAccess = false;
+            $eM->processEvent('userCanAccessWikiDocument', array(
+                            'canAccess' => &$userCanAccess,
+                            'wiki_page'  => $this->pagename,
+                            'group_id' => $this->gid
+                            ));
+            if(!$userCanAccess) {
+                return false;
+            }
+        } else {
+            // Check if user is authorized.
+            if($this->permissionExist()) {
+                if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-    return true;
-  }
 
   
   /**

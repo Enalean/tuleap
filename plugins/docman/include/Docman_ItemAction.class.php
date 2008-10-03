@@ -203,4 +203,13 @@ class Docman_ItemActionPaste extends Docman_ItemAction {
     }
 }
 
+class Docman_ItemActionApproval extends Docman_ItemAction {
+    function Docman_ItemActionApproval(&$item) {
+        parent::Docman_ItemAction($item);
+        $this->action           = 'details&section=approval';
+        $this->classes          = 'docman_item_option_approval';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_approval');
+    }
+}
+
 ?>

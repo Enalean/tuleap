@@ -60,12 +60,19 @@ require_once('Docman_View_Docman.class.php');
         $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODEX_PURIFIER_CONVERT_HTML)  .'</b></a>';
         
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
+        $this->javascript .= $this->getActionForItem($current_item); 
         $html .= '</div>';
         $html .= '</td>';
 
         echo $html;
     }
 
+    function _javascript($params) {
+        // force docman object to watch click on pen icon
+        $this->javascript .= "docman.initShowOptions();\n";
+        parent::_javascript($params);
+    }
+    
     function  _mode($params) {
         $html = '';
          // Close table opened in method 'breadCrumbs'.

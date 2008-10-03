@@ -25,8 +25,6 @@
 
 require_once('common/dao/include/DataAccess.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
-require(getenv('CODEX_LOCAL_INC'));
-require($GLOBALS['db_config_file']);
 
 require_once(dirname(__FILE__).'/../include/Docman_MetadataListOfValuesElementDao.class.php');
 
@@ -51,9 +49,12 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
          // Setup
         $da =& new MockDataAccess($this);
         $dao =& new MetadataListOfValuesElementDaoTestVersion($this);
-        $dao->da = CodexDataAccess::instance();
         $dao->setReturnValue('prepareRanking', 15);
         $dao->setReturnValue('update', true);
+        $dao->da = new MockDataAccess($this);
+        $dao->da->setReturnValue('quoteSmart', "'$name'", array($name));
+        $dao->da->setReturnValue('quoteSmart', "'$description'", array($description));
+        $dao->da->setReturnValue('quoteSmart', "'$status'", array($status));
 
         $sql_update = "UPDATE plugin_docman_metadata_love AS love".
             " SET love.name = '".$name."'".
@@ -75,7 +76,7 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
          // Setup
         $da =& new MockDataAccess($this);
         $dao =& new MetadataListOfValuesElementDaoTestVersion($this);
-        $dao->da = CodexDataAccess::instance();
+        $dao->da = new MockDataAccess($this);
 
         $dao->setReturnValue('update', true);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = ".$metadataId."     AND lovemd.value_id > 100  )";

@@ -71,11 +71,10 @@ class Docman_Widget_MyDocman extends Widget {
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
         
-        $atf = new Docman_ApprovalTableFactory(null);
         if($reviewer) {
-            $reviewsArray = $atf->getAllPendingReviewsForUser($user->getId());
+            $reviewsArray = Docman_ApprovalTableReviewerFactory::getAllPendingReviewsForUser($user->getId());
         } else {
-            $reviewsArray = $atf->getAllApprovalTableForUser($user->getId());
+            $reviewsArray = Docman_ApprovalTableReviewerFactory::getAllApprovalTableForUser($user->getId());
         }
 
         if(count($reviewsArray) > 0) {
@@ -100,7 +99,12 @@ class Docman_Widget_MyDocman extends Widget {
                     $docmanUrl = $this->pluginPath.'/?group_id='.$review['group_id'];
                     $docmanHref = '<a href="'.$docmanUrl.'">'.$review['group'].'</a>';
                     if($prevGroupId != -1) {
-                        $html .= '<tr class="boxitem"><td colspan="2">';
+                        if($reviewer) {
+                            $colspan = 2;
+                        } else {
+                            $colspan = 3;
+                        }
+                        $html .= '<tr class="boxitem"><td colspan="'.$colspan.'">';
                     }
                     $html .= '<strong>'.$hideUrl.$docmanHref.'</strong></td></tr>';
                     $i = 0;
@@ -112,7 +116,14 @@ class Docman_Widget_MyDocman extends Widget {
                     $html .= '<td align="left">';
                     $html .= '<a href="'.$review['url'].'">'. $hp->purify($review['title'], CODEX_PURIFIER_CONVERT_HTML) .'</a>';
                     $html .= '</td>';
-                
+
+                    // For requester, precise the status
+                    if(!$reviewer) {
+                        $html .= '<td align="right">';
+                        $html .= $review['status'];
+                        $html .= '</td>';
+                    }
+
                     // Date
                     $html .= '<td align="right">';
                     $html .= util_timestamp_to_userdateformat($review['date'], true);

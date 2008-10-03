@@ -168,20 +168,7 @@ class TokenTest extends UnitTestCase {
             $this->assertNotNull($t->getToken(), "With valid referer, we should'nt have a null token");
         }
     }
-    function testBreadcrumbs() {
-        $dao =& new MockDocman_TokenDao();
-        $http =& new MockHTTPRequest();
-        $http->setReturnValue('get', '1', array('bc'));
-        
-        $t =& new Docman_TokenTestVersion();
-        $t->setReturnReference('_getDao', $dao);
-        $t->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
-        $t->setReturnValue('_getCurrentUserId', 123);
-        $t->setReturnValue('_getHTTPRequest', $http);
-        $t->Docman_Token();
-        
-        $this->assertNull($t->getToken(), 'With breadcrumbs, token is null');        
-    }
+
     /* Cannot be tested due to PHP4 references
     function testGoodRetrieval() {
         $url     = 'http://codex.com/?id=1&action=show';

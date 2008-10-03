@@ -24,9 +24,9 @@
  */
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_VersionFactory.class.php');
-class DocmanActionsDeleteVisitor /* implements Visitor */ {
+class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     
-    function DocmanActionsDeleteVisitor(&$file_storage, &$docman) {
+    function Docman_ActionsDeleteVisitor(&$file_storage, &$docman) {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate   = time();
         $this->file_storage =& $file_storage;
@@ -64,7 +64,13 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
         return $this->_deleteItem($item, $params);
     }
     function visitWiki(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
+        // delete the document.
+        $deleted = $this->visitDocument($item, $params);
+        if($deleted) {
+            // grant a wiki permission only to wiki admins on the corresponding wiki page.
+            $this->restrictAccess($item, $params);
+        }
+        return $deleted;
     }
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
@@ -94,13 +100,26 @@ class DocmanActionsDeleteVisitor /* implements Visitor */ {
         return $this->visitDocument($item, $params);
     }
 
+    function restrictAccess($item, $params = array()) {
+        // Check whether there is other references to this wiki page.
+        $dao =& $this->_getItemDao();
+        $referenced = $dao->isWikiPageReferenced($item->getPageName(), $item->getGroupId());
+        if(!$referenced) {
+            $dIF =& $this->_getItemFactory();
+            $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($item->getPageName(), $item->getGroupId());
+            // Restrict access to wiki admins.
+            permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
+            permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
+        }
+    }
+
     function _deleteItem($item, $params) {
         if ($this->docman->userCanWrite($item->getId())) {
             $item->setDeleteDate($this->deleteDate);
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
             $em =& $this->_getEventManager();
-            $em->processEvent(PLUGIN_DOCMAN_EVENT_DEL, array(
+            $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
                 'item'     => &$item,
                 'parent'   => &$params['parent'],

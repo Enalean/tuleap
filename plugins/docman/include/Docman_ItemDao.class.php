@@ -43,13 +43,40 @@ class Docman_ItemDao extends DataAccessObject {
     }
 
     /**
+     * Return the SQL statement that exclude the items that are obsolete as of today.
+     * static
+     */
+    function getExcludeObsoleteItemsStmt($table) {
+        $sql = '';
+        $sql .= '('.$table.'.obsolescence_date = 0 OR ';
+        $sql .= ' '.$table.'.obsolescence_date > '.Docman_ItemDao::getObsoleteToday().')';
+        return $sql;
+    }
+
+    /**
+     * Return the SQL statement that exclude the items that are deleted.
+     */
+    function getExcludeDeletedItemsStmt($table) {
+        $sql = $table.'.delete_date IS NULL';
+        return $sql;
+    }
+
+    /**
+     * Return the SQL statements that exclude deleted & obsolete items.
+     */
+    function getCommonExcludeStmt($table) {
+        return Docman_ItemDao::getExcludeDeletedItemsStmt($table).' AND '.
+            Docman_ItemDao::getExcludeObsoleteItemsStmt($table);
+    }
+
+    /**
      * Return the row that match given id.
      *
      * @return DataAccessResult
      */
     function searchById($id, $params = array()) {
         $_id = (int) $id;
-        return $this->_searchWithCurrentVersion(' i.item_id = '.$_id, '', ' ORDER BY version_date DESC LIMIT 1', array(), $params);
+        return $this->_searchWithCurrentVersion(' i.item_id = '.$_id, '', '', array(), $params);
     }
 
     function searchByIdList($idList) {        
@@ -59,9 +86,27 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->_searchWithCurrentVersion($sql_where, '', '');
     }
 
-    function searchByTitle($title) {
-        $where = ' i.title = '.$this->da->quoteSmart($title);
-        $order = ' ORDER BY version_date DESC LIMIT 1';
+    /**
+     * Look for a folder by title.
+     *
+     * @param $title    Either a string to search or an array of string.
+     * @param $groupId  The group id on which the search applies
+     * @param $parentId The parent folder where to search.
+     */
+    function searchByTitle($title, $groupId=null, $parentId=null) {
+        if(is_array($title)) {
+            $where = ' i.title IN ("'.implode('", "', array_map('db_es', $title)).'")';
+        } else {
+            $where = ' i.title = '.$this->da->quoteSmart($title);
+        }
+        if($groupId !== null) {
+            $where .= ' AND i.group_id = '.$this->da->escapeInt($groupId);
+        }
+        if($parentId !== null) {
+            $where .= ' AND i.parent_id = '.$this->da->escapeInt($parentId);
+        }
+
+        $order = ' ORDER BY version_date DESC';
         return $this->_searchWithCurrentVersion($where, '', $order);
     }
 
@@ -150,7 +195,7 @@ class Docman_ItemDao extends DataAccessObject {
              
         return $this->_searchWithCurrentVersion($sql_where, '', $sql_order, $from, $params);
     }
-   
+        
     function _getItemSearchSelectStmt() {
         $sql = 'SELECT i.*, '.
             ' v.id as version_id, v.number as version_number,'.
@@ -187,11 +232,10 @@ class Docman_ItemDao extends DataAccessObject {
         $sql .= (count($from) > 0 ? ' LEFT JOIN '.implode(' LEFT JOIN ', $from) : '')
             .' WHERE 1 AND ';
         if (!isset($params['ignore_deleted']) || !$params['ignore_deleted']) {
-            $sql .= ' i.delete_date IS NULL AND ';
+            $sql .= ' '.$this->getExcludeDeletedItemsStmt('i').' AND ';
         }
         if (isset($params['ignore_obsolete']) && $params['ignore_obsolete'] == true) {
-            $sql .= '(i.obsolescence_date = 0 OR ';
-            $sql .= ' i.obsolescence_date > '.$this->getObsoleteToday().') AND ';
+            $sql .= $this->getExcludeObsoleteItemsStmt('i').' AND ';
         }
         if(isset($params['ignore_folders']) && $params['ignore_folders'] == true) {
             $sql .= ' i.item_type <> '.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.' AND ';
@@ -219,11 +263,10 @@ class Docman_ItemDao extends DataAccessObject {
     function _getCommonItemFilters($table='i', $ignoreDeleted=true, $ignoreObsolete=true) {
         $filters = array();
         if($ignoreDeleted) {
-            $filters['del'] = $table.'.delete_date IS NULL';
+            $filters['del'] = $this->getExcludeDeletedItemsStmt($table);
         }
         if($ignoreObsolete) {
-            $filters['obs'] = '('.$table.'.obsolescence_date = 0 OR '.
-                $table.'.obsolescence_date > '.$this->getObsoleteToday().')';
+            $filters['obs'] = $this->getExcludeObsoleteItemsStmt($table);
         }
         return $filters;
     }
@@ -309,7 +352,7 @@ class Docman_ItemDao extends DataAccessObject {
                     $wiki_page=null, $file_is_embedded=null) {       
        
         $argArray = array();
-
+		
         if($parent_id !== null) {
             $argArray[] = 'parent_id='.((int) $parent_id);
         }
@@ -544,7 +587,7 @@ class Docman_ItemDao extends DataAccessObject {
         if($ordering == 'down' || $ordering == 'up') {
             $can_update = ($rank == -1) ? false : true;
         }
-
+        $res = false;
         if ($can_update) {
             $sql = sprintf('UPDATE plugin_docman_item SET parent_id = %s, rank = %s '.
                 ' WHERE  item_id = %s ',
@@ -578,6 +621,12 @@ class Docman_ItemDao extends DataAccessObject {
         return $id;
     }
 
+    /**
+     * Search for subfolders in the given item array.
+     *
+     * @param array $parentIds List of parent ids
+     * @return DataAccessResult
+     */
     function searchSubFolders($parentIds = array()) {        
         if(is_array($parentIds) && count($parentIds) > 0) {           
             $sql = sprintf('SELECT *'
@@ -594,20 +643,16 @@ class Docman_ItemDao extends DataAccessObject {
         }
     }
 
-    function searchCurrentWikiVersion($groupId, $pagename) {
-        $version = null;
-        $sql = sprintf('SELECT MAX(version) AS version'.
-                       ' FROM wiki_page '.
-                       '  INNER JOIN wiki_version USING(id)'.
-                       ' WHERE group_id = %d'.
-                       ' AND pagename = %s',
-                       $groupId, $this->da->quoteSmart($pagename));
-        $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $row = $dar->current();
-            $version = $row['version'];
-        }
-        return $version;
+    /**
+     * Search of all childrens of the items given in parameter.
+     *
+     * @param array $parentIds List of parents.
+     * @param array $params
+     * @return DataAccessResult
+     */
+    function searchChildren($parentIds, $params) {
+        $where = " i.parent_id in (".implode(',', $parentIds).")";
+        return $this->_searchWithCurrentVersion($where, '', '', array(), $params);
     }
 
     /*
@@ -620,13 +665,82 @@ class Docman_ItemDao extends DataAccessObject {
         $sql = sprintf('SELECT i.*'.
                        ' FROM plugin_docman_item i, groups g'.
                        ' WHERE delete_date IS NULL'.
-                       ' AND (i.obsolescence_date > %d'.
-                       '   AND i.obsolescence_date < %d)'.
+                       ' AND (i.obsolescence_date >= %d'.
+                       '   AND i.obsolescence_date <= %d)'.
                        ' AND g.group_id = i.group_id'.
                        ' AND g.status = "A"',
                        $tsStart,
                        $tsEnd);
         return $this->retrieve($sql);
+    }
+
+    /**
+     * Checks if a wiki page is referenced in docman. Referencing docman items shouldn't be obsolete or deleted.
+     *
+     * @param string $wikipage wiki page name.
+     * @param int $group_id project id.
+     *
+     * @return boolean.
+     */
+    function isWikiPageReferenced($wikipage, $group_id) {
+        $obsoleteToday = $this->getObsoleteToday();
+        $sql = sprintf('SELECT item_id'.
+            ' FROM plugin_docman_item'.
+            ' WHERE wiki_page = \'%s\''.
+            ' AND group_id = %d'.
+            ' AND delete_date IS NULL'.
+            ' AND (obsolescence_date > %d OR obsolescence_date=0)'
+            , db_es($wikipage), db_ei($group_id), $obsoleteToday
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError() && $res->rowCount() >= 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * This returns ids of docman items that refrence a wiki page in a project. Returned item shouldn't be obsolete or deleted.
+     *
+     * @param string $wikipage wiki page name
+     * @param int $group_id project id.
+     *
+     * @return array $ids ids of docman items that reference the wiki page.
+     */
+    function getItemIdByWikiPageAndGroupId($wikipage, $group_id) {
+        $ids = array();
+        $sql = sprintf('SELECT item_id'.
+            ' FROM plugin_docman_item i'.
+            ' WHERE i.wiki_page = \'%s\''.
+            ' AND i.group_id = %d'.
+            ' AND '. Docman_ItemDao::getCommonExcludeStmt('i')
+            , db_es($wikipage), db_ei($group_id) 
+        );
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError()) {
+	        if($res->rowCount() > 1) {
+                $res->rewind();
+                while($res->valid()) {
+		            $row = $res->current();
+                    $ids[] = $row['item_id'];
+                    $res->next();
+                }
+                return $ids;
+            }
+            else {
+                $res->rewind();
+                if($res->valid()) {
+                    $row = $res->current();
+                    $id = $row['item_id'];
+                    return $id;
+                }
+            }
+        }
+        else {
+            return null;
+        }
     }
 }
 

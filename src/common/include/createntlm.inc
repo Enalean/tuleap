@@ -280,7 +280,7 @@ var $sbox = array(array(array(14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5
 			$out[$i] = 0;
 		}
 		for ($i = 0; $i < 65; $i++) {
-			if ( $outb[$i] )  {
+			if ( isset($outb[$i]) && $outb[$i] )  {
 				$out[$i/8] |= (1<<(7-($i%8)));
 			}
 		}

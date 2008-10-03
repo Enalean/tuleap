@@ -19,10 +19,7 @@ class Docman_View_Icons extends Docman_View_Browse {
         $html = '';
         
         $itemFactory = new Docman_ItemFactory($params['group_id']);
-        $itemTree =& $itemFactory->getItemSubTree($params['item']->getId(), array(
-            'user' => $params['user'],
-            'ignore_obsolete' => true,
-        ));
+        $itemTree =& $itemFactory->getItemSubTree($params['item'], $params['user']);
         
         $items = $itemTree->getAllItems();
         $nb = $items->size();
@@ -30,15 +27,15 @@ class Docman_View_Icons extends Docman_View_Browse {
             $html .= '<table border="0" cellpadding="0" cellspacing="4" width="100%">';
             $folders   = array();
             $documents = array();
-            $it =& $items->iterator();
+            $it = $items->iterator();
             while($it->valid()) {
-                $o =& $it->current();
+                $o = $it->current();
                 $this->is_folder = false;
                 $o->accept($this);
                 if ($this->is_folder) {
-                    $folders[] =& $o;
+                    $folders[] = $o;
                 } else {
-                    $documents[] =& $o;
+                    $documents[] = $o;
                 }
                 $it->next();
             }
@@ -112,10 +109,11 @@ class Docman_View_Icons extends Docman_View_Browse {
             'id'     => $item->getId()
         ));
         $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
-        $html .= '<span class="docman_item_title"><a href="'. $title_url .'">'.  $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML)  .'</a></span>';
+        $html .= '<span class="docman_item_title"><a href="'. $title_url .'" id="docman_item_title_link_'.$item->getId().'">'.  $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML)  .'</a></span>';
         $html .= '</a>';
         //Show/hide options {{{
         $html .= $this->getItemMenu($item, $params);
+        $this->javascript .= $this->getActionForItem($item);
         //}}}
         if (trim($item->getDescription()) != '') {
             $html .= '<div class="docman_item_description">'.  $hp->purify($item->getDescription(), CODEX_PURIFIER_BASIC) .'</div>';

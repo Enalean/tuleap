@@ -75,8 +75,8 @@ The main principle are:
   * views/*
 
 * Controler
-  * Docman.class
-  * SOAPDocman.class.php
+  * Docman_HTTPControler.class
+  * Docman_SOAPControler.class.php
 
 * Action
   * DocmanActions.class
@@ -90,13 +90,13 @@ The main principle are:
 
 !! Display item tree.
 
-* DocmanController receive a request from the user to display the docman content:
+* Docman_Controler receive a request from the user to display the docman content:
  * url: http://..../plugins/docman/index.php?group_id=101&action=show&id=134
  * params: group_id of the project
  * action: show ... shows (!) "something"
  * id: id of the "something" to show, it refers to an item.
 
-* DocmanController (in request method) set-up the view to use to display the tree
+* Docman_Controler (in request method) set-up the view to use to display the tree
 
 * The corresponding view (Docman_View_Tree for instance) set-up the tree to display
  * $itemBo = new Docman_ItemBo(101); // group_id

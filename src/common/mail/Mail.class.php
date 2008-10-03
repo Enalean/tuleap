@@ -245,6 +245,11 @@ class Mail {
      * @access protected
      */
     function _sendmail($header) {
+        $params = array('mail' => $this,
+                        'header' => $header);
+        $em =& EventManager::instance();
+        $em->processEvent('mail_sendmail', $params);
+
         return mail($this->getTo(),
             $this->getEncodedSubject(),
             $this->getBody(),

@@ -31,10 +31,12 @@ require_once('Docman_MetadataFactory.class.php');
 class Docman_CloneItemsVisitor {
     var $dstGroupId;
     var $_cacheMetadataUsage;
-    
+    var $itemMapping;
+
     function Docman_CloneItemsVisitor($dstGroupId) {
         $this->dstGroupId = $dstGroupId;
         $this->_cacheMetadataUsage = array();
+        $this->itemMapping = array();
     }
 
     function visitFolder($item, $params = array()) {
@@ -124,9 +126,11 @@ class Docman_CloneItemsVisitor {
         $metadataMapping = $params['metadataMapping'];
         $ugroupsMapping = $params['ugroupsMapping'];
 
+
         // Clone Item
         $itemFactory = $this->_getItemFactory();
-        $newItem = $item;
+        // @php5: clone
+        $newItem = clone $item;
         $newItem->setGroupId($this->dstGroupId);
         $newItem->setParentId($parentId);
         // Change rank if specified
@@ -145,6 +149,10 @@ class Docman_CloneItemsVisitor {
 
         $newItemId = $itemFactory->rawCreate($newItem);
         if($newItemId > 0) {
+            // Keep track of which item id in the new tree correspond the source item id
+            // This is needed for reports that applies on specific folders.
+            $this->itemMapping[$item->getId()] = $newItemId;
+
             // Clone Permissions
             $this->_clonePermissions($item, $newItemId, $ugroupsMapping);
 
@@ -224,12 +232,20 @@ class Docman_CloneItemsVisitor {
     
     function _metadataEnabled($srcGroupId, $mdLabel) {
         if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
-            $srcSettingsBo =& Docman_SettingsBo::instance($srcGroupId);
-            $dstSettingsBo =& Docman_SettingsBo::instance($this->dstGroupId);
+            $srcSettingsBo =& $this->_getSettingsBo($srcGroupId);
+            $dstSettingsBo =& $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel) 
                                                     && $dstSettingsBo->getMetadataUsage($mdLabel));
         }
         return $this->_cacheMetadataUsage[$mdLabel];
+    }
+
+    /**
+     * Return the mapping between item_id in the original tree (src) and the new one (dst).
+     * Src item id it the key of the hash map.
+     */
+    function getItemMapping() {
+        return $this->itemMapping;
     }
 
     // Factory methods mandatate by tests.
@@ -260,6 +276,11 @@ class Docman_CloneItemsVisitor {
 
     function &_getMetadataFactory($groupId) {
         $o = new Docman_MetadataFactory($groupId);
+        return $o;
+    }
+    
+    function &_getSettingsBo($groupId) {
+        $o =& Docman_SettingsBo::instance($groupId);
         return $o;
     }
 }

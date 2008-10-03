@@ -23,7 +23,7 @@
 
 require_once('WikiAttachmentRevision.class.php');
 require_once('WikiAttachmentDao.class.php');
-require_once('www/project/admin/permissions.php');
+//require_once('www/project/admin/permissions.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
 /**
@@ -314,12 +314,19 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         $rev -= 1;
 
-        $this->revision = new WikiAttachmentRevision($this->gid);
+        //$this->revision = new WikiAttachmentRevision($this->gid);
+        $this->revision =& $this->_getNewWikiAttachmentRevision();
+        $this->revision->setGid($this->gid);
         $this->revision->setAttachmentId($this->getId());
         $this->revision->setRevision($rev);
         $this->revision->dbFetch();
         $this->revision->log(user_getid());
     }
+
+	function &_getNewWikiAttachmentRevision() {
+		$r =& new WikiAttachmentRevision();
+		return $r;
+	}
 
     function exist() {
         return is_dir($this->basedir.'/'.$this->filename);
@@ -477,6 +484,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      */
     function permissionExist() {
+        require_once('www/project/admin/permissions.php');
         if (permission_exist('WIKIATTACHMENT_READ', $this->id))
             return true;
         else
@@ -488,6 +496,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      */
     function isAutorized($uid) {            
+        require_once('www/project/admin/permissions.php');
         if($this->permissionExist()) {
             if (!permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid)) {
                 return false;

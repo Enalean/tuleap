@@ -1,3 +1,4 @@
+plugin_docman	action_approval	Table d'approbation
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
 plugin_docman	action_details	Propriétés
@@ -25,7 +26,7 @@ plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateu
 plugin_docman	approval_notif_mail_notif_all	Tous d'un coup\n
 plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n$1\n\n
 plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a été réprouvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
-plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a été réprouver par un approbateur
+plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a été réprouvé par un approbateur
 plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a été approuvé par tous les approbateurs.\nAccès direct à la table d'approbation :\n<$2>\n\nMerci de noter que le statut du document n'a pas été modifié. Vous pouvez\nmodifier les propriétés du document :\n<$3>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
 plugin_docman	approval_notif_approve_mail_subject	[$1] '$2' a été approuvé par tous les approbateurs
 plugin_docman	approval_notif_approve_user_mail_subject	[$1] '$2' a été approuvé par un approbateur
@@ -51,7 +52,7 @@ plugin_docman	approval_tableupd_success	Paramètres de la tables modifiés.
 plugin_docman	approval_tableupd_failure	Le paramètres de la table n'ont pas été modifiés.
 plugin_docman	approval_tableins_failure	Un erreur est survenue lors de la création de la table d'approbation pour ce document.
 plugin_docman	approval_tabledel_success	Table supprimée.
-plugin_docman	approval_tabledel_failure	Une erreur est survenue lors de la suppression de la table.
+plugin_docman	approval_tabledel_failure	Une erreur est survenue. La table n'a pas été supprimée.
 
 plugin_docman	admin_md_detail_backtomenu	Retour au menu
 plugin_docman	admin_md_detail_param_title	Paramètres de la propriété
@@ -185,15 +186,25 @@ plugin_docman	details_actions_paste_canpaste	Vous pouvez <a href="$1">coller '$2
 plugin_docman	details_actions_update	Mise à jour
 plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre à jour</a> ce document.
 plugin_docman	details_actions_update_cannot	Vous ne pouvez pas mettre à jour ce document.
+plugin_docman	details_actions_update_apptable	Table d'approbation
+plugin_docman	details_actions_update_apptable_desc	Il y a déjà une table d'approbation sur la précédente version du document. Vous pouvez :
+plugin_docman	details_actions_update_apptable_default	Défaut
+plugin_docman	details_actions_update_apptable_keep	Conserver l'ancienne table.
+plugin_docman	details_actions_update_apptable_copy	Copier la table précédente (ex. corrections, mise à jour mineure).
+plugin_docman	details_actions_update_apptable_empty	Créer une nouvelle table vide.
+plugin_docman	details_actions_update_apptable_reset	Réinitialiser le cycle d'approbation (ex. mise à jour majeure).
+plugin_docman	details_actions_update_apptable_help	<p>Si vous décidez de :<ul><li><strong>Copier la table précédente</strong> : une nouvelle table d'approbation sera créée à partir de l'actuelle. Les approbateurs, commentaires et engagements sont conservés.</li><li><strong>Réinitialiser le cycle d'approbation</strong> : similaire à l'option précédente mais seule la structure de la table est conservée (description, type de notification, liste des approbateurs). En fait, la nouvelle table sera identique à l'ancienne à ceci près que les commentaires et engagements des approbateurs seront remis à zero.</li><li><strong>Créer une nouvelle table vide</strong> : recommencer le cycle avec une table totalement nouvelle.</li></ul>Dans tous les cas : Les <strong>approbateurs ne sont pas notifiés automatiquement</strong>.</p>
 plugin_docman	details_approval	Table d'approbation
 plugin_docman	details_approval_approval_title	Détails du cycle d'approbation
 plugin_docman	details_approval_admin	Admin
 plugin_docman	details_approval_comment	Commentaire
+plugin_docman	details_approval_create_import_title	Importer une ancienne table d'approbation
 plugin_docman	details_approval_create_reviewers_title	Ajouter des approbateurs
 plugin_docman	details_approval_create_reviewers_hand	Entrez la liste manuellement (separés par ',') :
 plugin_docman	details_approval_create_reviewers_ugroup	Ajouter les membres d'un groupe d'utilisateurs :
 plugin_docman	details_approval_create_reviewers_submit	Ajouter à la table
-plugin_docman	details_approval_create_title	Administration de la table d'approbation pour $1
+plugin_docman	details_approval_create_reviewers_oldver	Il est impossible d'ajouter des approbateur à une ancienne table d'approbation.
+plugin_docman	details_approval_create_title	Administration de la table d  'approbation pour $1
 plugin_docman	details_approval_create_settings	Paramètres globaux de la table d'approbation
 plugin_docman	details_approval_create_no_reviewers	Il n'y a pas d'approbateurs pour ce document.
 plugin_docman	details_approval_create_submit	Mettre à jour
@@ -210,10 +221,16 @@ plugin_docman	details_approval_doc_review_version_na	Pas applicable
 plugin_docman	details_approval_email_back	Retour vers la table d'approbation.
 plugin_docman	details_approval_email_subject	Sujet :
 plugin_docman	details_approval_email_title	Email de notification
+plugin_docman	details_approval_history_title	Historique des tables d'approbation
+plugin_docman	details_approval_history_table_version	Version du document
+plugin_docman	details_approval_history_table_owner	Demandeur
+plugin_docman	details_approval_history_table_status	Statut
+plugin_docman	details_approval_history_table_date	Date de début
 plugin_docman	details_approval_table_delete_txt	<h3>Confirmez la suppression de la table d'approbation</h3><p>Vous êtes sur le point de supprimer une table d'approbation. Merci de noter que toutes les données (liste des approbateurs, approbation en cours, paramètres) seront supprimées.</p><p>Êtes vous sûr de vouloir continuer ?</p>
 plugin_docman	details_approval_no_table	Pas de table d'approbation pour ce documment.
 plugin_docman	details_approval_no_table_create	Créer une nouvelle table d'approbation
 plugin_docman	details_approval_not_available	La table d'approbation n'est pas encore disponible.
+plugin_docman	details_approval_no_table_for_empty	Il est impossible de créer une table d'approbation pour un document Vide.
 plugin_docman	details_approval_notif_0	Désactivé
 plugin_docman	details_approval_notif_1	Tous d'un coup
 plugin_docman	details_approval_notif_2	Sequentiellement
@@ -226,20 +243,24 @@ plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personn
 plugin_docman	details_approval_notif_title	Notification
 plugin_docman	details_approval_notif_type	Type de notification :
 plugin_docman	details_approval_notif_submit	Mettre à jour les paramètres
+plugin_docman	details_approval_new_title	Créer une nouvelle table d'approbation
+plugin_docman	details_approval_new_desc	<big><strong>Attention :</strong></big> cette table est associée à une version précédente du document (version $1). La dernière version en date est la version $2, vous pouvez, au choix :
+plugin_docman	details_approval_oldver		Cette table correspond à une ancienne version du document.
 plugin_docman	details_approval_owner_comment	Commentaire du demandeur :
 plugin_docman	details_approval_rank	Rang
 plugin_docman	details_approval_requester	Demandeur d'approbation :
 plugin_docman	details_approval_review_comment	Ajouter un commantaire :
 plugin_docman	details_approval_review_date	Date d'approbation :
 plugin_docman	details_approval_review_notif	Notification :
-plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifié.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la séquence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>Séquentiel</em>, le workflow est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
+plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifié.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la séquence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>Séquentiel</em>, le workflow de notification est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
 plugin_docman	details_approval_review_review	Approbation :
 plugin_docman	details_approval_review_submit	Envoyer mon approbation
 plugin_docman	details_approval_review_table	Table d'approbation :
 plugin_docman	details_approval_review_table_link	Cliquez pour voir la table d'approbation
 plugin_docman	details_approval_review_title	Approbation
 plugin_docman	details_approval_review_version	Version en cours d'approbation :
-plugin_docman	details_approval_review_version_not_upd	Attention : la version du document que vous approuvez n'est pas la dernière.
+plugin_docman	details_approval_review_version_not_upd	Vous avez <strong>déjà approuvé une ancienne version</strong> de ce document.
+plugin_docman	details_approval_review_wo_access	Vous n'avez <strong> pas lu cette version du document</strong>.
 plugin_docman	details_approval_reviewer	Nom
 plugin_docman	details_approval_review	Approbation
 plugin_docman	details_approval_select	Sélectionner
@@ -252,6 +273,7 @@ plugin_docman	details_approval_table_status	Status de la table :
 plugin_docman	details_approval_table_title	Table d'approbation
 plugin_docman	details_approval_table_description	Commentaire :
 plugin_docman	details_approval_table_help	La table suivante a pour but d'organiser le cycle d'approbation :<ul><li>Avec <strong>Selectionner</strong> vous choisissez les approbateurs sur lesquels vous voulez appliquer une <strong>action</strong> (voir ci-dessous)</li><li>Avec <strong>Rang</strong> vous sélectionnez l'ordre d'envoi des emails (seulement en mode séquentiel <em>Sequential</em>)</li><li>Avec <strong>Actions</strong> vous pouvez au choix :<ul><li><strong>Supprimer de la table</strong>. Historique perdu.</li><li>ou <strong>Forcer la notification</strong> pour envoyer un email de notification indépendamment de l'état d'approbation.</li></ul></li></ul>
+plugin_docman	details_approval_table_version	Associée à la version :
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
 plugin_docman	details_delete	Suppression
@@ -274,6 +296,7 @@ plugin_docman	details_history_logs_old_value	Ancienne valeur
 plugin_docman	details_history_logs_new_value	Nouvelle valeur
 plugin_docman	details_history_logs_change_field	Mise à jour de <em>$1</em>
 plugin_docman	details_history_versions	Versions
+plugin_docman	details_history_versions_approval	Approbation
 plugin_docman	details_history_versions_author	Auteur
 plugin_docman	details_history_versions_changelog	Changement
 plugin_docman	details_history_versions_date	Date
@@ -281,6 +304,7 @@ plugin_docman	details_history_versions_error	Erreur lors de la récupération de
 plugin_docman	details_history_versions_label	Nom
 plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
 plugin_docman	details_history_versions_version	Version
+plugin_docman	details_history_versions_approval_show	Afficher
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
@@ -315,6 +339,7 @@ plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
+plugin_docman	docman_wiki_perms_notice	<strong>Attention: </strong>Pour une page wiki, un 'Lecteur' peut également editer le document.
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
@@ -360,6 +385,7 @@ plugin_docman	event_del	Suppression
 plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
 plugin_docman	event_metadataupdate	Mise à jour de propriété
+plugin_docman	event_wiki_page_updated	Nouvelle version de la page Wiki
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
@@ -384,9 +410,7 @@ plugin_docman	filters_ordering_ascending	Ascendant
 plugin_docman	filters_ordering_descending	Descendant
 plugin_docman	filters_ordering_message	La valeur de $1 devrait être soit "Ascendant", soit "Descendant"
 
-plugin_docman	info_copy_notify_cp	copié, vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
-plugin_docman	info_copy_notify_cp_doc	Document $1
-plugin_docman	info_copy_notify_cp_folder	Dossier $1
+plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
 plugin_docman	info_create_initversion	Version initiale créée.
 plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.
@@ -530,7 +554,7 @@ plugin_docman	report_clear_filters	Tout effacer
 plugin_docman	report_clone_success	Rapport cloné
 plugin_docman	report_custom_fltr	Personnaliser les filtres
 plugin_docman	report_del_failure	Une erreur est apparue lors de la suppression d'un rapport
-plugindocman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
+plugin_docman	report_del_notadmin	Seuls les admins peuvent supprimer un rapport 'projet'.
 plugin_docman	report_del_notfound	Rapport non trouvé. Suppression annulée.
 plugin_docman	report_del_notowner	Vous ne pouvez pas supprimer un rapport que vous ne possédez pas. Suppression annulée.
 plugin_docman	report_del_success	Rapport supprimé
@@ -636,3 +660,10 @@ plugin_docman	warning_invalidowner	Le propriétaire spécifié n'est pas valide.
 plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.
 plugin_docman	warning_recursive_perms	Vous ne pouvez pas changer les permissions de l'élément $1 puisque vous n'avez pas les droits requis.
+
+plugin_docman	docman_wiki_open_referencers	Ouvrir la liste des documents liés
+plugin_docman	docman_wiki_hide_referencers	Cacher les documents liés
+plugin_docman	docman_wiki_other_location	Autre chemin:
+plugin_docman	docman_wiki_other_locations	Autres chemins:
+plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
+plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents

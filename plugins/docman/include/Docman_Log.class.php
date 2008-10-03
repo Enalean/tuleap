@@ -23,6 +23,7 @@
  * 
  */
 require_once('Docman_LogDao.class.php');
+require_once('Docman_ItemFactory.class.php');
 /**
  * Log is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
@@ -34,6 +35,7 @@ class Docman_Log { /* implements EventListener */
     }
     
     function log($event, $params) {
+        $event = constant(strtoupper($event));
         switch ($event) {
             case PLUGIN_DOCMAN_EVENT_EDIT:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, 'old', 'new');
@@ -46,6 +48,9 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value'], $params['field']);
+                break;
+            case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value']);
                 break;
             default:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
@@ -68,7 +73,12 @@ class Docman_Log { /* implements EventListener */
         }
         return  $this->dao;
     }
-    
+
+    var $dif;
+    function _getItemFactory($group_id) {
+        $this->dif = new Docman_ItemFactory($group_id);
+        return $this->dif;
+    }
     
     function fetchLogsForItem($item_id, $display_access_logs) {
         $html = '';
@@ -115,9 +125,19 @@ class Docman_Log { /* implements EventListener */
                             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman','details_history_logs_change_field', array($md->getName())).'</td>';
                             $html .= '<td>'.$_old_v.'</td>';
                             $html .= '<td>'.$_new_v.'</td>';
-    
                         }
-                        else {                        
+                        elseif($row['type'] == PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE) {
+                            $old_version = $row['old_value'];
+                            $new_version = $row['new_value'];
+                            $dIF = $this->_getItemFactory($row['group_id']);
+                            $pagename = $dIF->getItemFromDb($item_id)->getPageName();
+                            $difflink =  '/wiki/index.php?group_id=' . $row['group_id'];
+                            $difflink .= '&pagename='.urlencode($pagename).'&action=diff';
+                            $difflink .= '&versions%5b%5d=' . $old_version . '&versions%5b%5d=' . $new_version;
+                            $html .= '<td colspan>' . $this->getText($row['type']) . '</td>';
+                            $html .= '<td colspan="2" align="center"><a href=' . $difflink . '>diffs</a>';
+                        }
+                        else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
                         $html .= '</tr>';
@@ -162,10 +182,20 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_metadataupdate');
                 break;
+            case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');                
+                break;
             default:
                 break;
         }
         return $txt;
+    }
+
+    /**
+     * Search if user accessed the given item after the given date.
+     */
+    function userAccessedSince($userId, $itemId, $date) {
+        return $this->dao->searchUserAccessSince($userId, $itemId, $date);
     }
 
 }

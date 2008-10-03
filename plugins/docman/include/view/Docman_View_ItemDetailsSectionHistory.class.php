@@ -24,6 +24,7 @@
  */
 require_once('Docman_View_ItemDetailsSection.class.php');
 require_once(dirname(__FILE__).'/../Docman_VersionFactory.class.php');
+require_once(dirname(__FILE__).'/../Docman_ApprovalTableFactory.class.php');
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection {
     var $logger;
@@ -38,6 +39,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         if (is_a($this->item, 'Docman_File')) {
             $content .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_versions') .'</h3>';
             $version_factory =& new Docman_VersionFactory();
+            $approvalFactory =& Docman_ApprovalTableFactory::getFromItem($this->item);
             if ($versions = $version_factory->getAllVersionForItem($this->item)) {
                 if (count($versions)) {
                     $titles = array();
@@ -46,6 +48,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_author');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_label');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_changelog');
+                    $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval');
                     $content .= html_build_list_table_top($titles, false, false, false);
                     $odd_even = array('boxitem', 'boxitemalt');
                     $i = 0;
@@ -62,6 +65,19 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         $content .= '<td>'. $user                                                  .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODEX_PURIFIER_LIGHT) .'</td>';
+
+                        $table = $approvalFactory->getTableFromVersion($versions[$key]);
+                        if($table != null) {
+                            $appTable = Docman_View_View::buildUrl($this->url, array(
+                                'action' => 'details',
+                                'section' => 'approval',
+                                'id' => $this->item->getId(),
+                                'version' => $versions[$key]->getNumber(),
+                            ));
+                            $content .= '<td><a href="'.$appTable.'">'.$titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval_show').'</a></td>';
+                        } else {
+                            $content .= '<td></td>';
+                        }
                         $content .= '</tr>';
                     }
                     $content .= '</table>';
