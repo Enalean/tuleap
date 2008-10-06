@@ -45,7 +45,9 @@ php_flag allow_call_time_pass_reference on
 #
 #php_value session.save_path "/var/tmp/codex_cache"
 
+
+# Debugging all=6143, all but notice=6135. See http://www.php.net/error_reporting
 # Debugging 2047=all, 2039=all-notice
 #php_flag display_errors on
-php_value error_reporting "2039"
+php_value error_reporting "6135"
 
