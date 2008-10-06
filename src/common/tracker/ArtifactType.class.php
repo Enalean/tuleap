@@ -731,11 +731,11 @@ class ArtifactType extends Error {
         } else {
             $user =& $um->getUserById($user_id);    
         }
-		if ( ($this->getUserPerm($user_id) >= 2) || ($user->isMember($this->Group->getID(),'A')) ) {
-			return true;
-		} else {
-			return false;
-		}
+        if ($user->isTrackerAdmin($this->Group->getID(),$this->getID())) {
+		    return true;
+        } else {
+            return false;
+        }
 	}
 
 
