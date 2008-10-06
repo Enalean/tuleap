@@ -1409,7 +1409,7 @@ sub create_pie {
 
 sub create_bar {
     my ($report_graphic_id,$rank,$field_name1,$field_label1,$field_name2,$field_label2) = @_;
-    $chart_id=create_chart($report_graphic_id,$rank,"bar","$field_label1 by $field_label2","");
+    $chart_id=create_chart($report_graphic_id,$rank,"bar","$field_label1 / $field_label2","");
     $bar_qy="INSERT INTO plugin_graphontrackers_bar_chart (id, field_base, field_group)
                                                    VALUES ($chart_id, '$field_name1', '$field_name2')";
     $bar_c = $dbh->prepare($bar_qy);
