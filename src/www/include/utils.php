@@ -1205,14 +1205,14 @@ function util_check_restricted_access($request_uri, $script_name) {
           );
         
         // Default values are very restrictive, but they can be overriden in the site-content file
-        $allow_codex_welcome_page=false; // Allow access to CodeX welcome page (at e.g. http://codex.xerox.com/)
+        $allow_codex_welcome_page=false; // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_codex_forums=false;   // CodeX help forums are accessible through the 'Discussion Forums' link
-        $allow_access_to_codex_trackers=false; // CodeX trackers are used for support requests on CodeX
-        $allow_access_to_codex_docs=false; // CodeX documents and wiki (Note that the User Guide is always accessible)
-        $allow_access_to_codex_mail=false; // CodeX mailing lists (Developers Channels)
-
+        $allow_access_to_codex_forums=false;   // Admin project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_codex_trackers=false; // Admin project trackers are used for support requests
+        $allow_access_to_codex_docs=false; // Admin project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_codex_mail=false; // Admin project mailing lists (Developers Channels)
+        $allow_access_to_codex_frs=false;  // Admin project file releases
 
         // Customizable security settings for restricted users:
         include($Language->getContent('include/restricted_user_permissions','en_US'));
@@ -1281,9 +1281,13 @@ function util_check_restricted_access($request_uri, $script_name) {
                 $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".db_es($_REQUEST['forum_id'])."'");
                 $group_id=db_result($result,0,'group_id');
                 // News
-                if ($allow_news_browsing) {
-                    if ($group_id==$GLOBALS['sys_news_group']) {
-                        $user_is_allowed=true;
+                if ($group_id==$GLOBALS['sys_news_group']) {
+                    if ($allow_news_browsing) {
+                    	$user_is_allowed=true;
+                    } else {
+                        // Otherwise, get group_id of corresponding news
+                        $result=db_query("SELECT group_id FROM news_bytes WHERE forum_id='".db_es($_REQUEST['forum_id'])."'");
+                        $group_id=db_result($result,0,'group_id');
                     }
                 }
                 // CodeX forums
@@ -1327,6 +1331,15 @@ function util_check_restricted_access($request_uri, $script_name) {
         // CodeX mailing lists page
         if (strpos($req_uri,'/mail/') !== false) {
             if ($allow_access_to_codex_mail) {
+                if ($group_id==1) {
+                    $user_is_allowed=true;
+                }
+            }
+        }
+        
+        // CodeX file releases
+        if (strpos($req_uri,'/file/') !== false) {
+            if ($allow_access_to_codex_frs) {
                 if ($group_id==1) {
                     $user_is_allowed=true;
                 }
