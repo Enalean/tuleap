@@ -43,11 +43,28 @@ function getConnection() {
     }
 }
 
-function db_query($qstring,$print=0) {
+function db_query($sql,$print=0) {
     global $conn;
-    $GLOBALS['DEBUG_DBPHP_QUERY_COUNT']++;
-    if ($print) print "<br>Query is: $qstring<br>";
-    $GLOBALS['db_qhandle'] = @mysql_query($qstring, $conn);
+    
+    if ($GLOBALS['DEBUG_MODE']) {
+        $GLOBALS['DEBUG_DBPHP_QUERY_COUNT']++;
+        $GLOBALS['QUERIES'][]=$sql;
+        $nb = isset($GLOBALS['DBSTORE'][md5($sql)]) ? ($GLOBALS['DBSTORE'][md5($sql)]['nb']+1) : 1;
+        $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => $nb);
+        if ($GLOBALS['DBSTORE'][md5($sql)]['nb'] > 1) {
+            $GLOBALS['DBSTORE_BACKTRACE'][md5($sql)][$nb]=debug_backtrace();
+            /*echo '<code>'. $GLOBALS['DBSTORE'][md5($sql)]['sql'] .'</code> have been fetched for the '. $GLOBALS['DBSTORE'][md5($sql)]['nb'] .' times. <br>';
+            $traces = debug_backtrace();
+            foreach($traces as $trace) {
+                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+            }
+            echo '<!-- ----------------------------------'."\n";
+            var_dump(debug_backtrace());
+            echo ' -->';*/
+        }
+    }
+    if ($print) print "<br>Query is: $sql<br>";
+    $GLOBALS['db_qhandle'] = @mysql_query($sql, $conn);
     return $GLOBALS['db_qhandle'];
 }
 

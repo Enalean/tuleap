@@ -51,19 +51,23 @@ class DataAccess {
     * @return object DataAccessResult
     */
     function &fetch($sql) {
-        $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
-        /*$nb = isset($this->store[md5($sql)]) ? ($this->store[md5($sql)]['nb']+1) : 1;
-        $this->store[md5($sql)] = array('sql' => $sql, 'nb' => $nb);
-        if ($this->store[md5($sql)]['nb'] > 1) {
-            echo '<code>'. $this->store[md5($sql)]['sql'] .'</code> have been fetched for the '. $this->store[md5($sql)]['nb'] .' times. <br>';
-            $traces = debug_backtrace();
-            foreach($traces as $trace) {
-                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+        if ($GLOBALS['DEBUG_MODE']) {
+            $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
+        	$GLOBALS['QUERIES'][]=$sql;
+            $nb = isset($GLOBALS['DBSTORE'][md5($sql)]) ? ($GLOBALS['DBSTORE'][md5($sql)]['nb']+1) : 1;
+            $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => $nb);
+            if ($GLOBALS['DBSTORE'][md5($sql)]['nb'] > 1) {
+                $GLOBALS['DBSTORE'][md5($sql)][$nb]=debug_backtrace();
+            	/*echo '<code>'. $GLOBALS['DBSTORE'][md5($sql)]['sql'] .'</code> have been fetched for the '. $GLOBALS['DBSTORE'][md5($sql)]['nb'] .' times. <br>';
+    	        $traces = debug_backtrace();
+        	    foreach($traces as $trace) {
+            	    echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+            	}
+       	     	echo '<!-- ----------------------------------'."\n";
+       	     	var_dump(debug_backtrace());
+        	    echo ' -->';*/
             }
-            echo '<!-- ----------------------------------'."\n";
-            var_dump(debug_backtrace());
-            echo ' -->';
-        }*/
+        }
         $dar = new DataAccessResult($this,mysql_query($sql,$this->db));
         return $dar;
     }

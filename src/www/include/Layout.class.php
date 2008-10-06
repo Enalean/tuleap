@@ -312,7 +312,7 @@ class Layout extends Response {
 
 	function generic_header_start($params) {
 
-            global $G_USER, $G_SESSION,$group_id,$Language;
+            global $group_id,$Language;
 
 	        if (!$params['title']) {
         	        $params['title'] = $GLOBALS['sys_name'];
@@ -452,7 +452,64 @@ class Layout extends Response {
                 echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
                 echo $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] + $GLOBALS['DEBUG_DAO_QUERY_COUNT'];
                 echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .")<br>";
-                echo "Page generated in ".$debug_compute_tile." seconds</debug>";
+                echo "Page generated in ".$debug_compute_tile." seconds</debug>\n";
+                echo "<br>Queries:\n";
+                
+                // Display all queries
+                //print_r($GLOBALS['QUERIES']);
+                
+                // Display queries executed more than once
+                foreach ($GLOBALS['DBSTORE'] as $key => $value) {
+                    if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
+                        echo "<br><legend>\n";
+                        echo $GLOBALS['HTML']->getImage(
+                        	'ic/toggle_plus.png', 
+                            array(
+                                'id' => "stacktrace_toggle_$key", 
+                            	'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
+                            	'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
+                            )
+                        );
+                        echo "<b>Run ".$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
+                        echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
+                        echo '</legend>';
+                        // Display available stacktraces
+                        echo "<div id=\"stacktrace_alternate_$key\" style=\"\" ></div>";
+                        echo "<script type=\"text/javascript\">Event.observe($('stacktrace_toggle_$key'), 'click', function (evt) { 
+                var element = $('stacktrace_$key');
+                if (element) {
+                    Element.toggle(element);
+                    Element.toggle($('stacktrace_alternate_$key'));
+                    
+                    //replace image
+                    var src_search = 'toggle_minus';
+                    var src_replace = 'toggle_plus';
+                    if ($('stacktrace_toggle_$key').src.match('toggle_plus')) {
+                        src_search = 'toggle_plus';
+                        src_replace = 'toggle_minus';
+                    }
+                    $('stacktrace_toggle_$key').src = $('stacktrace_toggle_$key').src.replace(src_search, src_replace);
+                }
+                Event.stop(evt);
+                return false;
+            });
+            $('stacktrace_alternate_$key').update('');
+            </script>";
+                        echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
+                        for ($i=2; $i<=$GLOBALS['DBSTORE'][$key]['nb']; $i++) {
+                            echo "<p>\n";
+                            $traces = $GLOBALS['DBSTORE_BACKTRACE'][$key][$i];
+                      	    foreach($traces as $trace) {
+            	                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+            	            }
+       	     	            /*echo '<!-- ----------------------------------'."\n";
+       	     	            var_dump($traces);
+        	                echo ' -->';*/
+                                                    }
+                        echo "</div>";
+                    }
+                }
+		echo "</pre>\n";
         }
           
         echo '</body>';
