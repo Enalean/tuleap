@@ -792,7 +792,6 @@ AddOutputFilter INCLUDES .shtml
 # Add mod deflate
 # http://developer.yahoo.com/performance/rules.html#gzip
 AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/x-javascript
-DeflateCompressionLevel 9
 BrowserMatch ^Mozilla/4 gzip-only-text/html
 BrowserMatch ^Mozilla/4\.[0678] no-gzip
 BrowserMatch \bMSIE\s7 !no-gzip !gzip-only-text/html
