@@ -30,8 +30,6 @@ require_once 'common/wiki/phpwiki/lib/HtmlElement.php';
 
 class Docman_WikiController extends Docman_Controller {
 
-    var $params;
-
     function __construct(&$plugin, $pluginPath, $themePath, $request) {
         parent::__construct($plugin, $pluginPath, $themePath, $request);
         $event_manager =& $this->_getEventManager();
