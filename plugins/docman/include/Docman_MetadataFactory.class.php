@@ -662,6 +662,10 @@ class Docman_MetadataFactory {
                 $loveIter->next();
             }
         }
+        $event_manager =& EventManager::instance();
+        $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $dstGroupId, 
+                                                                                 'targetProjectId' => $this->groupId,
+                                                                                 'md'              => $md));        
     }
 
     // Clone metadata defs and list of values
