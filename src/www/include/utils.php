@@ -1281,9 +1281,13 @@ function util_check_restricted_access($request_uri, $script_name) {
                 $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".db_es($_REQUEST['forum_id'])."'");
                 $group_id=db_result($result,0,'group_id');
                 // News
-                if ($allow_news_browsing) {
-                    if ($group_id==$GLOBALS['sys_news_group']) {
-                        $user_is_allowed=true;
+                if ($group_id==$GLOBALS['sys_news_group']) {
+                    if ($allow_news_browsing) {
+                    	$user_is_allowed=true;
+                    } else {
+                        // Otherwise, get group_id of corresponding news
+                        $result=db_query("SELECT group_id FROM news_bytes WHERE forum_id='".db_es($_REQUEST['forum_id'])."'");
+                        $group_id=db_result($result,0,'group_id');
                     }
                 }
                 // CodeX forums
