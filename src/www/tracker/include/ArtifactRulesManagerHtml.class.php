@@ -132,9 +132,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             echo "source:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','source')) ."',\n";
             echo "target:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','target')) ."',\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
-            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."'\n";
+            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."',\n";
+            echo "please_wait:        '". addslashes('Please wait while loading...') ."'\n";
         echo "};\n";
-        echo "Event.observe(window, 'load', buildAdminUI);";
+        echo "document.observe('dom:loaded', buildAdminUI);";
         echo "\n//------------------------------------------------------\n";
         echo "\n".'//]]></script>';
     }

@@ -588,13 +588,65 @@ function breadthFirstWalk(start, cb_getChildren, cb_mark, cb_is_marked) {
      }
 }
 
+com.xerox.codex.ProgressBar = Class.create({
+    initialize: function(parent, options) {
+        this.parent = $(parent);
+        this.options = Object.extend({
+            width:'200px',
+            border:'1px solid gray',
+            color:'gray',
+            background:'gray',
+            position:'before',
+            numberOfTicks:100,
+            please_wait_msg:' Please wait while loading...'
+        }, options || { });
+        
+        this.setNumberOfTicks(this.options.numberOfTicks);
+        this.ticks = 0;
+        
+        this.bar = Builder.node('div', {
+            style:"background:"+this.options.background+"; width:0px"
+        }, '*');
+        
+        this.container = Builder.node('div',
+            {
+                style:"color:"+this.options.color+";"
+            },
+            [
+                this.options.please_wait_msg,
+                Builder.node('div', {
+                        style:"width:"+this.options.width+"; border:"+this.options.border+";"
+                }, [ this.bar ])
+            ]
+        );
+        
+        var insertion = {};
+        insertion[this.options.position] = this.container;
+        $(parent).insert(insertion);
+    },
+    dispose: function() {
+        Element.remove(this.container);
+    },
+    update: function(percent) {
+        Element.setStyle(this.bar, {
+            width:percent+'%'
+        });
+    },
+    setNumberOfTicks: function(n) {
+        this.numberOfTicks = n;
+    },
+    tick:function() {
+        this.ticks++;
+        this.update(this.ticks * 100 / this.numberOfTicks);
+    }
+});
 /**
 * Build complete admin interface, based on rules_definitions, fields and options
 * hashs.
 * Assign handlers to inputs and build forbidden_sources and forbidden_targets hashs.
 */
 function buildAdminUI() {
-    admin_feedback_field_dependencies = document.getElementsByClassName('feedback_field_dependencies');
+    admin_feedback_field_dependencies = $$('.feedback_field_dependencies');
     
     //{{{ build forbidden_sources and forbidden_targets hashs
     $H(fields).values().each(function (field) {
@@ -664,6 +716,12 @@ function buildAdminUI() {
                         }
                     }
             });
+    });
+    //}}}
+    
+    //{{{ Build progress bar
+    var progress = new com.xerox.codex.ProgressBar('edit_rule', {
+        please_wait_msg: messages['please_wait']
     });
     //}}}
     
@@ -772,307 +830,329 @@ function buildAdminUI() {
     //}}}
     
     //{{{ Build rows of the table
-    $H(fields).values().each(function(source_field) {
-            $H(fields).values().each(function(target_field) {
-                    //One row foreach pair (source_field, target_field)
-                    if (target_field != source_field) {
-                        var tr = document.createElement('tr');
-                        tr.id        = 'fields_'+source_field.id+'_'+target_field.id;
-                        tr.className = 'boxitemalt';
-                        tr.style.verticalAlign = 'top';
-                        Element.hide(tr);
-                        
-                        //{{{ Build source cell
-                        tr.appendChild(td_source = document.createElement('td'));
-                        td_source.appendChild(inner_table = document.createElement('table'));
-                        Element.setStyle(inner_table, {width:'100%'});
-                        inner_table.cellPadding = 0;
-                        inner_table.cellSpacing = 0;
-                        inner_table.appendChild(inner_tbody = document.createElement('tbody'));
-                        //Foreach option build an inner row
-                        $H(options[source_field.id]).values().each(function(opt) {
-                            var txt = opt['option'].text+' ';
-                            var inner_tr = document.createElement('tr');
-                            inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
-                            
-                            //{{{ The checkbox
-                            var td_chk = document.createElement('td');
-                            Element.setStyle(td_chk, {width:'1%'});
-                            var chk = document.createElement('input');
-                            chk.type = 'checkbox';
-                            chk.name = chk.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
-                            chk.style.visibility = 'hidden';
-                            chk.onclick = function(event) {
-                                admin_checked(this.id);
-                            };
-                            td_chk.appendChild(chk);
-                            inner_tr.appendChild(td_chk);
-                            //}}}
-                            
-                            //{{{ The label of the option
-                            var td_txt = document.createElement('td');
-                            td_txt.appendChild(espace_insecable = document.createElement('span'));
-                            espace_insecable.innerHTML = '&nbsp;';
-                            td_txt.appendChild(label = document.createElement('label'));
-                            td_txt.onclick = function() {
-                                var link = admin_getInfosFromId(this.parentNode.id);
-                                admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
-                                return false;
-                            };
-                            Element.setStyle(td_txt, {cursor:'pointer'});
-                            //Does a rule exist ?
-                            if ($H(rules_definitions).values().find(function (definition) {
-                                return definition.source_field == source_field.id &&
-                                        definition.target_field == target_field.id &&
-                                        definition.source_value == opt['option'].value;
-                            })) {
-                                label.appendChild(strong = document.createElement('strong'));
-                                strong.innerHTML = txt;
-                            } else {
-                                label.innerHTML = txt;
-                            }
-                            Element.setStyle(label, {cursor:'pointer'});
-                            inner_tr.appendChild(td_txt);
-                            //}}}
-                            
-                            //{{{ The very beautiful arrow 
-                            inner_tr.appendChild(td_arrow = document.createElement('td'));
-                            Element.setStyle(td_arrow, {textAlign:'right'});
-                            td_arrow.appendChild(arrow = document.createElement('div'));
-                            arrow.innerHTML = '&rarr;';
-                            arrow.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
-                            Element.setStyle(arrow, {visibility:'hidden'});
-                            //}}}
-                            
-                            inner_tbody.appendChild(inner_tr);
-                        });
-                        //}}}
-                        
-                        //{{{ Build target cell
-                        var td_target = document.createElement('td');
-                        tr.appendChild(td_target);
-                        td_target.appendChild(inner_table = document.createElement('table'));
-                        Element.setStyle(inner_table, {width:'100%'});
-                        inner_table.cellPadding = 0;
-                        inner_table.cellSpacing = 0;
-                        inner_table.appendChild(inner_tbody = document.createElement('tbody'));
-                        //Foreach option build an inner row
-                        $H(options[target_field.id]).values().each(function(opt) {
-                            var txt = opt['option'].text+' ';
-                            var inner_tr = document.createElement('tr');
-                            inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
-                            
-                            //{{{ The very beautiful arrow 
-                            inner_tr.appendChild(td_arrow = document.createElement('td'));
-                            Element.setStyle(td_arrow, {textAlign:'right', width:'1%'});
-                            td_arrow.appendChild(arrow = document.createElement('div'));
-                            arrow.innerHTML = '&rarr;';
-                            arrow.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
-                            Element.setStyle(arrow, {visibility:'hidden'});
-                            //}}}
-                            
-                            //{{{ The checkbox
-                            var td_chk = document.createElement('td');
-                            Element.setStyle(td_chk, {width:'1%'});
-                            var chk = document.createElement('input');
-                            chk.type = 'checkbox';
-                            chk.name = chk.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
-                            chk.style.visibility = 'hidden';
-                            chk.onclick = function(event) {
-                                admin_checked(this.id);
-                            };
-                            td_chk.appendChild(chk);
-                            inner_tr.appendChild(td_chk);
-                            //}}}
-                            
-                            //{{{ The label of the option
-                            var td_txt = document.createElement('td');
-                            td_txt.appendChild(espace_insecable = document.createElement('span'));
-                            espace_insecable.innerHTML = '&nbsp;';
-                            td_txt.appendChild(label = document.createElement('label'));
-                            td_txt.onclick = function() {
-                                var link = admin_getInfosFromId(this.parentNode.id);
-                                admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
-                                return false;
-                            };
-                            Element.setStyle(td_txt, {cursor:'pointer'});
-                            //Does a rule exist ?
-                            if ($H(rules_definitions).values().find(function (definition) {
-                                return definition.source_field == source_field.id &&
-                                        definition.target_field == target_field.id &&
-                                        definition.target_value == opt['option'].value;
-                            })) {
-                                label.appendChild(strong = document.createElement('strong'));
-                                strong.innerHTML = txt;
-                            } else {
-                                label.innerHTML = txt;
-                            }
-                            Element.setStyle(label, {cursor:'pointer'});
-                            inner_tr.appendChild(td_txt);
-                            //}}}
-                            
-                            inner_tbody.appendChild(inner_tr);
-                        });
-                        //}}}
-                        
-                        tbody.appendChild(tr);
-                    }
+    var field_ids = $H(fields).keys().reverse();
+    var pairs = [];
+    field_ids.each(function(source_field_id) {
+            field_ids.each(function(target_field_id) {
+                    pairs.push([source_field_id, target_field_id]);
             });
     });
+    progress.setNumberOfTicks(pairs.length);
+    thread_BuildRows(pairs, progress, tbody, header_source, header_target, select_source, select_target);
     //}}}
     
-    //{{{ Some nice text in the header
-    // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
-    // As of 20060210, the sentence is Source: %1 %2 Target: %3 %4
-    header_source.innerHTML = messages['source'];
-    header_source.appendChild(select_source);
-    header_source.appendChild(document.createTextNode(' '));
+}
 
-    header_target.innerHTML = messages['target'];
-    header_target.appendChild(select_target);
-    header_target.appendChild(document.createTextNode(' '));
-    
-    //}}}
-    
-    //{{{ Save panel
-    tbody.appendChild(tr = document.createElement('tr'));
-    tr.id        = 'save_panel';
-    tr.className = 'boxtitle';
-    tr.appendChild(td = document.createElement('td'));
-    td.colSpan = 2;
-    Element.setStyle(td, {textAlign:'center'});
-    
-    //Save button
-    var save_btn = document.createElement('input');
-    save_btn.type    = 'submit'; //Be careful with IE, the input cannot be in dom before changing its type
-    save_btn.value   = messages['btn_save_rule'];
-    save_btn.id      = 'save_btn';        
-    td.appendChild(save_btn);
-    $('edit_rule_form').onsubmit = function() {
-        $('save').value = 'save';
-        $('direction_type').value      = admin_selected_type;
-        $('value').value               = admin_selected_value;
-        $('source_field_hidden').value = $F('source_field');
-        $('target_field_hidden').value = $F('target_field');
-        $('reset_btn').disabled        = $('save_btn').disabled = 'disabled';
-        return true;
-    };
-    //Reset button
-    var reset_btn = document.createElement('button');
-    td.appendChild(reset_btn);
-    reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
-    reset_btn.id = 'reset_btn';
-    reset_btn.onclick = function() {
-        admin_is_in_edit_mode = false;
-        if (admin_selected_type == 'target') {
-            admin_forceTargetValue($F('source_field'), $F('target_field'), admin_selected_value);
-        } else {
-            admin_forceSourceValue($F('source_field'), $F('target_field'), admin_selected_value);
-        }
-        Element.hide('save_panel');
-        $('source_field').disabled = '';
-        $('target_field').disabled = '';
-        return false;
-    };
-    Element.hide('save_panel');
-    //}}}
-    
-    //{{{ Handlers on select boxes (source and target fields)
-    select_target.onchange = function() {
-        //{{{ re-build source selectbox
-        var previous_selected = $F('source_field');
-        while($('source_field').options.length) {
-            $('source_field').remove($('source_field').options.length - 1);
-        }
-        $('source_field').appendChild(choose = document.createElement('option'));
-        choose.value = '-1';
-        choose.innerHTML = messages['choose_field'];
-        var value_to_select = choose;
-        $H(fields).values().each(function(source_field) {
-                //Don't add field if it is forbidden
-                if (forbidden_targets[source_field.id].length != $H(fields).keys().length
-                    && (
-                        $F('target_field') == '-1'
-                        || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
-                                return source_field.id == forbidden_source;
-                        }) 
-                    )
-                ) {
-                    //If a rule exist for this field, highlight it
-                    var so_className = '';
-                    if ($H(rules_definitions).values().find(function (rule_definition) {
-                                return rule_definition.source_field == source_field.id;
-                    })) {
-                        so_className = 'boxhighlight';
-                    }
-                    var so = Builder.node('option', {
-                            value: source_field.id,
-                            className:so_className
-                    }, source_field.label);
-                    $('source_field').appendChild(so);
-                    if (source_field.id == previous_selected) {
-                        value_to_select = so;
-                    }
+/**
+ * Chain pseudo threads to not freeze the browser
+ */ 
+function thread_BuildRows(pairs, progress, tbody, header_source, header_target, select_source, select_target) {
+    var pair = pairs.pop();
+    if (pair) {
+        progress.tick();
+        var source_field = fields[pair[0]];
+        var target_field = fields[pair[1]];
+        //One row foreach pair (source_field, target_field)
+        if (target_field != source_field) {
+            var tr = document.createElement('tr');
+            tr.id        = 'fields_'+source_field.id+'_'+target_field.id;
+            tr.className = 'boxitemalt';
+            tr.style.verticalAlign = 'top';
+            Element.hide(tr);
+            
+            //{{{ Build source cell
+            tr.appendChild(td_source = document.createElement('td'));
+            td_source.appendChild(inner_table = document.createElement('table'));
+            Element.setStyle(inner_table, {width:'100%'});
+            inner_table.cellPadding = 0;
+            inner_table.cellSpacing = 0;
+            inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+            //Foreach option build an inner row
+            $H(options[source_field.id]).values().each(function(opt) {
+                var txt = opt['option'].text+' ';
+                var inner_tr = document.createElement('tr');
+                inner_tr.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
+                
+                //{{{ The checkbox
+                var td_chk = document.createElement('td');
+                Element.setStyle(td_chk, {width:'1%'});
+                var chk = document.createElement('input');
+                chk.type = 'checkbox';
+                chk.name = chk.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
+                chk.style.visibility = 'hidden';
+                chk.onclick = function(event) {
+                    admin_checked(this.id);
+                };
+                td_chk.appendChild(chk);
+                inner_tr.appendChild(td_chk);
+                //}}}
+                
+                //{{{ The label of the option
+                var td_txt = document.createElement('td');
+                td_txt.appendChild(espace_insecable = document.createElement('span'));
+                espace_insecable.innerHTML = '&nbsp;';
+                td_txt.appendChild(label = document.createElement('label'));
+                td_txt.onclick = function() {
+                    var link = admin_getInfosFromId(this.parentNode.id);
+                    admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+                    return false;
+                };
+                Element.setStyle(td_txt, {cursor:'pointer'});
+                //Does a rule exist ?
+                if ($H(rules_definitions).values().find(function (definition) {
+                    return definition.source_field == source_field.id &&
+                            definition.target_field == target_field.id &&
+                            definition.source_value == opt['option'].value;
+                })) {
+                    label.appendChild(strong = document.createElement('strong'));
+                    strong.innerHTML = txt;
+                } else {
+                    label.innerHTML = txt;
                 }
-        });
-        value_to_select.selected = 'selected';
-        //}}}
-        admin_displayFields($F('source_field'), $F('target_field'));
-    };
-    select_source.onchange = function() {
-        //{{{ re-build target selectbox
-        var previous_selected = $F('target_field');
-        var len = $('target_field').options.length;
-        for(var i = len ; i >= 0 ; i--) {
-            $('target_field').options[i] = null;
-        }
-        $('target_field').appendChild(choose = document.createElement('option'));
-        choose.value = '-1';
-        choose.innerHTML = messages['choose_field'];
-        var value_to_select = choose;
-        $H(fields).values().each(function(target_field) {
-                //Don't add field if it is forbidden
-                if (forbidden_sources[target_field.id].length != $H(fields).keys().length
-                    && (
-                        $F('source_field') == '-1' 
-                        || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
-                                return target_field.id == forbidden_target;
-                        }) 
-                    )
-                ) {
-                    //If a rule exist for this field, highlight it
-                    var to_className = '';
-                    if ($H(rules_definitions).values().find(function (rule_definition) {
-                                return rule_definition.target_field == target_field.id;
-                    })) {
-                        to_className = 'boxhighlight';
-                    }
-                    var to = Builder.node('option', {
-                            value: target_field.id,
-                            className: to_className
-                    }, target_field.label);
-                    $('target_field').appendChild(to);
-                    if (target_field.id == previous_selected) {
-                        value_to_select = to;
-                    }
+                Element.setStyle(label, {cursor:'pointer'});
+                inner_tr.appendChild(td_txt);
+                //}}}
+                
+                //{{{ The very beautiful arrow 
+                inner_tr.appendChild(td_arrow = document.createElement('td'));
+                Element.setStyle(td_arrow, {textAlign:'right'});
+                td_arrow.appendChild(arrow = document.createElement('div'));
+                arrow.innerHTML = '&rarr;';
+                arrow.id = 'source_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
+                Element.setStyle(arrow, {visibility:'hidden'});
+                //}}}
+                
+                inner_tbody.appendChild(inner_tr);
+            });
+            //}}}
+            
+            //{{{ Build target cell
+            var td_target = document.createElement('td');
+            tr.appendChild(td_target);
+            td_target.appendChild(inner_table = document.createElement('table'));
+            Element.setStyle(inner_table, {width:'100%'});
+            inner_table.cellPadding = 0;
+            inner_table.cellSpacing = 0;
+            inner_table.appendChild(inner_tbody = document.createElement('tbody'));
+            //Foreach option build an inner row
+            $H(options[target_field.id]).values().each(function(opt) {
+                var txt = opt['option'].text+' ';
+                var inner_tr = document.createElement('tr');
+                inner_tr.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value;
+                
+                //{{{ The very beautiful arrow 
+                inner_tr.appendChild(td_arrow = document.createElement('td'));
+                Element.setStyle(td_arrow, {textAlign:'right', width:'1%'});
+                td_arrow.appendChild(arrow = document.createElement('div'));
+                arrow.innerHTML = '&rarr;';
+                arrow.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_arrow';
+                Element.setStyle(arrow, {visibility:'hidden'});
+                //}}}
+                
+                //{{{ The checkbox
+                var td_chk = document.createElement('td');
+                Element.setStyle(td_chk, {width:'1%'});
+                var chk = document.createElement('input');
+                chk.type = 'checkbox';
+                chk.name = chk.id = 'target_'+source_field.id+'_'+target_field.id+'_'+opt['option'].value+'_chk';
+                chk.style.visibility = 'hidden';
+                chk.onclick = function(event) {
+                    admin_checked(this.id);
+                };
+                td_chk.appendChild(chk);
+                inner_tr.appendChild(td_chk);
+                //}}}
+                
+                //{{{ The label of the option
+                var td_txt = document.createElement('td');
+                td_txt.appendChild(espace_insecable = document.createElement('span'));
+                espace_insecable.innerHTML = '&nbsp;';
+                td_txt.appendChild(label = document.createElement('label'));
+                td_txt.onclick = function() {
+                    var link = admin_getInfosFromId(this.parentNode.id);
+                    admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
+                    return false;
+                };
+                Element.setStyle(td_txt, {cursor:'pointer'});
+                //Does a rule exist ?
+                if ($H(rules_definitions).values().find(function (definition) {
+                    return definition.source_field == source_field.id &&
+                            definition.target_field == target_field.id &&
+                            definition.target_value == opt['option'].value;
+                })) {
+                    label.appendChild(strong = document.createElement('strong'));
+                    strong.innerHTML = txt;
+                } else {
+                    label.innerHTML = txt;
                 }
-        });
-        value_to_select.selected = 'selected';
-        //}}}
-        admin_displayFields($F('source_field'), $F('target_field'));
-    };
-    //}}}
-    
-    //Display the initial row
-    admin_displayFields($F('source_field'), $F('target_field'));
-
-    //Pre-select value if needed
-    if (preselected_source_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
-        admin_forceSourceValue(preselected_source_field, preselected_target_field, preselected_source_value);
+                Element.setStyle(label, {cursor:'pointer'});
+                inner_tr.appendChild(td_txt);
+                //}}}
+                
+                inner_tbody.appendChild(inner_tr);
+            });
+            //}}}
+            
+            tbody.appendChild(tr);
+        }
+        setTimeout(function () {
+                thread_BuildRows(pairs, progress, tbody, header_source, header_target, select_source, select_target);
+        }, 1);
     } else {
-        //Pre-select target if needed
-        if (preselected_target_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
-            admin_forceTargetValue(preselected_source_field, preselected_target_field, preselected_target_value);
+        progress.dispose();
+        //{{{ Some nice text in the header
+        // Expected sentence: If field %1 is selected to %2 then field %3 will propose %4
+        // As of 20060210, the sentence is Source: %1 %2 Target: %3 %4
+        header_source.innerHTML = messages['source'];
+        header_source.appendChild(select_source);
+        header_source.appendChild(document.createTextNode(' '));
+    
+        header_target.innerHTML = messages['target'];
+        header_target.appendChild(select_target);
+        header_target.appendChild(document.createTextNode(' '));
+        
+        //}}}
+        
+        //{{{ Save panel
+        tbody.appendChild(tr = document.createElement('tr'));
+        tr.id        = 'save_panel';
+        tr.className = 'boxtitle';
+        tr.appendChild(td = document.createElement('td'));
+        td.colSpan = 2;
+        Element.setStyle(td, {textAlign:'center'});
+        
+        //Save button
+        var save_btn = document.createElement('input');
+        save_btn.type    = 'submit'; //Be careful with IE, the input cannot be in dom before changing its type
+        save_btn.value   = messages['btn_save_rule'];
+        save_btn.id      = 'save_btn';        
+        td.appendChild(save_btn);
+        $('edit_rule_form').onsubmit = function() {
+            $('save').value = 'save';
+            $('direction_type').value      = admin_selected_type;
+            $('value').value               = admin_selected_value;
+            $('source_field_hidden').value = $F('source_field');
+            $('target_field_hidden').value = $F('target_field');
+            $('reset_btn').disabled        = $('save_btn').disabled = 'disabled';
+            return true;
+        };
+        //Reset button
+        var reset_btn = document.createElement('button');
+        td.appendChild(reset_btn);
+        reset_btn.appendChild(document.createTextNode(messages['btn_reset']));
+        reset_btn.id = 'reset_btn';
+        reset_btn.onclick = function() {
+            admin_is_in_edit_mode = false;
+            if (admin_selected_type == 'target') {
+                admin_forceTargetValue($F('source_field'), $F('target_field'), admin_selected_value);
+            } else {
+                admin_forceSourceValue($F('source_field'), $F('target_field'), admin_selected_value);
+            }
+            Element.hide('save_panel');
+            $('source_field').disabled = '';
+            $('target_field').disabled = '';
+            return false;
+        };
+        Element.hide('save_panel');
+        //}}}
+        
+        //{{{ Handlers on select boxes (source and target fields)
+        select_target.onchange = function() {
+            //{{{ re-build source selectbox
+            var previous_selected = $F('source_field');
+            while($('source_field').options.length) {
+                $('source_field').remove($('source_field').options.length - 1);
+            }
+            $('source_field').appendChild(choose = document.createElement('option'));
+            choose.value = '-1';
+            choose.innerHTML = messages['choose_field'];
+            var value_to_select = choose;
+            $H(fields).values().each(function(source_field) {
+                    //Don't add field if it is forbidden
+                    if (forbidden_targets[source_field.id].length != $H(fields).keys().length
+                        && (
+                            $F('target_field') == '-1'
+                            || !forbidden_sources[$F('target_field')].find(function (forbidden_source) {
+                                    return source_field.id == forbidden_source;
+                            }) 
+                        )
+                    ) {
+                        //If a rule exist for this field, highlight it
+                        var so_className = '';
+                        if ($H(rules_definitions).values().find(function (rule_definition) {
+                                    return rule_definition.source_field == source_field.id;
+                        })) {
+                            so_className = 'boxhighlight';
+                        }
+                        var so = Builder.node('option', {
+                                value: source_field.id,
+                                className:so_className
+                        }, source_field.label);
+                        $('source_field').appendChild(so);
+                        if (source_field.id == previous_selected) {
+                            value_to_select = so;
+                        }
+                    }
+            });
+            value_to_select.selected = 'selected';
+            //}}}
+            admin_displayFields($F('source_field'), $F('target_field'));
+        };
+        select_source.onchange = function() {
+            //{{{ re-build target selectbox
+            var previous_selected = $F('target_field');
+            var len = $('target_field').options.length;
+            for(var i = len ; i >= 0 ; i--) {
+                $('target_field').options[i] = null;
+            }
+            $('target_field').appendChild(choose = document.createElement('option'));
+            choose.value = '-1';
+            choose.innerHTML = messages['choose_field'];
+            var value_to_select = choose;
+            $H(fields).values().each(function(target_field) {
+                    //Don't add field if it is forbidden
+                    if (forbidden_sources[target_field.id].length != $H(fields).keys().length
+                        && (
+                            $F('source_field') == '-1' 
+                            || !forbidden_targets[$F('source_field')].find(function (forbidden_target) {
+                                    return target_field.id == forbidden_target;
+                            }) 
+                        )
+                    ) {
+                        //If a rule exist for this field, highlight it
+                        var to_className = '';
+                        if ($H(rules_definitions).values().find(function (rule_definition) {
+                                    return rule_definition.target_field == target_field.id;
+                        })) {
+                            to_className = 'boxhighlight';
+                        }
+                        var to = Builder.node('option', {
+                                value: target_field.id,
+                                className: to_className
+                        }, target_field.label);
+                        $('target_field').appendChild(to);
+                        if (target_field.id == previous_selected) {
+                            value_to_select = to;
+                        }
+                    }
+            });
+            value_to_select.selected = 'selected';
+            //}}}
+            admin_displayFields($F('source_field'), $F('target_field'));
+        };
+        //}}}
+        
+        //Display the initial row
+        admin_displayFields($F('source_field'), $F('target_field'));
+    
+        //Pre-select value if needed
+        if (preselected_source_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
+            admin_forceSourceValue(preselected_source_field, preselected_target_field, preselected_source_value);
+        } else {
+            //Pre-select target if needed
+            if (preselected_target_value && preselected_source_field != '-1' && preselected_target_field != '-1') {
+                admin_forceTargetValue(preselected_source_field, preselected_target_field, preselected_target_value);
+            }
         }
     }
 }
