@@ -19,10 +19,8 @@ class IM extends Controler {
 	function request() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project = project_get_object($group_id);
 		switch($request->get('action')) {
             case 'synchronize_all':
-                    //echo $request->get('action') ;
                     $this->action = 'synchronize_all';
                     $this->view = 'codex_im_admin';
             		break;
@@ -30,11 +28,11 @@ class IM extends Controler {
             		$this->action = 'synchronize_muc_only';
                     $this->view = 'codex_im_admin';
             		break;
-		     case 'synchronize_grp_only'://synchronize_grp
+		    case 'synchronize_grp_only':
             		$this->action = 'synchronize_grp';
                     $this->view = 'codex_im_admin';
             		break;
-		     case 'synchronize_muc_and_grp'://
+		    case 'synchronize_muc_and_grp':
             		$this->action = 'synchronize_muc_and_grp';
                     $this->view = 'codex_im_admin';
             		break;
@@ -43,9 +41,19 @@ class IM extends Controler {
                     break;
 		    case 'codex_im_admin':
 					$this->view = 'codex_im_admin';
-                     break;
-             default:
-                     break;
+                    break;
+            default:
+                    if ($group_id) {
+                        $project = project_get_object($group_id);
+                        if ($project->usesService('IM')) {
+                            $this->view = 'IM';
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im_admin','service_not_used'));
+                        }
+                    }else{
+                    	$this->view = 'codex_im_admin';
+                    }
+                    break;
          }
     }
     function getPlugin() {

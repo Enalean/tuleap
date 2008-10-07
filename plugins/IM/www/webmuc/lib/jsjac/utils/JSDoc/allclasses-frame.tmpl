@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+<TMPL_VAR NAME="project_name"> <TMPL_VAR NAME="filename"> 
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+</HEAD>
+<SCRIPT>
+function asd()
+{
+parent.document.title="<TMPL_VAR NAME="project_name"> <TMPL_VAR NAME="filename">";
+}
+</SCRIPT>
+<BODY BGCOLOR="white" onload="asd();">
+<TMPL_IF NAME="logo">
+   <IMG SRC="<TMPL_VAR NAME="logo">"/>
+</TMPL_IF>
+<H3 class="FrameHeadingFont"><B><TMPL_VAR NAME="project_name"></B></H3>
+<FONT size="+1" CLASS="FrameHeadingFont">
+<B><TMPL_VAR NAME="fname_link"></B></FONT>
+<BR>
+
+<TABLE BORDER="0" WIDTH="100%">
+
+<TMPL_LOOP name="classnames">
+<TR>
+<TD NOWRAP><FONT CLASS="FrameItemFont"><A HREF="<TMPL_VAR name="classlink">" TARGET="classFrame"><TMPL_VAR name="classname"></A>
+<BR>
+</FONT></TD>
+</TR>
+</TMPL_LOOP>
+</TABLE>
+
+</BODY>
+</HTML>

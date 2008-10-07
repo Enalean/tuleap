@@ -1,0 +1,468 @@
+<?xml version="1.0"?>
+<icondef>
+  <name>RhymBox</name>
+  <version>1.0</version>
+  <description>Default set of icons in RhymBox.  Created by Greg Fleming as part of his Megapack1 icon collection.</description>
+  <author>Greg Fleming</author>
+  <author>Sebastiaan Deckers</author>
+  <creation>2002-04-07</creation>
+  <icon>
+    <text>:-)</text>
+    <text>:)</text>
+    <graphic type="image/gif">smile.gif</graphic>
+  </icon>
+  <icon>
+    <text>;-)</text>
+    <text>;)</text>
+    <graphic type="image/gif">wink.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-|</text>
+    <text>:|</text>
+    <graphic type="image/gif">normal.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-\</text>
+    <text>:-/</text>
+    <text>:-\</text>
+    <graphic type="image/gif">ermm.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-s</text>
+    <text>:-S</text>
+    <text>:s</text>
+    <text>:S</text>
+    <graphic type="image/gif">puzzled.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-(</text>
+    <text>:(</text>
+    <graphic type="image/gif">depressed.gif</graphic>
+  </icon>
+  <icon>
+    <text>:'-(</text>
+    <text>:'(</text>
+    <graphic type="image/gif">cry.gif</graphic>
+  </icon>
+  <icon>
+    <text>:x</text>
+    <text>:X</text>
+    <graphic type="image/gif">speechless.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-O</text>
+    <text>:O</text>
+    <text>:-o</text>
+    <text>:o</text>
+    <graphic type="image/gif">surprised.gif</graphic>
+  </icon>
+  <icon>
+    <text>%-)</text>
+    <text>%)</text>
+    <graphic type="image/gif">evolved.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>&gt;:D</text>
+    <graphic type="image/gif">laugh.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-D</text>
+    <text>:d</text>
+    <text>:-d</text>
+    <text>:D</text>
+    <graphic type="image/gif">silly.gif</graphic>
+  </icon>
+  <icon>
+    <text>:o)</text>
+    <graphic type="image/gif">cheerful.gif</graphic>
+  </icon>
+  <icon>
+    <text>:p</text>
+    <graphic type="image/gif">ditsy.gif</graphic>
+  </icon>
+  <icon>
+    <text>:)</text>
+    <graphic type="image/gif">smiley.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-D</text>
+    <graphic type="image/gif">cheeky.gif</graphic>
+  </icon>
+  <icon>
+    <text>:*)</text>
+    <graphic type="image/gif">embarrassed.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-O</text>
+    <text>:-0</text>
+    <graphic type="image/gif">shocked.gif</graphic>
+  </icon>
+  <icon>
+    <text>:O</text>
+    <text>:0</text>
+    <graphic type="image/gif">scared.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-p</text>
+    <text>:-P</text>
+    <graphic type="image/gif">lick.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>B-)</text>
+    <graphic type="image/gif">cool.gif</graphic>
+    <transport name="msn">(h)</transport>
+  </icon>
+  <icon>
+    <text>B-|</text>
+    <graphic type="image/gif">calm.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-!</text>
+    <graphic type="image/gif">smoker.gif</graphic>
+  </icon>
+  <icon>
+    <text>|-)</text>
+    <graphic type="image/gif">bandit.gif</graphic>
+  </icon>
+  <icon>
+    <text>P-)</text>
+    <graphic type="image/gif">pirate.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-)}</text>
+    <graphic type="image/gif">beard.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-){</text>
+    <graphic type="image/gif">beard.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-)&gt;</text>
+    <graphic type="image/gif">old-man.gif</graphic>
+  </icon>
+  <icon>
+    <text>[:|]</text>
+    <graphic type="image/gif">ninja.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-[]</text>
+    <graphic type="image/gif">gasmask.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>:[</text>
+    <text>:-[</text>
+    <graphic type="image/gif">vampire.gif</graphic>
+  </icon>
+  <icon>
+    <text>3-|{</text>
+    <graphic type="image/gif">sleeping.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-/</text>
+    <graphic type="image/gif">paranoid.gif</graphic>
+  </icon>
+  <icon>
+    <text>?-|</text>
+    <graphic type="image/gif">ponder.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-S</text>
+    <graphic type="image/gif">nervous.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-s</text>
+    <graphic type="image/gif">confused.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-|</text>
+    <graphic type="image/gif">tired.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-[</text>
+    <graphic type="image/gif">bored.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-(</text>
+    <graphic type="image/gif">disappointed.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-&lt;</text>
+    <graphic type="image/gif">sad.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>&gt;:-D</text>
+    <graphic type="image/gif">evil.gif</graphic>
+  </icon>
+  <icon>
+    <text>&gt;:-|</text>
+    <graphic type="image/gif">angry.gif</graphic>
+  </icon>
+  <icon>
+    <text>&gt;:-)</text>
+    <graphic type="image/gif">devious.gif</graphic>
+  </icon>
+  <icon>
+    <text>&gt;:-o</text>
+    <graphic type="image/gif">mad.gif</graphic>
+  </icon>
+  <icon>
+    <text>:D</text>
+    <graphic type="image/gif">grin.gif</graphic>
+  </icon>
+  <icon>
+    <text>8)</text>
+    <graphic type="image/gif">classic.gif</graphic>
+  </icon>
+  <icon>
+    <text>:-]</text>
+    <graphic type="image/gif">square-eyed.gif</graphic>
+  </icon>
+  <icon>
+    <text>||-)</text>
+    <graphic type="image/gif">cross-eyed.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-)</text>
+    <graphic type="image/gif">foureyes.gif</graphic>
+  </icon>
+  <icon>
+    <text>X-)</text>
+    <text>x-)</text>
+    <graphic type="image/gif">knocked-out.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>:cat:</text>
+    <graphic type="image/gif">cat.gif</graphic>
+  </icon>
+  <icon>
+    <text>:dog:</text>
+    <graphic type="image/gif">dog.gif</graphic>
+  </icon>
+  <icon>
+    <text>::jaguar::</text>
+    <graphic type="image/gif">dog.gif</graphic>
+  </icon>
+  <icon>
+    <text>@-)</text>
+    <graphic type="image/gif">alien.gif</graphic>
+  </icon>
+  <icon>
+    <text>8-]</text>
+    <graphic type="image/gif">ogre.gif</graphic>
+  </icon>
+  <icon>
+    <text>O-)</text>
+    <text>o-)</text>
+    <graphic type="image/gif">cyclops.gif</graphic>
+  </icon>
+  <icon>
+    <text>O-]</text>
+    <text>o-]</text>
+    <graphic type="image/gif">robot.gif</graphic>
+  </icon>
+  <icon>
+    <text>|:-)</text>
+    <graphic type="image/gif">rambo.gif</graphic>
+  </icon>
+  <icon>
+    <text>:#(</text>
+    <graphic type="image/gif">hurt.gif</graphic>
+  </icon>
+  <icon>
+    <text>#-(</text>
+    <graphic type="image/gif">dead.gif</graphic>
+  </icon>
+  <icon>
+    <text>O:)</text>
+    <text>o:)</text>
+    <text>o:-)</text>
+    <text>O:-)</text>
+    <graphic type="image/gif">angel.gif</graphic>
+  </icon>
+  <icon>
+    <text>(6)</text>
+    <graphic type="image/gif">devil.gif</graphic>
+  </icon>
+  <icon>
+    <text>:yes:</text>
+    <text>(Y)</text>
+    <text>(y)</text>
+    <graphic type="image/gif">thumbup.gif</graphic>
+  </icon>
+  <icon>
+    <text>:no:</text>
+    <text>(N)</text>
+    <text>(n)</text>
+    <graphic type="image/gif">thumbdown.gif</graphic>
+  </icon>
+  <icon>
+    <text>(L)</text>
+    <text>(l)</text>
+    <text>:heart:</text>
+    <graphic type="image/gif">heart.gif</graphic>
+  </icon>
+  <icon>
+    <text>:bheart:</text>
+    <text>(U)</text>
+    <text>(u)</text>
+    <graphic type="image/gif">heart.gif</graphic>
+  </icon>
+  <icon>
+    <text>:man:</text>
+    <text>(Z)</text>
+    <text>(z)</text>
+    <graphic type="image/gif">person.gif</graphic>
+  </icon>
+  <icon>
+    <text>:letter:</text>
+    <text>(E)</text>
+    <text>(e)</text>
+    <graphic type="image/gif">letter.gif</graphic>
+  </icon>
+  <icon>
+    <text>(C)</text>
+    <text>(c)</text>
+    <text>:coffee:</text>
+    <graphic type="image/gif">coffee.gif</graphic>
+  </icon>
+  <icon>
+    <text>:jabber:</text>
+    <text>:lamp:</text>
+    <text>(I)</text>
+    <text>(i)</text>
+    <graphic type="image/gif">bulb.gif</graphic>
+  </icon>
+
+  <icon>
+    <text>:bat:</text>
+    <text>}{</text>
+    <graphic type="image/gif">bat.gif</graphic>
+  </icon>
+  <icon>
+    <text>:dragon:</text>
+    <graphic type="image/gif">dragon.gif</graphic>
+  </icon>
+  <icon>
+    <text>:home:</text>
+    <graphic type="image/gif">house.gif</graphic>
+  </icon>
+  <icon>
+    <text>:apple:</text>
+    <graphic type="image/gif">apple.gif</graphic>
+  </icon>
+  <icon>
+    <text>:glasses:</text>
+    <graphic type="image/gif">glasses.gif</graphic>
+  </icon>
+  <icon>
+    <text>:phone:</text>
+    <text>(T)</text>
+    <text>(t)</text>
+    <graphic type="image/gif">phone.gif</graphic>
+  </icon>
+  <icon>
+    <text>:mushroom:</text>
+    <graphic type="image/gif">mushroom.gif</graphic>
+  </icon>
+  <icon>
+    <text>:photo:</text>
+    <text>(P)</text>
+    <text>(p)</text>
+    <graphic type="image/gif">camera.gif</graphic>
+  </icon>
+  <icon>
+    <text>:world:</text>
+    <graphic type="image/gif">globe.gif</graphic>
+  </icon>
+  <icon>
+    <text>:syringe:</text>
+    <graphic type="image/gif">needle.gif</graphic>
+  </icon>
+  <icon>
+    <text language="en">::ace::</text>
+    <text language="nl">::aas::</text>
+    <graphic type="image/gif">ace.gif</graphic>
+  </icon>
+  <icon>
+    <text>:beer:</text>
+    <text>(B)</text>
+    <text>(b)</text>
+    <graphic type="image/gif">beer.gif</graphic>
+  </icon>
+  <icon>
+    <text>:carrot:</text>
+    <graphic type="image/gif">carrot.gif</graphic>
+  </icon>
+  <icon>
+    <text>:cherry:</text>
+    <graphic type="image/gif">cherry.gif</graphic>
+  </icon>
+  <icon>
+    <text>:cobra:</text>
+    <graphic type="image/gif">cobra.gif</graphic>
+  </icon>
+  <icon>
+    <text>(D)</text>
+    <text>(d)</text>
+    <text>:cocktail:</text>
+    <text>:wine:</text>
+    <graphic type="image/gif">cocktail.gif</graphic>
+  </icon>
+  <icon>
+    <text>:dinosaur:</text>
+    <graphic type="image/gif">dinosaur.gif</graphic>
+  </icon>
+  <icon>
+    <text>:drink:</text>
+    <graphic type="image/gif">drink.gif</graphic>
+  </icon>
+  <icon>
+    <text>:fish:</text>
+    <graphic type="image/gif">fish.gif</graphic>
+  </icon>
+  <icon>
+    <text>:graduate:</text>
+    <graphic type="image/gif">graduate.gif</graphic>
+  </icon>
+  <icon>
+    <text>:death:</text>
+    <graphic type="image/gif">grimreaper.gif</graphic>
+  </icon>
+  <icon>
+    <text>:hammer:</text>
+    <graphic type="image/gif">hammer.gif</graphic>
+  </icon>
+  <icon>
+    <text>:helicopter:</text>
+    <graphic type="image/gif">helicopter.gif</graphic>
+  </icon>
+  <icon>
+    <text>:music:</text>
+    <text>:note:</text>
+    <text>(8)</text>
+    <graphic type="image/gif">music.gif</graphic>
+  </icon>
+  <icon>
+    <text>:linux:</text>
+    <text>:tux:</text>
+    <graphic type="image/gif">penguin.gif</graphic>
+  </icon>
+  <icon>
+    <text>:skull:</text>
+    <graphic type="image/gif">skull.gif</graphic>
+  </icon>
+  <icon>
+    <text>:speaker:</text>
+    <graphic type="image/gif">speaker.gif</graphic>
+  </icon>
+  <icon>
+    <text>:television:</text>
+    <text>:tv:</text>
+    <graphic type="image/gif">tv.gif</graphic>
+  </icon>
+</icondef>

@@ -1,7 +1,7 @@
 <?php
 /*
  * Test ID: IM_05
- * Test description: Permet la création d'un muc room et d'un shared group un projet qui n'est pas sinchronisé avec le service IM'.
+ * Test description: Permet d'ajouter un membre de projet dans le muc room correspondant.
  * Pre-conditions:
  * 		1 - Jabbex doit être bien configurer pour dialoguer avec le serveur openfire
  * 		2 - le tableau des paramétres $params doit contenir au moins le group_id du 
@@ -11,6 +11,7 @@
  * 
  * Post-conditions:
  * 		1 - zdiallo va être ajouter au muc room du projet dont le group_id=252 .
+ * 		2 - zdiallo peut désormais participer à la salon de discutions dans lequel il ajouté.
  */
  
  ini_set('include_path',"/home/zdiallo/CodeX/dev_server/codex/src/www/include:/home/zdiallo/CodeX/dev_server/codex/src:.");

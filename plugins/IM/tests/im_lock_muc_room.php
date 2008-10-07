@@ -1,7 +1,7 @@
 <?php
 /*
  * Test ID: IM_03
- * Test description: Permet la création d'un muc room et d'un shared group un projet qui n'est pas sinchronisé avec le service IM'.
+ * Test description: Permet la suspension d'un muc room d'un projet qui a quitté l'état actif vers un autre état(suspended, pending)
  * Pre-conditions:
  * 		1 - Jabbex doit être bien configurer pour dialoguer avec le serveur openfire
  * 		2 - le tableau des paramétres $params doit contenir au moins le group_id du 

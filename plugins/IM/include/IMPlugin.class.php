@@ -5,7 +5,6 @@
  define("IM_DEBUG_ON",true,true);
  define("IM_DEBUG_OFF",false,true);
 require_once('common/plugin/Plugin.class.php');
-require_once(dirname(__FILE__)."/jabbex_api/Jabbex.php");
 require_once('www/include/user.php');
 require_once('common/user/UserHelper.class.php');
 
@@ -32,10 +31,15 @@ class IMPlugin extends Plugin {
        * last data remove ====>for testing script
        */
        var $last_im_datas_remove=array();
+       /**
+        * plugin id
+        */
+        var $id;
         /**
          * codex dao
          */
          var $codex_dao;
+         
 	/**
 	 * @param $id 
 	 * class instance
@@ -43,7 +47,9 @@ class IMPlugin extends Plugin {
 	 
     function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
+    	$this->id=$id;
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
+        $this->_addHook('javascript_file', 'jsFile', false);
        	$this->_addHook('approve_pending_project', 'im_process', false);
         $this->_addHook('project_is_suspended_or_pending', 'im_process_lock_muc_room', false);//can process several function
         $this->_addHook('confirme_account_register', 'account_register', false);
@@ -126,7 +132,7 @@ class IMPlugin extends Plugin {
      * To get an instance of jabdex
      * @return Jabbex object class for im processing
      */
-    function _get_im_object () {
+	function _get_im_object () {
 		try{
 			require_once(dirname(__FILE__)."/jabbex_api/Jabbex.php");
 		}catch(Exception $e){
@@ -134,7 +140,6 @@ class IMPlugin extends Plugin {
 			return null;
 		  
 		}
-		//var_dump(dirname(__FILE__)."/jabbex_api/Jabbex.php");
 		if(isset($this->im)&&$this->im){
         	//class was already instancied
         	return $this->im;
@@ -200,7 +205,7 @@ class IMPlugin extends Plugin {
     protected $dynamicpresence_alreadydisplayed;
     function getDynamicPresence($jid) {
         $id = md5($jid);
-        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" style="vertical-align:top"/>';
+        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" style="vertical-align:top" />';
         if (!$this->dynamicpresence_alreadydisplayed) {
             $html .= '<script type="text/javascript">'. "
             var plugin_im_presence = [];
@@ -284,6 +289,7 @@ class IMPlugin extends Plugin {
         return $this->_cache_presence[$jid];
     }
     
+	
     function instance() {
         static $_plugin_instance;
         if (!$_plugin_instance) {
@@ -381,8 +387,14 @@ class IMPlugin extends Plugin {
 	        $approuver = $um->getCurrentUser();
 			
 			try{
-				$this->_get_im_object()->create_shared_group($unix_project_name,$project_name);
-				$this->last_im_datas["grp"]=$project_name;
+				if($this->_get_im_object()){
+					$this->_get_im_object()->create_shared_group($unix_project_name,$project_name);
+					$this->last_im_datas["grp"]=$project_name;
+				}else{
+					if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
+					$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$project_name);
+					}
+				}
 			} catch(Exception $e){
 				if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
 					$GLOBALS['Response']->addFeedback('error', ' #### '.$e->getMessage().' ### ');
@@ -422,7 +434,7 @@ class IMPlugin extends Plugin {
 						$this->last_im_datas["muc"]=$group_name;
 					}else{
 						if(!$this->debug){//because when $this->debug is ON(true) we done fonctional test and $GLOBALS['Response'] is not known
-						$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$project_name);
+						$GLOBALS['Response']->addFeedback('error', ' #### IM object no available to create the shared group, '.$group_name);
 						}
 					}
 				} catch(Exception $e){
@@ -570,7 +582,7 @@ class IMPlugin extends Plugin {
        global $Language;
 	   $Language->loadLanguageMsg('IM','IM');
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
-        echo '<li><a href="'.$this->getPluginPath().'/?action=codex_im_admin">'.$link_title.'</a></li>';
+       echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
     }
  	
     function site_admin_external_tool_hook($params) {
@@ -637,14 +649,18 @@ class IMPlugin extends Plugin {
     function getDisplayPresence($user_id, $user_name, $realname) {
         $user_helper = new UserHelper();
         $im_object = $this->_get_im_object();
-        $jabberConf = $im_object->get_server_conf();
-        
-        $server_dns = $jabberConf['server_dns'];
-        
-        $jid_value = $user_name.'@'.$server_dns;
-        $adm_port_im = $jabberConf['webadmin_unsec_port'];
-        
-        $presence = $this->getDynamicPresence ($jid_value);
+        if(isset($im_object)&&$im_object){
+	        $jabberConf = $im_object->get_server_conf();
+	        
+	        $server_dns = $jabberConf['server_dns'];
+	        
+	        $jid_value = $user_name.'@'.$server_dns;
+	        $adm_port_im = $jabberConf['webadmin_unsec_port'];
+	        
+	        $presence = $this->getDynamicPresence ($jid_value);
+        }else{
+        	$presence='';
+        }
         
         return $presence . $user_helper->getDisplayName($user_name, $realname);
     }
@@ -700,6 +716,19 @@ class IMPlugin extends Plugin {
             $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
         }
 	}
+
+    function get_jabbex_objet () {
+		return $this->_get_im_object();
+	}
+    
+    function jsFile($params) {
+        // Only include the js files if we're actually in the IM pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
+        }
+    }
     
  	function process() {	
         require_once('IM.class.php');

@@ -2,6 +2,10 @@ plugin_im	description	Plugin de messagerie instantanée basé sur le protocole J
 plugin_im	name	Messagerie instantanée
 plugin_im	version	V1.0
 
+plugin_im	service_lbl_key	Messagerie Instantanée
+plugin_im	service_desc_key	La Messagerie Instantanée vous permet de discuter entre membres de projet.
+plugin_im	desc	La Messagerie Instantanée vous permet de discuter entre membres de projet.
+
 plugin_im	title	Messagerie instantanée
 plugin_im	my_roster	Ma liste de contact IM
 plugin_im	im_roster_member	Membres de votre liste IM
@@ -51,3 +55,5 @@ plugin_im_status	forbidden	Statut interdit
 plugin_im	user_appearance_pref_name	Messagerie Instantanée :
 plugin_im	user_appearance_pref_display_users_presence	Afficher la présence des utilisateurs
 plugin_im	link_im_admin_tool	Administration du serveur Jabber Openfire (login 'admin')
+
+plugin_im	wait_loading	Merci de patienter pendant le chargement de la page ...

@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>JWChat - Roster</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script src="switchStyle.js"></script>
+    <script src="shared.js"></script>
+    <script>
+function toggleGrp(name) {
+  parent.user.roster.toggleGrp(name);
+}
+
+var userSelected;
+function selectUser(e) {
+  var firingobj = null;
+  try {
+    if (window.event)
+      firingobj = window.event.srcElement;
+    else if (parent.event)
+      firingobj = parent.event.srcElement;
+    else if (parent.frames['groupchatIChat'].event)
+      firingobj = parent.frames['groupchatIChat'].event.srcElement;
+    else
+      firingobj = e.target;
+  } catch (err) { }
+
+  if (firingobj && (
+                    firingobj.id == 'msgbox' ||
+                    firingobj.id == 'submit_button' ||
+                    firingobj.id == 'toggle_sound_button' ||
+                    firingobj.id == 'scroll_lock_button'
+                    ))
+    return false;
+
+  if(userSelected)
+    userSelected.className = "rosterUser";
+
+  if (firingobj.parentNode.className == 'rosterUser' || firingobj.parentNode.className == 'rosterUserSelected')
+    firingobj = firingobj.parentNode;
+
+  var send_to = parent.document.getElementById('send_to_label');
+  if (firingobj && firingobj.className == 'chatUser') {
+    var nick = firingobj.getAttribute('username');
+    firingobj = document.getElementById('rosterUser_'+nick);
+  }
+  if (firingobj && (firingobj.className == 'rosterUserSelected' || 
+                    firingobj.className == 'rosterUser') && 
+      firingobj != userSelected) {	
+
+    firingobj.className = "rosterUserSelected";
+    userSelected = firingobj;
+					
+    send_to.innerHTML = "<span class='privMsg'>["+htmlEnc(userSelected.getAttribute('username'))+"&laquo;]</span>&nbsp;";
+  } else if(userSelected) {
+    send_to.innerHTML = '';
+    userSelected = null;
+  }
+  return true;
+}
+
+function userClicked(el,jid) {
+  // return selectUser(el);
+  return true;
+}
+
+function highlight(el) {
+  el.className = 'rosterUserSelected';
+}
+
+function unhighlight(el) {
+  if (userSelected && el == userSelected)
+    return;
+  el.className = 'rosterUser';
+}
+
+function init() {
+  // init handlers
+  parent.frames['groupchatIChat'].document.onclick = selectUser;
+}
+
+document.onclick = selectUser;
+onload = init;
+    </script>
+    <style>
+      body { background-color: white; background-image: none; margin: 0; }
+    </style>
+  </head>
+	<body>
+		<div id="roster" class="roster">
+		</div>
+	</body>
+</html>

@@ -18,14 +18,13 @@ class IMDataIntall {
     	$this->codexdata=array();
    		$GLOBALS['Language']->loadLanguageMsg('IM', 'IM');	
    		$this->codex_dao= & new IMPluginDao(CodexDataAccess::instance());
-   		
     }
-    
+
     /**
-     * To get an instance of jabdex
-     * @return Jabbex object class for im processing
+     * Get the only one Jabbex instance with the onelyone session ID in this script
+     * @return Jabbex IM datas encapsulation 
      */
-    function _get_im_object () {
+	function _get_im_object () {
 		try{
 			require_once(dirname(__FILE__)."/../jabbex_api/Jabbex.php");
 		}catch(Exception $e){
@@ -55,6 +54,7 @@ class IMDataIntall {
 		}
 		return $this->im;
 	}
+	
 	/**
 	 * add members and affiliate admins and owner room for the group identified by $group_id
 	 * @param long $group_id.
@@ -162,225 +162,26 @@ class IMDataIntall {
 		$group_Owner_name=$request->get('group_Owner_name');
 		$im_object=$this->_get_im_object();
 		try{
-			$im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
-			$this->muc_member_build($group_id);
-			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
+			if(isset($im_object)&&$im_object){
+				$im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
+				$this->muc_member_build($group_id);
+				$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_msg'));
+			}else{
+				$GLOBALS['Response']->addFeedback('error', "IM Object no available for muc room creation.");
+			}
 		}catch(Exception $e){
 			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_muc_error').$e->getMessage());
 		}
 		try{
-			$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
-			$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
+			if(isset($im_object)&&$im_object){
+				$im_object->create_shared_group(strtolower($unix_group_name), $group_name);
+				$GLOBALS['Response']->addFeedback('info', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_msg'));
+			}else{
+				$GLOBALS['Response']->addFeedback('error', "IM Object no available for shared group creation.");
+			}
 		}catch(Exception $e){
 			$GLOBALS['Response']->addFeedback('error', $group_name.' '.$GLOBALS['Language']->getText('plugin_im_admin','synchronise_grp_error').$e->getMessage());
 		}
-	}
-	 
-	/**
-	 * used by admin tools to diplay views
-	 */
-	function admin_install_muc_and_grp () {
-		session_require(array('group'=>'1','admin_flags'=>'A'));
-		$GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
-		$action = '';
-		$nb_grp=0 ;
-		$nb_muc=0;					
-		$res_grp = $this->codex_dao->search_group_without_shared_group();
-		$res_grp=$res_grp->query;
-		$res_muc =$this->codex_dao->search_group_without_muc(); //
-		$res_muc=$res_muc->query;
-		
-		//nomber of shared group to install
-		$nb_grp=db_numrows($res_grp);
-		
-		//nomber of muc room to install
-		$nb_muc=db_numrows($res_muc);
-		
-		$array_grp=array();
-		if($nb_grp>0){
-			$array_grp=result_column_to_array($res_grp,0);
-		}
-		
-		$array_muc=array();
-		if($nb_muc>0){
-			$array_muc=result_column_to_array($res_muc,0);
-		}
-		
-		$array_muc_and_grp=array_intersect($array_grp,$array_muc);
-		
-		if(sizeof($array_muc_and_grp)){
-			$array_muc_only=array_diff($array_muc,$array_muc_and_grp);
-			$array_grp_only=array_diff($array_grp,$array_muc_and_grp);
-		}else{
-			$array_muc_only=$array_muc;
-			$array_grp_only=$array_grp;
-		}
-		
-			echo'<fieldset>';
-			            echo'<legend style="font-size:1.3em; font-weight: bold;">Projets à synchroniser </legend>';
-		if($nb_grp!=0 ||$nb_muc){
-			//************form
-			global $PHP_SELF;
-			if(sizeof($array_muc_and_grp)){
-				foreach($array_muc_and_grp as $key=>$val){
-					$project = project_get_object($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name=$project->getPublicName();
-			        if(!(isset($group_name)&&$group_name!=null)){
-						$group_name=$unix_group_name;
-					}
-			        $group_description = $project->getDescription();
-			        $grp=new Group($val);
-			        $group_id=$grp->getID();//$group_id=$val;
-			        $project_members_ids=$grp->getMembersId();
-			        foreach($project_members_ids as $key=>$id){
-			        	$group_Owner_object=new User($id);
-			        	if($group_Owner_object->isMember($val,'A')){
-			        		 $group_Owner_name =trim($group_Owner_object->getName());
-			        	}
-			        }
-			        
-			        //field label
-			        $unix_group_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','unix_group_name_label');
-			        $group_description_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_description_label');
-			        $group_Owner_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_Owner_name_label');
-			        $action_label=$GLOBALS["Language"]->getText('plugin_im_admin','action_label');//plugin_im_admin - unix_group_name_label
-			        $action_on=$GLOBALS["Language"]->getText('plugin_im_admin','action_on_muc_and_grp');
-			        echo'<fieldset>';
-			            echo'<legend style="font-size:1.3em; font-weight: bold;">'.$group_name.'</legend>';
-			            echo $unix_group_name_label. '<a href="/projects/'. $unix_group_name .'">'. $unix_group_name.'</a><br>';
-			            echo $group_description_label.$group_description.'<br>';
-			            echo $group_Owner_name_label.$group_Owner_name.'<br>';
-			            echo $action_label.$action_on.'<br>';
-			            echo '
-					        <CENTER>
-					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
-					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_muc_and_grp">
-					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE='.$group_id.'>
-					         <INPUT TYPE="HIDDEN" NAME="group_description" VALUE="'.$group_description.'">
-					       	 <INPUT TYPE="HIDDEN" NAME="group_Owner_name" VALUE="'.$group_Owner_name.'">
-					       	 <INPUT type="submit" name="submit" value="'.$GLOBALS["Language"]->getText('plugin_im_admin','im_admin_synchro_muc').'">
-					        </FORM>
-					        </center>
-					        ';
-			        echo'</fieldset>';
-				}	
-			}
-			
-			if(sizeof($array_grp_only)){
-				foreach($array_grp_only as $key=>$val){
-					$project = project_get_object($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name=$project->getPublicName();
-			        if(!(isset($group_name)&&$group_name!=null)){
-						$group_name=$unix_group_name;
-					}
-			        $group_description = $project->getDescription();
-			        $grp=new Group($val);
-			        $group_id=$grp->getID();
-			        $project_members_ids=$grp->getMembersId();
-			        foreach($project_members_ids as $key=>$id){
-			        	$group_Owner_object=new User($id);
-			        	if($group_Owner_object->isMember($val,'A')){
-			        		 $group_Owner_name =$group_Owner_object->getName();
-			        	}
-			        }
-			        
-			        //field label
-			        $unix_group_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','unix_group_name_label');
-			        $group_description_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_description_label');
-			        $group_Owner_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_Owner_name_label');
-			        $action_label=$GLOBALS["Language"]->getText('plugin_im_admin','action_label');
-			        $action_on=$GLOBALS["Language"]->getText('plugin_im_admin','action_on_grp');
-			        echo'<fieldset>';
-			            echo'<legend style="font-size:1.3em; font-weight: bold;">'.$group_name.'</legend>';
-			            echo $unix_group_name_label. '<a href="/projects/'. $unix_group_name .'">'. $unix_group_name.'</a><br>';
-			            echo $group_description_label.$group_description.'<br>';
-			            echo $group_Owner_name_label.$group_Owner_name.'<br>';
-			            echo $action_label.$action_on.'<br>';
-			            echo '
-					        <CENTER>
-					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
-					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_grp_only">
-					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE='.$group_id.'>
-					         <INPUT TYPE="HIDDEN" NAME="group_description" VALUE="'.$group_description.'">
-					       	 <INPUT TYPE="HIDDEN" NAME="group_Owner_name" VALUE="'.$group_Owner_name.'">
-					       	 <INPUT type="submit" name="submit" value="'.$GLOBALS["Language"]->getText('plugin_im_admin','im_admin_synchro_muc').'">
-					        </FORM>
-					        </center>
-					        ';
-			        echo'</fieldset>';
-				}	
-			}
-			
-			
-			if(sizeof($array_muc_only)){
-				foreach($array_muc_only as $key=>$val){
-					$project = project_get_object($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name=$project->getPublicName();
-			        if(!(isset($group_name)&&$group_name!=null)){
-						$group_name=$unix_group_name;
-					}
-			        //$group_id=$val;
-			        $group_description = $project->getDescription();
-			        $grp=new Group($val);
-			        $group_id=$grp->getID();
-			        $project_members_ids=$grp->getMembersId();
-			        foreach($project_members_ids as $key=>$id){
-			        	$group_Owner_object=new User($id);
-			        	if($group_Owner_object->isMember($val,'A')){
-			        		 $group_Owner_name =$group_Owner_object->getName();
-			        	}
-			        }
-			       //field label
-			        $unix_group_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','unix_group_name_label');
-			        $group_description_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_description_label');
-			        $group_Owner_name_label=$GLOBALS["Language"]->getText('plugin_im_admin','group_Owner_name_label');
-			        $action_label=$GLOBALS["Language"]->getText('plugin_im_admin','action_label');
-			        $action_on=$GLOBALS["Language"]->getText('plugin_im_admin','action_on_muc');
-			        echo'<fieldset>';
-			            echo'<legend style="font-size:1.3em; font-weight: bold;">'.$group_name.'</legend>';
-			            echo $unix_group_name_label. '<a href="/projects/'. $unix_group_name .'">'. $unix_group_name.'</a><br>';
-			            echo $group_description_label.$group_description.'<br>';
-			            echo $group_Owner_name_label.$group_Owner_name.'<br>';
-			            echo $action_label.$action_on.'<br>';
-			            echo '
-					        <CENTER>
-					        <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
-					        <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_muc_only">
-					        <INPUT TYPE="HIDDEN" NAME="unix_group_name" VALUE="'.$unix_group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_name" VALUE="'.$group_name.'">
-					        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE='.$group_id.'>
-					         <INPUT TYPE="HIDDEN" NAME="group_description" VALUE="'.$group_description.'">
-					       	 <INPUT TYPE="HIDDEN" NAME="group_Owner_name" VALUE="'.$group_Owner_name.'">
-					       	 <INPUT type="submit" name="submit" value="'.$GLOBALS["Language"]->getText('plugin_im_admin','im_admin_synchro_muc').'">
-					        </FORM>
-					        </center>
-					        ';
-			       
-			        echo'</fieldset>';
-				}	
-			}
-			 
-				 echo '
-					 <CENTER>
-					 <FORM action="/plugins/IM/?action=codex_im_admin" method="POST">
-					 <INPUT TYPE="HIDDEN" NAME="action" VALUE="synchronize_all"> 
-					 <INPUT type="submit" name="submit" value="'.$GLOBALS["Language"]->getText('plugin_im_admin','im_admin_synchro_all').'">
-					 </FORM>
-					 </center>';
-		}else{
-		echo $GLOBALS["Language"]->getText('plugin_im_admin','no_project_to_synchronized');
-			  
-		}
-				echo'</fieldset>';
-			 
-		
 	}
     
 }

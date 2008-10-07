@@ -10,7 +10,7 @@
  * 		
  * 
  * Post-conditions:
- * 		1 - le muc room du projet dont le group_id=252 est fermer(protégé par un mot de passe ) dans le serveur openfire .
+ * 		1 - le muc room du projet dont le group_id=252 est désormais accessible dans le serveur openfire .
  */
  
  ini_set('include_path',"/home/zdiallo/CodeX/dev_server/codex/src/www/include:/home/zdiallo/CodeX/dev_server/codex/src:.");

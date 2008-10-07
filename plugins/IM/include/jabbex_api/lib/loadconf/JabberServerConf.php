@@ -20,7 +20,7 @@ class JabberServerConf
 	public function load_conf($conf_xml_file)
 	{
 
-		if(!$xml = simplexml_load_file($conf_xml_file)){
+		if( (!file_exists($conf_xml_file)) || (!$xml = simplexml_load_file($conf_xml_file)) ){
 			throw new Exception("Unable to load configuration file $conf_xml_file.",3017);
 		}
 		else{

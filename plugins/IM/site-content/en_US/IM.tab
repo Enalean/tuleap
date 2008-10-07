@@ -4,6 +4,10 @@ plugin_im	version	V1.0
 
 plugin_im	link_im_admin_title	Instant Messaging 
 
+plugin_im	service_lbl_key	Instant Messaging
+plugin_im	service_desc_key	Codex Instant Messaging allow communicate with your project team members. 
+plugin_im	desc	Codex Instant Messaging allow communicate with your project team members.
+
 plugin_im	my_roster	My IM Roster
 plugin_im	im_user_login	Instant Messaging Login:
 plugin_im	im_roster_member	Roster Members
@@ -50,3 +54,4 @@ plugin_im	user_appearance_pref_name	Instant Messaging:
 plugin_im	user_appearance_pref_display_users_presence	Display users presence
 plugin_im	link_im_admin_tool	Openfire Jabber server administration (login 'admin')
 
+plugin_im	wait_loading	Please wait while loading...

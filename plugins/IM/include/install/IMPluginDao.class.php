@@ -3,14 +3,17 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 class IMPluginDao extends DataAccessObject {
 	var $im;
+	var $openfire_db_name;
+	var $codex_db_name;
     function IMPluginDao(& $da ) {
         DataAccessObject::DataAccessObject($da);
+        
+        //infos about openfire
+        require_once(dirname(__FILE__).'/IMDbConf.class.php');
+        $conf=new IMDbConf();
+        $this->openfire_db_name=$conf->get_openfire_db_name();
     }
     
-    /**
-     * To get an instance of jabdex
-     * @return Jabbex object class for im processing
-     */
     function _get_im_object () {
 		
 		try{
@@ -71,7 +74,7 @@ class IMPluginDao extends DataAccessObject {
 		
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
 							FROM ". $this->da->db_name .".groups AS cg
-							LEFT JOIN openfire.mucRoom AS muc
+							LEFT JOIN ".$this->openfire_db_name.".mucRoom AS muc
 							ON (muc.name = LOWER(cg.unix_group_name)
 							AND muc.naturalName = cg.group_name)
 							WHERE muc.name IS NULL
@@ -87,7 +90,7 @@ class IMPluginDao extends DataAccessObject {
 	function get_last_rom_id () {
 		//the idType of muc room is 23
 		$id_type=23;
-		$sql=sprintf("SELECT id FROM openfire.jiveID WHERE idType=%s",
+		$sql=sprintf("SELECT id FROM ".$this->openfire_db_name.".jiveID WHERE idType=%s",
 						$this->da->quoteSmart($id_type));
 		$id_dar=$this->retrieve($sql);
 		$row=$id_dar->getRow();
@@ -99,7 +102,7 @@ class IMPluginDao extends DataAccessObject {
 	 * get group_id by group_unix_name
 	 */
 	 function get_rom_id_by_unix_name ($unix_name) {
-		$sql=sprintf("SELECT roomID FROM openfire.mucRoom WHERE name=%s",
+		$sql=sprintf("SELECT roomID FROM ".$this->openfire_db_name.".mucRoom WHERE name=%s",
 						$this->da->quoteSmart($unix_name));
 		$id_dar=$this->retrieve($sql);
 		$row=$id_dar->getRow();
@@ -114,7 +117,7 @@ class IMPluginDao extends DataAccessObject {
 		//the idType of muc room is 23
 		$id_type=23;
 		$last_id=$this->get_last_rom_id ()+1;
-		$sql=sprintf("UPDATE openfire.jiveID SET id= %s WHERE idType=%s",
+		$sql=sprintf("UPDATE ".$this->openfire_db_name.".jiveID SET id= %s WHERE idType=%s",
 						$this->da->quoteSmart($last_id),
 						$this->da->quoteSmart($id_type));
 		$updated = $this->update($sql);
@@ -128,7 +131,7 @@ class IMPluginDao extends DataAccessObject {
 		
 		$sql='SELECT cg.group_id
 				FROM '. $this->da->db_name .'.groups AS cg 
-				LEFT JOIN openfire.jiveGroupProp AS og
+				LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 	     				ON (og.groupName = LOWER(cg.unix_group_name)
 	          			AND og.name = \'sharedRoster.showInRoster\')
 				WHERE og.groupName IS NULL
@@ -143,9 +146,9 @@ class IMPluginDao extends DataAccessObject {
 	 * @return true/false
 	 */
 	function synchronize_grp_for_im_display_name () {
-		$sql_displayName='INSERT INTO openfire.jiveGroupProp (groupName, name, propValue)' .
+		$sql_displayName='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 	  								   'SELECT LOWER(cg.unix_group_name), \'sharedRoster.displayName\', cg.group_name
-										FROM '. $this->da->db_name .'.groups AS cg LEFT JOIN openfire.jiveGroupProp AS og
+										FROM '. $this->da->db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 			     						ON (og.groupName = cg.unix_group_name
 			          					AND og.name = \'sharedRoster.displayName\')
 										WHERE og.groupName IS NULL
@@ -158,9 +161,9 @@ class IMPluginDao extends DataAccessObject {
 	 * @return  true/false
 	 */
 	function synchronize_grp_for_im_show_in_roster () {
-		$sqlshowInRoster='INSERT INTO openfire.jiveGroupProp (groupName, name, propValue)' .
+		$sqlshowInRoster='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 			        		         'SELECT LOWER(cg.unix_group_name), \'sharedRoster.showInRoster\', \'onlyGroup\'
-									  FROM '. $this->da->db_name .'.groups AS cg LEFT JOIN openfire.jiveGroupProp AS og
+									  FROM '. $this->da->db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 	     							  ON (og.groupName = cg.unix_group_name
 	          						  AND og.name = \'sharedRoster.showInRoster\')
 									  WHERE og.groupName IS NULL
@@ -173,7 +176,7 @@ class IMPluginDao extends DataAccessObject {
 	 * to set muc members
 	 */
 	 function add_muc_room_user ($roomID,$jid/*,$nickname='',$firstName='',$lastName='',$url='',$faqentry=''*/) {
-		$forma="INSERT INTO openfire.mucMember(roomID,jid)
+		$forma="INSERT INTO ".$this->openfire_db_name.".mucMember(roomID,jid)
 				 VALUES(%s, %s)"; //we can add also , %s, %s,%s, %s, %s--->nickname,firstName,lastName,url,faqentry
 		$sql = sprintf($forma,
 						$this->da->quoteSmart($roomID),
@@ -191,7 +194,7 @@ class IMPluginDao extends DataAccessObject {
 	 * muc room affiliation
 	 */
 	 function muc_room_affiliation ($roomID,$jid,$affiliation) {
-		$forma="INSERT INTO openfire.mucAffiliation(roomID,jid,affiliation)
+		$forma="INSERT INTO ".$this->openfire_db_name.".mucAffiliation(roomID,jid,affiliation)
 				 VALUES (%s, %s, %s);";
 		$sql = sprintf($forma,
 						$this->da->quoteSmart($roomID),
@@ -261,7 +264,7 @@ class IMPluginDao extends DataAccessObject {
 					  		$can_register=$this->da->quoteSmart($can_register);
 					  		
 //					  		//for last muc Id
-//					  		$resultID=$this->retrieve("SELECT roomID FROM openfire.mucRoom ORDER BY roomID ASC")->query;
+//					  		$resultID=$this->retrieve("SELECT roomID FROM ".$this->openfire_db_name.".mucRoom ORDER BY roomID ASC")->query;
 //					  		$lastID=0;
 //					  		
 //					  		while ($donnees = db_fetch_array($resultID) ){
@@ -286,7 +289,7 @@ class IMPluginDao extends DataAccessObject {
 								$description=$this->da->quoteSmart($description);
 								
 								//echo "<font color=\"red\"><b>Owner :  </b></font> : ".$row['user_name']."  |<font color=\"red\"><b>Nom public : </b></font>".$row['group_name']."         |"."<font color=\"red\"><b>Unix name :  </b></font>".$row['unix_group_name']."  desc :".$row['short_description']."<br>";
-								$forma="INSERT INTO openfire.mucRoom
+								$forma="INSERT INTO ".$this->openfire_db_name.".mucRoom
 								                    (roomID, creationDate, modificationDate, name, naturalName, description, lockedDate, emptyDate, canChangeSubject, maxUsers, publicRoom, moderated, membersOnly, canInvite, roomPassword, canDiscoverJID, logEnabled, subject, rolesToBroadcast, useReservedNick, canChangeNick, canRegister)
 										 VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s)";
 								$sql = sprintf($forma,$id,$creation_date,$modification_date,$short_name,$public_name,$description,0000000000,$empty_date,$change_subject,$max_user,$public_room,$moderated,$members_only,$can_invite,$room_pwd,$can_discover_JID,$log_enabled,$subject,$role_to_broadcast,$use_reserved_NICK,$can_changed_nick,$can_register);
