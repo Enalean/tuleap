@@ -57,7 +57,7 @@ class IMDao extends DataAccessObject {
      * search groups no synchronized with muc room
      * @DataAccesResult
      */
-    function & search_group_without_muc () {
+    function & search_group_without_muc() {
 		
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
 							FROM ". $this->codex_db_name .".groups AS cg
@@ -74,7 +74,7 @@ class IMDao extends DataAccessObject {
 	/**
 	 * used for unique ID sequence generation
 	 */
-	function get_last_rom_id () {
+	function get_last_room_id() {
 		//the idType of muc room is 23
 		$id_type=23;
 		$sql=sprintf("SELECT id FROM ".$this->openfire_db_name.".jiveID WHERE idType=%s",
@@ -86,9 +86,9 @@ class IMDao extends DataAccessObject {
 	
 	
 	/**
-	 * get group_id by group_unix_name
+	 * get room_id by group_unix_name
 	 */
-	 function get_rom_id_by_unix_name ($unix_name) {
+	 function get_room_id_by_unix_name($unix_name) {
 		$sql=sprintf("SELECT roomID FROM ".$this->openfire_db_name.".mucRoom WHERE name=%s",
 						$this->da->quoteSmart($unix_name));
 		$id_dar=$this->retrieve($sql);
@@ -100,10 +100,10 @@ class IMDao extends DataAccessObject {
 	 * update last roomID
 	 */
 	 
-	 function update_last_room_id () {
+	 function update_last_room_id() {
 		//the idType of muc room is 23
 		$id_type=23;
-		$last_id=$this->get_last_rom_id ()+1;
+		$last_id=$this->get_last_room_id ()+1;
 		$sql=sprintf("UPDATE ".$this->openfire_db_name.".jiveID SET id= %s WHERE idType=%s",
 						$this->da->quoteSmart($last_id),
 						$this->da->quoteSmart($id_type));
@@ -132,7 +132,7 @@ class IMDao extends DataAccessObject {
 	 * synchronize_grp_for_im_display_name
 	 * @return true/false
 	 */
-	function synchronize_grp_for_im_display_name () {
+	function synchronize_grp_for_im_display_name() {
 		$sql_displayName='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 	  								   'SELECT LOWER(cg.unix_group_name), \'sharedRoster.displayName\', cg.group_name
 										FROM '. $this->codex_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
@@ -147,7 +147,7 @@ class IMDao extends DataAccessObject {
 	 * synchronize_grp_for_im_show_in_roster
 	 * @return  true/false
 	 */
-	function synchronize_grp_for_im_show_in_roster () {
+	function synchronize_grp_for_im_show_in_roster() {
 		$sqlshowInRoster='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 			        		         'SELECT LOWER(cg.unix_group_name), \'sharedRoster.showInRoster\', \'onlyGroup\'
 									  FROM '. $this->codex_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
@@ -162,7 +162,7 @@ class IMDao extends DataAccessObject {
 	/**
 	 * to set muc members
 	 */
-	 function add_muc_room_user ($roomID,$jid/*,$nickname='',$firstName='',$lastName='',$url='',$faqentry=''*/) {
+	 function add_muc_room_user($roomID,$jid/*,$nickname='',$firstName='',$lastName='',$url='',$faqentry=''*/) {
 		$forma="INSERT INTO ".$this->openfire_db_name.".mucMember(roomID,jid)
 				 VALUES(%s, %s)"; //we can add also , %s, %s,%s, %s, %s--->nickname,firstName,lastName,url,faqentry
 		$sql = sprintf($forma,
@@ -180,7 +180,7 @@ class IMDao extends DataAccessObject {
 	/**
 	 * muc room affiliation
 	 */
-	 function muc_room_affiliation ($roomID,$jid,$affiliation) {
+	 function muc_room_affiliation($roomID,$jid,$affiliation) {
 		$forma="INSERT INTO ".$this->openfire_db_name.".mucAffiliation(roomID,jid,affiliation)
 				 VALUES (%s, %s, %s);";
 		$sql = sprintf($forma,
@@ -195,7 +195,7 @@ class IMDao extends DataAccessObject {
 	 * synchronize_grp_for_im_display_name
 	 * @@return true/false
 	 */
-	function synchronize_grp_for_im_muc_room () {
+	function synchronize_grp_for_im_muc_room() {
 			          $dar=&$this->search_group_without_muc();
 			         $result=$dar->query;//$this->retrieve($sql)->query;
 			         if(isset($result)&&$result){
@@ -266,7 +266,7 @@ class IMDao extends DataAccessObject {
 					  		while ($row=$dar->getRow()){
 								//$lastID++;
 								//echo $lastID.'<br>';
-								$lastID=$this->get_last_rom_id();
+								$lastID=$this->get_last_room_id();
 								$id=$this->da->quoteSmart($lastID);
 								$short_name=strtolower($row['unix_group_name']);
 								$short_name=$this->da->quoteSmart($short_name);
@@ -320,7 +320,7 @@ class IMDao extends DataAccessObject {
 	/**
 	 * synchronize all project with IM concept .
 	 */
-	 function synchronize_all_project () {
+	 function synchronize_all_project() {
 	  $this->synchronize_grp_for_im_muc_room();
 	  $this->synchronize_grp_for_im_show_in_roster();
 	  $this->synchronize_grp_for_im_display_name();

@@ -72,7 +72,7 @@ class IMDataIntall {
 		
 		//about projet to be synchronize
 		$grp=new Group($group_id);
-		$roomID=$this->codex_dao->get_rom_id_by_unix_name ($grp->getUnixName());
+		$roomID=$this->codex_dao->get_room_id_by_unix_name ($grp->getUnixName());
 		$project_members_ids=$grp->getMembersId();
 		
 		foreach($project_members_ids as $user_id){

@@ -40,7 +40,7 @@ class IMPlugin extends Plugin {
      * codex dao
      */
     var $codex_dao;
-         
+    
 	/**
 	 * @param $id 
 	 * class instance
@@ -177,7 +177,7 @@ class IMPlugin extends Plugin {
 		require_once('IMDataAccess.class.php');
         $controler = new IM($this);
 		$this->codex_dao= & new IMDao(IMDataAccess::instance($controler));
-		$roomID=$this->codex_dao->get_rom_id_by_unix_name ($unix_project_name);
+		$roomID=$this->codex_dao->get_room_id_by_unix_name ($unix_project_name);
 		return (isset($roomID)&&$roomID);
 	}
 	/**
