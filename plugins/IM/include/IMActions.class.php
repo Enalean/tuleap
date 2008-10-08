@@ -3,7 +3,7 @@
 require_once('common/mvc/Actions.class.php');
 //require_once('common/include/HTTPRequest.class.php');
 require_once(dirname(__FILE__)."/install/IMDataIntall.class.php");
-require_once(dirname(__FILE__)."/install/IMPluginDao.class.php");
+require_once("IMDao.class.php");
 
 class IMActions extends Actions{
 	
@@ -32,7 +32,7 @@ class IMActions extends Actions{
 		
 		//shared group installation 
 		require_once('common/dao/CodexDataAccess.class.php');
-		$dao=new IMPluginDao(CodexDataAccess::instance());
+		$dao=new IMDao(IMDataAccess::instance());
 		$dao->synchronize_all_project();
 	}
 	

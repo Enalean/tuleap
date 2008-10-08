@@ -1,6 +1,6 @@
 <?php
 require_once('pre.php');
-require_once('IMPluginDao.class.php');
+require_once(dirname(__FILE__).'/../IMDao.class.php');
 require_once('common/include/GroupFactory.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
@@ -17,7 +17,7 @@ class IMDataIntall {
     function IMDataIntall() {
     	$this->codexdata=array();
    		$GLOBALS['Language']->loadLanguageMsg('IM', 'IM');	
-   		$this->codex_dao= & new IMPluginDao(CodexDataAccess::instance());
+   		$this->codex_dao= & new IMDao(CodexDataAccess::instance());
     }
 
     /**

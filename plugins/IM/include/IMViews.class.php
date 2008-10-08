@@ -143,7 +143,7 @@ class IMViews extends Views {
 		$nb_grp=0 ;
 		$nb_muc=0;
         
-        $im_dao= & new IMPluginDao(CodexDataAccess::instance());
+        $im_dao = & new IMDao(IMDataAccess::instance());
         
 		$res_grp = $im_dao->search_group_without_shared_group();
 		$res_grp = $res_grp->query;

@@ -173,9 +173,9 @@ class IMPlugin extends Plugin {
 	}
 	
 	function _this_muc_exist ($unix_project_name) {
-		require_once(dirname(__FILE__)."/install/IMPluginDao.class.php");
+		require_once("IMDao.class.php");
 		require_once('common/dao/CodexDataAccess.class.php');
-		$this->codex_dao= & new IMPluginDao(CodexDataAccess::instance());
+		$this->codex_dao= & new IMDao(IMDataAccess::instance());
 		$roomID=$this->codex_dao->get_rom_id_by_unix_name ($unix_project_name);
 		return (isset($roomID)&&$roomID);
 	}
