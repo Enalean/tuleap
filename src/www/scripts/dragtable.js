@@ -186,6 +186,7 @@ dragtable = {
     if (dragObj.startCol == -1) return;
 
     var new_elt = dragtable.fullCopy(table, false);
+    new_elt.style.width = 'auto';
     new_elt.style.margin = '0';
 
     // Copy the entire column
@@ -446,4 +447,3 @@ var forEach = function(object, block, context) {
     resolve.forEach(object, block, context);
   }
 };
-
