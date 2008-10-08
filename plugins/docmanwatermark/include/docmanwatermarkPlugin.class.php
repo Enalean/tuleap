@@ -113,7 +113,7 @@ class DocmanWatermarkPlugin extends Plugin {
     
     function process() {
         require_once('DocmanWatermark_HTTPController.class.php');
-        $controler = new DocmanWatermark_HTTPController($this, $this->_getPluginPath().'/../../plugins/docman',$this->_getPluginPath(), $this->_getThemePath());
+        $controler = new DocmanWatermark_HTTPController($this, $this->getPluginPath().'/../../plugins/docman',$this->getPluginPath(), $this->getThemePath());
         $controler->process();
     }
      
