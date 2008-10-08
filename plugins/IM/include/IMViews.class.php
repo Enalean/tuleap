@@ -4,6 +4,9 @@ require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once(dirname(__FILE__)."/install/IMDataIntall.class.php");
 
+require_once('IMDao.class.php');
+require_once('IMDataAccess.class.php');
+
 class IMViews extends Views {
 	
     var $install;
@@ -143,7 +146,7 @@ class IMViews extends Views {
 		$nb_grp=0 ;
 		$nb_muc=0;
         
-        $im_dao = & new IMDao(IMDataAccess::instance());
+        $im_dao = & new IMDao(IMDataAccess::instance($this->getControler()));
         
 		$res_grp = $im_dao->search_group_without_shared_group();
 		$res_grp = $res_grp->query;

@@ -32,7 +32,7 @@ class IMActions extends Actions{
 		
 		//shared group installation 
 		require_once('common/dao/CodexDataAccess.class.php');
-		$dao=new IMDao(IMDataAccess::instance());
+		$dao=new IMDao(IMDataAccess::instance($this->getControler()));
 		$dao->synchronize_all_project();
 	}
 	

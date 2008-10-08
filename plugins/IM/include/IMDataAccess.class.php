@@ -19,11 +19,6 @@ class IMDataAccess extends DataAccess {
         
         include_once($etc_root . '/database_im.inc');
         
-        echo 'HOST='.$im_dbhost.'<br>';
-        echo 'DBN='.$im_dbname.'<br>';
-        echo 'USER='.$im_dbuser.'<br>';
-        echo 'PASS='.$im_dbpasswd.'<br>';
-                
         $this->DataAccess($im_dbhost, $im_dbuser, $im_dbpasswd, $im_dbname);
     }
     
