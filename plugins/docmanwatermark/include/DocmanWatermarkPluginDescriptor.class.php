@@ -28,7 +28,7 @@ class DocmanWatermarkPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
         $GLOBALS['Language']->loadLanguageMsg('docmanwatermark', 'docmanwatermark');
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docman_watermark', 'descriptor_name'), 'v2.0', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_name'), 'v2.0', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_description'));
     }
 }
 ?>

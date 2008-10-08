@@ -20,3 +20,5 @@ plugin_docmanwatermark	admin_disabled	The Watermarking is disabled or there is n
 plugin_docmanwatermark	admin_project_import_error	Could not find project to import.
 plugin_docmanwatermark	admin_project_import_same	You are trying to import watermark settings from the same project.
 plugin_docmanwatermark	admin_import_from_project_not_match	The source project configuration doesn't much watermark settings. You are forwarded to Metadata synchronization board
+plugin_docmanwatermark	descriptor_name	PDF Watermark plugin
+plugin_docmanwatermark	descriptor_description	PDF Watermark plugin. Provide the possibility to add a customizable banner to PDF file uploaded in Docman

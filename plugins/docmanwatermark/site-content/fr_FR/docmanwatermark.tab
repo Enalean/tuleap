@@ -20,3 +20,5 @@ plugin_docmanwatermark	admin_disabled	Le Filigrane est désactivé ou bien il n'ex
 plugin_docmanwatermark	admin_project_import_error	Le projet a importer est inexistant.
 plugin_docmanwatermark	admin_project_import_same	Vous essayez d'importer la configuration de ce même projet.
 plugin_docmanwatermark	admin_import_from_project_not_match	Les metadata du projet source et du projet destination ne sont pas synchrones. vous êtes redirigé vers la configuration des Metadata
+plugin_docmanwatermark	descriptor_name	PDF Watermark plugin
+plugin_docmanwatermark	descriptor_description	Plugin PDF Watermark . Il fourni la possibilité d'ajouter une bannière configurable au fichier d'extension PDF chargé dans le Docman
