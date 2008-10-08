@@ -166,13 +166,13 @@ class PluginsAdministrationViews extends Views {
                 $link_to_hooks = implode(', ', $link_to_hooks);
                 
                 //PropertyDescriptor
-                $descs =& $plug_info->getPropertyDescriptors();
-                $keys  =& $descs->getKeys();
-                $iter  =& $keys->iterator();
+                $descs = $plug_info->getPropertyDescriptors();
+                $keys  = $descs->getKeys();
+                $iter  = $keys->iterator();
                 $props = '';
                 while($iter->valid()) {
-                    $key   =& $iter->current();
-                    $desc  =& $descs->get($key);
+                    $key   = $iter->current();
+                    $desc  = $descs->get($key);
                     $prop_name = $desc->getName();
                     $props .= '<tr><td class="pluginsadministration_label">'. $prop_name .'</td><td>';
                     if (is_bool($desc->getValue())) {

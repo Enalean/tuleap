@@ -144,8 +144,8 @@ class PluginsAdministrationActions extends Actions {
                 $key   =& $iter->current();
                 $desc  =& $descs->get($key);
                 $prop_name = $desc->getName();
-                if (isset($user_properties[$prop_name->getInternalString()])) {
-                    $val = $user_properties[$prop_name->getInternalString()];
+                if (isset($user_properties[$prop_name])) {
+                    $val = $user_properties[$prop_name];
                     if (is_bool($desc->getValue())) {
                         $val = $val ? true : false;
                     }

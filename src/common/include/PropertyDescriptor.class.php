@@ -12,12 +12,12 @@ class PropertyDescriptor {
     var $name;
     var $value;
     
-    function PropertyDescriptor(&$name, $value) {
-        $this->name =& $name;
+    function PropertyDescriptor($name, $value) {
+        $this->name = $name;
         $this->setValue($value);
     }
     
-    function &getName() { 
+    function getName() { 
         return $this->name; 
     }
     function getValue() { 
