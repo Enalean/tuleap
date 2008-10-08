@@ -244,6 +244,7 @@ project_admin_permissions	wikiattachment	wiki attachment $1
 project_admin_permissions	tracker	tracker $1
 project_admin_permissions	tracker_field	tracker field $1
 project_admin_permissions	object	object $1
+project_admin_permissions	artifact	Artifact $1
 # ...end of values
 project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
 project_admin_permissions	submit_perm	Submit Permissions

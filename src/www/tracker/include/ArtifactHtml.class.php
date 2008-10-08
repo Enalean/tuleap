@@ -334,6 +334,18 @@ class ArtifactHtml extends Artifact {
                 $crossref_fact->getNbReferences(),
                 $crossref_fact->getNbReferences() ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
             );
+            
+            //
+            // Artifact permissions
+            //
+            $html = permission_fetch_selection_form('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id, '');;
+            echo $this->_getSection(
+                'artifact_section_permissions',
+                $Language->getText('tracker_include_artifact','permissions').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactPermissions') : ''),
+                $html,
+                true
+            );
+            
             //
             // History
             //

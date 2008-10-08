@@ -11,7 +11,7 @@
 
 // Supported object types and related object_id:
 //
-//type='NEWS_READ'                id='forum_id'                table='news_bytes'
+//type='NEWS_READ'                 id='forum_id'                   table='news_bytes'
 // type='PACKAGE_READ'             id='package_id'                 table='frs_package'
 // type='RELEASE_READ'             id='release_id'                 table='frs_release'
 // type='DOCUMENT_READ'            id='docid"                      table='doc_data'
@@ -25,6 +25,7 @@
 // type='TRACKER_ACCESS_SUBMITTER' id='group_artifact_id'          table='artifact_group_list'
 // type='TRACKER_ACCESS_ASSIGNEE'  id='group_artifact_id'          table='artifact_group_list'
 // type='TRACKER_ACCESS_FULL'      id='group_artifact_id'          table='artifact_group_list'
+// type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
  
 
 require_once('www/project/admin/ugroup_utils.php');
@@ -69,6 +70,8 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','tracker_assignee_access');
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
         return $Language->getText('project_admin_permissions','tracker_full_access');
+    } else if ($permission_type=='TRACKER_ARTIFACT_ACCESS') {
+        return $Language->getText('project_admin_permissions','tracker_artifact_access');
     } else {
         $em =& EventManager::instance();
         $name = false;
@@ -109,6 +112,8 @@ function permission_get_object_type($permission_type,$object_id) {
         return 'tracker';
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
         return 'tracker';
+    } else if ($permission_type=='TRACKER_ACCESS_FULL') {
+        return 'artefact';
     } else {
         $em =& EventManager::instance();
         $object_type = false;
@@ -165,6 +170,18 @@ function permission_get_object_name($permission_type,$object_id) {
             }
         }
         return $ret;
+    } else if ($permission_type=='TRACKER_ARTIFACT_ACCESS') {
+        $ret = $object_id;
+        $sql="SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($object_id);
+        $result = db_query($sql);
+        if (db_numrows($result)>0) {
+            $row = db_fetch_array($result);
+            $atid = $row['group_artifact_id'];
+        }
+        $group = group_get_object($group_id);
+        $at = new ArtifactType($group, $atid);
+        $a = new Artifact($at,$object_id);
+        return $a->getId() .' - '. $a->getSummary();    
     } else {
         $em =& EventManager::instance();
         $object_name = false;

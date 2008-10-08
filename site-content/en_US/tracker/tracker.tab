@@ -342,6 +342,7 @@ tracker_include_artifact	toggle	Toggle
 tracker_include_artifact	expand_all	expand all
 tracker_include_artifact	collapse_all	collapse all
 tracker_include_artifact	details	Details
+tracker_include_artifact	permissions	Permissions
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
