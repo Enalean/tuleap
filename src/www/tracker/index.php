@@ -844,7 +844,17 @@ if ( $func == 'gotoid' ) {
         break;
         case 'browse' : {
                 $masschange = false;
-                require('./browse.php');
+                if ($request->exist('change_report_column')) {
+                    $report_id = $request->getValidated('report_id', 'uint');
+                    $field_name  = $request->getValidated('change_report_column', 'string');
+                    $arf = new ArtifactReportFactory($ath);
+                    if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
+                        $report->toggleFieldColumnUsage($field_name);
+                    }
+                    $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
+                } else {
+                    require('./browse.php');
+                }
                 break;
         }
         

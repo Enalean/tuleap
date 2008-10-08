@@ -297,7 +297,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          */
         function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false,$pv) {
-            global $PHP_SELF,$Language;
+            global $PHP_SELF,$Language,$ath;
             $hp = CodeX_HTMLPurifier::instance();
             $html_result = "";
         
@@ -325,7 +325,29 @@ class ArtifactReportHtml extends ArtifactReport {
             $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids);
             $result = $this->getResultQueryReport($query);
             $rows = count($result);
-                    
+            
+            if (!$pv && !$masschange) {
+                $html_result .= '<div style="text-align:right;"><select name="change_report_column" onchange="this.form.submit.click();">';
+                $html_result .= '<option selected="selected" value="">'. '-- Add/remove column' .'</option>';
+                $afsf = new ArtifactFieldSetFactory($ath);
+                foreach($afsf->getAllFieldSets() as $fieldset) {
+                    $html_result .= '<optgroup label="'. $fieldset->getLabel() .'">';
+                    foreach($fieldset->getArtifactFields() as $field) {
+                        if ($field->isUsed()) {
+                            $highlight = '';
+                            if (isset($result_fields[$field->getName()])) {
+                                $highlight = 'boxhighlight';
+                            }
+                            $html_result .= '<option value="'. $field->getName() .'" class="'. $highlight .'">';
+                            $html_result .= $field->getLabel();
+                            $html_result .= '</option>';
+                        }
+                    }
+                    $html_result .= '</optgroup>';
+                }
+                $html_result .= '</select></div>';
+            }
+            
            /*
               Show extra rows for <-- Prev / Next -->
             */  
@@ -386,12 +408,12 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-               	$html_result .= html_build_list_table_top ($title_arr,$links_arr);
+               	$html_result .= html_build_list_table_top ($title_arr,$links_arr,false,true,null, "draggable");
             }
 
             for ($i=0; $i < $rows ; $i++) {
 
-                $html_result .= '<TR class="'.get_priority_color($result[$i]['severity_id']) .'">'."\n";
+                $html_result .= '<TR class="'. html_get_alt_row_color ($i) .'">'."\n";
 
                 if ($masschange) {
                         $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="'.$result[$i]['artifact_id'].'"></td>';
@@ -419,6 +441,8 @@ class ArtifactReportHtml extends ArtifactReport {
 						} else {
 						    $html_result .= '<TD align="center">-</TD>';
 						}
+                    } else if ($field->getName() == 'severity') {
+                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:16px; height:16px; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id) .'</td></tr></table></td>';
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
@@ -603,7 +627,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $html_result .= '</TABLE>';
                 // Display query fields
                 if ($pv != 2) {
-                    $html_result .= '<A name="results"></A>';
+                    $html_result .= '<A name="query"></A>';
                     $html_result .= '<h3>';
                     $onclick = '';
                     $onclick .= "if ($('artifacts_query').empty()) { return true }";
