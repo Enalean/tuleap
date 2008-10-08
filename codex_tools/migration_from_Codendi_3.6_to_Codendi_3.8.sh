@@ -15,3 +15,5 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTIFACT_ACCESS',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTIFACT_ACCESS',15);
 
+# add the field severity on all reports
+UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
