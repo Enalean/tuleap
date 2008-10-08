@@ -19,6 +19,8 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
 $GLOBALS['DEBUG_MODE']=0;
 if ($GLOBALS['DEBUG_MODE']) {
     $GLOBALS['debug_time_start'] = microtime(true);
+    require_once('common/include/ErrorHandler.class.php');
+    $eh = new ErrorHandler();
  }
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
