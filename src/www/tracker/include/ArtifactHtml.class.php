@@ -339,7 +339,7 @@ class ArtifactHtml extends Artifact {
             // Artifact permissions
             //
             if ($this->ArtifactType->userIsAdmin()) {
-                $html = permission_fetch_selection_form('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id, '');;
+                $html = permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);;
                 echo $this->_getSection(
                     'artifact_section_permissions',
                     $Language->getText('tracker_include_artifact','permissions').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactPermissions') : ''),

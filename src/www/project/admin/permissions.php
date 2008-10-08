@@ -559,6 +559,24 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     $html = '';
     if (!$post_url) $post_url=$_SERVER['PHP_SELF'];
 
+    // Display form
+    $html .= '<FORM ACTION="'. $post_url .'" METHOD="POST">
+        <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_permissions">
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
+        <INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="'.$permission_type.'">
+        <INPUT TYPE="HIDDEN" NAME="object_id" VALUE="'.$object_id.'">';
+    
+    $html .= permission_fetch_selection_field($permission_type, $object_id, $group_id);
+    
+    $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','submit_perm').'">';
+    $html .= '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def').'">';
+    $html .= '</FORM>';
+    $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
+    return $html;
+}
+
+function permission_fetch_selection_field($permission_type, $object_id, $group_id) {
+    $html = '';
     // Get ugroups already defined for this permission_type
     $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
     $nb_set=db_numrows($res_ugroups);
@@ -580,13 +598,7 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     }
     $sql="SELECT * FROM ugroup WHERE group_id=".$group_id." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
     $res=db_query($sql);
-
-    // Display form
-    $html .= '<FORM ACTION="'. $post_url .'" METHOD="POST">
-		<INPUT TYPE="HIDDEN" NAME="func" VALUE="update_permissions">
-		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-		<INPUT TYPE="HIDDEN" NAME="permission_type" VALUE="'.$permission_type.'">
-		<INPUT TYPE="HIDDEN" NAME="object_id" VALUE="'.$object_id.'">';
+    
     $array = array();
     while($row = db_fetch_array($res)) {
         $name = util_translate_name_ugroup($row[1]);
@@ -596,13 +608,9 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
         );
     }
     $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
-    $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','submit_perm').'">';
-    $html .= '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def').'">';
-    $html .= '</FORM>';
-    $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
     return $html;
 }
-     
+
 function permission_display_selection_form($permission_type, $object_id, $group_id, $post_url) {
     echo permission_fetch_selection_form($permission_type, $object_id, $group_id, $post_url);
 }
