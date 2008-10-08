@@ -50,7 +50,7 @@ class DocmanPluginInfo extends PluginInfo {
                 {
                     $value = $variable['value'];
                 }
-                $descriptor =& new PropertyDescriptor($key, $value);
+                $descriptor = new PropertyDescriptor($key, $value);
                 $this->_addPropertyDescriptor($descriptor);
             }
         }
@@ -72,7 +72,7 @@ class DocmanPluginInfo extends PluginInfo {
                 $replace = '$1"'.addslashes($desc->getValue()).'";';
             }
             $content = preg_replace(
-                '`((?:^|\n)\$'. preg_quote($desc_name->getInternalString()) .'\s*=\s*)(.*)\s*;`', 
+                '`((?:^|\n)\$'. preg_quote($desc_name) .'\s*=\s*)(.*)\s*;`', 
                 $replace, 
                 $content
             );
