@@ -529,7 +529,7 @@ class User {
      * @return boolean true if the user is restricted, false otherwise
      */
     function isRestricted() {
-        return ($this->getStatus() == 'R');
+        return (!$this->isAnonymous() && $this->getStatus() == 'R');
     }
 
     /**
