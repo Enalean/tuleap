@@ -52,13 +52,6 @@ if (isset($func)) {
 	
         if ($res) {
             group_add_history('added_user',$form_unix_name,$group_id,array($form_unix_name));
-           	//zak added
-            // Raise an event for plugin configuration
-	        $em =& EventManager::instance();
-	        $em->processEvent('added_user_to_project', array(
-            'user_unix_name' => $form_unix_name,
-            'group_id'       => $group_id
-       		 ));
         }
 
     } else if ($func=='rmuser') {

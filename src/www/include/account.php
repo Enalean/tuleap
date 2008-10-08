@@ -77,7 +77,8 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
             $em =& EventManager::instance();
             $em->processEvent('project_admin_add_user', array(
                 'group_id' => $group_id,
-                'user_id' => $form_newuid
+                'user_id' => $form_newuid,
+                'user_unix_name' => $user_unix_name
             ));
             
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));

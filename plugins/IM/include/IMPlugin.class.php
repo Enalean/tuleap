@@ -9,36 +9,37 @@ require_once('www/include/user.php');
 require_once('common/user/UserHelper.class.php');
 
 class IMPlugin extends Plugin {
-	/**
-	 * get API Instant Messaging functions 
+	
+    /**
+     * get API Instant Messaging functions 
 	 */
-     var $im;
-     /**
-      * mapp current session
-      */
-     var $session;
+    var $im;
+    /**
+     * mapp current session
+     */
+    var $session;
+    
+    /**
+     * icon path
+     */
+    var $iconsPath;
      
-     /**
-      * icon path
-      */
-      var $iconsPath;
       
+    var $debug;
+    var $last_im_datas=array();
       
-      var $debug;
-      var $last_im_datas=array();
-      
-      /**
-       * last data remove ====>for testing script
-       */
-       var $last_im_datas_remove=array();
-       /**
-        * plugin id
-        */
-        var $id;
-        /**
-         * codex dao
-         */
-         var $codex_dao;
+    /**
+     * last data remove ====>for testing script
+     */
+    var $last_im_datas_remove=array();
+    /**
+     * plugin id
+     */
+    var $id;
+    /**
+     * codex dao
+     */
+    var $codex_dao;
          
 	/**
 	 * @param $id 
@@ -50,16 +51,15 @@ class IMPlugin extends Plugin {
     	$this->id=$id;
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
         $this->_addHook('javascript_file', 'jsFile', false);
-       	$this->_addHook('approve_pending_project', 'im_process', false);
-        $this->_addHook('project_is_suspended_or_pending', 'im_process_lock_muc_room', false);//can process several function
-        $this->_addHook('confirme_account_register', 'account_register', false);
-        $this->_addHook('added_user_to_project', 'im_process_muc_add_member', false);
+        $this->_addHook('approve_pending_project', 'projectIsApproved', false);
+        $this->_addHook('project_is_suspended_or_pending', 'projectIsSuspendedOrPending', false);
+        $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
+        $this->_addHook('project_is_active', 'projectIsActive', false);
+        $this->_addHook('project_admin_add_user', 'projectAddUser', false);
+        $this->_addHook('project_admin_remove_user', 'projectRemoveUser im_process_muc_remove_member', false);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
         $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
-        $this->_addHook('project_is_active', 'im_process_unlock_muc_room', false);//unlock_muc_room
-        $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
-        $this->_addHook('project_admin_remove_user', 'im_process_muc_remove_member', false);//im_process_muc_remove_member
         $this->_addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
         $this->_addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
         $this->_addHook('get_user_display_name', 'im_process_display_presence', false);
@@ -67,7 +67,9 @@ class IMPlugin extends Plugin {
         $this->_addHook('widgets', 'widgets', false);
         $this->_addHook('user_preferences_appearance', 'user_preferences_appearance', false);
         $this->_addHook('update_user_preferences_appearance', 'update_user_preferences_appearance', false);
+        
         $this->debug=$debug;
+        
     }
     
     function &getPluginInfo() {
@@ -78,39 +80,32 @@ class IMPlugin extends Plugin {
         return $this->pluginInfo;
     }
     
+    
     /**
-     * to allow test
+     * Functions used for "tests"
+     */
+    /**
      * @return string the last room name created  
      */
     function get_last_muc_room_name () {
 		return $this->last_im_datas["muc"];
 	}
-	
 	/**
-     * to allow test
      * @return string the last room name created  
      */
 	function get_last_muc_room_name_delete () {
 		return $this->last_im_datas_remove['muc'];
 	}
-	
 	function get_last_grp_name () {
 		return $this->last_im_datas["grp"];
 	}
-	
-	/**
-	 * 
-	 */
 	function get_last_muc_room_name_locked () {
 		return $this->last_im_datas["name_last_muc_locked"];
 	}
-	
 	function get_last_muc_room_name_unlocked () {
 		return $this->last_im_datas["name_last_muc_unlocked"];
 	}
-	
 	/**
-	 * To get last information about a member added in once muc
 	 * @return string information about a member added in once muc
 	 */
 	function get_last_member_of_once_muc_room () {
@@ -118,12 +113,16 @@ class IMPlugin extends Plugin {
 	}
 	
 	/**
-	 * To get last information about a member removed from once muc
 	 * @return string information about a member added in once muc
 	 */
 	function get_last_remove_member_of_once_muc_room () {
 		return $this->last_im_datas["names_remove_member_from_muc"];
 	}
+    /**
+     * End functions for tests.
+     */
+    
+    
     function imPluginLanguageFile($params) {
        $GLOBALS['Language']->loadLanguageMsg('IM','IM');
     }
@@ -299,16 +298,35 @@ class IMPlugin extends Plugin {
         }
         return $_plugin_instance;
     }
-    /**
-     * this function can be used to register an IM user  <br>
-     */
-    function account_register($params) {
-	$info_register_new_user  =	'<br>'.$params['realname']."( ".$params['loginname']. ") "."[ ".$params['email']." ]<br>";
-	echo $info_register_new_user;  
-	} 
-	
+    
 	/**
+	 * This function is called when a (or several) project(s) is (are) approved.
+     * Action: create a muc room and a shared group for the corresponding projects
+     *
+	 * @param array $params : contains the array of group_id
+	 */
+	function projectIsApproved($params) {
+		$this->muc_room_creation($params);
+		$this->create_im_shared_group($params);
+		if ($this->debug) {
+			echo "\nIM: projectIsApproved for projects: ".$params['group_id']."<br>";
+		}
+	}
+    
+    /**
+	 * This function is called when a project is supsended or pending
+     * Action: lock the muc room
+     *
+	 * @param array $params contains the group_id ($params['group_id'])
+	 */
+	function projectIsSuspendedOrPending($params) {
+		$this->im_lock_muc_room($params);
+	}
+    
+    /**
 	 * This function is called when the event "project_is_deleted" is called
+     * Action: lock the muc room
+     *
 	 * @param array $param : contains the group_id ($params['group_id'])
 	 * 
 	 * Before, we deleted the MUC room, but now, we only lock it,
@@ -320,56 +338,33 @@ class IMPlugin extends Plugin {
 	}
 	
 	/**
-	 * This function allow to create muc room and shared group when the corresponding project(s)
-	 * is(are) approuved by codex admin.
-	 *  @param array params data from the shared CodeX event
+	 * This function is called when the project is set to active
+     * Action: unlock the muc room
+     *
+	 * @param array $params contains the group_id ($params['group_id'])
 	 */
-	function im_process ($params) {
-		$this->muc_room_creation($params);
-		$this->create_im_shared_group($params);
-		if($this->debug){
-			echo "\nPass !!!<br>";
-		}
-	}
-	
-	/**
-	 * process members added in project hook
-	 *  @param array params data from the shared CodeX event
-	 */
-	function im_process_muc_add_member ($params) {
-		//add member in muc room
-		$this->im_muc_add_member ($params);
-	}
-	
-	/**
-	 * locked group or muc room
-	 *  @param array params data from the shared CodeX event
-	 */
-	function im_process_lock_muc_room ($params) {
-		$this->im_lock_muc_room($params);
-	}
-	
-	/**
-	 * im_process_unlock_muc_room
-	 *  @param array params data from the shared CodeX event
-	 */
-	 function im_process_unlock_muc_room ($params) {
+	 function projectIsActive($params) {
 		$this->im_unlock_muc_room($params);
 	}
 	
 	/**
-	 * callback used to delete a muc room.
-	 *  @param array params data from the shared CodeX event
+	 * This function is called when a user is added into a project
+     * Action: add user to muc room
+     *
+	 * @param array $params contains the group_id, the user_id and the user_unix_name
 	 */
-	function im_process_delete_muc_room ($params) {
-		$this->im_delete_muc_room($params);
+	function projectAddUser($params) {
+		$this->im_muc_add_member($params);
 	}
 	
+	
 	/**
-	 * To remove member from muc 
-	 *  @param array params data from the shared CodeX event
+	 * This function is called when a user is removed from a project
+     * Action: remove user from the muc room
+     *
+	 * @param array $params contains the group_id and the user_id
 	 */
-	function im_process_muc_remove_member ($params) {
+	function projectRemoveUser($params) {
 		$this->im_muc_remove_member($params);
 	}
 	
@@ -483,7 +478,7 @@ class IMPlugin extends Plugin {
     * unlock a MUC room created and locked by "lock_muc_room($unix_project_name)".
     * @param array $params :contains the data which comes from the envent listened.
     */
-   	function im_unlock_muc_room ($params) {
+   	function im_unlock_muc_room($params) {
 		$project_id = $params['group_id'];
         $project = project_get_object($project_id);
         $unix_project_name = $project->getUnixName();
@@ -533,7 +528,7 @@ class IMPlugin extends Plugin {
  	 * function called in im_process_muc_add_member($params) to add a member in a given muc room.
  	 * @param array $params :contains the data which comes from the envent listened.
  	 */
-	function im_muc_add_member ($params) {
+	function im_muc_add_member($params) {
 		$user_unix_name=$params['user_unix_name'];
 		
 		$group_id =$params['group_id'];
@@ -603,7 +598,7 @@ class IMPlugin extends Plugin {
             }
     }
 
- 	 function im_process_display_jabber_id ($eParams) {
+ 	 function im_process_display_jabber_id($eParams) {
 	    global $Language;
 	    $Language->loadLanguageMsg('IM','IM');
 		$plugin= & IMPlugin::instance() ;
