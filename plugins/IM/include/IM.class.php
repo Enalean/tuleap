@@ -27,7 +27,6 @@ class IM extends Controler {
                     $this->view = 'codex_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-					$this->view = 'IM';
 				}
             	break;
             case 'synchronize_muc_only':
@@ -36,7 +35,6 @@ class IM extends Controler {
                     $this->view = 'codex_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-					$this->view = 'IM';
 				}
             	break;
 		    case 'synchronize_grp_only':
@@ -45,7 +43,6 @@ class IM extends Controler {
                     $this->view = 'codex_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-					$this->view = 'IM';
 				}
                 break;
 		    case 'synchronize_muc_and_grp':
@@ -54,7 +51,6 @@ class IM extends Controler {
                     $this->view = 'codex_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-					$this->view = 'IM';
 				}
             	break;
             case 'get_presence':
@@ -65,19 +61,22 @@ class IM extends Controler {
 					$this->view = 'codex_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-					$this->view = 'IM';
 				}
                 break;
             default:
                 if ($group_id) {
                     $project = project_get_object($group_id);
                     if ($project->usesService('IM')) {
-                        $this->view = 'IM';
+                        $this->view = 'chat_room';
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im_admin','service_not_used'));
                     }
-                }else{
-                	$this->view = 'codex_im_admin';
+                } else {
+                    if ($user->isSuperUser()) {
+                        $this->view = 'codex_im_admin';
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+                    }
                 }
                 break;
         }

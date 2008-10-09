@@ -102,7 +102,7 @@ class IMViews extends Views {
        echo $html->box1_bottom();
        
     }
-   function IM() {
+   function chat_room() {
     	$project= new Group($this->request->get("group_id"));
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();
