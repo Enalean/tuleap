@@ -56,7 +56,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         $this->_addHook('project_is_active', 'projectIsActive', false);
         $this->_addHook('project_admin_add_user', 'projectAddUser', false);
-        $this->_addHook('project_admin_remove_user', 'projectRemoveUser im_process_muc_remove_member', false);
+        $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
         $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
@@ -133,7 +133,7 @@ class IMPlugin extends Plugin {
      */
 	function _get_im_object () {
 		try{
-			require_once(dirname(__FILE__)."/jabbex_api/Jabbex.php");
+			require_once("jabbex_api/Jabbex.php");
 		}catch(Exception $e){
 			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
 			return null;

@@ -23,7 +23,7 @@ class IMDao extends DataAccessObject {
     function _get_im_object () {
 		
 		try{
-			require_once(dirname(__FILE__)."/../jabbex_api/Jabbex.php");
+			require_once("jabbex_api/Jabbex.php");
 		}catch(Exception $e){
 			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
 		  	return null;
@@ -320,10 +320,72 @@ class IMDao extends DataAccessObject {
 	/**
 	 * synchronize all project with IM concept .
 	 */
-	 function synchronize_all_project() {
-	  $this->synchronize_grp_for_im_muc_room();
-	  $this->synchronize_grp_for_im_show_in_roster();
-	  $this->synchronize_grp_for_im_display_name();
+	function synchronize_all_project() {
+	    $this->synchronize_grp_for_im_muc_room();
+	    $this->synchronize_grp_for_im_show_in_roster();
+	    $this->synchronize_grp_for_im_display_name();
 	}
+    
+    
+    
+    
+    
+    /**
+	 * add members and affiliate admins and owner room for the group identified by $group_id
+	 * @param long $group_id.
+	 */
+	 function muc_member_build($group_id) {
+		//IM infos
+		$im_object = $this->_get_im_object();
+		$jabberConf = $im_object->get_server_conf();
+		$server_dns = $jabberConf['server_dns'];
+		$admin_server = $jabberConf['username'];
+		
+		//muc affiliation infos
+		$admin_affiliation = 20;
+		$super_admin_affiliation = 10;
+		
+		//about projet to be synchronize
+		$grp = new Group($group_id);
+		$roomID = $this->get_room_id_by_unix_name ($grp->getUnixName());
+		$project_members_ids = $grp->getMembersId();
+		
+		foreach ($project_members_ids as $user_id) {
+			$user_object = new User($user_id);
+			$user_name = trim($user_object->getName());
+			$jid_value = trim($user_name.'@'.$server_dns);
+			if( ! ($user_object->isMember($group_id,'A')) ) {
+				$this->add_muc_room_user($roomID,$jid_value);
+			}
+		}
+	}
+   
+	/**
+	 * synchronize_muc_only :
+	 *
+     * @throw Exception
+	 */
+	function synchronize_muc_only($unix_group_name, $group_name, $group_description, $group_Owner_name, $group_id) {
+		$im_object = $this->_get_im_object();
+        if (isset($im_object) && $im_object) {
+            $im_object->create_muc_room(strtolower($unix_group_name), $group_name, $group_description, $group_Owner_name);
+            $this->muc_member_build($group_id);
+        } else {
+            throw new Exception("IM Object not available");
+        }
+	}
+	
+	/**
+	 * synchronize_grp_only
+	 */
+	function synchronize_grp_only($unix_group_name, $group_name) {
+		$im_object = $this->_get_im_object();
+        if (isset($im_object) && $im_object) {
+            $im_object->create_shared_group(strtolower($unix_group_name), $group_name);
+        } else {
+            throw new Exception("IM Object not available");
+        }
+	}
+	
 }
 ?>

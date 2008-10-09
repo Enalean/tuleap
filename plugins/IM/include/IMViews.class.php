@@ -2,7 +2,6 @@
 require_once('pre.php');
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once(dirname(__FILE__)."/install/IMDataIntall.class.php");
 
 require_once('IMDao.class.php');
 require_once('IMDataAccess.class.php');
@@ -15,7 +14,6 @@ class IMViews extends Views {
         $this->View($controler, $view);
         $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
         $this->request =& HTTPRequest::instance();
-        $this->install=new IMDataIntall();
     }
     
     function display($view='') {
