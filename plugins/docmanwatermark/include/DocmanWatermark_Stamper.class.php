@@ -28,6 +28,7 @@
 class DocmanWatermark_Stamper {
     
     var $group_id;
+    var $lib_path;
     var $path;
     var $headers;
     var $item;
@@ -44,11 +45,12 @@ class DocmanWatermark_Stamper {
      *  @return void
      */
     
-    public function __construct($path,$headers,$group_id,$item, $user) {
+    public function __construct($lib_path, $path,$headers,$group_id,$item, $user) {
         $this->item     = $item;
         $this->user     = $user; 
         $this->group_id = $group_id;
         $this->path     = $path;
+        $this->lib_path = $lib_path;
         $this->headers  = $headers;
     }
     
@@ -59,7 +61,7 @@ class DocmanWatermark_Stamper {
      */
     
     public function load() {
-        require_once('Zend/Pdf.php');
+        require_once($this->lib_path.'/Pdf.php');
         $this->pdf = Zend_Pdf::load($this->path);
     }
    
@@ -111,7 +113,7 @@ class DocmanWatermark_Stamper {
      *  @return void
      */
     public function stamp() {
-        require_once('Zend/Pdf.php');
+        require_once($this->lib_path.'/Pdf.php');
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
         require_once('DocmanWatermark_MetadataFactory.class.php');

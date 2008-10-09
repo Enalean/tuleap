@@ -78,7 +78,9 @@ class DocmanWatermarkPlugin extends Plugin {
      */
     function stampFile($params) {
         require_once('DocmanWatermark_Stamper.class.php');
-        $stamper = new DocmanWatermark_Stamper($params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
+        $pInfo    = $this->getPluginInfo();
+        $zendPath = $pInfo->getPropertyValueForName("zend_path");
+        $stamper  = new DocmanWatermark_Stamper($zendPath, $params['path'],$params['headers'],$params['group_id'],$params['item'], $params['user']);
         try {
             if ($stamper->check()) {
                 $stamper->load();

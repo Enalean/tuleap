@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS plugin_docmanwatermark_metadata_love_md_extension;
+DROP TABLE IF EXISTS plugin_docmanwatermark_metadata_extension;
