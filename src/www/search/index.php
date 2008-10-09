@@ -460,21 +460,33 @@ if ($type_of_search == "soft") {
 	$words1=implode($array,"%' $crit artifact.details LIKE '%");
 	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
 	$words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
-
-	$sql =	"SELECT artifact.artifact_id,artifact.summary,artifact.open_date,user.user_name "
-		. "FROM artifact "
-		. "    INNER JOIN user ON user.user_id=artifact.submitted_by "
-		. "    LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id "
-		. "WHERE "
-		. "    artifact.group_artifact_id='$atid' "
-		. "    AND ((artifact.details LIKE '%$words1%') "
-		. "      OR (artifact.summary LIKE '%$words2%') "
-		. "      OR (artifact_history.field_name='comment' "
-		. "          AND (artifact_history.old_value LIKE '%$words3%'))) "
-		. "GROUP BY open_date DESC LIMIT $offset,999999999";
-
+    
+    $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
+                   artifact.summary,
+                   artifact.open_date,
+                   user.user_name
+           FROM artifact INNER JOIN user ON user.user_id=artifact.submitted_by 
+              LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id 
+              LEFT JOIN permissions ON (permissions.object_id = artifact.artifact_id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
+           WHERE artifact.group_artifact_id='". db_ei($atid) ."' 
+             AND (
+                   artifact.use_artifact_permissions = 0
+                   OR 
+                   (
+                       permissions.ugroup_id IN (". implode(',', UserManager::instance()->getCurrentUser()->getUgroups($group_id,$atid)) .")
+                   )
+             )
+             AND (
+                   (artifact.details LIKE '%". db_es($words1) ."%') 
+                   OR 
+                   (artifact.summary LIKE '%". db_es($words2) ."%') 
+                   OR 
+                   (artifact_history.field_name='comment' AND (artifact_history.old_value LIKE '%". db_es($words3) ."%'))
+             ) 
+           GROUP BY open_date DESC 
+           LIMIT ". db_ei($offset) .", 25";
 	$result = db_query($sql);
-	$rows_returned = db_numrows($result);
+	$rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb');
 
 	if ( !$result || $rows_returned < 1) {
 		$no_rows = 1;
