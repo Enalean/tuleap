@@ -437,10 +437,8 @@ class ArtifactReport extends Error {
             global $ath;
             $this->getQueryElements($prefs,$advsrch,$from,$where);
             
-            $aids = array();
-            
-            $um =& UserManager::instance();
-            $u  =& $um->getCurrentUser();
+            $um = UserManager::instance();
+            $u  = $um->getCurrentUser();
             $instances = array('artifact_type' => $this->group_artifact_id);
             $group_id = $ath->Group->getID();
             $ugroups = $u->getUgroups($group_id, $instances);
@@ -448,6 +446,21 @@ class ArtifactReport extends Error {
             $pm          =& PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
             
+            
+            //artifact permissions
+            $from  .= " LEFT JOIN permissions 
+                             ON (permissions.object_id = a.artifact_id 
+                                 AND 
+                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
+            $where .= " AND (a.use_artifact_permissions = 0
+                             OR 
+                             (
+                                 permissions.ugroup_id IN (". implode(',', $ugroups) .")
+                             )
+                       ) ";
+            
+            
+            $aids = array();
             //Does the user member of at least one group which has ACCESS_FULL ?
             if ($u->isSuperUser() || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
                 
