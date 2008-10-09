@@ -1,3 +1,17 @@
 #chatroom {
     text-align: center;
 }
+
+.im_synchronize {
+    font-size:1.3em; 
+    font-weight: bold;
+}
+
+form.project_sync {
+    text-align: center;
+}
+
+legend.project_sync {
+    font-size:1.3em; 
+    font-weight: bold;
+}

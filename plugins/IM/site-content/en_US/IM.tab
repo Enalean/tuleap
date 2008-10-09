@@ -21,6 +21,7 @@ plugin_im	muc-remove-member	is removed now from the chat room
 
 plugin_im_admin	im_admin_title	Instant Messaging plugin administration.
 plugin_im_admin	im_admin_warning	WARNING: If you synchronize one or several groups here, you will have to restart the Openfire server by executing "service openfire restart" as root in a shell window. This will interrupt all ongoing chat sessions!
+plugin_im_admin	projects_to_sync	Projets to synchronize:
 plugin_im_admin	im_admin_synchro_muc	Synchronize project.
 
 plugin_im_admin	im_admin_synchro_all	Synchronize all projects.
