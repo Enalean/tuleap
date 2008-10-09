@@ -196,6 +196,29 @@ class DataBuilder {
                 }
             }
             $select .= ",COUNT(0) AS c ";
+            
+            //artifact permissions
+            $sql_group_id = "SELECT group_id FROM artifact_group_list WHERE group_artifact_id=". db_ei($this->atid);
+            $result_group_id = db_query($sql_group_id);
+            if (db_numrows($result_group_id)>0) {
+                $row = db_fetch_array($result_group_id);
+                $group_id = $row['group_id'];
+            }
+            $user  = UserManager::instance()->getCurrentUser();
+            $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
+
+            $from  .= " LEFT JOIN permissions 
+                             ON (permissions.object_id = a.artifact_id 
+                                 AND 
+                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
+            $where .= " AND (a.use_artifact_permissions = 0
+                             OR 
+                             (
+                                 permissions.ugroup_id IN (". implode(',', $ugroups) .")
+                             )
+                       ) ";
+            
+            
             $sql ="$select $from $where $group_by $order_by";
             //echo $sql;
             $res = db_query($sql);
