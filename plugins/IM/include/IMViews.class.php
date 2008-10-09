@@ -11,7 +11,6 @@ class IMViews extends Views {
     function IMViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
-        $this->request =& HTTPRequest::instance();
     }
     
     function display($view='') {
@@ -23,8 +22,8 @@ class IMViews extends Views {
     }
     
     function header() {
-        $request =& HTTPRequest::instance();
-        $group_id=$request->get('group_id');
+        $request = HTTPRequest::instance();
+        $group_id = $request->get('group_id');
 
         if ($this->getControler()->view == 'codex_im_admin') {
             $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin'));
@@ -71,9 +70,12 @@ class IMViews extends Views {
     }
     // }}}
     
-    
-   function chat_room() {
-    	$project= new Group($this->request->get("group_id"));
+    /**
+	 * Display chat room of project $group_id
+	 */
+    function chat_room() {
+        $request = HTTPRequest::instance();
+    	$project= new Group($request->get('group_id'));
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();
     	
@@ -106,7 +108,7 @@ class IMViews extends Views {
     
     
     /**
-	 * used by admin tools to diplay views
+	 * Display forms to synchronize projects (site admin view)
 	 */
 	private function _admin_synchronize_muc_and_grp() {
 		$action = '';
