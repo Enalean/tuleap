@@ -181,7 +181,7 @@ function permission_get_object_name($permission_type,$object_id) {
         $group = group_get_object($group_id);
         $at = new ArtifactType($group, $atid);
         $a = new Artifact($at,$object_id);
-        return $a->getId() .' - '. $a->getSummary();    
+        return 'art #'. $a->getId() .' - '. $a->getSummary();    
     } else {
         $em =& EventManager::instance();
         $object_name = false;
