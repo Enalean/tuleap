@@ -1019,6 +1019,19 @@ class ArtifactHtml extends Artifact {
         );
         
         //
+        // Artifact permissions
+        //
+        if ($this->ArtifactType->userIsAdmin()) {
+            $html = permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);;
+            echo $this->_getSection(
+                'artifact_section_permissions',
+                $Language->getText('tracker_include_artifact','permissions') .' '. help_button('ArtifactUpdate.html#ArtifactPermissions'),
+                $html,
+                true
+            );
+        }
+        
+        //
         // Final submit button
         //
         echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
