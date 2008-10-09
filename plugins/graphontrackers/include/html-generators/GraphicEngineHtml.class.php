@@ -288,13 +288,32 @@ class graphicEngineHtml extends Error {
         echo '</div>';
     }
 
-
+    function _toInputElement($name, $value, $suffix = '') {
+        $str = '';
+        if (is_array($value)) {
+            foreach($value as $k => $v) {
+                $str .= $this->_toInputElement($name . $suffix . '[' . $k, $v, ']');
+            }
+        } else {
+            $hp =& CodeX_HTMLPurifier::instance();
+            $str .= '<input type="hidden" name="'. $name . $suffix .'" value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'" />';
+        }
+        return $str;
+    }
+    
     function genGraphRepSelBox($value) {
         $hp =& CodeX_HTMLPurifier::instance();
         require_once(dirname(__FILE__)."/../data-access/GraphOnTrackers_Report.class.php");
         $reports  = $this->grf->getReports_ids();
-        $returns  = '<B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_graphic_report_label','use_graphic_report').'&nbsp;&nbsp;</B>' .
-        			'<SELECT NAME="report_graphic_id" onChange="document.artifact_form.go_graphreport.click()">';
+        $returns  = '<form name="plugin_graphontrackers_selectreport_form" action="'. $_SERVER['REQUEST_URI'] .'" method="GET">';
+        parse_str($_SERVER['QUERY_STRING'], $url_params);
+        foreach($url_params as $key => $v) {
+            if ($key != 'go_graphreport' && $key != 'report_graphic_id') {
+                $returns .= $this->_toInputElement($key, $v);
+            }
+        }
+        $returns .= '<B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_graphic_report_label','use_graphic_report').'&nbsp;&nbsp;</B>' .
+                    '<SELECT NAME="report_graphic_id" onChange="document.plugin_graphontrackers_selectreport_form.go_graphreport.click()">';
         $returns .= '<OPTION VALUE="0">'.$GLOBALS['Language']->getText('plugin_graphontrackers_empty_select','none_value').'</OPTION>';
         for ($i=0;$i<count($reports);$i++){
             $r = new GraphOnTrackers_Report($reports[$i]);
@@ -305,6 +324,7 @@ class graphicEngineHtml extends Error {
             }
         }
         $returns .= '</SELECT>&nbsp;<INPUT TYPE="submit" VALUE="'.$GLOBALS['Language']->getText('plugin_graphontrackers_report','btn_go').'" NAME="go_graphreport"/>';
+        $returns .= '</form>';
         return $returns;
     }
 }

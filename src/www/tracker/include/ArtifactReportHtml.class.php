@@ -529,7 +529,6 @@ class ArtifactReportHtml extends ArtifactReport {
 		    }
 		}
 		$html_result .= '</td></tr></table>';		
-		$html_result .= '</FORM>';
             } else {
                	$html_result .= $nav_bar;
             }
@@ -698,7 +697,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         if ($pv == 0) {
                                 $html_result .= '<p> '.$Language->getText('global','btn_browse') .
                                     ' <input TYPE="text" name="chunksz" size="3" MAXLENGTH="5" '.
-                                    'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODEX_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report','at_once').'</FORM>';
+                                    'VALUE="'. (int)$chunksz.'">&nbsp;'. $hp->purify($ath->getItemName(), CODEX_PURIFIER_CONVERT_HTML) .$Language->getText('tracker_include_report','at_once');
                                 $html_result .= '<P>'.$Language->getText('tracker_include_report','sort_results').' ';
                                 $field = $art_field_fact->getFieldFromName('severity');
                                 if ( $field && $field->isUsed()) {
@@ -730,12 +729,14 @@ class ArtifactReportHtml extends ArtifactReport {
                     if ($pv == 2 || !$user_dont_want_to_see_results) {
                         $html_result .= $this->showResult($group_id,$prefs,$offset,$totalrows,$url,($pv == 1 ? true:false),$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange,$pv);
                     }
+                    $html_result .= '</form>';
                     if ($pv != 2 && !$user_dont_want_to_see_results) {  
                         #priority colors are not displayed in table-only view 
                         $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
                     }
                 } else {
                 
+                    $html_result .= '</form>';
                     $html_result .= '<h2>'.$Language->getText('tracker_include_report','no_match').'</h2>';
                     $html_result .= db_error();
                 
