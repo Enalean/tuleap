@@ -5,7 +5,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class IMDao extends DataAccessObject {
 	
     var $openfire_db_name;
-    
     var $codex_db_name;
     
     /**
@@ -15,9 +14,7 @@ class IMDao extends DataAccessObject {
     function IMDao(& $da ) {
         DataAccessObject::DataAccessObject($da);
         $this->openfire_db_name = $da->db_name;
-        
-        $this->codex_db_name = 'codex';
-        
+        $this->codex_db_name = $GLOBALS['sys_dbname'];
     }
     
     function _get_im_object () {
