@@ -335,6 +335,8 @@ tracker_include_artifact	expand_all	tout étendre
 tracker_include_artifact	collapse_all	tout réduire
 tracker_include_artifact	details	Détails
 tracker_include_artifact	permissions	Permissions
+tracker_include_artifact	permissions_label	Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :
+tracker_include_artifact	permissions_not_restricted	Les permissions ne sont pas restreintes pour cet artefact
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
@@ -587,6 +589,7 @@ tracker_common_canned	missing_param	Paramètres manquants
 # Script: SF/common/tracker/Artifact.class.php
 #
 tracker_common_artifact	view_private	Vous n'êtes pas autorisé à accéder à cet outil de suivi
+tracker_common_artifact	view_private_artifact	Vous n'êtes pas autorisé à accéder à cet artefact
 tracker_common_artifact	invalid_id	ID Artefact invalide
 tracker_common_artifact	row	Enregistrement $1&nbsp;:
 tracker_common_artifact	double_subm	  ERREUR - DOUBLE SOUMISSION. Vous avez déjà soumis un artefact (id=$1) avec le même résumé.  

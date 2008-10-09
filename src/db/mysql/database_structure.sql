@@ -2426,6 +2426,7 @@ CREATE TABLE artifact_field_set (
 CREATE TABLE artifact (
 	artifact_id int(11) NOT NULL auto_increment,
 	group_artifact_id int(11) NOT NULL,
+    use_artifact_permissions tinyint(1) NOT NULL DEFAULT '0',
 	status_id int(11) DEFAULT '1' NOT NULL,
 	submitted_by int(11) DEFAULT '100' NOT NULL,
 	open_date int(11) DEFAULT '0' NOT NULL,
