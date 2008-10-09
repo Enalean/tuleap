@@ -383,15 +383,15 @@ class IMPlugin extends Plugin {
 	 function create_im_shared_group ($params) {
 		$group_ids = $params['group_id'];
 		$group_ids=explode(',',$group_ids);
-		foreach($group_ids as $project_id){
-	        $project = project_get_object($project_id);
+		
+        $project_manager = ProjectManager::instance();
+        
+        foreach($group_ids as $project_id){
+	        $project = $project_manager->getProject($project_id);
 	        $unix_project_name = $project->getUnixName();
 	        $project_name = $project->getPublicName();
-	        $grp=new Group($project_id);//data_array['hide_members']
-	        $um = UserManager::instance();
-	        $approuver = $um->getCurrentUser();
-			
-			try{
+	        
+            try{
 				if($this->_get_im_object()){
 					$this->_get_im_object()->create_shared_group($unix_project_name,$project_name);
 					$this->last_im_datas["grp"]=$project_name;
@@ -416,23 +416,22 @@ class IMPlugin extends Plugin {
 		$group_ids = $params['group_id'];
 		$group_ids=explode(',',$group_ids);
 		//var_dump($group_ids);
+        
+        $project_manager = ProjectManager::instance();
+        $user_manager = UserManager::instance();
+        
 		foreach($group_ids as $val){
-	        $project = project_get_object($val);
+	        $project = $project_manager->getProject($val);
 	        $unix_group_name = $project->getUnixName();
 	        $group_name=($project->getPublicName()?$project->getPublicName():$unix_group_name);
 	        $group_description = $project->getDescription();
 	        if(!(isset($group_description)&&$group_description!=null)){
 				$group_description='No description';
 			}
-	        $um = UserManager::instance();
-	        //to get the current user who eventually create the project
-	        $approuver = $um->getCurrentUser();
-	        $grp=new Group($val);
-	        $project_members_ids=$grp->getMembersId();
-	        $group_Owner_object=new User($project_members_ids[0]);
-	        $group_Owner_name =$group_Owner_object->getName();
-	        $group_Owner_real_name=user_getrealname($project_members_ids[0]);
-	        if(!$this->_this_muc_exist ($unix_group_name)){
+	        $project_members_ids = $project->getMembersId();
+            $group_Owner_object = $user_manager->getUserById($project_members_ids[0]);
+	        $group_Owner_name = $group_Owner_object->getName();
+            if(!$this->_this_muc_exist ($unix_group_name)){
 				try{
 					if($this->_get_im_object()){
 						$this->_get_im_object()->create_muc_room($unix_group_name, $group_name, $group_description, $group_Owner_name);
@@ -455,9 +454,10 @@ class IMPlugin extends Plugin {
      * to lock an MUC room
      * @param array params:contains the data which comes from the envent listened (group_id her ).
      */
-     public function im_lock_muc_room($params){
-	 	$project_id = $params['group_id'];
-        $project = project_get_object($project_id);
+    public function im_lock_muc_room($params){
+        $project_manager = ProjectManager::instance();
+        $project_id = $params['group_id'];
+        $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
         $project_name = $project->getPublicName();
         
@@ -487,8 +487,9 @@ class IMPlugin extends Plugin {
     * @param array $params :contains the data which comes from the envent listened.
     */
    	function im_unlock_muc_room($params) {
+        $project_manager = ProjectManager::instance();
 		$project_id = $params['group_id'];
-        $project = project_get_object($project_id);
+        $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
         $project_name = $project->getPublicName();
 		
@@ -516,8 +517,9 @@ class IMPlugin extends Plugin {
  	 * @param array $params :contains the data which comes from the envent listened.
  	 */
  	function im_delete_muc_room($params) {
+		$project_manager = ProjectManager::instance();
 		$project_id = $params['group_id'];
-        $project = project_get_object($project_id);
+        $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
         $project_name = $project->getPublicName();
         if($this->_this_muc_exist ($unix_project_name)){
@@ -539,8 +541,9 @@ class IMPlugin extends Plugin {
 	function im_muc_add_member($params) {
 		$user_unix_name=$params['user_unix_name'];
 		
+        $project_manager = ProjectManager::instance();
 		$group_id =$params['group_id'];
-		$project = project_get_object($group_id);
+		$project = $project_manager->getProject($group_id);
         $group_name = $project->getUnixName();
         if($this->_this_muc_exist ($group_name)){
 			try{
@@ -561,11 +564,13 @@ class IMPlugin extends Plugin {
 	public function im_muc_remove_member($params){
 		//group infos
 		$group_id =$params['group_id'];
-		$project = project_get_object($group_id);
+        $project_manager = ProjectManager::instance();
+		$project = $project_manager->getProject($group_id);
         $unix_group_name = $project->getUnixName();
         //user infos
         $user_id=$params['user_id'];
-        $user=new User($user_id);
+        
+        $user = UserManager::instance()->getUserById($user_id);
         $user_unix_name=$user->getUserName();
         if($this->_this_muc_exist ($unix_group_name)){
 	        try{
