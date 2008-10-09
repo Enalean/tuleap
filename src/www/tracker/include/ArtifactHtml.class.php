@@ -1048,7 +1048,32 @@ class ArtifactHtml extends Artifact {
         // Artifact permissions
         //
         if ($this->ArtifactType->userIsAdmin()) {
-            $html = permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);;
+            $checked = '';
+            if ($this->useArtifactPermissions()) {
+                $checked = 'checked="checked"';
+            }
+            $html = '';
+            $html .= '<p>';
+            $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+            $html .= '<input type="checkbox" name="use_artifact_permissions" id="use_artifact_permissions" value="1" '. $checked .' />';
+            $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+            $html .= '</p>';
+            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
+            $html .= '<script type="text/javascript">';
+            $html .= "
+            document.observe('dom:loaded', function() {
+                if ( ! $('use_artifact_permissions').checked) {
+                    $('ugroups').disable();
+                }
+                $('use_artifact_permissions').observe('change', function(evt) {
+                    if (this.checked) {
+                        $('ugroups').enable();
+                    } else {
+                        $('ugroups').disable();
+                    }
+                });
+            });
+            </script>";
             echo $this->_getSection(
                 'artifact_section_permissions',
                 $Language->getText('tracker_include_artifact','permissions') .' '. help_button('ArtifactUpdate.html#ArtifactPermissions'),

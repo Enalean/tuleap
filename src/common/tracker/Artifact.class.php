@@ -558,6 +558,12 @@ class Artifact extends Error {
 		for($i=0;$i<sizeof($text_value_list);$i++){
 			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,'artifact',$ath->getGroupID());
 		}
+        
+        // artifact permissions
+        $request = HTTPRequest::instance();
+        $this->data_array['artifact_id'] = $artifact_id; // cheat
+        $this->setPermissions($request->get('use_artifact_permissions'), $request->get('ugroups'));
+        
         // All ok then reload the artifact data to make sure it is cached
         // correctly in memory
         $this->fetchData($artifact_id);
