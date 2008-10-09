@@ -1,0 +1,8 @@
+<?php
+
+$im_dbhost = "localhost";
+$im_dbuser = "openfireadm";
+$im_dbpasswd = "%sys_openfiredbpasswd%";
+$im_dbname =  "openfire";
+
+?>
