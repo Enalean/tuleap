@@ -51,6 +51,7 @@ class IMPlugin extends Plugin {
     	$this->id=$id;
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
         $this->_addHook('javascript_file', 'jsFile', false);
+        $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('approve_pending_project', 'projectIsApproved', false);
         $this->_addHook('project_is_suspended_or_pending', 'projectIsSuspendedOrPending', false);
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
@@ -125,6 +126,13 @@ class IMPlugin extends Plugin {
     
     function imPluginLanguageFile($params) {
        $GLOBALS['Language']->loadLanguageMsg('IM','IM');
+    }
+    function cssFile($params) {
+        // Only show the stylesheet if we're actually in the IM plugin pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
     }
     
     /**

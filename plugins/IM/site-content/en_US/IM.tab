@@ -55,3 +55,4 @@ plugin_im	user_appearance_pref_display_users_presence	Display users presence
 plugin_im	link_im_admin_tool	Openfire Jabber server administration (login 'admin')
 
 plugin_im	wait_loading	Please wait while loading...
+plugin_im	chatroom_title	This chat room allows you to communicate with other project members

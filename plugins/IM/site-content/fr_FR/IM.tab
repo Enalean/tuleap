@@ -57,3 +57,4 @@ plugin_im	user_appearance_pref_display_users_presence	Afficher la présence des 
 plugin_im	link_im_admin_tool	Administration du serveur Jabber Openfire (login 'admin')
 
 plugin_im	wait_loading	Merci de patienter pendant le chargement de la page ...
+plugin_im	chatroom_title	Ce salon de discussion vous permet de dialoguer avec les autres membres du projet
