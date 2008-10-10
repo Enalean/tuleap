@@ -5,6 +5,7 @@ require_once('common/include/HTTPRequest.class.php');
 
 require_once('IMDao.class.php');
 require_once('IMDataAccess.class.php');
+require_once('JabbexFactory.class.php');
 
 class IMViews extends Views {
 	
@@ -81,7 +82,7 @@ class IMViews extends Views {
     	
         $plugin = $this->getControler()->getPlugin();
         $plugin_path = $plugin->getPluginPath();
-        $im_object = $plugin->get_jabbex_objet();
+        $im_object = JabbexFactory::getJabbexInstance();
     	
         $jabberConf = $im_object->get_server_conf();
     	
