@@ -7,7 +7,7 @@
  * Cross Reference Factory class
  */
 
-require_once('common/include/CrossReference.class.php');
+require_once('common/reference/CrossReference.class.php');
 
 class CrossReferenceFactory {
     

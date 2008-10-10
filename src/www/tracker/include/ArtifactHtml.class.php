@@ -13,10 +13,10 @@
 //
 require_once('common/tracker/Artifact.class.php');
 require_once('common/mail/Mail.class.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 require_once('javascript_helpers.php');
 require_once('common/rss/RSS.class.php');
-require_once('common/include/CrossReferenceFactory.class.php');
+require_once('common/reference/CrossReferenceFactory.class.php');
 
 $Language->loadLanguageMsg('tracker/tracker');
 

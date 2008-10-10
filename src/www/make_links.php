@@ -15,7 +15,7 @@
 */
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 header('Content-type: text/html');
 

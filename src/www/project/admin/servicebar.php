@@ -11,7 +11,7 @@
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 require_once('common/event/EventManager.class.php');
 
 $Language->loadLanguageMsg('project/project');

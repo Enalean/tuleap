@@ -8,7 +8,7 @@
  */
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 class ReferenceAdministrationActions extends Actions {
     

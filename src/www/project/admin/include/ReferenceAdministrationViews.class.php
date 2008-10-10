@@ -8,7 +8,7 @@
  */
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 require_once('www/project/admin/project_admin_utils.php');
 
 class ReferenceAdministrationViews extends Views {

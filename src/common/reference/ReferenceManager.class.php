@@ -9,10 +9,10 @@
 
 require_once('common/dao/ReferenceDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
-require_once('common/include/Reference.class.php');
-require_once('common/include/ReferenceInstance.class.php');
+require_once('common/reference/Reference.class.php');
+require_once('common/reference/ReferenceInstance.class.php');
 require_once('common/include/GroupFactory.class.php');
-require_once('common/include/CrossReference.class.php');
+require_once('common/reference/CrossReference.class.php');
 
 /**
  * Reference Manager

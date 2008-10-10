@@ -8,7 +8,7 @@
 
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 $reference_manager =& ReferenceManager::instance();
 $request =& HTTPRequest::instance();
