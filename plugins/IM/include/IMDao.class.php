@@ -1,6 +1,7 @@
 <?php
 
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('JabbexFactory.class.php');
 
 class IMDao extends DataAccessObject {
 	
@@ -17,37 +18,12 @@ class IMDao extends DataAccessObject {
         $this->codex_db_name = $GLOBALS['sys_dbname'];
     }
     
-    function _get_im_object () {
-		
-		try{
-			require_once("jabbex_api/Jabbex.php");
-		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
-		  	return null;
-		}
-		
-		if(isset($this->im)&&$this->im){
-        	//class was already instancied
-        	return $this->im;
-        }else {
-			//Jabbex was never instancied in the current script
-			try{
-				if(isset($this->session)&&($this->session)){//if current session was saved .
-					$this->im= new Jabbex($this->session);
-				}else{ //we get new sessionID 
-					$this->session=session_hash();
-					if((isset($this->session))&&$this->session){
-						$this->im=new Jabbex($this->session);
-					}else{
-						echo "<br> Unable to get session !!!";
-					}
-				}
-			}catch(Exception $e){
-				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
-				return null;
-			}
-		}
-		return $this->im;
+    /**
+     * Returns an instance of jabdex
+     * @return Jabbex object class for im processing
+     */
+    function _get_im_object() {
+		return JabbexFactory::getJabbexInstance();
 	}
 	
     /**

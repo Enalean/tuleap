@@ -8,6 +8,8 @@ require_once('common/plugin/Plugin.class.php');
 require_once('www/include/user.php');
 require_once('common/user/UserHelper.class.php');
 
+require_once('JabbexFactory.class.php');
+
 class IMPlugin extends Plugin {
 	
     /**
@@ -136,47 +138,11 @@ class IMPlugin extends Plugin {
     }
     
     /**
-     * To get an instance of jabdex
+     * Returns an instance of jabdex
      * @return Jabbex object class for im processing
      */
-	function _get_im_object () {
-		try{
-			require_once("jabbex_api/Jabbex.php");
-		}catch(Exception $e){
-			$GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error #### '.$e->getMessage().' ### ');
-			return null;
-		  
-		}
-		if(isset($this->im)&&$this->im){
-        	//class was already instancied
-        	return $this->im;
-        }else {
-			//Jabbex was never instancied in the current script
-			try{
-				if(isset($this->session)&&($this->session)){//if current session was saved .
-					$this->im= new Jabbex($this->session);
-					return $this->im;
-				}else{ //we get new sessionID 
-					if($this->debug==true){
-						$this->session='debugsession123';
-					}else{
-					$this->session=session_hash();
-					}
-					
-					if((isset($this->session))&&$this->session){
-						$this->im=new Jabbex($this->session);
-						return $this->im;
-					}else{
-						echo "<br> Unable to get session !!!";
-						return null;
-					}
-				}
-			}catch(Exception $e){
-				$GLOBALS['Response']->addFeedback('error', 'Jabbex instance #### '.$e->getMessage().' ### ');
-				return null;
-			}
-		}
-		
+	function _get_im_object() {
+		return JabbexFactory::getJabbexInstance();
 	}
 	
 	function _this_muc_exist($unix_project_name) {
@@ -727,10 +693,6 @@ class IMPlugin extends Plugin {
         }
 	}
 
-    function get_jabbex_objet () {
-		return $this->_get_im_object();
-	}
-    
     function jsFile($params) {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
