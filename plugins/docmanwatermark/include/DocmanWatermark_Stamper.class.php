@@ -52,6 +52,7 @@ class DocmanWatermark_Stamper {
         $this->path     = $path;
         $this->lib_path = $lib_path;
         $this->headers  = $headers;
+        ini_set('include_path', $this->lib_path.':'.ini_get('include_path'));
     }
     
     /**
@@ -61,7 +62,7 @@ class DocmanWatermark_Stamper {
      */
     
     public function load() {
-        require_once($this->lib_path.'/Pdf.php');
+        require_once('Zend/Pdf.php');
         $this->pdf = Zend_Pdf::load($this->path);
     }
    
@@ -113,7 +114,7 @@ class DocmanWatermark_Stamper {
      *  @return void
      */
     public function stamp() {
-        require_once($this->lib_path.'/Pdf.php');
+        require_once('Zend/Pdf.php');
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
         require_once('DocmanWatermark_MetadataFactory.class.php');
