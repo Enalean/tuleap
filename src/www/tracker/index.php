@@ -851,7 +851,7 @@ if ( $func == 'gotoid' ) {
         break;
         case 'browse' : {
                 $masschange = false;
-                if ($request->exist('change_report_column')) {
+                if ($request->get('change_report_column')) {
                     $report_id = $request->getValidated('report_id', 'uint');
                     $field_name  = $request->getValidated('change_report_column', 'string');
                     $arf = new ArtifactReportFactory($ath);
