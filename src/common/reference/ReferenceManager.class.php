@@ -250,7 +250,7 @@ class ReferenceManager {
 			     $row['description'],
 			     preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
 			     'P', // scope is 'project'
-			     '',  // service ID - N/A
+			     $row['service_short_name'],  // service ID - N/A
 			     $row['is_active'], // is_used
 			     $group_id);
 	$this->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
@@ -450,7 +450,7 @@ class ReferenceManager {
                 $desc=$ref->getDescription();
             }
 
-            return "<a href=\"".$ref_instance->getGotoLink()."\" title=\"".$desc."\">".$ref_instance->getMatch()."</a>";
+            return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
     }
 

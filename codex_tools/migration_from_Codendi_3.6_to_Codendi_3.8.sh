@@ -20,4 +20,26 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 # add the field severity on all reports
 UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
 
+# fix references > services
+INSERT INTO reference SET 
+    id='20',        
+    keyword='slmbug', 
+    description='reference_slmbug_desc_key', 
+    link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
+    scope='S', 
+    service_short_name='tracker';
+INSERT INTO reference SET 
+    id='21',        
+    keyword='story', 
+    description='reference_story_desc_key', 
+    link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
+    scope='S', 
+    service_short_name='tracker';
+
+UPDATE reference r2, reference r1
+SET r1.service_short_name = r2.service_short_name
+WHERE r2.scope = 'S'
+  AND r1.scope <> 'S'
+  AND r1.keyword = r2.keyword
+  
 
