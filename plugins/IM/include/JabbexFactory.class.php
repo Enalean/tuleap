@@ -8,23 +8,19 @@
 
 class JabbexFactory {
     
-    var $_jabbex_instance;
+    private static $_jabbex_instance;
     
-    function JabbexFactory() {
-    }
-    
-    function getJabbexInstance() {
-        static $_jabbex_instance;
-        if (!$_jabbex_instance) {
+    public static function getJabbexInstance() {
+        if ( ! self::$_jabbex_instance) {
             try {
                 require_once("jabbex_api/Jabbex.php");
-                $_jabbex_instance = new Jabbex(session_hash());
+                self::$_jabbex_instance = new Jabbex(session_hash());
             } catch (Exception $e) {
-                $GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error:'.$e->getMessage().' ### ');
+                $GLOBALS['Response']->addFeedback('error', 'Jabbex require_once error:'.$e->getMessage());
                 return null;
             }
         }
-        return $_jabbex_instance;
+        return self::$_jabbex_instance;
     }
     
 }
