@@ -1,6 +1,6 @@
 <?php
 
-require_once("pre.php");
+require_once("jabbex_pre.php");
 
 // This class handles all events fired by the Jabbex client class.
 class EventHandler {

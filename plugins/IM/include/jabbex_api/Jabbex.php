@@ -1,7 +1,7 @@
 <?php
 
 // load initial configuration
-require_once(dirname(__FILE__)."/pre.php");
+require_once(dirname(__FILE__)."/jabbex_pre.php");
 require_once(dirname(__FILE__)."/JabbexInterface.php");
 
 

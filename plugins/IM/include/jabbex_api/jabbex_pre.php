@@ -2,7 +2,7 @@
 
 define("JABBER_LOG_FILE",$GLOBALS['codex_log']."/jabbex_log"); 
 
-require_once(dirname(__FILE__)."/local.inc.php");
+require_once("local.inc.php");
 
 define("DEBUG_ON",false); // Set this flag true to enable debug mode. ___This flag must be false in production environments___
 

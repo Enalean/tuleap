@@ -161,7 +161,7 @@ $this->_call_handler("timeout");
 require_once(dirname(__FILE__)."/class_ConnectionSocket.php");
 require_once(dirname(__FILE__)."/class_XMLParser.php");
 
-require_once(dirname(__FILE__)."/../../pre.php");
+require_once(dirname(__FILE__)."/../../jabbex_pre.php");
 
 // Version string
 define("CLASS_JABBER_VERSION","0.9rc3");
