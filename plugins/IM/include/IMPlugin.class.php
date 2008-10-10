@@ -179,7 +179,7 @@ class IMPlugin extends Plugin {
 		
 	}
 	
-	function _this_muc_exist ($unix_project_name) {
+	function _this_muc_exist($unix_project_name) {
 		require_once("IM.class.php");
         require_once("IMDao.class.php");
 		require_once('IMDataAccess.class.php');
@@ -384,7 +384,7 @@ class IMPlugin extends Plugin {
 		$group_ids = $params['group_id'];
 		$group_ids=explode(',',$group_ids);
 		
-        $project_manager = ProjectManager::instance();
+        $project_manager = $this->getProjectManager();
         
         foreach($group_ids as $project_id){
 	        $project = $project_manager->getProject($project_id);
@@ -417,8 +417,8 @@ class IMPlugin extends Plugin {
 		$group_ids=explode(',',$group_ids);
 		//var_dump($group_ids);
         
-        $project_manager = ProjectManager::instance();
-        $user_manager = UserManager::instance();
+        $project_manager = $this->getProjectManager();
+        $user_manager = $this->getUserManager();
         
 		foreach($group_ids as $val){
 	        $project = $project_manager->getProject($val);
@@ -455,7 +455,7 @@ class IMPlugin extends Plugin {
      * @param array params:contains the data which comes from the envent listened (group_id her ).
      */
     public function im_lock_muc_room($params){
-        $project_manager = ProjectManager::instance();
+        $project_manager = $this->getProjectManager();
         $project_id = $params['group_id'];
         $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
@@ -487,7 +487,7 @@ class IMPlugin extends Plugin {
     * @param array $params :contains the data which comes from the envent listened.
     */
    	function im_unlock_muc_room($params) {
-        $project_manager = ProjectManager::instance();
+        $project_manager = $this->getProjectManager();
 		$project_id = $params['group_id'];
         $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
@@ -517,7 +517,7 @@ class IMPlugin extends Plugin {
  	 * @param array $params :contains the data which comes from the envent listened.
  	 */
  	function im_delete_muc_room($params) {
-		$project_manager = ProjectManager::instance();
+		$project_manager = $this->getProjectManager();
 		$project_id = $params['group_id'];
         $project = $project_manager->getProject($project_id);
         $unix_project_name = $project->getUnixName();
@@ -541,7 +541,7 @@ class IMPlugin extends Plugin {
 	function im_muc_add_member($params) {
 		$user_unix_name=$params['user_unix_name'];
 		
-        $project_manager = ProjectManager::instance();
+        $project_manager = $this->getProjectManager();
 		$group_id =$params['group_id'];
 		$project = $project_manager->getProject($group_id);
         $group_name = $project->getUnixName();
@@ -564,13 +564,13 @@ class IMPlugin extends Plugin {
 	public function im_muc_remove_member($params){
 		//group infos
 		$group_id =$params['group_id'];
-        $project_manager = ProjectManager::instance();
+        $project_manager = $this->getProjectManager();
 		$project = $project_manager->getProject($group_id);
         $unix_group_name = $project->getUnixName();
         //user infos
         $user_id=$params['user_id'];
         
-        $user = UserManager::instance()->getUserById($user_id);
+        $user = $this->getUserManager()->getUserById($user_id);
         $user_unix_name=$user->getUserName();
         if($this->_this_muc_exist ($unix_group_name)){
 	        try{
@@ -629,7 +629,7 @@ class IMPlugin extends Plugin {
 			$label=$GLOBALS['Language']->getText('plugin_im','im_user_login');
 			//var_dump($label);
 			$entry_label['jid'] = $label;
-            if ( ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
+            if ( ! $this->getUserManager()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
                 $entry_value['jid'] = $this->_get_presence_status ($jid_value) .' ';
             }
             $entry_value['jid'] .= $jid_value;
@@ -692,7 +692,7 @@ class IMPlugin extends Plugin {
         function user_preferences_appearance($params) {
             $input = '<input type="hidden" name="plugin_im_display_users_presence" value="0" />';
             $input .= '<input type="checkbox" id="plugin_im_display_users_presence" name="plugin_im_display_users_presence" value="1" ';
-            if ( ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
+            if ( ! $this->getUserManager()->getCurrentUser()->getPreference('plugin_im_hide_users_presence')) {
                 $input .= 'checked="checked"';
             }
             $input .= ' style="margin-left:0px;" />';
@@ -709,9 +709,9 @@ class IMPlugin extends Plugin {
         function update_user_preferences_appearance($params) {
             if ($params['request']->exist('plugin_im_display_users_presence')) {
                 if ($params['request']->get('plugin_im_display_users_presence')) {
-                    UserManager::instance()->getCurrentUser()->delPreference('plugin_im_hide_users_presence');
+                    $this->getUserManager()->getCurrentUser()->delPreference('plugin_im_hide_users_presence');
                 } else {
-                    UserManager::instance()->getCurrentUser()->setPreference('plugin_im_hide_users_presence', '1');
+                    $this->getUserManager()->getCurrentUser()->setPreference('plugin_im_hide_users_presence', '1');
                 }
             }
         }
@@ -721,7 +721,7 @@ class IMPlugin extends Plugin {
  	 * @param array $params:contains the data which comes from the envent listened.
  	 */
 	function im_process_display_presence ($params) {
-        $user = UserManager::instance()->getCurrentUser();
+        $user = $this->getUserManager()->getCurrentUser();
         if ($user->isloggedIn() && (! $user->getPreference('plugin_im_hide_users_presence'))) { 
             $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
         }
@@ -744,6 +744,14 @@ class IMPlugin extends Plugin {
         require_once('IM.class.php');
         $controler =& new IM($this);
         $controler->process();
+    }
+    
+    
+    function getUserManager() {
+        return UserManager::instance();
+    }
+    function getProjectManager() {
+        return ProjectManager::instance();
     }
     
 }
