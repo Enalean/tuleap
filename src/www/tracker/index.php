@@ -548,7 +548,14 @@ if ( $func == 'gotoid' ) {
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
                             }                                                            
                         }
-                        $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
+                        if ($request->isAjax()) {
+                            if ($field = $art_field_fact->getFieldFromName($request->get('field'))) {
+                                $field_html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, user_getid(), true);
+                                echo $field_html['value'] ;
+                            }
+                        } else {
+                            $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
+                        }
                 }
                 break;
         }

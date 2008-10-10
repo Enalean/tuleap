@@ -466,6 +466,38 @@ class ArtifactReportHtml extends ArtifactReport {
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'.  $hp->purify($text, CODEX_PURIFIER_LIGHT, $group_id) . '&nbsp;</TD>';
+                    } else if($field->getName() == 'status_id') {
+                        $html_result .= "<TD $width>";
+                        $html_result .= '<div id="status_id_'. $i .'">';
+                        $html_result .= $hp->purify($value, CODEX_PURIFIER_BASIC, $group_id);
+                        $html_result .= '</div>';
+                        if ($field->userCanUpdate($group_id, $ath->getId())) {
+                            $field_values = $field->getFieldPredefinedValues($ath->getId(),false,false,true,false);
+                            $array_values = array();
+                            while($row = db_fetch_array($field_values)) {
+                                $array_values[]  = "[".$row['value_id'].", '". addslashes($row['value']) ."']";
+                            }
+                            $html_result .= '<script type="text/javascript">';
+                            $html_result .= "
+                            document.observe('dom:loaded', function() {
+                                new Ajax.InPlaceCollectionEditor('status_id_$i', '/tracker/', {
+                                    collection: [". implode(',', $array_values) ."],
+                                    callback: function(form, value) {
+                                        return {
+                                            func:                      'postmod',
+                                            group_id:                  ". $group_id .",
+                                            atid:                      ". $ath->getId() .",
+                                            aid:                       ". $result[$i]['artifact_id'] .",
+                                            artifact_timestamp:        (new Date()).getTime(),
+                                            field:                     '". $field->getName() ."',
+                                            '". $field->getName() ."': value
+                                        }
+                                    }
+                                });
+                            });
+                            </script>";
+                        }
+                        $html_result .= "</TD>\n";
 				    } else{
 				    	$html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id)  .'&nbsp;</TD>'."\n";
 				    }                             
