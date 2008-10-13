@@ -60,7 +60,7 @@ codendi.Tooltip = Class.create({
                 style: "z-index:1000; font-size:0.8em; background-color:#ffffcc; border:1px solid gray; display:none; position:absolute; padding:4px 8px; top:"+(pos[1] + this.element.offsetHeight)+"px; left:"+pos[0]+"px;"
         });
         this.tooltip.update(content);
-        document.body.insert({
+        Element.insert(document.body, {
             bottom: this.tooltip
         });
     },
