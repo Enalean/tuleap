@@ -65,6 +65,9 @@ codendi.Tooltip = Class.create({
         });
     },
     show: function() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
         if (this.tooltip) {
             this.tooltip.show();
         } else {
@@ -73,7 +76,9 @@ codendi.Tooltip = Class.create({
     },
     hide: function() {
         if (this.tooltip) {
-            this.tooltip.hide();
+            this.timeout = setTimeout((function() { 
+                this.tooltip.hide();
+            }).bindAsEventListener(this), 200);
         }
     }
 });
