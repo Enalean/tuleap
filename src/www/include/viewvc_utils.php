@@ -136,9 +136,7 @@ function viewvc_utils_passcommand() {
     $length = strpos($content, "</body>\n</html>") - $begin_doc;
    
     // Now insert references, and display
-    $request =& HTTPRequest::instance();
-    $group_id = (int) $request->get('group_id');
-    echo util_make_reference_links(substr($content,$begin_doc,$length),$group_id);
+    echo util_make_reference_links(substr($content,$begin_doc,$length),$GLOBALS['group_id']);
 
   } else {
     if ($viewvc_location) {
