@@ -509,19 +509,16 @@ class ArtifactReportHtml extends ArtifactReport {
             $html_result .= '</TABLE>';
 
             if ($masschange) {
-               	$html_result .= '
-       <script language="JavaScript">
+               	$html_result .= '<script language="JavaScript">';
+                $html_result .= "
        <!--
               function checkAll(val) {
-                       al=document.artifact_list;
-                       len = al.elements.length;
-                       var i=0;
-                       for( i=0 ; i<len ; i++) {
-                               if (al.elements[i].name==\'mass_change_ids[]\') {al.elements[i].checked=val;}
-                      }
-               }
+                  $$('input[name=\"mass_change_ids[]\"]').each(function (element) {
+                      element.checked = val;
+                  });
+              }
        //-->
-       </script>';
+       </script>";
 
 		$html_result .= '<INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$this->group_artifact_id.'">
                           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
