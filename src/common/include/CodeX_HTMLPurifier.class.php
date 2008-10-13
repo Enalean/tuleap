@@ -97,13 +97,13 @@ class CodeX_HTMLPurifier {
      * links, and content-based text.
      * Allowed makups:
      * - 'p', 'br'
-     * - 'a[href|title]'
+     * - 'a[href|title|class]'
      * - 'ul', 'ol', 'li'
      * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
     function getLightConfigMarkups() {
         $eParagraph       = array('p', 'br');
-        $eLinks           = array('a[href|title]');
+        $eLinks           = array('a[href|title|class]');
         $eList            = array('ul', 'ol', 'li');
         $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
                                   'pre', 'b', 'i');

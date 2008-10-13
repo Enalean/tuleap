@@ -50,11 +50,56 @@ while ($groups_array = db_fetch_array($results)) {
  }
 
 $ref->replaceLink($args,$projname);
-$feed=isset($feed)?$feed:"";
-$location = "Location: ".$ref->getLink().$feed;
-header($location);
-exit;
-
+if ($request->isAjax()) {
+    switch($ref->getServiceShortName()) {
+        case 'bugs':
+        case 'tracker':
+        case 'support':
+        case 'task':
+            $user_id = UserManager::instance()->getCurrentUser()->getId();
+            $aid = $request->get('val');
+            $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($aid);
+            $result = db_query($sql);
+            if (db_numrows($result)>0) {
+                $row = db_fetch_array($result);
+                $atid = $row['group_artifact_id'];
+                
+                require_once('common/tracker/ArtifactType.class.php');
+                require_once('common/tracker/ArtifactFieldFactory.class.php');
+                require_once('tracker/include/ArtifactHtml.class.php');
+                require_once('tracker/include/ArtifactFieldHtml.class.php');
+                $at = new ArtifactType(project_get_object($group_id),$atid);
+                $art_field_fact = new ArtifactFieldFactory($at);
+                $ah=new ArtifactHtml($at,$aid);
+                
+                $values = array();
+                
+                $summary = $art_field_fact->getFieldFromName('summary');
+                if ($summary->userCanRead($group_id, $atid)) {
+                    $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $summary, $user_id, true);
+                    $values[] = $html['value'];
+                }
+                
+                $status  = $art_field_fact->getFieldFromName('status_id');
+                if ($status->userCanRead($group_id, $atid)) {
+                    $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $status, $user_id, true);
+                    $values[] = $html['value'];
+                }
+                
+                if (count($values)) {
+                    echo '#'. $aid .' - '. implode(' - ', $values);
+                }
+            }
+            break;
+        default:
+            break;
+    }
+} else {
+    $feed=isset($feed)?$feed:"";
+    $location = "Location: ".$ref->getLink().$feed;
+    header($location);
+    exit;
+}
 // For emacs users
 // Local Variables:
 // mode: php
