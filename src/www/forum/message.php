@@ -77,7 +77,7 @@ if ($request->valid($vMsg)) {
 	echo $Language->getText('forum_message','by').": <a href=\"/users/".db_result($result, 0, 'user_name')."\">".user_get_name_display_from_unix(db_result($result, 0, "user_name"))."</a><BR>";
 	echo $Language->getText('forum_message','date').": ".format_date($sys_datefmt,db_result($result,0, "date"))."<BR>";
 	echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
-	echo '<pre>'.util_make_links(db_result($result,0, 'body'), $group_id).'</pre>';
+	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
 	echo "</TD></TR></TABLE>";
 
 	if ($pv == 0) {

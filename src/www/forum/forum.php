@@ -51,7 +51,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 			</TR>
 			<TR>
 				<TD>
-					<pre>'. util_make_links(db_result($result,$row,'body'), $g_id ) .'</pre>
+					'. util_make_links(nl2br(db_result($result,$row,'body')), $g_id ) .'
 				</TD>
 			</TR>
 		</TABLE>';
