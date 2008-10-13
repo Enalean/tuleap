@@ -31,7 +31,6 @@ codendi.Tooltip = Class.create({
         this.options = Object.extend({
         }, options || { });
         
-        this.fetched = false;
         this.fetching = false;
         
         this.tooltip = false;
@@ -49,7 +48,9 @@ codendi.Tooltip = Class.create({
                 onSuccess:(function(transport) {
                     this.createTooltip(transport.responseText);
                     this.fetching = false;
-                    this.show();
+                    if (this.show_tooltip) {
+                        this.show();
+                    }
                 }).bind(this)
             });
         }
@@ -65,6 +66,7 @@ codendi.Tooltip = Class.create({
         });
     },
     show: function() {
+        this.show_tooltip = true;
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
@@ -75,6 +77,7 @@ codendi.Tooltip = Class.create({
         }
     },
     hide: function() {
+        this.show_tooltip = false;
         if (this.tooltip) {
             this.timeout = setTimeout((function() { 
                 this.tooltip.hide();
