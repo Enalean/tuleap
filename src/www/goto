@@ -103,6 +103,7 @@ if ($request->isAjax()) {
                 if (count($values)) {
                     echo '<table>';
                     echo implode('', $values);
+                    echo '</table>';
                 }
             }
             break;
