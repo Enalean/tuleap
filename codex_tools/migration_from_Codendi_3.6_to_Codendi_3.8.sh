@@ -21,10 +21,9 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
 
 # fix references > services
-UPDATE reference r2, reference r1
-SET r1.service_short_name = r2.service_short_name
-WHERE r2.scope = 'S'
-  AND r1.scope <> 'S'
-  AND r1.keyword = r2.keyword
-  
+UPDATE reference
+SET service_short_name = 'tracker'
+WHERE scope = 'P'
+AND (service_short_name = '' OR service_short_name IS NULL)
+AND link LIKE '/tracker/%func=detail%'
 
