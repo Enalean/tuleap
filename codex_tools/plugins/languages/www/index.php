@@ -76,7 +76,6 @@ if ($request->exist('value') || $request->exist('load')) {
             }
         }
     }
-    $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/extensions.js');
     

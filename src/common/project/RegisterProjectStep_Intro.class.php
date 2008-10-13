@@ -20,7 +20,6 @@ class RegisterProjectStep_Intro extends RegisterProjectStep {
     function display($data) {
         include($GLOBALS['Language']->getContent('project/intro'));
         echo <<<EOS
-        <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript">
         Event.observe(window, 'load', function() {
                 if (!\$F('register_tos_i_agree')) {

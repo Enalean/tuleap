@@ -42,7 +42,6 @@ if($request->valid($vGroupId)) {
 if (!user_ismember($group_id, 'R2')) {
     exit_permission_denied();
 }
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");

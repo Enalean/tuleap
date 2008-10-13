@@ -385,6 +385,8 @@ class Layout extends Response {
 	}
     
     function displayJavascriptElements() {
+        echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
+        echo '<script type="text/javascript" src="/scripts/codendi/Tooltip.js"></script>'."\n";
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
         

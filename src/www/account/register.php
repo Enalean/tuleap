@@ -13,7 +13,6 @@ require_once('timezones.php');
 
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $Language->loadLanguageMsg('account/account');
 $request =& HTTPRequest:: instance();
@@ -348,7 +347,6 @@ if($page != 'admin_creation'){
 //
 // not valid registration, or first time to page
 //
-$HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
 ?>

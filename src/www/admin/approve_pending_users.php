@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('account.php');
 require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $Language->loadLanguageMsg('admin/admin');
 

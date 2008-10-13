@@ -8,7 +8,6 @@
 
 require_once('pre.php');    
 require_once('account.php');
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $Language->loadLanguageMsg('admin/admin');
 

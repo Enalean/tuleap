@@ -26,7 +26,6 @@ $hp =& CodeX_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 
-$HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
 $HTML->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
 
 site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));

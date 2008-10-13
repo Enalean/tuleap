@@ -143,7 +143,6 @@ if (isset($func)) {
        require('../../tracker/import.php');
     } */
 }
-$GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
 $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),'group'=>$group_id,
 			   'help' => 'ProjectAdministration.html'));

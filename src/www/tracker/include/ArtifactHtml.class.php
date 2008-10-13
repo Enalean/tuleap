@@ -64,7 +64,6 @@ class ArtifactHtml extends Artifact {
             // First display some  internal fields 
             $summary = $this->getValue('summary');
             echo '
-            <script type="text/javascript" src="/scripts/codendi/Tooltip.js"></script>
             <FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'. $sys_max_size_attachment.'">';
             if ( $ro ) {

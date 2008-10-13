@@ -190,7 +190,6 @@ class Docman_WikiController extends Docman_Controller {
                 $referrer_id = $this->getReferrerId($this->getReferrer());
             }
             if(isset($docman_item_id) && $docman_item_id) {
-                $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
                 $content = HTML();
                 $script = HTML::script(array('type' => 'text/javascript'), "toggle_documents('documents');");
                 $user =& $this->getUser();

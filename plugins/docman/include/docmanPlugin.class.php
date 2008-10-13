@@ -173,7 +173,6 @@ class DocmanPlugin extends Plugin {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/docman.js"></script>'."\n";

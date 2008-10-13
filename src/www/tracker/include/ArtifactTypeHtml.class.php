@@ -45,7 +45,6 @@ class ArtifactTypeHtml extends ArtifactType {
 		$group_id= $this->Group->getID();
         $hp = CodeX_HTMLPurifier::instance();
         
-        $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");
@@ -101,7 +100,6 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		$group_id= $this->Group->getID();
 
-        $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeCalendarScripts();

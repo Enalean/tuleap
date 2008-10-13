@@ -50,7 +50,6 @@ function register_valid()	{
 }
 
 // ###### first check for valid login, if so, congratulate
-$HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 if (register_valid()) {
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed')));

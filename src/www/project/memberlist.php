@@ -23,7 +23,6 @@ if($request->valid($vGroupId)) {
         exit_no_group();
     }
 }
-$GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
 
 site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 

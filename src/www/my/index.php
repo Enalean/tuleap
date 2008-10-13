@@ -33,7 +33,6 @@ if (user_isloggedin()) {
         $feedback.= $Language->getText('my_index', 'err_badbrowser');
     }
     $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
-    $GLOBALS['HTML']->includeJavascriptFile('/scripts/prototype/prototype.js');
     $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
     my_header(array('title'=>$title));
 

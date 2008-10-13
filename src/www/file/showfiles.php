@@ -17,8 +17,6 @@ require_once ('common/permission/PermissionsManager.class.php');
 require_once ('common/user/UserManager.class.php');
 $Language->loadLanguageMsg('file/file');
 
-$GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
-
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 

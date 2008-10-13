@@ -32,6 +32,7 @@ codendi.Tooltip = Class.create({
         }, options || { });
         
         this.fetched = false;
+        this.fetching = false;
         
         this.mouseoverEvent = this.mouseover.bindAsEventListener(this);
         this.element.observe('mouseover', this.mouseoverEvent);
@@ -42,13 +43,17 @@ codendi.Tooltip = Class.create({
         }
     },
     fetch: function() {
-        this.element.title += ' - Loading more details...';
-        new Ajax.Request(this.url, {
-            onSuccess:(function(transport) {
-                this.element.title = transport.responseText;
-                this.fetched = true;
-            }).bind(this)
-        });
+        if (!this.fetching) {
+            this.fetching = true;
+            this.element.title += ' - Loading more details...';
+            new Ajax.Request(this.url, {
+                onSuccess:(function(transport) {
+                    this.element.title = transport.responseText;
+                    this.fetched  = true;
+                    this.fetching = false;
+                }).bind(this)
+            });
+        }
     }
 });
 
