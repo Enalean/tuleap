@@ -52,6 +52,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
         $this->_addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
+        $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
 	}
 	function permission_get_name($params) {
         $this->loadPluginLanguageFile($params);
@@ -314,6 +315,19 @@ class DocmanPlugin extends Plugin {
             $this->_wiki_controller->setRequest($request);
         }
         return $this->_wiki_controller;
+    }
+    
+    function ajax_reference_tooltip($params) {
+        if ($params['reference']->getServiceShortName() == 'docman') {
+            require_once('Docman_CoreController.class.php');
+            $request = new CodeX_Request(array(
+                'id'       => $params['val'],
+                'group_id' => $params['group_id'],
+                'action'   => 'ajax_reference_tooltip'
+            ));
+            $controler =& new Docman_CoreController($this, $this->getPluginPath(), $this->getThemePath(), $request);
+            $controler->process();
+        }
     }
 }
 

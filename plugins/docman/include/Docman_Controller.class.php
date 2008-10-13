@@ -462,9 +462,12 @@ class Docman_Controller extends Controler {
                             $item = $reportItem;
                         }
                     }
-
-                    if ($item->getGroupId() != $this->request->get('group_id')) {
-                        $g =& group_get_object($this->request->get('group_id'));
+                    
+                    if ($this->request->get('action') == 'ajax_reference_tooltip') {
+                        $this->groupId = $item->getGroupId();
+                    }
+                    if ($item->getGroupId() != $this->getGroupId()) {
+                        $g =& group_get_object($this->getGroupId());
                         $this->_set_doesnot_belong_to_project_error($item, $g);
                     } else {
                         $user = $this->getUser();
@@ -1350,6 +1353,10 @@ class Docman_Controller extends Controler {
             $this->view = 'RedirectAfterCrud';
             break;
                                     
+        case 'ajax_reference_tooltip':
+            $this->view = 'AjaxReferenceTooltip';
+            break;
+            
         default:
             die(htmlspecialchars($view) .' is not supported');
             break;
