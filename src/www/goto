@@ -87,7 +87,7 @@ if ($request->isAjax()) {
                 }
                 
                 if (count($values)) {
-                    echo '#'. $aid .' - '. implode(' - ', $values);
+                    echo implode('<br />', $values);
                 }
             }
             break;
