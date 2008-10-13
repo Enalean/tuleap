@@ -34,25 +34,46 @@ codendi.Tooltip = Class.create({
         this.fetched = false;
         this.fetching = false;
         
-        this.mouseoverEvent = this.mouseover.bindAsEventListener(this);
-        this.element.observe('mouseover', this.mouseoverEvent);
-    },
-    mouseover: function(evt) {
-        if (!this.fetched) {
-            this.fetch();
-        }
+        this.tooltip = false;
+        
+        this.showEvent = this.show.bindAsEventListener(this);
+        this.element.observe('mouseover', this.showEvent);
+        this.hideEvent = this.hide.bindAsEventListener(this);
+        this.element.observe('mouseout', this.hideEvent);
     },
     fetch: function() {
         if (!this.fetching) {
             this.fetching = true;
-            this.element.title += ' - Loading more details...';
+            this.element.title = '';
             new Ajax.Request(this.url, {
                 onSuccess:(function(transport) {
-                    this.element.title = transport.responseText;
-                    this.fetched  = true;
+                    this.createTooltip(transport.responseText);
                     this.fetching = false;
+                    this.show();
                 }).bind(this)
             });
+        }
+    },
+    createTooltip: function(content) {
+        var pos = this.element.cumulativeOffset();
+        this.tooltip = new Element('div', {
+                style: "z-index:1000; background-color:#ffffcc; border:1px solid gray; display:none; position:absolute; padding:4px 8px; top:"+(pos[1] + this.element.offsetHeight)+"px; left:"+pos[0]+"px;"
+        });
+        this.tooltip.update(content);
+        document.body.insert({
+            bottom: this.tooltip
+        });
+    },
+    show: function() {
+        if (this.tooltip) {
+            this.tooltip.show();
+        } else {
+            this.fetch();
+        }
+    },
+    hide: function() {
+        if (this.tooltip) {
+            this.tooltip.hide();
         }
     }
 });
