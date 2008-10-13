@@ -72,7 +72,7 @@ if ($request->isAjax()) {
                 $uh = new UserHelper();
                 
                 $values = array();
-                foreach(array('summary', 'submitted_by', 'open_date', 'status_id') as $field_name) {
+                foreach(array('summary', 'submitted_by', 'status_id') as $field_name) {
                     $field = $art_field_fact->getFieldFromName($field_name);
                     if ($field->userCanRead($group_id, $atid)) {
                         
@@ -86,14 +86,17 @@ if ($request->isAjax()) {
                         
                         if ($field->getName() == 'submitted_by') {
                             $value = $uh->getDisplayNameFromUserId($field_value);
-                        } else if ($field->getName() == 'open_date') {
-                            $value = util_time_ago_in_words($field_value);
+                            
+                            $open_date = $art_field_fact->getFieldFromName($field_name);
+                            if ($field->userCanRead($group_id, $atid)) {
+                                $value .= ', '. util_time_ago_in_words($ah->getValue('open_date'));
+                            }
                         } else {
                             $value = $field_html->display($at->getID(),$field_value,false,false,true);
                         }
                         
                         $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
-                        $values[] = '<tr><td>'. $field_html->labelDisplay() .':</td><td>'. $value .'</td></tr>';
+                        $values[] = '<tr><td>'. $field_html->labelDisplay() .'</td><td>'. $value .'</td></tr>';
                     }
                 }
                 
