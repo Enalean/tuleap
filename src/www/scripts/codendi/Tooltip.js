@@ -83,8 +83,10 @@ codendi.Tooltip = Class.create({
     }
 });
 
+codendi.Tooltips = [];
+
 document.observe('dom:loaded', function() {
     $$('a[class=cross-reference]').each(function (a) {
-        new codendi.Tooltip(a, a.href);
+        codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
     });
 });
