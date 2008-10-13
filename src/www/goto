@@ -72,22 +72,37 @@ if ($request->isAjax()) {
                 $art_field_fact = new ArtifactFieldFactory($at);
                 $ah=new ArtifactHtml($at,$aid);
                 
+                $uh = new UserHelper();
+                
                 $values = array();
-                
-                $summary = $art_field_fact->getFieldFromName('summary');
-                if ($summary->userCanRead($group_id, $atid)) {
-                    $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $summary, $user_id, true);
-                    $values[] = $html['value'];
-                }
-                
-                $status  = $art_field_fact->getFieldFromName('status_id');
-                if ($status->userCanRead($group_id, $atid)) {
-                    $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $status, $user_id, true);
-                    $values[] = $html['value'];
+                foreach(array('summary', 'submitted_by', 'open_date', 'status_id') as $field_name) {
+                    $field = $art_field_fact->getFieldFromName($field_name);
+                    if ($field->userCanRead($group_id, $atid)) {
+                        
+                        if ( $field->isMultiSelectBox() ) {
+                                $field_value = $field->getValues($ah->getID());
+                        } else {
+                                $field_value = $ah->getValue($field_name);
+                        }
+                        
+                        $field_html = new ArtifactFieldHtml($field);
+                        
+                        if ($field->getName() == 'submitted_by') {
+                            $value = $uh->getDisplayNameFromUserId($field_value);
+                        } else if ($field->getName() == 'open_date') {
+                            $value = util_time_ago_in_words($field_value);
+                        } else {
+                            $value = $field_html->display($at->getID(),$field_value,false,false,true);
+                        }
+                        
+                        $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
+                        $values[] = '<tr><td>'. $field_html->labelDisplay() .':</td><td>'. $value .'</td></tr>';
+                    }
                 }
                 
                 if (count($values)) {
-                    echo implode('<br />', $values);
+                    echo '<table>';
+                    echo implode('', $values);
                 }
             }
             break;
