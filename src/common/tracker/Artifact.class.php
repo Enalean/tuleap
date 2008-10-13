@@ -989,6 +989,17 @@ class Artifact extends Error {
         }
         
         //
+        //  Reset the timestamp if we are changing from closed or declined
+        //
+        if (isset($changes['status_id']) && !$this->isStatusClosed($vfl['status_id'])) {
+            $upd_list .= "close_date='',";
+            $field = $art_field_fact->getFieldFromName('close_date');
+            if ( $field ) {
+                $this->addHistory ($field,$result['close_date'],'');
+            }
+        }
+
+        //
         //  Insert the list of dependencies 
         //
         
