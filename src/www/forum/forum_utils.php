@@ -316,8 +316,8 @@ function show_thread($thread_id,$et=0) {
 			*/
 			if ($et == 1) {
 				$ret_val .= '
-				<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2><pre>'.
-				nl2br(db_result($result, $i, 'body')).'</pre></TD><TR>';
+				<TR class="'. util_get_alt_row_color($total_rows) .'"><TD>&nbsp;</TD><TD COLSPAN=2>'.
+				nl2br(db_result($result, $i, 'body')).'</TD><TR>';
 			}
 
 			if (db_result($result,$i,'has_followups') > 0) {
