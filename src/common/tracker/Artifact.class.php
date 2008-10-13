@@ -1030,7 +1030,9 @@ class Artifact extends Error {
             exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
             return false;
         } else {
-            $this->setPermissions($request->get('use_artifact_permissions'), $request->get('ugroups'));
+            if (!$request->exist('change_permissions') || $request->get('change_permissions')) {
+                $this->setPermissions($request->get('use_artifact_permissions'), $request->get('ugroups'));
+            }
             return true;
         }
 
@@ -1046,7 +1048,10 @@ class Artifact extends Error {
                     WHERE artifact_id=". db_ei($this->getID());
             db_query($sql);
             if ($use_artifact_permissions) {
-                permission_process_selection_form($this->ArtifactType->getGroupID(), 'TRACKER_ARTIFACT_ACCESS', $this->getId(), $ugroups);
+                $result = permission_process_selection_form($this->ArtifactType->getGroupID(), 'TRACKER_ARTIFACT_ACCESS', $this->getId(), $ugroups);
+                if (!$result[0]) {
+                    $GLOBALS['Response']->addFeedback('error', $result[1]);
+                }
             }
         }
     }

@@ -2467,6 +2467,66 @@ EOS;
 		echo $this->showDependencies($mass_change_ids);
 
                 echo '</TD></TR>';
+                
+                //
+                // Artifact permissions
+                //
+                if ($this->userIsAdmin()) {
+                    echo '
+                    <TR><TD colspan="2"><hr></td></tr>
+                    <TR ><TD colspan="2">';
+                    
+                    echo '<h3>'. $Language->getText('tracker_include_artifact','permissions') .' '. help_button('ArtifactUpdate.html#ArtifactPermissions') .'</h3>';
+                    echo '<input type="hidden" name="change_permissions" value="0" />';
+                    echo '<input type="checkbox" name="change_permissions" value="1" id="change_permissions" />';
+                    echo '<label for="change_permissions">'. 'Change the permissions' .'</label>';
+                    echo '<blockquote>';
+                    $checked = '';
+                    $html = '';
+                    $html .= '<p>';
+                    $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+                    $html .= '<input type="checkbox" name="use_artifact_permissions" id="use_artifact_permissions" value="1" '. $checked .' />';
+                    $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+                    $html .= '</p>';
+                    $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $group_id);
+                    $html .= '<script type="text/javascript">';
+                    $html .= "
+                    document.observe('dom:loaded', function() {
+                        //init
+                        if ( ! $('use_artifact_permissions').checked  || ! $('use_artifact_permissions').checked ) {
+                            $('ugroups').disable();
+                        }
+                        if ( ! $('change_permissions').checked) {
+                            $('use_artifact_permissions').disable();
+                        }
+                        
+                        //event handlers
+                        $('change_permissions').observe('change', function(evt) {
+                            if (this.checked) {
+                                $('use_artifact_permissions').enable();
+                                if ($('use_artifact_permissions').checked) {
+                                    $('ugroups').enable();
+                                }
+                            } else {
+                                $('use_artifact_permissions').disable();
+                                $('ugroups').disable();
+                            }
+                        });
+                        
+                        $('use_artifact_permissions').observe('change', function(evt) {
+                            if (this.checked) {
+                                $('ugroups').enable();
+                            } else {
+                                $('ugroups').disable();
+                            }
+                        });
+                    });
+                    </script>";
+                    echo $html;
+                    echo '</blockquote>';
+                    echo '</TD></TR>';
+                }
+                
         	echo '<TR><TD colspan="2"><hr></td></tr>';                        
 		echo '</TD></TR>                
                         <TR><TD colspan="2" ALIGN="center">
@@ -2475,6 +2535,8 @@ EOS;
                         </TD></TR>';
                 
                 echo '</table>';
+                
+
 	}
 
 
