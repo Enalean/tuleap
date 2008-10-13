@@ -52,10 +52,7 @@ while ($groups_array = db_fetch_array($results)) {
 $ref->replaceLink($args,$projname);
 if ($request->isAjax()) {
     switch($ref->getServiceShortName()) {
-        case 'bugs':
         case 'tracker':
-        case 'support':
-        case 'task':
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             $aid = $request->get('val');
             $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($aid);
