@@ -27,3 +27,9 @@ WHERE scope = 'P'
 AND (service_short_name = '' OR service_short_name IS NULL)
 AND link LIKE '/tracker/%func=detail%'
 
+
+
+# IM plugin : grant privileges for openfireadm on session table (required for webmuc)
+
+GRANT SELECT ON codex.session to openfireadm@localhost;
+FLUSH PRIVILEGES;

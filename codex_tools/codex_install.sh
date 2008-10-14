@@ -1452,6 +1452,7 @@ GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$open
 GRANT SELECT ON codex.user to openfireadm@localhost;
 GRANT SELECT ON codex.groups to openfireadm@localhost;
 GRANT SELECT ON codex.user_group to openfireadm@localhost;
+GRANT SELECT ON codex.session to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 # Initialize Jabbex
