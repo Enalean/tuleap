@@ -101,7 +101,7 @@ var CodeX_RTE = Class.create({
         initialize:function(element) {
             this.element = $(element);
             this.rte     = false;
-            this.element.insert({before: \'<div><a href="javascript:embedded_rte.toggle();">Toggle rich text formatting</a></div>\'});
+            Element.insert(this.element, {before: \'<div><a href="javascript:embedded_rte.toggle();">Toggle rich text formatting</a></div>\'});
         },
         init_rte: function() {
             tinyMCE.init({
@@ -125,6 +125,8 @@ var CodeX_RTE = Class.create({
                     theme_advanced_buttons3_add_before : "tablecontrols,separator",
                     theme_advanced_buttons3_add : "emotions,media,advhr,separator,ltr,rtl,separator,fullscreen",
                     theme_advanced_buttons4 : "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator,insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,|,visualchars,nonbreaking,blockquote,pagebreak,|,insertfile,insertimage",
+                    
+                    codendi:null //cheat to not have to remove the last comma in elements above. #*%@ IE !
             });
             this.rte = true;
         },
