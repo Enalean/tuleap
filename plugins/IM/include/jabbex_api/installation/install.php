@@ -120,6 +120,9 @@ class JabbeXInstaller {
 
 			$xml->jdbcProvider->addChild('driver',$parameters["CD_DB_DRIVER"]);
 			$xml->jdbcProvider->addChild('connectionString',$parameters["CD_DB_URI"]."?user=".$parameters["USER_CD_DB"]."&amp;password=".$parameters["PWD_CD_DB"]);
+			
+			// provider->auth->className done in openfire.tpl.xml
+			$xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 
 			if( $xml->asXML($conf_file) ){
 
@@ -686,7 +689,7 @@ class JabbeXInstaller {
 	}	
 	
 	/*
-	 * Creates the JabbeX configuration file jabbex_api/etc/jabbex_conf.xml based on
+	 * Creates the JabbeX configuration file /etc/codex/plugins/IM/etc/jabbex_conf.xml based on
 	 * the template file resources/jabbex_conf.tpl.xml.
 	 */
 	function configure_jabbex(){
@@ -744,6 +747,57 @@ class JabbeXInstaller {
 		}
 	}
 
+	/*
+	 * Creates the database configuration file /etc/codex/plugins/IM/etc/database_im.inc based on
+	 * the template file resources/database_im.tpl.inc.
+	 */
+	function configure_database_im() {
+		
+		print("Configuring IM database configuration file...\n");
+		
+		$curent_dir = dirname(__FILE__);
+		$template_file = $curent_dir."/resources/database_im.tpl.inc";
+
+		$conf_str = file_get_contents($template_file);
+
+		$values["__OPENFIRE_DB_HOST__"] = $this->arguments["OF_DB_HOST"];
+		$values["__OPENFIRE_DB_USER__"] = $this->arguments["USER_OF_DB"];
+		$values["__OPENFIRE_DB_PWD__"] = $this->arguments["PWD_OF_DB"];
+		$values["__OPENFIRE_DB_NAME__"] = $this->arguments["OF_DB_NAME"];
+		
+		foreach($values as $key => $value) {
+			$conf_str = str_replace("{".$key."}",$value,$conf_str);
+		}
+
+		$target_dir =  $this->arguments["ETC_DIR"];
+		$file = $target_dir."/database_im.inc";
+
+		if ( $fp =  fopen($file,'w') ) {
+			if ( fwrite($fp, $conf_str) ) {
+
+				fclose($fp);
+
+				// Granting permission -rw-r--r-- 1 codexadm codexadm
+				`chmod 644 $file`;
+				`chown codexadm:codexadm $file`;
+				//---
+
+				print("\n");
+				print("**************************************************\n");
+				print("* The database_im.inc configuration file wa   s  *\n");
+				print("* successfully created inside the IM plugin etc/ *\n");
+				print("* directory.                                     *\n");
+				print("**************************************************\n");
+
+			} else {
+				fclose($fp);
+				exit("ERROR: Unable to create the IM database configuration file.");
+			}
+		} else {
+			exit("ERROR: Unable to create file $file \n");
+		}
+	}
+	
 	/*
 	 * Installs Openfire using the RPM found at resources/openfire/.
 	 */
@@ -849,7 +903,7 @@ class JabbeXInstaller {
 		$this->_add_property("xmpp.server.socket.active","false"); // Remote servers are not allowed to exchange packets with this server.
 		$this->_add_property("register.inband","false"); // Users can not automatically create new accounts.
 		$this->_add_property("register.password","false"); // Users are not allowed to change their password.
-		$this->_add_property("xmpp.auth.anonymous","false"); // Only registered users may login.
+		$this->_add_property("xmpp.auth.anonymous","false"); // Only registered users may login.		
 		
 		// The properties below were craping the performance of the jabber server.
 		// It's better to do a fine tune manually depending on the system the server is running over.
@@ -859,6 +913,45 @@ class JabbeXInstaller {
 		//$this->_add_property("cache.userGroup.size","0"); //
 		//$this->_add_property("cache.username2roster.size","0"); //
 	}
+	
+	function configure_openfire_for_webmuc() {
+		print("Configuring Openfire properties for webmuc...\n");
+		
+		// Specific configuration for webmuc
+		$this->_add_property("httpbind.enabled", "true"); // enable HTTP Bind
+		//$this->_add_property("httpbind.port.plain", "7070"); // set HTTP Bind port to 7070 (default)
+		//$this->_add_property("httpbind.port.secure", "7443"); // set HTTP Bind secure port to 7443 (default)
+		$this->_add_property("xmpp.httpbind.client.requests.polling", "0");
+		$this->_add_property("xmpp.httpbind.client.requests.wait", "10");
+		$this->_add_property("xmpp.httpbind.scriptSyntax.enabled", "true");
+		
+		$this->_add_property("xmpp.muc.history.type", "all"); // show the entire chat history to users joining a room.
+	}
+	
+	function copyAuthenticationJarFile() {
+		$curent_dir = dirname(__FILE__);
+		$jar_source = $curent_dir."/resources/codendi_auth.jar";
+		
+		$jar_dest = $this->arguments["OPENFIRE_DIR"] . "/lib/codendi_auth.jar";
+		
+		if (copy($jar_source, $jar_dest)) { 
+				// Granting permission -rw-r--r-- 1 codexadm codexadm
+				`chmod 644 $jar_dest`;
+				`chown codexadm:codexadm $jar_dest`;
+				//---
+
+				print("\n");
+				print("***************************************\n");
+				print("* The jar file codendi_auth.jar was   *\n");
+				print("* successfully copied inside the      *\n");
+				print("* /openfire/lib/ directory.           *\n");
+				print("***************************************\n");
+
+		} else {
+			exit("ERROR: Unable to copy file $jar_source \n");
+		}
+	}
+	
 }
 
 
@@ -884,6 +977,7 @@ $installer->openfire_status();
 
 $installer->create_openfire_db();
 $installer->configure_openfire();
+$installer->configure_openfire_for_webmuc();
 
 $installer->configure_jabbex_user();
 
@@ -895,6 +989,9 @@ $installer->create_of_conf_file();
 
 
 $installer->configure_jabbex();
+$installer->configure_database_im();
+
+$installer->copyAuthenticationJarFile();
 
 print "Reloading Openfire...\n This operation may take some seconds. Please be patient!\n";
 print `/etc/init.d/openfire reload`;
