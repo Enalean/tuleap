@@ -157,6 +157,23 @@ class SVNUpdateTest extends UnitTestCase {
         $this->assertEqual($conflictedLines[0], " C     /ignore_directory");
     }
     
+    function testGetPropertiesUpdates() {
+    	$merge_output = "";
+    	$merge_output .= " U   plugins/salome/www/c.php\n";
+    	$merge_output .= " U   documentation/user_guide/xml/en_US/User_Guide.xml\n";
+    	$merge_output .= " U   documentation/user_guide/xml/en_US/SiteOverview.xml\n";
+    	$merge_output .= " U   documentation/user_guide/xml/en_US/BecomingACitizen.xml\n";
+    	$merge_output .= " U   documentation/user_guide/xml/fr_FR/User_Guide.xml\n";
+    	$merge_output .= " U   documentation/user_guide/xml/fr_FR/SiteOverview.xml\n";
+    	$merge_output .= " U   documentation/user_guide/xml/fr_FR/BecomingACitizen.xml\n";
+    	$merge_output .= "Updated to revision 9994.\n";
+    	
+    	$su =& new SVNUpdateTestVersion($this);
+        $conflictedLines = $su->getConflictedLines($merge_output);
+        
+        $this->assertEqual(count($conflictedLines), 0);
+    }
+    
     function testGetSVNCommit() {
         $c1 =& new MockSVNCommit($this);
         $c1->setReturnValue('getRevision', 1);
