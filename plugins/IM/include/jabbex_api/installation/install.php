@@ -784,7 +784,7 @@ class JabbeXInstaller {
 
 				print("\n");
 				print("**************************************************\n");
-				print("* The database_im.inc configuration file wa   s  *\n");
+				print("* The database_im.inc configuration file was     *\n");
 				print("* successfully created inside the IM plugin etc/ *\n");
 				print("* directory.                                     *\n");
 				print("**************************************************\n");
