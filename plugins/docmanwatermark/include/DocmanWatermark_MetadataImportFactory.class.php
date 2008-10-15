@@ -60,6 +60,7 @@ class DocmanWatermark_MetadataImportFactory  {
     public function getWatermarkMetadataMap($md) {
         // get the metadata iterator from target project
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataDao.class.php');
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
         $dmd = new Docman_MetadataDao(CodexDataAccess::instance());
         $dar = $dmd->searchByName($this->targetProjectId,$md->getName());
         // if the name doesn't match then return md = 0

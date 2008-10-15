@@ -134,6 +134,14 @@ class DocmanWatermarkPlugin extends Plugin {
      *  hook method to import watermark metadata settings
      */
     function importWatermarkMetadataSettings($params) {
+        if ($params['md']->getGroupId() == $params['targetProjectId']) {
+            // the action was a project cloning from template
+            // the metadata will be copied from the current project to the new created project
+            // we must inverse the variables
+            $tempSrcProjectId          = $params['srcProjectId'];
+            $params['srcProjectId']    = $params['targetProjectId'];
+            $params['targetProjectId'] = $tempSrcProjectId; 
+        }
         require_once('DocmanWatermark_MetadataFactory.class.php');
         $dwmf = new DocmanWatermark_MetadataFactory();
         $mdId = $dwmf->getMetadataIdFromGroupId($params['srcProjectId']);
