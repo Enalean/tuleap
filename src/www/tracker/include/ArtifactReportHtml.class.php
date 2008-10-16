@@ -442,7 +442,7 @@ class ArtifactReportHtml extends ArtifactReport {
 						    $html_result .= '<TD align="center">-</TD>';
 						}
                     } else if ($field->getName() == 'severity') {
-                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:16px; height:16px; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id) .'</td></tr></table></td>';
+                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:1em; height:1em; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id) .'</td></tr></table></td>';
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
