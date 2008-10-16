@@ -442,7 +442,7 @@ class ArtifactReportHtml extends ArtifactReport {
 						    $html_result .= '<TD align="center">-</TD>';
 						}
                     } else if ($field->getName() == 'severity') {
-                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:1em; height:1em; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id) .'</td></tr></table></td>';
+                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:1em; height:1em; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODEX_PURIFIER_BASIC, $group_id) .'</td></tr></table></td>';
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
@@ -465,7 +465,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", nl2br(util_make_links($value,$group_id)));
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $text = str_replace('  ', '&nbsp; ', $text);
-                        $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'.  $hp->purify($text, CODEX_PURIFIER_LIGHT, $group_id) . '&nbsp;</TD>';
+                        $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'.  $hp->purify($text, CODEX_PURIFIER_BASIC, $group_id) . '&nbsp;</TD>';
                     } else if($field->getName() == 'status_id') {
                         $html_result .= "<TD $width>";
                         $html_result .= '<div id="status_id_'. $i .'">';
@@ -499,7 +499,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         }
                         $html_result .= "</TD>\n";
 				    } else{
-				    	$html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_LIGHT, $group_id)  .'&nbsp;</TD>'."\n";
+				    	$html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
 				    }                             
                                 
                 } // while 
