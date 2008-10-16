@@ -28,7 +28,7 @@
  */
 
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
-require('BaseLanguage.class.php');
+require('common/language/BaseLanguage.class.php');
 
 $Language =& new BaseLanguage();
 
