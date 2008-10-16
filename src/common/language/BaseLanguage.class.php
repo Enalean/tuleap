@@ -13,7 +13,7 @@
 
 	Tim Perdue, September 7, 2000
 	Laurent Julliard, Jan 14, 2004
-
+    Manuel Vacelet, July 22, 2008 (nice, every 4 years !)
 
 	Base class for adding multilingual support to CodeX
 
@@ -41,83 +41,275 @@ class BaseLanguage {
 	var $file_array = array();
 
 	function BaseLanguage() {
-		$this->loadLanguage('en_US');
+        $this->allLanguages = array('en_US', 'fr_FR');
 	}
 
 	/**
 	 * loadLanguageMsg($fname)
-	 * Load an individual language file. This is used by indivudual
-	 * php scripts to use their specific message catalog. fname is relative
-	 * $sys_incdir with no .tab extension at the end
-	 *
+     * DEPRECATED (now lang files are pre-compiled and loaded once for all)
 	 * @param		string	path of language file to load
 	 */
 	function loadLanguageMsg($fname, $plugin_name = null) {
-        global $sys_user_theme;
-        
-        if (is_null($plugin_name)) {
-            // load default message file
-            $ftname = $GLOBALS['sys_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
-        } else {
-            // load default message file for plugin
-            $ftname = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
-        }
-        if (!file_exists ($ftname)) {
-            // If the file does not exist in the selected language, use the default language (en_US)
-            $ftname = $GLOBALS['sys_incdir'].'/en_US/'.$fname.'.tab' ;
-        }
-        // load message file
-        $this->loadLanguageFile($ftname) ;
-        
-        // load site-local customizations
-        if (is_null($plugin_name)) {
-            $ftname = $GLOBALS['sys_custom_incdir'].'/'.$this->lang.'/'.$fname.'.tab' ;
-        } else {
-            if (isset($GLOBALS['sys_custompluginsroot']))
-                $ftname = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$this->lang.'/'.$fname.'.tab';
-        }
-        if (file_exists ($ftname)) {
-            $this->loadLanguageFile($ftname) ;
-        }
-        
-        // load customization by theme
-        $ftname = '../themes/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
-        if (file_exists ($ftname)) {
-            $this->loadLanguageFile($ftname) ;
-        }
-        
-        //load site-local customizations by theme
-        $ftname = $GLOBALS['sys_custom_themeroot'].'/messages/'.$sys_user_theme.'/'.$this->lang.'/'.$fname.'.tab' ;
-        if (file_exists ($ftname)) {
-            $this->loadLanguageFile($ftname) ;
-        }
+        return;
 	}
 
-	function loadLanguageFile($fname) {
-		if (array_key_exists($fname, $this->file_array)) { return; }
-		$this->file_array[$fname] = 1;
-		$ary = @file($fname,1);
-		for( $i=0; $i<sizeof($ary); $i++) {
-                    if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
-                        strlen(trim($ary[$i])) == 0) {    //...or empty lines
-				continue;
-			}
-			// Language files can include others for defaults.
-			// e.g. an English-Canada.tab file might "include English" first,
-			// then override all those whacky American spellings.
-			if (preg_match("/^include ([a-zA-Z]+)/", $ary[$i], $matches)) {
-				$dir = dirname($fname);
-				$this->loadLanguageFile($dir."/".$matches[1].".tab");
-			} else {
-				$line = explode("\t", $ary[$i], 3);
-                if (!isset($line[1]) || !isset($line[2])) {
-                    throw new Exception("Error in language file $fname at line $i");
+    /**
+     * "compile" all available language definitions.
+     */
+    function compileAllLanguageFiles() {
+        foreach($this->allLanguages as $code) {
+            $this->compileLanguage($code);
+        }
+        $this->compileThemeSiteContent();
+    }
+
+    /**
+     * Load all generated php files to verify if the syntax is correct.
+     */
+    function testLanguageFiles() {
+        if(is_dir($GLOBALS['codex_cache_dir'].'/lang/')) {
+            $fd = opendir($GLOBALS['codex_cache_dir'].'/lang/');
+            // Browse all themes
+            while(false !== ($file = readdir($fd))) {
+                if(is_file($GLOBALS['codex_cache_dir'].'/lang/'.$file)
+                   && preg_match('/\.php$/', $file)) {
+                    echo "Test $file\n";
+                    include($GLOBALS['codex_cache_dir'].'/lang/'.$file);
+                    unset($this->text_array);
                 }
-				$this->text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
-				//echo "(".strlen(trim($ary[$i])).")"."Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$this->text_array[$line[0]][$line[1]]."<br>";
-			}
-		}
-	}
+            }
+            closedir($fd);
+        }
+    }
+
+    /**
+     * "compile" string definitions for one language.
+     */
+    function compileLanguage($lang) {
+        $text_array = array();
+        $this->loadAllLanguageFiles($lang, $text_array);
+
+        // Dump the result into the cached files
+        $this->dumpLanguageFile($lang, $text_array);
+
+        return $text_array;
+    }
+
+    /**
+     * Load all tab files to build the internal string array.
+     *
+     * Here the order is important: First load the default definition and than
+     * load the custom (site wide) defs in order to override the default one,
+     * and so on.
+     */
+    function loadAllLanguageFiles($lang, &$text_array) {
+        // The order is important!
+
+        // 1) load all the en_US for official code (core + plugins) in order
+        // to define all the default values (all other language load while
+        // override existing values. If no overriding: the en_US value appears.
+        if($lang != 'en_US') {
+            $this->loadCoreSiteContent('en_US', $text_array);
+            // The old code was only loading the core site-content as fallback
+            //$this->loadCustomSiteContent('en_US');
+            //$this->loadCorePluginsSiteContent('en_US');
+            //$this->loadCustomPluginsSiteContent('en_US');
+        }
+
+        // 2) load the language for official code
+        $this->loadCoreSiteContent($lang, $text_array);
+        $this->loadCustomSiteContent($lang, $text_array);
+        $this->loadPluginsSiteContent($lang, $text_array);
+        $this->loadPluginsCustomSiteContent($lang, $text_array);
+
+        // 3) load the customization per theme
+
+    }
+
+    /**
+     * Load tab files in /usr/share/codex/site-content for given language
+     */
+    function loadCoreSiteContent($lang, &$text_array) {
+        $this->loadAllTabFiles($GLOBALS['sys_incdir'].'/'.$lang, $text_array);
+    }
+
+    /**
+     * Load tab files in /etc/codex/site-content for given language
+     */
+    function loadCustomSiteContent($lang, &$text_array) {
+        $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'].'/'.$lang, $text_array);
+    }
+
+    /**
+     * Load all tab files in /usr/share/codex/plugins/.../site-content for
+     * given language
+     */
+    function loadPluginsSiteContent($lang, &$text_array) {
+        $this->_loadPluginsSiteContent($GLOBALS['sys_pluginsroot'], $lang, $text_array);
+    }
+
+    /**
+     * Load all tab files in /etc/codex/plugins/.../site-content for
+     * given language
+     */
+    function loadPluginsCustomSiteContent($lang, &$text_array) {
+        $this->_loadPluginsSiteContent($GLOBALS['sys_custompluginsroot'], $lang, $text_array);
+    }
+
+    function compileThemeSiteContent() {
+        $text_array = array();
+        // Official themes
+        $this->_loadThemeSiteContent($GLOBALS['sys_themeroot'], $text_array);
+        // Site wide themes
+        $this->_loadThemeSiteContent($GLOBALS['sys_custom_themeroot'], $text_array);
+
+        foreach($text_array as $themeLang => $theme_text_array) {
+            $this->dumpLanguageFile($themeLang, $theme_text_array);
+        }
+    }
+
+    /**
+     * CodeX-en_US
+     * savannah-fr_FR
+     * ...
+     */
+    function _loadThemeSiteContent($basedir, &$text_array) {
+        if(is_dir($basedir)) {
+            $fd = opendir($basedir);
+            // Browse all themes
+            while(false !== ($theme = readdir($fd))) {
+                if(is_dir($basedir.'/'.$theme)
+                   && $theme != '.'
+                   && $theme != '..'
+                   && $theme != '.svn'
+                   && $theme != 'CVS') {
+
+                    // For each theme, check if there is a customisation in
+                    // available languages
+                    foreach($this->allLanguages as $lang) {
+                        // Default
+                        $location = $basedir.$theme.'/'.$lang;
+                        if(is_dir($location)) {
+                            $this->loadAllTabFiles($location, $text_array["$theme-$lang"]);
+                        }
+
+                        // Site-wide customisation
+                        $location = $GLOBALS['sys_custom_themeroot'].'/messages/'.$theme.'/'.$lang;
+                        if(is_dir($location)) {
+                            $this->loadAllTabFiles($location, $text_array["$theme-$lang"]);
+                        }
+                    }
+                }
+            }
+            closedir($fd);
+        }
+    }
+
+
+
+    /**
+     * This method walk through all the plugins and load all .tab files for
+     * each plugin found.
+     */
+    function _loadPluginsSiteContent($basedir, $lang, &$text_array) {
+        if(is_dir($basedir)) {
+            $fd = opendir($basedir);
+            while(false !== ($file = readdir($fd))) {
+                if(is_dir($basedir.'/'.$file)
+                   && $file != '.'
+                   && $file != '..'
+                   && $file != '.svn'
+                   && $file != 'CVS') {
+                    $location = $basedir.$file.'/site-content/'.$lang;
+                    if(is_dir($location)) {
+                        $this->loadAllTabFiles($location, $text_array);
+                    }
+                }
+            }
+            closedir($fd);
+        }
+    }
+
+    /**
+     * Look for all ".tab" files in the given path recursively.
+     */
+    function loadAllTabFiles($basedir, &$text_array) {
+        if(is_dir($basedir)) {
+            $fd = opendir($basedir);
+            while(false !== ($file = readdir($fd))) {
+                if(preg_match('/\.tab$/', $file)) {
+                    $this->parseLanguageFile($basedir.'/'.$file, $text_array);
+                }
+                elseif(is_dir($basedir.'/'.$file)
+                       && $file != '.'
+                       && $file != '..'
+                       && $file != '.svn'
+                       && $file != 'CVS') {
+                    $this->loadAllTabFiles($basedir.'/'.$file, $text_array);
+                }
+            }
+            closedir($fd);
+        }
+    }
+
+    /**
+     * Create a PHP file that contains all the strings loaded in this object.
+     */
+    function dumpLanguageFile($lang, $text_array) {
+        $fd = @fopen($GLOBALS['codex_cache_dir'].'/lang/'.$lang.'.php', 'w');
+        if($fd !== false) {
+            fwrite($fd, '<?php'."\n");
+            foreach($text_array as $key1 => $level2) {
+                foreach($level2 as $key2 => $value) {
+                    $str = str_replace("'", "\'", $value);
+                    fwrite($fd, '$this->text_array[\''.$key1.'\'][\''.$key2.'\'] = \''.$str.'\';'."\n");
+                }
+            }
+            fwrite($fd, '?>'."\n");
+            fclose($fd);
+        }
+    }
+
+    /**
+     * Load the right compiled lang files.
+     */
+    function loadThemeLanguage($theme) {
+        $cacheDir = $GLOBALS['codex_cache_dir'].'/lang/';
+        $themeFile = $cacheDir.$theme.'-'.$this->lang.'.php';
+        if(file_exists($themeFile)) {
+            include($themeFile);
+        }
+    }
+
+    function loadLanguageFile($fname) {
+        if (array_key_exists($fname, $this->file_array)) { return; }
+        $this->file_array[$fname] = 1;
+        $this->parseLanguageFile($fname, $this->text_array);
+    }
+
+    /**
+     * Parse given .tab file and store the result into $text_array
+     */
+    function parseLanguageFile($fname, &$text_array) {
+        $ary = @file($fname,1);
+        for( $i=0; $i<sizeof($ary); $i++) {
+            if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
+                strlen(trim($ary[$i])) == 0) {    //...or empty lines
+                continue;
+            }
+            // Language files can include others for defaults.
+            // e.g. an English-Canada.tab file might "include English" first,
+            // then override all those whacky American spellings.
+            if (preg_match("/^include ([a-zA-Z]+)/", $ary[$i], $matches)) {
+                $dir = dirname($fname);
+                $this->parseLanguageFile($dir."/".$matches[1].".tab", $text_array);
+            } else {
+                $line = explode("\t", $ary[$i], 3);
+                $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
+                //echo "(".strlen(trim($ary[$i])).")"."Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$text_array[$line[0]][$line[1]]."<br>";
+            }
+        }
+    }
 
 	function loadLanguageID($language_id) {
 		$res=db_query("SELECT * FROM supported_languages WHERE language_id='".db_es($language_id)."'");
@@ -127,21 +319,17 @@ class BaseLanguage {
 	// Load the global language file (this is a global message catalog
 	// that is loaded for all scripts from pre.php
 	function loadLanguage($lang) {
-		global $sys_user_theme;
-		if ($this->lang == $lang) { return; }
-		$fname = $GLOBALS['sys_incdir'].'/'.$lang.'/'.$lang.'.tab' ;
-		$this->loadLanguageFile($fname) ;
-		// Site-local customizations
-		$fname = $GLOBALS['sys_custom_incdir'].'/'.$lang.'/'.$lang.'.tab' ;
-		if (file_exists ($fname)) {
-			$this->loadLanguageFile($fname) ;
-		}
-		//Customization by theme
-		$ftname = '../themes/'.$sys_user_theme.'/'.$lang.'/'.$lang.'.tab' ;
-		if (file_exists ($ftname)) {
-			$this->loadLanguageFile($ftname) ;
-		}
-		$this->lang = $lang ;
+        if($this->lang != $lang) {
+            $this->lang = $lang;
+            $langFile = $GLOBALS['codex_cache_dir'].'/lang/'.$this->lang.'.php';
+            if(file_exists($langFile)) {
+                include($langFile);
+            } else {
+                // If language is supported, the compiled file should exists, try
+                // to create it
+                $this->text_array = $this->compileLanguage($lang);
+            }
+        }
 	}
 
 	function getText($pagename, $category, $args="") {
@@ -149,25 +337,22 @@ class BaseLanguage {
 			args is an array which will replace the $1, $2, etc
 			in the text_array string before it is returned
 		*/
-        $tstring = '';
-        if (isset($this->text_array[$pagename][$category])) {
-            if ($args || $args == 0) {
-                //$tstring = sprintf($this->text_array[$pagename][$category],$args);
-                for ($i=1; $i<=sizeof($args)+1; $i++) {
-                    $patterns[] = '/\$'.$i.'/';
-                }
-                $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
-            } else {
-                // Remove $1, $2 etc. even if the given arguments are empty
-                $pattern = '/\$\d+/';
-                $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
-                //$tstring = $this->text_array[$pagename][$category];
-            }
-        }
+		if ($args || $args == 0) {
+		    //$tstring = sprintf($this->text_array[$pagename][$category],$args);
+			for ($i=1; $i<=sizeof($args)+1; $i++) {
+				$patterns[] = '/\$'.$i.'/';
+			}
+			$tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
+		} else {
+                    // Remove $1, $2 etc. even if the given arguments are empty
+                    $pattern = '/\$\d+/';
+                    $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
+                    //$tstring = $this->text_array[$pagename][$category];
+		}
 		if (!$tstring) {
 		    $tstring = "*** Unkown msg $pagename - $category ***";
 		}
-		return $tstring;
+		return "$tstring";
 	}
     
     function hasText($pagename, $category) {
@@ -178,16 +363,16 @@ class BaseLanguage {
 	// and is used either to include long piece of text that are inconvenient
 	// to format on one line as the .tab file does or because there is some
 	// PHP code that can be cutomized
-	function getContent($file, $lang_code = null, $plugin_name = null,$extension = '.txt'){
+	function getContent($file, $lang_code = null, $plugin_name = null){
 
 	    // Language for current user unless it is specified in the param list
-	    if (!isset($lang_code) || !$lang_code) { $lang_code = $this->getLanguageCode(); }
+	    if (!isset($lang_code)) { $lang_code = $this->getLanguageCode(); }
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.$extension;
+            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.".txt";
         } else {
-            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$extension ;
+            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
         }
 	    if ( file_exists($custom_fn) ) {
             // The custom file exists. 
@@ -196,9 +381,9 @@ class BaseLanguage {
 		// Use the default file
 		// Check first if exist
         if (is_null($plugin_name)) {
-            $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.$extension;
+            $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.".txt";
         } else {
-            $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$extension;
+            $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
         }
 		if ( file_exists($fn) ) {
 		    // The custom file exists. 
@@ -209,7 +394,7 @@ class BaseLanguage {
 			return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
 		    else
 			// else try to find the file in the en_US directory
-			return $this->getContent($file, "en_US", $plugin_name,$extension);
+			return $this->getContent($file, "en_US");
 		}
 	    }
 	}
@@ -335,7 +520,6 @@ function language_code_to_result($alang) {
 }
 
 /* Return language code (e.g. 'en_US') corresponding to the language ID (e.g. '1'). */
-//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead
 function language_id_to_language_code($language_id=1) {
     $res=db_query("select language_code from supported_languages where language_id='".db_es($language_id)."'");
     return db_result($res,0,'language_code');

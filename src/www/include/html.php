@@ -558,7 +558,7 @@ function html_trash_image($alt) {
 }
 
 function html_trash_link($link, $warn, $alt) {
-    return '<a href="'.$link.'" onClick="return confirm(\''.$warn.'\')">'.html_trash_image($alt).'</a>';
+    return '<a href="'.$link.'" onClick="return confirm(\''.str_replace("'", "\'", $warn).'\')">'.html_trash_image($alt).'</a>';
 }
 
 /**

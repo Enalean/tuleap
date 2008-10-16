@@ -79,7 +79,7 @@ plugin_docman	admin_md_detail_val_delete	Delete
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
 plugin_docman	admin_md_detail_val_perm	Permanent
-plugin_docman	admin_md_detail_val_delete_warn	You are about to delete the value \'$1\' in the current category. All documents already labeled with this value will be bound to \'None\'. Click on \'Ok\' to proceed otherwise click on \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_warn	You are about to delete the value '$1' in the current category. All documents already labeled with this value will be bound to 'None'. Click on 'Ok' to proceed otherwise click on 'Cancel'.
 plugin_docman	admin_md_detail_val_delete_alt	Delete value '$1'
 plugin_docman	admin_md_detail_val_create_title	Create a new value
 plugin_docman	admin_md_detail_val_create_name	Name:
@@ -576,7 +576,7 @@ plugin_docman	report_save_I_reports	-- Personal reports:
 plugin_docman	report_saved_prjreports	-- Project saved search:
 plugin_docman	report_saved_persoreports	-- My saved search:
 
-plugin_docman	report_settings_delete	Are your sure you want to delete report \'$1\'?
+plugin_docman	report_settings_delete	Are your sure you want to delete report '$1'?
 plugin_docman	report_settings_delete_alt	Delete report '$1'
 plugin_docman	report_settings_description	Description:
 plugin_docman	report_settings_import_intro	You can import in this project a report defined in another project (either your 'Personal' reports or any 'Project' wide). The import only works if properties and values are the same in the two projects (same name, case sensitive). The import will work as best by trying to import as much as possible.

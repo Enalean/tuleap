@@ -79,7 +79,7 @@ plugin_docman	admin_md_detail_val_delete	Supprimer
 plugin_docman	admin_md_detail_val_inactive	Inactive
 plugin_docman	admin_md_detail_val_active	Active
 plugin_docman	admin_md_detail_val_perm	Permanent
-plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur \'$1\' de la catégorie courante. Tous les documents déjà étiquetté avec cette valeur se verront affecter la valeur \'None\'. Cliquez \'Ok\' pour continuer ou alors cliquez \'Cancel\'.
+plugin_docman	admin_md_detail_val_delete_warn	Vous supprimez la valeur '$1' de la catégorie courante. Tous les documents déjà étiquettés avec cette valeur se verront affecter la valeur 'None'. Cliquez 'Ok' pour continuer ou alors cliquez 'Cancel'.
 plugin_docman	admin_md_detail_val_delete_alt	Supprimer la valeur '$1'
 plugin_docman	admin_md_detail_val_create_title	Créer une nouvelle valeur
 plugin_docman	admin_md_detail_val_create_name	Nom :
@@ -576,7 +576,7 @@ plugin_docman	report_save_I_reports	-- Rapports personnels:
 plugin_docman	report_saved_prjreports	-- Recherche projet sauvegardée :
 plugin_docman	report_saved_persoreports	-- Mes recherches sauvegardées :
 
-plugin_docman	report_settings_delete	Êtes vous sûrs de vouloir supprimer le rapport \'$1\'?
+plugin_docman	report_settings_delete	Êtes vous sûrs de vouloir supprimer le rapport '$1'?
 plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
 plugin_docman	report_settings_description	Description :
 plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport défini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes dans les deux projets (même nom, sensible à la casse). L'import fera de son mieux pour importer le plus de données possible.
