@@ -62,7 +62,7 @@ class ArtifactReportHtml extends ArtifactReport {
 			  <INPUT TYPE="HIDDEN" NAME="func" VALUE="export">
                           <INPUT TYPE="HIDDEN" NAME="export_aids" VALUE="'. $hp->purify(implode(",",$aids), CODEX_PURIFIER_CONVERT_HTML) .'">
                           <input type="checkbox" name="only_displayed_fields" /> <small>'.$Language->getText('tracker_include_report','export_only_report_fields').'</small><br />
-                          <FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_report','btn_export').'"></FONT><br />
+                          <FONT SIZE="-1"><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_include_report','btn_export').'"></FONT><br />
                           <input type="hidden" name="report_id" value="'.(int)$this->getReportId().'" />
                           </FORM>';
 		  
@@ -544,9 +544,9 @@ class ArtifactReportHtml extends ArtifactReport {
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_items').' '.($offset+1).'-'.($offset_last+1).'</a><p>';
 		
 	      	 	$html_result .= '<table width= "100%"><tr><td width="50%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
+			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
 			$html_result .= '</td><td width="50%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_include_report','mass_change_all',(int)$total_rows).'">';
+			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_include_report','mass_change_all',(int)$total_rows).'">';
 			
 		    } else {
 			$html_result .=
@@ -554,7 +554,7 @@ class ArtifactReportHtml extends ArtifactReport {
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_all_items').' </a><p>';
 		
 			$html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';			
+			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';			
 		    }
 		}
 		$html_result .= '</td></tr></table>';		
@@ -677,7 +677,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
                     if (!$user_dont_want_to_see_query) {
                         $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
-                        $html_result .= '<div style="text-align:center"><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
+                        $html_result .= '<div style="text-align:center"><input type="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
                     }
                     $html_result .= '</div>';
                 }
@@ -1005,7 +1005,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	            }
 	    	}
             echo '</TABLE>'.
-                '<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
+                '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
                 '</FORM>';
         
         }
@@ -1137,7 +1137,7 @@ class ArtifactReportHtml extends ArtifactReport {
             
             
             echo '</TABLE>'.
-                '<P><CENTER><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
+                '<P><CENTER><INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></CENTER>'.
                 '</FORM>';
 
         }
