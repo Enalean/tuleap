@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright © STMicroelectronics, 2008. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -27,7 +27,6 @@ class MaillogPluginDescriptor
 extends PluginDescriptor {
 
     function MaillogPluginDescriptor() {
-        $GLOBALS['Language']->loadLanguageMsg('maillog', 'maillog');
         $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_maillog', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_maillog', 'descriptor_description'));
     }
 }

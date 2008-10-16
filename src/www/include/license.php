@@ -12,7 +12,6 @@
 $FILE_ACCEPTED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_ACCEPTED';
 $FILE_DECLINED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_DECLINED';
 
-$Language->loadLanguageMsg('include/include');
 
 /**
  * Says whether the license terms have already been displayed or not

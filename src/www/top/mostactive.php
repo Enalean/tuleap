@@ -8,7 +8,6 @@
 
 require_once('pre.php');    
 
-$Language->loadLanguageMsg('top/top');
 
 
 if (!isset($offset) || $offset < 0) {

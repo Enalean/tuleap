@@ -20,7 +20,6 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserHelper.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$sys_datefmt,$et,$et_cookie,$Language;

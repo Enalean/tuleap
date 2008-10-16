@@ -9,7 +9,6 @@
  */
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('datagenerator', 'datagenerator');
 
 class DataGeneratorPluginDescriptor extends PluginDescriptor {
     

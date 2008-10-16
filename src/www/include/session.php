@@ -9,7 +9,6 @@
 require_once('common/include/CookieManager.class.php');
 require_once('common/user/UserManager.class.php');
 
-//$Language->loadLanguageMsg('include/include');
 
 $G_SESSION=array();
 

@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('top/top');
 
 $HTML->header(array('title'=>$Language->getText('top_index','top_list')));
 ?>

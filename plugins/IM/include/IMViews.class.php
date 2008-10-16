@@ -11,7 +11,6 @@ class IMViews extends Views {
 	
     function IMViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
     }
     
     function display($view='') {

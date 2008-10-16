@@ -8,7 +8,6 @@
 
 require_once('common/tracker/ArtifactFieldSet.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 // Sort by rank result
 function art_fieldset_factory_cmp_place($fieldset1, $fieldset2) {

@@ -7,7 +7,6 @@
 //
 //
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 require_once('common/include/CodeX_HTTPPurifier.class.php');
 

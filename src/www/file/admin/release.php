@@ -21,8 +21,6 @@ require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FileModuleMonitorFactory.class.php');
 require_once ('www/project/admin/permissions.php');
 require_once ('common/include/HTTPRequest.class.php');
-$Language->loadLanguageMsg('file/file');
-$Language->loadLanguageMsg('news/news');
 $request = & HTTPRequest::instance();
 
 /*

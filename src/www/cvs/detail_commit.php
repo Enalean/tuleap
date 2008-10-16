@@ -10,7 +10,6 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 $order_str = "";
 

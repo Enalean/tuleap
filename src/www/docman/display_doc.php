@@ -16,7 +16,6 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require('./doc_utils.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 if ($docid) {
 

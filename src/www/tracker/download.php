@@ -10,7 +10,6 @@
 //
 
 require_once('pre.php');
-$Language->loadLanguageMsg('tracker/tracker');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');

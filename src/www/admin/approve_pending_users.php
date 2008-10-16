@@ -11,7 +11,6 @@ require_once('account.php');
 require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 $GLOBALS['HTML']->includeCalendarScripts();
-$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $hp = CodeX_HTMLPurifier::instance();

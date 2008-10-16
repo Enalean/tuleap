@@ -12,7 +12,6 @@
 require_once('pre.php');
 require_once('www/bugs/bug_utils.php');
 require_once('www/bugs/bug_data.php');
-$Language->loadLanguageMsg('help/help');
 
 // Initialize the global data structure before anyhting else
 bug_init($group_id);

@@ -12,7 +12,6 @@ require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
-$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $group = group_get_object($group_id,false,true);

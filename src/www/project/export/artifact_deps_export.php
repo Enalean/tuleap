@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('project/project');
 
 //
 //	get the Group object

@@ -12,7 +12,6 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('ServerUpdateViews.class.php');
 require_once('ServerUpdateActions.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
 
 class ServerUpdate extends Controler {
     

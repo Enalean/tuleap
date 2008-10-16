@@ -50,7 +50,6 @@ require_once('Docman_PermissionsManager.class.php');
 require_once('Docman_ReportFactory.class.php');
 require_once('Docman_MetadataFactory.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 
 class Docman_Controller extends Controler {
     // variables

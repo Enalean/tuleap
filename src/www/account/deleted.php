@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('account/account');
 
 $HTML->header(array('title'=>$Language->getText('account_deleted', 'title')));
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);

@@ -10,7 +10,6 @@ require_once('bookmarks.php');
 
 $request =& HTTPRequest::instance();
 
-$Language->loadLanguageMsg('my/my');
 
 $HTML->header(array("title"=>$Language->getText('bookmark_delete', 'title')));
 

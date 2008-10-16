@@ -15,7 +15,6 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
-$Language->loadLanguageMsg('forum/forum');
 
 function forum_show_a_nested_message ($result,$row=0) {
 	/*

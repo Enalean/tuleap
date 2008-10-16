@@ -16,7 +16,6 @@ if ($GLOBALS['sys_use_trove'] == 0) {
 }
 
 
-$Language->loadLanguageMsg('softwaremap/softwaremap');
 
 // assign default. 18 is 'topic'
 if (!isset($form_cat)) {

@@ -13,7 +13,6 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 
-$Language->loadLanguageMsg('search/search');
 
 if ($type_of_search !== "tracker" &&
     $type_of_search !== "wiki") {

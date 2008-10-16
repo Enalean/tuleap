@@ -6,7 +6,6 @@
 //
 // 
 
-  //$Language->loadLanguageMsg('include/include');
 
 require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');

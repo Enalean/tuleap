@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('proj_email.php');
 
-$Language->loadLanguageMsg('account/account');
 
 $request =& HTTPRequest::instance();
 

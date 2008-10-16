@@ -9,7 +9,6 @@
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
-$Language->loadLanguageMsg('project/project');
 require_once('common/include/SimpleSanitizer.class.php');
 
 function tocsv($string) {

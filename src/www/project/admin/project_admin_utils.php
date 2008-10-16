@@ -13,7 +13,6 @@
 */
 require_once('common/include/TemplateSingleton.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 function project_admin_header($params) {
 	global $group_id,$feedback,$Language;

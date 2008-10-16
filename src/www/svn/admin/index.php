@@ -12,7 +12,6 @@
 require_once('pre.php');    
 require_once('../svn_data.php');    
 
-$Language->loadLanguageMsg('svn/svn');
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

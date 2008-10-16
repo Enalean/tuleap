@@ -31,7 +31,6 @@ class SurveySingleton {
   function &instance() {
     static $survey_instance;
     if (isset($GLOBALS['Language'])) {
-      $GLOBALS['Language']->loadLanguageMsg('survey/survey');
     }
     if (!$survey_instance) {
       $survey_instance = new SurveySingleton();

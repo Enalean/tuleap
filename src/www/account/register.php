@@ -14,7 +14,6 @@ require_once('timezones.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 $GLOBALS['HTML']->includeCalendarScripts();
-$Language->loadLanguageMsg('account/account');
 $request =& HTTPRequest:: instance();
 $page = $request->get('page');
 // ###### function register_valid()

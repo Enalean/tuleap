@@ -35,7 +35,6 @@ require_once('common/tracker/ArtifactField.class.php');
 #require_once('common/wiki/lib/WikiPage.class.php');
 require_once('common/event/EventManager.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 /**
  * Return a printable name for a given permission type

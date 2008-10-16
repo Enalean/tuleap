@@ -7,7 +7,6 @@
 // 
 
 require_once('pre.php');
-$Language->loadLanguageMsg('help/help');
 
 $HTML->header(array(title=>$Language->getText('help_index','welcome',$GLOBALS['sys_name'])));
 

@@ -13,7 +13,6 @@
 
 */
 require_once('common/reference/CrossReferenceFactory.class.php');
-$GLOBALS['Language']->loadLanguageMsg('cvs/cvs');
 
 function uniformat_date($format, $date) {
 

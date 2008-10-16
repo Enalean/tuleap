@@ -10,7 +10,6 @@
 
 //require_once('common/tracker/ArtifactFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 require_once('include/ArtifactRulesManagerHtml.class.php');
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {

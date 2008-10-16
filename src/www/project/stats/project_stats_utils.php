@@ -1,6 +1,5 @@
 <?php
 
-$Language->loadLanguageMsg('project/project');
 
 // week_to_dates
 function week_to_dates( $week, $year = 0 ) {

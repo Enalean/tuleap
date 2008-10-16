@@ -220,7 +220,6 @@ class WikiAttachment /* implements UGroupPermission */ {
     function setFilename($name="") {
 
         if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
-            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', array($name)), E_USER_ERROR);
         }
@@ -337,7 +336,6 @@ class WikiAttachment /* implements UGroupPermission */ {
         $created = $dao->create($this->gid, $this->filename);
 
         if(!$created) {            
-            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
                                                         'err_insert'),
                           E_USER_ERROR);
@@ -353,7 +351,6 @@ class WikiAttachment /* implements UGroupPermission */ {
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
             if(!$res) {
-                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
                 return false;
             }
@@ -363,7 +360,6 @@ class WikiAttachment /* implements UGroupPermission */ {
         if(!is_dir($this->basedir.'/'.$this->filename)){
             $res = mkdir($this->basedir.'/'.$this->filename, 0700);
             if(!$res) {
-                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
             }
@@ -379,7 +375,6 @@ class WikiAttachment /* implements UGroupPermission */ {
             $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
 
             if($dar->rowCount() > 1) {
-                $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             }

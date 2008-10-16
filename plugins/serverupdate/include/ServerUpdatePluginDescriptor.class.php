@@ -2,7 +2,6 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved

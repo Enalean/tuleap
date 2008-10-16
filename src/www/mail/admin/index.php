@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../mail_utils.php');
 
-$Language->loadLanguageMsg('mail/mail');
 
 if ($group_id && user_ismember($group_id,'A')) {
 

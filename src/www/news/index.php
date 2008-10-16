@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require('../forum/forum_utils.php');
 
-$Language->loadLanguageMsg('news/news');
 
 $request =& HTTPRequest::instance();
 

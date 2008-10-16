@@ -8,7 +8,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 

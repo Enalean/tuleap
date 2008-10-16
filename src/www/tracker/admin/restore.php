@@ -28,7 +28,6 @@ require('../include/ArtifactCannedHtml.class.php');
 require('../include/ArtifactReportHtml.class.php');
 require('../include/ArtifactHtml.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

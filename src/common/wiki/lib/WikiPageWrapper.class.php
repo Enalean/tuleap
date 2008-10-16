@@ -92,7 +92,6 @@ class WikiPageWrapper {
   }
 
   function addNewProjectPage($pagename) {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     $projectPageName='ProjectWantedPages';
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -177,7 +176,6 @@ Upload:num_rev/filename
    *
    */
   function install() {
-      $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       if($this->gid == 1) {
           if(!user_is_super_user()) {              
               exit_error($GLOBALS['Language']->getText('global','error'),

@@ -8,7 +8,6 @@
 require_once('pre.php');
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

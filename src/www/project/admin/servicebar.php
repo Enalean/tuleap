@@ -14,7 +14,6 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('common/event/EventManager.class.php');
 
-$Language->loadLanguageMsg('project/project');
 $request = HTTPRequest::instance();
     
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {

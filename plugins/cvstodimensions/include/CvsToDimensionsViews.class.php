@@ -20,7 +20,6 @@ class CvsToDimensionsViews extends Views {
     function CvsToDimensionsViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->_controler = $controler;
-        $GLOBALS['Language']->loadLanguageMsg('cvstodimensions', 'cvstodimensions');
     }
     
     function header() {

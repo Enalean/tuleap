@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('svn/svn');
 
 
 $vGroupId = new Valid_GroupId();

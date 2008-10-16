@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 
 // NTY Now only for registered users on CodeX
 if (!user_isloggedin()) {

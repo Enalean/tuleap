@@ -13,7 +13,6 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/user/UserHelper.class.php');
 
-$Language->loadLanguageMsg('project/project');
 
 //	  
 //  get the Group object

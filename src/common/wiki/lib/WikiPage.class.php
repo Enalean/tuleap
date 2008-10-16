@@ -73,7 +73,6 @@ class WikiPage {
 		    ' WHERE group_id="'.$this->gid.'"'.
 		    ' AND pagename="'.addslashes($this->pagename).'"');
     if(db_numrows($res) > 1) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         exit_error($GLOBALS['Language']->getText('global','error'), 
                    $GLOBALS['Language']->getText('wiki_lib_wikipage', 
                                                  'notunique_err'));
@@ -90,7 +89,6 @@ class WikiPage {
     $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
 		    ' WHERE id="'.$this->id.'"');
     if(db_numrows($res) > 1) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         exit_error($GLOBALS['Language']->getText('global','error'), 
                    $GLOBALS['Language']->getText('wiki_lib_wikipage', 
                                                  'notunique_err'));

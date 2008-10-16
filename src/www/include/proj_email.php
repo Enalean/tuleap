@@ -10,7 +10,6 @@
 require_once('common/mail/Mail.class.php');
 require_once('common/include/URL.class.php');
 
-$Language->loadLanguageMsg('include/include');
 
 function send_new_project_email($group_id) {
   global $Language;

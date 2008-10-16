@@ -181,7 +181,6 @@ class DocmanPlugin extends Plugin {
     }
 
     function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
     }
 
     function logsDaily($params) {

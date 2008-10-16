@@ -15,7 +15,6 @@ class PluginsAdministrationActions extends Actions {
     
     function PluginsAdministrationActions(&$controler, $view=null) {
         $this->Actions($controler);
-        $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
     }
     
     // {{{ Actions

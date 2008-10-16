@@ -28,7 +28,6 @@ class ServerUpdatePlugin extends Plugin {
     }
     
     function siteAdminHooks($hook, $params) {
-        $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
         $site_url  = $this->getPluginPath().'/';
         $site_name = $GLOBALS['Language']->getText('plugin_serverupdate','descriptor_name');
         switch ($hook) {
@@ -54,7 +53,6 @@ class ServerUpdatePlugin extends Plugin {
     
     function myPageBox($params) {
         if (user_is_super_user()) {
-            $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
             $params['result'][] = array(
                 'text'    => '<a href="/plugins/serverupdate/">'. $GLOBALS['Language']->getText('plugin_serverupdate', 'descriptor_name') .'</a>',
                 'value'   => '<span id="widget_serverupdate_status">'. $GLOBALS['HTML']->getImage('ic/spinner.gif', array('alt' => 'Please wait...')) .'</span><script type="text/javascript">'."

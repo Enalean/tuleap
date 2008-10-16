@@ -14,7 +14,6 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_change_timezone', array());
 
-$Language->loadLanguageMsg('account/account');
 
 $request =& HTTPRequest::instance();
 

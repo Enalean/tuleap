@@ -46,7 +46,6 @@ class graphontrackers_linePlugin extends Plugin {
      * load the language file of the plugin
      */
     function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers_line', 'graphontrackers_line');
     }
     
     /**

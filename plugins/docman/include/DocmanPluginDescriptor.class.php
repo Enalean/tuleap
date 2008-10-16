@@ -24,7 +24,6 @@
  */
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
 
 class DocmanPluginDescriptor extends PluginDescriptor {
     

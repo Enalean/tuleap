@@ -25,7 +25,6 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 
-$Language->loadLanguageMsg('file/file');
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {

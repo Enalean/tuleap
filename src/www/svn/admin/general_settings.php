@@ -9,7 +9,6 @@
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-$Language->loadLanguageMsg('svn/svn');
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 

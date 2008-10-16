@@ -25,8 +25,6 @@
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/user/UserImport.class.php');
 
-$Language->loadLanguageMsg('project/project');
-$Language->loadLanguageMsg('include/include');
 
 class UserImportHtml extends UserImport {
 

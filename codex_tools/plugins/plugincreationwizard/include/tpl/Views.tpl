@@ -32,7 +32,6 @@ class <?=$class_name?>Views extends Views {
     
     function <?=$class_name?>Views(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('<?=$short_name?>', '<?=$short_name?>');
     }
     
     function header() {

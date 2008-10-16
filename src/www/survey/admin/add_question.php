@@ -11,7 +11,6 @@ require_once('common/survey/SurveySingleton.class.php');
 require_once('www/survey/survey_data.php');
 require_once('www/survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 

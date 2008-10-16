@@ -8,8 +8,6 @@
 //  Written for CodeX by Nicolas Terray
 //
 
-$Language->loadLanguageMsg('tracker/tracker');
-$Language->loadLanguageMsg('project/project');
 
 if ( !user_isloggedin() ) {
 	exit_not_logged_in();

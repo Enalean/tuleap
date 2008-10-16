@@ -6,7 +6,6 @@
 //
 // 
 
-  //$Language->loadLanguageMsg('include/include');
 
 $USER_RES=array();
 
@@ -321,7 +320,6 @@ function user_del_preference($preference_name) {
 }
 
 function user_display_choose_password($page,$user_id = false) {
-    $GLOBALS['Language']->loadLanguageMsg('account/account');
     $request = & HTTPRequest :: instance();
 	?>
     <table><tr valign='top'><td>

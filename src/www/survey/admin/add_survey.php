@@ -13,7 +13,6 @@ require('../survey_utils.php');
 require_once('common/include/HTTPRequest.class.php');
 $request =& HTTPRequest::instance();
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 

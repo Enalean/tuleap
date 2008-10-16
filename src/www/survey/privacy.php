@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 survey_header(array('title'=>'Survey'));
 

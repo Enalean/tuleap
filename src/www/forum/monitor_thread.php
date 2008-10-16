@@ -25,7 +25,6 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
-$GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 if ( !user_isloggedin()) {
     exit_not_logged_in();

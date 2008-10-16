@@ -55,7 +55,6 @@ class userlogPlugin extends Plugin {
      * $params['HTML']
      */
     function siteAdminHooks($hook, $params) {
-        $GLOBALS['Language']->loadLanguageMsg('userlog', 'userlog');
         $site_url  = $this->getPluginPath().'/';
         $site_name = $GLOBALS['Language']->getText('plugin_userlog','descriptor_name');
         switch ($hook) {

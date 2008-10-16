@@ -15,7 +15,6 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 $request =& HTTPRequest::instance();
 
 
@@ -34,7 +33,6 @@ File release system rewrite, Tim Perdue, SourceForge, Aug, 2000
 	If you pass the group_id plus the package_id, you will get the list of 
 		releases with just the releases of that package shown
 */
-$Language->loadLanguageMsg('file/file');
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if($request->valid($vGroupId)) {

@@ -29,7 +29,6 @@ require_once('www/forum/forum_utils.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/user/UserHelper.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('news/news');
 
 function news_header($params) {
   global $HTML,$group_id,$news_name,$news_id,$Language;

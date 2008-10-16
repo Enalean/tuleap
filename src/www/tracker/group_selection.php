@@ -12,7 +12,6 @@
 require_once('pre.php');
 require_once('common/include/GroupFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 $gf = new GroupFactory();
 ?>

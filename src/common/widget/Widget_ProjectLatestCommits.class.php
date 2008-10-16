@@ -61,7 +61,6 @@ class Widget_ProjectLatestCommits extends Widget {
     Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {
         $project =& project_get_object($this->group_id);
-        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $rss = new RSS(array(
             'title'       => $project->getPublicName() .' - '. $this->getTitle(),
             'description' => '',

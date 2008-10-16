@@ -16,7 +16,6 @@ require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
-$Language->loadLanguageMsg('help/help');
 
 
 // Get the group_id, group_artifact_id and field_name from the 

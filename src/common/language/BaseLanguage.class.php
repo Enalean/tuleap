@@ -44,15 +44,6 @@ class BaseLanguage {
         $this->allLanguages = array('en_US', 'fr_FR');
 	}
 
-	/**
-	 * loadLanguageMsg($fname)
-     * DEPRECATED (now lang files are pre-compiled and loaded once for all)
-	 * @param		string	path of language file to load
-	 */
-	function loadLanguageMsg($fname, $plugin_name = null) {
-        return;
-	}
-
     /**
      * "compile" all available language definitions.
      */

@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('homepage/homepage');
 
 $HTML->header(array('title'=>$Language->getText('contact', 'title')));
 

@@ -9,8 +9,6 @@
  */
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('createdao', 'createdao');
-
 class CreateDAOPluginDescriptor extends PluginDescriptor {
     
     function CreateDAOPluginDescriptor() {

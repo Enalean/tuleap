@@ -14,7 +14,6 @@
 //require_once('include/ArtifactFieldHtml.class.php');
 //require_once('common/tracker/ArtifactFieldFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {

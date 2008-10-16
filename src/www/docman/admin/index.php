@@ -23,7 +23,6 @@ if (!($group_id)) {
     exit_no_group();
  }
 
-$Language->loadLanguageMsg('docman/docman');
 
 if (!(user_ismember($group_id,"D2"))) {
     $feedback .= $Language->getText('docman_admin_index','error_perm');

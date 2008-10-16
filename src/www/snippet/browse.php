@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
-$Language->loadLanguageMsg('snippet/snippet');
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_browsing'),

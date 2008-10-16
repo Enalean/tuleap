@@ -14,8 +14,6 @@
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
-$GLOBALS['Language']->loadLanguageMsg('include/include');
 
 class Artifact extends Error {
 

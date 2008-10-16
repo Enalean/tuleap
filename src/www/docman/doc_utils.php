@@ -11,7 +11,6 @@
 */
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 function display_groups_option($group_id=false,$checkedval='xyxy') {
 

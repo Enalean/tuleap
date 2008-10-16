@@ -204,7 +204,6 @@ $sys_strftimefmt = $Language->getText('system','strftimefmt');
 $sys_datefmt = $Language->getText('system','datefmt');
 $sys_datefmt_short = $Language->getText('system','datefmt_short');
 
-$Language->loadLanguageMsg('include/include');
 
 EventManager::instance()->processEvent('plugin_load_language_file', null);
 

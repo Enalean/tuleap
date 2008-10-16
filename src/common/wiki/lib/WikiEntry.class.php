@@ -189,7 +189,6 @@ class WikiEntry {
 		    ' description="'.mysql_real_escape_string($this->desc).'"');
     
     if($res === false) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 				       'insert_err',
 				       db_error()), 
@@ -207,7 +206,6 @@ class WikiEntry {
 		    ' AND group_id='.$this->gid);
 
     if($res === false) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 				       'delete_err', 
 				       db_error()), 
@@ -234,7 +232,6 @@ class WikiEntry {
       $err = db_error();
       
       if($res === false) {
-          $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 	trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
 					 'update_err',
 					 db_error()),
@@ -243,7 +240,6 @@ class WikiEntry {
       }
       else {
 	if(db_affected_rows() === 0) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
           $feedback .= $GLOBALS['Language']->getText('wiki_lib_wikientry',
 					  'no_update',
 					  $this->name);

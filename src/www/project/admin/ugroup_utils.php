@@ -14,7 +14,6 @@ require_once('common/user/UserHelper.class.php');
 //
 // Define various functions for user group management
 //
-$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
 $GLOBALS['UGROUP_NONE']               =100;

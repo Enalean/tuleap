@@ -16,7 +16,6 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 
-$Language->loadLanguageMsg('project/project');
 
 if (!isset($export)) $export="";
 

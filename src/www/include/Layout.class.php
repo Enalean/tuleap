@@ -15,7 +15,6 @@ require_once('common/event/EventManager.class.php');
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
 
-//$Language->loadLanguageMsg('include/include');
 include($Language->getContent('layout/osdn_sites'));
             
 /*

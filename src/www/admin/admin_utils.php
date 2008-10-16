@@ -1,6 +1,5 @@
 <?php
 
-$Language->loadLanguageMsg('admin/admin');
 
 function site_admin_header($params) {
     GLOBAL $HTML, $Language;

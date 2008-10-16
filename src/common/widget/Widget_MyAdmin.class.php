@@ -19,7 +19,6 @@ class Widget_MyAdmin extends Widget {
         return $GLOBALS['Language']->getText('my_index', 'my_admin');
     }
     function getContent() {
-        $GLOBALS['Language']->loadLanguageMsg('admin/admin');
         
         require_once('www/forum/forum_utils.php');
         require_once('www/project/admin/ugroup_utils.php');

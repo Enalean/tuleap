@@ -12,7 +12,6 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 
 $sql="SELECT description,data,filename,filesize,filetype,doc_group FROM doc_data WHERE docid='$docid'";

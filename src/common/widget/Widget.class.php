@@ -53,7 +53,6 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
         return '';
     }
     function getPreferencesForm($layout_id, $owner_id, $owner_type) {
-        $GLOBALS['Language']->loadLanguageMsg('widget/widget');
         $prefs  = '';
         $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</legend>';

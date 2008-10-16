@@ -37,7 +37,6 @@ class CvsToDimensionsPlugin extends Plugin {
     }
     
     function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('cvstodimensions', 'cvstodimensions');
     }
     
     

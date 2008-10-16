@@ -10,7 +10,6 @@ require_once('pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 

@@ -25,13 +25,11 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     }
     
     function display($data) {
-        $GLOBALS['Language']->loadLanguageMsg('project/project');
         echo '<fieldset><legend style="font-size:1.2em;">Choose the template of the project</legend>';
         include($GLOBALS['Language']->getContent('project/template'));
         
         $rows=db_numrows($this->db_templates);
         if ($rows > 0) {
-            $GLOBALS['Language']->loadLanguageMsg('new/new');
             //echo '<h3>From templates</h3><blockquote>';
             
           $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose'));

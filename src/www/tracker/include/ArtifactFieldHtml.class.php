@@ -11,7 +11,6 @@
 
 //require_once('common/tracker/ArtifactField.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 require_once('common/include/HTTPRequest.class.php');
 

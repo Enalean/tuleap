@@ -16,7 +16,6 @@
 require_once ('common/tracker/ArtifactReport.class.php');
 require_once ('www/tracker/include/ArtifactTypeHtml.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFactory extends Error {
 

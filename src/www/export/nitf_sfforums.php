@@ -1,7 +1,6 @@
 <?php
 // ## export sf front page news in RSS
 require_once('pre.php');
-$Language->loadLanguageMsg('export/export');
 
 header("Content-Type: text/xml");
 

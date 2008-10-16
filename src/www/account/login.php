@@ -14,7 +14,6 @@ require_once('pre.php');
 require_once('account.php');
 require_once('common/include/CookieManager.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('account/account');
 
 $em =& EventManager::instance();
 

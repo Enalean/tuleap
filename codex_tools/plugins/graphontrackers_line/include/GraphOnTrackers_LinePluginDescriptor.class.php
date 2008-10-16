@@ -26,7 +26,6 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class GraphOnTrackers_LinePluginDescriptor extends PluginDescriptor {
     
     function GraphOnTrackers_LinePluginDescriptor() {
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers_line', 'graphontrackers_line');
         $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_graphontrackers_line', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_graphontrackers_line', 'descriptor_description'));
     }
     

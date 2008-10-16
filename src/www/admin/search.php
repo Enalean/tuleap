@@ -7,7 +7,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('admin/admin');
 $hp = CodeX_HTMLPurifier::instance();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

@@ -14,7 +14,6 @@
  *
  */
 
-//$Language->loadLanguageMsg('svnupdate/svnupdate');
 
 require_once("SVNCommit.class.php");
 require_once("SVNCommitedFile.class.php");

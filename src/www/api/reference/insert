@@ -22,7 +22,6 @@ header('Content-type: text/html');
 $reference_manager =& ReferenceManager::instance();
 $request =& HTTPRequest::instance();
 
-$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 if (!$request->get('group_id')) {
     if (!$request->get('group_name')) {

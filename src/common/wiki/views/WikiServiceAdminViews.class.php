@@ -55,7 +55,6 @@ class WikiServiceAdminViews extends WikiViews {
    * WikiServiceAdminViews - Constructor
    */
   function WikiServiceAdminViews(&$controler, $id=0) {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     parent::WikiView($controler, $id);
     $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'title', array(group_getname($this->gid)));
   }
@@ -64,7 +63,6 @@ class WikiServiceAdminViews extends WikiViews {
    * displayEntryForm - private
    */
   function _displayEntryForm($act='', $id='', $name='', $page='', $desc='', $rank='') {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="action" value="'.$act.'" />
@@ -174,7 +172,6 @@ class WikiServiceAdminViews extends WikiViews {
    * wikiDocuments - public view
    */
   function wikiDocuments() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_title', array($this->wikiname));
 
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_createdoc', $this->gid);
@@ -199,7 +196,6 @@ class WikiServiceAdminViews extends WikiViews {
    * _createWikiDocument - private
    */
   function _createWikiDocument() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'createwikidoc', array($this->wikiLink));
     $this->_displayEntryForm('create');
   }
@@ -208,7 +204,6 @@ class WikiServiceAdminViews extends WikiViews {
    * _browseWikiDocument - private
    */
   function _browseWikiDocument() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
     $wei = WikiEntry::getEntryIterator($this->gid);
    
@@ -262,7 +257,6 @@ class WikiServiceAdminViews extends WikiViews {
    * updateWikiDocument - public View
    */
   function updateWikiDocument() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'updatedoc', array($this->wikiname));
 
     $we = new WikiEntry($_REQUEST['id']);
@@ -284,7 +278,6 @@ class WikiServiceAdminViews extends WikiViews {
    * pagePerms - public View
    */
    function docPerms() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
      $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiDocuments&action=setWikiPagePerms';
      $this->_pagePerms($postUrl);    
      print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages"'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
@@ -295,7 +288,6 @@ class WikiServiceAdminViews extends WikiViews {
    * pagePerms - public View
    */
    function pagePerms() {
-     $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
      $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&view=wikiPages&action=setWikiPagePerms';
      $this->_pagePerms($postUrl);    
      print '<p><a href="'.$this->wikiAdminLink.'&view=wikiPages">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
@@ -305,7 +297,6 @@ class WikiServiceAdminViews extends WikiViews {
    * wikiPages - public View
    */
   function wikiPages() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_title', array($this->wikiname));
     
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_project_pages', $this->gid);
@@ -353,7 +344,6 @@ class WikiServiceAdminViews extends WikiViews {
     * browsePages - private
     */
     function _browsePages(&$pageList) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         print html_build_list_table_top(array('Page', 'Permissions'));
 
         sort($pageList);
@@ -402,7 +392,6 @@ class WikiServiceAdminViews extends WikiViews {
    * wikiPerms - public View
    */
   function wikiPerms() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikiperm', array($this->wikiname, $this->wikiname));
     $postUrl = '/wiki/admin/index.php?group_id='.$this->gid.'&action=setWikiPerms';
     permission_display_selection_form("WIKI_READ", $this->gid, $this->gid, $postUrl);
@@ -414,7 +403,6 @@ class WikiServiceAdminViews extends WikiViews {
      * @access public
      */
     function wikiAttachments() {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_title', array($this->wikiname));
    
         print html_build_list_table_top(array($GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
@@ -460,7 +448,6 @@ class WikiServiceAdminViews extends WikiViews {
   
 
     function attachmentPerms() {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         $attachmentId = $_GET['id'];
     
         $wa = new WikiAttachment($this->gid);
@@ -480,7 +467,6 @@ class WikiServiceAdminViews extends WikiViews {
      * @access public
      */
     function browseAttachment() {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         $attachmentId = (int) $_GET['id'];
     
         $wa = new WikiAttachment($this->gid);

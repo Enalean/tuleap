@@ -12,7 +12,6 @@ require_once('www/my/my_utils.php');
 
 session_require(array('isloggedin'=>'1'));
 
-$Language->loadLanguageMsg('account/account');
 
 $em =& EventManager::instance();
 

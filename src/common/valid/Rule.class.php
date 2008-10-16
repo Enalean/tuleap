@@ -332,7 +332,6 @@ extends Rule {
     }
 
     function geti18nError($key, $params="") {
-        $GLOBALS['Language']->loadLanguageMsg('valid/valid');
         return $GLOBALS['Language']->getText($this->i18nPageName, $key, $params);
     }
 

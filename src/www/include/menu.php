@@ -8,7 +8,6 @@
 
 /* The correct theme.php must be included by this point -- Geoffrey */
 
-  //$Language->loadLanguageMsg('include/include');
 
 // Menu entry  for all admin tasks when logged as site administor
 function menu_site_admin() {

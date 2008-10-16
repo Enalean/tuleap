@@ -26,7 +26,6 @@
 //require_once('common/include/Error.class.php');
 //require_once('common/include/Permission.class.php');
 
-//$Language->loadLanguageMsg('include/include');
 
 require_once('common/language/LanguageManager.class.php');
 require_once('common/dao/UserPreferencesDao.class.php');

@@ -27,7 +27,6 @@ class ServerUpdateViews extends Views {
     function ServerUpdateViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->iconsPath = $controler->getThemePath().'/images/ic/';
-        $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
     }
     
     function getIconsPath() {

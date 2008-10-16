@@ -26,7 +26,6 @@ require_once('pre.php');
 require('../survey_data.php');
 require('../survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),

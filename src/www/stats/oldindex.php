@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('cache.php');
 
-$Language->loadLanguageMsg('stats/stats');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

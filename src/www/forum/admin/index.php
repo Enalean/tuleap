@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 require('../forum_utils.php');
-$Language->loadLanguageMsg('forum/forum');
 
 $is_admin_page='y';
 $request =& HTTPRequest::instance();

@@ -7,7 +7,6 @@
  * UpgradeScriptExecution
  */
 
-//$Language->loadLanguageMsg('svnupdate/svnupdate');
 
 class UpgradeScriptExecution {
     

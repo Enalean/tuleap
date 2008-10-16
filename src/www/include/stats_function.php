@@ -8,7 +8,6 @@
 
 require_once('HTML_Graphs.php');
 
-$Language->loadLanguageMsg('include/include');
 
 function stats_sf_stats() {
   global $sys_datefmt,$Language;

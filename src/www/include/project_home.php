@@ -18,7 +18,6 @@ require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
-$Language->loadLanguageMsg('include/include');
 $em =& EventManager::instance();
 $em->processEvent('plugin_load_language_file', null);
 

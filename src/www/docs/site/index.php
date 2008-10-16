@@ -15,7 +15,6 @@
 require_once('pre.php');
 require_once('www/docman/doc_utils.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 $group_id = 1;
 

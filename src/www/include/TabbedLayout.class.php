@@ -7,7 +7,6 @@
  * TabbedLayout
  */
 require_once('Layout.class.php');
-$GLOBALS['Language']->loadlanguageMsg('themes/gforge-compat');
 class TabbedLayout extends Layout {
 
 

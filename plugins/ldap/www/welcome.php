@@ -77,7 +77,6 @@ function update_account($user_id, $tz='None', $mail_site=0, $mail_va=0) {
     return true;    
 }
 
-$Language->loadLanguageMsg('ldap', 'ldap');
 
 $user_id = user_getid();
 

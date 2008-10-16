@@ -127,7 +127,6 @@ class IMPlugin extends Plugin {
     
     
     function imPluginLanguageFile($params) {
-       $GLOBALS['Language']->loadLanguageMsg('IM','IM');
     }
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the IM plugin pages.
@@ -556,14 +555,12 @@ class IMPlugin extends Plugin {
 	 */
  	function siteAdminHooks($params) {
        global $Language;
-	   $Language->loadLanguageMsg('IM','IM');
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
        echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
     }
  	
     function site_admin_external_tool_hook($params) {
        global $Language;
-        $Language->loadLanguageMsg('IM','IM');
         echo '<li><A href="externaltools.php?tool=openfire">'.
         $GLOBALS['Language']->getText('plugin_im','link_im_admin_tool').
         '</A></li>';
@@ -579,7 +576,6 @@ class IMPlugin extends Plugin {
 
  	 function im_process_display_jabber_id($eParams) {
 	    global $Language;
-	    $Language->loadLanguageMsg('IM','IM');
 		$plugin= & IMPlugin::instance() ;
 		$pm=$plugin->_getPluginManager();
 		$entry_label['jid']='';

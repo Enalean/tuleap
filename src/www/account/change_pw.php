@@ -11,7 +11,6 @@ require_once('account.php');
 
 $request =& HTTPRequest::instance();
 
-$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post

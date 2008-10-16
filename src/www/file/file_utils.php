@@ -12,7 +12,6 @@
 // Provide various functions for file manager
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 
 function file_utils_header($params) {
     global $group_id,$Language;

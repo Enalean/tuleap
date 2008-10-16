@@ -7,7 +7,7 @@
 #  * http://codex.xrce.xerox.com
 #  *
 #  *
-#  */ $Language->loadLanguageMsg('wiki/wiki');
+#  */
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/views/WikiServiceViews.class.php

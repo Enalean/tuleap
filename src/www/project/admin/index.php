@@ -15,7 +15,6 @@ require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 // get current information
 $res_grp = group_get_result($group_id);

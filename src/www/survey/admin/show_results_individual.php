@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('www/survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 survey_header(array('title'=>$Language->getText('survey_admin_show_r_individual','res'),

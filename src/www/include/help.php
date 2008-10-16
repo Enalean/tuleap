@@ -7,7 +7,6 @@
 // 
 
 
-  //$Language->loadLanguageMsg('include/include');
 
 /**
 * help_button() - Show a help button.

@@ -9,8 +9,6 @@
 //  Written for CodeX by Marie-Luise Schneider
 //
 
-  //$Language->loadLanguageMsg('tracker/tracker');
-  //$Language->loadLanguageMsg('include/include');
 require_once('common/include/Error.class.php');
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');

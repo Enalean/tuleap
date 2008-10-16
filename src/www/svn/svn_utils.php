@@ -13,7 +13,6 @@ require_once('common/user/UserHelper.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
 
-$GLOBALS['Language']->loadLanguageMsg('svn/svn');
 
 function svn_header($params) {
         global $group_id, $Language, $there_are_specific_permissions;

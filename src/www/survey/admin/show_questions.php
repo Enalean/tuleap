@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('www/survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 $params = array('title'=>$Language->getText('survey_admin_show_questions','s_quest'),'pv'=>'1','group'=>$group_id);

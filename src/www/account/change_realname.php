@@ -13,7 +13,6 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_change_realname', array());
 
-$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post

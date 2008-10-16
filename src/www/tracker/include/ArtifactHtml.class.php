@@ -18,7 +18,6 @@ require_once('javascript_helpers.php');
 require_once('common/rss/RSS.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactHtml extends Artifact {
 
@@ -1122,7 +1121,6 @@ class ArtifactHtml extends Artifact {
     *
     */
     function displayRSS() {
-        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $group = $this->ArtifactType->getGroup();
         $rss = new RSS(array(
             'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary') .' - '. $GLOBALS['Language']->getText('tracker_include_artifact','follow_ups'),

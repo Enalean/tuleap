@@ -15,7 +15,6 @@ class PluginsAdministrationViews extends Views {
     
     function PluginsAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('pluginsAdministration', 'pluginsadministration');
     }
     
     function header() {

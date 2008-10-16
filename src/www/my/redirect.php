@@ -25,7 +25,6 @@
 
 require('pre.php');
 
-$Language->loadLanguageMsg('my/my');
 
 $vPv = new Valid_Pv();
 if ($request->valid($vPv) && $request->get('pv') == 2) {

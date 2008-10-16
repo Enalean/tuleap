@@ -13,7 +13,6 @@ class ServerUpdateActions extends Actions {
     
     function ServerUpdateActions(&$controler, $view=null) {
         $this->Actions($controler);
-        $GLOBALS['Language']->loadLanguageMsg('serverUpdate', 'serverupdate');
     }
 
 }

@@ -9,7 +9,6 @@
 require_once('pre.php');    
 require_once('common/mail/Mail.class.php');
 
-$Language->loadLanguageMsg('homepage/homepage');
 
 if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));

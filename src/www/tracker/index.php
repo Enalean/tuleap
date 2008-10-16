@@ -34,7 +34,6 @@ require('./include/ArtifactImportHtml.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 $sanitizer = new SimpleSanitizer();
 

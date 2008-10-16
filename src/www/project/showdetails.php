@@ -7,7 +7,6 @@
 // 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('project/project');
 $hp = CodeX_HTMLPurifier::instance();
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();

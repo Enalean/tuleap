@@ -13,7 +13,6 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/include/HTTPRequest.class.php');
 $request =& HTTPRequest::instance();
 
-$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 

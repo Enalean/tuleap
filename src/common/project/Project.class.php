@@ -87,7 +87,6 @@ class Project extends Group {
     */
     function Project($id) {
 	global $Language;
-	$Language->loadLanguageMsg('project/project');
 
         $this->Group($id);
         
@@ -352,7 +351,6 @@ class Project extends Group {
     	$descfields = getProjectsDescFieldsInfos();
     	$hp = CodeX_HTMLPurifier::instance();
     	global $Language;
-    	$Language->loadLanguageMsg('project/project');
     	
     	for($i=0;$i<sizeof($descfields);$i++){
 	

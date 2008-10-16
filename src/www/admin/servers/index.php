@@ -87,7 +87,6 @@ class ServerAdmin {
         if ($dar) {
             $matches = array();
             $projects = array();
-            $GLOBALS['Language']->loadLanguageMsg('project/project');
             $em =& EventManager::instance();
             $em->processEvent("plugin_load_language_file", null);
             while ($dar->valid()) {

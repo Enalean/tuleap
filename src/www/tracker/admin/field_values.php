@@ -8,7 +8,6 @@
 //  Written for CodeX by Stephane Bouhet
 //
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 if ( !user_isloggedin() ) {
 	exit_not_logged_in();

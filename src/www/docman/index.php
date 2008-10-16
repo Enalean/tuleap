@@ -19,7 +19,6 @@ if (!$group_id) {
     exit_no_group();
 }
 
-$Language->loadLanguageMsg('docman/docman');
 
 $params=array('title'=>$Language->getText('docman_index','title',array(group_getname($group_id))),
               'help'=>'DocumentManager.html',

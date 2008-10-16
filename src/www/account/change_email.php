@@ -14,7 +14,6 @@ $em->processEvent('before_change_email', array());
 
 session_require(array('isloggedin'=>1));
 
-$Language->loadLanguageMsg('account/account');
 
 $HTML->header(array('title'=> $Language->getText('account_change_email', 'title')));
 ?>

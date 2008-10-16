@@ -11,7 +11,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('admin/admin');
 
 if (!(user_isloggedin() && user_is_super_user())) {
     exit_error('ERROR',$Language->getText('admin_approve_license', 'error'));

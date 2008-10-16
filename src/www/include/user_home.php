@@ -20,7 +20,6 @@
 
 */
 
-$Language->loadLanguageMsg('include/include');
 
 $HTML->header(array('title'=>$Language->getText('include_user_home','devel_profile')));
 

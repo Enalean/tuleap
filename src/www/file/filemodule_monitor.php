@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
 	/*

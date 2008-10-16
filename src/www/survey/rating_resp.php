@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $HTML->header(array('title'=>$Language->getText('survey_rating_resp','voting')));
 

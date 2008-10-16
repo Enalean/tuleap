@@ -7,7 +7,6 @@
  * SVNUpdate
  */
 
-//$Language->loadLanguageMsg('svnupdate/svnupdate');
 
 require_once('SVNCommitMetaData.class.php');
 

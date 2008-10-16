@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('survey/survey');
 
 survey_header(array('title'=>$Language->getText('survey_admin_browse_question','edit_q'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));

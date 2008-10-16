@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-$Language->loadLanguageMsg('survey/survey');
 
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
 		    'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));

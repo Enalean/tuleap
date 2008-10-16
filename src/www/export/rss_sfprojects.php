@@ -3,7 +3,6 @@
 require_once('pre.php');
 require('./rss_utils.inc');
 require_once('www/new/new_utils.php');
-$Language->loadLanguageMsg('export/export');
 
 $server = get_server_url();
 

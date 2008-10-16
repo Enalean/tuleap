@@ -8,7 +8,6 @@
 require_once('pre.php');
 require('./site_stats_utils.php');
 
-$Language->loadLanguageMsg('stats/stats');
 
 $HTML->header(array(title=>$Language->getText('stats_graph','stats',$GLOBALS['sys_name'])));
 

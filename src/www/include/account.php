@@ -17,7 +17,6 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/valid/Rule.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('include/include');
 
 // ***** function account_pwvalid()
 // ***** check for valid password

@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('MySQLMaintenance', 'mysql_maintenance');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

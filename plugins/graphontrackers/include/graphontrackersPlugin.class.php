@@ -82,7 +82,6 @@ class GraphOnTrackersPlugin extends Plugin {
     }
 
     function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers', 'graphontrackers');
     }
 
     function tracker_collapsable_sections($params) {
@@ -213,7 +212,6 @@ class GraphOnTrackersPlugin extends Plugin {
      */
     function tracker_graphic_report_admin($params){
         
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers', 'graphontrackers');
         $request = HTTPRequest::instance();
         if ($request->valid(new Valid_WhiteList('func', array('reportgraphic'))) && $request->valid(new Valid_UInt('atid'))) {
             $func = $request->get('func');
@@ -352,7 +350,6 @@ class GraphOnTrackersPlugin extends Plugin {
      * @param params:hook parameters
      */
     function copy_graphical_reports($params){
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers', 'graphontrackers');
     
         $atid_source=$params['atid_source'];
         $atid_dest=$params['atid_dest'];

@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('viewvc_utils.php');
 require_once('www/svn/svn_utils.php');
 
-$Language->loadLanguageMsg('svn/svn');
 if (user_isloggedin()) {
     $vRoot = new Valid_String('root');
     $vRoot->required();

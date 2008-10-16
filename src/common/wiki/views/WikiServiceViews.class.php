@@ -38,7 +38,6 @@ class WikiServiceViews extends WikiViews {
    */
   function WikiServiceViews(&$controler, $id=0, $view=null) {
       $hp = CodeX_HTMLPurifier::instance();
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     parent::WikiView($controler, $id, $view);
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
@@ -68,7 +67,6 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function browse() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&'.$hideUrl.'">'.$hideImg.'</a>';
     print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', array($hurl));
@@ -90,7 +88,6 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function browsePages() {    
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
     $hurl='<a href="'.$this->wikiLink.'&view=browsePages&'.$hideUrl.'">'.$hideImg.'</a>';
     print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', array($hurl));
@@ -118,7 +115,6 @@ class WikiServiceViews extends WikiViews {
    *
    */
   function _browseWikiDocuments() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
     $wei =& WikiEntry::getEntryIterator($this->gid);
 
@@ -180,7 +176,6 @@ class WikiServiceViews extends WikiViews {
    * @param  string $addr Form action adress
    */
   function _newPageForm($addr='') {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     print '
     <form name="newPage" method="post" action="'.$addr.'">
       <input type="hidden" name="action" value="add_temp_page" />
@@ -241,7 +236,6 @@ class WikiServiceViews extends WikiViews {
    * displayMenu - public
    */
   function displayMenu() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     
     print '
     <table class="ServiceMenu">
@@ -322,7 +316,6 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function pagePerms() {
-     $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
      $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';     
      $this->_pagePerms($postUrl);
      print '<p><a href="'.$this->wikiLink.'">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
@@ -378,7 +371,6 @@ class WikiServiceViews extends WikiViews {
    * install: ask for confirmation and choose language
    */
   function install() {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     echo $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 
                             'install_intro', 
                             array($GLOBALS['Language']->getText('global','btn_create')));
@@ -398,7 +390,6 @@ echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_
   function doinstall() {
       global $LANG;
       global $language_id;
-      $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       $language_id=$_REQUEST['language_id'];
       if (!$language_id) $language_id=1; // default is en_US
       // Initial Wiki document is now created within phpWiki main()
