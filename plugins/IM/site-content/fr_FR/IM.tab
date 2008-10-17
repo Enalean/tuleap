@@ -18,6 +18,12 @@ plugin_im	muc_unlocked	est rendu disponible en tant que salon de discussion.
 plugin_im	muc-add-member	est maintenant membre du salon de discussion 
 plugin_im	muc-remove-member	est désormais supprimé du salon de discussion 
 
+plugin_im	toolbar_muc_logs	Archives
+plugin_im	muc_logs_title	Archives de la salle de discussion
+plugin_im	no_muc_logs	Aucune archive pour cette salle de discussion
+plugin_im	muc_logs_time	Heure
+plugin_im	muc_logs_user	Participant
+plugin_im	muc_logs_message	Message
 
 plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instantanée.
 plugin_im_admin	im_admin_warning	ATTENTION: Si vous synchronisez un ou plusieurs groupes, il faut impérativement rédemarrer ensuite le server Openfire avec la commande "service openfire reload" exécutée en tant que root sur le serveur. Cela interrompera toutes les discussions en cours!

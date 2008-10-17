@@ -63,6 +63,13 @@ class IM extends Controler {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
                 break;
+            case 'muc_logs':
+                if ($user->isMember($group_id)) {
+					$this->view = 'muc_logs';
+                } else {
+					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+				}
+                break;
             default:
                 if ($group_id) {
                     $project = project_get_object($group_id);

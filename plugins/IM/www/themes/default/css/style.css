@@ -15,3 +15,15 @@ legend.project_sync {
     font-size:1.3em; 
     font-weight: bold;
 }
+
+table.log {
+	
+}
+
+td.log_day {
+	text-align: left;
+}
+
+td.log_nickname {
+	font-weight: bold;
+}

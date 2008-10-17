@@ -19,6 +19,13 @@ plugin_im	muc_unlocked	is unlocked now for Instant Messaging
 plugin_im	muc-add-member	is now member of the chat room 
 plugin_im	muc-remove-member	is removed now from the chat room 
 
+plugin_im	toolbar_muc_logs	Logs
+plugin_im	muc_logs_title	Muc logs
+plugin_im	no_muc_logs	No logs for this MUC Room.
+plugin_im	muc_logs_time	Time
+plugin_im	muc_logs_user	User
+plugin_im	muc_logs_message	Message
+
 plugin_im_admin	im_admin_title	Instant Messaging plugin administration.
 plugin_im_admin	im_admin_warning	WARNING: If you synchronize one or several groups here, you will have to restart the Openfire server by executing "service openfire restart" as root in a shell window. This will interrupt all ongoing chat sessions!
 plugin_im_admin	projects_to_sync	Projets to synchronize:

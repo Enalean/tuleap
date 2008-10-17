@@ -7,6 +7,8 @@ require_once('IMDao.class.php');
 require_once('IMDataAccess.class.php');
 require_once('JabbexFactory.class.php');
 
+require_once('IMMucConversationLogManager.class.php');
+
 class IMViews extends Views {
 	
     function IMViews(&$controler, $view=null) {
@@ -30,6 +32,10 @@ class IMViews extends Views {
             $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'selected_top_tab' => 'admin'));
         } else {
             $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $group_id,'toptab' => 'IM'));
+        	if (user_ismember($request->get('group_id'))) {
+            	echo '<b><a href="/plugins/IM/?group_id='. $request->get('group_id') .'&amp;action=muc_logs">'. $GLOBALS['Language']->getText('plugin_im', 'toolbar_muc_logs') .'</a> | </b>';
+        	}
+            echo $this->_getHelp();
         }
     }
     
@@ -107,6 +113,69 @@ class IMViews extends Views {
         echo '</div>';
     }
     
+    /**
+	 * Display muc logs of project $group_id
+	 */
+    function muc_logs() {
+        $request = HTTPRequest::instance();
+    	$group_id = $request->get('group_id');
+        $project = new Group($group_id);
+    	
+    	echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
+	    
+	    $mclm = IMMucConversationLogManager::getMucConversationLogManagerInstance();
+	    
+	    try {
+	    	$conversations = $mclm->getConversationLogsByGroupName($project->getUnixName(true));	// MUC room names are lower cases TODO : check it
+	    } catch (Exception $e) {
+	    	echo $e->getMessage();
+	    }
+	    
+	    if (! $conversations || sizeof($conversations) == 0) {
+	    	echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
+	    } else {
+	    	
+	    	$purifier = CodeX_HTMLPurifier::instance();
+	    	
+	    	$nick_color_arr = array();	// association array nickname => color
+	    	$available_colors = $GLOBALS['HTML']->getTextColors();
+	    	
+	    	echo '<table class="logs">';
+	    	echo ' <tr>';
+	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_time') . '</th>';
+	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_user') . '</th>';
+	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message') . '</th>';
+	    	echo ' </tr>';
+	    	$current_day = null;
+	    	foreach ($conversations as $conv) {
+	    		if ($conv->getDay() != $current_day) {
+	    			$current_day = $conv->getDay(); 
+	    			echo ' <tr class="boxtitle">';
+	    			echo '  <td colspan="3">'.$conv->getDay().'</td>';
+	    			echo ' </tr>';
+	    		}
+	    		
+	    		// if nickname hasn't its color yet, we give it a new one 
+	    		if ( ! array_key_exists($conv->getNickname(), $nick_color_arr)) { 
+	    			// if all the colors have been used, we start again with the same colors
+	    			if (sizeof($available_colors) == 0) {
+	    				$available_colors = $GLOBALS['HTML']->getChartColors();
+	    			}
+	    			$current_color = array_pop($available_colors);	// remove a color from the array, and set it to current color
+	    			$nick_color_arr[$conv->getNickname()] = $GLOBALS['HTML']->getColorCodeFromColorName($current_color);
+	    		}
+	    		
+	    		echo ' <tr>';
+	    		echo '  <td class="log_time">'.$conv->getTime().'</td>';
+	    		echo '  <td class="log_nickname"><span style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
+	    		echo '  <td class="log_message">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
+	    		echo ' </tr>';
+	    		
+	    	}
+	    	echo '</table>';
+	    }
+
+    }
     
     /**
 	 * Display forms to synchronize projects (site admin view)
