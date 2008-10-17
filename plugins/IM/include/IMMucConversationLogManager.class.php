@@ -20,10 +20,10 @@ class IMMucConversationLogManager {
 	private static $_mucconversationlogmanager_instance;
 
 	public static function getMucConversationLogManagerInstance() {
-        if ( ! $this->_mucconversationlogmanager_instance) {
-            $this->_mucconversationlogmanager_instance = new IMMucConversationLogManager();
+        if ( ! self::$_mucconversationlogmanager_instance) {
+            self::$_mucconversationlogmanager_instance = new IMMucConversationLogManager();
         }
-        return $this->_mucconversationlogmanager_instance;
+        return self::$_mucconversationlogmanager_instance;
     }
 	
 	private function _getIMPlugin() {
