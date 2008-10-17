@@ -11,38 +11,38 @@
 
 /*
 
-	Tim Perdue, September 7, 2000
-	Laurent Julliard, Jan 14, 2004
+    Tim Perdue, September 7, 2000
+    Laurent Julliard, Jan 14, 2004
     Manuel Vacelet, July 22, 2008 (nice, every 4 years !)
 
-	Base class for adding multilingual support to CodeX
+    Base class for adding multilingual support to CodeX
 
-	Contains variables which can be overridden optionally by other
-	language files.
+    Contains variables which can be overridden optionally by other
+    language files.
 
-	Base language is english - an english class will extend this one,
-	but won't override anything
+    Base language is english - an english class will extend this one,
+    but won't override anything
 
-	As new languages are added, they can override what they wish, and
-	as we extend our class, other languages can follow suit
-	as they are translated without holding up our progress
+    As new languages are added, they can override what they wish, and
+    as we extend our class, other languages can follow suit
+    as they are translated without holding up our progress
 
-	A global language file is loaded first and then each php script
-	loads its won scripts (site-local customized versions are also
-	loaded if they do exist)
+    A global language file is loaded first and then each php script
+    loads its won scripts (site-local customized versions are also
+    loaded if they do exist)
 
 */
 
 class BaseLanguage {
 
-	//array to hold the string values
-	var $text_array ;
-	var $lang, $name, $id, $code ;
-	var $file_array = array();
+    //array to hold the string values
+    var $text_array ;
+    var $lang, $name, $id, $code ;
+    var $file_array = array();
 
-	function BaseLanguage() {
+    function BaseLanguage() {
         $this->allLanguages = array('en_US', 'fr_FR');
-	}
+    }
 
     /**
      * "compile" all available language definitions.
@@ -273,7 +273,9 @@ class BaseLanguage {
     }
 
     function loadLanguageFile($fname) {
-        if (array_key_exists($fname, $this->file_array)) { return; }
+        if (array_key_exists($fname, $this->file_array)) { 
+            return; 
+        }
         $this->file_array[$fname] = 1;
         $this->parseLanguageFile($fname, $this->text_array);
     }
@@ -302,14 +304,14 @@ class BaseLanguage {
         }
     }
 
-	function loadLanguageID($language_id) {
-		$res=db_query("SELECT * FROM supported_languages WHERE language_id='".db_es($language_id)."'");
-		$this->loadLanguage(db_result($res,0,'language_code'));
-	}
+    function loadLanguageID($language_id) {
+        $res=db_query("SELECT * FROM supported_languages WHERE language_id='".db_es($language_id)."'");
+        $this->loadLanguage(db_result($res,0,'language_code'));
+    }
 
-	// Load the global language file (this is a global message catalog
-	// that is loaded for all scripts from pre.php
-	function loadLanguage($lang) {
+    // Load the global language file (this is a global message catalog
+    // that is loaded for all scripts from pre.php
+    function loadLanguage($lang) {
         if($this->lang != $lang) {
             $this->lang = $lang;
             $langFile = $GLOBALS['codex_cache_dir'].'/lang/'.$this->lang.'.php';
@@ -321,43 +323,45 @@ class BaseLanguage {
                 $this->text_array = $this->compileLanguage($lang);
             }
         }
-	}
+    }
 
-	function getText($pagename, $category, $args="") {
-		/*
-			args is an array which will replace the $1, $2, etc
-			in the text_array string before it is returned
-		*/
-		if ($args || $args == 0) {
-		    //$tstring = sprintf($this->text_array[$pagename][$category],$args);
-			for ($i=1; $i<=sizeof($args)+1; $i++) {
-				$patterns[] = '/\$'.$i.'/';
-			}
-			$tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
-		} else {
+    function getText($pagename, $category, $args="") {
+        /*
+            args is an array which will replace the $1, $2, etc
+            in the text_array string before it is returned
+        */
+        if ($args || $args == 0) {
+            //$tstring = sprintf($this->text_array[$pagename][$category],$args);
+            for ($i=1; $i<=sizeof($args)+1; $i++) {
+                $patterns[] = '/\$'.$i.'/';
+            }
+            $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
+        } else {
                     // Remove $1, $2 etc. even if the given arguments are empty
                     $pattern = '/\$\d+/';
                     $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
                     //$tstring = $this->text_array[$pagename][$category];
-		}
-		if (!$tstring) {
-		    $tstring = "*** Unkown msg $pagename - $category ***";
-		}
-		return "$tstring";
-	}
+        }
+        if (!$tstring) {
+            $tstring = "*** Unkown msg $pagename - $category ***";
+        }
+        return "$tstring";
+    }
     
     function hasText($pagename, $category) {
         return isset($this->text_array[$pagename][$category]);
     }
 
-	// This is a legacy piece of code that used to be utils_get_content
-	// and is used either to include long piece of text that are inconvenient
-	// to format on one line as the .tab file does or because there is some
-	// PHP code that can be cutomized
-	function getContent($file, $lang_code = null, $plugin_name = null){
+    // This is a legacy piece of code that used to be utils_get_content
+    // and is used either to include long piece of text that are inconvenient
+    // to format on one line as the .tab file does or because there is some
+    // PHP code that can be cutomized
+    function getContent($file, $lang_code = null, $plugin_name = null){
 
-	    // Language for current user unless it is specified in the param list
-	    if (!isset($lang_code)) { $lang_code = $this->getLanguageCode(); }
+        // Language for current user unless it is specified in the param list
+        if (!isset($lang_code)) { 
+            $lang_code = $this->getLanguageCode(); 
+        }
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
@@ -365,149 +369,150 @@ class BaseLanguage {
         } else {
             $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
         }
-	    if ( file_exists($custom_fn) ) {
+        if ( file_exists($custom_fn) ) {
             // The custom file exists. 
             return $custom_fn;
-	    } else {
-		// Use the default file
-		// Check first if exist
-        if (is_null($plugin_name)) {
-            $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.".txt";
         } else {
-            $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
+            // Use the default file
+            // Check first if exist
+            if (is_null($plugin_name)) {
+                $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.".txt";
+            } else {
+                $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
+            }
+            if ( file_exists($fn) ) {
+                // The custom file exists. 
+                return $fn;
+            } else {
+                if ($lang_code == "en_US") {
+                    // return empty content to avoid include error
+                    return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
+                } else {
+                    // else try to find the file in the en_US directory
+                    return $this->getContent($file, "en_US");
+                }
+            }
         }
-		if ( file_exists($fn) ) {
-		    // The custom file exists. 
-		    return $fn;
-		} else {
-		    if ($lang_code == "en_US")
-			// return empty content to avoid include error
-			return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
-		    else
-			// else try to find the file in the en_US directory
-			return $this->getContent($file, "en_US");
-		}
-	    }
-	}
+    }
 
-	//result set handle for supported langauges
-	var $language_res;
+    //result set handle for supported langauges
+    var $language_res;
 
-	/*
-		returns database result
-		of supported languages
-	*/
-	function getLanguages() {
-                if (!isset($this->text_array['conf']['language_res']) || !$this->text_array['conf']['language_res']) {
-			$this->text_array['conf']['language_res']=db_query("SELECT * FROM supported_languages WHERE active=1 ORDER BY name ASC");
-		}
-		return $this->text_array['conf']['language_res'];
-	}
-
-	function getLanguageId() {
-		if (!$this->id) {
-			$this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".db_es($this->lang)."'"), 0, 0) ;
-		}
-		return $this->id ;
-	}
-
-	function getLanguageName() {
-		if (!$this->name) {
-			$id = $this->getLanguageId () ;
-			$this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
-		}
-		return $this->name ;
-	}
-
-	function getLanguageCode() {
-		if (!$this->code) {
-			$id = $this->getLanguageId () ;
-			$this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
-		}
-		return $this->code ;
-	}
-
-	function getEncoding() {
-		return $this->text_array['conf']['content_encoding'];
-	}
-
-	function getFont() {
-		return $this->text_array['conf']['default_font'];
-	}
-
-        /** Returns list of loaded language files (for debugging) */
-        function getLoadedLangageFiles() {
-            return array_keys($this->file_array);
+    /*
+        returns database result
+        of supported languages
+    */
+    function getLanguages() {
+        if (!isset($this->text_array['conf']['language_res']) || !$this->text_array['conf']['language_res']) {
+            $this->text_array['conf']['language_res']=db_query("SELECT * FROM supported_languages WHERE active=1 ORDER BY name ASC");
         }
+        return $this->text_array['conf']['language_res'];
+    }
+
+    function getLanguageId() {
+        if (!$this->id) {
+            $this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".db_es($this->lang)."'"), 0, 0) ;
+        }
+        return $this->id ;
+    }
+
+    function getLanguageName() {
+        if (!$this->name) {
+            $id = $this->getLanguageId () ;
+            $this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
+        }
+        return $this->name ;
+    }
+
+    function getLanguageCode() {
+        if (!$this->code) {
+            $id = $this->getLanguageId () ;
+            $this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
+        }
+        return $this->code ;
+    }
+
+    function getEncoding() {
+        return $this->text_array['conf']['content_encoding'];
+    }
+
+    function getFont() {
+        return $this->text_array['conf']['default_font'];
+    }
+
+    /** Returns list of loaded language files (for debugging) */
+    function getLoadedLangageFiles() {
+        return array_keys($this->file_array);
+    }
 
 }
 
 function language_code_to_result($alang) {
-	global $cookie_language_id;
+    global $cookie_language_id;
 
-	/*
+    /*
 
 
-		Determine which language file to use
+        Determine which language file to use
 
-		It depends on whether the user has set a cookie or not using
-		the account page or the left-hand nav or how their browser is
-		set or whether they are logged in or not
+        It depends on whether the user has set a cookie or not using
+        the account page or the left-hand nav or how their browser is
+        set or whether they are logged in or not
 
-		if logged in, use language from users table
-		else check for cookie and use that value if valid
-		if no cookie check browser preference and use that language if valid
-		else just use system default language
+        if logged in, use language from users table
+        else check for cookie and use that value if valid
+        if no cookie check browser preference and use that language if valid
+        else just use system default language
 
-	*/
+    */
 
-	if ($cookie_language_id) {
-		$lang=$cookie_language_id;
-		$res=db_query("select * from supported_languages where language_id='".db_es($lang)."'");
-		if (!$res || db_numrows($res) < 1) {
-			return db_query("select * from supported_languages where language_id='1'"); // default to english
-		} else {
-			return $res;
-		}
-	} else {
-		$ary = explode(',', str_replace(' ', '', $alang)); // delete space and split
-		for( $i=0; $i<sizeof($ary); $i++){
-			$lang_code = ereg_replace(';.*', '', $ary[$i]); // remove ;q=0.x
-			$res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
-			if (db_numrows($res) > 0) {
-			    return $res;
-			}
+    if ($cookie_language_id) {
+        $lang=$cookie_language_id;
+        $res=db_query("select * from supported_languages where language_id='".db_es($lang)."'");
+        if (!$res || db_numrows($res) < 1) {
+            return db_query("select * from supported_languages where language_id='1'"); // default to english
+        } else {
+            return $res;
+        }
+    } else {
+        $ary = explode(',', str_replace(' ', '', $alang)); // delete space and split
+        for( $i=0; $i<sizeof($ary); $i++){
+            $lang_code = ereg_replace(';.*', '', $ary[$i]); // remove ;q=0.x
+            $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
+            if (db_numrows($res) > 0) {
+                return $res;
+            }
 
-			// If that didn't work:
-			// - First substitute - with _ as the database
-			// uses en_US and not en-us as Mozilla and IE do
-			// - Second check if we have sublanguage specifier
-			// If so, try to strip it and look for main language only
-			if (strstr($lang_code, '-')) {
-			    $lang_code = str_replace('-','_',$lang_code);
-			    $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
-			    if (db_numrows($res) > 0) {
-				return $res;
-			    }
-			    
-			    $lang_code = substr($lang_code, 0, 2);
-			    $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
-			    if (db_numrows($res) > 0) {
-				return $res;
-			    }
-			}
-			
-			// If that didn't work:
-			// Test only the two first letter of the browser language
-			// as the database uses en_US and not en alone as Mozilla and IE can do
-			$lang_code = substr($lang_code, 0, 2);
-			$res = db_query("select * from supported_languages where SUBSTRING(language_code, 1, 2) = '".db_es($lang_code)."'");
-			if (db_numrows($res) > 0) {
-			    return $res;
-			}
-		}
-		return db_query("select * from supported_languages where language_code='".db_es($GLOBALS['sys_lang'])."'"); // default to system default
-	}
+            // If that didn't work:
+            // - First substitute - with _ as the database
+            // uses en_US and not en-us as Mozilla and IE do
+            // - Second check if we have sublanguage specifier
+            // If so, try to strip it and look for main language only
+            if (strstr($lang_code, '-')) {
+                $lang_code = str_replace('-','_',$lang_code);
+                $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
+                if (db_numrows($res) > 0) {
+                    return $res;
+                }
+                
+                $lang_code = substr($lang_code, 0, 2);
+                $res = db_query("select * from supported_languages where language_code = '".db_es($lang_code)."'");
+                if (db_numrows($res) > 0) {
+                    return $res;
+                }
+            }
+            
+            // If that didn't work:
+            // Test only the two first letter of the browser language
+            // as the database uses en_US and not en alone as Mozilla and IE can do
+            $lang_code = substr($lang_code, 0, 2);
+            $res = db_query("select * from supported_languages where SUBSTRING(language_code, 1, 2) = '".db_es($lang_code)."'");
+            if (db_numrows($res) > 0) {
+                return $res;
+            }
+        }
+        return db_query("select * from supported_languages where language_code='".db_es($GLOBALS['sys_lang'])."'"); // default to system default
+    }
 }
 
 /* Return language code (e.g. 'en_US') corresponding to the language ID (e.g. '1'). */
