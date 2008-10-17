@@ -559,8 +559,8 @@ if ($type_of_search == "soft") {
     } else {
         $language_id = db_fetch_array($result);
         //Build the search pagename in the wiki language
-        if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+        if ($language_id[0]== 'en_US'){$search_page = 'FullTextSearch';}
+        else if ($language_id[0] == 'fr_FR') {$search_page = 'RechercheEnTexteIntégral';}
     }
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));

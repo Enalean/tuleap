@@ -388,7 +388,7 @@ class ServerUpdateViews extends Views {
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
-        return '<a href="javascript:help_window(\''.get_server_url().'/plugins/serverupdate/documentation/'.user_get_languagecode().'/'.$section.'\');">[?]</a>';
+        return '<a href="javascript:help_window(\''.get_server_url().'/plugins/serverupdate/documentation/'.$GLOBALS['Language']->getLanguageCode().'/'.$section.'\');">[?]</a>';
     }
     
     /**

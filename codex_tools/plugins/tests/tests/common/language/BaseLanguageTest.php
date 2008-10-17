@@ -88,5 +88,27 @@ class BaseLanguageTest extends UnitTestCase {
         $this->assertEqual('fr_FR', $l2->getLanguageFromAcceptLanguage('de-de'));
         
     }
+    
+    function testGetLanguages() {
+        $l1 = new BaseLanguage('en_US,fr_FR', 'en_US');
+        $this->assertEqual(array(
+            'en_US' => 'English',
+            'fr_FR' => 'Français',
+        ), $l1->getLanguages());
+        
+        $l2 = new BaseLanguage('en_US', 'en_US');
+        $this->assertEqual(array(
+            'en_US' => 'English',
+        ), $l2->getLanguages());
+        
+        $l3 = new BaseLanguage('fr_FR', 'fr_FR');
+        $this->assertEqual(array(
+            'fr_FR' => 'Français',
+        ), $l3->getLanguages());
+        
+        $l4 = new BaseLanguage('fr_CA', 'fr_CA');
+        $this->assertEqual(array(
+        ), $l4->getLanguages());
+    }
 }
 ?>

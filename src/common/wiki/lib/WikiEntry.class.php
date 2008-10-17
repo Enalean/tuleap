@@ -35,7 +35,7 @@ class WikiEntry {
   /* private int(11) */     var $id;
   /* private int(11) */     var $gid;
   /* private int(11) */     var $rank;
-  /* private int(11) */     var $language_id;
+  /* private string */      var $language_id;
   /* private string(255) */ var $name;
   /* private string(255) */ var $page;
   /* private string(255) */ var $desc;
@@ -49,7 +49,7 @@ class WikiEntry {
       $this->id   = 0;
       $this->gid  = 0;
       $this->rank = 0;
-      $this->language_id = 1;
+      $this->language_id = $GLOBALS['Language']->defaultLanguage;
       $this->name = '';
       $this->page = '';
       $this->desc = '';
@@ -78,7 +78,7 @@ class WikiEntry {
   }
 
   function setLanguage_id($language_id) {
-    $this->language_id = (int) $language_id;
+    $this->language_id = $language_id;
   }
 
   function setName($name) {
@@ -183,7 +183,7 @@ class WikiEntry {
     $res = db_query(' INSERT INTO wiki_group_list SET'.
 		    ' group_id='.$this->gid.','.
 		    ' rank='.$this->rank.','.
-		    ' language_id='.$this->language_id.','.
+		    " language_id='".db_es($this->language_id)."',".
 		    ' wiki_name="'.mysql_real_escape_string($this->name).'",'.
 		    ' wiki_link="'.mysql_real_escape_string($this->page).'",'.
 		    ' description="'.mysql_real_escape_string($this->desc).'"');
@@ -222,7 +222,7 @@ class WikiEntry {
       $sql = ' UPDATE wiki_group_list SET'
           . ' group_id='.$this->gid.','
           . ' rank='.$this->rank.','
-          . ' language_id='.$this->language_id.','
+          . " language_id='".db_es($this->language_id)."',"
           . ' wiki_name="'.mysql_real_escape_string($this->name).'",'
           . ' wiki_link="'.mysql_real_escape_string($this->page).'",'
           . ' description="'.mysql_real_escape_string($this->desc).'"'

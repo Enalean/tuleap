@@ -27,7 +27,6 @@
 //require_once('common/include/Permission.class.php');
 
 
-require_once('common/language/LanguageManager.class.php');
 require_once('common/dao/UserPreferencesDao.class.php');
 
 /**
@@ -86,15 +85,9 @@ class User {
         if (!isset($this->data_array['language_id']) || !$this->data_array['language_id']) {
             $locale = $GLOBALS['sys_lang'];
         } else {
-            $lm =& $this->_getLanguageManager();
-            $locale = $lm->getLanguageCodeFromLanguageId($this->data_array['language_id']);
+            $locale = $this->data_array['language_id'];
         }
         $this->setLocale($locale);
-    }
-    
-    function &_getLanguageManager() {
-        $lm =& LanguageManager::instance();
-        return $lm;
     }
 
 

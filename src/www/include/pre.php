@@ -171,6 +171,7 @@ if(!IS_SCRIPT) {
     session_set();
 }
 
+$current_user = UserManager::instance()->getCurrentUser();
 /*
 
 	Now figure out what language file to instantiate
@@ -184,8 +185,8 @@ if (!$GLOBALS['sys_lang']) {
 }
 
 $Language = new BaseLanguage('en_US,fr_FR', $GLOBALS['sys_lang']);
-if (user_isloggedin()) {
-    $Language->loadLanguageID(user_get_language());
+if ($current_user->isLoggedIn()) {
+    $Language->loadLanguage($current_user->getLanguageId());
 } else {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language

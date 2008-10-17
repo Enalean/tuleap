@@ -36,7 +36,7 @@ require_once('WikiPage.class.php');
  */
 class Wiki {
   /* private int */ var $gid;
-  /* private int */ var $language_id;
+  /* private string */ var $language_id;
     /* private int */ var $exist;
 
   /**

@@ -378,7 +378,7 @@ class WikiServiceViews extends WikiViews {
     echo '<form name="WikiCreation" method="post" action="'.$this->wikiLink.'">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="view" value="doinstall" />'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_language').' ';
-echo html_get_language_popup($GLOBALS['Language'],'language_id',$GLOBALS['Language']->getLanguageId());
+echo html_get_language_popup($GLOBALS['Language'],'language_id',$GLOBALS['Language']->getLanguageCode());
 echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_create').'">
 </form>';
   }
@@ -391,11 +391,13 @@ echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_
       global $LANG;
       global $language_id;
       $language_id=$_REQUEST['language_id'];
-      if (!$language_id) $language_id=1; // default is en_US
+      if (!$language_id || !$GLOBALS['Language']->isLanguageSupported($language_id)) {
+          $language_id = $GLOBALS['Language']->defaultLanguage; 
+      }
       // Initial Wiki document is now created within phpWiki main()
       // Make sure phpWiki instantiates the right pages corresponding the the given language
-      define('DEFAULT_LANGUAGE',language_id_to_language_code($language_id));
-      $LANG=language_id_to_language_code($language_id);
+      define('DEFAULT_LANGUAGE', $language_id);
+      $LANG = $language_id;
 
       $wpw = new WikiPageWrapper($this->gid);
       $wpw->install();

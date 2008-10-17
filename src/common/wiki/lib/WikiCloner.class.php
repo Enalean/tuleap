@@ -131,8 +131,8 @@ class WikiCloner {
       $we_data = $this->getTemplateWikiEntries();
       foreach($we_data as $id => $data){
           $result = db_query(sprintf("INSERT INTO wiki_group_list (group_id, wiki_name, wiki_link, description, rank, language_id)"
-                                    . "VALUES(%d, '%s', '%s', '%s', %d, %d)", $this->group_id, $this->escapeString($data['wiki_name'])
-				    , $this->escapeString($data['wiki_link']), $this->escapeString($data['description']), (int) $data['rank'], $language)); 
+                                    . "VALUES(%d, '%s', '%s', '%s', %d, %s)", $this->group_id, $this->escapeString($data['wiki_name'])
+				    , $this->escapeString($data['wiki_link']), $this->escapeString($data['description']), (int) $data['rank'], $this->escapeString($language))); 
       }
   }
 
@@ -449,8 +449,7 @@ class WikiCloner {
    *
    *  Look for the template wiki language id.
    *
-   *  @param int : template project id.
-   *  @returrn int : template wiki language id.
+   *  @return string : template wiki language id.
    *
    *
    */
@@ -458,9 +457,9 @@ class WikiCloner {
       $result = db_query(sprintf("SELECT language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
       if($row = db_fetch_array($result)){
           $lang = $row['language_id'];
-	  return (int) $lang;
+          return $lang;
       }else{
-	  return 0;
+          return 0;
       }
   }
   

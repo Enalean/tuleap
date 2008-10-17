@@ -103,7 +103,7 @@ function register_valid($confirm_hash)	{
                           ,$request->get('form_mail_site')
                           ,$request->get('form_mail_va')
                           ,$tz
-                          ,$Language->getText('conf','language_id')
+                          ,$Language->getLanguageCode()
                           ,account_nextuid()
                           ,'A',$expiry_date);
 

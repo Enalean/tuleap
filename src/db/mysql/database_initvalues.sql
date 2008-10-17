@@ -51,7 +51,7 @@ INSERT INTO user SET \
         windows_pw = '', \
         fontsize = 0, \
         theme = '', \
-        language_id = 1, \
+        language_id = 'en_US', \
         last_pwd_update = '0', \
         last_access_date = '0';
 
@@ -82,7 +82,7 @@ INSERT INTO user SET \
         windows_pw = 'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', \
         fontsize = 0, \
         theme = '', \
-        language_id = 1, \
+        language_id = 'en_US', \
         last_pwd_update = '0', \
         last_access_date = '0';
 
@@ -2544,19 +2544,6 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#17',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#16',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#9',3);
-
-
--- 
--- supported_languages table
--- 
-
--- Create the list of supported languages for that site
-
-INSERT INTO supported_languages VALUES \
-(1,'English','English_US.tab','en_US','UTF-8',1);
-INSERT INTO supported_languages VALUES \
-(2,'Français','French_FR.tab','fr_FR','UTF-8',1);
-
 
 -- install and enable pluginsadministration
 INSERT INTO plugin (name, available) VALUES ('pluginsadministration', '1');

@@ -324,11 +324,6 @@ class BaseLanguage {
         }
     }
 
-    function loadLanguageID($language_id) {
-        $res=db_query("SELECT * FROM supported_languages WHERE language_id='".db_es($language_id)."'");
-        $this->loadLanguage(db_result($res,0,'language_code'));
-    }
-
     // Load the global language file (this is a global message catalog
     // that is loaded for all scripts from pre.php
     function loadLanguage($lang) {
@@ -380,7 +375,7 @@ class BaseLanguage {
 
         // Language for current user unless it is specified in the param list
         if (!isset($lang_code)) { 
-            $lang_code = $this->getLanguageCode(); 
+            $lang_code = $this->lang;
         }
 
         if (is_null($plugin_name)) {
@@ -418,38 +413,25 @@ class BaseLanguage {
     //result set handle for supported langauges
     var $language_res;
 
-    /*
-        returns database result
-        of supported languages
-    */
+    /**
+     * @return array pairs of language_code => Language
+     */
     function getLanguages() {
-        if (!isset($this->text_array['conf']['language_res']) || !$this->text_array['conf']['language_res']) {
-            $this->text_array['conf']['language_res']=db_query("SELECT * FROM supported_languages WHERE active=1 ORDER BY name ASC");
+        $languages =  array(
+            'en_US' => 'English',
+            'fr_FR' => 'Français',
+        );
+        $ret = array();
+        foreach($languages as $key => $value) {
+            if (in_array($key, $this->allLanguages)) {
+                $ret[$key] = $value;
+            }
         }
-        return $this->text_array['conf']['language_res'];
-    }
-
-    function getLanguageId() {
-        if (!$this->id) {
-            $this->id = db_result(db_query("SELECT language_id FROM supported_languages WHERE language_code='".db_es($this->lang)."'"), 0, 0) ;
-        }
-        return $this->id ;
-    }
-
-    function getLanguageName() {
-        if (!$this->name) {
-            $id = $this->getLanguageId () ;
-            $this->name = db_result(db_query("SELECT name FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
-        }
-        return $this->name ;
+        return $ret;
     }
 
     function getLanguageCode() {
-        if (!$this->code) {
-            $id = $this->getLanguageId () ;
-            $this->code = db_result(db_query("SELECT language_code FROM supported_languages WHERE language_id='".db_es($id)."'"), 0, 0) ;
-        }
-        return $this->code ;
+        return isset($this->lang) ? $this->lang : $this->defaultLanguage;
     }
 
     function getEncoding() {
@@ -550,13 +532,13 @@ class BaseLanguage {
         
         return $relevant_language;
     }
+    
+    /**
+     * @param $language string 'en_US'
+     * @return bool true if the $language is supported
+     */
+    function isLanguageSupported($language) {
+        return in_array($language, $this->allLanguages);
+    }
 }
-
-/* Return language code (e.g. 'en_US') corresponding to the language ID (e.g. '1'). */
-function language_id_to_language_code($language_id=1) {
-    $res=db_query("select language_code from supported_languages where language_id='".db_es($language_id)."'");
-    return db_result($res,0,'language_code');
-}
-
-
 ?>

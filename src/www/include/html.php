@@ -73,9 +73,16 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
  * @param		string	Which element of the box is to be selected
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
-  global $Language;
-	$res=$Language->getLanguages();
-	return html_build_select_box ($res,$title,$selected,false);
+    $hp = CodeX_HTMLPurifier::instance();
+    $html = '<select name="'. $title .'">';
+    foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
+        $select = ($selected == $code) ? 'selected="selected"' : '';
+        $html .= '<option value="'.  $hp->purify($code, CODEX_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
+        $html .= $hp->purify($lang, CODEX_PURIFIER_CONVERT_HTML);
+        $html .= '</option>';
+    }
+    $html .= '</selected>';
+    return $html;
 }
 
 

@@ -279,7 +279,7 @@ function account_create($loginname=''
                         ,$mail_site=0
                         ,$mail_va=0
                         ,$timezone='GMT'
-                        ,$lang_id=1
+                        ,$lang_id='en_US'
                         ,$unix_uid
                         ,$unix_status='N'
                         ,$expiry_date=0
@@ -303,7 +303,7 @@ function account_create($loginname=''
                      ." ,mail_siteupdates=".db_ei($mail_site)
                      ." ,mail_va=".db_ei($mail_va)
                      ." ,timezone='".db_es($timezone)."'"
-                     ." ,language_id=".db_ei($lang_id)
+                     ." ,language_id='".db_es($lang_id) ."'"
                      ." ,unix_uid=".db_ei($unix_uid)
                      ." ,unix_status='".db_es($unix_status)."'"
                      ." ,expiry_date=".db_ei($expiry_date));
