@@ -40,8 +40,28 @@ class BaseLanguage {
     var $lang, $name, $id, $code ;
     var $file_array = array();
 
-    function BaseLanguage() {
-        $this->allLanguages = array('en_US', 'fr_FR');
+    /**
+     * Supported languages
+     */
+    public $allLanguages;
+    
+    /**
+     * Default languages
+     */
+    public $defaultLanguage;
+    
+    /**
+     * Constructor
+     * @param $supported_languages string 'en_US,fr_FR'
+     * @param $default_language string 'en_US'
+     */
+    function __construct($supported_languages, $default_language) {
+        $this->allLanguages = preg_split('/\s*,\s*/', $supported_languages);
+        if (in_array($default_language, $this->allLanguages)) {
+            $this->defaultLanguage = $default_language;
+        } else {
+            throw new Exception('The default language must be part of supported languages');
+        }
     }
 
     /**
@@ -444,7 +464,92 @@ class BaseLanguage {
     function getLoadedLangageFiles() {
         return array_keys($this->file_array);
     }
-
+    
+    /**
+     * Parse the Accept-Language header according to RFC 2616
+     * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
+     * @see RFC 1766
+     *
+     * Based on Jesse Skinner work
+     * @see http://www.thefutureoftheweb.com/blog/use-accept-language-header#comment1
+     * 
+     * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
+     * @return array ('en-us' => 1, 'en' => 0.8, 'fr' => 0.5, 'fr-fr' => 0.3) ordered by score
+     */
+    function parseAcceptLanguage($accept_language) {
+        $langs      = array();
+        $lang_parse = array();
+        
+        // break up string into pieces (languages and q factors)
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', 
+                       $accept_language,
+                       $lang_parse);
+        
+        if (count($lang_parse[1])) {
+            // create a list like "en" => 0.8
+            $langs = array_combine($lang_parse[1], $lang_parse[4]);
+            
+            // set default to 1 for any without q factor
+            foreach ($langs as $lang => $val) {
+                if ($val === '') {
+                    $langs[$lang] = 1;
+                }
+            }
+            
+            // sort list based on value
+            arsort($langs, SORT_NUMERIC);
+        }
+        
+        return $langs;
+    }
+    
+    /**
+     * Get the relevant language code "en_US" provided by Codendi 
+     * depending on the Accept-Language header
+     * 
+     * According to RFC 2616, the separator between language abbreviation and 
+     * country code is a dash (-) for Accept-Language header.
+     * In Codendi, we use underscore (_).
+     * 
+     * @param $accept_language string "en-us,en;q=0.8,fr;q=0.5,fr-fr;q=0.3"
+     * @return string en_US
+     */
+    function getLanguageFromAcceptLanguage($accept_language) {
+        $relevant_language = $this->defaultLanguage;
+        
+        //extract language abbr and country codes from Codendi languages
+        $provided_languages = array();
+        foreach($this->allLanguages as $lang) {
+            list($l,$c) = explode('_', $lang);
+            $provided_languages[strtolower($l)][strtolower($c)] = $lang;
+        }
+        
+        //Now do the same thing for accept_language, 
+        $parse_accept_lang = $this->parseAcceptLanguage($accept_language);
+        foreach($parse_accept_lang as $lang => $score) {
+            $lang = explode('-', $lang);
+            $l = strtolower($lang[0]);
+            if (isset($provided_languages[$l])) {
+                
+                //We've just found a matching languages
+                //check now for the country code
+                if (isset($lang[1]) && isset($provided_languages[$l][strtolower($lang[1])])) {
+                    
+                    $relevant_language = $provided_languages[$l][strtolower($lang[1])];
+                } else {
+                    
+                    //If there is no country code, then take the first one 
+                    //provided by Codendi
+                    $relevant_language = array_shift($provided_languages[strtolower($lang[0])]);
+                }
+                
+                //We have our relevant language. We can go out
+                break;
+            }
+        }
+        
+        return $relevant_language;
+    }
 }
 
 function language_code_to_result($alang) {

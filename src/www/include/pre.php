@@ -183,20 +183,15 @@ if (!$GLOBALS['sys_lang']) {
 	$GLOBALS['sys_lang']="en_US";
 }
 
+$Language = new BaseLanguage('en_US,fr_FR', $GLOBALS['sys_lang']);
 if (user_isloggedin()) {
-    $Language = new BaseLanguage();
     $Language->loadLanguageID(user_get_language());
 } else {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language
     //if we don't support it, just use system default
-    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-        $res = language_code_to_result ($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        $lang_code=db_result($res,0,'language_code');
-    }
-    if (!isset($lang_code)) { $lang_code = $GLOBALS['sys_lang']; }
-    $Language = new BaseLanguage();
-    $Language->loadLanguage($lang_code);
+    $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
+    $Language->loadLanguage($Language->getLanguageFromAcceptLanguage($accept_language));
 }
 
 setlocale (LC_TIME, $Language->getText('system','locale'));

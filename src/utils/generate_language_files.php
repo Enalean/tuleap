@@ -30,7 +30,7 @@
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require('common/language/BaseLanguage.class.php');
 
-$Language =& new BaseLanguage();
+$Language =& new BaseLanguage('en_US,fr_FR', $GLOBALS['sys_lang']));
 
 $Language->compileAllLanguageFiles();
 
