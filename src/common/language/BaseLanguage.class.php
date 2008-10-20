@@ -71,7 +71,6 @@ class BaseLanguage {
         foreach($this->allLanguages as $code) {
             $this->compileLanguage($code);
         }
-        $this->compileThemeSiteContent();
     }
 
     /**
@@ -80,7 +79,7 @@ class BaseLanguage {
     function testLanguageFiles() {
         if(is_dir($GLOBALS['codex_cache_dir'].'/lang/')) {
             $fd = opendir($GLOBALS['codex_cache_dir'].'/lang/');
-            // Browse all themes
+            // Browse all generated php files
             while(false !== ($file = readdir($fd))) {
                 if(is_file($GLOBALS['codex_cache_dir'].'/lang/'.$file)
                    && preg_match('/\.php$/', $file)) {
@@ -132,9 +131,6 @@ class BaseLanguage {
         $this->loadCustomSiteContent($lang, $text_array);
         $this->loadPluginsSiteContent($lang, $text_array);
         $this->loadPluginsCustomSiteContent($lang, $text_array);
-
-        // 3) load the customization per theme
-
     }
 
     /**
@@ -166,58 +162,7 @@ class BaseLanguage {
     function loadPluginsCustomSiteContent($lang, &$text_array) {
         $this->_loadPluginsSiteContent($GLOBALS['sys_custompluginsroot'], $lang, $text_array);
     }
-
-    function compileThemeSiteContent() {
-        $text_array = array();
-        // Official themes
-        $this->_loadThemeSiteContent($GLOBALS['sys_themeroot'], $text_array);
-        // Site wide themes
-        $this->_loadThemeSiteContent($GLOBALS['sys_custom_themeroot'], $text_array);
-
-        foreach($text_array as $themeLang => $theme_text_array) {
-            $this->dumpLanguageFile($themeLang, $theme_text_array);
-        }
-    }
-
-    /**
-     * CodeX-en_US
-     * savannah-fr_FR
-     * ...
-     */
-    function _loadThemeSiteContent($basedir, &$text_array) {
-        if(is_dir($basedir)) {
-            $fd = opendir($basedir);
-            // Browse all themes
-            while(false !== ($theme = readdir($fd))) {
-                if(is_dir($basedir.'/'.$theme)
-                   && $theme != '.'
-                   && $theme != '..'
-                   && $theme != '.svn'
-                   && $theme != 'CVS') {
-
-                    // For each theme, check if there is a customisation in
-                    // available languages
-                    foreach($this->allLanguages as $lang) {
-                        // Default
-                        $location = $basedir.$theme.'/'.$lang;
-                        if(is_dir($location)) {
-                            $this->loadAllTabFiles($location, $text_array["$theme-$lang"]);
-                        }
-
-                        // Site-wide customisation
-                        $location = $GLOBALS['sys_custom_themeroot'].'/messages/'.$theme.'/'.$lang;
-                        if(is_dir($location)) {
-                            $this->loadAllTabFiles($location, $text_array["$theme-$lang"]);
-                        }
-                    }
-                }
-            }
-            closedir($fd);
-        }
-    }
-
-
-
+    
     /**
      * This method walk through all the plugins and load all .tab files for
      * each plugin found.
@@ -278,17 +223,6 @@ class BaseLanguage {
             }
             fwrite($fd, '?>'."\n");
             fclose($fd);
-        }
-    }
-
-    /**
-     * Load the right compiled lang files.
-     */
-    function loadThemeLanguage($theme) {
-        $cacheDir = $GLOBALS['codex_cache_dir'].'/lang/';
-        $themeFile = $cacheDir.$theme.'-'.$this->lang.'.php';
-        if(file_exists($themeFile)) {
-            include($themeFile);
         }
     }
 
