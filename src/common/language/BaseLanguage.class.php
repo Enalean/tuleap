@@ -57,7 +57,7 @@ class BaseLanguage {
      */
     function __construct($supported_languages, $default_language) {
         $this->allLanguages = array();
-        $supported_languages = preg_split('/\s*,\s*/', $supported_languages);
+        $supported_languages = explode(',', $supported_languages);
         foreach($supported_languages as $v) {
             if (trim($v) !== '') {
                 $this->allLanguages[] = trim($v);
