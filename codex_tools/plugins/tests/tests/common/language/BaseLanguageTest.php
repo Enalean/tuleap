@@ -61,7 +61,7 @@ class BaseLanguageTest extends UnitTestCase {
     }
     
     function testConstructor() {
-        $l1 = new BaseLanguage('lang1,lang2, lang3 ,lang4 , lang5', 'lang1');
+        $l1 = new BaseLanguage(',lang1,lang2, lang3 ,lang4 , lang5,', 'lang1');
         $this->assertEqual(array('lang1','lang2','lang3','lang4','lang5'), $l1->allLanguages);
         
         $result = 'fail';
@@ -75,6 +75,18 @@ class BaseLanguageTest extends UnitTestCase {
             }
         }
         $this->$result('An exception must be thrown if a default language is not supported');
+        
+        $result = 'fail';
+        try {
+            $l3 = new BaseLanguage('', '');
+        } catch (Exception $e) {
+            if ($e->getMessage() == 'You must provide supported languages (see local.inc)') {
+                $result = 'pass';
+            } else {
+                throw $e;
+            }
+        }
+        $this->$result('An exception must be thrown if supported languages are empty');
     }
     
     function testParseAcceptLanguage() {

@@ -172,18 +172,12 @@ if(!IS_SCRIPT) {
 }
 
 $current_user = UserManager::instance()->getCurrentUser();
-/*
 
-	Now figure out what language file to instantiate
-
-*/
-
-require('common/language/BaseLanguage.class.php');
-
+//Now figure out what language file to instantiate
 if (!$GLOBALS['sys_lang']) {
     $GLOBALS['sys_lang']="en_US";
 }
-
+require('common/language/BaseLanguage.class.php');
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 if ($current_user->isLoggedIn()) {
     $Language->loadLanguage($current_user->getLanguageId());

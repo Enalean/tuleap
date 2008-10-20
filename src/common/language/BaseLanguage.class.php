@@ -56,11 +56,21 @@ class BaseLanguage {
      * @param $default_language string 'en_US'
      */
     function __construct($supported_languages, $default_language) {
-        $this->allLanguages = preg_split('/\s*,\s*/', $supported_languages);
-        if (in_array($default_language, $this->allLanguages)) {
-            $this->defaultLanguage = $default_language;
+        $this->allLanguages = array();
+        $supported_languages = preg_split('/\s*,\s*/', $supported_languages);
+        foreach($supported_languages as $v) {
+            if (trim($v) !== '') {
+                $this->allLanguages[] = trim($v);
+            }
+        }
+        if (count($this->allLanguages)) {
+            if (in_array($default_language, $this->allLanguages)) {
+                $this->defaultLanguage = $default_language;
+            } else {
+                throw new Exception('The default language must be part of supported languages');
+            }
         } else {
-            throw new Exception('The default language must be part of supported languages');
+            throw new Exception('You must provide supported languages (see local.inc)');
         }
     }
 
