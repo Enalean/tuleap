@@ -87,8 +87,6 @@ class ServerAdmin {
         if ($dar) {
             $matches = array();
             $projects = array();
-            $em =& EventManager::instance();
-            $em->processEvent("plugin_load_language_file", null);
             while ($dar->valid()) {
                 $row = $dar->current();
                 $label = $row['label'];

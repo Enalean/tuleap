@@ -5,9 +5,6 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');
 $hp = CodeX_HTMLPurifier::instance();
 if (user_isloggedin()) {
-
-    $em =& EventManager::instance();
-    $em->processEvent('plugin_load_language_file', null);
     
     $request =& HTTPRequest::instance();
     $lm =& new WidgetLayoutManager();

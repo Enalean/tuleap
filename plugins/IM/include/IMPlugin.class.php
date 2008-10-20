@@ -51,7 +51,6 @@ class IMPlugin extends Plugin {
     function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
     	$this->id=$id;
-        $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('approve_pending_project', 'projectIsApproved', false);
@@ -125,9 +124,6 @@ class IMPlugin extends Plugin {
      * End functions for tests.
      */
     
-    
-    function imPluginLanguageFile($params) {
-    }
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the IM plugin pages.
         // This stops styles inadvertently clashing with the main site.

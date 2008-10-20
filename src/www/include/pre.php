@@ -194,9 +194,6 @@ $sys_strftimefmt = $Language->getText('system','strftimefmt');
 $sys_datefmt = $Language->getText('system','datefmt');
 $sys_datefmt_short = $Language->getText('system','datefmt_short');
 
-
-EventManager::instance()->processEvent('plugin_load_language_file', null);
-
 //insert this page view into the database
 if(!IS_SCRIPT) {
     require_once('logger.php');

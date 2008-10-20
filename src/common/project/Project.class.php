@@ -107,9 +107,6 @@ class Project extends Group {
                 $short_name=$res_row['short_name'];
                 if (!$short_name) { $short_name=$j;}
 
-                $em =& EventManager::instance();
-                $em->processEvent("plugin_load_language_file", null);
-
 		// needed for localisation
         $matches = array();
 		if ($res_row['description'] == "service_".$short_name."_desc_key") {

@@ -30,7 +30,6 @@ class DocmanPlugin extends Plugin {
 		$this->Plugin($id);
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
-        $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
         $this->_addHook('logs_daily',                        'logsDaily',                         false);
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
         $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
@@ -178,9 +177,6 @@ class DocmanPlugin extends Plugin {
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/docman.js"></script>'."\n";
         }
-    }
-
-    function loadPluginLanguageFile($params) {
     }
 
     function logsDaily($params) {

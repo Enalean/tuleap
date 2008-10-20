@@ -11,8 +11,6 @@ require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 
-$em =& EventManager::instance();
-$em->processEvent('plugin_load_language_file', null);
 $hp = CodeX_HTMLPurifier::instance();
 if (user_isloggedin()) {
 

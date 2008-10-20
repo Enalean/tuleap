@@ -54,7 +54,6 @@ class GraphOnTrackersPlugin extends Plugin {
         $this->setScope(Plugin::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                           'cssFile',                           false);
-        $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
         $this->_addHook('tracker_collapsable_sections',      'tracker_collapsable_sections',      false);
         $this->_addHook('tracker_urlparam_processing','tracker_urlparam_processing',false);
         $this->_addHook('tracker_user_pref','tracker_user_pref',false);
@@ -79,9 +78,6 @@ class GraphOnTrackersPlugin extends Plugin {
             $this->pluginInfo =& new GraphOnTrackersPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    function loadPluginLanguageFile($params) {
     }
 
     function tracker_collapsable_sections($params) {
