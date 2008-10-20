@@ -2479,7 +2479,7 @@ EOS;
                     echo '<h3>'. $Language->getText('tracker_include_artifact','permissions') .' '. help_button('ArtifactUpdate.html#ArtifactPermissions') .'</h3>';
                     echo '<input type="hidden" name="change_permissions" value="0" />';
                     echo '<input type="checkbox" name="change_permissions" value="1" id="change_permissions" />';
-                    echo '<label for="change_permissions">'. 'Change the permissions' .'</label>';
+                    echo '<label for="change_permissions">'. $GLOBALS['Language']->getText('tracker_include_type', 'mass_change_permissions') .'</label>';
                     echo '<blockquote>';
                     $checked = '';
                     $html = '';

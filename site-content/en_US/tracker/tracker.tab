@@ -345,6 +345,7 @@ tracker_include_artifact	details	Details
 tracker_include_artifact	permissions	Permissions
 tracker_include_artifact	permissions_label	Restrict access to this artifact for the following user groups:
 tracker_include_artifact	permissions_not_restricted	Permissions are not restricted for this artifact
+tracker_include_artifact	permissions_use_default	Use default tracker permissions
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
@@ -574,6 +575,7 @@ tracker_include_type	warning_delete_fieldset	** WARNING!! ** Delete this field s
 tracker_include_type	rank_in_fieldset	Rank in Field Set
 tracker_include_type	current_date	Current date.
 tracker_include_type	date_value	Date value:
+tracker_include_type	mass_change_permissions	Change permissions
 
 tracker_include_type	add	Add
 tracker_include_type	error_gn_default_not_added	Unable to add default global notification

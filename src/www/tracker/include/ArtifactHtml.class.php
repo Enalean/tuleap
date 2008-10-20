@@ -1078,7 +1078,8 @@ class ArtifactHtml extends Artifact {
                 'artifact_section_permissions',
                 $Language->getText('tracker_include_artifact','permissions') .' '. help_button('ArtifactUpdate.html#ArtifactPermissions'),
                 $html,
-                true
+                false,
+                $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_use_default')
             );
         }
         

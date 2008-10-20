@@ -337,6 +337,7 @@ tracker_include_artifact	details	Détails
 tracker_include_artifact	permissions	Permissions
 tracker_include_artifact	permissions_label	Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :
 tracker_include_artifact	permissions_not_restricted	Les permissions ne sont pas restreintes pour cet artefact
+tracker_include_artifact	permissions_use_default	Utiliser les permissions par défaut de l'outil de suivi
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
@@ -566,6 +567,7 @@ tracker_include_type	warning_delete_fieldset	** ATTENTION!! ** Effacer ce groupe
 tracker_include_type	rank_in_fieldset	Rang dans le groupe de champs
 tracker_include_type	current_date	Date courante.
 tracker_include_type	date_value	Date particulière :
+tracker_include_type	mass_change_permissions	Changer les permissions
 
 tracker_include_type	add	Ajouter
 tracker_include_type	error_gn_default_not_added	Erreur lors de l'ajout de la notification globale par défaut
