@@ -12,10 +12,6 @@ require_once('common/user/UserManager.class.php');
 
 $G_SESSION=array();
 
-$ALL_USERS_DATA = array();
-$ALL_USERS_GROUPS = array();
-$ALL_USERS_TRACKERS = array();
-
 function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     $auth_success     = false;
     $auth_user_id     = null;

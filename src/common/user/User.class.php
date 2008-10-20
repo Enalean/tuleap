@@ -59,19 +59,13 @@ class User {
     var $_preferencesdao;
     
     function User($id) {
-        global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
         
         $this->is_super_user = null;
         $this->id = $id;
         $this->locale = '';
         $this->_preferences = array();
         
-        if (isset($ALL_USERS_DATA["user_$id"])) {
-            $is_anonymous = ($id == 0);
-            $this->data_array = $ALL_USERS_DATA["user_$id"];
-            $this->group_data = $ALL_USERS_GROUPS["user_$id"];
-            $this->tracker_data = $ALL_USERS_TRACKERS["user_$id"];
-        } else if ($this->fetchData($id)) { 
+        if ($this->fetchData($id)) { 
             $is_anonymous = false;
         } else { //Passage en anonymous
             $this->id           = 0;
@@ -97,19 +91,16 @@ class User {
         Generall should NOT be used - here for supporting deprecated group.php
     */
     function fetchData($id) {
-      global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
-
-
+      
       $sql = "SELECT * FROM user WHERE user_id = $id";
       $db_res = db_query($sql);
       if (db_numrows($db_res) != 1) {
         return false;
       }
-      $this->data_array=db_fetch_array($db_res);
-      $ALL_USERS_DATA["user_$id"] = $this->data_array;
+      $this->data_array = db_fetch_array($db_res);
       
 
-      $this->group_data=array();
+      $this->group_data = array();
       $sql = "SELECT * FROM user_group WHERE user_id = $id";
       $db_res = db_query($sql);
       if (db_numrows($db_res) > 0) {
@@ -117,7 +108,6 @@ class User {
           $this->group_data[$row['group_id']] = $row;
         }
       }
-      $ALL_USERS_GROUPS["user_$id"] = $this->group_data;
       
       $this->tracker_data = array();
       $sql = "SELECT group_artifact_id, perm_level FROM artifact_perm WHERE user_id = $id";
@@ -127,7 +117,6 @@ class User {
           $this->tracker_data[$row['group_artifact_id']] = $row;
         }
       }
-      $ALL_USERS_TRACKERS["user_$id"] = $this->tracker_data;
       
       return true;
     } 
