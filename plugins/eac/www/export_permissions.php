@@ -26,7 +26,6 @@ require_once('pre.php');
 require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('showPermsVisitor.class.php'); 
-require_once('common/valid/ValidFactory.class.php'); 
 require_once('common/event/EventManager.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
