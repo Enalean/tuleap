@@ -78,7 +78,7 @@ class EacPlugin extends Plugin {
      */   
      
     function project_data_export_table_users($group_id) {
-        echo '<tr><td> </td> <td> </td> <td> <br><td align="right"><a href="'.$this->getPluginPath().'/export_users_ugroups.php?group_id='.$group_id.'">' .
+        echo '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align="center"><a href="'.$this->getPluginPath().'/export_users_ugroups.php?group_id='.$group_id.'">' .
                 '<b>'.$GLOBALS['Language']->getText('plugin_eac','export_definitions').'</b>' .
                         '</a></td></tr>';
     }
