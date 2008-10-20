@@ -24,6 +24,7 @@
  */
 
 require_once('common/language/BaseLanguage.class.php');
+Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllTabFiles'));
 
 class BaseLanguageTest extends UnitTestCase {
     
@@ -31,6 +32,34 @@ class BaseLanguageTest extends UnitTestCase {
         parent::__construct($name);
     }
 
+    function setUp() {
+        $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
+        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/codendi/plugins';
+        $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
+        $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
+        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
+        $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
+        $GLOBALS['codex_cache_dir']       = dirname(__FILE__) . '/_fixtures/tmp/';
+    }
+    
+    function tearDown() {
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__FILE__) . '/_fixtures/tmp/lang/'),
+                                                 RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($objects as $name => $object){
+            if($object->isFile()) {
+                unlink($name);
+            }
+        }
+        
+        unset($GLOBALS['sys_custom_incdir']);
+        unset($GLOBALS['sys_custompluginsroot']);
+        unset($GLOBALS['sys_incdir']);
+        unset($GLOBALS['sys_pluginsroot']);
+        unset($GLOBALS['sys_themeroot']);
+        unset($GLOBALS['sys_custom_themeroot']);
+        unset($GLOBALS['codex_cache_dir']);
+    }
+    
     function testConstructor() {
         $l1 = new BaseLanguage('lang1,lang2, lang3 ,lang4 , lang5', 'lang1');
         $this->assertEqual(array('lang1','lang2','lang3','lang4','lang5'), $l1->allLanguages);
@@ -109,6 +138,89 @@ class BaseLanguageTest extends UnitTestCase {
         $l4 = new BaseLanguage('fr_CA', 'fr_CA');
         $this->assertEqual(array(
         ), $l4->getLanguages());
+    }
+    
+    function testParseLanguageFile() {
+        $l = new BaseLanguage('en_US,fr_FR', 'en_US');
+        
+        $result = array();
+        $l->parseLanguageFile($GLOBALS['sys_incdir'].'/en_US/only-comments.tab', $result);
+        $this->assertEqual(array(
+        ), $result, 'Comments are ignored');
+        
+        
+        $result = array();
+        $l->parseLanguageFile($GLOBALS['sys_incdir'].'/en_US/empty-lines.tab', $result);
+        $this->assertEqual(array(
+        ), $result, 'Empty lines are ignored');
+        
+        
+        $result = array(
+            'file' => array('key1' => 'old-value')
+        );
+        $l->parseLanguageFile($GLOBALS['sys_incdir'].'/en_US/file.tab', $result);
+        $this->assertEqual(array(
+            'file' => array(
+                'key1' => 'value',
+                'key2' => 'value'
+            )
+        ), $result, 'Definitions are merged');
+        
+        $result = array();
+        $l->parseLanguageFile($GLOBALS['sys_incdir'].'/en_US/include.tab', $result);
+        $this->assertEqual(array(
+            'inc'    => array('key1' => 'value'),
+            'common' => array('key1' => 'value'),
+        ), $result, 'Files are included');
+        
+    }
+    
+    function testLoadAllTabFiles() {
+        $l = new BaseLanguage('en_US,fr_FR', 'en_US');
+        
+        $result = array();
+        $l->loadAllTabFiles($GLOBALS['sys_incdir'], $result);
+        $this->assertEqual(array(
+            'file'   => array(
+                'key1' => 'value',
+                'key2' => 'value'
+            ),
+            'inc'    => array('key1' => 'value'),
+            'common' => array('key1' => 'value'),
+        ), $result);
+    }
+    
+    function testDirectories() {
+        $result = array();
+        
+        $l1 = new BaseLanguageTestVersion($this);
+        $l1->expectOnce('loadAllTabFiles', array($GLOBALS['sys_incdir'].'/en_US', '*'));
+        $l1->loadCoreSiteContent('en_US', $result);
+        
+        $l2 = new BaseLanguageTestVersion($this);
+        $l2->expectOnce('loadAllTabFiles', array($GLOBALS['sys_custom_incdir'].'/en_US', '*'));
+        $l2->loadCustomSiteContent('en_US', $result);
+        
+        $l3 = new BaseLanguageTestVersion($this);
+        $l3->expectOnce('loadAllTabFiles', array($GLOBALS['sys_pluginsroot'].'/toto/site-content/en_US', '*'));
+        $l3->loadPluginsSiteContent('en_US', $result);
+        
+        $l4 = new BaseLanguageTestVersion($this);
+        $l4->expectOnce('loadAllTabFiles', array($GLOBALS['sys_custompluginsroot'].'/toto/site-content/en_US', '*'));
+        $l4->loadPluginsCustomSiteContent('en_US', $result);
+        
+    }
+    
+    function testLoadOrder() {
+        $result = array();
+        
+        $l = new BaseLanguageTestVersion($this);
+        $l->expectAt(0, 'loadAllTabFiles', array($GLOBALS['sys_incdir'].'/en_US', '*'));
+        $l->expectAt(1, 'loadAllTabFiles', array($GLOBALS['sys_custom_incdir'].'/en_US', '*'));
+        $l->expectAt(2, 'loadAllTabFiles', array($GLOBALS['sys_pluginsroot'].'/toto/site-content/en_US', '*'));
+        $l->expectAt(3, 'loadAllTabFiles', array($GLOBALS['sys_custompluginsroot'].'/toto/site-content/en_US', '*'));
+        
+        $l->loadAllLanguageFiles('en_US', $result);
     }
 }
 ?>
