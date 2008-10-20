@@ -11,9 +11,16 @@ require_once('IMMucConversationLogManager.class.php');
 
 class IMViews extends Views {
 	
+	protected $iconsPath;
+	
     function IMViews(&$controler, $view=null) {
         $this->View($controler, $view);
+        $this->iconsPath = $controler->getIconPath();
         $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
+    }
+    
+	function getIconsPath() {
+        return $this->iconsPath;
     }
     
     function display($view='') {
@@ -121,16 +128,56 @@ class IMViews extends Views {
     	$group_id = $request->get('group_id');
         $project = new Group($group_id);
     	
-    	echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
+        $any = $GLOBALS['Language']->getText('global', 'any');
+        
+        $start_date = $request->get('log_start_date');
+        if ($start_date == '') {
+        	$start_date = $any;
+        }
+        $end_date = $request->get('log_end_date');
+    	if ($end_date == '') {
+        	$end_date = $any;
+        }
+        
+        echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
+	    	    
+	    echo '<form name="muclog_search" id="muclog_search" action="">';
+	    echo ' <fieldset>';
+	    echo '  <legend>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_search') . ' <img src="'.$this->iconsPath.'help.png" alt="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" title="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" /> </legend>';
+	    echo '  <p>';
+	    echo '   <label for="log_start_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_start_date') . '</label>';
+	    echo $GLOBALS['HTML']->getDatePicker('log_start_date', 'log_start_date', $start_date);
+	    echo '  </p>';
+	    echo '  <p>';
+	    echo '   <label for="log_end_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_end_date') . '</label>';
+	    echo $GLOBALS['HTML']->getDatePicker('log_end_date', 'log_end_date', $end_date);
+	    echo '  </p>';
+	    echo '  <p>';
+	    echo '   <label for="search_button">&nbsp;</label>';
+	    echo '  <input id="search_button" type="submit" value="' . $GLOBALS['Language']->getText('plugin_im', 'search') . '">';
+	    echo '  </p>';
+	    echo ' </fieldset>';
+	    echo ' <input type="hidden" name="action" value="muc_logs" />';
+	    echo ' <input type="hidden" name="group_id" value="'.$group_id.'" />';
+	    echo '</form>';
 	    
-	    $mclm = IMMucConversationLogManager::getMucConversationLogManagerInstance();
-	    
-	    try {
-	    	$conversations = $mclm->getConversationLogsByGroupName($project->getUnixName(true));	// MUC room names are lower cases TODO : check it
-	    } catch (Exception $e) {
+    	$mclm = IMMucConversationLogManager::getMucConversationLogManagerInstance();
+	    $conversations = null;
+    	try {
+	    	if ($start_date == $any && $end_date == $any) {
+	    		$conversations = $mclm->getConversationLogsByGroupName($project->getUnixName(true));	// MUC room names are lower cases TODO : check it	
+	    	} elseif ($start_date == $any && $end_date != $any) {
+	    		$conversations = $mclm->getConversationLogsByGroupNameBeforeDate($project->getUnixName(true), $end_date);	// MUC room names are lower cases TODO : check it
+	    	} elseif ($start_date != $any && $end_date == $any) {
+	    		$conversations = $mclm->getConversationLogsByGroupNameAfterDate($project->getUnixName(true), $start_date);	// MUC room names are lower cases TODO : check it
+	    	} else {
+	    		$conversations = $mclm->getConversationLogsByGroupNameBetweenDates($project->getUnixName(true), $start_date, $end_date);	// MUC room names are lower cases TODO : check it
+	    	}
+    	} catch (Exception $e) {
 	    	echo $e->getMessage();
 	    }
-	    
+	    	
+    	
 	    if (! $conversations || sizeof($conversations) == 0) {
 	    	echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
 	    } else {

@@ -16,6 +16,24 @@ legend.project_sync {
     font-weight: bold;
 }
 
+form#muclog_search {
+	width: 25em;
+}
+
+form#muclog_search fieldset {
+	margin-bottom: 20px;;
+}
+
+form#muclog_search fieldset legend {
+	font-weight: bold;
+}
+
+p label {
+	float: left;
+	width: 40%;
+	text-align: right;
+}
+
 table.log {
 	
 }

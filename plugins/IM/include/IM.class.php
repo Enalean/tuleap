@@ -12,6 +12,12 @@ class IM extends Controler {
         $this->plugin =& $plugin;
     }
 
+	function getThemePath() {
+        return $this->plugin->getThemePath();
+    }
+    function getIconPath() {
+    	return $this->plugin->get_icon_path();
+    }
     function getProperty($name) {
         $info =& $this->plugin->getPluginInfo();
         return $info->getPropertyValueForName($name);
@@ -65,7 +71,23 @@ class IM extends Controler {
                 break;
             case 'muc_logs':
                 if ($user->isMember($group_id)) {
-					$this->view = 'muc_logs';
+                	$any = $GLOBALS['Language']->getText('global', 'any');
+                	$start_date = $request->get('log_start_date');
+				    if ($start_date != $any && $start_date!= '') {
+				    	$r = new Rule_Date();
+				    	if (! $r->isValid($start_date)) {
+				    		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im','date_format_error', array($start_date)));
+				    	}
+				    } // else date is '' or any
+				    
+				    $end_date = $request->get('log_end_date');
+			    	if ($end_date != $any && $end_date != '') {
+				    	$r = new Rule_Date();
+				    	if (! $r->isValid($end_date)) {
+				    		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im','date_format_error', array($end_date)));
+				    	}
+				    } // else date is '' or any
+				    $this->view = 'muc_logs';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
