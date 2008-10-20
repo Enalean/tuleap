@@ -181,10 +181,10 @@ $current_user = UserManager::instance()->getCurrentUser();
 require('common/language/BaseLanguage.class.php');
 
 if (!$GLOBALS['sys_lang']) {
-	$GLOBALS['sys_lang']="en_US";
+    $GLOBALS['sys_lang']="en_US";
 }
 
-$Language = new BaseLanguage('en_US,fr_FR', $GLOBALS['sys_lang']);
+$Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 if ($current_user->isLoggedIn()) {
     $Language->loadLanguage($current_user->getLanguageId());
 } else {

@@ -287,6 +287,10 @@ $sys_email_contact = 'codex-contact@%sys_default_domain%';
 // Address from which emails are sent
 $sys_noreply = '"CodeX" <noreply@%sys_default_domain%>';
 
+// Supported languages (separated comma)
+// Only en_US and fr_FR are available for now
+// Exemple: 'en_US,fr_FR'
+$sys_supported_languages = 'en_US,fr_FR';
 
 // Default language for the system
 $sys_lang = 'en_US';
