@@ -51,7 +51,7 @@ class User {
     var $tracker_data;
 
     // Keep super user info
-    var $isSuperUser;
+    var $is_super_user;
 
     var $locale;
     
@@ -61,7 +61,7 @@ class User {
     function User($id) {
         global $ALL_USERS_DATA, $ALL_USERS_GROUPS, $ALL_USERS_TRACKERS;
         
-        $this->isSuperUser = null;
+        $this->is_super_user = null;
         $this->id = $id;
         $this->locale = '';
         $this->_preferences = array();
