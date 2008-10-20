@@ -27,16 +27,14 @@ require_once ('pre.php');
 require_once ('common/valid/ValidFactory.class.php');
 
 $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
-$ugroups=array();
-$valueGroupId              = new Valid_UInt('group_id');
+$ugroups = array();
+$valueGroupId = new Valid_UInt('group_id');
+
 if($valueGroupId->validate($group_id)){
-    $group_id              = $request->get('group_id'); 
+    $group_id = $request->get('group_id');
+    $memberShower = new UserGroupExportMembers();
+    $memberShower->listUserFormatting($ugroups, $group_id); 
  }else {
-    echo 'no group_id choosen';
-    exit;
+    exit_no_group();
  }
-
-$MemberShower = new UserGroupExportMembers();
-$MemberShower->listUserFormatting($ugroups, $group_id);
-
 ?>

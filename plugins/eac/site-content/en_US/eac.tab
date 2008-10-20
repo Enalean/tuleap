@@ -5,3 +5,4 @@ plugin_eac	export_definitions	Export Definitions
 plugin_eac	Project_access_permission	Docman : Project Access Permissions
 plugin_eac	Export_perms	Export
 plugin_eac	Show_format	Show Format
+plugin_eac	no_group_id	aucun project n'est choisi

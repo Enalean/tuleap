@@ -26,32 +26,34 @@ require_once('pre.php');
 require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('showPermsVisitor.class.php'); 
-require_once ('common/valid/ValidFactory.class.php'); 
+require_once('common/valid/ValidFactory.class.php'); 
 require_once('common/event/EventManager.class.php');
 
-
-$GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
+$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
  
-$valueGroupId              = new Valid_UInt('group_id');
-if($valueGroupId->validate($group_id)){
-    $group_id              = $request->get('group_id'); 
- }else {
-    echo 'no group_id choosen';
-    exit;
- }
+$valueGroupId = new Valid_UInt('group_id');
+if($valueGroupId->validate($group_id)) {
+    $group_id = $request->get('group_id'); 
+    $docmanItem = array();
+    $listItem   = array();
+    $ugroups    = array();
+    
+    $um   = UserManager::instance();
+    $user = $um->getCurrentUser();
+    
+    $params['user']            = $user;
+    $params['ignore_collapse'] = true;
+    $params['ignore_perms']    = true;
+    $params['ignore_obsolete'] = false;
+    
+    $itemFactory = new Docman_ItemFactory($group_id);
+    $node        = $itemFactory->getItemTree(0, $params);
+    $visitor     = new showPermsVisitor(); 
+    $visitor->visitFolder($node, $docmanItem);
+    $visitor->csvFormatting($ugroups, $listItem, $group_id);
 
-$docmanItem                = array();
-$um                        = UserManager::instance();
-$user                      = $um->getCurrentUser();
-$params['user']            = $user;
-$params['ignore_collapse'] = true;
-$params['ignore_perms']    = true;
-$params['ignore_obsolete'] = false;
-$itemFactory               = new Docman_ItemFactory($group_id);
-$node                      = $itemFactory->getItemTree(0, $params);
-$visitor                   = new showPermsVisitor(); 
-$visitor->visitFolder($node, $docmanItem);
-$listItem                  = array();
-$ugroups                   = array();
-$visitor->csvFormatting($ugroups, $listItem, $group_id);
+}else {
+    exit_no_group();
+}
+
 ?> 

@@ -1,5 +1,0 @@
-##
-## Sql Uninstall Script
-##
-
-

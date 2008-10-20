@@ -1,3 +1,0 @@
-## 
-## Sql Install Script
-##
