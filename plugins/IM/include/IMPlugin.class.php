@@ -12,43 +12,18 @@ require_once('JabbexFactory.class.php');
 
 class IMPlugin extends Plugin {
 	
-    /**
-     * get API Instant Messaging functions 
-	 */
-    var $im;
-    /**
-     * mapp current session
-     */
-    var $session;
-    
-    /**
-     * icon path
-     */
-    var $iconsPath;
-     
-      
     var $debug;
-    var $last_im_datas=array();
-      
     /**
      * last data remove ====>for testing script
      */
+    var $last_im_datas=array();
     var $last_im_datas_remove=array();
     /**
      * plugin id
      */
     var $id;
-    /**
-     * codex dao
-     */
-    var $codex_dao;
     
-	/**
-	 * @param $id 
-	 * class instance
-	 */
-	 
-    function IMPlugin($id,$debug=IM_DEBUG_OFF) {
+	function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
     	$this->id=$id;
         $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
@@ -150,17 +125,17 @@ class IMPlugin extends Plugin {
         require_once("IMDao.class.php");
 		require_once('IMDataAccess.class.php');
         $controler = new IM($this);
-		$this->codex_dao= & new IMDao(IMDataAccess::instance($controler));
-		$roomID=$this->codex_dao->get_room_id_by_unix_name ($unix_project_name);
+		$dao= & new IMDao(IMDataAccess::instance($controler));
+		$roomID = $dao->get_room_id_by_unix_name ($unix_project_name);
 		return (isset($roomID)&&$roomID);
 	}
 	/**
 	 * to get pictures path
 	 * @return string directory path of icons
 	 */
-	 function get_icon_path () {
-		$themes_dir=$this->getThemePath();
-		$icon_path=$themes_dir.'/images/icons/';
+	 function get_icon_path() {
+		$themes_dir = $this->getThemePath();
+		$icon_path = $themes_dir.'/images/icons/';
 		return $icon_path;
 	}
     
@@ -697,6 +672,7 @@ class IMPlugin extends Plugin {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        	$GLOBALS['HTML']->includeCalendarScripts();
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
         }
     }
