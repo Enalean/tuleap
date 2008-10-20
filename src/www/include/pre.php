@@ -252,7 +252,6 @@ if(!IS_SCRIPT) {
     $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
     $HTML = new $name_of_theme_class($root_for_theme);
     $GLOBALS['Response'] =& $HTML;
-    $GLOBALS['Language']->loadThemeLanguage($GLOBALS['sys_user_theme']);
 }
 
 //Project extends Group and includes preference accessors
