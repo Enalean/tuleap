@@ -271,16 +271,16 @@ class User {
 
 
     function isSuperUser() {
-        if($this->isSuperUser === null) {
+        if($this->is_super_user === null) {
             $sql="SELECT * FROM user_group WHERE user_id='". $this->data_array['user_id'] ."' AND group_id='1' AND admin_flags='A'";
             $result=db_query($sql);
             if ($result && db_numrows($result) > 0) {
-                $this->isSuperUser = true;
+                $this->is_super_user = true;
             } else {
-                $this->isSuperUser = false;
+                $this->is_super_user = false;
             }
         }
-        return $this->isSuperUser;
+        return $this->is_super_user;
     }
     
     var $_ugroups;
