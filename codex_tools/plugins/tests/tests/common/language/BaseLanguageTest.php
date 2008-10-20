@@ -39,15 +39,15 @@ class BaseLanguageTest extends UnitTestCase {
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
-        $GLOBALS['codex_cache_dir']       = dirname(__FILE__) . '/_fixtures/tmp/';
+        $GLOBALS['codex_cache_dir']       = dirname(__FILE__) . '/_fixtures/tmp';
     }
     
     function tearDown() {
-        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__FILE__) . '/_fixtures/tmp/lang/'),
-                                                 RecursiveIteratorIterator::CHILD_FIRST);
-        foreach($objects as $name => $object){
-            if($object->isFile()) {
-                unlink($name);
+        $tmpdir = $GLOBALS['codex_cache_dir'] . '/lang/';
+        $fd = opendir($tmpdir);
+        while(false !== ($file = readdir($fd))) {
+            if(is_file($tmpdir .'/'. $file)) {
+                unlink($tmpdir .'/'. $file);
             }
         }
         
@@ -233,6 +233,14 @@ class BaseLanguageTest extends UnitTestCase {
         $l->expectAt(3, 'loadAllTabFiles', array($GLOBALS['sys_custompluginsroot'].'/toto/site-content/en_US', '*'));
         
         $l->loadAllLanguageFiles('en_US', $result);
+    }
+    
+    function testDumpLanguageFile() {
+        $l = new BaseLanguage('en_US', 'en_US');
+        $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
+        $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
+            file_get_contents($GLOBALS['codex_cache_dir'] .'/lang/my_lang.php')
+        );
     }
 }
 ?>

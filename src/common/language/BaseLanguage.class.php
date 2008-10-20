@@ -231,7 +231,7 @@ class BaseLanguage {
                     fwrite($fd, '$this->text_array[\''.$key1.'\'][\''.$key2.'\'] = \''.$str.'\';'."\n");
                 }
             }
-            fwrite($fd, '?>'."\n");
+            fwrite($fd, '?>');
             fclose($fd);
         }
     }
