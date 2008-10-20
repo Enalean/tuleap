@@ -87,12 +87,12 @@ class PluginManager {
     }
     
     function availablePlugin($plugin) {
-    	if ($plugin->canBeMadeAvailable()) {
-    		$plugin_factory = $this->_getPluginFactory();
-        	$plugin_factory->availablePlugin($plugin);
+        if ($plugin->canBeMadeAvailable()) {
+            $plugin_factory = $this->_getPluginFactory();
+            $plugin_factory->availablePlugin($plugin);
         
-        	$plugin->setAvailable(true);
-    	}
+            $plugin->setAvailable(true);
+        }
     }
     function unavailablePlugin($plugin) {
         $plugin_factory = $this->_getPluginFactory();

@@ -183,6 +183,7 @@ class PluginManagerTest extends UnitTestCase {
     function testEnablePlugin() {
         //The plugins
         $plugin = new MockPlugin($this);
+        $plugin->setReturnValue('canBeMadeAvailable', true);
         
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);

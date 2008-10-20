@@ -4,7 +4,7 @@ Mock::generate('User');
 Mock::generatePartial(
     'User',
     'UserTestVersion',
-    array('getStatus', 'getUnixStatus', '_getPreferencesDao', 'getId')
+    array('getStatus', 'getUnixStatus', '_getPreferencesDao', 'getId', 'isAnonymous')
 );
 
 require_once('common/dao/UserPreferencesDao.class.php');
@@ -36,6 +36,10 @@ class UserTest extends UnitTestCase {
         $u3 =& new UserTestVersion($this);
         $u3->setReturnValue('getStatus', 'D');
         $u4 =& new UserTestVersion($this);
+        $u4->setReturnValue('isAnonymous', false);
+        $u4->setReturnValue('getStatus', 'R');
+        $u4 =& new UserTestVersion($this);
+        $u4->setReturnValue('isAnonymous', true);
         $u4->setReturnValue('getStatus', 'R');
         
         $this->assertTrue($u1->isActive());
@@ -56,7 +60,7 @@ class UserTest extends UnitTestCase {
         $this->assertFalse($u4->isActive());
         $this->assertFalse($u4->isSuspended());
         $this->assertFalse($u4->isDeleted());
-        $this->assertTrue($u4->isRestricted());
+        $this->assertFalse($u4->isRestricted());
     }
 
     function testUnixStatus() {

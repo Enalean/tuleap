@@ -1,7 +1,7 @@
 <?php
 require_once('common/language/BaseLanguage.class.php');
-$GLOBALS['Language'] = new BaseLanguage();
-$GLOBALS['Language']->loadLanguage('en_US');
+Mock::generate('BaseLanguage');
+
 require_once('common/reference/ReferenceManager.class.php');
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -18,6 +18,13 @@ class ReferenceManagerTest extends UnitTestCase {
 	function ReferenceManagerTest($name = 'ReferenceManager test') {
 		$this->UnitTestCase($name);
 	}
+
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
 
 	function testSingleton() {
 		$this->assertReference(

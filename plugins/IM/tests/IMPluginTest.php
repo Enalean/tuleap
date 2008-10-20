@@ -1,7 +1,6 @@
 <?php
 
 require_once('common/language/BaseLanguage.class.php');
-$GLOBALS['Language'] = new BaseLanguage();
 
 require_once(dirname(__FILE__).'/../include/IMPlugin.class.php');
 //require_once(dirname(__FILE__).'/../include/jabbex_api/Jabbex.php');
