@@ -183,6 +183,7 @@ class IMViews extends Views {
 	    } else {
 	    	
 	    	$purifier = CodeX_HTMLPurifier::instance();
+	    	$uh = new UserHelper();
 	    	
 	    	$nick_color_arr = array();	// association array nickname => color
 	    	$available_colors = $GLOBALS['HTML']->getTextColors();
@@ -214,7 +215,7 @@ class IMViews extends Views {
 	    		
 	    		echo ' <tr>';
 	    		echo '  <td class="log_time">'.$conv->getTime().'</td>';
-	    		echo '  <td class="log_nickname"><span style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
+	    		echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
 	    		echo '  <td class="log_message">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
 	    		echo ' </tr>';
 	    		

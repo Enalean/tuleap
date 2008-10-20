@@ -12,11 +12,13 @@ class IMMucConversationLog {
 
 	private $_date;
 	private $_nickname;
+	private $_username;
 	private $_message;
 
-	function IMMucConversationLog($date, $nickname, $message) {
+	function IMMucConversationLog($date, $nickname, $username, $message) {
 		$this->_date = $date;
 		$this->_nickname = $nickname;
+		$this->_username = $username;
 		$this->_message = $message;
     }
     
@@ -35,6 +37,10 @@ class IMMucConversationLog {
 	
 	function getNickname() {
 		return $this->_nickname;
+	}
+	
+	function getUsername() {
+		return $this->_username;
 	}
 	
 	function getMessage() {

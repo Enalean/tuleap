@@ -36,7 +36,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucName($muc_name) {
-        $sql = sprintf("SELECT cl.*  
+        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM mucConversationLog cl, mucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s
@@ -50,7 +50,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameBeforeDate($muc_name, $end_date) {
-        $sql = sprintf("SELECT cl.*  
+        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username
                         FROM mucConversationLog cl, mucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND
@@ -67,7 +67,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameAfterDate($muc_name, $start_date) {
-        $sql = sprintf("SELECT cl.*  
+        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM mucConversationLog cl, mucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND
@@ -84,7 +84,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
-        $sql = sprintf("SELECT cl.*  
+        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM mucConversationLog cl, mucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND

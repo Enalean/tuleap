@@ -45,7 +45,7 @@ class IMMucConversationLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {	// can happen when user change topic name for instance
-            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['username'], $row['body']);
             		$logs[] = $current_conv;
     			}
     			$dar->next();
@@ -64,7 +64,7 @@ class IMMucConversationLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {	// can happen when user change topic name for instance
-            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['username'], $row['body']);
             		$logs[] = $current_conv;
     			}
     			$dar->next();
@@ -83,7 +83,7 @@ class IMMucConversationLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {	// can happen when user change topic name for instance
-            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['username'], $row['body']);
             		$logs[] = $current_conv;
     			}
     			$dar->next();
@@ -102,7 +102,7 @@ class IMMucConversationLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {	// can happen when user change topic name for instance
-            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['logTime'], $row['nickname'], $row['username'], $row['body']);
             		$logs[] = $current_conv;
     			}
     			$dar->next();
