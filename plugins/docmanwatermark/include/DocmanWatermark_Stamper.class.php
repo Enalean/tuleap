@@ -100,9 +100,15 @@ class DocmanWatermark_Stamper {
         $md     = $mdf->findByName($name);
         $mdlvef = new Docman_MetadataListOfValuesElementFactory();
         $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
-        $dwmdvf = new DocmanWatermark_MetadataValueFactory(); 
-        if (($this->headers['mime_type'] == 'application/pdf') && ($dwmdvf->isWatermarked($values[0]->getId()))) {
-            return true;
+        $values->rewind();
+        if ($values->valid()) {
+            $value = $values->current(); 
+            $dwmdvf = new DocmanWatermark_MetadataValueFactory(); 
+            if (($this->headers['mime_type'] == 'application/pdf') && ($dwmdvf->isWatermarked($value->getId()))) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -135,10 +141,10 @@ class DocmanWatermark_Stamper {
                 $style->setFillColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
                 $style->setLineColor(new Zend_Pdf_Color_Rgb(1, 0, 0));
                 $page->setStyle($style);
-                $page->drawRectangle(10, 10, 40, $height-10,SHAPE_DRAW_STROKE);
+                $page->drawRectangle(40, 40, 60, $height-40,SHAPE_DRAW_STROKE);
                 $page->rotate(20, 20, 1.57);
                 $page->drawText("Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName()." ".
-                                "Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName(), 10, 10);
+                                "Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName(), 40, -10);
             }      
         }
     }
