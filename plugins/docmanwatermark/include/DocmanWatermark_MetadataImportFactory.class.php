@@ -116,7 +116,7 @@ class DocmanWatermark_MetadataImportFactory  {
         $dwmd->setGroupId($this->targetProjectId);
         $dwmd->setId($md_id);
         $dwmf = new DocmanWatermark_MetadataFactory();
-        $dwmf->createField($dwmd);
+        $dwmf->setField($dwmd);
     }
     
 
