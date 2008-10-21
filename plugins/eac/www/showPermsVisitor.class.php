@@ -159,13 +159,13 @@ class showPermsVisitor {
         
         echo "Document/Folder,User group,Read,Write,Manage\n";
         
-        $table_perms =array();
-        $ugroups  = $this->listUgroups($group_id,$ugroups);
+        $table_perms = array();
+        $ugroups     = $this->listUgroups($group_id,$ugroups);
         foreach ($this->allTreeItems as $folder_id ) {
              $this->itemFullName($folder_id,$listItem);  
         }
 
-        foreach($listItem as $item_id=>$item) { 
+        foreach($listItem as $item_id => $item) { 
              $permission_type = 'PLUGIN_DOCMAN%';
              $table_perms     = $this->extractPermissions($group_id, $item_id, $permission_type);
              foreach ($table_perms as $row_permissions ) {
