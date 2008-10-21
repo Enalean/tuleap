@@ -132,11 +132,19 @@ if(!IS_SCRIPT) {
     require_once('common/valid/ValidFactory.class.php');
 }
 
+//Language
+if (!$GLOBALS['sys_lang']) {
+    $GLOBALS['sys_lang']="en_US";
+}
+require('common/language/BaseLanguage.class.php');
+$Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+
 //various html utilities
 require_once('utils.php');
 
 //database abstraction
 require_once('database.php');
+db_connect();
 
 //security library
 require_once('session.php');
@@ -144,6 +152,11 @@ require_once('session.php');
 //user functions like get_name, logged_in, etc
 require_once('user.php');
 require_once('common/user/User.class.php');
+if(!IS_SCRIPT) {
+    //determine if they're logged in
+    session_set();
+}
+$current_user = UserManager::instance()->getCurrentUser();
 
 //group functions like get_name, etc
 require_once('Group.class.php');
@@ -160,34 +173,7 @@ require_once('html.php');
 //left-hand nav library, themable
 require_once('menu.php');
 
-// #### Connect to db
 
-db_connect();
-
-if(!IS_SCRIPT) {
-    //determine if they're logged in
-    session_set();
-}
-
-$current_user = UserManager::instance()->getCurrentUser();
-
-//Now figure out what language file to instantiate
-if (!$GLOBALS['sys_lang']) {
-    $GLOBALS['sys_lang']="en_US";
-}
-require('common/language/BaseLanguage.class.php');
-$Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-if ($current_user->isLoggedIn()) {
-    $lang = $current_user->getLanguageId();
-} else {
-    //if you aren't logged in, check your browser settings 
-    //and see if we support that language
-    //if we don't support it, just use system default
-    $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-    $lang = $Language->getLanguageFromAcceptLanguage($accept_language);
-}
-$Language->loadLanguage($lang);
-setlocale (LC_TIME, $locale);
 
 //insert this page view into the database
 if(!IS_SCRIPT) {

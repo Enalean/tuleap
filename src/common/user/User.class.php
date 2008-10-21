@@ -77,7 +77,9 @@ class User {
         
         //set the locale
         if (!isset($this->data_array['language_id']) || !$this->data_array['language_id']) {
-            $locale = $GLOBALS['sys_lang'];
+            //Detect browser settings
+            $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
+            $locale = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
         } else {
             $locale = $this->data_array['language_id'];
         }

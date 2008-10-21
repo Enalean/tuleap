@@ -273,6 +273,7 @@ class BaseLanguage {
     function loadLanguage($lang) {
         if($this->lang != $lang) {
             $this->lang = $lang;
+            setlocale (LC_TIME, $lang);
             $langFile = $GLOBALS['codex_cache_dir'].'/lang/'.$this->lang.'.php';
             if(file_exists($langFile)) {
                 include($langFile);
@@ -285,6 +286,9 @@ class BaseLanguage {
     }
 
     function getText($pagename, $category, $args="") {
+        if (!isset($this->lang)) {
+            $this->loadLanguage(UserManager::instance()->getCurrentUser()->getLocale());
+        }
         /*
             args is an array which will replace the $1, $2, etc
             in the text_array string before it is returned
