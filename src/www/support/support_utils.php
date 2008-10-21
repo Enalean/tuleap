@@ -111,7 +111,7 @@ function support_status_box ($name='status_id',$checked='xzxz',$text_100='None')
 }
 
 function show_supportlist ($result,$offset,$set='open') {
-	global $sys_datefmt,$group_id;
+	global $group_id;
 	/*
 		Accepts a result set from the support table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -143,7 +143,7 @@ function show_supportlist ($result,$offset,$set='open') {
 			'<TD class="small"><A HREF="'.$PHP_SELF.'?func=detailsupport&support_id='. db_result($result, $i, 'support_id').
 			'&group_id='. db_result($result, $i, 'group_id').'">'. db_result($result, $i, 'support_id') .'</A></TD>'.
 			'<TD class="small">'. db_result($result, $i, 'summary') .'</TD>'.
-			'<TD class="small">'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
+			'<TD class="small">'. (($set != 'closed' && db_result($result, $i, 'date') < $then)?'<B>* ':'&nbsp; ') . format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
@@ -170,7 +170,7 @@ function show_supportlist ($result,$offset,$set='open') {
 }
 
 function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback,$sys_lf;
+    global $feedback,$sys_lf;
     /*
              Send a message to the person who opened this support and the person it is assigned to
     */
@@ -207,7 +207,7 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $body .= sprintf("$fmt$fmt\n$fmt\n",
 			     'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
 			     'Project: '.group_getname($group_id),
-			     'Submitted on: '.format_date($sys_datefmt,db_result($result,0,'open_date')));
+			     'Submitted on: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'open_date')));
 	    $body .= sprintf("$fmt$fmt\n$fmt$fmt\n\n%s\n\n",
 			     "Category: ".db_result($result,0,'category_name'),
 			     'Assigned to: '.user_getname(db_result($result,0,'assigned_to')),
@@ -292,7 +292,6 @@ function format_support_details ($support_id, $group_id, $ascii=false) {
     /*
            Show the details rows from support_history
           */
-    global $sys_datefmt;
     $result= support_data_get_messages ($support_id);
     $rows=db_numrows($result);
     
@@ -344,13 +343,13 @@ function format_support_details ($support_id, $group_id, $ascii=false) {
 	// Generate formatted output
 	if ($ascii) {
 	    $out .= sprintf($fmt,	
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    $user_link,
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'body')) );
 	} else {
 	    $out .= sprintf($fmt, util_get_alt_row_color($i),
 			    util_make_links(nl2br(db_result($result, $i, 'body')), $group_id),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    $user_link);
 	}
     }
@@ -368,7 +367,7 @@ function show_support_details ($support_id, $group_id, $ascii=false) {
 
 function format_support_changes($changes) {
 
-    global $sys_datefmt, $user_email;
+    global $user_email;
 
     reset($changes);
     $fmt = "%20s | %-25s | %s\n";
@@ -376,9 +375,9 @@ function format_support_changes($changes) {
     if (user_isloggedin()) {
 	$user_id = user_getid();
 	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
-	$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	$out_hdr .= 'Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
     } else {
-	$out_hdr = 'Changes by: '.$user_email.'     Date: '.format_date($sys_datefmt,time());
+	$out_hdr = 'Changes by: '.$user_email.'     Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
     }
 
 
@@ -422,7 +421,6 @@ function show_supporthistory ($support_id) {
 	/*
 		show the support_history rows that are relevant to this support_id, excluding details
 	*/
-	global $sys_datefmt;
 	$result= support_data_get_history ($support_id);
 	$rows= db_numrows($result);
 
@@ -456,7 +454,7 @@ function show_supporthistory ($support_id) {
 
 			} else if ($field == 'close_date') {
 
-				echo format_date($sys_datefmt,db_result($result, $i, 'old_value'));
+				echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'old_value'));
 
 			} else {
 
@@ -464,7 +462,7 @@ function show_supporthistory ($support_id) {
 
 		}
 		echo '</TD>'.
-			'<TD>'. format_date($sys_datefmt,db_result($result, $i, 'date')) .'</TD>'.
+			'<TD>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'</TD>'.
 			'<TD>'. db_result($result, $i, 'user_name'). '</TD></TR>';
 	}
 

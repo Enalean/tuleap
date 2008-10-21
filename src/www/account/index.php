@@ -43,7 +43,7 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'member_since'); ?>: </TD>
-<TD colspan="2"><B><?php print format_date($sys_datefmt,$row_user['add_date']); ?></B></TD>
+<TD colspan="2"><B><?php print format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row_user['add_date']); ?></B></TD>
 </TR>
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'user_id'); ?>: </TD>
@@ -157,12 +157,12 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'auth_attempt_t
 echo '<table>';
 echo '<tr>';
 echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_success').'</td>';
-echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['last_auth_success']).'</td>';
+echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row_user['last_auth_success']).'</td>';
 echo '</tr>';
 
 echo '<tr>';
 echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_failure').'</td>';
-echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['last_auth_failure']).'</td>';
+echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row_user['last_auth_failure']).'</td>';
 echo '</tr>';
 
 echo '<tr>';
@@ -172,7 +172,7 @@ echo '</tr>';
 
 echo '<tr>';
 echo '<td>'.$Language->getText('account_options', 'auth_attempt_prev_success').'</td>';
-echo '<td>'.format_date($GLOBALS['sys_datefmt'], $row_user['prev_auth_success']).'</td>';
+echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row_user['prev_auth_success']).'</td>';
 echo '</tr>';
 
 echo '</table>';

@@ -99,7 +99,7 @@ function svn_utils_technician_box($projectname,$name='_commiter',$checked='xzxz'
 
 
 function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $commiter='100', $path='', $chunksz=15, $morder='', $msort=0) {
-	global $sys_datefmt,$group_id,$Language;
+	global $group_id,$Language;
 	/*
 		Accepts a result set from the svn_commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -224,7 +224,7 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 			'<TD class="small"><b><A HREF="'.$_SERVER['PHP_SELF'].'?func=detailrevision&group_id='.$group_id.$id_link.$filter_str.'">'.$rev.
 		  '</b></A></TD>'.
 			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
-			'<TD class="small">'.format_date($sys_datefmt, db_result($result, $i, 'date')).'</TD>'.
+			'<TD class="small">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'who')).'</TD></TR>';
 
 	}
@@ -328,7 +328,7 @@ function svn_utils_field_get_label($sortField) {
 
 
 function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id) {
-    global $sys_datefmt,$Language;
+    global $Language;
     /*
       Accepts a result set from the svn_checkins table. Should include all columns from
       the table, and it should be joined to USER to get the user_name.
@@ -340,7 +340,7 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     $revision = db_result($result, 0, 'revision');
     $hdr = '['.$Language->getText('svn_browse_revision','rev').' #'.$revision.'] - ';
 
-    echo '<h2>'.$hdr.format_date($sys_datefmt, db_result($result, 0, 'date')).'</h2></h2>';
+    echo '<h2>'.$hdr.format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date')).'</h2></h2>';
     
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
 

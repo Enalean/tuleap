@@ -25,7 +25,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 		second param is which row in that result set to use
 
 	*/
-  global $sys_datefmt,$Language;
+  global $Language;
 	$g_id =  db_result($result,$row,'group_id');
 
 	if ($g_id == $GLOBALS['sys_news_group']) {
@@ -44,7 +44,7 @@ function forum_show_a_nested_message ($result,$row=0) {
                     db_result($result, $row, 'msg_id') .'">'.
                     '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
                     db_result($result, $row, 'subject') .' [ '.$Language->getText('forum_forum','reply').' ]</A> &nbsp; '.
-                    '<BR>'. format_date($sys_datefmt,db_result($result,$row,'date')) .'
+                    '<BR>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$row,'date')) .'
                 </TD>      
                                
 			</TR>
@@ -58,7 +58,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 }
 
 function forum_show_nested_messages ($thread_id, $msg_id) {
-  global $total_rows,$sys_datefmt,$Language;
+  global $total_rows,$Language;
 
 	$sql="SELECT user.user_name,forum.has_followups,user.realname,user.user_id,forum.msg_id,forum.group_forum_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to, forum_group_list.group_id ".
 		"FROM forum,user,forum_group_list WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)." AND forum_group_list.group_forum_id = forum.group_forum_id ".
@@ -407,7 +407,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 				*/
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 					'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
-					'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+					'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 
 				/*
 

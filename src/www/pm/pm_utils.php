@@ -288,7 +288,7 @@ function pm_show_tasklist ($result,$result_taskdeps,$offset,$url) {
 }
 
 function pm_format_tasklist ($result,$result_taskdeps,$offset,$url,&$count) {
-	global $sys_datefmt,$group_id,$group_project_id,$_status,$PHP_SELF;
+	global $group_id,$group_project_id,$_status,$PHP_SELF;
 	/*
 		Accepts a result set from the tasks table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -498,7 +498,6 @@ function pm_show_task_details ($project_task_id, $group_id) {
 	/*
 		Show the details rows from task_history
 	*/
-	global $sys_datefmt;
 	$sql="SELECT project_history.field_name,project_history.old_value,project_history.date,user.user_name ".
 		"FROM project_history,user ".
 		"WHERE project_history.mod_by=user.user_id AND project_history.field_name = 'details' ".
@@ -519,7 +518,7 @@ function pm_show_task_details ($project_task_id, $group_id) {
 			echo '
 			<TR class="'. util_get_alt_row_color ($i) .'">
 				<TD>'. util_make_links(nl2br(db_result($result, $i, 'old_value')), $group_id).'</TD>
-				<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>
+				<TD VALIGN="TOP">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>
 				<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 		echo '</TABLE>';
@@ -534,7 +533,6 @@ function pm_show_task_history ($project_task_id) {
     /*
 		show the project_history rows that are relevant to this project_task_id, excluding details
 	*/
-    global $sys_datefmt;
     $result=pm_data_get_history($project_task_id);
     $rows=db_numrows($result);
 
@@ -560,14 +558,14 @@ function pm_show_task_history ($project_task_id) {
         		echo pm_data_get_value($field, $group_id, $value_id);
             } else if (pm_data_is_date_field($field)) {
         		// For date fields do some special processing
-        		echo format_date($sys_datefmt,$value_id);
+        		echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value_id);
             } else {
         		// It's a text zone then display directly
         		echo $value_id;
             }
         
             echo '</TD>'.
-        	'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+        	'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
         	'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
         }
         echo '</TABLE>';
@@ -667,8 +665,6 @@ function show_task_cc_list ($project_task_id,$group_id, $ascii=false) {
 
 function format_task_cc_list ($project_task_id,$group_id, $ascii=false) {
 
-    global $sys_datefmt;
-
     /*
           show the files attached to this task
        */
@@ -744,7 +740,7 @@ function format_task_cc_list ($project_task_id,$group_id, $ascii=false) {
 			    $href_cc,
 			    db_result($result, $i, 'comment'),
 			    util_user_link(db_result($result, $i, 'user_name')),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    $html_delete);
 	}
     }
@@ -932,7 +928,6 @@ function pm_field_display($field_name, $group_id, $value='xyxy',
           - show_any: show the Any entry in the select box if true (value_id 0)
           - text_any: text associated with the any value_id  tp display in the select box
      */
-    global $sys_datefmt;
 
     if ($label) {
 	    $output = pm_field_label_display($field_name,$group_id,$break,$ascii);
@@ -978,10 +973,10 @@ function pm_field_display($field_name, $group_id, $value='xyxy',
 
     case 'DF':
 	if ($ascii) 
-	    $output .= ( ($value == 0) ? '' : format_date($sys_datefmt,$value));
+	    $output .= ( ($value == 0) ? '' : format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value));
 	else
 	    if ($ro) {
-		$output .= format_date($sys_datefmt,$value);
+		$output .= format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value);
 	    } else {
 		$output .= pm_field_date($field_name,
 					  (($value == 0) ? '' : format_date("Y-m-j",$value,'')));
@@ -1011,17 +1006,15 @@ function pm_field_display($field_name, $group_id, $value='xyxy',
 
 function format_task_changes($changes) {
 
-    global $sys_datefmt;
-
     reset($changes);
     $fmt = "%20s | %-25s | %s\n";
 
     if (user_isloggedin()) {
     	$user_id = user_getid();
     	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
-    	$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+    	$out_hdr .= 'Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
     } else {
-    	$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($sys_datefmt,time());
+    	$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
     }
 
     //Process special cases first: follow-up comment
@@ -1066,7 +1059,6 @@ function format_task_details ($project_task_id, $group_id, $ascii=false) {
     /*
       Format the details rows from task_history
       */
-    global $sys_datefmt;
     $result=pm_data_get_followups ($project_task_id);
     $rows=db_numrows($result);
 
@@ -1107,7 +1099,7 @@ function format_task_details ($project_task_id, $group_id, $ascii=false) {
     	// we don't so do it the ugly way...
     	if ($ascii) {
     	    $out .= sprintf($fmt,
-    			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+    			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
     			    db_result($result, $i, 'user_name'),
     			    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
     			    );
@@ -1115,7 +1107,7 @@ function format_task_details ($project_task_id, $group_id, $ascii=false) {
     	    $out .= sprintf($fmt,
     			    util_get_alt_row_color($i),
     			    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id),
-    			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+    			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
     			    db_result($result, $i, 'user_name'));
     	}
     }
@@ -1131,7 +1123,6 @@ function format_task_assigned_to ($project_task_id, $group_id, $ascii=false) {
     /*
       Format the details rows from task_history
       */
-    global $sys_datefmt;
     $result=pm_data_get_assigned_to_name ($project_task_id);
     $rows=db_numrows($result);
 
@@ -1441,7 +1432,7 @@ function pm_list_all_fields($sort_func=false,$by_field_id=false) {
 }
 
 function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback,$sys_lf;
+    global $feedback,$sys_lf;
     /*
       Send a message to the person who opened this task and the person it is assigned to - 
     */
@@ -1602,8 +1593,6 @@ function show_pm_attached_files ($project_task_id,$group_id, $ascii=false) {
 
 function format_pm_attached_files ($project_task_id,$group_id,$ascii=false) {
 
-    global $sys_datefmt;
-
     /*
           show the files attached to this task
        */
@@ -1655,7 +1644,7 @@ function format_pm_attached_files ($project_task_id,$group_id,$ascii=false) {
     
     	if ($ascii) {
     	    $out .= sprintf($fmt,
-    			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+    			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
     			    db_result($result, $i, 'filename'),
     			    intval(db_result($result, $i, 'filesize')/1024),
     			    db_result($result, $i, 'user_name'),
@@ -1668,7 +1657,7 @@ function format_pm_attached_files ($project_task_id,$group_id,$ascii=false) {
     			    db_result($result, $i, 'description'),
     			    intval(db_result($result, $i, 'filesize')/1024),
     			    util_user_link(db_result($result, $i, 'user_name')),
-    			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+    			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
     			    "<a href=\"$PHP_SELF?func=delete_file&group_id=$group_id&project_task_id=$project_task_id&project_file_id=$project_file_id\" ".
     			    '" onClick="return confirm(\'Delete this attachment?\')">'.
     			    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A>');

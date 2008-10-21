@@ -141,7 +141,7 @@ function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='Non
 }
 
 function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='100', $tag='100', $branch='100', $srch='' ,$chunksz=15, $morder='', $msort=0) {
-    global $sys_datefmt,$group_id,$Language;
+    global $group_id,$Language;
 	/*
 		Accepts a result set from the commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -286,7 +286,7 @@ function show_commitslist ($result,$offset,$total_rows,$set='any', $commiter='10
 		  '</b></A></TD>'.
 			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
 			##'<TD class="small">'.$commits_url.'</TD>'.
-			'<TD class="small">'.uniformat_date($sys_datefmt, db_result($result, $i, 'c_when')).'</TD>'.
+			'<TD class="small">'.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'c_when')).'</TD>'.
 			## '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'who')).'</TD></TR>';
 
@@ -403,7 +403,7 @@ function commit_field_get_label($sortField) {
 
 
 function show_commit_details ($result) {
-    global $sys_datefmt,$group_id,$commit_id,$Language;
+    global $group_id,$commit_id,$Language;
 	/*
 		Accepts a result set from the commits table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -418,7 +418,7 @@ function show_commit_details ($result) {
 	} else {
 	  $hdr = $Language->getText('cvs_commit_utils', 'checkin').' ';
 	}
-	echo '<h2>'.$hdr.uniformat_date($sys_datefmt, db_result($result, 0, 'c_when')).'</h2></h2>';
+	echo '<h2>'.$hdr.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when')).'</h2></h2>';
 	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
 	
 	$crossref_fact= new CrossReferenceFactory($commit_id,'commit_cvs',$group_id);

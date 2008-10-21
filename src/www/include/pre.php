@@ -124,8 +124,6 @@ require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $plugin_manager->loadPlugins();
 
-$sys_datefmt = "Y-M-d H:i";
-$sys_datefmt_short = "Y-M-d";
 $feedback=''; // Initialize global var
 
 //library to determine browser settings
@@ -180,19 +178,16 @@ if (!$GLOBALS['sys_lang']) {
 require('common/language/BaseLanguage.class.php');
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 if ($current_user->isLoggedIn()) {
-    $Language->loadLanguage($current_user->getLanguageId());
+    $lang = $current_user->getLanguageId();
 } else {
     //if you aren't logged in, check your browser settings 
     //and see if we support that language
     //if we don't support it, just use system default
     $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-    $Language->loadLanguage($Language->getLanguageFromAcceptLanguage($accept_language));
+    $lang = $Language->getLanguageFromAcceptLanguage($accept_language);
 }
-
-setlocale (LC_TIME, $Language->getText('system','locale'));
-$sys_strftimefmt = $Language->getText('system','strftimefmt');
-$sys_datefmt = $Language->getText('system','datefmt');
-$sys_datefmt_short = $Language->getText('system','datefmt_short');
+$Language->loadLanguage($lang);
+setlocale (LC_TIME, $locale);
 
 //insert this page view into the database
 if(!IS_SCRIPT) {

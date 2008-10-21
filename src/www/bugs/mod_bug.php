@@ -64,7 +64,7 @@ if (db_numrows($result) > 0) {
       <TR><TD><B>Submitted By:</B>&nbsp;</td><td><?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
           <TD><B>Group:</B>&nbsp;</td><td><?php echo group_getname($group_id); ?></TD>
       </TR>
-      <TR><TD><B>Submitted on:</B>&nbsp;</td><td><?php  echo format_date($sys_datefmt,db_result($result,0,'date')); ?></TD>
+      <TR><TD><B>Submitted on:</B>&nbsp;</td><td><?php  echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')); ?></TD>
           <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>
       </TR>
       <TR><TD COLSPAN="<?php echo 2*$fields_per_line; ?>">&nbsp</TD></TR>

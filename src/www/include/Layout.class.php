@@ -614,7 +614,6 @@ EOS;
 	}
 
         function pv_header($params) {
-            global $sys_datefmt;
 	        $this->generic_header_start($params); 
                 $this->generic_header_end($params); 
                 echo '
@@ -623,7 +622,7 @@ EOS;
                 if(isset($params['pv']) && $params['pv'] < 2) {
                 if (isset($params['title']) && $params['title']) {
                     echo '
-<H2>'.$params['title'].' - '.format_date($sys_datefmt,time()).'</H2>
+<H2>'.$params['title'].' - '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).'</H2>
 <HR>
 ';
                 }

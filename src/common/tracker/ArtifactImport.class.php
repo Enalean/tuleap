@@ -658,7 +658,7 @@ function getUsedFields() {
    *                               for users and comment-types
    */
   function parseFollowUpComments($followup_comments,&$parsed_comments,$art_id,$for_parse_report=false) {
-    global $sys_lf, $sys_datefmt,$user_id,$Language;
+    global $sys_lf, $user_id,$Language;
     
     //echo "<br>\n";
     $comments = split("------------------------------------------------------------------",$followup_comments);
@@ -683,7 +683,7 @@ function getUsedFields() {
 	  return true;
 	} else {
 	  if ($for_parse_report) {
-	    $date= format_date($sys_datefmt,time());
+	    $date= format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
 	    $this->getImportUser($sub_user_id,$sub_user_name);
 	    $arr["date"] = "<I>$date</I>";
 	    $arr["by"] = "<I>$sub_user_name</I>";
@@ -801,7 +801,7 @@ function getUsedFields() {
    *                               for users and comment-types
    */
      function parseLegacyDetails($details,&$parsed_details,$for_parse_report=false) {
-    global $sys_lf, $sys_datefmt,$user_id,$Language;
+    global $sys_lf, $user_id,$Language;
     
     $comments = split("==================================================",$details);
     

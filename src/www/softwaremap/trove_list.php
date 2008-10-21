@@ -412,7 +412,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 		print '</TD>'."\n".'<TD align="right">'; // now the right side of the display
 		print $Language->getText('softwaremap_trove_list','activity_percentile').' <B>'.$row_grp['percentile'].'</B>';
 		print '<BR>'.$Language->getText('softwaremap_trove_list','activity_ranking').' <B>'.$row_grp['ranking'].'</B>';
-		print '<BR>'.$Language->getText('softwaremap_trove_list','register_date').' <B>'.format_date($sys_datefmt,$row_grp['register_time']).'</B>';
+		print '<BR>'.$Language->getText('softwaremap_trove_list','register_date').' <B>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row_grp['register_time']).'</B>';
 		print '</TD></TR></TABLE>';
 		print '<HR>';
 	} // end if for row and range chacking

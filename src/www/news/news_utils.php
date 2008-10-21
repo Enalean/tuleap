@@ -74,7 +74,7 @@ function news_footer($params) {
 }
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
-    global $sys_datefmt, $sys_news_group,$Language;
+    global $sys_news_group,$Language;
     $hp = CodeX_HTMLPurifier::instance(); 
     $uh = new UserHelper();
     
@@ -139,7 +139,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                 if (!$limit) {
         
                 $return .= '<li><A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
-                $return .= ' &nbsp; <I>'. format_date($sys_datefmt,db_result($result,$i,'date')).'</I><br>';
+                $return .= ' &nbsp; <I>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</I><br>';
                 } else {
                 $return .= '
                         <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
@@ -151,7 +151,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                 $return .= '&nbsp;&nbsp;&nbsp;<I>'.
                     $hp->purify($uh->getDisplayNameFromUserName(db_result($result,$i,'user_name')), CODEX_PURIFIER_CONVERT_HTML) .
                     ' - '.
-                    format_date($sys_datefmt,db_result($result,$i,'date')) .' </I>'.
+                    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')) .' </I>'.
                     $proj_name . $summ_txt;
         
                 $sql='SELECT count(*) FROM forum WHERE group_forum_id='.db_result($result,$i,'forum_id');

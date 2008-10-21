@@ -204,7 +204,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "msg_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "subject")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>\n";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"date"))."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
@@ -258,7 +258,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -309,7 +309,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "support_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"open_date"))."</TD></TR>";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"open_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -364,8 +364,8 @@ if ($type_of_search == "soft") {
 			    ."&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-			        . "<TD>".format_date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"end_date"))."</TD></TR>";
+			        . "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, "start_date"))."</TD>"
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"end_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -534,7 +534,7 @@ if ($type_of_search == "soft") {
                         if ($submitted_field->userCanRead($group_id,$atid))
                             print "<TD>".$arr['user_name']."</TD>";
                         if ($date_field->userCanRead($group_id,$atid))
-                            print "<TD>".format_date($sys_datefmt,$arr['open_date'])."</TD>";
+                            print "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),$arr['open_date'])."</TD>";
                         if ($status_field->userCanRead($group_id,$atid))
                             print "<TD>".$status."</TD>";
                         print "</TR>";

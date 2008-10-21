@@ -1320,7 +1320,7 @@ function bug_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
 	// if ($value_func == '...')
 	return user_getname($value_id);
     } else if (bug_data_is_date_field($field)) {
-	return format_date($sys_datefmt,$value_id);
+	return format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value_id);
     }
 
     if ($by_field_id) {

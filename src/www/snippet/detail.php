@@ -114,7 +114,7 @@ if ($type=='snippet') {
             echo '</center>
                 </TD><TD>'. 
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="center">'.
-			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD>'.
+			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD>'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</b></a></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
@@ -249,7 +249,7 @@ if ($type=='snippet') {
 				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD>'.
 				$changes_output.'<td align="center">'.
-			        format_date($sys_datefmt,db_result($result,$i,'date')).'</TD><TD align="center">'.
+			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD align="center">'.
 				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
 				user_get_name_display_from_unix(db_result($result,$i,'user_name')).
 				'</b></a></TD><TD ALIGN="center">'.

@@ -109,7 +109,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         print '<TR>';
         $check = "";
         $title = '<B>'.  $hp->purify(util_unconvert_htmlspecialchars($group_name), CODEX_PURIFIER_CONVERT_HTML)  .
-        '</B> (' . date($GLOBALS['sys_datefmt_short'], $register_time) . ')';
+        '</B> (' . date($GLOBALS['Language']->getText('system', 'datefmt_short'), $register_time) . ')';
         if ($group_id == '100') {
             $check = "checked";
         } else {
