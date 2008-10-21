@@ -230,6 +230,7 @@ class PluginManagerTest extends UnitTestCase {
     }
 
     function testInstallPlugin() {
+        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
         mkdir(dirname(__FILE__).'/test');
         mkdir(dirname(__FILE__).'/test/custom');

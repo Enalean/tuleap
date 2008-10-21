@@ -9,6 +9,7 @@ class SOAPRequestTest extends UnitTestCase {
     
     function testError() {
        new SOAPRequest();
+       $this->assertError(); //Warning PHP5
        $this->assertError(); 
     }
     function testWithoutError() {
