@@ -166,8 +166,7 @@ class Layout extends Response {
             'yellowgreen',
             'burlywood',
             'coral',
-            'mistyrose3',
-            'slategray1'
+            'mistyrose3'
         );
     }
     
