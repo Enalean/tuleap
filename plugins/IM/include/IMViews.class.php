@@ -132,7 +132,8 @@ class IMViews extends Views {
         
         $start_date = $request->get('log_start_date');
         if ($start_date == '') {
-        	$start_date = $any;
+        	$week_ago = mktime( 0, 0, 0, date("m"), date("d") - 7, date("Y") );
+ 			$start_date = date("Y-m-d", $week_ago);
         }
         $end_date = $request->get('log_end_date');
     	if ($end_date == '') {
