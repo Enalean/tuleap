@@ -51,7 +51,7 @@ class DataAccess {
     * @return object DataAccessResult
     */
     function &fetch($sql) {
-        if ($GLOBALS['DEBUG_MODE']) {
+        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
         	$GLOBALS['QUERIES'][]=$sql;
             $nb = isset($GLOBALS['DBSTORE'][md5($sql)]) ? ($GLOBALS['DBSTORE'][md5($sql)]['nb']+1) : 1;
