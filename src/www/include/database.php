@@ -46,7 +46,7 @@ function getConnection() {
 function db_query($sql,$print=0) {
     global $conn;
     
-    if ($GLOBALS['DEBUG_MODE']) {
+    if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
         $GLOBALS['DEBUG_DBPHP_QUERY_COUNT']++;
         $GLOBALS['QUERIES'][]=$sql;
         $nb = isset($GLOBALS['DBSTORE'][md5($sql)]) ? ($GLOBALS['DBSTORE'][md5($sql)]['nb']+1) : 1;
