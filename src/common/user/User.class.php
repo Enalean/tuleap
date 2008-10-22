@@ -65,11 +65,45 @@ class User {
         $this->locale = '';
         $this->_preferences = array();
         
+        $this->data_array['user_id']            = 0;
+        $this->data_array['user_name']          = null;
+        $this->data_array['email']              = null;
+        $this->data_array['user_pw']            = null;
+        $this->data_array['realname']           = null;
+        $this->data_array['register_purpose']   = null;
+        $this->data_array['status']             = null;
+        $this->data_array['shell']              = null;
+        $this->data_array['unix_pw']            = null;
+        $this->data_array['unix_status']        = null;
+        $this->data_array['unix_uid']           = null;
+        $this->data_array['unix_box']           = null;
+        $this->data_array['ldap_id']            = null;
+        $this->data_array['add_date']           = null;
+        $this->data_array['confirm_hash']       = null;
+        $this->data_array['mail_siteupdates']   = null;
+        $this->data_array['mail_va']            = null;
+        $this->data_array['sticky_login']       = null;
+        $this->data_array['authorized_keys']    = null;
+        $this->data_array['email_new']          = null;
+        $this->data_array['people_view_skills'] = null;
+        $this->data_array['people_resume']      = null;
+        $this->data_array['timezone']           = null;
+        $this->data_array['windows_pw']         = null;
+        $this->data_array['fontsize']           = null;
+        $this->data_array['theme']              = null;
+        $this->data_array['language_id']        = null;
+        $this->data_array['last_pwd_update']    = null;
+        $this->data_array['last_access_date']   = null;
+        $this->data_array['expiry_date']        = null;
+        $this->data_array['prev_auth_success']  = null;
+        $this->data_array['last_auth_success']  = null;
+        $this->data_array['last_auth_failure']  = null;
+        $this->data_array['nb_auth_failure']    = null;
+        
         if ($this->fetchData($id)) { 
             $is_anonymous = false;
         } else { //Passage en anonymous
             $this->id           = 0;
-            $this->data_array   = array('user_id' => 0);
             $this->group_data   = array();
             $this->tracker_data = array();
             $is_anonymous = true;
