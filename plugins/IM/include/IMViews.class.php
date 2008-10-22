@@ -129,11 +129,16 @@ class IMViews extends Views {
     	
         $any = $GLOBALS['Language']->getText('global', 'any');
         
-        $start_date = $request->get('log_start_date');
-        if ($start_date == '') {
+        if ($request->exist('log_start_date')) {
+        	$start_date = $request->get('log_start_date');
+        	if ($start_date == '') {
+        		$start_date = $any;
+        	}	
+        } else {
         	$week_ago = mktime( 0, 0, 0, date("m"), date("d") - 7, date("Y") );
  			$start_date = date("Y-m-d", $week_ago);
         }
+        
         $end_date = $request->get('log_end_date');
     	if ($end_date == '') {
         	$end_date = $any;
