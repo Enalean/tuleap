@@ -382,7 +382,7 @@ function handlePresence(presence) {
         
         var aMessage = new JSJaCMessage();
         aMessage.setFrom(user.jid);
-        aMessage.setBody(""+ouser.name+" is now known as "+htmlEnc(ouser.nick));
+        aMessage.setBody(""+ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_isnowknownas'); ?> "+htmlEnc(ouser.nick));
         user.chatmsgs = user.chatmsgs.concat(aMessage);
         if (user.chatW && !user.chatW.closed && user.chatW.popMsgs)
           user.chatW.popMsgs();
@@ -474,7 +474,7 @@ function handlePresence(presence) {
       // show join message
       var aMessage = new JSJaCMessage();
       aMessage.setFrom(user.jid);
-      aMessage.setBody(ouser.name+" has become available");
+      aMessage.setBody(ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_hasbecomeavailable'); ?>");
       user.chatmsgs = user.chatmsgs.concat(aMessage);
       if (user.chatW && !user.chatW.closed && user.chatW.popMsgs)
         user.chatW.popMsgs();			
@@ -485,7 +485,7 @@ function handlePresence(presence) {
       // show part message
       var aMessage = new JSJaCMessage();
       aMessage.setFrom(user.jid);
-      var body = ""+ouser.name+" has left";
+      var body = ""+ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_hasleft'); ?>";
       if (presence.getStatus())
         body += ": " + presence.getStatus();
       aMessage.setBody(body);

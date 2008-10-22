@@ -672,7 +672,7 @@ onunload = part;
                       width="100%" height=7></td>
                   <td><img src="images/border_corner_topright.gif"
                       width=8 height=7></td>
-                  <td rowspan=3><img src="images/send_button.gif"
+                  <td rowspan=3><img src="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_send_button_img'); ?>"
                       width=101 height=29 
                       onClick="return submitClicked();" 
                       id='submit_button'
