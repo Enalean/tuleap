@@ -281,7 +281,7 @@ class IMViews extends Views {
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
-			        	$group_Owner_object = new User($id);
+			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
 			        		$group_Owner_name =trim($group_Owner_object->getName());
 			        	}
@@ -324,7 +324,7 @@ class IMViews extends Views {
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
-			        	$group_Owner_object = new User($id);
+			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
 			        		$group_Owner_name =$group_Owner_object->getName();
 			        	}
@@ -367,7 +367,7 @@ class IMViews extends Views {
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id){
-			        	$group_Owner_object = new User($id);
+			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
 			        		$group_Owner_name = $group_Owner_object->getName();
 			        	}

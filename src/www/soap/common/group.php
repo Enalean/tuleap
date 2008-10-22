@@ -190,7 +190,7 @@ function getGroupById($sessionKey, $group_id) {
 function checkRestrictedAccess($group) {
     if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users']) {
         if ($group) {
-            $user = new User(session_get_userid());
+            $user = UserManager::instance()->getUserById(session_get_userid());
             if ($user) {
                 if ($user->isRestricted()) {
                     return $group->userIsMember();

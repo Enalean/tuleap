@@ -305,7 +305,7 @@ function permission_exist($permission_type, $object_id) {
 function permission_is_authorized($permission_type, $object_id, $user_id, $group_id) {
 
     // Super-user has all rights...
-    $u = new User($user_id);
+    $u = UserManager::instance()->getUserById($user_id);
     if ($u->isSuperUser()) return true;
 
     $res=permission_db_authorized_ugroups($permission_type, $object_id);

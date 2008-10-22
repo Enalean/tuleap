@@ -69,7 +69,7 @@ class UserImport extends Error {
                     // It's not an email address, let's assume it is a CodeX username
                     $user_result = $user_dao->searchByUserName($line);
                     if ($user_result && ($user_array =& $user_result->getRow())) {	
-                        $current_user = new User($user_array['user_id']);  
+                        $current_user = UserManager::instance()->getUserById($user_array['user_id']);  
                     } else {
                         // this username doesn't exist in codeX   
                         $ok = false;
@@ -87,7 +87,7 @@ class UserImport extends Error {
                         $errors=$Language->getText('project_admin_userimport','special_user',$line);
                     } else {
                         $user_array =& $user_result->getRow();
-                        $current_user = new User($user_array['user_id']);
+                        $current_user = UserManager::instance()->getUserById($user_array['user_id']);
                     }
                 }
                 // $current_user contains the user Object we areparsing the name of or the email address 

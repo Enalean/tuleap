@@ -108,7 +108,7 @@ if (db_numrows($res_grp) < 1) {
         $members_id = $group->getMembersId();
         if (count($members_id) > 0) {
             $admin_id = $members_id[0]; // the first (and normally the only one) is the project creator)
-            $admin = new User($admin_id);
+            $admin = UserManager::instance()->getUserById($admin_id);
             if ($admin->getID() != 0) {
                 $project_date_creation = util_timestamp_to_userdateformat($group->getStartDate());
                 // Display the project admin (the project creator) and the creation date

@@ -290,7 +290,7 @@ class FRSFile extends Error {
             $user_id = user_getid();
         }
         
-        $user = new User($user_id);
+        $user = UserManager::instance()->getUserById($user_id);
         if ($user) {
             if ($user->isSuperUser()) {
                 return true;

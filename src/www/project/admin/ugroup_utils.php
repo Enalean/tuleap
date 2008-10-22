@@ -116,7 +116,7 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
     
     if (!is_a($user, 'User')) {
-        $user = new User($user);
+        $user = UserManager::instance()->getUserById($user);
     }
   
   if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);

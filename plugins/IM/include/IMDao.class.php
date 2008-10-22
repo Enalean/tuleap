@@ -262,7 +262,7 @@ class IMDao extends DataAccessObject {
 								$grp=new Group($group_id);
 						        $project_members_ids=$grp->getMembersId();
 						        foreach($project_members_ids as $user_id){
-							        $user_object=new User($user_id);
+							        $user_object = UserManager::instance()->getUserById($user_id);
 							        $user_name =trim($user_object->getName());
 							        $jid_value=trim($user_name.'@'.$server_dns);
 							        //$this->add_muc_room_user($id,$jid_value);
@@ -324,7 +324,7 @@ class IMDao extends DataAccessObject {
 		$project_members_ids = $grp->getMembersId();
 		
 		foreach ($project_members_ids as $user_id) {
-			$user_object = new User($user_id);
+			$user_object = UserManager::instance()->getUserById($user_id);
 			$user_name = trim($user_object->getName());
 			$jid_value = trim($user_name.'@'.$server_dns);
 			if( ! ($user_object->isMember($group_id,'A')) ) {

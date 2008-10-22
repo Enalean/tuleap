@@ -652,7 +652,7 @@ class ArtifactType extends Error {
                 if (user_is_super_user()) return true;
                 $my_user_id=user_getid();
             } else {
-                $u = new User($my_user_id);
+                $u = UserManager::instance()->getUserById($my_user_id);
                 if ($u->isSuperUser()) return true;
             }
             
@@ -693,7 +693,7 @@ class ArtifactType extends Error {
                 if (user_is_super_user()) return true;
                 $my_user_id=user_getid();
             } else {
-                $u = new User($my_user_id);
+                $u = UserManager::instance()->getUserById($my_user_id);
                 if ($u->isSuperUser()) return true;
             }
             
@@ -752,7 +752,7 @@ class ArtifactType extends Error {
                 if (user_is_super_user()) return true;
                 $my_user_id=user_getid();
             } else {
-                $u = new User($my_user_id);
+                $u = UserManager::instance()->getUserById($my_user_id);
                 if ($u->isSuperUser()) return true;
             }
 

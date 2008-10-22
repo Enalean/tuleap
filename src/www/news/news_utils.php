@@ -347,7 +347,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
 
     $group = new Group($group_id);
     // retrieve the user that submit the news
-    $user = new User(user_getid());
+    $user = UserManager::instance()->getCurrentUser();
     
     $mail = new Mail();
     $mail->setFrom($GLOBALS['sys_noreply']);

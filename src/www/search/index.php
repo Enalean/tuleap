@@ -68,7 +68,7 @@ if ($type_of_search == "soft") {
 	$words2=implode($array,"%' $crit short_description LIKE '%");
 	$words3=implode($array,"%' $crit unix_group_name LIKE '%");
 
-    $user = new User(user_getid());
+    $user = UserManager::instance()->getCurrentUser();
     if ($user->isRestricted()) {
         $from_restricted = ", user_group ";
         $where_restricted = " AND user_group.group_id = groups.group_id AND user_group.user_id = '".$user->getID()."'";
