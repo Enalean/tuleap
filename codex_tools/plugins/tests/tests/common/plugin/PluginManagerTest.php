@@ -183,6 +183,7 @@ class PluginManagerTest extends UnitTestCase {
     function testEnablePlugin() {
         //The plugins
         $plugin = new MockPlugin($this);
+        $plugin->setReturnValue('canBeMadeAvailable', true);
         
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
@@ -229,6 +230,7 @@ class PluginManagerTest extends UnitTestCase {
     }
 
     function testInstallPlugin() {
+        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
         mkdir(dirname(__FILE__).'/test');
         mkdir(dirname(__FILE__).'/test/custom');

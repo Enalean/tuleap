@@ -1,0 +1,3 @@
+# This .tab file contains only comments
+#key1	key2	value
+# The resulting array should be empty and the above key/value should not be loaded

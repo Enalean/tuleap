@@ -1,6 +1,5 @@
 <?php
 require_once('pre.php');
-$GLOBALS['Language']->loadLanguageMsg('account/account');
 
 header('Content-type: application/x-javascript');
 

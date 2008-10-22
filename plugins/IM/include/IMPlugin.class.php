@@ -26,7 +26,6 @@ class IMPlugin extends Plugin {
 	function IMPlugin($id,$debug=IM_DEBUG_OFF) {
     	$this->Plugin($id);
     	$this->id=$id;
-        $this->_addHook('plugin_load_language_file', 'imPluginLanguageFile',	false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('approve_pending_project', 'projectIsApproved', false);
@@ -100,10 +99,6 @@ class IMPlugin extends Plugin {
      * End functions for tests.
      */
     
-    
-    function imPluginLanguageFile($params) {
-       $GLOBALS['Language']->loadLanguageMsg('IM','IM');
-    }
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the IM plugin pages.
         // This stops styles inadvertently clashing with the main site.
@@ -531,14 +526,12 @@ class IMPlugin extends Plugin {
 	 */
  	function siteAdminHooks($params) {
        global $Language;
-	   $Language->loadLanguageMsg('IM','IM');
        $link_title= $GLOBALS['Language']->getText('plugin_im','link_im_admin_title');
        echo '<li><a href="'.$this->getPluginPath().'/">'.$link_title.'</a></li>';
     }
  	
     function site_admin_external_tool_hook($params) {
        global $Language;
-        $Language->loadLanguageMsg('IM','IM');
         echo '<li><A href="externaltools.php?tool=openfire">'.
         $GLOBALS['Language']->getText('plugin_im','link_im_admin_tool').
         '</A></li>';
@@ -554,7 +547,6 @@ class IMPlugin extends Plugin {
 
  	 function im_process_display_jabber_id($eParams) {
 	    global $Language;
-	    $Language->loadLanguageMsg('IM','IM');
 		$plugin= & IMPlugin::instance() ;
 		$pm=$plugin->_getPluginManager();
 		$entry_label['jid']='';

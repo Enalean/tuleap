@@ -59,8 +59,8 @@ class WikiServiceAdmin extends Controler {
 
     // Set language for phpWiki
     if ($this->wiki->getLanguage_id()) {
-        define('DEFAULT_LANGUAGE',language_id_to_language_code($this->wiki->getLanguage_id()));
-        $LANG=language_id_to_language_code($this->wiki->getLanguage_id());
+        define('DEFAULT_LANGUAGE', $this->wiki->getLanguage_id());
+        $LANG = $this->wiki->getLanguage_id();
     }
 
   }

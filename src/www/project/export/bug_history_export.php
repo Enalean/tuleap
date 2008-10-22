@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('project/project');
 
 bug_init($group_id);
 

@@ -75,8 +75,8 @@ class WikiService extends Controler {
 
     // Set language for phpWiki
     if ($this->wiki->getLanguage_id()) {
-        define('DEFAULT_LANGUAGE',language_id_to_language_code($this->wiki->getLanguage_id()));
-        $LANG=language_id_to_language_code($this->wiki->getLanguage_id());
+        define('DEFAULT_LANGUAGE', $this->wiki->getLanguage_id());
+        $LANG = $this->wiki->getLanguage_id();
     }
   }
 
@@ -91,7 +91,6 @@ class WikiService extends Controler {
   function checkPermissions() {
     // Check if user can access to whole wiki
     if(!$this->wiki->isAutorized(user_getid())) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         exit_error($GLOBALS['Language']->getText('global', 'perm_denied'),
                    $GLOBALS['Language']->getText('wiki_wikiservice', 'acces_denied_whole',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
     }
@@ -100,7 +99,6 @@ class WikiService extends Controler {
     if(!empty($_REQUEST['pagename'])) {
       $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
       if(!$wp->isAutorized(user_getid())) {
-          $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
           exit_error($GLOBALS['Language']->getText('global', 'perm_denied'),
                      $GLOBALS['Language']->getText('wiki_wikiservice', 'acces_denied_page',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
       }

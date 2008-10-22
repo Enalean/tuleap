@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../news/news_utils.php');
 
-$Language->loadLanguageMsg('news/news');
 $request =& HTTPRequest::instance();
 
 $validGroupId = new Valid_GroupId();

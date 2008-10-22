@@ -184,7 +184,6 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
           - show_any: show the Any entry in the select box if true (value_id 0)
           - text_any: text associated with the any value_id  tp display in the select box
      */
-    global $sys_datefmt;
 
     if ($label) {
 	$output = bug_field_label_display($field_name,$group_id,$break,$ascii);
@@ -232,10 +231,10 @@ function bug_field_display($field_name, $group_id, $value='xyxy',
 
     case 'DF':
 	if ($ascii) 
-	    $output .= ( ($value == 0) ? '' : format_date($sys_datefmt,$value));
+	    $output .= ( ($value == 0) ? '' : format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value));
 	else
 	    if ($ro) {
-		$output .= format_date($sys_datefmt,$value);
+		$output .= format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value);
 	    } else {
 		$output .= bug_field_date($field_name,
 					  (($value == 0) ? '' : format_date("Y-m-j",$value,'')));
@@ -454,7 +453,7 @@ function bug_canned_response_box ($group_id,$name='canned_response') {
  */
 function bug_show_task_dependencies ($group_id, $bug_id, $ro=false) {
 
-    global $sys_datefmt,$sys_lf;
+    global $sys_lf;
 
     //
     //      format the dependencies list for this artifact
@@ -520,7 +519,7 @@ function bug_show_task_dependencies ($group_id, $bug_id, $ro=false) {
  */
 function bug_show_bug_dependencies ($group_id, $bug_id, $ro=false) {
 
-    global $sys_datefmt,$sys_lf;
+    global $sys_lf;
 
     //
     //      format the dependencies list for this artifact
@@ -601,7 +600,7 @@ function bug_multiple_bug_depend_box ($name='dependent_on_bug[]',$group_id=false
 
 function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 		       $width_arr,$url,$nolink) {
-    global $sys_datefmt,$group_id,$PHP_SELF,$chunksz;
+    global $group_id,$PHP_SELF,$chunksz;
 
     /*
       Accepts a result set from the bugs table. Should include all columns from
@@ -691,7 +690,7 @@ function show_buglist ($result,$offset,$total_rows,$field_arr,$title_arr,
 
 	    if (bug_data_is_date_field($field_arr[$j]) ) {
 		if ($value)
-		    echo "<TD $width>".format_date($sys_datefmt,$value).'</TD>'."\n";
+		    echo "<TD $width>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value).'</TD>'."\n";
 		else
 		    echo "<TD align=\"center\">-</TD>\n";
 
@@ -971,7 +970,7 @@ function bug_build_notification_list($bug_id, $group_id, $changes) {
 }
 
 function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
-    global $sys_datefmt,$feedback,$sys_lf;
+    global $feedback,$sys_lf;
     /*
       Send a message to the person who opened this bug and the person it is assigned to - 
       modified by jstidd on 1/30/01 to eliminate default user assigned to
@@ -1009,7 +1008,7 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	$body .= sprintf($fmt_left.$fmt_right."\n", 
 			 'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
 			 'Project: '.group_getname($group_id) );
-	$body .= 'Submitted on: '.format_date($sys_datefmt,db_result($result,0,'date'))."\n";
+	$body .= 'Submitted on: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date'))."\n";
 
 	// All other regular fields now		 
 	$left = 1;
@@ -1139,7 +1138,6 @@ function format_bug_details ($bug_id, $group_id, $ascii=false) {
     /*
       Format the details rows from bug_history
       */
-    global $sys_datefmt;
     $result=bug_data_get_followups ($bug_id);
     $rows=db_numrows($result);
 
@@ -1187,7 +1185,7 @@ function format_bug_details ($bug_id, $group_id, $ascii=false) {
 	// we don't so do it the ugly way...
 	if ($ascii) {
 	    $out .= sprintf($fmt,
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    db_result($result, $i, 'user_name'),
 			    $comment_type,
 			    util_unconvert_htmlspecialchars(db_result($result, $i, 'old_value'))
@@ -1197,7 +1195,7 @@ function format_bug_details ($bug_id, $group_id, $ascii=false) {
 			    util_get_alt_row_color($i),
 			    $comment_type,
 			    util_make_links(nl2br(db_result($result, $i, 'old_value')),$group_id),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    db_result($result, $i, 'user_name'));
 	}
     }
@@ -1214,17 +1212,15 @@ function show_bug_details ($bug_id,$group_id, $ascii=false) {
 
 function format_bug_changes($changes) {
 
-    global $sys_datefmt;
-
     reset($changes);
     $fmt = "%20s | %-25s | %s\n";
 
     if (user_isloggedin()) {
 	$user_id = user_getid();
 	$out_hdr = 'Changes by: '.user_getrealname($user_id).' <'.user_getemail($user_id).">\n";
-	$out_hdr .= 'Date: '.format_date($sys_datefmt,time()).' ('.user_get_timezone().')';
+	$out_hdr .= 'Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
     } else {
-	$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($sys_datefmt,time());
+	$out_hdr = 'Changes by: Anonymous user        Date: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
     }
 
     //Process special cases first: follow-up comment
@@ -1271,7 +1267,6 @@ function show_bughistory ($bug_id,$group_id) {
     /*
 		show the bug_history rows that are relevant to this bug_id, excluding details
 	*/
-    global $sys_datefmt;
     $result=bug_data_get_history($bug_id);
     $rows=db_numrows($result);
 
@@ -1297,14 +1292,14 @@ function show_bughistory ($bug_id,$group_id) {
 		echo bug_data_get_value($field, $group_id, $value_id);
 	    } else if (bug_data_is_date_field($field)) {
 		// For date fields do some special processing
-		echo format_date($sys_datefmt,$value_id);
+		echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value_id);
 	    } else {
 		// It's a text zone then display directly
 		echo $value_id;
 	    }
 
 	    echo '</TD>'.
-		'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+		'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
 		'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 	}
         echo '</TABLE>';
@@ -1316,8 +1311,6 @@ function show_bughistory ($bug_id,$group_id) {
 
 
 function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
-
-    global $sys_datefmt;
 
     /*
           show the files attached to this bug
@@ -1373,7 +1366,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 
 	if ($ascii) {
 	    $out .= sprintf($fmt,
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    db_result($result, $i, 'filename'),
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    db_result($result, $i, 'user_name'),
@@ -1398,7 +1391,7 @@ function format_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 			    db_result($result, $i, 'description'),
 			    intval(db_result($result, $i, 'filesize')/1024),
 			    util_user_link(db_result($result, $i, 'user_name')),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),$html_delete);
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),$html_delete);
 	}
     }
 
@@ -1414,8 +1407,6 @@ function show_bug_attached_files ($bug_id,$group_id,$ascii=false,$pv=false) {
 }
 
 function format_bug_cc_list ($bug_id,$group_id,$ascii=false,$pv=false) {
-
-    global $sys_datefmt;
 
     /*
           format the CC list for this bug
@@ -1495,7 +1486,7 @@ function format_bug_cc_list ($bug_id,$group_id,$ascii=false,$pv=false) {
 			    $href_cc,
 			    db_result($result, $i, 'comment'),
 			    util_user_link(db_result($result, $i, 'user_name')),
-			    format_date($sys_datefmt,db_result($result, $i, 'date')),
+			    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
 			    $html_delete);
 	}
     }

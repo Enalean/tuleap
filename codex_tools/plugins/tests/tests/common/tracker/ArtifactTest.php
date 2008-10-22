@@ -1,8 +1,5 @@
 <?php
 
-require_once('common/language/BaseLanguage.class.php');
-$GLOBALS['Language'] = new BaseLanguage();
-
 require_once('common/include/Error.class.php');
 require_once('common/tracker/Artifact.class.php');
 

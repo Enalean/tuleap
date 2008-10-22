@@ -6,7 +6,6 @@ require_once('www/my/my_utils.php');
 
 session_require(array('isloggedin'=>'1'));
 
-$Language->loadLanguageMsg('account/account');
 
 $em =& EventManager::instance();
 
@@ -122,7 +121,7 @@ echo '>'.$Language->getText('account_options', 'font_size_large');
 <?php echo $Language->getText('account_options', 'language'); ?>: </td><td>
 <?php
 // display supported languages
-echo html_get_language_popup($Language,'language_id',$Language->getLanguageId());
+echo html_get_language_popup($Language,'language_id',$Language->getLanguageCode());
 ?>
                     </tr>
                    <tr>

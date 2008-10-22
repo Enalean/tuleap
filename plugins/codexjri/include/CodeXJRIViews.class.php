@@ -14,7 +14,6 @@ class CodeXJRIViews extends Views {
     
     function CodeXJRIViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('codexjri', 'codexjri');
     }
     
     function header() {

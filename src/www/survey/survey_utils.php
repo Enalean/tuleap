@@ -14,7 +14,6 @@
 
 require_once('common/survey/SurveySingleton.class.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 function survey_header($params) {
     global $group_id,$is_admin_page,$Language;

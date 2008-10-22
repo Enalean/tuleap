@@ -15,7 +15,6 @@
 //require_once('include/ArtifactFieldHtml.class.php');
 //require_once('common/tracker/ArtifactFieldFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 // Printer version ?
 if ( !$request->exist('pv') ) {

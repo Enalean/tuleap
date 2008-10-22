@@ -10,7 +10,6 @@ require_once('pre.php');
 require('../mail/mail_utils.php');
 require_once('common/include/HTTPRequest.class.php');
 
-$Language->loadLanguageMsg('mail/mail');
 
 $pv=isset($pv)?$pv:false;
 

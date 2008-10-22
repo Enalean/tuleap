@@ -18,7 +18,6 @@ require_once('javascript_helpers.php');
 require_once('common/rss/RSS.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactHtml extends Artifact {
 
@@ -44,7 +43,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function display($ro, $pv, $user_id) {
-            global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
+            global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
             $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
             // the column number is the number of field per line * 2 (label + value)
@@ -488,9 +487,9 @@ class ArtifactHtml extends Artifact {
                 } else if ($field->getName() == 'submitted_by') {
                     $value = util_user_link(user_getname($field_value));
                 } else if ($field->getName() == 'open_date') {
-                    $value = format_date($GLOBALS['sys_datefmt'],$field_value);
+                    $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
                 } else if ($field->getName() == 'last_update_date') {
-                	$value = format_date($GLOBALS['sys_datefmt'],$field_value);    
+                	$value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);    
                 } else {
                     $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
                     if ($read_only) $value = util_make_links($value,$group_id, $group_artifact_id);
@@ -510,7 +509,7 @@ class ArtifactHtml extends Artifact {
      * @return void
      */
     function displayCopy($ro,$pv) {
-        global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
+        global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
         $hp = CodeX_HTMLPurifier::instance();
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
@@ -750,7 +749,7 @@ class ArtifactHtml extends Artifact {
             //
                 //      show the artifact_history rows that are relevant to this artifact_id, excluding comment (follow-up comments)
                 //
-            global $sys_datefmt,$art_field_fact,$sys_lf,$Language;
+            global $art_field_fact,$sys_lf,$Language;
             $result=$this->getHistory();
             $rows=db_numrows($result);
             $html = '';
@@ -802,7 +801,7 @@ class ArtifactHtml extends Artifact {
                                     }
                         
                                     $html .= '</TD>'.
-                                        '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+                                        '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
                                 }
                             } else {
@@ -811,7 +810,7 @@ class ArtifactHtml extends Artifact {
                                 $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODEX_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                 $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_new), CODEX_PURIFIER_CONVERT_HTML) ;
                                 $html .= '</TD>'.
-                                        '<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+                                        '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
                                         '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
                             }
                         }
@@ -834,7 +833,7 @@ class ArtifactHtml extends Artifact {
          */
         function showInverseDependencies ($group_id, $group_artifact_id, $ascii=false) {
             $hp = CodeX_HTMLPurifier::instance();
-            global $sys_datefmt,$sys_lf,$Language;
+            global $sys_lf,$Language;
         
             //
             //      format the dependencies list for this artifact
@@ -905,7 +904,7 @@ class ArtifactHtml extends Artifact {
 
         
     function displayAdd($user_id) {
-        global $art_field_fact,$art_fieldset_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
+        global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
         $hp = CodeX_HTMLPurifier::instance();
         
         $fields_per_line=2;
@@ -1123,7 +1122,6 @@ class ArtifactHtml extends Artifact {
     *
     */
     function displayRSS() {
-        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $group = $this->ArtifactType->getGroup();
         $rss = new RSS(array(
             'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary') .' - '. $GLOBALS['Language']->getText('tracker_include_artifact','follow_ups'),

@@ -12,8 +12,6 @@
 require_once('www/project/export/project_export_utils.php');
 require_once('common/tracker/ArtifactImport.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
-$Language->loadLanguageMsg('include/include');
 
 class ArtifactImportHtml extends ArtifactImport {
 
@@ -83,7 +81,7 @@ function showErrors() {
  * @param $artifacts_data: array containing the records for each artifact to be imported
  */
   function showParseResults($parsed_labels,$artifacts_data) {
-    global $sys_datefmt,$Language;
+    global $Language;
     $hp = CodeX_HTMLPurifier::instance();
     $this->getImportUser($sub_user_id,$sub_user_name);
     $sub_on = format_date("Y-m-d",time());

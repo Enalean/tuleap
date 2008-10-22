@@ -36,7 +36,7 @@ class Widget_ProjectLatestCommits extends Widget {
             $html .= '<a href="'. $this->_getLinkToCommit($data) .'">#'.$data['revision'].'</a>';
             $html .= ' by '.$hp->purify($UH->getDisplayNameFromUserName($data['who']), CODEX_PURIFIER_CONVERT_HTML) .' on ';
             //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
-            $html .= format_date($GLOBALS['sys_datefmt'], (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
+            $html .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
             $html .= '</div>';
             $html .= '<div style="padding-left:20px; padding-bottom:4px; color:#555">';
             $html .= util_make_links(substr($data['description'], 0, 255), $this->group_id);
@@ -61,7 +61,6 @@ class Widget_ProjectLatestCommits extends Widget {
     Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {
         $project =& project_get_object($this->group_id);
-        $GLOBALS['Language']->loadLanguageMsg('rss/rss');
         $rss = new RSS(array(
             'title'       => $project->getPublicName() .' - '. $this->getTitle(),
             'description' => '',
@@ -72,7 +71,7 @@ class Widget_ProjectLatestCommits extends Widget {
         ));
         while($data = db_fetch_array($this->latest_revisions)) {
             $rss->addItem(array(
-                'title'       => '#'.$data['revision'] .' by '. $data['who'] .' on '. format_date($GLOBALS['sys_datefmt'], $data['date']),
+                'title'       => '#'.$data['revision'] .' by '. $data['who'] .' on '. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $data['date']),
                 'description' => util_make_links(nl2br($data['description'])),
                 'link'        => '/svn/?func=detailrevision&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['commit_id']
             ));

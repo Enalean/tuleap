@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 $HTML->header(array(title=>$Language->getText('docs_site_about','title', array($GLOBALS['sys_name']))));
 

@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
-$Language->loadLanguageMsg('snippet/snippet');
 
 if (user_isloggedin()) {
 

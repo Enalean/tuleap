@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('project/project');
 
 // This is the SQL query to retrieve all the survey responses for this group
 

@@ -12,7 +12,6 @@ require_once('common/dao/CodexDataAccess.class.php');
 require_once('pre.php');
 require_once('P26CDataAccess.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('cvstodimensions', 'cvstodimensions');
 
 class CvsToDimensions extends Controler {
 	

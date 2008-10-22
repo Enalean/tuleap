@@ -9,7 +9,6 @@
 $datetime_fmt = 'Y-m-d H:i:s';
 $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
-$Language->loadLanguageMsg('project/project');
 require_once('common/include/SimpleSanitizer.class.php');
 
 function tocsv($string) {
@@ -258,7 +257,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 }
 
 function pe_utils_format_bug_followups($group_id,$bug_id) {
-    global $BUG_FU, $sys_datefmt,$Language;
+    global $BUG_FU, $Language;
 
     // return all the follow-up comments attached to a given bug
     // Do a big SQl query the first time and then cache the results
@@ -288,7 +287,7 @@ function pe_utils_format_bug_followups($group_id,$bug_id) {
 		    '=================================================='.
 		    "\n".
 		    $Language->getText('project_export_utils','type').': '.$row['type'].'     '.$Language->getText('global','by').': '.$row['mod_by'].'      '.$Language->getText('global','on').': '.
-		    format_date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
 	    }
@@ -691,7 +690,7 @@ function pe_utils_format_task_assignees ($group_id,$task_id) {
 }
 
 function pe_utils_format_task_followups ($group_id,$task_id) {
-    global $TASK_FU, $sys_datefmt,$Language;
+    global $TASK_FU, $Language;
 
     // return all the follow-up comments attached to a given task
     // Do a big SQl query the first time and then cache the results
@@ -717,7 +716,7 @@ function pe_utils_format_task_followups ($group_id,$task_id) {
 		$TASK_FU[$row['project_task_id']] .= 
 		    '=================================================='."\n".
 		    $Language->getText('global','by').': '.$row['mod_by'].'      '.$Language->getText('global','on').': '.
-		    format_date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date'])."\n\n".
 		    prepare_textarea($row['old_value']).
 		    "\n";
 	    }
@@ -800,7 +799,7 @@ function prepare_support_request_record($group_id, &$record) {
 }
 
 function pe_utils_format_sr_messages($group_id,$sr_id) {
-    global $SR_MSG, $sys_datefmt,$Language;
+    global $SR_MSG, $Language;
 
     // return all the follow-up comments attached to a given bug
     // Do a big SQl query the first time and then cache the results
@@ -825,7 +824,7 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 		    '=================================================='.
 		    "\n".
 		    $Language->getText('global','by').': '.$row['from_email'].'      '.$Language->getText('global','on').': '.
-		    format_date($sys_datefmt,$row['date'])."\n\n".
+		    format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date'])."\n\n".
 		    prepare_textarea($row['body']).
 		    "\n";
 	    }

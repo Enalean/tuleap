@@ -2,7 +2,6 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
 
 class LdapPluginDescriptor extends PluginDescriptor {
     

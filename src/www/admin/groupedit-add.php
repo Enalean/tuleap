@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('account.php');
 require_once('www/admin/admin_utils.php');
 
-$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

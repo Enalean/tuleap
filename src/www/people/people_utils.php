@@ -12,7 +12,6 @@
 	Simplified by Laurent Julliard, Xerox Corporation, June 2004 (no job posting)
 */
 
-$Language->loadLanguageMsg('people/people');
 
 function people_header($params) {
     global $group_id,$HTML,$Language;

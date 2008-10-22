@@ -12,7 +12,6 @@
 
 //require_once('common/tracker/ArtifactCanned.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactCannedHtml extends ArtifactCanned {
 

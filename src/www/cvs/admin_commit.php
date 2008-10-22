@@ -12,7 +12,6 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 

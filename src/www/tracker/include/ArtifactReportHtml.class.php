@@ -11,7 +11,6 @@
 
 require_once('common/event/EventManager.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactReportHtml extends ArtifactReport {
     

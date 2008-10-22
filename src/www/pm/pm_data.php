@@ -686,7 +686,7 @@ function pm_data_get_value($field,$group_id,$value_id,$by_field_id=false) {
 	} else if ( $field == 'group_project_id' ) {
 	    return pm_data_get_group_name($value_id);
     } else if (pm_data_is_date_field($field)) {
-	    return format_date($sys_datefmt,$value_id);
+	    return format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value_id);
     }
 
     if ($by_field_id) {

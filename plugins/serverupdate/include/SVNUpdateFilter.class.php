@@ -7,7 +7,6 @@
  * SVNUpdateFilter
  */
 
-//$Language->loadLanguageMsg('svnupdate/svnupdate');
 
 require_once("SVNCommit.class.php");
 

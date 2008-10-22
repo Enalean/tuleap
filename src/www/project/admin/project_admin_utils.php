@@ -13,7 +13,6 @@
 */
 require_once('common/include/TemplateSingleton.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('project/project');
 
 function project_admin_header($params) {
 	global $group_id,$feedback,$Language;
@@ -109,7 +108,7 @@ function show_grouphistory ($group_id) {
 		show the group_history rows that are relevant to 
 		this group_id
 	*/
-	global $sys_datefmt,$Language;
+	global $Language;
 	$result=group_get_history($group_id);
 	$rows=db_numrows($result);
 	$hp =& CodeX_HTMLPurifier::instance();
@@ -169,7 +168,7 @@ function show_grouphistory ($group_id) {
 			echo $hp->purify($val);
 						
 			echo '</TD>'.
-				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
 				'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
 		}	       
 				

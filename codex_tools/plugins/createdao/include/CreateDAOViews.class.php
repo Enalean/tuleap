@@ -16,7 +16,6 @@ class CreateDAOViews extends Views {
     
     function CreateDAOViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('createdao', 'createdao');
     }
     
     function header() {

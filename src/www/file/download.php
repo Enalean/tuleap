@@ -8,7 +8,6 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');
-$Language->loadLanguageMsg('file/file');
 
 if (user_isloggedin()) {
   list(,$group_id, $file_id) = explode('/', $_SERVER['PATH_INFO']);

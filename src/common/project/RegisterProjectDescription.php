@@ -10,7 +10,6 @@
 
 <?php
 global $Language;
-$Language->loadLanguageMsg('project/project');
 
 $descfieldsinfos = getProjectsDescFieldsInfos();
 $hp = CodeX_HTMLPurifier::instance();

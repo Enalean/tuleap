@@ -14,8 +14,6 @@
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
-$GLOBALS['Language']->loadLanguageMsg('include/include');
 
 class Artifact extends Error {
 
@@ -2568,9 +2566,9 @@ class Artifact extends Error {
 	      if (user_isloggedin()) {
 		$user_id = user_getid();
 		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
-		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['sys_datefmt'],time()).' ('.user_get_timezone().')';
+		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
 	      } else {
-		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['sys_datefmt'],time());
+		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
 	      }
 	    }
             //Process special cases first: follow-up comment
@@ -2713,7 +2711,7 @@ class Artifact extends Error {
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
                     $out .= sprintf($fmt,
-                                    format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')),
+                                    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
                                     ($comment_type != '' ? $comment_type.$GLOBALS['sys_lf'] : '') . $comment_txt
                                     );
@@ -2774,7 +2772,7 @@ class Artifact extends Error {
                     
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
+                    $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2786,7 +2784,7 @@ class Artifact extends Error {
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
+                        $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODEX_PURIFIER_CONVERT_HTML)  .'</span>';
                         $out .= '</span>'.")";
                     }
                     $out .= '</div>';
@@ -2938,7 +2936,7 @@ class Artifact extends Error {
                                             $href_cc,
                                             $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'comment')), CODEX_PURIFIER_BASIC, $this->ArtifactType->getGroupId()) ,
                                             util_user_link(db_result($result, $i, 'user_name')),
-                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'date')),
+                                            format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')),
                                             $html_delete);
                         
                         } // for
@@ -3114,7 +3112,7 @@ class Artifact extends Error {
                 
                         if ($ascii) {
                             $out .= sprintf($fmt,
-                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
+                                            format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'adddate')),
                                              db_result($result, $i, 'filename') ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                              db_result($result, $i, 'user_name'),
@@ -3138,7 +3136,7 @@ class Artifact extends Error {
                                              $hp->purify(SimpleSanitizer::unsanitize(db_result($result, $i, 'description')), CODEX_PURIFIER_BASIC, $group_id) ,
                                             intval(db_result($result, $i, 'filesize')/1024),
                                             util_user_link(db_result($result, $i, 'user_name')),
-                                            format_date($GLOBALS['sys_datefmt'],db_result($result, $i, 'adddate')),
+                                            format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'adddate')),
                                             $html_delete);
                         }
         } // for

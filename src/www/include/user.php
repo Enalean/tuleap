@@ -6,7 +6,6 @@
 //
 // 
 
-  //$Language->loadLanguageMsg('include/include');
 
 $USER_RES=array();
 
@@ -215,23 +214,6 @@ function user_get_timezone() {
 	}
 }
 
-// Get user prefered language from the database
-// if language not defined then return system default
-//Deprecated. Use User->getLanguageId() instead
-function user_get_language() {
-    if (user_isloggedin()) {
-	$result=user_get_result_set(user_getid());
-	$lang_id = db_result($result,0,'language_id');
-    }
-    if (!isset($lang_id) || !$lang_id) { $lang_id = $GLOBALS['sys_lang']; }
-    return $lang_id;
-}
-
-//Deprecated. Use LanguageManager->getLanguageCodeFromLanguageId() instead... or UserManager::instance()->getCurrentUser()->getLocale()?
-function user_get_languagecode() {
-    return UserManager::instance()->getCurrentUser()->getLocale();
-}
-
 //Deprecated. Use User->setPreference() instead.
 function user_set_preference($preference_name,$value) {
 	GLOBAL $user_pref;
@@ -321,7 +303,6 @@ function user_del_preference($preference_name) {
 }
 
 function user_display_choose_password($page,$user_id = false) {
-    $GLOBALS['Language']->loadLanguageMsg('account/account');
     $request = & HTTPRequest :: instance();
 	?>
     <table><tr valign='top'><td>

@@ -14,7 +14,6 @@
 
 require_once('www/snippet/snippet_data.php');
 
-$Language->loadLanguageMsg('snippet/snippet');
 
 function snippet_header($params) {
 	global $is_snippet_page,$HTML,$feedback,$Language;

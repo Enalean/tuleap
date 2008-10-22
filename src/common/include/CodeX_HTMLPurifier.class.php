@@ -22,8 +22,6 @@
  * 
  */
 
-require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
-
 /**
  * Clean-up HTML code for user output.
  *
@@ -50,9 +48,14 @@ define('CODEX_PURIFIER_DISABLED', 100);
 
 class CodeX_HTMLPurifier {
     /**
+     * Hold an instance of the class
+     */
+    private static $codex_htmlpurifier_instance;
+    
+    /**
      * Constructor
      */
-    function CodeX_HTMLPurifier() {
+    private function __construct() {
     }
 
     /**
@@ -60,12 +63,12 @@ class CodeX_HTMLPurifier {
      *
      * @access: static
      */
-    function &instance() {
-        static $__codex_htmlpurifier_instance;
-        if(!$__codex_htmlpurifier_instance) {
-            $__codex_htmlpurifier_instance = new CodeX_HtmlPurifier();
+    public static function instance() {
+        if (!isset(self::$codex_htmlpurifier_instance)) {
+            $c = __CLASS__;
+            self::$codex_htmlpurifier_instance = new $c;
         }
-        return $__codex_htmlpurifier_instance;
+        return self::$codex_htmlpurifier_instance;
     }
 
     /**
@@ -194,6 +197,7 @@ class CodeX_HTMLPurifier {
             $html = nl2br($this->_makeLinks($html, $groupId));
         case CODEX_PURIFIER_STRIP_HTML:
         case CODEX_PURIFIER_FULL:
+            require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
             $hp =& HTMLPurifier::getInstance();
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);

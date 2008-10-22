@@ -8,7 +8,6 @@
 
 require_once('common/tracker/ArtifactFieldSetFactory.class.php');
 
-$Language->loadLanguageMsg('project/project');
 
 //
 //	get the Group object

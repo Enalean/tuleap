@@ -15,7 +15,6 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require('../doc_utils.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 if (!(user_ismember($group_id,"D2"))) {
     $feedback .= $Language->getText('docman_admin_index','error_perm');

@@ -12,7 +12,6 @@
 require_once('common/server/ServerFactory.class.php');
 require_once('common/include/URL.class.php');
 
-$Language->loadLanguageMsg('svn/svn');
 
 $vGroupId = new Valid_UInt('group_id');
 $vGroupId->required();

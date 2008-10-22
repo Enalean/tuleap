@@ -17,7 +17,7 @@ system	thousand_separator	,
 conf	content_encoding	utf-8
 conf	default_font	verdana,arial,helvetica,sans-serif
 conf	language_code	en
-conf	language_id	1
+conf	language_id	en_US
 global	perm_denied	Permission Denied
 global	error_perm_denied	Error - Permission Denied
 global	back_home	Back to Home Page

@@ -13,7 +13,6 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 commits_header(array ('title'=>$Language->getText('cvs_intro', 'title')));
 

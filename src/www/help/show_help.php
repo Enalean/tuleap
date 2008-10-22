@@ -10,7 +10,6 @@
 //
 
 require_once('pre.php');
-$Language->loadLanguageMsg('help/help');
 
 // Default language
 // Should be: $lang = $Language->getLanguageCode(); -> switch when documentation is available in several languages... //XXX

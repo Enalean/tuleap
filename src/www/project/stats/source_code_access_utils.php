@@ -7,7 +7,6 @@
 //  
 //
 
-$Language->loadLanguageMsg('project/project');
 
 /**
  * Prepare SQL query for given date and given person

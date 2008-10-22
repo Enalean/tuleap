@@ -39,7 +39,6 @@ class LDAP extends Error {
             $this->default_bind_passwd= $GLOBALS['sys_ldap_bind_passwd'];
         }
         $this->auth_dn_template   = $GLOBALS['sys_ldap_auth_dn'];
-        $Language->loadLanguageMsg('include/ldap');
     }
 
     function &instance() {

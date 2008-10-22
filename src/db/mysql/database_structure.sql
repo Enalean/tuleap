@@ -1941,7 +1941,7 @@ CREATE TABLE user (
   windows_pw varchar(80) NOT NULL default '',
   fontsize INT UNSIGNED NOT NULL DEFAULT 0,
   theme varchar(50),
-  language_id int(11) NOT NULL DEFAULT 1,
+  language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',
   last_access_date int(11) NOT NULL default '0',
   expiry_date int(11),
@@ -2803,20 +2803,6 @@ CREATE TABLE artifact_watcher (
 );
 
 #
-# Table structure for user interface supported languages
-#
-CREATE TABLE supported_languages (
-  language_id int(11) NOT NULL auto_increment,
-  name text,
-  filename text,
-  language_code varchar(15),
-  language_charset varchar(32),
-  active int(11) NOT NULL default '1',
-  PRIMARY KEY  (language_id),
-  KEY idx_supported_languages_language_code (language_code)
-);
-
-#
 # snippet category table
 #
 CREATE TABLE snippet_category (
@@ -2932,7 +2918,7 @@ CREATE TABLE wiki_group_list (
 	wiki_link varchar(255) NOT NULL default '',
 	description varchar(255) NOT NULL default '',
 	rank int(11) NOT NULL default '0',
-        language_id int(11) NOT NULL default '1',
+        language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
 	PRIMARY KEY (id)	
 ) TYPE=MyISAM;
 

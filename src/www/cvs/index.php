@@ -9,7 +9,6 @@
 require_once('pre.php');    
 require('../cvs/commit_utils.php');    
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 // ######################## table for summary info
 

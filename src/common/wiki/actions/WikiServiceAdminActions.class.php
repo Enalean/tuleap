@@ -54,7 +54,6 @@ class WikiServiceAdminActions extends WikiActions {
      * Check if the given page name is not empty
      */
     if(empty($page)) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
       return false;
     }
@@ -141,7 +140,6 @@ class WikiServiceAdminActions extends WikiActions {
     else
         $ret = $w->setPermissions($_POST['ugroups']);
     if(!$ret) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         exit_error($GLOBALS['Language']->getText('global','error'),
                    $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
     }
@@ -159,7 +157,6 @@ class WikiServiceAdminActions extends WikiActions {
     else
         $ret = $wp->setPermissions($_POST['ugroups']);
     if(!$ret) {
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         exit_error($GLOBALS['Language']->getText('global','error'),
                    $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
     }
@@ -181,7 +178,6 @@ class WikiServiceAdminActions extends WikiActions {
             $ret = $wa->setPermissions($_POST['ugroups']);
         }
         if(!$ret) {
-            $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
             exit_error($GLOBALS['Language']->getText('global','error'),
                        $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback)));
         }

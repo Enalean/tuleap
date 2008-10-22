@@ -36,7 +36,6 @@ class WidgetLayoutManager {
         if ($data = db_fetch_array($req)) {
             $readonly = $this->_currentUserCanUpdateLayout($owner_id, $owner_type);
             if (!$readonly) {
-                $GLOBALS['Language']->loadLanguageMsg('widget/widget');
                 echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">['. $GLOBALS['Language']->getText('widget_add', 'link_add') .']</a>';
             }
             $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
@@ -188,7 +187,6 @@ class WidgetLayoutManager {
     * @param  layout_id 
     */
     function displayAvailableWidgets($owner_id, $owner_type, $layout_id) {
-        $GLOBALS['Language']->loadLanguageMsg('widget/widget');
         $used_widgets = array();
         $sql = "SELECT * 
         FROM layouts_contents 

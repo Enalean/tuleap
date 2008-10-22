@@ -14,7 +14,6 @@ class PluginCreationWizardViews extends Views {
     
     function PluginCreationWizardViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('plugincreationwizard', 'plugincreationwizard');
     }
     
     function header() {

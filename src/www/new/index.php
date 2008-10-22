@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 
-$Language->loadLanguageMsg('new/new');
 $hp = CodeX_HTMLPurifier::instance();
 
 $offset = $request->getValidated('offset', 'uint', 0);

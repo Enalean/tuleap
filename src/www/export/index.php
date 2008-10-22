@@ -7,7 +7,6 @@
 // 
 
 require_once('pre.php');    
-$Language->loadLanguageMsg('export/export');
 
 $HTML->header(array(title=>$Language->getText('export_index','exports_available')));
 ?>

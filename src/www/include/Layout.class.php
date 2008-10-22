@@ -14,9 +14,6 @@ require_once('common/event/EventManager.class.php');
 
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
-
-//$Language->loadLanguageMsg('include/include');
-include($Language->getContent('layout/osdn_sites'));
             
 /*
 
@@ -1098,7 +1095,6 @@ EOS;
 	}
 
         function pv_header($params) {
-            global $sys_datefmt;
 	        $this->generic_header_start($params); 
                 $this->generic_header_end($params); 
                 echo '
@@ -1107,7 +1103,7 @@ EOS;
                 if(isset($params['pv']) && $params['pv'] < 2) {
                 if (isset($params['title']) && $params['title']) {
                     echo '
-<H2>'.$params['title'].' - '.format_date($sys_datefmt,time()).'</H2>
+<H2>'.$params['title'].' - '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).'</H2>
 <HR>
 ';
                 }
@@ -1486,10 +1482,11 @@ echo html_blankimage(5,100);
             include($motd);
         } else {
             // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
-            if (isset($GLOBALS['osdn_sites'])) {
+            include($GLOBALS['Language']->getContent('layout/osdn_sites'));
+            if (isset($osdn_sites)) {
                 $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_layout','network_gallery').'&nbsp;:&nbsp;';
                 // if less than 5 sites are defined, we only display the min number
-                $output .= $this->_getOsdnRandpick($GLOBALS['osdn_sites'], min(5, count($GLOBALS['osdn_sites'])));
+                $output .= $this->_getOsdnRandpick($osdn_sites, min(5, count($osdn_sites)));
                 $output .= '</span>';
             }
         }
@@ -1528,12 +1525,13 @@ echo html_blankimage(5,100);
         $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
         $output .= '<br /></a>';
         // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
-        if (isset($GLOBALS['osdn_sites'])) {
+        include($GLOBALS['Language']->getContent('layout/osdn_sites'));
+        if (isset($osdn_sites)) {
             $output .= '<form name="form1"><div>';
             $output .= '<select name="navbar" onChange="handle_navbar(selectedIndex,this)">';
             $output .= '   <option>------------</option>';
-            reset ($GLOBALS['osdn_sites']);
-            while (list ($key, $val) = each ($GLOBALS['osdn_sites'])) {
+            reset ($osdn_sites);
+            while (list ($key, $val) = each ($osdn_sites)) {
                 list ($key, $val) = each ($val);
                 $output .= '   <option value="'.$val.'">'.$key.'</option>';
             }

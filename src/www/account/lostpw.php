@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('account/account');
 
 require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();

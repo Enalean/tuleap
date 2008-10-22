@@ -8,7 +8,6 @@
 require_once('pre.php');
 require_once('bookmarks.php');
 
-$Language->loadLanguageMsg('my/my');
 
 $request =& HTTPRequest::instance();
 

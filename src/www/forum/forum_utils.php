@@ -20,10 +20,9 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserHelper.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 function forum_header($params) {
-    global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$sys_datefmt,$et,$et_cookie,$Language;
+    global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
     $hp = CodeX_HTMLPurifier::instance(); 
     $uh = new UserHelper();
   
@@ -71,7 +70,7 @@ function forum_header($params) {
 				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.
                 $hp->purify($uh->getDisplayNameFromUserId(db_result($result,0,'submitted_by')), CODEX_PURIFIER_CONVERT_HTML) .
 				'<BR>
-				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($sys_datefmt,db_result($result,0,'date')).'<BR>
+				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')).'<BR>
 				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
 				<P>
 				'. util_make_links( nl2br( db_result($result,0,'details')), $group_id);
@@ -267,7 +266,7 @@ function show_thread($thread_id,$et=0) {
 
 		$et is whether or not the forum is "expanded" or in flat mode
 	*/
-	global $total_rows,$sys_datefmt,$is_followup_to,$subject,$forum_id,$current_message;
+	global $total_rows,$is_followup_to,$subject,$forum_id,$current_message;
     $ret_val = '';
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
 		"FROM forum,user WHERE forum.thread_id='".db_ei($thread_id)."' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
@@ -310,7 +309,7 @@ function show_thread($thread_id,$et=0) {
 
 			$ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
 				'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
-				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 			/*
 				Show the body/message if requested
 			*/
@@ -336,7 +335,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 		If there are, it calls itself, incrementing $level
 		$level is used for indentation of the threads.
 	*/
-	global $total_rows,$sys_datefmt,$forum_id,$current_message;
+	global $total_rows,$forum_id,$current_message;
 
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
 		"FROM forum,user WHERE forum.thread_id=".db_ei($thread_id)." AND user.user_id=forum.posted_by AND forum.is_followup_to=".db_ei($msg_id)." ".
@@ -374,7 +373,7 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 
 			$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 				'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
-				'<TD>'.format_date($sys_datefmt,db_result($result,$i,'date')).'</TD></TR>';
+				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 
 			/*
 				Show the body/message if requested

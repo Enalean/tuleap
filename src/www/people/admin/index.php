@@ -9,7 +9,6 @@
 require_once('pre.php');
 require('../people_utils.php');
 
-$Language->loadLanguageMsg('people/people');
 
 if (user_ismember(1,'A')) {
 

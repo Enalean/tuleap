@@ -14,7 +14,6 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 

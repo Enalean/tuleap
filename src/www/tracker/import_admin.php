@@ -14,7 +14,6 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 $group_id = $request->getValidated('group_id', 'GroupId');
 $mode = $request->get('mode');

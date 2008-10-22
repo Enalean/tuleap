@@ -16,7 +16,6 @@ class IMViews extends Views {
     function IMViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->iconsPath = $controler->getIconPath();
-        $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
     }
     
 	function getIconsPath() {
@@ -50,7 +49,7 @@ class IMViews extends Views {
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
-        return '<b><a href="javascript:help_window(\''.get_server_url().'/plugins/IM/documentation/'.user_get_languagecode().'/'.$section.'\');">'.$GLOBALS['Language']->getText('global', 'help').'</a></b>';
+        return '<b><a href="javascript:help_window(\''.get_server_url().'/plugins/IM/documentation/'.$GLOBALS['Language']->getLanguageCode().'/'.$section.'\');">'.$GLOBALS['Language']->getText('global', 'help').'</a></b>';
     }
     
     function _getTitle() {

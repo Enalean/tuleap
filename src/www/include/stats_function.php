@@ -8,10 +8,9 @@
 
 require_once('HTML_Graphs.php');
 
-$Language->loadLanguageMsg('include/include');
 
 function stats_sf_stats() {
-  global $sys_datefmt,$Language;
+  global $Language;
 /*
 	pages/day
 */
@@ -80,7 +79,7 @@ function stats_sf_stats() {
 
 		for ($i=0;$i<$rows;$i++) {
 			//convert the dates and add to an array
-			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
+			$dates[$i]=format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,0));
 		}
 		GraphIt($dates,$count,$Language->getText('include_stats_function','new_proj_added'));
 	}
@@ -103,7 +102,7 @@ function stats_sf_stats() {
 
 		for ($i=0;$i<$rows;$i++) {
 			//convert the dates and add to an array
-			$dates[$i]=format_date($sys_datefmt,db_result($result,$i,0));
+			$dates[$i]=format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,0));
 		}
 		GraphIt($dates,$count,$Language->getText('include_stats_function','new_user_added'));
 	}

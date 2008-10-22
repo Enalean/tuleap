@@ -43,9 +43,9 @@ if($request->existAndNonEmpty('form_sticky_login')) {
     $form_sticky_login = (int) $request->get('form_sticky_login');
 }
 
-$language_id = 1;
-if($request->existAndNonEmpty('language_id')) {
-    $language_id= (int) $request->get('language_id');
+$language_id = $GLOBALS['sys_lang'];
+if($request->existAndNonEmpty('language_id') && $GLOBALS['Language']->isLanguageSupported($request->get('language_id'))) {
+    $language_id= $request->get('language_id');
 }
 
 // we check if the given value is authorized
@@ -72,7 +72,7 @@ db_query("UPDATE user SET "
          . "fontsize=" . $user_fontsize . ","
          . "theme='" . db_es($user_theme) . "',"
          . "sticky_login=" . $form_sticky_login . ","
-         . "language_id=" . $language_id . " WHERE "
+         . "language_id='" . db_es($language_id) . "' WHERE "
          . "user_id=" . user_getid());
 
 // Preferences

@@ -33,7 +33,6 @@
 
 require_once('common/event/EventManager.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 //
 //  make sure this person has permission to view artifacts

@@ -12,7 +12,6 @@ require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require('./rss_utils.inc');
-$Language->loadLanguageMsg('export/export');
 
 header("Content-Type: text/xml");
 print '<?xml version="1.0" encoding="UTF-8" ?>

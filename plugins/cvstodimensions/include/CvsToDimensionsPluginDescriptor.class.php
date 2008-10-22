@@ -8,7 +8,6 @@
  */
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('cvstodimensions', 'cvstodimensions');
 
 class CvsToDimensionsPluginDescriptor extends PluginDescriptor {
     

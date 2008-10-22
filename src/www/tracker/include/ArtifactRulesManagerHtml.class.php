@@ -26,7 +26,6 @@
 require_once('common/tracker/ArtifactRulesManager.class.php');
 require_once('ArtifactTypeHtml.class.php');
 require_once('ArtifactRuleValueJavascript.class.php');
-$Language->loadLanguageMsg('tracker/tracker');
 
 /**
 * Html view of the manager.

@@ -11,7 +11,6 @@
 
 //require_once('common/tracker/ArtifactField.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 require_once('common/include/HTTPRequest.class.php');
 
@@ -361,7 +360,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_none=false, $text_none=0,
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0) {
-	    global $sys_datefmt,$Language;
+	    global $Language;
         $hp = CodeX_HTMLPurifier::instance();
         //Use url parameters to populate fields
         if (!$ro) {
@@ -485,7 +484,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    		$output .= ( ($value == 0) ? '' : format_date("Y-m-j",$value));
 			else
 		    		if ($ro) {
-					$output .= format_date($sys_datefmt,$value);
+					$output .= format_date($GLOBALS['Language']->getText('system', 'datefmt'),$value);
 		    		} else {
 					$output .= $this->fieldDate((($value == 0) ? '' : format_date("Y-m-j",$value,'')));
 		    		}

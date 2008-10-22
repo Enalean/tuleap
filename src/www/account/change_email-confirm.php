@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/event/EventManager.class.php');
 
-$Language->loadLanguageMsg('account/account');
 
 $em =& EventManager::instance();
 $em->processEvent('before_change_email-confirm', array());

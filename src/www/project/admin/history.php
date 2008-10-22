@@ -9,7 +9,6 @@
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 

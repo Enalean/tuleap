@@ -63,7 +63,6 @@ class GraphOnTrackers_Chart_LineDataBuilder extends ChartDataBuilder {
 
     function getMonthHeaders(){
 
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers_line', 'graphontrackers_line');
         return array($GLOBALS['Language']->getText('plugin_graphontrackers_line_month','january'),
                      $GLOBALS['Language']->getText('plugin_graphontrackers_line_month','february'),
                      $GLOBALS['Language']->getText('plugin_graphontrackers_line_month','march'),

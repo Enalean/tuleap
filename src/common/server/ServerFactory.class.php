@@ -15,7 +15,6 @@ require_once('common/server/Server.class.php');
 class ServerFactory {
     
     function ServerFactory() {
-        $GLOBALS['Language']->loadLanguageMsg('server/server');
     }
     function getAllServers() {
         $servers = array();

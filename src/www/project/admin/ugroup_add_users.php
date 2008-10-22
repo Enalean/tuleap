@@ -12,7 +12,6 @@
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 $request =& HTTPRequest::instance();
 

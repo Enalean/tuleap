@@ -32,7 +32,6 @@ require('../include/ArtifactHtml.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 $sanitizer =& new SimpleSanitizer();
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 $request =& HTTPRequest::instance();
 

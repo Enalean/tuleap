@@ -11,7 +11,6 @@ require_once('HTML_Graphs.php');
 require_once('www/survey/survey_utils.php');
 require_once('common/survey/SurveySingleton.class.php');
 
-$Language->loadLanguageMsg('survey/survey');
 $survey =& SurveySingleton::instance();
 
 $is_admin_page='y';

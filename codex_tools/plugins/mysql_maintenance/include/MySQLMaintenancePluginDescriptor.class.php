@@ -2,7 +2,6 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('MySQLMaintenance', 'mysql_maintenance');
 
 class MySQLMaintenancePluginDescriptor extends PluginDescriptor {
     

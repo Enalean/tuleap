@@ -8,7 +8,6 @@
 require_once('pre.php');
 require('./project_stats_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 if (!isset($groupname) ) {
     $groupname = '';

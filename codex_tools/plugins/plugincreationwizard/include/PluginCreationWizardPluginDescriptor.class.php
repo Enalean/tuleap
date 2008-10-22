@@ -8,7 +8,6 @@
  */
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('plugincreationwizard', 'plugincreationwizard');
 
 class PluginCreationWizardPluginDescriptor extends PluginDescriptor {
     

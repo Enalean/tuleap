@@ -9,7 +9,6 @@
 require_once('pre.php');    
 require_once('account.php');
 $GLOBALS['HTML']->includeCalendarScripts();
-$Language->loadLanguageMsg('admin/admin');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 

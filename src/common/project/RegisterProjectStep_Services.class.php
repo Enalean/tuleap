@@ -26,9 +26,6 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
         $servers = $sf->getAllServers();
         $can_display_servers = count($servers) > 1;
         
-        $em =& EventManager::instance();
-        $em->processEvent("plugin_load_language_file", null);
-        
         $p =& project_get_object($data['project']['built_from_template']);
         $title_arr=array();
         $title_arr[]=''; //$GLOBALS['Language']->getText('project_admin_editservice','enabled');

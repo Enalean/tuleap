@@ -14,7 +14,6 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {
   global $Language;

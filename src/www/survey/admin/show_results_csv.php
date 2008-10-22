@@ -11,7 +11,6 @@ require_once('pre.php');
 require_once('HTML_Graphs.php');
 require_once('www/survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {

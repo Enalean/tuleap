@@ -10,7 +10,6 @@
 //require_once('common/include/Error.class.php');
 //require_once('common/tracker/ArtifactReportField.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 require_once('common/user/UserManager.class.php');
 require_once('common/dao/ArtifactFieldDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');

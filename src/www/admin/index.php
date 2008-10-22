@@ -12,7 +12,6 @@ require_once('www/stats/site_stats_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$Language->loadLanguageMsg('admin/admin');
 
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
 

@@ -10,7 +10,6 @@
  */
 //require_once('common/include/Error.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactCanned extends Error {
 

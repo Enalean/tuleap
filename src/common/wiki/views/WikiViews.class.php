@@ -26,7 +26,6 @@ function exit_wiki_empty() {
     GLOBAL $HTML;
 	global $group_id;
 	
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
 
 	$go = group_get_object($group_id);
 	$uname = $go->getUnixName();
@@ -148,7 +147,6 @@ class WikiViews extends Views {
     * pagePerms - public View
     */
     function _pagePerms($postUrl='') { 
-        $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
 

@@ -7,7 +7,6 @@
 // 
 
 require "pre.php";    
-$Language->loadLanguageMsg('help/help');
 
 $res_cat = db_query("SELECT * FROM trove_cat WHERE trove_cat_id=$helpid");
 if (db_numrows($res_cat)<1) {

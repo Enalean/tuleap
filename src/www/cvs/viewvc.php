@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('viewvc_utils.php');
 require_once('www/cvs/commit_utils.php');
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 if (user_isloggedin()) {
   // be backwards compatible with old viewvc.cgi links that are now redirected

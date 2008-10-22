@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('www/survey/survey_utils.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 

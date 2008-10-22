@@ -11,7 +11,6 @@
 */
 require_once('www/project/admin/permissions.php');
 
-$Language->loadLanguageMsg('docman/docman');
 
 function display_groups_option($group_id=false,$checkedval='xyxy') {
 
@@ -196,7 +195,7 @@ function display_doc_list($group_id) {
  Display list of docs in administration page
 */
 function display_docs($group_id) {
-    global $sys_datefmt, $Language;
+    global $Language;
 
     $query = "select d1.docid, d1.title, d1.doc_group,d1.rank,d1.createdate,d2.groupname "
         ."from doc_data as d1, doc_groups as d2 "

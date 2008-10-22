@@ -10,7 +10,6 @@ require_once('pre.php');
 require_once('account.php');
 session_require(array('isloggedin'=>1));
 
-$Language->loadLanguageMsg('account/account');
 
 // ###### function register_valid()
 // ###### checks for valid register from form post

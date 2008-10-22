@@ -16,7 +16,6 @@ require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once('javascript_helpers.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactTypeHtml extends ArtifactType {
 
@@ -623,7 +622,6 @@ EOS;
                 if ($a_star_is_displayed) {
                     $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ug_may_have_no_access',"/tracker/admin/?group_id=".(int)$this->getGroupID()."&atid=".(int)$this->getID()."&func=permissions&perm_type=tracker");
                 }
-                $GLOBALS['Language']->loadLanguageMsg('project/project');
                 $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
                 //{{{20050602 NTY: removed. what is default permissions ???
                 //$html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
@@ -707,7 +705,6 @@ EOS;
             }
             //end of table
             $html .= "</table>";
-            $GLOBALS['Language']->loadLanguageMsg('project/project');
             $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
             //{{{20050602 NTY: removed. what is default permissions ???
             //$html .= "<input type='submit' name='reset' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def')."\" />";
@@ -2253,7 +2250,7 @@ EOS;
          * @return void
          */
         function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=0) {
-            global $art_field_fact,$sys_datefmt,$sys_max_size_attachment,$Language;
+            global $art_field_fact,$sys_max_size_attachment,$Language;
             $hp = CodeX_HTMLPurifier::instance();
             $fields_per_line=2;
             $max_size=40;

@@ -12,7 +12,6 @@ class CvsToDimensionsPlugin extends Plugin {
 	function CvsToDimensionsPlugin($id) {
 		$this->Plugin($id);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('plugin_load_language_file',         'loadPluginLanguageFile',            false);
         $this->_addHook('cssfile', 'cssFile', false);
 	}
 	
@@ -34,10 +33,6 @@ class CvsToDimensionsPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
-    }
-    
-    function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('cvstodimensions', 'cvstodimensions');
     }
     
     

@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('export/export');
 
 function rss_setscheme() {
 	if ($GLOBALS['scheme'] == "netscape") {

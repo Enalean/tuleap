@@ -8,7 +8,6 @@
 
 require_once('pre.php');    
 
-$Language->loadLanguageMsg('project/project');
 $hp = CodeX_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

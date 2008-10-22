@@ -25,7 +25,6 @@
 require_once('www/project/stats/source_code_access_utils.php');
 require_once('www/project/export/project_export_utils.php');
 
-$Language->loadLanguageMsg('project/project');
 
 // Export files access logs for this group
 function export_file_logs($project, $span, $who) {

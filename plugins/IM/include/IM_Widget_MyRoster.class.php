@@ -17,7 +17,6 @@ class IM_Widget_MyRoster extends Widget {
         $this->Widget('myroster');
         $this->plugin = $plugin;
         $this->request =& HTTPRequest::instance();
-        $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
     }
     function getTitle() {
     return $GLOBALS['Language']->getText('plugin_im', 'my_roster'); 

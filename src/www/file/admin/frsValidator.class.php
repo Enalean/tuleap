@@ -28,7 +28,6 @@ class frsValidator {
     }
 
     function isValidForCreation($release, $group_id) {
-        $GLOBALS['Language']->loadLanguageMsg('file/file');
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         $frsff = new FRSFileFactory();
@@ -61,7 +60,6 @@ class frsValidator {
     }
 
     function isValidForUpdate($release, $group_id) {
-        $GLOBALS['Language']->loadLanguageMsg('file/file');
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         $frsff = new FRSFileFactory();

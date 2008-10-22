@@ -8,7 +8,6 @@
 //  Written for CodeX by Marc Nazarian
 //
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 if ( !user_isloggedin() ) {
 	exit_not_logged_in();

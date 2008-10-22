@@ -48,7 +48,7 @@ INSERT INTO user SET
         people_view_skills = 0, 
         timezone = 'GMT', 
         windows_pw = '', 
-        language_id = 1, 
+        language_id = 'en_US', 
         last_pwd_update = '0', 
         last_access_date = '0';
 

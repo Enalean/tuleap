@@ -20,7 +20,6 @@ class GroupFactory extends Error {
 	 */
 	function GroupFactory() {
             if (isset($GLOBALS['Language']))
-                $GLOBALS['Language']->loadLanguageMsg('include/include');
             $this->Error();
             return true;
 	}

@@ -53,3 +53,23 @@ $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_au
 
 TODO : Déplacer le script de debug dans Layout.class.php
 
+
+ALTER TABLE user CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US' 
+UPDATE user 
+SET language_id = 'fr_FR'
+WHERE language_id = 2;
+
+UPDATE user 
+SET language_id = 'en_US'
+WHERE language_id != 'fr_FR';
+
+ALTER TABLE wiki_group_list CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US'
+UPDATE wiki_group_list 
+SET language_id = 'fr_FR'
+WHERE language_id = 2;
+
+UPDATE wiki_group_list 
+SET language_id = 'en_US'
+WHERE language_id != 'fr_FR';
+
+DROP TABLE supported_languages;

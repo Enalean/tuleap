@@ -11,7 +11,6 @@ if (!$group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
-$Language->loadLanguageMsg('cvs/cvs');
 
 commits_header(array ('title'=>$Language->getText('cvs_browse_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#QueryingCVS'));

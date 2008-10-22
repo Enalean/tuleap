@@ -6,7 +6,6 @@
 //
 // 
 
-  //$Language->loadLanguageMsg('include/include');
 
 function exit_error($title,$text) {
     global $HTML,$Language;

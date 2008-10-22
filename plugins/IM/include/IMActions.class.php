@@ -14,7 +14,6 @@ class IMActions extends Actions{
 	 */
     function IMAction(&$controler, $view=null) {
         $this->Actions($controler);
-        $GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
 	}
 	
 	// {{{ Actions

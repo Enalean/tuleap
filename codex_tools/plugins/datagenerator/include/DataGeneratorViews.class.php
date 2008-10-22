@@ -14,7 +14,6 @@ class DataGeneratorViews extends Views {
     
     function DataGeneratorViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $GLOBALS['Language']->loadLanguageMsg('datagenerator', 'datagenerator');
     }
     
     function header() {

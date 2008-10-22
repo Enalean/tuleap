@@ -13,7 +13,6 @@
 require_once('www/project/admin/permissions.php');
 require_once('common/tracker/ArtifactFieldSetFactory.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 class ArtifactType extends Error {
 
@@ -549,7 +548,7 @@ class ArtifactType extends Error {
 	 *	@return boolean	success.
 	 */
 	function delay($date) {
-		global $sys_datefmt,$Language;
+		global $Language;
 		if (!$this->userIsAdmin()) {
 			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;		

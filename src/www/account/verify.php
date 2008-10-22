@@ -9,7 +9,6 @@
 require_once('pre.php');
 require_once('account.php');  // LJ needed to create unix account
    
-$Language->loadLanguageMsg('account/account');
 
 // ###### function login_valid()
 // ###### checks for valid login from form post

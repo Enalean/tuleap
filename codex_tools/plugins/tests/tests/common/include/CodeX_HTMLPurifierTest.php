@@ -29,19 +29,16 @@ require_once('common/include/CodeX_HTMLPurifier.class.php');
 // Need to create this testversion by hand because with Mock object there is no
 // way to tell them "return the parameter as is".
 // This method to be used only when mandatory (when the is a utils_make_links call).
-class CodeX_HTMLPurifierTestVersion
-extends CodeX_HTMLPurifier {
-    function CodeX_HTMLPurifierTestVersion() {
-        parent::CodeX_HTMLPurifier();
-    }
+class CodeX_HTMLPurifierTestVersion extends CodeX_HTMLPurifier {
+    private static $codex_htmlpurifier_testversion_instance;
     // Need to redfine this method too because the parent one return a
     // 'CodeX_HTMLPurifier' object.
-    function &instance() {
-        static $__codex_htmlpurifiertestversion_instance;
-        if(!$__codex_htmlpurifiertestversion_instance) {
-            $__codex_htmlpurifiertestversion_instance = new CodeX_HTMLPurifierTestVersion();
+    public static function instance() {
+        if (!isset(self::$codex_htmlpurifier_testversion_instance)) {
+            $c = __CLASS__;
+            self::$codex_htmlpurifier_testversion_instance = new $c;
         }
-        return $__codex_htmlpurifiertestversion_instance;
+        return self::$codex_htmlpurifier_testversion_instance;
     }
     function _makeLinks($str, $gid) {
         return $str;

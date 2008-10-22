@@ -11,7 +11,6 @@ require_once('cache.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-$Language->loadLanguageMsg('homepage/homepage');
 
 $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 

@@ -25,7 +25,6 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
-$GLOBALS['Language']->loadLanguageMsg('forum/forum');
 
 if ( !user_isloggedin()) {
     exit_not_logged_in();
@@ -147,7 +146,7 @@ if ($request->valid($vFrm)) {
 		        	'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
 	    	$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
 					'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
-					'<TD>'.format_date($GLOBALS['sys_datefmt'],db_result($result,$i,'date')).'</TD></TR>';	
+					'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';	
   	    	$i++;
         }
 		$ret_val .= '</TABLE><a href="javascript:checkAll(1)">'.$GLOBALS['Language']->getText('tracker_include_report','check_all_items').'</a>'.

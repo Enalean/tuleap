@@ -7,7 +7,6 @@
  * Upgrade
  */
 
-//$Language->loadLanguageMsg('svnupdate/svnupdate');
 
 
 require_once("UpgradeScriptExecution.class.php");

@@ -90,7 +90,6 @@ class CrossReferenceFactory {
     function getHTMLDisplayCrossRefs() {
     	global $Language;
         
-    	$Language->loadLanguageMsg('references/references');
         
     	$artifact_ref_from=array();
     	$artifact_ref_to=array();

@@ -14,8 +14,6 @@ require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 
-$Language->loadLanguageMsg('project/project');
-$Language->loadLanguageMsg('project/register');
 
 $request =& HTTPRequest::instance();
 $current_step = $request->exist('current_step') ? $request->get('current_step') : 0;

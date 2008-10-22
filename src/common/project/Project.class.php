@@ -87,7 +87,6 @@ class Project extends Group {
     */
     function Project($id) {
 	global $Language;
-	$Language->loadLanguageMsg('project/project');
 
         $this->Group($id);
         
@@ -107,9 +106,6 @@ class Project extends Group {
                 $res_row = db_fetch_array($db_res);
                 $short_name=$res_row['short_name'];
                 if (!$short_name) { $short_name=$j;}
-
-                $em =& EventManager::instance();
-                $em->processEvent("plugin_load_language_file", null);
 
 		// needed for localisation
         $matches = array();
@@ -352,7 +348,6 @@ class Project extends Group {
     	$descfields = getProjectsDescFieldsInfos();
     	$hp = CodeX_HTMLPurifier::instance();
     	global $Language;
-    	$Language->loadLanguageMsg('project/project');
     	
     	for($i=0;$i<sizeof($descfields);$i++){
 	

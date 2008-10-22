@@ -26,7 +26,6 @@ require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 require('www/project/admin/include/UserImportHtml.class.php');
 
-$Language->loadLanguageMsg('project/project');
 
 if ( !user_isloggedin()) {
     exit_not_logged_in();

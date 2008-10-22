@@ -8,7 +8,6 @@
 
 require_once('pre.php');
 
-$Language->loadLanguageMsg('project/project');
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

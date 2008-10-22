@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('survey/survey');
 
 function survey_data_survey_create($group_id,$survey_title,$survey_questions,
 				   $is_active, $is_anonymous)

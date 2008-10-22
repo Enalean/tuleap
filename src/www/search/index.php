@@ -13,7 +13,6 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 
-$Language->loadLanguageMsg('search/search');
 
 if ($type_of_search !== "tracker" &&
     $type_of_search !== "wiki") {
@@ -205,7 +204,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "msg_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "subject")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>\n";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"date"))."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
@@ -259,7 +258,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"date"))."</TD></TR>";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -310,7 +309,7 @@ if ($type_of_search == "soft") {
 				. db_result($result, $i, "support_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"open_date"))."</TD></TR>";
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"open_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -365,8 +364,8 @@ if ($type_of_search == "soft") {
 			    ."&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
 				. db_result($result, $i, "summary")."</A></TD>"
 				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-			        . "<TD>".format_date($sys_datefmt,db_result($result, $i, "start_date"))."</TD>"
-				. "<TD>".format_date($sys_datefmt,db_result($result,$i,"end_date"))."</TD></TR>";
+			        . "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, "start_date"))."</TD>"
+				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"end_date"))."</TD></TR>";
 		}
 		echo "</TABLE>\n";
 	}
@@ -535,7 +534,7 @@ if ($type_of_search == "soft") {
                         if ($submitted_field->userCanRead($group_id,$atid))
                             print "<TD>".$arr['user_name']."</TD>";
                         if ($date_field->userCanRead($group_id,$atid))
-                            print "<TD>".format_date($sys_datefmt,$arr['open_date'])."</TD>";
+                            print "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),$arr['open_date'])."</TD>";
                         if ($status_field->userCanRead($group_id,$atid))
                             print "<TD>".$status."</TD>";
                         print "</TR>";
@@ -560,8 +559,8 @@ if ($type_of_search == "soft") {
     } else {
         $language_id = db_fetch_array($result);
         //Build the search pagename in the wiki language
-        if ($language_id[0]== 1){$search_page = 'FullTextSearch';}
-        else if ($language_id[0] == 2) {$search_page = 'RechercheEnTexteIntégral';}
+        if ($language_id[0]== 'en_US'){$search_page = 'FullTextSearch';}
+        else if ($language_id[0] == 'fr_FR') {$search_page = 'RechercheEnTexteIntégral';}
     }
 	$GLOBALS['sys_force_ssl'] = 1;
 	util_return_to('/wiki/index.php?group_id='.$group_id.'&pagename='.$search_page.'&s='.urlencode($_REQUEST['words']));

@@ -27,7 +27,6 @@ require_once('GraphOnTrackers_Line_Chart.class.php');
 class graphontrackers_linePlugin extends Plugin {
     function graphontrackers_linePlugin($id) {
         parent::Plugin($id);
-        $this->_addHook('plugin_load_language_file',            'loadPluginLanguageFile',               false);
         $this->_addHook('graphontrackers_load_chart_factories', 'graphontrackers_load_chart_factories', false);
     }
     
@@ -40,13 +39,6 @@ class graphontrackers_linePlugin extends Plugin {
             $this->pluginInfo =& new GraphOnTrackers_LinePluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-    
-    /**
-     * load the language file of the plugin
-     */
-    function loadPluginLanguageFile($params) {
-        $GLOBALS['Language']->loadLanguageMsg('graphontrackers_line', 'graphontrackers_line');
     }
     
     /**

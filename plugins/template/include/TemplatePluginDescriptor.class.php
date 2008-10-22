@@ -2,7 +2,6 @@
 
 require_once('common/plugin/PluginDescriptor.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('template', 'template');
 
 class TemplatePluginDescriptor extends PluginDescriptor {
     

@@ -5,11 +5,11 @@
  * 
  * 
  *
- * Tests the class String
+ * Tests legacy account_
  */
+
 require_once('common/language/BaseLanguage.class.php');
-$GLOBALS['Language'] = new BaseLanguage();
-$GLOBALS['Language']->loadLanguage('en_US');
+Mock::generate('BaseLanguage');
 
 require_once("account.php");
 
@@ -22,6 +22,12 @@ class AccountTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
 
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
     function testEquals() {
         $this->assertTrue(account_namevalid("abcdef"));
         $this->assertTrue(account_namevalid("abcdef123"));

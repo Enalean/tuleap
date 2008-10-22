@@ -71,7 +71,6 @@ class LdapPlugin extends Plugin {
         // IN  $params['type_of_search']
         // OUT $params['output']
 
-        $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
         $params['output'] .= "\t<OPTION value=\"people_ldap\"".( $params['type_of_search'] == "people_ldap" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_ldap', 'people_ldap')."</OPTION>\n";
     }
 
@@ -224,7 +223,6 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             if(UserLdap::isLdapUser($params['user_id'])) {
                 $params['allow_codex_login'] = false;
-                $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
                 $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
                                                                           'login_pls_use_ldap',
                                                                           array($GLOBALS['sys_name']));
@@ -240,7 +238,6 @@ class LdapPlugin extends Plugin {
      */
     function loginAfterForm($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
             echo $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login_help', array($GLOBALS['sys_email_admin'], $GLOBALS['sys_name']));
         }
     }
@@ -306,7 +303,6 @@ class LdapPlugin extends Plugin {
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            $GLOBALS['Language']->loadLanguageMsg('ldap', 'ldap');
             if(UserLdap::isLdapUser($params['user_id'])) {
                 $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
 

@@ -26,7 +26,6 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     }
     
     function display($params = array()) {
-        $GLOBALS['Language']->loadLanguageMsg('docman', 'docman');
         $this->_header($params);
         $this->_scripts($params);
         $this->_feedback($params);

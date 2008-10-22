@@ -12,7 +12,6 @@
 $FILE_ACCEPTED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_ACCEPTED';
 $FILE_DECLINED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_DECLINED';
 
-$Language->loadLanguageMsg('include/include');
 
 /**
  * Says whether the license terms have already been displayed or not
@@ -42,7 +41,7 @@ function license_already_declined() {
  * @return true
  */
 function license_accepted() {
-    global $FILE_ACCEPTED, $sys_datefmt, $sys_lf, $Language;
+    global $FILE_ACCEPTED, $sys_lf, $Language;
 
     // Open the file and go to the end
     $fp = @fopen($FILE_ACCEPTED,'a+');
@@ -52,7 +51,7 @@ function license_accepted() {
     }
 
     // Write Date in file
-    $msg = $Language->getText('include_license','license_accepted').' '.format_date($sys_datefmt,time()).$sys_lf;
+    $msg = $Language->getText('include_license','license_accepted').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).$sys_lf;
 
     if (fwrite($fp, $msg) == FALSE) {
       exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_write_acc',$FILE_ACCEPTED));
@@ -69,7 +68,7 @@ function license_accepted() {
  * @return true
  */
 function license_declined() {
-    global $FILE_DECLINED, $sys_datefmt, $sys_lf, $Language;
+    global $FILE_DECLINED, $sys_lf, $Language;
 
     // Open the file and go to the end
     $fp = @fopen($FILE_DECLINED,'a+');
@@ -80,7 +79,7 @@ function license_declined() {
 
     // Write Date in file
     $msg = $Language->getText('include_license','license_declined')." ".
-	format_date($sys_datefmt,time()).$sys_lf;
+	format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).$sys_lf;
 
     if (fwrite($fp, $msg) == FALSE) {
       exit_error($Language->getText('global','error'),$Language->getText('include_license','cannot_write_decl',$FILE_DECLINED));

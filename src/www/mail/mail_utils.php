@@ -6,7 +6,6 @@
 //
 // 
 
-$Language->loadLanguageMsg('mail/mail');
 
 function mail_header($params) {
   global $group_id, $Language;

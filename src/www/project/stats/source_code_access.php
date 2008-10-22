@@ -10,7 +10,6 @@ require('../admin/project_admin_utils.php');
 require('./source_code_access_utils.php');
 require('www/project/export/access_logs_export.php');
 
-$Language->loadLanguageMsg('project/project');
 
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));

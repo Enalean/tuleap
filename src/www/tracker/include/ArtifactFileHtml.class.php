@@ -13,7 +13,6 @@
 
 //require_once('common/tracker/ArtifactFile.class.php');
 
-$Language->loadLanguageMsg('tracker/tracker');
 
 class ArtifactFileHtml extends ArtifactFile {
 

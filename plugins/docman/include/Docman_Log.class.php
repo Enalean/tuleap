@@ -103,7 +103,7 @@ class Docman_Log { /* implements EventListener */
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? user_get_name_display_from_id($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        $html .= '<td>'. format_date($GLOBALS['sys_datefmt'], $row['time']) .'</td>';
+                        $html .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';
                         if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];

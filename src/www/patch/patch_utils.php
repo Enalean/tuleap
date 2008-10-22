@@ -111,7 +111,7 @@ function patch_status_box($name='status_id',$checked='xzxz',$text_100='None') {
 }
 
 function show_patchlist ($result,$offset,$set='open') {
-	global $sys_datefmt,$group_id;
+	global $group_id;
 	/*
 		Accepts a result set from the patch table. Should include all columns from
 		the table, and it should be joined to USER to get the user_name.
@@ -153,7 +153,7 @@ function show_patchlist ($result,$offset,$set='open') {
 			'&group_id='.db_result($result, $i, 'group_id').'">'.db_result($result, $i, 'patch_id').'</b></A></TD>'.
 			'<TD class="small">'.db_result($result, $i, 'summary').'</TD>'.
 			'<TD class="small">'.$patch_url.'</TD>'.
-			'<TD class="small">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+			'<TD class="small">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
 			'<TD class="small">'.util_user_link(db_result($result,$i,'submitted_by')).'</TD></TR>';
 
@@ -206,7 +206,7 @@ function get_patch_category_name($string) {
 }
 
 function mail_followup($patch_id,$more_addresses=false) {
-	global $sys_datefmt,$feedback,$sys_lf;
+	global $feedback,$sys_lf;
 	/*
 
 		Send a message to the person who opened this patch and the person it is assigned to
@@ -251,7 +251,7 @@ function mail_followup($patch_id,$more_addresses=false) {
 		if ($result2 && $rows > 0) {
 			$body .= "\n\nFollow-Ups:";
 			for ($i=0; $i<$rows;$i++) {
-				$body .= "\n\nDate: ".format_date($sys_datefmt,db_result($result2,$i,'date'));
+				$body .= "\n\nDate: ".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result2,$i,'date'));
 				$body .= "\nBy: ".db_result($result2,$i,'user_name');
 				$body .= "\n\nComment:\n".util_unconvert_htmlspecialchars(db_result($result2,$i,'old_value'));
 				$body .= "\n-------------------------------------------------------";
@@ -301,7 +301,6 @@ function show_patch_details ($patch_id) {
 	/*
 		Show the details rows from patch_history
 	*/
-	global $sys_datefmt;
 	$sql="select patch_history.field_name,patch_history.old_value,patch_history.date,user.user_name ".
 		"FROM patch_history,user ".
 		"WHERE patch_history.mod_by=user.user_id ".
@@ -325,7 +324,7 @@ function show_patch_details ($patch_id) {
 			echo '<TR class="'. util_get_alt_row_color($i) .'"><TD>'.
 				nl2br( db_result($result, $i, 'old_value') ) .'</TD>'.
 				'</TD>'.
-				'<TD VALIGN="TOP">'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD VALIGN="TOP">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
 				'<TD VALIGN="TOP">'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 		echo '</TABLE>';
@@ -339,7 +338,6 @@ function show_patchhistory ($patch_id) {
 	/*
 		show the patch_history rows that are relevant to this patch_id, excluding details
 	*/
-	global $sys_datefmt;
 	$sql="select patch_history.field_name,patch_history.old_value,patch_history.date,user.user_name ".
 		"FROM patch_history,user ".
 		"WHERE patch_history.mod_by=user.user_id ".
@@ -380,7 +378,7 @@ function show_patchhistory ($patch_id) {
 
 			} else if ($field == 'close_date') {
 
-				echo format_date($sys_datefmt,db_result($result, $i, 'old_value'));
+				echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'old_value'));
 
 			} else {
 
@@ -388,7 +386,7 @@ function show_patchhistory ($patch_id) {
 
 			}
 			echo '</TD>'.
-				'<TD>'.format_date($sys_datefmt,db_result($result, $i, 'date')).'</TD>'.
+				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
 				'<TD>'.db_result($result, $i, 'user_name').'</TD></TR>';
 		}
 

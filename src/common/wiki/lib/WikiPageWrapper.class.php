@@ -92,7 +92,6 @@ class WikiPageWrapper {
   }
 
   function addNewProjectPage($pagename) {
-    $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
     $projectPageName='ProjectWantedPages';
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
@@ -177,7 +176,6 @@ Upload:num_rev/filename
    *
    */
   function install() {
-      $GLOBALS['Language']->loadLanguageMsg('wiki/wiki');
       if($this->gid == 1) {
           if(!user_is_super_user()) {              
               exit_error($GLOBALS['Language']->getText('global','error'),
@@ -197,14 +195,14 @@ Upload:num_rev/filename
       $desc_en = "Initial wiki document";
       switch ($we->getLanguage_id()){
               // English
-	      case 1:   define('WIKI_PGSRC', 'codexpgsrc');
+	      case 'en_US':   define('WIKI_PGSRC', 'codexpgsrc');
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
 			$we->setName($name_en);
 		        $we->setPage($page_en);
 			$we->setDesc($desc_en);
 			break;
 	      // French   
-	      case 2:   define('WIKI_PGSRC', 'pgsrc');
+	      case 'fr_FR':   define('WIKI_PGSRC', 'pgsrc');
 			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/locale/fr/pgsrc');
 			$we->setName($name_fr);
 		        $we->setPage($page_fr);

@@ -8,7 +8,6 @@
 
 require_once('common/survey/SurveySingleton.class.php');
 
-$Language->loadLanguageMsg('survey/survey');
 
 $is_admin_page='y';
 survey_header(array('title'=>$Language->getText('survey_admin_update_question','edit_a_q'), 'help'=>'AdministeringSurveys.html#CreatingorEditingQuestions'));

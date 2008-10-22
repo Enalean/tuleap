@@ -25,13 +25,11 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     }
     
     function display($data) {
-        $GLOBALS['Language']->loadLanguageMsg('project/project');
         echo '<fieldset><legend style="font-size:1.2em;">Choose the template of the project</legend>';
         include($GLOBALS['Language']->getContent('project/template'));
         
         $rows=db_numrows($this->db_templates);
         if ($rows > 0) {
-            $GLOBALS['Language']->loadLanguageMsg('new/new');
             //echo '<h3>From templates</h3><blockquote>';
             
           $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('register_template','choose'));
@@ -111,7 +109,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
         print '<TR>';
         $check = "";
         $title = '<B>'.  $hp->purify(util_unconvert_htmlspecialchars($group_name), CODEX_PURIFIER_CONVERT_HTML)  .
-        '</B> (' . date($GLOBALS['sys_datefmt_short'], $register_time) . ')';
+        '</B> (' . date($GLOBALS['Language']->getText('system', 'datefmt_short'), $register_time) . ')';
         if ($group_id == '100') {
             $check = "checked";
         } else {

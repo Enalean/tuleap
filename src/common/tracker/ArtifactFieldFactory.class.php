@@ -12,7 +12,6 @@
 //require_once('common/include/Error.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('tracker/tracker');
 
 // Sort by place result
 function art_field_factory_cmp_place($field1, $field2) {

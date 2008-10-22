@@ -14,7 +14,6 @@ class PluginCreationWizardActions extends Actions {
     
     function PluginCreationWizardActions(&$controler, $view=null) {
         $this->Actions($controler);
-        $GLOBALS['Language']->loadLanguageMsg('plugincreationwizard', 'plugincreationwizard');
     }
     
     // {{{ Actions

@@ -8,7 +8,6 @@
 
 require_once('pre.php');  
 
-$Language->loadLanguageMsg('top/top'); 
 
 if ($GLOBALS['type'] == 'downloads_week') {
 	$rankfield = 'downloads_week';

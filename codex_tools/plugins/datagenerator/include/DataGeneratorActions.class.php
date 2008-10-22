@@ -19,8 +19,6 @@ class DataGeneratorActions extends Actions {
 	// {{{ Actions
     function generate() {
         global $Language;
-        $Language->loadLanguageMsg('project/project');
-        $Language->loadLanguageMsg('project/register');
         $request =& HTTPRequest::instance();
         if ($data = $request->get('data')) {
             if (isset($data['users']['generate'])) {

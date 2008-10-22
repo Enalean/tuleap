@@ -8,7 +8,6 @@
 
 require_once('pre.php');    
 
-$Language->loadLanguageMsg('account/account');
 
 $HTML->header(array('title'=>$Language->getText('account_first', 'title', array($GLOBALS['sys_name']))));
 ?>

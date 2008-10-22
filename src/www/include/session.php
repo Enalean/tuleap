@@ -9,13 +9,8 @@
 require_once('common/include/CookieManager.class.php');
 require_once('common/user/UserManager.class.php');
 
-//$Language->loadLanguageMsg('include/include');
 
 $G_SESSION=array();
-
-$ALL_USERS_DATA = array();
-$ALL_USERS_GROUPS = array();
-$ALL_USERS_TRACKERS = array();
 
 function session_login_valid($form_loginname,$form_pw,$allowpending=0) {
     $auth_success     = false;
@@ -392,12 +387,12 @@ function session_login_feedback() {
     $level = 'info';
     if($user->getNbAuthFailure() > 0) {
         $level = 'warning';
-        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['sys_datefmt'], $user->getLastAuthFailure()));
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAuthFailure()));
         $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$user->getNbAuthFailure());
     }
     // Display nothing if no previous record.
     if($user->getPreviousAuthSuccess() > 0) {
-        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['sys_datefmt'], $user->getPreviousAuthSuccess()));
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getPreviousAuthSuccess()));
     }
 }
 

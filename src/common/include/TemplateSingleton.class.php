@@ -25,7 +25,6 @@ class TemplateSingleton {
   function &instance() {
     static $template_instance;
     if (isset($GLOBALS['Language'])) {
-      $GLOBALS['Language']->loadLanguageMsg('include/include');
     }
     if (!$template_instance) {
       $template_instance = new TemplateSingleton();
