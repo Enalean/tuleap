@@ -11,22 +11,10 @@ $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
 if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
 if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
 
+$conn = null;
 function db_connect() {
-    global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
-    $conn_opt = '';
-    if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
-      $conn_opt = MYSQL_CLIENT_SSL;
-    }
-    $conn = mysql_connect($sys_dbhost,$sys_dbuser,$sys_dbpasswd, false, $conn_opt);
-    unset($sys_dbpasswd);
-    if (!$conn) {
-        die('Database Error - Could not connect. ' . mysql_error());
-    }
-    mysql_query("SET NAMES 'utf8'", $conn);
-    $db_selected= mysql_select_db($sys_dbname, $conn);
-    if (!$db_selected) {
-        die ("Database Error - Can't use database $sys_dbname: " . mysql_error());
-    }
+    global $conn;
+    $conn = CodeXDataAccess::instance();
 }
 
 /**
@@ -45,26 +33,14 @@ function getConnection() {
 
 function db_query($sql,$print=0) {
     global $conn;
-    
-    if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
-        $GLOBALS['DEBUG_DBPHP_QUERY_COUNT']++;
-        $GLOBALS['QUERIES'][]=$sql;
-        $nb = isset($GLOBALS['DBSTORE'][md5($sql)]) ? ($GLOBALS['DBSTORE'][md5($sql)]['nb']+1) : 1;
-        $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => $nb);
-        if ($GLOBALS['DBSTORE'][md5($sql)]['nb'] > 1) {
-            $GLOBALS['DBSTORE_BACKTRACE'][md5($sql)][$nb]=debug_backtrace();
-            /*echo '<code>'. $GLOBALS['DBSTORE'][md5($sql)]['sql'] .'</code> have been fetched for the '. $GLOBALS['DBSTORE'][md5($sql)]['nb'] .' times. <br>';
-            $traces = debug_backtrace();
-            foreach($traces as $trace) {
-                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
-            }
-            echo '<!-- ----------------------------------'."\n";
-            var_dump(debug_backtrace());
-            echo ' -->';*/
-        }
+    if ($print) {
+        print "<br>Query is: $sql<br>";
     }
-    if ($print) print "<br>Query is: $sql<br>";
-    $GLOBALS['db_qhandle'] = @mysql_query($sql, $conn);
+    $dar = $conn->fetch($sql);
+    $GLOBALS['db_qhandle'] = $dar->query;
+    if (db_numrows($GLOBALS['db_qhandle'])) {
+        db_reset_result($GLOBALS['db_qhandle']);
+    }
     return $GLOBALS['db_qhandle'];
 }
 
@@ -112,7 +88,7 @@ function db_fetch_array($qhandle = 0) {
 function db_insertid($qhandle) {
 	global $conn;
     if (isset($conn) && $conn) {
-        return @mysql_insert_id($conn);
+        return @mysql_insert_id($conn->db);
     } else {
         return @mysql_insert_id();
     }

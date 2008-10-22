@@ -15,7 +15,7 @@ class CodexDataAccess extends DataAccess {
     function CodexDataAccess() {
       $conn_opt = '';
       if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
-	$conn_opt = MYSQL_CLIENT_SSL;
+          $conn_opt = MYSQL_CLIENT_SSL;
       }
       $this->DataAccess($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'], $GLOBALS['sys_dbname'], $conn_opt);
     }
