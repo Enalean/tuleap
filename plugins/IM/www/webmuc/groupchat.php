@@ -3,7 +3,6 @@
 
 <?php
 require_once('pre.php');
-$GLOBALS['Language']->loadLanguageMsg('IM', 'IM');
 ?>
 
   <head>
