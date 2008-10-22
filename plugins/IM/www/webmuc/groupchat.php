@@ -1,5 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
+<?php
+require_once('pre.php');
+?>
+
   <head>
     <title>JWChat - Groupchat</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -255,7 +260,7 @@ function popMsgs() {
     if (msg.getType() == 'groupchat' && msg.getSubject()) { // set topic
       user.roster.subject = msg.getSubject();
       document.getElementById('room_topic').innerHTML = htmlEnc(msg.getSubject());
-      putMsgHTML("/me has set the topic to: "+msg.getSubject(), mtime, from);
+      putMsgHTML("/me <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_hassetthetopicto'); ?> "+msg.getSubject(), mtime, from);
       return;
     }
 
@@ -585,8 +590,8 @@ onunload = part;
         <tr> <!-- topic -->
           <td colspan=2 class="spaced" style="padding-right: 8px;">
                 <span
-              id="room_name" title="This Room's Name"></span><br><span
-              class="room_topic" title="This Room's Topic">Topic:
+              id="room_name" title="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_alt_roomname'); ?>"></span><br><span
+              class="room_topic" title="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_alt_roomtopic'); ?>"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_topic'); ?>
               <span id="room_topic"></span></span></td>
         </tr>
         <tr>
@@ -667,11 +672,11 @@ onunload = part;
                       width="100%" height=7></td>
                   <td><img src="images/border_corner_topright.gif"
                       width=8 height=7></td>
-                  <td rowspan=3><img src="images/send_button.gif"
+                  <td rowspan=3><img src="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_send_button_img'); ?>"
                       width=101 height=29 
                       onClick="return submitClicked();" 
                       id='submit_button'
-                      title="Submit Message"></td>
+                      title="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_alt_sendbutton'); ?>"></td>
                 </tr>
                 <tr>
                   <td><img src="images/border_left.gif" height="100%"
@@ -684,7 +689,7 @@ onunload = part;
                       onKeyPress="return msgboxKeyPressed(this,event);" 
                       onKeyDown="return msgboxKeyDown(this,event);"
                       onFocus="clearOnFirstFocus(this);" 
-                      value="Click here to start writing!"></td>
+                      value="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_help_startwriting'); ?>"></td>
                   <td><img src="images/border_right.gif" height="100%"
                       width=8></td>
                 </tr>
@@ -707,34 +712,30 @@ onunload = part;
                   <td style="padding-left: 6px;" width="50%"><table
                       width="100%" border=0 cellspacing=0
                       cellpadding=0><tr><td nowrap><label
-                              for="status_selector">Status:
+                              for="status_selector"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status'); ?>
                             </label><select id="status_selector"
                               onChange="setStatus(this);">
                               <option value="available"
-                                class="user_available">Online</option>
+                                class="user_available"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status_online'); ?></option>
                               <option value="chat"
-                                class="user_chat">Free for
-                                Chat</option>
+                                class="user_chat"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status_free'); ?></option>
                               <option value="away"
-                                class="user_away">Away</option>
-                              <option value="xa" class="user_xa">Not
-                                Available</option>
-                              <option value="dnd" class="user_dnd">Do
-                                not Disturb</option>
+                                class="user_away"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status_away'); ?></option>
+                              <option value="xa" class="user_xa"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status_notavailable'); ?></option>
+                              <option value="dnd" class="user_dnd"><?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_status_donotdisturb'); ?></option>
                               <!--option value="offline" class="user_unavailable">Offline</option-->
                             </select></td><td width="100%"
                                             style="padding-left:
                                             4px;"><input type="text"
                               id="status_message" style="width:100%;"
                               onChange="setStatusMessage(this);"
-                              title="Enter a Status Message"
+                              title="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_alt_statusmessage'); ?>"
                               onFocus="clearOnFirstFocus(this);"
-                              value="Enter your status message
-                              here!"></td></tr></table></td>
+                              value="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_statusmessage'); ?>"></td></tr></table></td>
                   <td style="padding-right:6px;" align=right><img
                       src="images/stock_volume.png" width=16 height=16
                       id="toggle_sound_button" alt="Sound"
-                      align=middle title="Toggle Sound"
+                      align=middle title="<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_alt_togglesound'); ?>"
                       onClick="toggleSound(this);"
                       class='actionButton'>
                   </td>
