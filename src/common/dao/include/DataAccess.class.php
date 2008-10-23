@@ -30,7 +30,7 @@ class DataAccess {
     * @param $pass string dbserver user password
     * @param $db string database name
     */
-    function DataAccess($host,$user,$pass,$db,$opt='') {
+    function DataAccess($host,$user,$pass,$db,$opt=0) {
         $this->store = array();
         $this->db = mysql_connect($host,$user,$pass, true, $opt);
         if ($this->db) {
