@@ -58,6 +58,13 @@ class User {
     var $_preferences;
     var $_preferencesdao;
     
+    /**
+     * session hash
+     * By default it is false. Use explicitly setSessionHash()
+     * @see setSessionHash
+     */
+    protected $session_hash;
+    
     function User($id) {
         
         $this->is_super_user = null;
@@ -118,6 +125,8 @@ class User {
             $locale = $this->data_array['language_id'];
         }
         $this->setLocale($locale);
+        
+        $this->session_hash = false;
     }
 
 
@@ -283,7 +292,7 @@ class User {
     }
     
     function isLoggedIn() {
-        return !$this->isAnonymous();
+        return $this->getSessionHash() !== false;
     }
     
     function isValid() {
@@ -409,6 +418,12 @@ class User {
         return $this->data_array['add_date'];
     }
     /**
+     * @return string the last time the user has changed her password
+     */
+    function getLastPwdUpdate() {
+        return $this->data_array['last_pwd_update'];
+    }
+    /**
      * @return string the last access date of the user (timestamp format)
      */
     function getLastAccessDate() {
@@ -511,6 +526,10 @@ class User {
     function getLastAuthSuccess() {
         return $this->data_array['last_auth_success'];
     }
+    function setLastAuthSuccess($last) {
+        $this->data_array['last_auth_success'] = $last;
+        return $this;
+    }
     /**
      * Return the previous authentication success (the one before last auth
      * success).
@@ -519,17 +538,29 @@ class User {
     function getPreviousAuthSuccess() {
         return $this->data_array['prev_auth_success'];
     }
+    function setPreviousAuthSuccess($previous) {
+        $this->data_array['prev_auth_success'] = $previous;
+        return $this;
+    }
     /**
      * @return int Timestamp of the last unsuccessful authencation attempt
      */
     function getLastAuthFailure() {
         return $this->data_array['last_auth_failure'];
     }
+    function setLastAuthFailure($last) {
+        $this->data_array['last_auth_failure'] = $last;
+        return $this;
+    }
     /**
      * @return int Number of authentication failure since the last success.
      */
     function getNbAuthFailure() {
         return $this->data_array['nb_auth_failure'];
+    }
+    function setNbAuthFailure($nb) {
+        $this->data_array['nb_auth_failure'] = $nb;
+        return $this;
     }
     /**
      * isActive - test if the user is active or not
@@ -679,6 +710,23 @@ class User {
         }
         return true;
     }
+    
+    /**
+     * setSessionHash
+     * @param $session_hash string
+     */
+     public function setSessionHash($session_hash) {
+         $this->session_hash = $session_hash;
+     }
+     
+     /**
+      * getSessionHash
+      * @return string
+      */
+     function getSessionHash() {
+         return $this->session_hash;
+     }
+     
 }
 
 ?>

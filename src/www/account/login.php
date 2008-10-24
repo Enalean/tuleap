@@ -66,18 +66,19 @@ if($request->valid(new Valid_WhiteList('stay_in_ssl', array(0,1)))) {
 $success = false;
 $status = null;
 if ($request->isPost()) {
-    list($success, $status) = session_login_valid($_rVar['form_loginname'], $_rVar['form_pw']);
-    if ($success) {
-        account_redirect_after_login();
+    if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
+    } else {
+        $user = UserManager::instance()->login($_rVar['form_loginname'], $_rVar['form_pw']);
+        if ($user->isLoggedIn()) {
+            account_redirect_after_login();
+        }
+        $status = $user->getStatus();
     }
 }
 
-$cookie_manager =& new CookieManager();
-if ($cookie_manager->isCookie('session_hash') && $cookie_manager->getCookie('session_hash')) {
-	//nuke their old session
-    $cookie_manager->removeCookie('session_hash');
-	session_delete($cookie_manager->getCookie('session_hash'));
-}
+//nuke their old session
+UserManager::instance()->logout();
 
 $purifier =& CodeX_HTMLPurifier::instance();
 

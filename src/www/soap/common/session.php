@@ -90,11 +90,11 @@ function login($loginname, $passwd, $version) {
     global $Language;
     
     if (isCompatible($version)) {
-	    list($success, $status) = session_login_valid($loginname,$passwd);
-	    if ($success) {
+        $user = UserManager::instance()->login($loginname, $passwd);
+	    if ($user->isLoggedIn()) {
 	        $return = array(
-	            'user_id'  => session_get_userid(),
-	            'session_hash' => $GLOBALS['session_hash']
+	            'user_id'      => $user->getId(),
+	            'session_hash' => $user->getSessionHash()
 	        );
 	        return $return;
 	    } else {
@@ -118,9 +118,10 @@ function retrieveSession($session_hash, $version) {
     global $Language;
     if (isCompatible($version)) {
 	    if (session_continue($session_hash)) {
+            $user = UserManager::instance()->getCurrentUser();
 	        $return = array(
-	            'user_id'  => session_get_userid(),
-	            'session_hash' => $session_hash
+	            'user_id'      => $user->getId(),
+	            'session_hash' => $user->getSessionHash()
 	        );
 	        return $return;
 	    } else {
@@ -162,11 +163,7 @@ function isCompatible($client_version) {
 function logout($sessionKey) {
     global $session_hash;
     if (session_continue($sessionKey)){
-        if (isset($session_hash)) {
-            session_delete($session_hash);
-        }
-        $cookie_manager =& new CookieManager();
-        $cookie_manager->removeCookie('session_hash');
+        UserManager::instance()->logout();
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'logout');
     }

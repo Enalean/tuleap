@@ -1289,7 +1289,7 @@ function getTrackerList($sessionKey, $group_id) {
  */
 function trackerlist_to_soap($at_arr) {
     global $ath;
-    $user_id = session_get_userid();
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
     $return = array();
     for ($i=0; $i<count($at_arr); $i++) {
         if ($at_arr[$i]->isError()) {
@@ -1315,7 +1315,7 @@ function trackerlist_to_soap($at_arr) {
                 if (!$report_fact || !is_object($report_fact)) {
                     return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactReportFactory', 'getArtifactTypes');
                 }
-                $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], user_getid()));
+                $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], $user_id));
                 
                 $sql = "SELECT COALESCE(sum(af.filesize) / 1024,NULL,0) as total_file_size"
                         ." FROM artifact_file af, artifact a, artifact_group_list agl"
@@ -1370,6 +1370,7 @@ function artifactreportsdesc_to_soap($artifactreportsdesc) {
  */
 function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
         $group = group_get_object($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactType');
@@ -1387,7 +1388,7 @@ function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
             return new SoapFault(get_artifact_type_factory_fault, $at->getErrorMessage(), 'getArtifactType');
         }
         
-    	if ($at->userCanView(session_get_userid())) {
+    	if ($at->userCanView($user_id)) {
         	// The function getArtifactTypes returns only the trackers the user is allowed to view
         	return artifacttype_to_soap($at);
         } else {
@@ -1442,7 +1443,7 @@ function getArtifactTypes($sessionKey, $group_id) {
  */
 function artifacttype_to_soap($at) {
     global $ath;
-    $user_id = session_get_userid();
+    $user_id = UserManager::instance()->getCurrentUser()->getId();
     $return = array();
 
     // number of opend artifact are not part of ArtifactType, so we have to get it with ArtifactTypeFactory (could need some refactoring maybe)
@@ -2021,6 +2022,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
 function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
+        $user_id = UserManager::instance()->getCurrentUser()->getId();
         $grp = group_get_object($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifact');
@@ -2044,7 +2046,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         }
 
         // check the user if he can submit artifacts for this tracker
-        if (!$ath->userCanSubmit(session_get_userid())) {
+        if (!$ath->userCanSubmit($user_id)) {
             return new SoapFault(permission_denied_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'addArtifact');
         }
         
@@ -2061,7 +2063,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         foreach($all_used_fields as $used_field) {
             // We only check the field the user is allowed to submit
             // because the Artifact create function expect only these fields in the array $vfl
-            if ($used_field->userCanSubmit($group_id, $group_artifact_id, session_get_userid())) {
+            if ($used_field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
                 // We skip these 4 fields, because their value is automatically filled
                 if ($used_field->getName() == 'open_date' || $used_field->getName() == 'last_update_date' || $used_field->getName() == 'submitted_by' || $used_field->getName() == 'artifact_id') {
                     continue;

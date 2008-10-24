@@ -143,10 +143,6 @@ require_once('session.php');
 //user functions like get_name, logged_in, etc
 require_once('user.php');
 require_once('common/user/User.class.php');
-if(!IS_SCRIPT) {
-    //determine if they're logged in
-    session_set();
-}
 $current_user = UserManager::instance()->getCurrentUser();
 
 //group functions like get_name, etc

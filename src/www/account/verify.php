@@ -18,7 +18,10 @@ function verify_login_valid()	{
 
     $request =& HTTPRequest::instance();
 
-	if (!$request->existAndNonEmpty('form_loginname')) return 0;
+	if (!$request->existAndNonEmpty('form_loginname')) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
+        return 0;
+    }
 
 	// first check just confirmation hash
 	$res = db_query('SELECT confirm_hash,status FROM user WHERE '
@@ -42,8 +45,8 @@ function verify_login_valid()	{
         return 0;
     }
 
-	// then check valid login	
-	return (session_login_valid($request->get('form_loginname'), $request->get('form_pw'),1));
+	// then check valid login
+    return UserManager::instance()->login($request->get('form_loginname'), $request->get('form_pw'), true);
 }
 
 $request =& HTTPRequest::instance();

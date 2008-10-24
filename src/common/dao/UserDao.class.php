@@ -355,6 +355,101 @@ class UserDao extends DataAccessObject {
                 $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
+    
+    function searchBySessionHashAndIp($session_hash, $ip) {
+        $sql = "SELECT user.*, session_hash, session.ip_addr AS session_ip_addr, session.time AS session_time
+                FROM user INNER JOIN session USING (user_id)
+                WHERE session_hash = ". $this->da->quoteSmart($session_hash);
+        $first_part_of_ip = implode('.', array_slice(explode('.', $ip), 0, 2));
+        $sql .= "
+              AND session.ip_addr LIKE ". $this->da->quoteSmart($first_part_of_ip .'.%');
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @return string the new session_hash
+     */
+    function createSession($user_id, $time) {
+        
+        // concatinate current time, and random seed for MD5 hash
+        // continue until unique hash is generated (SHOULD only be once)
+        do {
+            $hash = md5( $time . rand() . $_SERVER['REMOTE_ADDR'] . microtime() );
+            $sql = "SELECT 1
+                    FROM session
+                    WHERE session_hash = ". $this->da->quoteSmart($hash);
+            $dar = $this->retrieve($sql);
+        } while ($dar && $dar->rowCount() == 1);
+        $sql = sprintf("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES (%s, %s, %d, %d)",
+            $this->da->quoteSmart($hash),
+            $this->da->quoteSmart($_SERVER['REMOTE_ADDR']),
+            $time,
+            $user_id
+        );
+        if ($this->update($sql)) {
+            $this->storeLoginSuccess($user_id, $time);
+        } else {
+            $hash = false;
+        }
+        return $hash;
+    }
+    
+    /** 
+     * Store login success.
+     * 
+     * Store last log-on success timestamp in 'last_auth_success' field and backup
+     * the previous value in 'prev_auth_success'. In order to keep the failure
+     * counter coherent, if the 'last_auth_success' is newer than the
+     * 'last_auth_failure' it means that there was no bad attempts since the last
+     * log-on and 'nb_auth_failure' can be reset to zero.
+     * 
+     * @todo: define a global time object that would give the same time to all
+     * actions on an execution.
+     */
+    function storeLoginSuccess($user_id, $time) {
+        $sql = "UPDATE user 
+                SET nb_auth_failure = 0,
+                    prev_auth_success = last_auth_success,
+                    last_auth_success = ". $this->da->escapeInt($time) .",
+                    ". $this->_getLastAccessUpdate($time) ."
+                WHERE user_id = ". $this->da->escapeInt($user_id);
+        $this->update($sql);
+    }
+    
+    /**
+     * Don't log access if already accessed in the past 6 hours (scalability+privacy)
+     */
+    function _getLastAccessUpdate($time) {
+        return "last_access_date  = IF(". $this->da->escapeInt($time) ." - last_access_date > 21600, ". $this->da->escapeInt($time) .", last_access_date)";
+    }
+    
+    function storeLastAccessDate($user_id, $time) {
+        $sql = "UPDATE user 
+                SET ". $this->_getLastAccessUpdate($time) ."
+                WHERE user_id = ". $this->da->escapeInt($user_id);
+        $this->update($sql);
+    }
+    
+    /**
+     * Store login failure.
+     *
+     * Store last log-on failure and increment the number of failure. If the there
+     * was no bad attemps since the last successful login (ie. 'last_auth_success'
+     * newer than 'last_auth_failure') the counter is reset to 1.
+     */
+    function storeLoginFailure($login, $time) {
+        $sql = "UPDATE user 
+                SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1), 
+                last_auth_failure = ". $this->da->escapeInt($time) ."
+                WHERE user_name = ". $this->da->quoteSmart($login);
+        $this->update($sql);
+    }
+    
+    function deleteSession($session_hash) {
+        $sql = "DELETE FROM session
+                WHERE session_hash = ". $this->da->quoteSmart($session_hash);
+        return $this->update($sql);
+    }
 }
 
 

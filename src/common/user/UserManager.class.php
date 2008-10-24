@@ -13,13 +13,13 @@ class UserManager {
     var $_users;
     var $_userid_bynames;
     var $_userdao;
-    var $_currentuser_id;
+    var $_currentuser;
     
     function UserManager(&$userdao) {
         $this->_users = array();
         $this->_userid_bynames = array();
         $this->_userdao =& $userdao;
-        $this->_currentuser_id = 0;
+        $this->_currentuser = null;
     }
     
     function &instance() {
@@ -38,7 +38,7 @@ class UserManager {
     function &getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
             if ($user_id == 0) {
-                $this->_users[$user_id] =& new User(0);
+                $this->_users[$user_id] = $this->_getUserInstanceFromRow(array('user_id' => 0));
             } else {
                 $dar =& $this->_userdao->searchByUserId($user_id);
                 if ($row = $dar->getRow()) {
@@ -81,10 +81,197 @@ class UserManager {
     }
     
     /**
+     * @param $session_hash string Optional parameter. If given, this will force 
+     *                             the load of the user with the given session_hash. 
+     *                             else it will check from the user cookies & ip
      * @return User the user currently logged in (who made the request)
      */
-    function &getCurrentUser() {
-        return $this->getUserById($this->_currentuser_id);
+    function getCurrentUser($session_hash = false) {
+        if (!isset($this->_currentuser) || $session_hash !== false) {
+            $dar = null;
+            if ($session_hash === false) {
+                $session_hash = $this->_getCookieManager()->getCookie('session_hash');
+            }
+            if ($dar = $this->_userdao->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
+                if ($row = $dar->getRow()) {
+                    $this->_currentuser = $this->_getUserInstanceFromRow($row);
+                    $this->_currentuser->setSessionHash($session_hash);
+                    $this->_userdao->storeLastAccessDate($this->_currentuser->getId(), time());
+                }
+            }
+            if (!isset($this->_currentuser)) {
+                //No valid session_hash/ip found. User is anonymous
+                $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+                $this->_currentuser->setSessionHash(false);
+            }
+            //cache the user
+            $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
+            $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
+        }
+        return $this->_currentuser;
+    }
+    
+    /**
+     * Logout the current user
+     * - remove the cookie
+     * - clear the session hash
+     */
+    function logout() {
+        $user = $this->getCurrentUser();
+        if ($user->getSessionHash()) {
+            $this->_userdao->deleteSession($user->getSessionHash());
+            $user->setSessionHash(false);
+            $this->_getCookieManager()->removeCookie('session_hash');
+        }
+    }
+    
+    /**
+     * Login the user
+     * @param $name string The login name submitted by the user
+     * @param $pwd string The password submitted by the user
+     * @param $allowpending boolean True if pending users are allowed (for verify.php). Default is false
+     * @return User Registered user or anonymous if the authentication failed
+     */
+    function login($name, $pwd, $allowpending = false) {
+        $logged_in = false;
+        $now = time();
+        
+        $auth_success     = false;
+        $auth_user_id     = null;
+        $auth_user_status = null;
+        
+        $params = array();
+        $params['loginname']        = $name;
+        $params['passwd']           = $pwd;
+        $params['auth_success']     =& $auth_success;
+        $params['auth_user_id']     =& $auth_user_id;
+        $params['auth_user_status'] =& $auth_user_status;
+        $em =& EventManager::instance();
+        $em->processEvent('session_before_login', $params);
+        
+        //If nobody answer success, look for the user into the db
+        if ($auth_success || ($dar = $this->_userdao->searchByUserName($name))) {
+            if ($auth_success || ($row = $dar->getRow())) {
+                if ($auth_success) {
+                    $this->_currentuser = $this->getUserById($auth_user_id);
+                } else {
+                    $this->_currentuser = $this->_getUserInstanceFromRow($row);
+                    if ($this->_currentuser->getUserPw() == md5($pwd)) {
+                        //We have the good user, but check that he is allowed to connect
+                        $auth_success = true;
+                        $params = array('user_id'           => $this->_currentuser->getId(),
+                                        'allow_codex_login' => &$auth_success);
+                        $em->processEvent('session_after_login', $params);
+                    }
+                }
+                if ($auth_success) {
+                    $allowed = false;
+                    //Check the status
+                    $status  = $this->_currentuser->getStatus();
+                    if (($status == 'A') || ($status == 'R') || 
+                        ($allowpending && ($status == 'V' || $status == 'W' ||
+                            ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
+                        $allowed =  true;
+                    } else {
+                        if ($status == 'S') { 
+                            //acount suspended
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
+                            $allowed =  false;
+                        }
+                        if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
+                            ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) { 
+                            //account pending
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
+                            $allowed =  false;
+                        } 
+                        if ($status == 'D') { 
+                            //account deleted
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
+                            $allowed =  false;
+                        }
+                        if (($status != 'A')&&($status != 'R')) {
+                            //unacceptable account flag
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
+                            $allowed =  false;
+                        }
+                    }
+                    if ($allowed) {
+                        //Check that password is not expired
+                        if ($password_lifetime = $this->_getPasswordLifetime()) {
+                            $expired = false;
+                            $expiration_date = $now - 3600 * 24 * $password_lifetime;
+                            $warning_date = $expiration_date + 3600 * 24 * 10; //Warns 10 days before
+                            
+                            if ($this->_currentuser->getLastPwdUpdate() < $expiration_date) {
+                                $expired = true;
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session', 'expired_password'));
+                            } else {
+                                //warn the user that its password will expire
+                                if ($this->_currentuser->getLastPwdUpdate() < $warning_date) {
+                                    $GLOBALS['Response']->addFeedback(
+                                        'warning', 
+                                        $GLOBALS['Language']->getText(
+                                            'include_session', 
+                                            'password_will_expire', 
+                                            ceil(($this->_currentuser->getLastPwdUpdate() - $expiration_date) / ( 3600 * 24 ))
+                                        )
+                                    );
+                                }
+                            }
+                            //The password is expired. Redirect the user.
+                            if ($expired) {
+                                $GLOBALS['Response']->redirect('/account/change_pw.php?user_id='.$this->_currentuser->getId());
+                            }
+                        }
+                        //Create the session
+                        if ($session_hash = $this->_userdao->createSession($this->_currentuser->getId(), $now)) {
+                            $logged_in = true;
+                            $this->_currentuser->setSessionHash($session_hash);
+                            
+                            // If permanent login configured then cookie expires in one year from now
+                            $expire = 0;
+                            if ($this->_currentuser->getStickyLogin()) {
+                                $expire = $now + $this->_getSessionLifetime();
+                            }
+                            $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
+                            
+                            // Populate response with details about login attempts.
+                            //
+                            // Always display the last succefull log-in. But if there was errors (number of
+                            // bad attempts > 0) display the number of bad attempts and the last
+                            // error. Moreover, in case of errors, messages are displayed as warning
+                            // instead of info.
+                            $level = 'info';
+                            if($this->_currentuser->getNbAuthFailure() > 0) {
+                                $level = 'warning';
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->_currentuser->getLastAuthFailure()));
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$this->_currentuser->getNbAuthFailure());
+                            }
+                            // Display nothing if no previous record.
+                            if($this->_currentuser->getPreviousAuthSuccess() > 0) {
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->_currentuser->getPreviousAuthSuccess()));
+                            }
+                        }
+                    }
+                } else {
+                    //invalid password or user_name
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
+                    $this->_userdao->storeLoginFailure($name, $now);
+                    //Add a delay when use login fail.
+                    //The delay is 2 sec/nb of bad attempt.
+                    sleep(2 * $this->_currentuser->getNbAuthFailure());
+                }
+            }
+        }
+
+        if (!$logged_in) {
+            $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+        }
+        
+        //cache the user
+        $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
+        $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
+        return $this->_currentuser;
     }
     
     /**
@@ -107,12 +294,30 @@ class UserManager {
         return isset($this->_userid_bynames[$user_name]);
     }
     
+    /**
+     * @return CookieManager
+     */
+    function _getCookieManager() {
+        return new CookieManager();
+    }
     
     /**
-     * Set the id of the user logged in
+     * @return EventManager
      */
-    function setCurrentUserId($user_id) {
-        $this->_currentuser_id = $user_id;
+    function _getEventManager() {
+        return EventManager::instance();
+    }
+    
+    function _getServerIp() {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+    
+    function _getSessionLifetime() {
+        return $GLOBALS['sys_session_lifetime'];
+    }
+    
+    function _getPasswordLifetime() {
+        return $GLOBALS['sys_password_lifetime'];
     }
 }
 
