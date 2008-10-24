@@ -22,7 +22,7 @@
  *
  * 
  */
-require_once ('userGroupExportMembers.class.php');
+require_once ('../include/userGroupExportMembers.class.php');
 require_once ('pre.php');
 
 $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
