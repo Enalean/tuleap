@@ -65,49 +65,58 @@ class User {
      */
     protected $session_hash;
     
-    function User($id) {
+    function User($id, $row = null) {
         
         $this->is_super_user = null;
         $this->id = $id;
         $this->locale = '';
         $this->_preferences = array();
         
-        $this->data_array['user_id']            = 0;
-        $this->data_array['user_name']          = null;
-        $this->data_array['email']              = null;
-        $this->data_array['user_pw']            = null;
-        $this->data_array['realname']           = null;
-        $this->data_array['register_purpose']   = null;
-        $this->data_array['status']             = null;
-        $this->data_array['shell']              = null;
-        $this->data_array['unix_pw']            = null;
-        $this->data_array['unix_status']        = null;
-        $this->data_array['unix_uid']           = null;
-        $this->data_array['unix_box']           = null;
-        $this->data_array['ldap_id']            = null;
-        $this->data_array['add_date']           = null;
-        $this->data_array['confirm_hash']       = null;
-        $this->data_array['mail_siteupdates']   = null;
-        $this->data_array['mail_va']            = null;
-        $this->data_array['sticky_login']       = null;
-        $this->data_array['authorized_keys']    = null;
-        $this->data_array['email_new']          = null;
-        $this->data_array['people_view_skills'] = null;
-        $this->data_array['people_resume']      = null;
-        $this->data_array['timezone']           = null;
-        $this->data_array['windows_pw']         = null;
-        $this->data_array['fontsize']           = null;
-        $this->data_array['theme']              = null;
-        $this->data_array['language_id']        = null;
-        $this->data_array['last_pwd_update']    = null;
-        $this->data_array['last_access_date']   = null;
-        $this->data_array['expiry_date']        = null;
-        $this->data_array['prev_auth_success']  = null;
-        $this->data_array['last_auth_success']  = null;
-        $this->data_array['last_auth_failure']  = null;
-        $this->data_array['nb_auth_failure']    = null;
+        $db_attributes = array(
+            'user_id',
+            'user_name',
+            'email',
+            'user_pw',
+            'realname',
+            'register_purpose',
+            'status',
+            'shell',
+            'unix_pw',
+            'unix_status',
+            'unix_uid',
+            'unix_box',
+            'ldap_id',
+            'add_date',
+            'confirm_hash',
+            'mail_siteupdates',
+            'mail_va',
+            'sticky_login',
+            'authorized_keys',
+            'email_new',
+            'people_view_skills',
+            'people_resume',
+            'timezone',
+            'windows_pw',
+            'fontsize',
+            'theme',
+            'language_id',
+            'last_pwd_update',
+            'last_access_date',
+            'expiry_date',
+            'prev_auth_success',
+            'last_auth_success',
+            'last_auth_failure',
+            'nb_auth_failure',
+        );
+        foreach($db_attributes as $key) {
+            $this->data_array[$key] = null;
+            if (isset($row[$key])) {
+                $this->data_array[$key] = $row[$key];
+            }
+        }
         
-        if ($this->fetchData($id)) { 
+        if ($id) {
+            $this->fetchData($id); 
             $is_anonymous = false;
         } else { //Passage en anonymous
             $this->id           = 0;
@@ -137,14 +146,6 @@ class User {
     */
     function fetchData($id) {
       
-      $sql = "SELECT * FROM user WHERE user_id = $id";
-      $db_res = db_query($sql);
-      if (db_numrows($db_res) != 1) {
-        return false;
-      }
-      $this->data_array = db_fetch_array($db_res);
-      
-
       $this->group_data = array();
       $sql = "SELECT * FROM user_group WHERE user_id = $id";
       $db_res = db_query($sql);

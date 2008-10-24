@@ -76,7 +76,7 @@ class UserManager {
     }
     
     function &_getUserInstanceFromRow($row) {
-        $u =& new User($row['user_id']/*, $row */);
+        $u =& new User($row['user_id'], $row);
         return $u;
     }
     
