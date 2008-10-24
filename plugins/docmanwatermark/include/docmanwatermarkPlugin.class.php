@@ -46,7 +46,7 @@ class DocmanWatermarkPlugin extends Plugin {
         $this->_addHook('plugin_docman_file_before_download', 'stampFile', false);
         $this->_addHook('plugin_docman_after_admin_menu', 'addAdminMenuWatermark', false);
         $this->_addHook('plugin_docman_after_dispacher', 'dispachToController', false);
-        $this->_addHook('plugin_docman_after_metadata_clone', 'importWatermarkMetadataSettings', false);
+        $this->_addHook('plugin_docman_after_metadata_clone', 'synchronizeWatermarkMetadataSettings', false);
     }
     
     /**
@@ -131,15 +131,15 @@ class DocmanWatermarkPlugin extends Plugin {
     }
     
     /**
-     *  hook method to import watermark metadata settings
+     *  hook method to synchnonize watermark metadata settings
      */
-    function importWatermarkMetadataSettings($params) {
+    function synchronizeWatermarkMetadataSettings($params) {
         require_once('DocmanWatermark_MetadataFactory.class.php');
+        require_once('DocmanWatermark_MetadataImportFactory.class.php');
         $dwmf = new DocmanWatermark_MetadataFactory();
+        $dwmif = new DocmanWatermark_MetadataImportFactory();
         $mdId = $dwmf->getMetadataIdFromGroupId($params['srcProjectId']);
         if ($mdId == $params['md']->getId()) {
-            require_once('DocmanWatermark_MetadataImportFactory.class.php');
-            $dwmif = new DocmanWatermark_MetadataImportFactory();
             $dwmif->setSrcProjectId($params['srcProjectId']);
             $dwmif->setTargetProjectId($params['targetProjectId']);
             $dwmif->importSettings($params['md']);

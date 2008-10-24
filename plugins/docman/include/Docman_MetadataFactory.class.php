@@ -663,8 +663,8 @@ class Docman_MetadataFactory {
             }
         }
         $event_manager =& EventManager::instance();
-        $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $dstGroupId, 
-                                                                                 'targetProjectId' => $this->groupId,
+        $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $this->groupId, 
+                                                                                 'targetProjectId' => $dstGroupId,
                                                                                  'md'              => $md));        
     }
 
