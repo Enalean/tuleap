@@ -8,6 +8,7 @@
 	$conference_service = $request->get('cs');
 	$room = $request->get('room');
 
+	$group_id = $request->get('group_id');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -17,12 +18,12 @@
     <title>MUCkl</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
-    <script src="../config.js.php"></script>
+    <script src="../config.js.php?group_id=<?php echo $group_id; ?>"></script>
     <script src="config.js"></script>
     <script src="shared.js"></script>
     <script src="browsercheck.js"></script>
     <script src="sounds.js"></script>
-    <script src="roster.js"></script>
+    <script src="roster.js.php?group_id=<?php echo $group_id; ?>"></script>
 
 <!-- JSJaC -->
     <script src="lib/jsjac/jsjac.js"></script>

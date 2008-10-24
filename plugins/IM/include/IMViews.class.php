@@ -88,7 +88,8 @@ class IMViews extends Views {
 	 */
     function chat_room() {
         $request = HTTPRequest::instance();
-    	$project= new Group($request->get('group_id'));
+	$group_id = $request->get('group_id'); 
+    	$project= new Group($group_id);
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();
     	
@@ -112,7 +113,7 @@ class IMViews extends Views {
         echo $GLOBALS['HTML']->getImage('ic/spinner.gif');
         echo '</div>';
 
-        $url = $plugin_path . '/webmuc/muckl.php?username=' . $user_unix_name . '&sessid=' . $sessionId . '&host=' . $server_dns . '&cs=' . $conference_service . '&room=' . $room_name;
+        $url = $plugin_path . '/webmuc/muckl.php?username=' . $user_unix_name . '&sessid=' . $sessionId . '&host=' . $server_dns . '&cs=' . $conference_service . '&room=' . $room_name . '&group_id=' . $group_id;
         echo '<iframe id="mucroom" src="'.$url.'" width="800" height="600" frameborder="0"></iframe>';
 
         echo '<script type="text/javascript" src="mucroom.js"></script>';

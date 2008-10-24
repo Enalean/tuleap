@@ -1,3 +1,8 @@
+<?php
+require_once('pre.php');
+$group_id = $request->get('group_id');
+?>
+
 function RosterGroup(name) {
   this.name = name;
   this.users = new Array();
@@ -134,7 +139,7 @@ function RosterOpenGroupchat(aJid,nick,pass) {
 		user.type = 'groupchat';
   }
 
-	frames['chatW'].location.replace("groupchat.php?jid="+escape(aJid)+"&nick="+escape(nick)+"&pass="+escape(pass));
+	frames['chatW'].location.replace("groupchat.php?jid="+escape(aJid)+"&nick="+escape(nick)+"&pass="+escape(pass)+"&group_id="+<?php echo $group_id; ?>);
 	user.chatW = frames['chatW'];
 }
 
@@ -368,3 +373,4 @@ function GroupchatRoster(targetW) {
 }
 
 GroupchatRoster.prototype = new Roster();
+

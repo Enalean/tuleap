@@ -3,6 +3,8 @@
 
 <?php
 require_once('pre.php');
+
+$group_id = $request->get('group_id');
 ?>
 
   <head>
@@ -11,12 +13,12 @@ require_once('pre.php');
     <script src="shared.js"></script>
     <script src="browsercheck.js"></script>
     <script src="emoticons.js"></script>
-    <script src="../config.js.php"></script>
+    <script src="../config.js.php?group_id=<?php echo $group_id; ?>"></script>
     <script src="config.js"></script>
 
     <script src="switchStyle.js"></script>
 
-    <script src="roster.js"></script>
+    <script src="roster.js.php?group_id=<?php echo $group_id; ?>"></script>
 
     <script src="lib/jsjac/jsjac.js"></script>
     <script>

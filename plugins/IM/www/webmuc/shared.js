@@ -119,6 +119,20 @@ function msgFormat(msg) { // replaces emoticons and urls in a message
   // replace _bla_ 
   msg = msg.replace(/(\s|^)\_([^\*\r\n]+)\_/g,"$1<u>$2</u>");
 
+  // replace Codendi References
+  codendiRefRegexpOtherProject = /(\s|^)(\S+) #([\d]+):(\S+)/g;
+  codendiRefRegexpOtherProjectNotOk = /(\s|^)(\S+) #([\S]+):(\S+)/g;
+  codendiRefRegexpSameProject = /(\s|^)(\S+) #([\S]+)/g;
+  if (codendiRefRegexpOtherProject.test(msg)) {
+    msg = msg.replace(codendiRefRegexpOtherProject,"$1<a href=\"http://" + XMPPDOMAIN + "/goto?key=$2&val=$4&group_id=$3\" target=\"_blank\">$2 #$3:$4</a>");
+  } else {
+    if (! codendiRefRegexpOtherProjectNotOk.test(msg)) {
+      if (codendiRefRegexpSameProject.test(msg)) {
+        msg = msg.replace(codendiRefRegexpSameProject,"$1<a href=\"http://" + XMPPDOMAIN + "/goto?key=$2&val=$3&group_id=" + GROUP_ID  + "\" target=\"_blank\">$2 #$3</a>");
+      }
+    }
+  }
+
   msg = msg.replace(/\n/g,"<br>");
 
   return msg;
