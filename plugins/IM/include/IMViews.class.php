@@ -108,17 +108,23 @@ class IMViews extends Views {
     	$user_unix_name = $user->getName();
         echo '<div id="chatroom">';
         echo '<h2 id="mucroom_title">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_title') .'</h2>';
-       
-        echo '<div id="mucroom_timer">';
-        echo $GLOBALS['Language']->getText('plugin_im','wait_loading');
-        echo $GLOBALS['HTML']->getImage('ic/spinner.gif');
-        echo '</div>';
-
-        $url = $plugin_path . '/webmuc/muckl.php?username=' . $user_unix_name . '&sessid=' . $sessionId . '&host=' . $server_dns . '&cs=' . $conference_service . '&room=' . $room_name . '&group_id=' . $group_id;
-        echo '<iframe id="mucroom" src="'.$url.'" width="800" height="600" frameborder="0"></iframe>';
-
-        echo '<script type="text/javascript" src="mucroom.js"></script>';
-        echo '</div>';
+        
+        $user_projects = $user->getProjects();
+        if (in_array($group_id, $user_projects)) {
+        	
+        	echo '<div id="mucroom_timer">';
+        	echo $GLOBALS['Language']->getText('plugin_im','wait_loading');
+        	echo $GLOBALS['HTML']->getImage('ic/spinner.gif');
+        	echo '</div>';
+        
+			$url = $plugin_path . '/webmuc/muckl.php?username=' . $user_unix_name . '&sessid=' . $sessionId . '&host=' . $server_dns . '&cs=' . $conference_service . '&room=' . $room_name . '&group_id=' . $group_id;
+        	echo '<iframe id="mucroom" src="'.$url.'" width="800" height="600" frameborder="0"></iframe>';
+        	
+        	echo '<script type="text/javascript" src="mucroom.js"></script>';
+        	echo '</div>';
+        } else {
+        	echo '<p class="feedback_error">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_onlymembers').'</p>';
+        }
     }
     
     /**

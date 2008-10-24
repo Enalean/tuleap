@@ -71,6 +71,7 @@ plugin_im	link_im_admin_tool	Administration du serveur Jabber Openfire (login 'a
 
 plugin_im	wait_loading	Merci de patienter pendant le chargement de la page ...
 plugin_im	chatroom_title	Ce salon de discussion vous permet de dialoguer avec les autres membres du projet
+plugin_im	chatroom_onlymembers	Vous devez être membre du projet pour entrer dans le salon de discussion.
 
 plugin_im	muckl_alt_roomname	Nom de cette salle de discussion
 plugin_im	muckl_topic	Sujet :
