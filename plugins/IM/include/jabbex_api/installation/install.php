@@ -925,7 +925,8 @@ class JabbeXInstaller {
 		$this->_add_property("xmpp.httpbind.client.requests.wait", "10");
 		$this->_add_property("xmpp.httpbind.scriptSyntax.enabled", "true");
 		
-		$this->_add_property("xmpp.muc.history.type", "all"); // show the entire chat history to users joining a room.
+		$this->_add_property("xmpp.muc.history.type", "number");	// show 30 last messages when log on chat room
+		$this->_add_property("xmpp.muc.history.maxNumber", "30");
 	}
 	
 	function copyAuthenticationJarFile() {
