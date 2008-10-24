@@ -88,7 +88,8 @@ class IMViews extends Views {
 	 */
     function chat_room() {
         $request = HTTPRequest::instance();
-	$group_id = $request->get('group_id'); 
+
+		$group_id = $request->get('group_id'); 
     	$project= new Group($group_id);
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();

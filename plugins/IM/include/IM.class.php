@@ -73,7 +73,7 @@ class IM extends Controler {
                 if ($user->isMember($group_id)) {
                 	$any = $GLOBALS['Language']->getText('global', 'any');
                 	$start_date = $request->get('log_start_date');
-				    if ($start_date != $any && $start_date!= '') {
+				    if ($start_date != $any && $start_date != '') {
 				    	$r = new Rule_Date();
 				    	if (! $r->isValid($start_date)) {
 				    		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im','date_format_error', array($start_date)));
