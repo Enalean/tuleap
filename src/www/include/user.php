@@ -206,12 +206,13 @@ function user_get_name_display_from_unix($user_name) {
 
 //Deprecated. Use user->getTimezone() instead
 function user_get_timezone() {
-	if (user_isloggedin()) {
-		$result=user_get_result_set(user_getid());
-		return db_result($result,0,'timezone');
-	} else {
-		return '';
-	}
+    $current_user = UserManager::instance()->getCurrentUser();
+    if ($current_user->isLoggedIn()) {
+        $result=user_get_result_set(user_getid());
+        return $current_user->getTimezone();
+    } else {
+        return '';
+    }
 }
 
 //Deprecated. Use User->setPreference() instead.

@@ -175,9 +175,9 @@ if(!IS_SCRIPT) {
 */
 //set up the user's timezone if they are logged in
 if (user_isloggedin()) {
-	putenv('TZ='.user_get_timezone());
+    putenv('TZ='.$current_user->getTimezone());
 } else {
-	//just use pacific time as always
+    //just use pacific time as always
 }
 
 //Set up the vars and theme functions 
