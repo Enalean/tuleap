@@ -1074,16 +1074,13 @@ EOS;
             $('stacktrace_alternate_$key').update('');
             </script>";
                         echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
-                        for ($i=2; $i<=$GLOBALS['DBSTORE'][$key]['nb']; $i++) {
+                        for ($i = 0; $i < $GLOBALS['DBSTORE'][$key]['nb']; ++$i) {
                             echo "<p>\n";
-                            $traces = $GLOBALS['DBSTORE_BACKTRACE'][$key][$i];
+                            $traces = $GLOBALS['DBSTORE'][$key][$i];
                       	    foreach($traces as $trace) {
-            	                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. $trace['class'] .'::'. $trace['function'] ."</code>\n<br />";
+            	                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n<br />";
             	            }
-       	     	            /*echo '<!-- ----------------------------------'."\n";
-       	     	            var_dump($traces);
-        	                echo ' -->';*/
-                                                    }
+                        }
                         echo "</div>";
                     }
                 }
