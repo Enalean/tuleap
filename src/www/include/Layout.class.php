@@ -1031,15 +1031,39 @@ EOS;
                 echo $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] + $GLOBALS['DEBUG_DAO_QUERY_COUNT'];
                 echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .")<br>";
                 echo "Page generated in ".$debug_compute_tile." seconds</debug>\n";
-                echo "<br>Queries:\n";
                 
-                // Display all queries
-                //print_r($GLOBALS['QUERIES']);
+                // Display all queries used to generate the page
+                /*
+                echo "<br>Queries:\n";
+                echo '<pre>';
+                print_r($GLOBALS['QUERIES']);
+                echo '</pre>';
+                */
+                
+                //Print the backtrace of specific queries
+                /*
+                $specific_queries = array(10);
+                $i = 0;
+                foreach($GLOBALS['DBSTORE'] as $d) {
+                    if (in_array($i++, $specific_queries)) {
+                        $traces = $d[0];
+                        foreach($traces as $trace) {
+                            echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n<br />";
+                        }
+                        echo '<br/>';
+                    }
+                }
+                */
                 
                 // Display queries executed more than once
+                $title_displayed = false;
                 foreach ($GLOBALS['DBSTORE'] as $key => $value) {
                     if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
-                        echo "<br><legend>\n";
+                        if (!$title_displayed) {
+                            echo '<p>Queries executed more than once :</p>';
+                            $title_displayed = true;
+                        }
+                        echo "<legend>\n";
                         echo $GLOBALS['HTML']->getImage(
                         	'ic/toggle_plus.png', 
                             array(
