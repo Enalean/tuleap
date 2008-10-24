@@ -154,6 +154,7 @@ class User {
           $this->group_data[$row['group_id']] = $row;
         }
       }
+      $this->is_super_user = isset($this->group_data[1]['admin_flags']) && $this->group_data[1]['admin_flags'] == 'A';
       
       $this->tracker_data = array();
       $sql = "SELECT group_artifact_id, perm_level FROM artifact_perm WHERE user_id = $id";
@@ -317,15 +318,6 @@ class User {
 
 
     function isSuperUser() {
-        if($this->is_super_user === null) {
-            $sql="SELECT * FROM user_group WHERE user_id='". $this->data_array['user_id'] ."' AND group_id='1' AND admin_flags='A'";
-            $result=db_query($sql);
-            if ($result && db_numrows($result) > 0) {
-                $this->is_super_user = true;
-            } else {
-                $this->is_super_user = false;
-            }
-        }
         return $this->is_super_user;
     }
     
