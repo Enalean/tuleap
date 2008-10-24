@@ -1038,22 +1038,25 @@ EOS;
                 echo '<pre>';
                 print_r($GLOBALS['QUERIES']);
                 echo '</pre>';
-                */
+                /**/
                 
                 //Print the backtrace of specific queries
                 /*
-                $specific_queries = array(10);
+                echo '<pre>';
+                $specific_queries = array(48,49);
                 $i = 0;
                 foreach($GLOBALS['DBSTORE'] as $d) {
+                    //echo $i ."\t". $d['sql'] ."\n";
                     if (in_array($i++, $specific_queries)) {
-                        $traces = $d[0];
+                        $traces = $d['trace'][0];
                         foreach($traces as $trace) {
-                            echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n<br />";
+                            echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
                         }
-                        echo '<br/>';
+                        echo "\n";
                     }
                 }
-                */
+                echo '</pre>';
+                /**/
                 
                 // Display queries executed more than once
                 $title_displayed = false;
@@ -1098,23 +1101,51 @@ EOS;
             $('stacktrace_alternate_$key').update('');
             </script>";
                         echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
-                        for ($i = 0; $i < $GLOBALS['DBSTORE'][$key]['nb']; ++$i) {
-                            echo "<p>\n";
-                            $traces = $GLOBALS['DBSTORE'][$key][$i];
-                      	    foreach($traces as $trace) {
-            	                echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n<br />";
-            	            }
-                        }
+                        $this->_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
                         echo "</div>";
                     }
                 }
+                
 		echo "</pre>\n";
         }
           
         echo '</body>';
         echo '</html>';
 	}
-
+    function _debug_backtraces($backtraces) {
+        $paths = array();
+        foreach($backtraces as $b) {
+            $this->_debug_backtrace_rec($paths, array_reverse($b));
+        }
+        echo '<table>';
+        $this->_debug_display_paths($paths);
+        echo '</table>';
+    }
+    function _debug_backtrace_rec(&$paths, $trace) {
+        if (count($trace)) {
+            $file = substr($trace[0]['file'], strlen($GLOBALS['codex_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
+            $this->_debug_backtrace_rec($paths[$file], array_slice($trace, 1));
+        }
+    }
+    function _debug_display_paths($paths, $padding = 0) {
+        if (is_array($paths)) {
+            $color = "black";
+            if (count($paths) > 1) {
+                $color = "red";
+            }
+            foreach($paths as $p => $next) {
+                echo '<tr style="color:'. $color .'">';
+                echo '<td style="padding-left:'. $padding .'px;">';
+                echo substr($p, 0, strpos($p, ' '));
+                echo '</td>';
+                echo '<td>';
+                echo substr($p, strpos($p, ' '));
+                echo '</td>';
+                echo '</tr>';
+                $this->_debug_display_paths($next, $padding+20);
+            }
+        }
+    }
         function pv_header($params) {
 	        $this->generic_header_start($params); 
                 $this->generic_header_end($params); 

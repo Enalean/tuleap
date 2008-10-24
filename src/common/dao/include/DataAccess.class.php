@@ -55,9 +55,9 @@ class DataAccess {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
-                $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => 0);
+                $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => 0, 'trace' => array());
             }
-            $GLOBALS['DBSTORE'][md5($sql)][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = debug_backtrace();
+            $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = debug_backtrace();
         }
         $dar = new DataAccessResult($this,mysql_query($sql,$this->db));
         return $dar;
