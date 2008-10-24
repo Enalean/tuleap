@@ -208,7 +208,6 @@ function user_get_name_display_from_unix($user_name) {
 function user_get_timezone() {
     $current_user = UserManager::instance()->getCurrentUser();
     if ($current_user->isLoggedIn()) {
-        $result=user_get_result_set(user_getid());
         return $current_user->getTimezone();
     } else {
         return '';
