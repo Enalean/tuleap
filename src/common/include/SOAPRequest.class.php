@@ -13,5 +13,8 @@ class SOAPRequest extends CodeX_Request {
     function SOAPRequest($params) {
         parent::CodeX_Request($params);
     }
+    
+    function registerShutdownFunction() {
+    }
 }
 ?>
