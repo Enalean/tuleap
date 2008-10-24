@@ -66,37 +66,39 @@ if ($request->isAjax()) {
                 require_once('tracker/include/ArtifactHtml.class.php');
                 require_once('tracker/include/ArtifactFieldHtml.class.php');
                 $at = new ArtifactType(project_get_object($group_id),$atid);
-                $art_field_fact = new ArtifactFieldFactory($at);
-                $ah=new ArtifactHtml($at,$aid);
-                
-                $uh = new UserHelper();
-                
-                $values = array();
-                foreach(array('summary', 'submitted_by', 'status_id') as $field_name) {
-                    $field = $art_field_fact->getFieldFromName($field_name);
-                    if ($field->userCanRead($group_id, $atid)) {
-                        
-                        if ( $field->isMultiSelectBox() ) {
-                                $field_value = $field->getValues($ah->getID());
-                        } else {
-                                $field_value = $ah->getValue($field_name);
-                        }
-                        
-                        $field_html = new ArtifactFieldHtml($field);
-                        
-                        if ($field->getName() == 'submitted_by') {
-                            $value = $uh->getDisplayNameFromUserId($field_value);
+                if (!$at->isError() && $at->isValid()) {
+                    $art_field_fact = new ArtifactFieldFactory($at);
+                    $ah=new ArtifactHtml($at,$aid);
+                    
+                    $uh = new UserHelper();
+                    
+                    $values = array();
+                    foreach(array('summary', 'submitted_by', 'status_id') as $field_name) {
+                        $field = $art_field_fact->getFieldFromName($field_name);
+                        if ($field->userCanRead($group_id, $atid)) {
                             
-                            $open_date = $art_field_fact->getFieldFromName($field_name);
-                            if ($field->userCanRead($group_id, $atid)) {
-                                $value .= ', '. util_time_ago_in_words($ah->getValue('open_date'));
+                            if ( $field->isMultiSelectBox() ) {
+                                    $field_value = $field->getValues($ah->getID());
+                            } else {
+                                    $field_value = $ah->getValue($field_name);
                             }
-                        } else {
-                            $value = $field_html->display($at->getID(),$field_value,false,false,true);
+                            
+                            $field_html = new ArtifactFieldHtml($field);
+                            
+                            if ($field->getName() == 'submitted_by') {
+                                $value = $uh->getDisplayNameFromUserId($field_value);
+                                
+                                $open_date = $art_field_fact->getFieldFromName($field_name);
+                                if ($field->userCanRead($group_id, $atid)) {
+                                    $value .= ', '. util_time_ago_in_words($ah->getValue('open_date'));
+                                }
+                            } else {
+                                $value = $field_html->display($at->getID(),$field_value,false,false,true);
+                            }
+                            
+                            $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
+                            $values[] = '<tr><td>'. $field_html->labelDisplay() .'</td><td>'. $value .'</td></tr>';
                         }
-                        
-                        $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
-                        $values[] = '<tr><td>'. $field_html->labelDisplay() .'</td><td>'. $value .'</td></tr>';
                     }
                 }
                 
