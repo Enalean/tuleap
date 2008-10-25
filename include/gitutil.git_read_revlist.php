@@ -11,7 +11,7 @@
 
 function git_read_revlist($proj,$head,$count)
 {
-	$revs = git_rev_list($proj,$head,$count);
+	$revs = trim(git_rev_list($proj,$head,$count));
 	$revlist = explode("\n",$revs);
 	return $revlist;
 }
