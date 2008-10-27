@@ -181,19 +181,19 @@ class IMDao extends DataAccessObject {
 			         		$admin_affiliation = self::OPENFIRE_ADMIN_AFFILIATION;
 			         		$super_admin_affiliation = self::OPENFIRE_SUPER_ADMIN_AFFILIATION;
 			         		
-			         		$creation_date=''.round(microtime(true));
-			         	 	$creation_date=$this->da->quoteSmart($creation_date);
+			         		$creation_date=''.round(1000*microtime(true));
+			         	 	$creation_date=$this->da->quoteSmart($creation_date, 'force_string');
 			         	 	//echo $creation_date;
-					  		$modification_date=''.round(microtime(true));
-					  		$modification_date=$this->da->quoteSmart($modification_date);
+					  		$modification_date=''.round(1000*microtime(true));
+					  		$modification_date=$this->da->quoteSmart($modification_date, 'force_string');
 					  		$short_name='';
 					  		$public_name='';
 					  		$owner='';
 					  		$description='';
 					  		$locked_date = '000000000000000';
-					  		$locked_date = $this->da->quoteSmart($locked_date);
-					  		$empty_date=''.round(microtime(true));
-					  		$empty_date=$this->da->quoteSmart($empty_date);
+					  		$locked_date = $this->da->quoteSmart($locked_date, 'force_string');
+					  		$empty_date=''.round(1000*microtime(true));
+					  		$empty_date=$this->da->quoteSmart($empty_date, 'force_string');
 					  		$change_subject=1;
 					  		$change_subject=$this->da->quoteSmart($change_subject);
 					  		$max_user=0;
@@ -206,8 +206,6 @@ class IMDao extends DataAccessObject {
 					  		$members_only=$this->da->quoteSmart($members_only);
 					  		$can_invite=1;
 					  		$can_invite=$this->da->quoteSmart($can_invite);
-					  		$room_pwd = NULL;
-					  		$room_pwd = $this->da->quoteSmart($room_pwd);
 					  		$can_discover_JID=1;
 					  		$can_discover_JID=$this->da->quoteSmart($can_discover_JID);
 					  		$log_enabled=1;
@@ -250,10 +248,10 @@ class IMDao extends DataAccessObject {
 								
 								//echo "<font color=\"red\"><b>Owner :  </b></font> : ".$row['user_name']."  |<font color=\"red\"><b>Nom public : </b></font>".$row['group_name']."         |"."<font color=\"red\"><b>Unix name :  </b></font>".$row['unix_group_name']."  desc :".$row['short_description']."<br>";
 								$forma="INSERT INTO ".$this->openfire_db_name.".mucRoom
-								                    (roomID, creationDate, modificationDate, name, naturalName, description, lockedDate, emptyDate, canChangeSubject, maxUsers, publicRoom, moderated, membersOnly, canInvite, roomPassword, canDiscoverJID, logEnabled, subject, rolesToBroadcast, useReservedNick, canChangeNick, canRegister)
-										 VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s)";
-								$sql = sprintf($forma,$id,$creation_date,$modification_date,$short_name,$public_name,$description,$locked_date,$empty_date,$change_subject,$max_user,$public_room,$moderated,$members_only,$can_invite,$room_pwd,$can_discover_JID,$log_enabled,$subject,$role_to_broadcast,$use_reserved_NICK,$can_changed_nick,$can_register);
-								//echo $sql.'<br>';
+								                    (roomID, creationDate, modificationDate, name, naturalName, description, lockedDate, emptyDate, canChangeSubject, maxUsers, publicRoom, moderated, membersOnly, canInvite, canDiscoverJID, logEnabled, subject, rolesToBroadcast, useReservedNick, canChangeNick, canRegister)
+										 VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s,%s, %s)";
+								$sql = sprintf($forma,$id,$creation_date,$modification_date,$short_name,$public_name,$description,$locked_date,$empty_date,$change_subject,$max_user,$public_room,$moderated,$members_only,$can_invite,$can_discover_JID,$log_enabled,$subject,$role_to_broadcast,$use_reserved_NICK,$can_changed_nick,$can_register);
+								echo $sql.'<br>';
 								  
 								$tamp=$this->update($sql);
 								//$tamp=true;//to be delete
