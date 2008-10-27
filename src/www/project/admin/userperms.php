@@ -17,7 +17,7 @@ require_once('common/user/UserHelper.class.php');
 //	  
 //  get the Group object
 //	  
-$group = group_get_object($group_id);
+$group = project_get_object($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
 	exit_no_group();
 }		   
@@ -30,19 +30,12 @@ $at_arr = $atf->getArtifactTypes();
 	
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
-
-//no results found
-if (db_numrows($res_grp) < 1) {
-	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
-}
 $project=project_get_object($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
         echo $Language->getText('project_admin_userperms','unable_load_p')."<br>";
     	return;
 }
-$row_grp = db_fetch_array($res_grp);
 
 // ########################### form submission, make updates
 if (isset($submit)) {
@@ -148,33 +141,50 @@ if (isset($submit)) {
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
 }
 
-$res_dev = db_query("SELECT user.user_name AS user_name,"
-	. "user.user_id AS user_id, "
-	. "user_group.admin_flags, "
-	. "user_group.bug_flags, "
-	. "user_group.forum_flags, "
-	. "user_group.project_flags, "
-	. "user_group.patch_flags, "
-	. "user_group.doc_flags, "
-	. "user_group.file_flags, "
-	. "user_group.support_flags, "
-        . "user_group.wiki_flags, "
-	. "user_group.svn_flags, "
-	. "user_group.news_flags "
-	. "FROM user,user_group WHERE "
-	. "user.user_id=user_group.user_id AND user_group.group_id=$group_id "
-	. "ORDER BY user.user_name");
+$sql = array();
+$sql['select'] = "SELECT user.user_name AS user_name,
+                  user.realname AS realname,
+                  user.user_id AS user_id,
+                  user_group.admin_flags,
+                  user_group.bug_flags,
+                  user_group.forum_flags,
+                  user_group.project_flags,
+                  user_group.patch_flags,
+                  user_group.doc_flags,
+                  user_group.file_flags,
+                  user_group.support_flags,
+                  user_group.wiki_flags,
+                  user_group.svn_flags,
+                  user_group.news_flags";
+$sql['from']  = " FROM user,user_group ";
+$sql['where'] = " WHERE user.user_id = user_group.user_id 
+                    AND user_group.group_id = ". db_ei($group_id);
+$sql['order'] = " ORDER BY user.user_name ";
+
+if ($project->usesTracker()&&$at_arr ) {
+    for ($j = 0; $j < count($at_arr); $j++) {
+        $atid = db_ei($at_arr[$j]->getID());
+        $sql['select'] .= ", IFNULL(artifact_perm_". $atid .".perm_level, 0) AS perm_level_". $atid ." ";
+        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_". $atid ." 
+                                 ON(artifact_perm_". $atid .".user_id = user_group.user_id 
+                                    AND artifact_perm_". $atid .".group_artifact_id = ". $atid .") ";
+    }
+}
+$res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['order']);
+
+$sql = "SELECT ugroup_user.user_id AS user_id, ugroup.ugroup_id AS ugroup_id, ugroup.name AS name 
+FROM ugroup, ugroup_user 
+WHERE ugroup.group_id = ". db_ei($group_id) ."
+  AND ugroup_user.ugroup_id = ugroup.ugroup_id";
+$res_ugrp = db_query($sql);
+$ugroups = array();
+while($row = db_fetch_array($res_ugrp)) {
+    $ugroups[$row['user_id']][] = $row;
+}
 
 project_admin_header(array('title'=>$Language->getText('project_admin_utils','user_perms'),'group'=>$group_id,
 		     'help' => 'UserPermissions.html'));
 
-/*$project=project_get_object($group_id);
-if ($project->isError()) {
-        //wasn't found or some other problem
-        echo "Unable to load project object<br>";
-    	return;
-}
-*/
 echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>
 <FORM action="userperms.php" method="post">
@@ -266,7 +276,6 @@ echo $head;
 ?>
 
 <?php
-
 if (!$res_dev || db_numrows($res_dev) < 1) {
     echo '<H2>'.$Language->getText('project_admin_userperms','no_users_found').'</H2>';
 } else {
@@ -285,7 +294,7 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
-        $user_name = $hp->purify($uh->getDisplayNameFromUserName($row_dev['user_name']), CODEX_PURIFIER_CONVERT_HTML);
+        $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODEX_PURIFIER_CONVERT_HTML);
         echo '<td><a name="'. ucfirst(substr($row_dev['user_name'], 0, 1)) .'"></a>'. $user_name .'</td>';
         echo '
             <TD>
@@ -305,7 +314,6 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             echo $cell;
         }
 
-        
         // bug selects
         if ($project->usesBugs()) {
             $cell = '';
@@ -413,15 +421,15 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
             $cell .= '</SELECT></FONT></TD>';
             echo $cell;
         }
-           
-	
+        
         $k = 0;
         if ( $project->usesTracker()&&$at_arr ) {
             // Loop on tracker
             for ($j = 0; $j < count($at_arr); $j++) {
-                $perm = $at_arr[$j]->getUserPerm($row_dev['user_id']);
+                $atid = $at_arr[$j]->getID();
+                $perm = $row_dev['perm_level_' . $atid];
                 $cell = '';
-                $cell .= '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$at_arr[$j]->getID().'">';
+                $cell .= '<TD><FONT size="-1"><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$atid.'">';
                 $cell .= '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$Language->getText('global','none');
                 $cell .= '<OPTION value="3"'.(($perm==3 || $perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin');
                 $cell .= '</SELECT></FONT></TD>';
@@ -430,17 +438,18 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
         }
 
         print '<TD><FONT size="-1">';
-        $res_ugroups=ugroup_db_list_all_ugroups_for_user($group_id,$row_dev['user_id']);
-        $is_first=true;
-        if (db_numrows($res_ugroups)<1) {
-            print '-';
-        } else {
-            while ($row = db_fetch_array($res_ugroups)) {
-                if (!$is_first) { print ', '; }
+        if (isset($ugroups[$row_dev['user_id']])) {
+            $is_first=true;
+            foreach($ugroups[$row_dev['user_id']] as $row) {
+                if (!$is_first) { 
+                    print ', '; 
+                }
                 print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.
                     $row['name'].'</a>';
-                $is_first=false;
+                $is_first = false;
             }
+        } else {
+            print '-';
         }
         print '</FONT></TD>';
 
