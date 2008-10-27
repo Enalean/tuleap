@@ -90,7 +90,7 @@ class IMViews extends Views {
         $request = HTTPRequest::instance();
 
 		$group_id = $request->get('group_id'); 
-    	$project= new Group($group_id);
+    	$project = project_get_object($group_id);
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();
     	
@@ -133,7 +133,7 @@ class IMViews extends Views {
     function muc_logs() {
         $request = HTTPRequest::instance();
     	$group_id = $request->get('group_id');
-        $project = new Group($group_id);
+        $project = project_get_object($group_id);
     	
         $any = $GLOBALS['Language']->getText('global', 'any');
         
@@ -290,7 +290,7 @@ class IMViews extends Views {
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name=$project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = new Group($val); // $val = group_id;
+			        $grp = project_get_object($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
@@ -333,7 +333,7 @@ class IMViews extends Views {
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name = $project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = new Group($val); // $val = group_id;
+			        $grp = project_get_object($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
@@ -376,7 +376,7 @@ class IMViews extends Views {
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name = $project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = new Group($val); // $val = group_id;
+			        $grp = project_get_object($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id){

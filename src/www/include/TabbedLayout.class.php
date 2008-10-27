@@ -389,7 +389,7 @@ if (isset($params['group']) && $params['group']) {
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : '';
 		if(isset($params['group']) && $params['group']) {
 			// get group info using the common result set
-			$project = group_get_object($params['group']);
+			$project = project_get_object($params['group']);
 			if ($project && is_object($project)) {
 				if ($project->isError()) {
 
