@@ -955,7 +955,9 @@ class Layout extends Response {
                         Element.setStyle(element, {
                                 border:'5px dotted red'
                         });
-                        alert('An <input> has the attribute name="'+element.name+'" which is reserved in '+result.join(' and '));
+                        if (!confirm('An <input> has the attribute name="'+element.name+'" which is reserved in '+result.join(' and '))) {
+                            throw \$break;
+                        }
                     }
                 }
             });
