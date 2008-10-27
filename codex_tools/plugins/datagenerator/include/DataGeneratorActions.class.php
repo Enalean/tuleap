@@ -21,7 +21,7 @@ class DataGeneratorActions extends Actions {
         global $Language;
         $request =& HTTPRequest::instance();
         if ($data = $request->get('data')) {
-            if (isset($data['users']['generate'])) {
+            if (isset($data['users']['generate']) && $data['users']['generate']) {
                 $um = UserManager::instance();
                 $nb_wanted = isset($data['users']['nb']) ? (int)$data['users']['nb'] : 1;
                 $users = $this->_getUsersData();
@@ -41,14 +41,14 @@ class DataGeneratorActions extends Actions {
                               ,0
                               ,0
                               ,'Europe/Paris'
-                              ,1
+                              ,'en_US'
                               ,account_nextuid()
                               ,'A');
                         $nb_done++;
                     }
                 }
             }
-            if (isset($data['projects']['generate'])) {
+            if (isset($data['projects']['generate']) && $data['projects']['generate']) {
                 $nb_wanted = isset($data['projects']['nb']) ? (int)$data['projects']['nb'] : 1;
                 $projects = $this->_getProjectsData();
                 reset($projects);
