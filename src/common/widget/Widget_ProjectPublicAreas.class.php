@@ -231,7 +231,7 @@ class Widget_ProjectPublicAreas extends Widget {
             //	  
             //  get the Group object
             //	  
-            $group = group_get_object($group_id);
+            $group = project_get_object($group_id);
             if (!$group || !is_object($group) || $group->isError()) {
                 exit_no_group();
             }		   

@@ -132,7 +132,7 @@ class Docman_Controller extends Controler {
             // Docman already install for this project.
             return false;
         } else {
-            $project = group_get_object($_gid);
+            $project = project_get_object($_gid);
             $tmplGroupId = (int) $project->getTemplate();
             $this->_cloneDocman($tmplGroupId, $_gid, $ugroupsMapping);
         }
@@ -366,7 +366,7 @@ class Docman_Controller extends Controler {
             $this->_setView('Error');
         } else {
             $_groupId = (int) $this->request->get('group_id');
-            $project = group_get_object($_groupId);
+            $project = project_get_object($_groupId);
             if($project == false) {
                 $this->feedback->log('error', 'Project is missing.');
                 $this->_setView('Error');
@@ -416,7 +416,7 @@ class Docman_Controller extends Controler {
                 // Install
                 $_gid = (int) $this->request->get('group_id');
                 
-                $project = group_get_object($_gid);
+                $project = project_get_object($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
                 $this->_cloneDocman($tmplGroupId, $_gid, false);
                 if (!$item_factory->getRoot($_gid)) {
@@ -466,7 +466,7 @@ class Docman_Controller extends Controler {
                         $this->groupId = $item->getGroupId();
                     }
                     if ($item->getGroupId() != $this->getGroupId()) {
-                        $g =& group_get_object($this->getGroupId());
+                        $g =& project_get_object($this->getGroupId());
                         $this->_set_doesnot_belong_to_project_error($item, $g);
                     } else {
                         $user = $this->getUser();

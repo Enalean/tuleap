@@ -123,7 +123,7 @@ class Widget_MyArtifacts extends Widget {
             
             // {{{ check permissions
             //create group
-            $group = group_get_object($group_id);
+            $group = project_get_object($group_id);
             if (!$group || !is_object($group) || $group->isError()) {
                     exit_no_group();
             }

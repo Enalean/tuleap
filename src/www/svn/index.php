@@ -16,7 +16,7 @@ $vGroupId->required();
 
 $there_are_specific_permissions = true;
 if ($request->valid($vGroupId)) {
-    $obj                            = group_get_object($request->get('group_id'));
+    $obj                            = project_get_object($request->get('group_id'));
     $group_name                     = $obj->getUnixName(false);
  }
 

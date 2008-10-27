@@ -46,7 +46,7 @@ require_once('Docman_View_View.class.php');
             $gid = $params['item']->getGroupId();
         }
         if($gid > 0) {
-            $go = group_get_object($gid);
+            $go = project_get_object($gid);
             if($go != false) {
                 $title .= $go->getPublicName().' - ';
             }

@@ -56,7 +56,7 @@ class WikiService extends Controler {
     if(empty($this->gid))
       exit_no_group();
 
-    $go = group_get_object($this->gid);
+    $go = project_get_object($this->gid);
     if(!$go) 
       exit_no_group();
 

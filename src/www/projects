@@ -32,7 +32,7 @@ if ($group_id === false) {
     $request =& HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
     
-	$project=new Project($group_id);
+	$project = project_get_object($group_id);
 
 	//now show the project page
 	require_once('project_home.php');
