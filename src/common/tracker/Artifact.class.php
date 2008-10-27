@@ -879,7 +879,7 @@ class Artifact extends Error {
                 $old_value = $result[$field_name];
                 $is_text = ($field->isTextField() || $field->isTextArea());
                 if  ($is_text) {
-                    $differ = ($old_value != stripslashes(htmlspecialchars($value)));
+                    $differ = ($old_value != htmlspecialchars($value));
                     //Log for Cross references
 					$text_value_list[]=$value; 
 					
