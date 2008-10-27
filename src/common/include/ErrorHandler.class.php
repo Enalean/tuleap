@@ -33,7 +33,7 @@ class ErrorHandler {
         if (error_reporting() == 0) {
             return;
         }
-
+        
         // check if function has been called by an exception
         if(func_num_args() == 5) {
             // called by trigger_error()
@@ -77,7 +77,7 @@ class ErrorHandler {
         } else {
             $err = 'CAUGHT EXCEPTION';
         }
-    
+        
         $errMsg = "$errstr in $errfile on line $errline";
         $trace = '';
         // start backtrace
@@ -130,7 +130,7 @@ class ErrorHandler {
     
     } // end of errorHandler()
     
-    function getArgument($arg) {
+    function getArgument($arg, $nb_of_recursive = 0) {
         switch (strtolower(gettype($arg))) {
     
             case 'string':
@@ -145,10 +145,11 @@ class ErrorHandler {
             case 'array':
                 $ret = 'array(';
                 $separtor = '';
-    
-                foreach ($arg as $k => $v) {
-                    $ret .= $separtor.$this->getArgument($k).' => '.$this->getArgument($v);
-                    $separtor = ', ';
+                if ($nb_of_recursive) {
+                    foreach ($arg as $k => $v) {
+                        $ret .= $separtor.$this->getArgument($k, $nb_of_recursive - 1).' => '.$this->getArgument($v, $nb_of_recursive - 1);
+                        $separtor = ', ';
+                    }
                 }
                 $ret .= ')';
     

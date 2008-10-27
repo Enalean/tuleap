@@ -1030,8 +1030,7 @@ EOS;
         if ( user_ismember(1,'A') && $GLOBALS['DEBUG_MODE'] ) {
                 $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
                 echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
-                echo $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] + $GLOBALS['DEBUG_DAO_QUERY_COUNT'];
-                echo " (". $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] ." + ". $GLOBALS['DEBUG_DAO_QUERY_COUNT'] .")<br>";
+                echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
                 echo "Page generated in ".$debug_compute_tile." seconds</debug>\n";
                 
                 // Display all queries used to generate the page
