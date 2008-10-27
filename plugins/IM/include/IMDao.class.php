@@ -251,7 +251,7 @@ class IMDao extends DataAccessObject {
 								                    (roomID, creationDate, modificationDate, name, naturalName, description, lockedDate, emptyDate, canChangeSubject, maxUsers, publicRoom, moderated, membersOnly, canInvite, canDiscoverJID, logEnabled, subject, rolesToBroadcast, useReservedNick, canChangeNick, canRegister)
 										 VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s,%s, %s)";
 								$sql = sprintf($forma,$id,$creation_date,$modification_date,$short_name,$public_name,$description,$locked_date,$empty_date,$change_subject,$max_user,$public_room,$moderated,$members_only,$can_invite,$can_discover_JID,$log_enabled,$subject,$role_to_broadcast,$use_reserved_NICK,$can_changed_nick,$can_register);
-								echo $sql.'<br>';
+								//echo $sql.'<br>';
 								  
 								$tamp=$this->update($sql);
 								//$tamp=true;//to be delete
