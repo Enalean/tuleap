@@ -212,7 +212,6 @@ $server->wsdl->addComplexType(
     '',
     array(
         'field_name' => array('name' => 'field_name', 'type' => 'xsd:string'),
-        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'field_value' => array('name' => 'field_value', 'type' => 'xsd:string')
     )
 );
