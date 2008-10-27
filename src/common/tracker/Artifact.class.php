@@ -637,7 +637,7 @@ class Artifact extends Error {
       
       	if ($comment != '') {
         	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
-          	$changes['comment']['add'] = stripslashes($comment);
+          	$changes['comment']['add'] = $comment;
 
 			$field = $art_field_fact->getFieldFromName("comment_type_id");
 			if ( $field && isset($comment_type_id) && $comment_type_id) {
