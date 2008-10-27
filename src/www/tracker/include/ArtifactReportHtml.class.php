@@ -497,7 +497,9 @@ class ArtifactReportHtml extends ArtifactReport {
                             </script>";
                         }
                         $html_result .= "</TD>\n";
-				    } else{
+				    } else if ($field->getName() == 'summary') {
+				    	$html_result .= "<TD $width>".  $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
+                    } else {
 				    	$html_result .= "<TD $width>".  $hp->purify($value, CODEX_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
 				    }                             
                                 
