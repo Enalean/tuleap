@@ -8,6 +8,10 @@ class IMDao extends DataAccessObject {
     var $openfire_db_name;
     var $codex_db_name;
     
+    const MUC_ROOM_TYPE_ID = 23;
+    const OPENFIRE_ADMIN_AFFILIATION = 20;
+    const OPENFIRE_SUPER_ADMIN_AFFILIATION = 10;
+    
     /**
     * Constructs the IMDao
     * @param $da instance of the DataAccess class
@@ -48,12 +52,10 @@ class IMDao extends DataAccessObject {
 	 * used for unique ID sequence generation
 	 */
 	function get_last_room_id() {
-		//the idType of muc room is 23
-		$id_type=23;
-		$sql=sprintf("SELECT id FROM ".$this->openfire_db_name.".jiveID WHERE idType=%s",
-						$this->da->quoteSmart($id_type));
-		$id_dar=$this->retrieve($sql);
-		$row=$id_dar->getRow();
+		$sql = sprintf("SELECT id FROM ".$this->openfire_db_name.".jiveID WHERE idType=%s",
+						$this->da->quoteSmart(self::MUC_ROOM_TYPE_ID));
+		$id_dar = $this->retrieve($sql);
+		$row = $id_dar->getRow();
 		return $row['id'];
 	}
 	
@@ -74,12 +76,10 @@ class IMDao extends DataAccessObject {
 	 */
 	 
 	 function update_last_room_id() {
-		//the idType of muc room is 23
-		$id_type=23;
 		$last_id=$this->get_last_room_id ()+1;
 		$sql=sprintf("UPDATE ".$this->openfire_db_name.".jiveID SET id= %s WHERE idType=%s",
 						$this->da->quoteSmart($last_id),
-						$this->da->quoteSmart($id_type));
+						$this->da->quoteSmart(self::MUC_ROOM_TYPE_ID));
 		$updated = $this->update($sql);
 	}
 	 
@@ -178,8 +178,8 @@ class IMDao extends DataAccessObject {
 							$jabberConf=$im_object->get_server_conf();
 							$server_dns=$jabberConf['server_dns'];
 			         		$admin_server=$jabberConf['username'];
-			         		$admin_affiliation=20;
-			         		$super_admin_affiliation=10;
+			         		$admin_affiliation = self::OPENFIRE_ADMIN_AFFILIATION;
+			         		$super_admin_affiliation = self::OPENFIRE_SUPER_ADMIN_AFFILIATION;
 			         		
 			         		$creation_date=''.round(1000*microtime(true));
 			         	 	$creation_date=$this->da->quoteSmart($creation_date);
@@ -315,8 +315,8 @@ class IMDao extends DataAccessObject {
 		$admin_server = $jabberConf['username'];
 		
 		//muc affiliation infos
-		$admin_affiliation = 20;
-		$super_admin_affiliation = 10;
+		$admin_affiliation = self::OPENFIRE_ADMIN_AFFILIATION;
+		$super_admin_affiliation = self::OPENFIRE_SUPER_ADMIN_AFFILIATION;
 		
 		//about projet to be synchronize
 		$grp = new Group($group_id);
