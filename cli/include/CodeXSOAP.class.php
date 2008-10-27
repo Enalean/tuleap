@@ -81,7 +81,7 @@ class CodeXSOAP extends SoapClient {
 		}
 		
 		$LOG->add("CodeXSOAP::Executing command ".$command."...");
-        return parent::__call($command,$params);
+        return call_user_func_array(array($this, $command),$params);
 	}
 	
 	/**
