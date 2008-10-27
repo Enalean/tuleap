@@ -141,8 +141,14 @@ if (isset($submit)) {
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
 }
 
+$offset = $request->getValidated('offset', 'uint', 0);
+if (!$offset) {
+    $offset = 0;
+}
+$number_per_page = 25;
+
 $sql = array();
-$sql['select'] = "SELECT user.user_name AS user_name,
+$sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
                   user_group.admin_flags,
@@ -160,6 +166,7 @@ $sql['from']  = " FROM user,user_group ";
 $sql['where'] = " WHERE user.user_id = user_group.user_id 
                     AND user_group.group_id = ". db_ei($group_id);
 $sql['order'] = " ORDER BY user.user_name ";
+$sql['limit'] = " LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
 
 if ($project->usesTracker()&&$at_arr ) {
     for ($j = 0; $j < count($at_arr); $j++) {
@@ -170,8 +177,13 @@ if ($project->usesTracker()&&$at_arr ) {
                                     AND artifact_perm_". $atid .".group_artifact_id = ". $atid .") ";
     }
 }
-$res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['order']);
+$res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['order'] . $sql['limit']);
 
+$sql = 'SELECT FOUND_ROWS() AS nb';
+$res = db_query($sql);
+$row = db_fetch_array($res);
+$num_total_rows = $row['nb'];
+                
 $sql = "SELECT ugroup_user.user_id AS user_id, ugroup.ugroup_id AS ugroup_id, ugroup.name AS name 
 FROM ugroup, ugroup_user 
 WHERE ugroup.group_id = ". db_ei($group_id) ."
@@ -189,6 +201,7 @@ echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>
 <FORM action="userperms.php" method="post">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">';
+/*
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $used_abc_array = array();
 while ($row_dev = db_fetch_array($res_dev)) {
@@ -208,6 +221,7 @@ for ($i=0; $i < count($abc_array); $i++) {
         echo $letter;
     }
 }
+*/
 
 echo '<TABLE width="100%" cellspacing=1 cellpadding=2 border=0>';
 
@@ -276,7 +290,7 @@ echo $head;
 ?>
 
 <?php
-if (!$res_dev || db_numrows($res_dev) < 1) {
+if (!$res_dev || $number_per_page < 1) {
     echo '<H2>'.$Language->getText('project_admin_userperms','no_users_found').'</H2>';
 } else {
     $i=0;
@@ -461,9 +475,33 @@ if (!$res_dev || db_numrows($res_dev) < 1) {
 
 }
 
-echo '
-</TABLE>
-<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">
+echo '</TABLE>';
+if ($num_total_rows && $number_per_page < $num_total_rows) {
+    //Jump to page
+    $nb_of_pages = ceil($num_total_rows / $number_per_page);
+    $current_page = round($offset / $number_per_page);
+    echo '<div style="font-family:Verdana">Page: ';
+    $width = 10;
+    for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+        if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+            echo '<a href="?'.
+                'group_id='. (int)$group_id .
+                '&amp;offset='. (int)($i * $number_per_page) .
+                '">';
+            if ($i == $current_page) {
+                echo '<b>'. ($i + 1) .'</b>';
+            } else {
+                echo $i + 1;
+            }
+            echo '</a>&nbsp;';
+        } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+            echo '...&nbsp;';
+        }
+    }
+    echo '</div>';
+}
+
+echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">
 </FORM>',
 
 
