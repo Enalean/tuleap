@@ -249,6 +249,11 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 	$group_id=db_result($result,0,'group_id');
 	$forum_name=db_result($result,0,'forum_name');
 
+    $is_a_news = false;
+    if ($group_id == $GLOBALS['sys_news_group']) {    // test here because forum_header will change the value of $group_id
+        $is_a_news = true;
+    }
+    
         $params=array('title'=>group_getname($group_id).' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
 	forum_header($params);
@@ -304,8 +309,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 		} else {
 			$public_flag='1';
 		}
-		if ($group_id==$GLOBALS['sys_news_group']) {
-			echo '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">';
+		if ($is_a_news) {
+			$forum_popup = '<INPUT TYPE="HIDDEN" NAME="forum_id" VALUE="'.$forum_id.'">';
 		} else {
 			$res=db_query("SELECT group_forum_id,forum_name ".
 					"FROM forum_group_list ".
