@@ -25,6 +25,9 @@
 // Only displayed for site-admins
 $GLOBALS['DEBUG_MODE'] = 1;
 
+//Display for all users (0) or only to siteadmin (1) ? 
+$GLOBALS['DEBUG_DISPLAY_FOR_ALL'] = 0;
+
 // Error reporting.
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');

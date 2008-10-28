@@ -1027,7 +1027,7 @@ EOS;
         global $Language;
         include($Language->getContent('layout/footer'));
         	
-        if ( user_ismember(1,'A') && $GLOBALS['DEBUG_MODE'] ) {
+        if ( isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
                 $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
                 echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
                 echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
