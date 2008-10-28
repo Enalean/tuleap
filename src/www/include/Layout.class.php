@@ -1039,6 +1039,16 @@ EOS;
                 echo '<pre>';
                 print_r($GLOBALS['QUERIES']);
                 echo '</pre>';
+                
+                $paths = array();
+                foreach($GLOBALS['DBSTORE'] as $d) {
+                    foreach($d['trace'] as $trace) {
+                        $this->_debug_backtrace_rec($paths, array_reverse($trace), $d['sql']);
+                    }
+                }
+                echo '<table>';
+                $this->_debug_display_paths($paths, false);
+                echo '</table>';
                 /**/
                 
                 //Print the backtrace of specific queries
@@ -1122,28 +1132,41 @@ EOS;
         $this->_debug_display_paths($paths);
         echo '</table>';
     }
-    function _debug_backtrace_rec(&$paths, $trace) {
+    function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
         if (count($trace)) {
             $file = substr($trace[0]['file'], strlen($GLOBALS['codex_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
-            $this->_debug_backtrace_rec($paths[$file], array_slice($trace, 1));
+            if (strpos($file, '/src/common/dao/include/DataAccessObject.class.php') === 0) {
+                $this->_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
+            } else {
+                $this->_debug_backtrace_rec($paths[$file], array_slice($trace, 1), $leaf);
+            }
+        } else if ($leaf) {
+            $paths[] = $leaf;
         }
     }
-    function _debug_display_paths($paths, $padding = 0) {
+    function _debug_display_paths($paths, $red = true, $padding = 0) {
         if (is_array($paths)) {
             $color = "black";
-            if (count($paths) > 1) {
+            if ($red && count($paths) > 1) {
                 $color = "red";
             }
             foreach($paths as $p => $next) {
-                echo '<tr style="color:'. $color .'">';
-                echo '<td style="padding-left:'. $padding .'px;">';
-                echo substr($p, 0, strpos($p, ' '));
-                echo '</td>';
-                echo '<td>';
-                echo substr($p, strpos($p, ' '));
-                echo '</td>';
-                echo '</tr>';
-                $this->_debug_display_paths($next, $padding+20);
+                if (is_numeric($p)) {
+                    echo '<tr style="color:green">';
+                    echo '<td></td>';
+                    echo '<td>'. $next .'</td>';
+                    echo '</tr>';
+                } else {
+                    echo '<tr style="color:'. $color .'">';
+                    echo '<td style="padding-left:'. $padding .'px;">';
+                    echo substr($p, 0, strpos($p, ' '));
+                    echo '</td>';
+                    echo '<td>';
+                    echo substr($p, strpos($p, ' '));
+                    echo '</td>';
+                    echo '</tr>';
+                }
+                $this->_debug_display_paths($next, $red, $padding+20);
             }
         }
     }
