@@ -338,32 +338,37 @@ Event.observe(window, 'load', function() {
 	
 });
 
-function check_parameters(){
-	$('feedback').innerHTML = '';
-	var valide = false;
-	if(release_mode == 'creation'){
-		if( $('package_id')){
-			var package_id = $('package_id').value;
-		}else { var package_id = null; }
-			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
-					'&name=' + $('release_name').value;
-		}else{
-			var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
-					'&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
-		}
-		new Ajax.Request(url,
-			{
-			    method:'get',
-			    onSuccess: (function(transport, json) {
-            	if (json.valid) {
-            		this.submit();
-				} else {
-            		$('feedback').innerHTML = json.msg;
-            		Element.scrollTo('feedback');
-            	}
-        	 }).bind(this) 
-		});
-		Event.stop(evt);
-        return false;
-}
-		
+document.observe('dom:loaded', function () {
+    var create_release_btn = $('create_release');
+    if (create_release_btn) {
+        create_release_btn.observe('click', function check_parameters(evt){
+            $('feedback').innerHTML = '';
+            var valide = false;
+            if(release_mode == 'creation'){
+                if( $('package_id')){
+                    var package_id = $('package_id').value;
+                } else { 
+                    var package_id = null; 
+                }
+                var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
+                            '&name=' + $('release_name').value;
+            } else {
+                var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
+                        '&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
+            }
+            new Ajax.Request(url, {
+                method:'get',
+                onSuccess: (function(transport, json) {
+                    if (json.valid) {
+                        this.form.submit();
+                    } else {
+                        $('feedback').innerHTML = json.msg;
+                        Element.scrollTo('feedback');
+                    }
+                }).bind(create_release_btn) 
+            });
+            Event.stop(evt);
+            return false;
+        });
+    }
+});

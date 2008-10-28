@@ -679,7 +679,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 <TD ALIGN="CENTER">
                     
                     <INPUT TYPE="HIDDEN" NAME="create" VALUE="bla">
-                    <INPUT TYPE="SUBMIT" ID="create_release"  VALUE="<?php echo $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release') : $GLOBALS['Language']->getText('file_admin_qrs', 'release_file'); ?>" onclick="check_parameters()">
+                    <INPUT TYPE="SUBMIT" ID="create_release"  VALUE="<?php echo $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release') : $GLOBALS['Language']->getText('file_admin_qrs', 'release_file'); ?>">
                     <input type="submit" ID="cancel_release" name="cancel" value="<?php echo  $GLOBALS['Language']->getText('global','btn_cancel');?>" />
                 </TD>
             </TR>
