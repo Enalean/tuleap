@@ -29,12 +29,9 @@ class PluginManager {
         $plugin_factory = $this->_getPluginFactory();
         $event_manager  = $this->_getEventManager();
         
-        $col_available_plugins = $plugin_factory->getAvailablePlugins();
-        $available_plugins = $col_available_plugins->iterator();
         $priority_manager = $this->_getPluginHookPriorityManager();
         $priority_manager->cacheAllPrioritiesForPluginHook();
-        while($available_plugins->valid()) {
-            $plugin = $available_plugins->current();
+        foreach($plugin_factory->getAvailablePlugins() as $plugin) {
             $hooks = $plugin->getHooksAndCallbacks();
             $iter = $hooks->iterator();
             while($iter->valid()) {
@@ -43,8 +40,6 @@ class PluginManager {
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
                 $iter->next();
             }
-            $available_plugins->next();
-            unset($plugin);
         }
         $this->plugins_loaded = true;
     }

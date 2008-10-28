@@ -33,7 +33,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchById($id) {
-        $sql = sprintf("SELECT name, available FROM plugin WHERE id = %s",
+        $sql = sprintf("SELECT * FROM plugin WHERE id = %s",
                 $this->da->quoteSmart($id));
         return $this->retrieve($sql);
     }
@@ -43,7 +43,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByName($name) {
-        $sql = sprintf("SELECT id, available FROM plugin WHERE name = %s",
+        $sql = sprintf("SELECT * FROM plugin WHERE name = %s",
                 $this->da->quoteSmart($name));
         return $this->retrieve($sql);
     }
@@ -53,7 +53,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByAvailable($available) {
-        $sql = sprintf("SELECT id, name FROM plugin WHERE available = %s",
+        $sql = sprintf("SELECT * FROM plugin WHERE available = %s",
                 $this->da->quoteSmart($available));
         return $this->retrieve($sql);
     }

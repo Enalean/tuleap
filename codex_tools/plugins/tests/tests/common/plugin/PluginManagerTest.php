@@ -64,20 +64,12 @@ class PluginManagerTest extends UnitTestCase {
         $plugin_2->setReturnValue('getId', 124);
         $plugin_2->setReturnReference('getHooksAndCallbacks', $hooks_p2);
 
-        //The iterator for available plugins
-        $it_available     = new MockIterator($this);
-        $it_available->setReturnValue('valid', true);
-        $it_available->setReturnValueAt(2, 'valid', false);
-        $it_available->setReturnReferenceAt(0, 'current', $plugin_1);
-        $it_available->setReturnReferenceAt(1, 'current', $plugin_2);
-
-        //The available plugins
-        $available        = new MockCollection($this);
-        $available->setReturnReference('iterator', $it_available);
-
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
-        $plugin_factory->setReturnReference('getAvailablePlugins', $available);
+        $plugin_factory->setReturnValue('getAvailablePlugins', array(
+            $plugin_1,
+            $plugin_2,
+        ));
         
         //The event manager
         $em             = new MockEventManager($this);
