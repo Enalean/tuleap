@@ -32,12 +32,4 @@ $GLOBALS['DEBUG_DISPLAY_FOR_ALL'] = 0;
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
-// Error Handler
-// Display the backtrace alongside any notice, warning, or error
-if ($GLOBALS['DEBUG_MODE']) {
-    $GLOBALS['debug_time_start'] = microtime(true);
-    require_once('common/include/ErrorHandler.class.php');
-    $eh = new ErrorHandler();
-}
-
 ?>
