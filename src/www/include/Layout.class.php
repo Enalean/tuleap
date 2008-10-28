@@ -1127,7 +1127,7 @@ EOS;
     function _debug_backtraces($backtraces) {
         $paths = array();
         foreach($backtraces as $b) {
-            $this->_debug_backtrace_rec($paths, array_reverse($b));
+            $this->_debug_backtrace_rec($paths, array_reverse($b[0]));
         }
         echo '<table>';
         $this->_debug_display_paths($paths);
