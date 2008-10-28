@@ -390,7 +390,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
 /**
  * Update ugroup with list of members
  */
-function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description, $pickList) {
+function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description) {
     global $Language;
 
     // Sanity check
@@ -419,19 +419,12 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
     }
 
-    // Reset members of the group
-    $sql="DELETE FROM ugroup_user WHERE ugroup_id=$ugroup_id";
-    if (!db_query($sql)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_reset_ug',array($ugroup_id,db_error())));
-    }
-
-    // Then add all selected users
-    $user_count=count($pickList);
-    
-    for ($i=0; $i<$user_count; $i++) {
-        $sql="INSERT INTO ugroup_user (ugroup_id,user_id) VALUES ($ugroup_id,".$pickList[$i].")";
-        if (!db_query($sql)) {
-            exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','cant_insert_u_in_g',array($pickList[$i],db_error())));
+    // Search for all members of this ugroup
+    $pickList = array();
+    $sql="SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
+    if ($res = db_query($sql)) {
+        while($row = db_fetch_array($res)) {
+            $pickList[] = $row['user_id'];
         }
     }
     
@@ -448,7 +441,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description,
     // Now log in project history
     group_add_history('upd_ug','',$group_id,array($ugroup_name));
 
-    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,$user_count)));
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','ug_upd_success',array($ugroup_name,count($pickList))));
 }
 
 function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
