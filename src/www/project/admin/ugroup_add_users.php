@@ -21,8 +21,10 @@ $group_id = $request->getValidated('group_id', 'GroupId', 0);
 //Only project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+$user_helper = new UserHelper();
 
 function display_user_result_table($res) {
+    global $user_helper;
     $nb_cols = 3;
     if (db_numrows($res)) {
         echo '<table><tr>';
@@ -39,7 +41,7 @@ function display_user_result_table($res) {
             }
             echo '<td width="'. round(100/$nb_cols) .'%">';
             echo '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
-            echo '<table width="100%"><tr><td><a href="/users/'. $data['user_name'] .'/">'. user_get_name_display_from_id($data['user_id']) .'</a></td>';
+            echo '<table width="100%"><tr><td><a href="/users/'. $data['user_name'] .'/">'. $user_helper->getDisplayName($data['user_name'], $data['realname']) .'</a></td>';
             echo '<td style="text-align:right;">';
             project_admin_display_bullet_user($data['user_id'], $action);
             echo '</td></tr></table>';
@@ -135,7 +137,7 @@ if ($ugroup_id) {
         
         //Display existing members
         echo '<fieldset><legend>'. $Language->getText('project_admin_editugroup','members').'</legend>';
-        $sql_members = "SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($ugroup_id);
+        $sql_members = "SELECT user.user_id AS user_id, user.user_name AS user_name, user.realname AS realname FROM ugroup_user INNER JOIN user USING(user_id) WHERE ugroup_id = ". db_ei($ugroup_id);
         $res_members = db_query($sql_members);
         if (db_numrows($res_members)>0) {
             echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
@@ -143,7 +145,7 @@ if ($ugroup_id) {
             $hp = CodeX_HTMLPurifier::instance();
             while ($data = db_fetch_array($res_members)) {
                 echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                echo '<td style="white-space:nowrap">'. user_get_name_display_from_id($data['user_id']) .'</td>';
+                echo '<td style="white-space:nowrap">'. $user_helper->getDisplayName($data['user_name'], $data['realname']) .'</td>';
                 echo '<td>';
                 project_admin_display_bullet_user($data['user_id'], 'remove');
                 echo '</td>';
@@ -198,7 +200,7 @@ if ($ugroup_id) {
         echo '<input type="submit" name="browse" value="Browse" /></span>';
         echo '</p>';
         
-        $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
+        $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
                 FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroup_id) .") AS R
                 ";
         if ($in_project) {

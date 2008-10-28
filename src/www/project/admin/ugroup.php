@@ -17,14 +17,13 @@ require_once('www/project/admin/permissions.php');
 $Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-
 if (!isset($func)) $func="";
 if ($func=='delete') {
     ugroup_delete($group_id, $ugroup_id);
 }
 
 if ($func=='do_update') {
-    ugroup_update($_POST['group_id'], $_POST['ugroup_id'], $_POST['ugroup_name'], $_POST['ugroup_description'], $_POST['PickList']);
+    ugroup_update($_POST['group_id'], $_POST['ugroup_id'], $_POST['ugroup_name'], $_POST['ugroup_description']);
 }
 
 
