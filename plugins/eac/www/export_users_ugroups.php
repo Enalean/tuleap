@@ -22,18 +22,18 @@
  *
  * 
  */
-require_once ('../include/userGroupExportMembers.class.php');
-require_once ('pre.php');
+require_once('../include/userGroupExportMembers.class.php');
+require_once('pre.php');
 
 $GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
 $ugroups = array();
-$valueGroupId = new Valid_UInt('group_id');
+$vGroupId = new Valid_UInt('group_id');
 
-if($valueGroupId->validate($group_id)){
+if($vGroupId->validate($group_id)){
     $group_id = $request->get('group_id');
     $memberShower = new UserGroupExportMembers();
     $memberShower->listUserFormatting($ugroups, $group_id); 
- }else {
+}else {
     exit_no_group();
- }
+}
 ?>
