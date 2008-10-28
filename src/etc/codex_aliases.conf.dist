@@ -146,3 +146,15 @@ RedirectMatch permanent /cvs/viewcvs.php(.*) /cvs/viewvc.php$1
 # Forbid access to .svn directories
 RedirectMatch 404 /\.svn(/|$)
 
+#
+# Instant messaging: http-bind for web chat.
+# Needs mod_proxy and mod_proxy_http for reverse proxying
+#
+# For HTTPS binding, make sure you have a valid SSL certificate, and replace
+# port number 7070 by 7443 in the following lines and 'http' by 'https'
+# Note that you may not need HTTPS here: it only adds encryption between
+# the Apache server (reverse proxy) and the OpenFire server.
+#
+RewriteEngine on
+RewriteRule /http-bind  http://%sys_default_domain%:7070/http-bind/ [P]
+RewriteRule /http-bind/ http://%sys_default_domain%:7070/http-bind/ [P]

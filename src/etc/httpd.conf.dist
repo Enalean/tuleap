@@ -185,10 +185,10 @@ LoadModule dir_module modules/mod_dir.so
 #LoadModule userdir_module modules/mod_userdir.so
 LoadModule alias_module modules/mod_alias.so
 LoadModule rewrite_module modules/mod_rewrite.so
-#LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_module modules/mod_proxy.so
 #LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
 #LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
-#LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
 #LoadModule proxy_connect_module modules/mod_proxy_connect.so
 LoadModule cache_module modules/mod_cache.so
 #LoadModule suexec_module modules/mod_suexec.so

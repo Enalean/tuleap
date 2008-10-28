@@ -800,6 +800,9 @@ if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
 fi
+# replace string patterns in codex_aliases.inc
+substitute '/etc/codex/conf.d/codex_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
+
 # replace string patterns in database.inc
 substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
 
