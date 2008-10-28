@@ -39,8 +39,7 @@ if ($action == 'permissions_frs_package') {
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
         if ($action == 'validator_frs_create') {
             $vName = new Valid_String('name');
-            $vName->required();
-            $vDate = new Valid_UInt('date');
+            $vDate = new Valid_String('date');
             $vDate->required();
             $vPackageId = new Valid_UInt('package_id');
             $vPackageId->required();    	          
@@ -74,8 +73,7 @@ if ($action == 'permissions_frs_package') {
         } else {
             if ($action == 'validator_frs_update') {
                 $vName = new Valid_String('name');
- 	            $vName->required();
- 	            $vDate = new Valid_UInt('date');
+ 	            $vDate = new Valid_String('date');
  	            $vDate->required();
                 $vPackageId = new Valid_UInt('package_id');
     	        $vPackageId->required();
