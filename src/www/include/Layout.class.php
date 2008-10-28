@@ -1041,9 +1041,10 @@ EOS;
                 echo '</pre>';
                 
                 $paths = array();
+                $time = $GLOBALS['debug_time_start'];
                 foreach($GLOBALS['DBSTORE'] as $d) {
                     foreach($d['trace'] as $trace) {
-                        $this->_debug_backtrace_rec($paths, array_reverse($trace), $d['sql']);
+                        $this->_debug_backtrace_rec($paths, array_reverse($trace[0]), '['. round($trace[1] - $GLOBALS['debug_time_start'], 5) .'] '. $d['sql']);
                     }
                 }
                 echo '<table>';

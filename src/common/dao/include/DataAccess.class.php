@@ -57,7 +57,7 @@ class DataAccess {
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
                 $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => 0, 'trace' => array());
             }
-            $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = debug_backtrace();
+            $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = array(debug_backtrace(), microtime(1));
         }
         $dar = new DataAccessResult($this,mysql_query($sql,$this->db));
         return $dar;
