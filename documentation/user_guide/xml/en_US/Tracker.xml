@@ -872,6 +872,28 @@
 
     </section>
 
+    <section id="ArtifactPermissions">
+      <title>Permissions on artifacts</title>
+      
+      <para>Tracker admins can restrict access to artifact. Those permissions are 
+      a complement to the permissions defined at tracker level.</para>
+      
+      <para>The tracker admin just has to edit the artifact and update permissions 
+      like in the example below (where the artifact is currently restricted to 
+      project admins and members).</para>
+      
+      <figure id="FigureArtifactPermissions">
+        <title>Permissions d'un artefact</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_artifactpermissions.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+    
     <section id="ArtifactHistory">
       <title>Artifact History</title>
 

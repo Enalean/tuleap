@@ -953,6 +953,29 @@
 
     </section>
 
+    <section id="ArtifactPermissions">
+      <title>Permissions sur les artefacts</title>
+      
+      <para>Les administrateurs d'outil de suivi peuvent restreindre l'accès à un 
+      artefact pour certains utilisateurs. Ces permissions s'ajoutent ainsi à 
+      celles définies au niveau de l'outil de suivi et des champs.</para>
+      
+      <para>Il suffit à l'administrateur d'éditer un artefact et de restreindre 
+      les permissions comme le montre l'exemple suivant, où l'artefact est restreind 
+      aux administrateurs et aux membres du projet.</para>
+      
+      <figure id="FigureArtifactPermissions">
+        <title>Permissions d'un artefact</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/fr_FR/sc_artifactpermissions.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+    
     <section id="ArtifactHistory">
       <title>Historique des artefacts</title>
 
