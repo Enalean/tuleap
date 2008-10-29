@@ -1031,7 +1031,10 @@ EOS;
                 $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
                 echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
                 echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
-                echo "Page generated in ".$debug_compute_tile." seconds</debug>\n";
+                echo "Page generated in ".$debug_compute_tile." seconds (xdebug: ". xdebug_time_index() .")</span>\n";
+                if ($file = xdebug_get_profiler_filename()) {
+                    echo '<div>Profiler info has been written in: '. $file .'</div>';
+                }
                 
                 // Display all queries used to generate the page
                 /*
@@ -1040,11 +1043,25 @@ EOS;
                 print_r($GLOBALS['QUERIES']);
                 echo '</pre>';
                 
+                $max = 0;
+                foreach($GLOBALS['DBSTORE'] as $d) {
+                    foreach($d['trace'] as $trace) {
+                        $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                        if ($max < $time_taken) {
+                            $max = $time_taken;
+                        }
+                    }
+                }
+
                 $paths = array();
                 $time = $GLOBALS['debug_time_start'];
                 foreach($GLOBALS['DBSTORE'] as $d) {
                     foreach($d['trace'] as $trace) {
-                        $this->_debug_backtrace_rec($paths, array_reverse($trace[0]), '['. round($trace[1] - $GLOBALS['debug_time_start'], 5) .'] '. $d['sql']);
+                        $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                        $this->_debug_backtrace_rec($paths, array_reverse($trace[0]), 
+                            '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3)) 
+                            .'/'. $time_taken .'] '. 
+                            ($time_taken >= $max ? ' top! ' : '') . $d['sql']);
                     }
                 }
                 echo '<table>';
@@ -1078,7 +1095,7 @@ EOS;
                             echo '<p>Queries executed more than once :</p>';
                             $title_displayed = true;
                         }
-                        echo "<legend>\n";
+                        echo "<div><legend>\n";
                         echo $GLOBALS['HTML']->getImage(
                         	'ic/toggle_plus.png', 
                             array(
@@ -1089,7 +1106,7 @@ EOS;
                         );
                         echo "<b>Run ".$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
                         echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
-                        echo '</legend>';
+                        echo '</legend></div>';
                         // Display available stacktraces
                         echo "<div id=\"stacktrace_alternate_$key\" style=\"\" ></div>";
                         echo "<script type=\"text/javascript\">Event.observe($('stacktrace_toggle_$key'), 'click', function (evt) { 
@@ -1126,8 +1143,9 @@ EOS;
 	}
     function _debug_backtraces($backtraces) {
         $paths = array();
+        $i = 1;
         foreach($backtraces as $b) {
-            $this->_debug_backtrace_rec($paths, array_reverse($b[0]));
+            $this->_debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
         }
         echo '<table>';
         $this->_debug_display_paths($paths);

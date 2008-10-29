@@ -51,15 +51,17 @@ class DataAccess {
     * @return object DataAccessResult
     */
     function &fetch($sql) {
+        $time = microtime(1);
+        $res = mysql_query($sql,$this->db);
         if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
                 $GLOBALS['DBSTORE'][md5($sql)] = array('sql' => $sql, 'nb' => 0, 'trace' => array());
             }
-            $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = array(debug_backtrace(), microtime(1));
+            $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = array(debug_backtrace(), $time, microtime(1));
         }
-        $dar = new DataAccessResult($this,mysql_query($sql,$this->db));
+        $dar = new DataAccessResult($this, $res);
         return $dar;
     }
 
