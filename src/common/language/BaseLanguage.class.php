@@ -378,10 +378,6 @@ class BaseLanguage {
         return $ret;
     }
 
-    function getLanguageCode() {
-        return isset($this->lang) ? $this->lang : $this->defaultLanguage;
-    }
-
     function getEncoding() {
         return $this->text_array['conf']['content_encoding'];
     }

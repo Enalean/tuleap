@@ -25,7 +25,7 @@ require_once('snippet_caching.php');
 $function= intval($function);
 
 // Set the language context as specified in the URL
-if ( $lang_code != $Language->getLanguageCode() ) {
+if ( $lang_code != UserManager::instance()->getCurrentUser()->getLocale() ) {
     $Language->loadLanguage($lang_code);
 }
 

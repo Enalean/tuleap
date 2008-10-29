@@ -378,7 +378,7 @@ class WikiServiceViews extends WikiViews {
     echo '<form name="WikiCreation" method="post" action="'.$this->wikiLink.'">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="view" value="doinstall" />'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_language').' ';
-echo html_get_language_popup($GLOBALS['Language'],'language_id',$GLOBALS['Language']->getLanguageCode());
+             echo html_get_language_popup($GLOBALS['Language'],'language_id',UserManager::instance()->getCurrentUser()->getLocale());
 echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_create').'">
 </form>';
   }

@@ -17,7 +17,7 @@ function cache_display($name,$function,$time) {
       mkdir($GLOBALS['codex_cache_dir'], 0755);
   }
 
-  $filename = $GLOBALS['codex_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".$Language->getLanguageCode().".sf";
+  $filename = $GLOBALS['codex_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".UserManager::instance()->getCurrentUser()->getLocale().".sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to
@@ -68,7 +68,7 @@ function cache_display($name,$function,$time) {
 function cache_get_new_data($function) {
     global $Language;
     
-    $furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_user_theme']."&lang_code=".urlencode($Language->getLanguageCode())."&function=".urlencode($function)),'r');
+    $furl=fopen(make_local_url("write_cache.php?sys_theme=".$GLOBALS['sys_user_theme']."&lang_code=".urlencode(UserManager::instance()->getCurrentUser()->getLocale())."&function=".urlencode($function)),'r');
 	return stripslashes(fread($furl,200000));
 }
 ?>

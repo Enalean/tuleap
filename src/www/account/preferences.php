@@ -121,7 +121,7 @@ echo '>'.$Language->getText('account_options', 'font_size_large');
 <?php echo $Language->getText('account_options', 'language'); ?>: </td><td>
 <?php
 // display supported languages
-echo html_get_language_popup($Language,'language_id',$Language->getLanguageCode());
+echo html_get_language_popup($Language,'language_id',UserManager::instance()->getCurrentUser()->getLocale());
 ?>
                     </tr>
                    <tr>

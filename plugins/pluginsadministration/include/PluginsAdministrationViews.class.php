@@ -312,7 +312,7 @@ EOS;
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
-        return '<a href="javascript:help_window(\''.get_server_url().'/plugins/pluginsadministration/documentation/'.$GLOBALS['Language']->getLanguageCode().'/'.$section.'\');">[?]</a>';
+        return '<a href="javascript:help_window(\''.get_server_url().'/plugins/pluginsadministration/documentation/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$section.'\');">[?]</a>';
     }
     
     function _searchPlugins() {
