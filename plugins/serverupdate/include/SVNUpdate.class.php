@@ -160,6 +160,9 @@ class SVNUpdate {
             $this->writeStdErr($xml_commits);
             $GLOBALS['Response']->addFeedback('error', $regs[1].$regs[2]);
             return false;
+        } else if (strpos($xml_commits, 'svn: This client is too old to work with working copy') === 0) {
+            $GLOBALS['Response']->addFeedback('error', 'svn: This client is too old to work with working copy');
+            return false;
         } else {
             $commits = $this->_setCommitsFromXML($xml_commits);
         }
