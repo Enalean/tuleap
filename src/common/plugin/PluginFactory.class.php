@@ -2,8 +2,6 @@
 require_once('common/dao/PluginDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 
-require_once('common/collection/Map.class.php');
-
 
 
 require_once('Plugin.class.php');
@@ -85,6 +83,7 @@ class PluginFactory {
     
     function _getInstancePlugin($id, $row) {
         if (!isset($this->retrieved_plugins['by_id'][$id])) {
+            $this->retrieved_plugins['by_id'][$id] = false;
             $plugin_class_info = $this->_getClassNameForPluginName($row['name']);
             $plugin_class      = $plugin_class_info['class'];
             if ($plugin_class) {
