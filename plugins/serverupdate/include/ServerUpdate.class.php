@@ -135,7 +135,7 @@ class ServerUpdate extends Controler {
                     break;
             }
         } else {
-            if ($this->getSVNUpdate->getRepository() == "") {
+            if ($this->getSVNUpdate()->getRepository() == "") {
                 $this->view = 'norepository';
             } else {
                 $this->view = 'browse';
