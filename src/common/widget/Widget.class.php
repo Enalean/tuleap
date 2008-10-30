@@ -82,6 +82,9 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     function isAvailable() {
         return true;
     }
+    function isAjax() {
+        return false;
+    }
     function getInstanceId() {
         return $this->content_id;
     }

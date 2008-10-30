@@ -712,7 +712,8 @@ class Layout extends Response {
     }
     
     function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
-        echo '<div class="widget" id="widget_'. $widget->id .'-'. $widget->getInstanceId() .'">';
+        $element_id = 'widget_'. $widget->id .'-'. $widget->getInstanceId();
+        echo '<div class="widget" id="'. $element_id .'">';
         echo '<div class="widget_titlebar '. ($readonly?'':'widget_titlebar_handle') .'">';
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
         if (!$readonly) {
@@ -738,7 +739,21 @@ class Layout extends Response {
         if (!$readonly && $display_preferences) {
             echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type) .'</div>';
         }
-        echo $widget->getContent() .'</div>';
+        if ($widget->isAjax()) {
+            echo '<div id="'. $element_id .'-ajax" style="text-align:center">'. $this->getImage('ic/spinner.gif') .'<noscript style="color:red">(javascript mandatory)</noscript></div>';
+        } else {
+            echo $widget->getContent();
+        }
+        echo '</div>';
+        if ($widget->isAjax()) {
+            echo '<script type="text/javascript">'."
+            document.observe('dom:loaded', function () {
+                new Ajax.Updater('$element_id-ajax', 
+                                 '/widgets/widget.php?owner=". $owner_type.$owner_id ."&action=ajax&name[". $widget->id ."]=". $widget->getInstanceId() ."'
+                );
+            });
+            </script>";
+        }
         echo '</div>';
     }
     function _getTogglePlusForWidgets() {

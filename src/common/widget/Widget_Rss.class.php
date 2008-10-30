@@ -46,6 +46,9 @@ require_once('Widget.class.php');
         }
         return $content;
     }
+    function isAjax() {
+        return true;
+    }
     function getPreferences() {
         $hp = CodeX_HTMLPurifier::instance();
         $prefs  = '';

@@ -41,17 +41,28 @@ if ($request->valid($vOwner)) {
             $instance_id = (int)$param[$name];
             if ($widget =& Widget::getInstance($name)) {
                 if ($widget->isAvailable()) {
-                    if ($request->get('action') == 'rss') {
-                        $widget->displayRss();
-                        exit();
-                    } else {
-                        if ($request->get('action') == 'update' && ($layout_id = (int)$request->get('layout_id'))) {
-                            if ($owner_type == $lm->OWNER_TYPE_USER || user_ismember($group_id, 'A') || user_is_super_user()) {
-                                if ($request->get('cancel') || $widget->updatePreferences($request)) {
-                                    $lm->hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                    switch ($request->get('action')) {
+                        case 'rss':
+                            $widget->displayRss();
+                            exit();
+                            break;
+                        case 'update':
+                            if ($layout_id = (int)$request->get('layout_id')) {
+                                if ($owner_type == $lm->OWNER_TYPE_USER || user_ismember($group_id, 'A') || user_is_super_user()) {
+                                    if ($request->get('cancel') || $widget->updatePreferences($request)) {
+                                        $lm->hideWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
+                                    }
                                 }
                             }
-                        }
+                            break;
+                        case 'ajax':
+                            if ($widget->isAjax()) {
+                                $widget->loadContent($instance_id);
+                                echo $widget->getContent();
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
