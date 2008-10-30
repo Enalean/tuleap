@@ -156,11 +156,21 @@ class Docman_Actions extends Actions {
         switch ($iFactory->getItemTypeForItem($item)) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             if ($request->exist('upload_content')) {
-                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+            	
+            	if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+					$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+            	} else {
+                	$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+            	}
+            	
                 if ($path) {
                     $uploadSucceded = true;
                     $_filename = basename($path);
-                    $_filesize = filesize($path);
+                    if ($request->exist('file_size')) {
+                    	$_filesize = $request->get('file_size');
+                    } else {
+                    	$_filesize = filesize($path);
+                    }
                     $_filetype = mime_content_type($path); //be careful with false detection
                 }
             } else {
@@ -232,6 +242,18 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
     }
+    
+    function _storeFileChunk($item) {
+        $fs       = $this->_getFileStorage();
+        $request  = $this->_controler->request;
+    	if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+			$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+			if (!$path) {
+				$_action_type = 'appendFileChunk';
+				$this->_controler->feedback->log('error', "Error storing file chunk");
+			}
+    	}
+    }
 
     function createFolder() {
         $this->createDocument();
@@ -254,7 +276,7 @@ class Docman_Actions extends Actions {
                 )
             {
 
-                // Special handeling of obsolescence date
+                // Special handling of obsolescence date
                 if(isset($item['obsolescence_date']) 
                    && preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', 
                                  $item['obsolescence_date'], $d)) {
@@ -325,6 +347,27 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
+    function appendFileChunk() {
+        $request =& $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            $itemType = $item_factory->getItemTypeForItem($item);
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+            	$this->_storeFileChunk($item);
+            } else {
+            	$this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+            }
+            
+        } else {
+			$this->_controler->feedback->log('error', 'Error while appending file chunk');
+		}
+        
+        //$this->event_manager->processEvent('send_notifications', array()); //TODO ???
+    }
+    
     function update() {
         $request =& HTTPRequest::instance();
         if ($request->exist('item')) {

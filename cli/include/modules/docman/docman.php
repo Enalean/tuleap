@@ -18,6 +18,7 @@ require_once('CLI_Action_Docman_CreateFolder.class.php');
 require_once('CLI_Action_Docman_Delete.class.php');
 require_once('CLI_Action_Docman_Monitor.class.php');
 require_once('CLI_Action_Docman_Move.class.php');
+require_once('CLI_Action_Docman_CreateBigDocument.class.php');
 
 class CLI_Module_Docman extends CLI_Module {
     function CLI_Module_Docman() {
@@ -29,6 +30,7 @@ class CLI_Module_Docman extends CLI_Module {
         $this->addAction(new CLI_Action_Docman_Delete());
         $this->addAction(new CLI_Action_Docman_Monitor());
         $this->addAction(new CLI_Action_Docman_Move());
+        $this->addAction(new CLI_Action_Docman_CreateBigDocument());
     }
 }
 ?>

@@ -42,10 +42,24 @@ class Docman_FileStorage {
             return false;
         }
     }
-    function store($content, $group_id, $item_id, $version_number) {
+    function store($content, $group_id, $item_id, $version_number, $chunk_offset = 0, $chunk_size = 0) {
         $path = $this->_getPath('file', $group_id, $item_id, $version_number);
-        if ($f = fopen($path, 'w')) {
-            fwrite($f, $content);
+        
+        if (is_file($path)) {
+        	$mode = 'r+';
+        } else {
+        	$mode = 'w';
+        }
+        
+        if (($f = fopen($path, $mode)) && (flock($f, LOCK_EX))) {
+        	fseek($f, $chunk_offset * $chunk_size);
+            
+        	if ($chunk_size > 0) {
+        		fwrite($f, $content, $chunk_size);
+            } else {
+            	fwrite($f, $content);
+            }
+            
             fclose($f);
             return $path;
         } else {

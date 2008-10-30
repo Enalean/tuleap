@@ -96,6 +96,9 @@ $GLOBALS['server']->register(
         'type' => 'xsd:string',
         'content' => 'xsd:string',
         'ordering'=>'xsd:string',
+        'chunk_offset'=>'xsd:int',
+        'chunk_size'=>'xsd:int',
+    	'file_size'=>'xsd:int',
         ),
     array('createDocmanDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -103,6 +106,23 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Create a document.'
+);
+$GLOBALS['server']->register(
+    'appendFileChunk',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'item_id'=>'xsd:int',
+        'content'=>'xsd:string',
+        'chunk_offset'=>'xsd:int',
+        'chunk_size'=>'xsd:int',
+        ),
+    array('appendFileChunkResponse'=>'xsd:int'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#appendFileChunk',
+    'rpc',
+    'encoded',
+    'Append a chunk of data to a file.'
 );
 $GLOBALS['server']->register(
     'createDocmanFolder',
@@ -257,7 +277,7 @@ function listFolder($sessionKey,$group_id,$item_id) {
 /**
  * 
  */
-function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $description, $type, $content, $ordering) {
+function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $chunk_offset, $chunk_size, $file_size) {
     global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
@@ -282,6 +302,9 @@ function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $descrip
             //needed internally in docman vvv
             'action'       => 'createDocument',
             'confirm'      => true,
+            'chunk_offset' => $chunk_offset,
+            'chunk_size'   => $chunk_size,
+            'file_size'    => $file_size,
         );
         switch ($type) {
             case "file":
@@ -319,6 +342,54 @@ function createDocmanDocument($sessionKey,$group_id,$parent_id, $title, $descrip
         }
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'createDocmanDocument');
+    }
+}
+
+/**
+ * 
+ */
+function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
+  	global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault, 'Could Not Get Group', 'createDocmanDocument');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'createDocmanDocument');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'createDocmanDocument');
+        }
+        
+        // TODO
+		$soap_request_params = array(
+			'group_id'			=> $group_id,
+			'item_id'			=> $item_id,
+            'upload_content'	=> base64_decode($content),
+            'chunk_offset'		=> $chunk_offset,
+            'chunk_size'		=> $chunk_size,
+            //needed internally in docman vvv
+            'action'			=> 'appendFileChunk',
+            'confirm'			=> true,
+        );
+        
+		$request =& new SOAPRequest($soap_request_params);
+        
+    	$plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $result = $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new SoapFault(null,  $msg,  'deleteDocmanItem');
+            } else {
+                return $result;
+            }
+        } else {
+            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'deleteDocmanItem');
+        }
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'createDocmanFolder');
     }
 }
 
@@ -494,12 +565,12 @@ $GLOBALS['server']->addFunction(
             'getRootFolder',
             'listFolder',
             'createDocmanDocument',
+            'appendFileChunk',
             'createDocmanFolder',
             'deleteDocmanItem',
             'monitorDocmanItem',
-            'moveDocmanItem'
+            'moveDocmanItem',
             ));
-
 }
 
 
