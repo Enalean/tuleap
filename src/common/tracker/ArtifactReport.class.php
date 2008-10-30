@@ -260,6 +260,13 @@ class ArtifactReport extends Error {
                   AND field_name = '". db_es($field_name) ."'";
         db_query($sql);
     }
+    function toggleFieldQueryUsage($field_name) {
+        $sql = "UPDATE artifact_report_field
+                SET show_on_query = 1 - show_on_query
+                WHERE report_id  = ".  db_ei($this->report_id) ."
+                  AND field_name = '". db_es($field_name) ."'";
+        db_query($sql);
+    }
 	/**
 	 *	fetchData - re-fetch the data for this ArtifactReport from the database.
 	 *

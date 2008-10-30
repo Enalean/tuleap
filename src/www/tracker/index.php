@@ -858,6 +858,14 @@ if ( $func == 'gotoid' ) {
                         $report->toggleFieldColumnUsage($field_name);
                     }
                     $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
+                } else if ($request->get('change_report_query')) {
+                    $report_id = $request->getValidated('report_id', 'uint');
+                    $field_name  = $request->getValidated('change_report_query', 'string');
+                    $arf = new ArtifactReportFactory($ath);
+                    if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
+                        $report->toggleFieldQueryUsage($field_name);
+                    }
+                    $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                 } else {
                     require('./browse.php');
                 }

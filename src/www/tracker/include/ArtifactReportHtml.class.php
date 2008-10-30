@@ -170,12 +170,18 @@ class ArtifactReportHtml extends ArtifactReport {
         function displayQueryFields($prefs,$advsrch,$pv) {
             global $ath,$Language;
             $hp = CodeX_HTMLPurifier::instance();
+            $html_select = '';
             //
             // Loop through the list of used fields to define label and fields/boxes
             // used as search criteria
             //
+            $query_fields = $this->getQueryFields();
             
-            $html_select = "<table width='100%'>";
+            $html_select .= '<div style="text-align:right;">';
+            $html_select .= $this->getFieldsSelectbox('change_report_query', '-- Add/remove criteria', $query_fields, $ath);
+            $html_select .= '</div>';
+            
+            $html_select .= "<table width='100%'>";
             $labels = '';
             $boxes  = '';
             // Number of search criteria (boxes) displayed in one row
@@ -184,7 +190,6 @@ class ArtifactReportHtml extends ArtifactReport {
             $ib=0;$is=0;
             $load_cal=false;
 
-            $query_fields = $this->getQueryFields();
             while (list($key,$field) = each($query_fields) ) {
             
                 $field_html = new ArtifactFieldHtml($field);
@@ -280,7 +285,32 @@ class ArtifactReportHtml extends ArtifactReport {
             return $html_select;
 
         }
-
+        
+        function getFieldsSelectbox($name, $label, $used, $ath) {
+            $html_result  = '';
+            $html_result .= '<select name="'. $name .'" onchange="this.form.submit();">';
+            $html_result .= '<option selected="selected" value="">'. $label .'</option>';
+            $afsf = new ArtifactFieldSetFactory($ath);
+            foreach($afsf->getAllFieldSets() as $fieldset) {
+                $html_result .= '<optgroup label="'. $fieldset->getLabel() .'">';
+                foreach($fieldset->getArtifactFields() as $field) {
+                    if ($field->isUsed()) {
+                        $highlight = '';
+                        if ($field->getName() != 'comment_type_id') {
+                            if (isset($used[$field->getName()])) {
+                                $highlight = 'boxhighlight';
+                            }
+                            $html_result .= '<option value="'. $field->getName() .'" class="'. $highlight .'">';
+                            $html_result .= $field->getLabel();
+                            $html_result .= '</option>';
+                        }
+                    }
+                }
+                $html_result .= '</optgroup>';
+            }
+            $html_result .= '</select>';
+            return $html_result;
+        }
 
         /**
          *  Return the HTML code to display the results of the query fields
@@ -325,26 +355,10 @@ class ArtifactReportHtml extends ArtifactReport {
             $result = $this->getResultQueryReport($query);
             $rows = count($result);
             
-            if (!$pv && !$masschange) {
-                $html_result .= '<div style="text-align:right;"><select name="change_report_column" onchange="this.form.submit.click();">';
-                $html_result .= '<option selected="selected" value="">'. '-- Add/remove column' .'</option>';
-                $afsf = new ArtifactFieldSetFactory($ath);
-                foreach($afsf->getAllFieldSets() as $fieldset) {
-                    $html_result .= '<optgroup label="'. $fieldset->getLabel() .'">';
-                    foreach($fieldset->getArtifactFields() as $field) {
-                        if ($field->isUsed()) {
-                            $highlight = '';
-                            if (isset($result_fields[$field->getName()])) {
-                                $highlight = 'boxhighlight';
-                            }
-                            $html_result .= '<option value="'. $field->getName() .'" class="'. $highlight .'">';
-                            $html_result .= $field->getLabel();
-                            $html_result .= '</option>';
-                        }
-                    }
-                    $html_result .= '</optgroup>';
-                }
-                $html_result .= '</select></div>';
+            if (!$pv && !$masschange && $this->getId() != 100) {
+                $html_result .= '<div style="text-align:right;">';
+                $html_result .= $this->getFieldsSelectbox('change_report_column', '-- Add/remove column', $result_fields, $ath);
+                $html_result .= '</div>';
             }
             
            /*
@@ -407,7 +421,7 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-               	$html_result .= html_build_list_table_top ($title_arr,$links_arr,false,true,null, "draggable");
+               	$html_result .= html_build_list_table_top ($title_arr,$links_arr,false,true,null, ($this->getId() != 100 ? "draggable" : ""));
             }
 
             for ($i=0; $i < $rows ; $i++) {
