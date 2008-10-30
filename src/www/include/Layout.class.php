@@ -406,13 +406,13 @@ class Layout extends Response {
     
     function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
         $hp = CodeX_HTMLPurifier::instance();
-        return '<input type="text" 
+        return '<span style="white-space:nowrap;"><input type="text" 
                        class="highlight-days-67 format-y-m-d divider-dash no-transparency" 
                        id="'.  $hp->purify($id, CODEX_PURIFIER_CONVERT_HTML)  .'" 
                        name="'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'" 
                        size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" 
                        maxlength="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" 
-                       value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'">';
+                       value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'"></span>';
     }
     
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
