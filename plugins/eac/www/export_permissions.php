@@ -25,11 +25,9 @@
 require_once('pre.php');
 require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 require_once('common/user/UserManager.class.php');
-require_once('showPermsVisitor.class.php'); 
+require_once('../include/showPermsVisitor.class.php');
 require_once('common/event/EventManager.class.php');
 
-$GLOBALS['Language']->loadLanguageMsg('eac', 'eac');
- 
 $valueGroupId = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)) {
     $group_id = $request->get('group_id'); 
@@ -54,5 +52,4 @@ if($valueGroupId->validate($group_id)) {
 }else {
     exit_no_group();
 }
-
 ?> 
