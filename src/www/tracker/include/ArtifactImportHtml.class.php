@@ -59,10 +59,11 @@ class ArtifactImportHtml extends ArtifactImport {
       
       echo '<h2>'.$Language->getText('tracker_import','parse_report').'</h2>';
       if (!$ok) {
-	$this->showErrors();
+          $this->showErrors();
       } else {
-	echo $Language->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
-	$this->showParseResults($this->parsed_labels,$artifacts_data);
+          echo $Language->getText('tracker_import','ready',array(($number_inserts+$number_updates),$number_inserts, $number_updates))."<br><br>\n";
+          echo $Language->getText('tracker_import', 'check_data');
+          $this->showParseResults($this->parsed_labels,$artifacts_data);
       }
       
       $this->ath->footer(array());

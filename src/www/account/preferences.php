@@ -23,7 +23,7 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
     <tr valign="top">
         <td>
             <fieldset>
-                <legend>Email settings</legend>
+                <legend><?php echo $Language->getText('account_preferences', 'email_settings'); ?></legend>
 <INPUT type="checkbox" name="form_mail_site" value="1" 
 <?php 
 if ($row_user['mail_siteupdates']) print " checked"; 
@@ -37,7 +37,7 @@ echo '>'.$Language->getText('account_register', 'communitymail');
 ?>
             </fieldset>
             <fieldset>
-                <legend>Session</legend>
+                <legend><?php echo $Language->getText('account_preferences', 'session'); ?></legend>
 <P><INPUT type="checkbox"  name="form_sticky_login" value="1" 
 <?php
 if ($row_user['sticky_login']) print " checked";
@@ -47,7 +47,7 @@ echo '>'.$Language->getText('account_options', 'remember_me', $GLOBALS['sys_name
         </td>
         <td>
             <fieldset>
-                <legend>Appearance</legend>
+                <legend><?php echo $Language->getText('account_preferences', 'appearance'); ?></legend>
                 <table>
                     <tr>
                         <td>
@@ -168,8 +168,13 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
                 </table>
             </fieldset>
             <fieldset>
-                <legend>Import/export</legend>
-<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance'); ?>: 
+                <legend><?php echo $Language->getText('account_preferences', 'import_export'); ?></legend>
+                 <table>
+                  <tr>
+                   <td>
+<?php echo $Language->getText('account_options', 'csv_separator').' '.help_button('AccountMaintenance'); ?>:
+                   </td>
+                   <td>
 <?php
 if ($u_separator = user_get_preference("user_csv_separator")) {
 } else {
@@ -187,7 +192,33 @@ foreach ($csv_separators as $separator) {
 }
 print "</select>\n";
 ?>
-
+                   </td>
+                  </tr>
+                  <tr>
+                   <td>
+<?php echo $Language->getText('account_preferences', 'csv_dateformat').' '.help_button('AccountMaintenance'); ?>:
+                   </td>
+                   <td>
+<?php
+if ($u_dateformat = user_get_preference("user_csv_dateformat")) {
+} else {
+    $u_dateformat = DEFAULT_CSV_DATEFORMAT;
+}
+// build the CSV date format select box
+print '<select name="user_csv_dateformat">'."\n";
+// $csv_dateformats is defined in /www/include/utils.php
+foreach ($csv_dateformats as $dateformat) {
+    print '<option value="'.$dateformat.'"';
+    if ($u_dateformat == $dateformat) {
+        print ' selected="selected"';
+    }
+    print '>'.$Language->getText('account_preferences', $dateformat).'</option>\n';
+}
+print "</select>\n";
+?>
+                  </td>
+                 </tr>
+                </table>
             </fieldset>
         </td>
     </tr>

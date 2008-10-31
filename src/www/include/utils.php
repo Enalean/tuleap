@@ -16,6 +16,11 @@ require_once('common/valid/Rule.class.php');
 define("DEFAULT_CSV_SEPARATOR", ",");
 // array of allowed separators for CSV export
 $csv_separators = array("comma", "semicolon", "tab");
+// The date format for CSV export can differ regarding the Excel version.
+// So we let the user define his prefered date format
+define("DEFAULT_CSV_DATEFORMAT", "month_day_year");
+// array of allowed date formats for CSV export
+$csv_dateformats = array("month_day_year", "day_month_year");
 
 function util_microtime_float($offset = null) {
     list($usec, $sec) = explode(" ", microtime());
@@ -56,6 +61,23 @@ function util_sysdatefmt_to_userdateformat($date) {
     return $user_date;
 }
 
+function util_get_user_preferences_export_datefmt() {
+    $fmt = '';
+    $u_pref = user_get_preference("user_csv_dateformat");
+    switch ($u_pref) {
+        case "month_day_year";
+            $fmt = 'm/d/Y H:i:s';
+            break;
+        case "day_month_year";
+            $fmt = 'd/m/Y H:i:s';
+            break;
+        default;
+            $fmt = 'm/d/Y H:i:s';
+            break;
+    }
+    return $fmt;
+}
+
 /**
 * Convert a timestamp unix into the user defined format.
 * This format is depending on the choosen language, and is defined
@@ -92,6 +114,7 @@ function util_importdatefmt_to_unixtime($date) {
     if (strstr($date,"/") !== false) {
       list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
       $time = mktime($hour, $minute, 0, $month, $day, $year);
+      
       return array($time,true);
     }
     
@@ -104,10 +127,15 @@ function util_importdatefmt_to_unixtime($date) {
     return array($time,false);
 }
 
-// Explode a date in the form of (n/j/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
+// Explode a date in the form of (m/d/Y H:i or d/m/Y H:i) into its a list of 5 parts (YYYY,MM,DD,H,i)
 // if DD and MM are not defined then default them to 1
 function util_xlsdatefmt_explode($date) {
-
+  
+  if ($u_pref = user_get_preference("user_csv_dateformat")) {
+  } else {
+      $u_pref = DEFAULT_CSV_DATEFORMAT;
+  }
+  
   $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
   if ($res == 0) { 
     //if it doesn't work try (n/j/Y) only
@@ -116,10 +144,18 @@ function util_xlsdatefmt_explode($date) {
       // nothing is valid return Epoch time
       $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
     } else {
-      list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
+        if ($u_pref == "day_month_year") {
+            list(,$day,$month,$year) = $match; $hour='0'; $minute='0';
+        } else {
+            list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
+        }
     }
   } else {
-    list(,$month,$day,$year,$hour,$minute) = $match;
+      if ($u_pref == "day_month_year") {
+            list(,$day,$month,$year,$hour,$minute) = $match;
+        } else {
+            list(,$month,$day,$year,$hour,$minute) = $match;
+        }
   }
 
   return array($year,$month,$day,$hour,$minute);

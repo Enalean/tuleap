@@ -330,35 +330,6 @@
 	&SYS_PRODUCT_NAME;. Le but est de permettre aux autres utilisateurs de
 	mieux vous connaître vous et votre expertise technique.</para>
       </listitem>
-
-      <listitem>
-	<para><emphasis role="bold">&#34;Souviens-toi de
-	moi&#34;</emphasis> : par défaut, votre session de travail
-	courante sur &SYS_PRODUCT_NAME; s'achève dès que vous stoppez votre
-	navigateur Web. Au prochain démarrage, vous devrez à nouveau
-	vous identifier. En cochant cette case vous demandez à &SYS_PRODUCT_NAME;
-	de se souvenir de votre identité entre deux sessions de
-	travail à moins, bien sûr, que vous ne vous déconnectiez
-	explicitement en utilisant le lien &#34;Se
-	déconnecter&#34;. Pour des raisons de sécurité nous vous
-	recommandons de n'utiliser cette fonctionnalité que si vous
-	disposez d'une machine personnelle.</para>
-      </listitem>
-
-      <listitem>
-	<para><emphasis role="bold">Séparateur CSV</emphasis>:
-          &SYS_PRODUCT_NAME; vous permet d'importer et d'exporter des données de vos projets
-          (Voir <xref linkend="ProjectDataExport" /> pour plus de détails).
-          Le format d'import et d'export utilisé est le format CSV.
-          Comme la norme CSV n'est pas implémentée de la même manière dans tous les 
-          logiciels, vous avez la possibilité de définir votre séparateur CSV.          
-          Les différents séparateurs disponibles sont :
-          <itemizedlist mark="bullet">
-            <listitem><para>la virgule (,) : le séparateur par défaut.</para></listitem>
-            <listitem><para>Le point-virgule (;) : utilisé par défaut par la version française d'Excel.</para></listitem>
-            <listitem><para>Tab (tabulation).</para></listitem>
-          </itemizedlist></para>
-      </listitem>
       
       <listitem>
 	<para><emphasis role="bold">Clés SSH partagées</emphasis> : ce
@@ -374,6 +345,62 @@
       </listitem>
     </itemizedlist>
   </section>
+  
+  <section id="UserPreferences">
+   <title>Préférences</title>
+     <para>
+        Vos préférences utilisateurs sont disponibles dans Ma page personnelle -> Préférences.
+        Voici les préférences que vous pouvez définir :
+     </para>
+     <itemizedlist mark="bullet">
+     <listitem>
+        <para><emphasis role="bold">&#34;Souviens-toi de
+        moi&#34;</emphasis> : par défaut, votre session de travail
+        courante sur &SYS_PRODUCT_NAME; s'achève dès que vous stoppez votre
+        navigateur Web. Au prochain démarrage, vous devrez à nouveau
+        vous identifier. En cochant cette case vous demandez à &SYS_PRODUCT_NAME;
+        de se souvenir de votre identité entre deux sessions de
+        travail à moins, bien sûr, que vous ne vous déconnectiez
+        explicitement en utilisant le lien &#34;Se
+        déconnecter&#34;. Pour des raisons de sécurité nous vous
+        recommandons de n'utiliser cette fonctionnalité que si vous
+        disposez d'une machine personnelle.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Séparateur CSV</emphasis>:
+          &SYS_PRODUCT_NAME; vous permet d'importer et d'exporter des données de vos projets
+          (Voir <xref linkend="ProjectDataExport" /> pour plus de détails).
+          Le format d'import et d'export utilisé est le format CSV.
+          Comme la norme CSV n'est pas implémentée de la même manière dans tous les 
+          logiciels, vous avez la possibilité de définir votre séparateur CSV.          
+          Les différents séparateurs disponibles sont :
+          <itemizedlist mark="bullet">
+            <listitem><para>la virgule (,) : le séparateur par défaut.</para></listitem>
+            <listitem><para>Le point-virgule (;) : utilisé par défaut par la version française d'Excel.</para></listitem>
+            <listitem><para>Tab (tabulation).</para></listitem>
+          </itemizedlist></para>
+      </listitem>
+      
+      <listitem>
+      <para><emphasis role="bold">Format de date CSV</emphasis>:
+          CodeX vous permet d'importer et d'exporter des données de vos projets
+          (Voir <xref linkend="ProjectDataExport" /> pour plus de détails).
+          Le format d'import et d'export utilisé est le format CSV.
+          Comme la norme CSV n'est pas implémentée de la même manière dans tous les 
+          logiciels, vous avez la possibilité de définir votre format de date CSV.
+          Les différents formats disponibles sont :
+          <itemizedlist mark="bullet">
+            <listitem><para>mois/jour/année : le format par défaut (généralement utilisé aux Etats-Unis).</para></listitem>
+            <listitem><para>jour/mois/année : utilisé par défaut dans la version française d'Excel.</para></listitem>
+          </itemizedlist>
+          Ce format sera utilisé lors de l'export des artéfacts. Il sera également utilisé 
+          lors de l'import. N'oubliez donc pas de vérifier vos données dates avant d'importer.
+          Le système attend des dates au format défini dans vos préférences.
+          </para>
+      </listitem>
+     </itemizedlist>
+   </section>
 </chapter>
 <!--
 Local Variables:

@@ -1252,8 +1252,8 @@ width="14.5cm" />
         soumission d'un nouvel artefact. Qui plus est, un exemple de
         fichier CSV figure en bas de page. 
         Comme pour l'export de données, vous pouvez spécifier le séparateur
-        utilisé dans le fichier CSV que vous voulez importer (voir 
-        <xref linkend="AccountMaintenance" />).
+        utilisé dans le fichier CSV que vous voulez importer ainsi que le format 
+        de dates <xref linkend="UserPreferences" />).
         Si vous avez déjà utilisé
         le module d'exportation (voir <xref
         linkend="ProjectDataExport" />) vous remarquerez que les

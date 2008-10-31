@@ -196,7 +196,7 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 
 function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 
-    global $datetime_fmt,$sys_lf,$Language;
+    global $sys_lf,$Language;
     /*
            Prepare the column values in the artifact record
            Input: a row from the artifact table (passed by reference.
@@ -231,7 +231,7 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 				// later in the process
 				$record[$field->getName()] = '0';
 		    else
-				$record[$field->getName()] = format_date($datetime_fmt,$record[$field->getName()]);
+				$record[$field->getName()] = format_date(util_get_user_preferences_export_datefmt(), $record[$field->getName()]);
 		} else if ( $field->isFloat() ) {
 			$record[$field->getName()] = number_format($record[$field->getName()],2);
 		}

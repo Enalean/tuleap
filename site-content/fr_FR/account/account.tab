@@ -51,6 +51,17 @@ account_options	auth_attempt_nb_failure	Nombre de connexions échouées:
 account_options	auth_attempt_sessions	Sessions ouvertes:
 #
 #-----------------------------------------------
+# Script: SF/www/account/preferences.php
+#
+account_preferences	email_settings	Courrier électronique
+account_preferences	session	Session
+account_preferences	appearance	Apparence
+account_preferences	import_export	Import/export
+account_preferences	csv_dateformat	Format de date CSV
+account_preferences	month_day_year	mois/jour/année
+account_preferences	day_month_year	jour/mois/année
+#
+#-----------------------------------------------
 # Script: SF/www/account/change_email.php
 #
 account_change_email	title	Changer l'adresse e-mail
