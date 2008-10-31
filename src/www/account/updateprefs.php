@@ -56,6 +56,14 @@ if($request->existAndNonEmpty('user_csv_separator') &&
     $user_csv_separator = $request->get('user_csv_separator');
 }
 
+// we check if the given value is authorized
+// $csv_dateformats is defined in src/www/include/utils.php
+$user_csv_dateformat = DEFAULT_CSV_DATEFORMAT;
+if($request->existAndNonEmpty('user_csv_dateformat') &&
+   in_array($request->get('user_csv_dateformat'), $csv_dateformats)) {
+    $user_csv_dateformat = $request->get('user_csv_dateformat');
+}
+
 $username_display = null;
 if ($request->existAndNonEmpty('username_display')) {
     $username_display = $request->get('username_display');
@@ -77,6 +85,7 @@ db_query("UPDATE user SET "
 
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);
+user_set_preference("user_csv_dateformat", $user_csv_dateformat);
 if($username_display !== null) {
     user_set_preference("username_display", $username_display);
 }

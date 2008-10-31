@@ -59,6 +59,17 @@ account_options	auth_attempt_nb_failure	Number of login failure:
 account_options	auth_attempt_sessions	Open sessions:
 #
 #-----------------------------------------------
+# Script: SF/www/account/preferences.php
+#
+account_preferences	email_settings	Email settings
+account_preferences	session	Session
+account_preferences	appearance	Appearance
+account_preferences	import_export	Import/export
+account_preferences	csv_dateformat	CSV Date format
+account_preferences	month_day_year	month/day/year
+account_preferences	day_month_year	day/month/year
+#
+#-----------------------------------------------
 # Script: SF/www/account/change_email.php
 #
 account_change_email	title	Change Email Address
