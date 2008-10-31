@@ -23,14 +23,28 @@
  * 
  */
  
-require_once('pre.php');
-
 class showPermsVisitor {
  
-    var  $allTreeItems = array();
-    var  $sep          = ',';
-   
-    public function showPermsVisitor() {
+    var $group_id;
+    var $allTreeItems = array();
+    var $sep          = ',';
+    var $node;
+    
+    public function showPermsVisitor($group_id) {
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
+        require_once('common/user/UserManager.class.php');
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
+        
+        $params['user']            = $user;
+        $params['ignore_collapse'] = true;
+        $params['ignore_perms']    = true;
+        $params['ignore_obsolete'] = false;
+        
+        $itemFactory    = new Docman_ItemFactory($group_id);
+        $node           = $itemFactory->getItemTree(0, $params);
+        $this->node     = $node;
+        $this->group_id = $group_id;
     }
    
     
@@ -129,11 +143,10 @@ class showPermsVisitor {
     /**
      *  Method itemFullName which append the full name  of the Doc/Folder and memorize its Id and its full name in listItem
      * @param Array Id contains item's id and short name
-     * @param Array listItem will memorize item id and its full name
-     * @return null
+     * @return Array listItem will memorize item id and its full name
      */ 
     
-    public function itemFullName($tableId , $listItem) { 
+    private function itemFullName($tableId) { 
         $item_full_name = '';
         $item_id        = '';
         foreach($tableId as $id => $idDoc) {     
@@ -141,6 +154,7 @@ class showPermsVisitor {
             $item_id         = $id;
         }
         $listItem[$item_id] = $item_full_name;
+        return $listItem;
     }
     
     /**
@@ -151,24 +165,28 @@ class showPermsVisitor {
      * @return null
      */
     
-    public function csvFormatting($ugroups, $listItem ,$group_id) {
+    public function csvFormatting() {
         header('Content-Disposition: filename=export_permissions.csv');
         header('Content-Type: text/csv');
         
         echo "Document/Folder,User group,Read,Write,Manage\n";
         
         $table_perms = array();
-        $ugroups     = $this->listUgroups($group_id,$ugroups);
+        $docmanItem  = array();
+        $listItem    = array();
+        
+        $ugroups     = $this->listUgroups($ugroups);
+        $this->visitFolder($this->node, $docmanItem);
         foreach ($this->allTreeItems as $folder_id ) {
-             $this->itemFullName($folder_id,$listItem);  
+            $listItem = $this->itemFullName($folder_id);  
         }
 
         foreach($listItem as $item_id => $item) { 
              $permission_type = 'PLUGIN_DOCMAN%';
-             $table_perms     = $this->extractPermissions($group_id, $item_id, $permission_type);
-             foreach ($table_perms as $row_permissions ) {
+             $table_perms     = $this->extractPermissions($item_id, $permission_type);
+             foreach ($table_perms as $row_permissions) {
                  $permission = $this->permissionFormatting($row_permissions['permission_type']);
-                 echo $item."".$this->sep."".$row_permissions['name']."".$this->sep."".$permission."".PHP_EOL;
+                 echo $item.$this->sep.$row_permissions['name'].$this->sep.$permission.PHP_EOL;
              }
         }  
     }
@@ -179,7 +197,7 @@ class showPermsVisitor {
      * @return String 
      */
     
-    public function permissionFormatting($permissionType) {
+    private function permissionFormatting($permissionType) {
         if($permissionType == 'PLUGIN_DOCMAN_MANAGE') {
             return 'yes'.$this->sep.'yes'.$this->sep.'yes';
         } else if ($permissionType == 'PLUGIN_DOCMAN_READ') {
@@ -196,21 +214,20 @@ class showPermsVisitor {
      * @return null
      */
     
-    public function listUgroups($group_id,&$ugroups) {
-        $requete_liste_ugroups =  sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
-                                          ' FROM  ugroup Ugrp '.
-                                          ' WHERE Ugrp.group_id = %d',db_ei($group_id));
-        
-        $resultat_liste_ugroups = db_query($requete_liste_ugroups);
-        if($resultat_liste_ugroups && !db_error($resultat_liste_ugroups)) {
-            while($row_liste_ugroups = db_fetch_array($resultat_liste_ugroups)) {
-                $ugroup_id = $row_liste_ugroups['ugroup_id'];
-                $ugroups[] = $row_liste_ugroups;
+    private function listUgroups($ugroups) {
+        $sql = sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
+                       ' FROM  ugroup Ugrp '.
+                       ' WHERE Ugrp.group_id = %d',
+                       db_ei($this->group_id));
+
+        $result_list_ugroups = db_query($sql);
+        if($result_list_ugroups && !db_error($result_list_ugroups)) {
+            while($row_list_ugroups = db_fetch_array($result_list_ugroups)) {
+                $ugroup_id = $row_list_ugroups['ugroup_id'];
+                $ugroups[] = $row_list_ugroups;
             }
-            return $ugroups;
-        } else {
-            //echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
+        return $ugroups;
     }
     
     /**
@@ -221,23 +238,21 @@ class showPermsVisitor {
      * @return array row_perms permission information
      */
     
-    public function extractPermissions($group_id, $item_id, $permission_type){
-        $table_perms =array();
+    private function extractPermissions($item_id, $permission_type){
+        $table_perms = array();
         
-        $requete_perms = sprintf('SELECT  Ugrp.ugroup_id, Ugrp.name, P.permission_type, PDI.title'.
-                                 ' FROM ugroup Ugrp '.
-                                 ' INNER JOIN permissions P ON(P.ugroup_id=Ugrp.ugroup_id and P.permission_type LIKE %s)'.
-                                 ' INNER JOIN plugin_docman_item PDI ON(PDI.item_id=P.object_id AND PDI.group_id=Ugrp.group_id)'.
-                                 ' WHERE Ugrp.group_id= %d AND PDI.item_id= %d',DataAccess::quoteSmart($permission_type),db_ei($group_id),db_ei($item_id));
+        $sql = sprintf('SELECT  Ugrp.ugroup_id, Ugrp.name, P.permission_type, PDI.title'.
+                       ' FROM ugroup Ugrp '.
+                       ' INNER JOIN permissions P ON(P.ugroup_id = Ugrp.ugroup_id AND P.permission_type LIKE \'%s\')'.
+                       ' INNER JOIN plugin_docman_item PDI ON(PDI.item_id = P.object_id AND PDI.group_id = Ugrp.group_id)'.
+                       ' WHERE Ugrp.group_id = %d AND PDI.item_id = %d',
+                       db_es($permission_type), db_ei($this->group_id), db_ei($item_id));
+        $result_perms = db_query($sql);
         
-        $resultat_perms = db_query($requete_perms);  
-        
-        if($resultat_perms && !db_error($resultat_perms)) {
-	        while ($row_perms = db_fetch_array($resultat_perms)) {
+        if($result_perms && !db_error($result_perms)) {
+	        while ($row_perms = db_fetch_array($result_perms)) {
 	            $table_perms[] = $row_perms;
             }
-        } else {
-            //echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
         return $table_perms;
      }

@@ -23,32 +23,14 @@
  * 
  */
 require_once('pre.php');
-require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('../include/showPermsVisitor.class.php');
-require_once('common/event/EventManager.class.php');
-
 $valueGroupId = new Valid_UInt('group_id');
 if($valueGroupId->validate($group_id)) {
     $group_id = $request->get('group_id'); 
-    $docmanItem = array();
-    $listItem   = array();
-    $ugroups    = array();
-    
-    $um   = UserManager::instance();
-    $user = $um->getCurrentUser();
-    
-    $params['user']            = $user;
-    $params['ignore_collapse'] = true;
-    $params['ignore_perms']    = true;
-    $params['ignore_obsolete'] = false;
-    
-    $itemFactory = new Docman_ItemFactory($group_id);
-    $node        = $itemFactory->getItemTree(0, $params);
-    $visitor     = new showPermsVisitor(); 
-    $visitor->visitFolder($node, $docmanItem);
-    $visitor->csvFormatting($ugroups, $listItem, $group_id);
-
+    //header('Content-Disposition: filename=export_permissions.csv');
+    //header('Content-Type: text/csv');
+    require_once('../include/showPermsVisitor.class.php');
+    $visitor = new showPermsVisitor($group_id); 
+    $visitor->csvFormatting();
 }else {
     exit_no_group();
 }
