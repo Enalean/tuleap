@@ -1141,7 +1141,8 @@ width="14.5cm" />
       	case of a new artifact submission. In addition, it gives
       	you a sample CSV file.
         As for the export feature, you can specify the separator
-        used in the CSV file you want to import (See <xref linkend="AccountMaintenance" />).
+        used in the CSV file you want to import as well as the date format 
+        (See <xref linkend="UserPreferences" />).
         If you already use the Tracker
       	Artifact Export (see <xref linkend="ProjectDataExport" />)
       	you will notice that the format of the files to import

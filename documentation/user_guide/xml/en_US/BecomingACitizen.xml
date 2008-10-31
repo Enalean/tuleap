@@ -307,7 +307,26 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">Remember my Login/Password</emphasis>:
+	<para><emphasis role="bold">SSH shared keys</emphasis>: this one has
+          to do with the Shell Account service. When you are a registered
+          user, the &SYS_PRODUCT_NAME; server gives you a personal shell account with the
+          same login/password as for the Web interface. To automate the shell
+          login you can share a public encryption key with &SYS_PRODUCT_NAME; and use the
+          secure shell SSH to access &SYS_PRODUCT_NAME; instantly without having to type a
+          password. More on that in <xref linkend="ShellAccount" /></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+  
+  <section id="UserPreferences">
+   <title>Preferences</title>
+     <para>
+        Your preferences are available in My personal Page -> Preferences.
+        Here are some of the preferences you can define:
+     </para>
+     <itemizedlist mark="bullet">
+     <listitem>
+        <para><emphasis role="bold">Remember my Login/Password</emphasis>:
           by default your current login session on &SYS_PRODUCT_NAME; is terminated
           whenever you stop your Web browser. When you restart your browser
           and visit &SYS_PRODUCT_NAME; you will be asked for your login/password again. By
@@ -319,7 +338,7 @@
       </listitem>
 
       <listitem>
-	<para><emphasis role="bold">CSV separator</emphasis>:
+        <para><emphasis role="bold">CSV separator</emphasis>:
           &SYS_PRODUCT_NAME; provides you export and import functionalities
           (See <xref linkend="ProjectDataExport" /> for details).
           The import/export format is CSV format. Like CSV norm is
@@ -333,18 +352,28 @@
             <listitem><para>tab (tab).</para></listitem>
           </itemizedlist></para>
       </listitem>
-
+      
       <listitem>
-	<para><emphasis role="bold">SSH shared keys</emphasis>: this one has
-          to do with the Shell Account service. When you are a registered
-          user, the &SYS_PRODUCT_NAME; server gives you a personal shell account with the
-          same login/password as for the Web interface. To automate the shell
-          login you can share a public encryption key with &SYS_PRODUCT_NAME; and use the
-          secure shell SSH to access &SYS_PRODUCT_NAME; instantly without having to type a
-          password. More on that in <xref linkend="ShellAccount" /></para>
+      <para><emphasis role="bold">CSV date format</emphasis>:
+          CodeX provides export and import functionalities
+          (See <xref linkend="ProjectDataExport" /> for details).
+          The import/export format is CSV format. Like CSV norm is
+          not implemented by the same way in each software, we allow you
+          to change the CSV date format, in order to fit with your
+          preferred software!
+          The available formats are:
+          <itemizedlist mark="bullet">
+            <listitem><para>month/day/year : the default format (generally used in United States).</para></listitem>
+            <listitem><para>day/month/year : used by default by the french version of Excel.</para></listitem>
+          </itemizedlist>
+          This format will be used to generate the exported artifacts, and will also be used
+          when importing. Then, don't forget to check your dates value before importing.
+          They should be the same format as defined in your preferences.
+          </para>
       </listitem>
-    </itemizedlist>
+     </itemizedlist>
   </section>
+  
 </chapter>
 <!--
 Local Variables:
