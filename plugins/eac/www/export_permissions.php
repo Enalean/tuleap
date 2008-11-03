@@ -23,13 +23,13 @@
  * 
  */
 require_once('pre.php');
-$valueGroupId = new Valid_UInt('group_id');
-if($valueGroupId->validate($group_id)) {
-    $group_id = $request->get('group_id'); 
-    //header('Content-Disposition: filename=export_permissions.csv');
-    //header('Content-Type: text/csv');
-    require_once('../include/showPermsVisitor.class.php');
-    $visitor = new showPermsVisitor($group_id); 
+$vGroupId = new Valid_UInt('group_id');
+if($vGroupId->validate($group_id)) {
+    $group_id = $request->get('group_id');
+    header('Content-Disposition: filename=export_permissions.csv');
+    header('Content-Type: text/csv');
+    require_once('../include/permsVisitor.class.php');
+    $visitor = new permsVisitor($group_id);
     $visitor->csvFormatting();
 }else {
     exit_no_group();
