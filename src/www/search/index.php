@@ -7,6 +7,8 @@
 // 
 
 require_once('pre.php');
+require_once('common/tracker/ArtifactTypeFactory.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('www/tracker/include/ArtifactTypeHtml.class.php');
 require_once('www/tracker/include/ArtifactHtml.class.php');
 require_once('common/tracker/ArtifactType.class.php');
@@ -25,7 +27,8 @@ $hp = CodeX_HTMLPurifier::instance();
 	Force them to enter at least three characters
 */
 if ($words && (strlen($words) < 3)) {
-	if ($type_of_search == "tracker" ||
+	if ($type_of_search == "all_trackers" ||
+        $type_of_search == "tracker" ||
         $type_of_search == "wiki") {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
     }
@@ -35,7 +38,8 @@ if ($words && (strlen($words) < 3)) {
 }
 
 if (!$words) {
-    if ($type_of_search == "tracker" ||
+    if ($type_of_search == "all_trackers" ||
+        $type_of_search == "tracker" ||
         $type_of_search == "wiki") {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
     }
@@ -417,6 +421,108 @@ if ($type_of_search == "soft") {
 		echo "</TABLE>\n";
 	}
 
+} else if ($type_of_search == 'all_trackers') {
+    if ($project = project_get_object($group_id)) {
+        
+        $atf = new ArtifactTypeFactory($project);
+        
+        // Get the artfact type list
+        $at_arr = $atf->getArtifactTypes();
+        if (!$at_arr || count($at_arr) < 1) {
+            $no_rows = 1;
+            echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')).'</H2>';
+        } else {
+            for ($i = 0; $i < count($at_arr); $i++) {
+                $atid = $at_arr[$i]->getID();
+                
+                $array=explode(" ",$words);
+                $words1=implode($array,"%' $crit artifact.details LIKE '%");
+                $words2=implode($array,"%' $crit artifact.summary LIKE '%");
+                $words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+                
+                $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
+                               artifact.summary,
+                               artifact.open_date,
+                               user.user_name
+                       FROM artifact INNER JOIN user ON user.user_id=artifact.submitted_by 
+                          LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id 
+                          LEFT JOIN permissions ON (permissions.object_id = artifact.artifact_id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
+                       WHERE artifact.group_artifact_id='". db_ei($atid) ."' 
+                         AND (
+                               artifact.use_artifact_permissions = 0
+                               OR 
+                               (
+                                   permissions.ugroup_id IN (". implode(',', $current_user->getUgroups($group_id,$atid)) .")
+                               )
+                         )
+                         AND (
+                               (artifact.details LIKE '%". db_es($words1) ."%') 
+                               OR 
+                               (artifact.summary LIKE '%". db_es($words2) ."%') 
+                               OR 
+                               (artifact_history.field_name='comment' AND (artifact_history.old_value LIKE '%". db_es($words3) ."%'))
+                         ) 
+                       GROUP BY open_date DESC, artifact.artifact_id DESC 
+                       LIMIT ". db_ei($offset) .", 25";
+                $result = db_query($sql);
+                if ($rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb')) {
+                    
+                    echo '<h3>'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</h3>';
+                    
+                    $art_field_fact = new ArtifactFieldFactory($at_arr[$i]);
+                    
+                    $title_arr = array();
+                    
+                    $summary_field = $art_field_fact->getFieldFromName("summary");
+                    if ($summary_field->userCanRead($group_id,$atid))
+                        $title_arr[] = $Language->getText('search_index','artifact_summary');
+                    $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
+                    if ($submitted_field->userCanRead($group_id,$atid))
+                        $title_arr[] = $Language->getText('search_index','submitted_by');
+                    $date_field = $art_field_fact->getFieldFromName("open_date");
+                    if ($date_field->userCanRead($group_id,$atid))
+                        $title_arr[] = $Language->getText('search_index','date');
+                    $status_field = $art_field_fact->getFieldFromName("status_id");
+                    if ($status_field->userCanRead($group_id,$atid))
+                        $title_arr[] = $Language->getText('global','status');
+    
+                    echo html_build_list_table_top ($title_arr);
+                    $art_displayed=0;
+                    $rows=0;
+                    while ($arr = db_fetch_array($result)) {
+                        $rows++;
+                        $curArtifact=new Artifact($at_arr[$i], $arr['artifact_id']);
+                        if ($curArtifact->isStatusClosed($curArtifact->getStatusID())) {
+                            $status=$Language->getText('global','closed');
+                        } else {                        
+                            $status=$Language->getText('global','open');
+                        }
+                        // Only display artifacts that the user is allowed to see
+                        if ($curArtifact->userCanView()) {
+                            print "\n<TR class=\"". html_get_alt_row_color($art_displayed) ."\">";
+                            if ($summary_field->userCanRead($group_id,$atid)) print "<TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
+                                . $arr['artifact_id']."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
+                                . $arr['summary']."</A></TD>";
+                            if ($submitted_field->userCanRead($group_id,$atid))
+                                print "<TD>".$arr['user_name']."</TD>";
+                            if ($date_field->userCanRead($group_id,$atid))
+                                print "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),$arr['open_date'])."</TD>";
+                            if ($status_field->userCanRead($group_id,$atid))
+                                print "<TD>".$status."</TD>";
+                            print "</TR>";
+                            $art_displayed++;
+                            if ($art_displayed>24) { break; } // Only display 25 results.
+                        }
+                    }
+                    echo "</table>\n";
+                }
+            }
+        }
+        
+    } else {
+        exit_no_group();
+    }
+
 } else if ($type_of_search == 'tracker') {
 
     //
@@ -455,10 +561,10 @@ if ($type_of_search == "soft") {
     $ath->header($params);
         
         
-	$array=explode(" ",$words);
-	$words1=implode($array,"%' $crit artifact.details LIKE '%");
-	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
-	$words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+    $array=explode(" ",$words);
+    $words1=implode($array,"%' $crit artifact.details LIKE '%");
+    $words2=implode($array,"%' $crit artifact.summary LIKE '%");
+    $words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
     
     $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
                    artifact.summary,
@@ -484,8 +590,8 @@ if ($type_of_search == "soft") {
              ) 
            GROUP BY open_date DESC 
            LIMIT ". db_ei($offset) .", 25";
-	$result = db_query($sql);
-	$rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb');
+    $result = db_query($sql);
+    $rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb');
 
 	if ( !$result || $rows_returned < 1) {
 		$no_rows = 1;
@@ -625,7 +731,7 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 
 
 
-if ($type_of_search !== "tracker" || !isset($ath)) {
+if (($type_of_search !== "tracker" &&  $type_of_search !== "all_trackers" ) || !isset($ath)) {
     $HTML->footer(array());
 } else {
     $ath->footer(array());

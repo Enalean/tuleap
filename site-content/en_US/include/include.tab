@@ -141,6 +141,7 @@ include_menu	tasks	Tasks
 include_menu	supp_requ	Support Requests
 include_menu	this_forum	This Forum
 include_menu	this_tracker	This Tracker
+include_menu	all_trackers	All trackers
 include_menu	software_proj	Software Projects
 include_menu	code_snippets	Code Snippets 
 include_menu	people	People

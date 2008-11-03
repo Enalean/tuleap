@@ -1522,7 +1522,9 @@ echo html_blankimage(5,100);
         } else if ($group_id && $is_wiki_page) {
             $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
         }
-        
+        if ($group_id) {
+            $output .= "\t<OPTION value=\"all_trackers\"".( $type_of_search == "all_trackers" ? " SELECTED" : "" ).">".$Language->getText('include_menu','all_trackers')."</OPTION>\n";
+        }
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         if ($GLOBALS['sys_use_snippet'] != 0) {
             $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
