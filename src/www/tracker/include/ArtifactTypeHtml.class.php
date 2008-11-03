@@ -48,6 +48,7 @@ class ArtifactTypeHtml extends ArtifactType {
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/dragtable.js");
+        $GLOBALS['HTML']->includeJavascriptFile("/scripts/tablekit/tablekit.js");
         $GLOBALS['HTML']->includeCalendarScripts();
         
 		//required by new site_project_header

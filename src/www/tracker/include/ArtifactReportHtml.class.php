@@ -421,9 +421,16 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-               	$html_result .= html_build_list_table_top ($title_arr,$links_arr,false,true,null, ($this->getId() != 100 ? "draggable" : ""));
+               	$html_result .= '<table class="draggable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
+                $html_result .= '<thead>';
+                $html_result .= '<tr class="boxtable">';
+                while((list(,$title) = each($title_arr)) && (list(,$link) = each($links_arr))) {
+                    $html_result .= '<th class="boxtitle"><a href="'. $link .'">'. $title .'</a></th>';
+                }
+                $html_result .= '</tr>';
+                $html_result .= '</thead>';
             }
-
+            $html_result .= '<tbody>';
             for ($i=0; $i < $rows ; $i++) {
 
                 $html_result .= '<TR class="'. html_get_alt_row_color ($i) .'">'."\n";
@@ -521,7 +528,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $html_result .= "</tr>\n";
             }
         
-            $html_result .= '</TABLE>';
+            $html_result .= '</tbody></table>';
 
             if ($masschange) {
                	$html_result .= '<script language="JavaScript">';

@@ -652,3 +652,18 @@ div.datePicker table td
         background:#f2f2f2;
         }
 /* }}} */
+
+/* {{{ tablekit */
+th.resize-handle-active {
+    cursor: e-resize;
+}
+
+div.resize-handle {
+    cursor: e-resize;
+    width: 2px;
+    border-right: 1px dashed #1E90FF;
+    position:absolute;
+    top:0;
+    left:0;
+}
+/* }}} */
