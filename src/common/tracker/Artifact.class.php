@@ -1672,9 +1672,12 @@ class Artifact extends Error {
      */
     function getDependencies() {
                 
-    	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
+    	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl ".
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
+            "afvl.field_id = 2 AND ". //status hard coded
+            "afvl.value_id = a.status_id AND ".
+            "afvl.group_artifact_id = a.group_artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
             "d.artifact_id = ". db_ei($this->getID()) ." AND ".
             "ag.group_id = g.group_id ORDER BY a.artifact_id";
@@ -1689,9 +1692,12 @@ class Artifact extends Error {
      */
     function getInverseDependencies() {
                 
-        $sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a ".
+        $sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl ".
             "WHERE d.artifact_id = a.artifact_id AND ".
+            "afvl.field_id = 2 AND ". //status hard coded
+            "afvl.value_id = a.status_id AND ".
+            "afvl.group_artifact_id = a.group_artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
             "d.is_dependent_on_artifact_id = ". db_ei($this->getID()) ." AND ".
             "ag.group_id = g.group_id ORDER BY a.artifact_id";
@@ -2982,14 +2988,19 @@ class Artifact extends Error {
             // based on output type (Ascii, HTML)
             if ($ascii) {
 		$out .= $Language->getText('tracker_include_artifact','dep_list').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list'))). $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-                        $fmt = "%-15s | %s". $GLOBALS['sys_lf'];
-                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
+                        $fmt = "%-15s | %s (%s)". $GLOBALS['sys_lf'];
+                        $out .= sprintf($fmt, 
+                                        $Language->getText('tracker_include_artifact','artifact'), 
+                                        $Language->getText('tracker_include_artifact','summary'),
+                                        $Language->getText('global','status')
+                        );
                         $out .= "------------------------------------------------------------------". $GLOBALS['sys_lf'];
             } else {    
         
                         $title_arr=array();
                         $title_arr[]=$Language->getText('tracker_include_artifact','artifact');
                         $title_arr[]=$Language->getText('tracker_include_artifact','summary');
+                        $title_arr[]=$Language->getText('global','status');
                         $title_arr[]=$Language->getText('tracker_import_admin','tracker');
                         $title_arr[]=$Language->getText('tracker_include_artifact','group');
                         if ($pv == 0) {
@@ -2997,7 +3008,7 @@ class Artifact extends Error {
                         }
                         $out .= html_build_list_table_top ($title_arr);
                 
-                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td>';
+                        $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
                         if ($pv == 0) {
                             $fmt .= '<td align="center">%s</td>';
                         }
@@ -3009,11 +3020,12 @@ class Artifact extends Error {
         
                         $dependent_on_artifact_id = db_result($result, $i, 'is_dependent_on_artifact_id');
                         $summary = db_result($result, $i, 'summary');
+                        $status = db_result($result, $i, 'status');
                         $tracker_label = db_result($result, $i, 'name');
                         $group_label = db_result($result, $i, 'group_name');
                 
                         if ($ascii) {
-                            $out .= sprintf($fmt, $dependent_on_artifact_id, util_unconvert_htmlspecialchars($summary));
+                            $out .= sprintf($fmt, $dependent_on_artifact_id, util_unconvert_htmlspecialchars($summary), $status);
                         } else {
                 
                             if ( user_ismember($this->ArtifactType->getGroupID()) ) {
@@ -3028,6 +3040,7 @@ class Artifact extends Error {
                                             util_get_alt_row_color($i),
                                             '<a href="/tracker/?func=gotoid&group_id='.(int)$group_id.'&aid='.(int)$dependent_on_artifact_id.'">'.(int)$dependent_on_artifact_id.'</a>',
                                             $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ,
+                                            $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) ,
                                             $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_CONVERT_HTML) ,
                                             $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_CONVERT_HTML) ,
                                             $html_delete);

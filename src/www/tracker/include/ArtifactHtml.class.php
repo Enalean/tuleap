@@ -841,7 +841,6 @@ class ArtifactHtml extends Artifact {
         
             $result=$this->getInverseDependencies();
             $rows=db_numrows($result);
-            
             $out = '';
             
             // Nobody in the dependencies list -> return now
@@ -857,20 +856,25 @@ class ArtifactHtml extends Artifact {
             // based on output type (Ascii, HTML)
             if ($ascii) {
 		$out .= $Language->getText('tracker_include_artifact','dep_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list')))."$sys_lf$sys_lf";
-                        $fmt = "%-15s | %s$sys_lf";
-                        $out .= sprintf($fmt, $Language->getText('tracker_include_artifact','artifact'), $Language->getText('tracker_include_artifact','summary'));
+                        $fmt = "%-15s | %s (%s)$sys_lf";
+                        $out .= sprintf($fmt, 
+                                        $Language->getText('tracker_include_artifact','artifact'), 
+                                        $Language->getText('tracker_include_artifact','summary'),
+                                        $Language->getText('global','status')
+                        );
                         $out .= "------------------------------------------------------------------$sys_lf";
             } else {    
         
                         $title_arr=array();
                         $title_arr[]=$Language->getText('tracker_include_artifact','artifact');
                         $title_arr[]=$Language->getText('tracker_include_artifact','summary');
+                        $title_arr[]=$Language->getText('global','status');
                         $title_arr[]=$Language->getText('tracker_import_admin','tracker');
                         $title_arr[]=$Language->getText('tracker_include_artifact','group');
                         $out .= html_build_list_table_top ($title_arr);
                 
                         $fmt = "\n".'<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td>'.
-                            '<td align="center">%s</td></tr>';
+                            '<td align="center">%s</td><td align="center">%s</td></tr>';
                 }
                 
             // Loop through the denpendencies and format them
@@ -878,17 +882,19 @@ class ArtifactHtml extends Artifact {
         
                         $dependent_on_artifact_id = db_result($result, $i, 'artifact_id');
                         $summary = db_result($result, $i, 'summary');
+                        $status = db_result($result, $i, 'status');
                         $tracker_label = db_result($result, $i, 'name');
                         $group_label = db_result($result, $i, 'group_name');
                 
                         if ($ascii) {
-                            $out .= sprintf($fmt, $dependent_on_artifact_id, $summary);
+                            $out .= sprintf($fmt, $dependent_on_artifact_id, $summary, $status);
                         } else {
                 
                             $out .= sprintf($fmt,
                                             util_get_alt_row_color($i),
                                             '<a href="/tracker/?func=gotoid&group_id='. (int)$group_id .'&aid='. (int)$dependent_on_artifact_id .'">'. (int)$dependent_on_artifact_id .'</a>',
                                              $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) ,
+                                             $hp->purify($status, CODEX_PURIFIER_CONVERT_HTML) ,
                                              $hp->purify(SimpleSanitizer::unsanitize($tracker_label), CODEX_PURIFIER_CONVERT_HTML) ,
                                              $hp->purify(util_unconvert_htmlspecialchars($group_label), CODEX_PURIFIER_CONVERT_HTML) );
                         
