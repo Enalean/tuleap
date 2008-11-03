@@ -2003,6 +2003,7 @@ EOS;
 		if ($this->userIsAdmin()) {
 		    echo '<p>'. $Language->getText('tracker_include_type','admin_note') .'</p>';
             if (count($notifs)) {
+                echo '<div id="global_notifs">';
                 foreach($notifs as $key => $nop) {
                     echo '<div>';
                     echo '<a href="?func=notification&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$this->getId() .'&amp;action=remove_global&amp;global_notification_id='. (int)$notifs[$key]->getId() .'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a> &nbsp;';
@@ -2019,8 +2020,39 @@ EOS;
                     
                     echo '</div>';
                 }
+                echo '</div>';
             }
-            echo '<p><a href="?func=notification&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$this->getId() .'&amp;action=add_global">'. $Language->getText('tracker_include_type','add') .'</a></p>';
+            echo '<p><a href="?func=notification&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$this->getId() .'&amp;action=add_global" id="add_global">'. $Language->getText('tracker_include_type','add') .'</a></p>';
+            echo '<script type="text/javascript">'."
+            document.observe('dom:loaded', function() {
+                $('add_global').observe('click', function (evt) {
+                    var self = arguments.callee;
+                    if (!self.counter) {
+                        self.counter = 0;
+                    }
+                    var number = self.counter++;
+                    
+                    var div = new Element('div');
+                    div.insert('<a href=\"#\" onclick=\"this.parentNode.remove(); return false;\">". $GLOBALS['Response']->getimage('ic/trash.png') ."</a> &nbsp;'+
+                               //addresses
+                               '<input type=\"text\" name=\"add_global_notification['+number+'][addresses]\" size=\"55\" />'+
+                               //all_updates
+                               '&nbsp;&nbsp;&nbsp;". addslashes($Language->getText('tracker_include_type','send_all')) ." '+
+                               '<input type=\"hidden\" name=\"add_global_notification['+number+'][all_updates]\" value=\"0\" />'+
+                               '<input type=\"checkbox\" name=\"add_global_notification['+number+'][all_updates]\" value=\"1\" />'+
+                               //check_permissions
+                               '&nbsp;&nbsp;&nbsp;". addslashes($Language->getText('tracker_include_type','check_perms')) ." '+
+                               '<input type=\"hidden\" name=\"add_global_notification['+number+'][check_permissions]\" value=\"0\" />'+
+                               '<input type=\"checkbox\" name=\"add_global_notification['+number+'][check_permissions]\" value=\"1\" checked=\"checked\" />'
+                    );
+                    
+                    Element.insert($('global_notifs'), div);
+                    
+                    Event.stop(evt);
+                    return false;
+                });
+            });
+            </script>";
 		} else {
             $ok = false;
             if (count($notifs)) {
