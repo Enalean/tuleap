@@ -361,7 +361,6 @@ function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offs
             return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'createDocmanDocument');
         }
         
-        // TODO
 		$soap_request_params = array(
 			'group_id'			=> $group_id,
 			'item_id'			=> $item_id,

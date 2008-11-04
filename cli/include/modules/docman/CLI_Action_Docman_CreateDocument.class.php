@@ -8,10 +8,13 @@
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Docman_CreateDocument extends CLI_Action {
+	
+	private $chunk_size = 6000000; //6 Mo
+	private $current_chunk_offset = 0;
+	private $filename;
     
     function CLI_Action_Docman_CreateDocument() {
         $this->CLI_Action('createDocument', 'Create a document');
-        $this->setSoapCommand('createDocmanDocument');
         $this->addParam(array(
             'name'           => 'parent_id',
             'description'    => '--parent_id=<item_id>     ID of the parent the document will be created in'
@@ -82,16 +85,84 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         return true;
     }
     function before_soapCall(&$loaded_params) {
-        if ($loaded_params['soap']['type'] == 'file') {
-            if (!file_exists($loaded_params['soap']['content'])) {
-                exit_error("File '". $loaded_params['soap']['content'] ."' doesn't exist");
-            } else if (!($fh = fopen($loaded_params['soap']['content'], "rb"))) {
-                exit_error("Could not open '". $loaded_params['soap']['content'] ."' for reading");
+        if (isset($this->filename)) {
+            if (!file_exists($this->filename)) {
+                exit_error("File '". $this->filename ."' doesn't exist");
+            } else if (!($fh = fopen($this->filename, "rb"))) {
+                exit_error("Could not open '$this->filename' for reading");
             } else {
-                $contents = file_get_contents($loaded_params['soap']['content']);
+            	$chunk_offset = $this->current_chunk_offset++;
+        		
+        		$contents = file_get_contents($this->filename, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
                 $loaded_params['soap']['content'] = base64_encode($contents);
+                $loaded_params['soap']['chunk_offset'] = $chunk_offset;
+                $loaded_params['soap']['chunk_size'] = $this->chunk_size;
             }
         }
+    }
+    
+    function execute($params) {
+    	$soap_result = null;
+        if ($this->module->getParameter($params, array('h', 'help'))) {
+            echo $this->help();
+        } else {
+            $loaded_params = $this->loadParams($params);
+            $this->after_loadParams($loaded_params);
+            if ($this->confirmation($loaded_params)) {
+            	if ($loaded_params['soap']['type'] == 'file') {
+            		$this->filename = $loaded_params['soap']['content'];
+            	}
+            	
+            	// Create the document (with the first chunk if it's a file)
+				$this->setSoapCommand('createDocmanDocument');
+				
+                if ($loaded_params['soap']['type'] == 'file') {
+					echo "\rSending file (0%)";
+                }
+                
+				$this->before_soapCall($loaded_params);
+				$loaded_params['soap']['file_size'] = filesize($this->filename);
+                try {
+                	$soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+                } catch (SoapFault $fault) {
+                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
+                    exit_error($fault, $fault->getCode());
+                }
+                
+                // If it's a file, send the other chunks
+                if ($loaded_params['soap']['type'] == 'file') {
+               		$item_id = $soap_result;
+	                $filesize = filesize($this->filename);
+	                
+	                $modulo = $filesize % $this->chunk_size;
+	                $chunk_count = ($filesize - $modulo) / $this->chunk_size;
+	                if ($modulo != 0) {
+	                	$chunk_count++;
+	                }
+	                
+					$this->setSoapCommand('appendFileChunk');
+
+            		$loaded_params['soap'] = array(
+            			'group_id' => $loaded_params['soap']['group_id'],
+            			'item_id' => $item_id,
+            		);
+	                
+	                while($this->current_chunk_offset < $chunk_count) {
+						echo "\rSending file (".intval($this->current_chunk_offset / $chunk_count * 100).'%)';
+		                $this->before_soapCall($loaded_params);
+		                try {
+		                	$soap_result2 = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+		                } catch (SoapFault $fault) {
+		                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
+		                    exit_error($fault, $fault->getCode());
+		                }
+	            	}
+	            	echo "\rSending file (100%)\n";
+                }
+                $this->soapResult($params, $soap_result, array(), $loaded_params);
+            }
+        }
+        return $soap_result;
     }
 }
 

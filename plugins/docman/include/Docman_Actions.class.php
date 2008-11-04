@@ -364,8 +364,6 @@ class Docman_Actions extends Actions {
         } else {
 			$this->_controler->feedback->log('error', 'Error while appending file chunk');
 		}
-        
-        //$this->event_manager->processEvent('send_notifications', array()); //TODO ???
     }
     
     function update() {
