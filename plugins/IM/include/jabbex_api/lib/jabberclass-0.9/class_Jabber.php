@@ -406,7 +406,7 @@ class Jabber {
 			
 			if($this->_log_file){
 				// Header for each log entry.
-				fwrite($this->_log_file,"\n#\n#\n#\n##### ".date("Y/n/d-G:i:s")." #####\n#\n#\n#\n");
+				fwrite($this->_log_file,"\n# ".date("Y/n/d-G:i:s")." #\n");
 			}
 			
 			if ($this->_log_file && $this->_log_flush) {
