@@ -710,7 +710,7 @@ class ArtifactReport extends Error {
 			return $where;
 	
 	    } else if ( ($field->isTextField() || $field->isTextArea())
-                        && isset($prefs[$field->getName()][0])) {
+                        && isset($prefs[$field->getName()][0]) && $prefs[$field->getName()][0]) {
 	
 			// It's a text field accept. Process INT or TEXT,VARCHAR fields differently
 			return " AND ".$field->buildMatchExpression($field_name,$prefs[$field->getName()][0]);
