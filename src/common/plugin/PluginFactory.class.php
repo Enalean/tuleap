@@ -160,11 +160,14 @@ class PluginFactory {
      * @return array of all plugins
      */
     function getAllPlugins() {
+        $all_plugins = array();
         $dar = $this->plugin_dao->searchAll();
         while($row = $dar->getRow()) {
-             $p = $this->_getInstancePlugin($row['id'], $row['name']);
+            if ($p = $this->_getInstancePlugin($row['id'], $row['name'])) {
+                $all_plugins[] = $p;
+            } 
         }
-        return $this->retrieved_plugins['by_id'];
+        return $all_plugins;
     }
     /**
      * @return true if the plugin is enabled

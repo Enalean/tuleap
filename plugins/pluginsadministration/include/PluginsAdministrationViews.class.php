@@ -323,11 +323,8 @@ EOS;
             $plugin_hook_priority_manager =& new PluginHookPriorityManager();
             $plugin_manager               =& PluginManager::instance();
             
-            $plugins =& $plugin_manager->getAllPlugins();
-            $iter    =& $plugins->iterator();
-            
-            while ($iter->valid()) {
-                $plugin     =& $iter->current();
+            $plugins = $plugin_manager->getAllPlugins();
+            foreach($plugins as $plugin) {
                 $plug_info  =& $plugin->getPluginInfo();
                 $descriptor =& $plug_info->getPluginDescriptor();
                 $available = $plugin_manager->isPluginAvailable($plugin);
@@ -358,7 +355,6 @@ EOS;
                     $this->_priorities[$hook][$priority][$plugin->getId()] = array('name' => $name, 'available' => $available);
                     $hooks->next();
                 }
-                $iter->next();
             }
         }
     }
