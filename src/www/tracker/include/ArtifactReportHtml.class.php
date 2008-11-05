@@ -421,7 +421,7 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-               	$html_result .= '<table class="draggable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
+               	$html_result .= '<table class="reorderable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
                 $html_result .= '<thead>';
                 $html_result .= '<tr class="boxtable">';
                 while((list(,$title) = each($title_arr)) && (list(,$link) = each($links_arr))) {
