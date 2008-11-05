@@ -92,3 +92,25 @@ div.resize-handle {
 /* }}} */
 
 
+# Reorder report fields for prepareRanking usage
+SET @counter = 0;
+SET @previous = NULL;
+UPDATE artifact_report_field 
+        INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank, 
+                           @previous := report_id, 
+                           artifact_report_field.* 
+                    FROM artifact_report_field 
+                    ORDER BY report_id, place_result, field_name
+        ) as R1 USING(report_id,field_name)
+SET artifact_report_field.place_result = R1.new_rank;
+SET @counter = 0;
+SET @previous = NULL;
+UPDATE artifact_report_field 
+        INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank, 
+                           @previous := report_id, 
+                           artifact_report_field.* 
+                    FROM artifact_report_field 
+                    ORDER BY report_id, place_query, field_name
+        ) as R1 USING(report_id,field_name)
+SET artifact_report_field.place_query = R1.new_rank;
+
