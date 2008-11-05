@@ -343,12 +343,13 @@ class ArtifactReportHtml extends ArtifactReport {
             reset($result_fields);
             while (list(,$field) = each($result_fields)) {
                 if ($pv != 0) {
-		    $links_arr[] = $url.'&pv='.(int)$pv.'&order='.urlencode($field->getName()).'#results';
-		} else {
-		    $links_arr[] = $url.'&order='.urlencode($field->getName()).'#results';
-		}	
+                    $links_arr[] = $url.'&pv='.(int)$pv.'&order='.urlencode($field->getName()).'#results';
+                } else {
+                    $links_arr[] = $url.'&order='.urlencode($field->getName()).'#results';
+                }
                 $title_arr[] =  $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML) ;
                 $width_arr[$field->getName()] = $field->getColWidth();
+                $id_arr[] = $hp->purify($field->getName(), CODEX_PURIFIER_CONVERT_HTML) ;
             }
 
             $query = $this->createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids);
@@ -424,8 +425,8 @@ class ArtifactReportHtml extends ArtifactReport {
                	$html_result .= '<table class="reorderable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
                 $html_result .= '<thead>';
                 $html_result .= '<tr class="boxtable">';
-                while((list(,$title) = each($title_arr)) && (list(,$link) = each($links_arr))) {
-                    $html_result .= '<th class="boxtitle"><a href="'. $link .'">'. $title .'</a></th>';
+                while((list(,$title) = each($title_arr)) && (list(,$link) = each($links_arr)) && (list(,$id) = each($id_arr))) {
+                    $html_result .= '<th class="boxtitle"><a href="'. $link .'" id="'. $id .'">'. $title .'</a></th>';
                 }
                 $html_result .= '</tr>';
                 $html_result .= '</thead>';

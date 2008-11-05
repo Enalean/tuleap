@@ -58,7 +58,20 @@ codendi.ReorderColumns = Class.create({
             hoverclass: 'drop-over',
             onDrop: (function(dragged, dropped, evt) {
                 dragged.undoPositioned();
-                this.reorder(dropped.up('table'), dragged.up('th').cellIndex, dropped.cellIndex);
+                var from = dragged.up('th').cellIndex;
+                var to   = dropped.cellIndex;
+                
+                var form = dropped.up('form');
+                form.appendChild(new Element('input', { 
+                        type: 'hidden', 
+                        name: 'reordercolumns['+dragged.id+']', 
+                        value: dropped.previous() ? dropped.previous().down().id : '-1' //we can't use 'beginning' since ids are field names
+                }));
+                
+                this.reorder(dropped.up('table'), from, to);
+
+                //save the new column order
+                form.request();
             }).bind(this)
         });
     },
