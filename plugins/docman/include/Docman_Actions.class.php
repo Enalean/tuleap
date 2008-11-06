@@ -165,7 +165,11 @@ class Docman_Actions extends Actions {
             	
                 if ($path) {
                     $uploadSucceded = true;
-                    $_filename = basename($path);
+                     if ($request->exist('file_name')) {
+                     	$_filename = $request->get('file_name');
+                     } else {
+                    	$_filename = basename($path);
+                     }
                     if ($request->exist('file_size')) {
                     	$_filesize = $request->get('file_size');
                     } else {

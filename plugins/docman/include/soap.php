@@ -99,6 +99,7 @@ $GLOBALS['server']->register(
         'chunk_offset'=>'xsd:int',
         'chunk_size'=>'xsd:int',
     	'file_size'=>'xsd:int',
+    	'file_name'=>'xsd:string',
         ),
     array('createDocmanDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -277,7 +278,7 @@ function listFolder($sessionKey,$group_id,$item_id) {
 /**
  * 
  */
-function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $chunk_offset, $chunk_size, $file_size) {
+function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $chunk_offset, $chunk_size, $file_size, $file_name) {
     global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
@@ -305,6 +306,7 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
             'chunk_offset' => $chunk_offset,
             'chunk_size'   => $chunk_size,
             'file_size'    => $file_size,
+            'file_name'    => $file_name,
         );
         switch ($type) {
             case "file":

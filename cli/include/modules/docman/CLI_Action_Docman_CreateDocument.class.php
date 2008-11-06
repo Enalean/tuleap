@@ -109,19 +109,23 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
             $loaded_params = $this->loadParams($params);
             $this->after_loadParams($loaded_params);
             if ($this->confirmation($loaded_params)) {
-            	if ($loaded_params['soap']['type'] == 'file') {
-            		$this->filename = $loaded_params['soap']['content'];
-            	}
             	
-            	// Create the document (with the first chunk if it's a file)
+            	// This command will create the document (if it's a file, the first chunk will be sent)
 				$this->setSoapCommand('createDocmanDocument');
-				
-                if ($loaded_params['soap']['type'] == 'file') {
-					echo "\rSending file (0%)";
+
+				if ($loaded_params['soap']['type'] == 'file') {
+            		$this->filename = $loaded_params['soap']['content'];
                 }
                 
 				$this->before_soapCall($loaded_params);
-				$loaded_params['soap']['file_size'] = filesize($this->filename);
+				
+            	if ($loaded_params['soap']['type'] == 'file') {
+					$loaded_params['soap']['file_size'] = filesize($this->filename);
+					$loaded_params['soap']['file_name'] = $this->filename;
+					
+					echo "\rSending file (0%)";
+                }
+				
                 try {
                 	$soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
                 } catch (SoapFault $fault) {
