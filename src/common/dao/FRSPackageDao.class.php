@@ -131,7 +131,7 @@ class FRSPackageDao extends DataAccessObject {
 
         if($rank !== null) {
             $arg[] = 'rank';
-            $values[] = $this->prepareRanking(0, $group_id, $rank, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+            $values[] = $this->prepareRanking(0, $group_id, $rank, 'package_id', 'group_id');
         }
 
         if($approve_license !== null) {
@@ -151,7 +151,7 @@ class FRSPackageDao extends DataAccessObject {
         $cols   = array('group_id', 'name', 'status_id', 'rank', 'approve_license');
         foreach ($data_array as $key => $value) {
             if ($key == 'rank') {
-                $value = $this->prepareRanking(0, $data_array['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+                $value = $this->prepareRanking(0, $data_array['group_id'], $value, 'package_id', 'group_id');
             }
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -204,7 +204,7 @@ class FRSPackageDao extends DataAccessObject {
         }
 
         if($rank !== null) {
-            $argArray[] = 'rank='. $this->prepareRanking($package_id, $group_id, $rank, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+            $argArray[] = 'rank='. $this->prepareRanking($package_id, $group_id, $rank, 'package_id', 'group_id');
         }
 
         if($approve_license !== null) {
@@ -233,7 +233,7 @@ class FRSPackageDao extends DataAccessObject {
                 foreach($data_array as $key => $value) {
                     if ($key != 'package_id' && $value != $current[$key]) {
                         if ($key == 'rank') {
-                            $value = $this->prepareRanking($package_id, $current['group_id'], $value, array('primary_key' => 'package_id', 'parent_key' => 'group_id'));
+                            $value = $this->prepareRanking($package_id, $current['group_id'], $value, 'package_id', 'group_id');
                         }
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
                     }

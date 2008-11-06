@@ -76,9 +76,7 @@ class Docman_ApprovalTableReviewerDao extends DataAccessObject {
     }
 
     function prepareUserRanking($tableId, $userId, $rank) {
-        $options['primary_key'] = 'reviewer_id';
-        $options['parent_key']  = 'table_id';
-        return parent::prepareRanking($userId, $tableId, $rank, $options);
+        return parent::prepareRanking($userId, $tableId, $rank, 'reviewer_id', 'table_id');
     }
 
     function addUser($tableId, $userId) {

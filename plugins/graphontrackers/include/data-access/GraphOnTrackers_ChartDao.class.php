@@ -56,7 +56,7 @@
         }
         
         public function create($report_id, $chart_type, $title, $description, $width, $height) {
-            $rank = $this->prepareRanking(0, $report_id, 'beginning', array('parent_key' => 'report_graphic_id'));
+            $rank = $this->prepareRanking(0, $report_id, 'beginning', 'id', 'report_graphic_id');
             $sql = sprintf("INSERT INTO plugin_graphontrackers_chart(report_graphic_id, rank, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)",
                 (int)$report_id,
                 (int)$rank,
@@ -78,7 +78,7 @@
         }
         
         public function updatebyId($id, $report_id, $rank, $title, $description, $width, $height) {
-            $rank = $this->prepareRanking($id, $report_id, $rank, array('parent_key' => 'report_graphic_id'));
+            $rank = $this->prepareRanking($id, $report_id, $rank, 'id', 'report_graphic_id');
             $sql = sprintf("UPDATE plugin_graphontrackers_chart SET rank = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d",
                 (int)$rank,
                 $this->da->quoteSmart($title),
