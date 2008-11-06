@@ -866,6 +866,30 @@ if ( $func == 'gotoid' ) {
                         $report->toggleFieldQueryUsage($field_name);
                     }
                     $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
+                } else if($reordercolumns = $request->get('reordercolumns')) {
+                    if (is_array($reordercolumns)) {
+                        $report_id = $request->getValidated('report_id', 'uint');
+                        $field_name  = $request->getValidated('change_report_query', 'string');
+                        $arf = new ArtifactReportFactory($ath);
+                        if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
+                            list($id,$new_position) = each($reordercolumns);
+                            $dao = new ArtifactReportFieldDao(CodeXDataAccess::instance());
+                            if ($new_position == '-1') {
+                                $new_position = 'end';
+                            } else {
+                                $dar = $dao->searchByReportIdAndFieldName($report_id, $new_position);
+                                if ($dar && ($row = $dar->getRow())) {
+                                    $new_position = $row['place_result'];
+                                } else {
+                                    $new_position = '--'; //don't change anything
+                                }
+                            }
+                            $dao->updateResultRanking($id, $report_id, $new_position);
+                        }
+                    }
+                    if ($request->isAjax()) {
+                        exit;
+                    }
                 } else {
                     require('./browse.php');
                 }

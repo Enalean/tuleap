@@ -61,32 +61,36 @@ codendi.ReorderColumns = Class.create({
                 var from = dragged.up('th').cellIndex;
                 var to   = dropped.cellIndex;
                 
-                var form = dropped.up('form');
-                form.appendChild(new Element('input', { 
-                        type: 'hidden', 
-                        name: 'reordercolumns['+dragged.id+']', 
-                        value: dropped.previous() ? dropped.previous().down().id : '-1' //we can't use 'beginning' since ids are field names
-                }));
-                
-                this.reorder(dropped.up('table'), from, to);
-
-                //save the new column order
-                form.request();
+                //don't change column order if it is not necessary
+                if (from != to) {
+                    var form = dropped.up('form');
+                    var input = new Element('input', { 
+                            type: 'hidden', 
+                            name: 'reordercolumns['+dragged.id+']', 
+                            value: (from < to ? (dropped.next() ? dropped.next().down().id : '-1') : dropped.down().id)
+                    });
+                    form.appendChild(input);
+                    
+                    this.reorder(dropped.up('table'), from, to);
+    
+                    //save the new column order
+                    form.request();
+                    
+                    //remove the input for other requests
+                    Element.remove(input);
+                }
             }).bind(this)
         });
     },
     reorder: function(table, from, to) {
-        //don't change column order if it is not necessary
-        if (from != to) {
-            var i = table.rows.length;
-            while (i--) {
-                var row  = table.rows[i];
-                var cell = row.removeChild(row.cells[from]);
-                if (to < row.cells.length) {
-                    row.insertBefore(cell, row.cells[to]);
-                } else {
-                    row.appendChild(cell);
-                }
+        var i = table.rows.length;
+        while (i--) {
+            var row  = table.rows[i];
+            var cell = row.removeChild(row.cells[from]);
+            if (to < row.cells.length) {
+                row.insertBefore(cell, row.cells[to]);
+            } else {
+                row.appendChild(cell);
             }
         }
     }
