@@ -1,7 +1,7 @@
 <?php
 
 require_once('../include/simpletest/reporter.php');
-
+require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
 class CodeXHtmlReporter extends HtmlReporter {
     protected $_timer;
@@ -32,10 +32,33 @@ class CodeXHtmlReporter extends HtmlReporter {
         }
     }
 }
+ 
+class CodeXJUnitXMLReporter extends JUnitXMLReporter {
+        
+    public function getXML() {
+        return $this->doc->saveXML();
+    }
+    
+    public function writeXML($filename) {
+        $fh = fopen($filename, 'w');
+        fwrite($fh, $this->getXML());
+        fclose($fh);        
+    }
+        
+}
 
 class CodeXReporterFactory {
-    /* public static */ function reporter($type = "html") {
-        return $type == "text" ? new TextReporter() : new CodeXHtmlReporter();
+    public static function reporter($type = "html") {
+        switch ($type) {
+            case "text":
+                return new TextReporter();
+                break;
+            case "junit_xml":
+                return new CodeXJUnitXMLReporter();
+                break;
+            default:
+                return new CodeXHtmlReporter();
+        }
     }
 }
 ?>
