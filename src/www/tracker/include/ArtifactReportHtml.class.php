@@ -337,7 +337,8 @@ class ArtifactReportHtml extends ArtifactReport {
             $links_arr = array();
             $title_arr = array();
             $width_arr = array();
-
+            $id_arr    = array();
+            
             if ( count($result_fields) == 0 ) return;
 
             reset($result_fields);
@@ -420,13 +421,50 @@ class ArtifactReportHtml extends ArtifactReport {
 
 	    if ($masschange) {
                	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
+                //TODO: put width here
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-               	$html_result .= '<table class="reorderable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
+                $html_result .= '<script type="text/javascript">'."
+                TableKit.options.observers['onResizeEnd'] = function(table) {
+                    var total = table.offsetWidth;
+                    var form  = table.up('form');
+                    var inputs = Element.childElements(table.rows[0]).inject([], function (inputs, cell) {
+                        var percent = Math.round(cell.offsetWidth * 100 / total);
+                        var el = new Element('input', {
+                            type: 'hidden',
+                            name: 'resizecolumns['+cell.down().id+']',
+                            value: percent
+                        });
+                        Element.setStyle(cell, {
+                            width: percent + '%'
+                        });
+                        form.appendChild(el);
+                        inputs.push(el);
+                        return inputs;
+                    });
+                    
+                    //Send request
+                    form.request();
+                    
+                    //Remove inputs for a future call
+                    inputs.each(function (input) {
+                        Element.remove(input);
+                    });
+                }
+                </script>";
+                $html_result .= '<table class="reorderable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
                 $html_result .= '<thead>';
                 $html_result .= '<tr class="boxtable">';
-                while((list(,$title) = each($title_arr)) && (list(,$link) = each($links_arr)) && (list(,$id) = each($id_arr))) {
-                    $html_result .= '<th class="boxtitle"><a href="'. $link .'" id="'. $id .'">'. $title .'</a></th>';
+                while((list(,$title) = each($title_arr)) && 
+                      (list(,$link) = each($links_arr)) && 
+                      (list(,$id) = each($id_arr)) &&
+                      (list(,$width) = each($width_arr))) {
+                    if ($width) {
+                        $width = 'style="width:'.$width.'%"';
+                    } else {
+                        $width = '';
+                    }
+                    $html_result .= '<th class="boxtitle" '. $width .'><a href="'. $link .'" id="'. $id .'">'. $title .'</a></th>';
                 }
                 $html_result .= '</tr>';
                 $html_result .= '</thead>';
@@ -445,12 +483,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     //echo "$key=".$result[$i][$key]."<br>";
                                     
 				    $value = $result[$i][$key];
-				    if ($width_arr[$key]) {
-						$width = 'WIDTH="'.$width_arr[$key].'%"';
-				    } else {
-						$width = '';
-				    }
-				    $width .= ' class="small"';
+				    $width = ' class="small"';
 				    
 				    if ( $field->isDateField() ) {
 						if ($value) {

@@ -119,7 +119,7 @@ Object.extend(TableKit, {
 		if(TableKit.tables[table.id] &&  TableKit.tables[table.id].observers && TableKit.tables[table.id].observers[eventName]) {
 			TableKit.tables[table.id].observers[eventName](table, event);
 		}
-		TableKit.options.observers[eventName](table, event)();
+		TableKit.options.observers[eventName](table, event);
 	},
 	isSortable : function(table) {
 		return TableKit.tables[table.id] ? TableKit.tables[table.id].sortable : false;
@@ -637,8 +637,13 @@ TableKit.Resizable = {
 		}
 		var pad = parseInt(cell.getStyle('paddingLeft'),10) + parseInt(cell.getStyle('paddingRight'),10);
 		w = Math.max(w-pad, TableKit.option('minWidth', table.id)[0]);
-		
+		var last_w = cell.offsetWidth;
 		cell.setStyle({'width' : w + 'px'});
+        var next = cell.next();
+        if (next) {
+            next_w = next.offsetWidth + (last_w - w);
+            next.setStyle({'width' : next_w + 'px'});
+        }
 	},
 	initDetect : function(e) {
 		e = TableKit.e(e);
@@ -698,6 +703,7 @@ TableKit.Resizable = {
 				document.body.removeChild(elm);
 			});
 		}
+		TableKit.notify('onResizeEnd', TableKit.Resizable._tbl, e);
 		Event.observe(cell, 'mouseout', TableKit.Resizable.killDetect);
 		TableKit.Resizable._tbl = TableKit.Resizable._handle = TableKit.Resizable._cell = null;
 		Event.stop(e);

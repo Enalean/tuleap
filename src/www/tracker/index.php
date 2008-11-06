@@ -869,9 +869,9 @@ if ( $func == 'gotoid' ) {
                 } else if($reordercolumns = $request->get('reordercolumns')) {
                     if (is_array($reordercolumns)) {
                         $report_id = $request->getValidated('report_id', 'uint');
-                        $field_name  = $request->getValidated('change_report_query', 'string');
                         $arf = new ArtifactReportFactory($ath);
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
+                            //Todo: check that the user can update the report
                             list($id,$new_position) = each($reordercolumns);
                             $dao = new ArtifactReportFieldDao(CodeXDataAccess::instance());
                             if ($new_position == '-1') {
@@ -885,6 +885,19 @@ if ( $func == 'gotoid' ) {
                                 }
                             }
                             $dao->updateResultRanking($id, $report_id, $new_position);
+                        }
+                    }
+                    if ($request->isAjax()) {
+                        exit;
+                    }
+                } else if($resizecolumns = $request->get('resizecolumns')) {
+                    if (is_array($resizecolumns)) {
+                        $report_id = $request->getValidated('report_id', 'uint');
+                        $arf = new ArtifactReportFactory($ath);
+                        if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
+                            //Todo: check that the user can update the report
+                            $dao = new ArtifactReportFieldDao(CodeXDataAccess::instance());
+                            $dao->resizeColumns($report_id, $resizecolumns);
                         }
                     }
                     if ($request->isAjax()) {

@@ -51,5 +51,41 @@ class ArtifactReportFieldDao extends DataAccessObject {
         echo $sql . PHP_EOL;
         return $this->update($sql);
     }
+    
+    function resizeColumns($report_id, $new_sizes) {
+        if (is_array($new_sizes) && count($new_sizes)) {
+            $sql = '';
+            $set = '';
+            $where = '';
+            $i = 0;
+            foreach($new_sizes as $field_name => $col_width) {
+                if (!$sql) {
+                    $sql .= " UPDATE ";
+                } else {
+                    $sql .= ", ";
+                }
+                $sql .= $this->table_name ." AS R_$i ";
+                
+                if (!$set) {
+                    $set .= " SET ";
+                } else {
+                    $set .= ", ";
+                }
+                $set .= " R_$i.col_width = ". $this->da->escapeInt($col_width);
+                
+                if (!$where) {
+                    $where .= " WHERE ";
+                } else {
+                    $where .= " AND ";
+                }
+                $where .= " R_$i.field_name = ". $this->da->quoteSmart($field_name);
+                $where .= " AND R_$i.report_id  = ". $this->da->escapeInt($report_id);
+                $i++;
+            }
+            $sql .= $set . $where;
+            return $this->update($sql);
+        }
+        return false;
+    }
 }
 ?>
