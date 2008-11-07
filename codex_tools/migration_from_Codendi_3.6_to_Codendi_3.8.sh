@@ -75,21 +75,7 @@ WHERE language_id != 'fr_FR';
 DROP TABLE supported_languages;
 
 
-# Add tablekit css style
-/* {{{ tablekit */
-th.resize-handle-active {
-    cursor: e-resize;
-}
-
-div.resize-handle {
-    cursor: e-resize;
-    width: 2px;
-    border-right: 1px dashed #1E90FF;
-    position:absolute;
-    top:0;
-    left:0;
-}
-/* }}} */
+# Add common stylesheet in custom themes
 
 
 # Reorder report fields for prepareRanking usage

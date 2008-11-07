@@ -158,3 +158,35 @@ RedirectMatch 404 /\.svn(/|$)
 RewriteEngine on
 RewriteRule /http-bind  http://%sys_default_domain%:7070/http-bind/ [P]
 RewriteRule /http-bind/ http://%sys_default_domain%:7070/http-bind/ [P]
+
+
+# Look for images in the following order:
+# 1. /etc/themes/XXXX/images
+# 2. /etc/themes/custom/images
+# 3. .../www/themes/XXXX/images
+# 4. .../www/themes/custom/images
+
+#   try to find it in the custom theme...
+#   ...and if found stop and be happy:
+RewriteCond  /etc/codex/themes/$1/images/$2  -f
+RewriteRule  ^/custom/([^/]*)/images/(.+)  /etc/codex/themes/$1/images/$2  [L]
+
+#   try to find it in custom common...
+#   ...and if found stop and be happy:
+RewriteCond  /etc/codex/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /etc/codex/themes/common/images/$1  [L]
+
+#   try to find it in the theme...
+#   ...and if found stop and be happy:
+RewriteCond  /usr/share/codex/src/www/themes/$1/images/$2  -f
+RewriteRule  ^/themes/([^/]*)/images/(.+)  /themes/$1/images/$2  [L]
+
+#   lastly try to find it in common...
+#   ...and if found stop and be happy:
+RewriteCond  /usr/share/codex/src/www/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /themes/common/images/$1  [L]
+
+#   else go on for other Alias or ScriptAlias directives,
+#   etc.
+RewriteRule   ^(.+)  -  [PT]
+
