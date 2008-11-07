@@ -102,6 +102,7 @@ class TabbedLayout extends Layout {
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
 	<title><?php echo $params['title']; ?></title>
+    <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnews.php" type="application/rss+xml">
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">

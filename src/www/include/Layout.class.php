@@ -834,6 +834,7 @@ class Layout extends Response {
         }
         // -->
         </SCRIPT>
+        <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
         <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <?php
               if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {

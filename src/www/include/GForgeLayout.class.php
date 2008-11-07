@@ -396,6 +396,7 @@ class GForgeLayout extends TabbedLayout {
 
 	?>
 <!-- BEGIN codex stylesheet in GF Layout -->
+<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
 <!-- END   codex stylesheet in GF Layout -->
