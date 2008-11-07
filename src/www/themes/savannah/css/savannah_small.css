@@ -700,4 +700,8 @@ div.resize-handle {
     top:0;
     left:0;
 }
+
+th.drop-over {
+    background-color: #eeeef0;
+}
 /* }}} */
