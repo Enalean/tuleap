@@ -34,7 +34,7 @@ if (array_key_exists("CODEX_WSDL", $_ENV)) {
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "0.5.0";
+$CLI_VERSION = "0.5.0"; //TODO Change version number
 
 error_reporting(E_ALL);
 
@@ -100,6 +100,10 @@ for ($i = 1; $i <= $argc-1; $i++) {
 
 define("WSDL_URL", $host);
 $LOG = new Log();
+
+// Disable the cache for testing purposes. TODO re-enable the cache for production.
+ini_set("soap.wsdl_cache_enabled", "0");
+
 $soap = new CodeXSOAP();
 $modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
 

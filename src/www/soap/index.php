@@ -19,7 +19,9 @@ if ($request->exist('wsdl')) {
 }
 	
 try {
-    
+	// Disable the cache for testing purposes. TODO re-enable the cache for production.
+    ini_set("soap.wsdl_cache_enabled", "0");
+	
     $server = new SoapServer($uri.'/soap/codex.wsdl.php?wsdl',  
     							array('trace' => 1, 
     								  'soap_version' => SOAP_1_1
