@@ -1603,7 +1603,7 @@ find /etc/codex/ -type f  \
 # Upgrade to SVN 1.5
 #
 echo "Upgrade repositories to SVN 1.5"
-find /svnroot/ -maxdepth 1 -name "*" -exec svnadmin upgrade {} \; >/dev/null
+find /svnroot/ -maxdepth 1 -name "*" -exec sudo -u codexadm svnadmin upgrade {} \; >/dev/null
 
 ##############################################
 # Restarting some services
