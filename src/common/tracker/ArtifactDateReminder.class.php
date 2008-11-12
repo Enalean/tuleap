@@ -30,13 +30,8 @@ class ArtifactDateReminder {
 
     /**
      *  Constructor.
-     *
      */
-    function ArtifactDateReminder() {
-         
-        // Error constructor
-        $this->Error();
-
+    function __construct() {
     }
 
     function codexDaily() {
