@@ -145,14 +145,17 @@ class permsVisitor {
      * @return Array listItem will memorize item id and its full name
      */ 
     
-    private function itemFullName($tableId) { 
+    private function itemFullName($tableId,&$visited_id) { 
         $item_full_name = '';
         $item_id        = '';
-        foreach($tableId as $id => $idDoc) {     
-            $item_full_name .= $idDoc."/";
-            $item_id         = $id;
+        foreach($tableId as $id => $idDoc) {
+            if (!array_search($id,$visited_id)) {
+                $item_full_name .= $idDoc."/";
+                $item_id         = $id;
+                $listItem[$item_id] = $item_full_name;
+                $visited_id[] = $id;
+            }
         }
-        $listItem[$item_id] = $item_full_name;
         return $listItem;
     }
     
@@ -171,20 +174,24 @@ class permsVisitor {
         $table_perms = array();
         $docmanItem  = array();
         $listItem    = array();
+        $visited_ids = array();
         
         $ugroups     = $this->listUgroups($ugroups);
         $this->visitFolder($this->node, $docmanItem);
+        
         foreach ($this->allTreeItems as $folder_id ) {
-            $listItem = $this->itemFullName($folder_id);  
+            $listItem[] = $this->itemFullName($folder_id,$visited_ids);  
         }
 
-        foreach($listItem as $item_id => $item) { 
-             $permission_type = 'PLUGIN_DOCMAN%';
-             $table_perms     = $this->extractPermissions($item_id, $permission_type);
-             foreach ($table_perms as $row_permissions) {
-                 $permission = $this->permissionFormatting($row_permissions['permission_type']);
-                 echo $item.$this->sep.$row_permissions['name'].$this->sep.$permission.PHP_EOL;
-             }
+        foreach($listItem as $item_ids => $items) {
+            foreach ($items as $item_id => $item) {
+                $permission_type = 'PLUGIN_DOCMAN%';
+                $table_perms     = $this->extractPermissions($item_id, $permission_type);
+                foreach ($table_perms as $row_permissions) {
+                    $permission = $this->permissionFormatting($row_permissions['permission_type']);
+                    echo $item.$this->sep.$row_permissions['name'].$this->sep.$permission.PHP_EOL;
+                }
+            }
         }  
     }
     
@@ -276,12 +283,15 @@ class permsVisitor {
     private function extractPermissions($item_id, $permission_type){
         $table_perms = array();
         
-        $sql = sprintf('SELECT  Ugrp.ugroup_id, Ugrp.name, P.permission_type, PDI.title'.
-                       ' FROM ugroup Ugrp '.
-                       ' INNER JOIN permissions P ON(P.ugroup_id = Ugrp.ugroup_id AND P.permission_type LIKE \'%s\')'.
-                       ' INNER JOIN plugin_docman_item PDI ON(PDI.item_id = P.object_id AND PDI.group_id = Ugrp.group_id)'.
-                       ' WHERE Ugrp.group_id = %d AND PDI.item_id = %d',
-                       db_es($permission_type), db_ei($this->group_id), db_ei($item_id));
+        $sql = sprintf('SELECT DISTINCT Ugrp.ugroup_id, Ugrp.name, P.permission_type, PDI.title'.
+                       ' FROM plugin_docman_item PDI,permissions P,ugroup Ugrp '.
+                       ' WHERE (Ugrp.group_id = %d) ' .
+                       ' AND PDI.item_id = %d ' .
+                       ' AND P.ugroup_id = Ugrp.ugroup_id ' .
+                       ' AND P.permission_type LIKE \'%s\' ' .
+                       ' AND PDI.item_id = P.object_id ' .
+                       ' AND PDI.group_id = Ugrp.group_id',
+                        db_ei($this->group_id), db_ei($item_id), db_es($permission_type));
         $result_perms = db_query($sql);
         
         while ($row_perms = db_fetch_array($result_perms)) {
