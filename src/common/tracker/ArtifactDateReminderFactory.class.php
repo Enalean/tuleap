@@ -295,9 +295,7 @@ class ArtifactDateReminderFactory extends Error {
      * 
      * @return int 
      */
-    function getNotificationToBeSent() {
-        
-    	$current_time = time();
+    function getNotificationToBeSent($current_time) {
     	if ($current_time >= $this->getNotificationStartDate() + 24 * 3600) {
     		$delay = intval(($current_time -$this->getNotificationStartDate()) / (24 * 3600));
     		return floor($delay);
@@ -526,17 +524,16 @@ class ArtifactDateReminderFactory extends Error {
 	*    (c)  increment notifications sent
 	* }
 	*/
-	function checkReminderStatus() {
+	function checkReminderStatus($current_time) {
 	
 		if ($this->getNotificationSent() < $this->getRecurse()) {
-
-			if ($this->getNotificationToBeSent() > 0 && $this->getNotificationToBeSent() > $this->getNotificationSent()) {
+            $notificationToBeSent = $this->getNotificationToBeSent($current_time);
+			if ($notificationToBeSent > 0 && $notificationToBeSent > $this->getNotificationSent()) {
 				//previous notification mails were not sent (for different possible reasons: push to prod of the feature, mail server crash, bug, etc)
 				//in this case, re-adjust 'notification_sent' field
-				$this->updateNotificationSent($this->getNotificationToBeSent());
+				$this->updateNotificationSent($notificationToBeSent);
 			}
 
-			$current_time = time();
 			$next_day = intval($this->getNextReminderDate() + 24 * 3600);
 			if ($current_time >= $this->getNextReminderDate() && $current_time < $next_day) {
 				if ($this->handleNotification()) {

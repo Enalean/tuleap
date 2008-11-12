@@ -40,7 +40,7 @@ class ArtifactDateReminder extends Error {
 	}
 	
 	function codexDaily() {
-	    	    
+        $current_time = time();
 	    $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
 	    $res = db_query($sql);
 	    if (db_numrows($res) > 0) {    
@@ -49,7 +49,7 @@ class ArtifactDateReminder extends Error {
 		    //For each event(represented by a row in artifact_date_reminder_processing table) ,  
 		    //instantiate a new ArtifactDateReminderFactory, then check its reminder status
 		    $adrf = new ArtifactDateReminderFactory($notification_id);
-		    $adrf->checkReminderStatus();
+		    $adrf->checkReminderStatus($current_time);
 	        }
 	    }	    
 	
