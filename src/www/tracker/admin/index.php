@@ -474,6 +474,79 @@ if ($group_id && !$atid) {
 		$ath->footer(array());
 		break;
 	  
+	case 'date_field_notification':
+		if ( !user_isloggedin() ) {
+		    exit_not_logged_in();
+		    return;
+		}
+		
+	        if ( !$ath->userIsAdmin() ) {
+		    exit_permission_denied();
+		    return;
+		}
+		
+		//check if  field_id exist
+		$sql = sprintf('SELECT field_id FROM artifact_field'
+				.' WHERE group_artifact_id=%d'
+				.' AND field_id=%d',
+				$ath->getID(),$field_id);
+		$result = db_query($sql);
+		if (db_numrows($result) < 1) {		    
+		    exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','wrong_field',array($field_id)));
+		} else {
+		    $field = $art_field_fact->getFieldFromId($field_id);  
+		    if (! $field->getNotificationStatus()) {
+		        exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','wrong_field',array($field_id)));
+		    }
+		}
+				
+		if (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
+		    if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == NULL)) && _
+		    		(!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == NULL))) {        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notified_users'));
+		    } else if (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == NULL)) {		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_start'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {   		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
+		    } else if (!isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0))) {		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_frequency'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
+		    } else if (!isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0))) {		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','specify_notification_recurse'));
+		    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {		        
+				$GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','positive_value'));
+		    } else {
+		    	//merge notified_users and notified_groups into one array
+		    	if (isset($notified_users)) {
+		    		$notified = $notified_users;
+		    	} else {
+		    		$notified = array();	
+		    	}
+		    	if (isset($notified_groups)) {
+		    		foreach ($notified_groups as $gr) {
+		    			array_push($notified,$gr);
+		    		}
+		    	}
+		    	// now update the reminder settings		        
+		        $res = $ath->updateDateFieldReminderSettings($field_id,$ath->getID(),$start,$notif_type,$frequency,$recurse,$notified);			
+		        if ($res) {		            
+			    $GLOBALS['Response']->addFeedback('info',$Language->getText('tracker_admin_index','notif_update_success',array($field->getLabel())));
+		        } else {		            
+			    $GLOBALS['Response']->addFeedback('error',$Language->getText('tracker_admin_index','notif_update_fail',array($field->getLabel())));
+		        }
+		    }
+		}
+		
+		$ath->adminHeader(array ('title'=>$Language->getText('tracker_admin_index','admin_date_field_notif'),
+		   'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
+		   
+		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$ath->getID().'">'.$ath->getName().'</a>\' - '.$Language->getText('tracker_include_type','mail_notif').'</h2>';		
+		
+		$ath->displayDateFieldNotificationSettings($field_id);   
+		$ath->footer(array());
+		break;	
+	
 	case 'editoptions':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
@@ -736,7 +809,7 @@ if ($group_id && !$atid) {
                     
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
+						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),(isset($enable_notification)?$enable_notification:0),$special,$use_it,$field_set_id) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
             // Reload the field factory
@@ -779,9 +852,10 @@ if ($group_id && !$atid) {
                     $special        = $request->getValidated('special', new Valid_WhiteList('', array(1)), 0);
                     $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
                     $field_set_id = $request->getValidated('field_set_id', 'uint');
+                    $enable_notification = $request->getValidated('enable_notification', new Valid_WhiteList('', array(1)), 0);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
-							 $empty_ok,$keep_history,$special,$use_it,$field_set_id) ) {
+							 $empty_ok,$keep_history,$enable_notification,$special,$use_it,$field_set_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if (!(isset($use_it) && $use_it)) {
@@ -816,6 +890,9 @@ if ($group_id && !$atid) {
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
             
+            //if the field is date field, clear corresponding date reminder settings
+            $field->deleteFieldReminderSettings($field->getID(),$atid);
+	    
             //clear permissions
             permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
             
@@ -860,7 +937,7 @@ if ($group_id && !$atid) {
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 						    $field->getDisplaySize(),$field->getPlace(),
-						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
+						    $field->getEmptyOk(),$field->getKeepHistory(),$field->getNotificationStatus(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
 			$ath->footer(array());
 		}
 		break;

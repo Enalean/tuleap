@@ -764,6 +764,8 @@ class Artifact extends Error {
         $text_value_list=array();
         $changes = array();
         $upd_list = '';
+        $arr_add_rem = array();
+        $arr_del_rem = array();
         reset($vfl);
         while (list($field_name,$value) = each($vfl)) {
                 
@@ -922,6 +924,18 @@ class Artifact extends Error {
                         $field_html = new ArtifactFieldHtml($field);
                         $changes[$field_name]['del']=$field_html->display($this->ArtifactType->getID(),$old_value,false,false,true,true);
                         $changes[$field_name]['add']=$field_html->display($this->ArtifactType->getID(),$value,false,false,true,true);
+
+                        //update date reminder processing data, according to date field value update
+                        if ($field->isDateField()) {
+                            if (($old_value == 0 || $old_value == NULL) && $value <> 0 && $value <> NULL) {
+                                //field date value is set
+                                $arr_add_rem[count($arr_add_rem)] = $field->getId();
+                            } else if ($old_value <> 0 && $old_value <> NULL && $value == 0) {
+                                //field date value is unset
+                                $arr_del_rem[count($arr_del_rem)] = $field->getId();
+                            }
+                        }
+
                     } else {
 	                    // The user does not have the permissions to update the current field,
 	                    // we exit the function with an error message
@@ -965,6 +979,7 @@ class Artifact extends Error {
         //
         //  Enter the timestamp if we are changing to closed or declined
         //
+        $del_reminder = false;
         if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
             $now=time();
             $upd_list .= "close_date='$now',";
@@ -972,6 +987,10 @@ class Artifact extends Error {
             if ( $field ) {
                 $this->addHistory ($field,$result['close_date'],'');
             }
+
+            //Delete corresponding entry in artifact_date_reminder_processing table
+            $this->ArtifactType->deleteArtifactFromDateReminderProcessing(0,$this->getID(),$this->ArtifactType->getID());
+            $del_reminder = true;
         }
         
         //
@@ -986,6 +1005,9 @@ class Artifact extends Error {
             return false;
         }
                 
+        //get the End Date value before update
+        $old_close_date = $this->getCloseDate();
+
         //
         //  Finally, build the full SQL query and update the artifact itself (if need be)
         //
@@ -1005,6 +1027,19 @@ class Artifact extends Error {
             exit_error($Language->getText('tracker_common_artifact','upd_fail').': '.$sql,$Language->getText('tracker_common_artifact','upd_fail'));
             return false;
         } else {
+            if ($del_reminder == false) {
+                // update artifact_date_reminder_processing table
+                if (count($arr_add_rem) > 0) {
+                    foreach ($arr_add_rem as $field_rem) {
+                        $this->ArtifactType->addArtifactToDateReminderProcessing($field_rem,$this->getID(),$this->ArtifactType->getID());
+                    }	
+                }
+                if (count($arr_del_rem)) {
+                    foreach ($arr_del_rem as $field_rem) {
+                        $this->ArtifactType->deleteArtifactFromDateReminderProcessing($field_rem,$this->getID(),$this->ArtifactType->getID());
+                    }
+                }
+            }
             return true;
         }
 
