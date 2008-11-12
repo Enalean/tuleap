@@ -32,6 +32,8 @@ codendi.Tooltip = Class.create({
         }, options || { });
         
         this.fetching = false;
+        this.fetched  = false;
+        this.old_title = this.element.title;
         
         this.tooltip = false;
         
@@ -46,10 +48,15 @@ codendi.Tooltip = Class.create({
             this.element.title = '';
             new Ajax.Request(this.url, {
                 onSuccess:(function(transport) {
-                    this.createTooltip(transport.responseText);
                     this.fetching = false;
-                    if (this.show_tooltip) {
-                        this.show();
+                    this.fetched  = true;
+                    if (transport.responseText) {
+                        this.createTooltip(transport.responseText);
+                        if (this.show_tooltip) {
+                            this.show();
+                        }
+                    } else {
+                        this.element.title = this.old_title;
                     }
                 }).bind(this)
             });
@@ -65,7 +72,7 @@ codendi.Tooltip = Class.create({
             bottom: this.tooltip
         });
     },
-    show: function() {
+    show: function(evt) {
         this.show_tooltip = true;
         if (this.timeout) {
             clearTimeout(this.timeout);
@@ -77,7 +84,10 @@ codendi.Tooltip = Class.create({
                     left: pos[0]+"px"
             });
             this.tooltip.show();
-        } else {
+            if (evt) {
+                Event.stop(evt);
+            }
+        } else if (!this.fetched) {
             this.fetch();
         }
     },
