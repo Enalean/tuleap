@@ -56,9 +56,9 @@ codendi.Tooltip = Class.create({
         }
     },
     createTooltip: function(content) {
-        var pos = this.element.cumulativeOffset();
         this.tooltip = new Element('div', {
-                style: "z-index:1000; font-size:0.8em; background-color:#ffffcc; border:1px solid gray; display:none; position:absolute; padding:4px 8px; top:"+(pos[1] + this.element.offsetHeight)+"px; left:"+pos[0]+"px;"
+                'class': "codendi-tooltip",
+                style: "display:none;"
         });
         this.tooltip.update(content);
         Element.insert(document.body, {
@@ -71,6 +71,11 @@ codendi.Tooltip = Class.create({
             clearTimeout(this.timeout);
         }
         if (this.tooltip) {
+            var pos = this.element.cumulativeOffset();
+            Element.setStyle(this.tooltip, {
+                    top: (pos[1] + this.element.offsetHeight)+"px",
+                    left: pos[0]+"px"
+            });
             this.tooltip.show();
         } else {
             this.fetch();
