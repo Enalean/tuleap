@@ -253,8 +253,7 @@ class Docman_Actions extends Actions {
     	if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
 			$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
 			if (!$path) {
-				$_action_type = 'appendFileChunk';
-				$this->_controler->feedback->log('error', "Error storing file chunk");
+				$this->_controler->feedback->log('error', "Error while storing file chunk");
 			}
     	}
     }
@@ -351,6 +350,9 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
+    /**
+ 	* Append a chunk of data to a file
+ 	*/
     function appendFileChunk() {
         $request =& $this->_controler->request;
 
@@ -359,6 +361,7 @@ class Docman_Actions extends Actions {
             $item_factory = $this->_getItemFactory();
             $item = $item_factory->getItemFromDb($item_id);
             $itemType = $item_factory->getItemTypeForItem($item);
+            
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
             	$this->_storeFileChunk($item);
             } else {
@@ -367,6 +370,32 @@ class Docman_Actions extends Actions {
             
         } else {
 			$this->_controler->feedback->log('error', 'Error while appending file chunk');
+		}
+    }
+    
+    /**
+ 	* Returns the MD5 checksum of a file
+ 	*/
+    function getFileMD5sum() {
+        $request =& $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            $itemType = $item_factory->getItemTypeForItem($item);
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+            	$fs = $this->_getFileStorage();
+				$md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
+				$this->_controler->_viewParams['action_result'] = $md5sum;
+				if (!$md5sum) {
+					$this->_controler->feedback->log('error', "Error while getting file checksum");
+				}
+			} else {
+				$this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+			}
+        } else {
+			$this->_controler->feedback->log('error', 'Error while getting file checksum (unable to retrieve the item ID)');
 		}
     }
     

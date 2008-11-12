@@ -9,7 +9,7 @@ require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Docman_CreateDocument extends CLI_Action {
 	
-	private $chunk_size = 6000000; //6 Mo
+	private $chunk_size = 6000000; // ~6 Mo
 	private $current_chunk_offset = 0;
 	private $filename;
     
@@ -102,7 +102,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
     }
     
     function execute($params) {
-    	$soap_result = null;
+   	$soap_result = null;
         if ($this->module->getParameter($params, array('h', 'help'))) {
             echo $this->help();
         } else {
@@ -162,11 +162,35 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
 		                }
 	            	}
 	            	echo "\rSending file (100%)\n";
+	            	
+	            	$this->checkChecksum($loaded_params, $item_id);
                 }
                 $this->soapResult($params, $soap_result, array(), $loaded_params);
             }
         }
         return $soap_result;
+    }
+    
+    function checkChecksum(&$loaded_params, $item_id) {
+    	$this->setSoapCommand('getFileMD5sum');
+		$loaded_params['soap'] = array(
+			'group_id' => $loaded_params['soap']['group_id'],
+			'item_id' => $item_id,
+			'version' => 0,
+		);
+		
+		$local_checksum = md5_file($this->filename);
+
+		// For very big files, the checksum can take several minutes to be computed, so we set the socket timeout to 10 minutes
+		ini_set('default_socket_timeout', 600);
+
+		$distant_checksum = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+		
+		if ($local_checksum == $distant_checksum) {
+			echo "File uploaded successfully\n";
+		} else {
+			exit_error("Local and remote checksums are not the same. You should remove the document on the server, and try to create it again.");
+		}
     }
 }
 

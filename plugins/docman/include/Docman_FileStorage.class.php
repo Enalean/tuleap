@@ -67,6 +67,16 @@ class Docman_FileStorage {
         }
     }
     
+    function getFileMD5sum($group_id, $item_id, $version_number) {
+    	$path = $this->_getPath('file', $group_id, $item_id, $version_number);
+    	
+    	if (is_file($path)) {
+    		return md5_file($path);
+    	} else {    	
+    		return false;
+    	}
+    }
+    
     function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {
         $dstPath = $this->_getPath($dst_name, $dst_group_id, $dst_item_id, $dst_version_number);
         

@@ -126,6 +126,21 @@ $GLOBALS['server']->register(
     'Append a chunk of data to a file.'
 );
 $GLOBALS['server']->register(
+    'getFileMD5sum',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'item_id'=>'xsd:int',
+    	'version_number'=>'xsd:int',
+        ),
+    array('getFileMD5sumResponse'=>'xsd:string'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getFileMD5sum',
+    'rpc',
+    'encoded',
+    'Returns the MD5 checksum of the file corresponding to the provided item ID.'
+);
+$GLOBALS['server']->register(
     'createDocmanFolder',
     array(
         'sessionKey'=>'xsd:string',
@@ -348,19 +363,19 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
 }
 
 /**
- * 
+ * Append a chunk of data to a file
  */
 function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
   	global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'createDocmanDocument');
+            return new SoapFault(get_group_fault, 'Could Not Get Group', 'appendFileChunk');
         } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'createDocmanDocument');
+            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'appendFileChunk');
         }
         if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'createDocmanDocument');
+            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'appendFileChunk');
         }
         
 		$soap_request_params = array(
@@ -382,15 +397,60 @@ function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offs
             $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg,  'deleteDocmanItem');
+                   return new SoapFault(null,  $msg,  'appendFileChunk');
             } else {
                 return $result;
             }
         } else {
-            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'deleteDocmanItem');
+            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'appendFileChunk');
         }
     } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'createDocmanFolder');
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'appendFileChunk');
+    }
+}
+
+/**
+ * Returns the MD5 checksum of the file corresponding to the provided item ID.
+ */
+function getFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
+  	global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault, 'Could Not Get Group', 'getFileMD5sum');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'getFileMD5sum');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getFileMD5sum');
+        }
+        
+		$soap_request_params = array(
+			'group_id'			=> $group_id,
+			'item_id'			=> $item_id,
+			'version_number'	=> $version_number,
+            //needed internally in docman vvv
+            'action'			=> 'getFileMD5sum',
+            'confirm'			=> true,
+        );
+        
+		$request =& new SOAPRequest($soap_request_params);
+
+    	$plugin_manager =& PluginManager::instance();
+        $p =& $plugin_manager->getPluginByName('docman');
+        if ($p && $plugin_manager->isPluginAvailable($p)) {
+            $result = $p->processSOAP($request);
+            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+                   $msg = $GLOBALS['Response']->getRawFeedback();
+                   return new SoapFault(null,  $msg, 'getFileMD5sum');
+            } else {
+                return $result;
+            }
+        } else {
+            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'getFileMD5sum');
+        }
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'getFileMD5sum');
     }
 }
 
@@ -567,6 +627,7 @@ $GLOBALS['server']->addFunction(
             'listFolder',
             'createDocmanDocument',
             'appendFileChunk',
+        	'getFileMD5sum',
             'createDocmanFolder',
             'deleteDocmanItem',
             'monitorDocmanItem',
