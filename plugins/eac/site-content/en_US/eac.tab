@@ -5,4 +5,20 @@ plugin_eac	export_definitions	Export Definitions
 plugin_eac	Project_access_permission	Docman : Project Access Permissions
 plugin_eac	Export_perms	Export
 plugin_eac	Show_format	Show Format
-plugin_eac	no_group_id	aucun project n'est choisi
+plugin_eac	no_group_id	No project was chosen
+plugin_eac	export_format	Project data export
+plugin_eac	perm_exp_format	Docman permission export format
+plugin_eac	perm_exp_format_msg	Docman permission export format
+plugin_eac	format_label	Label
+plugin_eac	format_sample	Sample value
+plugin_eac	format_description	Description
+plugin_eac	format_path	Path
+plugin_eac	format_path_desc	The Item path in docman tree
+plugin_eac	format_user_group	User Group
+plugin_eac	format_user_group_desc	The User Group who have the related permission
+plugin_eac	format_read	Read
+plugin_eac	format_read_desc	The permission to read the item
+plugin_eac	format_write	Write
+plugin_eac	format_write_desc	The permission to write on the item
+plugin_eac	format_manage	Manage
+plugin_eac	format_manage_desc	The permission to manage the item

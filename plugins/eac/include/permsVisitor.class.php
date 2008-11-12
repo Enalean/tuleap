@@ -165,6 +165,46 @@ class permsVisitor {
         }  
     }
     
+    public function showDefinitionFormat() {
+        project_admin_header(array('title'=>$GLOBALS['Language']->getText('plugin_eac','export_format')));
+        
+        echo '<h3>'.$GLOBALS['Language']->getText('plugin_eac','perm_exp_format').'</h3>';
+        echo '<p>'.$GLOBALS['Language']->getText('plugin_eac','perm_exp_format_msg').'</p>';
+        $title_arr = array(
+            $GLOBALS['Language']->getText('plugin_eac','format_label'),
+            $GLOBALS['Language']->getText('plugin_eac','format_sample'),
+            $GLOBALS['Language']->getText('plugin_eac','format_description')
+        );
+        echo  html_build_list_table_top ($title_arr);
+        echo "<tr class='". util_get_alt_row_color(0) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_path')."</b></td>";
+        echo "<td>Project Documentation/My Document</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_path_desc')."</td>";
+        echo "</tr>";
+        echo "<tr class='". util_get_alt_row_color(1) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_user_group')."</b></td>";
+        echo "<td>Developper Group</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_user_group_desc')."</td>";
+        echo "</tr>";
+        echo "<tr class='". util_get_alt_row_color(2) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_read')."</b></td>";
+        echo "<td>yes</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_read_desc')."</td>";
+        echo "</tr>";
+        echo "<tr class='". util_get_alt_row_color(3) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_write')."</b></td>";
+        echo "<td>no</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_write_desc')."</td>";
+        echo "</tr>";
+        echo "<tr class='". util_get_alt_row_color(4) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_manage')."</b></td>";
+        echo "<td>no</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_manage_desc')."</td>";
+        echo "</tr>";        
+        echo "</table>";
+        site_project_footer( array() );
+    }
+    
     /**
      * Method permissionFormatting which print information about permission in csv format
      * @param Tree item is the Embedded File
@@ -195,11 +235,9 @@ class permsVisitor {
                        db_ei($this->group_id));
 
         $result_list_ugroups = db_query($sql);
-        if($result_list_ugroups && !db_error($result_list_ugroups)) {
-            while($row_list_ugroups = db_fetch_array($result_list_ugroups)) {
-                $ugroup_id = $row_list_ugroups['ugroup_id'];
-                $ugroups[] = $row_list_ugroups;
-            }
+        while($row_list_ugroups = db_fetch_array($result_list_ugroups)) {
+            $ugroup_id = $row_list_ugroups['ugroup_id'];
+            $ugroups[] = $row_list_ugroups;
         }
         return $ugroups;
     }
@@ -223,10 +261,8 @@ class permsVisitor {
                        db_es($permission_type), db_ei($this->group_id), db_ei($item_id));
         $result_perms = db_query($sql);
         
-        if($result_perms && !db_error($result_perms)) {
-            while ($row_perms = db_fetch_array($result_perms)) {
+        while ($row_perms = db_fetch_array($result_perms)) {
                 $table_perms[] = $row_perms;
-            }
         }
         return $table_perms;
      }

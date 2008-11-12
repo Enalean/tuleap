@@ -24,13 +24,21 @@
  */
 require_once('pre.php');
 $vGroupId = new Valid_UInt('group_id');
-if($vGroupId->validate($group_id)) {
+$vExport = new Valid_WhiteList('export', array('format','csv'));
+if($vGroupId->validate($group_id) && $request->valid($vExport)) {
     $group_id = $request->get('group_id');
-    header('Content-Disposition: filename=export_permissions.csv');
-    header('Content-Type: text/csv');
-    require_once('../include/permsVisitor.class.php');
-    $visitor = new permsVisitor($group_id);
-    $visitor->csvFormatting();
+    $export   = $request->get('export');
+    if ($export == 'csv') {
+        header('Content-Disposition: filename=export_permissions.csv');
+        header('Content-Type: text/csv');
+        require_once('../include/permsVisitor.class.php');
+        $visitor = new permsVisitor($group_id);
+        $visitor->csvFormatting();
+    } else { // export = format
+        require_once('../include/permsVisitor.class.php');
+        $visitor = new permsVisitor($group_id);
+        $visitor->showDefinitionFormat();
+    }
 }else {
     exit_no_group();
 }

@@ -66,7 +66,7 @@ class EacPlugin extends Plugin {
    
     function project_data_export_table($params) {
         $url  = $this->getPluginPath().'/export_permissions.php?group_id='.$params['group_id'];
-        $link = '<td align="center"><a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_eac','Export_perms').'</a><br><a href ="">'.$GLOBALS['Language']->getText('plugin_eac','Show_format').'</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td>';
+        $link = '<td align="center"><a href="'.$url.'&export=csv'.'">'.$GLOBALS['Language']->getText('plugin_eac','Export_perms').'</a><br><a href ='.$url.'&export=format'.'>'.$GLOBALS['Language']->getText('plugin_eac','Show_format').'</a></td> <td align="center">-<br>-</td><td align="center">-<br>-</td>';
         echo '<tr class="'.util_get_alt_row_color($params['row_color']++).'"><td><b>'.$GLOBALS['Language']->getText('plugin_eac','Project_access_permission').''. $link.'</tr>';
     }
 
