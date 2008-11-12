@@ -26,35 +26,35 @@ require_once('common/tracker/ArtifactDateReminderFactory.class.php');
 //
 // The artifact date reminder object
 //
-class ArtifactDateReminder extends Error {
-	
-	/**
-	 *  Constructor.
-	 *
-	 */
-	function ArtifactDateReminder() {
-	    
-	    // Error constructor
-	    $this->Error();
-	
-	}
-	
-	function codexDaily() {
+class ArtifactDateReminder {
+
+    /**
+     *  Constructor.
+     *
+     */
+    function ArtifactDateReminder() {
+         
+        // Error constructor
+        $this->Error();
+
+    }
+
+    function codexDaily() {
         $current_time = time();
-	    $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
-	    $res = db_query($sql);
-	    if (db_numrows($res) > 0) {    
-	        while ($rows = db_fetch_array($res)) {
-		    $notification_id = $rows['notification_id'];
-		    //For each event(represented by a row in artifact_date_reminder_processing table) ,  
-		    //instantiate a new ArtifactDateReminderFactory, then check its reminder status
-		    $adrf = new ArtifactDateReminderFactory($notification_id);
-		    $adrf->checkReminderStatus($current_time);
-	        }
-	    }	    
-	
-	}
-	
+        $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
+        $res = db_query($sql);
+        if (db_numrows($res) > 0) {
+            while ($rows = db_fetch_array($res)) {
+                $notification_id = $rows['notification_id'];
+                // For each event(represented by a row in artifact_date_reminder_processing table),
+                // instantiate a new ArtifactDateReminderFactory, then check its reminder status
+                $adrf = new ArtifactDateReminderFactory($notification_id);
+                $adrf->checkReminderStatus($current_time);
+            }
+        }
+
+    }
+
 }
 
 ?>
