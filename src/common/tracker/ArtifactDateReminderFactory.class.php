@@ -293,11 +293,14 @@ class ArtifactDateReminderFactory extends Error {
      * Get the number of mails that should have been sent, but 
      * weren't sent due to different possible issues
      * 
+     * @param Integer $current_time Time when the computation should occur (appart for test, should be time())
+     * 
      * @return int 
      */
     function getNotificationToBeSent($current_time) {
-    	if ($current_time >= $this->getNotificationStartDate() + 24 * 3600) {
-    		$delay = intval(($current_time -$this->getNotificationStartDate()) / (24 * 3600));
+        $start_date = $this->getNotificationStartDate();
+    	if ($current_time >= $start_date + 24 * 3600) {
+    		$delay = intval(($current_time - $start_date) / (24 * 3600));
     		return floor($delay);
     	} else {
     		return 0;
@@ -523,6 +526,8 @@ class ArtifactDateReminderFactory extends Error {
 	*    (b)  send mail
 	*    (c)  increment notifications sent
 	* }
+	* 
+	* @param Integer $current_time Time when the reminder status should be checked (appart for test should be time())
 	*/
 	function checkReminderStatus($current_time) {
 	
