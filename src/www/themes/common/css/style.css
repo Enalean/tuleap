@@ -691,6 +691,12 @@ div.resize-handle {
 th.drop-over {
     background-color: #eeeef0;
 }
+table.reorderable th.boxtitle a {
+    padding-left:10px;
+    background-image: url(../images/drag.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+}
 /* }}} */
 
 /* {{{ Tooltip */
