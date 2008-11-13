@@ -521,18 +521,9 @@ function show_priority_colors_key($msg='') {
 	echo '</tr></table>';
 }
 
-
+// Deprecated
 function get_priority_color ($index) {
-    /*
-        Return the color value for the index that was passed in
-        (defined in $sys_urlroot/<selected theme>/css/)
-    */
-    global $bgpri;
-    if (isset($index) && isset($bgpri[$index])) {
-        return $bgpri[$index];
-    } else {
-        return "";
-    }
+    return $GLOBALS['HTML']->getPriorityColor($index);
 }
 
 function build_priority_select_box ($name='priority', $checked_val='5') {

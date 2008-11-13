@@ -6,11 +6,8 @@
  *
  * Savannah Theme
  */
-require_once('www/include/Layout.class.php');
+require_once('common/layout/Layout.class.php');
 class savannah_Theme extends Layout {
-    function savannah_Theme($root) {
-        $this->Layout($root);
-    }
 }
 
 ?>

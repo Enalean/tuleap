@@ -100,3 +100,9 @@ UPDATE artifact_report_field
         ) as R1 USING(report_id,field_name)
 SET artifact_report_field.place_query = R1.new_rank;
 
+
+#custom themes
+=> no more images
+=> refactoring in common/layout instead of www/include
+
+#TODO remove reserved names javascript

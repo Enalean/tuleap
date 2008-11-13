@@ -6,11 +6,8 @@
  *
  * CodeX default Theme
  */
-require_once('www/include/Layout.class.php');
+require_once('common/layout/Layout.class.php');
 class CodeX_Theme extends Layout {
-    function CodeX_Theme($root) {
-        $this->Layout($root);
-    }
 }
 
 ?>

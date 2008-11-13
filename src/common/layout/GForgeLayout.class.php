@@ -36,17 +36,15 @@ class GForgeLayout extends TabbedLayout {
 	var $FONTSIZE_SMALLER='x-small';
 	var $FONTSIZE_SMALLEST='xx-small';
 	var $FONTSIZE_HTMLBOX_TITLE = 'small';
-	var $bgpri = array();
 
 	/**
 	 * Layout() - Constructor
 	 */
 	function GForgeLayout($root) {
-		GLOBAL $bgpri;
 		// Constructor for parent class...
 		//# if ( file_exists($GLOBALS['sys_custom_path'] . '/index_std.php') )
 		//#	$this->rootindex = $GLOBALS['sys_custom_path'] . '/index_std.php';
-		$this->TabbedLayout($root);
+		parent::TabbedLayout($root);
 	
 		//determine font for this platform
 		if (browser_is_windows() && browser_is_ie()) {

@@ -11,21 +11,6 @@ class TabbedLayout extends Layout {
 
 
 	/**
-	 * The root location for images
-	 *
-	 * @var		string	$imgroot
-	 */
-	var $imgroot;
-	
-	/**
-	 * Layout() - Constructor
-	 */
-	function TabbedLayout($root) {
-		$this->Layout($root);
-        $this->imgroot = $root.'/images/';
-	}
-
-	/**
 	 *	createLinkToUserHome() - Creates a link to a user's home page	
 	 * 
 	 *	@param	string	The user's user_name
