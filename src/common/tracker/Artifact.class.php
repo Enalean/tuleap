@@ -1005,9 +1005,6 @@ class Artifact extends Error {
             return false;
         }
                 
-        //get the End Date value before update
-        $old_close_date = $this->getCloseDate();
-
         //
         //  Finally, build the full SQL query and update the artifact itself (if need be)
         //
