@@ -349,17 +349,21 @@ function _get_permissions_as_array($group_id, $parent_id, $permissions) {
     
     // Initialize the ugroup permissions to the same values as the parent folder
 	foreach ($ugroups as $ugroup) {
-		$permissions_array[$ugroup['ugroup']['id']] = 100;
+		$ugroup_id = $ugroup['ugroup']['id'];
+		$permissions_array[$ugroup_id] = 100;
     	foreach ($perms as $perm) {
     		if (isset($ugroup['permissions'][$perm])) {
-    			$permissions_array[$ugroup['ugroup']['id']] = _get_definition_index_for_permission($perm);
+    			$permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
     		}
     	}
     }
     
     // Set the SOAP-provided permissions
 	foreach ($permissions as $index => $permission) {
-		$permissions_array[$permission->ugroup_id] = _get_definition_index_for_permission($permission->type);
+		$ugroup_id = $permission->ugroup_id;
+		if (isset($permissions_array[$ugroup_id])) {
+			$permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
+		}
     }
     
     return $permissions_array;
