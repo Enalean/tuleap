@@ -600,9 +600,9 @@ class ArtifactReportHtml extends ArtifactReport {
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_items').' '.($offset+1).'-'.($offset_last+1).'</a><p>';
 		
 	      	 	$html_result .= '<table width= "100%"><tr><td width="50%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
+			$html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items').'('.($offset+1).'-'.($offset_last+1).')">';
 			$html_result .= '</td><td width="50%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_include_report','mass_change_all',(int)$total_rows).'">';
+			$html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_include_report','mass_change_all',(int)$total_rows).'">';
 			
 		    } else {
 			$html_result .=
@@ -610,7 +610,7 @@ class ArtifactReportHtml extends ArtifactReport {
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_all_items').' </a><p>';
 		
 			$html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';			
+			$html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';			
 		    }
 		}
 		$html_result .= '</td></tr></table>';		

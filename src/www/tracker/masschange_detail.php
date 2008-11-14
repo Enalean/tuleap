@@ -40,7 +40,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language
 
 $ath->header($params);
 
-$submit = $request->get('submit');
+$submit = $request->get('submit_btn');
 if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {
     $mass_change_ids = $request->get('mass_change_ids');
   if (!$mass_change_ids) {
