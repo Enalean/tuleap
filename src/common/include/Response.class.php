@@ -38,6 +38,9 @@ class Response {
     function feedbackHasWarningsOrErrors() {
     	   return $this->_feedback->hasWarningsOrErrors();
     }
+    function feedbackHasErrors() {
+    	   return $this->_feedback->hasErrors();
+    }
     function getRawFeedback() {
     	   return $this->_feedback->fetchAsPlainText();
     }

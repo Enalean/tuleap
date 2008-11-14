@@ -5,9 +5,9 @@
 * 
 */
 
-require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
+require_once('CLI_Action_Docman_CreateItem.class.php');
 
-class CLI_Action_Docman_CreateDocument extends CLI_Action {
+class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 	
 	private $chunk_size = 6000000; // ~6 Mo
 	private $current_chunk_offset = 0;
@@ -17,27 +17,53 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         $this->CLI_Action('createDocument', 'Create a document');
         $this->addParam(array(
             'name'           => 'parent_id',
-            'description'    => '--parent_id=<item_id>     ID of the parent the document will be created in'
+            'description'    => '--parent_id=<item_id>     ID of the parent the document will be created in',
+            'soap'     => true,
         ));
         $this->addParam(array(
             'name'           => 'title',
-            'description'    => '--title=<title>     Title of the new folder'
+            'description'    => '--title=<title>     Title of the new folder',
+            'soap'     => true,
         ));
         $this->addParam(array(
             'name'           => 'description',
-            'description'    => '--description=<description>     Description of the new document'
+            'description'    => '--description=<description>     Description of the new document',
+            'soap'     => true,
         ));
         $this->addParam(array(
             'name'           => 'type',
-            'description'    => '--type=<file|link|wiki|embedded_file>     nature of the document'
+            'description'    => '--type=<file|link|wiki|embedded_file>     nature of the document',
+            'soap'     => true,
         ));
         $this->addParam(array(
             'name'           => 'content',
-            'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document'
+            'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document',
+            'soap'     => true,
         ));
         $this->addParam(array(
             'name'           => 'ordering',
-            'description'    => '--ordering=<begin|end>     Place where the new document will be hosted'
+            'description'    => '--ordering=<begin|end>     Place where the new document will be hosted',
+            'soap'     => true,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-read',
+            'description'    => '--perm-read=<comma separated list of ugroups IDs>     Groups that will have the permission READ',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-write',
+            'description'    => '--perm-write=<comma separated list of ugroups IDs>     Groups that will have the permission WRITE',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-manage',
+            'description'    => '--perm-manage=<comma separated list of ugroups IDs>     Groups that will have the permission MANAGE',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-none',
+            'description'    => '--perm-none=<comma separated list of ugroups IDs>     Groups that will have no permission',
+            'soap'     => false,
         ));
     }
     
@@ -84,90 +110,90 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
         }
         return true;
     }
-    function before_soapCall(&$loaded_params) {
-        if (isset($this->filename)) {
-            if (!file_exists($this->filename)) {
-                exit_error("File '". $this->filename ."' doesn't exist");
-            } else if (!($fh = fopen($this->filename, "rb"))) {
-                exit_error("Could not open '$this->filename' for reading");
-            } else {
-            	$chunk_offset = $this->current_chunk_offset++;
-        		
-        		$contents = file_get_contents($this->filename, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
-                $loaded_params['soap']['content'] = base64_encode($contents);
-                $loaded_params['soap']['chunk_offset'] = $chunk_offset;
-                $loaded_params['soap']['chunk_size'] = $this->chunk_size;
-            }
-        }
-    }
     
+    /**
+     * Load the next file chunk and set the corresponding SOAP parameters
+     */
+    function loadChunk(&$loaded_params) {
+        if (isset($this->filename)) {
+            $chunk_offset = $this->current_chunk_offset++;
+        	$contents = file_get_contents($this->filename, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
+			$loaded_params['soap']['content'] = base64_encode($contents);
+			$loaded_params['soap']['chunk_offset'] = $chunk_offset;
+			$loaded_params['soap']['chunk_size'] = $this->chunk_size;
+		}
+    }
+
     function execute($params) {
    	$soap_result = null;
         if ($this->module->getParameter($params, array('h', 'help'))) {
             echo $this->help();
         } else {
             $loaded_params = $this->loadParams($params);
-            $this->after_loadParams($loaded_params);
-            if ($this->confirmation($loaded_params)) {
+			$this->after_loadParams($loaded_params);
+			
+            // This command will create the document (if it's a file, the first chunk will be sent)
+			$this->setSoapCommand('createDocmanDocument');
+			
+			if ($loaded_params['soap']['type'] == 'file') {
+            	$this->filename = $loaded_params['soap']['content'];
             	
-            	// This command will create the document (if it's a file, the first chunk will be sent)
-				$this->setSoapCommand('createDocmanDocument');
-
-				if ($loaded_params['soap']['type'] == 'file') {
-            		$this->filename = $loaded_params['soap']['content'];
-                }
-                
-				$this->before_soapCall($loaded_params);
-				
-            	if ($loaded_params['soap']['type'] == 'file') {
-					$loaded_params['soap']['file_size'] = filesize($this->filename);
+            	if (!file_exists($this->filename)) {
+                	exit_error("File '". $this->filename ."' doesn't exist");
+            	} else if (!($fh = fopen($this->filename, "rb"))) {
+                	exit_error("Could not open '$this->filename' for reading");
+            	} else {
+            		$this->loadChunk($loaded_params);
+            		
+            		$loaded_params['soap']['file_size'] = filesize($this->filename);
 					$loaded_params['soap']['file_name'] = $this->filename;
 					$loaded_params['soap']['mime_type'] = mime_content_type($this->filename);
-					
-					echo "\rSending file (0%)";
-                }
 				
-                try {
-                	$soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
-                } catch (SoapFault $fault) {
-                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
-                    exit_error($fault, $fault->getCode());
+					echo "\rSending file (0%)";
+            	}
+			}
+		
+			try {
+                $soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+			} catch (SoapFault $fault) {
+				$GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
+				exit_error($fault, $fault->getCode());
+			}
+                
+            // If it's a file, send the other chunks
+            if ($loaded_params['soap']['type'] == 'file') {
+               	$item_id = $soap_result;
+                $filesize = filesize($this->filename);
+                
+                $modulo = $filesize % $this->chunk_size;
+                $chunk_count = ($filesize - $modulo) / $this->chunk_size;
+                if ($modulo != 0) {
+                	$chunk_count++;
                 }
                 
-                // If it's a file, send the other chunks
-                if ($loaded_params['soap']['type'] == 'file') {
-               		$item_id = $soap_result;
-	                $filesize = filesize($this->filename);
-	                
-	                $modulo = $filesize % $this->chunk_size;
-	                $chunk_count = ($filesize - $modulo) / $this->chunk_size;
-	                if ($modulo != 0) {
-	                	$chunk_count++;
-	                }
-	                
-					$this->setSoapCommand('appendFileChunk');
+				$this->setSoapCommand('appendFileChunk');
 
-            		$loaded_params['soap'] = array(
-            			'group_id' => $loaded_params['soap']['group_id'],
-            			'item_id' => $item_id,
-            		);
-	                
-	                while($this->current_chunk_offset < $chunk_count) {
-						echo "\rSending file (".intval($this->current_chunk_offset / $chunk_count * 100).'%)';
-		                $this->before_soapCall($loaded_params);
-		                try {
-		                	$soap_result2 = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
-		                } catch (SoapFault $fault) {
-		                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
-		                    exit_error($fault, $fault->getCode());
-		                }
-	            	}
-	            	echo "\rSending file (100%)\n";
-	            	
-	            	$this->checkChecksum($loaded_params, $item_id);
-                }
-                $this->soapResult($params, $soap_result, array(), $loaded_params);
-            }
+            	$loaded_params['soap'] = array(
+            		'group_id' => $loaded_params['soap']['group_id'],
+            		'item_id' => $item_id,
+            	);
+                
+                while($this->current_chunk_offset < $chunk_count) {
+					echo "\rSending file (".intval($this->current_chunk_offset / $chunk_count * 100).'%)';
+	                $this->loadChunk($loaded_params);
+	                try {
+	                	$soap_result2 = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
+	                } catch (SoapFault $fault) {
+	                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
+	                    exit_error($fault, $fault->getCode());
+	                }
+            	}
+            	echo "\rSending file (100%)\n";
+            	
+            	$this->checkChecksum($loaded_params, $item_id);
+			}
+			$this->soapResult($params, $soap_result, array(), $loaded_params);
+
         }
         return $soap_result;
     }

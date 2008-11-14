@@ -55,6 +55,29 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Docman_Item'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'Permission',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'type' => array('name'=>'type', 'type' => 'xsd:string'),
+        'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'), 
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfPermission',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Permission[]')),
+    'tns:Permission'
+);
+
 //
 // Function definition
 //
@@ -96,6 +119,8 @@ $GLOBALS['server']->register(
         'type' => 'xsd:string',
         'content' => 'xsd:string',
         'ordering'=>'xsd:string',
+    	'permissions'=>'tns:ArrayOfPermission',
+    	// The next are optionals and are used only for files
         'chunk_offset'=>'xsd:int',
         'chunk_size'=>'xsd:int',
     	'file_size'=>'xsd:int',
@@ -150,6 +175,7 @@ $GLOBALS['server']->register(
         'title'=>'xsd:string',
         'description'=>'xsd:string',
         'ordering'=>'xsd:string',
+        'permissions'=>'tns:ArrayOfPermission',
         ),
     array('createDocmanFolderResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -290,12 +316,61 @@ function listFolder($sessionKey,$group_id,$item_id) {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'listFolder');
     }
 }
+   
+/**
+ * @see Docman_Actions
+ */
+function _get_definition_index_for_permission($p) {
+    switch ($p) {
+        case 'PLUGIN_DOCMAN_READ':
+            return 1;
+            break;
+        case 'PLUGIN_DOCMAN_WRITE':
+            return 2;
+            break;
+        case 'PLUGIN_DOCMAN_MANAGE':
+            return 3;
+            break;
+        default:
+            return 100;
+            break;
+    }
+}
+
+/**
+ * Returns an array containing all the permissions for the specified item. The ugroups that have no defined permission take the permission of the parent folder.
+ */
+function _get_permissions_as_array($group_id, $parent_id, $permissions) {
+	$permissions_array = array();
+	$perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+	
+   	// Get the ugroups of the parent
+	$ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
+    
+    // Initialize the ugroup permissions to the same values as the parent folder
+	foreach ($ugroups as $ugroup) {
+		$permissions_array[$ugroup['ugroup']['id']] = 100;
+    	foreach ($perms as $perm) {
+    		if (isset($ugroup['permissions'][$perm])) {
+    			$permissions_array[$ugroup['ugroup']['id']] = _get_definition_index_for_permission($perm);
+    		}
+    	}
+    }
+    
+    // Set the SOAP-provided permissions
+	foreach ($permissions as $index => $permission) {
+		$permissions_array[$permission->ugroup_id] = _get_definition_index_for_permission($permission->type);
+    }
+    
+    return $permissions_array;
+}
 
 /**
  * 
  */
-function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
-    global $Language;
+function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $permissions, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
+	global $Language;
+
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -316,14 +391,15 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
                 'description' => $description,
             ),
             'ordering' => $ordering,
-            //needed internally in docman vvv
-            'action'       => 'createDocument',
-            'confirm'      => true,
+            'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
             'chunk_offset' => $chunk_offset,
             'chunk_size'   => $chunk_size,
             'file_size'    => $file_size,
             'file_name'    => $file_name,
-            'mime_type'    => $mime_type, 
+            'mime_type'    => $mime_type,  
+            //needed internally in docman vvv
+            'action'       => 'createDocument',
+            'confirm'      => true,  
         );
         switch ($type) {
             case "file":
@@ -350,7 +426,7 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             $result = $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
                    return new SoapFault(null,  $msg,  'createDocmanDocument');
             } else {
@@ -459,8 +535,8 @@ function getFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
 /**
  * 
  */
-function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $description, $ordering) {
-    global $Language;
+function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $description, $ordering, $permissions) {
+	global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -481,6 +557,7 @@ function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $descripti
                 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             ),
             'ordering' => $ordering,
+            'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
             //needed internally in docman vvv
             'action'       => 'createFolder',
             'confirm'      => true,

@@ -5,9 +5,9 @@
 * 
 */
 
-require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
+require_once('CLI_Action_Docman_CreateItem.class.php');
 
-class CLI_Action_Docman_CreateFolder extends CLI_Action {
+class CLI_Action_Docman_CreateFolder extends CLI_Action_Docman_CreateItem {
 	
     function CLI_Action_Docman_CreateFolder() {
         $this->CLI_Action('createFolder', 'Create a folder');
@@ -27,6 +27,26 @@ class CLI_Action_Docman_CreateFolder extends CLI_Action {
         $this->addParam(array(
             'name'           => 'ordering',
             'description'    => '--ordering=<begin|end>     Place where the new folder will be hosted'
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-read',
+            'description'    => '--perm-read=<comma separated list of ugroups IDs>     Groups that will have the permission READ',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-write',
+            'description'    => '--perm-write=<comma separated list of ugroups IDs>     Groups that will have the permission WRITE',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-manage',
+            'description'    => '--perm-manage=<comma separated list of ugroups IDs>     Groups that will have the permission MANAGE',
+            'soap'     => false,
+        ));
+        $this->addParam(array(
+            'name'           => 'perm-none',
+            'description'    => '--perm-none=<comma separated list of ugroups IDs>     Groups that will have no permission',
+            'soap'     => false,
         ));
     }
     

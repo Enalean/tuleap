@@ -165,11 +165,13 @@ class Docman_Actions extends Actions {
             	
                 if ($path) {
                     $uploadSucceded = true;
-                     if ($request->exist('file_name')) {
-                     	$_filename = $request->get('file_name');
-                     } else {
-                    	$_filename = basename($path);
-                     }
+                    
+                    if ($request->exist('file_name')) {
+                        $_filename = $request->get('file_name');
+                    } else {
+                        $_filename = basename($path);
+                    }
+                    
                     if ($request->exist('file_size')) {
                     	$_filesize = $request->get('file_size');
                     } else {
@@ -673,7 +675,7 @@ class Docman_Actions extends Actions {
     * Docman_Actions::recursivePermission (see each method for details).
     */
     function permissions($params) {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         $id = isset($params['id']) ? $params['id'] : $request->get('id');
         $force = isset($params['force']) ? $params['force'] : false;
         if ($id && $request->exist('permissions')) {
