@@ -54,7 +54,6 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
 	}
 	function permission_get_name($params) {
-        $this->loadPluginLanguageFile($params);
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
