@@ -163,7 +163,7 @@ class PluginFactory {
         $all_plugins = array();
         $dar = $this->plugin_dao->searchAll();
         while($row = $dar->getRow()) {
-            if ($p = $this->_getInstancePlugin($row['id'], $row['name'])) {
+            if ($p = $this->_getInstancePlugin($row['id'], $row)) {
                 $all_plugins[] = $p;
             } 
         }
