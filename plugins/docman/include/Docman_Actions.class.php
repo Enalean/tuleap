@@ -175,7 +175,12 @@ class Docman_Actions extends Actions {
                     } else {
                     	$_filesize = filesize($path);
                     }
-                    $_filetype = mime_content_type($path); //be careful with false detection
+                    
+                    if ($request->exist('mime_type')) {
+                        $_filetype = $request->get('mime_type');
+                    } else {
+                        $_filetype = mime_content_type($path); //be careful with false detection
+                    }
                 }
             } else {
                 $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);

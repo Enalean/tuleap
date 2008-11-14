@@ -122,6 +122,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action {
             	if ($loaded_params['soap']['type'] == 'file') {
 					$loaded_params['soap']['file_size'] = filesize($this->filename);
 					$loaded_params['soap']['file_name'] = $this->filename;
+					$loaded_params['soap']['mime_type'] = mime_content_type($this->filename);
 					
 					echo "\rSending file (0%)";
                 }
