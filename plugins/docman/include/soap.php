@@ -78,6 +78,29 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Permission'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'MetadataValue',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'label' => array('name'=>'label', 'type' => 'xsd:string'),
+        'value' => array('name'=>'value', 'type' => 'xsd:string'), 
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfMetadataValue',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataValue[]')),
+    'tns:MetadataValue'
+);
+
 //
 // Function definition
 //
@@ -111,21 +134,22 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanDocument',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'parent_id'=>'xsd:int',
-        'title'=>'xsd:string',
-        'description'=>'xsd:string',
-        'type' => 'xsd:string',
-        'content' => 'xsd:string',
-        'ordering'=>'xsd:string',
-    	'permissions'=>'tns:ArrayOfPermission',
-    	// The next are optionals and are used only for files
-        'chunk_offset'=>'xsd:int',
-        'chunk_size'=>'xsd:int',
-    	'file_size'=>'xsd:int',
-    	'file_name'=>'xsd:string',
-        'mime_type'=>'xsd:string',
+        'sessionKey'  => 'xsd:string',
+        'group_id'    => 'xsd:int',
+        'parent_id'   => 'xsd:int',
+        'title'       => 'xsd:string',
+        'description' => 'xsd:string',
+        'type'        => 'xsd:string',
+        'content'     => 'xsd:string',
+        'ordering'    => 'xsd:string',
+    	'permissions' => 'tns:ArrayOfPermission',
+    	'metadata'    => 'tns:ArrayOfMetadataValue',
+    	// The next are optionals and are used only for files. TODO: create one function per document type
+        'chunk_offset'=> 'xsd:int',
+        'chunk_size'  => 'xsd:int',
+    	'file_size'   => 'xsd:int',
+    	'file_name'   => 'xsd:string',
+        'mime_type'   => 'xsd:string',
         ),
     array('createDocmanDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -176,6 +200,7 @@ $GLOBALS['server']->register(
         'description'=>'xsd:string',
         'ordering'=>'xsd:string',
         'permissions'=>'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         ),
     array('createDocmanFolderResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -316,10 +341,7 @@ function listFolder($sessionKey,$group_id,$item_id) {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'listFolder');
     }
 }
-   
-/**
- * @see Docman_Actions
- */
+
 function _get_definition_index_for_permission($p) {
     switch ($p) {
         case 'PLUGIN_DOCMAN_READ':
@@ -338,7 +360,7 @@ function _get_definition_index_for_permission($p) {
 }
 
 /**
- * Returns an array containing all the permissions for the specified item. The ugroups that have no defined permission take the permission of the parent folder.
+ * Returns an array containing all the permissions for the specified item. The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
 function _get_permissions_as_array($group_id, $parent_id, $permissions) {
 	$permissions_array = array();
@@ -369,10 +391,27 @@ function _get_permissions_as_array($group_id, $parent_id, $permissions) {
     return $permissions_array;
 }
 
+function _get_metadata_as_array($metadata) {
+	$metadata_array = array();
+	foreach ($metadata as $m) {
+		if (isset($metadata_array[$m->label])) {
+			if (is_array($metadata_array[$m->label])) {
+				array_push($metadata_array[$m->label], $m->value);
+			} else {
+				$metadata_array[$m->label] = array($metadata_array[$m->label], $m->value);
+			}
+		} else {
+			$metadata_array[$m->label] = $m->value;
+		}
+	}
+	
+	return $metadata_array;
+}
+
 /**
  * 
  */
-function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $type, $content, $ordering, $permissions, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
+function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $type, $content, $permissions, $metadata, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
 	global $Language;
 
     if (session_continue($sessionKey)) {
@@ -396,6 +435,7 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
             ),
             'ordering' => $ordering,
             'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
+            'metadata'	   => _get_metadata_as_array($metadata),
             'chunk_offset' => $chunk_offset,
             'chunk_size'   => $chunk_size,
             'file_size'    => $file_size,
@@ -539,7 +579,7 @@ function getFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
 /**
  * 
  */
-function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $description, $ordering, $permissions) {
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $permissions, $metadata) {
 	global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
@@ -562,6 +602,7 @@ function createDocmanFolder($sessionKey,$group_id,$parent_id, $title, $descripti
             ),
             'ordering' => $ordering,
             'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
+			'metadata'	   => _get_metadata_as_array($metadata),
             //needed internally in docman vvv
             'action'       => 'createFolder',
             'confirm'      => true,

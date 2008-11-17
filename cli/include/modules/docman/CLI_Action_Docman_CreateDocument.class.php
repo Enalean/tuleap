@@ -14,22 +14,8 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 	private $filename;
     
     function CLI_Action_Docman_CreateDocument() {
-        $this->CLI_Action('createDocument', 'Create a document');
-        $this->addParam(array(
-            'name'           => 'parent_id',
-            'description'    => '--parent_id=<item_id>     ID of the parent the document will be created in',
-            'soap'     => true,
-        ));
-        $this->addParam(array(
-            'name'           => 'title',
-            'description'    => '--title=<title>     Title of the new folder',
-            'soap'     => true,
-        ));
-        $this->addParam(array(
-            'name'           => 'description',
-            'description'    => '--description=<description>     Description of the new document',
-            'soap'     => true,
-        ));
+        $this->CLI_Action_Docman_CreateItem('createDocument', 'Create a document');
+
         $this->addParam(array(
             'name'           => 'type',
             'description'    => '--type=<file|link|wiki|embedded_file>     nature of the document',
@@ -39,31 +25,6 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
             'name'           => 'content',
             'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document',
             'soap'     => true,
-        ));
-        $this->addParam(array(
-            'name'           => 'ordering',
-            'description'    => '--ordering=<begin|end>     Place where the new document will be hosted',
-            'soap'     => true,
-        ));
-        $this->addParam(array(
-            'name'           => 'perm-read',
-            'description'    => '--perm-read=<comma separated list of ugroups IDs>     Groups that will have the permission READ',
-            'soap'     => false,
-        ));
-        $this->addParam(array(
-            'name'           => 'perm-write',
-            'description'    => '--perm-write=<comma separated list of ugroups IDs>     Groups that will have the permission WRITE',
-            'soap'     => false,
-        ));
-        $this->addParam(array(
-            'name'           => 'perm-manage',
-            'description'    => '--perm-manage=<comma separated list of ugroups IDs>     Groups that will have the permission MANAGE',
-            'soap'     => false,
-        ));
-        $this->addParam(array(
-            'name'           => 'perm-none',
-            'description'    => '--perm-none=<comma separated list of ugroups IDs>     Groups that will have no permission',
-            'soap'     => false,
         ));
     }
     
