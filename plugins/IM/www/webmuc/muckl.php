@@ -145,7 +145,6 @@ function sendPresence2Groupchats(gc,val,away) {
   var aPresence;
   for (var i=0; i<gc.length; i++) {
     aPresence = new JSJaCPresence();
-    aPresence.setXMLNS();
     aPresence.setTo(gc[i]);
     if (away && away != '')
       aPresence.setStatus(away);
