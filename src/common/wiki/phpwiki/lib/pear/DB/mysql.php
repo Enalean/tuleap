@@ -115,7 +115,7 @@ class DB_mysql extends DB_common
         global $conn;
         $this->_db = $GLOBALS['sys_dbname'];
         $this->dsn = $dsninfo;
-        $this->connection = $conn;
+        $this->connection = $conn->db;
         return DB_OK;
         /// -- MV add
 
