@@ -58,6 +58,34 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
         ));
     }
     
+    function validate_parent_id(&$parent_id) {
+        if (!isset($parent_id)) {
+            echo $this->help();
+            exit_error("You must specify the parent ID of the document with the --parent_id parameter");
+        }
+        return true;
+    }
+    function validate_title(&$title) {
+        if (!isset($title) || trim($title) == '') {
+            echo $this->help();
+            exit_error("You must specify the title of the document with the --title parameter");
+        }
+        return true;
+    }
+    function validate_ordering(&$ordering) {
+        $allowed_ordering = array("begin", "end");
+        if (isset($ordering)) {
+            // check that the value is allowed
+            if (!in_array($ordering, $allowed_ordering)) {
+                echo $this->help();
+                exit_error("You must specify the ordering of the document with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
+            }
+        } else {
+            // $ordering is not set
+            $ordering = "begin";
+        }
+        return true;
+    }
     function validate_status(&$status) {
         $allowed_values= array("none", "draft", "approved", "rejected");      
         if (isset($status) && !in_array($status, $allowed_values)) {

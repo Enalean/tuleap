@@ -131,11 +131,9 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanFile',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman document parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
@@ -145,7 +143,6 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         
-        // Type specific parameters
         'content'           => 'xsd:string',
         'chunk_offset'      => 'xsd:int',
         'chunk_size'        => 'xsd:int',
@@ -163,22 +160,18 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanEmbeddedFile',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman document parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
         'ordering'          => 'xsd:string',
         'status'            => 'xsd:string',
         'obsolescence_date' => 'xsd:string',
+        'content'           => 'xsd:string',
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
-        
-        // Type specific parameters
-        'content'           => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -190,22 +183,18 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanWikiPage',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman document parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
         'ordering'          => 'xsd:string',
         'status'            => 'xsd:string',
         'obsolescence_date' => 'xsd:string',
+        'content'           => 'xsd:string',
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
-        
-        // Type specific parameters
-        'content'           => 'xsd:string',
         ),
     array('createDocmanWikiPageResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -217,22 +206,18 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanLink',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman document parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
         'ordering'          => 'xsd:string',
         'status'            => 'xsd:string',
         'obsolescence_date' => 'xsd:string',
+        'content'           => 'xsd:string',
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
-        
-        // Type specific parameters
-        'content'           => 'xsd:string',
         ),
     array('createDocmanLinkResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -244,11 +229,9 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanEmptyDocument',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman document parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
@@ -300,11 +283,9 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanFolder',
     array(
-        // Common parameters
         'sessionKey'        => 'xsd:string',
         'group_id'          => 'xsd:int',
         
-        // Docman item parameters
         'parent_id'         => 'xsd:int',
         'title'             => 'xsd:string',
         'description'       => 'xsd:string',
@@ -595,9 +576,9 @@ function _get_status_value($status) {
  * @param string       $mime_type    Mime type
  * @param string       $soapfunction The SOAP function that called this function
  */
-function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type, $soapfunction) {
+function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $soapfunction, $content = null, $chunk_offset = null, $chunk_size = null, $file_size = null, $file_name = null, $mime_type = null) {
     global $Language;
-
+    
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -659,23 +640,23 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
 }
 
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type, 'createDocmanFile');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, 'createDocmanFile', $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type);
 }
 
-function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $content, null, null, null, null, 'createDocmanEmbeddedFile');
+function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, 'createDocmanEmbeddedFile', $content);
 }
 
-function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $content, null, null, null, null, 'createDocmanWikiPage');
+function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, 'createDocmanWikiPage', $content);
 }
 
-function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $content, null, null, null, null, 'createDocmanLink');
+function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, 'createDocmanLink', $content);
 }
 
 function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, null, null, null, null, null, 'createDocmanEmptyDocument');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, 'createDocmanEmptyDocument');
 }
 
 /**
