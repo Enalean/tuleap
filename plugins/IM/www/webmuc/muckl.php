@@ -9,6 +9,9 @@
 	$room = $request->get('room');
 
 	$group_id = $request->get('group_id');
+	
+	$hp = CodeX_HTMLPurifier::instance();
+	
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -302,7 +305,7 @@ function handlePresence(presence) {
         else if (error.firstChild && error.firstChild.nodeValue)
           user.chatW.putMsgHTML(error.firstChild.nodeValue,new Date(),from,null,true);
         else if (error.firstChild.tagName == 'conflict') {
-          user.chatW.putMsgHTML('<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_connection_conflict'); ?>',new Date(),from,null,true);
+          user.chatW.putMsgHTML('<?php echo $hp->purify($GLOBALS['Language']->getText('plugin_im', 'muckl_connection_conflict'), CODEX_PURIFIER_JS_QUOTE); ?>',new Date(),from,null,true);
         }
       }
     }
@@ -385,7 +388,7 @@ function handlePresence(presence) {
         
         var aMessage = new JSJaCMessage();
         aMessage.setFrom(user.jid);
-        aMessage.setBody(""+ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_isnowknownas'); ?> "+htmlEnc(ouser.nick));
+        aMessage.setBody(""+ouser.name+" <?php echo $hp->purify($GLOBALS['Language']->getText('plugin_im', 'muckl_isnowknownas'), CODEX_PURIFIER_JS_QUOTE); ?> "+htmlEnc(ouser.nick));
         user.chatmsgs = user.chatmsgs.concat(aMessage);
         if (user.chatW && !user.chatW.closed && user.chatW.popMsgs)
           user.chatW.popMsgs();
@@ -477,7 +480,7 @@ function handlePresence(presence) {
       // show join message
       var aMessage = new JSJaCMessage();
       aMessage.setFrom(user.jid);
-      aMessage.setBody(ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_hasbecomeavailable'); ?>");
+      aMessage.setBody(ouser.name+" <?php echo $hp->purify($GLOBALS['Language']->getText('plugin_im', 'muckl_hasbecomeavailable'), CODEX_PURIFIER_JS_QUOTE); ?>");
       user.chatmsgs = user.chatmsgs.concat(aMessage);
       if (user.chatW && !user.chatW.closed && user.chatW.popMsgs)
         user.chatW.popMsgs();			
@@ -488,7 +491,7 @@ function handlePresence(presence) {
       // show part message
       var aMessage = new JSJaCMessage();
       aMessage.setFrom(user.jid);
-      var body = ""+ouser.name+" <?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_hasleft'); ?>";
+      var body = ""+ouser.name+" <?php echo $hp->purify($GLOBALS['Language']->getText('plugin_im', 'muckl_hasleft'), CODEX_PURIFIER_JS_QUOTE); ?>";
       if (presence.getStatus())
         body += ": " + presence.getStatus();
       aMessage.setBody(body);
