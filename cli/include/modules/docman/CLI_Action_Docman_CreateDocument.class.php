@@ -18,13 +18,13 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 
         $this->addParam(array(
             'name'           => 'type',
-            'description'    => '--type=<file|link|wiki|embedded_file>     nature of the document',
-            'soap'     => true,
+            'description'    => '--type=<file|embedded_file|wiki|link|empty>     nature of the document',
+            'soap'     => false,
         ));
         $this->addParam(array(
             'name'           => 'content',
             'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document',
-            'soap'     => true,
+            'soap'     => false,
         ));
     }
     
@@ -43,17 +43,10 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
         return true;
     }
     function validate_type(&$type) {
-        $allowed_types= array("file", "link", "wiki", "embedded_file");      
+        $allowed_types= array("file", "embedded_file", "wiki", "link", "empty");      
         if (! isset($type) || !in_array($type, $allowed_types)) {
             echo $this->help();
             exit_error("You must specify the type of the document with the --type parameter, taking the value {".implode(",", $allowed_types)."}");
-        }
-        return true;
-    }
-    function validate_content(&$content) {
-        if (!isset($content) || trim($content) == '') {
-            echo $this->help();
-            exit_error("You must specify the content of the document with the --content parameter, according to the document type");
         }
         return true;
     }
@@ -84,9 +77,44 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 			$loaded_params['soap']['chunk_size'] = $this->chunk_size;
 		}
     }
+    
+    function after_loadParams(&$loaded_params) {
+    	parent::after_loadParams($loaded_params);
+    	
+    	$type = $loaded_params['others']['type'];
+    	if ($type != 'empty') {
+    		
+	    	if (!isset($loaded_params['others']['content']) || trim($loaded_params['others']['content']) == '') {
+	            echo $this->help();
+	            exit_error("You must specify the content of the document with the --content parameter, according to the document type");
+	        }
+    		
+	    	switch ($type) {
+	    		case 'file':
+	    			$this->filename = $loaded_params['others']['content'];
+	            	
+	            	if (!file_exists($this->filename)) {
+	                	exit_error("File '". $this->filename ."' doesn't exist");
+	            	} else if (!($fh = fopen($this->filename, "rb"))) {
+	                	exit_error("Could not open '$this->filename' for reading");
+	            	} else {
+	            		$this->loadChunk($loaded_params);
+	            		$loaded_params['soap']['file_size'] = filesize($this->filename);
+						$loaded_params['soap']['file_name'] = $this->filename;
+						$loaded_params['soap']['mime_type'] = mime_content_type($this->filename);
+						echo "Sending file (0%)";
+	            	}
+	            	break;
+	    		case 'embedded_file':
+	    		case 'wiki':
+	    		case 'link':
+	    			$loaded_params['soap']['content'] = $loaded_params['others']['content']; break;
+	    	}
+    	}
+    }
 
     function execute($params) {
-   	$soap_result = null;
+        $soap_result = null;
         if ($this->module->getParameter($params, array('h', 'help'))) {
             echo $this->help();
         } else {
@@ -94,25 +122,16 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 			$this->after_loadParams($loaded_params);
 			
             // This command will create the document (if it's a file, the first chunk will be sent)
-			$this->setSoapCommand('createDocmanDocument');
-			
-			if ($loaded_params['soap']['type'] == 'file') {
-            	$this->filename = $loaded_params['soap']['content'];
-            	
-            	if (!file_exists($this->filename)) {
-                	exit_error("File '". $this->filename ."' doesn't exist");
-            	} else if (!($fh = fopen($this->filename, "rb"))) {
-                	exit_error("Could not open '$this->filename' for reading");
-            	} else {
-            		$this->loadChunk($loaded_params);
-            		
-            		$loaded_params['soap']['file_size'] = filesize($this->filename);
-					$loaded_params['soap']['file_name'] = $this->filename;
-					$loaded_params['soap']['mime_type'] = mime_content_type($this->filename);
-				
-					echo "\rSending file (0%)";
-            	}
+			//$this->setSoapCommand('createDocmanDocument');
+			$type = $loaded_params['others']['type'];
+			switch ($type) {
+				case 'file':			$soapCommand = 'createDocmanFile'; break;
+				case 'embedded_file':	$soapCommand = 'createDocmanEmbeddedFile'; break;
+				case 'wiki':			$soapCommand = 'createDocmanWikiPage'; break;
+				case 'link':			$soapCommand = 'createDocmanLink'; break;
+				case 'empty':			$soapCommand = 'createDocmanEmptyDocument'; break;
 			}
+			$this->setSoapCommand($soapCommand);
 		
 			try {
                 $soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
@@ -122,7 +141,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
 			}
                 
             // If it's a file, send the other chunks
-            if ($loaded_params['soap']['type'] == 'file') {
+            if ($type == 'file') {
                	$item_id = $soap_result;
                 $filesize = filesize($this->filename);
                 
@@ -132,7 +151,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
                 	$chunk_count++;
                 }
                 
-				$this->setSoapCommand('appendFileChunk');
+				$this->setSoapCommand('appendDocmanFileChunk');
 
             	$loaded_params['soap'] = array(
             		'group_id' => $loaded_params['soap']['group_id'],
@@ -160,7 +179,7 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
     }
     
     function checkChecksum(&$loaded_params, $item_id) {
-    	$this->setSoapCommand('getFileMD5sum');
+    	$this->setSoapCommand('getDocmanFileMD5sum');
 		$loaded_params['soap'] = array(
 			'group_id' => $loaded_params['soap']['group_id'],
 			'item_id' => $item_id,
