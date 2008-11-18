@@ -109,6 +109,8 @@ class IMViews extends Views {
         echo '<div id="chatroom">';
         echo '<h2 id="mucroom_title">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_title') .'</h2>';
         
+        echo '<p id="mucroom_summary">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_summary') .'</p>';
+        
         $user_projects = $user->getProjects();
         if (in_array($group_id, $user_projects)) {
         	
