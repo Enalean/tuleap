@@ -432,7 +432,7 @@ class Docman_Actions extends Actions {
                 unset($data['owner']);
             }
             
-            // Special handeling of obsolescence date
+            // Special handling of obsolescence date
             if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
                     $d = explode('-',$data['obsolescence_date']);
                     $data['obsolescence_date'] = gmmktime(0,0,0,

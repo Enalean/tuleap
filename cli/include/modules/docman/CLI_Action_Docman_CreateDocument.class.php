@@ -17,13 +17,19 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
         $this->CLI_Action_Docman_CreateItem('createDocument', 'Create a document');
 
         $this->addParam(array(
+            'name'           => 'obsolescence_date',
+            'description'    => '--obsolescence_date=<yy-mm-dd|yyyy-mm-dd>    Date when the document will be obsolete',
+            'soap'     => true,
+        ));
+        
+        $this->addParam(array(
             'name'           => 'type',
-            'description'    => '--type=<file|embedded_file|wiki|link|empty>     nature of the document',
+            'description'    => '--type=<file|embedded_file|wiki|link|empty>    nature of the document',
             'soap'     => false,
         ));
         $this->addParam(array(
             'name'           => 'content',
-            'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>     content of the document, according to the type of the document',
+            'description'    => '--content=<local_file_location>|<url>|<WikiPage>|<raw content>    content of the document, according to the type of the document',
             'soap'     => false,
         ));
     }
@@ -61,6 +67,24 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
         } else {
             // $ordering is not set
             $ordering = "begin";
+        }
+        return true;
+    }
+    function validate_obsolescence_date(&$date) {
+        if (isset($date)) {
+            $match = preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $date, $m);
+            if (!$m) {
+                echo $this->help();
+                exit_error('Obsolete date format must be: yyyy-mm-dd or yy-mm-dd');
+            } else {
+                $month  = $m[2];
+                $day    = $m[3];
+                
+                if ($month > 12 || $day > 31 || $month < 1 ||  $day < 1) {
+                    echo $this->help();
+                    exit_error('Obsolescence date format must be: yyyy-mm-dd or yy-mm-dd. Please respect the correct ranges: 1 < mm < 12; 1 < dd < 31');
+                }
+            }
         }
         return true;
     }
@@ -122,7 +146,6 @@ class CLI_Action_Docman_CreateDocument extends CLI_Action_Docman_CreateItem  {
             $this->after_loadParams($loaded_params);
             	
             // This command will create the document (if it's a file, the first chunk will be sent)
-            //$this->setSoapCommand('createDocmanDocument');
             $type = $loaded_params['others']['type'];
             switch ($type) {
                 case 'file':			$soapCommand = 'createDocmanFile'; break;
