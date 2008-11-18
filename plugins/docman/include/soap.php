@@ -139,9 +139,10 @@ $GLOBALS['server']->register(
         'parent_id'   => 'xsd:int',
         'title'       => 'xsd:string',
         'description' => 'xsd:string',
+        'ordering'    => 'xsd:string',
+        'status'      => 'xsd:string',
         'type'        => 'xsd:string',
         'content'     => 'xsd:string',
-        'ordering'    => 'xsd:string',
     	'permissions' => 'tns:ArrayOfPermission',
     	'metadata'    => 'tns:ArrayOfMetadataValue',
     	// The next are optionals and are used only for files. TODO: create one function per document type
@@ -193,13 +194,14 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'createDocmanFolder',
     array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'parent_id'=>'xsd:int',
-        'title'=>'xsd:string',
-        'description'=>'xsd:string',
-        'ordering'=>'xsd:string',
-        'permissions'=>'tns:ArrayOfPermission',
+        'sessionKey'  => 'xsd:string',
+        'group_id'    => 'xsd:int',
+        'parent_id'   => 'xsd:int',
+        'title'       => 'xsd:string',
+        'description' => 'xsd:string',
+        'ordering'    => 'xsd:string',
+        'status'      => 'xsd:string',
+        'permissions' => 'tns:ArrayOfPermission',
         'metadata'    => 'tns:ArrayOfMetadataValue',
         ),
     array('createDocmanFolderResponse'=>'xsd:int'),
@@ -342,6 +344,9 @@ function listFolder($sessionKey,$group_id,$item_id) {
     }
 }
 
+/**
+ * Returns the integer value that corresponds to the permission
+ */
 function _get_definition_index_for_permission($p) {
     switch ($p) {
         case 'PLUGIN_DOCMAN_READ':
@@ -360,13 +365,14 @@ function _get_definition_index_for_permission($p) {
 }
 
 /**
- * Returns an array containing all the permissions for the specified item. The ugroups that have no permission defined in the request take the permission of the parent folder.
+ * Returns an array containing all the permissions for the specified item.
+ * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
 function _get_permissions_as_array($group_id, $parent_id, $permissions) {
 	$permissions_array = array();
 	$perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
-	
-   	// Get the ugroups of the parent
+
+	// Get the ugroups of the parent
 	$ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
     
     // Initialize the ugroup permissions to the same values as the parent folder
@@ -391,8 +397,45 @@ function _get_permissions_as_array($group_id, $parent_id, $permissions) {
     return $permissions_array;
 }
 
+/**
+ * Takes an array of metadata objects as provided by the SOAP request:
+ * 
+ * Array
+ * (
+ *     [0] => stdClass Object
+ *         (
+ *             [label] => field_2
+ *             [value] => This is a string
+ *         )
+ * 
+ *     [1] => stdClass Object
+ *         (
+ *             [label] => field_9
+ *             [value] => 103
+ *         )
+ * 
+ *     [2] => stdClass Object
+ *         (
+ *             [label] => field_9
+ *             [value] => 104
+ *         )
+ * )
+ * 
+ * And returns an associated array of metadata as required by the Docman Actions:
+ * 
+ * Array
+ * (
+ *     [field_2] => This is a string
+ *     [field_9] => Array
+ *         (
+ *             [0] => 103
+ *             [1] => 104
+ *         )
+ * )  
+ */
 function _get_metadata_as_array($metadata) {
 	$metadata_array = array();
+	
 	foreach ($metadata as $m) {
 		if (isset($metadata_array[$m->label])) {
 			if (is_array($metadata_array[$m->label])) {
@@ -404,14 +447,45 @@ function _get_metadata_as_array($metadata) {
 			$metadata_array[$m->label] = $m->value;
 		}
 	}
-	
+
 	return $metadata_array;
 }
 
 /**
- * 
+ * Returns the constant value associated to the requested status
  */
-function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $type, $content, $permissions, $metadata, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
+function _get_status_value($status) {
+	switch ($status) {
+		case 'draft' : $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT; break;
+		case 'approved' : $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED; break;
+		case 'rejected' : $value = PLUGIN_DOCMAN_ITEM_STATUS_REJECTED; break;
+		default : $value = PLUGIN_DOCMAN_ITEM_STATUS_NONE; break;
+	}
+	
+	return $value;
+}
+
+/**
+ * Create a docman document
+ *
+ * @param string       $sessionKey   Session key
+ * @param int          $group_id     Group ID
+ * @param int          $parent_id    Parent folder ID
+ * @param string       $title        Title
+ * @param string       $description  Description
+ * @param string       $ordering     Ordering (begin, end)
+ * @param string       $status       Status (none, draft, approved, rejected)
+ * @param string       $type         Type (file, embedded_file, link, empty, wiki)
+ * @param string       $content      Content (base64 encoded data, url, wiki page name)
+ * @param Array        $permissions  Permissions
+ * @param Array        $metadata     Metadata values
+ * @param int          $chunk_offset Chunk offset
+ * @param int          $chunk_size   Chunk size
+ * @param int          $file_size    File size
+ * @param string       $file_name    File name
+ * @param string       $mime_type    Mime type
+ */
+function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $content, $permissions, $metadata, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
 	global $Language;
 
     if (session_continue($sessionKey)) {
@@ -425,13 +499,13 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
             return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'createDocmanDocument');
         }
         
-        
         $soap_request_params = array(
             'group_id' => $group_id,
             'item' => array(
                 'parent_id' => $parent_id,
                 'title' => $title,
                 'description' => $description,
+        		'status'	=> _get_status_value($status),
             ),
             'ordering' => $ordering,
             'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
@@ -486,6 +560,13 @@ function createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $descr
 
 /**
  * Append a chunk of data to a file
+ * 
+ * @param string       $sessionKey   Session key
+ * @param int          $group_id     Group ID
+ * @param int          $parent_id    Parent folder ID
+ * @param string       $content      Content (base64 encoded data)
+ * @param int          $chunk_offset Chunk offset
+ * @param int          $chunk_size   Chunk size
  */
 function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
   	global $Language;
@@ -533,6 +614,11 @@ function appendFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offs
 
 /**
  * Returns the MD5 checksum of the file corresponding to the provided item ID.
+ * 
+ * @param string       $sessionKey     Session key
+ * @param int          $group_id       Group ID
+ * @param int          $item_id        Item ID
+ * @param int          $version_number Version Number
  */
 function getFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
   	global $Language;
@@ -577,9 +663,19 @@ function getFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
 }
 
 /**
- * 
+ * Create a docman folder
+ *
+ * @param string       $sessionKey   Session key
+ * @param int          $group_id     Group ID
+ * @param int          $parent_id    Parent folder ID
+ * @param string       $title        Title
+ * @param string       $description  Description
+ * @param string       $ordering     Ordering (begin, end)
+ * @param string       $status       Status (none, draft, approved, rejected)
+ * @param Array        $permissions  Permissions
+ * @param Array        $metadata     Metadata values
  */
-function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $permissions, $metadata) {
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata) {
 	global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
@@ -599,6 +695,7 @@ function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $descrip
                 'title' => $title,
                 'description' => $description,
                 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+        		'status'	=> _get_status_value($status),
             ),
             'ordering' => $ordering,
             'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
@@ -611,9 +708,9 @@ function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $descrip
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             $result = $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg,  'createDocmanFolder');
+                   return new SoapFault(null, $msg, 'createDocmanFolder');
             } else {
                 return $result;
             }
@@ -654,7 +751,7 @@ function deleteDocmanItem($sessionKey,$group_id,$item_id) {
             $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg,  'deleteDocmanItem');
+                   return new SoapFault(null, $msg, 'deleteDocmanItem');
             } else {
                 return $result;
             }
