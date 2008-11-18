@@ -1354,7 +1354,7 @@ class Docman_Controller extends Controler {
             $this->action = $view;
             $this->_setView('');
             break;
-        	
+            
         case 'getFileMD5sum':
             $this->action = $view;
             $this->_setView('');

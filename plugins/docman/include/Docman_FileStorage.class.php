@@ -46,18 +46,18 @@ class Docman_FileStorage {
         $path = $this->_getPath('file', $group_id, $item_id, $version_number);
         
         if (is_file($path)) {
-        	$mode = 'r+';
+            $mode = 'r+';
         } else {
-        	$mode = 'w';
+            $mode = 'w';
         }
         
         if (($f = fopen($path, $mode)) && (flock($f, LOCK_EX))) {
-        	fseek($f, $chunk_offset * $chunk_size);
+            fseek($f, $chunk_offset * $chunk_size);
             
-        	if ($chunk_size > 0) {
-        		fwrite($f, $content, $chunk_size);
+            if ($chunk_size > 0) {
+                fwrite($f, $content, $chunk_size);
             } else {
-            	fwrite($f, $content);
+                fwrite($f, $content);
             }
             
             fclose($f);
@@ -68,13 +68,13 @@ class Docman_FileStorage {
     }
     
     function getFileMD5sum($group_id, $item_id, $version_number) {
-    	$path = $this->_getPath('file', $group_id, $item_id, $version_number);
-    	
-    	if (is_file($path)) {
-    		return md5_file($path);
-    	} else {    	
-    		return false;
-    	}
+        $path = $this->_getPath('file', $group_id, $item_id, $version_number);
+        
+        if (is_file($path)) {
+            return md5_file($path);
+        } else {
+            return false;
+        }
     }
     
     function copy($srcPath, $dst_name, $dst_group_id, $dst_item_id, $dst_version_number) {

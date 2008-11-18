@@ -8,8 +8,8 @@
 require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
 
 abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
-	function CLI_Action_Docman_CreateItem($name, $description) {
-		$this->CLI_Action($name, $description);
+    function CLI_Action_Docman_CreateItem($name, $description) {
+        $this->CLI_Action($name, $description);
 
         $this->addParam(array(
             'name'           => 'parent_id',
@@ -56,8 +56,8 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
             'description'    => '--properties=<property file>     File that contains the properties to apply to the item',
             'soap'     => false,
         ));
-	}
-	
+    }
+    
     function validate_status(&$status) {
         $allowed_values= array("none", "draft", "approved", "rejected");      
         if (isset($status) && !in_array($status, $allowed_values)) {
@@ -67,58 +67,58 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
         return true;
     }
     function validate_perm(&$perm) {
-    	 if (isset($perm) && !preg_match("/^[0-9]+(,[0-9]+)*$/", $perm)) {
-    	 	echo $this->help();
-    	 	return false;
-    	 }
-    	 return true;
+        if (isset($perm) && !preg_match("/^[0-9]+(,[0-9]+)*$/", $perm)) {
+            echo $this->help();
+            return false;
+        }
+        return true;
     }
     function validate_perm_read(&$perm) {
-    	if (!$this->validate_perm($perm)) {
-    		exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-read=101,102");
-    	}
-    	return true;
+        if (!$this->validate_perm($perm)) {
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-read=101,102");
+        }
+        return true;
     }
     function validate_perm_write(&$perm) {
-    	if (!$this->validate_perm($perm)) {
-    		exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-write=101,102");
-    	}
-    	return true;
+        if (!$this->validate_perm($perm)) {
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-write=101,102");
+        }
+        return true;
     }
     function validate_perm_manage(&$perm) {
-    	if (!$this->validate_perm($perm)) {
-    		exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-manage=101,102");
-    	}
-    	return true;
+        if (!$this->validate_perm($perm)) {
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-manage=101,102");
+        }
+        return true;
     }
     function validate_perm_none(&$perm) {
-    	if (!$this->validate_perm($perm)) {
-    		exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-none=101,102");
-    	}
-    	return true;
+        if (!$this->validate_perm($perm)) {
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-none=101,102");
+        }
+        return true;
     }
-	
+    
     /**
      * Retrieve the groups given by the CLI parameters (read-groups, write-groups, manage-groups) and put them in the SOAP parameter "permissions" with their associated permission
      */
     function loadPermissionParams(&$loaded_params) {
-    	$loaded_params['soap']['permissions'] = array();
+        $loaded_params['soap']['permissions'] = array();
 
         $permissions = array(
-    					array('type' => 'PLUGIN_DOCMAN_READ', 'param_name' => 'perm_read'),
-    					array('type' => 'PLUGIN_DOCMAN_WRITE', 'param_name' => 'perm_write'),
-    					array('type' => 'PLUGIN_DOCMAN_MANAGE', 'param_name' => 'perm_manage'),
-    					array('type' => '', 'param_name' => 'perm_none'));
-    	
-    	foreach ($permissions as $permission) {
-	    	if (isset($loaded_params['others'][$permission['param_name']])) {
-				$ids = explode(',', $loaded_params['others'][$permission['param_name']]);
-				// For each group that is present in the definition of the current permission, store a permission
-				foreach ($ids as $id) {
-					$loaded_params['soap']['permissions'][] = array('ugroup_id' => $id, 'type' => $permission['type']);
-				}
-			}
-    	}
+                        array('type' => 'PLUGIN_DOCMAN_READ', 'param_name' => 'perm_read'),
+                        array('type' => 'PLUGIN_DOCMAN_WRITE', 'param_name' => 'perm_write'),
+                        array('type' => 'PLUGIN_DOCMAN_MANAGE', 'param_name' => 'perm_manage'),
+                        array('type' => '', 'param_name' => 'perm_none'));
+        
+        foreach ($permissions as $permission) {
+            if (isset($loaded_params['others'][$permission['param_name']])) {
+                $ids = explode(',', $loaded_params['others'][$permission['param_name']]);
+                // For each group that is present in the definition of the current permission, store a permission
+                foreach ($ids as $id) {
+                    $loaded_params['soap']['permissions'][] = array('ugroup_id' => $id, 'type' => $permission['type']);
+                }
+            }
+        }
     }
     
     /**
@@ -139,33 +139,33 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
      * ;==============================
      */
     function loadMetadata(&$loaded_params) {
-    	$loaded_params['soap']['metadata'] = array();
+        $loaded_params['soap']['metadata'] = array();
 
-    	// We do nothing if no file is specified
-    	if (isset ($loaded_params['others']['properties'])) {
-	    	$properties = parse_ini_file($loaded_params['others']['properties']);
-	    	if ($properties) {
-		    	foreach ($properties as $name => $val) {
-		    		if ($val != '') {
-		    			// Check if the value corresponds to the pattern used for lists. Ex: "<1,2,3>"
-			    		if (preg_match('/^<([0-9]+(,[0-9]+)*)>$/', $val, $matches)) {
-							$lov = explode(',', $matches[1]);
-							// Put each list value into the SOAP parameters array "metadata"
-							foreach ($lov as $lv) {
-								array_push($loaded_params['soap']['metadata'], array('label' => $name, 'value' => $lv));
-							}
-						} else {
-							array_push($loaded_params['soap']['metadata'], array('label' => $name, 'value' => $val));
-						}
-		    		}
-		    	}
-	    	}
-    	}
+        // We do nothing if no file is specified
+        if (isset ($loaded_params['others']['properties'])) {
+            $properties = parse_ini_file($loaded_params['others']['properties']);
+            if ($properties) {
+                foreach ($properties as $name => $val) {
+                    if ($val != '') {
+                        // Check if the value corresponds to the pattern used for lists. Ex: "<1,2,3>"
+                        if (preg_match('/^<([0-9]+(,[0-9]+)*)>$/', $val, $matches)) {
+                            $lov = explode(',', $matches[1]);
+                            // Put each list value into the SOAP parameters array "metadata"
+                            foreach ($lov as $lv) {
+                                array_push($loaded_params['soap']['metadata'], array('label' => $name, 'value' => $lv));
+                            }
+                        } else {
+                            array_push($loaded_params['soap']['metadata'], array('label' => $name, 'value' => $val));
+                        }
+                    }
+                }
+            }
+        }
     }
     
     function after_loadParams(&$loaded_params) {
-    	$this->loadPermissionParams($loaded_params);
-    	$this->loadMetadata($loaded_params);
+        $this->loadPermissionParams($loaded_params);
+        $this->loadMetadata($loaded_params);
     }
 }
 ?>

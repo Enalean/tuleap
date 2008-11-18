@@ -156,13 +156,13 @@ class Docman_Actions extends Actions {
         switch ($iFactory->getItemTypeForItem($item)) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             if ($request->exist('upload_content')) {
-            	
-            	if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-					$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
-            	} else {
-                	$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
-            	}
-            	
+                
+                if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+                } else {
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+                }
+                
                 if ($path) {
                     $uploadSucceded = true;
                     
@@ -173,9 +173,9 @@ class Docman_Actions extends Actions {
                     }
                     
                     if ($request->exist('file_size')) {
-                    	$_filesize = $request->get('file_size');
+                        $_filesize = $request->get('file_size');
                     } else {
-                    	$_filesize = filesize($path);
+                        $_filesize = filesize($path);
                     }
                     
                     if ($request->exist('mime_type')) {
@@ -254,15 +254,18 @@ class Docman_Actions extends Actions {
         }
     }
     
+    /**
+     * Like _storeFile, but this function just add a chunk to an existing file, without creating a new document version
+     */
     function _storeFileChunk($item) {
         $fs       = $this->_getFileStorage();
         $request  = $this->_controler->request;
-    	if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-			$path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
-			if (!$path) {
-				$this->_controler->feedback->log('error', "Error while storing file chunk");
-			}
-    	}
+        if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+            $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+            if (!$path) {
+                $this->_controler->feedback->log('error', "Error while storing file chunk");
+            }
+        }
     }
 
     function createFolder() {
@@ -358,8 +361,8 @@ class Docman_Actions extends Actions {
     }
 
     /**
- 	* Append a chunk of data to a file
- 	*/
+     * Append a chunk of data to a file
+     */
     function appendFileChunk() {
         $request =& $this->_controler->request;
 
@@ -370,19 +373,19 @@ class Docman_Actions extends Actions {
             $itemType = $item_factory->getItemTypeForItem($item);
             
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-            	$this->_storeFileChunk($item);
+                $this->_storeFileChunk($item);
             } else {
-            	$this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+                $this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
             }
             
         } else {
-			$this->_controler->feedback->log('error', 'Error while appending file chunk');
-		}
+            $this->_controler->feedback->log('error', 'Error while appending file chunk');
+        }
     }
     
     /**
- 	* Returns the MD5 checksum of a file
- 	*/
+     * Returns the MD5 checksum of a file
+     */
     function getFileMD5sum() {
         $request =& $this->_controler->request;
 
@@ -392,18 +395,18 @@ class Docman_Actions extends Actions {
             $item = $item_factory->getItemFromDb($item_id);
             $itemType = $item_factory->getItemTypeForItem($item);
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-            	$fs = $this->_getFileStorage();
-				$md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
-				$this->_controler->_viewParams['action_result'] = $md5sum;
-				if (!$md5sum) {
-					$this->_controler->feedback->log('error', "Error while getting file checksum");
-				}
-			} else {
-				$this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
-			}
+                $fs = $this->_getFileStorage();
+                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
+                $this->_controler->_viewParams['action_result'] = $md5sum;
+                if (!$md5sum) {
+                    $this->_controler->feedback->log('error', "Error while getting file checksum");
+                }
+            } else {
+                $this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+            }
         } else {
-			$this->_controler->feedback->log('error', 'Error while getting file checksum (unable to retrieve the item ID)');
-		}
+            $this->_controler->feedback->log('error', 'Error while getting file checksum (unable to retrieve the item ID)');
+        }
     }
     
     function update() {
@@ -581,7 +584,7 @@ class Docman_Actions extends Actions {
     var $permissions_manager;
     function &_getPermissionsManagerInstance(){
         if(!$this->permissions_manager){
-	    $this->permissions_manager =& PermissionsManager::instance(); 
+        $this->permissions_manager =& PermissionsManager::instance(); 
         }
         return $this->permissions_manager;
     }
@@ -893,7 +896,7 @@ class Docman_Actions extends Actions {
             }
         }
     }
-	
+
     function change_view() {
         $request =& HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');

@@ -36,13 +36,13 @@ class Response {
         $this->_feedback->log($level, $message, $purify);
     }
     function feedbackHasWarningsOrErrors() {
-    	   return $this->_feedback->hasWarningsOrErrors();
+           return $this->_feedback->hasWarningsOrErrors();
     }
     function feedbackHasErrors() {
-    	   return $this->_feedback->hasErrors();
+           return $this->_feedback->hasErrors();
     }
     function getRawFeedback() {
-    	   return $this->_feedback->fetchAsPlainText();
+           return $this->_feedback->fetchAsPlainText();
     }
     function &_getFeedbackDao() {
         $f =& new FeedbackDao(CodexDataAccess::instance());

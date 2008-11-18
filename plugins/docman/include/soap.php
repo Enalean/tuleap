@@ -138,13 +138,13 @@ $GLOBALS['server']->register(
         'description' => 'xsd:string',
         'ordering'    => 'xsd:string',
         'status'      => 'xsd:string',
-    	'permissions' => 'tns:ArrayOfPermission',
-    	'metadata'    => 'tns:ArrayOfMetadataValue',
+        'permissions' => 'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         'content'     => 'xsd:string',
         'chunk_offset'=> 'xsd:int',
         'chunk_size'  => 'xsd:int',
-    	'file_size'   => 'xsd:int',
-    	'file_name'   => 'xsd:string',
+        'file_size'   => 'xsd:int',
+        'file_name'   => 'xsd:string',
         'mime_type'   => 'xsd:string',
         ),
     array('createDocmanFileResponse'=>'xsd:int'),
@@ -164,8 +164,8 @@ $GLOBALS['server']->register(
         'description' => 'xsd:string',
         'ordering'    => 'xsd:string',
         'status'      => 'xsd:string',
-    	'permissions' => 'tns:ArrayOfPermission',
-    	'metadata'    => 'tns:ArrayOfMetadataValue',
+        'permissions' => 'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         'content'     => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileResponse'=>'xsd:int'),
@@ -185,8 +185,8 @@ $GLOBALS['server']->register(
         'description' => 'xsd:string',
         'ordering'    => 'xsd:string',
         'status'      => 'xsd:string',
-    	'permissions' => 'tns:ArrayOfPermission',
-    	'metadata'    => 'tns:ArrayOfMetadataValue',
+        'permissions' => 'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         'content'     => 'xsd:string',
         ),
     array('createDocmanWikiPageResponse'=>'xsd:int'),
@@ -206,8 +206,8 @@ $GLOBALS['server']->register(
         'description' => 'xsd:string',
         'ordering'    => 'xsd:string',
         'status'      => 'xsd:string',
-    	'permissions' => 'tns:ArrayOfPermission',
-    	'metadata'    => 'tns:ArrayOfMetadataValue',
+        'permissions' => 'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         'content'     => 'xsd:string',
         ),
     array('createDocmanLinkResponse'=>'xsd:int'),
@@ -227,8 +227,8 @@ $GLOBALS['server']->register(
         'description' => 'xsd:string',
         'ordering'    => 'xsd:string',
         'status'      => 'xsd:string',
-    	'permissions' => 'tns:ArrayOfPermission',
-    	'metadata'    => 'tns:ArrayOfMetadataValue',
+        'permissions' => 'tns:ArrayOfPermission',
+        'metadata'    => 'tns:ArrayOfMetadataValue',
         ),
     array('createDocmanEmptyDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -260,7 +260,7 @@ $GLOBALS['server']->register(
         'sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'item_id'=>'xsd:int',
-    	'version_number'=>'xsd:int',
+        'version_number'=>'xsd:int',
         ),
     array('getDocmanFileMD5sumResponse'=>'xsd:string'),
     $GLOBALS['uri'],
@@ -447,29 +447,29 @@ function _get_definition_index_for_permission($p) {
  * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
 function _get_permissions_as_array($group_id, $parent_id, $permissions) {
-	$permissions_array = array();
-	$perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+    $permissions_array = array();
+    $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
 
-	// Get the ugroups of the parent
-	$ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
+    // Get the ugroups of the parent
+    $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
     
     // Initialize the ugroup permissions to the same values as the parent folder
-	foreach ($ugroups as $ugroup) {
-		$ugroup_id = $ugroup['ugroup']['id'];
-		$permissions_array[$ugroup_id] = 100;
-    	foreach ($perms as $perm) {
-    		if (isset($ugroup['permissions'][$perm])) {
-    			$permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
-    		}
-    	}
+    foreach ($ugroups as $ugroup) {
+        $ugroup_id = $ugroup['ugroup']['id'];
+        $permissions_array[$ugroup_id] = 100;
+        foreach ($perms as $perm) {
+            if (isset($ugroup['permissions'][$perm])) {
+                $permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
+            }
+        }
     }
     
     // Set the SOAP-provided permissions
-	foreach ($permissions as $index => $permission) {
-		$ugroup_id = $permission->ugroup_id;
-		if (isset($permissions_array[$ugroup_id])) {
-			$permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
-		}
+    foreach ($permissions as $index => $permission) {
+        $ugroup_id = $permission->ugroup_id;
+        if (isset($permissions_array[$ugroup_id])) {
+            $permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
+        }
     }
     
     return $permissions_array;
@@ -512,35 +512,35 @@ function _get_permissions_as_array($group_id, $parent_id, $permissions) {
  * )  
  */
 function _get_metadata_as_array($metadata) {
-	$metadata_array = array();
-	
-	foreach ($metadata as $m) {
-		if (isset($metadata_array[$m->label])) {
-			if (is_array($metadata_array[$m->label])) {
-				array_push($metadata_array[$m->label], $m->value);
-			} else {
-				$metadata_array[$m->label] = array($metadata_array[$m->label], $m->value);
-			}
-		} else {
-			$metadata_array[$m->label] = $m->value;
-		}
-	}
+    $metadata_array = array();
+    
+    foreach ($metadata as $m) {
+        if (isset($metadata_array[$m->label])) {
+            if (is_array($metadata_array[$m->label])) {
+                array_push($metadata_array[$m->label], $m->value);
+            } else {
+                $metadata_array[$m->label] = array($metadata_array[$m->label], $m->value);
+            }
+        } else {
+            $metadata_array[$m->label] = $m->value;
+        }
+    }
 
-	return $metadata_array;
+    return $metadata_array;
 }
 
 /**
  * Returns the constant value associated to the requested status
  */
 function _get_status_value($status) {
-	switch ($status) {
-		case 'draft' : $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT; break;
-		case 'approved' : $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED; break;
-		case 'rejected' : $value = PLUGIN_DOCMAN_ITEM_STATUS_REJECTED; break;
-		default : $value = PLUGIN_DOCMAN_ITEM_STATUS_NONE; break;
-	}
-	
-	return $value;
+    switch ($status) {
+        case 'draft' : $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT; break;
+        case 'approved' : $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED; break;
+        case 'rejected' : $value = PLUGIN_DOCMAN_ITEM_STATUS_REJECTED; break;
+        default : $value = PLUGIN_DOCMAN_ITEM_STATUS_NONE; break;
+    }
+    
+    return $value;
 }
 
 /**
@@ -565,7 +565,7 @@ function _get_status_value($status) {
  * @param string       $soapfunction The SOAP function that called this function
  */
 function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type, $soapfunction) {
-	global $Language;
+    global $Language;
 
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
@@ -579,31 +579,31 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
         }
         
         $soap_request_params = array(
-            'group_id' => $group_id,
-            'item' => array(
-                'parent_id' => $parent_id,
-                'title' => $title,
+            'group_id'     => $group_id,
+            'item'         => array(
+                'parent_id'   => $parent_id,
+                'title'       => $title,
                 'description' => $description,
-        		'status'	=> _get_status_value($status),
-        		'item_type'=> $type,
+                'status'      => _get_status_value($status),
+                'item_type'   => $type,
             ),
-            'ordering' => $ordering,
+            'ordering'     => $ordering,
             'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
-            'metadata'	   => _get_metadata_as_array($metadata),
+            'metadata'     => _get_metadata_as_array($metadata),
             'chunk_offset' => $chunk_offset,
             'chunk_size'   => $chunk_size,
             'file_size'    => $file_size,
             'file_name'    => $file_name,
-            'mime_type'    => $mime_type,  
+            'mime_type'    => $mime_type,
             //needed internally in docman vvv
             'action'       => 'createDocument',
             'confirm'      => true,  
         );
         switch ($type) {
-            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:			$soap_request_params['upload_content'] = base64_decode($content); break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:	$soap_request_params['content'] = $content; break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:			$soap_request_params['item']['wiki_page'] = $content; break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:			$soap_request_params['item']['link_url'] = $content; break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:            $soap_request_params['upload_content'] = base64_decode($content); break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:    $soap_request_params['content'] = $content; break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:            $soap_request_params['item']['wiki_page'] = $content; break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:            $soap_request_params['item']['link_url'] = $content; break;
         }
         
         $request =& new SOAPRequest($soap_request_params);
@@ -614,7 +614,7 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
             $result = $p->processSOAP($request);
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg, $soapfunction);
+                   return new SoapFault(null, $msg, $soapfunction);
             } else {
                 return $result;
             }
@@ -627,23 +627,23 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
 }
 
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
-	return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type, 'createDocmanFile');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type, 'createDocmanFile');
 }
 
 function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $content) {
-	return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $content, null, null, null, null, 'createDocmanEmbeddedFile');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $content, null, null, null, null, 'createDocmanEmbeddedFile');
 }
 
 function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $content) {
-	return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $content, null, null, null, null, 'createDocmanWikiPage');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $content, null, null, null, null, 'createDocmanWikiPage');
 }
 
 function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $content) {
-	return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $content, null, null, null, null, 'createDocmanLink');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $content, null, null, null, null, 'createDocmanLink');
 }
 
 function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata) {
-	return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, null, null, null, null, null, 'createDocmanEmptyDocument');
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, null, null, null, null, null, 'createDocmanEmptyDocument');
 }
 
 /**
@@ -657,7 +657,7 @@ function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $
  * @param int          $chunk_size   Chunk size
  */
 function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
-  	global $Language;
+    global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -669,20 +669,20 @@ function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chun
             return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'appendDocmanFileChunk');
         }
         
-		$soap_request_params = array(
-			'group_id'			=> $group_id,
-			'item_id'			=> $item_id,
-            'upload_content'	=> base64_decode($content),
-            'chunk_offset'		=> $chunk_offset,
-            'chunk_size'		=> $chunk_size,
+        $soap_request_params = array(
+            'group_id'       => $group_id,
+            'item_id'        => $item_id,
+            'upload_content' => base64_decode($content),
+            'chunk_offset'   => $chunk_offset,
+            'chunk_size'     => $chunk_size,
             //needed internally in docman vvv
-            'action'			=> 'appendFileChunk',
-            'confirm'			=> true,
+            'action'         => 'appendFileChunk',
+            'confirm'        => true,
         );
         
-		$request =& new SOAPRequest($soap_request_params);
+        $request =& new SOAPRequest($soap_request_params);
         
-    	$plugin_manager =& PluginManager::instance();
+        $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             $result = $p->processSOAP($request);
@@ -709,7 +709,7 @@ function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chun
  * @param int          $version_number Version Number
  */
 function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
-  	global $Language;
+    global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -721,18 +721,18 @@ function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) 
             return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getDocmanFileMD5sum');
         }
         
-		$soap_request_params = array(
-			'group_id'			=> $group_id,
-			'item_id'			=> $item_id,
-			'version_number'	=> $version_number,
+        $soap_request_params = array(
+            'group_id'       => $group_id,
+            'item_id'        => $item_id,
+            'version_number' => $version_number,
             //needed internally in docman vvv
-            'action'			=> 'getFileMD5sum',
-            'confirm'			=> true,
+            'action'         => 'getFileMD5sum',
+            'confirm'        => true,
         );
         
-		$request =& new SOAPRequest($soap_request_params);
+        $request =& new SOAPRequest($soap_request_params);
 
-    	$plugin_manager =& PluginManager::instance();
+        $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             $result = $p->processSOAP($request);
@@ -764,7 +764,7 @@ function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) 
  * @param Array        $metadata     Metadata values
  */
 function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata) {
-	global $Language;
+    global $Language;
     if (session_continue($sessionKey)) {
         $group =& group_get_object($group_id);
         if (!$group || !is_object($group)) {
@@ -777,20 +777,20 @@ function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $descrip
         }
         
         $request =& new SOAPRequest(array(
-            'group_id' => $group_id,
-            'item' => array(
-                'parent_id'       => $parent_id,
-                'title' => $title,
+            'group_id'    => $group_id,
+            'item'        => array(
+                'parent_id'   => $parent_id,
+                'title'       => $title,
                 'description' => $description,
-                'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-        		'status'	=> _get_status_value($status),
+                'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+                'status'      => _get_status_value($status),
             ),
-            'ordering' => $ordering,
-            'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
-			'metadata'	   => _get_metadata_as_array($metadata),
+            'ordering'    => $ordering,
+            'permissions' => _get_permissions_as_array($group_id, $parent_id, $permissions),
+            'metadata'    => _get_metadata_as_array($metadata),
             //needed internally in docman vvv
-            'action'       => 'createFolder',
-            'confirm'      => true,
+            'action'      => 'createFolder',
+            'confirm'     => true,
         ));
         $plugin_manager =& PluginManager::instance();
         $p =& $plugin_manager->getPluginByName('docman');
@@ -938,11 +938,11 @@ $GLOBALS['server']->addFunction(
             'createDocmanEmbeddedFile',
             'createDocmanWikiPage',
             'createDocmanLink',
-        	'createDocmanEmptyDocument',
+            'createDocmanEmptyDocument',
         
             'createDocmanFile',
             'appendDocmanFileChunk',
-        	'getDocmanFileMD5sum',
+            'getDocmanFileMD5sum',
         
             'createDocmanFolder',
             'deleteDocmanItem',
