@@ -92,3 +92,4 @@ plugin_im	muckl_hassetthetopicto	has set the topic to:
 plugin_im	muckl_isnowknownas	is now known as:
 plugin_im	muckl_hasleft	has left
 plugin_im	muckl_send_button_img	/plugins/IM/themes/default/images/en_US_send_button.gif
+plugin_im	muckl_connection_conflict	Conflict: it seems that you are already connected to this chat room with another client.

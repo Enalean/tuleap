@@ -302,7 +302,7 @@ function handlePresence(presence) {
         else if (error.firstChild && error.firstChild.nodeValue)
           user.chatW.putMsgHTML(error.firstChild.nodeValue,new Date(),from,null,true);
         else if (error.firstChild.tagName == 'conflict') {
-          user.chatW.putMsgHTML('Conflict: it seems that you are already connected to this chat room with another client.',new Date(),from,null,true);
+          user.chatW.putMsgHTML('<?php echo $GLOBALS['Language']->getText('plugin_im', 'muckl_connection_conflict'); ?>',new Date(),from,null,true);
         }
       }
     }

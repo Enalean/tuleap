@@ -93,3 +93,4 @@ plugin_im	muckl_hassetthetopicto	a changé le sujet de la salle de discussion en
 plugin_im	muckl_isnowknownas	a changé son pseudo en :
 plugin_im	muckl_hasleft	a quitté la salle de discussion
 plugin_im	muckl_send_button_img	/plugins/IM/themes/default/images/fr_FR_send_button.gif
+plugin_im	muckl_connection_conflict	Conflit : il semble que vous soyez déjà connecté à ce salon de discussion avec un autre client.
