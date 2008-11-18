@@ -31,7 +31,7 @@ class IMMucConversationLog {
 	}
 	
 	function getTime() {
-		return format_date("H:m:i", $this->_date / 1000, true);
+		return format_date("H:i", $this->_date / 1000, true);
 	}
 		
 	

@@ -208,6 +208,7 @@ class IMViews extends Views {
 	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message') . '</th>';
 	    	echo ' </tr>';
 	    	$current_day = null;
+	    	$current_time_minute = null;
 	    	foreach ($conversations as $conv) {
 	    		if ($conv->getDay() != $current_day) {
 	    			$current_day = $conv->getDay(); 
@@ -227,7 +228,12 @@ class IMViews extends Views {
 	    		}
 	    		
 	    		echo ' <tr>';
-	    		echo '  <td class="log_time">'.$conv->getTime().'</td>';
+	    		if ($conv->getTime() != $current_time_minute) {
+	    		    $current_time_minute = $conv->getTime();
+	    		    echo '  <td class="log_time">'.$current_time_minute.'</td>'; 
+	    		} else {
+	    		    echo '  <td class="log_time">&nbsp;</td>';
+	    		}
 	    		echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
 	    		echo '  <td class="log_message">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
 	    		echo ' </tr>';
