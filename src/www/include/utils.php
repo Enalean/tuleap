@@ -1254,15 +1254,12 @@ function util_check_restricted_access($request_uri, $script_name) {
         // End of customization
         
         foreach ($forbidden_url as $str) {
-echo "Checking: $req_uri,$str \n";
             $pos = strpos($req_uri,$str);
             if ($pos === false) {
                 // Not found
             } else {
-echo "Checking forbid...$pos \n";
                 if ($pos == 0) {
                     // beginning of string
-echo "Forbidden!!";
                     return false;
                 }
             }
