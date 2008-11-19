@@ -1228,18 +1228,17 @@ function util_check_restricted_access($request_uri, $script_name) {
         // Restricted users cannot access any page belonging to a project they are not a member of.
         // In addition, the following URLs are forbidden (value overriden in site-content file)
         $forbidden_url = array( 
-          '/snippet/',     // Code Snippet Library
+          '/snippet',     // Code Snippet Library
           '/softwaremap/', // browsable software map
-          '/new/',         // list of the newest releases made on the CodeX site
-          '/search/',      // search for people, projects, and artifacts in trackers!
+          '/new',         // list of the newest releases made on the CodeX site
+          '/search',      // search for people, projects, and artifacts in trackers!
           '/people/',      // people skills and profile
-          '/stats/',       // CodeX site statistics
-          '/top/',         // projects rankings (active, downloads, etc)
+          '/stats',       // CodeX site statistics
+          '/top',         // projects rankings (active, downloads, etc)
           '/project/register.php',    // Register a new project
-          '/export/',      // CodeX XML feeds
+          '/export',      // CodeX XML feeds
           '/info.php'      // PHP info
           );
-        
         // Default values are very restrictive, but they can be overriden in the site-content file
         $allow_codex_welcome_page=false; // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
@@ -1255,12 +1254,15 @@ function util_check_restricted_access($request_uri, $script_name) {
         // End of customization
         
         foreach ($forbidden_url as $str) {
+echo "Checking: $req_uri,$str \n";
             $pos = strpos($req_uri,$str);
             if ($pos === false) {
                 // Not found
             } else {
+echo "Checking forbid...$pos \n";
                 if ($pos == 0) {
                     // beginning of string
+echo "Forbidden!!";
                     return false;
                 }
             }
