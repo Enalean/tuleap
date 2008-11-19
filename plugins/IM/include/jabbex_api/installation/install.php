@@ -930,7 +930,7 @@ class JabbeXInstaller {
 		
 		// monitoring plugin
 		$this->_add_property("conversation.idleTime", "11");
-        $this->_add_property("conversation.maxTime", "120");
+        $this->_add_property("conversation.maxTime", "240");
         $this->_add_property("conversation.messageArchiving", "false");
         $this->_add_property("conversation.metadataArchiving", "true");
         $this->_add_property("conversation.roomArchiving", "true");
