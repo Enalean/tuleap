@@ -155,7 +155,25 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanFile',
     'rpc',
     'encoded',
-    'Create a file.'
+    'Create a docman file
+<pre>
+sessionKey        Session key
+group_id          Group ID
+parent_id         Parent folder ID
+title             Title
+description       Description
+ordering          Ordering (begin, end)
+status            Status (none, draft, approved, rejected)
+obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+permissions       Permissions
+metadata          Metadata values
+content           Content (base64 encoded data)
+chunk_offset      Chunk offset
+chunk_size        Chunk size
+file_size         File size
+file_name         File name
+mime_type         Mime type
+</pre>'
 );
 $GLOBALS['server']->register(
     'createDocmanEmbeddedFile',
@@ -178,7 +196,20 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanEmbeddedFile',
     'rpc',
     'encoded',
-    'Create an embedded file.'
+    'Create a docman embedded file
+<pre>
+sessionKey        Session key
+group_id          Group ID
+parent_id         Parent folder ID
+title             Title
+description       Description
+ordering          Ordering (begin, end)
+status            Status (none, draft, approved, rejected)
+obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+content           Content (raw data)
+permissions       Permissions
+metadata          Metadata values
+</pre>'
 );
 $GLOBALS['server']->register(
     'createDocmanWikiPage',
@@ -201,7 +232,20 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanWikiPage',
     'rpc',
     'encoded',
-    'Create a wiki page.'
+    'Create a docman wiki page
+<pre>
+sessionKey        Session key
+group_id          Group ID
+parent_id         Parent folder ID
+title             Title
+description       Description
+ordering          Ordering (begin, end)
+status            Status (none, draft, approved, rejected)
+obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+content           Content (page name)
+permissions       Permissions
+metadata          Metadata values
+</pre>'
 );
 $GLOBALS['server']->register(
     'createDocmanLink',
@@ -224,7 +268,20 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanLink',
     'rpc',
     'encoded',
-    'Create a link.'
+    'Create a docman link
+<pre>
+sessionKey        Session key
+group_id          Group ID
+parent_id         Parent folder ID
+title             Title
+description       Description
+ordering          Ordering (begin, end)
+status            Status (none, draft, approved, rejected)
+obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+content           Content (url)
+permissions       Permissions
+metadata          Metadata values
+</pre>'
 );
 $GLOBALS['server']->register(
     'createDocmanEmptyDocument',
@@ -246,7 +303,19 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanEmptyDocument',
     'rpc',
     'encoded',
-    'Create an empty document.'
+    'Create a docman empty document
+<pre>
+sessionKey        Session key
+group_id          Group ID
+parent_id         Parent folder ID
+title             Title
+description       Description
+ordering          Ordering (begin, end)
+status            Status (none, draft, approved, rejected)
+obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+permissions       Permissions
+metadata          Metadata values
+</pre>'
 );
 $GLOBALS['server']->register(
     'appendDocmanFileChunk',
@@ -263,7 +332,15 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#appendDocmanFileChunk',
     'rpc',
     'encoded',
-    'Append a chunk of data to a file.'
+    'Append a chunk of data to a file
+<pre>
+sessionKey        Session key
+group_id          Group ID
+item_id           Item ID
+content           Content (base64 encoded data)
+chunk_offset      Chunk offset
+chunk_size        Chunk size
+</pre>'
 );
 $GLOBALS['server']->register(
     'getDocmanFileMD5sum',
@@ -278,7 +355,13 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#getDocmanFileMD5sum',
     'rpc',
     'encoded',
-    'Returns the MD5 checksum of the file corresponding to the provided item ID.'
+    'Returns the MD5 checksum of the file corresponding to the provided item ID
+<pre>
+sessionKey        Session key
+group_id          Group ID
+item_id           Item ID
+version_number    Version number
+</pre>'
 );
 $GLOBALS['server']->register(
     'createDocmanFolder',
@@ -299,7 +382,18 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#createDocmanFolder',
     'rpc',
     'encoded',
-    'Create a folder.'
+    'Create a folder
+<pre>
+sessionKey   Session key
+group_id     Group ID
+parent_id    Parent folder ID
+title        Title
+description  Description
+ordering     Ordering (begin, end)
+status       Status (none, draft, approved, rejected)
+permissions  Permissions
+metadata     Metadata values
+</pre>'
 );
 $GLOBALS['server']->register(
     'deleteDocmanItem',
@@ -460,27 +554,30 @@ function _get_definition_index_for_permission($p) {
  */
 function _get_permissions_as_array($group_id, $parent_id, $permissions) {
     $permissions_array = array();
-    $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
-
-    // Get the ugroups of the parent
-    $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
     
-    // Initialize the ugroup permissions to the same values as the parent folder
-    foreach ($ugroups as $ugroup) {
-        $ugroup_id = $ugroup['ugroup']['id'];
-        $permissions_array[$ugroup_id] = 100;
-        foreach ($perms as $perm) {
-            if (isset($ugroup['permissions'][$perm])) {
-                $permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
+    if ($permissions != null) {
+        $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+    
+        // Get the ugroups of the parent
+        $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
+        
+        // Initialize the ugroup permissions to the same values as the parent folder
+        foreach ($ugroups as $ugroup) {
+            $ugroup_id = $ugroup['ugroup']['id'];
+            $permissions_array[$ugroup_id] = 100;
+            foreach ($perms as $perm) {
+                if (isset($ugroup['permissions'][$perm])) {
+                    $permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
+                }
             }
         }
-    }
-    
-    // Set the SOAP-provided permissions
-    foreach ($permissions as $index => $permission) {
-        $ugroup_id = $permission->ugroup_id;
-        if (isset($permissions_array[$ugroup_id])) {
-            $permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
+        
+        // Set the SOAP-provided permissions
+        foreach ($permissions as $index => $permission) {
+            $ugroup_id = $permission->ugroup_id;
+            if (isset($permissions_array[$ugroup_id])) {
+                $permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
+            }
         }
     }
     
