@@ -42,13 +42,19 @@ INSERT INTO openfire.jiveProperty (name, propValue) VALUES
 	("xmpp.httpbind.client.requests.polling", "0"),
 	("xmpp.httpbind.client.requests.wait", "10"),
 	("xmpp.httpbind.scriptSyntax.enabled", "true"),
-	("xmpp.muc.history.type", "all");
+	("xmpp.muc.history.type", "all"),
+	("conversation.idleTime, "10"),
+    ("conversation.maxTime, "240"),
+    ("conversation.messageArchiving, "false"),
+    ("conversation.metadataArchiving, "true"),
+    ("conversation.roomArchiving, "true");
 # TODO : Modify openfire/conf/openfire.xml : 
 # TODO : $xml->provider->auth->className update node to CodexJDBCAuth
 # TODO : $xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 # copy jar file into openfire lib dir
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
 # TODO : update httpd.conf and codex_aliases.conf (see rev #10208 for details)
+# TODO : instal monitoring plugin (copy plugin jar in openfire plugin dir)
 
 
 TODO : Déplacer le script de debug dans Layout.class.php

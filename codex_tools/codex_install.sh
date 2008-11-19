@@ -560,7 +560,7 @@ $RPM -Uvh ${newest_rpm}/openfire-*.i386.rpm
 
 echo "Installing OpenFire plugins"
 cd ${newest_rpm}
-$CP helga.jar presence.jar subscription.jar /opt/openfire/plugins
+$CP helga.jar presence.jar subscription.jar monitoring.jar /opt/openfire/plugins
 
 #####
 # CodeX RPMS

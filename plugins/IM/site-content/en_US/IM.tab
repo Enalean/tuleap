@@ -31,6 +31,9 @@ plugin_im	muc_logs_end_date	End Date:
 plugin_im	search	Search
 plugin_im	muc_logs_helpsearch	Leave blank for Any
 plugin_im	date_format_error	Date format error: $1 is not a valid date
+plugin_im	muc_logs_join	$1 joined the room
+plugin_im	muc_logs_left	$1 has left the room
+plugin_im	muc_logs_settopic	$1 has set the topic to: $2
 
 plugin_im_admin	im_admin_title	Instant Messaging plugin administration.
 plugin_im_admin	im_admin_warning	WARNING: If you synchronize one or several groups here, you will have to restart the Openfire server by executing "service openfire restart" as root in a shell window. This will interrupt all ongoing chat sessions!

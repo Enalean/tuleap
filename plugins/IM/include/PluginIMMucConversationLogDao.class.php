@@ -27,7 +27,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $sql = "SELECT * FROM mucConversationLog";
+        $sql = "SELECT * FROM ofConversation";
         return $this->retrieve($sql);
     }
     
@@ -36,11 +36,10 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucName($muc_name) {
-        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
-                        WHERE cl.roomID = r.roomID AND
-                              r.name = %s
-                        ORDER BY logTime ASC",
+        $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
+                        FROM ofMessageArchive ma
+                        WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s
+                        ORDER BY sentDate ASC",
             $this->da->quoteSmart($muc_name));
         return $this->retrieve($sql);
     }
@@ -50,12 +49,11 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameBeforeDate($muc_name, $end_date) {
-        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username
-                        FROM mucConversationLog cl, mucRoom r
-                        WHERE cl.roomID = r.roomID AND
-                              r.name = %s AND
-                              cl.logTime <=  UNIX_TIMESTAMP(ADDDATE(%s, 1)) * 1000
-                        ORDER BY logTime ASC",
+        $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
+                        FROM ofMessageArchive ma
+                        WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
+                              sentDate <=  UNIX_TIMESTAMP(ADDDATE(%s, 1)) * 1000
+                        ORDER BY sentDate ASC",
             $this->da->quoteSmart($muc_name),
             $this->da->quoteSmart($end_date)
             );
@@ -67,12 +65,11 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameAfterDate($muc_name, $start_date) {
-        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
-                        WHERE cl.roomID = r.roomID AND
-                              r.name = %s AND
-                              cl.logTime >=  UNIX_TIMESTAMP(%s) * 1000
-                        ORDER BY logTime ASC",
+        $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
+                        FROM ofMessageArchive ma
+                        WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
+                              sentDate >=  UNIX_TIMESTAMP(%s) * 1000
+                        ORDER BY sentDate ASC",
             $this->da->quoteSmart($muc_name),
             $this->da->quoteSmart($start_date)
             );
@@ -84,13 +81,12 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
-        $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
-                        WHERE cl.roomID = r.roomID AND
-                              r.name = %s AND
-                              cl.logTime >=  UNIX_TIMESTAMP(%s) * 1000 AND
-                              cl.logTime <=  UNIX_TIMESTAMP(ADDDATE(%s, 1)) * 1000
-                        ORDER BY logTime ASC",
+        $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
+                        FROM ofMessageArchive ma
+                        WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
+                              sentDate >=  UNIX_TIMESTAMP(%s) * 1000 AND
+                              sentDate <=  UNIX_TIMESTAMP(ADDDATE(%s, 1)) * 1000
+                        ORDER BY sentDate ASC",
             $this->da->quoteSmart($muc_name),
             $this->da->quoteSmart($start_date),
             $this->da->quoteSmart($end_date)

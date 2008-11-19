@@ -7,7 +7,7 @@ require_once('IMDao.class.php');
 require_once('IMDataAccess.class.php');
 require_once('JabbexFactory.class.php');
 
-require_once('IMMucConversationLogManager.class.php');
+require_once('IMMucLogManager.class.php');
 
 class IMViews extends Views {
 	
@@ -128,121 +128,126 @@ class IMViews extends Views {
         	echo '<p class="feedback_error">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_onlymembers').'</p>';
         }
     }
-    
+        
     /**
-	 * Display muc logs of project $group_id
-	 */
+     * Display muc logs of project $group_id
+     * using monitoring openfire's plugin
+     */
     function muc_logs() {
         $request = HTTPRequest::instance();
-    	$group_id = $request->get('group_id');
+        $group_id = $request->get('group_id');
         $project = project_get_object($group_id);
-    	
+        
         $any = $GLOBALS['Language']->getText('global', 'any');
         
         if ($request->exist('log_start_date')) {
-        	$start_date = $request->get('log_start_date');
-        	if ($start_date == '') {
-        		$start_date = $any;
-        	}	
+            $start_date = $request->get('log_start_date');
+            if ($start_date == '') {
+                $start_date = $any;
+            }   
         } else {
-        	$week_ago = mktime( 0, 0, 0, date("m"), date("d") - 7, date("Y") );
- 			$start_date = date("Y-m-d", $week_ago);
+            $week_ago = mktime( 0, 0, 0, date("m"), date("d") - 7, date("Y") );
+            $start_date = date("Y-m-d", $week_ago);
         }
         
         $end_date = $request->get('log_end_date');
-    	if ($end_date == '') {
-        	$end_date = $any;
+        if ($end_date == '') {
+            $end_date = $any;
         }
         
         echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
-	    	    
-	    echo '<form name="muclog_search" id="muclog_search" action="">';
-	    echo ' <fieldset>';
-	    echo '  <legend>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_search') . ' <img src="'.$this->iconsPath.'help.png" alt="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" title="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" /> </legend>';
-	    echo '  <p>';
-	    echo '   <label for="log_start_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_start_date') . '</label>';
-	    echo $GLOBALS['HTML']->getDatePicker('log_start_date', 'log_start_date', $start_date);
-	    echo '  </p>';
-	    echo '  <p>';
-	    echo '   <label for="log_end_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_end_date') . '</label>';
-	    echo $GLOBALS['HTML']->getDatePicker('log_end_date', 'log_end_date', $end_date);
-	    echo '  </p>';
-	    echo '  <p>';
-	    echo '   <label for="search_button">&nbsp;</label>';
-	    echo '  <input id="search_button" type="submit" value="' . $GLOBALS['Language']->getText('plugin_im', 'search') . '">';
-	    echo '  </p>';
-	    echo ' </fieldset>';
-	    echo ' <input type="hidden" name="action" value="muc_logs" />';
-	    echo ' <input type="hidden" name="group_id" value="'.$group_id.'" />';
-	    echo '</form>';
-	    
-    	$mclm = IMMucConversationLogManager::getMucConversationLogManagerInstance();
-	    $conversations = null;
-    	try {
-	    	if ($start_date == $any && $end_date == $any) {
-	    		$conversations = $mclm->getConversationLogsByGroupName($project->getUnixName(true));	// MUC room names are lower cases TODO : check it	
-	    	} elseif ($start_date == $any && $end_date != $any) {
-	    		$conversations = $mclm->getConversationLogsByGroupNameBeforeDate($project->getUnixName(true), $end_date);	// MUC room names are lower cases TODO : check it
-	    	} elseif ($start_date != $any && $end_date == $any) {
-	    		$conversations = $mclm->getConversationLogsByGroupNameAfterDate($project->getUnixName(true), $start_date);	// MUC room names are lower cases TODO : check it
-	    	} else {
-	    		$conversations = $mclm->getConversationLogsByGroupNameBetweenDates($project->getUnixName(true), $start_date, $end_date);	// MUC room names are lower cases TODO : check it
-	    	}
-    	} catch (Exception $e) {
-	    	echo $e->getMessage();
-	    }
-	    	
-    	
-	    if (! $conversations || sizeof($conversations) == 0) {
-	    	echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
-	    } else {
-	    	
-	    	$purifier = CodeX_HTMLPurifier::instance();
-	    	$uh = new UserHelper();
-	    	
-	    	$nick_color_arr = array();	// association array nickname => color
-	    	$available_colors = $GLOBALS['HTML']->getTextColors();
-	    	
-	    	echo '<table class="logs">';
-	    	echo ' <tr>';
-	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_time') . '</th>';
-	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_user') . '</th>';
-	    	echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message') . '</th>';
-	    	echo ' </tr>';
-	    	$current_day = null;
-	    	$current_time_minute = null;
-	    	foreach ($conversations as $conv) {
-	    		if ($conv->getDay() != $current_day) {
-	    			$current_day = $conv->getDay(); 
-	    			echo ' <tr class="boxtitle">';
-	    			echo '  <td colspan="3">'.$conv->getDay().'</td>';
-	    			echo ' </tr>';
-	    		}
-	    		
-	    		// if nickname hasn't its color yet, we give it a new one 
-	    		if ( ! array_key_exists($conv->getNickname(), $nick_color_arr)) { 
-	    			// if all the colors have been used, we start again with the same colors
-	    			if (sizeof($available_colors) == 0) {
-	    				$available_colors = $GLOBALS['HTML']->getChartColors();
-	    			}
-	    			$current_color = array_pop($available_colors);	// remove a color from the array, and set it to current color
-	    			$nick_color_arr[$conv->getNickname()] = $GLOBALS['HTML']->getColorCodeFromColorName($current_color);
-	    		}
-	    		
-	    		echo ' <tr>';
-	    		if ($conv->getTime() != $current_time_minute) {
-	    		    $current_time_minute = $conv->getTime();
-	    		    echo '  <td class="log_time">'.$current_time_minute.'</td>'; 
-	    		} else {
-	    		    echo '  <td class="log_time">&nbsp;</td>';
-	    		}
-	    		echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
-	    		echo '  <td class="log_message">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
-	    		echo ' </tr>';
-	    		
-	    	}
-	    	echo '</table>';
-	    }
+                
+        echo '<form name="muclog_search" id="muclog_search" action="">';
+        echo ' <fieldset>';
+        echo '  <legend>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_search') . ' <img src="'.$this->iconsPath.'help.png" alt="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" title="' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_helpsearch') . '" /> </legend>';
+        echo '  <p>';
+        echo '   <label for="log_start_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_start_date') . '</label>';
+        echo $GLOBALS['HTML']->getDatePicker('log_start_date', 'log_start_date', $start_date);
+        echo '  </p>';
+        echo '  <p>';
+        echo '   <label for="log_end_date">' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_end_date') . '</label>';
+        echo $GLOBALS['HTML']->getDatePicker('log_end_date', 'log_end_date', $end_date);
+        echo '  </p>';
+        echo '  <p>';
+        echo '   <label for="search_button">&nbsp;</label>';
+        echo '  <input id="search_button" type="submit" value="' . $GLOBALS['Language']->getText('plugin_im', 'search') . '">';
+        echo '  </p>';
+        echo ' </fieldset>';
+        echo ' <input type="hidden" name="action" value="muc_logs" />';
+        echo ' <input type="hidden" name="group_id" value="'.$group_id.'" />';
+        echo '</form>';
+        
+        $mclm = IMMucLogManager::getMucLogManagerInstance();
+        $conversations = null;
+        try {
+            if ($start_date == $any && $end_date == $any) {
+                $conversations = $mclm->getLogsByGroupName($project->getUnixName(true));   
+            } elseif ($start_date == $any && $end_date != $any) {
+                $conversations = $mclm->getLogsByGroupNameBeforeDate($project->getUnixName(true), $end_date);
+            } elseif ($start_date != $any && $end_date == $any) {
+                $conversations = $mclm->getLogsByGroupNameAfterDate($project->getUnixName(true), $start_date);
+            } else {
+                $conversations = $mclm->getLogsByGroupNameBetweenDates($project->getUnixName(true), $start_date, $end_date);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+            
+        
+        if (! $conversations || sizeof($conversations) == 0) {
+            echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
+        } else {
+            
+            $purifier = CodeX_HTMLPurifier::instance();
+            $uh = new UserHelper();
+            
+            $nick_color_arr = array();  // association array nickname => color
+            $available_colors = $GLOBALS['HTML']->getTextColors();
+            
+            echo '<table class="logs">';
+            echo ' <tr>';
+            echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_time') . '</th>';
+            echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_user') . '</th>';
+            echo '  <th>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message') . '</th>';
+            echo ' </tr>';
+            $current_day = null;
+            $current_time_minute = null;
+            foreach ($conversations as $conv) {
+                if ($conv->getDay() != $current_day) {
+                    $current_day = $conv->getDay(); 
+                    echo ' <tr class="boxtitle">';
+                    echo '  <td colspan="3">'.$conv->getDay().'</td>';
+                    echo ' </tr>';
+                }
+                
+                // if nickname hasn't its color yet, we give it a new one 
+                if ( ! array_key_exists($conv->getNickname(), $nick_color_arr)) { 
+                    // if all the colors have been used, we start again with the same colors
+                    if (sizeof($available_colors) == 0) {
+                        $available_colors = $GLOBALS['HTML']->getChartColors();
+                    }
+                    $current_color = array_pop($available_colors);  // remove a color from the array, and set it to current color
+                    $nick_color_arr[$conv->getNickname()] = $GLOBALS['HTML']->getColorCodeFromColorName($current_color);
+                }
+                
+                echo ' <tr class="'.get_class($conv).'">';
+                if ($conv->getTime() != $current_time_minute) {
+                    $current_time_minute = $conv->getTime();
+                    echo '  <td class="log_time">'.$current_time_minute.'</td>'; 
+                } else {
+                    echo '  <td class="log_time">&nbsp;</td>';
+                }
+                if ($conv->getNickname() != null) {
+                    echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
+                } else {
+                    echo '  <td class="log_nickname">&nbsp;</td>';
+                }
+                echo '  <td class="'.get_class($conv).'">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
+                echo ' </tr>';
+                
+            }
+            echo '</table>';
+        }
 
     }
     

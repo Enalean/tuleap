@@ -843,7 +843,7 @@ class JabbeXInstaller {
 	 * Creates the Openfire's DB and its tables structure.
 	 * This function uses global parameters so you want to run command_line_arguments prior to calling it.
 	 */
-	function create_openfire_db(){
+	function create_openfire_db() {
 
 		print("Creating Openfire DB tables...\n");
 		
@@ -927,6 +927,13 @@ class JabbeXInstaller {
 		
 		$this->_add_property("xmpp.muc.history.type", "number");	// show 30 last messages when log on chat room
 		$this->_add_property("xmpp.muc.history.maxNumber", "30");
+		
+		// monitoring plugin
+		$this->_add_property("conversation.idleTime", "11");
+        $this->_add_property("conversation.maxTime", "120");
+        $this->_add_property("conversation.messageArchiving", "false");
+        $this->_add_property("conversation.metadataArchiving", "true");
+        $this->_add_property("conversation.roomArchiving", "true");
 	}
 	
 	function copyAuthenticationJarFile() {

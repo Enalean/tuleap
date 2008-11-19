@@ -5,47 +5,16 @@
  *
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com> 
  *
- * IMMucConversationLog
+ * IMMucConversationLog : manage conversation log between members of the MUC Room
  */
-      
-class IMMucConversationLog {
 
-	private $_date;
-	private $_nickname;
-	private $_username;
-	private $_message;
+require_once('IMMucLog.class.php');
+
+class IMMucConversationLog extends IMMucLog {
 
 	function IMMucConversationLog($date, $nickname, $username, $message) {
-		$this->_date = $date;
-		$this->_nickname = $nickname;
-		$this->_username = $username;
-		$this->_message = $message;
+		parent::__construct($date, $nickname, $username, $message);
     }
-    
-	function getDate() {
-		return util_timestamp_to_userdateformat($this->_date / 1000);
-	}
-	
-	function getDay() {
-		return util_timestamp_to_userdateformat($this->_date / 1000, true);
-	}
-	
-	function getTime() {
-		return format_date("H:i", $this->_date / 1000, true);
-	}
-		
-	
-	function getNickname() {
-		return $this->_nickname;
-	}
-	
-	function getUsername() {
-		return $this->_username;
-	}
-	
-	function getMessage() {
-		return $this->_message;
-	}
     
 }
 

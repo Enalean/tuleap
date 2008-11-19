@@ -45,3 +45,15 @@ td.log_day {
 td.log_nickname {
 	font-weight: bold;
 }
+
+td.IMMucChangeTopicSystemLog {
+	font-weight: bold;
+}
+td.IMMucJoinTheRoomSystemLog {
+    font-style: italic;
+    color: grey;
+}
+td.IMMucLeftTheRoomSystemLog {
+    font-style: italic;
+    color: grey;
+}
