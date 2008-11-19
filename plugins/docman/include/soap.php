@@ -558,23 +558,24 @@ function _get_status_value($status) {
 /**
  * Create a docman document
  *
- * @param string       $sessionKey   Session key
- * @param int          $group_id     Group ID
- * @param int          $parent_id    Parent folder ID
- * @param string       $title        Title
- * @param string       $description  Description
- * @param string       $ordering     Ordering (begin, end)
- * @param string       $status       Status (none, draft, approved, rejected)
- * @param string       $type         Type (file, embedded_file, link, empty, wiki)
- * @param string       $content      Content (base64 encoded data, url, wiki page name)
- * @param Array        $permissions  Permissions
- * @param Array        $metadata     Metadata values
- * @param int          $chunk_offset Chunk offset
- * @param int          $chunk_size   Chunk size
- * @param int          $file_size    File size
- * @param string       $file_name    File name
- * @param string       $mime_type    Mime type
- * @param string       $soapfunction The SOAP function that called this function
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param string       $type              Type (file, embedded_file, link, empty, wiki)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ * @param string       $soapfunction      The SOAP function that called this function
+ * @param string       $content           Content (base64 encoded data, url, wiki page name)
+ * @param int          $chunk_offset      Chunk offset
+ * @param int          $chunk_size        Chunk size
+ * @param int          $file_size         File size
+ * @param string       $file_name         File name
+ * @param string       $mime_type         Mime type
  */
 function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $soapfunction, $content = null, $chunk_offset = null, $chunk_size = null, $file_size = null, $file_name = null, $mime_type = null) {
     global $Language;
@@ -639,22 +640,101 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
     }
 }
 
+/**
+ * Create a docman file
+ *
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ * @param string       $content           Content (base64 encoded data)
+ * @param int          $chunk_offset      Chunk offset
+ * @param int          $chunk_size        Chunk size
+ * @param int          $file_size         File size
+ * @param string       $file_name         File name
+ * @param string       $mime_type         Mime type
+ */
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, 'createDocmanFile', $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type);
 }
 
+/**
+ * Create a docman embedded file
+ *
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param string       $content           Content (raw data)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ */
 function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, 'createDocmanEmbeddedFile', $content);
 }
 
+/**
+ * Create a docman wiki page
+ *
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param string       $content           Content (page name)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ */
 function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, 'createDocmanWikiPage', $content);
 }
 
+/**
+ * Create a docman link
+ *
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param string       $content           Content (url)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ */
 function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, 'createDocmanLink', $content);
 }
 
+/**
+ * Create a docman embedded file
+ *
+ * @param string       $sessionKey        Session key
+ * @param int          $group_id          Group ID
+ * @param int          $parent_id         Parent folder ID
+ * @param string       $title             Title
+ * @param string       $description       Description
+ * @param string       $ordering          Ordering (begin, end)
+ * @param string       $status            Status (none, draft, approved, rejected)
+ * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param Array        $permissions       Permissions
+ * @param Array        $metadata          Metadata values
+ */
 function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, 'createDocmanEmptyDocument');
 }
