@@ -2,6 +2,7 @@
 require_once('pre.php');
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('www/project/export/project_export_utils.php');
 
 require_once('IMDao.class.php');
 require_once('IMDataAccess.class.php');
@@ -24,6 +25,8 @@ class IMViews extends Views {
     
     function display($view='') {
         if ($view == 'get_presence') {
+            $this->$view();
+        } elseif ($view == 'export_muc_logs') {
             $this->$view();
         } else {
             parent::display($view);
@@ -221,7 +224,7 @@ class IMViews extends Views {
                 } else {
                     if ($conv->isLoggedAsActivity() && ($conv->getTimestamp() - $last_conversation_activity) > IMMucLog::DELAY_BETWEEN_CONVERSATIONS * 60) {
                         echo ' <tr class="conversation_separation">';
-                        echo '  <td colspan="3"><hr></td>';
+                        echo '  <td colspan="3"><hr class="conversation_separation"></td>';
                         echo ' </tr>';
                     }
                 }
@@ -257,6 +260,96 @@ class IMViews extends Views {
                 
             }
             echo '</table>';
+            
+            echo '<form action="" method="post" name="muc_logs_export_form" id="muc_logs_export_form">';
+            echo ' <input name="type" value="export" type="hidden">';
+            echo ' <font size="-1"><input value="'.$GLOBALS['Language']->getText('plugin_im', 'export_muc_logs').'" type="submit"></font><br>';
+            echo '</form>';
+            
+        }
+
+    }
+    
+    /**
+     * Export muc logs of project $group_id
+     * using monitoring openfire's plugin
+     */
+    function export_muc_logs() {
+        $request = HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $project = project_get_object($group_id);
+        
+        $any = $GLOBALS['Language']->getText('global', 'any');
+        
+        if ($request->exist('log_start_date')) {
+            $start_date = $request->get('log_start_date');
+            if ($start_date == '') {
+                $start_date = $any;
+            }   
+        } else {
+            $week_ago = mktime( 0, 0, 0, date("m"), date("d") - 7, date("Y") );
+            $start_date = date("Y-m-d", $week_ago);
+        }
+        
+        $end_date = $request->get('log_end_date');
+        if ($end_date == '') {
+            $end_date = $any;
+        }
+        
+        $mclm = IMMucLogManager::getMucLogManagerInstance();
+        $conversations = null;
+        try {
+            if ($start_date == $any && $end_date == $any) {
+                $conversations = $mclm->getLogsByGroupName($project->getUnixName(true));   
+            } elseif ($start_date == $any && $end_date != $any) {
+                $conversations = $mclm->getLogsByGroupNameBeforeDate($project->getUnixName(true), $end_date);
+            } elseif ($start_date != $any && $end_date == $any) {
+                $conversations = $mclm->getLogsByGroupNameAfterDate($project->getUnixName(true), $start_date);
+            } else {
+                $conversations = $mclm->getLogsByGroupNameBetweenDates($project->getUnixName(true), $start_date, $end_date);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+            
+        $eol = "\n";
+        $col_list = array('date', 'nickname', 'message');
+        $lbl_list = array(
+                        'date' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_time'),
+                        'nickname' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_user'),
+                        'message' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message')
+                    );
+        
+        $purifier = CodeX_HTMLPurifier::instance();
+        $uh = new UserHelper();
+            
+        $file_name = 'muc_logs_'.$project->getUnixName();
+        header ('Content-Type: text/csv');
+        header ('Content-Disposition: filename='.$file_name.'.csv');
+            
+        if (! $conversations || sizeof($conversations) == 0) {
+            echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
+        } else {
+            
+            // Build CSV header
+            foreach($lbl_list as $k => $v) {
+                $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
+            }
+            echo build_csv_header($col_list, $lbl_list).$eol;
+  
+            // Build CSV content
+            foreach ($conversations as $conv) {
+                $time = $conv->getDate();
+                if ($conv->getNickname() != null) {
+                    $nick = $conv->getNickname();
+                } else {
+                    $nick = '';
+                }
+                $message = $conv->getMessage();
+                
+                echo build_csv_record($col_list, array('date'=>$time, 'nickname'=>$nick, 'message'=>$message)).$eol;
+                    
+            }
         }
 
     }

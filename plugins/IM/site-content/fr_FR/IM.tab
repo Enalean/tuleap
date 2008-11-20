@@ -33,6 +33,7 @@ plugin_im	date_format_error	Erreur de format de date : $1 n'est pas une date val
 plugin_im	muc_logs_join	$1 a rejoint le salon de discussion
 plugin_im	muc_logs_left	$1 a quitté le salon de discussion
 plugin_im	muc_logs_settopic	$1 a changé le sujet de la salle de discussion en : $2
+plugin_im	export_muc_logs	Exporter les logs
 
 plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instantanée.
 plugin_im_admin	im_admin_warning	ATTENTION: Si vous synchronisez un ou plusieurs groupes, il faut impérativement rédemarrer ensuite le server Openfire avec la commande "service openfire reload" exécutée en tant que root sur le serveur. Cela interrompera toutes les discussions en cours!

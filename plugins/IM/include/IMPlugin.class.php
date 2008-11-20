@@ -44,7 +44,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('widgets', 'widgets', false);
         $this->_addHook('user_preferences_appearance', 'user_preferences_appearance', false);
         $this->_addHook('update_user_preferences_appearance', 'update_user_preferences_appearance', false);
-        
+        $this->_addHook('project_export_entry', 'provide_exportable_items', false);
         $this->debug=$debug;
         
     }
@@ -557,7 +557,9 @@ class IMPlugin extends Plugin {
 			$im_object=$this->_get_im_object();
 			$jabberConf=$im_object->get_server_conf();
 			$server_dns=$jabberConf['server_dns'];
-			$user_login=user_getname($eParams['user_id']);
+			
+			$user_login = $this->getUserManager()->getUserById($eParams['user_id'])->getName();
+			
 			$jid_value=$user_login.'@'.$server_dns;
 			$label=$GLOBALS['Language']->getText('plugin_im','im_user_login');
 			//var_dump($label);
@@ -647,6 +649,24 @@ class IMPlugin extends Plugin {
                     $this->getUserManager()->getCurrentUser()->setPreference('plugin_im_hide_users_presence', '1');
                 }
             }
+        }
+        
+        function provide_exportable_items($exportable_items) {
+            $entry_label['im_muc_logs'] = $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title');
+            $entry_data_export_links['im_muc_logs'] = '/plugins/IM/?log_start_date=&log_end_date=&action=muc_logs&type=export&group_id='.$exportable_items['group_id'];
+            $entry_data_export_format_links['im_muc_logs'] = null;
+            $entry_history_data_export_links['im_muc_logs'] = null;
+            $entry_history_data_export_format_links['im_muc_logs'] = null;
+            $entry_dependencies_data_export_links['im_muc_logs'] = null;
+            $entry_dependencies_data_export_format_links['im_muc_logs'] = null;
+            
+            $exportable_items['labels'] = $entry_label;
+            $exportable_items['data_export_links'] = $entry_data_export_links;
+            $exportable_items['data_export_format_links'] = $entry_data_export_format_links;
+            $exportable_items['history_data_export_links'] = $entry_history_data_export_links;
+            $exportable_items['history_data_export_format_links'] = $entry_history_data_export_format_links;
+            $exportable_items['dependencies_data_export_links'] = $entry_dependencies_data_export_links;
+            $exportable_items['dependencies_data_export_format_links'] = $entry_dependencies_data_export_format_links;
         }
         
 	/**

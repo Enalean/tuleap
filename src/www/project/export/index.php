@@ -15,7 +15,9 @@ require_once('www/tracker/include/ArtifactTypeHtml.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
+require_once('common/event/EventManager.class.php');
 
+$em =& EventManager::instance();
 
 if (!isset($export)) $export="";
 
@@ -372,6 +374,73 @@ echo '
 		}
 	}
         }
+        
+    
+    // Plugins entries
+    $entry_label = array();
+    $entry_data_export_links = array();
+    $entry_data_export_format_links = array();
+    $history_data_export_links = array();
+    $history_data_export_format_links = array();
+    $dependencies_data_export_links = array();
+    $dependencies_data_export_format_links = array();
+    
+    $exportable_items = array(
+                        'group_id' => $group_id,
+                        'labels' => &$entry_label,
+                        'data_export_links' => &$entry_data_export_links,
+                        'data_export_format_links' => &$entry_data_export_format_links,
+                        'history_export_links' => &$history_data_export_links,
+                        'history_export_format_links' => &$history_data_export_format_links,
+                        'dependencies_export_links' => &$dependencies_data_export_links,
+                        'dependencies_export_format_links' => &$dependencies_data_export_format_links);
+    $em->processEvent('project_export_entry', $exportable_items);
+    foreach ($exportable_items['labels'] as $key => $label) {
+        echo '<tr class="'.util_get_alt_row_color($iu).'">';
+        echo ' <td><b>'.$label.'</b></td>';
+        echo ' <td align="center">';
+        if ($entry_data_export_links[$key] != null) {
+            echo '  <a href="'.$entry_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';    
+        } else {
+            echo '-';
+        }
+        echo '  <br>';
+        if ($entry_data_export_format_links[$key] != null) {
+            echo '  <a href="'.$entry_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';    
+        } else {
+            echo '-';
+        }
+        echo ' </td>';
+        echo ' <td align="center">';
+        if ($history_data_export_links[$key] != null) {
+            echo '  <a href="'.$history_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
+        } else {
+            echo '-';
+        }
+        echo '  <br>';
+        if ($history_data_export_format_links[$key] != null) {
+            echo '  <a href="'.$history_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
+        } else {
+            echo '-';
+        }
+        echo ' </td>';
+        echo ' <td align="center">';
+        if ($dependencies_data_export_links[$key] != null) {
+            echo '  <a href="'.$dependencies_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
+        } else {
+            echo '-';
+        }
+        echo '  <br>';
+        if ($dependencies_data_export_format_links[$key] != null) {
+            echo '  <a href="'.$dependencies_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
+        } else {
+            echo '-';
+        }
+        echo ' </td>';
+        echo '</tr>';
+        $iu ++;   
+    }
+    
 
 	echo '</TABLE>';
 echo '

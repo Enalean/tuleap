@@ -87,7 +87,12 @@ class IM extends Controler {
 				    		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im','date_format_error', array($end_date)));
 				    	}
 				    } // else date is '' or any
-				    $this->view = 'muc_logs';
+				    
+				    if ($request->get('type') == 'export') {
+				        $this->view = 'export_muc_logs';
+				    } else {
+				        $this->view = 'muc_logs';
+				    }
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
