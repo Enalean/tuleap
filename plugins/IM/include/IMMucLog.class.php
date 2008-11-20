@@ -11,6 +11,15 @@
 abstract class IMMucLog {
 
     /**
+     * Duration between two conversation, in minutes.
+     * If there is no real activity during this amount of minutes, 
+     * the log systme will consider the next activity as a new conversation.
+     * isLoggedAsActivity function will determine if the activity is
+     * considered as real activity or not.
+     */
+    const DELAY_BETWEEN_CONVERSATIONS = 10;
+    
+    /**
      * Date of the log (timestamp in milliseconds)
      */
     protected $_date;
@@ -48,6 +57,10 @@ abstract class IMMucLog {
     function getTime() {
         return format_date("H:i", $this->_date / 1000, true);
     }
+    
+    function getTimestamp() {
+        return floor($this->_date / 1000);
+    }
         
     
     function getNickname() {
@@ -62,6 +75,13 @@ abstract class IMMucLog {
         return $this->_message;
     }
     
+    /**
+     * Will determine if the activity is
+     * considered as real activity or not.
+     * Used to distinguish conversations.  
+     */
+    abstract function isLoggedAsActivity();
+
 }
 
 ?>

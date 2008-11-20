@@ -193,7 +193,6 @@ class IMViews extends Views {
             echo $e->getMessage();
         }
             
-        
         if (! $conversations || sizeof($conversations) == 0) {
             echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
         } else {
@@ -212,12 +211,19 @@ class IMViews extends Views {
             echo ' </tr>';
             $current_day = null;
             $current_time_minute = null;
+            $last_conversation_activity = null;
             foreach ($conversations as $conv) {
                 if ($conv->getDay() != $current_day) {
                     $current_day = $conv->getDay(); 
                     echo ' <tr class="boxtitle">';
                     echo '  <td colspan="3">'.$conv->getDay().'</td>';
                     echo ' </tr>';
+                } else {
+                    if ($conv->isLoggedAsActivity() && ($conv->getTimestamp() - $last_conversation_activity) > IMMucLog::DELAY_BETWEEN_CONVERSATIONS * 60) {
+                        echo ' <tr class="conversation_separation">';
+                        echo '  <td colspan="3"><hr></td>';
+                        echo ' </tr>';
+                    }
                 }
                 
                 // if nickname hasn't its color yet, we give it a new one 
@@ -244,6 +250,10 @@ class IMViews extends Views {
                 }
                 echo '  <td class="'.get_class($conv).'">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
                 echo ' </tr>';
+                
+                if ($conv->isLoggedAsActivity()) {
+                    $last_conversation_activity = $conv->getTimestamp();
+                }
                 
             }
             echo '</table>';

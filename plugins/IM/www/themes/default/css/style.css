@@ -57,3 +57,6 @@ td.IMMucLeftTheRoomSystemLog {
     font-style: italic;
     color: grey;
 }
+tr.conversation_separation {
+	color: grey;
+}
