@@ -21,7 +21,7 @@ abstract class IMMucSystemLog extends IMMucLog {
     protected $_nickname;
     
     function isLoggedAsActivity() {
-        return false;
+        return true;
     }
 
 }
