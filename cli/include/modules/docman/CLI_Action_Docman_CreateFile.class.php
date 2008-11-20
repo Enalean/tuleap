@@ -10,8 +10,6 @@ require_once('CLI_Action_Docman_CreateDocument.class.php');
 class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
     
     private $chunk_size = 6000000; // ~6 Mo
-    private $current_chunk_offset = 0;
-    private $filename;
 
     function CLI_Action_Docman_CreateFile() {
         $this->CLI_Action_Docman_CreateDocument('createFile', 'Create a document of type file');
@@ -25,125 +23,100 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
     }
     
     function validate_content(&$content) {
+        $error = '';
         if (!isset($content) || trim($content) == '') {
+            $error = "You must specify the location of the file with the --content parameter";
+        } else if (!file_exists($content)) {
+            $error = "File '$content' doesn't exist";
+        } else if (!fopen($content, 'rb')) {
+            $error = "Could not open '$content' for reading";
+        }
+        if ($error) {
             echo $this->help();
-            exit_error("You must specify the location of the file with the --content parameter");
+            exit_error($error);
         }
         return true;
     }
 
     /**
-     * Load the next file chunk and set the corresponding SOAP parameters
-     */
-    function loadChunk(&$loaded_params) {
-        if (isset($this->filename)) {
-            $chunk_offset = $this->current_chunk_offset++;
-            $contents = file_get_contents($this->filename, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
-            $loaded_params['soap']['content'] = base64_encode($contents);
-            $loaded_params['soap']['chunk_offset'] = $chunk_offset;
-            $loaded_params['soap']['chunk_size'] = $this->chunk_size;
-        }
-    }
-    
-    /**
      * Compares the local and the distant checksums and throw an error if they are different
      */
-    function checkChecksum(&$loaded_params, $item_id) {
+    function checkChecksum($group_id, $item_id, $filename) {
         $this->setSoapCommand('getDocmanFileMD5sum');
-        $loaded_params['soap'] = array(
-            'group_id' => $loaded_params['soap']['group_id'],
+        $soap_params = array(
+            'group_id' => $group_id,
             'item_id'  => $item_id,
             'version'  => 0,
         );
-
-        $local_checksum = md5_file($this->filename);
-
+        
+        $local_checksum = md5_file($filename);
+        
         // For very big files, the checksum can take several minutes to be computed, so we set the socket timeout to 10 minutes
-        ini_set('default_socket_timeout', 600);
-
-        $distant_checksum = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
-
+        $default_socket_timeout = ini_set('default_socket_timeout', 600);
+        
+        $distant_checksum = $GLOBALS['soap']->call('getDocmanFileMD5sum', $soap_params, $this->use_extra_params());
+        
+        //revert default_socket_timeout
+        if ($default_socket_timeout !== false) {
+            ini_set('default_socket_timeout', $default_socket_timeout);
+        }
+        
         if ($local_checksum == $distant_checksum) {
             echo "File uploaded successfully\n";
         } else {
-            exit_error("Local and remote checksums are not the same. You should remove the document on the server, and try to create it again.");
+            echo "ERROR: Local and remote checksums are not the same. You should remove the document on the server, and try to create it again.\n";
         }
     }
     
     function after_loadParams(&$loaded_params) {
         parent::after_loadParams($loaded_params);
         
-        if (!isset($loaded_params['others']['content']) || trim($loaded_params['others']['content']) == '') {
-            echo $this->help();
-            exit_error("You must specify the content of the document with the --content parameter, according to the document type");
-        }
-
-        $this->filename = $loaded_params['others']['content'];
-
-        if (!file_exists($this->filename)) {
-            exit_error("File '". $this->filename ."' doesn't exist");
-        } else if (!($fh = fopen($this->filename, "rb"))) {
-            exit_error("Could not open '$this->filename' for reading");
-        } else {
-            $this->loadChunk($loaded_params);
-            $loaded_params['soap']['file_size'] = filesize($this->filename);
-            $loaded_params['soap']['file_name'] = $this->filename;
-            $loaded_params['soap']['mime_type'] = mime_content_type($this->filename);
-            echo "Sending file (0%)";
-        }
+        $filename = $loaded_params['others']['content'];
+        
+        $loaded_params['soap']['file_size'] = filesize($filename);
+        $loaded_params['soap']['file_name'] = $filename;
+        $loaded_params['soap']['mime_type'] = mime_content_type($filename);
     }
-    
-    function execute($params) {
-        $soap_result = null;
-        if ($this->module->getParameter($params, array('h', 'help'))) {
-            echo $this->help();
-        } else {
-            $loaded_params = $this->loadParams($params);
-            $this->after_loadParams($loaded_params);
+
+    function soapCall($soap_params, $use_extra_params = true) {
+        $filename = $soap_params['file_name'];
+        
+        // How many chunks do we have to send
+        $chunk_count = ceil($soap_params['file_size'] / $this->chunk_size);
+
+        for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            // Display progression indicator
+            echo "\rSending file (". intval($chunk_offset / $chunk_count * 100) ."%)";
+            
+            // Retrieve the current chunk of the file
+            $contents = file_get_contents($filename, null, null, $chunk_offset * $this->chunk_size, $this->chunk_size);
+            $soap_params['content'] = base64_encode($contents);
+            $soap_params['chunk_offset'] = $chunk_offset;
+            $soap_params['chunk_size'] = $this->chunk_size;
+            
+            // Send the chunk
+            if (!$chunk_offset) {
+                // If this is the first chunk, then use the original soapCommand...
+                $item_id = $GLOBALS['soap']->call($this->soapCommand, $soap_params, $use_extra_params);
                 
-            try {
-                //print_r($loaded_params['soap']);
-                $soap_result = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
-            } catch (SoapFault $fault) {
-                $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
-                exit_error($fault, $fault->getCode());
+                // And reinit soap_params with the new item's id
+                $soap_params = array(
+                    'group_id' => $soap_params['group_id'],
+                    'item_id'  => $item_id,
+                );
+            } else {
+                // If this is not the first chunk, then we have to append the chunk
+                $GLOBALS['soap']->call('appendDocmanFileChunk', $soap_params, $use_extra_params);
             }
-
-            $item_id = $soap_result;
-            $filesize = filesize($this->filename);
-
-            $modulo = $filesize % $this->chunk_size;
-            $chunk_count = ($filesize - $modulo) / $this->chunk_size;
-            if ($modulo != 0) {
-                $chunk_count++;
-            }
-
-            $this->setSoapCommand('appendDocmanFileChunk');
-
-            $loaded_params['soap'] = array(
-                'group_id' => $loaded_params['soap']['group_id'],
-                'item_id' => $item_id,
-            );
-
-            // Send the other chunks
-            while($this->current_chunk_offset < $chunk_count) {
-                echo "\rSending file (".intval($this->current_chunk_offset / $chunk_count * 100).'%)';
-                $this->loadChunk($loaded_params);
-                try {
-                    $soap_result2 = $this->soapCall($loaded_params['soap'], $this->use_extra_params());
-                } catch (SoapFault $fault) {
-                    $GLOBALS['LOG']->add($GLOBALS['soap']->__getLastResponse());
-                    exit_error($fault, $fault->getCode());
-                }
-            }
-            echo "\rSending file (100%)\n";
-             
-            $this->checkChecksum($loaded_params, $item_id);
-
-            $this->soapResult($params, $soap_result, array(), $loaded_params);
         }
-        return $soap_result;
+        // Finish!
+        echo "\rSending file (100%)\n";
+        
+        // Check that the local and remote file are the same
+        $this->checkChecksum($soap_params['group_id'], $item_id, $filename);
+        
+        // The soap result is the new item's id
+        return $item_id;
     }
 }
-
 ?>

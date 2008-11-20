@@ -167,7 +167,7 @@ class Docman_Actions extends Actions {
                     $uploadSucceded = true;
                     
                     if ($request->exist('file_name')) {
-                        $_filename = $request->get('file_name');
+                        $_filename = basename($request->get('file_name'));
                     } else {
                         $_filename = basename($path);
                     }
@@ -375,11 +375,11 @@ class Docman_Actions extends Actions {
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                 $this->_storeFileChunk($item);
             } else {
-                $this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
             }
             
         } else {
-            $this->_controler->feedback->log('error', 'Error while appending file chunk');
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
         }
     }
     
@@ -399,13 +399,13 @@ class Docman_Actions extends Actions {
                 $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
                 $this->_controler->_viewParams['action_result'] = $md5sum;
                 if (!$md5sum) {
-                    $this->_controler->feedback->log('error', "Error while getting file checksum");
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                 }
             } else {
-                $this->_controler->feedback->log('error', 'The type of the specified document is not "file"');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
             }
         } else {
-            $this->_controler->feedback->log('error', 'Error while getting file checksum (unable to retrieve the item ID)');
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
         }
     }
     
@@ -642,22 +642,7 @@ class Docman_Actions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
-    function _get_definition_index_for_permission($p) {
-        switch ($p) {
-            case 'PLUGIN_DOCMAN_READ':
-                return 1;
-                break;
-            case 'PLUGIN_DOCMAN_WRITE':
-                return 2;
-                break;
-            case 'PLUGIN_DOCMAN_MANAGE':
-                return 3;
-                break;
-            default:
-                return 100;
-                break;
-        }
-    }
+    
     /**
     * User has asked to set or to change permissions on an item
     * This method is the direct action of the docman controler but can also be called internally (@see createDocument)
@@ -853,7 +838,7 @@ class Docman_Actions extends Actions {
                             $done_permissions[$ugroup_id] = 100;
                         } else {
                             //keep the old permission
-                            $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
+                            $done_permissions[$ugroup_id] = Docman_PermissionsManager::getDefinitionIndexForPermission($permission);
                         }
                     }
                 }

@@ -143,12 +143,12 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         
-        'content'           => 'xsd:string',
-        'chunk_offset'      => 'xsd:int',
-        'chunk_size'        => 'xsd:int',
         'file_size'         => 'xsd:int',
         'file_name'         => 'xsd:string',
         'mime_type'         => 'xsd:string',
+        'content'           => 'xsd:string',
+        'chunk_offset'      => 'xsd:int',
+        'chunk_size'        => 'xsd:int',
         ),
     array('createDocmanFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -167,12 +167,12 @@ status            Status (none, draft, approved, rejected)
 obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
 permissions       Permissions
 metadata          Metadata values
-content           Content (base64 encoded data)
-chunk_offset      Chunk offset
-chunk_size        Chunk size
 file_size         File size
 file_name         File name
 mime_type         Mime type
+content           Content (base64 encoded data)
+chunk_offset      Chunk offset
+chunk_size        Chunk size
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -529,55 +529,33 @@ function listFolder($sessionKey,$group_id,$item_id) {
 }
 
 /**
- * Returns the integer value that corresponds to the permission
- */
-function _get_definition_index_for_permission($p) {
-    switch ($p) {
-        case 'PLUGIN_DOCMAN_READ':
-            return 1;
-            break;
-        case 'PLUGIN_DOCMAN_WRITE':
-            return 2;
-            break;
-        case 'PLUGIN_DOCMAN_MANAGE':
-            return 3;
-            break;
-        default:
-            return 100;
-            break;
-    }
-}
-
-/**
  * Returns an array containing all the permissions for the specified item.
  * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
 function _get_permissions_as_array($group_id, $parent_id, $permissions) {
     $permissions_array = array();
     
-    if ($permissions != null) {
-        $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+    $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+
+    // Get the ugroups of the parent
+    $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
     
-        // Get the ugroups of the parent
-        $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
-        
-        // Initialize the ugroup permissions to the same values as the parent folder
-        foreach ($ugroups as $ugroup) {
-            $ugroup_id = $ugroup['ugroup']['id'];
-            $permissions_array[$ugroup_id] = 100;
-            foreach ($perms as $perm) {
-                if (isset($ugroup['permissions'][$perm])) {
-                    $permissions_array[$ugroup_id] = _get_definition_index_for_permission($perm);
-                }
+    // Initialize the ugroup permissions to the same values as the parent folder
+    foreach ($ugroups as $ugroup) {
+        $ugroup_id = $ugroup['ugroup']['id'];
+        $permissions_array[$ugroup_id] = 100;
+        foreach ($perms as $perm) {
+            if (isset($ugroup['permissions'][$perm])) {
+                $permissions_array[$ugroup_id] = Docman_PermissionsManager::getDefinitionIndexForPermission($perm);
             }
         }
-        
-        // Set the SOAP-provided permissions
-        foreach ($permissions as $index => $permission) {
-            $ugroup_id = $permission->ugroup_id;
-            if (isset($permissions_array[$ugroup_id])) {
-                $permissions_array[$ugroup_id] = _get_definition_index_for_permission($permission->type);
-            }
+    }
+    
+    // Set the SOAP-provided permissions
+    foreach ($permissions as $index => $permission) {
+        $ugroup_id = $permission->ugroup_id;
+        if (isset($permissions_array[$ugroup_id])) {
+            $permissions_array[$ugroup_id] = Docman_PermissionsManager::getDefinitionIndexForPermission($permission->type);
         }
     }
     
@@ -757,7 +735,7 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
  * @param string       $file_name         File name
  * @param string       $mime_type         Mime type
  */
-function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type) {
+function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, 'createDocmanFile', $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type);
 }
 

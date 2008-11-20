@@ -48,7 +48,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'perm_none',
-            'description'    => '--perm_none=<comma separated list of ugroup IDs>     Groups that will have no permission',
+            'description'    => '--perm_none=<comma separated list of ugroup IDs>     Groups that will have no permission (ie. those groups will not inherit the permissions of the parent folder)',
             'soap'     => false,
         ));
         $this->addParam(array(
@@ -61,14 +61,14 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
     function validate_parent_id(&$parent_id) {
         if (!isset($parent_id)) {
             echo $this->help();
-            exit_error("You must specify the parent ID of the document with the --parent_id parameter");
+            exit_error("You must specify the parent ID of the item with the --parent_id parameter");
         }
         return true;
     }
     function validate_title(&$title) {
         if (!isset($title) || trim($title) == '') {
             echo $this->help();
-            exit_error("You must specify the title of the document with the --title parameter");
+            exit_error("You must specify the title of the item with the --title parameter");
         }
         return true;
     }
@@ -78,7 +78,7 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
             // check that the value is allowed
             if (!in_array($ordering, $allowed_ordering)) {
                 echo $this->help();
-                exit_error("You must specify the ordering of the document with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
+                exit_error("You must specify the ordering of the item with the --ordering parameter, taking the value {".implode(",", $allowed_ordering)."}");
             }
         } else {
             // $ordering is not set
@@ -103,31 +103,31 @@ abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
     }
     function validate_perm_read(&$perm) {
         if (!$this->validate_perm($perm)) {
-            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-read=101,102");
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm_read=101,102");
         }
         return true;
     }
     function validate_perm_write(&$perm) {
         if (!$this->validate_perm($perm)) {
-            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-write=101,102");
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm_write=101,102");
         }
         return true;
     }
     function validate_perm_manage(&$perm) {
         if (!$this->validate_perm($perm)) {
-            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-manage=101,102");
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm_manage=101,102");
         }
         return true;
     }
     function validate_perm_none(&$perm) {
         if (!$this->validate_perm($perm)) {
-            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm-none=101,102");
+            exit_error("The permissions must be a comma separated list of ugroup IDs. Ex: --perm_none=101,102");
         }
         return true;
     }
     
     /**
-     * Retrieve the groups given by the CLI parameters (read-groups, write-groups, manage-groups) and put them in the SOAP parameter "permissions" with their associated permission
+     * Retrieve the groups given by the CLI parameters (read_groups, write_groups, manage_groups) and put them in the SOAP parameter "permissions" with their associated permission
      */
     function loadPermissionParams(&$loaded_params) {
         $loaded_params['soap']['permissions'] = array();
