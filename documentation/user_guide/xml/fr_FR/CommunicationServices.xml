@@ -230,10 +230,49 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         <para>Le plug-in IM de &SYS_PRODUCT_NAME; ne contient pas de client Jabber, chaque utilisateur
         est libre d'utiliser le client qui correspond le mieux a ses besoins. Un certain
         nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
-        plateformes, une liste non-exhaustive est disponible à l'url http://www.jabber.org/clients.</para>
+        plateformes, une liste non-exhaustive est disponible à l'url http://www.jabber.org/clients.
+        Notons toutefois que certains clients, comme Coccinella par exemple, permettent de faire 
+        du tableau blanc partagé.
+        </para>
         
         <para>Le status d'un utilisateur utilisant un client Jabber (en ligne, occupé, absent)
         est affiché dans &SYS_PRODUCT_NAME;.</para>
+        
+        <section id="JabberOnCodexWebPage">
+        <title>Intégration de la messagerie instantanée dans &SYS_PRODUCT_NAME;</title>
+        
+        <para>Un certain nombre d'informations concernant la messagerie instantanée 
+        sont disponibles directement depuis &SYS_PRODUCT_NAME;. Ainsi, chaque utilisateur peut voir sa 
+        liste de contact ainsi que leur status directement depuis son espace personnel. 
+        Pour ce faire, il suffit de se rendre sur la page "Ma Page Personnelle". Si le 
+        widget affichant la liste de contact n'est pas visible, il faut l'ajouter. Pour ce 
+        faire, cliquez sur le lien "Ajouter des widgets" , et ajouter le widget correspondant 
+        à "Ma liste de contact IM".</para>
+        
+        <para>Chaque nom d'utilisateur affiché dans &SYS_PRODUCT_NAME; s'accompagne d'une icone de couleur 
+        (gris,vert, jaune ou rouge) indiquant le status de l'utilisateur : gris pour 
+        "non connecté", vert pour "en ligne", jaune pour "absent" et rouge pour "occupé". 
+        Les utilisateurs peuvent modifier leur status à l'aide de leur client Jabber.</para>
+        
+        <para>Tout nouveau projet approuvé implique la création d'un groupe partagé et 
+        d'un salon de discussion correspondant au projet.</para>
+        
+        <para>Tout nouveau membre ajouté au projet est également ajouté au groupe partagé 
+        et au salon de discussion correspondant. Ce nouveau membre sera automatiquement invité 
+        à rejoindre le salon de discussion du projet dès sa prochaine connection sur le serveur 
+        Jabber.</para>
+        
+        <para>Si un membre est supprimé dans un projet alors il sera supprimé du groupe 
+        partagé et du salon de discussions correspondant .</para>
+        
+        <para>Si un projet est suspendu ou en attente de validation, le salon de discussions
+         sera rendue indisponible (vérouillé) et le groupe partagé ne sera pas visible sur 
+         la liste de contacts des membres du projet.</para>
+         
+         <para>Si un projet est détruit, son salon de discussions sera détruit et son 
+         groupe partagé n'existera plus .</para>
+        
+        </section>
         
         <section id="JabberClientConfiguration">
             <title>Configuration d'un client Jabber</title>
@@ -271,6 +310,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
             d'informations, consultez la documentation fournie avec votre client.</para>
             
         </section>
+        
         <section id="JoiningAMUC">
             <title>Rejoindre un salon de discussion multi-utilisateurs (MUC)</title>
             <para>Comme il a été spécifié précédement,le plug-in de messagerie
@@ -298,41 +338,6 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
             salon de discussion, consultez la documentation de votre client Jabber.</para>
         </section>
         
-        <section id="JabberOnCodexWebPage">
-        <title>Intégration de la messagerie instantanée dans &SYS_PRODUCT_NAME;</title>
-        
-        <para>Un certain nombre d'informations concernant la messagerie instantanée 
-        sont disponibles directement depuis &SYS_PRODUCT_NAME;. Ainsi, chaque utilisateur peut voir sa 
-        liste de contact ainsi que leur status directement depuis son espace personnel. 
-        Pour ce faire, il suffit de se rendre sur la page "Ma Page Personnelle". Si le 
-        widget affichant la liste de contact n'est pas visible, il faut l'ajouter. Pour ce 
-        faire, cliquez sur le lien "Ajouter des widgets" , et ajouter le widget correspondant 
-        à "Ma liste de contact IM".</para>
-        
-        <para>Chaque nom d'utilisateur affiché dans &SYS_PRODUCT_NAME; s'accompagne d'une icone de couleur 
-        (gris,vert, jaune ou rouge) indiquant le status de l'utilisateur : gris pour 
-        "non connecté", vert pour "en ligne", jaune pour "absent" et rouge pour "occupé". 
-        Les utilisateurs peuvent modifier leur status à l'aide de leur client Jabber.</para>
-        
-        <para>Tout nouveau projet approuvé implique la création d'un groupe partagé et 
-        d'un salon de discussion correspondant au projet.</para>
-        
-        <para>Tout nouveau membre ajouté au projet est également ajouté au groupe partagé 
-        et au salon de discussion correspondant. Ce nouveau membre sera automatiquement invité 
-        à rejoindre le salon de discussion du projet dès sa prochaine connection sur le serveur 
-        Jabber.</para>
-        
-        <para>Si un membre est supprimé dans un projet alors il sera supprimé du groupe 
-        partagé et du salon de discussions correspondant .</para>
-        
-        <para>Si un projet est suspendu ou en attente de validation, le salon de discutions
-         sera rendue indisponible (vérouillé) et le groupe partagé ne sera pas visible sur 
-         la liste de contacts des membres du projet.</para>
-         
-         <para>Si un projet est détruit, son salon de discutions sera détruit et son 
-         groupe partagé n'existera plus .</para>
-        
-        </section>
     </section>
   </chapter>
 <!--

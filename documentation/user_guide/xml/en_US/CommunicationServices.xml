@@ -200,10 +200,46 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         thus each user can choose the client that best fits his or her needs. Several
         open source (and/or free) clients are available for the most common platforms,
         and you can find a list (non-exhaustive) of them at http://www.jabber.org/clients.
+        Note that some clients, like Coccinella for instance, allow you to do shared whiteboard.
         </para>
         
         <para>The status of a user using a Jabber client (online, busy, away) is 
         displayed in &SYS_PRODUCT_NAME;.</para>
+        
+        <section id="JabberOnCodexWebPage">
+        <title>Jabber Related Information on the &SYS_PRODUCT_NAME; Web Page</title>
+        
+        <para>&SYS_PRODUCT_NAME; provides several bits of information regarding the Instant 
+        Messaging on its web interface. Thus, each user has access to his roster 
+        (contact list) and the status of each of his contacts directly on his personal page.
+        In order to do this, simply visit the page "My Personal Page". If the widget 
+        displaying the contact list is not visible it must be added. To do so, click on the 
+        link "Add widgets" and add the widget corresponding to "My IM Roster".
+        </para>
+        
+        <para>Next to each user name &SYS_PRODUCT_NAME; displays a colored icon (gray, green, yellow 
+        or red) that indicates the status of the user: gray for "offline", green for "online",
+        yellow for "away", and red for "busy". Users can change their status through their 
+        Jabber client.</para>
+        
+        <para>Any new approved project implies the creation of a corresponding shared group
+        and chat room.</para>
+        
+        <para>Any new member added to the project is also added to the corresponding shared
+        group and chat room. This new member will be automatically invited to join the 
+        project's chat room as soon as he or she connects to the Jabber server.</para>
+        
+        <para>If a member is removed from a project then he or she will also be removed 
+        from its corresponding shared group and chat room.</para>
+        
+        <para>If a project is suspended or awaiting validation, its corresponding chat 
+        room will be made unavailable (locked) and the shared group will not be visible on 
+        the roster of project members.</para>
+        
+        <para>If a project is deleted, the corresponding chat room and shared group will 
+        be destroyed as well.</para>
+        
+        </section>
         
         <section id="JabberClientConfiguration">
             <title>Jabber Client Configuration</title>
@@ -240,6 +276,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
             </para>
             
         </section>
+        
         <section id="JoiningAMUC">
             <title>Joining a Multi-User Chat Room (MUC)</title>
             <para>As stated before, the IM plug-in creates a multi-user chat
@@ -264,41 +301,6 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
             
             <para>For further information on how to invite external users to chat
             rooms using your Jabber client please refer to its documentation.</para>
-        </section>
-        
-        <section id="JabberOnCodexWebPage">
-        <title>Jabber Related Information on the &SYS_PRODUCT_NAME; Web Page</title>
-        
-        <para>&SYS_PRODUCT_NAME; provides several bits of information regarding the Instant 
-        Messaging on its web interface. Thus, each user has access to his roster 
-        (contact list) and the status of each of his contacts directly on his personal page.
-        In order to do this, simply visit the page "My Personal Page". If the widget 
-        displaying the contact list is not visible it must be added. To do so, click on the 
-        link "Add widgets" and add the widget corresponding to "My IM Roster".
-        </para>
-        
-        <para>Next to each user name &SYS_PRODUCT_NAME; displays a colored icon (gray, green, yellow 
-        or red) that indicates the status of the user: gray for "offline", green for "online",
-        yellow for "away", and red for "busy". Users can change their status through their 
-        Jabber client.</para>
-        
-        <para>Any new approved project implies the creation of a corresponding shared group
-        and chat room.</para>
-        
-        <para>Any new member added to the project is also added to the corresponding shared
-        group and chat room. This new member will be automatically invited to join the 
-        project's chat room as soon as he or she connects to the Jabber server.</para>
-        
-        <para>If a member is removed from a project then he or she will also be removed 
-        from its corresponding shared group and chat room.</para>
-        
-        <para>If a project is suspended or awaiting validation, its corresponding chat 
-        room will be made unavailable (locked) and the shared group will not be visible on 
-        the roster of project members.</para>
-        
-        <para>If a project is deleted, the corresponding chat room and shared group will 
-        be destroyed as well.</para>
-        
         </section>
         
     </section>
