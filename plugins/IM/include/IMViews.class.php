@@ -338,7 +338,7 @@ class IMViews extends Views {
   
             // Build CSV content
             foreach ($conversations as $conv) {
-                $time = $conv->getDate();
+                $time = format_date(util_get_user_preferences_export_datefmt(), $conv->getTimestamp()); 
                 if ($conv->getNickname() != null) {
                     $nick = $conv->getNickname();
                 } else {
