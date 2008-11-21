@@ -19,7 +19,7 @@ if ($request->exist('wsdl')) {
 }
 	
 try {
-    
+	
     $server = new SoapServer($uri.'/soap/codex.wsdl.php?wsdl',  
     							array('trace' => 1, 
     								  'soap_version' => SOAP_1_1

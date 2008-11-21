@@ -156,12 +156,33 @@ class Docman_Actions extends Actions {
         switch ($iFactory->getItemTypeForItem($item)) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             if ($request->exist('upload_content')) {
-                $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+                
+                if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+                } else {
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+                }
+                
                 if ($path) {
                     $uploadSucceded = true;
-                    $_filename = basename($path);
-                    $_filesize = filesize($path);
-                    $_filetype = mime_content_type($path); //be careful with false detection
+                    
+                    if ($request->exist('file_name')) {
+                        $_filename = basename($request->get('file_name'));
+                    } else {
+                        $_filename = basename($path);
+                    }
+                    
+                    if ($request->exist('file_size')) {
+                        $_filesize = $request->get('file_size');
+                    } else {
+                        $_filesize = filesize($path);
+                    }
+                    
+                    if ($request->exist('mime_type')) {
+                        $_filetype = $request->get('mime_type');
+                    } else {
+                        $_filetype = mime_content_type($path); //be careful with false detection
+                    }
                 }
             } else {
                 $path = $fs->upload($_FILES['file'], $item->getGroupId(), $item->getId(), $number);
@@ -232,6 +253,20 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
     }
+    
+    /**
+     * Like _storeFile, but this function just add a chunk to an existing file, without creating a new document version
+     */
+    function _storeFileChunk($item) {
+        $fs       = $this->_getFileStorage();
+        $request  = $this->_controler->request;
+        if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+            $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+            if (!$path) {
+                $this->_controler->feedback->log('error', "Error while storing file chunk");
+            }
+        }
+    }
 
     function createFolder() {
         $this->createDocument();
@@ -254,7 +289,7 @@ class Docman_Actions extends Actions {
                 )
             {
 
-                // Special handeling of obsolescence date
+                // Special handling of obsolescence date
                 if(isset($item['obsolescence_date']) 
                    && preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', 
                                  $item['obsolescence_date'], $d)) {
@@ -325,6 +360,55 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
+    /**
+     * Append a chunk of data to a file
+     */
+    function appendFileChunk() {
+        $request =& $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            $itemType = $item_factory->getItemTypeForItem($item);
+            
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                $this->_storeFileChunk($item);
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+            }
+            
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
+        }
+    }
+    
+    /**
+     * Returns the MD5 checksum of a file
+     */
+    function getFileMD5sum() {
+        $request =& $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            $itemType = $item_factory->getItemTypeForItem($item);
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                $fs = $this->_getFileStorage();
+                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
+                $this->_controler->_viewParams['action_result'] = $md5sum;
+                if (!$md5sum) {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+        }
+    }
+    
     function update() {
         $request =& HTTPRequest::instance();
         if ($request->exist('item')) {
@@ -348,7 +432,7 @@ class Docman_Actions extends Actions {
                 unset($data['owner']);
             }
             
-            // Special handeling of obsolescence date
+            // Special handling of obsolescence date
             if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
                     $d = explode('-',$data['obsolescence_date']);
                     $data['obsolescence_date'] = gmmktime(0,0,0,
@@ -500,7 +584,7 @@ class Docman_Actions extends Actions {
     var $permissions_manager;
     function &_getPermissionsManagerInstance(){
         if(!$this->permissions_manager){
-	    $this->permissions_manager =& PermissionsManager::instance(); 
+        $this->permissions_manager =& PermissionsManager::instance(); 
         }
         return $this->permissions_manager;
     }
@@ -558,22 +642,7 @@ class Docman_Actions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
-    function _get_definition_index_for_permission($p) {
-        switch ($p) {
-            case 'PLUGIN_DOCMAN_READ':
-                return 1;
-                break;
-            case 'PLUGIN_DOCMAN_WRITE':
-                return 2;
-                break;
-            case 'PLUGIN_DOCMAN_MANAGE':
-                return 3;
-                break;
-            default:
-                return 100;
-                break;
-        }
-    }
+    
     /**
     * User has asked to set or to change permissions on an item
     * This method is the direct action of the docman controler but can also be called internally (@see createDocument)
@@ -594,7 +663,7 @@ class Docman_Actions extends Actions {
     * Docman_Actions::recursivePermission (see each method for details).
     */
     function permissions($params) {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         $id = isset($params['id']) ? $params['id'] : $request->get('id');
         $force = isset($params['force']) ? $params['force'] : false;
         if ($id && $request->exist('permissions')) {
@@ -769,7 +838,7 @@ class Docman_Actions extends Actions {
                             $done_permissions[$ugroup_id] = 100;
                         } else {
                             //keep the old permission
-                            $done_permissions[$ugroup_id] = $this->_get_definition_index_for_permission($permission);
+                            $done_permissions[$ugroup_id] = Docman_PermissionsManager::getDefinitionIndexForPermission($permission);
                         }
                     }
                 }
@@ -812,7 +881,7 @@ class Docman_Actions extends Actions {
             }
         }
     }
-	
+
     function change_view() {
         $request =& HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');

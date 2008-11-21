@@ -13,7 +13,7 @@ if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
 
 function db_connect() {
     global $sys_dbhost,$sys_dbuser,$sys_dbpasswd,$conn,$sys_dbname;
-    $conn_opt = '';
+    $conn_opt = 0;
     if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
       $conn_opt = MYSQL_CLIENT_SSL;
     }

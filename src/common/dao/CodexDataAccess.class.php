@@ -13,7 +13,7 @@ require_once('include/DataAccess.class.php');
 class CodexDataAccess extends DataAccess {
     
     function CodexDataAccess() {
-      $conn_opt = '';
+      $conn_opt = 0;
       if(isset($GLOBALS['sys_enablessl']) && $GLOBALS['sys_enablessl']) {
 	$conn_opt = MYSQL_CLIENT_SSL;
       }
