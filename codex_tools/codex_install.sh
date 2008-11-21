@@ -183,7 +183,7 @@ for rpm in openssh-server openssh openssh-clients \
    dejavu-lgc-fonts \
    compat-libstdc++-33 \
    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
-   zip unzip enscript xinetd
+   zip unzip enscript xinetd mod_auth_mysql
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -271,6 +271,14 @@ while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
     read -s -p "Password for Openfire DB user: " openfire_passwd
     echo
     read -s -p "Retype password for Openfire DB user: " openfire_passwd2
+    echo
+done
+
+dbauth_passwd="a"; dbauth_passwd2="b";
+while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
+    read -s -p "Password for DB Authentication user: " dbauth_passwd
+    echo
+    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
     echo
 done
 
@@ -591,10 +599,6 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codex-salome-tmf-*noarch.rpm
 
 
-# Create an http password file
-$TOUCH /etc/httpd/conf/codex_htpasswd
-$CHMOD 644 /etc/httpd/conf/codex_htpasswd
-
 ######
 # Now install the non RPMs stuff 
 #
@@ -647,7 +651,6 @@ $LN -sf ${dir_entry} docbook-xsl
 #$RM -f apache-tomcat-6
 #$LN -sf ${dir_entry} apache-tomcat-6
 #TOMCAT_DIR=/usr/share/apache-tomcat-6
-#$CHOWN -R codexadm.codexadm $TOMCAT_DIR
 echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
 #echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codexadm/.profile
 
@@ -661,6 +664,7 @@ echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
 #</tomcat-users>
 #EOF
 #$CHMOD 0600 $TOMCAT_USERS_XML
+#$CHOWN -R codexadm.codexadm $TOMCAT_DIR
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -784,10 +788,6 @@ $CHMOD 740 /usr/lib/codex/bin/backup_job
 $CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codex/bin
 $CHOWN root.root /usr/lib/codex/bin/backup_subversion.sh
 $CHMOD 740 /usr/lib/codex/bin/backup_subversion.sh
-# needed by newparse.pl
-$TOUCH /etc/httpd/conf/htpasswd
-$CHMOD 644 /etc/httpd/conf/htpasswd
-
 
 # replace string patterns in local.inc
 substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
@@ -796,6 +796,7 @@ substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name"
 substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
+substitute '/etc/codex/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
   substitute '/etc/codex/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
@@ -882,6 +883,10 @@ if [ ! -d "/var/lib/mysql/codex" ]; then
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
+GRANT SELECT ON codex.user to dbauthuser@localhost identified by '$dbauth_passwd';
+GRANT SELECT ON codex.groups to dbauthuser@localhost;
+GRANT SELECT ON codex.user_group to dbauthuser@localhost;
+GRANT SELECT ON codex.session to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -1452,10 +1457,6 @@ build_dir /etc/codex/plugins/IM/etc codexadm codexadm 755
 # Create openfireadm MySQL user
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
-GRANT SELECT ON codex.user to openfireadm@localhost;
-GRANT SELECT ON codex.groups to openfireadm@localhost;
-GRANT SELECT ON codex.user_group to openfireadm@localhost;
-GRANT SELECT ON codex.session to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 # Initialize Jabbex
@@ -1463,7 +1464,7 @@ IM_ADMIN_GROUP='imadmingroup'
 IM_ADMIN_USER='imadmin-bot'
 IM_ADMIN_USER_PW='1M@dm1n'
 IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codex -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd dbauthuser -pcd $dbauth_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codex -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
 # Install plugin
 $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
 

@@ -61,19 +61,6 @@ sub hash_shadow_array {
         }
         return %tmp_hash;
       }
-sub hash_htpasswd_array {
-        my @file_array = @_;
-        my %tmp_hash;
-        my $counter=0;
-
-        foreach (@file_array) {
-          ($name, $passwd) = split(":", $_);
-          if (defined $tmp_hash{$name}) { print "$apache_htpasswd: $name already exists, please remove duplicates!\n";}
-          $tmp_hash{$name}=$counter;
-          $counter++;
-        }
-        return %tmp_hash;
-      }
 sub hash_smbpasswd_array {
         my @file_array = @_;
         my %tmp_hash;
@@ -144,11 +131,9 @@ my ($up_group, $new_group, $del_group) = ("0","0","0");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
 @smbpasswd_array = open_array_file($smb_passwd_file) if ($winaccount_on); # doesn't exist?? XXX
-@htpasswd_array = open_array_file($apache_htpasswd);
 # Index files (use hash that points to line number)
 %passwd_hash = hash_passwd_array(@passwd_array);
 %shadow_hash = hash_shadow_array(@shadow_array);
-%htpasswd_hash = hash_htpasswd_array(@htpasswd_array);
 %smbpasswd_hash = hash_smbpasswd_array(@smbpasswd_array);
 
 #LJ The file containing all allowed root for CVS server
@@ -232,13 +217,11 @@ while ($ln = pop(@userdump_array)) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
                 update_user_group($uid, $username);
 		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
-		update_httpuser($username, $passwd);
 		++$up_user;
 
 	} elsif ($unix_status eq 'A' && !$user_exists && $user_active) {
 		add_user($uid, $username, $realname, $shell, $passwd, $email);
 		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
-		add_httpuser($username, $passwd);
 		++$new_user;
 	
 	} elsif ($unix_status eq 'D') {
@@ -247,14 +230,12 @@ while ($ln = pop(@userdump_array)) {
 	        if ($user_exists) {
 		  delete_user($uid,$username);
 		  delete_winuser($uid);
-		  delete_httpuser($username);
 		  ++$del_user;
 		}
 		
 	} elsif (($unix_status eq 'S' || $status eq 'S') && $user_exists) {
           if (suspend_user($username)) {
             suspend_winuser($uid);
-            suspend_httpuser($username);
             ++$suspend_user;
           }
 		
@@ -627,14 +608,8 @@ while ($ln = pop(@groupdump_array)) {
 		    print SVNACCESS "\n";
 
 		    print SVNACCESS "[/]\n";
-		    if ($sys_allow_restricted_users) {
-			print SVNACCESS "* = \n"; # deny all access by default
-			# we don't know yet how to enable read access to all active users,
-			# and deny it to all restricted users...
-		    } else {
-			if ($public_svn) { print SVNACCESS "* = r\n"; }
-			else { print SVNACCESS "* = \n";}
-		    }
+		    if ($public_svn) { print SVNACCESS "* = r\n"; }
+		    else { print SVNACCESS "* = \n";}
 		    print SVNACCESS "\@members = rw\n";
 		    print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
 		    if ($custom_perm) { print SVNACCESS $custom_lines;}
@@ -812,7 +787,6 @@ print "Deleted groups   : $del_group\n";
 write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
-write_array_file($apache_htpasswd, @htpasswd_array);
 if ($winaccount_on) {
   write_array_file($smb_passwd_file, @smbpasswd_array);
   chmod 0600, "$smb_passwd_file";
@@ -894,10 +868,6 @@ sub add_winuser {
 
 }
 
-sub add_httpuser {
-	my ($username, $passwd) = @_;
-	push @htpasswd_array, "$username:$passwd\n";
-}
 
 
 #############################
@@ -959,25 +929,6 @@ sub update_winuser {
   add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd) unless $found;
 }
 
-sub update_httpuser {
-  my ($username, $passwd) = @_;
-
-  my ($p_username, $p_passwd);
-
-  my $counter = 0;
-  my $found   = 0;
-  if (defined $htpasswd_hash{$username}) {
-    $found = 1;
-    ($p_username, $p_passwd) = split(":", $htpasswd_array[$htpasswd_hash{$username}]);
-    if ($passwd ne $p_passwd) {
-	$htpasswd_array[$htpasswd_hash{$username}] = "$username:$passwd\n";
-      }
-  }
-
-  add_httpuser($username, $passwd) unless $found;
-	
-}
-
 
 #############################
 # User Deletion Function
@@ -1021,14 +972,6 @@ sub delete_winuser {
 }	
 
 
-sub delete_httpuser {
-  my $this_user = shift(@_);
-
-  if (defined $htpasswd_hash{$this_user}) {
-    $htpasswd_array[$htpasswd_hash{$this_user}] = '';
-  }
-}
-
 #############################
 # User Suspension Function
 #############################
@@ -1063,17 +1006,6 @@ sub suspend_winuser {
   }
 }
 
-
-sub suspend_httpuser {
-  my $this_user = shift(@_);
-  my ($username, $p_passwd);
-  my $counter = 0;
-
-  if (defined $htpasswd_hash{$this_user}) {
-    ($username,$p_passwd) = split(":", $htpasswd_array[$htpasswd_hash{$this_user}]);
-    $htpasswd_array[$htpasswd_hash{$username}] ="$username:!!\n";
-  }
-}
 
 #############################
 # Group Add Function
