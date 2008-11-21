@@ -36,7 +36,7 @@
  * @fileoverview Collection of MD5 and SHA1 hashing and encoding
  * methods.
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 437 $
+ * @version $Revision: 482 $
  */
 
 /*
@@ -228,7 +228,7 @@ function binb2b64(binarray)
           else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);
         }
     }
-  return str;
+  return str.replace(/AAA\=(\=*?)$/,'$1'); // cleans garbage chars at end of string
 }
 
 /*

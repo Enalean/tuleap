@@ -157,7 +157,7 @@ Number.max = function(A, B) {
  * @fileoverview Collection of MD5 and SHA1 hashing and encoding
  * methods.
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 437 $
+ * @version $Revision: 482 $
  */
 
 /*
@@ -349,7 +349,7 @@ function binb2b64(binarray)
           else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);
         }
     }
-  return str;
+  return str.replace(/AAA\=(\=*?)$/,'$1'); // cleans garbage chars at end of string
 }
 
 /*
@@ -1440,7 +1440,7 @@ function JSJaCConsoleLogger(level) {
  * this site, with one single exception."
  *
  * @author Stefan Strigler
- * @version $Revision: 437 $
+ * @version $Revision: 481 $
  */
 
 /**
@@ -1472,7 +1472,7 @@ function JSJaCCookie(name,value,secs)
    * stored data gets lost when browser is being closed. 
    * @type int
    */
-  this.expires = secs;
+  this.secs = secs;
 
   /**
    * Stores this cookie
@@ -1866,7 +1866,7 @@ function JSJaCKeys(func,oDbg) {
 /**
  * @fileoverview Contains all Jabber/XMPP packet related classes.
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 476 $
+ * @version $Revision: 480 $
  */
 
 var JSJACPACKET_USE_XMLNS = true;
@@ -2086,11 +2086,14 @@ JSJaCPacket.prototype.getChild = function(name, ns) {
  */
 JSJaCPacket.prototype.getChildVal = function(name, ns) {
   var node = this.getChild(name, ns);
-  if (node && node.firstChild) {
-    return node.firstChild.nodeValue;
-  } else {
-    return '';
+  var ret = '';
+  if (node && node.hasChildNodes()) {
+    // concatenate all values from childNodes
+    for (var i=0; i<node.childNodes.length; i++)
+      if (node.childNodes.item(i).nodeValue)
+        ret += node.childNodes.item(i).nodeValue;
   }
+  return ret;
 };
 
 /**
@@ -2134,17 +2137,17 @@ JSJaCPacket.prototype.errorReply = function(stanza_error) {
  * Returns a string representation of the raw xml content of this packet.
  * @type String
  */
-JSJaCPacket.prototype.xml = function() {
-
-  if (this.getDoc().xml) // IE
-    return this.getDoc().xml;
-
-  var xml = (new XMLSerializer()).serializeToString(this.getNode());
-  if (typeof(xml) != 'undefined')
-    return xml;
-  return (new XMLSerializer()).serializeToString(this.doc); // oldschool
-
+JSJaCPacket.prototype.xml = typeof XMLSerializer != 'undefined' ?
+function() {
+  var r = (new XMLSerializer()).serializeToString(this.getNode());
+  if (typeof(r) == 'undefined')
+    r = (new XMLSerializer()).serializeToString(this.doc); // oldschool
+  return r
+} :
+function() {// IE
+  return this.getDoc().xml
 };
+
 
 // PRIVATE METHODS DOWN HERE
 
@@ -3799,7 +3802,7 @@ JSJaCConnection.prototype._unregisterPID = function(pID) {
 /**
  * @fileoverview All stuff related to HTTP Binding
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 473 $
+ * @version $Revision: 483 $
  */
 
 /**
@@ -3945,12 +3948,10 @@ JSJaCHttpBindingConnection.prototype._getRequestString = function(raw, last) {
       }
     }
     if (last)
-      reqstr += "type='terminate' ";
+      reqstr += "type='terminate'";
     else if (this._reinit) {
-      if (JSJACHBC_USE_BOSH_VER) {
-        reqstr += "xmpp:restart='true' ";
-        reqstr += " xmlns:xmpp='urn:xmpp:xbosh' ";
-      }
+      if (JSJACHBC_USE_BOSH_VER) 
+        reqstr += "xmpp:restart='true' xmlns:xmpp='urn:xmpp:xbosh'";
       this._reinit = false;
     }
 
@@ -3977,7 +3978,7 @@ JSJaCHttpBindingConnection.prototype._getRequestString = function(raw, last) {
  * @private
  */
 JSJaCHttpBindingConnection.prototype._getInitialRequestString = function() {
-  var reqstr = "<body hold='"+this._hold+"' xmlns='http://jabber.org/protocol/httpbind' to='"+this.authhost+"' wait='"+this._wait+"' rid='"+this._rid+"'";
+  var reqstr = "<body content='text/xml; charset=utf-8' hold='"+this._hold+"' xmlns='http://jabber.org/protocol/httpbind' to='"+this.authhost+"' wait='"+this._wait+"' rid='"+this._rid+"'";
   if (this.host || this.port)
     reqstr += " route='xmpp:"+this.host+":"+this.port+"'";
   if (this.secure)

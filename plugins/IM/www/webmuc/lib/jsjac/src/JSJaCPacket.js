@@ -1,7 +1,7 @@
 /**
  * @fileoverview Contains all Jabber/XMPP packet related classes.
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 476 $
+ * @version $Revision: 480 $
  */
 
 var JSJACPACKET_USE_XMLNS = true;
@@ -221,11 +221,14 @@ JSJaCPacket.prototype.getChild = function(name, ns) {
  */
 JSJaCPacket.prototype.getChildVal = function(name, ns) {
   var node = this.getChild(name, ns);
-  if (node && node.firstChild) {
-    return node.firstChild.nodeValue;
-  } else {
-    return '';
+  var ret = '';
+  if (node && node.hasChildNodes()) {
+    // concatenate all values from childNodes
+    for (var i=0; i<node.childNodes.length; i++)
+      if (node.childNodes.item(i).nodeValue)
+        ret += node.childNodes.item(i).nodeValue;
   }
+  return ret;
 };
 
 /**
@@ -269,17 +272,17 @@ JSJaCPacket.prototype.errorReply = function(stanza_error) {
  * Returns a string representation of the raw xml content of this packet.
  * @type String
  */
-JSJaCPacket.prototype.xml = function() {
-
-  if (this.getDoc().xml) // IE
-    return this.getDoc().xml;
-
-  var xml = (new XMLSerializer()).serializeToString(this.getNode());
-  if (typeof(xml) != 'undefined')
-    return xml;
-  return (new XMLSerializer()).serializeToString(this.doc); // oldschool
-
+JSJaCPacket.prototype.xml = typeof XMLSerializer != 'undefined' ?
+function() {
+  var r = (new XMLSerializer()).serializeToString(this.getNode());
+  if (typeof(r) == 'undefined')
+    r = (new XMLSerializer()).serializeToString(this.doc); // oldschool
+  return r
+} :
+function() {// IE
+  return this.getDoc().xml
 };
+
 
 // PRIVATE METHODS DOWN HERE
 

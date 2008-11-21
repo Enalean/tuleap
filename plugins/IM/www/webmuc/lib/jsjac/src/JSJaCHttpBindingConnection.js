@@ -1,7 +1,7 @@
 /**
  * @fileoverview All stuff related to HTTP Binding
  * @author Stefan Strigler steve@zeank.in-berlin.de
- * @version $Revision: 473 $
+ * @version $Revision: 483 $
  */
 
 /**
@@ -147,12 +147,10 @@ JSJaCHttpBindingConnection.prototype._getRequestString = function(raw, last) {
       }
     }
     if (last)
-      reqstr += "type='terminate' ";
+      reqstr += "type='terminate'";
     else if (this._reinit) {
-      if (JSJACHBC_USE_BOSH_VER) {
-        reqstr += "xmpp:restart='true' ";
-        reqstr += " xmlns:xmpp='urn:xmpp:xbosh' ";
-      }
+      if (JSJACHBC_USE_BOSH_VER) 
+        reqstr += "xmpp:restart='true' xmlns:xmpp='urn:xmpp:xbosh'";
       this._reinit = false;
     }
 
@@ -179,7 +177,7 @@ JSJaCHttpBindingConnection.prototype._getRequestString = function(raw, last) {
  * @private
  */
 JSJaCHttpBindingConnection.prototype._getInitialRequestString = function() {
-  var reqstr = "<body hold='"+this._hold+"' xmlns='http://jabber.org/protocol/httpbind' to='"+this.authhost+"' wait='"+this._wait+"' rid='"+this._rid+"'";
+  var reqstr = "<body content='text/xml; charset=utf-8' hold='"+this._hold+"' xmlns='http://jabber.org/protocol/httpbind' to='"+this.authhost+"' wait='"+this._wait+"' rid='"+this._rid+"'";
   if (this.host || this.port)
     reqstr += " route='xmpp:"+this.host+":"+this.port+"'";
   if (this.secure)
