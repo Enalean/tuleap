@@ -115,7 +115,7 @@ class IMMucLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {
-            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['username'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['nickname'], $row['body']);
             		$logs[$row['sentDate']] = $current_conv;
     			}
     			$dar->next();
@@ -176,7 +176,7 @@ class IMMucLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {
-            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['username'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['nickname'], $row['body']);
             		$logs[$row['sentDate']] = $current_conv;
     			}
     			$dar->next();
@@ -237,7 +237,7 @@ class IMMucLogManager {
     		while ($dar->valid()) {
     			$row = $dar->current();
     			if ($row['body'] != null) {
-            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['username'], $row['body']);
+            		$current_conv = new IMMucConversationLog($row['sentDate'], $row['nickname'], $row['nickname'], $row['body']);
             		$logs[$row['sentDate']] = $current_conv;
     			}
     			$dar->next();
