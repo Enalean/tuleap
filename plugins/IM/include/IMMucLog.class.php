@@ -74,13 +74,6 @@ abstract class IMMucLog {
     function getMessage() {
         return $this->_message;
     }
-    
-    /**
-     * Will determine if the activity is
-     * considered as real activity or not.
-     * Used to distinguish conversations.  
-     */
-    abstract function isLoggedAsActivity();
 
 }
 

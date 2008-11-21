@@ -15,10 +15,6 @@ class IMMucConversationLog extends IMMucLog {
 	function IMMucConversationLog($date, $nickname, $username, $message) {
 		parent::__construct($date, $nickname, $username, $message);
     }
-    
-    function isLoggedAsActivity() {
-        return true;
-    }
 
 }
 

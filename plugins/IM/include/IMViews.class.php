@@ -222,7 +222,7 @@ class IMViews extends Views {
                     echo '  <td colspan="3">'.$conv->getDay().'</td>';
                     echo ' </tr>';
                 } else {
-                    if ($conv->isLoggedAsActivity() && ($conv->getTimestamp() - $last_conversation_activity) > IMMucLog::DELAY_BETWEEN_CONVERSATIONS * 60) {
+                    if (($conv->getTimestamp() - $last_conversation_activity) > IMMucLog::DELAY_BETWEEN_CONVERSATIONS * 60) {
                         echo ' <tr class="conversation_separation">';
                         echo '  <td colspan="3"><hr class="conversation_separation"></td>';
                         echo ' </tr>';
@@ -254,9 +254,8 @@ class IMViews extends Views {
                 echo '  <td class="'.get_class($conv).'">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
                 echo ' </tr>';
                 
-                if ($conv->isLoggedAsActivity()) {
-                    $last_conversation_activity = $conv->getTimestamp();
-                }
+                // update last activity time
+                $last_conversation_activity = $conv->getTimestamp();
                 
             }
             echo '</table>';

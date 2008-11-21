@@ -19,10 +19,6 @@ require_once('IMMucLog.class.php');
 abstract class IMMucSystemLog extends IMMucLog {
     
     protected $_nickname;
-    
-    function isLoggedAsActivity() {
-        return true;
-    }
 
 }
 
