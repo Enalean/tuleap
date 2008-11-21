@@ -227,10 +227,13 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         peuvent rejoindre le salon lui correspondant, mais un membre présent dans un salon peut
         inviter des utilisateurs externes au projet.</para>
         
-        <para>Le plug-in IM de &SYS_PRODUCT_NAME; ne contient pas de client Jabber, chaque utilisateur
-        est libre d'utiliser le client qui correspond le mieux a ses besoins. Un certain
-        nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
-        plateformes, une liste non-exhaustive est disponible à l'url http://www.jabber.org/clients.
+        <para>Le plug-in IM de &SYS_PRODUCT_NAME; contient un client Jabber intégré à l'interface
+        web de votre projet. Ce client vous permet uniquement de dialoguer dans le salon de discussion
+        du projet (voir <xref linkend="CodendiMUCRooms" />).
+        Bien entendu, chaque utilisateur est libre d'utiliser le client qui correspond le mieux a ses besoins. 
+        Un certain nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
+        plateformes, une liste non-exhaustive est disponible à l'url 
+        <ulink url="http://www.jabber.org/clients">http://www.jabber.org/clients</ulink>.
         Notons toutefois que certains clients, comme Coccinella par exemple, permettent de faire 
         du tableau blanc partagé.
         </para>
@@ -312,30 +315,51 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         </section>
         
         <section id="JoiningAMUC">
-            <title>Rejoindre un salon de discussion multi-utilisateurs (MUC)</title>
+            <title>Salon de discussion multi-utilisateurs (MUC)</title>
             <para>Comme il a été spécifié précédement,le plug-in de messagerie
             instantanée crée un salon de discussion multi-utilisateurs pour chaque projet.
             Ce salon porte le nom du projet, et n'est accessible qu'aux membres du projet.
             </para>
+            <para>
+                Vous pouvez accèder au salon de discussion directement dans l'interface web
+                de votre projet, ou grâce à un client de messagerie instantanée.
+            </para>
             
-            <para>Vous devez paramètrer votre client Jabber avec l'adresse du serveur de
-            conférence pour qu'il sache où récupérer les informations concernant les salons
-            de discussion. Cette adresse est simplement conference.serveurJabber.com, c'est
-            à dire le mot "conference", un ".", et l'adresse du serveur Jabber. A partir de là
-            vous avez accès à la liste des salons, et vous pouvez vous connectez à ceux
-            correspondant à vos projets.</para>
+            <section id="CodendiMUCRooms">
+             <title>Salon de discussion dans l'interface web</title>
+             
+             *** TODO ***
+             
+            </section>
             
-            <para>Chaque client Jabber a sa propre manière de gérer les salons de discussion, 
-            il est possible que l'étape décrite précédement soit différentes en fonction
-            des clients. En cas de besoin, consultez la documentation concernant votre
-            client Jabber à propos des salons de discussion (MUC).</para>
+            <section id="MUCWithClient">
+             <title>Joindre un salon de discussion avec un client</title>
+             <para>Vous devez paramètrer votre client Jabber avec l'adresse du serveur de
+                conférence pour qu'il sache où récupérer les informations concernant les salons
+                de discussion. Cette adresse est simplement conference.serveurJabber.com, c'est
+                à dire le mot "conference", un ".", et l'adresse du serveur Jabber. A partir de là
+                vous avez accès à la liste des salons, et vous pouvez vous connectez à ceux
+                correspondant à vos projets.</para>
             
-            <para>Une fois connecté au salon, vous pouvez inviter des utilisateurs non-membres
-            du projet à le rejoindre. Une fois qu'un utilisateur a accepté une invitation, il
-            devient membre du salon de discussion.</para>
+                <para>Chaque client Jabber a sa propre manière de gérer les salons de discussion, 
+                il est possible que l'étape décrite précédement soit différentes en fonction
+                des clients. En cas de besoin, consultez la documentation concernant votre
+                client Jabber à propos des salons de discussion (MUC).</para>
             
-            <para>Pour plus d'informations sur l'invitation d'utilisateurs exétieurs dans un
-            salon de discussion, consultez la documentation de votre client Jabber.</para>
+                <para>Une fois connecté au salon, vous pouvez inviter des utilisateurs non-membres
+                du projet à le rejoindre. Une fois qu'un utilisateur a accepté une invitation, il
+                devient membre du salon de discussion.</para>
+            
+                <para>Pour plus d'informations sur l'invitation d'utilisateurs extérieurs dans un
+                salon de discussion, consultez la documentation de votre client Jabber.</para>
+            </section>
+        </section>
+        
+        <section id="MUCRoomLogs">
+             <title>Archives des conversations</title>
+             
+             *** TODO ***
+             
         </section>
         
     </section>

@@ -196,10 +196,13 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         can join its respective MUC, but once a member has joined the room he or she
         can invite external users.</para>
         
-        <para>The &SYS_PRODUCT_NAME; IM plug-in does not come bundled with any Jabber client, 
-        thus each user can choose the client that best fits his or her needs. Several
+        <para>The &SYS_PRODUCT_NAME; IM plug-in comes with a Jabber client integrated
+        into the web interface of your project. This client lets you chat into the project
+        MUC Room (see <xref linkend="CodendiMUCRooms" />).
+        Of course, each user can choose the client that best fits his or her needs. Several
         open source (and/or free) clients are available for the most common platforms,
-        and you can find a list (non-exhaustive) of them at http://www.jabber.org/clients.
+        and you can find a list (non-exhaustive) of them at 
+        <ulink url="http://www.jabber.org/clients">http://www.jabber.org/clients</ulink>.
         Note that some clients, like Coccinella for instance, allow you to do shared whiteboard.
         </para>
         
@@ -278,29 +281,50 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         </section>
         
         <section id="JoiningAMUC">
-            <title>Joining a Multi-User Chat Room (MUC)</title>
+            <title>Multi-User Chat Room (MUC)</title>
             <para>As stated before, the IM plug-in creates a multi-user chat
             room for each project. This room is named after the project name 
             and is opened only for project members.</para>
+            <para>
+                You can access the MUC Room in the web interface of yourproject, 
+                or with a IM client.
+            </para>
             
-            <para>You need to inform your Jabber client the address of the conference
-            server it must query for chat rooms. This address is simply 
-            conference.server_address, i.e. the word “conference”, a dot, and the 
-            Jabber server address. Then you will be able to retrieve the list of available
-            chat rooms on the server. Just find the chat room corresponding to your project
-            and join it.</para>
+            <section id="CodendiMUCRooms">
+             <title>MUC Room with the web interface</title>
+             
+             *** TODO ***
+             
+            </section>
             
-            <para>Of course the steps described above are very generic, and each 
-            Jabber client has its own specific process. Please check your Jabber client 
-            documentation for further information about its support on multi-user chat 
-            (group chat, conferences, or simply chat rooms).</para>
+            <section id="MUCWithClient">
+             <title>Join a MUC Room with a client</title>
+                <para>You need to inform your Jabber client the address of the conference
+                server it must query for chat rooms. This address is simply 
+                conference.server_address, i.e. the word “conference”, a dot, and the 
+                Jabber server address. Then you will be able to retrieve the list of available
+                chat rooms on the server. Just find the chat room corresponding to your project
+                and join it.</para>
+                
+                <para>Of course the steps described above are very generic, and each 
+                Jabber client has its own specific process. Please check your Jabber client 
+                documentation for further information about its support on multi-user chat 
+                (group chat, conferences, or simply chat rooms).</para>
             
-            <para>Once inside the room you can invite non-members to join it.
-            Once the user accepts the invitation he or she becomes member of
-             the chat room.</para>
+                <para>Once inside the room you can invite non-members to join it.
+                Once the user accepts the invitation he or she becomes member of
+                the chat room.</para>
             
-            <para>For further information on how to invite external users to chat
-            rooms using your Jabber client please refer to its documentation.</para>
+                <para>For further information on how to invite external users to chat
+                rooms using your Jabber client please refer to its documentation.</para>
+            </section>
+        </section>
+        
+        <section id="MUCRoomLogs">
+             <title>MUC Room Logs</title>
+             
+             *** TODO ***
+             
         </section>
         
     </section>
