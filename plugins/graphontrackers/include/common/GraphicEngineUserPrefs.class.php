@@ -111,7 +111,7 @@ class graphicEngineUserPrefs {
         $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
 
         $from  .= " LEFT JOIN permissions 
-                         ON (permissions.object_id = a.artifact_id 
+                         ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
                              AND 
                              permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
         $where .= " AND (a.use_artifact_permissions = 0

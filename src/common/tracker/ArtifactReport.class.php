@@ -455,7 +455,7 @@ class ArtifactReport extends Error {
             
             //artifact permissions
             $from  .= " LEFT JOIN permissions 
-                             ON (permissions.object_id = a.artifact_id 
+                             ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
                                  AND 
                                  permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
             $where .= " AND (a.use_artifact_permissions = 0
