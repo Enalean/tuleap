@@ -194,7 +194,7 @@ $sys_http_user  = "codexadm"; // Unix user running the HTTP server
 $dummy_uid      = "103";      // UserID of the dummy user that will own group's files
 
 $sys_dbauth_user   = "dbauthuser";
-$sys_dbauth_passwd = '%sys_dbauth_passwd%'
+$sys_dbauth_passwd = '%sys_dbauth_passwd%';
 
 //
 //
