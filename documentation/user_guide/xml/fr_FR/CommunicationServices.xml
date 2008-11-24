@@ -208,7 +208,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
       son nom ou sa description ou même de le détruire.</para>
     </section>
     
-    <section id="IM">
+    <section id="IMPlugin">
         <title>Plug-in de messagerie instantanée</title>
         
         <para>&SYS_PRODUCT_NAME; est associé à un serveur Jabber et contient un plug-in de 
@@ -314,22 +314,211 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
             
         </section>
         
-        <section id="JoiningAMUC">
+        <section id="MUCRooms">
             <title>Salon de discussion multi-utilisateurs (MUC)</title>
             <para>Comme il a été spécifié précédement,le plug-in de messagerie
             instantanée crée un salon de discussion multi-utilisateurs pour chaque projet.
             Ce salon porte le nom du projet, et n'est accessible qu'aux membres du projet.
             </para>
             <para>
-                Vous pouvez accèder au salon de discussion directement dans l'interface web
+                Vous pouvez accéder au salon de discussion directement dans l'interface web
                 de votre projet, ou grâce à un client de messagerie instantanée.
             </para>
             
             <section id="CodendiMUCRooms">
              <title>Salon de discussion dans l'interface web</title>
+             <para>
+             Pour entrer dans le salon de discussion de votre projet, il vous
+             suffit de cliquer sur l'onglet 'Messagerie Instantanée' de votre projet.
+             Vous serez alors automatiquement connecté à la messagerie instantanée,
+             et pourrez commencer à discuter avec les membres de votre projet 
+             également connectés.
+             </para>
+             <para>
+             L'interface du salon de discussion se compose de plusieurs zones :
+             <itemizedlist mark="bullet" spacing="compact">
+              <listitem>
+               <para>
+                    La fenêtre principale vous permet de visualiser les messages 
+                    des différents participants à la discussion. Les noms des 
+                    utilisateurs apparaissent devant les messages, pour pouvoir 
+                    mieux suivre la discussion. Les messages systèmes (qui entre 
+                    dans la salle de discussion, qui en sort, etc) sont affichés 
+                    en gras.
+                </para>
+                <para>
+                    Les messages sont affichés sans formatage particulier.
+                    Il est cependant possible d'en appliquer certains (voir pour 
+                    cela la section <xref linkend="MUCRoomsMessagesTips" />).
+                    Les URL sont cliquables (s'ouvrent dans une autre fenêtre).
+                    Les références de votre projet son également cliquables (exemple,
+                    si vous écrivez le message bug #23 dans la fenêtre de discussion,
+                    le mot 'bug #23' sera cliquable et vous redirigera vers le bug 23
+                    de votre projet. Le système ne vérifie pas a priori si le bug
+                    23 existe dans votre projet. Il est possible de faire des
+                    références vers un autre projet, mais uniquement avec la forme
+                    mot clé #numéro du projet:numéro de l'item. La forme avec le 
+                    nom court du projet n'est pas reconnue par la messagerie 
+                    instantanée. Pour plus d'explications sur les références croisées,
+                    voir la <xref linkend="ReferenceOverview" />.
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Juste en dessous de la fenêtre principale, se trouve la zone
+                    d'écriture du message. Pour envoyer un message à tous les 
+                    membres du salon de discussion, cliquez sur cette zone,
+                    entrez votre messages, puis appuyez au choix sur le bouton 
+                    'Envoyer' ou sur la touche Entrée de votre clavier.
+                    Le message apparaîtra à la suite des autres messages, précédé
+                    par votre nom. 
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    La zone à droite de la fenêtre principale correspond à la liste
+                    des utilisateurs connectés au salon de discussion. Cette liste
+                    est actualisée en temps réel.
+                 </para>
+                 <para>Il existe une notion de message 
+                    privé. Si vous souhaitez envoyer un message à un utilisateur
+                    particulier sans que votre message soit vu par tout le salon
+                    de discussion, vous pouvez cliquer sur le nom de l'utilisateur 
+                    en question, puis taper votre message (le nom de 
+                    l'utilisateur apparaît dans la zone d'écriture du message,
+                    indiquant qu'il sera le seul à le recevoir). Pour revenir à
+                    l'état normal (discussion avec tout le monde), il vous suffit
+                    de cliquer sur le nom de la personne dans la zone d'écriture,
+                    ce qui aura pour effet de faire disparaître son nom.
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Au dessus de la fenêtre principale, le nom du salon de discussion
+                    est inscrit (il s'agit du nom du projet).
+                    En dessous, se trouve le sujet du salon de discussion.
+                    Ce sujet est modifiable en tapant une commande spéciale dans
+                    la zone de message :
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/topic Le nouveau sujet du salon de discussion
+                    </programlisting>
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Sous la zone d'écriture, se trouve une dernière zone correspondant
+                    à votre statut de messagerie Instantanée. Il s'agit d'un état
+                    indiquant aux autres si vous êtes disponibles pour dialoguer,
+                    ou si vous êtes occupés et ne souhaitez pas être dérangé, etc.
+                    Vous pouvez également rajouter un texte libre, comme votre 
+                    humeur du jour, ou toute autre chose.
+                </para>
+                <para>
+                    A droite, vous pouvez également voir un bouton vous permettant 
+                    de couper ou d'activer le son. Pour disposer du son, vous devez
+                    avoir un plugin Flash pour votre navigateur.
+                </para>
+               </listitem>
+              </itemizedlist>
+             </para>
              
-             *** TODO ***
+             <figure id="FigureWebMucRooms">
+              <title>Salon de discussion dans l'interface web de &SYS_PRODUCT_NAME;</title>
+              
+              <mediaobject>
+                <imageobject>
+                 <imagedata format="PNG"
+                     fileref="../../screenshots/fr_FR/sc_webmucrooms.png" />
+                 </imageobject>
+              </mediaobject>
+             </figure>
              
+             <para>
+              <tip id="MUCRoomsMessagesTips">
+               <title>Astuce: mise en forme et commandes spéciales</title>
+               <para>
+                    Lorsque vous tapez du texte dans la fenêtre de messagerie 
+                    instantanée, le client interprète un certain nombre de 
+                    commandes pour mettre le texte en forme. Ces commandes 
+                    peuvent être interprétées différemment selon votre client,
+                    mais fonctionnent sur la plupart d'entres eux.
+                    <itemizedlist mark="bullet" spacing="compact">
+                     <listitem>
+                      <para>
+                        <emphasis role="bold">Ecrire en gras :</emphasis>
+                        vous devez entourer votre texte avec une étoile.
+                        <para>Exemple : je vous contacterai par téléphone *demain à 14h00*</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Souligner :</emphasis>
+                        vous devez entourer votre texte avec un tiret bas.
+                        <para>Exemple : je vous contacterai par téléphone _demain à 14h00_</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Faire un lien (URL) :</emphasis>
+                        le système détectera les URL si elles commencent par http://
+                        <para>Exemple : Vous pouvez aller voir sur http://www.codendi.com</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Faire une référence vers un objet de votre projet :</emphasis>
+                        Vous pouvez référencer un objet de votre projet (artefact, bug, document, page wiki, etc.).
+                        Pour cela, écrivez simplement la référence vers l'objet 
+                        en respectant la syntaxe habituelle motclé #numérod'objet
+                        <para>Exemple : Vous pouvez aller voir le document doc #185 pour plus de détails.</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Changer le sujet d'un salon de discussion :</emphasis>
+                        vous devez écrire /topic suivi du nom du salon.
+                        <para>Exemple : /topic Réunion Mensuelle</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Changer de pseudo :</emphasis>
+                        vous pouvez changer votre pseudonyme pour la durée de la session.
+                        Les autres utilisateurs vous verrons alors sous ce nouveau nom.
+                        Même si cette fonctionnalité peut paraître amusante, rappelez 
+                        vous toujours que changer fréquemment de pseudo peut nuire 
+                        à la qualité de la discussion (difficile de suivre qui dit
+                        quoi si tout le monde change de pseudo). N'utilisez cette 
+                        fonction que pour apporter plus de clarté (si deux utilisateurs
+                        ont des noms assez proches par exemple). 
+                        Veuillez noter que dans les archives de discussions, en cas
+                        de changement de pseudonyme, les messages indiqueront 
+                        toujours le 'vrai' utilisateur, c'est à dire le nom d'utilisateur 
+                        d'origine. La commande pour changer de pseudo est /nick suivi 
+                        de votre nouveau pseudo.
+                        <para>Exemple : /nick Manu - maison</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Les smileys (ou émoticons) :</emphasis>
+                        vous pouvez utiliser des smileys. Le client de l'interface web
+                        ne dispose pas d'une interface pour insérer des smileys.
+                        Pour pouvez néanmoins en ajouter sous forme textuelle.
+                        Elle apparaîtront sous forme d'image dans les différents
+                        clients (y compris le client web). Chaque client implémente
+                        différemment les émoticons, mais en général, les plus
+                        courants devraient fonctionner.
+                       <para>
+                        Exemple : le texte :-) affichera un beau sourire !
+                       </para>
+                      </para>
+                     </listitem>
+                    </itemizedlist>
+               </para>
+              </tip>
+             </para>
+      
             </section>
             
             <section id="MUCWithClient">
@@ -357,9 +546,43 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         
         <section id="MUCRoomLogs">
              <title>Archives des conversations</title>
-             
-             *** TODO ***
-             
+             <para>
+                Les conversations des salons de discussions sont archivées par 
+                le système (les conversations privées ne sont pas archivées).
+                Pour accéder aux archives, cliquez sur le lien Archives de l'onglet
+                Messagerie Instantanée de votre projet. Tout membre du projet 
+                a accès aux archives du projet.
+             </para>
+             <para>
+                Par défaut, les archives des conversations
+                des 7 derniers jours sont affichées. Vous pouvez bien sûr changer
+                la période de recherche grâce au calendrier. Si vous ne souhaitez
+                rien précisez, laissez la zone vide. Vide pour date de début 
+                signifie "depuis le début", vide pour la date de fin signifie
+                "jusqu'à maintenant".
+             </para>
+             <para>
+                Les archives des conversations sont classées par jour.
+                Elles vous renseignent sur l'heure des messages (heure et minutes),
+                l'auteur du message (identifiant de l'utilisateur sur le serveur 
+                &SYS_PRODUCT_NAME;), et bien sûr le message lui-même. Les changements
+                de peudos ne sont pas consignés dans les archives. Les messages systèmes
+                sont présents, ce qui aide à savoir qui était présent lorsque telle
+                chose a été dite. Les URL et les références apparaîtront comme des
+                liens, mais les commandes spéciales (voir <xref linkend="MUCRoomsMessagesTips" />)
+                ne sont pas interprétées.
+             </para>
+             <para>
+                Notez également que les conversations sont séparées par un léger trait
+                horizontal lorsque qu'il n'y a pas eu d'activité pendant au moins
+                10 minutes.
+             </para>
+             <para>
+                Vous pouvez exporter les archives, au format CSV, en cliquant sur le bouton
+                exporter en bas de page des archives.
+                L'export tiendra compte de vos préférences utilisateurs concernant
+                le séparateur CSV et le format de date (voir <xref linkend="UserPreferences" />).
+             </para>
         </section>
         
     </section>

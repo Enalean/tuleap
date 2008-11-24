@@ -179,7 +179,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       even delete the forum.</para>
     </section>
     
-    <section id="IM">
+    <section id="IMPlugin">
         <title>Instant Messaging Plug-in</title>
         
         <para>&SYS_PRODUCT_NAME; is bundled with a Jabber server and an Instant Messaging (IM)
@@ -280,20 +280,197 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
             
         </section>
         
-        <section id="JoiningAMUC">
+        <section id="MUCRooms">
             <title>Multi-User Chat Room (MUC)</title>
             <para>As stated before, the IM plug-in creates a multi-user chat
             room for each project. This room is named after the project name 
             and is opened only for project members.</para>
             <para>
-                You can access the MUC Room in the web interface of yourproject, 
+                You can access the MUC Room in the web interface of your project, 
                 or with a IM client.
             </para>
             
             <section id="CodendiMUCRooms">
              <title>MUC Room with the web interface</title>
+             <para>
+             To enter the chat room of your project, you just need to clic on
+             the IM tab of your project. This will automatically connect you
+             to IM, and you will be able to start chating with the other 
+             connected members.
+             </para>
+             <para>
+             The web interface of the chat room is composed of several areas:
+             <itemizedlist mark="bullet" spacing="compact">
+              <listitem>
+               <para>
+                    The main window shows you the messages of all participants.
+                    The names of the participants are written beside the messages,
+                    to let you better follow the discussion.
+                    The system messages (like who arrived in the room, who left)
+                    are displayed in bold.
+                </para>
+                <para>
+                    Messages are displayed without specific format, but you can
+                    add some if you want (see <xref linkend="MUCRoomsMessagesTips" />
+                    for that).
+                    URLs are displayed as hyperlinks (and are opened in another window).
+                    Project references are also displayed as hyperlinks (for instance, 
+                    if you write the message bug #23 in the chat room, a click on the word
+                    'bug #23' will open a new window and will lead you to the bug details
+                    page). The system does not check that bug 23 really exist in your
+                    project. it is possible to make references to other projects,
+                    but only with the pattern keyword #projectID:itemNumber.
+                    The pattern with project name is not recognized by IM.
+                    For more details about cross-references, see <xref linkend="ReferenceOverview" />.
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Just below the main window, is the writing message area.
+                    To send a message to all chat room members, select this area
+                    with the mouse, write your message, and then either click on
+                    the 'Send' button, either press the 'Enter' key.
+                    Your message will show up in the flow, preceed by your name.
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    The area on the right is the list of the room members, which
+                    means the users connected to the chat room.
+                    This list is updated in real time.
+                 </para>
+                 <para>
+                    There is a concept of private messages. If you want to talk to
+                    someone, but don't want the other to see it, you can click on
+                    the name of the person, and then write your message (the name
+                    of the user is now just below your message, which indicate
+                    he will be the only one to receive it). To come back to the
+                    usual way of doing (chat with eveybody) you just need to
+                    click again on the name of the person in the writing area, 
+                    which will make the buddy name disappear.
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Above the main area, the name of the chat room is written
+                    (it is the name of the project, you can not change it).
+                    Just below, you can find the topic of the room.
+                    You can update this topic by writing the special command as 
+                    a message:
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+/topic The new topic of the room
+                    </programlisting>
+                </para>
+               </listitem>
+               <listitem>
+                <para>
+                    Below the writing area is located a status zone, corresponding to
+                    your IM status. This status can be useful to tell the other
+                    if your are free to chat, or busy, etc.
+                    You can also add a free text, to express your mood of the day,
+                    or anything else!
+                </para>
+                <para>
+                    On the right, there is a small icon which lets you switch off/
+                    swith on the sound.
+                    You need a Flash plugin in your browser to have sound.
+                </para>
+               </listitem>
+              </itemizedlist>
+             </para>
              
-             *** TODO ***
+             <figure id="FigureWebMucRooms">
+              <title>Multi-User Chat Room in the web interface of &SYS_PRODUCT_NAME;</title>
+              
+              <mediaobject>
+                <imageobject>
+                 <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_webmucrooms.png" />
+                 </imageobject>
+              </mediaobject>
+             </figure>
+             
+             <para>
+              <tip id="MUCRoomsMessagesTips">
+               <title>Tips: formatting and special commands</title>
+               <para>
+                    When you type some text in the chat window, the client
+                    interprets some commands to format the text. These commands
+                    can be interpreted depending on the IM client, but most of them
+                    are working the same way.
+                    <itemizedlist mark="bullet" spacing="compact">
+                     <listitem>
+                      <para>
+                        <emphasis role="bold">Write in bold:</emphasis>
+                        you must surround your text with a star.
+                        <para>Example: I will call you *tomorrow at 2 o'clock*</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Underlign:</emphasis>
+                        you must surround the text with underscore.
+                        <para>Example: I will call you _tomorrow at 2 o'clock_</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Write a hyperlink:</emphasis>
+                        the system will detect hyperlinks if they are starting with http://
+                        <para>Example : You can read http://www.codendi.com and see what I mean</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Make a cross-reference to a item of your project:</emphasis>
+                        You can make a reference to any item of your project (artifact, bug, document, wiki page, etc.)
+                        For that, just write the reference to the item respecting the pattern
+                        keyword #itemnumber
+                        <para>Example : You can read the document doc #185 for more details.</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Change the chat room topic:</emphasis>
+                        you must write the specific command /topic followed by the new name of the topic.
+                        <para>Example: /topic Monthly Meeting</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Change your nickname:</emphasis>
+                        You can change your nickname during the session.
+                        The other users will then see you as this new name.
+                        This feature can seem funny, but remember that the 
+                        the discussion will be hard to follow if everybody change 
+                        his nickname often. We recommand you to use this feature 
+                        if it makes sens only (to differenciate two people with 
+                        a close name for instance).
+                        Please note that nickname changes won't appear in chat room
+                        logs. Messages will always be alloted to their real user.
+                        To change the nickname, the command is /nick followed by
+                        your new nickname.
+                        <para>Example: /nick Tom - at home</para>
+                      </para>
+                     </listitem>
+                     <listitem>
+                      <para>
+                       <emphasis role="bold">Smileys:</emphasis>
+                        You can use smileys. The web client doesn't have an interface
+                        to insert smileys, but you can add them in a textual way.
+                        They will appear like an image for the clients (even for
+                        the web one).
+                        Each client implements its own smileys, so use the more 
+                        commons ones, and you shouldn't have any problem.
+                       <para>
+                        Example: the text :-) will display a beautiful smile!
+                       </para>
+                      </para>
+                     </listitem>
+                    </itemizedlist>
+               </para>
+              </tip>
+             </para>
              
             </section>
             
@@ -322,9 +499,41 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         
         <section id="MUCRoomLogs">
              <title>MUC Room Logs</title>
-             
-             *** TODO ***
-             
+             <para>
+                Conversations in chat rooms are logged (private conversation are not).
+                To access the log, select the link 'Logs' in the IM tab of your project.
+                Every member of the project has access to the project room logs.
+             </para>
+             <para>
+                By default, conversation logs of the 7 last days are displayed.
+                You can of course change the search period, thanks to the
+                calendar. If you don't want to specify dates, leave the field 
+                blank. Blank for start date means "from the beginning", blank for
+                end date means "until now".
+             </para>
+             <para>
+                Conversation logs are grouped by day.
+                You will find the time of the message (hour and minute),
+                the author of the message (username on the &SYS_PRODUCT_NAME;
+                server), and of course the message itself.
+                Nickname changes are not logged. System messages are present. 
+                This is very useful to know who was in the room when what thing
+                has been told.
+                URLs and cross-references will appear as hyperlinks, but special
+                commands (see <xref linkend="MUCRoomsMessagesTips" />) won't be
+                interpreted.
+             </para>
+             <para>
+                A light horizontal line will separate conversations. Two conversations
+                are considered as different if there has been no activity during
+                at least 10 minutes.
+             </para>
+             <para>
+                You can export the room logs, in CSV format.
+                To do this, click on the Export button at the end of the logs.
+                The export will use your user preferences for CSV separator and
+                date format (see <xref linkend="UserPreferences" />).
+             </para>
         </section>
         
     </section>
