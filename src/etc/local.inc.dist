@@ -193,6 +193,7 @@ $jpgraph_dir      = "/usr/share/jpgraph";
 $sys_http_user  = "codexadm"; // Unix user running the HTTP server
 $dummy_uid      = "103";      // UserID of the dummy user that will own group's files
 
+// DB user for http authentication (must have access to user/group/user_group tables)
 $sys_dbauth_user   = "dbauthuser";
 $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 

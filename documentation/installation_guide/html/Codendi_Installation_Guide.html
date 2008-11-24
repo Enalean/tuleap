@@ -1388,18 +1388,14 @@ by the Codendi cron job, and initially created by the samba service at the first
 your Codendi server (see the section on <a
  href="#RPM_Packages">RPM
 Packages</a>)</li>
-  <li>Create the <tt>/var/lib/codex/svnroot</tt> directory, the <tt>/svnroot</tt> link and the <span
- style="font-family: monospace;">/etc/httpd/conf/htpasswd</span> as
+  <li>Create the <tt>/var/lib/codex/svnroot</tt> directory and the <tt>/svnroot</tt> link as
 follows:<br>
     <br>
     <tt># mkdir /var/lib/codex/svnroot<br>
 # chown codexadm.codexadm /var/lib/codex/svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
 # ln -s /var/lib/codex/svnroot /svnroot</tt><tt><br>
-# touch </tt><span style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><br>
-    <tt># chown codexadm.codexadm </tt><span
- style="font-family: monospace;">/etc/httpd/conf/htpasswd</span><tt><br>
-# chmod 644 </tt><span style="font-family: monospace;">/etc/httpd/conf/htpasswd</span></li>
+</li>
 </ul>
 Subversion offers several remote access methods either via the native
 svnserve protocol or via the HTTP WebDAV subversion protocol. For many

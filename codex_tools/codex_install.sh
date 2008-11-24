@@ -811,6 +811,9 @@ substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 
+# replace string patterns in munin.conf (for MySQL authentication)
+substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+
 if [ "$disable_subdomains" != "y" ]; then
   # replace string patterns in codex_full.zone
   sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
