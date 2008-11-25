@@ -24,14 +24,12 @@ require_once('GraphOnTrackers_Engine.class.php');
 
 class GraphOnTrackers_Engine_Bar extends GraphOnTrackers_Engine {
 
-    var $graph;
     var $title;
     var $description;
     var $field_base;
     var $field_group;
     var $height;
     var $width;
-    var $data;
     var $legend;
     var $xaxis;
     

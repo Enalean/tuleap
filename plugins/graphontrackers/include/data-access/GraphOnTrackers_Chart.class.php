@@ -235,7 +235,7 @@ abstract class GraphOnTrackers_Chart {
     
     
     /**
-     * @return GraphOnTracker_Chart_Engine The engine associated to the concrete chart
+     * @return GraphOnTracker_Engine The engine associated to the concrete chart
      */
     abstract protected function getEngine();
     
@@ -254,6 +254,12 @@ abstract class GraphOnTrackers_Chart {
      * User as permission to visualize the chart
      */
     abstract public function userCanVisualize();
+    
+    /**
+     * Create an instance of the chart
+     * @return GraphOnTrackers_Chart
+     */
+    abstract public static function create($graphic_report, $id, $rank, $title, $description, $width, $height);
 }
  
 ?>

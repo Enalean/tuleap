@@ -24,7 +24,6 @@ require_once('GraphOnTrackers_Engine.class.php');
 
 class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     
-    var $graph;
     var $title;
     var $description;
     var $scale;
@@ -37,7 +36,6 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     var $hint;
     var $links;
     var $summary;
-    var $data;
     var $jp_graph_path;
     var $summary_label;
     

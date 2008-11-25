@@ -25,13 +25,11 @@ require_once('GraphOnTrackers_Engine.class.php');
 
 class GraphOnTrackers_Engine_Pie extends GraphOnTrackers_Engine {
 
-    var $graph;
     var $title;
     var $field_base;
     var $height;
     var $width;
     var $size_pie;
-    var $data;
     var $legend;
     
     

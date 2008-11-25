@@ -26,7 +26,8 @@
  */
 abstract class GraphOnTrackers_Engine {
     
-    protected $data;
+    public $graph;
+    public $data;
     
     /**
      * @return boolean true if the data are valid to buid the chart
