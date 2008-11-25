@@ -91,8 +91,8 @@ def fetch_access_file(svnrepo):
                         #SVNACCESS[who][path] = perm
 
         f.close()
-        print SVNGROUPS
-        print SVNACCESS
+        #print SVNGROUPS
+        #print SVNACCESS
 
 
 def check_read_access(username, svnrepo, svnpath):
