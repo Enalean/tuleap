@@ -329,6 +329,8 @@ class Docman_MetadataValueFactory extends Error {
                     //$value = 100; // Set to default
                     // Maybe a warning ?
                 }
+            } else if (is_array($value) && count($value) > 1) {
+                $value = $value[0]; // If only one value is allowed, the first is taken
             }
             break;
         case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
