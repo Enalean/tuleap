@@ -126,12 +126,12 @@ if ($export == 'artifact') {
 		      $multiarr = array_merge($multiarr,db_fetch_array($result));
 		    }
 		    
-		    prepare_artifact_record($ath,$fields,$atid,$multiarr);
+		    prepare_artifact_record($ath,$fields,$atid,$multiarr, 'csv');
 		    echo build_csv_record($col_list, $multiarr).$eol;
 		  }
 		} else {
 		  while ($arr = db_fetch_array($result)) {	    
-		    prepare_artifact_record($at,$fields,$atid,$arr);
+		    prepare_artifact_record($at,$fields,$atid,$arr, 'csv');
 		    echo build_csv_record($col_list, $arr).$eol;
 		  }
 		}
@@ -158,7 +158,7 @@ if ($export == 'artifact') {
     echo '<p>'.$Language->getText('project_export_artifact_export','art_exp_format_msg').'</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
-    prepare_artifact_record($at,$fields,$atid,$record);
+    prepare_artifact_record($at,$fields,$atid,$record, 'csv');
     display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
 
 
@@ -269,14 +269,14 @@ if ($export == 'artifact') {
                                 foreach($all_results as $result) {
                                     $arr = array_merge($arr, db_fetch_array($result));
                                 }
-                                prepare_artifact_record($at,$fields,$atid,$arr);
+                                prepare_artifact_record($at,$fields,$atid,$arr, 'database');
                                 insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
                             }
                         }
                     } else {
                         $result = db_query($sql);   
                         while ($arr = db_fetch_array($result)) {
-                            prepare_artifact_record($at,$fields,$atid,$arr);
+                            prepare_artifact_record($at,$fields,$atid,$arr, 'database');
                             insert_record_in_table($dbname, $tbl_name, $col_list, $arr);
                         }
                     }

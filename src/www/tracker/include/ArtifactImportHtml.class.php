@@ -307,7 +307,7 @@ function showErrors() {
     } else {
       $record = $this->ath->buildDefaultRecord();
     }
-    prepare_artifact_record($at,$fields,$this->ath->getId(),$record);
+    prepare_artifact_record($at,$fields,$this->ath->getId(),$record, 'csv');
     
     $hp = CodeX_HTMLPurifier::instance();
     foreach($record as $k => $v) {
