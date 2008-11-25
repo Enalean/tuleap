@@ -2129,7 +2129,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
             
             // Send the notification
             $agnf =& new ArtifactGlobalNotificationFactory();
-            $addresses = $agnf->getAllAddresses($a->getID());
+            $addresses = $agnf->getAllAddresses($ath->getID());
             $a->mailFollowupWithPermissions($addresses);
             
             return $a->getID();
