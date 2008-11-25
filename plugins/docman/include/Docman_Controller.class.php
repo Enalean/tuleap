@@ -1351,11 +1351,9 @@ class Docman_Controller extends Controler {
             break;
             
         case 'appendFileChunk':
-            $this->action = $view;
-            $this->_setView('');
-            break;
-            
         case 'getFileMD5sum':
+        case 'getProjectMetadata':
+        case 'getMetadataListOfValues':
             $this->action = $view;
             $this->_setView('');
             break;

@@ -1204,6 +1204,41 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
         }
     }
+    
+    /**
+     * Returns the (used) metadata of the given project 
+     */
+    function getProjectMetadata() {
+        $request =& $this->_controler->request;
+        $groupId = $request->get('group_id');
+        $metadataFactory = new Docman_MetadataFactory($groupId);
+        $metadataList = $metadataFactory->getRealMetadataList(true);
+        $this->_controler->_viewParams['action_result'] = $metadataList;
+    }
+    
+    /**
+     * Returns the list of values for the given list metadata.
+     */
+    function getMetadataListOfValues() {
+        $request =& $this->_controler->request;
+        $groupId = $request->get('group_id');
+        $metadataFactory = new Docman_MetadataFactory($groupId);
+        $metadataLovFactory = new Docman_MetadataListOfValuesElementFactory();
+        
+        $label = $request->get('label');
+        
+        $md = $metadataFactory->getFromLabel($label);
+        
+        $res = array();
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+           foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, false) as $val) {
+               $res[] = $val;
+           }
+        }
+        
+        $this->_controler->_viewParams['action_result'] = $res;
+    }
+    
 
     function monitor($params) {
         $user = $this->_controler->getUser();
