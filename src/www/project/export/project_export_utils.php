@@ -194,14 +194,22 @@ function prepare_bug_record($group_id, &$col_list, &$record) {
 
 }
 
-function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
+/**
+ * Prepare the column values in the artifact record
+ *
+ * @param ArtifactType (tracker) $at the tracker the artifact to prepare blelong to
+ * @param array{ArtifactField} $fields the fields of the artifact to export 
+ * @param int $group_artifact_id the tracker ID
+ * @param array $record array 'field_name' => 'field_value'
+ * @param string $export type of export ('csv' or 'database' : for date format, csv will take user preference, wheareas for database the format will be mysql format.)
+ */
+function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $export) {
 
-    global $sys_lf,$Language;
-    /*
-           Prepare the column values in the artifact record
-           Input: a row from the artifact table (passed by reference.
-          Output: the same row with values transformed for export
-       */
+    global $datetime_fmt,$sys_lf,$Language;
+    /* $record:          
+       Input: a row from the artifact table (passed by reference.
+       Output: the same row with values transformed for export
+    */
 	
     reset($fields);
     $line = '';
@@ -225,13 +233,18 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record) {
 
 		    // replace the date fields (unix time) with human readable dates that
 		    // is also accepted as a valid format in future import
-		    if ($record[$field->getName()] == '')
+		    if ($record[$field->getName()] == '') {
 				// if date undefined then set datetime to 0. Ideally should
 				// NULL as well but if we pass NULL it is interpreted as a string
 				// later in the process
 				$record[$field->getName()] = '0';
-		    else
-				$record[$field->getName()] = format_date(util_get_user_preferences_export_datefmt(), $record[$field->getName()]);
+		    } else {
+		        if ($export == 'database') {
+				    $record[$field->getName()] = format_date($datetime_fmt, $record[$field->getName()]);
+		        } else {
+		            $record[$field->getName()] = format_date(util_get_user_preferences_export_datefmt(), $record[$field->getName()]);
+		        }
+		    }
 		} else if ( $field->isFloat() ) {
 			$record[$field->getName()] = number_format($record[$field->getName()],2);
 		}
