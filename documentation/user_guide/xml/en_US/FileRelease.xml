@@ -498,8 +498,8 @@
             you define a permission for a release, then it overrides the
             permissions defined for the package.</para>
 
-            <para>The permissions set for the release can be either
-            stricter or less strict than the package permissions.
+            <para>The permissions set for the release can be only
+            stricter than the package permissions.
             </para>
 
           </listitem>
