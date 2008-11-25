@@ -3334,6 +3334,15 @@ width="14.5cm" />
 	defined (see section &#34;<xref
 	linkend="TrackerEventRoleBasedEmailNotification" />&#34;
 	below).</para>
+    
+    <para>You can choose to disable the permission check for global 
+    email notification.
+    This can be useful if the email address is a mailing list,
+    because individual permissions can't be checked for each
+    member of the mailing list. So for mailing lists, if the check box
+    "check permissions" is checked, the notifications will be send to each 
+    member with the permissions of an anonymous user.
+    </para>
 
 	<para>This feature is typically used to send submissions of
 	new artifacts to a number of well identified persons in the

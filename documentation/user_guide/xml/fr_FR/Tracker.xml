@@ -3515,6 +3515,16 @@ width="14.5cm" />
         linkend="TrackerEventRoleBasedEmailNotification" />&#34;
         ci-dessous).</para>
 
+        <para>Vous pouvez désactiver la vérification des permissions
+        pour la notification email globale.
+        Ce peut être utile si l'adresse en question est une liste de
+        distribution. En effet, pour les listes de distribution, le
+        système ne peut vérifier les permissions individuelles de
+        chaque membre de la liste. Donc, si la case "vérifier les permissions" 
+        est cochée, les notifications seront envoyées aux membres de la
+        liste de distribution avec les droits 'utilisateur anonyme'.
+        </para>
+    
         <para>Cette fonctionnalité peut être utilisée pour informer de
         la soumission d'un nouvel artefact les personnes de l'équipe
         en charge de leur qualification et leur assignation.</para>
