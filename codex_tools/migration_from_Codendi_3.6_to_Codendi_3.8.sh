@@ -1,3 +1,81 @@
+
+
+
+
+dbauth_passwd="a"; dbauth_passwd2="b";
+while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
+    read -s -p "Password for DB Authentication user: " dbauth_passwd
+    echo
+    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
+    echo
+done
+
+###############################################################################
+echo "Updating Packages"
+
+
+# MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed)
+
+
+###############################################################################
+echo "Updating local.inc"
+
+# dbauthuser and password
+$GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+// DB user for http authentication (must have access to user/group/user_group tables)
+\$sys_dbauth_user = "dbauthuser";
+\$sys_dbauth_passwd = '$dbauth_passwd';
+?>
+EOF
+fi
+
+###############################################################################
+# HTTP-based authentication
+echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.old"
+echo "This file is no longer needed (now using MySQL based authentication with mod_auth_mysql)"
+
+if [ -f "/etc/httpd/conf/htpasswd" ]; then
+  $MV /etc/httpd/conf/htpasswd /etc/httpd/conf/htpasswd.codendi3.6
+fi
+
+echo "Update munin.conf accordingly"
+# replace string patterns in munin.conf (for MySQL authentication)
+substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+
+
+###############################################################################
+echo "Updating database"
+
+# See if MySQL root account is password protected
+mysqlshow 2>&1 | grep password
+while [ $? -eq 0 ]; do
+    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    echo
+    mysqlshow --password=$old_passwd 2>&1 | grep password
+done
+[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+
+
+
+
+# Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN) and Openfire
+$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+GRANT SELECT ON codex.user to dbauthuser@localhost identified by '$dbauth_passwd';
+GRANT SELECT ON codex.groups to dbauthuser@localhost;
+GRANT SELECT ON codex.user_group to dbauthuser@localhost;
+GRANT SELECT ON codex.session to dbauthuser@localhost;
+FLUSH PRIVILEGES;
+EOF
+
+
+
+# Remove useless tables
+$CAT <<EOF | $MYSQL $pass_opt codex
 DROP TABLE intel_agreement;
 DROP TABLE user_diary;
 DROP TABLE user_diary_monitor;
@@ -6,6 +84,7 @@ DROP TABLE user_metric1;
 DROP TABLE user_metric_tmp1_1;
 DROP TABLE user_ratings;
 DROP TABLE user_trust_metric;
+EOF
 
 
 # artifact permissions
@@ -56,7 +135,7 @@ INSERT INTO openfire.jiveProperty (name, propValue) VALUES
 	("xmpp.httpbind.client.requests.wait", "10"),
 	("xmpp.httpbind.scriptSyntax.enabled", "true"),
 	("xmpp.muc.history.type", "all"),
-	("conversation.idleTime, "10"),
+	("conversation.idleTime", "10"),
     ("conversation.maxTime, "240"),
     ("conversation.messageArchiving, "false"),
     ("conversation.metadataArchiving, "true"),
