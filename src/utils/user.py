@@ -23,6 +23,7 @@ global USER_NAMES
 
 USER_NAMES = {}
 USER_IS_SUPER_USER = None
+USER_IS_RESTRICTED = None
 
 def user_isloggedin():
     return session.G_USER.has_key('user_id')
@@ -50,6 +51,32 @@ def user_is_super_user():
         USER_IS_SUPER_USER = False
   
     return USER_IS_SUPER_USER
+
+
+def user_is_restricted():
+
+    global USER_IS_RESTRICTED
+
+    if USER_IS_RESTRICTED is not None: return USER_IS_RESTRICTED
+
+    if user_isloggedin():
+
+        cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM user WHERE user_id='"+str(user_getid())+
+                       "' AND status='R'")
+        row = cursor.fetchone()
+        cursor.close()
+
+        if row is None:
+            USER_IS_RESTRICTED = False
+        else:
+            USER_IS_RESTRICTED = True
+
+    else:
+        USER_IS_RESTRICTED = False
+
+    return USER_IS_RESTRICTED
+
 
 
 def user_is_member(group_id, type='0'):

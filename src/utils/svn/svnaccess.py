@@ -25,6 +25,7 @@ import re
 import sys
 import string
 import user
+import group
 
 global SVNACCESS, SVNGROUPS
 SVNACCESS = None
@@ -104,6 +105,12 @@ def check_read_access(username, svnrepo, svnpath):
     
     if user.user_is_super_user():
         return True
+    if user.user_is_restricted():
+        path_elements = string.split(svnrepo,'/')
+        group_name = path_elements[len(path_elements)-1]
+        group_id = group.set_group_info_from_name(group_name)
+        if not user.user_is_member(group_id):
+            return False
 
     if SVNACCESS is None:
         fetch_access_file(svnrepo)
