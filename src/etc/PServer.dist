@@ -44,8 +44,8 @@
 # CertificateFile  PEM certificate for use with sserver
 # PrivateKeyFile   PEM certificate for use with sserver
 #
-CertificateFile=/etc/httpd/conf/ssl.crt/server.crt
-PrivateKeyFile=/etc/httpd/conf/ssl.key/server.key
+CertificateFile=/etc/pki/tls/certs/localhost.crt
+PrivateKeyFile=/etc/pki/tls/private/localhost.key
 
 #
 # NoReverseDns	   Disable Reverse lookups by the server to help broken
