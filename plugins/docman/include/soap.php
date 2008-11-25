@@ -99,32 +99,6 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
-    'Metadata',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-        'label' => array('name'=>'label', 'type' => 'xsd:string'),
-        'name' => array('name'=>'name', 'type' => 'xsd:string'),
-        'type' => array('name'=>'type', 'type' => 'xsd:string'),
-        'isMultipleValuesAllowed' => array('name'=>'isMultipleValuesAllowed', 'type' => 'xsd:int'),
-        'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type' => 'xsd:int'),
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfMetadata',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
-    'tns:Metadata'
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
     'MetadataListValue',
     'complexType',
     'struct',
@@ -147,6 +121,32 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:MetadataListValue'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'Metadata',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'label' => array('name'=>'label', 'type' => 'xsd:string'),
+        'name' => array('name'=>'name', 'type' => 'xsd:string'),
+        'type' => array('name'=>'type', 'type' => 'xsd:string'),
+        'isMultipleValuesAllowed' => array('name'=>'isMultipleValuesAllowed', 'type' => 'xsd:int'),
+        'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type' => 'xsd:int'),
+        'listOfValues' => array('name'=>'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'), 
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfMetadata',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
+    'tns:Metadata'
+);
 
 //
 // Function definition
@@ -501,25 +501,6 @@ $GLOBALS['server']->register(
 <pre>
 sessionKey   Session key
 group_id     Group ID
-</pre>'
-);
-
-$GLOBALS['server']->register(
-    'getDocmanMetadataListOfValues',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'  =>'xsd:int',
-        'label'     =>'xsd:string',),
-    array('getDocmanMetadataListOfValuesResponse'=>'tns:ArrayOfMetadataListValue'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getDocmanMetadataListOfValues',
-    'rpc',
-    'encoded',
-    'Returns the list of values for the given list metadata
-<pre>
-sessionKey   Session key
-group_id     Group ID
-label        Label of the list metadata
 </pre>'
 );
 
@@ -1209,6 +1190,17 @@ function getDocmanProjectMetadata($sessionKey, $group_id) {
         $p =& $plugin_manager->getPluginByName('docman');
         if ($p && $plugin_manager->isPluginAvailable($p)) {
             $result = $p->processSOAP($request);
+            
+            foreach ($result as &$md) {
+                $md->listOfValues = array();
+                if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                    $request =& new SOAPRequest(array('group_id' => $group_id,
+                                                      'label'    => $md->getLabel(),
+                                                      'action'   => 'getMetadataListOfValues'));
+                    
+                    $md->listOfValues = $p->processSOAP($request);
+                 }
+            }
 
             if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
                    $msg = $GLOBALS['Response']->getRawFeedback();
@@ -1224,45 +1216,6 @@ function getDocmanProjectMetadata($sessionKey, $group_id) {
     }
 }
 
-/**
- * Returns the list of values for the given list metadata.
- */
-function getDocmanMetadataListOfValues($sessionKey, $group_id, $label) {
-   if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'getDocmanMetadataListOfValues');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'getDocmanMetadataListOfValues');
-        }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getDocmanMetadataListOfValues');
-        }
-        
-        // Get the metadata for the project
-        $soap_request_params = array('group_id' => $group_id,
-                                     'label'    => $label,
-                                     'action'   => 'getMetadataListOfValues');
-        
-        $request =& new SOAPRequest($soap_request_params);
-        
-        $plugin_manager =& PluginManager::instance();
-        $p =& $plugin_manager->getPluginByName('docman');
-        if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $result = $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
-                   $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null, $msg, 'getDocmanMetadataListOfValues');
-            } else {
-                return $result;
-            }
-        } else {
-            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'getDocmanMetadataListOfValues');
-        }
-    } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'getDocmanMetadataListOfValues');
-    }
-}
 $GLOBALS['server']->addFunction(
         array(
             'getRootFolder',
@@ -1283,7 +1236,6 @@ $GLOBALS['server']->addFunction(
             'moveDocmanItem',
         
             'getDocmanProjectMetadata',
-            'getDocmanMetadataListOfValues',
             ));
 }
 

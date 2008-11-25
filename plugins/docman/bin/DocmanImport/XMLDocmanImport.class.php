@@ -102,6 +102,7 @@ class XMLDocmanImport {
         echo "Retrieving metadata definition... ";
         try {
             $metadataList = $this->soap->getDocmanProjectMetadata($this->hash, $this->groupId);
+
             foreach ($metadataList as $metadata) {
                 if ($this->doc->xpath("/docman/propdefs/propdef[@name='$metadata->name']")) {
                     $this->metadataMap[$metadata->name]['label'] = $metadata->label;
@@ -109,7 +110,7 @@ class XMLDocmanImport {
                     $this->metadataMap[$metadata->name]['isEmptyAllowed'] = $metadata->isEmptyAllowed;
                     if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                         $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
-                        $lov = $this->soap->getDocmanMetadataListOfValues($this->hash, $this->groupId, $metadata->label);
+                        $lov = $metadata->listOfValues;
                         foreach ($lov as $val) {
                             if ($val->id != 100) {
                                 $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
@@ -418,7 +419,7 @@ class XMLDocmanImport {
      */
     public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
         $this->loadXML($xmlDoc);
-        
+
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
             if($opt == self::CHILDREN_ONLY) {
