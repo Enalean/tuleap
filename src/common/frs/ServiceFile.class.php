@@ -111,26 +111,28 @@ class ServiceFile extends Service {
             for ($f=0; $f<$rows_files; $f++) {
                 $package_id=db_result($res_files,$f,'package_id');
                 $release_id=db_result($res_files,$f,'release_id');
-                if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
-                    //if ($package_id==db_result($res_files,($f-1),'package_id')) {
-                    //same package as last iteration - don't show this release
-                } else {
-                    $authorized=false;
-                    // check access.
-                    if (permission_exist('RELEASE_READ', $release_id)) {
-                        $authorized=permission_is_authorized('RELEASE_READ',$release_id, $user_id ,$this->getGroupId());
-                    } else {  
-                        $authorized=permission_is_authorized('PACKAGE_READ',$package_id, $user_id ,$this->getGroupId());
+                if ($frspf->userCanRead($this->getGroupId(), $package_id, $user_id)) {
+                    if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
+                        //if ($package_id==db_result($res_files,($f-1),'package_id')) {
+                        //same package as last iteration - don't show this release
+                    } else {
+                        $authorized=false;
+                        // check access.
+                        if (permission_exist('RELEASE_READ', $release_id)) {
+                            $authorized=permission_is_authorized('RELEASE_READ',$release_id, $user_id ,$this->getGroupId());
+                        } else {  
+                            $authorized=permission_is_authorized('PACKAGE_READ',$package_id, $user_id ,$this->getGroupId());
+                        }
+                        if ($authorized) {
+                            $packages[] = array(
+                                'package_name' => db_result($res_files,$f,'package_name'),
+                                'release_name' => db_result($res_files,$f,'release_name'),
+                                'release_id'   => $release_id,
+                                'package_id'   => $package_id,
+                            );
+                            $package_displayed[$package_id] = true;
+                         }
                     }
-                    if ($authorized) {
-                        $packages[] = array(
-                            'package_name' => db_result($res_files,$f,'package_name'),
-                            'release_name' => db_result($res_files,$f,'release_name'),
-                            'release_id'   => $release_id,
-                            'package_id'   => $package_id,
-                        );
-                        $package_displayed[$package_id] = true;
-                     }
                 }
             }
         }

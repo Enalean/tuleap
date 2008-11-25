@@ -535,8 +535,9 @@
 
             <para>Pour cela, séléctionnez le lien &#34;[Voir/Modifier]&#34; de la 
             partie permissions, puis procédez à la sélection des groupes d'utilisateurs
-            autorisés pour définir des permissions sur une
-            version.</para>
+            autorisés pour définir des permissions sur une version. Les permissions
+            sur les versions peuvent uniquement être plus strictes que celles du
+            paquet auquel elle appartient.</para>
 
           </listitem>
         
