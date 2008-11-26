@@ -1354,6 +1354,7 @@ class Docman_Controller extends Controler {
         case 'getFileMD5sum':
         case 'getProjectMetadata':
         case 'getMetadataListOfValues':
+        case 'createVersion':
             $this->action = $view;
             $this->_setView('');
             break;

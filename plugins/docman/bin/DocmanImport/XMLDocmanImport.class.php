@@ -66,7 +66,7 @@ class XMLDocmanImport {
         } catch (Exception $e) {
             $this->printSoapErrorAndDie($e);
         }
-        
+
         echo "Connected to $wsdl as $login.".PHP_EOL;
     }
 
@@ -90,7 +90,7 @@ class XMLDocmanImport {
         } catch (Exception $e) {
             $this->printSoapErrorAndDie($e);
         }
-        
+
         echo "Done.".PHP_EOL;
     }
 
@@ -124,15 +124,16 @@ class XMLDocmanImport {
         } catch (Exception $e) {
             $this->printSoapErrorAndDie($e);
         }
-        
+
         if ($missingProp) {
             $this->exitError("The following propert".((count($missingProp) > 1)? "ies don't": "y doesn't")." allow empty values and must be defined in the <propdefs> node: ".implode(", ", $missingProp).PHP_EOL);
         }
-        
+
         echo "Done.".PHP_EOL;
     }
 
     private function printSoapErrorAndDie(Exception $e) {
+        //print_r($e);
         echo "Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL;
         $this->exitError($e->getMessage());
     }
@@ -143,16 +144,16 @@ class XMLDocmanImport {
     private function loadXML($rootPath) {
         $archiveName = basename($rootPath);
         $this->dataBaseDir = $rootPath.'/'.$archiveName;
-        
+
         // DTD validation
         $dom = new DOMDocument();
         $dom->load($rootPath.'/'.$archiveName.'.xml');
         if (!$dom->validate()) {
             $this->warn("DTD Validation failed.");
         }
-        
+
         $this->doc = simplexml_import_dom($dom);
-        
+
         // Build the maps
         $this->buildMetadataMap();
         $this->buildUgroupMap();
@@ -202,7 +203,7 @@ class XMLDocmanImport {
                         // Check that just one value is given to a list that allow only one value
                         if (count($values) > 1 && !$metadataDef['isMultipleValuesAllowed']) {
                             $errorMsg .= "Item '$item_name':\tThe list property '$title' allows only one value, but ".count($values)." values are given.".PHP_EOL;
-                        } 
+                        }
                         // Check if no value is given to a list that require a value
                         else if (count($values) == 0 && !$metadataDef['isEmptyAllowed']) {
                             $errorMsg .= "Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.".PHP_EOL;
@@ -358,7 +359,7 @@ class XMLDocmanImport {
                 }
             }
         }
-        
+
         // Check that no metadata defined on the server is forgotten in this definition
 
         if ($errorMsg) {
@@ -407,7 +408,7 @@ class XMLDocmanImport {
      */
     public function import($xmlDoc, $parentId) {
         $this->loadXML($xmlDoc);
-        
+
         $nodes = $this->doc->xpath('/docman/item');
         foreach ($nodes as $node) {
             $this->recurseOnNode($node, $parentId);
@@ -487,65 +488,59 @@ class XMLDocmanImport {
 
         switch($node['type']) {
             case 'file':
-                //$iFiles = 0;
+                $iFiles = 0;
                 $itemId = false;
-                //foreach($node->xpath('version') as $version) {
 
-                $versions = $node->xpath('versions/version');
-
-                if (is_array($versions)) {
-                    $version = $versions[0];
-                } else {
-                    $version = $versions;
+                foreach($node->xpath('versions/version') as $version) {
+                    //$versions = $node->xpath('versions/version');
+                    //$version = $versions[0];
+                    $file = $version->content;
+                    $label = isset($version->label) ? (string) $version->label : '';
+                    $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
+                    $fileName = $version->filename;
+                    $fileType = $version->filetype;
+                    $fileSize = $version->filesize;
+                    if($iFiles == 0) {
+                        // First version
+                        $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $fileSize);
+                    } else {
+                        if($itemId !== false) {
+                            // Update
+                            $this->createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize);
+                        }
+                    }
+                    $iFiles++;
                 }
-
-                $file = $version->content;
-                $label = isset($version->label) ? (string) $version->label : '';
-                $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
-                $fileName = $version->filename;
-                $fileType = $version->filetype;
-                $fileSize = $version->filesize;
-                //                if($iFiles == 0) {
-                // First version
-                $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $fileSize);
-                //                } else {
-                //                    if($itemId !== false) {
-                //                        // Update
-                //                        $this->createVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize);
-                //                    }
-                //                }
-                //$iFiles++;
-                //}
                 break;
 
             case 'embeddedfile':
-                //$iFiles = 0;
+                $iFiles = 0;
                 $itemId = false;
-                //foreach($node->xpath('version') as $version) {
+                foreach($node->xpath('versions/version') as $version) {
 
-                $versions = $node->xpath('versions/version');
+//                $versions = $node->xpath('versions/version');
+//
+//                if (is_array($versions)) {
+//                    $version = $versions[0];
+//                } else {
+//                    $version = $versions;
+//                }
 
-                if (is_array($versions)) {
-                    $version = $versions[0];
-                } else {
-                    $version = $versions;
+                    $file = $version->content;
+                    $label = isset($version->label) ? (string) $version->label : '';
+                    $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
+                    $fileName = $version->filename;
+                    if($iFiles == 0) {
+                    // First version
+                        $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file);
+                    } else {
+                        if($itemId !== false) {
+                        // Update
+                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $fileSize);
+                        }
+                    }
+                    $iFiles++;
                 }
-
-                $file = $version->content;
-                $label = isset($version->label) ? (string) $version->label : '';
-                $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
-                $fileName = $version->filename;
-                //                if($iFiles == 0) {
-                // First version
-                $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file);
-                //                } else {
-                //                    if($itemId !== false) {
-                //                        // Update
-                //                        $this->createVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize);
-                //                    }
-                //                }
-                //$iFiles++;
-                //}
                 break;
 
             case 'wiki':
@@ -670,10 +665,10 @@ class XMLDocmanImport {
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file) {
         echo "Creating embedded file '$title' ($file)".PHP_EOL;
         $fullPath = $this->dataBaseDir.'/'.$file;
-        $content = file_get_contents($fullPath);
+        $contents = file_get_contents($fullPath);
 
         try {
-            return $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $content, $permissions, $metadata);
+            return $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata);
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -684,7 +679,7 @@ class XMLDocmanImport {
      */
     private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $fileSize) {
         $infoStr = "Creating new file '$title' ($file, $fileName, $fileType)";
-        
+
         $fullPath = $this->dataBaseDir.'/'.$file;
 
         // The following is inspired from CLI_Action_Docman_CreateFile.class.php
@@ -703,22 +698,34 @@ class XMLDocmanImport {
             // Send the chunk
             if (!$chunk_offset) {
                 // If this is the first chunk, then use the original soapCommand...
-                $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, null, $contents, $chunk_offset, $chunk_size);
+                try {
+                    $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size);
+                } catch (Exception $e){
+                    $this->printSoapErrorAndDie($e);
+                }
             } else {
-                // If this is not the first chunk, then we have to append the chunk
-                $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
+                try {
+                    // If this is not the first chunk, then we have to append the chunk
+                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
+                } catch (Exception $e){
+                    $this->printSoapErrorAndDie($e);
+                }
             }
         }
         // Finish!
         echo "\r$infoStr - Sending file (100%)";
 
         // Check that the local and remote file are the same
-        if ($this->checkChecksum($item_id, 0, $fullPath) === true) {
-            echo " - Checksum OK".PHP_EOL;
-            return $item_id;
-        } else {
-            echo " - ERROR: Checksum error".PHP_EOL;
-            return false;
+        try {
+            if ($this->checkChecksum($item_id, $fullPath) === true) {
+                echo " - Checksum OK".PHP_EOL;
+                return $item_id;
+            } else {
+                echo " - ERROR: Checksum error".PHP_EOL;
+                return false;
+            }
+        } catch (Exception $e){
+            $this->printSoapErrorAndDie($e);
         }
     }
 
@@ -727,14 +734,14 @@ class XMLDocmanImport {
      *
      * @return true if they are the same
      */
-    private function checkChecksum($item_id, $version, $filename) {
+    private function checkChecksum($item_id, $filename) {
 
         $local_checksum = md5_file($filename);
 
         // For very big files, the checksum can take several minutes to be computed, so we set the socket timeout to 10 minutes
         $default_socket_timeout = ini_set('default_socket_timeout', 600);
 
-        $distant_checksum = $this->soap->getDocmanFileMD5sum($this->hash, $this->groupId, $item_id, $version);
+        $distant_checksum = $this->soap->getDocmanFileMD5sum($this->hash, $this->groupId, $item_id);
 
         // Revert default_socket_timeout
         if ($default_socket_timeout !== false) {
@@ -747,11 +754,70 @@ class XMLDocmanImport {
     /**
      * Create a new file version
      */
-//    public function createVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize) {
-//        echo "Update file $itemId ($file, $fileName, $fileType)".PHP_EOL;
-//        $fullPath = $this->dataBaseDir.'/'.$file;
-//        $docmanWebWrapper = $this->getWebWrapper();
-//        return $docmanWebWrapper->createVersion($itemId, $label, $changeLog, $fullPath, $fileName, $fileType, $fileSize);
-//    }
+    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize) { //TODO refactor
+        $infoStr = "Creating new file version '$label' ($file, $fileName, $fileType)";
+
+        $fullPath = $this->dataBaseDir.'/'.$file;
+
+        // The following is inspired from CLI_Action_Docman_CreateFile.class.php
+        $chunk_size = 6000000; // ~6 Mo
+
+        // How many chunks do we have to send
+        $chunk_count = ceil($fileSize / $chunk_size);
+
+        for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            // Display progression indicator
+            echo "\r$infoStr - Sending file (". intval($chunk_offset / $chunk_count * 100) ."%)";
+
+            // Retrieve the current chunk of the file
+            $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
+
+            // Send the chunk
+            if (!$chunk_offset) {
+                // If this is the first chunk, then use the original soapCommand...
+                try {
+                    $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size);
+                } catch (Exception $e){
+                    $this->printSoapErrorAndDie($e);
+                }
+
+            } else {
+                // If this is not the first chunk, then we have to append the chunk
+                try {
+                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
+                } catch (Exception $e){
+                    $this->printSoapErrorAndDie($e);
+                }
+            }
+        }
+        // Finish!
+        echo "\r$infoStr - Sending file (100%)";
+
+        // Check that the local and remote file are the same
+        try {
+            if ($this->checkChecksum($itemId, $fullPath) === true) {
+                echo " - Checksum OK".PHP_EOL;
+                return $item_id;
+            } else {
+                echo " - ERROR: Checksum error".PHP_EOL;
+                return false;
+            }
+        } catch (Exception $e){
+            $this->printSoapErrorAndDie($e);
+        }
+    }
+    
+    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $fileSize) {
+        echo "Creating embedded file version '$label' ($file)".PHP_EOL;
+        $fullPath = "$this->dataBaseDir/$file";
+
+        $contents = file_get_contents($fullPath);
+
+        try {
+            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $contents);
+        } catch (Exception $e){
+            $this->printSoapErrorAndDie($e);
+        }
+    }
 }
 ?>

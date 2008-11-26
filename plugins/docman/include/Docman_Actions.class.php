@@ -158,9 +158,9 @@ class Docman_Actions extends Actions {
             if ($request->exist('upload_content')) {
                 
                 if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
                 } else {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number);
                 }
                 
                 if ($path) {
@@ -261,9 +261,10 @@ class Docman_Actions extends Actions {
         $fs       = $this->_getFileStorage();
         $request  = $this->_controler->request;
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-            $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+            $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber(), $request->get('chunk_offset'), $request->get('chunk_size'));
             if (!$path) {
-                $this->_controler->feedback->log('error', "Error while storing file chunk");
+                //TODO i18n
+                $this->_controler->feedback->log('error', "Error while storing file chunk ");
             }
         }
     }
@@ -396,7 +397,7 @@ class Docman_Actions extends Actions {
             $itemType = $item_factory->getItemTypeForItem($item);
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                 $fs = $this->_getFileStorage();
-                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
+                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
                 $this->_controler->_viewParams['action_result'] = $md5sum;
                 if (!$md5sum) {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
@@ -547,9 +548,16 @@ class Docman_Actions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
+    
+    /**
+     * Creates a new file or embedded file version. This action is called in soap.php using a SOAPRequest.
+     */
+    function createVersion() {
+        $this->new_version();
+    }
 
     function new_version() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         if ($request->exist('id')) {
             $user =& $this->_controler->getUser();
             $item_factory =& $this->_getItemFactory();
