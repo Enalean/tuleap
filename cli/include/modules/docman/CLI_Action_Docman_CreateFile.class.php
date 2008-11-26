@@ -46,7 +46,6 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
         $soap_params = array(
             'group_id' => $group_id,
             'item_id'  => $item_id,
-            'version'  => 0,
         );
         
         $local_checksum = md5_file($filename);
