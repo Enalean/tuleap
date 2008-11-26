@@ -67,5 +67,20 @@ class Docman_SOAPController extends Docman_Controller {
         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
         $this->_setView('SOAP');
     }
+    
+    function _dispatch($view, $item, $root, $get_show_view) {
+           
+        switch ($view) {
+            case 'appendFileChunk':
+            case 'getFileMD5sum':
+            case 'getProjectMetadata':
+            case 'getMetadataListOfValues':
+            case 'new_version':
+                $this->action = $view;
+                $this->_setView('');
+                break;
+            default: parent::_dispatch($view, $item, $root, $get_show_view);
+        }
+   }
 }
 

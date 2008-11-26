@@ -823,7 +823,7 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
         'mime_type'      => $mime_type,
     );
         
-    return _makeDocmanRequest($sessionKey, $group_id, 'createVersion', $params);
+    return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
 
 /**
@@ -842,7 +842,7 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
                     'version' => array('label' => $label, 'changelog' => $changelog,),
                     'content' => $content);
     
-    return _makeDocmanRequest($sessionKey, $group_id, 'createVersion', $params);
+    return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
 
 

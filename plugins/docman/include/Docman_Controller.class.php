@@ -1349,15 +1349,6 @@ class Docman_Controller extends Controler {
             $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
             $this->view = 'RedirectAfterCrud';
             break;
-            
-        case 'appendFileChunk':
-        case 'getFileMD5sum':
-        case 'getProjectMetadata':
-        case 'getMetadataListOfValues':
-        case 'createVersion':
-            $this->action = $view;
-            $this->_setView('');
-            break;
                                     
         default:
             die(htmlspecialchars($view) .' is not supported');
