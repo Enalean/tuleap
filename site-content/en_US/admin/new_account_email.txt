@@ -13,7 +13,7 @@ $body = "You are now a registered user on ".$GLOBALS['sys_name']
 ."project.\n\n\n ** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".$GLOBALS['sys_name']
 ." to create your Shell account. Some features like CVS access depend on it. Your Shell account will be activated in about $hoursleft "
 ."hour $minutesleft minutes from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
-."the Site Documentation (<". $base_url ."/docs/site/>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
+."the Site Documentation (<". $base_url ."/plugins/docman/?group_id=1>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
 ."(Define your skills profile, your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
 .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
             

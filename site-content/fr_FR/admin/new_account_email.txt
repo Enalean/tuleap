@@ -13,7 +13,7 @@ $body = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_na
 ." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. "
 ." Votre compte shell sera activé dans approximativement $hoursleft "
 ."heures $minutesleft minutes. \n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site ("
-."<". $base_url ."/docs/site/>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
+."<". $base_url ."/plugins/docman/?group_id=1>) et de peaufiner la configuration de votre compte utilisateur (<". $base_url ."/account/>) "
 ."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
 ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
 .$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'équipe ".$GLOBALS['sys_name'];
