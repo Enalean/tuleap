@@ -44,7 +44,7 @@
       </authorgroup>
 
       <releaseinfo>Slideware available at <ulink
-      url="http://&SYS_DEFAULT_DOMAIN;/docs/site">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
+      url="http://&SYS_DEFAULT_DOMAIN;/plugins/docman/?group_id=1">http://&SYS_DEFAULT_DOMAIN;/plugins/docman/?group_id=1</ulink></releaseinfo>
     </biblioentry>
 
     <biblioentry id="bib.cug.cbbk">
@@ -106,7 +106,7 @@
 
       <title>The &SYS_ORG_NAME; Code exchange Policy</title>
 
-      <releaseinfo>Available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/docs/site ">http://&SYS_DEFAULT_DOMAIN;/docs/site</ulink></releaseinfo>
+      <releaseinfo>Available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/plugins/docman/?group_id=1 ">http://&SYS_DEFAULT_DOMAIN;/plugins/docman/?group_id=1</ulink></releaseinfo>
     </biblioentry>
 
     <biblioentry id="bib.cug.xosp">

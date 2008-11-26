@@ -15,7 +15,7 @@ L'équipe <?php print $GLOBALS['sys_name']; ?> invite les équipes de projet de 
 <P>Dans les pages qui suivent, nous vous présenterons des documents importants concernant l'utilisation de votre compte et de votre environnement de projet. Veuillez les lire attentivement.</p>
 
 <p>
-<?php print $GLOBALS['sys_name']; ?> offre une suite complète de services. Si vous ne l'avez déjà fait nous vous invitons à parcourir la documentation concernant les <a href="/docs/site" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
+<?php print $GLOBALS['sys_name']; ?> offre une suite complète de services. Si vous ne l'avez déjà fait nous vous invitons à parcourir la documentation concernant les <a href="/plugins/docman/?group_id=1" target="side_window">Services <?php print $GLOBALS['sys_name']; ?></a>.
 </p>
 
 <p>

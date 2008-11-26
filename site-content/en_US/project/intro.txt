@@ -25,7 +25,7 @@ ignore these; they are very important to you and your project.</p>
 <p>
 <?php print $GLOBALS['sys_name']; ?> offers a full suite of services. If
 you haven't already, please be sure to browse 
-the <a href="/docs/site" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a> documentation.
+the <a href="/plugins/docman/?group_id=1" target="side_window"><?php print $GLOBALS['sys_name']; ?> Services</a> documentation.
 </p>
 
 <p>
