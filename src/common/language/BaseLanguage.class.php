@@ -222,6 +222,11 @@ class BaseLanguage {
      * Create a PHP file that contains all the strings loaded in this object.
      */
     function dumpLanguageFile($lang, $text_array) {
+        // Create language cache directory if needed
+        if (!file_exists($GLOBALS['codex_cache_dir'].'/lang/')) {
+            // This directory must be world reachable, but writable only by the web-server
+            mkdir($GLOBALS['codex_cache_dir'].'/lang/', 0755);
+        }
         $fd = @fopen($GLOBALS['codex_cache_dir'].'/lang/'.$lang.'.php', 'w');
         if($fd !== false) {
             fwrite($fd, '<?php'."\n");

@@ -110,6 +110,13 @@ if (!IS_SCRIPT &&
     }
 }
 
+
+// Create cache directory if needed
+if (!file_exists($GLOBALS['codex_cache_dir'])) {
+      // This directory must be world reachable, but writable only by the web-server
+      mkdir($GLOBALS['codex_cache_dir'], 0755);
+}
+
 //Load plugins
 require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
