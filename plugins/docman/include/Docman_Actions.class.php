@@ -255,10 +255,14 @@ class Docman_Actions extends Actions {
     }
 
     function createFolder() {
-        $this->createDocument();
+        $this->createItem();
     }
     
     function createDocument() {
+        $this->createItem();   
+    }
+    
+    function createItem() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
