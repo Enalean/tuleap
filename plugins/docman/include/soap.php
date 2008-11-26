@@ -307,7 +307,6 @@ $GLOBALS['server']->register(
         'item_id'           => 'xsd:int',
         'label'             => 'xsd:string',
         'changelog'         => 'xsd:string',
-        'file_size'         => 'xsd:int',
         'content'           => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileVersionResponse'=>'xsd:int'),
@@ -322,7 +321,6 @@ group_id          Group ID
 item_id           Item ID
 label             Version label
 changelog         Changelog
-file_size         File size
 content           Content (raw data)
 </pre>'
 );
@@ -764,35 +762,35 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
  * @param string       $file_name         File name
  * @param string       $mime_type         Mime type
  */
-function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $content = null, $chunk_offset = null, $chunk_size = null, $file_size = null, $file_name = null, $mime_type = null) {
+function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $content = null, $file_size = null, $file_name = null, $mime_type = null, $chunk_offset = null, $chunk_size = null) {
         
-        $params = array(
-            'item'         => array(
-                'parent_id'         => $parent_id,
-                'title'             => $title,
-                'description'       => $description,
-                'status'            => _get_status_value($status),
-                'item_type'         => $type,
-                'obsolescence_date' => $obsolescence_date
-            ),
-            'ordering'     => $ordering,
-            'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
-            'metadata'     => _get_metadata_as_array($metadata),
-            'chunk_offset' => $chunk_offset,
-            'chunk_size'   => $chunk_size,
-            'file_size'    => $file_size,
-            'file_name'    => $file_name,
-            'mime_type'    => $mime_type,
-        );
-        
-        switch ($type) {
-            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:            $params['upload_content'] = base64_decode($content); break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:    $params['content'] = $content; break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:            $params['item']['wiki_page'] = $content; break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:            $params['item']['link_url'] = $content; break;
-        }
+    $params = array(
+        'item'         => array(
+            'parent_id'         => $parent_id,
+            'title'             => $title,
+            'description'       => $description,
+            'status'            => _get_status_value($status),
+            'item_type'         => $type,
+            'obsolescence_date' => $obsolescence_date
+        ),
+        'ordering'     => $ordering,
+        'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
+        'metadata'     => _get_metadata_as_array($metadata),
+        'chunk_offset' => $chunk_offset,
+        'chunk_size'   => $chunk_size,
+        'file_size'    => $file_size,
+        'file_name'    => $file_name,
+        'mime_type'    => $mime_type,
+    );
+    
+    switch ($type) {
+        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:            $params['upload_content'] = base64_decode($content); break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:    $params['content'] = $content; break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:            $params['item']['wiki_page'] = $content; break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:            $params['item']['link_url'] = $content; break;
+    }
 
-        return _makeDocmanRequest($sessionKey, $group_id, 'createDocument', $params);
+    return _makeDocmanRequest($sessionKey, $group_id, 'createDocument', $params);
 }
 
 /**
@@ -834,13 +832,12 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
  * @param int          $item_id           Item ID
  * @param string       $label             Version label
  * @param string       $changelog         Changelog
- * @param int          $file_size         File size
  * @param string       $content           Content (raw data)
  */
-function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $content) {
-    $params = array('id'      => $item_id,
-                    'version' => array('label' => $label, 'changelog' => $changelog,),
-                    'content' => $content);
+function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content) {
+    $params = array('id'        => $item_id,
+                    'version'   => array('label' => $label, 'changelog' => $changelog,),
+                    'content'   => $content);
     
     return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
@@ -867,7 +864,7 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
  * @param int          $chunk_size        Chunk size
  */
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $content, $chunk_offset, $chunk_size, $file_size, $file_name, $mime_type);
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $content, $file_size, $file_name, $mime_type, $chunk_offset, $chunk_size);
 }
 
 /**

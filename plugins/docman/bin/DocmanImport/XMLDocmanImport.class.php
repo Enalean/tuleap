@@ -492,14 +492,13 @@ class XMLDocmanImport {
                 $itemId = false;
 
                 foreach($node->xpath('versions/version') as $version) {
-                    //$versions = $node->xpath('versions/version');
-                    //$version = $versions[0];
                     $file = $version->content;
                     $label = isset($version->label) ? (string) $version->label : '';
                     $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
                     $fileName = $version->filename;
                     $fileType = $version->filetype;
                     $fileSize = $version->filesize;
+                    
                     if($iFiles == 0) {
                         // First version
                         $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $fileSize);
@@ -517,26 +516,17 @@ class XMLDocmanImport {
                 $iFiles = 0;
                 $itemId = false;
                 foreach($node->xpath('versions/version') as $version) {
-
-//                $versions = $node->xpath('versions/version');
-//
-//                if (is_array($versions)) {
-//                    $version = $versions[0];
-//                } else {
-//                    $version = $versions;
-//                }
-
                     $file = $version->content;
                     $label = isset($version->label) ? (string) $version->label : '';
                     $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
-                    $fileName = $version->filename;
+
                     if($iFiles == 0) {
                     // First version
                         $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file);
                     } else {
                         if($itemId !== false) {
                         // Update
-                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $fileSize);
+                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file);
                         }
                     }
                     $iFiles++;
@@ -663,12 +653,14 @@ class XMLDocmanImport {
      * Creates an embedded file
      */
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file) {
-        echo "Creating embedded file '$title' ($file)".PHP_EOL;
+        echo "Creating embedded file '$title' ($file)";
         $fullPath = $this->dataBaseDir.'/'.$file;
         $contents = file_get_contents($fullPath);
 
         try {
-            return $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata);
+            $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata);
+            echo " [$id]".PHP_EOL;
+            return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -807,14 +799,14 @@ class XMLDocmanImport {
         }
     }
     
-    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $fileSize) {
+    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file) {
         echo "Creating embedded file version '$label' ($file)".PHP_EOL;
         $fullPath = "$this->dataBaseDir/$file";
 
         $contents = file_get_contents($fullPath);
 
         try {
-            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $contents);
+            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents);
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
