@@ -34,6 +34,21 @@ if [ $? -ne 0 ]; then
 EOF
 fi
 
+# sys_pending_account_lifetime
+$GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+// Duration before deleting pending accounts which have not been activated
+// (in days)
+// Default value is 60 days
+\$sys_pending_account_lifetime = 60;
+?>
+EOF
+fi
+
 ###############################################################################
 # HTTP-based authentication
 echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.old"
@@ -84,6 +99,12 @@ DROP TABLE user_metric1;
 DROP TABLE user_metric_tmp1_1;
 DROP TABLE user_ratings;
 DROP TABLE user_trust_metric;
+EOF
+
+
+# account approver
+$CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user ADD COLUMN approved_by int(11) NOT NULL default '0' AFTER add_date;
 EOF
 
 

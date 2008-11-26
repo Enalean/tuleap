@@ -337,6 +337,11 @@ $sys_frs_license_mandatory = 1;
 // Default value is about 6 months: 3600*24*183=15811200
 $sys_session_lifetime = 15811200;
 
+// Duration before deleting pending accounts which have not been activated
+// (in days)
+// Default value is 60 days
+$sys_pending_account_lifetime = 60;
+
 // Default password duration. User will be asked to change its password 
 // after 'sys_password_lifetime' days.
 // 0 = no duration

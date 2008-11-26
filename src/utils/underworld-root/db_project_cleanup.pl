@@ -17,13 +17,18 @@ $then=(time()-3600);
 $rel = $dbh->prepare("DELETE FROM groups WHERE status='I' and register_time < '$then'");
 $rel->execute();
 
-# two weeks ago for pending user accounts
-$then=(time()-3600*24*14);
-$rel = $dbh->prepare("DELETE FROM user WHERE status='P' and add_date < '$then'");
-$rel->execute();
+# Pending user accounts
+# default (see local.inc) is 60 days
+if ($sys_pending_account_lifetime != 0) {
+  $then=(time()-3600*24*$sys_pending_account_lifetime);
+  $rel = $dbh->prepare("DELETE FROM user WHERE status='P' and add_date < '$then'");
+  $rel->execute();
+}
 
 # Default: 6 months ago for sessions (this is for permanent login)
 # Can be modified in local.inc
-$then=(time()-$sys_session_lifetime);
-$rel = $dbh->prepare("DELETE FROM session WHERE time < '$then'");
-$rel->execute();
+if ($sys_session_lifetime != 0) {
+  $then=(time()-$sys_session_lifetime);
+  $rel = $dbh->prepare("DELETE FROM session WHERE time < '$then'");
+  $rel->execute();
+}
