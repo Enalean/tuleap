@@ -678,7 +678,11 @@ class XMLDocmanImport {
         $chunk_size = 6000000; // ~6 Mo
 
         // How many chunks do we have to send
-        $chunk_count = ceil($fileSize / $chunk_size);
+        if ($fileSize == 0) {
+            $chunk_count = 1;
+        } else {
+            $chunk_count = ceil($fileSize / $chunk_size);    
+        }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
             // Display progression indicator
