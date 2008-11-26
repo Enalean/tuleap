@@ -78,7 +78,7 @@ cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 # Apache configuration must be reloaded because of new SVN repositories
 cp -f /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codex_svnroot.conf.backup
 cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codex_svnroot.conf
-/usr/sbin/apachectl graceful
+service httpd reload
 
 # update authorized SSH keys in home dir
 ./ssh_create.pl
