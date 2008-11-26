@@ -28,7 +28,7 @@ $expiry_date = 0;
         $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
     }else{
         $vDate = new Valid_String();
-        if ($request->exist('form_expiry') && $vDate->validate($request->get('form_expiry'))) {
+        if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
             $date_list = split("-", $request->get('form_expiry'), 3);
             $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
             $expiry_date = $unix_expiry_time; 
@@ -50,6 +50,7 @@ $expiry_date = 0;
         
             // update the user status flag to active
             db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
+                     ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                  " WHERE user_id IN ($list_of_users)");
         
             // Now send the user verification emails
@@ -90,8 +91,9 @@ $expiry_date = 0;
             
         
             // update the user status flag to active
-            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."' 
-                  WHERE user_id IN ($list_of_users)");
+            db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".
+                     ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+                     " WHERE user_id IN ($list_of_users)");
         
             // Now send the user verification emails
             $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
@@ -105,7 +107,8 @@ $expiry_date = 0;
             }
             
         } else if ($action_select=='delete') {
-            db_query("UPDATE user SET status='D' WHERE user_id IN ($list_of_users)");
+            db_query("UPDATE user SET status='D, approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+                     " WHERE user_id IN ($list_of_users)");
         }
     }
 //

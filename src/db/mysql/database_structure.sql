@@ -1929,6 +1929,7 @@ CREATE TABLE user (
   unix_box varchar(10) NOT NULL default 'shell1',
   ldap_id text,
   add_date int(11) NOT NULL default '0',
+  approved_by int(11) NOT NULL default '0',
   confirm_hash varchar(32) default NULL,
   mail_siteupdates int(11) NOT NULL default '0',
   mail_va int(11) NOT NULL default '0',
