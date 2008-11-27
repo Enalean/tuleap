@@ -160,7 +160,10 @@ if (db_numrows($res_grp) < 1) {
     	
       
         print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
-        
+
+        $template_group = ProjectManager::instance()->getProject($row_grp['built_from_template']);
+        print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
+
         $sf =& new ServerFactory();
         if (count($sf->getAllServers()) > 1) {
             $p =& project_get_object($row_grp['group_id']);
