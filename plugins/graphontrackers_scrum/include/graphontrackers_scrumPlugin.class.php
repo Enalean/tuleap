@@ -21,7 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('common/plugin/Plugin.class.php');
-require_once('GraphOnTrackers_Scrum_Chart_Burndown.class.php');
 
 /**
  * Base class for the plugin graphontrackers_scrum
@@ -52,6 +51,7 @@ class GraphOnTrackers_ScrumPlugin extends Plugin {
      * return the different charts provided by this plugin
      */
     function graphontrackers_load_chart_factories($params) {
+        require_once('GraphOnTrackers_Scrum_Chart_Burndown.class.php');
         $params['factories']['graphontrackers_scrum_burndown'] = array(
             //The type of the chart
             'chart_type'      => 'graphontrackers_scrum_burndown',
