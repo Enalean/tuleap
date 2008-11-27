@@ -492,13 +492,13 @@ class XMLDocmanImport {
                 $itemId = false;
 
                 foreach($node->xpath('versions/version') as $version) {
-                    $file = $version->content;
-                    $label = isset($version->label) ? (string) $version->label : '';
-                    $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
-                    $fileName = $version->filename;
-                    $fileType = $version->filetype;
-                    $fileSize = $version->filesize;
-                    
+                    $file      = (string)$version->content;
+                    $label     = (string)$version->label;
+                    $changeLog = (string)$version->changelog;
+                    $fileName  = (string)$version->filename;
+                    $fileType  = (string)$version->filetype;
+                    $fileSize  = (string)$version->filesize;
+
                     if($iFiles == 0) {
                         // First version
                         $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $fileSize);
@@ -516,17 +516,18 @@ class XMLDocmanImport {
                 $iFiles = 0;
                 $itemId = false;
                 foreach($node->xpath('versions/version') as $version) {
-                    $file = $version->content;
-                    $label = isset($version->label) ? (string) $version->label : '';
-                    $changeLog = isset($version->changelog) ? (string) $version->changelog : '';
+                    $file      = (string)$version->content;
+                    $label     = (string)$version->label;
+                    $changeLog = (string)$version->changelog;
+                    $author    = (string)$version->author;
 
                     if($iFiles == 0) {
-                    // First version
+                        // First version
                         $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file);
                     } else {
                         if($itemId !== false) {
-                        // Update
-                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file);
+                            // Update
+                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author);
                         }
                     }
                     $iFiles++;
@@ -601,10 +602,12 @@ class XMLDocmanImport {
      * Creates a folder
      */
     private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata) {
-        echo "Creating folder '$title'".PHP_EOL;
+        echo "Creating folder '$title'";
 
         try {
-            return $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata);
+            $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata);
+            echo " #$id".PHP_EOL;
+            return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -614,10 +617,12 @@ class XMLDocmanImport {
      * Creates an empty document
      */
     private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata) {
-        echo "Creating empty document '$title'".PHP_EOL;
+        echo "Creating empty document '$title'";
 
         try {
-            return $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata);
+            $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata);
+            echo " #$id".PHP_EOL;
+            return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -627,10 +632,12 @@ class XMLDocmanImport {
      * Creates a wiki page
      */
     private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename) {
-        echo "Creating wikipage '$title' ($pagename)".PHP_EOL;
+        echo "Creating wikipage '$title' ($pagename)";
 
         try {
-            return $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata);
+            $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata);
+            echo " #$id".PHP_EOL;
+            return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -640,10 +647,12 @@ class XMLDocmanImport {
      * Creates a link
      */
     private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url) {
-        echo "Creating link '$title' ($url)".PHP_EOL;
+        echo "Creating link '$title' ($url)";
 
         try {
-            return $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata);
+            $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata);
+            echo " #$id".PHP_EOL;
+            return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }
@@ -659,7 +668,7 @@ class XMLDocmanImport {
 
         try {
             $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata);
-            echo " [$id]".PHP_EOL;
+            echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
@@ -681,7 +690,7 @@ class XMLDocmanImport {
         if ($fileSize == 0) {
             $chunk_count = 1;
         } else {
-            $chunk_count = ceil($fileSize / $chunk_size);    
+            $chunk_count = ceil($fileSize / $chunk_size);
         }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
@@ -714,10 +723,12 @@ class XMLDocmanImport {
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($item_id, $fullPath) === true) {
-                echo " - Checksum OK".PHP_EOL;
+                echo " - Checksum OK";
+                echo " #$item_id".PHP_EOL;
                 return $item_id;
             } else {
-                echo " - ERROR: Checksum error".PHP_EOL;
+                echo " - ERROR: Checksum error";
+                echo " #$item_id".PHP_EOL;
                 return false;
             }
         } catch (Exception $e){
@@ -750,7 +761,7 @@ class XMLDocmanImport {
     /**
      * Create a new file version
      */
-    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize) { //TODO refactor
+    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize) {
         $infoStr = "Creating new file version '$label' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
@@ -802,15 +813,15 @@ class XMLDocmanImport {
             $this->printSoapErrorAndDie($e);
         }
     }
-    
-    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file) {
+
+    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author) {
         echo "Creating embedded file version '$label' ($file)".PHP_EOL;
         $fullPath = "$this->dataBaseDir/$file";
 
         $contents = file_get_contents($fullPath);
 
         try {
-            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents);
+            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author);
         } catch (Exception $e){
             $this->printSoapErrorAndDie($e);
         }

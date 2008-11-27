@@ -52,6 +52,9 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value']);
                 break;
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value']);
+                break;
             default:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
                 break;
@@ -137,6 +140,13 @@ class Docman_Log { /* implements EventListener */
                             $html .= '<td colspan>' . $this->getText($row['type']) . '</td>';
                             $html .= '<td colspan="2" align="center"><a href=' . $difflink . '>diffs</a>';
                         }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR) {
+                            $oldUser = user_get_name_display_from_id($row['old_value']);
+                            $newUser = user_get_name_display_from_id($row['new_value']);
+                            $html .= '<td colspan>'. $this->getText($row['type']) .'</td>';
+                            $html .= "<td>$oldUser</td>";
+                            $html .= "<td>$newUser</td>";
+                        }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
@@ -184,6 +194,9 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');                
+                break;
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');    
                 break;
             default:
                 break;

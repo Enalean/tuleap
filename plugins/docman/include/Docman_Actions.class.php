@@ -211,9 +211,24 @@ class Docman_Actions extends Actions {
         if($uploadSucceded) {
             $vFactory =& $this->_getVersionFactory();
 
+            $userId = $user->getId();
+            if ($request->exist('author') && ($request->get('author') != $userId)) {
+                $versionAuthor = $request->get('author');
+
+                $eArray = array('group_id'  => $item->getGroupId(),
+                                'item'      => &$item,
+                                'old_value' => $userId, 
+                                'new_value' => $versionAuthor,
+                                'user'      => &$user);
+                
+                $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
+            } else {
+                $versionAuthor = $userId;
+            }
+
             $vArray = array('item_id'   => $item->getId(),
                             'number'    => $number,
-                            'user_id'   => $user->getId(),
+                            'user_id'   => $versionAuthor,
                             'label'     => $_label,
                             'changelog' => $_changelog,
                             'filename'  => $_filename,
@@ -262,7 +277,7 @@ class Docman_Actions extends Actions {
         $this->createItem();   
     }
     
-    function createItem() {
+    private function createItem() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {

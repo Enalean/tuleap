@@ -389,6 +389,7 @@ plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
 plugin_docman	event_metadataupdate	Mise à jour de propriété
 plugin_docman	event_wiki_page_updated	Nouvelle version de la page Wiki
+plugin_docman	event_set_version_author	Auteur de la version
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
