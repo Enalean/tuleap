@@ -499,17 +499,16 @@ class XMLDocmanImport {
                     $changeLog = (string)$version->changelog;
                     $fileName  = (string)$version->filename;
                     $fileType  = (string)$version->filetype;
-                    $fileSize  = (string)$version->filesize;
                     $author    = (string)$version->author;
                     $date      = (string)$version->date;
 
                     if($iFiles == 0) {
                         // First version
-                        $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $fileSize, $author, $date);
+                        $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $author, $date);
                     } else {
                         if($itemId !== false) {
                             // Update
-                            $this->createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize, $author, $date);
+                            $this->createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date);
                         }
                     }
                     $iFiles++;
@@ -607,7 +606,7 @@ class XMLDocmanImport {
      * Creates a folder
      */
     private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata) {
-        echo "Creating folder '$title'";
+        echo "Folder            '$title'";
 
         try {
             $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata);
@@ -622,7 +621,7 @@ class XMLDocmanImport {
      * Creates an empty document
      */
     private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata) {
-        echo "Creating empty document '$title'";
+        echo "Empty document    '$title'";
 
         try {
             $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata);
@@ -637,7 +636,7 @@ class XMLDocmanImport {
      * Creates a wiki page
      */
     private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename) {
-        echo "Creating wikipage '$title' ($pagename)";
+        echo "Wikipage          '$title' ($pagename)";
 
         try {
             $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata);
@@ -652,7 +651,7 @@ class XMLDocmanImport {
      * Creates a link
      */
     private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url) {
-        echo "Creating link '$title' ($url)";
+        echo "Link              '$title' ($url)";
 
         try {
             $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata);
@@ -667,7 +666,7 @@ class XMLDocmanImport {
      * Creates an embedded file
      */
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date) {
-        echo "Creating embedded file '$title' ($file)";
+        echo "Embedded file     '$title' ($file)";
         $fullPath = $this->dataBaseDir.'/'.$file;
         $contents = file_get_contents($fullPath);
 
@@ -683,11 +682,12 @@ class XMLDocmanImport {
     /**
      * Creates a file
      */
-    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $fileSize, $author, $date) {
-        $infoStr = "Creating new file '$title' ($file, $fileName, $fileType)";
+    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date) {
+        $infoStr = "File              '$title' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
-
+        $fileSize = filesize($fullPath);
+        
         // The following is inspired from CLI_Action_Docman_CreateFile.class.php
         $chunk_size = 6000000; // ~6 Mo
 
@@ -700,7 +700,7 @@ class XMLDocmanImport {
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
             // Display progression indicator
-            echo "\r$infoStr - Sending file (". intval($chunk_offset / $chunk_count * 100) ."%)";
+            echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
 
             // Retrieve the current chunk of the file
             $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -723,17 +723,14 @@ class XMLDocmanImport {
             }
         }
         // Finish!
-        echo "\r$infoStr - Sending file (100%)";
+        echo "\r$infoStr #$item_id".PHP_EOL;
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($item_id, $fullPath) === true) {
-                echo " - Checksum OK";
-                echo " #$item_id".PHP_EOL;
                 return $item_id;
             } else {
-                echo " - ERROR: Checksum error";
-                echo " #$item_id".PHP_EOL;
+                echo "ERROR: Checksum error".PHP_EOL;
                 return false;
             }
         } catch (Exception $e){
@@ -766,10 +763,11 @@ class XMLDocmanImport {
     /**
      * Create a new file version
      */
-    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $fileSize, $author, $date) {
-        $infoStr = "Creating new file version '$label' ($file, $fileName, $fileType)";
+    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date) {
+        $infoStr = "                      Version '$label' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
+        $fileSize = filesize($fullPath);
 
         // The following is inspired from CLI_Action_Docman_CreateFile.class.php
         $chunk_size = 6000000; // ~6 Mo
@@ -779,7 +777,7 @@ class XMLDocmanImport {
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
             // Display progression indicator
-            echo "\r$infoStr - Sending file (". intval($chunk_offset / $chunk_count * 100) ."%)";
+            echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
 
             // Retrieve the current chunk of the file
             $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -803,15 +801,14 @@ class XMLDocmanImport {
             }
         }
         // Finish!
-        echo "\r$infoStr - Sending file (100%)";
+        echo "\r$infoStr     ".PHP_EOL;
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($itemId, $fullPath) === true) {
-                echo " - Checksum OK".PHP_EOL;
                 return true;
             } else {
-                echo " - ERROR: Checksum error".PHP_EOL;
+                echo "ERROR: Checksum error".PHP_EOL;
                 return false;
             }
         } catch (Exception $e){
@@ -820,7 +817,7 @@ class XMLDocmanImport {
     }
 
     private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
-        echo "Creating embedded file version '$label' ($file)".PHP_EOL;
+        echo "                      Version '$label' ($file)".PHP_EOL;
         $fullPath = "$this->dataBaseDir/$file";
 
         $contents = file_get_contents($fullPath);
