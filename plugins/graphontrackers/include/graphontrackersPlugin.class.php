@@ -23,11 +23,6 @@
  */
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/plugin/Plugin.class.php');
-require_once('data-access/GraphOnTrackers_Chart_Bar.class.php');
-require_once('data-access/GraphOnTrackers_Chart_Pie.class.php');
-require_once('data-access/GraphOnTrackers_Chart_Gantt.class.php');
-require_once('data-access/GraphOnTrackers_Report.class.php');
-require_once('data-access/GraphOnTrackers_ReportFactory.class.php');
 
 class GraphOnTrackersPlugin extends Plugin {
 
@@ -106,6 +101,9 @@ class GraphOnTrackersPlugin extends Plugin {
     }
     
     function graphontrackers_load_chart_factories($params) {
+        require_once('data-access/GraphOnTrackers_Chart_Bar.class.php');
+        require_once('data-access/GraphOnTrackers_Chart_Pie.class.php');
+        require_once('data-access/GraphOnTrackers_Chart_Gantt.class.php');
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackers_Chart_Pie',
@@ -346,6 +344,7 @@ class GraphOnTrackersPlugin extends Plugin {
      * @param params:hook parameters
      */
     function copy_graphical_reports($params){
+        require_once('data-access/GraphOnTrackers_ReportFactory.class.php');
     
         $atid_source=$params['atid_source'];
         $atid_dest=$params['atid_dest'];
@@ -361,7 +360,7 @@ class GraphOnTrackersPlugin extends Plugin {
      * @param params:hook parameters
      */
     function delete_graphical_reports($params){
-        
+        require_once('data-access/GraphOnTrackers_Report.class.php');
         $atid=$params['atid'];
         $sql = "SELECT report_graphic_id FROM plugin_graphontrackers_report_graphic WHERE group_artifact_id='".db_ei($atid)."'";
         $res = db_query($sql);
