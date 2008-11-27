@@ -115,6 +115,12 @@ a:hover {
 .boxitem {  background-color: transparent; text-align: left; color: #333333; }
 .boxitemalt { text-align: left; background-color: #ffffff; }
 .boxhighlight { background-color: #e8e8e0; text-align: left; color: #333333; }
+tr.boxitem:hover {
+    background-color: #eaece0;
+}
+tr.boxitemalt:hover {
+    background-color: #fffff0;
+}
 
 .boxtop {}
 .boxtop_top {}
