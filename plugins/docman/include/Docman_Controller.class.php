@@ -99,6 +99,7 @@ class Docman_Controller extends Controler {
         $event_manager->addListener('plugin_docman_event_new_version',      $this->logger, 'log', true, 0);
         $event_manager->addListener('plugin_docman_event_metadata_update',  $this->logger, 'log', true, 0);
         $event_manager->addListener('plugin_docman_event_set_version_author',$this->logger, 'log', true, 0);
+        $event_manager->addListener('plugin_docman_event_set_version_date',$this->logger, 'log', true, 0);
         
         $this->notificationsManager =& new Docman_NotificationsManager($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true, 0);

@@ -159,7 +159,9 @@ class Docman_VersionDao extends DataAccessObject {
         return $this->_createAndReturnId($sql);
     }
     function createFromRow($row) {
-        $row['date'] = time();
+        if (!isset($row['date']) || $row['date'] == '') {
+            $row['date'] = time();
+        }
         $arg    = array();
         $values = array();
         $params = array('force_string' => false);

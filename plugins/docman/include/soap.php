@@ -199,6 +199,9 @@ $GLOBALS['server']->register(
         'content'           => 'xsd:string',
         'chunk_offset'      => 'xsd:int',
         'chunk_size'        => 'xsd:int',
+        
+        'author'            => 'xsd:string',
+        'date'              => 'xsd:string',
         ),
     array('createDocmanFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -223,6 +226,8 @@ mime_type         Mime type
 content           Content (base64 encoded data)
 chunk_offset      Chunk offset
 chunk_size        Chunk size
+author            Version author (user name)
+date              Version date (YYYY-MM-DD HH:MM)
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -241,6 +246,9 @@ $GLOBALS['server']->register(
         'content'           => 'xsd:string',
         'chunk_offset'      => 'xsd:int',
         'chunk_size'        => 'xsd:int',
+        
+        'author'            => 'xsd:string',
+        'date'              => 'xsd:string',
         ),
     array('createDocmanFileVersionResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -260,6 +268,8 @@ mime_type         Mime type
 content           Content (base64 encoded data)
 chunk_offset      Chunk offset
 chunk_size        Chunk size
+author            Version author (user name)
+date              Version date (YYYY-MM-DD HH:MM)
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -277,6 +287,9 @@ $GLOBALS['server']->register(
         'content'           => 'xsd:string',
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
+    
+        'author'            => 'xsd:string',
+        'date'              => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -296,6 +309,8 @@ obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
 content           Content (raw data)
 permissions       Permissions
 metadata          Metadata values
+author            Version author (user name)
+date              Version date (YYYY-MM-DD HH:MM)
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -309,6 +324,7 @@ $GLOBALS['server']->register(
         'changelog'         => 'xsd:string',
         'content'           => 'xsd:string',
         'author'            => 'xsd:string',
+        'date'              => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileVersionResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -324,6 +340,7 @@ label             Version label
 changelog         Changelog
 content           Content (raw data)
 author            Version author (user name)
+date              Version date (YYYY-MM-DD HH:MM)
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -695,6 +712,20 @@ function _get_status_value($status) {
     return $value;
 }
 
+/**
+ * Returns the user ID corresponding to the given user name, or null if it doesn't exist
+ */
+function _getUserIdByUserName($userName) {
+    if ($userName != '') {
+        $user = UserManager::instance()->getUserByUserName($userName);
+        if ($user == null) {
+            return null;
+        } else {
+            return $user->getId();
+        }
+    }
+}
+
 
 /**
  * Makes a docman request
@@ -798,19 +829,21 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
  * @param int          $chunk_offset      Chunk offset
  * @param int          $chunk_size        Chunk size
  */
-function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size) {
+function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date) {
         
     $params = array(
-        'id'            => $item_id,
-        'version'       => array('label' => $label, 'changelog' => $changelog),
+        'id'             => $item_id,
+        'version'        => array('label' => $label, 'changelog' => $changelog),
         'upload_content' => base64_decode($content),
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
         'file_size'      => $file_size,
         'file_name'      => $file_name,
         'mime_type'      => $mime_type,
+        'date'           => $date,
+        'author'         => _getUserIdByUserName($author),
     );
-        
+    
     return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
 
@@ -825,19 +858,15 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
  * @param string       $content           Content (raw data)
  * @param string       $author            Version author (user name)
  */
-function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author) {
+function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author, $date) {
 
-    $params = array('id'        => $item_id,
-                    'version'   => array('label' => $label, 'changelog' => $changelog,),
-                    'content'   => $content);
-    
-    $authorObj = UserManager::instance()->getUserByUserName($author);
-    if ($authorObj == null) {
-        // What to do if the author doesn't exist?
-        //return new SoapFault(null, "The user '$author' doesn't exist.", 'createDocmanEmbeddedFileVersion');
-    } else {
-        $params['author'] = $authorObj->getId();
-    }
+    $params = array(
+        'id'        => $item_id,
+        'version'   => array('label' => $label, 'changelog' => $changelog,),
+        'content'   => $content,
+        'date'      => $date,
+        'author'    => _getUserIdByUserName($author),
+    );
     
     return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
@@ -862,14 +891,18 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
  * @param int          $chunk_offset      Chunk offset
  * @param int          $chunk_size        Chunk size
  */
-function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size) {
+function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date) {
 
-    $extraParams = array('chunk_offset'   => $chunk_offset,
-                         'chunk_size'     => $chunk_size,
-                         'file_size'      => $file_size,
-                         'file_name'      => $file_name,
-                         'mime_type'      => $mime_type,
-                         'upload_content' => base64_decode($content));
+    $extraParams = array(
+        'chunk_offset'   => $chunk_offset,
+        'chunk_size'     => $chunk_size,
+        'file_size'      => $file_size,
+        'file_name'      => $file_name,
+        'mime_type'      => $mime_type,
+        'upload_content' => base64_decode($content),
+        'date'           => $date,
+        'author'         => _getUserIdByUserName($author),
+    );
     
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $extraParams);
 }
@@ -889,8 +922,13 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  */
-function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata) {
-    $extraParams['content'] = $content;
+function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date) {
+    $extraParams = array(
+        'content' => $content,
+        'date'    => $date,
+        'author'  => _getUserIdByUserName($author),
+    );
+    
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $extraParams);
 }
 

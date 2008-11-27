@@ -217,13 +217,25 @@ class Docman_Actions extends Actions {
 
                 $eArray = array('group_id'  => $item->getGroupId(),
                                 'item'      => &$item,
-                                'old_value' => $userId, 
                                 'new_value' => $versionAuthor,
                                 'user'      => &$user);
                 
                 $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
             } else {
                 $versionAuthor = $userId;
+            }
+            
+            $date = '';
+            if ($request->exist('date')) {
+                $date = strtotime($request->get('date'));
+                
+                $eArray = array('group_id'  => $item->getGroupId(),
+                                'item'      => &$item,
+                                'old_value' => null, 
+                                'new_value' => $date,
+                                'user'      => &$user);
+                
+                $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
             }
 
             $vArray = array('item_id'   => $item->getId(),
@@ -234,7 +246,8 @@ class Docman_Actions extends Actions {
                             'filename'  => $_filename,
                             'filesize'  => $_filesize,
                             'filetype'  => $_filetype, 
-                            'path'      => $path);
+                            'path'      => $path,
+                            'date'      => $date);
             $vId = $vFactory->create($vArray);
             
             $eArray = array('group_id' => $item->getGroupId(),
