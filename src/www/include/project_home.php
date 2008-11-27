@@ -63,9 +63,6 @@ if ($GLOBALS['sys_use_trove'] != 0) {
     trove_getcatlisting($group_id,0,1);
 }
 
-print '<BR>';
-print $Language->getText('include_project_home','view_proj_activity',"/project/stats/?group_id=$group_id");
-
 print '</TD><TD NoWrap VALIGN="top">';
 
 if (! $project->hideMembers()) {

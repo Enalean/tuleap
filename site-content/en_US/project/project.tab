@@ -215,6 +215,7 @@ project_admin_index	import_user	[Import List Of Users]
 project_admin_index	show_projects	Projects created from this template
 project_admin_index	show_projects_hide	hide
 project_admin_index	show_projects_show	show
+project_admin_index	view_proj_activity	View project activity <a href="$1">statistics</a>
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php

@@ -165,6 +165,11 @@ print '&nbsp;
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }
+
+print '&nbsp;
+<BR><P>
+'.$Language->getText('project_admin_index','view_proj_activity',"/project/stats/?group_id=$group_id");
+
 //print '<!-- Not implemented on CodeX
 //<P align=center>
 //<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
