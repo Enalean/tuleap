@@ -56,6 +56,8 @@ class XMLDocmanImport {
      */
     public function __construct($groupId, $wsdl, $login, $password) {
         $this->groupId = $groupId;
+        $this->metadataMap = array();
+        $this->ugroupMap = array();
 
         // Disable the cache for testing purposes. TODO re-enable the cache for production.
         ini_set("soap.wsdl_cache_enabled", "0");
@@ -125,7 +127,7 @@ class XMLDocmanImport {
             $this->printSoapErrorAndDie($e);
         }
 
-        if ($missingProp) {
+        if (isset($missingProp)) {
             $this->exitError("The following propert".((count($missingProp) > 1)? "ies don't": "y doesn't")." allow empty values and must be defined in the <propdefs> node: ".implode(", ", $missingProp).PHP_EOL);
         }
 
@@ -179,7 +181,7 @@ class XMLDocmanImport {
             $item_name = $item_nodes[0]->properties->title;
             $title = (string)$property['title'];
              
-            if ($this->metadataMap[$title]) {
+            if (isset($this->metadataMap[$title])) {
                 $metadataDef =  $this->metadataMap[$title];
                 $type = $metadataDef['type'];
                 switch ($type) {
@@ -239,7 +241,7 @@ class XMLDocmanImport {
             }
         }
 
-        if ($errorMsg) {
+        if (isset($errorMsg)) {
             $this->exitError($errorMsg);
         }
     }
@@ -253,7 +255,7 @@ class XMLDocmanImport {
         foreach ($permissions as $permission) {
             $ugroup_name = (string)$permission['ugroup'];
 
-            if (!$this->ugroupMap[$ugroup_name]) {
+            if (!isset($this->ugroupMap[$ugroup_name])) {
                 $item_nodes = $permission->xpath('../..');
                 $item_name = $item_nodes[0]->properties->title;
 
@@ -261,7 +263,7 @@ class XMLDocmanImport {
             }
         }
 
-        if ($errorMsg) {
+        if (isset($errorMsg)) {
             $this->exitError($errorMsg);
         }
     }
@@ -275,11 +277,11 @@ class XMLDocmanImport {
         foreach ($ugroups as $ugroup) {
             $name = (string)$ugroup['name'];
 
-            if ($this->ugroupMap[$name]) {
+            if (isset($this->ugroupMap[$name])) {
                 foreach ($ugroup->member as $member) {
                     $user_name = (string)$member;
                     $members[] = $user_name;
-                    if (!$this->ugroupMap[$name]['members'][$user_name]) {
+                    if (!isset($this->ugroupMap[$name]['members'][$user_name])) {
                         $this->warn("The user '$user_name' is not a member of the ugroup '$name' on the server.");
                     }
                 }
@@ -294,7 +296,7 @@ class XMLDocmanImport {
             }
         }
 
-        if ($errorMsg) {
+        if (isset($errorMsg)) {
             $this->exitError($errorMsg);
         }
     }
@@ -333,7 +335,7 @@ class XMLDocmanImport {
                         }
                     }
                 }
-            } else if ($type) {
+            } else if ($type != null) {
                 $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
             } else {
                 $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
@@ -362,7 +364,7 @@ class XMLDocmanImport {
 
         // Check that no metadata defined on the server is forgotten in this definition
 
-        if ($errorMsg) {
+        if (isset($errorMsg)) {
             $this->exitError($errorMsg);
         }
     }
