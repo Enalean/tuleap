@@ -22,11 +22,9 @@
  */
 
 require '../../include/Docman_ItemFactory.class.php';
-//require '../../include/Docman_MetadataFactory.class.php';
 require 'Docman_XMLExportVisitor.class.php';
 
 class Docman_XMLExport {
-    //protected $archiveName;
     protected $groupId;
     protected $dataPath;
     
@@ -41,11 +39,6 @@ class Docman_XMLExport {
         $this->dataPath = $path;
     }
 
-/*
-    public function setArchiveName($name) {
-        $this->archiveName = $name;
-    }
-*/
     public function getXML($doc) {
         $docman = $doc->createElement('docman');
         $docman->appendChild($this->getMetadataDef($doc));
@@ -55,7 +48,7 @@ class Docman_XMLExport {
     }
 
     /**
-     * Should be transfered in Docman_MetadataFactory
+     * Should be transfered in Docman_Metadata
      * @param DOMDocument $doc
      * @return DOMNode
      */
