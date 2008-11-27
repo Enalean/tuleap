@@ -294,6 +294,12 @@ class BaseLanguage {
         if (!isset($this->lang)) {
             $this->loadLanguage(UserManager::instance()->getCurrentUser()->getLocale());
         }
+        // If the language files were modified by an update, the compiled version might not have been generated, 
+        // and the message not present.
+        if (!isset($this->text_array[$pagename][$category])) {
+            // Force compile (only once)
+            $this->text_array = $this->compileLanguage($this->lang);
+        }
         /*
             args is an array which will replace the $1, $2, etc
             in the text_array string before it is returned
