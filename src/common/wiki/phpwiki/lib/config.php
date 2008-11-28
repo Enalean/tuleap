@@ -244,10 +244,8 @@ function guessing_setlocale ($category, $locale) {
         return false;
         
     foreach ($alt[$lang] as $try) {
-        if ($res = setlocale($category, $try))
+        if ($res = setlocale($category, $try. '.' . $GLOBALS['charset']))
             return $res;
-        // Try with charset appended...
-        $try = $try . '.' . $GLOBALS['charset'];
         if ($res = setlocale($category, $try))
             return $res;
         foreach (array(".", '@', '_') as $sep) {
