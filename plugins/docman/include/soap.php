@@ -788,14 +788,6 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
     }
 }
 
-function debug($msg) {
-    file_put_contents('/tmp/a', "-$msg-".PHP_EOL, FILE_APPEND);
-}
-
-function debarr($msg) {
-  debug(print_r($msg, TRUE));  
-}
-
 /**
  * Create a docman document
  *
