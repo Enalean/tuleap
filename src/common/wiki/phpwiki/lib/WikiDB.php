@@ -2,7 +2,7 @@
 rcs_id('$Id: WikiDB.php,v 1.135 2005/09/11 14:19:44 rurban Exp $');
 
 require_once('lib/PageType.php');
-
+require_once('common/mail/Mail.class.php');
 /**
  * The classes in the file define the interface to the
  * page database.
@@ -230,16 +230,16 @@ class WikiDB {
                 list($emails, $userids) = $page->getPageChangeEmails($notify);
                 if (!empty($emails)) {
                     // CodeX specific
-                    $from = user_getemail(user_getid() );
-                    //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
-                    $editedby = sprintf(_("Removed by: %s"), $from);
-                    $emails = join(',', $emails);
-                    $subject = sprintf(_("Page removed %s"), urlencode($pagename));
-                    if (mail("<undisclosed-recipients>","[".WIKI_NAME."] ".$subject, 
-                             $subject."\n".
-                             $editedby."\n\n".
-                             "Deleted $pagename",
-                             "From: $from\r\nBcc: $emails"))
+                    $subject = sprintf(_("Page removed %s"), $pagename);
+                    $from    = user_getemail(user_getid());
+                    $body    = $subject."\n".
+                               sprintf(_("Removed by: %s"), $from)."\n\n";
+                    $m = new Mail();
+                    $m->setFrom($from);
+                    $m->setSubject("[".WIKI_NAME."] ".$subject);
+                    $m->setBcc(join(',', $emails));
+                    $m->setBody($body);
+                    if ($m->send())
                         trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                               $pagename, join(',',$userids)), E_USER_NOTICE);
                     else
@@ -1014,7 +1014,7 @@ class WikiDB_Page
         }
         $backend = &$this->_wikidb->_backend;
         //$backend = &$request->_dbi->_backend;
-        $subject = _("Page change").' '.urlencode($this->_pagename);
+        $subject = _("Page change").' '.$this->_pagename;
         $previous = $backend->get_previous_version($this->_pagename, $version);
         if (!isset($meta['mtime'])) $meta['mtime'] = time();
         if ($previous) {
@@ -1046,14 +1046,16 @@ class WikiDB_Page
             $content .= _("New page");
         }
         // CodeX specific
-        $from = user_getemail(user_getid() );
-        //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
-        $editedby = sprintf(_("Edited by: %s"), $from);
-        $emails = join(',',$emails);
-        if (mail("<undisclosed-recipients>",
-                 "[".WIKI_NAME."] ".$subject, 
-                 $subject."\n". $editedby."\n". $difflink."\n\n",
-                 "From: $from\r\nBcc: $emails"))
+        $from    = user_getemail(user_getid());
+        $body    = $subject."\n".
+                   sprintf(_("Edited by: %s"), $from)."\n".
+                   $difflink;
+        $m = new Mail();
+        $m->setFrom($from);
+        $m->setSubject("[".WIKI_NAME."] ".$subject);
+        $m->setBcc(join(',', $emails));
+        $m->setBody($body);
+        if ($m->send())
             trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                   $this->_pagename, join(',',$userids)), E_USER_NOTICE);
         else
@@ -1071,16 +1073,17 @@ class WikiDB_Page
         } else {
             $oldname = $this->_pagename;
             // CodeX specific
-            $from = user_getemail(user_getid() );
-            //$from = $request->_user->getId() . '@' .  $request->get('REMOTE_HOST');
-            $editedby = sprintf(_("Edited by: %s"), $from);
-            $emails = join(',',$emails);
-            $subject = sprintf(_("Page rename %s to %s"), urlencode($oldname), urlencode($to));
-            $link = WikiURL($to, true);
-            if (mail("<undisclosed-recipients>",
-                     "[".WIKI_NAME."] ".$subject, 
-                     $subject."\n".$editedby."\n".$link."\n\n"."Renamed $from to $to",
-                     "From: $from\r\nBcc: $emails"))
+            $subject = sprintf(_("Page rename %s to %s"), $oldname, $to);
+            $from    = user_getemail(user_getid());
+            $body    = $subject."\n".
+                       sprintf(_("Edited by: %s"), $from)."\n".
+                       WikiURL($to, array(), true);
+            $m = new Mail();
+            $m->setFrom($from);
+            $m->setSubject("[".WIKI_NAME."] ".$subject);
+            $m->setBcc(join(',', $emails));
+            $m->setBody($body);
+            if ($m->send())
                 trigger_error(sprintf(_("PageChange Notification of %s sent to %s"),
                                       $oldname, join(',',$userids)), E_USER_NOTICE);
             else
