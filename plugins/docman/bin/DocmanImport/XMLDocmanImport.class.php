@@ -335,10 +335,10 @@ class XMLDocmanImport {
                         }
                     }
                 }
-            } else if ($type != null) {
-                $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+            } else if ($type === null) {
+               $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL; 
             } else {
-                $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+                $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
             }
 
             // Check if the metadata value can be empty
@@ -391,6 +391,7 @@ class XMLDocmanImport {
             case 'text':   return PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
             case 'date':   return PLUGIN_DOCMAN_METADATA_TYPE_DATE;
             case 'list':   return PLUGIN_DOCMAN_METADATA_TYPE_LIST;
+            default:       return null;
         }
     }
 
@@ -475,6 +476,7 @@ class XMLDocmanImport {
         $status           = isset($node->properties->status)            ? (string) $node->properties->status            : '';
         $obsolescenceDate = isset($node->properties->obsolescence_date) ? (string) $node->properties->obsolescence_date : '0';
         $ordering         = 'end';
+        $owner            = (string) $node->properties->owner;
 
         // Dynamic metadata
         $metadata = array();
@@ -504,7 +506,7 @@ class XMLDocmanImport {
 
                     if($iFiles == 0) {
                         // First version
-                        $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $author, $date);
+                        $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $author, $date, $owner);
                     } else {
                         if($itemId !== false) {
                             // Update
@@ -527,7 +529,7 @@ class XMLDocmanImport {
 
                     if($iFiles == 0) {
                         // First version
-                        $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $author, $date);
+                        $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $author, $date, $owner);
                     } else {
                         if($itemId !== false) {
                             // Update
@@ -540,20 +542,20 @@ class XMLDocmanImport {
 
             case 'wiki':
                 $pagename = (string) $node->pagename;
-                $this->createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $pagename);
+                $this->createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $pagename, $owner);
                 break;
 
             case 'link':
                 $url = (string) $node->url;
-                $this->createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $url);
+                $this->createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $url, $owner);
                 break;
 
             case 'empty':
-                $this->createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata);
+                $this->createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner);
                 break;
 
             case 'folder':
-                $newParentId = $this->createFolder($parentId, $title, $description, $ordering, $status, $permissions, $metadata);
+                $newParentId = $this->createFolder($parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner);
                 foreach($node->xpath('item') as $child) {
                     $this->recurseOnNode($child, $newParentId);
                 }
@@ -605,11 +607,11 @@ class XMLDocmanImport {
     /**
      * Creates a folder
      */
-    private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata) {
+    private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner) {
         echo "Folder            '$title'";
 
         try {
-            $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata);
+            $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner);
             echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
@@ -620,11 +622,11 @@ class XMLDocmanImport {
     /**
      * Creates an empty document
      */
-    private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata) {
+    private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner) {
         echo "Empty document    '$title'";
 
         try {
-            $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata);
+            $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner);
             echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
@@ -635,11 +637,11 @@ class XMLDocmanImport {
     /**
      * Creates a wiki page
      */
-    private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename) {
+    private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner) {
         echo "Wikipage          '$title' ($pagename)";
 
         try {
-            $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata);
+            $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner);
             echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
@@ -650,11 +652,11 @@ class XMLDocmanImport {
     /**
      * Creates a link
      */
-    private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url) {
+    private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner) {
         echo "Link              '$title' ($url)";
 
         try {
-            $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata);
+            $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner);
             echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
@@ -665,13 +667,13 @@ class XMLDocmanImport {
     /**
      * Creates an embedded file
      */
-    private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date) {
+    private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner) {
         echo "Embedded file     '$title' ($file)";
         $fullPath = $this->dataBaseDir.'/'.$file;
         $contents = file_get_contents($fullPath);
 
         try {
-            $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date);
+            $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner);
             echo " #$id".PHP_EOL;
             return $id;
         } catch (Exception $e){
@@ -682,7 +684,7 @@ class XMLDocmanImport {
     /**
      * Creates a file
      */
-    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date) {
+    private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date, $owner) {
         $infoStr = "File              '$title' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
@@ -709,7 +711,7 @@ class XMLDocmanImport {
             if (!$chunk_offset) {
                 // If this is the first chunk, then use the original soapCommand...
                 try {
-                    $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date);
+                    $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date, $owner);
                 } catch (Exception $e){
                     $this->printSoapErrorAndDie($e);
                 }

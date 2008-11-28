@@ -319,7 +319,16 @@ class Docman_Actions extends Actions {
                 }
 
                 $user =& $this->_controler->getUser();
-                $item['user_id']  = $user->getId();
+                
+                // Change owner
+                $userId = $user->getId();
+                if (isset($item['owner'])) {
+                    $owner = $item['owner'];
+                } else {
+                    $owner = $userId;
+                }
+                $item['user_id'] = $owner;
+                
                 $item['group_id'] = $request->get('group_id');
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
@@ -338,6 +347,16 @@ class Docman_Actions extends Actions {
                         'item'     => &$new_item,
                         'user'     => &$user)
                     );
+
+                    // Log change owner
+                    if ($owner != $userId) {
+                        $eArray = array('group_id'  => $request->get('group_id'),
+                                        'item'      => &$new_item,
+                                        'new_value' => $owner,
+                                        'user'      => &$user);
+                        
+                        $this->event_manager->processEvent('plugin_docman_event_set_owner', $eArray);
+                    }
 
                     $info_item_created = 'info_document_created';
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {

@@ -54,6 +54,7 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
+            case PLUGIN_DOCMAN_EVENT_SET_OWNER:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['new_value']);
                 break;
             default:
@@ -141,7 +142,7 @@ class Docman_Log { /* implements EventListener */
                             $html .= '<td colspan>' . $this->getText($row['type']) . '</td>';
                             $html .= '<td colspan="2" align="center"><a href=' . $difflink . '>diffs</a>';
                         }
-                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR) {
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR || $row['type'] == PLUGIN_DOCMAN_EVENT_SET_OWNER) {
                             $newUser = user_get_name_display_from_id($row['new_value']);
                             $html .= '<td>'. $this->getText($row['type']) .'</td>';
                             $html .= "<td>&nbsp;</td>";
@@ -206,6 +207,9 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
+                break;
+            case PLUGIN_DOCMAN_EVENT_SET_OWNER:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_owner');    
                 break;
             default:
                 break;
