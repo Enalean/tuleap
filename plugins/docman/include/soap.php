@@ -1001,7 +1001,7 @@ function deleteDocmanItem($sessionKey, $group_id, $item_id) {
  * Enables the monitoring if an item by a user
  */
 function monitorDocmanItem($sessionKey, $group_id, $item_id) {
-    return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id));
+    return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id, 'monitor' => true));
 }
 
 /**
