@@ -390,6 +390,9 @@ plugin_docman	event_newversion	New version
 plugin_docman	event_metadataupdate	Property change
 plugin_docman	event_wiki_page_updated	Wiki page content change
 plugin_docman	event_set_version_author	Version author
+plugin_docman	event_set_version_date	Version date
+plugin_docman	event_set_owner	Owner
+plugin_docman	event_set_create_date	Creation date
 
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
