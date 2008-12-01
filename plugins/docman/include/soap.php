@@ -203,6 +203,7 @@ $GLOBALS['server']->register(
         'author'            => 'xsd:string',
         'date'              => 'xsd:string',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -230,6 +231,7 @@ chunk_size        Chunk size
 author            Version author (user name)
 date              Version date (YYYY-MM-DD HH:MM)
 owner             Owner of the document
+create_date       Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -293,6 +295,7 @@ $GLOBALS['server']->register(
         'author'            => 'xsd:string',
         'date'              => 'xsd:string',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanEmbeddedFileResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -315,6 +318,7 @@ metadata          Metadata values
 author            Version author (user name)
 date              Version date (YYYY-MM-DD HH:MM)
 owner             Owner of the document
+create_date       Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -363,6 +367,7 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanWikiPageResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -383,6 +388,7 @@ content           Content (page name)
 permissions       Permissions
 metadata          Metadata values
 owner             Owner of the document
+create_date       Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -401,6 +407,7 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanLinkResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -421,6 +428,7 @@ content           Content (url)
 permissions       Permissions
 metadata          Metadata values
 owner             Owner of the document
+create_date       Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -438,6 +446,7 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanEmptyDocumentResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -457,6 +466,7 @@ obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
 permissions       Permissions
 metadata          Metadata values
 owner             Owner of the document
+create_date       Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -517,6 +527,7 @@ $GLOBALS['server']->register(
         'permissions'       => 'tns:ArrayOfPermission',
         'metadata'          => 'tns:ArrayOfMetadataValue',
         'owner'             => 'xsd:string',
+        'create_date'       => 'xsd:string',
         ),
     array('createDocmanFolderResponse'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -535,6 +546,7 @@ status       Status (none, draft, approved, rejected)
 permissions  Permissions
 metadata     Metadata values
 owner        Owner of the folder
+create_date  Item creation date
 </pre>'
 );
 $GLOBALS['server']->register(
@@ -804,7 +816,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
  * @param Array        $metadata          Metadata values
  * @param Array        $extraParams       Extra parameters array
  */
-function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $extraParams = array()) {
+function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $extraParams = array()) {
         
     $params = array(
         'item'         => array(
@@ -815,6 +827,7 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
             'item_type'         => $type,
             'obsolescence_date' => $obsolescence_date,
             'owner'             => _getUserIdByUserName($owner),
+            'create_date'       => $create_date,
         ),
         'ordering'     => $ordering,
         'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
@@ -906,7 +919,7 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
  * @param int          $chunk_offset      Chunk offset
  * @param int          $chunk_size        Chunk size
  */
-function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner) {
+function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date) {
 
     $extraParams = array(
         'chunk_offset'   => $chunk_offset,
@@ -919,7 +932,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
         'author'         => _getUserIdByUserName($author),
     );
     
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $extraParams);
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $create_date, $extraParams);
 }
 
 /**
@@ -937,14 +950,14 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  */
-function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner) {
+function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date) {
     $extraParams = array(
         'content' => $content,
         'date'    => $date,
         'author'  => _getUserIdByUserName($author),
     );
     
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $extraParams);
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $create_date, $extraParams);
 }
 
 /**
@@ -962,9 +975,9 @@ function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $d
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  */
-function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner) {
+function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date) {
     $extraParams['item']['wiki_page'] = $content;
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $extraParams);
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $extraParams);
 }
 
 /**
@@ -982,9 +995,9 @@ function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $descr
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  */
-function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner) {
+function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date) {
     $extraParams['item']['link_url'] = $content;
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $extraParams);
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $extraParams);
 }
 
 /**
@@ -1001,8 +1014,8 @@ function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $descripti
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  */
-function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner);
+function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date) {
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date);
 }
 
 /**
@@ -1052,7 +1065,7 @@ function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
  * @param Array        $permissions  Permissions
  * @param Array        $metadata     Metadata values
  */
-function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner) {
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date) {
 
     $params = array(
                   'item'        => array(
@@ -1062,6 +1075,7 @@ function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $descrip
                                        'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
                                        'status'      => _get_status_value($status),
                                        'owner'       => _getUserIdByUserName($owner),
+                                       'create_date' => $create_date,
                                    ),
                   'ordering'    => $ordering,
                   'permissions' => _get_permissions_as_array($group_id, $parent_id, $permissions),

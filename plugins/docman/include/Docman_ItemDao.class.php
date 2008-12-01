@@ -306,7 +306,12 @@ class Docman_ItemDao extends DataAccessObject {
     }  
 
     function createFromRow($row) {
-        $row['create_date'] = $row['update_date'] = time();
+        if (!isset($row['create_date']) || $row['create_date'] == '') {
+            $row['create_date'] = time();
+        }
+        
+        $row['update_date'] = time();
+        
         $arg    = array();
         $values = array();
         $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');

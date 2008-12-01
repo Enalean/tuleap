@@ -290,7 +290,7 @@ class Docman_Actions extends Actions {
         $this->createItem();   
     }
     
-    private function createItem() {
+    function createItem() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
@@ -329,6 +329,12 @@ class Docman_Actions extends Actions {
                 }
                 $item['user_id'] = $owner;
                 
+                // Change creation date
+                if (isset($item['create_date'])) {
+                    $item['create_date'] = strtotime($item['create_date']);
+                    $create_date_changed = true;
+                }
+                
                 $item['group_id'] = $request->get('group_id');
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
@@ -356,6 +362,18 @@ class Docman_Actions extends Actions {
                                         'user'      => &$user);
                         
                         $this->event_manager->processEvent('plugin_docman_event_set_owner', $eArray);
+                    }
+                    
+                    // Log change create date
+                    if (isset($create_date_changed) && $create_date_changed === true) {
+                        $eArray = array(
+                                    'group_id'  => $request->get('group_id'),
+                                    'item'      => &$new_item,
+                                    'new_value' => $item['create_date'],
+                                    'user'      => &$user,
+                                  );
+                            
+                        $this->event_manager->processEvent('plugin_docman_event_set_create_date', $eArray);
                     }
 
                     $info_item_created = 'info_document_created';
