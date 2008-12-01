@@ -625,21 +625,6 @@ group_id     Group ID
 // Function implementation
 //
 /**
-* Returns the document object that is at the top of the docman given a group object.
-*/
-function getRootFolder($sessionKey,$group_id) {
-    return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
-}
-
-/**
-* Lists the contents of a folder
-*/
-function listFolder($sessionKey,$group_id,$item_id) {
-    $params = array('id' => $item_id, 'report' => 'List');
-    return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
-}
-
-/**
  * Returns an array containing all the permissions for the specified item.
  * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
@@ -757,7 +742,6 @@ function _getUserIdByUserName($userName) {
     }
 }
 
-
 /**
  * Makes a docman request
  *
@@ -806,7 +790,22 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
 }
 
 /**
- * Creates a docman document
+* Returns the document object that is at the top of the docman given a group object.
+*/
+function getRootFolder($sessionKey,$group_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
+}
+
+/**
+* Lists the contents of a folder
+*/
+function listFolder($sessionKey,$group_id,$item_id) {
+    $params = array('id' => $item_id, 'report' => 'List');
+    return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
+}
+
+/**
+ * Creates a docman item
  *
  * @param string       $sessionKey        Session key
  * @param int          $group_id          Group ID
@@ -816,7 +815,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
  * @param string       $ordering          Ordering (begin, end)
  * @param string       $status            Status (none, draft, approved, rejected)
  * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
- * @param string       $type              Type (file, embedded_file, link, empty, wiki)
+ * @param string       $type              Type (folder, file, embedded_file, link, empty, wiki)
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
  * @param string       $owner             Owner
@@ -824,20 +823,19 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
  * @param string       $update_date       Update date
  * @param Array        $extraParams       Extra parameters array
  */
-function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
         
     $params = array(
         'item'         => array(
             'parent_id'         => $parent_id,
             'title'             => $title,
             'description'       => $description,
-            'status'            => _get_status_value($status),
             'item_type'         => $type,
-            'obsolescence_date' => $obsolescence_date,
-            'owner'             => _getUserIdByUserName($owner),
+            'status'            => _get_status_value($status),
             'create_date'       => $create_date,
             'update_date'       => $update_date,
         ),
+        'owner'             => _getUserIdByUserName($owner),
         'ordering'     => $ordering,
         'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
         'metadata'     => _get_metadata_as_array($metadata),
@@ -848,7 +846,15 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
     }
     $params += $extraParams;
     
-    return _makeDocmanRequest($sessionKey, $group_id, 'createDocument', $params);
+    return _makeDocmanRequest($sessionKey, $group_id, 'createItem', $params);
+}
+
+/**
+ * Creates a docman document
+ */
+function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+    $extraParams['item']['obsolescence_date'] = $obsolescence_date;
+    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
 
 /**
@@ -970,24 +976,7 @@ function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
  * Creates a docman folder
  */
 function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
-
-    $params = array(
-                  'item'        => array(
-                                       'parent_id'   => $parent_id,
-                                       'title'       => $title,
-                                       'description' => $description,
-                                       'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-                                       'status'      => _get_status_value($status),
-                                       'owner'       => _getUserIdByUserName($owner),
-                                       'create_date' => $create_date,
-                                       'update_date' => $update_date,
-                                   ),
-                  'ordering'    => $ordering,
-                  'permissions' => _get_permissions_as_array($group_id, $parent_id, $permissions),
-                  'metadata'    => _get_metadata_as_array($metadata),
-              );
-        
-    return _makeDocmanRequest($sessionKey, $group_id, 'createFolder', $params);
+    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 
 /**
@@ -1032,26 +1021,21 @@ $GLOBALS['server']->addFunction(
         array(
             'getRootFolder',
             'listFolder',
-        
             'createDocmanEmbeddedFile',
             'createDocmanEmbeddedFileVersion',
             'createDocmanWikiPage',
             'createDocmanLink',
             'createDocmanEmptyDocument',
-        
             'createDocmanFile',
             'createDocmanFileVersion',
             'appendDocmanFileChunk',
             'getDocmanFileMD5sum',
-        
             'createDocmanFolder',
             'deleteDocmanItem',
             'monitorDocmanItem',
             'moveDocmanItem',
-        
             'getDocmanProjectMetadata',
             ));
 }
-
 
 ?>
