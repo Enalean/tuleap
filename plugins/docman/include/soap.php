@@ -625,20 +625,14 @@ group_id     Group ID
 // Function implementation
 //
 /**
-* getRootFolder
-* 
 * Returns the document object that is at the top of the docman given a group object.
-*
 */
 function getRootFolder($sessionKey,$group_id) {
     return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
 }
 
 /**
-* listFolder
-* 
-* TODO: description
-*
+* Lists the contents of a folder
 */
 function listFolder($sessionKey,$group_id,$item_id) {
     $params = array('id' => $item_id, 'report' => 'List');
@@ -812,7 +806,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
 }
 
 /**
- * Create a docman document
+ * Creates a docman document
  *
  * @param string       $sessionKey        Session key
  * @param int          $group_id          Group ID
@@ -858,7 +852,7 @@ function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $desc
 }
 
 /**
- * Create a docman file version
+ * Creates a docman file version
  */
 function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date) {
         
@@ -879,7 +873,7 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
 }
 
 /**
- * Create a docman embedded file version
+ * Creates a docman embedded file version
  */
 function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $content, $author, $date) {
 
@@ -895,7 +889,7 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
 }
 
 /**
- * Create a docman file
+ * Creates a docman file
  */
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
 
@@ -914,7 +908,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
 }
 
 /**
- * Create a docman embedded file
+ * Creates a docman embedded file
  */
 function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date) {
     $extraParams = array(
@@ -927,7 +921,7 @@ function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $d
 }
 
 /**
- * Create a docman wiki page
+ * Creates a docman wiki page
  */
 function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
     $extraParams['item']['wiki_page'] = $content;
@@ -935,7 +929,7 @@ function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $descr
 }
 
 /**
- * Create a docman link
+ * Creates a docman link
  */
 function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
     $extraParams['item']['link_url'] = $content;
@@ -943,14 +937,14 @@ function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $descripti
 }
 
 /**
- * Create a docman embedded file
+ * Creates a docman embedded file
  */
 function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 
 /**
- * Append a chunk of data to a file
+ * Appends a chunk of data to a file
  */
 function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
 
@@ -973,7 +967,7 @@ function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
 }
 
 /**
- * Create a docman folder
+ * Creates a docman folder
  */
 function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
 
@@ -997,123 +991,24 @@ function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $descrip
 }
 
 /**
- * Delete a docman item
+ * Deletes a docman item
  */
-function deleteDocmanItem($sessionKey,$group_id,$item_id) {
-    global $Language;
-    if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'deleteDocmanItem');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'deleteDocmanItem');
-        }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'deleteDocmanItem');
-        }
-        
-        $request =& new SOAPRequest(array(
-            'group_id' => $group_id,
-            'id'       => $item_id,
-            //needed internally in docman vvv
-            'action'       => 'delete',
-            'confirm'      => true,
-        ));
-        $plugin_manager =& PluginManager::instance();
-        $p =& $plugin_manager->getPluginByName('docman');
-        if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $result = $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
-                   $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null, $msg, 'deleteDocmanItem');
-            } else {
-                return $result;
-            }
-        } else {
-            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'deleteDocmanItem');
-        }
-    } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteDocmanItem');
-    }
+function deleteDocmanItem($sessionKey, $group_id, $item_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'delete', array('id' => $item_id));
 }
 
 /**
- * 
+ * Enables the monitoring if an item by a user
  */
-function monitorDocmanItem($sessionKey,$group_id,$item_id) {
-    global $Language;
-    if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'monitorDocmanItem');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'monitorDocmanItem');
-        }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'monitorDocmanItem');
-        }
-        
-        $request =& new SOAPRequest(array(
-            'group_id' => $group_id,
-            'id'       => $item_id,
-            //needed internally in docman vvv
-            'action'       => 'monitor',
-            'monitor'      => true,
-        ));
-        $plugin_manager =& PluginManager::instance();
-        $p =& $plugin_manager->getPluginByName('docman');
-        if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
-                   $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg,  'monitorDocmanItem');
-            } else {
-                return true;
-            }
-        } else {
-            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'monitor');
-        }
-    } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'monitorDocmanItem');
-    }
+function monitorDocmanItem($sessionKey, $group_id, $item_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id));
 }
 
+/**
+ * Moves an item
+ */
 function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
-    if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'moveDocmanItem');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'moveDocmanItem');
-        }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'moveDocmanItem');
-        }
-        
-        $request =& new SOAPRequest(array(
-            'group_id'     => $group_id,
-            'item_to_move' => $item_id,
-            'id'           => $new_parent,
-            //needed internally in docman vvv
-            'action'       => 'move_here',
-            'confirm'      => true,
-        ));
-        $plugin_manager =& PluginManager::instance();
-        $p =& $plugin_manager->getPluginByName('docman');
-        if ($p && $plugin_manager->isPluginAvailable($p)) {
-            $p->processSOAP($request);
-            if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
-                   $msg = $GLOBALS['Response']->getRawFeedback();
-                   return new SoapFault(null,  $msg,  'moveDocmanItem');
-            } else {
-                return true;
-            }
-        } else {
-            return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', 'moveDocmanItem');
-        }
-    } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'moveDocmanItem');
-    }
+    return _makeDocmanRequest($sessionKey, $group_id, 'move_here', array('item_to_move' => $item_id, 'id' => $new_parent));
 }
 
 /**
