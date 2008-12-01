@@ -330,7 +330,7 @@ class Docman_Actions extends Actions {
                 $item['user_id'] = $owner;
                 
                 // Change creation date
-                if (isset($item['create_date'])) {
+                if (isset($item['create_date']) && $item['create_date'] != '') {
                     $item['create_date'] = strtotime($item['create_date']);
                     $create_date_changed = true;
                 }
