@@ -333,6 +333,16 @@ class Docman_Actions extends Actions {
                 if (isset($item['create_date']) && $item['create_date'] != '') {
                     $item['create_date'] = strtotime($item['create_date']);
                     $create_date_changed = true;
+                } else {
+                    $create_date_changed = false;
+                }
+                
+                // Change update date
+                if (isset($item['update_date']) && $item['update_date'] != '') {
+                    $item['update_date'] = strtotime($item['update_date']);
+                    $update_date_changed = true;
+                } else {
+                    $update_date_changed = false;
                 }
                 
                 $item['group_id'] = $request->get('group_id');
@@ -364,8 +374,8 @@ class Docman_Actions extends Actions {
                         $this->event_manager->processEvent('plugin_docman_event_set_owner', $eArray);
                     }
                     
-                    // Log change create date
-                    if (isset($create_date_changed) && $create_date_changed === true) {
+                    // Log change creation date
+                    if ($create_date_changed) {
                         $eArray = array(
                                     'group_id'  => $request->get('group_id'),
                                     'item'      => &$new_item,
@@ -374,6 +384,18 @@ class Docman_Actions extends Actions {
                                   );
                             
                         $this->event_manager->processEvent('plugin_docman_event_set_create_date', $eArray);
+                    }
+                    
+                    // Log change update date
+                    if ($update_date_changed) {
+                        $eArray = array(
+                                    'group_id'  => $request->get('group_id'),
+                                    'item'      => &$new_item,
+                                    'new_value' => $item['update_date'],
+                                    'user'      => &$user,
+                                  );
+                            
+                        $this->event_manager->processEvent('plugin_docman_event_set_update_date', $eArray);
                     }
 
                     $info_item_created = 'info_document_created';
@@ -563,7 +585,11 @@ class Docman_Actions extends Actions {
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $this->_storeFile($item);
-                $item_factory->update(array('id' => $item->getId()));
+                
+                // We update the update_date of the document only if no version date was given
+                if (!$request->exist('date') || $request->get('date') == '') {
+                    $item_factory->update(array('id' => $item->getId()));    
+                }
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
