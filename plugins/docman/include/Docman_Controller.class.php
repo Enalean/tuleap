@@ -1161,6 +1161,7 @@ class Docman_Controller extends Controler {
             break;
         case 'createFolder':
         case 'createDocument':
+        case 'createItem':
             if ($this->request->exist('cancel')) {
                 $this->_set_redirectView();
             } else {

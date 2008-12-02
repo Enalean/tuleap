@@ -322,8 +322,8 @@ class Docman_Actions extends Actions {
                 
                 // Change owner
                 $userId = $user->getId();
-                if (isset($item['owner'])) {
-                    $owner = $item['owner'];
+                if ($request->exist('owner')) {
+                    $owner = $request->get('owner');
                 } else {
                     $owner = $userId;
                 }
@@ -677,7 +677,7 @@ class Docman_Actions extends Actions {
     
     /**
     * User has asked to set or to change permissions on an item
-    * This method is the direct action of the docman controler but can also be called internally (@see createDocument)
+    * This method is the direct action of the docman controler but can also be called internally (@see createItem)
     * To call it directly, you have to give two extra parameters (in $params):
     * - id : the id of the item
     * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
