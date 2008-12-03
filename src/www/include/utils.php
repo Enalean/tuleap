@@ -1217,30 +1217,40 @@ function util_check_restricted_access($request_uri, $script_name) {
         // In addition, the following URLs are forbidden (value overriden in site-content file)
         $forbidden_url = array( 
           '/snippet',     // Code Snippet Library
-          '/softwaremap/', // browsable software map
-          '/new',         // list of the newest releases made on the CodeX site
+          '/softwaremap/',// browsable software map
+          '/new/',        // list of the newest releases made on the CodeX site ('/news' must be allowed...)
           '/search',      // search for people, projects, and artifacts in trackers!
-          '/people/',      // people skills and profile
+          '/people/',     // people skills and profile
           '/stats',       // CodeX site statistics
           '/top',         // projects rankings (active, downloads, etc)
           '/project/register.php',    // Register a new project
           '/export',      // CodeX XML feeds
-          '/info.php'      // PHP info
+          '/info.php'     // PHP info
           );
         // Default values are very restrictive, but they can be overriden in the site-content file
         $allow_codex_welcome_page=false; // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_codex_forums=false;   // Admin project help forums are accessible through the 'Discussion Forums' link
-        $allow_access_to_codex_trackers=false; // Admin project trackers are used for support requests
-        $allow_access_to_codex_docs=false; // Admin project documents and wiki (Note that the User Guide is always accessible)
-        $allow_access_to_codex_mail=false; // Admin project mailing lists (Developers Channels)
-        $allow_access_to_codex_frs=false;  // Admin project file releases
+        $allow_access_to_project_forums   = array(); // Admin project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_project_trackers = array(); // Admin project trackers are used for support requests
+        $allow_access_to_project_docs     = array(); // Admin project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_project_mail     = array(); // Admin project mailing lists (Developers Channels)
+        $allow_access_to_project_frs      = array(); // Admin project file releases
         
 
         // Customizable security settings for restricted users:
         include($Language->getContent('include/restricted_user_permissions','en_US'));
         // End of customization
+        
+        // For convenient reasons, admin can customize those variables as arrays
+        // but for performances reasons we prefer to use hashes (avoid in_array)
+        // so we transform array(101) => array(101=>0)
+        $allow_access_to_project_forums   = array_flip($allow_access_to_project_forums); 
+        $allow_access_to_project_trackers = array_flip($allow_access_to_project_trackers);
+        $allow_access_to_project_docs     = array_flip($allow_access_to_project_docs);
+        $allow_access_to_project_mail     = array_flip($allow_access_to_project_mail);
+        $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
+        
         
         foreach ($forbidden_url as $str) {
             $pos = strpos($req_uri,$str);
@@ -1315,11 +1325,14 @@ function util_check_restricted_access($request_uri, $script_name) {
                     }
                 }
                 // CodeX forums
-                if ($allow_access_to_codex_forums) {
-                    if ($group_id==1) {
-                        $user_is_allowed=true;
-                    }
+                if (isset($allow_access_to_project_forums[$group_id])) {
+                    $user_is_allowed=true;
                 }
+            }
+            elseif (array_key_exists('group_id', $_REQUEST) &&
+                    $_REQUEST['group_id'] &&
+                    isset($allow_access_to_project_forums[$group_id])) {
+                $user_is_allowed=true;
             }
         }
         
@@ -1333,41 +1346,29 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
 
         // CodeX trackers
-        if (strpos($req_uri,'/tracker/') !== false) {
-            if ($allow_access_to_codex_trackers) {
-                if ($group_id==1) {
-                    $user_is_allowed=true;
-                }
-            }
+        if (strpos($req_uri,'/tracker/') !== false && 
+            isset($allow_access_to_project_trackers[$group_id])) {
+            $user_is_allowed=true;
         }
 
         // CodeX documents and wiki
-        if ((strpos($req_uri,'/docman/') !== false) || 
+        if (((strpos($req_uri,'/docman/') !== false) || 
             (strpos($req_uri,'/plugins/docman/') !== false) ||
-            (strpos($req_uri,'/wiki/') !== false)) {
-            if ($allow_access_to_codex_docs) {
-                if ($group_id==1) {
-                    $user_is_allowed=true;
-                }
-            }
+            (strpos($req_uri,'/wiki/') !== false)) &&
+            isset($allow_access_to_project_docs[$group_id])) {
+            $user_is_allowed=true;
         }
 
         // CodeX mailing lists page
-        if (strpos($req_uri,'/mail/') !== false) {
-            if ($allow_access_to_codex_mail) {
-                if ($group_id==1) {
-                    $user_is_allowed=true;
-                }
-            }
+        if (strpos($req_uri,'/mail/') !== false &&
+            isset($allow_access_to_project_mail[$group_id])) {
+            $user_is_allowed=true;
         }
         
         // CodeX file releases
-        if (strpos($req_uri,'/file/') !== false) {
-            if ($allow_access_to_codex_frs) {
-                if ($group_id==1) {
-                    $user_is_allowed=true;
-                }
-            }
+        if (strpos($req_uri,'/file/') !== false &&
+            isset($allow_access_to_project_frs[$group_id])) {
+            $user_is_allowed=true;
         }
         
         // Now check group_id

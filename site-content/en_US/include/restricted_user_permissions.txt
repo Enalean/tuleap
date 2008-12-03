@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
@@ -31,9 +31,15 @@
 //$allow_codex_welcome_page=false; // Allow access to welcome page 
 //$allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
 //$allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-//$allow_access_to_codex_forums=false;   // Admin project help forums are accessible through the 'Discussion Forums' link
-//$allow_access_to_codex_trackers=false; // Admin project trackers are used for support requests
-//$allow_access_to_codex_docs=false; // Admin project documents and wiki (Note that the User Guide is always accessible)
-//$allow_access_to_codex_mail=false; // Admin project mailing lists (Developers Channels)
-//$allow_access_to_codex_frs=false;  // Admin project file releases
+
+// The following variables defines array of projects allowed even for
+// restricted users.
+// For instance $allow_access_to_project_forums = array(105) will give
+// access to project number 105 forums to all users (restricted or not).
+
+//$allow_access_to_project_forums   = array(); // Admin project help forums are accessible through the 'Discussion Forums' link
+//$allow_access_to_project_trackers = array(); // Admin project trackers are used for support requests
+//$allow_access_to_project_docs     = array(); // Admin project documents and wiki (Note that the User Guide is always accessible)
+//$allow_access_to_project_mail     = array(); // Admin project mailing lists (Developers Channels)
+//$allow_access_to_project_frs      = array(); // Admin project file releases
 ?>
