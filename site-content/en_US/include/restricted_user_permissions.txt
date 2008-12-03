@@ -32,8 +32,7 @@
 //$allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
 //$allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
 
-// The following variables defines array of projects allowed even for
-// restricted users.
+// The following variables define access rules for the support project(s)
 // For instance $allow_access_to_project_forums = array(105) will give
 // access to project number 105 forums to all users (restricted or not).
 
@@ -44,4 +43,8 @@
 //$allow_access_to_project_docs     = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
 //$allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
 //$allow_access_to_project_frs      = array(1); // Support project file releases
+
+// List of fully public projects (same access for restricted and unrestricted users)
+//$public_projects = array(); 
+
 ?>

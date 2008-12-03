@@ -1238,6 +1238,8 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
         $allow_access_to_project_frs      = array(1); // Support project file releases
         
+        // List of fully public projects (same access for restricted and unrestricted users)
+        $public_projects = array(); 
 
         // Customizable security settings for restricted users:
         include($Language->getContent('include/restricted_user_permissions','en_US'));
@@ -1251,6 +1253,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_docs     = array_flip($allow_access_to_project_docs);
         $allow_access_to_project_mail     = array_flip($allow_access_to_project_mail);
         $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
+        $public_projects                  = array_flip($public_projects);
         
         
         foreach ($forbidden_url as $str) {
@@ -1375,13 +1378,15 @@ function util_check_restricted_access($request_uri, $script_name) {
         // Now check group_id
         if (isset($group_id)) { 
             if (!$user_is_allowed) { 
-                if (!user_ismember($group_id)) {
+                if ((!user_ismember($group_id))
+                    &&(!isset($public_projects[$group_id]))) {
                     return false;
                 }
             }
         } elseif (array_key_exists('group_id', $_REQUEST)) {
             if (!$user_is_allowed) {
-                if (!user_ismember($_REQUEST['group_id'])) {
+                if ((!user_ismember($_REQUEST['group_id']))
+                    &&(!isset($public_projects[$_REQUEST['group_id']])))  {
                     return false;
                 }
             }
