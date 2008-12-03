@@ -1228,14 +1228,15 @@ function util_check_restricted_access($request_uri, $script_name) {
           '/info.php'     // PHP info
           );
         // Default values are very restrictive, but they can be overriden in the site-content file
+        // Default support project is project 1.
         $allow_codex_welcome_page=false; // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_project_forums   = array(); // Admin project help forums are accessible through the 'Discussion Forums' link
-        $allow_access_to_project_trackers = array(); // Admin project trackers are used for support requests
-        $allow_access_to_project_docs     = array(); // Admin project documents and wiki (Note that the User Guide is always accessible)
-        $allow_access_to_project_mail     = array(); // Admin project mailing lists (Developers Channels)
-        $allow_access_to_project_frs      = array(); // Admin project file releases
+        $allow_access_to_project_forums   = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_project_trackers = array(1); // Support project trackers are used for support requests
+        $allow_access_to_project_docs     = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
+        $allow_access_to_project_frs      = array(1); // Support project file releases
         
 
         // Customizable security settings for restricted users:
