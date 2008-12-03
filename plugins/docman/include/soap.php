@@ -148,493 +148,19 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Metadata'
 );
 
-//
-// Function definition
-//
-$GLOBALS['server']->register(
-    'getRootFolder',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        ),
-    array('listFolderResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getRootFolder',
-    'rpc',
-    'encoded',
-    'Returns the document object id that is at the top of the docman given a group object.'
-);
-$GLOBALS['server']->register(
-    'listFolder',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'item_id'=>'xsd:int',
-        ),
-    array('listFolderResponse'=>'tns:ArrayOfDocman_Item'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#listFolder',
-    'rpc',
-    'encoded',
-    'List folder contents.'
-);
-$GLOBALS['server']->register(
-    'createDocmanFile',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'obsolescence_date' => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-        
-        'file_size'         => 'xsd:int',
-        'file_name'         => 'xsd:string',
-        'mime_type'         => 'xsd:string',
-        'content'           => 'xsd:string',
-        'chunk_offset'      => 'xsd:int',
-        'chunk_size'        => 'xsd:int',
-        
-        'author'            => 'xsd:string',
-        'date'              => 'xsd:string',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanFileResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanFile',
-    'rpc',
-    'encoded',
-    'Create a docman file
-<pre>
-sessionKey        Session key
-group_id          Group ID
-parent_id         Parent folder ID
-title             Title
-description       Description
-ordering          Ordering (begin, end)
-status            Status (none, draft, approved, rejected)
-obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
-permissions       Permissions
-metadata          Metadata values
-file_size         File size
-file_name         File name
-mime_type         Mime type
-content           Content (base64 encoded data)
-chunk_offset      Chunk offset
-chunk_size        Chunk size
-author            Version author (user name)
-date              Version date (YYYY-MM-DD HH:MM)
-owner             Owner of the document
-create_date       Item creation date
-update_date       Item update date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanFileVersion',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'item_id'           => 'xsd:int',
-        'label'             => 'xsd:string',
-        'changelog'         => 'xsd:string',
+}
 
-        'file_size'         => 'xsd:int',
-        'file_name'         => 'xsd:string',
-        'mime_type'         => 'xsd:string',
-        'content'           => 'xsd:string',
-        'chunk_offset'      => 'xsd:int',
-        'chunk_size'        => 'xsd:int',
-        
-        'author'            => 'xsd:string',
-        'date'              => 'xsd:string',
-        ),
-    array('createDocmanFileVersionResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanFileVersion',
-    'rpc',
-    'encoded',
-    'Create a docman file version
-<pre>
-sessionKey        Session key
-group_id          Group ID
-item_id           Item ID
-label             Version label
-changelog         Changelog
-file_size         File size
-file_name         File name
-mime_type         Mime type
-content           Content (base64 encoded data)
-chunk_offset      Chunk offset
-chunk_size        Chunk size
-author            Version author (user name)
-date              Version date (YYYY-MM-DD HH:MM)
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanEmbeddedFile',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'obsolescence_date' => 'xsd:string',
-        'content'           => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-    
-        'author'            => 'xsd:string',
-        'date'              => 'xsd:string',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanEmbeddedFileResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanEmbeddedFile',
-    'rpc',
-    'encoded',
-    'Create a docman embedded file
-<pre>
-sessionKey        Session key
-group_id          Group ID
-parent_id         Parent folder ID
-title             Title
-description       Description
-ordering          Ordering (begin, end)
-status            Status (none, draft, approved, rejected)
-obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
-content           Content (raw data)
-permissions       Permissions
-metadata          Metadata values
-author            Version author (user name)
-date              Version date (YYYY-MM-DD HH:MM)
-owner             Owner of the document
-create_date       Item creation date
-update_date       Item update date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanEmbeddedFileVersion',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-    
-        'item_id'           => 'xsd:int',
-        'label'             => 'xsd:string',
-        'changelog'         => 'xsd:string',
-        'content'           => 'xsd:string',
-        'author'            => 'xsd:string',
-        'date'              => 'xsd:string',
-        ),
-    array('createDocmanEmbeddedFileVersionResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanEmbeddedFileVersion',
-    'rpc',
-    'encoded',
-    'Create a docman embedded file version
-<pre>
-sessionKey        Session key
-group_id          Group ID
-item_id           Item ID
-label             Version label
-changelog         Changelog
-content           Content (raw data)
-author            Version author (user name)
-date              Version date (YYYY-MM-DD HH:MM)
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanWikiPage',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'obsolescence_date' => 'xsd:string',
-        'content'           => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanWikiPageResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanWikiPage',
-    'rpc',
-    'encoded',
-    'Create a docman wiki page
-<pre>
-sessionKey        Session key
-group_id          Group ID
-parent_id         Parent folder ID
-title             Title
-description       Description
-ordering          Ordering (begin, end)
-status            Status (none, draft, approved, rejected)
-obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
-content           Content (page name)
-permissions       Permissions
-metadata          Metadata values
-owner             Owner of the document
-create_date       Item creation date
-update_date       Item update date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanLink',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'obsolescence_date' => 'xsd:string',
-        'content'           => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanLinkResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanLink',
-    'rpc',
-    'encoded',
-    'Create a docman link
-<pre>
-sessionKey        Session key
-group_id          Group ID
-parent_id         Parent folder ID
-title             Title
-description       Description
-ordering          Ordering (begin, end)
-status            Status (none, draft, approved, rejected)
-obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
-content           Content (url)
-permissions       Permissions
-metadata          Metadata values
-owner             Owner of the document
-create_date       Item creation date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanEmptyDocument',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'obsolescence_date' => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanEmptyDocumentResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanEmptyDocument',
-    'rpc',
-    'encoded',
-    'Create a docman empty document
-<pre>
-sessionKey        Session key
-group_id          Group ID
-parent_id         Parent folder ID
-title             Title
-description       Description
-ordering          Ordering (begin, end)
-status            Status (none, draft, approved, rejected)
-obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
-permissions       Permissions
-metadata          Metadata values
-owner             Owner of the document
-create_date       Item creation date
-update_date       Item update date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'appendDocmanFileChunk',
-    array(
-        'sessionKey'   => 'xsd:string',
-        'group_id'     => 'xsd:int',
-        'item_id'      => 'xsd:int',
-        'content'      => 'xsd:string',
-        'chunk_offset' => 'xsd:int',
-        'chunk_size'   => 'xsd:int',
-        ),
-    array('appendDocmanFileChunkResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#appendDocmanFileChunk',
-    'rpc',
-    'encoded',
-    'Append a chunk of data to a file
-<pre>
-sessionKey        Session key
-group_id          Group ID
-item_id           Item ID
-content           Content (base64 encoded data)
-chunk_offset      Chunk offset
-chunk_size        Chunk size
-</pre>'
-);
-$GLOBALS['server']->register(
-    'getDocmanFileMD5sum',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'item_id'=>'xsd:int',
-        ),
-    array('getDocmanFileMD5sumResponse'=>'xsd:string'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getDocmanFileMD5sum',
-    'rpc',
-    'encoded',
-    'Returns the MD5 checksum of the file corresponding to the provided item ID
-<pre>
-sessionKey        Session key
-group_id          Group ID
-item_id           Item ID
-</pre>'
-);
-$GLOBALS['server']->register(
-    'createDocmanFolder',
-    array(
-        'sessionKey'        => 'xsd:string',
-        'group_id'          => 'xsd:int',
-        
-        'parent_id'         => 'xsd:int',
-        'title'             => 'xsd:string',
-        'description'       => 'xsd:string',
-        'ordering'          => 'xsd:string',
-        'status'            => 'xsd:string',
-        'permissions'       => 'tns:ArrayOfPermission',
-        'metadata'          => 'tns:ArrayOfMetadataValue',
-        'owner'             => 'xsd:string',
-        'create_date'       => 'xsd:string',
-        'update_date'       => 'xsd:string',
-        ),
-    array('createDocmanFolderResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#createDocmanFolder',
-    'rpc',
-    'encoded',
-    'Create a folder
-<pre>
-sessionKey   Session key
-group_id     Group ID
-parent_id    Parent folder ID
-title        Title
-description  Description
-ordering     Ordering (begin, end)
-status       Status (none, draft, approved, rejected)
-permissions  Permissions
-metadata     Metadata values
-owner        Owner of the folder
-create_date  Item creation date
-update_date  Item update date
-</pre>'
-);
-$GLOBALS['server']->register(
-    'deleteDocmanItem',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'item_id'=>'xsd:int'),
-    array('deleteDocmanItemResponse'=>'xsd:int'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#deleteDocmanItem',
-    'rpc',
-    'encoded',
-    'Delete an item (document or folder)'
-);
-$GLOBALS['server']->register(
-    'monitorDocmanItem',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'=>'xsd:int',
-        'item_id'=>'xsd:int'),
-    array('monitorDocmanItemResponse'=>'xsd:boolean'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#monitorDocmanItem',
-    'rpc',
-    'encoded',
-    'Monitor an item (document or folder)'
-);
-
-$GLOBALS['server']->register(
-    'moveDocmanItem',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'  =>'xsd:int',
-        'item_id'   =>'xsd:int',
-        'parent'    =>'xsd:int'),
-    array('moveDocmanItemResponse'=>'xsd:boolean'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#moveDocmanItem',
-    'rpc',
-    'encoded',
-    'Move an item in a new folder'
-);
-
-$GLOBALS['server']->register(
-    'getDocmanProjectMetadata',
-    array(
-        'sessionKey'=>'xsd:string',
-        'group_id'  =>'xsd:int',),
-    array('getDocmanProjectMetadataResponse'=>'tns:ArrayOfMetadata'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getDocmanProjectMetadata',
-    'rpc',
-    'encoded',
-    'Returns the metadata defined for the given project
-<pre>
-sessionKey   Session key
-group_id     Group ID
-</pre>'
-);
-
-} else {
-
-//
-// Function implementation
-//
 /**
  * Returns an array containing all the permissions for the specified item.
  * The ugroups that have no permission defined in the request take the permission of the parent folder.
  */
-function _get_permissions_as_array($group_id, $parent_id, $permissions) {
+function _get_permissions_as_array($group_id, $item_id, $permissions) {
     $permissions_array = array();
     
     $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
 
     // Get the ugroups of the parent
-    $ugroups = permission_get_ugroups_permissions($group_id, $parent_id, $perms, false);
+    $ugroups = permission_get_ugroups_permissions($group_id, $item_id, $perms, false);
     
     // Initialize the ugroup permissions to the same values as the parent folder
     foreach ($ugroups as $ugroup) {
@@ -790,18 +316,39 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
 }
 
 /**
-* Returns the document object that is at the top of the docman given a group object.
-*/
-function getRootFolder($sessionKey,$group_id) {
-    return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
+ * Returns an array containing the common item params needed by docman actions TODO call build params in the soap function
+ */
+function _buildItemParams($group_id, $perm_item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date) {
+    $params = array();
+    
+    if ($title !== null)       $params['item']['title'] = $title;
+    if ($description !== null) $params['item']['description'] = $description;
+    if ($type !== null)        $params['item']['item_type'] = $type;
+    if ($status !== null)      $params['item']['status'] = _get_status_value($status);
+    if ($create_date !== null) $params['item']['create_date'] = $create_date;
+    if ($update_date !== null) $params['item']['update_date'] = $update_date;
+    if ($owner !== null)       $params['item']['owner'] = $owner;
+    if ($permissions !== null) $params['permissions'] = _get_permissions_as_array($group_id, $perm_item_id, $permissions);
+    if ($metadata !== null)    $params['metadata'] = _get_metadata_as_array($metadata);
+    
+    return $params;
 }
 
 /**
-* Lists the contents of a folder
-*/
-function listFolder($sessionKey,$group_id,$item_id) {
-    $params = array('id' => $item_id, 'report' => 'List');
-    return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
+ * This function is like the PHP function array_merge_recursive but prevents returning null when one of the arrays is null
+ */
+function _safe_array_merge_recursive($array1, $array2) {
+    if ($array1 === null && $array2 === null) {
+        return array();
+    } else {
+        if ($array1 === null) {
+            return $array2;
+        } else if ($array2 === null) {
+            return $array1;
+        } else {
+            return array_merge_recursive($array1, $array2);
+        }
+    }
 }
 
 /**
@@ -825,37 +372,173 @@ function listFolder($sessionKey,$group_id,$item_id) {
  */
 function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
         
-    $params = array(
-        'item'         => array(
-            'parent_id'         => $parent_id,
-            'title'             => $title,
-            'description'       => $description,
-            'item_type'         => $type,
-            'status'            => _get_status_value($status),
-            'create_date'       => $create_date,
-            'update_date'       => $update_date,
-        ),
-        'owner'             => _getUserIdByUserName($owner),
-        'ordering'     => $ordering,
-        'permissions'  => _get_permissions_as_array($group_id, $parent_id, $permissions),
-        'metadata'     => _get_metadata_as_array($metadata),
-    );
-
-    if (isset($extraParams['item'])) {
-        $params['item'] += $extraParams['item'];
-    }
-    $params += $extraParams;
+    $params = _buildItemParams($group_id, $parent_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
+    $params['item']['parent_id'] = $parent_id;
+    $params['ordering'] = $ordering;
     
-    return _makeDocmanRequest($sessionKey, $group_id, 'createItem', $params);
+    return _makeDocmanRequest($sessionKey, $group_id, 'createItem', _safe_array_merge_recursive($params, $extraParams));
 }
 
 /**
  * Creates a docman document
  */
 function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
-    $extraParams['item']['obsolescence_date'] = $obsolescence_date;
+    if ($obsolescence_date !== null) $extraParams['item']['obsolescence_date'] = $obsolescence_date;
     return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
+
+/**
+ * Updates a docman item
+ */
+function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+    
+    $params = _buildItemParams($group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date);
+    $params['item']['id'] = $item_id;
+    
+    $permParams['id'] = $item_id;
+    $permParams['permissions'] = $params['permissions'];
+    _makeDocmanRequest($sessionKey, $group_id, 'permissions', $permParams);    
+    
+    _makeDocmanRequest($sessionKey, $group_id, 'update', _safe_array_merge_recursive($params, $extraParams));
+    
+    return true;
+}
+
+/**
+ * Updates a docman document
+ */
+function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array()) {
+    if ($obsolescence_date !== null) {
+        $extraParams['item']['obsolescence_date'] = $obsolescence_date;
+    }
+    return _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
+}
+//
+// SOAP function implementations
+//
+
+/**
+* Returns the document object that is at the top of the docman given a group object.
+*/
+function getRootFolder($sessionKey,$group_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
+}
+$soapFunctions[] = array('getRootFolder', 'Returns the document object id that is at the top of the docman given a group object');
+
+
+/**
+* Lists the contents of a folder
+*/
+function listFolder($sessionKey,$group_id,$item_id) {
+    $params = array('id' => $item_id, 'report' => 'List');
+    return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
+}
+$soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocman_Item');
+
+
+/**
+ * Returns the MD5 checksum of the file corresponding to the provided item ID.
+ */
+function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
+    $params = array('item_id' => $item_id);
+    return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
+}
+$soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the file corresponding to the provided item ID', 'xsd:string');
+
+
+/**
+ * Returns the metadata of the given project 
+ */
+function getDocmanProjectMetadata($sessionKey, $group_id) {
+
+    $result = _makeDocmanRequest($sessionKey, $group_id, 'getProjectMetadata');
+    
+    foreach ($result as &$md) {
+        $md->listOfValues = array();
+        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $md->listOfValues = _makeDocmanRequest($sessionKey, $group_id, 'getMetadataListOfValues', array('label' => $md->getLabel()));
+         }
+    }
+    
+    return $result;
+}
+$soapFunctions[] = array('getDocmanProjectMetadata', 'Returns the metadata of the given project', 'tns:ArrayOfMetadata');
+
+
+/**
+ * Creates a docman file
+ */
+function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
+
+    $extraParams = array(
+        'chunk_offset'   => $chunk_offset,
+        'chunk_size'     => $chunk_size,
+        'file_size'      => $file_size,
+        'file_name'      => $file_name,
+        'mime_type'      => $mime_type,
+        'upload_content' => base64_decode($content),
+        'date'           => $date,
+        'author'         => _getUserIdByUserName($author),
+    );
+    
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
+}
+$soapFunctions[] = array('createDocmanFile', 'Creates a docman file');
+
+
+/**
+ * Creates a docman embedded file
+ */
+function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date) {
+
+    $extraParams = array(
+        'content' => $content,
+        'date'    => $date,
+        'author'  => _getUserIdByUserName($author),
+    );
+    
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
+}
+$soapFunctions[] = array('createDocmanEmbeddedFile', 'Creates a docman embedded file');
+
+
+/**
+ * Creates a docman wiki page
+ */
+function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+    $extraParams['item']['wiki_page'] = $content;
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
+}
+$soapFunctions[] = array('createDocmanWikiPage', 'Creates a docman wiki page');
+
+
+/**
+ * Creates a docman link
+ */
+function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+    $extraParams['item']['link_url'] = $content;
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
+}
+$soapFunctions[] = array('createDocmanLink', 'Creates a docman link');
+
+
+/**
+ * Creates a docman embedded file
+ */
+function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('createDocmanEmptyDocument', 'Creates a docman empty document');
+
+
+/**
+ * Creates a docman folder
+ */
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('createDocmanFolder', 'Create a folder');
+
 
 /**
  * Creates a docman file version
@@ -877,6 +560,8 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
     
     return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
+$soapFunctions[] = array('createDocmanFileVersion', 'Creates a docman file version');
+
 
 /**
  * Creates a docman embedded file version
@@ -893,64 +578,11 @@ function createDocmanEmbeddedFileVersion($sessionKey, $group_id, $item_id, $labe
     
     return _makeDocmanRequest($sessionKey, $group_id, 'new_version', $params);
 }
+$soapFunctions[] = array('createDocmanEmbeddedFileVersion', 'Creates a docman embedded file version');
+
 
 /**
- * Creates a docman file
- */
-function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
-
-    $extraParams = array(
-        'chunk_offset'   => $chunk_offset,
-        'chunk_size'     => $chunk_size,
-        'file_size'      => $file_size,
-        'file_name'      => $file_name,
-        'mime_type'      => $mime_type,
-        'upload_content' => base64_decode($content),
-        'date'           => $date,
-        'author'         => _getUserIdByUserName($author),
-    );
-    
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
-}
-
-/**
- * Creates a docman embedded file
- */
-function createDocmanEmbeddedFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $author, $date, $owner, $create_date, $update_date) {
-    $extraParams = array(
-        'content' => $content,
-        'date'    => $date,
-        'author'  => _getUserIdByUserName($author),
-    );
-    
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
-}
-
-/**
- * Creates a docman wiki page
- */
-function createDocmanWikiPage($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
-    $extraParams['item']['wiki_page'] = $content;
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
-}
-
-/**
- * Creates a docman link
- */
-function createDocmanLink($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
-    $extraParams['item']['link_url'] = $content;
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
-}
-
-/**
- * Creates a docman embedded file
- */
-function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
-    return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
-}
-
-/**
- * Appends a chunk of data to a file
+ * Appends a chunk of data to the last version of a file
  */
 function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chunk_offset, $chunk_size) {
 
@@ -963,35 +595,8 @@ function appendDocmanFileChunk($sessionKey, $group_id, $item_id, $content, $chun
         
     return _makeDocmanRequest($sessionKey, $group_id, 'appendFileChunk', $params);
 }
+$soapFunctions[] = array('appendDocmanFileChunk', 'Appends a chunk of data to the last version of a file');
 
-/**
- * Returns the MD5 checksum of the file corresponding to the provided item ID.
- */
-function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
-    $params = array('item_id' => $item_id);
-    return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
-}
-
-/**
- * Creates a docman folder
- */
-function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
-    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
-}
-
-/**
- * Deletes a docman item
- */
-function deleteDocmanItem($sessionKey, $group_id, $item_id) {
-    return _makeDocmanRequest($sessionKey, $group_id, 'delete', array('id' => $item_id));
-}
-
-/**
- * Enables the monitoring if an item by a user
- */
-function monitorDocmanItem($sessionKey, $group_id, $item_id) {
-    return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id, 'monitor' => true));
-}
 
 /**
  * Moves an item
@@ -999,43 +604,164 @@ function monitorDocmanItem($sessionKey, $group_id, $item_id) {
 function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
     return _makeDocmanRequest($sessionKey, $group_id, 'move_here', array('item_to_move' => $item_id, 'id' => $new_parent));
 }
+$soapFunctions[] = array('moveDocmanItem', 'Moves an item in a new folder', 'xsd:boolean');
+
 
 /**
- * Returns the metadata of the given project 
+ * Deletes a docman item
  */
-function getDocmanProjectMetadata($sessionKey, $group_id) {
+function deleteDocmanItem($sessionKey, $group_id, $item_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'delete', array('id' => $item_id));
+}
+$soapFunctions[] = array('deleteDocmanItem', 'Delete an item (document or folder)');
 
-    $result = _makeDocmanRequest($sessionKey, $group_id, 'getProjectMetadata');
+
+/**
+ * Enables the monitoring of an item by a user
+ */
+function monitorDocmanItem($sessionKey, $group_id, $item_id) {
+    return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id, 'monitor' => true));
+}
+$soapFunctions[] = array('monitorDocmanItem', 'Enables the monitoring of an item by a user', 'xsd:boolean');
+
+
+/**
+ * Updates a docman file
+ */
+function updateDocmanFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('updateDocmanFile', 'Updates a docman file');
+
+
+/**
+ * Updates a docman embedded file
+ */
+function updateDocmanEmbeddedFile($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('updateDocmanEmbeddedFile', 'Updates a docman embedded file');
+
+
+/**
+ * Updates a docman wiki page
+ */
+function updateDocmanWikiPage($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+    if ($content !== null) $extraParams['item']['wiki_page'] = $content;
+    return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams); 
+}
+$soapFunctions[] = array('updateDocmanWikiPage', 'Updates a docman wiki page');
+
+
+/**
+ * Updates a docman link
+ */
+function updateDocmanLink($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date) {
+    if ($content !== null) $extraParams['item']['link_url'] = $content;
+    return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams); 
+}
+$soapFunctions[] = array('updateDocmanLink', 'Updates a docman link'); 
+
+
+/**
+ * Updates a docman empty document
+ */
+function updateDocmanEmptyDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('updateDocmanEmptyDocument', 'Updates a docman empty document');
+
+
+//
+// Functions registering
+//
+
+if (defined('NUSOAP')) {
+    // Soap parameters definition
+    $GLOBALS['soapParameters'] = array(
+                      'sessionKey'        => array('xsd:string', 'Session key'),
+                      'group_id'          => array('xsd:int', 'Group ID'),
+                      'parent_id'         => array('xsd:int', 'Parent ID'),
+                      'item_id'           => array('xsd:int', 'item ID'),
+                      'title'             => array('xsd:string', 'Title'),
+                      'description'       => array('xsd:string', 'Description'),
+                      'ordering'          => array('xsd:string', 'Ordering (begin, end)'),
+                      'status'            => array('xsd:string', 'Status (none, draft, approved, rejected)'),
+                      'obsolescence_date' => array('xsd:string', 'Obsolescence date (yy-mm-dd or yyyy-mm-dd)'),
+                      'content'           => array('xsd:string', 'Content'),
+                      'permissions'       => array('tns:ArrayOfPermission', 'Permissions'),
+                      'metadata'          => array('tns:ArrayOfMetadataValue', 'Metadata values'),
+                      'owner'             => array('xsd:string', 'Owner of the item'),
+                      'create_date'       => array('xsd:string', 'Item creation date'),
+                      'update_date'       => array('xsd:string', 'Item update date'),
+                      'author'            => array('xsd:string', 'Version author'),
+                      'date'              => array('xsd:string', 'Version date'),
+                      'label'             => array('xsd:string', 'version label'),
+                      'changelog'         => array('xsd:string', 'Version changelog'),
+                      'file_size'         => array('xsd:int', 'File size'),
+                      'file_name'         => array('xsd:string', 'File name'),
+                      'mime_type'         => array('xsd:string', 'Mime type'),
+                      'chunk_offset'      => array('xsd:int', 'Chunk offset'),
+                      'chunk_size'        => array('xsd:int', 'Chunk size'),
+                      'new_parent'        => array('xsd:int', 'New parent ID'),
+                  );
+}
+/**
+ * Registers a function on the soap server. The parameters of the function are retrieved by reflexion.
+ */
+function _registerFunction($name, $doc, $response = 'xsd:int') {
+    if (defined('NUSOAP')) {
+        // WSDL generation
+        $function = new ReflectionFunction($name);
+        $parameters = $function->getParameters();
+        
+        $usedParameters = array();
+        foreach ($parameters as $parameter) {
+        	$usedParameters[] = $parameter->getName();
+        }
+        
+        $soapParameters = $GLOBALS['soapParameters'];
     
-    foreach ($result as &$md) {
-        $md->listOfValues = array();
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $md->listOfValues = _makeDocmanRequest($sessionKey, $group_id, 'getMetadataListOfValues', array('label' => $md->getLabel()));
-         }
+        $parameters = array();
+        $paramsDoc = '<pre>';
+
+        foreach ($usedParameters as $usedParameter) {
+            $parameters[$usedParameter] = $soapParameters[$usedParameter][0];
+            $paramsDoc .= str_pad($usedParameter, 20).$soapParameters[$usedParameter][1].'<br/>';
+        }
+        
+        $paramsDoc .= '</pre>';
+        
+        $GLOBALS['server']->register(
+            $name,
+            $parameters,
+            array($name.'Response' => $response),
+            $GLOBALS['uri'],
+            $GLOBALS['uri'].'#'.$name,
+            'rpc',
+            'encoded',
+            "$doc $paramsDoc"
+        );
+    } else {
+        $GLOBALS['server']->addFunction($name);
     }
-    
-    return $result;
 }
 
-$GLOBALS['server']->addFunction(
-        array(
-            'getRootFolder',
-            'listFolder',
-            'createDocmanEmbeddedFile',
-            'createDocmanEmbeddedFileVersion',
-            'createDocmanWikiPage',
-            'createDocmanLink',
-            'createDocmanEmptyDocument',
-            'createDocmanFile',
-            'createDocmanFileVersion',
-            'appendDocmanFileChunk',
-            'getDocmanFileMD5sum',
-            'createDocmanFolder',
-            'deleteDocmanItem',
-            'monitorDocmanItem',
-            'moveDocmanItem',
-            'getDocmanProjectMetadata',
-            ));
+/**
+ * Registers all the functions defined in the $soapFunctions array 
+ */
+function _registerFunctions($functions) {
+    if (is_array($functions)) {
+        foreach ($functions as $function) {
+            if (isset($function[2])) {
+    	        _registerFunction($function[0], $function[1], $function[2]);
+            } else {
+                _registerFunction($function[0], $function[1]);
+            }
+        }
+    }
 }
+
+_registerFunctions($soapFunctions);
 
 ?>

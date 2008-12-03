@@ -72,15 +72,42 @@ class Docman_SOAPController extends Docman_Controller {
            
         switch ($view) {
             case 'appendFileChunk':
-            case 'getFileMD5sum':
-            case 'getProjectMetadata':
-            case 'getMetadataListOfValues':
             case 'new_version':
+            case 'update':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'permissions':
+                if (!$this->userCanManage($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'getFileMD5sum':
+            case 'getMetadataListOfValues':
+                if (!$this->userCanRead($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'getProjectMetadata':
                 $this->action = $view;
                 $this->_setView('');
                 break;
             default: parent::_dispatch($view, $item, $root, $get_show_view);
         }
    }
+   
+    function _getEventManager() {
+        return new EventManager();
+    }
 }
 

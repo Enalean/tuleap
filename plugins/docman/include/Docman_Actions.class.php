@@ -87,7 +87,6 @@ class Docman_Actions extends Actions {
             $dbresults = user_get_result_set_from_unix($_owner);
             $_owner_id     = db_result($dbresults, 0, 'user_id');
             $_owner_status = db_result($dbresults, 0, 'status');
-            
             if($_owner_id === false || $_owner_id < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
                 $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
                 $ret_id = $user->getId();
@@ -98,14 +97,15 @@ class Docman_Actions extends Actions {
         }
         return $ret_id;
     }
-
-    function _raiseOwnerChangeEvent(&$user, &$item, $group_id, $old, $new) {
+    
+    private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {
         $logEventParam = array('group_id' => $group_id,
                                'item'     => &$item,
                                'user'     => &$user,
                                'old_value' => $old,
                                'new_value' => $new,
-                               'field'     => 'owner');
+                               'field'     => $field);
+
         $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                            $logEventParam);
     }
@@ -217,7 +217,7 @@ class Docman_Actions extends Actions {
 
                 $eArray = array('group_id'  => $item->getGroupId(),
                                 'item'      => &$item,
-                                'new_value' => $versionAuthor,
+                                'new_value' => UserManager::instance()->getUserById($versionAuthor)->getName(),
                                 'user'      => &$user);
                 
                 $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
@@ -322,8 +322,13 @@ class Docman_Actions extends Actions {
                 
                 // Change owner
                 $userId = $user->getId();
-                if ($request->exist('owner')) {
-                    $owner = $request->get('owner');
+                if (isset($item['owner'])) {
+                    $um = UserManager::instance();
+                    if ($new_owner = $um->getUserByUserName($item['owner']) !== null) {
+                        $owner = $new_owner->getId();
+                    } else {
+                        $owner = $userId;
+                    }
                 } else {
                     $owner = $userId;
                 }
@@ -366,36 +371,17 @@ class Docman_Actions extends Actions {
 
                     // Log change owner
                     if ($owner != $userId) {
-                        $eArray = array('group_id'  => $request->get('group_id'),
-                                        'item'      => &$new_item,
-                                        'new_value' => $owner,
-                                        'user'      => &$user);
-                        
-                        $this->event_manager->processEvent('plugin_docman_event_set_owner', $eArray);
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['owner'], 'owner');
                     }
                     
                     // Log change creation date
                     if ($create_date_changed) {
-                        $eArray = array(
-                                    'group_id'  => $request->get('group_id'),
-                                    'item'      => &$new_item,
-                                    'new_value' => $item['create_date'],
-                                    'user'      => &$user,
-                                  );
-                            
-                        $this->event_manager->processEvent('plugin_docman_event_set_create_date', $eArray);
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['create_date'], 'create_date');
                     }
                     
                     // Log change update date
                     if ($update_date_changed) {
-                        $eArray = array(
-                                    'group_id'  => $request->get('group_id'),
-                                    'item'      => &$new_item,
-                                    'new_value' => $item['update_date'],
-                                    'user'      => &$user,
-                                  );
-                            
-                        $this->event_manager->processEvent('plugin_docman_event_set_update_date', $eArray);
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['update_date'], 'update_date');
                     }
 
                     $info_item_created = 'info_document_created';
@@ -438,7 +424,7 @@ class Docman_Actions extends Actions {
     }
 
     function update() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         if ($request->exist('item')) {
             $user =& $this->_controler->getUser();
             
@@ -449,25 +435,51 @@ class Docman_Actions extends Actions {
             
             // Update Owner
             $ownerChanged = false;
-            if(array_key_exists('owner', $data)) {
+            if(isset($data['owner'])) {
                 $_owner_id = $this->_checkOwnerChange($data['owner'], $user);
                 if($_owner_id != $item->getOwnerId()) {
                     $ownerChanged = true;
-                    $_oldowner = user_getname($item->getOwnerId());
-                    $_newowner = user_getname($_owner_id);
+                    $um = UserManager::instance();
+                    $_oldowner = $um->getUserById($item->getOwnerId())->getName();
+                    $_newowner = $um->getUserById($_owner_id)->getName();
                     $data['user_id'] = $_owner_id;
                 }
                 unset($data['owner']);
             }
             
-            // Special handling of obsolescence date
-            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
-                    $d = explode('-',$data['obsolescence_date']);
-                    $data['obsolescence_date'] = gmmktime(0,0,0,
-                                                          $d[1], $d[2], $d[0]);
+            // Change creation date
+            if (isset($data['create_date']) && $data['create_date'] != '') {
+                $data['create_date'] = strtotime($data['create_date']);
+                $old_create_date = $item->getCreateDate();
+                if ($old_create_date == $data['create_date']) {
+                    $create_date_changed = false;
+                } else {
+                    $create_date_changed = true;
+                }
+            } else {
+                $create_date_changed = false;
             }
-            else {
-                $data['obsolescence_date'] = 0;
+            
+            // Change update date
+            if (isset($data['update_date']) && $data['update_date'] != '') {
+                $data['update_date'] = strtotime($data['update_date']);
+                $old_update_date = $item->getUpdateDate();
+                if ($old_update_date == $data['update_date']) {
+                    $update_date_changed = false;
+                } else {
+                    $update_date_changed = true;
+                }
+            } else {
+                $update_date_changed = false;
+            }
+            
+            // Special handling of obsolescence date
+            if(isset($data['obsolescence_date'])) {
+                if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
+                    $data['obsolescence_date'] = gmmktime(0, 0, 0, $d[2], $d[3], $d[1]);
+                } else {
+                    $data['obsolescence_date'] = 0;
+                }
             }
 
             // Check is status change
@@ -482,11 +494,9 @@ class Docman_Actions extends Actions {
             // For empty document, check if type changed
             $createFile = false;
             $itemType = $item_factory->getItemTypeForItem($item);
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
-                && isset($data['item_type'])
-               && $itemType != $data['item_type']
-               && ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-                   || $this->_controler->getProperty('embedded_are_allowed'))) {
+
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
+                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))) {
                 
                 if($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                    || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
@@ -507,22 +517,19 @@ class Docman_Actions extends Actions {
             }
 
             if($ownerChanged) {
-                $this->_raiseOwnerChangeEvent($user,
-                                              $item,
-                                              $request->get('group_id'), 
-                                              $_oldowner, 
-                                              $_newowner);
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $_oldowner, $_newowner, 'owner');
             }
 
             if($statusChanged) {
-                $logEventParam = array('group_id' => $request->get('group_id'),
-                                       'item'     => &$item,
-                                       'user'     => &$user,
-                                       'old_value' => $old_st,
-                                       'new_value' => $data['status'],
-                                       'field'     => 'status');
-                $this->event_manager->processEvent('plugin_docman_event_metadata_update',
-                                                   $logEventParam);
+               $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
+            }
+            
+            if($create_date_changed) {
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_create_date, $data['create_date'], 'create_date');
+            }
+            
+            if($update_date_changed) {
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_update_date, $data['update_date'], 'update_date');
             }
 
             if($createFile) {
@@ -879,7 +886,12 @@ class Docman_Actions extends Actions {
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
+                    
+                    $dPm = Docman_PermissionsManager::instance($group_id);
+                    if ($force || $dPm->userCanManage($this->_controler->getUser(), $item_id)) {
+                        $this->_getPermissionsManagerInstance()->addPermission($permission, $item_id, $ugroup_id);
+                    }
+                    
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {

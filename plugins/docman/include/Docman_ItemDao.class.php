@@ -436,6 +436,14 @@ class Docman_ItemDao extends DataAccessObject {
         } else if (isset($row['item_id'])) {
             $id = $row['item_id'];
         }
+        
+        if (isset($row['update_date']) && $row['update_date'] != '') {
+            $updateParent = false;
+        } else {
+            $updateParent = true;
+            $row['update_date'] = time();
+        }
+        
         if ($id) {
             $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
@@ -446,12 +454,11 @@ class Docman_ItemDao extends DataAccessObject {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }
-                $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
                 $sql = 'UPDATE plugin_docman_item'
                     .' SET '.implode(' , ', $set_array)
                     .' WHERE item_id='. $this->da->quoteSmart($id);
                 $updated = $this->update($sql);
-                if ($updated) {
+                if ($updated && $updateParent) {
                     $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
                 }
             }

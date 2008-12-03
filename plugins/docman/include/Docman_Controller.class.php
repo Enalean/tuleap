@@ -101,9 +101,6 @@ class Docman_Controller extends Controler {
                          'plugin_docman_event_metadata_update',
                          'plugin_docman_event_set_version_author',
                          'plugin_docman_event_set_version_date',
-                         'plugin_docman_event_set_owner',
-                         'plugin_docman_event_set_create_date',
-                         'plugin_docman_event_set_update_date',
                      );
                      
         $this->logger  =& new Docman_Log();
