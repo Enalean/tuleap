@@ -97,7 +97,7 @@ class Docman_SOAPActions extends Docman_Actions {
         $request =& $this->_controler->request;
         $groupId = $request->get('group_id');
         $metadataFactory = new Docman_MetadataFactory($groupId);
-        $metadataList = $metadataFactory->getRealMetadataList(true);
+        $metadataList = array_merge($metadataFactory->getRealMetadataList(true), $metadataFactory->getHardCodedMetadataList(true));
         $this->_controler->_viewParams['action_result'] = $metadataList;
     }
     

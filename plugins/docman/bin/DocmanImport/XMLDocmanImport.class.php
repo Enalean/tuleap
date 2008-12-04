@@ -40,6 +40,9 @@ class XMLDocmanImport {
 
     // Metadata map
     private $metadataMap;
+    
+    // List of hardcoded metadata enabled on the target project
+    private $hardCodedMetadata;
 
     // Group map
     private $ugroupMap;
@@ -61,6 +64,7 @@ class XMLDocmanImport {
     public function __construct($groupId, $wsdl, $login, $password) {
         $this->groupId = $groupId;
         $this->metadataMap = array();
+        $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
 
         // Disable the cache for testing purposes. TODO re-enable the cache for production.
@@ -99,6 +103,7 @@ class XMLDocmanImport {
         // Sanity checks
         echo "Checking the XML document... ";
         $this->checkMetadataDefinition();
+        $this->checkHardCodedMetadataUsage();
         $this->checkMetadataUsage();
         $this->checkUgroupDefinition();
         $this->checkUgroupsUsage();
@@ -165,25 +170,32 @@ class XMLDocmanImport {
      */
     private function buildMetadataMap() {
         echo "Retrieving metadata definition... ";
+        
+        $hardCodedMetadataLabels = array('title', 'description', 'owner' , 'create_date', 'update_date' , 'status', 'obsolescence_date');
+        
         try {
             $metadataList = $this->soap->getDocmanProjectMetadata($this->hash, $this->groupId);
 
             foreach ($metadataList as $metadata) {
-                if ($this->doc->xpath("/docman/propdefs/propdef[@name='$metadata->name']")) {
-                    $this->metadataMap[$metadata->name]['label'] = $metadata->label;
-                    $this->metadataMap[$metadata->name]['type'] = $metadata->type;
-                    $this->metadataMap[$metadata->name]['isEmptyAllowed'] = $metadata->isEmptyAllowed;
-                    if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                        $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
-                        $lov = $metadata->listOfValues;
-                        foreach ($lov as $val) {
-                            if ($val->id != 100) {
-                                $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
+                if (in_array($metadata->label, $hardCodedMetadataLabels)) {
+                    $this->hardCodedMetadata[] = $metadata->label;
+                } else {
+                    if ($this->doc->xpath("/docman/propdefs/propdef[@name='$metadata->name']")) {
+                        $this->metadataMap[$metadata->name]['label'] = $metadata->label;
+                        $this->metadataMap[$metadata->name]['type'] = $metadata->type;
+                        $this->metadataMap[$metadata->name]['isEmptyAllowed'] = $metadata->isEmptyAllowed;
+                        if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                            $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
+                            $lov = $metadata->listOfValues;
+                            foreach ($lov as $val) {
+                                if ($val->id != 100) {
+                                    $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
+                                }
                             }
                         }
+                    } else if (!$metadata->isEmptyAllowed) {
+                        $missingProp[] = $metadata->name;
                     }
-                } else if (!$metadata->isEmptyAllowed){
-                    $missingProp[] = $metadata->name;
                 }
             }
         } catch (Exception $e) {
@@ -201,6 +213,23 @@ class XMLDocmanImport {
         //print_r($e);
         echo "Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL;
         $this->exitError($e->getMessage());
+    }
+    
+    private function checkHardCodedMetadataUsage() {
+        
+        $errorMsg = '';
+        
+        if ($this->doc->xpath('//item/properties/obsolescence_date') != null && !in_array('obsolescence_date', $this->hardCodedMetadata)) {
+            $errorMsg .= "The Obsolescence Date property is not used on the target project.".PHP_EOL;
+        }
+        
+        if ($this->doc->xpath('//item/properties/status') != null && !in_array('status', $this->hardCodedMetadata)) {
+            $errorMsg .= "The Status property is not used on the target project.".PHP_EOL;
+        }
+        
+    if ($errorMsg != '') {
+            $this->exitError($errorMsg);
+        }
     }
 
     /**
