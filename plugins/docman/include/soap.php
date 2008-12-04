@@ -466,6 +466,15 @@ $soapFunctions[] = array('getDocmanProjectMetadata', 'Returns the metadata of th
 
 
 /**
+ * Creates a docman folder
+ */
+function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('createDocmanFolder', 'Create a folder');
+
+
+/**
  * Creates a docman file
  */
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
@@ -529,15 +538,6 @@ function createDocmanEmptyDocument($sessionKey, $group_id, $parent_id, $title, $
     return _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $permissions, $metadata, $owner, $create_date, $update_date);
 }
 $soapFunctions[] = array('createDocmanEmptyDocument', 'Creates a docman empty document');
-
-
-/**
- * Creates a docman folder
- */
-function createDocmanFolder($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
-    return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
-}
-$soapFunctions[] = array('createDocmanFolder', 'Create a folder');
 
 
 /**
@@ -623,6 +623,15 @@ function monitorDocmanItem($sessionKey, $group_id, $item_id) {
     return _makeDocmanRequest($sessionKey, $group_id, 'monitor', array('id' => $item_id, 'monitor' => true));
 }
 $soapFunctions[] = array('monitorDocmanItem', 'Enables the monitoring of an item by a user', 'xsd:boolean');
+
+
+/**
+ * Updates a docman folder
+ */
+function updateDocmanFolder($sessionKey, $group_id, $item_id, $title, $description, $status, $permissions, $metadata, $owner, $create_date, $update_date) {
+    return _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $permissions, $metadata, $owner, $create_date, $update_date);
+}
+$soapFunctions[] = array('updateDocmanFolder', 'Updates a docman folder');
 
 
 /**
