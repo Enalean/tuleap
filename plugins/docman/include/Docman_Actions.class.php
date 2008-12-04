@@ -324,7 +324,8 @@ class Docman_Actions extends Actions {
                 $userId = $user->getId();
                 if (isset($item['owner'])) {
                     $um = UserManager::instance();
-                    if ($new_owner = $um->getUserByUserName($item['owner']) !== null) {
+                    $new_owner = $um->getUserByUserName($item['owner']);
+                    if ($new_owner !== null) {
                         $owner = $new_owner->getId();
                     } else {
                         $owner = $userId;
