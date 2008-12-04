@@ -448,7 +448,6 @@ class Docman_Actions extends Actions {
             
             // Change creation date
             if (isset($data['create_date']) && $data['create_date'] != '') {
-                //$data['create_date'] = strtotime($data['create_date']);
                 $old_create_date = $item->getCreateDate();
                 if ($old_create_date == $data['create_date']) {
                     $create_date_changed = false;
@@ -461,7 +460,6 @@ class Docman_Actions extends Actions {
             
             // Change update date
             if (isset($data['update_date']) && $data['update_date'] != '') {
-                //$data['update_date'] = strtotime($data['update_date']);
                 $old_update_date = $item->getUpdateDate();
                 if ($old_update_date == $data['update_date']) {
                     $update_date_changed = false;
