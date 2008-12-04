@@ -198,9 +198,10 @@ class Docman_XMLExportVisitor {
     
     protected function getNormalizedLogin($userId) {
         if(!isset($this->userCache[$userId])) {
-            $lr = UserLdap::getLdapResultSetFromUserId($userId);
-            if($lr !== null) {
-                $this->userCache[$userId] = $lr->getLogin();
+            $um = UserManager::instance();
+            $user = $um->getUserById($userId);
+            if($user !== null) {
+                $this->userCache[$userId] = $user->getName();
             } else {
                 $this->userCache[$userId] = '';
             }

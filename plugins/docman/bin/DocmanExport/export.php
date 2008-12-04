@@ -25,7 +25,7 @@
  * How to compare 2 dumps:
  * diff -u -I "[ ]*<date>.*</date>" -I "[ ]*<create_date>.*</create_date>" -I "[ ]*<update_date>.*</update_date>" -I "[ ]*<owner>.*</owner>" -I "[ ]*<author>.*</author>" file1.xml file2.xml
  */
-
+set_include_path(get_include_path() .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src' .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src/www/include');
 require 'pre.php';
 require 'XMLExport.class.php';
 
