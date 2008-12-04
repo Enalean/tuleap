@@ -105,9 +105,5 @@ class Docman_SOAPController extends Docman_Controller {
             default: parent::_dispatch($view, $item, $root, $get_show_view);
         }
    }
-   
-    function _getEventManager() {
-        return new EventManager();
-    }
 }
 
