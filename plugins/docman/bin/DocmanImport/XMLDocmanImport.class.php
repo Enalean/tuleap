@@ -32,6 +32,7 @@ class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
 
+    // ID of the project
     private $groupId;
 
     private $dataBaseDir;
@@ -43,7 +44,10 @@ class XMLDocmanImport {
     // Group map
     private $ugroupMap;
 
+    // Soap client
     private $soap;
+    
+    // Session hash
     private $hash;
 
     /**
@@ -70,6 +74,65 @@ class XMLDocmanImport {
         }
 
         echo "Connected to $wsdl as $login.".PHP_EOL;
+    }
+    
+    /**
+     * Loads and checks an XML document
+     */
+    private function loadXML($rootPath) {
+        $archiveName = basename($rootPath);
+        $this->dataBaseDir = $rootPath.'/'.$archiveName;
+
+        // DTD validation
+        $dom = new DOMDocument();
+        $dom->load($rootPath.'/'.$archiveName.'.xml');
+        if (!$dom->validate()) {
+            $this->warn("DTD Validation failed.");
+        }
+
+        $this->doc = simplexml_import_dom($dom);
+
+        // Build the maps
+        $this->buildMetadataMap();
+        $this->buildUgroupMap();
+
+        // Sanity checks
+        echo "Checking the XML document... ";
+        $this->checkMetadataDefinition();
+        $this->checkMetadataUsage();
+        $this->checkUgroupDefinition();
+        $this->checkUgroupsUsage();
+        echo "Done.".PHP_EOL;
+    }
+
+    /**
+     * Import all the items to the specified parent folder
+     */
+    public function import($xmlDoc, $parentId) {
+        $this->loadXML($xmlDoc);
+
+        $nodes = $this->doc->xpath('/docman/item');
+        foreach ($nodes as $node) {
+            $this->recurseOnNode($node, $parentId);
+        }
+    }
+
+    /**
+     * Import an item to the specified parent folder
+     */
+    public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
+        $this->loadXML($xmlDoc);
+
+        $rootNode = $this->findPath($path);
+        if ($rootNode instanceof SimpleXMLElement) {
+            if($opt == self::CHILDREN_ONLY) {
+                foreach($rootNode->xpath('item') as $child) {
+                    $this->recurseOnNode($child, $parentId);
+                }
+            } else {
+                $this->recurseOnNode($rootNode, $parentId);
+            }
+        }
     }
 
     /**
@@ -141,40 +204,13 @@ class XMLDocmanImport {
     }
 
     /**
-     * Loads and checks an XML document
-     */
-    private function loadXML($rootPath) {
-        $archiveName = basename($rootPath);
-        $this->dataBaseDir = $rootPath.'/'.$archiveName;
-
-        // DTD validation
-        $dom = new DOMDocument();
-        $dom->load($rootPath.'/'.$archiveName.'.xml');
-        if (!$dom->validate()) {
-            $this->warn("DTD Validation failed.");
-        }
-
-        $this->doc = simplexml_import_dom($dom);
-
-        // Build the maps
-        $this->buildMetadataMap();
-        $this->buildUgroupMap();
-
-        // Sanity checks
-        echo "Checking the XML document... ";
-        $this->checkMetadataDefinition();
-        $this->checkMetadataUsage();
-        $this->checkUgroupDefinition();
-        $this->checkUgroupsUsage();
-        echo "Done.".PHP_EOL;
-    }
-
-    /**
      * Checks if the metadata used in the XML document reference metadata defined in the propdefs node of the document
      */
     private function checkMetadataUsage() {
         $propertyList = $this->doc->xpath('//item/properties/property');
 
+        $errorMsg = '';
+        
         // Check the values set to the properties
         foreach ($propertyList as $property) {
             $item_nodes = $property->xpath('../..');
@@ -187,9 +223,9 @@ class XMLDocmanImport {
                 switch ($type) {
                     case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                         $value = (string)$property;
-                        $match = preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value);
+                        $match = preg_match('/^[0-9]*$/', $value);
                         if (!$match) {
-                            $errorMsg .= "Item '$item_name':\tThe property '$title' set to the value '$value' is a date and must follow the format YYYY-MM-DD.".PHP_EOL;
+                            $errorMsg .= "Item '$item_name':\tThe property '$title' set to the value '$value' is a date and must be a timestamp.".PHP_EOL;
                         }
                         break;
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
@@ -241,7 +277,7 @@ class XMLDocmanImport {
             }
         }
 
-        if (isset($errorMsg)) {
+        if ($errorMsg != '') {
             $this->exitError($errorMsg);
         }
     }
@@ -252,6 +288,8 @@ class XMLDocmanImport {
     private function checkUgroupsUsage() {
         $permissions = $this->doc->xpath('//item/permissions/permission');
 
+        $errorMsg = '';
+        
         foreach ($permissions as $permission) {
             $ugroup_name = (string)$permission['ugroup'];
 
@@ -263,7 +301,7 @@ class XMLDocmanImport {
             }
         }
 
-        if (isset($errorMsg)) {
+        if ($errorMsg != '') {
             $this->exitError($errorMsg);
         }
     }
@@ -274,6 +312,8 @@ class XMLDocmanImport {
     private function checkUgroupDefinition() {
         $ugroups = $this->doc->xpath('/docman/ugroups/ugroup');
 
+        $errorMsg = '';
+        
         foreach ($ugroups as $ugroup) {
             $name = (string)$ugroup['name'];
 
@@ -296,7 +336,7 @@ class XMLDocmanImport {
             }
         }
 
-        if (isset($errorMsg)) {
+        if ($errorMsg != '') {
             $this->exitError($errorMsg);
         }
     }
@@ -309,62 +349,67 @@ class XMLDocmanImport {
         // Retrieve the metadata definition in the XML document
         $propdefs = $this->doc->xpath('/docman/propdefs/propdef');
 
+        $errorMsg = '';
+        
         foreach ($propdefs as $propdef) {
             $name = (string)$propdef['name'];
 
             $type = self::typeStringToCode((string)$propdef['type']);
-             
-            // Check if the metadata type is the same in the XML document and on the server
-            if ($type == $this->metadataMap[$name]['type']) {
+            // First check if the metadata exists on the server
+            if (isset($this->metadataMap[$name])) {
+                 
+                // Check if the metadata type is the same in the XML document and on the server
+                if ($type == $this->metadataMap[$name]['type']) {
+                    if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                        $values = array();
+                        foreach ($propdef->value as $value) {
+                            $values[] = (string)$value;
+                        }
+    
+                        $server_values = array_keys($this->metadataMap[$name]['values']);
+                        if ($values != $server_values) {
+                            $diff1 = array_diff($values, $server_values);
+                            $diff2 = array_diff($server_values, $values);
+                            $errorMsg = "The property '$name' doesn't declare the same list of values as in the server:".PHP_EOL;
+                            if (count($diff1)) {
+                                $errorMsg .= "\tIncorrect:\t".implode(', ', $diff1).PHP_EOL;
+                            }
+                            if (count($diff2)) {
+                                $errorMsg .= "\tMissing:\t".implode(', ', $diff2).PHP_EOL;
+                            }
+                        }
+                    }
+                } else if ($type === null) {
+                    $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL; 
+                } else {
+                    $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+                }
+    
+                // Check if the metadata value can be empty
+                $empty = (string)$propdef['empty'];
+                // 'true' is the default value if nothing is specified
+                if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
+                    $errorMsg .= "The property '$name' doesn't allow empty values. Please set the attribute empty to \"false\" to the corresponding propdef element.".PHP_EOL;
+                } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
+                    $errorMsg .= "The property '$name' allows empty values. Please set the attribute empty to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
+                }
+    
+                // Check if multiple values are allowed
                 if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                    $values = array();
-                    foreach ($propdef->value as $value) {
-                        $values[] = (string)$value;
-                    }
-
-                    $server_values = array_keys($this->metadataMap[$name]['values']);
-                    if ($values != $server_values) {
-                        $diff1 = array_diff($values, $server_values);
-                        $diff2 = array_diff($server_values, $values);
-                        $errorMsg = "The property '$name' doesn't declare the same list of values as in the server:".PHP_EOL;
-                        if (count($diff1)) {
-                            $errorMsg .= "\tIncorrect:\t".implode(', ', $diff1).PHP_EOL;
-                        }
-                        if (count($diff2)) {
-                            $errorMsg .= "\tMissing:\t".implode(', ', $diff2).PHP_EOL;
-                        }
+                    $multival = (string)$propdef['multivalue'];
+                    // 'false' is the default value if nothing is specified
+                    if (($multival == 'false' || $multival == null) && $this->metadataMap[$name]['isMultipleValuesAllowed']) {
+                        $errorMsg .= "The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.".PHP_EOL;
+                    } else if ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
+                        $errorMsg .= "The property '$name' doesn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).".PHP_EOL;
                     }
                 }
-            } else if ($type === null) {
-               $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL; 
             } else {
-                $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
-            }
-
-            // Check if the metadata value can be empty
-            $empty = (string)$propdef['empty'];
-            // 'true' is the default value if nothing is specified
-            if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
-                $errorMsg .= "The property '$name' doesn't allow empty values. Please set the attribute empty to \"false\" to the corresponding propdef element.".PHP_EOL;
-            } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
-                $errorMsg .= "The property '$name' allows empty values. Please set the attribute empty to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
-            }
-
-            // Check if multiple values are allowed
-            if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                $multival = (string)$propdef['multivalue'];
-                // 'false' is the default value if nothing is specified
-                if (($multival == 'false' || $multival == null) && $this->metadataMap[$name]['isMultipleValuesAllowed']) {
-                    $errorMsg .= "The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.".PHP_EOL;
-                } else if ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
-                    $errorMsg .= "The property '$name' deosn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).".PHP_EOL;
-                }
+                $errorMsg .= "The property '$name' (".(string)$propdef['type']." metadata) doesn't exist on the server.".PHP_EOL;
             }
         }
 
-        // Check that no metadata defined on the server is forgotten in this definition
-
-        if (isset($errorMsg)) {
+        if ($errorMsg != '') {
             $this->exitError($errorMsg);
         }
     }
@@ -407,36 +452,6 @@ class XMLDocmanImport {
     }
 
     /**
-     * Import all the items to the specified parent folder
-     */
-    public function import($xmlDoc, $parentId) {
-        $this->loadXML($xmlDoc);
-
-        $nodes = $this->doc->xpath('/docman/item');
-        foreach ($nodes as $node) {
-            $this->recurseOnNode($node, $parentId);
-        }
-    }
-
-    /**
-     * Import an item to the specified parent folder
-     */
-    public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
-        $this->loadXML($xmlDoc);
-
-        $rootNode = $this->findPath($path);
-        if ($rootNode instanceof SimpleXMLElement) {
-            if($opt == self::CHILDREN_ONLY) {
-                foreach($rootNode->xpath('item') as $child) {
-                    $this->recurseOnNode($child, $parentId);
-                }
-            } else {
-                $this->recurseOnNode($rootNode, $parentId);
-            }
-        }
-    }
-
-    /**
      * Returns the node that corresponds to the given unix-like path
      */
     private function findPath($path) {
@@ -474,7 +489,7 @@ class XMLDocmanImport {
         $title            = (string) $node->properties->title;
         $description      = (string) $node->properties->description;
         $status           = (string) $node->properties->status;
-        $obsolescenceDate = isset($node->properties->obsolescence_date) ? (string) $node->properties->obsolescence_date : '0';
+        $obsolescenceDate = (string) $node->properties->obsolescence_date;
         $ordering         = 'end';
         $owner            = (string) $node->properties->owner;
         $createDate       = (string) $node->properties->create_date;

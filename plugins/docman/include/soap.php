@@ -361,7 +361,7 @@ function _safe_array_merge_recursive($array1, $array2) {
  * @param string       $description       Description
  * @param string       $ordering          Ordering (begin, end)
  * @param string       $status            Status (none, draft, approved, rejected)
- * @param string       $obsolescence_date Obsolescence date (yy-mm-dd or yyyy-mm-dd)
+ * @param string       $obsolescence_date Obsolescence date
  * @param string       $type              Type (folder, file, embedded_file, link, empty, wiki)
  * @param Array        $permissions       Permissions
  * @param Array        $metadata          Metadata values
@@ -696,15 +696,15 @@ if (defined('NUSOAP')) {
                       'description'       => array('xsd:string', 'Description'),
                       'ordering'          => array('xsd:string', 'Ordering (begin, end)'),
                       'status'            => array('xsd:string', 'Status (none, draft, approved, rejected)'),
-                      'obsolescence_date' => array('xsd:string', 'Obsolescence date (yy-mm-dd or yyyy-mm-dd)'),
+                      'obsolescence_date' => array('xsd:string', 'Obsolescence date (timestamp)'),
                       'content'           => array('xsd:string', 'Content'),
                       'permissions'       => array('tns:ArrayOfPermission', 'Permissions'),
                       'metadata'          => array('tns:ArrayOfMetadataValue', 'Metadata values'),
                       'owner'             => array('xsd:string', 'Owner of the item'),
-                      'create_date'       => array('xsd:string', 'Item creation date'),
-                      'update_date'       => array('xsd:string', 'Item update date'),
+                      'create_date'       => array('xsd:string', 'Item creation date (timestamp)'),
+                      'update_date'       => array('xsd:string', 'Item update date (timestamp)'),
                       'author'            => array('xsd:string', 'Version author'),
-                      'date'              => array('xsd:string', 'Version date'),
+                      'date'              => array('xsd:string', 'Version date (timestamp)'),
                       'label'             => array('xsd:string', 'version label'),
                       'changelog'         => array('xsd:string', 'Version changelog'),
                       'file_size'         => array('xsd:int', 'File size'),

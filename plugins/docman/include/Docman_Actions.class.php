@@ -227,7 +227,7 @@ class Docman_Actions extends Actions {
             
             $date = '';
             if ($request->exist('date')) {
-                $date = strtotime($request->get('date'));
+                $date = $request->get('date');
                 
                 $eArray = array('group_id'  => $item->getGroupId(),
                                 'item'      => &$item,
@@ -308,13 +308,13 @@ class Docman_Actions extends Actions {
             {
 
                 // Special handling of obsolescence date
-                if(isset($item['obsolescence_date']) 
-                   && preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', 
-                                 $item['obsolescence_date'], $d)) {
-                    $item['obsolescence_date'] = mktime(0, 0, 0,
-                                                        $d[2], $d[3], $d[1]);
-                }
-                else {
+                if(isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
+                    if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $item['obsolescence_date'], $d)) {
+                        $item['obsolescence_date'] = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
+                    } else if (!preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
+                        $item['obsolescence_date'] = 0;
+                    }
+                } else {
                     $item['obsolescence_date'] = 0;
                 }
 
@@ -337,7 +337,6 @@ class Docman_Actions extends Actions {
                 
                 // Change creation date
                 if (isset($item['create_date']) && $item['create_date'] != '') {
-                    $item['create_date'] = strtotime($item['create_date']);
                     $create_date_changed = true;
                 } else {
                     $create_date_changed = false;
@@ -345,7 +344,6 @@ class Docman_Actions extends Actions {
                 
                 // Change update date
                 if (isset($item['update_date']) && $item['update_date'] != '') {
-                    $item['update_date'] = strtotime($item['update_date']);
                     $update_date_changed = true;
                 } else {
                     $update_date_changed = false;
@@ -450,7 +448,7 @@ class Docman_Actions extends Actions {
             
             // Change creation date
             if (isset($data['create_date']) && $data['create_date'] != '') {
-                $data['create_date'] = strtotime($data['create_date']);
+                //$data['create_date'] = strtotime($data['create_date']);
                 $old_create_date = $item->getCreateDate();
                 if ($old_create_date == $data['create_date']) {
                     $create_date_changed = false;
@@ -463,7 +461,7 @@ class Docman_Actions extends Actions {
             
             // Change update date
             if (isset($data['update_date']) && $data['update_date'] != '') {
-                $data['update_date'] = strtotime($data['update_date']);
+                //$data['update_date'] = strtotime($data['update_date']);
                 $old_update_date = $item->getUpdateDate();
                 if ($old_update_date == $data['update_date']) {
                     $update_date_changed = false;
@@ -475,10 +473,10 @@ class Docman_Actions extends Actions {
             }
             
             // Special handling of obsolescence date
-            if(isset($data['obsolescence_date'])) {
+            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
                 if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
                     $data['obsolescence_date'] = gmmktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                } else {
+                } else if (!preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
                     $data['obsolescence_date'] = 0;
                 }
             }
