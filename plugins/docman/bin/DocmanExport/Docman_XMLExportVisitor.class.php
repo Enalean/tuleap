@@ -179,13 +179,11 @@ class Docman_XMLExportVisitor {
     
     protected function createVersion($version) {
         $vNode = $this->doc->createElement('version');
-        //$this->appendChild($vNode, 'number', $version->getNumber());
         $this->appendChild($vNode, 'author', $this->getNormalizedLogin($version->getAuthorId()));
         $this->appendChild($vNode, 'label', $version->getLabel());
         $this->appendChild($vNode, 'changelog', $version->getChangeLog());
         $this->appendChild($vNode, 'date', $version->getDate());
         $this->appendChild($vNode, 'filename', $version->getFileName());
-        $this->appendChild($vNode, 'filesize', $version->getFileSize());
         $this->appendChild($vNode, 'filetype', $version->getFileType());
         $fileName = sprintf('content%05d.bin', $this->fileCounter++);
         $this->appendChild($vNode, 'content', $fileName);
