@@ -35,7 +35,6 @@ See the file COPYING.
 <dt><a href="#DNS">DNS</a></dt>
 <dt><a href="#SSH">SSH</a></dt>
 <dt><a href="#Sendmail">Sendmail</a></dt>
-<dt><a href="#Samba">Samba</a></dt>
 <dt><a href="#Mailman">Mailman</a></dt>
 <dt><a href="#Mailman">OpenFire</a></dt>
 <dt><a href="#BackgroundDaemons">Background Daemons</a></dt>
@@ -516,15 +515,7 @@ are not re-used.<br>
   <font color="#ff0000"><span style="font-weight: bold;">Remark</span>:</font>
 Unix login name are all
 lowercase even if uppercase are used in the Web login name. <br>
-&nbsp; <li> <b>A Samba account</b> again with the same login name and
-password.</li>
-  <br>
-This account is used only when accessing the resources exported as
-Windows
-shared resources (more in the Samba section). Information about login
-name
-and encrypted password stored in the Codendi database and in the
-Samba password file.
+&nbsp;
 </ol>
 There are specific user account you must know about:
 <ul>
@@ -1003,8 +994,7 @@ directory to let her login through ssh without having to type her
 password. <br>
         </li>
         <li> <b>user_dump:</b> a user info dump with user id, status
-(Active, Suspended,...), default shell, MD5 encrypted password, the 2
-MD4 encrypted passwords for the Samba account (optional) and the real
+(Active, Suspended,...), default shell, MD5 encrypted password, and the real
 name.</li>
         <br>
 &nbsp;
@@ -1520,31 +1510,6 @@ must not be modified.<br>
 &nbsp; <br>
 &nbsp;
 <p> </p>
-<hr width="100%" size="2">
-<h1><a name="Samba"></a>Samba</h1>
-Samba allows Windows users to access a number of Codendi shared resources
-(see below). The Samba password file
-<span style="font-family: monospace;">/etc/smbpasswd</span> is
-generated automatically by the Codendi back-end scripts like the
-<span style="font-family: monospace;">/etc/passwd</span>,
-<span style="font-family: monospace;">/etc/shadow</span> and <span
- style="font-family: monospace;">/etc/group</span> files. The
-login/password used by Codendi users to access their shared resources are
-the same as the Codendi login and password. When browsing the Codendi
-shared resource from the Windows Explorer, users will see the following
-folders<br>
-<ul>
-  <li> <b>FTP Incoming directory</b>: make it easy to upload file
-releases
-for Windows users that do not have/know the command line FTP client</li>
-  <li> <b>The User directory</b>: a given user will only see her own
-user directory.<br>
-  </li>
-  <li> <b>The Project directories</b>: all project directories are
-visible but access permissions apply as only project members can write
-to the project home directory.<br>
-  </li>
-</ul>
 <hr width="100%" size="2">
 <h1><a name="Mailman"></a>Mailman</h1>
 <p>The Mailman mailing lists manager requires little attention from the

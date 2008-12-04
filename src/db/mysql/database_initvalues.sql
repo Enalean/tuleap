@@ -48,7 +48,6 @@ INSERT INTO user SET \
         people_view_skills = 0, \
         people_resume = '', \
         timezone = 'GMT', \
-        windows_pw = '', \
         fontsize = 0, \
         theme = '', \
         language_id = 'en_US', \
@@ -79,7 +78,6 @@ INSERT INTO user SET \
         people_view_skills = 0, \
         people_resume = '', \
         timezone = 'GMT', \
-        windows_pw = 'AD3682DB98997A758E5D533411003C5C:2E17AE860AC9D678CD6B9C16DBBA6006', \
         fontsize = 0, \
         theme = '', \
         language_id = 'en_US', \

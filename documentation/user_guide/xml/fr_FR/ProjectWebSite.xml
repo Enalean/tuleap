@@ -479,36 +479,6 @@ ftp://nom_projet.&SYS_DEFAULT_DOMAIN;/home/groups/nom_projet/htdocs/
           </itemizedlist>
         </section>
 
-        <section id="NetscapeComposer6.x">
-          <title>Netscape Composer 6.x</title>
-
-			<para>Avec Netscape version 6 (ou Mozilla 1.0 et au delà) il n'est plus possible
-				d'éditer une page HTML sans en avoir au préalable une copie locale. Pour
-				utiliser le mécanisme de publication de Netscape 6 créez tout d'abord la
-				structure arborescente et les pages de votre site Web sur votre poste de
-				travail, travaillez sur cette copie locale puis publiez les pages
-				modifiées via FTP.</para>
-
-			<para>Les utilisateurs Windows ont aussi la possibilité de pointer directement
-				sur les répertoires des projets sur &SYS_PRODUCT_NAME; (voir <xref
-					linkend="MSWindowsSharedResources"/>) et de travailler sur les
-				fichiers HTML comme s'ils étaient situés sur votre poste de travail. Dans ce
-				cas aucune action de publication n'est nécessaire.</para>
-        </section>
-
-        <section id="MicrosoftFrontPage">
-          <title>Microsoft FrontPage</title>
-
-			<para>Vous ne pouvez pas utiliser les fonctions de publication de FrontPage car
-				&SYS_PRODUCT_NAME; ne supporte pas les extensions de Frontpage. De plus, la publication
-				via FTP ne fonctionne pas non plus car Frontpage ne permet pas de spécifier
-				complètement le chemin d'accès au site Web distant. L'une des solutions de
-				rechange consiste à mapper un disque réseau sur
-				<literal>\\codex\projects</literal> (voir <xref
-					linkend="MSWindowsSharedResources"/>) et à travailler
-				directement sur les répertoires du serveur Web de votre projet.</para>
-        </section>
-
         <section id="MacromediaDreamweaver">
           <title>Macromedia Dreamweaver</title>
 

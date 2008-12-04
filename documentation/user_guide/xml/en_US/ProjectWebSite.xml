@@ -435,34 +435,6 @@ if ( user_isloggedin() ) {
           </listitem>
         </itemizedlist>
 
-        <section id="NetscapeComposer6.x">
-          <title>Netscape Composer 6.x</title>
-
-          <para>With Netscape version 6 (or Mozilla 1.0) it is no longer
-          possible to publish a page without first storing a local copy. In
-          order to use the Netscape 6 publishing mechanism first create your
-          Web site structure and pages on your desktop machine, work with this
-          local copy and then publish the pages via FTP as needed.</para>
-
-          <para>As an alternative Windows users can also map a network drive
-          pointing directly to the Projects directory on &SYS_PRODUCT_NAME; (see <xref
-          linkend="MSWindowsSharedResources" />) and work with the HTML files
-          as if they were located on the local machine. In this case no
-          publishing is required.</para>
-        </section>
-
-        <section id="MicrosoftFrontPage">
-          <title>Microsoft FrontPage</title>
-
-          <para>You can&#39;t use the Publish feature of FrontPage because the
-          &SYS_PRODUCT_NAME; server doesn&#39;t support the FrontPage Web extensions. In
-          addition, publishing through FTP won&#39;t work either because
-          FrontPage does not allow you to fully specify the path to the remote
-          of your project Web server. A work around consist in mounting the
-          Windows network drive at <literal>\\codex\projects</literal> (see
-          <xref linkend="MSWindowsSharedResources" />) and work directly on
-          your remote Web server directories.</para>
-        </section>
 
         <section id="MacromediaDreamweaver">
           <title>Macromedia Dreamweaver</title>

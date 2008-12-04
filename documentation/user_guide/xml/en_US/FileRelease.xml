@@ -404,10 +404,7 @@
                     <para>&SYS_PRODUCT_NAME; server offers an upload mechanism via FTP (ou SCP). 
                     To upload your files, follow the instructions given when you 
                     click the <emphasis>?</emphasis> next to the [add file] link.
-                    Alternatively, if you are a MS Windows user, you can also
-                    see the FTP Incoming space directly from Windows Explorer and drag
-                    and drop your files in there (see <xref
-                    linkend="MSWindowsSharedResources" />). Then click the 
+                    Then click the 
                     [Refresh File list] link to see your files.</para></tip>
                 </para>
                 <para>Before you upload the files make sure you gave them names

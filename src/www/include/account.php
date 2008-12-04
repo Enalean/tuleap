@@ -10,7 +10,6 @@
 //
 
 require_once('common/mail/Mail.class.php');
-require_once('common/include/createntlm.inc');
 require_once('common/password/PasswordStrategy.class.php');
 require_once('common/password/PasswordRegexpValidator.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
@@ -28,11 +27,10 @@ function account_pwvalid($pw, &$errors) {
     return $valid;
 }
 
-// Set user password (Unix, Web and Windows)
+// Set user password (Unix, Web)
 function account_set_password($user_id,$password) {
     $res = db_query("UPDATE user SET user_pw='" . md5($password) . "',"
                     . "unix_pw='" . account_genunixpw($password) . "',"
-                    . "windows_pw='" . account_genwinpw($password) . "',"
                     . "last_pwd_update='".time()."'"
                     ." WHERE user_id=" . db_ei($user_id));
     if (! $res) {
@@ -240,12 +238,6 @@ function account_genunixpw($plainpw) {
 	return crypt($plainpw,account_gensalt());
 }
 
-// generate the 2 windows passwords (win_passwd:winNT_passwd)
-function account_genwinpw($plainpw) {
-    $smbhash=new smbHash();
-    return $smbhash->lmhash($plainpw).":".$smbhash->nthash($plainpw);
-}
-
 // returns next userid
 function account_nextuid() {
 	db_query("SELECT max(unix_uid) AS maxid FROM user");
@@ -291,7 +283,6 @@ function account_create($loginname=''
                      ." SET user_name='".db_es($loginname)."'"
                      ." ,user_pw='".md5($pw)."'"
                      ." ,unix_pw='".account_genunixpw($pw)."'"
-                     ." ,windows_pw='".account_genwinpw($pw)."'"
                      ." ,ldap_id='".db_es($ldap_id)."'"
                      ." ,realname='".db_es($realname)."'"
                      ." ,register_purpose='".db_es($register_purpose)."'"

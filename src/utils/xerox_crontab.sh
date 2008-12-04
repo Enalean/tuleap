@@ -72,7 +72,6 @@ cd $CODEX_UTILS_PREFIX
 cp -f /etc/passwd /etc/passwd.backup
 cp -f /etc/shadow /etc/shadow.backup
 cp -f /etc/group /etc/group.backup
-cp -f /etc/smbpasswd /etc/smbpasswd.backup 2>/dev/null
 ./new_parse.pl
 
 # Apache configuration must be reloaded because of new SVN repositories

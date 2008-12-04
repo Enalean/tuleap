@@ -71,9 +71,6 @@ $sys_cookie_domain = "%sys_default_domain%";
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
 $sys_lists_host = "lists.%sys_default_domain%";
- 
-// Windows Workgroup CodeX belog to (Samba)
-$sys_win_domain = "%sys_win_domain%";
 
 // Fully qualified name
 $sys_fullname = "%sys_fullname%";

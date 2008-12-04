@@ -172,7 +172,7 @@ rpms_ok=1
 for rpm in openssh-server openssh openssh-clients \
    httpd  apr apr-util mod_ssl vsftpd \
    openssl openldap perl perl-DBI perl-DBD-MySQL gd \
-   sendmail telnet bind bind-chroot caching-nameserver ntp samba python perl-suidperl \
+   sendmail telnet bind bind-chroot caching-nameserver ntp python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
    mysql MySQL-python php-mbstring php-gd php-soap php-xml \
@@ -228,7 +228,6 @@ read -p "Your Company long name (e.g. Xerox Corporation): " sys_long_org_name
 read -p "Codex Server fully qualified machine name: " sys_fullname
 read -p "Codex Server IP address: " sys_ip_address
 read -p "LDAP server name: " sys_ldap_server
-read -p "Windows domain (Samba): " sys_win_domain
 read -p "Activate user shell accounts? [y|n]:" active_shell
 read -p "Generate a self-signed SSL certificate to enable HTTPS support? [y|n]:" create_ssl_certificate
 read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
@@ -767,7 +766,6 @@ $CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codex/documentation/c
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_win_domain%' "$sys_win_domain" 
 # For CLI: only one parameter
 substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 
@@ -795,7 +793,6 @@ substitute '/etc/codex/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server"
 substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
-substitute '/etc/codex/conf/local.inc' '%sys_win_domain%' "$sys_win_domain" 
 substitute '/etc/codex/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
@@ -1083,11 +1080,6 @@ $CHOWN codexadm.codexadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
-##############################################
-# Samba configuration
-#
-$SERVICE smb start
-todo "Samba service is started. If you want to use it, please configure it (procedure is detailed in the Installation Guide)."
 
 ##############################################
 # Subversion configuration
@@ -1414,7 +1406,6 @@ $CHKCONFIG mysqld on
 $CHKCONFIG cvs on
 $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
-$CHKCONFIG smb on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
 

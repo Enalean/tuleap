@@ -108,65 +108,6 @@ newgrp nom_projet
         </itemizedlist>
     </section>
 
-	<section id="MSWindowsSharedResources">
-		<title>Ressources partagées MS Windows</title>
-		
-		<para><emphasis role="bold">Note Importante</emphasis> : cette fonctionnalité
-			peut avoir été désactivée par l'administrateur de votre site &SYS_PRODUCT_NAME; et s'avérer
-			indisponible dans votre organisation.</para>
-		
-		<para>Les utilisateurs Windows (et les utilisateurs Linux/Unix disposant de
-			Samba) peuvent utiliser des disques réseau pour accéder aux espaces de stockage
-			suivants depuis leur explorateur de fichiers :</para>
-		
-		<itemizedlist mark="bullet" spacing="compact">
-			<listitem>
-				<para>Votre répertoire maison (home directory),</para>
-			</listitem>
-			
-			<listitem>
-				<para>Les divers répertoires maison du projet (où se situe le site Web du
-					projet)</para>
-			</listitem>
-			
-			<listitem>
-				<para>L'espace FTP entrant où vous pouvez directement glisser-déposer
-					les fichiers à inclure dans vos publication de version au lieu
-					d'utiliser un client FTP pour le chargement. (Voir 
-                                        <xref linkend="ReleaseAdministration"/>)</para>
-			</listitem>
-		</itemizedlist>
-		
-		<para>Pour accéder aux ressources partagées &SYS_PRODUCT_NAME;, ouvrez votre explorateur de
-			fichiers, naviguez dans le Réseau Microsoft Global, ouvrez le domaine
-			&SYS_SAMBA_DOMAIN; et cliquez sur le serveur &SYS_PRODUCT_NAME;. Utilisez vos nom
-			d'utilisateur et mot de passe &SYS_PRODUCT_NAME; pour vous connecter aux ressources (ils vous
-			seront demandés uniquement s'ils ne sont pas identiques à vos nom
-			d'utilisateur et mot de passe Windows).</para>
-		
-		<para>Les ressources partagées peuvent aussi être accédées directement en
-			utilisant les chemins suivants :</para>
-		
-		<itemizedlist mark="bullet" spacing="compact">
-			<listitem>
-				<para><literal>\\codex\nom_utilisateur</literal> (Répertoire
-					maison de l'utilisateur)</para>
-			</listitem>
-			
-			<listitem>
-				<para><literal>\\codex\Projects</literal> (Les répertoires de tous
-					les projets - uniquement pour les membres d'un projet)</para>
-			</listitem>
-			
-			<listitem>
-				<para><literal>\\codex\Ftp_Incoming</literal> (Espace de chargement
-					FTP entrant - pour les membres d'un projet)</para>
-			</listitem>
-		</itemizedlist>
-		
-		<para>Inutile de préciser que les permissions en écriture et en lecture mises en
-			place par &SYS_PRODUCT_NAME; pour protéger vos données s'appliquent à toutes ces ressources partagées.</para>
-	</section>
     
     <section id="SoapAPI">
       <title>API SOAP</title>

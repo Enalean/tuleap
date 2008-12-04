@@ -96,7 +96,6 @@ class User {
             'people_view_skills',
             'people_resume',
             'timezone',
-            'windows_pw',
             'fontsize',
             'theme',
             'language_id',

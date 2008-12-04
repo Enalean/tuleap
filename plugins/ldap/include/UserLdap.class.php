@@ -65,7 +65,6 @@ class UserLdap {
             //    User class or function in user.php
             $qry1 = "UPDATE user SET user_pw='" . md5($password) . "'"
                 . ", unix_pw='" . account_genunixpw($password) . "'"
-                . ", windows_pw='" . account_genwinpw($password) . "'"
                 . ", realname='".db_es($lr->getCommonName())."'"
                 . ", email='".db_es($lr->getEmail())."'"
                 . " WHERE user_id=" . $userId;

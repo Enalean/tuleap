@@ -20,6 +20,9 @@ echo "Updating Packages"
 ###############################################################################
 echo "Updating local.inc"
 
+# Remove $sys_win_domain XXX ???
+
+
 # dbauthuser and password
 $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
@@ -106,6 +109,12 @@ EOF
 $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE user ADD COLUMN approved_by int(11) NOT NULL default '0' AFTER add_date;
 EOF
+
+# Windows password no longer needed
+$CAT <<EOF | $MYSQL $pass_opt codex
+ALTER TABLE user DROP COLUMN windows_pw;
+EOF
+
 
 
 # artifact permissions

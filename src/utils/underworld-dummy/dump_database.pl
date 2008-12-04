@@ -15,16 +15,14 @@ my $server_array = ();
 &db_connect;
 
 # Dump the User Table information
-my $query = "SELECT unix_uid, unix_status, status, user_name, shell, unix_pw, windows_pw, email, realname FROM user WHERE unix_status != \"N\"";
+my $query = "SELECT unix_uid, unix_status, status, user_name, shell, unix_pw, email, realname FROM user WHERE unix_status != \"N\"";
 my $c = $dbh->prepare($query);
 $c->execute();
 	
-while(my ($id, $unix_status, $status, $username, $shell, $passwd, $winpasswds, $email, $realname) = $c->fetchrow()) {
+while(my ($id, $unix_status, $status, $username, $shell, $passwd, $email, $realname) = $c->fetchrow()) {
 	$home_dir = $homedir_prefix."/".$username;
-	# need to split them because they might be empty
-	($winpw,$winntpw) = split(/:/,$winpasswds);
 
-	$userlist = "$id:$unix_status:$status:$username:$shell:$passwd:$winpw:$winntpw:$email:$realname\n";
+	$userlist = "$id:$unix_status:$status:$username:$shell:$passwd:$email:$realname\n";
 
 	push @user_array, $userlist;
 }

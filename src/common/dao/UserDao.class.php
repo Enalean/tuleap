@@ -259,16 +259,6 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-    * Searches User by WindowsPw 
-    * @return DataAccessResult
-    */
-    function & searchByWindowsPw($windowsPw) {
-        $sql = sprintf("SELECT * FROM user WHERE windows_pw = %s",
-            $this->da->quoteSmart($windowsPw));
-        return $this->retrieve($sql);
-    }
-
-    /**
     * Searches User by Fontsize 
     * @return DataAccessResult
     */
@@ -303,8 +293,8 @@ class UserDao extends DataAccessObject {
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $windows_pw, $fontsize, $theme, $language_id) {
-		$sql = sprintf("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, windows_pw, fontsize, theme, language_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id) {
+		$sql = sprintf("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             $this->da->quoteSmart($user_name),
             $this->da->quoteSmart($email),
             $this->da->quoteSmart($user_pw),
@@ -327,7 +317,6 @@ class UserDao extends DataAccessObject {
             $this->da->quoteSmart($people_view_skills),
             $this->da->quoteSmart($people_resume),
             $this->da->quoteSmart($timezone),
-            $this->da->quoteSmart($windows_pw),
             $this->da->quoteSmart($fontsize),
             $this->da->quoteSmart($theme),
             $this->da->quoteSmart($language_id));

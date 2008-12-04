@@ -35,8 +35,7 @@ if ($request->isPost()
     $form_pw = $request->get('form_pw');
 	db_query("UPDATE user SET "
 		. "user_pw='" . md5($form_pw) . "',"
-		. "unix_pw='" . account_genunixpw($form_pw) . "',"
-		. "windows_pw='" . account_genwinpw($form_pw) . "' WHERE "
+		. "unix_pw='" . account_genunixpw($form_pw) . "' WHERE "
 		. "confirm_hash='".db_es($confirm_hash)."'");
 
 	session_redirect("/");

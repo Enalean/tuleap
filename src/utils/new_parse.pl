@@ -26,7 +26,6 @@ umask 002;
 require("include.pl");  # Include all the predefined functions and variables
 require("./cvs1/cvs_watch.pl"); # Include predefined functions for watch mode
 
-$smb_passwd_file="/etc/samba/smbpasswd";
 
 
 ##############################
@@ -61,19 +60,6 @@ sub hash_shadow_array {
         }
         return %tmp_hash;
       }
-sub hash_smbpasswd_array {
-        my @file_array = @_;
-        my %tmp_hash;
-        my $counter=0;
-
-        foreach (@file_array) {
-          ($name, $uid, $rest) = split(":", $_);
-          if (defined $tmp_hash{$uid}) { print "$smb_passwd_file: ID $uid already exists, please remove duplicates!\n";}
-          $tmp_hash{$uid}=$counter;
-          $counter++;
-        }
-        return %tmp_hash;
-      }
 
 # This section is used to get the list of active users so that we can customize 
 # the SVN access rights... But it is not clear how!
@@ -94,7 +80,7 @@ my $verbose=0;
 my $user_file = $dump_dir . "/user_dump";
 my $group_file = $dump_dir . "/group_dump";
 my $server_file = $dump_dir . "/server_dump";
-my ($uid, $unix_status, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname);
+my ($uid, $unix_status, $status, $username, $shell, $passwd, $email, $realname);
 my ($gname, $gstatus, $gid, $userlist, $ugrouplist);
 my $server_url;
 if ($sys_force_ssl) {
@@ -103,9 +89,6 @@ if ($sys_force_ssl) {
   $server_url="http://$sys_default_domain";
 }
 
-# Win accounts are activated if /etc/samba/smbpasswd exists.
-my $winaccount_on = -f "$smb_passwd_file";
-my $winempty_passwd = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 # file templates
 my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
@@ -130,11 +113,9 @@ my ($up_group, $new_group, $del_group) = ("0","0","0");
 @passwd_array = open_array_file("/etc/passwd");
 @shadow_array = open_array_file("/etc/shadow");
 @group_array = open_array_file("/etc/group");
-@smbpasswd_array = open_array_file($smb_passwd_file) if ($winaccount_on); # doesn't exist?? XXX
 # Index files (use hash that points to line number)
 %passwd_hash = hash_passwd_array(@passwd_array);
 %shadow_hash = hash_shadow_array(@shadow_array);
-%smbpasswd_hash = hash_smbpasswd_array(@smbpasswd_array);
 
 #LJ The file containing all allowed root for CVS server
 #
@@ -181,20 +162,8 @@ if($sys_server_id == 0) {
 print ("\n\n	Processing Users\n\n");
 while ($ln = pop(@userdump_array)) {
 	chop($ln);
-	($uid, $unix_status, $status, $username, $shell, $passwd, $win_passwd, $winnt_passwd, $email, $realname) = split(":", $ln);
+	($uid, $unix_status, $status, $username, $shell, $passwd, $email, $realname) = split(":", $ln);
 
-	# if win passwords are empty in the SQL database then it means
-	# that it's a user that was created before Win Account were put in place
-	# Force it to the "X....X" real empty password
-	$win_passwd = $winempty_passwd if ($win_passwd eq "");
-	$winnt_passwd = $winempty_passwd if ($winnt_passwd eq "");
-
-# LJ commented out because it's all on the same machine for the moment
-# The SF site has  a cvs server which names start with cvs. We don't
-#
-#	if (substr($hostname,0,3) eq "cvs") {
-#		$shell = "/bin/cvssh";
-#	}
 	
 	$uid += $uid_add;
 
@@ -216,12 +185,10 @@ while ($ln = pop(@userdump_array)) {
 	if ($unix_status eq 'A' && $user_exists && $user_active) {
 		update_user($uid, $username, $realname, $shell, $passwd, $email);
                 update_user_group($uid, $username);
-		update_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		++$up_user;
 
 	} elsif ($unix_status eq 'A' && !$user_exists && $user_active) {
 		add_user($uid, $username, $realname, $shell, $passwd, $email);
-		add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd);
 		++$new_user;
 	
 	} elsif ($unix_status eq 'D') {
@@ -229,13 +196,11 @@ while ($ln = pop(@userdump_array)) {
 	        # already been deleted so do nothing
 	        if ($user_exists) {
 		  delete_user($uid,$username);
-		  delete_winuser($uid);
 		  ++$del_user;
 		}
 		
 	} elsif (($unix_status eq 'S' || $status eq 'S') && $user_exists) {
           if (suspend_user($username)) {
-            suspend_winuser($uid);
             ++$suspend_user;
           }
 		
@@ -787,10 +752,6 @@ print "Deleted groups   : $del_group\n";
 write_array_file("/etc/passwd", @passwd_array);
 write_array_file("/etc/shadow", @shadow_array);
 write_array_file("/etc/group", @group_array);
-if ($winaccount_on) {
-  write_array_file($smb_passwd_file, @smbpasswd_array);
-  chmod 0600, "$smb_passwd_file";
-}
 write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 
 if ($use_cvsnt && $server_is_master) {
@@ -857,17 +818,6 @@ sub add_user {
         }
 }
 
-sub add_winuser {
-	my ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
-	
-	return if (!$winaccount_on);
-
-	$win_date = sprintf("%08X", time());
-		
-	push @smbpasswd_array, "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
-
-}
-
 
 
 #############################
@@ -909,26 +859,6 @@ sub update_user_group {
 }
 
 
-sub update_winuser {
-  ($uid, $username, $realname, $win_passwd, $winnt_passwd) = @_;
-	
-  return if (!$winaccount_on);
-
-  my $found   = 0;
-  if (defined $smbpasswd_hash{$uid}) {
-      $found = 1;
-      my ($p_username, $p_uid, $p_win_passwd, $p_winnt_passwd,$p_account_bits,
-          $p_last_set_time, $p_realname) = split(":", $smbpasswd_array[$smbpasswd_hash{$uid}]);
-      $win_date = sprintf("%08X", time());
-      if ($win_passwd ne $p_win_passwd) {
-	$smbpasswd_array[$smbpasswd_hash{$uid}] = "$username:$uid:$win_passwd:$winnt_passwd:[U          ]:LCT-$win_date:$realname\n";
-      }
-    }	
-  
-  # if account not found then create the entry again
-  add_winuser($uid, $username, $realname, $win_passwd, $winnt_passwd) unless $found;
-}
-
 
 #############################
 # User Deletion Function
@@ -961,15 +891,6 @@ sub delete_user {
 	system("rm -fr $homedir_prefix/$this_user");
 }
 
-sub delete_winuser {
-  my $this_uid = shift(@_);
-	
-  return if (!$winaccount_on);
-  
-  if (defined $smbpasswd_hash{$this_uid}) {
-    $smbpasswd_array[$smbpasswd_hash{$this_uid}] = '';
-  }
-}	
 
 
 #############################
@@ -988,21 +909,6 @@ sub suspend_user {
       $shadow_array[$shadow_hash{$this_user}]= "$s_username:$new_passwd:$s_date:$s_min:$s_max:$s_inact:$s_expire:$s_flag:$s_resv";
     }
     return 1;
-  }
-}
-
-sub suspend_winuser {
-  my $this_uid = shift(@_);
-	
-  return if (!$winaccount_on);
-  
-  my $new_account_bits = "[DU         ]"; # D flag for suspended
-  if (defined $smbpasswd_hash{$this_uid}) {
-    ($username, $uid, $win_passwd, $winnt_passwd,$account_bits,
-     $last_set_time, $realname) = split(":",$smbpasswd_array[$smbpasswd_hash{$this_uid}]);
-    # if already suspended then give up
-    return if ($account_bits =~ /DU/);
-    $smbpasswd_array[$smbpasswd_hash{$this_uid}] = "$username:$uid:$win_passwd:$winnt_passwd:$new_account_bits:$last_set_time:$realname";
   }
 }
 

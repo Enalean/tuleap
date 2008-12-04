@@ -444,11 +444,7 @@
                     <para>&SYS_PRODUCT_NAME; vous permet de télécharger vos fichiers par FTP (ou SCP).
                     Pour ce faire, suivez les indications qui vous sont données 
                     lorsque vous cliquez sur le <emphasis>?</emphasis> situé après 
-                    le lien [ajouter un fichier].
-                    Par ailleurs, si vous êtes un utilisateur Windows, vous pouvez 
-                    aussi accéder à l'espace de chargement FTP directement depuis
-                    l'explorateur Windows et y glisser les fichiers (voir
-                    <xref linkend="MSWindowsSharedResources" />). Ensuite
+                    le lien [ajouter un fichier]. Ensuite
                     rafraîchissez la page Web ou cliquez sur le lien 
                     &#34;Rafraîchir la liste des fichiers&#34; puis ajouter un 
                     nouveau fichier pour voir apparaître les fichiers chargés.

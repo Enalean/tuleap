@@ -110,65 +110,6 @@ newgrp projectname
           </listitem>
       </itemizedlist>
     </section>
-
-    <section id="MSWindowsSharedResources">
-      <title>MS Windows Shared Resources</title>
-
-    <para><emphasis role="bold">Important Note</emphasis>: this
-    feature can be deactivated by your &SYS_PRODUCT_NAME; site administrator and
-    may therefore be unavailable in your organization.</para>
-
-	<para>Windows users (as well as Linux/Unix users equipped with Samba) can also use mapped
-		network drives to access the following storage spaces from their Windows
-		Explorer:</para>
-
-      <itemizedlist mark="bullet"
-                    spacing="compact">
-        <listitem>
-          <para>Your user home directory,</para>
-        </listitem>
-
-        <listitem>
-          <para>The various project home directories (where the project Web
-          site is located)</para>
-        </listitem>
-
-        <listitem>
-          <para>The FTP incoming space where you can directly drag and drop
-          your file releases instead of using FTP upload (See <xref
-          linkend="ReleaseAdministration" />)</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>To access your &SYS_PRODUCT_NAME; shared resources, open your file explorer,
-      browse the Entire Microsoft Network, open the &SYS_SAMBA_DOMAIN; domain and click on
-      the &SYS_PRODUCT_NAME; machine. Use your &SYS_PRODUCT_NAME; login and password to connect to the
-      resources (If they are not the same as your Windows login/password a
-      dialog box will pop up asking for the appropriate &SYS_PRODUCT_NAME; login/password)</para>
-
-      <para>Shared resources can also be directly accessed at:</para>
-
-      <itemizedlist mark="bullet"
-                    spacing="compact">
-        <listitem>
-          <para><literal>\\codex\your_login_name</literal> (User home
-          directory - for all users)</para>
-        </listitem>
-
-        <listitem>
-          <para><literal>\\codex\Projects</literal> (All project directories -
-          for project members)</para>
-        </listitem>
-
-        <listitem>
-          <para><literal>\\codex\Ftp_Incoming</literal> (FTP upload space -
-          for project members)</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Needless to say all read and write permissions put in place by
-      &SYS_PRODUCT_NAME; to protect your data still apply to these shared resources.</para>
-    </section>
     
     <section id="SoapAPI">
       <title>SOAP API</title>
