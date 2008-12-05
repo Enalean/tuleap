@@ -271,6 +271,22 @@ function checkRestrictedAccess($group) {
     }
 }
 
+/**
+ * Returns true is the current user is a member of the given group
+ */
+function checkGroupMemberAccess($group) {
+    if ($group) {
+        $user = new User(session_get_userid());
+        if ($user) {
+            return $group->userIsMember();
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 function ugroups_to_soap($ugroups) {
     $return = array();
     
@@ -291,6 +307,10 @@ function ugroups_to_soap($ugroups) {
     return $return;
 }
 
+/**
+ * Returns the Ugroups associated to the given project
+ * This function can only be called by members of the group 
+ */
 function getGroupUgroups($sessionKey, $group_id) {
    global $Language;
     if (session_continue($sessionKey)) {
@@ -300,7 +320,7 @@ function getGroupUgroups($sessionKey, $group_id) {
         } elseif ($group->isError()) {
             return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'getGroupUgroups');
         }
-        if (!checkRestrictedAccess($group)) {
+        if (!checkGroupMemberAccess($group)) {
             return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getGroupUgroups');
         }
         
@@ -311,7 +331,6 @@ function getGroupUgroups($sessionKey, $group_id) {
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupUgroups');
     }
-        
 }
 
 $server->addFunction(
