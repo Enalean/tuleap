@@ -106,13 +106,11 @@ class Docman_XMLExportVisitor {
     
     protected function getNodeForMetadataValues($mdValues, $mdNode) {
         foreach($mdValues as $val) {
-            $node = $this->doc->createElement('value');
-            if($val->getId() == 100) {
-                $node->nodeValue = 'None';
-            } else {
+            if($val->getId() != 100) {
+                $node = $this->doc->createElement('value');
                 $node->appendChild($this->doc->createTextNode($val->getName()));
+                $mdNode->appendChild($node);
             }
-            $mdNode->appendChild($node);
         }
     }
     

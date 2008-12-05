@@ -116,7 +116,7 @@ class Docman_SOAPActions extends Docman_Actions {
         
         $res = array();
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-           foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, false) as $val) {
+           foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, true) as $val) {
                $res[] = $val;
            }
         }

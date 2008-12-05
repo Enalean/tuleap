@@ -187,6 +187,7 @@ class XMLDocmanImport {
                         if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                             $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
                             $lov = $metadata->listOfValues;
+                            $this->metadataMap[$metadata->name]['values'] = array();
                             foreach ($lov as $val) {
                                 if ($val->id != 100) {
                                     $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
@@ -351,17 +352,17 @@ class XMLDocmanImport {
                     $user_name = (string)$member;
                     $members[] = $user_name;
                     if (!isset($this->ugroupMap[$name]['members'][$user_name])) {
-                        $this->warn("The user '$user_name' is not a member of the ugroup '$name' on the server.");
+                        $this->warn("The user '$user_name' is not a member of the ugroup '$name' on the target project.");
                     }
                 }
 
                 foreach ($this->ugroupMap[$name]['members'] as $user_name => $member) {
                     if (!in_array($user_name, $members)) {
-                        $this->warn("The user '$user_name' is a member of the ugroup '$name' on the server, but he's not inside the ugroup definition in the XML document.");
+                        $this->warn("The user '$user_name' is a member of the ugroup '$name' on the target project, but he's not inside the ugroup definition in the XML document.");
                     }
                 }
             } else {
-                $errorMsg .= "The ugroup '$name' doesn't exist on the server.".PHP_EOL;
+                $errorMsg .= "The ugroup '$name' doesn't exist on the target project.".PHP_EOL;
             }
         }
 
@@ -399,28 +400,28 @@ class XMLDocmanImport {
                         if ($values != $server_values) {
                             $diff1 = array_diff($values, $server_values);
                             $diff2 = array_diff($server_values, $values);
-                            $errorMsg = "The property '$name' doesn't declare the same list of values as in the server:".PHP_EOL;
+                            $errorMsg = "The property '$name' doesn't declare the same list of values as in the target project:".PHP_EOL;
                             if (count($diff1)) {
-                                $errorMsg .= "\tIncorrect:\t".implode(', ', $diff1).PHP_EOL;
+                                $errorMsg .= "\tNot on the target:\t".implode(', ', $diff1).PHP_EOL;
                             }
                             if (count($diff2)) {
-                                $errorMsg .= "\tMissing:\t".implode(', ', $diff2).PHP_EOL;
+                                $errorMsg .= "\tNot on the archive:\t".implode(', ', $diff2).PHP_EOL;
                             }
                         }
                     }
                 } else if ($type === null) {
                     $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL; 
                 } else {
-                    $errorMsg .= "The property '$name' has not the same type as in the server: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
+                    $errorMsg .= "The property '$name' has not the same type as in the target project: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
                 }
     
                 // Check if the metadata value can be empty
                 $empty = (string)$propdef['empty'];
                 // 'true' is the default value if nothing is specified
                 if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
-                    $errorMsg .= "The property '$name' doesn't allow empty values. Please set the attribute empty to \"false\" to the corresponding propdef element.".PHP_EOL;
+                    $errorMsg .= "The property '$name' doesn't allow empty values in the target project. Please set the \"empty\" attribute to \"false\" to the corresponding propdef element.".PHP_EOL;
                 } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
-                    $errorMsg .= "The property '$name' allows empty values. Please set the attribute empty to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
+                    $errorMsg .= "The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
                 }
     
                 // Check if multiple values are allowed
@@ -434,7 +435,7 @@ class XMLDocmanImport {
                     }
                 }
             } else {
-                $errorMsg .= "The property '$name' (".(string)$propdef['type']." metadata) doesn't exist on the server.".PHP_EOL;
+                $errorMsg .= "The property '$name' (".(string)$propdef['type']." metadata) doesn't exist on the target project.".PHP_EOL;
             }
         }
 
@@ -618,15 +619,16 @@ class XMLDocmanImport {
     private function extractOneMetadata(SimpleXMLElement $property, array &$metadata) {
         $propTitle = (string)$property['title'];
         $dstMetadataLabel = $this->metadataMap[$propTitle]['label'];
-        $values = $property->xpath('value');
-        if($values !== false && count($values) > 0) {
-            foreach($values as $value) {
-                $val = (string) $value;
-                if($val == 'None') {
-                    $metadata[] = array('label' => $dstMetadataLabel, 'value' => '100');
-                } else {
+        
+        if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $values = $property->xpath('value');
+            if($values !== false && count($values) > 0) {
+                foreach($values as $value) {
+                    $val = (string) $value;
                     $metadata[] = array('label' => $dstMetadataLabel, 'value' => $this->metadataMap[$propTitle]['values'][$val]);
                 }
+            } else {
+                $metadata[] = array('label' => $dstMetadataLabel, 'value' => '100');
             }
         } else {
             $metadata[] = array('label' => $dstMetadataLabel, 'value' => (string) $property);
