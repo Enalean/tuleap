@@ -25,12 +25,25 @@ require 'XMLDocmanImport.class.php';
 
 $start = microtime(true);
 
-// Login and password can be hardcoded during the tests
-$login = '';
-$password = '';
+//
+// Parameters to customize
+//
 
+// WSDL url: <codex_url>/soap/codex.wsdl.php?wsdl
+$wsdl = '';
+
+// Destination project ID
+$projectId = '';
+
+// Destination folder ID
+$folderId = '';
+
+// Docman archive folder. The folder <archive> must contain a file <archive>.xml and a folder <archive>.
+$archive = '';
+
+
+// Ask for login and password
 if (!$login) {
-    // Ask for login and password
     echo "Login: ";
     $login = fgets(STDIN);
     $login = substr($login, 0, strlen($login)-1);
@@ -50,15 +63,28 @@ if (!$password) {
     echo PHP_EOL;
 }
 
-// Specify here the WSDL url to <codexurl>/soap/codex.wsdl.php?wsdl
-$wsdl = "http://brame-farine.grenoble.xrce.xerox.com:8360/soap/codex.wsdl.php?wsdl";
-
-if (!$wsdl) {
-    exit("Error: You need to specify the WSDL url in this script.".PHP_EOL);
+if (!isset($wsdl) || $wsdl == '') {
+    exit("Error: You need to define the WSDL url in this script.".PHP_EOL);
 }
 
-$xmlImport = new XMLDocmanImport(108, $wsdl, $login, $password);
-$xmlImport->import('example', 594);
+if (!isset($projectId) || $projectId == '') {
+    exit("Error: You need to define the destination project ID in this script.".PHP_EOL);
+}
+
+if (!isset($folderId) || $folderId == '') {
+    exit("Error: You need to define the destination folder ID in this script.".PHP_EOL);
+}
+
+if (!isset($archive) || $archive == '') {
+    exit("Error: You need to define the archive folder ID in this script.".PHP_EOL);
+}
+
+// Connection to the server
+$xmlImport = new XMLDocmanImport($projectId, $wsdl, $login, $password);
+
+// Import
+$xmlImport->importPath($archive, $folderId, 'Project Documentation');
+//$xmlImport->import($archive, $folderId);
 
 $end = microtime(true);
 echo "Time elapsed: ".round($end-$start, 1)."s".PHP_EOL;

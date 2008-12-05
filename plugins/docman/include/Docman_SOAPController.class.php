@@ -71,6 +71,14 @@ class Docman_SOAPController extends Docman_Controller {
     function _dispatch($view, $item, $root, $get_show_view) {
            
         switch ($view) {
+            case 'permissions':
+                if (!$this->userCanManage($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
             case 'appendFileChunk':
             case 'new_version':
             case 'update':
@@ -81,16 +89,7 @@ class Docman_SOAPController extends Docman_Controller {
                     $this->_setView('');
                 }
                 break;
-            case 'permissions':
-                if (!$this->userCanManage($item->getId())) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
-                } else {
-                    $this->action = $view;
-                    $this->_setView('');
-                }
-                break;
             case 'getFileMD5sum':
-            case 'getMetadataListOfValues':
                 if (!$this->userCanRead($item->getId())) {
                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
                 } else {
@@ -98,6 +97,7 @@ class Docman_SOAPController extends Docman_Controller {
                     $this->_setView('');
                 }
                 break;
+            case 'getMetadataListOfValues':
             case 'getProjectMetadata':
                 $this->action = $view;
                 $this->_setView('');
