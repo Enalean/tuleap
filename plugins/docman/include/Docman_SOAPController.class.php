@@ -67,5 +67,43 @@ class Docman_SOAPController extends Docman_Controller {
         $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'item_does_not_belong', array($item->getId(), util_unconvert_htmlspecialchars($group->getPublicName()))));
         $this->_setView('SOAP');
     }
+    
+    function _dispatch($view, $item, $root, $get_show_view) {
+           
+        switch ($view) {
+            case 'permissions':
+                if (!$this->userCanManage($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_perms'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'appendFileChunk':
+            case 'new_version':
+            case 'update':
+                if (!$this->userCanWrite($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'getFileMD5sum':
+                if (!$this->userCanRead($item->getId())) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
+                } else {
+                    $this->action = $view;
+                    $this->_setView('');
+                }
+                break;
+            case 'getMetadataListOfValues':
+            case 'getProjectMetadata':
+                $this->action = $view;
+                $this->_setView('');
+                break;
+            default: parent::_dispatch($view, $item, $root, $get_show_view);
+        }
+   }
 }
 

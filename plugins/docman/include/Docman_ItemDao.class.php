@@ -306,7 +306,17 @@ class Docman_ItemDao extends DataAccessObject {
     }  
 
     function createFromRow($row) {
-        $row['create_date'] = $row['update_date'] = time();
+        if (isset($row['create_date']) && $row['create_date'] != '') {
+            $updateParent = false;
+        } else {
+            $updateParent = true;
+            $row['create_date'] = time();
+        }
+
+        if (!isset($row['update_date']) || $row['update_date'] == '') {
+            $row['update_date'] = time();
+        }
+        
         $arg    = array();
         $values = array();
         $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
@@ -320,19 +330,25 @@ class Docman_ItemDao extends DataAccessObject {
             $sql = 'INSERT INTO plugin_docman_item '
                 .'('.implode(', ', $arg).')'
                 .' VALUES ('.implode(', ', $values).')';
-            return $this->_createAndReturnId($sql, $row['create_date']);
+            return $this->_createAndReturnId($sql, $updateParent);
         } else {
             return false;
         }
     }
 
-    function _createAndReturnId($sql, $date) {
+    /**
+     * Creates an item by calling the given SQL request, and returns the new ID
+     *  
+     * @param $sql          SQL request
+     * @param $updateParent Determines if the parent folder "update date" must be updated
+     */
+    function _createAndReturnId($sql, $updateParent) {
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
-                if ($inserted) {
+                if ($inserted && $updateParent) {
                     $this->_updateUpdateDateOfParent($row['id']);
                 }
             } else {
@@ -420,6 +436,14 @@ class Docman_ItemDao extends DataAccessObject {
         } else if (isset($row['item_id'])) {
             $id = $row['item_id'];
         }
+        
+        if (isset($row['update_date']) && $row['update_date'] != '') {
+            $updateParent = false;
+        } else {
+            $updateParent = true;
+            $row['update_date'] = time();
+        }
+        
         if ($id) {
             $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
@@ -430,12 +454,11 @@ class Docman_ItemDao extends DataAccessObject {
                         $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                     }
                 }
-                $set_array[] = 'update_date = '. $this->da->quoteSmart(time());
                 $sql = 'UPDATE plugin_docman_item'
                     .' SET '.implode(' , ', $set_array)
                     .' WHERE item_id='. $this->da->quoteSmart($id);
                 $updated = $this->update($sql);
-                if ($updated) {
+                if ($updated && $updateParent) {
                     $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
                 }
             }

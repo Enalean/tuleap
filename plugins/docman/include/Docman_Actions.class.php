@@ -87,7 +87,6 @@ class Docman_Actions extends Actions {
             $dbresults = user_get_result_set_from_unix($_owner);
             $_owner_id     = db_result($dbresults, 0, 'user_id');
             $_owner_status = db_result($dbresults, 0, 'status');
-            
             if($_owner_id === false || $_owner_id < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
                 $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
                 $ret_id = $user->getId();
@@ -98,14 +97,15 @@ class Docman_Actions extends Actions {
         }
         return $ret_id;
     }
-
-    function _raiseOwnerChangeEvent(&$user, &$item, $group_id, $old, $new) {
+    
+    private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {
         $logEventParam = array('group_id' => $group_id,
                                'item'     => &$item,
                                'user'     => &$user,
                                'old_value' => $old,
                                'new_value' => $new,
-                               'field'     => 'owner');
+                               'field'     => $field);
+
         $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                            $logEventParam);
     }
@@ -158,9 +158,9 @@ class Docman_Actions extends Actions {
             if ($request->exist('upload_content')) {
                 
                 if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
                 } else {
-                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0);
+                    $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number);
                 }
                 
                 if ($path) {
@@ -211,15 +211,43 @@ class Docman_Actions extends Actions {
         if($uploadSucceded) {
             $vFactory =& $this->_getVersionFactory();
 
+            $userId = $user->getId();
+            if ($request->exist('author') && ($request->get('author') != $userId)) {
+                $versionAuthor = $request->get('author');
+
+                $eArray = array('group_id'  => $item->getGroupId(),
+                                'item'      => &$item,
+                                'new_value' => UserManager::instance()->getUserById($versionAuthor)->getName(),
+                                'user'      => &$user);
+                
+                $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
+            } else {
+                $versionAuthor = $userId;
+            }
+            
+            $date = '';
+            if ($request->exist('date')) {
+                $date = $request->get('date');
+                
+                $eArray = array('group_id'  => $item->getGroupId(),
+                                'item'      => &$item,
+                                'old_value' => null, 
+                                'new_value' => $date,
+                                'user'      => &$user);
+                
+                $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
+            }
+
             $vArray = array('item_id'   => $item->getId(),
                             'number'    => $number,
-                            'user_id'   => $user->getId(),
+                            'user_id'   => $versionAuthor,
                             'label'     => $_label,
                             'changelog' => $_changelog,
                             'filename'  => $_filename,
                             'filesize'  => $_filesize,
                             'filetype'  => $_filetype, 
-                            'path'      => $path);
+                            'path'      => $path,
+                            'date'      => $date);
             $vId = $vFactory->create($vArray);
             
             $eArray = array('group_id' => $item->getGroupId(),
@@ -253,26 +281,16 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
     }
-    
-    /**
-     * Like _storeFile, but this function just add a chunk to an existing file, without creating a new document version
-     */
-    function _storeFileChunk($item) {
-        $fs       = $this->_getFileStorage();
-        $request  = $this->_controler->request;
-        if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
-            $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), 0, $request->get('chunk_offset'), $request->get('chunk_size'));
-            if (!$path) {
-                $this->_controler->feedback->log('error', "Error while storing file chunk");
-            }
-        }
-    }
 
     function createFolder() {
-        $this->createDocument();
+        $this->createItem();
     }
     
     function createDocument() {
+        $this->createItem();   
+    }
+    
+    function createItem() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
         if ($request->exist('item')) {
@@ -290,18 +308,47 @@ class Docman_Actions extends Actions {
             {
 
                 // Special handling of obsolescence date
-                if(isset($item['obsolescence_date']) 
-                   && preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', 
-                                 $item['obsolescence_date'], $d)) {
-                    $item['obsolescence_date'] = mktime(0, 0, 0,
-                                                        $d[2], $d[3], $d[1]);
-                }
-                else {
+                if(isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
+                    if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $item['obsolescence_date'], $d)) {
+                        $item['obsolescence_date'] = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
+                    } else if (!preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
+                        $item['obsolescence_date'] = 0;
+                    }
+                } else {
                     $item['obsolescence_date'] = 0;
                 }
 
                 $user =& $this->_controler->getUser();
-                $item['user_id']  = $user->getId();
+                
+                // Change owner
+                $userId = $user->getId();
+                if (isset($item['owner'])) {
+                    $um = UserManager::instance();
+                    $new_owner = $um->getUserByUserName($item['owner']);
+                    if ($new_owner !== null) {
+                        $owner = $new_owner->getId();
+                    } else {
+                        $owner = $userId;
+                    }
+                } else {
+                    $owner = $userId;
+                }
+                $item['user_id'] = $owner;
+                
+                // Change creation date
+                if (isset($item['create_date']) && $item['create_date'] != '') {
+                    $create_date_changed = true;
+                } else {
+                    $create_date_changed = false;
+                }
+                
+                // Change update date
+                if (isset($item['update_date']) && $item['update_date'] != '') {
+                    $update_date_changed = true;
+                } else {
+                    $update_date_changed = false;
+                }
+                
                 $item['group_id'] = $request->get('group_id');
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
@@ -320,6 +367,21 @@ class Docman_Actions extends Actions {
                         'item'     => &$new_item,
                         'user'     => &$user)
                     );
+
+                    // Log change owner
+                    if ($owner != $userId) {
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['owner'], 'owner');
+                    }
+                    
+                    // Log change creation date
+                    if ($create_date_changed) {
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['create_date'], 'create_date');
+                    }
+                    
+                    // Log change update date
+                    if ($update_date_changed) {
+                        $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['update_date'], 'update_date');
+                    }
 
                     $info_item_created = 'info_document_created';
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
@@ -360,57 +422,8 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    /**
-     * Append a chunk of data to a file
-     */
-    function appendFileChunk() {
-        $request =& $this->_controler->request;
-
-        if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
-            $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
-            $itemType = $item_factory->getItemTypeForItem($item);
-            
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                $this->_storeFileChunk($item);
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
-            }
-            
-        } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
-        }
-    }
-    
-    /**
-     * Returns the MD5 checksum of a file
-     */
-    function getFileMD5sum() {
-        $request =& $this->_controler->request;
-
-        if ($request->exist('item_id')) {
-            $item_id = $request->get('item_id');
-            $item_factory = $this->_getItemFactory();
-            $item = $item_factory->getItemFromDb($item_id);
-            $itemType = $item_factory->getItemTypeForItem($item);
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                $fs = $this->_getFileStorage();
-                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $request->get('version_number'));
-                $this->_controler->_viewParams['action_result'] = $md5sum;
-                if (!$md5sum) {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
-                }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
-            }
-        } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
-        }
-    }
-    
     function update() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         if ($request->exist('item')) {
             $user =& $this->_controler->getUser();
             
@@ -421,25 +434,49 @@ class Docman_Actions extends Actions {
             
             // Update Owner
             $ownerChanged = false;
-            if(array_key_exists('owner', $data)) {
+            if(isset($data['owner'])) {
                 $_owner_id = $this->_checkOwnerChange($data['owner'], $user);
                 if($_owner_id != $item->getOwnerId()) {
                     $ownerChanged = true;
-                    $_oldowner = user_getname($item->getOwnerId());
-                    $_newowner = user_getname($_owner_id);
+                    $um = UserManager::instance();
+                    $_oldowner = $um->getUserById($item->getOwnerId())->getName();
+                    $_newowner = $um->getUserById($_owner_id)->getName();
                     $data['user_id'] = $_owner_id;
                 }
                 unset($data['owner']);
             }
             
-            // Special handling of obsolescence date
-            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != '') {
-                    $d = explode('-',$data['obsolescence_date']);
-                    $data['obsolescence_date'] = gmmktime(0,0,0,
-                                                          $d[1], $d[2], $d[0]);
+            // Change creation date
+            if (isset($data['create_date']) && $data['create_date'] != '') {
+                $old_create_date = $item->getCreateDate();
+                if ($old_create_date == $data['create_date']) {
+                    $create_date_changed = false;
+                } else {
+                    $create_date_changed = true;
+                }
+            } else {
+                $create_date_changed = false;
             }
-            else {
-                $data['obsolescence_date'] = 0;
+            
+            // Change update date
+            if (isset($data['update_date']) && $data['update_date'] != '') {
+                $old_update_date = $item->getUpdateDate();
+                if ($old_update_date == $data['update_date']) {
+                    $update_date_changed = false;
+                } else {
+                    $update_date_changed = true;
+                }
+            } else {
+                $update_date_changed = false;
+            }
+            
+            // Special handling of obsolescence date
+            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
+                if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
+                    $data['obsolescence_date'] = gmmktime(0, 0, 0, $d[2], $d[3], $d[1]);
+                } else if (!preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
+                    $data['obsolescence_date'] = 0;
+                }
             }
 
             // Check is status change
@@ -454,11 +491,9 @@ class Docman_Actions extends Actions {
             // For empty document, check if type changed
             $createFile = false;
             $itemType = $item_factory->getItemTypeForItem($item);
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
-                && isset($data['item_type'])
-               && $itemType != $data['item_type']
-               && ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-                   || $this->_controler->getProperty('embedded_are_allowed'))) {
+
+            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
+                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))) {
                 
                 if($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                    || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
@@ -479,22 +514,19 @@ class Docman_Actions extends Actions {
             }
 
             if($ownerChanged) {
-                $this->_raiseOwnerChangeEvent($user,
-                                              $item,
-                                              $request->get('group_id'), 
-                                              $_oldowner, 
-                                              $_newowner);
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $_oldowner, $_newowner, 'owner');
             }
 
             if($statusChanged) {
-                $logEventParam = array('group_id' => $request->get('group_id'),
-                                       'item'     => &$item,
-                                       'user'     => &$user,
-                                       'old_value' => $old_st,
-                                       'new_value' => $data['status'],
-                                       'field'     => 'status');
-                $this->event_manager->processEvent('plugin_docman_event_metadata_update',
-                                                   $logEventParam);
+               $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
+            }
+            
+            if($create_date_changed) {
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_create_date, $data['create_date'], 'create_date');
+            }
+            
+            if($update_date_changed) {
+                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_update_date, $data['update_date'], 'update_date');
             }
 
             if($createFile) {
@@ -549,7 +581,7 @@ class Docman_Actions extends Actions {
     }
 
     function new_version() {
-        $request =& HTTPRequest::instance();
+        $request =& $this->_controler->request;
         if ($request->exist('id')) {
             $user =& $this->_controler->getUser();
             $item_factory =& $this->_getItemFactory();
@@ -557,7 +589,11 @@ class Docman_Actions extends Actions {
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $this->_storeFile($item);
-                $item_factory->update(array('id' => $item->getId()));
+                
+                // We update the update_date of the document only if no version date was given
+                if (!$request->exist('date') || $request->get('date') == '') {
+                    $item_factory->update(array('id' => $item->getId()));    
+                }
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
@@ -645,7 +681,7 @@ class Docman_Actions extends Actions {
     
     /**
     * User has asked to set or to change permissions on an item
-    * This method is the direct action of the docman controler but can also be called internally (@see createDocument)
+    * This method is the direct action of the docman controler but can also be called internally (@see createItem)
     * To call it directly, you have to give two extra parameters (in $params):
     * - id : the id of the item
     * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
@@ -847,7 +883,12 @@ class Docman_Actions extends Actions {
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
+                    
+                    $dPm = Docman_PermissionsManager::instance($group_id);
+                    if ($force || $dPm->userCanManage($this->_controler->getUser(), $item_id)) {
+                        $this->_getPermissionsManagerInstance()->addPermission($permission, $item_id, $ugroup_id);
+                    }
+                    
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {

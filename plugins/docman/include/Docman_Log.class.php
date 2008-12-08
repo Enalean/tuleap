@@ -52,6 +52,10 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value']);
                 break;
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['new_value']);
+                break;
             default:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
                 break;
@@ -121,6 +125,9 @@ class Docman_Log { /* implements EventListener */
                                 if($_new_e !== null) {
                                     $_new_v = $_new_e->getName();
                                 }                            
+                            } else if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_DATE){
+                                $_old_v = format_date($GLOBALS['sys_datefmt'], $_old_v);
+                                $_new_v = format_date($GLOBALS['sys_datefmt'], $_new_v);
                             }
                             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman','details_history_logs_change_field', array($md->getName())).'</td>';
                             $html .= '<td>'.$_old_v.'</td>';
@@ -136,6 +143,18 @@ class Docman_Log { /* implements EventListener */
                             $difflink .= '&versions%5b%5d=' . $old_version . '&versions%5b%5d=' . $new_version;
                             $html .= '<td colspan>' . $this->getText($row['type']) . '</td>';
                             $html .= '<td colspan="2" align="center"><a href=' . $difflink . '>diffs</a>';
+                        }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR) {
+                            $newUser = $row['new_value'];
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= "<td>&nbsp;</td>";
+                            $html .= "<td>$newUser</td>";
+                        }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE) {
+                            $newDate = format_date($GLOBALS['sys_datefmt'], $row['new_value']);
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= "<td>&nbsp;</td>";
+                            $html .= "<td>$newDate</td>";
                         }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
@@ -184,6 +203,12 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');                
+                break;
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');    
+                break;
+            case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
                 break;
             default:
                 break;

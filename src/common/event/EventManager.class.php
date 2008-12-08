@@ -30,7 +30,13 @@ class EventManager {
         $entry['listener']    = $listener;
         $entry['callback']    = $callback;
         $entry['recallEvent'] = $recallEvent;
-        $this->listeners->put( $event, $entry, $priority);
+        
+        $ev = $this->listeners->get($event);
+        // We add the listener only if it's not already registered for this event 
+        if (!$ev || !$ev->contains($entry)) {
+            $this->listeners->put( $event, $entry, $priority);                
+        }
+        
     }
     
     function processEvent($event, $params) {

@@ -46,7 +46,6 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
         $soap_params = array(
             'group_id' => $group_id,
             'item_id'  => $item_id,
-            'version'  => 0,
         );
         
         $local_checksum = md5_file($filename);
@@ -82,7 +81,11 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
         $filename = $soap_params['file_name'];
         
         // How many chunks do we have to send
-        $chunk_count = ceil($soap_params['file_size'] / $this->chunk_size);
+        if ($soap_params['file_size'] == 0) {
+            $chunk_count = 1;
+        } else {
+            $chunk_count = ceil($soap_params['file_size'] / $this->chunk_size);
+        }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
             // Display progression indicator
