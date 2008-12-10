@@ -25,7 +25,8 @@ require 'XMLDocmanImport.class.php';
 require 'parameters.php';
 
 function usage() {
-    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --folderId=<destination folder ID> --archive=<archive path>".PHP_EOL.PHP_EOL;
+    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --folderId=<destination folder ID> --archive=<archive path>".PHP_EOL;
+    echo         "       import.php --help".PHP_EOL.PHP_EOL;
 }
 
 function help() {
@@ -34,7 +35,8 @@ function help() {
     echo "    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl".PHP_EOL;
     echo "    --projectId=<destination project ID>    ID of the destination project".PHP_EOL;
     echo "    --folderId=<destination folder ID>      ID of the destination folder. The imported documents will be created in this folder".PHP_EOL;
-    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL.PHP_EOL; 
+    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL;
+    echo "    --help                                  Show this help".PHP_EOL.PHP_EOL; 
     die;
 }
 
