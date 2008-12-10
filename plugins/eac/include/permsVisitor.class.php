@@ -141,7 +141,8 @@ class permsVisitor {
     
     /**
      *  Method itemFullName which append the full name  of the Doc/Folder and memorize its Id and its full name in listItem
-     * @param Array Id contains item's id and short name
+     * @param  Array tableId contains item's id and short name
+     * @param  Array visited_id contains item's which are already visited to donot visit them again
      * @return Array listItem will memorize item id and its full name
      */ 
     

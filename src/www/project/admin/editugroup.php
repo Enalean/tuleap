@@ -223,15 +223,14 @@ if (($func=='edit')||($func=='do_create')) {
                     'results'         => &$results
                 ));
                 if ($results) {
-		    
                     echo '<TD>'.$results.'</TD>';
-		   
                 } else {
                     echo '<TD>'.$row['object_id'].'</TD>';
                 }
             }
 
-            echo '</TR>';
+            echo '</TR>
+';
             $row_num++;
         }
         echo '</table><p>';

@@ -32,30 +32,31 @@ class userGroupExportMembers {
 
     /**
      * Method userList which  extract list of  users of a user group
-     * @param int group_id project id
+     * @param  int group_id project id
+     * @param  Array ugroup_id user/group ids
      * @return null
      */
 
     public function userList($ugroup_id, $group_id) {
-        $requete_list = sprintf('SELECT  U.user_name, U.user_id, Ugrp.name, G.group_name'.
+        $req_list = sprintf('SELECT  U.user_name, U.user_id, Ugrp.name, G.group_name'.
                                 ' FROM user U'.
                                 ' INNER JOIN ugroup_user UU ON(U.user_id=UU.user_id)'.
                                 ' INNER JOIN ugroup Ugrp ON( UU.ugroup_id=Ugrp.ugroup_id)'.
                                 ' INNER JOIN groups G ON (Ugrp.group_id=G.group_id)  '.
                                 ' WHERE UU.ugroup_id= %d AND Ugrp.group_id= %d', db_ei($ugroup_id),db_ei($group_id));
-        $resultat_list = db_query($requete_list);
+        $result_list = db_query($req_list);
       
-        if($resultat_list && !db_error($resultat_list)) {
-            return  $resultat_list;
+        if($result_list && !db_error($result_list)) {
+            return  $result_list;
         } else {
             echo 'DB error:'.$GLOBALS['Response']->addFeedback('plugin_eac','db_error');
         }
     }
     
     /**
-     * Method userList which  extract list of  users of a user group
-     * @param Array ugroups contains user groups information
-     * @param int $group_id project id
+     * Method listUserFormatting to render a csv stream with all groups and related users
+     * @param  Array ugroups contains user groups information
+     * @param  int group_id project id
      * @return null
      */
     
@@ -82,7 +83,7 @@ class userGroupExportMembers {
      * @return null
      */
 
-    public public function listUgroups($group_id) {
+    public function listUgroups($group_id) {
         $req_list_ugroups = sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
                                          ' FROM ugroup Ugrp'.
                                          ' WHERE Ugrp.group_id= %d', db_ei($group_id));

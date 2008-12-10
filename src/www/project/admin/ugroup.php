@@ -105,6 +105,7 @@ $em->processEvent("project_data_export_table_users", $group_id);
 echo '</TABLE>';
 echo '<P>'.$Language->getText('project_admin_ugroup','predef_g');
 
+
 project_admin_footer(array());
 
 
