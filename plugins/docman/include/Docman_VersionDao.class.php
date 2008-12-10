@@ -43,7 +43,7 @@ class Docman_VersionDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByItemId($itemId) {
-        $sql = sprintf("SELECT id, number, item_id, user_id, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE item_id = %s ORDER BY date DESC",
+        $sql = sprintf("SELECT id, number, item_id, user_id, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE item_id = %s ORDER BY number DESC",
 				$this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
     }
