@@ -228,8 +228,8 @@ class XMLDocmanImport {
         if ($this->doc->xpath('//item/properties/status') != null && !in_array('status', $this->hardCodedMetadata)) {
             $errorMsg .= "The Status property is not used on the target project.".PHP_EOL;
         }
-        
-    if ($errorMsg != '') {
+
+        if ($errorMsg != '') {
             $this->exitError($errorMsg);
         }
     }
@@ -411,11 +411,11 @@ class XMLDocmanImport {
                         }
                     }
                 } else if ($type === null) {
-                    $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL; 
+                    $errorMsg .= "The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
                 } else {
                     $errorMsg .= "The property '$name' has not the same type as in the target project: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'".PHP_EOL;
                 }
-    
+
                 // Check if the metadata value can be empty
                 $empty = (string)$propdef['empty'];
                 // 'true' is the default value if nothing is specified
@@ -424,7 +424,7 @@ class XMLDocmanImport {
                 } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
                     $errorMsg .= "The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).".PHP_EOL;
                 }
-    
+
                 // Check if multiple values are allowed
                 if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                     $multival = (string)$propdef['multivalue'];
@@ -489,12 +489,12 @@ class XMLDocmanImport {
         // Transform "Unix path" to XPath
         $xpath = '/docman/item[properties/title="'.str_replace('/','"]/item[properties/title="', $path).'"]';
         $nodeList = $this->doc->xpath($xpath);
-        
+
         if ($nodeList === false || count($nodeList) == 0) {
             $this->exitError("Can't find the element \"$path\" ($xpath)".PHP_EOL);
         } else {
             if (count($nodeList) == 1) {
-                return $nodeList[0];    
+                return $nodeList[0];
             } else {
                 $this->exitError("$path ($xpath) found more than one target element".PHP_EOL);
             }
@@ -625,7 +625,7 @@ class XMLDocmanImport {
     private function extractOneMetadata(SimpleXMLElement $property, array &$metadata) {
         $propTitle = (string)$property['title'];
         $dstMetadataLabel = $this->metadataMap[$propTitle]['label'];
-        
+
         if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $values = $property->xpath('value');
             if($values !== false && count($values) > 0) {
@@ -658,81 +658,127 @@ class XMLDocmanImport {
          
     }
 
+    private static function askWhatToDo($e) {
+        self::printException($e);
+
+        do {
+            echo "(R)etry, (A)bort, (C)ontinue? [R] ";
+            $op = strtoupper(trim(fgets(STDIN)));
+        } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
+
+        if ($op == 'A') {
+            echo 'Import aborted.'.PHP_EOL;
+            die;
+        } else if ($op == 'C') {
+            echo 'Continuing...'.PHP_EOL;
+            $retry = false;
+        } else {
+            echo 'Retrying...'.PHP_EOL;
+            $retry = true;
+        }
+
+        return $retry;
+    }
+    
+    private static function printException($e) {
+        echo PHP_EOL.PHP_EOL.$e->__toString().PHP_EOL.PHP_EOL;
+    }
+
     /**
      * Creates a folder
      */
     private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
-        echo "Folder            '$title'";
+        do {
+            $retry = false;
+            
+            echo "Folder            '$title'";
 
-        try {
-            $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-            echo " #$id".PHP_EOL;
-            return $id;
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
+                echo " #$id".PHP_EOL;
+                return $id;
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 
     /**
      * Creates an empty document
      */
     private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
-        echo "Empty document    '$title'";
+        do {
+            $retry = false;
+            
+            echo "Empty document    '$title'";
 
-        try {
-            $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-            echo " #$id".PHP_EOL;
-            return $id;
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
+                echo " #$id".PHP_EOL;
+                return $id;
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 
     /**
      * Creates a wiki page
      */
     private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner, $createDate, $updateDate) {
-        echo "Wikipage          '$title' ($pagename)";
+        do {
+            $retry = false;
+            
+            echo "Wikipage          '$title' ($pagename)";
 
-        try {
-            $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
-            echo " #$id".PHP_EOL;
-            return $id;
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
+                echo " #$id".PHP_EOL;
+                return $id;
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 
     /**
      * Creates a link
      */
     private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner, $createDate, $updateDate) {
-        echo "Link              '$title' ($url)";
+        do {
+            $retry = false;
+            
+            echo "Link              '$title' ($url)";
 
-        try {
-            $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
-            echo " #$id".PHP_EOL;
-            return $id;
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
+                echo " #$id".PHP_EOL;
+                return $id;
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 
     /**
      * Creates an embedded file
      */
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner, $createDate, $updateDate) {
-        echo "Embedded file     '$title' ($file)";
-        $fullPath = $this->dataBaseDir.'/'.$file;
-        $contents = file_get_contents($fullPath);
+        do {
+            $retry = false;
+            
+            echo "Embedded file     '$title' ($file)";
+            $fullPath = $this->dataBaseDir.'/'.$file;
+            $contents = file_get_contents($fullPath);
 
-        try {
-            $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner, $createDate, $updateDate);
-            echo " #$id".PHP_EOL;
-            return $id;
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner, $createDate, $updateDate);
+                echo " #$id".PHP_EOL;
+                return $id;
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 
     /**
@@ -743,9 +789,9 @@ class XMLDocmanImport {
 
         $fullPath = $this->dataBaseDir.'/'.$file;
         $fileSize = filesize($fullPath);
-        
+
         // The following is inspired from CLI_Action_Docman_CreateFile.class.php
-        $chunk_size = 6000000; // ~6 Mo
+        $chunk_size = 5; // ~6 Mo
 
         // How many chunks do we have to send
         if ($fileSize == 0) {
@@ -755,28 +801,28 @@ class XMLDocmanImport {
         }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
-            // Display progression indicator
-            echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
+            do {
+                $retry = false;
+                
+                // Display progression indicator
+                echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
 
-            // Retrieve the current chunk of the file
-            $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
+                // Retrieve the current chunk of the file
+                $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
 
-            // Send the chunk
-            if (!$chunk_offset) {
-                // If this is the first chunk, then use the original soapCommand...
+                // Send the chunk
                 try {
-                    $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date, $owner, $createDate, $updateDate);
+                    if (!$chunk_offset) {
+                        // If this is the first chunk, then use the original soapCommand...
+                        $item_id = $this->soap->createDocmanFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date, $owner, $createDate, $updateDate);
+                    } else {
+                        // If this is not the first chunk, then we have to append the chunk
+                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
+                    }
                 } catch (Exception $e){
-                    $this->printSoapErrorAndDie($e);
+                    $retry = self::askWhatToDo($e);
                 }
-            } else {
-                try {
-                    // If this is not the first chunk, then we have to append the chunk
-                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
-                } catch (Exception $e){
-                    $this->printSoapErrorAndDie($e);
-                }
-            }
+            } while ($retry);
         }
         // Finish!
         echo "\r$infoStr #$item_id".PHP_EOL;
@@ -790,7 +836,7 @@ class XMLDocmanImport {
                 return false;
             }
         } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
+            $this->printException($e);
         }
     }
 
@@ -832,29 +878,28 @@ class XMLDocmanImport {
         $chunk_count = ceil($fileSize / $chunk_size);
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
-            // Display progression indicator
-            echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
+            do {
+                $retry = false;
+                
+                // Display progression indicator
+                echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
 
-            // Retrieve the current chunk of the file
-            $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
+                // Retrieve the current chunk of the file
+                $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
 
-            // Send the chunk
-            if (!$chunk_offset) {
-                // If this is the first chunk, then use the original soapCommand...
+                // Send the chunk
                 try {
-                    $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date);
+                    if (!$chunk_offset) {
+                        // If this is the first chunk, then use the original soapCommand...
+                        $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date);
+                    } else {
+                        // If this is not the first chunk, then we have to append the chunk
+                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
+                    }
                 } catch (Exception $e){
-                    $this->printSoapErrorAndDie($e);
+                    $retry = self::askWhatToDo($e);
                 }
-
-            } else {
-                // If this is not the first chunk, then we have to append the chunk
-                try {
-                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
-                } catch (Exception $e){
-                    $this->printSoapErrorAndDie($e);
-                }
-            }
+            } while ($retry);
         }
         // Finish!
         echo "\r$infoStr     ".PHP_EOL;
@@ -868,21 +913,25 @@ class XMLDocmanImport {
                 return false;
             }
         } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
+            $this->printException($e);
         }
     }
 
     private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
-        echo "                      Version '$label' ($file)".PHP_EOL;
-        $fullPath = "$this->dataBaseDir/$file";
+        do {
+            $retry = false;
+            
+            echo "                      Version '$label' ($file)".PHP_EOL;
+            $fullPath = "$this->dataBaseDir/$file";
 
-        $contents = file_get_contents($fullPath);
+            $contents = file_get_contents($fullPath);
 
-        try {
-            $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author, $date);
-        } catch (Exception $e){
-            $this->printSoapErrorAndDie($e);
-        }
+            try {
+                $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author, $date);
+            } catch (Exception $e){
+                $retry = self::askWhatToDo($e);
+            }
+        } while ($retry);
     }
 }
 ?>
