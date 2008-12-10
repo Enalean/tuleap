@@ -28,6 +28,20 @@ function usage() {
     echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --folderId=<destination folder ID> --archive=<archive path>".PHP_EOL.PHP_EOL;
 }
 
+function help() {
+    echo "Imports a set of Codendi Docman documents to a project".PHP_EOL;
+    usage();
+    echo "    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl".PHP_EOL;
+    echo "    --projectId=<destination project ID>    ID of the destination project".PHP_EOL;
+    echo "    --folderId=<destination folder ID>      ID of the destination folder. The imported documents will be created in this folder".PHP_EOL;
+    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL.PHP_EOL; 
+    die;
+}
+
+if (getParameter($argv, 'help') || getParameter($argv, 'h')) {
+    help();
+}
+
 if (($wsdl = getParameter($argv, 'wsdl', true)) === null) {
     echo "Missing parameter: --wsdl".PHP_EOL;
 }
@@ -56,7 +70,6 @@ if ($wsdl === null || $projectId === null || $folderId === null || $archive === 
     usage();
     die;
 }
-
 
 // Ask for login and password
 if (!isset($login)) {

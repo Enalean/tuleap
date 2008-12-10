@@ -21,8 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class MultiplePathFoundException extends LogicException {}
-
 define('PLUGIN_DOCMAN_METADATA_TYPE_TEXT', 1);
 define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
@@ -89,7 +87,10 @@ class XMLDocmanImport {
 
         // DTD validation
         $dom = new DOMDocument();
-        $dom->load($rootPath.'/'.$archiveName.'.xml');
+        if (!$dom->load($rootPath.'/'.$archiveName.'.xml')) {
+            $this->exitError("Failed to load XML document.".PHP_EOL);
+        }
+        
         if (!$dom->validate()) {
             $this->warn("DTD Validation failed.");
         }
@@ -488,10 +489,15 @@ class XMLDocmanImport {
         // Transform "Unix path" to XPath
         $xpath = '/docman/item[properties/title="'.str_replace('/','"]/item[properties/title="', $path).'"]';
         $nodeList = $this->doc->xpath($xpath);
-        if($nodeList !== false && count($nodeList) == 1) {
-            return $nodeList[0];
+        
+        if ($nodeList === false || count($nodeList) == 0) {
+            $this->exitError("Can't find the element \"$path\" ($xpath)".PHP_EOL);
         } else {
-            throw new MultiplePathFoundException("$path ($xpath) found more than one target element.");
+            if (count($nodeList) == 1) {
+                return $nodeList[0];    
+            } else {
+                $this->exitError("$path ($xpath) found more than one target element".PHP_EOL);
+            }
         }
     }
 
