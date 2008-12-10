@@ -22,34 +22,65 @@
  */
 
 require 'XMLDocmanImport.class.php';
+require 'parameters.php';
 
-$start = microtime(true);
+function usage() {
+    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --folderId=<destination folder ID> --archive=<archive path>".PHP_EOL;
+    echo         "       import.php --help".PHP_EOL.PHP_EOL;
+}
 
-//
-// Parameters to customize
-//
+function help() {
+    echo "Imports a set of Codendi Docman documents to a project".PHP_EOL;
+    usage();
+    echo "    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl".PHP_EOL;
+    echo "    --projectId=<destination project ID>    ID of the destination project".PHP_EOL;
+    echo "    --folderId=<destination folder ID>      ID of the destination folder. The imported documents will be created in this folder".PHP_EOL;
+    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL;
+    echo "    --help                                  Show this help".PHP_EOL.PHP_EOL; 
+    die;
+}
 
-// WSDL url: <codex_url>/soap/codex.wsdl.php?wsdl
-$wsdl = '';
+if (getParameter($argv, 'help') || getParameter($argv, 'h')) {
+    help();
+}
 
-// Destination project ID
-$projectId = '';
+if (($wsdl = getParameter($argv, 'wsdl', true)) === null) {
+    echo "Missing parameter: --wsdl".PHP_EOL;
+}
 
-// Destination folder ID
-$folderId = '';
+if (($projectId = getParameter($argv, 'projectId', true)) === null) {
+    echo "Missing parameter: --projectId".PHP_EOL;
+}
 
-// Docman archive folder. The folder <archive> must contain a file <archive>.xml and a folder <archive>.
-$archive = '';
+if (($folderId = getParameter($argv, 'folderId', true)) === null) {
+    echo "Missing parameter: --folderId".PHP_EOL;
+}
 
+if (($archive = getParameter($argv, 'archive', true)) === null) {
+    echo "Missing parameter: --archive".PHP_EOL;
+} else if (is_dir($archive)) {
+    if (!is_file("$archive/".basename($archive).".xml")) {
+        echo "The archive folder must contain an XML file with the same name".PHP_EOL;   
+        $archive = null; 
+    }
+} else {
+    echo "The archive must be an existing folder".PHP_EOL;
+    $archive = null;
+}
+
+if ($wsdl === null || $projectId === null || $folderId === null || $archive === null) {
+    usage();
+    die;
+}
 
 // Ask for login and password
-if (!$login) {
+if (!isset($login)) {
     echo "Login: ";
     $login = fgets(STDIN);
     $login = substr($login, 0, strlen($login)-1);
 }
 
-if (!$password) {
+if (!isset($password)) {
     echo "Password for $login: ";
 
     if ( PHP_OS != 'WINNT') {
@@ -63,21 +94,7 @@ if (!$password) {
     echo PHP_EOL;
 }
 
-if (!isset($wsdl) || $wsdl == '') {
-    exit("Error: You need to define the WSDL url in this script.".PHP_EOL);
-}
-
-if (!isset($projectId) || $projectId == '') {
-    exit("Error: You need to define the destination project ID in this script.".PHP_EOL);
-}
-
-if (!isset($folderId) || $folderId == '') {
-    exit("Error: You need to define the destination folder ID in this script.".PHP_EOL);
-}
-
-if (!isset($archive) || $archive == '') {
-    exit("Error: You need to define the archive folder ID in this script.".PHP_EOL);
-}
+$start = microtime(true);
 
 // Connection to the server
 $xmlImport = new XMLDocmanImport($projectId, $wsdl, $login, $password);
