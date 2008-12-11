@@ -791,7 +791,7 @@ class XMLDocmanImport {
         $fileSize = filesize($fullPath);
 
         // The following is inspired from CLI_Action_Docman_CreateFile.class.php
-        $chunk_size = 5; // ~6 Mo
+        $chunk_size = 6000000; // ~6 Mo
 
         // How many chunks do we have to send
         if ($fileSize == 0) {
