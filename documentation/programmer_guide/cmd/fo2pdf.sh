@@ -1,7 +1,7 @@
 #!/bin/sh
 # honor JAVA_HOME if defined
 if [ -z "$JAVA_HOME" ]; then 
-    JAVA_HOME=/usr/java/jre/bin
+    JAVA_HOME=/usr/java/jre
 fi
 
 # honor FOP_HOME if defined
@@ -28,7 +28,7 @@ fi
 echo "Transforming FO file '$1' to PDF file '$2' ..."
 CP=${FOP_HOME}/build/fop.jar:${FOP_HOME}/lib/batik.jar:${SAXON_HOME}/saxon.jar:${FOP_HOME}/lib/xml-apis.jar:${FOP_HOME}/lib/avalon-framework-cvs-20020315.jar:${FOP_HOME}/lib/logkit-1.0.jar:${JIMI_HOME}/JimiProClasses.zip
 echo Using CLASSPATH: ${CP}
-${JAVA_HOME}/java -cp ${CP} org.apache.fop.apps.Fop -fo $1 -pdf $2
+${JAVA_HOME}/bin/java -cp ${CP} org.apache.fop.apps.Fop -fo $1 -pdf $2
 if [ $? != 0 ] 
 then
         echo "Failed!"
