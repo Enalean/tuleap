@@ -27,6 +27,7 @@ try {
 
 	require_once('common/session.php');
     require_once('common/group.php');
+    require_once('common/users.php');
     require_once('tracker/tracker.php');
     require_once('frs/frs.php');
     

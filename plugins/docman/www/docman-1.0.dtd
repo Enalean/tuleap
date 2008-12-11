@@ -24,6 +24,7 @@
 <!ELEMENT create_date (#PCDATA) >
 <!ELEMENT update_date (#PCDATA) >
 <!ELEMENT owner (#PCDATA) >
+<!ATTLIST owner type CDATA #IMPLIED >
 <!ELEMENT status (#PCDATA) >
 <!ELEMENT obsolescence_date (#PCDATA) >
 <!ELEMENT property (#PCDATA | value )* >
@@ -37,6 +38,7 @@
 <!ELEMENT versions (version+) >
 <!ELEMENT version (author, label?, changelog?, date, filename?, filetype?, content) >
 <!ELEMENT author (#PCDATA) >
+<!ATTLIST author type CDATA #IMPLIED >
 <!ELEMENT label (#PCDATA) >
 <!ELEMENT changelog (#PCDATA) >
 <!ELEMENT date (#PCDATA) >
