@@ -26,6 +26,7 @@ class LdapPlugin extends Plugin {
 
         // User finder
         $this->_addHook('user_finder', 'userFinder', false);
+        $this->_addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
 
         // User Home
         $this->_addHook('user_home_pi_entry', 'personalInformationEntry', false);  
@@ -274,6 +275,52 @@ class LdapPlugin extends Plugin {
         }
     }
 
+    /**
+     * $params['identifier'] IN
+     * $params['user'] OUT
+     * $params['tokenFound'] OUT
+     *
+     * @param unknown_type $params
+     */
+    function user_manager_get_user_by_identifier($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            // identifier = type:value
+            $separatorPosition = strpos($params['identifier'], ':');
+            $type = strtolower(substr($params['identifier'], 0, $separatorPosition));
+            $value = strtolower(substr($params['identifier'], $separatorPosition + 1));
+            
+            $ldap = LDAP::instance();
+            $lri = null;
+            switch ($type) {
+                case 'ldapid':
+                    $params['tokenFound'] = true;
+                    $lri = $ldap->searchEdUid($value);
+                    break;
+                case 'ldapdn':
+                    $params['tokenFound'] = true;
+                    //$lri = $ldap->searchDn($value);
+                    break;
+                case 'ldapuid':
+                    $params['tokenFound'] = true;
+                    $lri = $ldap->searchLogin($value);
+                    break;
+            }
+            if($lri instanceof LDAPResultIterator) {
+                if($lri->count() == 1) {
+                    $lr = $lri->current();
+                    $um = UserManager::instance();
+                    $user = $um->getUserByLdapId($lr->getEdUid());
+                    if($user == null) {
+                        // Create account
+                    }
+                    $params['user'] = $user;
+                } elseif($lri->count() > 1) {
+                    throw new Exception("Several accounts share the same LDAP identifier '$value'");
+                }
+            }
+        }
+    }
+    
     /**
      * Hook
      * Params:

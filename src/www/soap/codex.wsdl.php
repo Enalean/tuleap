@@ -32,6 +32,9 @@ require_once('./common/session.php');
 // include the common GROUP API
 require_once('./common/group.php');
 
+// include the common USERS API
+require_once('common/users.php');
+
 // include the TRACKER API
 require_once('./tracker/tracker.php');
 

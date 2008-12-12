@@ -44,6 +44,9 @@ class XMLDocmanImport {
 
     // Group map
     private $ugroupMap;
+    
+    // User map (identifier => "unix" user name)
+    private $userMap;
 
     // Soap client
     private $soap;
@@ -64,6 +67,7 @@ class XMLDocmanImport {
         $this->metadataMap = array();
         $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
+        $this->userMap = array();
 
         // Disable the cache for testing purposes. TODO re-enable the cache for production.
         ini_set("soap.wsdl_cache_enabled", "0");
@@ -71,8 +75,8 @@ class XMLDocmanImport {
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
             $this->hash = $this->soap->login($login, $password)->session_hash;
-        } catch (Exception $e) {
-            $this->printSoapErrorAndDie($e);
+        } catch (SoapFault $e) {
+            $this->printSoapResponseAndThrow($e);
         }
 
         echo "Connected to $wsdl as $login.".PHP_EOL;
@@ -98,6 +102,7 @@ class XMLDocmanImport {
         $this->doc = simplexml_import_dom($dom);
 
         // Build the maps
+        $this->buildUserMap();
         $this->buildMetadataMap();
         $this->buildUgroupMap();
 
@@ -158,8 +163,8 @@ class XMLDocmanImport {
                     }
                 }
             }
-        } catch (Exception $e) {
-            $this->printSoapErrorAndDie($e);
+        } catch (SoapFault $e) {
+            $this->printSoapResponseAndThrow($e);
         }
 
         echo "Done.".PHP_EOL;
@@ -200,8 +205,8 @@ class XMLDocmanImport {
                     }
                 }
             }
-        } catch (Exception $e) {
-            $this->printSoapErrorAndDie($e);
+        } catch (SoapFault $e) {
+            $this->printSoapResponseAndThrow($e);
         }
 
         if (isset($missingProp)) {
@@ -210,11 +215,40 @@ class XMLDocmanImport {
 
         echo "Done.".PHP_EOL;
     }
+    
+    private function buildUserMap() {
 
-    private function printSoapErrorAndDie(Exception $e) {
-        //print_r($e);
+        $userIdentifiers = array();
+        foreach (array_unique($this->doc->xpath('//author | //owner')) as $userIdentifier) {
+            if ($userIdentifier != '') {
+                $userIdentifiers[] = self::userNodeToIdentifier($userIdentifier);
+            }
+        }
+        
+        if (count($userIdentifiers) > 0) {
+            echo "Retrieving users... ";
+            
+            try {
+                $res = $this->soap->checkUsersExistence($this->hash, $userIdentifiers);
+                foreach ($res as $userInfo) {
+                    $this->userMap[$userInfo->identifier] = $userInfo->username;
+                }
+            } catch (SoapFault $e) {
+                $this->printSoapResponseAndThrow($e);
+            }
+            
+            $absentUsers = array_diff($userIdentifiers, array_keys($this->userMap));
+            if (count($absentUsers) != 0) {
+                $this->exitError("Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers));
+            }
+            
+            echo "Done.".PHP_EOL;
+        }
+    }
+
+    private function printSoapResponseAndThrow(SoapFault $e) {
         echo "Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL;
-        $this->exitError($e->getMessage());
+        throw $e;
     }
     
     private function checkHardCodedMetadataUsage() {
@@ -513,6 +547,38 @@ class XMLDocmanImport {
         $error = "<strong>VERSION CREATION FAILURE: '$fileName' of $itemId in $parentId</strong>".PHP_EOL;
         file_put_contents('import_error.log', $error, FILE_APPEND);
     }
+    
+    /**
+     * userNodeToIdentifier
+     * 
+     * @param $userNode A node containing a user (author, owner)
+     * @return string   The user identifier formatted as "type:value" for this node
+     */
+    private static function userNodeToIdentifier($userNode) {
+        if ((string)$userNode == '') {
+            return null;
+        } else {
+            if (isset($userNode['type'])) {
+                return $userNode['type'].":$userNode";
+            } else {
+                return (string)$userNode;
+            }
+        }
+    }
+    
+    /**
+     * userNodeToUsername
+     * 
+     * @param $userNode A node containing a user (author, owner)
+     * @return string   The username according to the userMap
+     */
+    private function userNodeToUsername($userNode) {
+        if ((string)$userNode == '') {
+            return null;
+        } else {
+            return $this->userMap[self::userNodeToIdentifier($userNode)];
+        }
+    }
 
     /**
      * Processes the given node and its childs
@@ -527,7 +593,7 @@ class XMLDocmanImport {
         $status           = (string) $node->properties->status;
         $obsolescenceDate = (string) $node->properties->obsolescence_date;
         $ordering         = 'end';
-        $owner            = (string) $node->properties->owner;
+        $owner            = $this->userNodeToUsername($node->properties->owner);
         $createDate       = (string) $node->properties->create_date;
         $updateDate       = (string) $node->properties->update_date;
 
@@ -554,7 +620,7 @@ class XMLDocmanImport {
                     $changeLog = (string)$version->changelog;
                     $fileName  = (string)$version->filename;
                     $fileType  = (string)$version->filetype;
-                    $author    = (string)$version->author;
+                    $author    = $this->userNodeToUsername($version->author);
                     $date      = (string)$version->date;
 
                     if($iFiles == 0) {
@@ -577,7 +643,7 @@ class XMLDocmanImport {
                     $file      = (string)$version->content;
                     $label     = (string)$version->label;
                     $changeLog = (string)$version->changelog;
-                    $author    = (string)$version->author;
+                    $author    = $this->userNodeToUsername($version->author);
                     $date      = (string)$version->date;
 
                     if($iFiles == 0) {
