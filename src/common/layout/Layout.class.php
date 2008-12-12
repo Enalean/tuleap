@@ -1242,6 +1242,28 @@ class Layout extends Response {
 <?php
         if (isset($params['group']) && $params['group']) {
             echo $this->project_tabs($params['toptab'],$params['group']);
+        } else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
+                   strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
+            $tabs = array(
+                array(
+                    'link'  => '/my/', 
+                    'label' => $Language->getText('my_index','my_dashboard')
+                ),
+                array(
+                    'link'  => '/account/', 
+                    'label' => $Language->getText('my_index','account_maintenance'),
+                ),
+                array(
+                    'link'  => '/account/preferences.php',
+                    'label' => $Language->getText('account_options','preferences')
+                ),
+            );
+            echo '<hr SIZE="1" NoShade>';
+            foreach($tabs as $tab) {
+                $this->tab_entry($tab['link'],'',$tab['label'],strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
+                      (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1),'');
+            }
+            echo '<hr SIZE="1" NoShade>';
         }
         echo $this->_getFeedback();
         $this->_feedback->display();

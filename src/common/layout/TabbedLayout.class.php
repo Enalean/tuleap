@@ -202,8 +202,35 @@ if (isset($params['group']) && $params['group']) {
 			</tr>
 			<?php
 
-}
+} else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
+           strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
+    ?>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+        <?php
+        echo $this->tabGenerator(array(
+                '/my/', 
+                '/account/', 
+                '/account/preferences.php'
+            ), array(
+                $Language->getText('my_index','my_dashboard'),
+                $Language->getText('my_index','account_maintenance'),
+                $Language->getText('account_options','preferences')
+            ),
+            true,
+            strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
+              (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1)
+            ,
+            'WHITE', //deprecated
+            '');
 
+        ?>
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    <?php
+}
 ?>
 			<tr class="start_main_body_row">
 				<td align="left" width="9"><img src="<?php echo $this->imgroot; ?>tabs/topleft-inner.png" height="9" width="9" alt="" /></td>
@@ -446,7 +473,6 @@ if (isset($params['group']) && $params['group']) {
     * @param sel_tab_bgcolor DEPRECATED
     */
 	function tabGenerator($TABS_DIRS,$TABS_TITLES,$nested=false,$selected=false,$sel_tab_bgcolor='WHITE',$total_width='100%') {
-
 		$count=count($TABS_DIRS);
 		$width=intval((100/$count));
 		

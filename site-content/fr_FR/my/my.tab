@@ -5,6 +5,8 @@
 #-----------------------------------------------
 # Script: SF/www/my/index.php
 #
+my_index	my_dashboard	Tableau de bord
+my_index	account_maintenance	Gestion du compte
 my_index	title	Page personnelle de $1
 my_index	err_badbrowser	Alerte&nbsp;: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionnalités ne seront pas disponibles.
 my_index	message	Votre page personnelle contient la liste des artefacts que vous avez [<b>S</b>]oumis ou qui vous ont été [<b>A</b>]ssignés avec leur niveau de complétion, les forums et les fichiers que vous surveillez et les projets dont vous êtes membre.<P>
