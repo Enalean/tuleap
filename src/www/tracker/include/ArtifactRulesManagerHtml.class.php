@@ -89,9 +89,152 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
     }
     
-    function displayEditForm($params = array()) {
+    function getAllSourceFields($target_id) {
+        $sources = array();
+        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $used_fields = $art_field_fact->getAllUsedFields();
+        foreach($used_fields as $field) {
+            if ($field->getName() != 'submitted_by') {
+                if ($field->isMultiSelectBox() || $field->isSelectBox()) {
+                    if (!$target_id || !$this->fieldIsAForbiddenSource($this->artifact_type->getId(), $field->getId(), $target_id)) {
+                        $sources[$field->getId()] = $field;
+                    }
+                }
+            }
+        }
+        return $sources;
+    }
+    
+    function getAllTargetFields($source_id) {
+        $targets = array();
+        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $used_fields = $art_field_fact->getAllUsedFields();
+        foreach($used_fields as $field) {
+            if ($field->getName() != 'submitted_by') {
+                if ($field->isMultiSelectBox() || $field->isSelectBox()) {
+                    if (!$source_id || !$this->fieldIsAForbiddenTarget($this->artifact_type->getId(), $field->getId(), $source_id)) {
+                        $targets[$field->getId()] = $field;
+                    }
+                }
+            }
+        }
+        return $targets;
+    }
+    
+    
+    
+    function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
+        $hp = CodeX_HTMLPurifier::instance();
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
-        echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule"></div>';
+        echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
+        /**/
+        echo '<table border=0><thead><tr class="boxtable"><td class="boxtitle">';
+        echo $GLOBALS['Language']->getText('tracker_field_dependencies','source');
+        
+        $onchange = '$(\'source_field_hidden\').value = $(\'source_field\').value;'.
+                    '$(\'target_field_hidden\').value = $(\'target_field\').value;'.
+                    'Form.Element.disable(\'source_field\');'.
+                    'Form.Element.disable(\'target_field\');'.
+                    'this.up(\'table\').down(\'tbody\').update(\'<tr><td align=\\\'center\\\' colspan=\\\'2\\\'>'. 
+                    addslashes(str_replace('"', "'", $GLOBALS['HTML']->getImage('ic/spinner.gif'))) .
+                    '</td></tr>\');'.
+                    'this.form.submit();';
+        
+        echo PHP_EOL.'<select id="source_field" name="source_field" onchange="'. $onchange .'">'.PHP_EOL;
+        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
+        $sources = $this->getAllSourceFields($target_field);
+        foreach($sources as $id => $field) {
+            $highlight = $this->fieldHasTarget($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
+            $selected  = $field->getId() == $source_field ? ' selected="selected" ' : ' ';
+            echo '<option value="'. $id .'" '. $highlight . $selected .'>';
+            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML);
+            echo '</option>';
+        }
+        echo '</select>';
+        echo '</td><td class="boxtitle">';
+        echo $GLOBALS['Language']->getText('tracker_field_dependencies','target');
+        echo '<select id="target_field" name="target_field" onchange="'. $onchange .'">';
+        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
+        $targets = $this->getAllTargetFields($source_field);
+        foreach($targets as $id => $field) {
+            $highlight = $this->fieldHasSource($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
+            $selected  = $field->getId() == $target_field ? ' selected="selected" ' : ' ';
+            echo '<option value="'. $id .'" '. $highlight . $selected .'>';
+            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML);
+            echo '</option>';
+        }
+        echo '</select>';
+        //Preload spinner
+        echo $GLOBALS['HTML']->getImage('ic/spinner.gif', array('style' => 'display:none'));
+        echo '</td></tr></thead>';
+        echo '<tbody><tr style="vertical-align:top;" class="boxitemalt"><td>';
+        if ($source_field && $target_field && isset($sources[$source_field]) && isset($targets[$target_field])) {
+            //Source values
+            echo '<table width="100%" cellpadding="0" cellspacing="0">';
+            $values = $sources[$source_field]->getFieldPredefinedValues($this->artifact_type->getID());
+            if (db_numrows($values) > 1) {
+                while ($row = db_fetch_array($values)) {
+                    echo '<tr id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
+                    echo '<td style="width: 1%;">';
+                    echo '<input type="checkbox" 
+                                 id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                                 name="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                                 style="visibility: hidden;"
+                                 onclick="admin_checked(this.id)" />';
+                    echo '</td><td style="cursor: pointer;" onclick="return admin_selectSourceEvent(this)"><span> </span><label style="cursor: pointer;">';
+                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_CONVERT_HTML);
+                    if ($this->valueHasTarget($this->artifact_type->getId(), $source_field, $row[0], $target_field)) {
+                        echo '<strong>'. $v .'</strong>';
+                    } else {
+                        echo $v;
+                    }
+                    echo ' </label></td>';
+                    echo '<td style="text-align: right;"><div id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_arrow" style="visibility: hidden;">&rarr;</div></td>';
+                    echo '</tr>';
+                }
+            }
+            echo '</table>';
+            echo '</td><td>';
+            //Target values
+            echo '<table width="100%" cellpadding="0" cellspacing="0">';
+            $values = $targets[$target_field]->getFieldPredefinedValues($this->artifact_type->getID());
+            if (db_numrows($values) > 1) {
+                while ($row = db_fetch_array($values)) {
+                    echo '<tr id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
+                    echo '<td style="text-align: right; width: 1%"><div id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_arrow" style="visibility: hidden;">&rarr;</div></td>';
+                    echo '<td style="width: 1%;">';
+                    echo '<input type="checkbox" 
+                                 id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                                 name="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                                 style="visibility: hidden;"
+                                 onclick="admin_checked(this.id)" />';
+                    echo '</td><td style="cursor: pointer;" onclick="return admin_selectTargetEvent(this)"><span> </span><label style="cursor: pointer;">';
+                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_CONVERT_HTML);
+                    if ($this->valueHasSource($this->artifact_type->getId(), $target_field, $row[0], $source_field)) {
+                        echo '<strong>'. $v .'</strong>';
+                    } else {
+                        echo $v;
+                    }
+                    echo ' </label></td>';
+                    echo '</tr>';
+                }
+            }
+            echo '</table>';
+        } else {
+            echo '</td><td>';
+        }
+        echo '</td></tr>';
+        echo '<tr id="save_panel" class="boxtitle">';
+        echo '<td colspan="2" style="text-align: center;">';
+        echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" id="save_btn"/>';
+        echo '<button id="reset_btn">'. $GLOBALS['Language']->getText('global','btn_reset') .'</button>';
+        echo '</td>';
+        echo '</tr>';
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>';
+        /**/
+        
         echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="source_field_hidden" name="source_field" value="" />';
         echo '<input type="hidden" id="target_field_hidden" name="target_field" value="" />';
@@ -105,45 +248,21 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         
         $this->displayRulesAsJavascript();
         
-        if (isset($params['preselected_source_field'])) {
-            echo 'var preselected_source_field = '. $params['preselected_source_field'] .";\n";
-        } else {
-            echo "var preselected_source_field = '-1';\n";
-        }
-        if (isset($params['preselected_target_field'])) {
-            echo 'var preselected_target_field = '. $params['preselected_target_field'] .";\n";
-        } else {
-            echo "var preselected_target_field = '-1';\n";
-        }
-        if (isset($params['preselected_source_value'])) {
-            echo 'var preselected_source_value = '. $params['preselected_source_value'] .";\n";
-        } else {
-            echo "var preselected_source_value = undefined;\n";
-        }
-        if (isset($params['preselected_target_value'])) {
-            echo 'var preselected_target_value = '. $params['preselected_target_value'] .";\n";
-        } else {
-            echo "var preselected_target_value = undefined;\n";
-        }
         echo "var messages = {\n";
-            //echo "href:               '". $this->href ."',\n";
-            echo "choose_field:       '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','choose_field')) ."',\n";
-            echo "source:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','source')) ."',\n";
-            echo "target:             '". addslashes($GLOBALS['Language']->getText('tracker_field_dependencies','target')) ."',\n";
             echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
             echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."',\n";
-            echo "please_wait:        '". addslashes('Please wait while loading...') ."'\n";
         echo "};\n";
         echo "document.observe('dom:loaded', buildAdminUI);";
         echo "\n//------------------------------------------------------\n";
         echo "\n".'//]]></script>';
+
     }
     
-    function displayRules($params = array()) {
+    function displayRules($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
         $this->_header();
         echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</div>';
         echo '<br />';
-        $this->displayEditForm($params);
+        $this->displayEditForm($source_field, $target_field, $source_value, $target_value);
         echo '<br />';
         $this->_footer();
     }
@@ -163,11 +282,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                     }
                 }
                 $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
-                $this->displayRules(array(
-                    'preselected_source_field' => $request->get('source_field'),
-                    'preselected_target_field' => $request->get('target_field'),
-                    'preselected_source_value' => $request->get('value'),
-                ));
+                $this->displayRules($request->get('source_field'), $request->get('target_field'), $request->get('value'), false);
                 break;
             case 'target': // n sources -> 1 target
                 $this->deleteRuleValueByTarget($this->artifact_type->getId(), $request->get('source_field'), $request->get('target_field'), $request->get('value'));
@@ -181,11 +296,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                     }
                 }
                 $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
-                $this->displayRules(array(
-                    'preselected_source_field' => $request->get('source_field'),
-                    'preselected_target_field' => $request->get('target_field'),
-                    'preselected_target_value' => $request->get('value')
-                ));
+                $this->displayRules($request->get('source_field'), $request->get('target_field'), false, $request->get('value'));
                 break;
             default:
                 $this->badRequest();
