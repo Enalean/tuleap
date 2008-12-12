@@ -12,12 +12,14 @@ class UserManager {
  
     var $_users;
     var $_userid_bynames;
+    var $_userid_byldapid;
     var $_userdao;
     var $_currentuser_id;
     
     function UserManager(&$userdao) {
         $this->_users = array();
         $this->_userid_bynames = array();
+        $this->_userid_byldapid = array();
         $this->_userdao =& $userdao;
         $this->_currentuser_id = 0;
     }
@@ -71,6 +73,28 @@ class UserManager {
         $user = null;
         if ($this->_userid_bynames[$user_name] !== null) {
             $user =& $this->_users[$this->_userid_bynames[$user_name]];
+        }
+        return $user;
+    }
+    
+    /**
+     * @param  string Ldap identifier
+     * @return User or null if the user is not found
+     */
+    function getUserByLdapId($ldapId) {
+        if (!isset($this->_userid_byldapid[$ldapId])) {
+            $dar =& $this->_userdao->searchByLdapId($ldapId);
+            if ($row = $dar->getRow()) {
+                $u =& $this->_getUserInstanceFromRow($row);
+                $this->_users[$u->getId()] = $u;
+                $this->_userid_byldapid[$ldapId] = $u->getId();
+            } else {
+                $this->_userid_byldapid[$ldapId] = null;
+            }
+        }
+        $user = null;
+        if ($this->_userid_byldapid[$ldapId] !== null) {
+            $user =& $this->_users[$this->_userid_byldapid[$ldapId]];
         }
         return $user;
     }

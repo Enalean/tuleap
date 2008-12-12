@@ -386,6 +386,12 @@ class User {
         return $this->data_array['status'];
     }
     /**
+     * @return string ldap identifier of the user
+     */
+    function getLdapId() {
+        return $this->data_array['ldap_id'];
+    }
+    /**
      * @return string the registration date of the user (timestamp format)
      */
     function getAddDate() {
