@@ -145,13 +145,8 @@ function my_header($params) {
         site_header($params);
     }
     $hp = CodeX_HTMLPurifier::instance();
-    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')')) .'</h2>';
-    echo '<a href="/my/'. $pv .'"><b>'. $GLOBALS['Language']->getText('include_menu','my_perso_page') .'</b></a>';
-    echo ' | ';
-    echo '<a href="/account/'. $pv .'"><b>'. $GLOBALS['Language']->getText('include_menu','account_maintenance') .'</b></a>';
-    echo ' | ';
-    echo '<a href="/account/preferences.php'. $pv .'"><b>'. $GLOBALS['Language']->getText('account_options', 'preferences') .'</b></a>';
-    echo ' | ';
-    echo help_button('LoginAndPersonalPage.html', false, $GLOBALS['Language']->getText('global','help'));
+    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
+    echo ' ' . help_button('LoginAndPersonalPage.html');
+    echo '</h2>';
 }
 ?>
