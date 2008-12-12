@@ -35,13 +35,17 @@ require_once('ArtifactRuleFactory.class.php');
 class ArtifactRulesManager {
 
 
-	function ArtifactRulesManager() {
+    function ArtifactRulesManager() {
     }
     
+    protected $rules_by_tracker_id;
     function getAllRulesByArtifactTypeWithOrder($artifact_type_id) {
-		$fact = $this->_getArtifactRuleFactory();
-        return $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
-	}
+        if (!isset($this->rules_by_tracker_id[$artifact_type_id])) {
+            $fact = $this->_getArtifactRuleFactory();
+            $this->rules_by_tracker_id[$artifact_type_id] = $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        }
+        return $this->rules_by_tracker_id[$artifact_type_id];
+    }
     
     function saveRuleValue($artifact_type_id, $source, $source_value, $target, $target_value) {
         $fact = $this->_getArtifactRuleFactory();
@@ -196,6 +200,83 @@ class ArtifactRulesManager {
         return $selected_values;
     }
     
+    function fieldIsAForbiddenSource($artifact_type_id, $field_id, $target_id) {
+        return !$this->ruleExists($artifact_type_id, $field_id, $target_id) && 
+                (
+                    $field_id == $target_id || 
+                    $this->isCyclic($artifact_type_id, $field_id, $target_id) || 
+                    $this->fieldHasSource($artifact_type_id, $target_id)
+               );
+    }
+    
+    function isCyclic($artifact_type_id, $source_id, $target_id) {
+        if ($source_id == $target_id) {
+            return true;
+        } else {
+            $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+            $found = false;
+            while (!$found && (list(,$rule) = each($rules))) {
+                if ($rule->source_field == $target_id) {
+                    $found = $this->isCyclic($artifact_type_id, $source_id, $rule->target_field);
+                }
+            }
+            return $found;
+        }
+    }
+    
+    function fieldIsAForbiddenTarget($artifact_type_id, $field_id, $source_id) {
+        return !$this->ruleExists($artifact_type_id, $source_id, $field_id) && 
+                (
+                    $field_id == $source_id || 
+                    $this->isCyclic($artifact_type_id, $source_id, $field_id) || 
+                    $this->fieldHasSource($artifact_type_id, $field_id)
+               );
+    }
+    
+    function fieldHasTarget($artifact_type_id, $field_id) {
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        $found = false;
+        while (!$found && (list(,$rule) = each($rules))) {
+            $found = ($rule->source_field == $field_id);
+        }
+        return $found;
+    }
+    
+    function fieldHasSource($artifact_type_id, $field_id) {
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        $found = false;
+        while (!$found && (list(,$rule) = each($rules))) {
+            $found = ($rule->target_field == $field_id);
+        }
+        return $found;
+    }
+    
+    function valueHasTarget($artifact_type_id, $field_id, $value_id, $target_id) {
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        $found = false;
+        while (!$found && (list(,$rule) = each($rules))) {
+            $found = ($rule->source_field == $field_id && $rule->source_value == $value_id && $rule->target_field == $target_id);
+        }
+        return $found;
+    }
+    
+    function valueHasSource($artifact_type_id, $field_id, $value_id, $source_id) {
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        $found = false;
+        while (!$found && (list(,$rule) = each($rules))) {
+            $found = ($rule->target_field == $field_id && $rule->target_value == $value_id && $rule->source_field == $source_id);
+        }
+        return $found;
+    }
+    
+    function ruleExists($artifact_type_id, $source_id, $target_id) {
+        $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
+        $found = false;
+        while (!$found && (list(,$rule) = each($rules))) {
+            $found = ($rule->source_field == $source_id && $rule->target_field == $target_id);
+        }
+        return $found;
+    }
 }
 
 ?>

@@ -230,5 +230,191 @@ class ArtifactRulesManagerTest extends UnitTestCase {
         //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
         /**/
     }
+    
+    function testForbidden() {
+        $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
+        $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
+        $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
+        
+        $arf = new MockArtifactRuleFactory($this);
+        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        
+        $arm = new ArtifactRulesManagerTestVersion($this);
+        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        
+        //Forbidden sources
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'A'), "Field B cannot be the source of field A because A->B->A is cyclic");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'A'), "Field C cannot be the source of field A because A->B->C->A is cyclic");
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'D', 'A'), "Field D can be the source of field A");
+
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'B'), "Field A is the source of field B");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'B', 'B'), "Field B cannot be the source of field B");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'B'), "Field C cannot be the source of field B because B is already a target");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'B'), "Field D cannot be the source of field B because B is already a target");
+
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'C'), "Field A cannot be the source of field C because C is already a target");
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'C'), "Field B is the source of field C");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'C', 'C'), "Field C cannot be the source of field C");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'C'), "Field D cannot be the source of field C because C is already a target");
+
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'A', 'D'), "Field A can be the source of field D");
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'B', 'D'), "Field B can be the source of field D");
+        $this->assertFalse($arm->fieldIsAForbiddenSource(1, 'C', 'D'), "Field C can be the source of field D");
+        $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'D', 'D'), "Field D cannot be the source of field D");
+        
+        //Forbidden targets                                                            
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'A'), "Field A cannot be the target of field A");
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'B', 'A'), "Field B is the target of field A");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'A'), "Field C cannot be the target of field A because C is already a target");
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'A'), "Field D can be the target of field A");
+
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'B'), "Field A cannot be the target of field B because A->B->A is cyclic");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'B'), "Field B cannot be the target of field B");
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'C', 'B'), "Field C is the target of field B");
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'B'), "Field D can be the target of field B");
+
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'A', 'C'), "Field A cannot be the target of field C because A->B->C->A is cyclic");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'C'), "Field B cannot be the target of field C because B is already a target");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'C'), "Field C cannot be the target of field C");
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'D', 'C'), "Field D can be the target of field C");
+
+        $this->assertFalse($arm->fieldIsAForbiddenTarget(1, 'A', 'D'), "Field A can be the target of field D");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'B', 'D'), "Field B cannot be the target of field D because B is already a target");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'C', 'D'), "Field C cannot be the target of field D because C is already a target");
+        $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
+    }
+    
+    function testFieldHasSourceTarget() {
+        $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
+        $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
+        $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
+        
+        $arf = new MockArtifactRuleFactory($this);
+        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        
+        $arm = new ArtifactRulesManagerTestVersion($this);
+        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+
+        $this->assertFalse($arm->fieldHasSource(1, 'A'));
+        $this->assertTrue($arm->fieldHasSource(1, 'B'));
+        $this->assertTrue($arm->fieldHasSource(1, 'C'));
+        $this->assertFalse($arm->fieldHasSource(1, 'D'));
+        $this->assertTrue($arm->fieldHasSource(1, 'E'));
+        $this->assertFalse($arm->fieldHasSource(1, 'F'));
+        
+        $this->assertTrue($arm->fieldHasTarget(1, 'A'));
+        $this->assertTrue($arm->fieldHasTarget(1, 'B'));
+        $this->assertFalse($arm->fieldHasTarget(1, 'C'));
+        $this->assertTrue($arm->fieldHasTarget(1, 'D'));
+        $this->assertFalse($arm->fieldHasTarget(1, 'E'));
+        $this->assertFalse($arm->fieldHasTarget(1, 'F'));
+        
+    }
+    function testIsCyclic() {
+        $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
+        $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
+        $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
+        
+        $arf = new MockArtifactRuleFactory($this);
+        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        
+        $arm = new ArtifactRulesManagerTestVersion($this);
+        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        
+        $this->assertTrue($arm->isCyclic(1, 'A', 'A'));
+        $this->assertFalse($arm->isCyclic(1, 'A', 'B'));
+        $this->assertFalse($arm->isCyclic(1, 'A', 'C'));
+        $this->assertFalse($arm->isCyclic(1, 'A', 'D'));
+        $this->assertFalse($arm->isCyclic(1, 'A', 'E'));
+        
+        $this->assertTrue($arm->isCyclic(1, 'B', 'A'));
+        $this->assertTrue($arm->isCyclic(1, 'B', 'B'));
+        $this->assertFalse($arm->isCyclic(1, 'B', 'C'));
+        $this->assertFalse($arm->isCyclic(1, 'B', 'D'));
+        $this->assertFalse($arm->isCyclic(1, 'B', 'E'));
+        
+        $this->assertTrue($arm->isCyclic(1, 'C', 'A'));
+        $this->assertTrue($arm->isCyclic(1, 'C', 'B'));
+        $this->assertTrue($arm->isCyclic(1, 'C', 'C'));
+        $this->assertFalse($arm->isCyclic(1, 'C', 'D'));
+        $this->assertFalse($arm->isCyclic(1, 'C', 'E'));
+        
+        $this->assertFalse($arm->isCyclic(1, 'D', 'A'));
+        $this->assertFalse($arm->isCyclic(1, 'D', 'B'));
+        $this->assertFalse($arm->isCyclic(1, 'D', 'C'));
+        $this->assertTrue($arm->isCyclic(1, 'D', 'D'));
+        $this->assertFalse($arm->isCyclic(1, 'D', 'E'));
+        
+        $this->assertFalse($arm->isCyclic(1, 'E', 'A'));
+        $this->assertFalse($arm->isCyclic(1, 'E', 'B'));
+        $this->assertFalse($arm->isCyclic(1, 'E', 'C'));
+        $this->assertTrue($arm->isCyclic(1, 'E', 'D'));
+        $this->assertTrue($arm->isCyclic(1, 'E', 'E'));
+    }
+    
+    function testRuleExists() {
+        $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
+        $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
+        $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
+        
+        $arf = new MockArtifactRuleFactory($this);
+        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        
+        $arm = new ArtifactRulesManagerTestVersion($this);
+        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+        
+        //Rule exists
+        $this->assertFalse($arm->ruleExists(1, 'A', 'A'));
+        $this->assertTrue($arm->ruleExists(1, 'A', 'B'));
+        $this->assertFalse($arm->ruleExists(1, 'A', 'C'));
+        $this->assertFalse($arm->ruleExists(1, 'A', 'D'));
+        $this->assertFalse($arm->ruleExists(1, 'A', 'E'));
+        
+        $this->assertFalse($arm->ruleExists(1, 'B', 'A'));
+        $this->assertFalse($arm->ruleExists(1, 'B', 'B'));
+        $this->assertTrue($arm->ruleExists(1, 'B', 'C'));
+        $this->assertFalse($arm->ruleExists(1, 'B', 'D'));
+        $this->assertFalse($arm->ruleExists(1, 'B', 'E'));
+        
+        $this->assertFalse($arm->ruleExists(1, 'C', 'A'));
+        $this->assertFalse($arm->ruleExists(1, 'C', 'B'));
+        $this->assertFalse($arm->ruleExists(1, 'C', 'C'));
+        $this->assertFalse($arm->ruleExists(1, 'C', 'D'));
+        $this->assertFalse($arm->ruleExists(1, 'C', 'E'));
+        
+        $this->assertFalse($arm->ruleExists(1, 'D', 'A'));
+        $this->assertFalse($arm->ruleExists(1, 'D', 'B'));
+        $this->assertFalse($arm->ruleExists(1, 'D', 'C'));
+        $this->assertFalse($arm->ruleExists(1, 'D', 'D'));
+        $this->assertTrue($arm->ruleExists(1, 'D', 'E'));
+        
+        $this->assertFalse($arm->ruleExists(1, 'E', 'A'));
+        $this->assertFalse($arm->ruleExists(1, 'E', 'B'));
+        $this->assertFalse($arm->ruleExists(1, 'E', 'C'));
+        $this->assertFalse($arm->ruleExists(1, 'E', 'D'));
+        $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
+        
+    }
+    function testValueHasSourceTarget() {
+        $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
+        $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
+        $r3 = new ArtifactRuleValue(3, 1, 'D', '5', 'E', '6');
+        
+        $arf = new MockArtifactRuleFactory($this);
+        $arf->setReturnValue('getAllRulesByArtifactTypeWithOrder', array($r1, $r2, $r3));
+        
+        $arm = new ArtifactRulesManagerTestVersion($this);
+        $arm->setReturnReference('_getArtifactRuleFactory', $arf);
+
+        //value has source or target
+        $this->assertTrue($arm->valueHasSource(1, 'B', 2, 'A'));
+        $this->assertFalse($arm->valueHasSource(1, 'B', 2, 'C'));
+        $this->assertFalse($arm->valueHasSource(1, 'B', 3, 'C'));
+        $this->assertTrue($arm->valueHasTarget(1, 'B', 3, 'C'));
+        $this->assertFalse($arm->valueHasTarget(1, 'B', 3, 'A'));
+        $this->assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
+        
+    }
 }
 ?>

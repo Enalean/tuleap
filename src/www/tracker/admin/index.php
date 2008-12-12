@@ -921,7 +921,11 @@ if ($group_id && !$atid) {
                 $armh->badRequest();
             }
         } else {
-            $armh->displayRules();
+            $armh->displayRules($request->get('source_field'), 
+                                $request->get('target_field'),
+                                $request->get('direction_type') == 'source' ? $request->get('value') : false,
+                                $request->get('direction_type') == 'source' ? false : $request->get('value')
+            );
         }
         break;
     case 'fieldsets':

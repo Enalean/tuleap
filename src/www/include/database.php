@@ -46,7 +46,7 @@ function getConnection() {
 function db_query($qstring,$print=0) {
     global $conn;
     $GLOBALS['DEBUG_DBPHP_QUERY_COUNT']++;
-    if ($print) print "<br>Query is: $qstring<br>";
+    if ($print || isset($GLOBALS['print_sql'])) print "<br>Query is: $qstring<br>";
     $GLOBALS['db_qhandle'] = @mysql_query($qstring, $conn);
     return $GLOBALS['db_qhandle'];
 }
