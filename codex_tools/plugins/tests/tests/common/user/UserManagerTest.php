@@ -6,10 +6,13 @@ require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
+require_once('common/event/EventManager.class.php');
+Mock::generate('EventManager');
 
 require_once('common/user/UserManager.class.php');
 Mock::generatePartial('UserManager', 'UserManagerTestVersion', array('_getUserInstanceFromRow'));
-
+// Special mock for getUserByIdentifier test
+Mock::generatePartial('UserManager', 'UserManager4GetByIdent', array('_getEventManager', 'getUserByUserName', 'getUserById', 'getUserByEmail'));
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -136,6 +139,38 @@ class UserManagerTest extends UnitTestCase {
         $um->getUserById(123);
         $this->assertTrue($um->isUserLoadedById(123));
         $this->assertTrue($um->isUserLoadedByUserName('user_123'));
+    }
+    
+    function testGetUserByIdentifierPluginNoAnswerWithSimpleId() {
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent');   
+        
+        $um = new UserManager4GetByIdent($this);
+        $um->expectOnce('getUserByUserName');
+        $um->setReturnReference('_getEventManager', $em);
+        
+        $user = $um->getUserByIdentifier('test');
+        $this->assertNull($user);
+        
+        $em->tally();
+        $um->tally();
+    }
+    
+
+    function testGetUserByIdentifierPluginNoAnswerWithComplexId() {
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent');   
+        
+        $um = new UserManager4GetByIdent($this);
+        $um->expectNever('getUserByUserName');
+        
+        $um->setReturnReference('_getEventManager', $em);
+        
+        $user = $um->getUserByIdentifier('plugin:test');
+        $this->assertNull($user);
+        
+        $em->tally();
+        $um->tally();
     }
 }
 ?>

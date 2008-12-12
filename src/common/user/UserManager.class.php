@@ -102,38 +102,42 @@ class UserManager {
      *     email:manu@st.com
      *     id:1234
      *     manu (no type specified means that the identifier is a username)
+     * 
+     * @param string $identifier User identifier
+     * 
+     * @return User
      */
     public function getUserByIdentifier($identifier) {
         $user = null;
         
-        // Guess identifier type
-        $separatorPosition = strpos($identifier, ':');
-        if ($separatorPosition === false) {
-            // identifier = username
-            $user = $this->getUserByUserName($identifier);
-        } else {
-            // identifier = type:value
-            $identifierType = substr($identifier, 0, $separatorPosition);
-            $identifierValue = substr($identifier, $separatorPosition + 1);
-            
-            //TODO refactor using some LDAP plugin hook
-            
-            switch ($identifierType) {
-                case 'id':
-                    $user = $this->getUserById($identifierValue);
-                    break;
-                case 'email': // Use with caution, a same email can be shared between several accounts
-                    $user = $this->getUserByEmail($identifierValue);
-                    break;
-                case 'ldapId':
-                case 'ldapDn':
-                case 'ldapRdn':
-                case 'ldapUid':
-                case 'ldapCn':    
-                    break;
+        $em = $this->_getEventManager();
+        $tokenFoundInPlugins = false;
+        $params = array('identifier' => $identifier,
+                        'user'       => $user,
+                        'tokenFound' => &$tokenFoundInPlugins);
+        $em->processEvent('user_manager_get_user_by_identifier', $params);
+        
+        if (!$tokenFoundInPlugins) {
+            // Guess identifier type
+            $separatorPosition = strpos($identifier, ':');
+            if ($separatorPosition === false) {
+                // identifier = username
+                $user = $this->getUserByUserName($identifier);
+            } else {
+                // identifier = type:value
+                $identifierType = substr($identifier, 0, $separatorPosition);
+                $identifierValue = substr($identifier, $separatorPosition + 1);
+
+                switch ($identifierType) {
+                    case 'id':
+                        $user = $this->getUserById($identifierValue);
+                        break;
+                    case 'email': // Use with caution, a same email can be shared between several accounts
+                        $user = $this->getUserByEmail($identifierValue);
+                        break;
+                }
             }
         }
-        
         return $user;
     }
     
@@ -176,6 +180,16 @@ class UserManager {
     function setCurrentUserId($user_id) {
         $this->currentuser_id = $user_id;
     }
+    
+    /**
+     * Return an event manager instance
+     *
+     * @return EventManager
+     */
+    protected function _getEventManager() {
+        return EventManager::instance();
+    }
+    
 }
 
 ?>
