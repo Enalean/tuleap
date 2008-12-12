@@ -1,0 +1,32 @@
+plugin_hudson	descriptor_description	Continuous Intégration with Hudson
+plugin_hudson	descriptor_name	Continuous Integration
+
+plugin_hudson	title	Continuous Integration
+
+plugin_hudson	service_lbl_key	Continuous Integration
+plugin_hudson	service_desc_key	Continuous Integration with Hudson
+
+plugin_hudson	header_table_job	Job
+plugin_hudson	header_table_lastsuccess	Last Success
+plugin_hudson	header_table_lastfailure	Last Failure
+plugin_hudson	header_table_rss	RSS
+plugin_hudson	header_table_actions	Actions
+
+plugin_hudson	service_not_used	Hudson service is not enabled
+plugin_hudson	group_id_missing	Missing group_id parameter.
+plugin_hudson	job_url_missing	Missing Hudson job url (eg: http://myCIserver:8080/hudson/job/MyJob)
+plugin_hudson	job_id_missing	Missing Hudson job ID
+plugin_hudson	add_job_error	Unable to add Hudson job.
+plugin_hudson	malformed_url	Hudson job URL is malformed
+plugin_hudson	malformed_url_scheme	Hudson job URL is malformed: no URL scheme
+plugin_hudson	job_added	Hudson job added.
+plugin_hudson	edit_job_error	Unable to update Hudson job
+plugin_hudson	job_edited	Hudson job updated.
+plugin_hudson	delete_job_error	Unable to delete Hudson job
+plugin_hudson	job_deleted	Hudson job deleted.
+
+plugin_hudson	status_blue	Success
+plugin_hudson	status_yellow	Unstable
+plugin_hudson	status_red	Failure
+plugin_hudson	status_grey	Pending
+plugin_hudson	status_unknown	Unknown status
