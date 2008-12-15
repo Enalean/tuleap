@@ -71,17 +71,33 @@ class HudsonJob {
                 // The last build was successful.
                 return $GLOBALS['Language']->getText('plugin_hudson','status_blue');
                 break;
+            case "blue_anime":
+                // The last build was successful. A new build is in progress.
+                return $GLOBALS['Language']->getText('plugin_hudson','status_blue_anime');
+                break;
             case "yellow":
                 // The last build was successful but unstable. This is primarily used to represent test failures.
                 return $GLOBALS['Language']->getText('plugin_hudson','status_yellow'); 
+                break;
+            case "yellow_anime":
+                // The last build was successful but unstable. This is primarily used to represent test failures. A new build is in progress.
+                return $GLOBALS['Language']->getText('plugin_hudson','status_yellow_anime'); 
                 break;
             case "red":
                 // The last build fatally failed.
                 return $GLOBALS['Language']->getText('plugin_hudson','status_red');
                 break;
+            case "red_anime":
+                // The last build fatally failed. A new build is in progress.
+                return $GLOBALS['Language']->getText('plugin_hudson','status_red_anime');
+                break;
             case "grey":
                 // The project has never been built before, or the project is disabled.
                 return $GLOBALS['Language']->getText('plugin_hudson','status_grey');
+                break;
+            case "grey_anime":
+                // The project has never been built before, or the project is disabled. The first build of this project is in progress.
+                return $GLOBALS['Language']->getText('plugin_hudson','status_grey_anime');
                 break;
             default:
                 // Can we have anime icons here?
@@ -99,16 +115,32 @@ class HudsonJob {
                 // The last build was successful.
                 return $this->getIconsPath()."status_blue.png";
                 break;
+            case "blue_anime":
+                // The last build was successful. A new build is in progress.
+                return $this->getIconsPath()."status_blue.png";
+                break;
             case "yellow":
                 // The last build was successful but unstable. This is primarily used to represent test failures.
                 return $this->getIconsPath()."status_yellow.png"; 
+                break;
+            case "yellow_anime":
+                // The last build was successful but unstable. A new build is in progress.
+                return $this->getIconsPath()."status_yellow.png";
                 break;
             case "red":
                 // The last build fatally failed.
                 return $this->getIconsPath()."status_red.png";
                 break;
+            case "red_anime":
+                // The last build fatally failed. A new build is in progress.
+                return $this->getIconsPath()."status_red.png";
+                break;
             case "grey":
                 // The project has never been built before, or the project is disabled.
+                return $this->getIconsPath()."status_grey.png";
+                break;
+            case "grey_anime":
+                // The first build of the project is in progress.
                 return $this->getIconsPath()."status_grey.png";
                 break;
             default:
