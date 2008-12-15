@@ -53,6 +53,9 @@ class XMLDocmanImport {
     
     // Session hash
     private $hash;
+    
+    // When force is true, continue even if some users don't exist on the remote server
+    private $force;
 
     /**
      * XMLDocmanImport constructor
@@ -131,7 +134,8 @@ class XMLDocmanImport {
     /**
      * Import an item to the specified parent folder
      */
-    public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
+    public function importPath($xmlDoc, $parentId, $path, $force = false, $opt=self::CHILDREN_ONLY) {
+        $this->force = $force;
         $this->loadXML($xmlDoc);
 
         $rootNode = $this->findPath($path);
@@ -239,7 +243,12 @@ class XMLDocmanImport {
             
             $absentUsers = array_diff($userIdentifiers, array_keys($this->userMap));
             if (count($absentUsers) != 0) {
-                $this->exitError("Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers));
+                $msg = "Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers);
+                if ($this->force) {
+                    $this->warn($msg);
+                } else {
+                    $this->exitError($msg);                    
+                }
             }
             
             echo "Done.".PHP_EOL;
@@ -573,7 +582,7 @@ class XMLDocmanImport {
      * @return string   The username according to the userMap
      */
     private function userNodeToUsername($userNode) {
-        if ((string)$userNode == '') {
+        if ((string)$userNode == '' || !isset($this->userMap[self::userNodeToIdentifier($userNode)])) {
             return null;
         } else {
             return $this->userMap[self::userNodeToIdentifier($userNode)];
