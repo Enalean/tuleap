@@ -287,7 +287,8 @@ echo $this->outerTabs($params);
         
 
 		if (user_isloggedin()) {
-            $selected = (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
+            $selected = ((isset($params['selected_top_tab']) && $params['selected_top_tab'] == '/my/') || 
+                         strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
                          strstr(getStringFromServer('REQUEST_URI'),'/account/'));            
             $sthSelected = ($sthSelected || $selected);
             $mynode = new TreeNode(array('link'=>'/my/'
@@ -295,7 +296,7 @@ echo $this->outerTabs($params);
                                          ,'selected'=>$selected));
 
             if($selected) {
-                $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/my/');
+                $selected = (isset($params['selected_top_tab']) && $params['selected_top_tab'] == '/my/') ||  (boolean) strstr(getStringFromServer('REQUEST_URI'),'/my/');
                 $mynode->addChild(new TreeNode(array('link'=>'/my/'
                                                      ,'title'=>$Language->getText('my_index','my_dashboard')
                                                      ,'selected'=>$selected)));

@@ -202,7 +202,8 @@ if (isset($params['group']) && $params['group']) {
 			</tr>
 			<?php
 
-} else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
+} else if ((isset($params['selected_top_tab']) && $params['selected_top_tab'] == '/my/') || 
+           strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
            strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
     ?>
     <tr>
@@ -219,8 +220,9 @@ if (isset($params['group']) && $params['group']) {
                 $Language->getText('account_options','preferences')
             ),
             true,
-            strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
-              (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1)
+            (isset($params['selected_top_tab']) && $params['selected_top_tab'] == '/my/') ||
+              strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
+                (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1)
             ,
             'WHITE', //deprecated
             '');
@@ -428,7 +430,9 @@ if (isset($params['group']) && $params['group']) {
 			$selected=array_search('/reporting/',$TABS_DIRS);
 		} elseif ((strstr(getStringFromServer('REQUEST_URI'),'/admin/') || $selected_top_tab == 'admin') && user_ismember(1,'A')) {
 			$selected=array_search('/admin/',$TABS_DIRS);;
-		} else {
+		} elseif ($selected_top_tab && (array_search($selected_top_tab,$TABS_DIRS) !== FALSE)) {
+            $selected = array_search($selected_top_tab,$TABS_DIRS);
+        } else {
 			$selected=0;
 		}
 		echo $this->tabGenerator($TABS_DIRS,$TABS_TITLES,false,$selected,null,'100%');
