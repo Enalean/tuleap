@@ -137,7 +137,7 @@ class UserManager {
         $em = $this->_getEventManager();
         $tokenFoundInPlugins = false;
         $params = array('identifier' => $identifier,
-                        'user'       => $user,
+                        'user'       => &$user,
                         'tokenFound' => &$tokenFoundInPlugins);
         $em->processEvent('user_manager_get_user_by_identifier', $params);
         
