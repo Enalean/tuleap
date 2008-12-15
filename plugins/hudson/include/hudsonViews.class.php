@@ -93,7 +93,7 @@ class hudsonViews extends Views {
                 }
                 echo '  <td><a href="'.$job->getUrl().'/rssAll"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
                 if ($user->isMember($request->get('group_id'), 'A')) {
-                    echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/delete.png').'</a></td>';
+                    echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
                 }
                 echo ' </tr>';
                 
@@ -121,7 +121,7 @@ class hudsonViews extends Views {
             echo '  </p>';
             echo ' </form>';
             echo '</div>';
-            echo "<script>Effect.toggle('hudson_add_job', 'slide');</script>";
+            echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
         }
     }
     // }}}
