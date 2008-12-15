@@ -16,6 +16,7 @@ plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
 plugin_hudson	addjob_title	Add job
 plugin_hudson	form_job_url	Job URL:
+plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob
 plugin_hudson	form_addjob_button	Add job
 plugin_hudson	editjob_title	Edit job
 plugin_hudson	form_addjob_button	Update job

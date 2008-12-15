@@ -110,15 +110,13 @@ class hudsonViews extends Views {
             echo '">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
             echo '<div id="hudson_add_job">';
             echo ' <form>';
-            echo '  <p>';
             echo '   <label for="hudson_job_url">Job URL:</label>';
             echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
-            echo '  </p>';
-            echo '  <p>';
             echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
             echo '   <input type="hidden" name="action" value="add_job" />';
             echo '   <input type="submit" value="Add job" />';
-            echo '  </p>';
+            echo '   <br />';
+            echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
             echo ' </form>';
             echo '</div>';
             echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
@@ -142,6 +140,9 @@ class hudsonViews extends Views {
                 echo '  <p>';
                 echo '   <label for="new_hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
                 echo '   <input id="new_hudson_job_url" name="new_hudson_job_url" type="text" value="'.$row['job_url'].'" size="64" />';
+                echo '  </p>';
+                echo '  <p>';
+                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
                 echo '  </p>';
                 echo '  <p>';
                 echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';

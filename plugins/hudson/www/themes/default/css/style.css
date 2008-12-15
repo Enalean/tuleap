@@ -1,0 +1,8 @@
+.legend {
+    font-style: italic;
+    font-size: smaller;
+    color: #666;
+    background: transparent;
+    margin: 0 0 0 50px;
+    padding: 0;
+}
