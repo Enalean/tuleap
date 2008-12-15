@@ -75,27 +75,37 @@ class hudsonViews extends Views {
             while ($dar->valid()) {
                 $row = $dar->current();
 
-                $job = new HudsonJob($row['job_url']);
-                $job->buildJobObject();
+                try {
+                    $job = new HudsonJob($row['job_url']);
+                    
+                    echo ' <tr>';
+                    echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
+                    echo '  <td><a href="'.$job->getUrl().'">'.$job->getName().'</a></td>';
+                    if ($job->getLastSuccessfulBuildNumber() != '') {
+                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'">build #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
+                    } else {
+                        echo '  <td>&nbsp;</td>';
+                    }
+                    if ($job->getLastFailedBuildNumber() != '') {
+                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'">build #'.$job->getLastFailedBuildNumber().'</a></td>';
+                    } else {
+                        echo '  <td>&nbsp;</td>';
+                    }
+                    echo '  <td><a href="'.$job->getUrl().'/rssAll"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
+                    if ($user->isMember($request->get('group_id'), 'A')) {
+                        echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
+                    }
+                    echo ' </tr>';
                 
-                echo ' <tr>';
-                echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
-                echo '  <td><a href="'.$job->getUrl().'">'.$job->getName().'</a></td>';
-                if ($job->getLastSuccessfulBuildNumber() != '') {
-                    echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'">build #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
-                } else {
-                    echo '  <td>&nbsp;</td>';
+                } catch (HudsonJobURLMalformedException $me) {
+                    echo ' <tr>';
+                    echo '  <td></td>';
+                    echo '  <td colspan="4"><span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'</span></td>';
+                    if ($user->isMember($request->get('group_id'), 'A')) {
+                        echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
+                    }
+                    echo ' </tr>';
                 }
-                if ($job->getLastFailedBuildNumber() != '') {
-                    echo '  <td><a href="'.$job->getLastFailedBuildUrl().'">build #'.$job->getLastFailedBuildNumber().'</a></td>';
-                } else {
-                    echo '  <td>&nbsp;</td>';
-                }
-                echo '  <td><a href="'.$job->getUrl().'/rssAll"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
-                if ($user->isMember($request->get('group_id'), 'A')) {
-                    echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
-                }
-                echo ' </tr>';
                 
                 $dar->next();
             }

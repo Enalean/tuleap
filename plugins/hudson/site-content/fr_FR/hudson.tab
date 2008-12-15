@@ -16,6 +16,7 @@ plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
 plugin_hudson	addjob_title	Ajouter un projet
 plugin_hudson	form_job_url	URL du projet :
+plugin_hudson	wrong_job_url	URL du projet incorrecte : $1
 plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monProjet
 plugin_hudson	form_addjob_button	Ajouter
 plugin_hudson	editjob_title	Modifier le projet
