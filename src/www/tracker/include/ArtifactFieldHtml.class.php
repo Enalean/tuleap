@@ -110,8 +110,9 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             $output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
             $output .= '<script type="text/javascript">';
-            $output .= "\nfields['".(int)$this->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."');\n";
+            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."')";
             $output .= $this->_getValuesAsJavascript($array_values,$checked);
+            $output .= ";\n";
             $output .= "</script>";
             return $output;
 	    }
@@ -123,10 +124,10 @@ class ArtifactFieldHtml extends ArtifactField {
     function _getValuesAsJavascript($values, $default_value) {
         global $Language;
         $hp = CodeX_HTMLPurifier::instance();
-            $output  = "options['".(int)$this->getID()."'] = {};\n";
+            $output  = "";
             $isDefaultValuePresent = false;
             foreach ($values as $row) {
-                $output .= "options['". (int)$this->getID() ."']['". (int)$row['0'] ."'] = {option:new Option('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODEX_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."'), selected:". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') ."};\n";
+                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODEX_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
                 if ($row['0'] == $default_value) {
                     $isDefaultValuePresent = true;
                 }
@@ -134,7 +135,7 @@ class ArtifactFieldHtml extends ArtifactField {
             if (!$isDefaultValuePresent && !is_array($default_value)) {
                 // for single select box, if the default value is not present, 
                 // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
-                $output .= "options['". (int)$this->getID() ."']['". (int)$default_value ."'] = {option:new Option('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODEX_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."'), selected:true};\n";
+                $output .= "\n\t.addOption('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODEX_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."', true)\n";
             }
             return $output;
     }        
@@ -182,8 +183,9 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             $output .= '<script type="text/javascript">';
-            $output .= "\nfields['".(int)$this->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify($this->getLabel(), CODEX_PURIFIER_JS_QUOTE)."');\n";
+            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."')";
              $output .= $this->_getValuesAsJavascript($array_values,$checked);
+            $output .= ';';
             $output .= "\n</script>";
            return $output;
 	    }

@@ -790,7 +790,8 @@ class Artifact extends Error {
                     }
                 }
             }
-
+            
+            $is_text = ($field->isTextField() || $field->isTextArea());
             if ( ($field->isMultiSelectBox())&&(is_array($value)) ) {
 
 				if ($masschange && (in_array($Language->getText('global','unchanged'),$value))) {
@@ -844,8 +845,10 @@ class Artifact extends Error {
 	                if ( !$field->updateValues($this->getID(),$values) ) {
 	                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','field_upd_fail',$field->getLabel()));
 	                }
-	                //Log for Cross references
-                    $text_value_list[]=$values;
+	                if ($is_text) {
+                        //Log for Cross references
+                        $text_value_list[]=$values;
+                    }
                                         
 	                // Keep track of the change
 	                $field_html = new ArtifactFieldHtml($field);
@@ -865,7 +868,6 @@ class Artifact extends Error {
 				}	
        
                 $old_value = $result[$field_name];
-                $is_text = ($field->isTextField() || $field->isTextArea());
                 if  ($is_text) {
                     $differ = ($old_value != htmlspecialchars($value));
                     //Log for Cross references

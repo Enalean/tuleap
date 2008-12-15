@@ -63,12 +63,12 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) > 1) {
-                        echo "fields['".(int)$field->getID()."'] = new com.xerox.codex.tracker.Field('".(int)$field->getID()."', '".(int)$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_JS_QUOTE) ."');\n";
+                        echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_JS_QUOTE) ."')";
                         $default_value = $field->getDefaultValue();
-                        echo "options['".(int)$field->getID()."'] = {};\n";
                         while ($row = db_fetch_array($values)) {
-                            echo "options['". (int)$field->getID() ."']['". (int)$row[0] ."'] = {option:new Option('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."'), selected:". ($row[0]==$default_value?'true':'false') ."};\n";
+                            echo "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."', ". ($row[0]==$default_value?'true':'false') .")";
                         }
+                        echo ";\n";
                     }
                 }
             }
@@ -82,9 +82,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $html =& new ArtifactRuleValueJavascript($rules[$key]);
-                echo 'rules_definitions['. (int)($rules[$key]->id) .'] = ';
+                echo 'codendi.tracker.rules_definitions.push(';
                 $html->display();
-                echo ";\n";
+                echo ");\n";
             }
         }
         echo "\n//------------------------------------------------------\n";

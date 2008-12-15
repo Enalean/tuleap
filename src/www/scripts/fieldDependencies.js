@@ -1,5 +1,5 @@
 /**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+* Copyright (c) Xerox Corporation, CodeX Team, 2001-2008. All rights reserved
 *
 * Originally written by Nicolas Terray, 2006
 *
@@ -23,45 +23,9 @@
 */
 
 // Define namespace to prevent clashes
-if (!com) var com = {};
-if (!com.xerox) com.xerox = {};
-if (!com.xerox.codex) com.xerox.codex = {};
-if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
+var codendi = codendi || { };
+codendi.tracker = codendi.tracker || { };
 
-// Define global (berk) variables
-var fields            = {};
-var fields_by_name    = {};
-var options           = {};
-var rules             = [];
-var rules_definitions = {};
-var dependencies      = {};
-var selections        = {};
-
-
-/**
- * Debug function.
- * Just give a msg as arguments, 
- * and it will be displayed inside 
- * a textarea at the end of the page.
- * Other js loggers was a little bit
- * too heavy for a simple feature.
- */
-function xgs_debug(msg) {
-    var d = $('debug_console');
-    if (!d) {
-        d = document.createElement('textarea');
-        d.rows = 50;
-        d.cols = 160;
-        d.id = 'debug_console';
-        document.body.appendChild(d);
-    }
-    var now = new Date();
-    var h = now.getHours();
-    var m = now.getMinutes();
-    var s = now.getSeconds();
-    var ms = now.getMilliseconds();
-    d.value += '['+h+':'+m+':'+s+'.'+ms+']\t'+msg+'\n';
-}
 //==============================================================================
 //==============================================================================
 
@@ -73,6 +37,226 @@ function xgs_debug(msg) {
 
 // The highlight color for the Yellow Fade Technique
 var HIGHLIGHT_STARTCOLOR = '#ffff99';
+
+codendi.tracker.rules_definitions = [];
+
+codendi.tracker.rule_forest = {
+    nodes: {},
+    trees: {},
+    getNode: function(field, is_child) {
+        if (!this.nodes[field]) {
+            this.nodes[field] = new codendi.tracker.RuleNode(field);
+            if (!is_child) {
+                this.trees[field] = this.nodes[field];
+            }
+        }
+        return this.nodes[field];
+    },
+    isTree: function(field) {
+        return this.trees[field] ? true : false;
+    }
+};
+
+/**
+ * A Rule
+ */
+codendi.tracker.RuleNode = Class.create({
+    initialize:function(field) {
+        this.field = field;
+        this.targets = {};
+        
+        //Register event on the field
+        var f = codendi.tracker.fields.get(this.field);
+        this.onchangeEvent = f.onchange.bind(f);
+        f.element().observe('change', this.onchangeEvent);
+    },
+    addRule: function(source_value, target_field, target_value) {
+        if (!this.targets[target_field]) {
+            this.targets[target_field] = {
+                field: codendi.tracker.rule_forest.getNode(target_field, true),
+                values: {}
+            }
+        }
+        if (!this.targets[target_field].values[source_value]) {
+            this.targets[target_field].values[source_value] = [];
+        }
+        this.targets[target_field].values[source_value].push(target_value);
+    },
+    process: function() {
+        //retrieve selected source values
+        var selected_sources = codendi.tracker.fields.get(this.field).element().getValue();
+        if (!Object.isArray(selected_sources)) {
+            selected_sources = [selected_sources];
+        }
+        
+        //Store only if we are root (else already stored before we reach this field)
+        if (codendi.tracker.rule_forest.isTree(this.field)) {
+            codendi.tracker.fields.get(this.field).updateSelectedState(selected_sources);
+        }
+        
+        //for each targets of this field
+        $H(this.targets).each(function (target) {
+            var target_field_id = target.key;
+            var transitions = target.value;
+            
+            //retrieve options of the target
+            var target_options = codendi.tracker.fields.get(target_field_id).options;
+            
+            //Build the new options accordingly to the rules
+            var new_target_options = {};
+            selected_sources.each(function (selected_value) {
+                if (transitions.values[selected_value]) {
+                    transitions.values[selected_value].each(function (target_value) {
+                        new_target_options[target_value] = Object.clone(target_options[target_value]);
+                    });
+                }
+            });
+            
+            //Force field to new options
+            codendi.tracker.fields.get(target_field_id).force(new_target_options);
+            
+            //Chain the process
+            codendi.tracker.rule_forest.getNode(target_field_id).process();
+        });
+    }
+});
+
+/**
+ * Codendi field
+ */
+codendi.tracker.Field = Class.create({
+    initialize: function (id, name, label) {
+        this.id              = id;
+        this.name            = name;
+        this.label           = label;
+        this._highlight      = null;
+        this.options         = {}
+    },
+    addOption: function(text, value, selected) {
+        this.options[value] = {
+                value:value,
+                text:text,
+                selected:selected
+        };
+        return this;
+    },
+    force: function(new_options) {
+        var el = this.element();
+        
+        //Clear the field
+        var len = el.options.length; 
+        for (var i = len; i >= 0; i--) {
+            el.options[i] = null;
+        }
+        
+        //Revert selected state for all options
+        this.updateSelectedState();
+        
+        //Add options
+        $H(this.options).values().each((function (option) {
+            if ($H(new_options).keys().find(function(value) { return value == option.value; })) {
+                var opt = new Option(option.text, option.value);
+                if (new_options[option.value].selected) {
+                    opt.selected = true;
+                    //Store the selected state for this option
+                    this.options[option.value].selected = true;
+                }
+                el.options[el.options.length] = opt;
+            }
+        }).bind(this));
+        
+        //We've finished. Highlight the field to indicate to the user that it has changed (or not)
+        this.highlight();
+    },
+    highlight: function() {
+        //We store the actual effect to not load a lot of new objects
+        //and also to prevent locks of the background color
+        if (!this._highlight) {
+            this._highlight = new Effect.Highlight(this.element(), {startcolor:HIGHLIGHT_STARTCOLOR});
+        } else {
+            this._highlight.start(this._highlight.options);
+        }
+    },
+    updateSelectedState: function(selected_values) {
+        //Revert selected state for all options
+        $H(this.options).keys().each((function (value) {
+                this.options[value].selected = selected_values && selected_values[value] ? true : false;
+        }).bind(this));
+    },
+    element: function() {
+        return $(this.name);
+    },
+    onchange: function() {
+        var el = this.element();
+        
+        //Store the selected state
+        var len = el.options.length; 
+        for (var i = 0; i < len; ++i) {
+            this.options[el.options[i].value].selected = el.options[i].selected;
+        }
+        //Process rules
+        codendi.tracker.rule_forest.getNode(this.id).process();
+    }
+});
+
+codendi.tracker.fields = {
+    fields: {},
+    add: function(id, name, label) {
+        this.fields[id] = new codendi.tracker.Field(id, name, label);
+        return this.fields[id];
+    },
+    get: function(id) {
+        return this.fields[id]
+    }
+};
+
+document.observe('dom:loaded', function() {
+    //Load rules definitions
+    //Only if fields and values exist
+    codendi.tracker.rules_definitions.each(function (rule_definition) {
+        if (rule_definition.source_field != rule_definition.target_field 
+            && codendi.tracker.fields.get(rule_definition.source_field) 
+            && codendi.tracker.fields.get(rule_definition.target_field)
+            && codendi.tracker.fields.get(rule_definition.source_field).element() 
+            && codendi.tracker.fields.get(rule_definition.target_field).element() 
+        ) {
+            codendi.tracker.rule_forest.getNode(rule_definition.source_field)
+                                       .addRule(rule_definition.source_value,
+                                                rule_definition.target_field,
+                                                rule_definition.target_value
+                                                );
+        }
+    });
+    
+    //Apply the initial rules
+    $H(codendi.tracker.rule_forest.trees).each(function (rule_node) {
+        rule_node.value.process();
+    });
+    
+    //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
+    var codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
+    if (codex_field_dependencies_highlight_change && codex_field_dependencies_highlight_change != '') {
+        HIGHLIGHT_STARTCOLOR = codex_field_dependencies_highlight_change;
+    }
+    var hexChars = "0123456789ABCDEF";
+    function Dec2Hex (Dec) { 
+        var a = Dec % 16; 
+        var b = (Dec - a)/16; 
+        var hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
+        return hex;
+    }
+    var re = new RegExp(/rgb\([^0-9]*([0-9]+)[^0-9]*([0-9]+)[^0-9]*([0-9]+)\)/); //Fx returns rgb(123, 64, 32) instead of hexa color
+    if (m = re.exec(HIGHLIGHT_STARTCOLOR)) {
+        var r = m[1] || null;
+        var g = m[2] || null;
+        var b = m[3] || null;
+        if (r && g && b) {
+            HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
+        }
+    }
+    //}}}
+
+});
 
 // Search for a class in loaded stylesheets
 function getStyleClass (className) {
@@ -107,448 +291,6 @@ function getStyleClassProperty (className, propertyName) {
     return styleClass[propertyName];
   else 
     return null;
-}
-
-
-
-/**
-* Internal representation of a field
-* 
-* A field is identified by an id and has a name and a label
-* The id is used only internally as widget elements id is the name of the field.
-* The fields can propose some options
-*  - defaultOptions are all options the field can propose
-*  - actualOptions are the options which are proposed at a given time
-*  - selectedOptions are the options which are selected on corresponding widgets
-*/
-com.xerox.codex.tracker.Field = Class.create();
-Object.extend(com.xerox.codex.tracker.Field.prototype, {
-    initialize: function (id, name, label) {
-        this.id              = id;
-        this.name            = name;
-        this.label           = label;
-        this._highlight      = null;
-        this.defaultOptions  = [];
-        this.selectedOptions = [];
-        this.actualOptions   = [];
-    },
-    highlight: function() {
-        //We store the actual effect to not load a lot of new objects
-        //and also to prevent locks of the background color
-        if (!this._highlight) {
-            this._highlight = new Effect.Highlight($(this.name), {startcolor:HIGHLIGHT_STARTCOLOR});
-        } else {
-            this._highlight.start(this._highlight.options);
-        }
-    },
-    addDefaultOption: function(option_id, selected) {
-        this.defaultOptions.push(option_id);
-        this.actualOptions.push(option_id);
-        if (selected) {
-            this.selectedOptions.push(option_id);
-        }
-    },
-    /**
-    * update maps the navigator state of the field to the js representation (this class) of the field.
-    * If an option was registered as selected and it is not (or vice versa), we update the representation.
-    *
-    */
-    update: function() {
-        var has_changed = false;
-        var el = $(this.name);
-        for(i = 0 ; i < el.options.length ; i++) {
-            //search if the option i is a selectedOption
-            var j = 0;
-            var found = false;
-            while(j < this.selectedOptions.length && !found) {
-                if (this.selectedOptions[j] == el.options[i].value) {
-                    found = this.selectedOptions[j];
-                }
-                j++;
-            }
-            
-            if (found) { //The option was previously selected
-                if (!(el.options[i].selected)) { //The option is not anymore selected
-                    //We remove it
-                    this.selectedOptions = this.selectedOptions.reject(function (element) { return element == el.options[i].value; });
-                    has_changed = true;
-                }
-            } else { //The option was not selected...
-                if (el.options[i].selected) { //...but is now selected
-                    //We add it
-                    this.selectedOptions.push(el.options[i].value);
-                    has_changed = true;
-                }
-            }
-        }
-        return has_changed;
-    },
-    /**
-    * add an actualOption
-    */
-    add: function(new_option_id) {
-        //We search first if we have already added this option
-        var len = $(this.name).options.length;
-        var i = 0;
-        while (i < len && $(this.name).options[i].value != new_option_id) {
-            i++;
-        }
-        if (i >= len) {
-            opt = new Option(options[this.id][new_option_id].option.text, options[this.id][new_option_id].option.value);
-            $(this.name).options[$(this.name).options.length] = opt;
-            $(this.name).options[$(this.name).options.length - 1].innerHTML = opt.text;
-            this.actualOptions.push(new_option_id);
-        }
-    },
-    /**
-    * remove all actual options
-    */
-    clear: function() {
-        var el = $(this.name);
-        
-        //clear actual options
-        this.actualOptions = [];
-        var len = el.options.length; 
-        for (i = len; i >= 0; i--) {
-            el.options[i] = null;
-        }
-    },
-    /**
-    * reset field (map widget to defaultOptions)
-    */
-    reset: function() {
-        var changed = true;
-        var el = $(this.name);
-        if (el.options.length == this.defaultOptions.length) {
-            changed = false;
-        } else {
-            //clear actual options
-            this.actualOptions = [];
-            var len = el.options.length; 
-            for (i = len; i >= 0; i--) {
-                el.options[i] = null;
-            }
-            
-            //fill new options
-            for (i = 0 ; i < this.defaultOptions.length ; i++) {
-                var opt = new Option(options[this.id][this.defaultOptions[i]].option.text, options[this.id][this.defaultOptions[i]].option.value);
-                el.options[el.options.length] = opt;
-                el.options[el.options.length - 1] = opt.text; //html entities (cannot be done before in IE)
-                this.actualOptions.push(this.defaultOptions[i]);
-            }
-            
-            //select options
-            this.selectedOptions.each(function (option) {
-                var i     = 0;
-                var found = false;
-                var len   = el.options.length;
-                while(i < len && !found) {
-                    if (el.options[i].value == option) {
-                        el.options[i].selected = true;
-                        found = true;
-                    }
-                    i++;
-                }
-            });
-        }
-        return changed;
-    },
-    /**
-    * preselect options
-    */
-    select: function() {
-        if (arguments[0]) {
-            this.selectedOptions = arguments[0];
-        } else {
-            var selectedOptions = this.selectedOptions;
-            this.selectedOptions = this.actualOptions.findAll(function(element) {
-                return selectedOptions.find(function (option) {
-                    return element == option;
-                });
-            });
-        }
-        var el = $(this.name);
-        if (el.options.length > 0) {
-            if (this.selectedOptions.length < 1) {
-                this.selectedOptions.push(this.actualOptions[0]);
-            }
-            var len = el.options.length;
-            for(var k = 0 ; k < len ; k++) {
-                el.options[k].selected = this.selectedOptions.find(function (element) {
-                        return element == el.options[k].value;
-                }) ? 'selected' : '';
-            }
-        }
-    },
-    /**
-    * if the user select an option, we have to store the changes
-    */
-    updateSelected: function() {
-        this.selectedOptions = [];
-        var el = $(this.name);
-        if (el) {
-            var len = el.options.length;
-            for(var k = 0 ; k < len ; k++) {
-                if (el.options[k].selected) {
-                    this.selectedOptions.push(this.defaultOptions.find(function (element) {
-                        return el.options[k].value == element;
-                    }));
-                }
-            }
-        }
-    }
-});
-
-/**
-* A rule (representation of a php RuleValue)
-* 
-*/
-com.xerox.codex.tracker.Rule = Class.create();
-Object.extend(com.xerox.codex.tracker.Rule.prototype, {
-    initialize: function (rule_definition) {
-        this.source_field_id = rule_definition.source_field;
-        this.source_value_id = rule_definition.source_value;
-        this.target_field_id = rule_definition.target_field;
-        this.target_value_id = rule_definition.target_value;
-        this.selected        = [];
-    },
-    process: function(source_field) {
-        var applied = false;
-        if (this.source_field_id == source_field.id) {
-            fields[this.source_field_id].update();
-            if (this.can_apply()) {
-                fields[this.target_field_id].add(this.target_value_id);
-                fields[this.target_field_id].select(this.selected);
-                applied = fields[this.target_field_id];
-            }
-        }
-        return applied;
-    },
-    /**
-    * we store internally the state of the target selection to not loose it when user switches between rules
-    */
-    updateSelected: function(source_field, target_field) {
-        if (this.target_field_id == target_field.id) {
-            if (this.source_field_id == source_field.id) {
-                if (this.can_apply()) {
-                    var len = $(fields[this.target_field_id].name).options.length;
-                    var i = 0;
-                    this.selected = [];
-                    while (i < len) {
-                        if ($(fields[this.target_field_id].name).options[i].selected) {
-                            this.selected.push($(fields[this.target_field_id].name).options[i].value);
-                        }
-                        i++;
-                    }
-                }
-            }
-        }
-    },
-    /**
-    * @return true if the current rule can be applied (rule.source_value is selected on "real" field)
-    */
-    can_apply: function() {
-
-        var can_apply = false; 
-        var len = $(fields[this.source_field_id].name).options.length;
-        for (var i = 0 ; i < len && !can_apply ; i++) {
-            can_apply = $(fields[this.source_field_id].name).options[i].value == this.source_value_id 
-                        && $(fields[this.source_field_id].name).options[i].selected;
-        }
-
-        return can_apply;
-    }
-});
-
-function addOptionsToFields() {
-    $H(fields).each(function(f) {
-        $H(options[f.key]).values().each(function (opt) {
-            f.value.addDefaultOption(opt['option'].value, opt['selected']);
-        });
-        f.value.updateSelected();
-    });
-}
-function getFieldByName(name) {
-    if (!fields_by_name[name]) {
-        fields_by_name[name] = $H(fields).values().find(function (field) { return field.name == name; });
-    }
-    return fields_by_name[name];
-}
-function applyRules(evt, name) {
-
-    if (name) { this.name = name; }
-    //We apply rules starting from the field which has name == id
-    source_field = getFieldByName(this.name.replace('[]', ''));
-    //Source field has been changed. We have to store those changes.
-    source_field.updateSelected();
-    //We keep history of selections to not lose them
-    if(selections[source_field.id]) {
-        $H(selections[source_field.id]).keys().each(function(key) {
-            rules.each(function(rule) {
-                rule.updateSelected(fields[key], source_field);
-            });
-        });
-    }
-    //Does the selected field has dependencies (targets) ?
-    if (dependencies[source_field.id]) {
-        //We add the current field to the queue
-        //This queue manage the bubble : 
-        // if A => B and B => C, 
-        // then C may be changed depending on the selected value of A
-        var queue = [source_field];
-        
-        //We process the queue, until it is empty
-        var j = 0;
-        while(j < queue.length) {
-            //Highlight queue is an array of element to highlight (those who are modified)
-            var highlight_queue = [];
-            //originals is a hash of target fields (to save their current state)
-            var originals = {};
-            
-            //For each field that are target of the current field...
-            dependencies[queue[j].id].each(function (field) {
-                    //...clear it (empty options),
-                    field.clear();
-                    
-                    //...push it to the queue if it as dependencies, (if we don't have already add it)
-                    if (dependencies[field.id] && !queue.find(function (element) { return element == field;})) {
-                            queue.push(field);
-                    }
-                    
-                    //...and save its actual state.
-                    originals[field.id] = {field:field, options:[]};
-                    var el = $(field.name);
-                    for(var k = 0 ; k < el.options.length ; k++) {
-                            originals[field.id].options.push(options[field.id][el.options[k].value]);
-                    }
-            });
-            
-            //We process all rules which can match the current source field
-            rules.each(function (rule) {
-                    rule.process(queue[j]);
-            });
-            
-            //Now we look at original states of targets to see if there has been a change
-            $H(originals).values().each(function(target) {
-                var el = $(target.field.name);
-                var found = false;
-                for (var k = 0 ; k < el.options.length && !found ; k++) {
-                    found = target.options.find(function (element) {
-                        return element.value == el.options[i].value && el.options[i].selected == element.selected;
-                    });
-                }
-                //There has benn a change: we highlight the field
-                if (!found) {
-                    highlight_queue.push(target.field);
-                }
-            });
-            
-            //for each target...
-            dependencies[queue[j].id].each(function(field) {
-                    //... select the target accordingly to previous selection and current options
-                    field.select();
-            });
-            
-            //Highlight fields which need
-            highlight_queue.each(function(field) {
-                field.highlight();
-            });
-            
-            //Go one step further into the queue
-            j++;
-        }
-    }
-
-    
-}
-
-function registerFieldsEvents() {
-    for(id in fields) {
-        var el = document.getElementById(fields[id].name);
-        if (el) {
-            el.onchange = applyRules;
-        }
-    }
-
-}
-
-function addRule(rule_definition) {
-
-    if (rule_definition.source_field != rule_definition.target_field 
-        && fields[rule_definition.source_field] 
-        && fields[rule_definition.target_field]
-        && $(fields[rule_definition.source_field].name) 
-        && $(fields[rule_definition.target_field].name) 
-    ) {
-        if (!selections[rule_definition.target_field]) { 
-            selections[rule_definition.target_field] = {}; 
-        }
-        if (!selections[rule_definition.target_field][rule_definition.source_field]) { 
-            selections[rule_definition.target_field][rule_definition.source_field] = []; 
-        }
-        
-        if (!dependencies[rule_definition.source_field]) {
-            dependencies[rule_definition.source_field] = [];
-        }
-        dependencies[rule_definition.source_field].push(fields[rule_definition.target_field]);
-        
-        rules.push(new com.xerox.codex.tracker.Rule(rule_definition));
-
-    }
-
-}
-
-function initFieldDependencies() {
-    addOptionsToFields();
-    registerFieldsEvents();
-    $H(rules_definitions).values().each(function(rule_definition) {
-            addRule(rule_definition);
-    });
-    //Once rules have been loaded, we applied them on fields
-    $H(fields).values().each(function (field) {
-            applyRules(null, field.name);
-    });
-    //Once rules have been applied, we preselect values
-    $H(fields).keys().each(function (field_id) {
-            if (options[field_id]) {
-                    options_that_should_be_selected = $H(options[field_id]).keys().findAll(function (option_id) {
-                                return options[field_id][option_id]['selected'];
-                    });
-                    fields[field_id].select(options_that_should_be_selected);
-            }
-    });
-    //Once fields have been selected, we store curent selection in rules
-    $H(fields).keys().each(function (target_id) {
-        if(selections[target_id]) {
-            $H(selections[target_id]).keys().each(function(source_id) {
-                rules.each(function(rule) {
-                    rule.updateSelected(fields[source_id], fields[target_id] );
-                });
-            });
-        }
-    });
-    //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    var codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
-    if (codex_field_dependencies_highlight_change && codex_field_dependencies_highlight_change != '') {
-        HIGHLIGHT_STARTCOLOR = codex_field_dependencies_highlight_change;
-    }
-    var hexChars = "0123456789ABCDEF";
-    function Dec2Hex (Dec) { 
-        var a = Dec % 16; 
-        var b = (Dec - a)/16; 
-        var hex = "" + hexChars.charAt(b) + hexChars.charAt(a); 
-        return hex;
-    }
-    var re = new RegExp(/rgb\([^0-9]*([0-9]+)[^0-9]*([0-9]+)[^0-9]*([0-9]+)\)/); //Fx returns rgb(123, 64, 32) instead of hexa color
-    if (m = re.exec(HIGHLIGHT_STARTCOLOR)) {
-        var r = m[1] || null;
-        var g = m[2] || null;
-        var b = m[3] || null;
-        if (r && g && b) {
-            HIGHLIGHT_STARTCOLOR = '#'+Dec2Hex(r)+Dec2Hex(g)+Dec2Hex(b);
-        }
-    }
-    //}}}
 }
 //}}}
 
@@ -671,12 +413,10 @@ function admin_checked(id) {
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
     }
     //Does a rule exist ?
-    var rule_exists = $H(rules_definitions).values().find(function (definition) {
-        return definition.source_field == checkbox.source_field_id &&
-                definition.target_field == checkbox.target_field_id &&
-                definition.source_value == checkbox.source_value_id &&
-                definition.target_values == checkbox.target_value_id;
-    });
+    var rule_exists = codendi.tracker.rule_forest.getNode(checkbox.source_field_id) &&
+                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id] &&
+                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id].values[checkbox.source_value_id] &&
+                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id].values[checkbox.source_value_id].include(checkbox.target_value_id);
     if (rule_exists && checked || !rule_exists && !checked) {
         //Bug here!
         // NTY 20060210: The initial behaviour was to be able to detect when a user 
@@ -690,7 +430,7 @@ function admin_checked(id) {
     //The user is leaving the edit mode
     if (admin_nb_diff === 0) {
         can_leave_edit_mode = true;
-        $H(rules_definitions).values().each(function (rule_definition) {
+        codendi.tracker.rules_definitions.each(function (rule_definition) {
                     var checkbox_name = checkbox.type+'_'
                                         +rule_definition.source_field+'_'
                                         +rule_definition.target_field+'_'
@@ -735,33 +475,31 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
     admin_selected_value = target_value_id;
     admin_selected_type  = 'target';
     
-    $H(options[target_field_id]).each(function (opt) {
-        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
-    });
-    $H(options[target_field_id]).each(function (opt) {
-        Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+    $H(codendi.tracker.fields.get(target_field_id).options).each(function (opt) {
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'hidden'});
+        Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
     });
     Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id, 'boxhighlight');
     Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+target_value_id+'_arrow', {visibility:'visible'});
     
     //Select sources
-    $H(options[source_field_id]).each(function (opt) {
-        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'visible'});
+    $H(codendi.tracker.fields.get(source_field_id).options).each(function (opt) {
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'visible'});
         //Does a rule exist ?
-        if ($H(rules_definitions).values().find(function (definition) {
+        if (codendi.tracker.rules_definitions.find(function (definition) {
             return definition.source_field == source_field_id &&
                     definition.target_field == target_field_id &&
                     definition.target_value == target_value_id &&
-                    definition.source_value == opt.value['option'].value;
+                    definition.source_value == opt.value.value;
         })) {
-            Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
-            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
+            Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk').checked = 'checked';
+            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'visible'});
         } else {
-            Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
-            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+            Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+            $('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk').checked = '';
+            Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
         }
     });
     
@@ -788,33 +526,31 @@ function admin_forceSourceValue(source_field_id, target_field_id, source_value_i
     admin_selected_value = source_value_id;
     admin_selected_type  = 'source';
     
-    $H(options[source_field_id]).each(function (opt) {
-        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'hidden'});
-    });
-    $H(options[source_field_id]).each(function (opt) {
-        Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+    $H(codendi.tracker.fields.get(source_field_id).options).each(function (opt) {
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'hidden'});
+        Element.removeClassName('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+        Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
     });
     Element.addClassName('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id, 'boxhighlight');
     Element.setStyle('source_'+source_field_id+'_'+target_field_id+'_'+source_value_id+'_arrow', {visibility:'visible'});
     
     //Select targets
-    $H(options[target_field_id]).each(function (opt) {
-        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk', {visibility:'visible'});
+    $H(codendi.tracker.fields.get(target_field_id).options).each(function (opt) {
+        Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk', {visibility:'visible'});
         //Does a rule exist ?
-        if ($H(rules_definitions).values().find(function (definition) {
+        if (codendi.tracker.rules_definitions.find(function (definition) {
             return definition.source_field == source_field_id &&
                     definition.target_field == target_field_id &&
                     definition.source_value == source_value_id &&
-                    definition.target_value == opt.value['option'].value;
+                    definition.target_value == opt.value.value;
         })) {
-            Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = 'checked';
-            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'visible'});
+            Element.addClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk').checked = 'checked';
+            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'visible'});
         } else {
-            Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value, 'boxhighlight');
-            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_chk').checked = '';
-            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value['option'].value+'_arrow', {visibility:'hidden'});
+            Element.removeClassName('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value, 'boxhighlight');
+            $('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_chk').checked = '';
+            Element.setStyle('target_'+source_field_id+'_'+target_field_id+'_'+opt.value.value+'_arrow', {visibility:'hidden'});
         }
     });
 }
