@@ -192,8 +192,12 @@ class ArtifactRulesManager {
         $selected_values = array();
         if (db_numrows($db_result) > 1) {
             while ($row = db_fetch_array($db_result)) {
-                if ($row['field_id'] == $field_id && in_array($row['value_id'], $field_values)) {
-                    $selected_values[] = $row['value'];
+                if (isset($row['field_id'])) {
+                    if ($row['field_id'] == $field_id && in_array($row['value_id'], $field_values)) {
+                        $selected_values[] = $row['value'];
+                    }
+                } else if (in_array($row['user_id'], $field_values)) {
+                    $selected_values[] = $row['user_name'];
                 }
             }
         }

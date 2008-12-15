@@ -55,7 +55,6 @@ $ah->display($ro,$pv,user_getid());
 echo '<script type="text/javascript">'. "\n";
 $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
-echo "Event.observe(window, 'load', initFieldDependencies, true);\n";
 echo "Event.observe(window, 'load', function() {
         if ($('tracker_details')) {
             new com.xerox.codex.FieldEditor('tracker_details', {
