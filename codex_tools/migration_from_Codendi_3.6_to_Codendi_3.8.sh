@@ -110,6 +110,8 @@ $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE user ADD COLUMN approved_by int(11) NOT NULL default '0' AFTER add_date;
 EOF
 
+echo "Please note that Windows shares (with Samba) are no longer supported"
+
 # Windows password no longer needed
 $CAT <<EOF | $MYSQL $pass_opt codex
 ALTER TABLE user DROP COLUMN windows_pw;
@@ -256,3 +258,14 @@ SET artifact_report_field.place_query = R1.new_rank;
 => refactoring in common/layout instead of www/include
 
 #TODO remove reserved names javascript
+
+#
+# TODO: add these lines to /etc/my.cnf under [mysqld]
+#
+
+  # Skip logging openfire db (for instant messaging)
+  # The 'monitor' openrfire plugin creates large codex-bin files
+  # Comment this line if you prefer to be safer.
+  set-variable  = binlog-ignore-db=openfire
+
+#

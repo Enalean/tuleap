@@ -681,6 +681,11 @@ socket=/var/lib/mysql/mysql.sock
 # clients (those using the mysqlclient10 compatibility package).
 old_passwords=1
 
+# Skip logging openfire db (for instant messaging)
+# The 'monitor' openrfire plugin creates large codex-bin files
+# Comment this line if you prefer to be safer.
+set-variable  = binlog-ignore-db=openfire
+
 [mysql.server]
 user=mysql
 basedir=/var/lib
