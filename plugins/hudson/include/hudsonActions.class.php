@@ -48,7 +48,7 @@ class hudsonActions extends Actions {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_added'));
         }
     }
-    function editJob() {
+    function updateJob() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');

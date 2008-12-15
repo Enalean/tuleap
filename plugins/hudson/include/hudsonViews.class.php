@@ -107,7 +107,7 @@ class hudsonViews extends Views {
         if ($user->isMember($request->get('group_id'), 'A')) {
             echo '<a href="#" onclick="';
             echo "Effect.toggle('hudson_add_job', 'slide'); return false;";
-            echo '">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' Add job</a>';
+            echo '">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
             echo '<div id="hudson_add_job">';
             echo ' <form>';
             echo '  <p>';
@@ -122,6 +122,40 @@ class hudsonViews extends Views {
             echo ' </form>';
             echo '</div>';
             echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
+        }
+    }
+    
+    function editJob() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $user = UserManager::instance()->getCurrentUser();
+        if ($user->isMember($group_id, 'A')) {
+            
+            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+            $dar = $job_dao->searchByJobID($job_id);
+            if ($dar->valid()) {
+                $row = $dar->current();
+            
+                echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
+                echo ' <form method="post">';
+                echo '  <p>';
+                echo '   <label for="new_hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
+                echo '   <input id="new_hudson_job_url" name="new_hudson_job_url" type="text" value="'.$row['job_url'].'" size="64" />';
+                echo '  </p>';
+                echo '  <p>';
+                echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
+                echo '   <input type="hidden" name="job_id" value="'.$job_id.'" />';
+                echo '   <input type="hidden" name="action" value="update_job" />';
+                echo '   <input type="submit" value="'.$GLOBALS['Language']->getText('plugin_hudson','form_editjob_button').'" />';
+                echo '  </p>';
+                echo ' </form>';
+                
+            } else {
+                
+            }
+        } else {
+            
         }
     }
     // }}}

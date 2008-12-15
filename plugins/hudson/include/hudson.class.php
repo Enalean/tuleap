@@ -69,7 +69,23 @@ class hudson extends Controler {
                     case 'edit_job':
                         if (user_ismember($group_id,'A')) {
                             if ($request->exist('job_id')) {
-                                $this->action = 'editJob';
+                                $this->view = 'editJob';
+                            } else {
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','job_id_missing'));
+                            }
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+                            $this->view = 'projectOverview';
+                        }
+                        break;
+                    case 'update_job':
+                        if (user_ismember($group_id,'A')) {
+                            if ($request->exist('job_id')) {
+                                if ($request->exist('new_hudson_job_url') && $request->get('new_hudson_job_url') != '') {
+                                    $this->action = 'updateJob';
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','job_url_missing'));
+                                }
                             } else {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','job_id_missing'));
                             }

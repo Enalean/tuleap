@@ -38,6 +38,18 @@ class PluginHudsonJobDao extends DataAccessObject {
     }
 
     /**
+    * Searches PluginHudsonJob by job ID 
+    * @return DataAccessResult
+    */
+    function & searchByJobID($job_id) {
+        $sql = sprintf("SELECT *  
+                        FROM plugin_hudson_job
+                        WHERE job_id = %s",
+            $this->da->quoteSmart($job_id));
+        return $this->retrieve($sql);
+    }
+    
+    /**
     * create a row in the table plugin_hudson_job 
     * @return true if there is no error
     */

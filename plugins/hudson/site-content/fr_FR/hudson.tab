@@ -14,6 +14,11 @@ plugin_hudson	header_table_actions	Actions
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
+plugin_hudson	addjob_title	Ajouter un projet
+plugin_hudson	form_job_url	URL du projet :
+plugin_hudson	form_addjob_button	Ajouter
+plugin_hudson	editjob_title	Modifier le projet
+plugin_hudson	form_editjob_button	Modifier
 plugin_hudson	job_url_missing	Url du projet Hudson manquante (ex: http://monserveurIC:8080/hudson/job/MonJob)
 plugin_hudson	job_id_missing	Identifiant du projet Hudson manquant.
 plugin_hudson	add_job_error	Impossible d'ajouter le projet Hudson
@@ -21,12 +26,16 @@ plugin_hudson	malformed_url	L'Url du projet Hudson est malformée
 plugin_hudson	malformed_url_scheme	L'Url du projet Hudson est malformée : pas de protocole
 plugin_hudson	job_added	Le project Hudson a été ajouté.
 plugin_hudson	edit_job_error	Impossible de modifier le projet Hudson
-plugin_hudson	job_edited	Le project Hudson a été modifié.
+plugin_hudson	job_updated	Le project Hudson a été modifié.
 plugin_hudson	delete_job_error	Impossible de supprimer le projet Hudson
 plugin_hudson	job_deleted	Le project Hudson a été supprimé.
 
 plugin_hudson	status_blue	Succès
+plugin_hudson	status_blue_anime	En cours
 plugin_hudson	status_yellow	Instable
+plugin_hudson	status_yellow_anime	En cours
 plugin_hudson	status_red	En échec
+plugin_hudson	status_red_anime	En cours
 plugin_hudson	status_grey	En attente
+plugin_hudson	status_grey_anime	En cours
 plugin_hudson	status_unknown	Status inconnu
