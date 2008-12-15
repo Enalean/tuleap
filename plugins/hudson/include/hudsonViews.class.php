@@ -112,7 +112,7 @@ class hudsonViews extends Views {
             echo ' <form>';
             echo '  <p>';
             echo '   <label for="hudson_job_url">Job URL:</label>';
-            echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" />';
+            echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
             echo '  </p>';
             echo '  <p>';
             echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
