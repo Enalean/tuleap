@@ -98,10 +98,10 @@ class hudsonViews extends Views {
                     }
                     echo ' </tr>';
                 
-                } catch (HudsonJobURLMalformedException $me) {
+                } catch (Exception $e) {
                     echo ' <tr>';
-                    echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'" title="'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'" /></td>';
-                    echo '  <td colspan="4"><span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'</span></td>';
+                    echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
+                    echo '  <td colspan="4"><span class="error">'.$e->getMessage().'</span></td>';
                     if ($user->isMember($request->get('group_id'), 'A')) {
                         echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
                     }

@@ -67,7 +67,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             try {
                 $job = new Hudsonjob($monitored_job);
                 $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1; 
-            } catch (HudsonJobURLMalformedException $me) {
+            } catch (Exception $e) {
                 // Do not display wrong jobs
             }
         }
@@ -117,7 +117,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             try {
                 $job = new Hudsonjob($row['job_url']);
                 $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_url'].'" '.(in_array($row['job_url'], $this->_monitored_jobs)?'checked="checked"':'').'> '.$job->getName().'<br />';
-            } catch (HudsonJobURLMalformedException $me) {
+            } catch (Exception $e) {
                 // Do not display wrong jobs
             }
             $dar->next();
@@ -149,7 +149,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
                     
                     $cpt++;
                     
-                } catch (HudsonJobURLMalformedException $me) {
+                } catch (Exception $e) {echo 'ICICI';
                     // Do not display wrong jobs
                 }
             }

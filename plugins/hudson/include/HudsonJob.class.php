@@ -10,6 +10,8 @@
 require_once('hudson.class.php');
 //require_once('PluginFactory.class.php');
 require_once('HudsonJobURLMalformedException.class.php');
+require_once('HudsonJobURLFileException.class.php');
+require_once('HudsonJobURLFileNotFoundException.class.php');
  
 class HudsonJob {
 
@@ -26,13 +28,10 @@ class HudsonJob {
     function HudsonJob($hudson_job_url) {
         $parsed_url = parse_url($hudson_job_url);
         
-        if ( ! $parsed_url) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','malformed_url'));
+        if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
+            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_job_url)));
         }
-        if ( ! array_key_exists('scheme', $parsed_url)) {
-            throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','malformed_url_scheme'));
-        }
-        
+                
         $this->hudson_job_url = $hudson_job_url . "/api/xml";
         
         $controler = $this->getHudsonControler(); 
@@ -50,7 +49,16 @@ class HudsonJob {
     }
     
     protected function _getXMLObject($hudson_job_url) {
-        return simplexml_load_file($hudson_job_url);
+        if (@file_get_contents($hudson_job_url) !== false) {
+            $xmlobj = simplexml_load_file($hudson_job_url);
+            if ($xmlobj !== false) {
+                return $xmlobj;
+            } else {
+                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_job_url)));
+            }
+        } else {
+            throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_job_url))); 
+        }
     }
     
     function getProjectStyle() {

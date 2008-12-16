@@ -17,6 +17,8 @@ plugin_hudson	group_id_missing	Paramètre group_id manquant.
 plugin_hudson	addjob_title	Ajouter un projet
 plugin_hudson	form_job_url	URL du projet :
 plugin_hudson	wrong_job_url	URL du projet incorrecte : $1
+plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
+plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1
 plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monProjet
 plugin_hudson	form_addjob_button	Ajouter
 plugin_hudson	editjob_title	Modifier le projet
@@ -24,8 +26,6 @@ plugin_hudson	form_editjob_button	Modifier
 plugin_hudson	job_url_missing	Url du projet Hudson manquante (ex: http://monserveurIC:8080/hudson/job/MonJob)
 plugin_hudson	job_id_missing	Identifiant du projet Hudson manquant.
 plugin_hudson	add_job_error	Impossible d'ajouter le projet Hudson
-plugin_hudson	malformed_url	L'Url du projet Hudson est malformée
-plugin_hudson	malformed_url_scheme	L'Url du projet Hudson est malformée : pas de protocole
 plugin_hudson	job_added	Le project Hudson a été ajouté.
 plugin_hudson	edit_job_error	Impossible de modifier le projet Hudson
 plugin_hudson	job_updated	Le project Hudson a été modifié.
