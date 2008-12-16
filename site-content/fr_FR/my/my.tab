@@ -22,6 +22,7 @@ my_index	stop_file	Arrêter la surveillance du paquet ?
 my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
 my_index	my_arts	Mes artefacts
+my_index	display_arts	Afficher les artefacts :
 my_index	my_survey	Sondages
 my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
