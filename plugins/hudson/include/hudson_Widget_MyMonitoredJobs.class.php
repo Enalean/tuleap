@@ -66,7 +66,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
         foreach ($this->_monitored_jobs as $monitored_job) {
             try {
                 $job = new Hudsonjob($monitored_job);
-                $this->_all_status[(string)$job->getColor()] = $this->_all_status[(string)$job->getColor()] + 1; 
+                $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1; 
             } catch (HudsonJobURLMalformedException $me) {
                 // Do not display wrong jobs
             }

@@ -65,6 +65,13 @@ class HudsonJob {
     function getColor() {
         return $this->dom_job->color;
     }
+    function getColorNoAnime() {
+        $color = $this->getColor();
+        if (strpos($color, "_anime")) {
+            $color = substr($color, 0, strpos($color, "_anime"));
+        }
+        return $color;
+    }
     function getStatus() {
         switch ($this->getColor()) {
             case "blue":

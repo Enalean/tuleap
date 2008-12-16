@@ -6,6 +6,11 @@ Mock::generatePartial(
     'HudsonJobTestVersion',
     array('_getXMLObject', 'getIconsPath', 'getHudsonControler')
 );
+Mock::generatePartial(
+    'HudsonJob',
+    'HudsonJobTestColorVersion',
+    array('getColor')
+);
 
 require_once(dirname(__FILE__).'/../include/hudson.class.php');
 Mock::generate('hudson');
@@ -312,6 +317,28 @@ XML;
         $this->assertTrue($j->isBuildable());
         
     }
+    
+    function testColorNoAnime1() {
+        $j = new HudsonJobTestColorVersion($this);
+        $j->setReturnValue('getColor', "blue");
+        $this->assertEqual($j->getColorNoAnime(), "blue");
+    }  
+    function testColorNoAnime2() {
+        $j = new HudsonJobTestColorVersion($this);
+        $j->setReturnValue('getColor', "blue_anime");
+        $this->assertEqual($j->getColorNoAnime(), "blue");
+    }
+    function testColorNoAnime3() {
+        $j = new HudsonJobTestColorVersion($this);        
+        $j->setReturnValue('getColor', "grey");
+        $this->assertEqual($j->getColorNoAnime(), "grey");
+    }
+    function testColorNoAnime4() {
+        $j = new HudsonJobTestColorVersion($this);  
+        $j->setReturnValue('getColor', "grey_anime");
+        $this->assertEqual($j->getColorNoAnime(), "grey");
+    }
+    
 }
 
 ?>
