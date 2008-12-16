@@ -9,7 +9,7 @@ widget_add	codex_widgets	Widgets $1
 widget_add	external_widgets	Widgets Externes
 widget_add	add	Ajouter
 widget_add	already_used	Déjà utilisé
-widget_add	link_add	Ajouter des widgets
+widget_add	link_add	Personnaliser
 
 widget_rss	default_url	http://news.google.fr/?ned=fr&topic=t&output=rss
 

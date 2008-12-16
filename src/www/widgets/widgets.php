@@ -3,6 +3,7 @@ require_once('pre.php');
 require_once('www/my/my_utils.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');
+$GLOBALS['HTML']->includeJavascriptFile('/scripts/codendi/LayoutManager.js');
 $hp = CodeX_HTMLPurifier::instance();
 if (user_isloggedin()) {
     

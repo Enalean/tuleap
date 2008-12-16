@@ -253,10 +253,33 @@ UPDATE artifact_report_field
 SET artifact_report_field.place_query = R1.new_rank;
 
 
+#Layouts for dashboard
+INSERT INTO layouts(id, name, description, scope) VALUES
+(2, '3 columns', 'Simple layout made of 3 columns', 'S'),
+(3, 'Left', 'Simple layout made of a main column and a small, left sided, column', 'S'),
+(4, 'Right', 'Simple layout made of a main column and a small, right sided, column', 'S');
+
+INSERT INTO layouts_rows(id, layout_id, rank) VALUES
+(2, 2, 0),
+(3, 3, 0),
+(4, 4, 0);
+
+INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
+(3, 2, 33),
+(4, 2, 33),
+(5, 2, 33),
+(6, 3, 33),
+(7, 3, 66),
+(8, 4, 66),
+(9, 4, 33);
+
+
 #custom themes
 => no more images
 => refactoring in common/layout instead of www/include
 
+#TODO Move DivBasedLayout in common
+#TODO Clean-up CodendiBlack (remove common images, fix blue labels on IE, ...)
 #TODO remove reserved names javascript
 
 #

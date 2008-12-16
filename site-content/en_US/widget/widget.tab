@@ -16,7 +16,7 @@ widget_add	codex_widgets	$1 Widgets
 widget_add	external_widgets	External Widgets
 widget_add	add	Add
 widget_add	already_used	Already used
-widget_add	link_add	Add widgets
+widget_add	link_add	Customize
 
 widget_rss	default_url	http://news.google.com/?ned=us&topic=t&output=rss
 

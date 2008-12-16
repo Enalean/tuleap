@@ -34,7 +34,7 @@ if ($owner) {
             break;
     }
     if ($good) {
-        if ($layout_id = (int)$request->get('layout_id') || $request->get('action') == 'preferences') {
+        if (($layout_id = (int)$request->get('layout_id')) || $request->get('action') == 'preferences') {
             $name = null;
             if ($request->exist('name')) {
                 $param = $request->get('name');
@@ -75,6 +75,9 @@ if ($owner) {
                     if ($name) {
                         $lm->displayWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
                     }
+                    break;
+                case 'layout':
+                    $lm->updateLayout($owner_id, $owner_type, $request->get('layout_id'), $request->get('new_layout'));
                     break;
                 default:
                     $lm->reorderLayout($owner_id, $owner_type, $layout_id, &$request);
