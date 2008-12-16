@@ -51,7 +51,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
         }
         
         if ($this->_use_global_status == "true") {
-            $_all_status = array(
+            $this->_all_status = array(
                 'grey' => 0,
                 'blue' => 0,
                 'yellow' => 0,
@@ -66,15 +66,15 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
         foreach ($this->_monitored_jobs as $monitored_job) {
             try {
                 $job = new Hudsonjob($monitored_job);
-                $_all_status[(string)$job->getColor()] = $_all_status[(string)$job->getColor()] + 1; 
+                $this->_all_status[(string)$job->getColor()] = $this->_all_status[(string)$job->getColor()] + 1; 
             } catch (HudsonJobURLMalformedException $me) {
                 // Do not display wrong jobs
             }
         }
-        if ($_all_status['grey'] > 0 || $_all_status['red'] > 0) {
+        if ($this->_all_status['grey'] > 0 || $this->_all_status['red'] > 0) {
             $this->_global_status = $GLOBALS['Language']->getText('plugin_hudson','global_status_red');
             $this->_global_status_icon = $this->plugin->getThemePath() . "/images/ic/" . "status_red.png";
-        } elseif ($_all_status['yellow'] > 0) {
+        } elseif ($this->_all_status['yellow'] > 0) {
             $this->_global_status = $GLOBALS['Language']->getText('plugin_hudson','global_status_yellow');
             $this->_global_status_icon = $this->plugin->getThemePath() . "/images/ic/" . "status_yellow.png";
         } else {
