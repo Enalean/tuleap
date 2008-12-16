@@ -60,8 +60,8 @@ class hudsonPlugin extends Plugin {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $GLOBALS['HTML']->includeCalendarScripts();
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
+            echo '<script type="text/javascript" src="hudson_tab.js"></script>'."\n";
         }
     }
     

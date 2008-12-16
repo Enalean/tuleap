@@ -80,7 +80,8 @@ class hudsonViews extends Views {
                     
                     echo ' <tr>';
                     echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
-                    echo '  <td><a href="'.$job->getUrl().'">'.$job->getName().'</a></td>';
+                    // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
+                    echo '  <td><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$job->getName().'</a></td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
                         echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'">build #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
@@ -99,7 +100,7 @@ class hudsonViews extends Views {
                 
                 } catch (HudsonJobURLMalformedException $me) {
                     echo ' <tr>';
-                    echo '  <td></td>';
+                    echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'" title="'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'" /></td>';
                     echo '  <td colspan="4"><span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($row['job_url'])).'</span></td>';
                     if ($user->isMember($request->get('group_id'), 'A')) {
                         echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
@@ -115,9 +116,8 @@ class hudsonViews extends Views {
         }
         
         if ($user->isMember($request->get('group_id'), 'A')) {
-            echo '<a href="#" onclick="';
-            echo "Effect.toggle('hudson_add_job', 'slide'); return false;";
-            echo '">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
+            // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
+            echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
             echo '<div id="hudson_add_job">';
             echo ' <form>';
             echo '   <label for="hudson_job_url">Job URL:</label>';
@@ -131,6 +131,12 @@ class hudsonViews extends Views {
             echo '</div>';
             echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
         }
+        
+        $url = '';
+        echo '<div id="hudson_iframe_div">';
+        echo ' <iframe id="hudson_iframe" src="'.$url.'" class="iframe_service"></iframe>';
+        echo '</div>';
+        echo "<script>Element.toggle('hudson_iframe_div', 'slide');</script>";
     }
     
     function editJob() {
