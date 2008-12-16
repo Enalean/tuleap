@@ -150,7 +150,9 @@ class HudsonJob {
         }
     }
     
-    
+    function isBuildable() {
+        return ($this->dom_job->buildable == "true");
+    }
     function getLastSuccessfulBuildNumber() {
         return $this->dom_job->lastSuccessfulBuild->number;
     }
