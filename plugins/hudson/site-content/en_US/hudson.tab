@@ -41,3 +41,11 @@ plugin_hudson	status_red_anime	In progress
 plugin_hudson	status_grey	Pending
 plugin_hudson	status_grey_anime	In progress
 plugin_hudson	status_unknown	Unknown status
+
+plugin_hudson	global_status_blue	Success
+plugin_hudson	global_status_yellow	One or more unstable job
+plugin_hudson	global_status_red	One or more failure or pending job
+
+plugin_hudson	my_jobs	My Hudson Jobs
+plugin_hudson	monitored_jobs	Monitored jobs:
+plugin_hudson	use_global_status	Use global status:

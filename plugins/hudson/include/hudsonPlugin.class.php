@@ -34,6 +34,10 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
+        
+        $this->_addHook('widget_instance', 'myPageBox', false);
+        $this->_addHook('widgets', 'widgets', false);
+        
 	}
 	
     function &getPluginInfo() {
@@ -65,6 +69,20 @@ class hudsonPlugin extends Plugin {
         }
     }
     
+    function myPageBox($params) {
+        if ($params['widget'] == 'myhudsonjobs') {
+            require_once('hudson_Widget_MyMonitoredJobs.class.php');
+            $params['instance'] = new hudson_Widget_MyMonitoredJobs($this);
+        }
+    }
+    function widgets($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        $lm = new WidgetLayoutManager();
+        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+            $params['codex_widgets'][] = 'myhudsonjobs';
+        }
+    }
+        
     function process() {
         require_once('hudson.class.php');
         $controler =& new hudson();

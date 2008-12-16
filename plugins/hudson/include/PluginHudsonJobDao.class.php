@@ -50,6 +50,21 @@ class PluginHudsonJobDao extends DataAccessObject {
     }
     
     /**
+    * Searches PluginHudsonJob by user ID
+    * means "all the jobs of all projects the user is member of" 
+    * @return DataAccessResult
+    */
+    function & searchByUserID($user_id) {
+        $sql = sprintf("SELECT j.*  
+                        FROM plugin_hudson_job j, user u, user_group ug
+                        WHERE ug.group_id = j.group_id AND
+                              u.user_id = ug.user_id AND 
+                              u.user_id = %s",
+            $this->da->quoteSmart($user_id));
+        return $this->retrieve($sql);
+    }
+    
+    /**
     * create a row in the table plugin_hudson_job 
     * @return true if there is no error
     */

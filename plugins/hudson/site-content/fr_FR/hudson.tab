@@ -41,3 +41,11 @@ plugin_hudson	status_red_anime	En cours
 plugin_hudson	status_grey	En attente
 plugin_hudson	status_grey_anime	En cours
 plugin_hudson	status_unknown	Status inconnu
+
+plugin_hudson	global_status_blue	Succès
+plugin_hudson	global_status_yellow	Un projet ou plus instable
+plugin_hudson	global_status_red	Un projet ou plus en échec ou en attente
+
+plugin_hudson	my_jobs	Mes projets Hudson
+plugin_hudson	monitored_jobs	Projets suivis :
+plugin_hudson	use_global_status	Utiliser le status global :

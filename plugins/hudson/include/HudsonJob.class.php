@@ -7,7 +7,7 @@
  * HudsonJob
  */
 
-//require_once('hudson.class.php');
+require_once('hudson.class.php');
 //require_once('PluginFactory.class.php');
 require_once('HudsonJobURLMalformedException.class.php');
  
