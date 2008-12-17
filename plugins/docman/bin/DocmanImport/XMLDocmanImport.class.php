@@ -53,6 +53,12 @@ class XMLDocmanImport {
     
     // Session hash
     private $hash;
+    
+    // When force is true, continue even if some users don't exist on the remote server
+    private $force;
+    
+    // Whether the items will be reordered or not (folder, docs - alphabetical)
+    private $reorder;
 
     /**
      * XMLDocmanImport constructor
@@ -62,15 +68,14 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($groupId, $wsdl, $login, $password) {
+    public function __construct($groupId, $wsdl, $login, $password, $force, $reorder) {
         $this->groupId = $groupId;
         $this->metadataMap = array();
         $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
         $this->userMap = array();
-
-        // Disable the cache for testing purposes. TODO re-enable the cache for production.
-        ini_set("soap.wsdl_cache_enabled", "0");
+        $this->force = $force;
+        $this->reorder = $reorder;
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
@@ -115,6 +120,31 @@ class XMLDocmanImport {
         $this->checkUgroupsUsage();
         echo "Done.".PHP_EOL;
     }
+    
+    /**
+     * Compare two item nodes using folder, document and alphabetical order
+     */
+    private static function compareItemNodes($node1, $node2) {
+        if (($node1['type'] == 'folder') && ($node2['type'] != 'folder')) {
+            return -1;
+        } else if (($node2['type'] == 'folder') && ($node1['type'] != 'folder')) {
+            return 1;
+        } else {
+            $title1 = (string)$node1->properties->title;
+            $title2 = (string)$node2->properties->title;
+            return strcasecmp($title1, $title2);
+        }
+    }
+    
+    /**
+     * Reorder an array of item nodes
+     */
+    private function reorderItemNodes(array $nodes) {
+        if (isset($this->reorder) && ($this->reorder == true)) {
+            usort($nodes, array('XMLDocmanImport', 'compareItemNodes'));
+        }
+        return $nodes;
+    }
 
     /**
      * Import all the items to the specified parent folder
@@ -137,7 +167,7 @@ class XMLDocmanImport {
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
             if($opt == self::CHILDREN_ONLY) {
-                foreach($rootNode->xpath('item') as $child) {
+                foreach($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
                     $this->recurseOnNode($child, $parentId);
                 }
             } else {
@@ -239,7 +269,12 @@ class XMLDocmanImport {
             
             $absentUsers = array_diff($userIdentifiers, array_keys($this->userMap));
             if (count($absentUsers) != 0) {
-                $this->exitError("Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers));
+                $msg = "Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers);
+                if ($this->force) {
+                    $this->warn($msg);
+                } else {
+                    $this->exitError($msg);                    
+                }
             }
             
             echo "Done.".PHP_EOL;
@@ -573,7 +608,7 @@ class XMLDocmanImport {
      * @return string   The username according to the userMap
      */
     private function userNodeToUsername($userNode) {
-        if ((string)$userNode == '') {
+        if ((string)$userNode == '' || !isset($this->userMap[self::userNodeToIdentifier($userNode)])) {
             return null;
         } else {
             return $this->userMap[self::userNodeToIdentifier($userNode)];
@@ -675,7 +710,7 @@ class XMLDocmanImport {
 
             case 'folder':
                 $newParentId = $this->createFolder($parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-                foreach($node->xpath('item') as $child) {
+                foreach($this->reorderItemNodes($node->xpath('item')) as $child) {
                     $this->recurseOnNode($child, $newParentId);
                 }
                 break;
