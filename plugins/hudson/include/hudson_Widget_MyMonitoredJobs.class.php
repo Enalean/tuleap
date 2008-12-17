@@ -157,7 +157,6 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
                         $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
                         $html .= ' </td>';
                         $html .= ' <td style="width:99%">';
-                        //$html .= '  <a href="'.$job->getUrl().'">'.$job->getName().'</a><br />';
                         $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
                         $html .= ' </td>';
                         $html .= '</tr>';
