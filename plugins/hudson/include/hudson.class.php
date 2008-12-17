@@ -108,6 +108,9 @@ class hudson extends Controler {
                             $this->view = 'projectOverview';
                         }
                         break;
+                    case "view_job":
+                        $this->view = 'job_details';
+                        break;
                     default:
                         $this->view = 'projectOverview';
                         break;

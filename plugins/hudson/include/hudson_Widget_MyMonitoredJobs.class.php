@@ -27,7 +27,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
         $this->Widget('myhudsonjobs');
         $this->plugin = $plugin;
         
-        $this->_monitored_jobs = user_get_preference('my_monitored_hudson_jobs');
+        $this->_monitored_jobs = user_get_preference('plugin_hudson_my_monitored_jobs');
         if ($this->_monitored_jobs === false) {
             $this->_monitored_jobs = array();
             
@@ -36,18 +36,18 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             $dar = $job_dao->searchByUserID($user->getId());
             while ($dar->valid()) {
                 $row = $dar->current();
-                $this->_monitored_jobs[] = $row['joburl'];
+                $this->_monitored_jobs[] = $row['job_id'];
                 $dar->next();
             }
-            user_set_preference('my_monitored_hudson_jobs', implode(",", $this->_monitored_jobs));
+            user_set_preference('plugin_hudson_my_monitored_jobs', implode(",", $this->_monitored_jobs));
         } else {
             $this->_monitored_jobs = explode(",", $this->_monitored_jobs);
         }
         
-        $this->_use_global_status = user_get_preference('my_hudson_jobs_use_global_status');
+        $this->_use_global_status = user_get_preference('plugin_hudson_use_global_status');
         if ($this->_use_global_status === false) {
             $this->_use_global_status = "true";
-            user_set_preference('my_hudson_jobs_use_global_status', $this->_use_global_status);
+            user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
         }
         
         if ($this->_use_global_status == "true") {
@@ -65,8 +65,14 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
     function computeGlobalStatus() {
         foreach ($this->_monitored_jobs as $monitored_job) {
             try {
-                $job = new Hudsonjob($monitored_job);
-                $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1; 
+                $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+                $dar = $job_dao->searchByJobID($monitored_job);
+                if ($dar->valid()) {
+                    $row = $dar->current();
+                    $job_url = $row['job_url'];
+                    $job = new HudsonJob($job_url);
+                    $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;    
+                }
             } catch (Exception $e) {
                 // Do not display wrong jobs
             }
@@ -97,11 +103,11 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
         if (!$request->exist('cancel')) {
             $monitored_jobs = $request->get('myhudsonjobs');
             $this->_monitored_jobs = $monitored_jobs;
-            user_set_preference('my_monitored_hudson_jobs', implode(",", $monitored_jobs));
+            user_set_preference('plugin_hudson_my_monitored_jobs', implode(",", $monitored_jobs));
             
             $use_global_status = $request->get('use_global_status');
             $this->_use_global_status = ($use_global_status !== false)?"true":"false";
-            user_set_preference('my_hudson_jobs_use_global_status', $this->_use_global_status);
+            user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
         }
         return true;
     }
@@ -116,7 +122,7 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             $row = $dar->current();
             try {
                 $job = new Hudsonjob($row['job_url']);
-                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_url'].'" '.(in_array($row['job_url'], $this->_monitored_jobs)?'checked="checked"':'').'> '.$job->getName().'<br />';
+                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_monitored_jobs)?'checked="checked"':'').'> '.$job->getName().'<br />';
             } catch (Exception $e) {
                 // Do not display wrong jobs
             }
@@ -136,20 +142,29 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             $cpt = 1;
             foreach ($this->_monitored_jobs as $monitored_job) {
                 try {
-                    $job = new Hudsonjob($monitored_job);
                     
-                    $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
-                    $html .= ' <td>';
-                    $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
-                    $html .= ' </td>';
-                    $html .= ' <td style="width:99%">';
-                    $html .= '  <a href="'.$job->getUrl().'">'.$job->getName().'</a><br />';
-                    $html .= ' </td>';
-                    $html .= '</tr>';
-                    
-                    $cpt++;
-                    
-                } catch (Exception $e) {echo 'ICICI';
+                    $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+                    $dar = $job_dao->searchByJobID($monitored_job);
+                    if ($dar->valid()) {
+                        $row = $dar->current();
+                        $job_url = $row['job_url'];
+                        $job_id = $row['job_id'];
+                        $group_id = $row['group_id'];
+                        $job = new HudsonJob($job_url);
+                        
+                        $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
+                        $html .= ' <td>';
+                        $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
+                        $html .= ' </td>';
+                        $html .= ' <td style="width:99%">';
+                        //$html .= '  <a href="'.$job->getUrl().'">'.$job->getName().'</a><br />';
+                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
+                        $html .= ' </td>';
+                        $html .= '</tr>';
+                        
+                        $cpt++;
+                    }
+                } catch (Exception $e) {
                     // Do not display wrong jobs
                 }
             }

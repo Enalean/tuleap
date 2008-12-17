@@ -55,6 +55,80 @@ class hudsonViews extends Views {
         $group_id = $request->get('group_id');
         $user = UserManager::instance()->getCurrentUser();
         
+        $this->_display_jobs_table($group_id);       
+        if ($user->isMember($request->get('group_id'), 'A')) {
+            $this->_display_add_job_form($group_id);
+        }
+        $this->_display_iframe();
+        $this->_hide_iframe();
+    }
+    
+    function job_details() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $user = UserManager::instance()->getCurrentUser();
+        
+        // Do we display the table with other jobs?
+        /*$this->_display_jobs_table($group_id);       
+        if ($user->isMember($request->get('group_id'), 'A')) {
+            $this->_display_add_job_form($group_id);
+        }*/
+        
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->searchByJobID($job_id);
+        if ($dar->valid()) {
+            $row = $dar->current();
+            $this->_display_iframe($row['job_url']);
+        } else {var_dump($dar);
+            $this->_display_iframe();
+        }
+                
+        
+    }
+    
+    function editJob() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $user = UserManager::instance()->getCurrentUser();
+        if ($user->isMember($group_id, 'A')) {
+            
+            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+            $dar = $job_dao->searchByJobID($job_id);
+            if ($dar->valid()) {
+                $row = $dar->current();
+            
+                echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
+                echo ' <form method="post">';
+                echo '  <p>';
+                echo '   <label for="new_hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
+                echo '   <input id="new_hudson_job_url" name="new_hudson_job_url" type="text" value="'.$row['job_url'].'" size="64" />';
+                echo '  </p>';
+                echo '  <p>';
+                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
+                echo '  </p>';
+                echo '  <p>';
+                echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
+                echo '   <input type="hidden" name="job_id" value="'.$job_id.'" />';
+                echo '   <input type="hidden" name="action" value="update_job" />';
+                echo '   <input type="submit" value="'.$GLOBALS['Language']->getText('plugin_hudson','form_editjob_button').'" />';
+                echo '  </p>';
+                echo ' </form>';
+                
+            } else {
+                
+            }
+        } else {
+            
+        }
+    }
+    // }}}
+    
+    function _display_jobs_table($group_id) {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
         $dar = $job_dao->searchByGroupID($group_id);
         
@@ -110,72 +184,35 @@ class hudsonViews extends Views {
                 
                 $dar->next();
             }
-            
-            echo '</table>';
-            
+            echo '</table>';   
         }
-        
-        if ($user->isMember($request->get('group_id'), 'A')) {
-            // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
-            echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
-            echo '<div id="hudson_add_job">';
-            echo ' <form>';
-            echo '   <label for="hudson_job_url">Job URL:</label>';
-            echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
-            echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
-            echo '   <input type="hidden" name="action" value="add_job" />';
-            echo '   <input type="submit" value="Add job" />';
-            echo '   <br />';
-            echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
-            echo ' </form>';
-            echo '</div>';
-            echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
-        }
-        
-        $url = '';
+    }
+    
+    function _display_add_job_form($group_id) {
+        // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
+        echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
+        echo '<div id="hudson_add_job">';
+        echo ' <form>';
+        echo '   <label for="hudson_job_url">Job URL:</label>';
+        echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
+        echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
+        echo '   <input type="hidden" name="action" value="add_job" />';
+        echo '   <input type="submit" value="Add job" />';
+        echo '   <br />';
+        echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
+        echo ' </form>';
+        echo '</div>';
+        echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
+    }
+    
+    function _display_iframe($url = '') {
         echo '<div id="hudson_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service'));
         echo '</div>';
+    }
+    function _hide_iframe() {
         echo "<script>Element.toggle('hudson_iframe_div', 'slide');</script>";
     }
-    
-    function editJob() {
-        $request =& HTTPRequest::instance();
-        $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-        $user = UserManager::instance()->getCurrentUser();
-        if ($user->isMember($group_id, 'A')) {
-            
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-            $dar = $job_dao->searchByJobID($job_id);
-            if ($dar->valid()) {
-                $row = $dar->current();
-            
-                echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
-                echo ' <form method="post">';
-                echo '  <p>';
-                echo '   <label for="new_hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
-                echo '   <input id="new_hudson_job_url" name="new_hudson_job_url" type="text" value="'.$row['job_url'].'" size="64" />';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
-                echo '   <input type="hidden" name="job_id" value="'.$job_id.'" />';
-                echo '   <input type="hidden" name="action" value="update_job" />';
-                echo '   <input type="submit" value="'.$GLOBALS['Language']->getText('plugin_hudson','form_editjob_button').'" />';
-                echo '  </p>';
-                echo ' </form>';
-                
-            } else {
-                
-            }
-        } else {
-            
-        }
-    }
-    // }}}
 }
 
 
