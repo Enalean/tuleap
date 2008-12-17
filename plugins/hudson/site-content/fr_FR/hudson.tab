@@ -11,6 +11,7 @@ plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
 plugin_hudson	header_table_rss	RSS
 plugin_hudson	header_table_actions	Actions
+plugin_hudson	build	build
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.

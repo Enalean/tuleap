@@ -11,6 +11,7 @@ plugin_hudson	header_table_lastsuccess	Last Success
 plugin_hudson	header_table_lastfailure	Last Failure
 plugin_hudson	header_table_rss	RSS
 plugin_hudson	header_table_actions	Actions
+plugin_hudson	build	build
 
 plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.

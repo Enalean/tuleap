@@ -83,12 +83,12 @@ class hudsonViews extends Views {
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
                     echo '  <td><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$job->getName().'</a></td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;">build #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'" onclick="toggle_iframe(this); return false;">build #'.$job->getLastFailedBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber().'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
