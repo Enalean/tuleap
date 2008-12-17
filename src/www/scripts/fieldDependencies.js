@@ -413,10 +413,12 @@ function admin_checked(id) {
         Element.setStyle(checkbox.type+'_'+checkbox.source_field_id+'_'+checkbox.target_field_id+'_'+checkbox[checkbox.type+'_value_id']+'_arrow', {visibility:'hidden'});        
     }
     //Does a rule exist ?
-    var rule_exists = codendi.tracker.rule_forest.getNode(checkbox.source_field_id) &&
-                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id] &&
-                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id].values[checkbox.source_value_id] &&
-                      codendi.tracker.rule_forest.getNode(checkbox.source_field_id).targets[checkbox.target_field_id].values[checkbox.source_value_id].include(checkbox.target_value_id);
+    var rule_exists = codendi.tracker.rules_definitions.find(function (definition) {
+        return definition.source_field == checkbox.source_field_id &&
+                definition.target_field == checkbox.target_field_id &&
+                definition.target_value == checkbox.target_value_id &&
+                definition.source_value == checkbox.source_value_id;
+    });
     if (rule_exists && checked || !rule_exists && !checked) {
         //Bug here!
         // NTY 20060210: The initial behaviour was to be able to detect when a user 
@@ -454,7 +456,7 @@ function admin_checked(id) {
 }
 
 function admin_selectTargetEvent(element) {
-    var link = admin_getInfosFromId(element.up('tr').id);
+    var link = admin_getInfosFromId($(element).up('tr').id);
     admin_selectTargetValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
     return false;
 };
@@ -506,7 +508,7 @@ function admin_forceTargetValue(source_field_id, target_field_id, target_value_i
 }
 
 function admin_selectSourceEvent(element) {
-    var link = admin_getInfosFromId(element.up('tr').id);
+    var link = admin_getInfosFromId($(element).up('tr').id);
     admin_selectSourceValue(link.source_field_id, link.target_field_id, link[link.type+'_value_id']);
     return false;
 };
