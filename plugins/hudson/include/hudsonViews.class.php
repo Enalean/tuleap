@@ -134,7 +134,7 @@ class hudsonViews extends Views {
         
         $url = '';
         echo '<div id="hudson_iframe_div">';
-        echo ' <iframe id="hudson_iframe" src="'.$url.'" class="iframe_service"></iframe>';
+        $GLOBALS['HTML']->iframe($url, array('id' => 'hudson_iframe', 'class' => 'iframe_service'));
         echo '</div>';
         echo "<script>Element.toggle('hudson_iframe_div', 'slide');</script>";
     }

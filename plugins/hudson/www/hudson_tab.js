@@ -7,4 +7,5 @@ function toggle_iframe(joburl) {
         Effect.toggle('hudson_iframe_div', 'appear');
     }
     $('hudson_iframe').src = joburl;
+    $('link_show_only').href = joburl;
 }

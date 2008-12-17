@@ -675,7 +675,7 @@ class Layout extends Response {
     
     function iframe($url, $html_options = array()) {
         $html = '';
-        $html .= '<div class="iframe_showonly"><a href="'. $url .'" title="Show only this frame">Show only this frame '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
+        $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="Show only this frame">Show only this frame '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
         $args = ' src="'. $url .'" ';
         foreach($html_options as $key => $value) {
             $args .= ' '. $key .'="'. $value .'" ';
