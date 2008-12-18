@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @copyright Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+ *
+ * This file is licensed under the GNU General Public License version 2. See the file COPYING.
+ * 
+ * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
+ *
+ * HudsonJobTest : test the class HudsonJob
+ */
+
 require_once(dirname(__FILE__).'/../include/HudsonJob.class.php');
 Mock::generatePartial(
     'HudsonJob',
@@ -18,13 +28,6 @@ Mock::generate('hudson');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-/**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
- * 
- * 
- *
- * Test the class Hudsonjob
- */
 class HudsonJobTest extends UnitTestCase {
     /**
      * Constructor of the test. Can be ommitted.

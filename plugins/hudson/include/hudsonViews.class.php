@@ -1,25 +1,13 @@
 <?php
 
-/*
- * Copyright (c) Xerox, 2008. All Rights Reserved.
+/**
+ * @copyright Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
  *
- * Originally written by Marc Nazarian, 2008. Xerox Codendi Team.
+ * This file is licensed under the GNU General Public License version 2. See the file COPYING.
+ * 
+ * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Codendi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * HudsonViews
  */
 
 require_once('common/mvc/Views.class.php');
@@ -28,9 +16,6 @@ require_once('common/user/UserManager.class.php');
 
 require_once('HudsonJob.class.php');
 
-/**
- * hudsonViews
- */
 class hudsonViews extends Views {
     
     function hudsonViews(&$controler, $view=null) {

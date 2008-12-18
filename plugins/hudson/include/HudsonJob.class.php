@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
- * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
+ * @copyright Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+ *
+ * This file is licensed under the GNU General Public License version 2. See the file COPYING.
  * 
+ * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  *
  * HudsonJob
  */
 
 require_once('hudson.class.php');
-//require_once('PluginFactory.class.php');
 require_once('HudsonJobURLMalformedException.class.php');
 require_once('HudsonJobURLFileException.class.php');
 require_once('HudsonJobURLFileNotFoundException.class.php');
