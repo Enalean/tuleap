@@ -10,6 +10,7 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
+require_once('PluginHudsonJobDao.class.php');
 
 class hudsonPlugin extends Plugin {
 	
@@ -18,6 +19,8 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
+        
+        $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         
         $this->_addHook('widget_instance', 'myPageBox', false);
         $this->_addHook('widgets', 'widgets', false);
@@ -53,6 +56,18 @@ class hudsonPlugin extends Plugin {
         }
     }
     
+    /**
+     * When a project is deleted,
+     * we delete all the hudson jobs of this project
+     *
+     * @param mixed $params ($param['group_id'] the ID of the deleted project)
+     */
+    function projectIsDeleted($params) {
+        $group_id = $params['group_id'];
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
+    }
+    
     function myPageBox($params) {
         if ($params['widget'] == 'myhudsonjobs') {
             require_once('hudson_Widget_MyMonitoredJobs.class.php');
@@ -72,6 +87,7 @@ class hudsonPlugin extends Plugin {
         $controler =& new hudson();
         $controler->process();
     }
+    
 }
 
 ?>
