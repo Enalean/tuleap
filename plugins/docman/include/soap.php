@@ -256,15 +256,11 @@ function _get_status_value($status) {
  * Returns the user ID corresponding to the given user name, or null if it doesn't exist
  */
 function _getUserIdByUserName($userName) {
-    if ($userName == '') {
+    $user = UserManager::instance()->getUserByUserName($userName);
+    if ($user == null) {
         return null;
     } else {
-        $user = UserManager::instance()->getUserByUserName($userName);
-        if ($user == null) {
-            return null;
-        } else {
-            return $user->getId();
-        }
+        return $user->getId();
     }
 }
 
@@ -309,7 +305,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
             }
         } else {
             return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', $actor);
-        }
+        }  
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', $actor);
     }
@@ -338,17 +334,13 @@ function _buildItemParams($group_id, $perm_item_id, $title, $description, $statu
  * This function is like the PHP function array_merge_recursive but prevents returning null when one of the arrays is null
  */
 function _safe_array_merge_recursive($array1, $array2) {
-    if ($array1 === null && $array2 === null) {
-        return array();
-    } else {
-        if ($array1 === null) {
-            return $array2;
-        } else if ($array2 === null) {
-            return $array1;
-        } else {
-            return array_merge_recursive($array1, $array2);
-        }
+    if ($array1 === null) {
+        $array1 = array();
     }
+    if ($array2 === null) {
+        $array2 = array();
+    }
+    return array_merge_recursive($array1, $array2);
 }
 
 /**

@@ -90,7 +90,7 @@ function ugroup_get_ugroups_with_members($group_id) {
     $sql="SELECT ugroup.ugroup_id, ugroup.name, user.user_id, user.user_name FROM ugroup ".
     "NATURAL LEFT JOIN ugroup_user ".
     "NATURAL LEFT JOIN user ".
-    "WHERE ugroup.group_id=$group_id ".
+    "WHERE ugroup.group_id=".db_ei($group_id).
     " ORDER BY ugroup.name";
     
     $return = array();
