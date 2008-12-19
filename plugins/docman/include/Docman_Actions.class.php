@@ -883,11 +883,7 @@ class Docman_Actions extends Actions {
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
-                    
-                    $dPm = Docman_PermissionsManager::instance($group_id);
-                    if ($force || $dPm->userCanManage($this->_controler->getUser(), $item_id)) {
-                        $this->_getPermissionsManagerInstance()->addPermission($permission, $item_id, $ugroup_id);
-                    }
+                    permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
                     
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];

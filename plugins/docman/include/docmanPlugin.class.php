@@ -261,11 +261,18 @@ class DocmanPlugin extends Plugin {
         $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->process();
     }
-    function processSOAP(&$request) {
+    
+    protected $soapControler;
+    public function processSOAP(&$request) {
         require_once('Docman_SOAPController.class.php');
-        $controler =& new Docman_SOAPController($this, $this->getPluginPath(), $this->getThemePath(), $request);
-        return $controler->process();
+        if ($this->soapControler) {
+            $this->soapControler->setRequest($request);
+        } else {
+            $this->soapControler = new Docman_SOAPController($this, $this->getPluginPath(), $this->getThemePath(), $request);
+        }
+        return $this->soapControler->process();
     }
+     
     function wiki_page_updated($params) {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
