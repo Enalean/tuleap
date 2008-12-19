@@ -119,28 +119,30 @@ class hudsonViews extends Views {
         
         if ($dar && $dar->valid()) {
 
-            echo '<table>';
-            echo ' <tr>';
-            echo '  <th>&nbsp;</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
-            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
+            echo '<table id="jobs_table">';
+            echo ' <tr class="boxtable">';
+            echo '  <th class="boxtitle">&nbsp;</th>';
+            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
+            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
+            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
+            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
+                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
             echo ' </tr>';
-        
+            
+            $cpt = 1;
             while ($dar->valid()) {
                 $row = $dar->current();
 
+                echo ' <tr class="'. util_get_alt_row_color($cpt) .'">';
+                
                 try {
                     $job = new HudsonJob($row['job_url']);
                     
-                    echo ' <tr>';
                     echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
-                    echo '  <td><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$job->getName().'</a></td>';
+                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$job->getName().'</a></td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
                         echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
@@ -151,23 +153,30 @@ class hudsonViews extends Views {
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
-                    if ($user->isMember($request->get('group_id'), 'A')) {
-                        echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
-                    }
-                    echo ' </tr>';
-                
+                    echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
+                                    
                 } catch (Exception $e) {
-                    echo ' <tr>';
                     echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
                     echo '  <td colspan="4"><span class="error">'.$e->getMessage().'</span></td>';
-                    if ($user->isMember($request->get('group_id'), 'A')) {
-                        echo '  <td><a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a><a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a></td>';
-                    }
-                    echo ' </tr>';
                 }
                 
+                if ($user->isMember($request->get('group_id'), 'A')) {
+                    echo '  <td>';
+                    // edit job
+                    echo '   <span class="job_action">';
+                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a>';
+                    echo '   </span>';
+                    // delete job
+                    echo '   <span class="job_action">';
+                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a>';
+                    echo '   </span>';
+                    echo '  </td>';
+                }
+                
+                echo ' </tr>';
+                
                 $dar->next();
+                $cpt++;
             }
             echo '</table>';   
         }
