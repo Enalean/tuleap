@@ -26,6 +26,8 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
 define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
 
+require_once 'dates.php';
+
 class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
@@ -614,6 +616,18 @@ class XMLDocmanImport {
             return $this->userMap[self::userNodeToIdentifier($userNode)];
         }
     }
+    
+    /**
+     * Parse a date given as an ISO8601 date or a timestamp
+     * @return The corresponding timestamp
+     */
+    private function parseDate($s) {
+        if (is_numeric($s)) {
+            return $s;
+        } else {
+            return parseIso8601Date($s);
+        }
+    }
 
     /**
      * Processes the given node and its childs
@@ -629,8 +643,8 @@ class XMLDocmanImport {
         $obsolescenceDate = (string) $node->properties->obsolescence_date;
         $ordering         = 'end';
         $owner            = $this->userNodeToUsername($node->properties->owner);
-        $createDate       = (string) $node->properties->create_date;
-        $updateDate       = (string) $node->properties->update_date;
+        $createDate       = $this->parseDate((string) $node->properties->create_date);
+        $updateDate       = $this->parseDate((string) $node->properties->update_date);
 
         // Dynamic metadata
         $metadata = array();
@@ -656,7 +670,7 @@ class XMLDocmanImport {
                     $fileName  = (string)$version->filename;
                     $fileType  = (string)$version->filetype;
                     $author    = $this->userNodeToUsername($version->author);
-                    $date      = (string)$version->date;
+                    $date      = $this->parseDate((string)$version->date);
 
                     if($iFiles == 0) {
                         // First version
