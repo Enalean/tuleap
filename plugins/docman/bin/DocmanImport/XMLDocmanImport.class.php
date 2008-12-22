@@ -89,6 +89,10 @@ class XMLDocmanImport {
         echo "Connected to $wsdl as $login.".PHP_EOL;
     }
     
+    public function __destruct() {
+        $this->soap->logout($this->hash);
+    }
+    
     /**
      * Loads and checks an XML document
      */
