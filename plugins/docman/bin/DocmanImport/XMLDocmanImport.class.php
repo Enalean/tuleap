@@ -26,7 +26,7 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
 define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
 
-require_once 'dates.php';
+require_once 'DateParser.class.php';
 
 class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
@@ -622,7 +622,7 @@ class XMLDocmanImport {
         if (is_numeric($s)) {
             return $s;
         } else {
-            return parseIso8601Date($s);
+            return DateParser::parseIso8601($s);
         }
     }
 
