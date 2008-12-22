@@ -19,10 +19,7 @@ class HudsonJob {
     protected $hudson_job_url;
     protected $dom_job;
     private $icons_path;
-    
-    protected $projectStyle;
-    protected $name;
-    
+        
     /**
      * Construct an Hudson job from a job URL
      */
