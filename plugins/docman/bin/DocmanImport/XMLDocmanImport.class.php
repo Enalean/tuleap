@@ -693,7 +693,7 @@ class XMLDocmanImport {
                     $label     = (string)$version->label;
                     $changeLog = (string)$version->changelog;
                     $author    = $this->userNodeToUsername($version->author);
-                    $date      = (string)$version->date;
+                    $date      = $this->parseDate((string)$version->date);
 
                     if($iFiles == 0) {
                         // First version
