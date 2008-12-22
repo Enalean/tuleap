@@ -67,7 +67,7 @@ class Docman_XMLExportVisitor {
         $this->appendChild($prop, 'owner', $this->getNormalizedLogin($item->getOwnerId()));
         $this->appendChild($prop, 'status', $this->getNormalizedStatus($item->getStatus()));
         if($item->getObsolescenceDate() != 0) {
-            $this->appendChild($prop, 'obsolescence_date', $item->getObsolescenceDate());
+            $this->appendChild($prop, 'obsolescence_date', date('c', $item->getObsolescenceDate()));
         }
 
         $this->appendItemMetadataNode($prop, $item);
@@ -98,7 +98,13 @@ class Docman_XMLExportVisitor {
             if($metadata->getValue() instanceof ArrayIterator) {
                 $this->getNodeForMetadataValues($metadata->getValue(), $node);
             } else {
-                $node->appendChild($this->doc->createTextNode($metadata->getValue()));
+                $value = $metadata->getValue();
+                
+                if ($value != '' && ($metadata->getType() == PLUGIN_DOCMAN_METADATA_TYPE_DATE)) {
+                    $value = date('c', $value);
+                }
+                
+                $node->appendChild($this->doc->createTextNode($value));
             }
             return $node;
         }

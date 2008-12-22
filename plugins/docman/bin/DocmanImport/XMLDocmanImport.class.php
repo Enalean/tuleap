@@ -323,13 +323,6 @@ class XMLDocmanImport {
                 $metadataDef =  $this->metadataMap[$title];
                 $type = $metadataDef['type'];
                 switch ($type) {
-                    case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                        $value = (string)$property;
-                        $match = preg_match('/^[0-9]*$/', $value);
-                        if (!$match) {
-                            $errorMsg .= "Item '$item_name':\tThe property '$title' set to the value '$value' is a date and must be a timestamp.".PHP_EOL;
-                        }
-                        break;
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                         $values = $property->value;
 
@@ -640,7 +633,7 @@ class XMLDocmanImport {
         $title            = (string) $node->properties->title;
         $description      = (string) $node->properties->description;
         $status           = (string) $node->properties->status;
-        $obsolescenceDate = (string) $node->properties->obsolescence_date;
+        $obsolescenceDate = $this->parseDate((string) $node->properties->obsolescence_date);
         $ordering         = 'end';
         $owner            = $this->userNodeToUsername($node->properties->owner);
         $createDate       = $this->parseDate((string) $node->properties->create_date);
@@ -752,7 +745,13 @@ class XMLDocmanImport {
                 $metadata[] = array('label' => $dstMetadataLabel, 'value' => '100');
             }
         } else {
-            $metadata[] = array('label' => $dstMetadataLabel, 'value' => (string) $property);
+            $value = (string) $property;
+            
+            if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_DATE) {
+                $value = $this->parseDate($value);
+            }
+            
+            $metadata[] = array('label' => $dstMetadataLabel, 'value' => $value);
         }
     }
 

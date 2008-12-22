@@ -340,8 +340,7 @@ class Docman_MetadataValueFactory extends Error {
         case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
             if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $value, $d)) {
                 $value = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
-            }
-            else {
+            } else if (!preg_match('/\d+/', $value)) { // Allow timestamps as supplied value
                 $value = 0;
             }
             break;
