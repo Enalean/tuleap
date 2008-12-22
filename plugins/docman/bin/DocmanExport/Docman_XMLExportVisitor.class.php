@@ -62,8 +62,8 @@ class Docman_XMLExportVisitor {
         
         $this->appendChild($prop, 'title', $item->getTitle());
         $this->appendChild($prop, 'description', $item->getDescription());
-        $this->appendChild($prop, 'create_date', $item->getCreateDate());
-        $this->appendChild($prop, 'update_date', $item->getUpdateDate());
+        $this->appendChild($prop, 'create_date', date('c', $item->getCreateDate()));
+        $this->appendChild($prop, 'update_date', date('c', $item->getUpdateDate()));
         $this->appendChild($prop, 'owner', $this->getNormalizedLogin($item->getOwnerId()));
         $this->appendChild($prop, 'status', $this->getNormalizedStatus($item->getStatus()));
         if($item->getObsolescenceDate() != 0) {
@@ -180,7 +180,7 @@ class Docman_XMLExportVisitor {
         $this->appendChild($vNode, 'author', $this->getNormalizedLogin($version->getAuthorId()));
         $this->appendChild($vNode, 'label', $version->getLabel());
         $this->appendChild($vNode, 'changelog', $version->getChangeLog());
-        $this->appendChild($vNode, 'date', $version->getDate());
+        $this->appendChild($vNode, 'date', date('c', $version->getDate()));
         $this->appendChild($vNode, 'filename', $version->getFileName());
         $this->appendChild($vNode, 'filetype', $version->getFileType());
         $fileName = sprintf('content%05d.bin', $this->fileCounter++);
