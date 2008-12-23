@@ -76,6 +76,13 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     function hasRss() {
         return false;
     }
+    function getRssUrl($owner_id, $owner_type) {
+        if ($this->hasRss()) {
+            return '/widgets/widget.php?owner='.$owner_type.$owner_id.'&amp;action=rss&amp;name['. $this->id .']='. $this->getInstanceId();
+        } else {
+            return false;
+        }
+    }
     function isUnique() {
         return true;
     }

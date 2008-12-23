@@ -740,7 +740,7 @@ class Layout extends Response {
             }
         }
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss"><a href="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=rss&amp;name['. $widget->id .']='. $widget->getInstanceId() .'">rss</a></div>';
+            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">rss</a></div>';
         }
         echo '</div>';
         $style = '';
