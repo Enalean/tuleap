@@ -68,3 +68,7 @@ hr.conversation_separation {
 form#muc_logs_export_form {
 	margin-top: 30px;
 }
+
+.widget-preview-im {
+    background-image:url('../images/widget-preview-im.png');
+}

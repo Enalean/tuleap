@@ -115,36 +115,66 @@ codendi.layout_manager = {
 document.observe('dom:loaded', function() {
     if ($('layout-manager')) {
         codendi.layout_manager.load();
-    }
-    $('save').observe('click', function(evt) {
-        if ($('layout-manager')) {
-            var reg = /^\d+$/
-            var invalid = $('layout-manager').select('.layout-manager-column input[type=text]').find(function (element) {
-                return (!reg.test(element.value)) ? element : false;
-            });
-            if (invalid) {
-                alert(invalid.value+' is not a valid number');
-            } else {
-                var form = $('layout-manager').up('form');
-                if (form) {
-                    $('layout-manager').select('.layout-manager-row').each(function (row) {
-                        form.insert(new Element('input', {
-                                type: 'hidden',
-                                name: 'new_layout[]',
-                                value: row.select('.layout-manager-column input[type=text]').pluck('value').join(',')
-                        }));
-                    });
+        $('save').observe('click', function(evt) {
+            if ($('layout-manager')) {
+                var reg = /^\d+$/
+                var invalid = $('layout-manager').select('.layout-manager-column input[type=text]').find(function (element) {
+                    return (!reg.test(element.value)) ? element : false;
+                });
+                if (invalid) {
+                    alert(invalid.value+' is not a valid number');
+                } else {
+                    var form = $('layout-manager').up('form');
+                    if (form) {
+                        $('layout-manager').select('.layout-manager-row').each(function (row) {
+                            form.insert(new Element('input', {
+                                    type: 'hidden',
+                                    name: 'new_layout[]',
+                                    value: row.select('.layout-manager-column input[type=text]').pluck('value').join(',')
+                            }));
+                        });
+                    }
                 }
             }
+        });
+        $$('.layout-manager-chooser').each(function (row) {
+                row.down('input[type=radio]').observe('change', function() {
+                        $$('.layout-manager-chooser').each(function (row) {
+                                row.removeClassName('layout-manager-chooser_selected');
+                        });
+                        row.addClassName('layout-manager-chooser_selected');
+                });
+        });
+    }
+
+    //Widget categorizer
+    var first = true;
+    $$('.widget-categ-switcher').each(function (a) {
+        var scan_id = a.href.match(/#(widget-categ-\w+)$/);
+        if (scan_id && scan_id[1]) {
+            var id = scan_id[1];
+            var nb_rows = a.up('table').select('tr').size();
+            a.observe('click', function(evt) {
+                //Display widgets of this category
+                $('widget-content-categ').childElements().invoke('hide');
+                $(id).show();
+                a.up('table').select('.widget-categ-switcher').each(function(other_a) {
+                    other_a.up('tr').removeClassName('boxhighlight');
+                });
+                a.up('tr').addClassName('boxhighlight');
+                Event.stop(evt);
+                return false;
+            });
+            //remove corresponding table
+            if (!first) {
+                $(id).hide();
+            } else {
+                first = false;
+                a.up('tr').addClassName('boxhighlight');
+                $('widget-content-categ').addClassName('boxhighlight');
+            }
+            Element.remove($(id).down('tr'));
+            $('widget-content-categ').appendChild(Element.remove($(id)));
         }
     });
-    $$('.layout-manager-chooser').each(function (row) {
-            row.down('input[type=radio]').observe('change', function() {
-                    $$('.layout-manager-chooser').each(function (row) {
-                            row.removeClassName('layout-manager-chooser_selected');
-                    });
-                    row.addClassName('layout-manager-chooser_selected');
-            });
-    });
-
 });

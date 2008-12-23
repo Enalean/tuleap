@@ -245,5 +245,15 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
         }
         return $widgets;
     }
+    
+    function getCategory() {
+        return 'general';
+    }
+    function getDescription() {
+        return '';
+    }
+    function getPreviewCssClass() {
+        return '';
+    }
 }
 ?>

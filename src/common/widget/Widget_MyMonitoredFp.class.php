@@ -100,5 +100,12 @@ class Widget_MyMonitoredFp extends Widget {
         }
         return $html_my_monitored_fp;
     }
+    
+    function getCategory() {
+        return 'frs';
+    }
+    function getDescription() {
+        return 'Lists packages that you are currently monitoring, by project.';
+    }
 }
 ?>

@@ -120,5 +120,8 @@ class Widget_MyProjects extends Widget {
         }
         $rss->display();
     }
+    function getDescription() {
+        return 'Lists the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.';
+    }
 }
 ?>

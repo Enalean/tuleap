@@ -103,5 +103,14 @@ class Widget_MyMonitoredForums extends Widget {
         }
         return $html_my_monitored_forums;
     }
+    
+    function getCategory() {
+        return 'forums';
+    }
+    
+    function getDescription() {
+        return 'Lists forums that you are currently monitoring, by project. <br>
+                To cancel any of the monitored items just click on the trash icon () next to the item label. ';
+    }
 }
 ?>

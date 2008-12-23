@@ -31,5 +31,9 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function canBeUsedByProject(&$project) {
         return $project->usesFile();
     }
+    
+    function getCategory() {
+        return 'frs';
+    }
 }
 ?>

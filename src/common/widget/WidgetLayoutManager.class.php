@@ -274,11 +274,14 @@ class WidgetLayoutManager {
             echo '</table>';
             echo '<input type="submit" id="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         } else {
-            echo '<table cellpadding="2" cellspacing="0">';
-            $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets', $GLOBALS['sys_name']), Widget::getCodeXWidgets($owner_type), $used_widgets);
+            $after = '';
+            echo '<table cellpadding="0" cellspacing="0"><tbody><tr valign="top"><td>';
+            echo '<table cellpadding="2" cellspacing="0"><tbody>';
+            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets', $GLOBALS['sys_name']), Widget::getCodeXWidgets($owner_type), $used_widgets);
             echo '<tr><td>&nbsp;</td><td></td></tr>';
-            $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
-            echo '</table>';
+            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
+            echo '</tbody></table>';
+            echo '</td><td id="widget-content-categ">'. $after .'</td></tr></tbody></table>';
         }
         echo '</form>';
     }
@@ -422,33 +425,88 @@ class WidgetLayoutManager {
     * @param  used_widgets  
     */
     function _displayWidgetsSelectionForm($title, $widgets, $used_widgets) {
+        $additionnal_html = '';
         if (count($widgets)) {
             echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';
+            $categs = $this->getCategories($widgets);
             $widget_rows = array();
-            foreach($widgets as $widget_name) {
-                if ($widget = Widget::getInstance($widget_name)) {
-                    if ($widget->isAvailable()) {
-                        $row = '';
-                        $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
-                        $row .= '<td align="right">';
-                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
-                        } else {
-                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+            if (count($categs)) {
+                foreach($categs as $c => $ws) {
+                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'. $c .'</td>';
+                }
+            } else {
+                foreach($widgets as $widget_name) {
+                    if ($widget = Widget::getInstance($widget_name)) {
+                        if ($widget->isAvailable()) {
+                            $row = '';
+                            $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
+                            $row .= '<td align="right">';
+                            if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+                                $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+                            } else {
+                                $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                            }
+                            $row .= '</td>';
+                            $widget_rows[$widget->getTitle()] = $row;
                         }
-                        $row .= '</td>';
-                        $widget_rows[$widget->getTitle()] = $row;
                     }
                 }
             }
             uksort($widget_rows, 'strnatcasecmp');
             $i = 0;
             foreach($widget_rows as $row) {
-                echo '<tr class="'. util_get_alt_row_color($i++) .'">'. $row .'</tr>';
+                echo '<tr class="'. (count($categs) ? '' : util_get_alt_row_color($i++)) .'">'. $row .'</tr>';
+            }
+            if (count($categs)) {
+                foreach($categs as $c => $ws) {
+                    $i = 0;
+                    $widget_rows = array();
+                    foreach($ws as $widget_name => $widget) {
+                        $row = '';
+                        $row .= '<table width="100%"><tr valign="top"><td rowspan="2" class="widget-preview '. $widget->getPreviewCssClass() .'"></td><td>';
+                        $row .= '<strong>'. $widget->getTitle()  .'</strong>';
+                        $row .= '<p>'. $widget->getDescription() .'</p>';
+                        $row .= $widget->getInstallPreferences();
+                        $row .= '</td></tr><tr valign="bottom"><td align="right">';
+                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+                        } else {
+                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                        }
+                        $row .= '</td></tr></table>';
+                        $widget_rows[$widget->getTitle()] = $row;
+                    }
+                    uksort($widget_rows, 'strnatcasecmp');
+                    $additionnal_html .= '<table cellpadding="20" cellspacing="0" id="widget-categ-'. $c .'">';
+                    $additionnal_html .= '<tr class="boxtitle"><td colspan="2">'. $c .'</td></tr>';
+                    foreach($widget_rows as $row) {
+                        $additionnal_html .= '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $row .'</td></tr>';
+                    }
+                    $additionnal_html .= '</table>';
+                }
             }
         }
+        return $additionnal_html;
     }
-    
+    function getCategories($widgets) {
+        $categ = array();
+        foreach($widgets as $widget_name) {
+            if ($widget = Widget::getInstance($widget_name)) {
+                if ($widget->isAvailable()) {
+                    $cs = explode(',', $widget->getCategory());
+                    foreach($cs as $c) {
+                        if ($c = trim($c)) {
+                            if (!isset($categ[$c])) {
+                                $categ[$c] = array();
+                            }
+                            $categ[$c][$widget_name] = $widget;
+                        }
+                    }
+                }
+            }
+        }
+        return $categ;
+    }
     /**
     * addWidget
     *

@@ -1440,7 +1440,7 @@ class Layout extends Response {
             $hp =& CodeX_HTMLPurifier::instance();
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
-                            'label'       => $hp->purify($service_data['label']),
+                            'label'       => $short_name == 'summary' ? $hp->purify($project->getPublicName()).' &raquo;' : $hp->purify($service_data['label']),
                             'enabled'     => $enabled,
                             'description' => $hp->purify($service_data['description']));
         }

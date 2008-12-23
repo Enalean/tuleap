@@ -322,12 +322,36 @@ echo $this->outerTabs($params);
                                                     ,'selected'=>$selected)));
 	}
         
-	if ($GLOBALS['sys_use_trove'] != 0) {
-        $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'softwaremap');
-        $sthSelected = ($sthSelected || $selected);
-        $menuTree->addChild(new TreeNode(array('link'=>'/softwaremap/'
-                                                ,'title'=>$Language->getText('menu','projectree')
-                                                ,'selected'=>$selected)));
+	if ($GLOBALS['sys_use_trove'] != 0 || (isset($params['group']) && $params['group'])) {
+        $selected = false;
+        if (isset($params['group']) && $params['group']) {
+            // get group info using the common result set
+			$project =& group_get_object($params['group']);
+			if ($project && is_object($project)) {
+				if ($project->isError()) {
+                    die('is error');
+				} else {
+                    $sthSelected = true;
+
+                    $projTree = $this->project_tabs($params['toptab'],$params['group']);
+
+                    $projTree->setData(array('link'=>'/softwaremap/'
+                                             ,'title'=>$Language->getText('menu','projectree')
+                                             ,'selected'=>true));
+                                             //'link'=>'/projects/'.$project->getUnixName().'/'
+                                             //,'title'=>$project->getPublicName()
+                                             //,'selected' => true));
+                    
+                    $menuTree->addChild($projTree);
+				}
+			}
+        } else {
+            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'softwaremap');
+            $sthSelected = ($sthSelected || $selected);
+            $menuTree->addChild(new TreeNode(array('link'=>'/softwaremap/'
+                                                    ,'title'=>$Language->getText('menu','projectree')
+                                                    ,'selected'=>$selected)));
+        }
 	}
 	if ($GLOBALS['sys_use_snippet'] != 0) {
         $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
@@ -345,7 +369,7 @@ echo $this->outerTabs($params);
 		}
 
 		if (user_ismember(1,'A')) {
-            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/admin/');
+            $selected = strpos(getStringFromServer('REQUEST_URI'),'/admin/') === 0;
             $sthSelected = ($sthSelected || $selected);
             $menuTree->addChild(new TreeNode(array('link'=>'/admin/'
                                                    ,'title'=>$Language->getText('menu','admin')
@@ -357,27 +381,7 @@ echo $this->outerTabs($params);
         $menuTree->addChild(new TreeNode(array('link'=>'/site/'
                                                ,'title'=>$Language->getText('include_layout','Help')
                                                ,'selected'=>$selected)));
-
-
-		if(isset($params['group']) && $params['group']) {
-			// get group info using the common result set
-			$project =& group_get_object($params['group']);
-			if ($project && is_object($project)) {
-				if ($project->isError()) {
-                    die('is error');
-				} else {
-                    $sthSelected = true;
-
-                    $projTree = $this->project_tabs($params['toptab'],$params['group']);
-
-                    $projTree->setData(array('link'=>'/projects/'.$project->getUnixName().'/'
-                                             ,'title'=>$project->getPublicName()
-                                             ,'selected' => true));
-                    
-                    $menuTree->addChild($projTree);
-				}
-			}
-		} 
+        
         
         // Set selected value for 'home' link (this is the selected tab 
         // if no other was previously selected)

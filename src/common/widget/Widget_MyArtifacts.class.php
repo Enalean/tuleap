@@ -251,5 +251,12 @@ class Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
         
     }
+    
+    function getCategory() {
+        return 'trackers';
+    }
+    function getDescription() {
+        return 'Lists artifacts you have submitted or assigned to you, by project. ';
+    }
 }
 ?>

@@ -57,6 +57,10 @@ class Widget_ProjectLatestCommits extends Widget {
     function hasRss() {
         return false;
     }
+    
+    function getCategory() {
+        return 'scm';
+    }
     /*
     Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {

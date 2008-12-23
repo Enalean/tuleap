@@ -340,6 +340,17 @@ table.release tr td img {
     font-size:0.8em;
     text-decoration:none;
 }
+#widget-content-categ {
+    padding:10px;
+}
+.widget-preview {
+    background:transparent url('../images/widget-preview.png') top left no-repeat;
+    width:128px;
+    height:128px;
+}
+.widget-preview-bookmarks {
+    background-image:url('../images/widget-preview-favorites.png');
+}
 /* }}} */
 
 /* {{{ lists & users autocomplete */

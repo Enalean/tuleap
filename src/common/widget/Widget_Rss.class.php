@@ -139,5 +139,9 @@ require_once('Widget.class.php');
     function isUnique() {
         return false;
     }
+    
+    function getCategory() {
+        return '';
+    }
 }
 ?>
