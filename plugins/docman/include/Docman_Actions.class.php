@@ -438,7 +438,7 @@ class Docman_Actions extends Actions {
                 $_owner_id = $this->_checkOwnerChange($data['owner'], $user);
                 if($_owner_id != $item->getOwnerId()) {
                     $ownerChanged = true;
-                    $um = UserManager::instance();
+                    $um = $this->_getUserManagerInstance();
                     $_oldowner = $um->getUserById($item->getOwnerId())->getName();
                     $_newowner = $um->getUserById($_owner_id)->getName();
                     $data['user_id'] = $_owner_id;
@@ -620,10 +620,19 @@ class Docman_Actions extends Actions {
     var $permissions_manager;
     function &_getPermissionsManagerInstance(){
         if(!$this->permissions_manager){
-        $this->permissions_manager =& PermissionsManager::instance(); 
+            $this->permissions_manager =& PermissionsManager::instance(); 
         }
         return $this->permissions_manager;
     }
+    
+    protected $userManager;
+    function _getUserManagerInstance(){
+        if(!$this->userManager){
+            $this->userManager = UserManager::instance(); 
+        }
+        return $this->userManager;
+    }
+    
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
