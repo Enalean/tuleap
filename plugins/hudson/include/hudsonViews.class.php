@@ -54,22 +54,79 @@ class hudsonViews extends Views {
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
         
-        // Do we display the table with other jobs?
-        /*$this->_display_jobs_table($group_id);       
-        if ($user->isMember($request->get('group_id'), 'A')) {
-            $this->_display_add_job_form($group_id);
-        }*/
-        
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
             $this->_display_iframe($row['job_url']);
-        } else {var_dump($dar);
+        } else {
             $this->_display_iframe();
         }
                 
         
+    }
+    
+    function last_build() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->searchByJobID($job_id);
+        if ($dar->valid()) {
+            $row = $dar->current();
+            $this->_display_iframe($row['job_url'].'/lastBuild/');
+        } else {
+            $this->_display_iframe();
+        }
+    }
+    
+    function build_number() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $build_id = $request->get('build_id');
+
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->searchByJobID($job_id);
+        if ($dar->valid()) {
+            $row = $dar->current();
+            $this->_display_iframe($row['job_url'].'/'.$build_id.'/');
+        } else {
+            $this->_display_iframe();
+        }
+    }
+    
+    function last_test_result() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $user = UserManager::instance()->getCurrentUser();
+        
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->searchByJobID($job_id);
+        if ($dar->valid()) {
+            $row = $dar->current();
+            $this->_display_iframe($row['job_url'].'/lastBuild/testReport/');
+        } else {var_dump($dar);
+            $this->_display_iframe();
+        }
+    }
+    
+    function test_trend() {
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $job_id = $request->get('job_id');
+        $user = UserManager::instance()->getCurrentUser();
+        
+        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $dar = $job_dao->searchByJobID($job_id);
+        if ($dar->valid()) {
+            $row = $dar->current();
+            $this->_display_iframe($row['job_url'].'/test/?width=800&height=600&failureOnly=false');
+        } else {var_dump($dar);
+            $this->_display_iframe();
+        }
     }
     
     function editJob() {

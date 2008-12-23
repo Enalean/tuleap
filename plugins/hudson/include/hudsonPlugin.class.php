@@ -73,12 +73,39 @@ class hudsonPlugin extends Plugin {
             require_once('hudson_Widget_MyMonitoredJobs.class.php');
             $params['instance'] = new hudson_Widget_MyMonitoredJobs($this);
         }
+        if ($params['widget'] == 'projecthudsonjobsoverview') {
+            require_once('hudson_Widget_ProjectJobsOverview.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobsOverview($this);
+        }
+        if ($params['widget'] == 'projecthudsonjoblastbuilds') {
+            require_once('hudson_Widget_ProjectJobLastBuilds.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobLastBuilds($this);
+        }
+        if ($params['widget'] == 'projecthudsonjobtestresults') {
+            require_once('hudson_Widget_ProjectJobTestResults.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobTestResults($this);
+        }
+        if ($params['widget'] == 'projecthudsonjobtesttrend') {
+            require_once('hudson_Widget_ProjectJobTestTrend.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobTestTrend($this);
+        }
+        if ($params['widget'] == 'projecthudsonjobbuildhistory') {
+            require_once('hudson_Widget_ProjectJobBuildHistory.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobBuildHistory($this);
+        }
     }
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         $lm = new WidgetLayoutManager();
         if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
             $params['codex_widgets'][] = 'myhudsonjobs';
+        }
+        if ($params['owner_type'] == $lm->OWNER_TYPE_GROUP) {
+            $params['codex_widgets'][] = 'projecthudsonjobsoverview';
+            $params['codex_widgets'][] = 'projecthudsonjoblastbuilds';
+            $params['codex_widgets'][] = 'projecthudsonjobtestresults';
+            $params['codex_widgets'][] = 'projecthudsonjobtesttrend';
+            $params['codex_widgets'][] = 'projecthudsonjobbuildhistory';
         }
     }
         

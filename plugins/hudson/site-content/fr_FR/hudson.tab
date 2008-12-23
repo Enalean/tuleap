@@ -12,6 +12,10 @@ plugin_hudson	header_table_lastfailure	Dernier échec
 plugin_hudson	header_table_rss	RSS
 plugin_hudson	header_table_actions	Actions
 plugin_hudson	build	build
+plugin_hudson	last_build	Dernier Build :
+plugin_hudson	last_build_success	Dernier succès :
+plugin_hudson	last_build_failure	Dernier échec :
+plugin_hudson	weather_report	Météo :
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
@@ -50,3 +54,13 @@ plugin_hudson	global_status_red	Un projet ou plus en échec ou en attente
 plugin_hudson	my_jobs	Mes projets Hudson
 plugin_hudson	monitored_jobs	Projets suivis :
 plugin_hudson	use_global_status	Utiliser le status global :
+plugin_hudson	project_jobs	Projets Hudson
+plugin_hudson	project_job_details	Projet Hudson : $1
+plugin_hudson	project_job_lastbuilds	Derniers builds $1
+plugin_hudson	project_job_testresults_widget_title	Résultats des tests $1 ($2 / $3)
+plugin_hudson	project_job_testresults	Resultats des tests
+plugin_hudson	pass_legend	Passe ($1)
+plugin_hudson	fail_legend	Echoue ($1)
+plugin_hudson	skip_legend	Ignore ($1)
+plugin_hudson	project_job_testtrend	Tendance des résultats des tests $1
+plugin_hudson	project_job_buildhistory	Historique des builds $1

@@ -1,4 +1,4 @@
-plugin_hudson	descriptor_description	Continuous Intégration with Hudson
+plugin_hudson	descriptor_description	Continuous Integration with Hudson
 plugin_hudson	descriptor_name	Continuous Integration
 
 plugin_hudson	title	Continuous Integration
@@ -12,6 +12,10 @@ plugin_hudson	header_table_lastfailure	Last Failure
 plugin_hudson	header_table_rss	RSS
 plugin_hudson	header_table_actions	Actions
 plugin_hudson	build	build
+plugin_hudson	last_build	Last Build:
+plugin_hudson	last_build_success	Last Success:
+plugin_hudson	last_build_failure	Last Failure:
+plugin_hudson	weather_report	Weather Report:
 
 plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
@@ -50,3 +54,13 @@ plugin_hudson	global_status_red	One or more failure or pending job
 plugin_hudson	my_jobs	My Hudson Jobs
 plugin_hudson	monitored_jobs	Monitored jobs:
 plugin_hudson	use_global_status	Use global status:
+plugin_hudson	project_jobs	Hudson Jobs
+plugin_hudson	project_job_details	$1 Hudson Job
+plugin_hudson	project_job_lastbuilds	$1 Last Builds
+plugin_hudson	project_job_testresults_widget_title	$1 Test Results ($2 / $3)
+plugin_hudson	project_job_testresults	Test Results
+plugin_hudson	pass_legend	Pass ($1)
+plugin_hudson	fail_legend	Fail ($1)
+plugin_hudson	skip_legend	Skip ($1)
+plugin_hudson	project_job_testtrend	$1 Test Result Trend
+plugin_hudson	project_job_buildhistory	$1 Builds History
