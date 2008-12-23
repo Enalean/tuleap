@@ -108,7 +108,7 @@ class hudsonViews extends Views {
         if ($dar->valid()) {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/lastBuild/testReport/');
-        } else {var_dump($dar);
+        } else {
             $this->_display_iframe();
         }
     }
@@ -124,7 +124,7 @@ class hudsonViews extends Views {
         if ($dar->valid()) {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/test/?width=800&height=600&failureOnly=false');
-        } else {var_dump($dar);
+        } else {
             $this->_display_iframe();
         }
     }
