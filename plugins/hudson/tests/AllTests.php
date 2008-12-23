@@ -14,6 +14,7 @@ class HudsonGroupTest extends GroupTest {
         $this->GroupTest($name);
         
         $this->addTestFile(dirname(__FILE__).'/HudsonJobTest.php');
+        $this->addTestFile(dirname(__FILE__).'/HudsonTestResultTest.php');
 
     }
 }

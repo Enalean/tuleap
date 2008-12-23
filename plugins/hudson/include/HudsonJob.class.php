@@ -166,6 +166,14 @@ class HudsonJob {
     function isBuildable() {
         return ($this->dom_job->buildable == "true");
     }
+    
+    function getLastBuildNumber() {
+        return $this->dom_job->lastBuild->number;
+    }
+    function getLastBuildUrl() {
+        return $this->dom_job->lastBuild->url;
+    }
+    
     function getLastSuccessfulBuildNumber() {
         return $this->dom_job->lastSuccessfulBuild->number;
     }
@@ -178,6 +186,49 @@ class HudsonJob {
     }
     function getLastFailedBuildUrl() {
         return $this->dom_job->lastFailedBuild->url;
+    }
+    
+    function getHealthScores() {
+        $scores = array();
+        foreach ($this->dom_job->healthReport as $health_report) {
+            $scores[] = $health_report->score;
+        }
+        return $scores;
+    }
+    function getHealthDescriptions() {
+        $descs = array();
+        foreach ($this->dom_job->healthReport as $health_report) {
+            $scores[] = $health_report->description;
+        }
+        return $descs;
+    }
+    function getHealthAverageScore() {
+        $arr = $this->getHealthScores();
+        $sum = 0;
+        foreach ($arr as $score) {
+            $sum += (int)$score;
+        }
+        $num = sizeof($arr);
+        if ($num != 0) {
+            return floor($sum/$num);
+        } else {
+            return null;
+        }
+    }
+    
+    function getWeatherReportIcon() {
+        $score = $this->getHealthAverageScore();
+        if ($score >= 80) {
+            return $this->getIconsPath()."health_80_plus.gif";
+        } elseif ($score >= 60) {
+            return $this->getIconsPath()."health_60_to_79.gif";
+        } elseif ($score >= 40) {
+            return $this->getIconsPath()."health_40_to_59.gif";
+        } elseif ($score >= 20) {
+            return $this->getIconsPath()."health_20_to_39.gif";
+        } else {
+            return $this->getIconsPath()."health_00_to_19.gif";
+        }
     }
     
 }

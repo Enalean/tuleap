@@ -140,9 +140,14 @@ XML;
         $this->assertEqual($j->getColor(), "yellow");
         $this->assertEqual($j->getStatusIcon(), "status_yellow.png");
         
+        $this->assertEqual($j->getLastBuildNumber(), "60");
         $this->assertEqual($j->getLastSuccessfulBuildNumber(), "60");
         $this->assertEqual($j->getLastFailedBuildNumber(), "30");
         $this->assertTrue($j->isBuildable());
+        
+        $this->assertEqual($j->getHealthScores(), array('79', '98'));
+        $this->assertEqual($j->getHealthAverageScore(), '88');
+        $this->assertEqual($j->getWeatherReportIcon(), "health_80_plus.gif");
         
     }
     
@@ -201,9 +206,14 @@ XML;
         $this->assertEqual($j->getColor(), "red");
         $this->assertEqual($j->getStatusIcon(), "status_red.png");
         
+        $this->assertEqual($j->getLastBuildNumber(), "1");
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertEqual($j->getLastFailedBuildNumber(), "1");
         $this->assertTrue($j->isBuildable());
+        
+        $this->assertEqual($j->getHealthScores(), array('0'));
+        $this->assertEqual($j->getHealthAverageScore(), '0');
+        $this->assertEqual($j->getWeatherReportIcon(), "health_00_to_19.gif");
         
     }
     
@@ -239,9 +249,13 @@ XML;
         $this->assertEqual($j->getColor(), "grey");
         $this->assertEqual($j->getStatusIcon(), "status_grey.png");
         
+        $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
         $this->assertFalse($j->isBuildable());
+        
+        $this->assertEqual($j->getHealthScores(), array());
+        $this->assertEqual($j->getHealthAverageScore(), '0');
         
     }
     
@@ -277,9 +291,13 @@ XML;
         $this->assertEqual($j->getColor(), "grey");
         $this->assertEqual($j->getStatusIcon(), "status_grey.png");
         
+        $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
         $this->assertTrue($j->isBuildable());
+        
+        $this->assertEqual($j->getHealthScores(), array());
+        $this->assertEqual($j->getHealthAverageScore(), '0');
         
     }
     
@@ -315,9 +333,13 @@ XML;
         $this->assertEqual($j->getColor(), "grey");
         $this->assertEqual($j->getStatusIcon(), "status_grey.png");
         
+        $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
         $this->assertTrue($j->isBuildable());
+        
+        $this->assertEqual($j->getHealthScores(), array());
+        $this->assertEqual($j->getHealthAverageScore(), '0');
         
     }
     
