@@ -59,6 +59,7 @@ plugin_hudson	project_job_details	$1 Hudson Job
 plugin_hudson	project_job_lastbuilds	$1 Last Builds
 plugin_hudson	project_job_testresults_widget_title	$1 Test Results ($2 / $3)
 plugin_hudson	project_job_testresults	Test Results
+plugin_hudson	project_job_lastartifacts	$1 Last Artifacts
 plugin_hudson	pass_legend	Pass ($1)
 plugin_hudson	fail_legend	Fail ($1)
 plugin_hudson	skip_legend	Skip ($1)

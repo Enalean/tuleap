@@ -93,6 +93,10 @@ class hudsonPlugin extends Plugin {
             require_once('hudson_Widget_ProjectJobBuildHistory.class.php');
             $params['instance'] = new hudson_Widget_ProjectJobBuildHistory($this);
         }
+        if ($params['widget'] == 'projecthudsonjoblastartifacts') {
+            require_once('hudson_Widget_ProjectJobLastArtifacts.class.php');
+            $params['instance'] = new hudson_Widget_ProjectJobLastArtifacts($this);
+        }
     }
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
@@ -106,6 +110,7 @@ class hudsonPlugin extends Plugin {
             $params['codex_widgets'][] = 'projecthudsonjobtestresults';
             $params['codex_widgets'][] = 'projecthudsonjobtesttrend';
             $params['codex_widgets'][] = 'projecthudsonjobbuildhistory';
+            $params['codex_widgets'][] = 'projecthudsonjoblastartifacts';
         }
     }
         
