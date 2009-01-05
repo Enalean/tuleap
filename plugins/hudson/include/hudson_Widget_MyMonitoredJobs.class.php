@@ -9,13 +9,13 @@
  * hudson_Widget_MyMonitoredJobs 
  */
 
-require_once('common/widget/Widget.class.php');
+require_once('HudsonWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_MyMonitoredJobs extends Widget {
+class hudson_Widget_MyMonitoredJobs extends HudsonWidget {
     
     var $plugin;
     
@@ -194,10 +194,6 @@ class hudson_Widget_MyMonitoredJobs extends Widget {
             $dar->next();
         }
         return $monitored_jobs;
-    }
-    
-    function getCategory() {
-        return 'ci';
     }
     
 }

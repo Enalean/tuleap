@@ -9,13 +9,13 @@
  * hudson_Widget_ProjectJobsOverview 
  */
 
-require_once('common/widget/Widget.class.php');
+require_once('HudsonWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_ProjectJobsOverview extends Widget {
+class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
     
     var $plugin;
     var $group_id;
@@ -198,11 +198,7 @@ class hudson_Widget_ProjectJobsOverview extends Widget {
         }
         return $monitored_jobs;
     }
-    
-    function getCategory() {
-        return 'ci';
-    }
-    
+       
 }
 
 ?>
