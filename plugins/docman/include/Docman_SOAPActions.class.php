@@ -58,8 +58,7 @@ class Docman_SOAPActions extends Docman_Actions {
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
             $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber(), $request->get('chunk_offset'), $request->get('chunk_size'));
             if (!$path) {
-                //TODO i18n
-                $this->_controler->feedback->log('error', "Error while storing file chunk ");
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
             }
         }
     }
@@ -74,16 +73,20 @@ class Docman_SOAPActions extends Docman_Actions {
             $item_id = $request->get('item_id');
             $item_factory = $this->_getItemFactory();
             $item = $item_factory->getItemFromDb($item_id);
-            $itemType = $item_factory->getItemTypeForItem($item);
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                $fs = $this->_getFileStorage();
-                $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
-                $this->_controler->_viewParams['action_result'] = $md5sum;
-                if (!$md5sum) {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+            if ($item !== null) {
+                $itemType = $item_factory->getItemTypeForItem($item);
+                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                    $fs = $this->_getFileStorage();
+                    $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
+                    $this->_controler->_viewParams['action_result'] = $md5sum;
+                    if (!$md5sum) {
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
                 }
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
             }
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));

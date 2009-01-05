@@ -26,6 +26,8 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
 define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
 
+require_once 'DateParser.class.php';
+
 class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
@@ -85,6 +87,10 @@ class XMLDocmanImport {
         }
 
         echo "Connected to $wsdl as $login.".PHP_EOL;
+    }
+    
+    public function __destruct() {
+        $this->soap->logout($this->hash);
     }
     
     /**
@@ -321,13 +327,6 @@ class XMLDocmanImport {
                 $metadataDef =  $this->metadataMap[$title];
                 $type = $metadataDef['type'];
                 switch ($type) {
-                    case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                        $value = (string)$property;
-                        $match = preg_match('/^[0-9]*$/', $value);
-                        if (!$match) {
-                            $errorMsg .= "Item '$item_name':\tThe property '$title' set to the value '$value' is a date and must be a timestamp.".PHP_EOL;
-                        }
-                        break;
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                         $values = $property->value;
 
@@ -614,6 +613,18 @@ class XMLDocmanImport {
             return $this->userMap[self::userNodeToIdentifier($userNode)];
         }
     }
+    
+    /**
+     * Parse a date given as an ISO8601 date or a timestamp
+     * @return The corresponding timestamp
+     */
+    private function parseDate($s) {
+        if (is_numeric($s)) {
+            return $s;
+        } else {
+            return DateParser::parseIso8601($s);
+        }
+    }
 
     /**
      * Processes the given node and its childs
@@ -626,11 +637,11 @@ class XMLDocmanImport {
         $title            = (string) $node->properties->title;
         $description      = (string) $node->properties->description;
         $status           = (string) $node->properties->status;
-        $obsolescenceDate = (string) $node->properties->obsolescence_date;
+        $obsolescenceDate = $this->parseDate((string) $node->properties->obsolescence_date);
         $ordering         = 'end';
         $owner            = $this->userNodeToUsername($node->properties->owner);
-        $createDate       = (string) $node->properties->create_date;
-        $updateDate       = (string) $node->properties->update_date;
+        $createDate       = $this->parseDate((string) $node->properties->create_date);
+        $updateDate       = $this->parseDate((string) $node->properties->update_date);
 
         // Dynamic metadata
         $metadata = array();
@@ -656,7 +667,7 @@ class XMLDocmanImport {
                     $fileName  = (string)$version->filename;
                     $fileType  = (string)$version->filetype;
                     $author    = $this->userNodeToUsername($version->author);
-                    $date      = (string)$version->date;
+                    $date      = $this->parseDate((string)$version->date);
 
                     if($iFiles == 0) {
                         // First version
@@ -679,7 +690,7 @@ class XMLDocmanImport {
                     $label     = (string)$version->label;
                     $changeLog = (string)$version->changelog;
                     $author    = $this->userNodeToUsername($version->author);
-                    $date      = (string)$version->date;
+                    $date      = $this->parseDate((string)$version->date);
 
                     if($iFiles == 0) {
                         // First version
@@ -738,7 +749,13 @@ class XMLDocmanImport {
                 $metadata[] = array('label' => $dstMetadataLabel, 'value' => '100');
             }
         } else {
-            $metadata[] = array('label' => $dstMetadataLabel, 'value' => (string) $property);
+            $value = (string) $property;
+            
+            if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_DATE) {
+                $value = $this->parseDate($value);
+            }
+            
+            $metadata[] = array('label' => $dstMetadataLabel, 'value' => $value);
         }
     }
 
