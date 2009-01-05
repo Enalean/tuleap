@@ -278,6 +278,22 @@ class XMLDocmanImport {
                 $msg = "Can't find the users referenced by the following identifiers: ".implode(', ', $absentUsers);
                 if ($this->force) {
                     $this->warn($msg);
+                    
+                    // Record info loss on items: owners
+                    foreach ($absentUsers as $absentUser) {
+                        $nodes = $this->doc->xpath("//item[properties/owner=\"$absentUser\" or concat(properties/owner/@type, \":\", properties/owner)=\"$absentUser\"]");
+                        foreach ($nodes as $node) {
+                            $this->addImportMessageOnItem($node, "the owner was identified as \"$absentUser\"");
+                        }
+                    }
+                    
+                    // Record info loss on versions: authors
+                    foreach ($absentUsers as $absentUser) {
+                        $nodes = $this->doc->xpath("//version[author=\"$absentUser\" or concat(author/@type, \":\", author)=\"$absentUser\"]");
+                        foreach ($nodes as $node) {
+                            $this->addImportMessageOnVersion($node, "the author was identified as \"$absentUser\"");
+                        }
+                    }
                 } else {
                     $this->exitError($msg);                    
                 }
@@ -285,6 +301,30 @@ class XMLDocmanImport {
             
             echo "Done.".PHP_EOL;
         }
+    }
+    
+    /**
+     * Appends the given message to the description node of the item
+     */
+    private function addImportMessageOnItem($item, $message) {
+        $appendText = "Import information: $message";
+        $text = (string)$item->properties->description;
+        if ($text != '') {
+             $text .= "\n";
+        }
+        $item->properties->description = $text.$appendText;
+    }
+    
+    /**
+     * Appends the given message to the changelog node of the item version
+     */
+    private function addImportMessageOnVersion($version, $message) {
+        $appendText = "Import information: $message";
+        $text = (string)$version->changelog;
+        if ($text != '') {
+             $text .= "\n";
+        }
+        $version->changelog = $text.$appendText;
     }
 
     private function printSoapResponseAndThrow(SoapFault $e) {
