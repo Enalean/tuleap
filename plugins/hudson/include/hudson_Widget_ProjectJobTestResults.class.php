@@ -157,6 +157,10 @@ class hudson_Widget_ProjectJobTestResults extends Widget {
         return $monitored_jobs;
     }
     
+    function getCategory() {
+        return 'ci';
+    }
+    
 }
 
 ?>

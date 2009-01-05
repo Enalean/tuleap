@@ -199,6 +199,10 @@ class hudson_Widget_ProjectJobsOverview extends Widget {
         return $monitored_jobs;
     }
     
+    function getCategory() {
+        return 'ci';
+    }
+    
 }
 
 ?>

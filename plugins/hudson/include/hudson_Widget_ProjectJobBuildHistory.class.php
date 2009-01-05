@@ -154,6 +154,10 @@ class hudson_Widget_ProjectJobBuildHistory extends Widget {
         return $monitored_jobs;
     }
     
+    function getCategory() {
+        return 'ci';
+    }
+    
 }
 
 ?>
