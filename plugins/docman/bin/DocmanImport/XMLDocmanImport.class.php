@@ -314,7 +314,7 @@ class XMLDocmanImport {
         if ($text != '') {
              $text .= "\n";
         }
-        $item->properties->description = $text.$appendText;
+        $item->properties->description =  preg_replace('/&(?!\w+;)/', '&amp;', $text.$appendText);
     }
     
     /**
@@ -326,7 +326,7 @@ class XMLDocmanImport {
         if ($text != '') {
              $text .= "\n";
         }
-        $version->changelog = $text.$appendText;
+        $version->changelog = preg_replace('/&(?!\w+;)/', '&amp;', $text.$appendText);
     }
 
     protected function printSoapResponseAndThrow(SoapFault $e) {
