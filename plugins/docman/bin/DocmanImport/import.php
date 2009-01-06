@@ -80,7 +80,7 @@ if ($wsdl === null || $projectId === null || $folderId === null || $archive === 
     usage();
     die;
 }
-
+$login = 'cplantie2'; $password='aaaaaa';
 // Ask for login and password
 if (!isset($login)) {
     echo "Login: ";

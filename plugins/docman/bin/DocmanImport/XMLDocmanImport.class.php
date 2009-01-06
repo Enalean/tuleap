@@ -281,7 +281,7 @@ class XMLDocmanImport {
                 if ($this->force) {
                     $this->warn($msg);
                     
-                    // Record info loss on items: owners
+                    // Record item owners loss
                     foreach ($absentUsers as $absentUser) {
                         $nodes = $this->doc->xpath("//item[properties/owner=\"$absentUser\" or concat(properties/owner/@type, \":\", properties/owner)=\"$absentUser\"]");
                         foreach ($nodes as $node) {
@@ -289,11 +289,22 @@ class XMLDocmanImport {
                         }
                     }
                     
-                    // Record info loss on versions: authors
-                    foreach ($absentUsers as $absentUser) {
-                        $nodes = $this->doc->xpath("//version[author=\"$absentUser\" or concat(author/@type, \":\", author)=\"$absentUser\"]");
-                        foreach ($nodes as $node) {
-                            $this->addImportMessageOnVersion($node, "previous author ($absentUser) not found");
+                    // Record version authors loss 
+                    $versionedItems = $this->doc->xpath("//item[versions/version]");
+                    foreach ($versionedItems as $versionedItem) {
+                        $versionNumber = 0;
+                        foreach ($versionedItem->xpath('versions/version') as $version) {
+                            if ($version->author['type'] != '') {
+                                $author = $version->author['type'].':'.$version->author;
+                            } else {
+                                $author = $version->author;
+                            }
+                            
+                            if (in_array($author, $absentUsers)) {
+                                $this->addImportMessageOnItem($versionedItem, "version $versionNumber previous author ($author) not found");
+                            }
+                            
+                            $versionNumber++;
                         }
                     }
                 } else {
@@ -325,19 +336,19 @@ class XMLDocmanImport {
     /**
      * Appends the given message to the changelog node of the item version
      */
-    private function addImportMessageOnVersion($version, $message) {
-        $appendText = "Import information: $message";
-        
-        if (isset($version->changelog)) {
-            if ((string)$version->changelog != '') {
-                $appendText = "\n$appendText";
-            }
-        } else {
-            $version->changelog = '';
-        }
-        
-        $this->appendTextToNode($version->changelog, $appendText);
-    }
+//    private function addImportMessageOnVersion($version, $message) {
+//        $appendText = "Import information: $message";
+//        
+//        if (isset($version->changelog)) {
+//            if ((string)$version->changelog != '') {
+//                $appendText = "\n$appendText";
+//            }
+//        } else {
+//            $version->changelog = '';
+//        }
+//        
+//        $this->appendTextToNode($version->changelog, $appendText);
+//    }
     
     /**
      * Appends a text to a node
