@@ -90,17 +90,15 @@ class Docman_SOAPController extends Docman_Controller {
                 }
                 break;
             case 'getFileMD5sum':
+            case 'getMetadataListOfValues':
+            case 'getProjectMetadata':
+            case 'getTreeInfo':
                 if (!$this->userCanRead($item->getId())) {
                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
                 } else {
                     $this->action = $view;
                     $this->_setView('');
                 }
-                break;
-            case 'getMetadataListOfValues':
-            case 'getProjectMetadata':
-                $this->action = $view;
-                $this->_setView('');
                 break;
             default: parent::_dispatch($view, $item, $root, $get_show_view);
         }
