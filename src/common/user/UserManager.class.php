@@ -39,17 +39,21 @@ class UserManager {
      */
     function &getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
-            if ($user_id == 0) {
-                $this->_users[$user_id] =& new User(0);
-            } else {
-                $dar =& $this->_userdao->searchByUserId($user_id);
-                if ($row = $dar->getRow()) {
-                    $u =& $this->_getUserInstanceFromRow($row);
-                    $this->_users[$u->getId()] =& $u;
-                    $this->_userid_bynames[$u->getUserName()] = $user_id;
+            if (is_numeric($user_id)) {
+                if ($user_id == 0) {
+                    $this->_users[$user_id] =& new User(0);
                 } else {
-                    $this->_users[$user_id] = null;
+                    $dar =& $this->_userdao->searchByUserId($user_id);
+                    if ($row = $dar->getRow()) {
+                        $u =& $this->_getUserInstanceFromRow($row);
+                        $this->_users[$u->getId()] =& $u;
+                        $this->_userid_bynames[$u->getUserName()] = $user_id;
+                    } else {
+                        $this->_users[$user_id] = null;
+                    }
                 }
+            } else {
+                $this->_users[$user_id] = null;
             }
         }
         return $this->_users[$user_id];

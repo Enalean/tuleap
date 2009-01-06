@@ -57,8 +57,8 @@ function checkUsersExistence($sessionKey, $users) {
         
         $existingUsers = array();
         
+        $um = UserManager::instance();
         foreach ($users as $userIdentifier) {
-            $um = UserManager::instance();
             try {
                 $userObj = $um->getUserByIdentifier($userIdentifier);
         	    if ($userObj !== null) {
