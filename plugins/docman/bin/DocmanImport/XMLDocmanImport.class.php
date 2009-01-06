@@ -285,7 +285,7 @@ class XMLDocmanImport {
                     foreach ($absentUsers as $absentUser) {
                         $nodes = $this->doc->xpath("//item[properties/owner=\"$absentUser\" or concat(properties/owner/@type, \":\", properties/owner)=\"$absentUser\"]");
                         foreach ($nodes as $node) {
-                            $this->addImportMessageOnItem($node, "the owner was identified as \"$absentUser\"");
+                            $this->addImportMessageOnItem($node, "previous owner ($absentUser) not found");
                         }
                     }
                     
@@ -293,7 +293,7 @@ class XMLDocmanImport {
                     foreach ($absentUsers as $absentUser) {
                         $nodes = $this->doc->xpath("//version[author=\"$absentUser\" or concat(author/@type, \":\", author)=\"$absentUser\"]");
                         foreach ($nodes as $node) {
-                            $this->addImportMessageOnVersion($node, "the author was identified as \"$absentUser\"");
+                            $this->addImportMessageOnVersion($node, "previous author ($absentUser) not found");
                         }
                     }
                 } else {
