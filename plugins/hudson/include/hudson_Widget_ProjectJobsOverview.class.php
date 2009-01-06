@@ -59,20 +59,9 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
     }
     
     function computeGlobalStatus() {
-        $monitored_jobs = $this->_getMonitoredJobsByGroup();
-        foreach ($monitored_jobs as $monitored_job) {
-            try {
-                $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-                $dar = $job_dao->searchByJobID($monitored_job);
-                if ($dar->valid()) {
-                    $row = $dar->current();
-                    $job_url = $row['job_url'];
-                    $job = new HudsonJob($job_url);
-                    $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;    
-                }
-            } catch (Exception $e) {
-                // Do not display wrong jobs
-            }
+        $jobs = $this->getJobsByGroup($this->group_id);
+        foreach ($jobs as $job) {
+            $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;    
         }
         if ($this->_all_status['grey'] > 0 || $this->_all_status['red'] > 0) {
             $this->_global_status = $GLOBALS['Language']->getText('plugin_hudson','global_status_red');
@@ -147,35 +136,26 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
     }*/
     
     function getContent() {
-        $monitored_jobs = $this->_getMonitoredJobsByGroup();
-        if (sizeof($monitored_jobs) > 0) {
+        $jobs = $this->getJobsByGroup($this->group_id);
+        if (sizeof($jobs) > 0) {
             $html = '';            
             $html .= '<table style="width:100%">';
             $cpt = 1;
             
-            foreach ($monitored_jobs as $monitored_job) {
+            foreach ($jobs as $job_id => $job) {
                 try {
                     
-                    $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-                    $dar = $job_dao->searchByJobID($monitored_job);
-                    if ($dar->valid()) {
-                        $row = $dar->current();
-                        $job_url = $row['job_url'];
-                        $job_id = $row['job_id'];
-                        $group_id = $row['group_id'];
-                        $job = new HudsonJob($job_url);
+                    $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
+                    $html .= ' <td>';
+                    $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
+                    $html .= ' </td>';
+                    $html .= ' <td style="width:99%">';
+                    $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$this->group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
+                    $html .= ' </td>';
+                    $html .= '</tr>';
                         
-                        $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
-                        $html .= ' <td>';
-                        $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
-                        $html .= ' </td>';
-                        $html .= ' <td style="width:99%">';
-                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
-                        $html .= ' </td>';
-                        $html .= '</tr>';
-                        
-                        $cpt++;
-                    }
+                    $cpt++;
+                    
                 } catch (Exception $e) {
                     // Do not display wrong jobs
                 }

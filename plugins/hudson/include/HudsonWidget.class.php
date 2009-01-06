@@ -18,16 +18,21 @@ abstract class HudsonWidget extends Widget {
         return 'ci';
     }
     
-    protected function _getMonitoredJobsByGroup() {
+    protected function getJobsByGroup($group_id) {
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByGroupID($this->group_id);
-        $monitored_jobs = array();
+        $dar = $job_dao->searchByGroupID($group_id);
+        $jobs = array();
         while ($dar->valid()) {
             $row = $dar->current();
-            $monitored_jobs[] = $row['job_id'];                    
+            try {
+                $job = new Hudsonjob($row['job_url']);
+                $jobs[$row['job_id']] = $job;
+            } catch (exception $e) {
+                // Do not add unvalid jobs
+            }
             $dar->next();
         }
-        return $monitored_jobs;
+        return $jobs;
     }
     
 }

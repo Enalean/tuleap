@@ -31,23 +31,19 @@ class hudson_Widget_ProjectJobLastBuilds extends HudsonWidget {
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
         
-        $monitored_jobs = $this->_getMonitoredJobsByGroup();
-        if (sizeof($monitored_jobs) > 0) {
-            $monitored_job_id = $monitored_jobs[0]; // TODO : change
+        $jobs = $this->getJobsByGroup($this->group_id);
+        if (sizeof($jobs) > 0) {
+            
+            /////////////////////////////////////////////////////////////////
+            // TODO : change
+            $used_job_id = array_shift(array_keys($jobs)); // TODO : change
+            $used_job = $jobs[$used_job_id]; // TODO : change
+            /////////////////////////////////////////////////////////////////
 
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-            $dar = $job_dao->searchByJobID($monitored_job_id);
-            if ($dar->valid()) {
-                $row = $dar->current();
-                $this->job_url = $row['job_url'];
-                $this->job_id = $row['job_id'];
+            $this->job_url = $used_job->getUrl();
+            $this->job_id = $used_job_id;
+            $this->job = $used_job;
 
-                try {
-                    $this->job = new HudsonJob($this->job_url);
-                } catch (Exception $e) {
-                    $this->job = null;
-                }
-            }
         } else {
             $this->job = null;
         }
@@ -95,30 +91,19 @@ class hudson_Widget_ProjectJobLastBuilds extends HudsonWidget {
             user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
         }
         return true;
-    }
+    }*/
+    
     function getPreferences() {
         $prefs  = '';
-        // Monitored jobs
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs').'</strong><br />';
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$job->getName().'<br />';
-            } catch (Exception $e) {
-                // Do not display wrong jobs
-            }
-            $dar->next();
+        // jobs
+        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
+        $jobs = $this->getJobsByGroup($this->group_id);
+        foreach ($jobs as $job_id => $job) {
+            $prefs .= '<input type="radio" name="hudsonprojectjoblastbuilds" value="'.$job_id.'"> '.$job->getName().'<br />';
         }
         
-        // Use global status
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
-        $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';
         return $prefs;
-    }*/
+    }
     
     function getContent() {
         $html = '';
@@ -137,6 +122,10 @@ class hudson_Widget_ProjectJobLastBuilds extends HudsonWidget {
         }
             
         return $html;
+    }
+    
+    function isUnique() {
+        return false;
     }
     
 }

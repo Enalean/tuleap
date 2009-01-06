@@ -31,24 +31,19 @@ class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
         
-        $monitored_jobs = $this->_getMonitoredJobsByGroup();
-        if (sizeof($monitored_jobs) > 0) {
-            $monitored_job_id = $monitored_jobs[0]; // TODO : change
+        $jobs = $this->getJobsByGroup($this->group_id);
+        if (sizeof($jobs) > 0) {
+            
+            /////////////////////////////////////////////////////////////////
+            // TODO : change
+            $used_job_id = array_shift(array_keys($jobs)); // TODO : change
+            $used_job = $jobs[$used_job_id]; // TODO : change
+            /////////////////////////////////////////////////////////////////
 
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-            $dar = $job_dao->searchByJobID($monitored_job_id);
-            if ($dar->valid()) {
-                $row = $dar->current();
-                $this->job_url = $row['job_url'];
-                $this->job_id = $row['job_id'];
-
-                try {
-                    $this->job = new HudsonJob($this->job_url);
-                } catch (Exception $e) {
-                    $this->job = null;
-                }
-
-            }
+            $this->job_url = $used_job->getUrl();
+            $this->job_id = $used_job_id;
+            $this->job = $used_job;
+            
         } else {
             $this->job = null;
             $this->test_result = null;
