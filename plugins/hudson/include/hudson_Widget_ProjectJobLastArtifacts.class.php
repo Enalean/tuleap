@@ -145,18 +145,6 @@ class hudson_Widget_ProjectJobLastArtifacts extends HudsonWidget {
         return $html;
     }
     
-    function _getMonitoredJobsByGroup() {
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByGroupID($this->group_id);
-        $monitored_jobs = array();
-        while ($dar->valid()) {
-            $row = $dar->current();
-            $monitored_jobs[] = $row['job_id'];                    
-            $dar->next();
-        }
-        return $monitored_jobs;
-    }
-    
 }
 
 ?>
