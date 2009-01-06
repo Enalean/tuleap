@@ -334,23 +334,6 @@ class XMLDocmanImport {
     }
     
     /**
-     * Appends the given message to the changelog node of the item version
-     */
-//    private function addImportMessageOnVersion($version, $message) {
-//        $appendText = "Import information: $message";
-//        
-//        if (isset($version->changelog)) {
-//            if ((string)$version->changelog != '') {
-//                $appendText = "\n$appendText";
-//            }
-//        } else {
-//            $version->changelog = '';
-//        }
-//        
-//        $this->appendTextToNode($version->changelog, $appendText);
-//    }
-    
-    /**
      * Appends a text to a node
      */
     private function appendTextToNode(SimpleXMLElement $node, $text) {
