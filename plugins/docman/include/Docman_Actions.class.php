@@ -505,7 +505,9 @@ class Docman_Actions extends Actions {
             }
 
             $item_factory->update($data);
-            if(!$ownerChanged && !$statusChanged && !$request->exist('metadata')) {
+            
+            // Log the 'edit' event if link_url or wiki_page are set
+            if (isset($data['link_url']) || isset($data['wiki_page'])) {
                 $this->event_manager->processEvent('plugin_docman_event_edit', array(
                     'group_id' => $request->get('group_id'),
                     'item'     => &$item,

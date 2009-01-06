@@ -32,11 +32,7 @@ class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
 
-    // ID of the project
-    private $groupId;
-
     private $dataBaseDir;
-    private $doc;
 
     // Metadata map
     private $metadataMap;
@@ -50,11 +46,17 @@ class XMLDocmanImport {
     // User map (identifier => "unix" user name)
     private $userMap;
 
+    // ID of the project
+    protected $groupId;
+    
+    // XML document
+    protected $doc;
+        
     // Soap client
-    private $soap;
+    protected $soap;
     
     // Session hash
-    private $hash;
+    protected $hash;
     
     // When force is true, continue even if some users don't exist on the remote server
     private $force;
@@ -96,7 +98,7 @@ class XMLDocmanImport {
     /**
      * Loads and checks an XML document
      */
-    private function loadXML($rootPath) {
+    protected function loadXML($rootPath) {
         $archiveName = basename($rootPath);
         $this->dataBaseDir = $rootPath.'/'.$archiveName;
 
@@ -283,7 +285,7 @@ class XMLDocmanImport {
                     foreach ($absentUsers as $absentUser) {
                         $nodes = $this->doc->xpath("//item[properties/owner=\"$absentUser\" or concat(properties/owner/@type, \":\", properties/owner)=\"$absentUser\"]");
                         foreach ($nodes as $node) {
-                            $this->addImportMessageOnItem($node, "the owner was identified as \"$absentUser\"");
+                            $this->addImportMessageOnItem($node, "previous owner ($absentUser) not found");
                         }
                     }
                     
@@ -291,7 +293,7 @@ class XMLDocmanImport {
                     foreach ($absentUsers as $absentUser) {
                         $nodes = $this->doc->xpath("//version[author=\"$absentUser\" or concat(author/@type, \":\", author)=\"$absentUser\"]");
                         foreach ($nodes as $node) {
-                            $this->addImportMessageOnVersion($node, "the author was identified as \"$absentUser\"");
+                            $this->addImportMessageOnVersion($node, "previous author ($absentUser) not found");
                         }
                     }
                 } else {
@@ -327,7 +329,7 @@ class XMLDocmanImport {
         $version->changelog = $text.$appendText;
     }
 
-    private function printSoapResponseAndThrow(SoapFault $e) {
+    protected function printSoapResponseAndThrow(SoapFault $e) {
         echo "Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL;
         throw $e;
     }
@@ -582,7 +584,7 @@ class XMLDocmanImport {
     /**
      * Displays an error and terminates execution of the script
      */
-    private function exitError($error) {
+    protected function exitError($error) {
         exit (PHP_EOL."Fatal error: ".PHP_EOL.$error.PHP_EOL);
     }
 
@@ -667,78 +669,123 @@ class XMLDocmanImport {
     }
 
     /**
-     * Processes the given node and its childs
-     *
-     * @param SimpleXMLElement $node     The node to process
-     * @param int              $parentId The parent folder ID where the node will be imported
+     * Returns an array containing the properties for an item (metadata + permissions)
      */
-    private function recurseOnNode(SimpleXMLElement $node, $parentId) {
-        // Static metadata
-        $title            = (string) $node->properties->title;
-        $description      = (string) $node->properties->description;
-        $status           = (string) $node->properties->status;
-        $obsolescenceDate = $this->parseDate((string) $node->properties->obsolescence_date);
-        $ordering         = 'end';
-        $owner            = $this->userNodeToUsername($node->properties->owner);
-        $createDate       = $this->parseDate((string) $node->properties->create_date);
-        $updateDate       = $this->parseDate((string) $node->properties->update_date);
-
+    protected function getItemInformation(SimpleXMLElement $node) {
+        $information = array(
+                          (string) $node->properties->title,
+                          (string) $node->properties->description,
+                          (string) $node->properties->status,
+                          $this->parseDate((string) (string) $node->properties->obsolescence_date),
+                          $this->userNodeToUsername($node->properties->owner),
+                          $this->parseDate((string) $node->properties->create_date),
+                          $this->parseDate((string) $node->properties->update_date),
+        );
+        
         // Dynamic metadata
         $metadata = array();
         foreach($node->xpath('properties/property') as $property) {
             $this->extractOneMetadata($property, $metadata);
         }
+        $information[] = $metadata;
 
         // Permissions
         $permissions = array();
         foreach($node->xpath('permissions/permission') as $permission) {
             $this->extractOnePermission($permission, $permissions);
         }
+        $information[] = $permissions;
+        
+        return $information;
+    }
+    
+    /**
+     * Returns an array containing the versions for an item
+     */
+    protected function getVersionInformation(SimpleXMLElement $node) {
+        $version = array(
+                       (string)$node->content,
+                       (string)$node->label,
+                       (string)$node->changelog,
+                       $this->userNodeToUsername($node->author),
+                       $this->parseDate((string)$node->date),
+        );
+
+        return $version;
+    }
+
+    /**
+     * Processes the given node and its childs
+     *
+     * @param SimpleXMLElement $node     The node to process
+     * @param int              $parentId The parent folder ID where the node will be imported
+     */
+    protected function recurseOnNode(SimpleXMLElement $node, $parentId) {
+        
+        list(
+             $title,
+             $description,
+             $status,
+             $obsolescenceDate,
+             $owner,
+             $createDate,
+             $updateDate,
+             $metadata,
+             $permissions
+        ) = $this->getItemInformation($node);
+        
+        $ordering         = 'end';
 
         switch($node['type']) {
             case 'file':
                 $iFiles = 0;
                 $itemId = false;
 
-                foreach($node->xpath('versions/version') as $version) {
-                    $file      = (string)$version->content;
-                    $label     = (string)$version->label;
-                    $changeLog = (string)$version->changelog;
-                    $fileName  = (string)$version->filename;
-                    $fileType  = (string)$version->filetype;
-                    $author    = $this->userNodeToUsername($version->author);
-                    $date      = $this->parseDate((string)$version->date);
-
+                foreach ($node->xpath('versions/version') as $version) {
+                    
+                    list(
+                        $file,
+                        $label,
+                        $changelog,
+                        $author,
+                        $date
+                    ) = $this->getVersionInformation($version);
+                    
+                    $fileName = (string)$version->filename;
+                    $fileType = (string)$version->filetype;
+                    
+                    // If this is the initial version
                     if($iFiles == 0) {
-                        // First version
                         $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $author, $date, $owner, $createDate, $updateDate);
                     } else {
                         if($itemId !== false) {
-                            // Update
-                            $this->createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date);
+                            $this->createFileVersion($itemId, $label, $changelog, $file, $fileName, $fileType, $author, $date);
                         }
                     }
                     $iFiles++;
                 }
+
                 break;
 
             case 'embeddedfile':
                 $iFiles = 0;
                 $itemId = false;
                 foreach($node->xpath('versions/version') as $version) {
-                    $file      = (string)$version->content;
-                    $label     = (string)$version->label;
-                    $changeLog = (string)$version->changelog;
-                    $author    = $this->userNodeToUsername($version->author);
-                    $date      = $this->parseDate((string)$version->date);
+                    
+                    list(
+                        $file,
+                        $label,
+                        $changelog,
+                        $author,
+                        $date
+                    ) = $this->getVersionInformation($version);
 
+                    // If this is the initial version
                     if($iFiles == 0) {
-                        // First version
                         $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $author, $date, $owner, $createDate, $updateDate);
                     } else {
                         if($itemId !== false) {
-                            // Update
-                            $this->createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date);
+                            $this->createEmbeddedFileVersion($itemId, $label, $changelog, $file, $author, $date);
                         }
                     }
                     $iFiles++;
@@ -765,9 +812,6 @@ class XMLDocmanImport {
                     $this->recurseOnNode($child, $newParentId);
                 }
                 break;
-
-            default:
-                //error
         }
     }
 
@@ -816,7 +860,7 @@ class XMLDocmanImport {
          
     }
 
-    private static function askWhatToDo($e) {
+    protected static function askWhatToDo($e) {
         self::printException($e);
 
         do {
@@ -849,7 +893,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
             
-            echo "Folder            '$title'";
+            echo "Creating folder            '$title'";
 
             try {
                 $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
@@ -868,7 +912,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
             
-            echo "Empty document    '$title'";
+            echo "Creating empty document    '$title'";
 
             try {
                 $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
@@ -887,7 +931,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
             
-            echo "Wikipage          '$title' ($pagename)";
+            echo "Creating wiki page         '$title' ($pagename)";
 
             try {
                 $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
@@ -906,7 +950,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
             
-            echo "Link              '$title' ($url)";
+            echo "Creating link              '$title' ($url)";
 
             try {
                 $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
@@ -925,7 +969,7 @@ class XMLDocmanImport {
         do {
             $retry = false;
             
-            echo "Embedded file     '$title' ($file)";
+            echo "Creating embedded file     '$title' ($file)";
             $fullPath = $this->dataBaseDir.'/'.$file;
             $contents = file_get_contents($fullPath);
 
@@ -943,7 +987,7 @@ class XMLDocmanImport {
      * Creates a file
      */
     private function createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $fileName, $fileType, $author, $date, $owner, $createDate, $updateDate) {
-        $infoStr = "File              '$title' ($file, $fileName, $fileType)";
+        $infoStr = "Creating file              '$title' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
         $fileSize = filesize($fullPath);
@@ -1023,7 +1067,7 @@ class XMLDocmanImport {
     /**
      * Create a new file version
      */
-    private function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date) {
+    protected function createFileVersion($itemId, $label, $changeLog, $file, $fileName, $fileType, $author, $date) {
         $infoStr = "                      Version '$label' ($file, $fileName, $fileType)";
 
         $fullPath = $this->dataBaseDir.'/'.$file;
@@ -1075,7 +1119,7 @@ class XMLDocmanImport {
         }
     }
 
-    private function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
+    protected function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
         do {
             $retry = false;
             

@@ -126,6 +126,51 @@ class Docman_SOAPActions extends Docman_Actions {
         
         $this->_controler->_viewParams['action_result'] = $res;
     }
+    
+    /**
+     * Returns the list of items contained in the arborescence of the given folder
+     * The items are summarized by the following attributes: id, parent_id, title, type, update_date, nb_versions
+     */
+    function getTreeInfo() {
+        $request =& $this->_controler->request;
+        $groupId = $request->get('group_id');
+        
+        $itemFactory = Docman_ItemFactory::instance($groupId);
+        
+        $nb = 0;
+        $params['user'] = $this->_controler->getUser();
+        $params['getall'] = true;
+        
+        if ($request->exist('parent_id')) {
+            $parent_id = $request->get('parent_id');
+        } else {
+            $parent_id = 0;    
+        }
+        
+        $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
+        $itemList[] = $itemFactory->getItemFromDb($parent_id);
+        
+        $res = array();
+        foreach ($itemList as $item) {
+            $type = $itemFactory->getItemTypeForItem($item);
+            if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $vf = new Docman_VersionFactory();
+                $nbVersions = count($vf->getAllVersionForItem($item));
+            } else {
+                $nbVersions = null; 
+            }
+            
+            $res[] = array(
+                         'id'          => $item->getId(),
+                         'parent_id'   => $item->getParentId(),
+                         'title'       => $item->getTitle(),
+                         'type'        => $type,
+                         'nb_versions' => $nbVersions,
+                     );
+        }
+        
+        $this->_controler->_viewParams['action_result'] = $res;
+    }
 }
 
 ?>

@@ -148,6 +148,33 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Metadata'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'ItemInfo',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id' => array('name'=>'id', 'type' => 'xsd:int'),
+        'parent_id' => array('name'=>'parent_id', 'type' => 'xsd:int'),
+        'title' => array('name'=>'title', 'type' => 'xsd:string'),
+        'type' => array('name'=>'type', 'type' => 'xsd:string'),
+        'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfItemInfo',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ItemInfo[]')),
+    'tns:ItemInfo'
+);
+
+
 }
 
 /**
@@ -312,7 +339,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
 }
 
 /**
- * Returns an array containing the common item params needed by docman actions TODO call build params in the soap function
+ * Returns an array containing the common item params needed by docman actions
  */
 function _buildItemParams($group_id, $perm_item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date) {
     $params = array();
@@ -455,6 +482,15 @@ function getDocmanProjectMetadata($sessionKey, $group_id) {
     return $result;
 }
 $soapFunctions[] = array('getDocmanProjectMetadata', 'Returns the metadata of the given project', 'tns:ArrayOfMetadata');
+
+
+/**
+ * Returns the tree information of the given project
+ */
+function getDocmanTreeInfo($sessionKey, $group_id, $parent_id) {    
+    return _makeDocmanRequest($sessionKey, $group_id, 'getTreeInfo', array('parent_id' => $parent_id));
+}
+$soapFunctions[] = array('getDocmanTreeInfo', 'Returns the tree information of the given project', 'tns:ArrayOfItemInfo');
 
 
 /**
