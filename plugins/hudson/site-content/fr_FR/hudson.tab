@@ -20,8 +20,8 @@ plugin_hudson	weather_report	Tendance :
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
 plugin_hudson	addjob_title	Ajouter un job
-plugin_hudson	form_job_url	URL du projet :
-plugin_hudson	wrong_job_url	URL du projet incorrecte : $1
+plugin_hudson	form_job_url	URL du job :
+plugin_hudson	wrong_job_url	URL du job incorrecte : $1
 plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
 plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1
 plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monJob
