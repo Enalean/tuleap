@@ -310,11 +310,16 @@ class XMLDocmanImport {
      */
     private function addImportMessageOnItem($item, $message) {
         $appendText = "Import information: $message";
-        $text = (string)$item->properties->description;
-        if ($text != '') {
-             $text .= "\n";
+        
+        if (isset($item->properties->description)) {
+            if ((string)$item->properties->description != '') {
+                $appendText = "\n$appendText";
+            }
+        } else {
+            $item->properties->description = '';
         }
-        $item->properties->description =  preg_replace('/&(?!\w+;)/', '&amp;', $text.$appendText);
+
+        $this->appendTextToNode($item->properties->description, $appendText);
     }
     
     /**
@@ -322,11 +327,26 @@ class XMLDocmanImport {
      */
     private function addImportMessageOnVersion($version, $message) {
         $appendText = "Import information: $message";
-        $text = (string)$version->changelog;
-        if ($text != '') {
-             $text .= "\n";
+        
+        if (isset($version->changelog)) {
+            if ((string)$version->changelog != '') {
+                $appendText = "\n$appendText";
+            }
+        } else {
+            $version->changelog = '';
         }
-        $version->changelog = preg_replace('/&(?!\w+;)/', '&amp;', $text.$appendText);
+        
+        $this->appendTextToNode($version->changelog, $appendText);
+    }
+    
+    /**
+     * Appends a text to a node
+     */
+    private function appendTextToNode(SimpleXMLElement $node, $text) {
+        $domNode = dom_import_simplexml($node);
+        $dom = $domNode->ownerDocument;
+        $textNode = $dom->createTextNode($text);
+        $domNode->appendChild($textNode);
     }
 
     protected function printSoapResponseAndThrow(SoapFault $e) {
