@@ -6,7 +6,7 @@ plugin_hudson	title	Intégration Continue
 plugin_hudson	service_lbl_key	Intégration Continue
 plugin_hudson	service_desc_key	Intégration Continue avec Hudson
 
-plugin_hudson	header_table_job	Projet
+plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
 plugin_hudson	header_table_rss	RSS
@@ -19,23 +19,23 @@ plugin_hudson	weather_report	Tendance :
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
-plugin_hudson	addjob_title	Ajouter un projet
+plugin_hudson	addjob_title	Ajouter un job
 plugin_hudson	form_job_url	URL du projet :
 plugin_hudson	wrong_job_url	URL du projet incorrecte : $1
 plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
 plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1
-plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monProjet
+plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monJob
 plugin_hudson	form_addjob_button	Ajouter
-plugin_hudson	editjob_title	Modifier le projet
+plugin_hudson	editjob_title	Modifier le job
 plugin_hudson	form_editjob_button	Modifier
-plugin_hudson	job_url_missing	Url du projet Hudson manquante (ex: http://monserveurIC:8080/hudson/job/MonJob)
-plugin_hudson	job_id_missing	Identifiant du projet Hudson manquant.
-plugin_hudson	add_job_error	Impossible d'ajouter le projet Hudson
-plugin_hudson	job_added	Le project Hudson a été ajouté.
-plugin_hudson	edit_job_error	Impossible de modifier le projet Hudson
-plugin_hudson	job_updated	Le project Hudson a été modifié.
-plugin_hudson	delete_job_error	Impossible de supprimer le projet Hudson
-plugin_hudson	job_deleted	Le project Hudson a été supprimé.
+plugin_hudson	job_url_missing	Url du job Hudson manquante (ex: http://monserveurIC:8080/hudson/job/MonJob)
+plugin_hudson	job_id_missing	Identifiant du job Hudson manquant.
+plugin_hudson	add_job_error	Impossible d'ajouter le job Hudson
+plugin_hudson	job_added	Le job Hudson a été ajouté.
+plugin_hudson	edit_job_error	Impossible de modifier le job Hudson
+plugin_hudson	job_updated	Le job Hudson a été modifié.
+plugin_hudson	delete_job_error	Impossible de supprimer le job Hudson
+plugin_hudson	job_deleted	Le job Hudson a été supprimé.
 
 plugin_hudson	status_blue	Succès
 plugin_hudson	status_blue_anime	En cours
@@ -48,14 +48,15 @@ plugin_hudson	status_grey_anime	En cours
 plugin_hudson	status_unknown	Status inconnu
 
 plugin_hudson	global_status_blue	Succès
-plugin_hudson	global_status_yellow	Un projet ou plus instable
-plugin_hudson	global_status_red	Un projet ou plus en échec ou en attente
+plugin_hudson	global_status_yellow	Un job ou plus instable
+plugin_hudson	global_status_red	Un job ou plus en échec ou en attente
 
-plugin_hudson	my_jobs	Mes projets Hudson
-plugin_hudson	monitored_jobs	Projets suivis :
+plugin_hudson	my_jobs	Mes jobs Hudson
+plugin_hudson	monitored_jobs	Jobs suivis :
+plugin_hudson	monitored_job	Job suivis :
 plugin_hudson	use_global_status	Utiliser le status global :
-plugin_hudson	project_jobs	Projets Hudson
-plugin_hudson	project_job_details	Projet Hudson : $1
+plugin_hudson	project_jobs	jobs Hudson
+plugin_hudson	project_job_details	Job Hudson : $1
 plugin_hudson	project_job_lastbuilds	Derniers builds $1
 plugin_hudson	project_job_testresults_widget_title	Résultats des tests $1 ($2 / $3)
 plugin_hudson	project_job_testresults	Resultats des tests
