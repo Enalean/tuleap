@@ -26,17 +26,19 @@ require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
 
 function usage() {
-    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --folderId=<destination folder ID> --archive=<archive path>".PHP_EOL;
+    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --archive=<archive path>".PHP_EOL;
     echo         "       import.php --help".PHP_EOL.PHP_EOL;
 }
 
 function help() {
     echo "Imports a set of Codendi Docman documents to a project".PHP_EOL;
     usage();
+    echo "Required parameters:".PHP_EOL;
     echo "    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl".PHP_EOL;
-    echo "    --projectId=<destination project ID>    ID of the destination project".PHP_EOL;
-    echo "    --folderId=<destination folder ID>      ID of the destination folder. The imported documents will be created in this folder".PHP_EOL;
-    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL;
+    echo "    --projectId=<destination project ID>    Destination project ID".PHP_EOL;
+    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL.PHP_EOL;
+    echo "Optional parameters:".PHP_EOL;
+    echo "    --folderId=<destination folder ID>      Destination folder ID. The imported documents will be created in this folder (default: project root folder)".PHP_EOL;
     echo "    --force                                 Continue even if some users (authors, owners) don't exist on the remote server".PHP_EOL;
     echo "    --reorder                               The items will be reordered in alphabetical order, folders before documents".PHP_EOL;
     echo "    --update                                Update the document tree. Warning! This will create, update or remove documents".PHP_EOL;
@@ -56,9 +58,7 @@ if (($projectId = getParameter($argv, 'projectId', true)) === null) {
     echo "Missing parameter: --projectId".PHP_EOL;
 }
 
-if (($folderId = getParameter($argv, 'folderId', true)) === null) {
-    echo "Missing parameter: --folderId".PHP_EOL;
-}
+$folderId = getParameter($argv, 'folderId', true);
 
 if (($archive = getParameter($argv, 'archive', true)) === null) {
     echo "Missing parameter: --archive".PHP_EOL;
@@ -76,7 +76,7 @@ $force = getParameter($argv, 'force');
 $reorder = getParameter($argv, 'reorder');
 $update = getParameter($argv, 'update');
 
-if ($wsdl === null || $projectId === null || $folderId === null || $archive === null) {
+if ($wsdl === null || $projectId === null || $archive === null) {
     usage();
     die;
 }

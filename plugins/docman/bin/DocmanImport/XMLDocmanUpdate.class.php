@@ -34,6 +34,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
 
         // Build the remote item tree
         try {
+            // If the parentId is not defined, take the root folder
+            if ($parentId === null) {
+                $parentId = $this->soap->getRootFolder($this->hash, $this->groupId);
+            }
+            
             $remoteItems = $this->soap->getDocmanTreeInfo($this->hash, $this->groupId, $parentId);
             foreach ($remoteItems as $item) {
                 $this->remoteItems[$item->id] = $item;

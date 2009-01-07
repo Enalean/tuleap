@@ -170,6 +170,16 @@ class XMLDocmanImport {
      * Import an item to the specified parent folder
      */
     public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
+
+        // If the parentId is not defined, import into the root folder
+        if ($parentId === null) {
+            try {
+                $parentId = $this->soap->getRootFolder($this->hash, $this->groupId);
+            } catch (SoapFault $e) {
+                $this->printSoapResponseAndThrow($e);
+            }
+        }
+        
         $this->loadXML($xmlDoc);
 
         $rootNode = $this->findPath($path);
