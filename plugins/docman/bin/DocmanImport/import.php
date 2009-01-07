@@ -25,24 +25,27 @@ require_once 'XMLDocmanImport.class.php';
 require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
 
-function usage() {
-    echo PHP_EOL."Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --archive=<archive path>".PHP_EOL;
-    echo         "       import.php --help".PHP_EOL.PHP_EOL;
-}
+$usage = "
+Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --archive=<archive path>
+       import.php --help".PHP_EOL;
 
 function help() {
-    echo "Imports a set of Codendi Docman documents to a project".PHP_EOL;
-    usage();
-    echo "Required parameters:".PHP_EOL;
-    echo "    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl".PHP_EOL;
-    echo "    --projectId=<destination project ID>    Destination project ID".PHP_EOL;
-    echo "    --archive=<archive path>                Path of the archive folder that must contain an XML file".PHP_EOL.PHP_EOL;
-    echo "Optional parameters:".PHP_EOL;
-    echo "    --folderId=<destination folder ID>      Destination folder ID. The imported documents will be created in this folder (default: project root folder)".PHP_EOL;
-    echo "    --force                                 Continue even if some users (authors, owners) don't exist on the remote server".PHP_EOL;
-    echo "    --reorder                               The items will be reordered in alphabetical order, folders before documents".PHP_EOL;
-    echo "    --update                                Update the document tree. Warning! This will create, update or remove documents".PHP_EOL;
-    echo "    --help                                  Show this help".PHP_EOL.PHP_EOL; 
+    global $usage;
+    
+    echo "Imports a set of Codendi Docman documents to a project
+$usage
+Required parameters:
+    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl
+    --projectId=<destination project ID>    Destination project ID
+    --archive=<archive path>                Path of the archive folder that must contain an XML file
+
+Optional parameters:
+    --folderId=<destination folder ID>      Destination folder ID. The imported documents will be created in this folder (default: project root folder)
+    --force                                 Continue even if some users (authors, owners) don't exist on the remote server
+    --reorder                               The items will be reordered in alphabetical order, folders before documents
+    --update                                Update the document tree. Warning! This will create, update or remove documents
+    --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
+    --help                                  Show this help".PHP_EOL.PHP_EOL; 
     die;
 }
 
@@ -75,9 +78,20 @@ if (($archive = getParameter($argv, 'archive', true)) === null) {
 $force = getParameter($argv, 'force');
 $reorder = getParameter($argv, 'reorder');
 $update = getParameter($argv, 'update');
+$path = getParameter($argv, 'path');
+
+// Path parameter check
+if ($path === null) {
+    $path = '/Project Documentation';
+} else {
+    if (!preg_match('/^(\/[^\/]+)+$/', $path)) {
+        echo "The path must follow the pattern: /folder/subfolder(/subfolder...)".PHP_EOL;
+        die;
+    }
+}
 
 if ($wsdl === null || $projectId === null || $archive === null) {
-    usage();
+    echo $usage.PHP_EOL;
     die;
 }
 
@@ -109,13 +123,13 @@ if ($update) {
     $xmlUpdate = new XMLDocmanUpdate($projectId, $wsdl, $login, $password, $force, $reorder);
     
     // Update
-    $xmlUpdate->updatePath($archive, $folderId, 'Project Documentation');
+    $xmlUpdate->updatePath($archive, $folderId, $path);
 } else {
     // Connect
     $xmlImport = new XMLDocmanImport($projectId, $wsdl, $login, $password, $force, $reorder);
     
     // Import
-    $xmlImport->importPath($archive, $folderId, 'Project Documentation');
+    $xmlImport->importPath($archive, $folderId, $path);
 }
 
 $end = microtime(true);

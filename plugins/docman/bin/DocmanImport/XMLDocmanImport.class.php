@@ -155,18 +155,6 @@ class XMLDocmanImport {
     }
 
     /**
-     * Import all the items to the specified parent folder
-     */
-    public function import($xmlDoc, $parentId) {
-        $this->loadXML($xmlDoc);
-
-        $nodes = $this->doc->xpath('/docman/item');
-        foreach ($nodes as $node) {
-            $this->recurseOnNode($node, $parentId);
-        }
-    }
-
-    /**
      * Import an item to the specified parent folder
      */
     public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
@@ -619,9 +607,9 @@ class XMLDocmanImport {
     /**
      * Returns the node that corresponds to the given unix-like path
      */
-    private function findPath($path) {
+    protected function findPath($path) {
         // Transform "Unix path" to XPath
-        $xpath = '/docman/item[properties/title="'.str_replace('/','"]/item[properties/title="', $path).'"]';
+        $xpath = '/docman'.preg_replace('/\/([^\/]+)/', '/item[properties/title="$1"]', $path);
         $nodeList = $this->doc->xpath($xpath);
 
         if ($nodeList === false || count($nodeList) == 0) {
@@ -633,19 +621,6 @@ class XMLDocmanImport {
                 $this->exitError("$path ($xpath) found more than one target element".PHP_EOL);
             }
         }
-    }
-
-    private function raiseImportError(SimpleXMLElement $node, $parentId) {
-        $type  = strtoupper((string) $node['type']);
-        $title = (string) $node->properties->title;
-        $error = "<strong>$type CREATION FAILURE: '$title' into $parentId</strong>".PHP_EOL;
-        file_put_contents('import_error.log', $error, FILE_APPEND);
-        echo $error;
-    }
-
-    private function raiseImportVersionError($fileName, $itemId, $parentId) {
-        $error = "<strong>VERSION CREATION FAILURE: '$fileName' of $itemId in $parentId</strong>".PHP_EOL;
-        file_put_contents('import_error.log', $error, FILE_APPEND);
     }
     
     /**
