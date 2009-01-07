@@ -26,7 +26,7 @@ require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
 
 $usage = "
-Usage: import.php --wsdl=<WSDL URL> --projectId=<destination project ID> --archive=<archive path>
+Usage: import.php --url=<Codendi URL> --projectId=<destination project ID> --archive=<archive path>
        import.php --help".PHP_EOL;
 
 function help() {
@@ -35,7 +35,7 @@ function help() {
     echo "Imports a set of Codendi Docman documents to a project
 $usage
 Required parameters:
-    --wsdl=<WSDL URL>                       URL of the Codendi WSDL. Usually <codendi_home>/soap/codex.wsdl.php?wsdl
+    --url=<Codendi URL>                     URL of the Codendi home page (ex: http://codendi.mycompany.com:81)
     --projectId=<destination project ID>    Destination project ID
     --archive=<archive path>                Path of the archive folder that must contain an XML file
 
@@ -53,8 +53,8 @@ if (getParameter($argv, 'help') || getParameter($argv, 'h')) {
     help();
 }
 
-if (($wsdl = getParameter($argv, 'wsdl', true)) === null) {
-    echo "Missing parameter: --wsdl".PHP_EOL;
+if (($url = getParameter($argv, 'url', true)) === null) {
+    echo "Missing parameter: --url".PHP_EOL;
 }
 
 if (($projectId = getParameter($argv, 'projectId', true)) === null) {
@@ -90,7 +90,7 @@ if ($path === null) {
     }
 }
 
-if ($wsdl === null || $projectId === null || $archive === null) {
+if ($url === null || $projectId === null || $archive === null) {
     echo $usage.PHP_EOL;
     die;
 }
@@ -117,6 +117,9 @@ if (!isset($password)) {
 }
 
 $start = microtime(true);
+
+// WSDL URL
+$wsdl = "$url/soap/codex.wsdl.php?wsdl";
 
 if ($update) {
     // Connect
