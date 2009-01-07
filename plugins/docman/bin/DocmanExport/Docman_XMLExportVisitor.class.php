@@ -65,8 +65,12 @@ class Docman_XMLExportVisitor {
         $this->appendChild($prop, 'create_date', date('c', $item->getCreateDate()));
         $this->appendChild($prop, 'update_date', date('c', $item->getUpdateDate()));
         $this->appendChild($prop, 'owner', $this->getNormalizedLogin($item->getOwnerId()));
-        $this->appendChild($prop, 'status', $this->getNormalizedStatus($item->getStatus()));
-        if($item->getObsolescenceDate() != 0) {
+
+        $prjSettings = Docman_SettingsBo::instance($item->getGroupId());
+        if($prjSettings->getMetadataUsage('status')) {
+            $this->appendChild($prop, 'status', $this->getNormalizedStatus($item->getStatus()));
+        }
+        if($prjSettings->getMetadataUsage('obsolescence_date') && $item->getObsolescenceDate() != 0) {
             $this->appendChild($prop, 'obsolescence_date', date('c', $item->getObsolescenceDate()));
         }
 

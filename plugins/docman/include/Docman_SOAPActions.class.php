@@ -143,33 +143,35 @@ class Docman_SOAPActions extends Docman_Actions {
         
         if ($request->exist('parent_id')) {
             $parent_id = $request->get('parent_id');
-        } else {
-            $parent_id = 0;    
         }
         
-        $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
-        $itemList[] = $itemFactory->getItemFromDb($parent_id);
-        
-        $res = array();
-        foreach ($itemList as $item) {
-            $type = $itemFactory->getItemTypeForItem($item);
-            if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $vf = new Docman_VersionFactory();
-                $nbVersions = count($vf->getAllVersionForItem($item));
-            } else {
-                $nbVersions = null; 
+        if (isset($parent_id) && $parent_id != 0) {
+            $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
+            $itemList[] = $itemFactory->getItemFromDb($parent_id);
+                file_put_contents('/tmp/a', "0-$parent_id-".print_r($itemList, true)."-1", FILE_APPEND);
+            $res = array();
+            foreach ($itemList as $item) {
+                $type = $itemFactory->getItemTypeForItem($item);
+                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    $vf = new Docman_VersionFactory();
+                    $nbVersions = count($vf->getAllVersionForItem($item));
+                } else {
+                    $nbVersions = null; 
+                }
+                
+                $res[] = array(
+                             'id'          => $item->getId(),
+                             'parent_id'   => $item->getParentId(),
+                             'title'       => $item->getTitle(),
+                             'type'        => $type,
+                             'nb_versions' => $nbVersions,
+                         );
             }
             
-            $res[] = array(
-                         'id'          => $item->getId(),
-                         'parent_id'   => $item->getParentId(),
-                         'title'       => $item->getTitle(),
-                         'type'        => $type,
-                         'nb_versions' => $nbVersions,
-                     );
+            $this->_controler->_viewParams['action_result'] = $res;
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param', 'parent_id'));
         }
-        
-        $this->_controler->_viewParams['action_result'] = $res;
     }
 }
 

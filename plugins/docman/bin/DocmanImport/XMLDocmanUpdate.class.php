@@ -30,10 +30,15 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         $this->loadXML($xmlDoc);
 
         // Build the local item tree
-        $localTree = $this->getTreeFromItemElement($this->doc);
+        $localTree = $this->getTreeFromItemElement($this->findPath($path));
 
         // Build the remote item tree
         try {
+            // If the parentId is not defined, take the root folder
+            if ($parentId === null) {
+                $parentId = $this->soap->getRootFolder($this->hash, $this->groupId);
+            }
+            
             $remoteItems = $this->soap->getDocmanTreeInfo($this->hash, $this->groupId, $parentId);
             foreach ($remoteItems as $item) {
                 $this->remoteItems[$item->id] = $item;
@@ -183,27 +188,29 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     /**
      * Returns a tree from an XML element (recursive)
      */
-    private function getTreeFromItemElement($itemElement) {
-        $tree = null;
-
-        foreach ($itemElement->item as $childItem) {
-            $title = (string)$childItem->properties->title;
-            
-            if (isset($tree[$title])) {
-                $parentTitle = $itemElement->properties->title;
-                
-                $msg = "Several items have the title '$title' in the folder '$parentTitle' (in the archive). In order to make use of the update function, please assure that all the items have distinct names in each folder.";
+    private function getTreeFromItemElement_rec($itemElement) {
+        $tree['xmlElement'] = $itemElement;
+        
+        foreach ($itemElement->xpath('item') as $childItem) {
+            $children = $this->getTreeFromItemElement_rec($childItem);
+            $childTitle = (string)$childItem->properties->title;
+            if (isset($tree['children'][$childTitle])) {
+                $title = $itemElement->properties->title;
+                $msg = "Several items have the title '$childTitle' in the folder '$title' (in the archive). In order to make use of the update function, please assure that all the items have distinct names in each folder.";
                 $this->exitError($msg.PHP_EOL);
             }
-            
-            $tree[$title]['xmlElement'] = $childItem;
-            $children = $this->getTreeFromItemElement($childItem);
-            if ($children != null) {
-                $tree[$title]['children'] = $children;
-            }
+            $tree['children'][$childTitle] = $children;
         }
-
+        
         return $tree;
+    }
+    
+    /**
+     * Returns a tree from an XML element
+     */
+    private function getTreeFromItemElement($itemElement) {
+        $title = (string)$itemElement->properties->title;
+        return array($title => $this->getTreeFromItemElement_rec($itemElement));
     }
 
     /**
