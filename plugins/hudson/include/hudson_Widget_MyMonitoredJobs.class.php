@@ -195,7 +195,10 @@ class hudson_Widget_MyMonitoredJobs extends HudsonWidget {
         }
         return $monitored_jobs;
     }
-    
+
+    function isUnique() {
+        return true;
+    }
 }
 
 ?>

@@ -15,112 +15,69 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
+require_once('HudsonTestResult.class.php');
+
 class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
     
-    var $plugin;
+    const WIDGET_ID = 'projecthudsonjobtesttrend';
+    
     var $group_id;
     
     var $job;
     var $job_url;
     var $job_id;
     
-    function hudson_Widget_ProjectJobTestTrend($plugin) {
-        $this->Widget('projecthudsonjobtesttrend');
-        $this->plugin = $plugin;
+    function hudson_Widget_ProjectJobTestTrend($owner_type, $owner_id) {
+        $this->Widget(self::WIDGET_ID);
         
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
         
-        $jobs = $this->getJobsByGroup($this->group_id);
-        if (sizeof($jobs) > 0) {
-            
-            /////////////////////////////////////////////////////////////////
-            // TODO : change
-            $used_job_id = array_shift(array_keys($jobs)); // TODO : change
-            $used_job = $jobs[$used_job_id]; // TODO : change
-            /////////////////////////////////////////////////////////////////
-
-            $this->job_url = $used_job->getUrl();
-            $this->job_id = $used_job_id;
-            $this->job = $used_job;
-            
-        } else {
-            $this->job = null;
-            $this->test_result = null;
-        }
-        
-        
-        
-        /*$this->_not_monitored_jobs = user_get_preference('plugin_hudson_project_not_monitored_jobs');
-        if ($this->_not_monitored_jobs === false) {
-            $this->_not_monitored_jobs = array();
-        } else {
-            $this->_not_monitored_jobs = explode(",", $this->_not_monitored_jobs);
-        }*/
-        
+        $this->setOwner($owner_id, $owner_type);
     }
     
     function getTitle() {
         $title = '';
-        $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName())); 
+        if ($this->job) {
+            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()));
+        } else {
+             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend');
+        }
         return  $title;
     }
-    /*
-    function updatePreferences(&$request) {
-        $request->valid(new Valid_String('cancel'));
-        if (!$request->exist('cancel')) {
-            $monitored_jobs = $request->get('myhudsonjobs');
+    
+    function loadContent($id) {
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . self::WIDGET_ID . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $res = db_query($sql);
+        if ($res && db_numrows($res)) {
+            $data = db_fetch_array($res);
+            $this->job_id    = $data['job_id'];
+            $this->content_id = $id;
             
-            $user = UserManager::instance()->getCurrentUser();
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-            $dar = $job_dao->searchByUserID($user->getId());
-            $not_monitored_jobs = array();
-            while ($dar->valid()) {
-                $row = $dar->current();
-                if ( ! in_array($row['job_id'], $monitored_jobs)) {
-                    $not_monitored_jobs[] = $row['job_id'];                    
+            $jobs = $this->getJobsByGroup($this->group_id);
+            if (array_key_exists($this->job_id, $jobs)) {
+                $used_job = $jobs[$this->job_id];
+                $this->job_url = $used_job->getUrl();
+                $this->job = $used_job;
+                
+                try {
+                    $this->test_result = new HudsonTestResult($this->job_url);
+                } catch (Exception $e) {
+                    $this->test_result = null;
                 }
-                $dar->next();
+                
+            } else {
+                $this->job = null;
+                $this->test_result = null;
             }
             
-            $this->_not_monitored_jobs = $not_monitored_jobs; 
-            
-            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(",", $this->_not_monitored_jobs));
-            
-            $use_global_status = $request->get('use_global_status');
-            $this->_use_global_status = ($use_global_status !== false)?"true":"false";
-            user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
         }
-        return true;
     }
-    function getPreferences() {
-        $prefs  = '';
-        // Monitored jobs
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs').'</strong><br />';
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$job->getName().'<br />';
-            } catch (Exception $e) {
-                // Do not display wrong jobs
-            }
-            $dar->next();
-        }
-        
-        // Use global status
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
-        $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';
-        return $prefs;
-    }*/
     
     function getContent() {
         $html = '';
-        if ($this->job != null) {
-                        
+        if ($this->job != null && $this->test_result != null) {
+
             $job = $this->job;
             
             $html .= '<div style="padding: 20px;">';
@@ -129,6 +86,12 @@ class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
             $html .= '</a>';
             $html .= '</div>';
 
+        } else {
+            if ($this->job != null) {
+                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found');
+            } else {
+                $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
+            }
         }
             
         return $html;

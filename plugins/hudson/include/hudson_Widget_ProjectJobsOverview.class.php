@@ -164,7 +164,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
             return $html;
         }
     }
-       
+    
+    function isUnique() {
+        return true;
+    }
 }
 
 ?>
