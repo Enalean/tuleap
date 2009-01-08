@@ -456,13 +456,23 @@ $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocma
 
 
 /**
- * Returns the MD5 checksum of the file corresponding to the provided item ID.
+ * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
  */
 function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
     $params = array('item_id' => $item_id);
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
 }
-$soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the file corresponding to the provided item ID', 'xsd:string');
+$soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the file (last version) corresponding to the provided item ID', 'xsd:string');
+
+
+/**
+ * Returns the MD5 checksum of the file (all versions) corresponding to the provided item ID.
+ */
+function getDocmanFileAllVersionsMD5sum($sessionKey, $group_id, $item_id) {
+    $params = array('item_id' => $item_id, 'all_versions' => true);
+    return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
+}
+$soapFunctions[] = array('getDocmanFileAllVersionsMD5sum', 'Returns the MD5 checksum of the file (all versions) corresponding to the provided item ID', 'tns:ArrayOfstring');
 
 
 /**

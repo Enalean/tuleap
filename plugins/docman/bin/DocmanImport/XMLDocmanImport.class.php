@@ -32,7 +32,7 @@ class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
 
-    private $dataBaseDir;
+    protected $dataBaseDir;
 
     // Metadata map
     private $metadataMap;
@@ -699,7 +699,7 @@ class XMLDocmanImport {
     }
     
     /**
-     * Returns an array containing the versions for an item
+     * Returns an array containing the data of a version
      */
     protected function getVersionInformation(SimpleXMLElement $node) {
         $version = array(

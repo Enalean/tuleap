@@ -55,9 +55,9 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         
         $tagCounts = $this->tagCount($mergedTree);
         
-        echo PHP_EOL."Number of items that will be updated: ".$tagCounts['IN_BOTH'].PHP_EOL;
-        echo "Number of items that will be created: ".$tagCounts['IN_SECOND'].PHP_EOL;
-        echo "Number of items that will be removed: ".$tagCounts['IN_FIRST'].PHP_EOL;
+        echo PHP_EOL.$tagCounts['IN_BOTH']." item(s) will be updated".PHP_EOL;
+        echo $tagCounts['IN_SECOND']." item(s) will be created".PHP_EOL;
+        echo $tagCounts['IN_FIRST']." item(s) will be removed".PHP_EOL;
         
         echo "Are you sure you want to update the document tree? (y/n) [n] ";
         $answer = strtoupper(trim(fgets(STDIN)));
@@ -112,8 +112,20 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                     break;
 
                 case 'IN_BOTH':
-                    // In both => update item
-                    $this->updateItem($itemId, $tree['xmlElement']);
+                    // In both => update or re-create item
+                    $node = $tree['xmlElement'];
+                    
+                    if ($node['type'] == 'file' || $node['type'] == 'embeddedfile' ) {
+                        if ($this->checkVersionChecksums($itemId, $node)) {
+                            $this->updateItem($itemId, $node);
+                        } else {
+                            echo "The local and remote versions doesn't match for item '$title' (#$itemId), it will be deleted and re-created.".PHP_EOL;
+                            $this->deleteItem($itemId, $title);
+                            $this->recurseOnNode($node, $parentId);
+                        }
+                    } else {
+                        $this->updateItem($itemId, $node);
+                    }
 
                     if (isset($tree['children'])) {
                         foreach ($tree['children'] as $childTitle => $subTree) {
@@ -229,6 +241,55 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                 $retry = parent::askWhatToDo($e);
             }
         } while ($retry);
+    }
+    
+    /**
+     * Returns the MD5 checksums of all the versions of the given item
+     */
+    private function getAllVersionsMD5sum($node) {
+        $md5sums = array();
+        
+        foreach ($node->xpath('versions/version') as $version) {
+            $file = (string)$version->content;
+            $fullPath = $this->dataBaseDir.'/'.$file;
+            $md5sums[] = md5_file($fullPath);
+        }
+        
+        return $md5sums;
+    }
+    
+    /**
+     * Compares the version checksums in order to decide what to do.
+     * For each version of the item, the checksum of the local file and the remote file are compared
+     * @return true  if we just have to send the new versions to the server
+     *         false if some versions have been created server-side (so we will need to delete and recreate the whole item)
+     */
+    private function checkVersionChecksums($itemId, $node) {
+        $localMd5sums  = $this->getAllVersionsMD5sum($node);
+        
+        do {
+            $retry = false;
+            
+            echo "Retrieving version checksums for item #$itemId".PHP_EOL;
+            
+            try {
+                $remoteMd5sums = $this->soap->getDocmanFileAllVersionsMD5sum($this->hash, $this->groupId, $itemId);
+            } catch (Exception $e){
+                $retry = parent::askWhatToDo($e);
+            }
+        } while ($retry);
+        
+        if (count($localMd5sums) >= count($remoteMd5sums)) {
+            $commonVersionCount = count($remoteMd5sums);
+            for ($i = 0; $i < $commonVersionCount; $i++) {
+                if ($localMd5sums[$i] != $remoteMd5sums[$i]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
