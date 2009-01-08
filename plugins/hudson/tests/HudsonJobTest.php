@@ -143,6 +143,8 @@ XML;
         $this->assertEqual($j->getLastBuildNumber(), "60");
         $this->assertEqual($j->getLastSuccessfulBuildNumber(), "60");
         $this->assertEqual($j->getLastFailedBuildNumber(), "30");
+        $this->assertEqual($j->getNextBuildNumber(), "61");
+        $this->assertTrue($j->hasBuilds());
         $this->assertTrue($j->isBuildable());
         
         $this->assertEqual($j->getHealthScores(), array('79', '98'));
@@ -209,6 +211,8 @@ XML;
         $this->assertEqual($j->getLastBuildNumber(), "1");
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertEqual($j->getLastFailedBuildNumber(), "1");
+        $this->assertEqual($j->getNextBuildNumber(), "2");
+        $this->assertTrue($j->hasBuilds());
         $this->assertTrue($j->isBuildable());
         
         $this->assertEqual($j->getHealthScores(), array('0'));
@@ -252,6 +256,8 @@ XML;
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
+        $this->assertEqual($j->getNextBuildNumber(), "1");
+        $this->assertFalse($j->hasBuilds());
         $this->assertFalse($j->isBuildable());
         
         $this->assertEqual($j->getHealthScores(), array());
@@ -294,6 +300,8 @@ XML;
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
+        $this->assertEqual($j->getNextBuildNumber(), "1");
+        $this->assertFalse($j->hasBuilds());
         $this->assertTrue($j->isBuildable());
         
         $this->assertEqual($j->getHealthScores(), array());
@@ -336,6 +344,8 @@ XML;
         $this->assertNull($j->getLastBuildNumber());
         $this->assertNull($j->getLastSuccessfulBuildNumber());
         $this->assertNull($j->getLastFailedBuildNumber());
+        $this->assertEqual($j->getNextBuildNumber(), "1");
+        $this->assertFalse($j->hasBuilds());
         $this->assertTrue($j->isBuildable());
         
         $this->assertEqual($j->getHealthScores(), array());

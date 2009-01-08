@@ -167,6 +167,10 @@ class HudsonJob {
         return ($this->dom_job->buildable == "true");
     }
     
+    function hasBuilds() {
+        return ((int)$this->getLastBuildNumber() !== 0); 
+    }
+    
     function getLastBuildNumber() {
         return $this->dom_job->lastBuild->number;
     }
@@ -186,6 +190,10 @@ class HudsonJob {
     }
     function getLastFailedBuildUrl() {
         return $this->dom_job->lastFailedBuild->url;
+    }
+    
+    function getNextBuildNumber() {
+        return $this->dom_job->nextBuildNumber;
     }
     
     function getHealthScores() {
