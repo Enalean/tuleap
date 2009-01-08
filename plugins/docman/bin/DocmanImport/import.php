@@ -26,7 +26,7 @@ require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
 
 $usage = "
-Usage: import.php --url=<Codendi URL> --projectId=<destination project ID> --archive=<archive path>
+Usage: import.php --url=<Codendi URL> --project=<destination project unix name> --archive=<archive path>
        import.php --help".PHP_EOL;
 
 function help() {
@@ -35,8 +35,8 @@ function help() {
     echo "Imports a set of Codendi Docman documents to a project
 $usage
 Required parameters:
-    --url=<Codendi URL>                     URL of the Codendi home page (ex: http://codendi.mycompany.com:81)
-    --projectId=<destination project ID>    Destination project ID
+    --url=<Codendi URL>                     URL of the Codendi home page (ex: http://codendi.mycompany.com:81
+    --project=<destination project>         Destination project unix name
     --archive=<archive path>                Path of the archive folder that must contain an XML file
 
 Optional parameters:
@@ -57,8 +57,8 @@ if (($url = getParameter($argv, 'url', true)) === null) {
     echo "Missing parameter: --url".PHP_EOL;
 }
 
-if (($projectId = getParameter($argv, 'projectId', true)) === null) {
-    echo "Missing parameter: --projectId".PHP_EOL;
+if (($project = getParameter($argv, 'project', true)) === null) {
+    echo "Missing parameter: --project".PHP_EOL;
 }
 
 $folderId = getParameter($argv, 'folderId', true);
@@ -90,7 +90,7 @@ if ($path === null) {
     }
 }
 
-if ($url === null || $projectId === null || $archive === null) {
+if ($url === null || $project === null || $archive === null) {
     echo $usage.PHP_EOL;
     die;
 }
@@ -123,13 +123,13 @@ $wsdl = "$url/soap/codex.wsdl.php?wsdl";
 
 if ($update) {
     // Connect
-    $xmlUpdate = new XMLDocmanUpdate($projectId, $wsdl, $login, $password, $force, $reorder);
+    $xmlUpdate = new XMLDocmanUpdate($project, $wsdl, $login, $password, $force, $reorder);
     
     // Update
     $xmlUpdate->updatePath($archive, $folderId, $path);
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($projectId, $wsdl, $login, $password, $force, $reorder);
+    $xmlImport = new XMLDocmanImport($project, $wsdl, $login, $password, $force, $reorder);
     
     // Import
     $xmlImport->importPath($archive, $folderId, $path);
