@@ -9,13 +9,13 @@
  * hudson_Widget_ProjectJobsOverview 
  */
 
-require_once('HudsonWidget.class.php');
+require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
+class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     
     var $plugin;
     var $group_id;
@@ -32,19 +32,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
         
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
-        
-        /*$this->_not_monitored_jobs = user_get_preference('plugin_hudson_project_not_monitored_jobs');
-        if ($this->_not_monitored_jobs === false) {
-            $this->_not_monitored_jobs = array();
-        } else {
-            $this->_not_monitored_jobs = explode(",", $this->_not_monitored_jobs);
-        }
-        
-        $this->_use_global_status = user_get_preference('plugin_hudson_use_global_status');
-        if ($this->_use_global_status === false) {
-            $this->_use_global_status = "true";
-            user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
-        }*/
         
         if ($this->_use_global_status == "true") {
             $this->_all_status = array(
@@ -83,57 +70,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
         $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_jobs'); 
         return  $title;
     }
-    /*
-    function updatePreferences(&$request) {
-        $request->valid(new Valid_String('cancel'));
-        if (!$request->exist('cancel')) {
-            $monitored_jobs = $request->get('myhudsonjobs');
-            
-            $user = UserManager::instance()->getCurrentUser();
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-            $dar = $job_dao->searchByUserID($user->getId());
-            $not_monitored_jobs = array();
-            while ($dar->valid()) {
-                $row = $dar->current();
-                if ( ! in_array($row['job_id'], $monitored_jobs)) {
-                    $not_monitored_jobs[] = $row['job_id'];                    
-                }
-                $dar->next();
-            }
-            
-            $this->_not_monitored_jobs = $not_monitored_jobs; 
-            
-            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(",", $this->_not_monitored_jobs));
-            
-            $use_global_status = $request->get('use_global_status');
-            $this->_use_global_status = ($use_global_status !== false)?"true":"false";
-            user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
-        }
-        return true;
-    }
-    function getPreferences() {
-        $prefs  = '';
-        // Monitored jobs
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs').'</strong><br />';
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$job->getName().'<br />';
-            } catch (Exception $e) {
-                // Do not display wrong jobs
-            }
-            $dar->next();
-        }
-        
-        // Use global status
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
-        $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';
-        return $prefs;
-    }*/
     
     function getContent() {
         $jobs = $this->getJobsByGroup($this->group_id);
@@ -165,9 +101,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonWidget {
         }
     }
     
-    function isUnique() {
-        return true;
-    }
 }
 
 ?>

@@ -6,18 +6,16 @@
  * 
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  * 
- * hudson_Widget_ProjectJobBuildHistory 
+ * hudson_Widget_JobBuildHistory 
  */
 
-require_once('HudsonWidget.class.php');
+require_once('HudsonJobWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_ProjectJobBuildHistory extends HudsonWidget {
-    
-    const WIDGET_ID = 'projecthudsonjobbuildhistory';
+class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
     
     var $group_id;
     
@@ -25,8 +23,14 @@ class hudson_Widget_ProjectJobBuildHistory extends HudsonWidget {
     var $job_url;
     var $job_id;
     
-    function hudson_Widget_ProjectJobBuildHistory($owner_type, $owner_id) {
-        $this->Widget(self::WIDGET_ID);
+    function hudson_Widget_JobBuildHistory($owner_type, $owner_id) {
+        $wlm = new WidgetLayoutManager();
+        if ($owner_type == $wlm->OWNER_TYPE_USER) {
+            $this->widget_id = 'myhudsonjobbuildhistory';
+        } else {
+            $this->widget_id = 'projecthudsonjobbuildhistory';
+        }
+        $this->Widget($this->widget_id);
         
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
@@ -45,7 +49,7 @@ class hudson_Widget_ProjectJobBuildHistory extends HudsonWidget {
     }
     
     function loadContent($id) {
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . self::WIDGET_ID . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -84,7 +88,11 @@ class hudson_Widget_ProjectJobBuildHistory extends HudsonWidget {
         return true;
     }
     function getRssUrl() {
-        return $this->job->getUrl().'/rssAll';
+        if ($this->job) {
+            return $this->job->getUrl().'/rssAll';
+        } else {
+            return null;
+        }
     }
     
 }

@@ -9,13 +9,13 @@
  * hudson_Widget_MyMonitoredJobs 
  */
 
-require_once('HudsonWidget.class.php');
+require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_MyMonitoredJobs extends HudsonWidget {
+class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     
     var $plugin;
     
@@ -196,9 +196,6 @@ class hudson_Widget_MyMonitoredJobs extends HudsonWidget {
         return $monitored_jobs;
     }
 
-    function isUnique() {
-        return true;
-    }
 }
 
 ?>

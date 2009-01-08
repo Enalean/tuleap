@@ -6,10 +6,10 @@
  * 
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  * 
- * hudson_Widget_ProjectJobTestTrends 
+ * hudson_Widget_JobTestTrends 
  */
 
-require_once('HudsonWidget.class.php');
+require_once('HudsonJobWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
@@ -17,9 +17,7 @@ require_once('HudsonJob.class.php');
 
 require_once('HudsonTestResult.class.php');
 
-class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
-    
-    const WIDGET_ID = 'projecthudsonjobtesttrend';
+class hudson_Widget_JobTestTrend extends HudsonJobWidget {
     
     var $group_id;
     
@@ -27,8 +25,14 @@ class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
     var $job_url;
     var $job_id;
     
-    function hudson_Widget_ProjectJobTestTrend($owner_type, $owner_id) {
-        $this->Widget(self::WIDGET_ID);
+    function hudson_Widget_JobTestTrend($owner_type, $owner_id) {
+        $wlm = new WidgetLayoutManager();
+        if ($owner_type == $wlm->OWNER_TYPE_USER) {
+            $this->widget_id = 'myhudsonjobtesttrend';
+        } else {
+            $this->widget_id = 'projecthudsonjobtesttrend';
+        }
+        $this->Widget($this->widget_id);
         
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
@@ -47,14 +51,20 @@ class hudson_Widget_ProjectJobTestTrend extends HudsonWidget {
     }
     
     function loadContent($id) {
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . self::WIDGET_ID . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
             $this->job_id    = $data['job_id'];
             $this->content_id = $id;
             
-            $jobs = $this->getJobsByGroup($this->group_id);
+            $jobs = array();
+            $wlm = new WidgetLayoutManager();
+            if ($this->owner_type == $wlm->OWNER_TYPE_USER) {
+                $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
+            } else {
+                $jobs = $this->getJobsByGroup($this->group_id);
+            }
             if (array_key_exists($this->job_id, $jobs)) {
                 $used_job = $jobs[$this->job_id];
                 $this->job_url = $used_job->getUrl();
