@@ -56,13 +56,8 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
             $this->job_id    = $data['job_id'];
             $this->content_id = $id;
             
-            $jobs = array();
-            $wlm = new WidgetLayoutManager();
-            if ($this->owner_type == $wlm->OWNER_TYPE_USER) {
-                $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
-            } else {
-                $jobs = $this->getJobsByGroup($this->group_id);
-            }
+            $jobs = $this->getAvailableJobs();
+            
             if (array_key_exists($this->job_id, $jobs)) {
                 $used_job = $jobs[$this->job_id];
                 $this->job_url = $used_job->getUrl();

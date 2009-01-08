@@ -11,11 +11,23 @@
 
 require_once('common/widget/Widget.class.php');
 require_once('PluginHudsonJobDao.class.php');
+require_once('common/widget/WidgetLayoutManager.class.php');
 
 abstract class HudsonWidget extends Widget {
     
     function getCategory() {
         return 'ci';
+    }
+    
+    protected function getAvailableJobs() {
+        $jobs = array();
+        $wlm = new WidgetLayoutManager();
+        if ($this->owner_type == $wlm->OWNER_TYPE_USER) {
+            $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
+        } else {
+            $jobs = $this->getJobsByGroup($this->group_id);
+        }
+        return $jobs;
     }
     
     protected function getJobsByGroup($group_id) {
