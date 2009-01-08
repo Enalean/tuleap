@@ -6,7 +6,7 @@
  * 
  * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
  * 
- * abstract class HudsonJobWidget 
+ * abstract class HudsonOverviewWidget 
  */
 
 require_once('HudsonWidget.class.php');
