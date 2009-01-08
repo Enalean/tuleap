@@ -60,7 +60,13 @@ abstract class HudsonJobWidget extends HudsonWidget {
     function getPreferences() {
         $prefs  = '';
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
-        $jobs = $this->getJobsByGroup($this->group_id);
+        $jobs = array();
+        $wlm = new WidgetLayoutManager();
+        if ($this->owner_type == $wlm->OWNER_TYPE_USER) {
+            $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
+        } else {
+            $jobs = $this->getJobsByGroup($this->group_id);
+        }
         foreach ($jobs as $job_id => $job) {
             $selected = ($job_id == $this->job_id)?'checked="checked"':'';
             $prefs .= '<input type="radio" name="' . $this->id . '" value="'.$job_id.'" ' . $selected . '> '.$job->getName().'<br />';
