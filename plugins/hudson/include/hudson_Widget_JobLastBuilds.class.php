@@ -17,23 +17,17 @@ require_once('HudsonJob.class.php');
 
 class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
     
-    var $group_id;
-    
-    var $job;
-    var $job_url;
-    var $job_id;
-    
     function hudson_Widget_JobLastBuilds($owner_type, $owner_id) {
+        $request =& HTTPRequest::instance();
         $wlm = new WidgetLayoutManager();
         if ($owner_type == $wlm->OWNER_TYPE_USER) {
             $this->widget_id = 'myhudsonjoblastbuilds';
+            $this->group_id = $owner_id;
         } else {
             $this->widget_id = 'projecthudsonjoblastbuilds';
+            $this->group_id = $request->get('group_id');
         }
         $this->Widget($this->widget_id);
-        
-        $request =& HTTPRequest::instance();
-        $this->group_id = $request->get('group_id');
                 
         $this->setOwner($owner_id, $owner_type);
     }

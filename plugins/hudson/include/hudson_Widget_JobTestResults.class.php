@@ -18,24 +18,19 @@ require_once('HudsonTestResult.class.php');
 
 class hudson_Widget_JobTestResults extends HudsonJobWidget {
     
-    var $group_id;
-    
-    var $job;
     var $test_result;
-    var $job_url;
-    var $job_id;
     
     function hudson_Widget_JobTestResults($owner_type, $owner_id) {
+        $request =& HTTPRequest::instance();
         $wlm = new WidgetLayoutManager();
         if ($owner_type == $wlm->OWNER_TYPE_USER) {
             $this->widget_id = 'myhudsonjobtestresults';
+            $this->group_id = $owner_id;
         } else {
             $this->widget_id = 'projecthudsonjobtestresults';
+            $this->group_id = $request->get('group_id');
         }
         $this->Widget($this->widget_id);
-        
-        $request =& HTTPRequest::instance();
-        $this->group_id = $request->get('group_id');
         
         $this->setOwner($owner_id, $owner_type);
     }
