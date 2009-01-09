@@ -23,6 +23,7 @@
 require_once('common/dao/SystemEventDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/event/EventManager.class.php');
+require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
 
 
 /**
@@ -95,4 +96,29 @@ class SystemEventManager {
         }
     }
 
+
+    /**
+     * Process stored events. Should this be moved to a new class?
+     */
+    function processEvents() {
+        while (($dar=$this->dao->checkOutNextEvent()) != null) {
+            if ($row = $dar->getRow()) {
+                switch ($row['type']) {
+                case 'PROJECT_CREATE':
+                    $sysevent = new SystemEvent_PROJECT_CREATE(SystemEvent::PROJECT_CREATE,$row['parameters'],$row['priority']);
+                    break;
+                default:
+                    break;
+                }
+
+                // Process $sysevent
+                $sysevent->setStatus('RUNNING');
+                $sysevent->process();
+            }
+        }
+    }
+
+
 }
+
+?>

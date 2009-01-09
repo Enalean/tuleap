@@ -29,7 +29,9 @@ if [ -z "$PHP" ]; then
 fi
 # Include path is only defined in php.conf (and not php.ini).
 # It was also reported that 8MB (default memory limit) is not sufficient in some cases.
-PHP_PARAMS="-q -d include_path=/usr/share/codex/src/www/include:/usr/share/codex/src:.i -d memory_limit=32M"
+if [ -z "$PHP_PARAMS" ]; then
+    PHP_PARAMS="-q -d include_path=/usr/share/codex/src/www/include:/usr/share/codex/src:.i -d memory_limit=32M"
+fi
 
 # Common functions
 error() {

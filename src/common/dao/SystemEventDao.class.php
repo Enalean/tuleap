@@ -43,7 +43,24 @@ class SystemEventDao extends DataAccessObject {
      * @return DataAccessResult
     */
     function checkOutNextEvent() {
+        // Get Id of next event to process
+        $sql = "SELECT id FROM system_event WHERE status='NEW' ORDER BY priority, create_date LIMIT 1";
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            // Mark event as 'RUNNING'
+            if ($row = $dar->getRow()) {
+                $id = $row['id'];
+                $upd_sql = "UPDATE system_event SET status='RUNNING' WHERE id=$id";
+                $this->update($upd_sql);
+                // Retrieve all event parameters
+                $event_sql = "SELECT * FROM system_event WHERE id=$id";
+                return $this->retrieve($event_sql);
+            }
+        }
+        return null;
     }
 
 
 }
+
+?>

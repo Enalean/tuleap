@@ -83,5 +83,18 @@ class SystemEvent {
         return $this->status;
     }
 
+    function setStatus($status) {
+        $this->status=$status;
+    }
+
+    /** 
+     * Process stored event
+     * Virtual method redeclared in children
+     */
+    function process() {
+        return null;
+    }
 
 }
+
+?>
