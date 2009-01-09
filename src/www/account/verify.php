@@ -7,8 +7,9 @@
 // 
 
 require_once('pre.php');
-require_once('account.php');  // LJ needed to create unix account
-   
+require_once('account.php');
+require_once('common/event/EventManager.class.php');
+
 
 // ###### function login_valid()
 // ###### checks for valid login from form post
@@ -83,7 +84,10 @@ if ($request->isPost() && $request->exist('Login')){
 	  } else {
 	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A'  WHERE user_name='".db_es($request->get('form_loginname'))."'");
 	  }
-		session_redirect("/account/first.php");
+          $user= UserManager::instance()->getUserByUserName($request->get('form_loginname'));
+          $em =& EventManager::instance();
+          $em->processEvent('project_admin_activate_user', array('user_id' => $user->getId()));
+          session_redirect("/account/first.php");
 	}
 }
 

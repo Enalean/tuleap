@@ -305,6 +305,10 @@ function account_create($loginname=''
     } else {
         $user_id = db_insertid($result);
         account_create_mypage($user_id);
+        if ($status=='A' or $status=='R') {
+            $em =& EventManager::instance();
+            $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+        }
         return $user_id;
     }
 }

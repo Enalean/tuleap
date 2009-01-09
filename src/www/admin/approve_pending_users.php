@@ -52,6 +52,12 @@ $expiry_date = 0;
             db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
                      ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                  " WHERE user_id IN ($list_of_users)");
+
+            $users_array = explode(",", $list_of_users);
+            $em =& EventManager::instance();
+            foreach ($users_array as $user_id) {
+                $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+            }
         
             // Now send the user verification emails
             $res_user = db_query("SELECT email, confirm_hash FROM user "
@@ -261,7 +267,7 @@ if (db_numrows($res) < 1) {
     
     //list of user_id's of pending users
     $arr=result_column_to_array($res,0);
-    $user_list=implode($arr,',');
+    $user_list=implode(',',$arr);
     
       echo '
         <CENTER>

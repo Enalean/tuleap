@@ -117,6 +117,10 @@ if (!file_exists($GLOBALS['codex_cache_dir'])) {
       mkdir($GLOBALS['codex_cache_dir'], 0755);
 }
 
+// Instantiate System Event listener
+require_once('common/system_event/SystemEventManager.class.php');
+$system_event_manager = new SystemEventManager();
+
 //Load plugins
 require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();

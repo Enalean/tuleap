@@ -118,6 +118,34 @@ ALTER TABLE user DROP COLUMN windows_pw;
 EOF
 
 
+# 
+# Table structure for System Events
+# 
+# type        : one of "PROJECT_CREATE", "PROJECT_DELETE", "USER_CREATE", etc.
+# parameters  : event parameters (group_id, etc.) depending on event type
+# priority    : event priority from 3 (high prio) to 1 (low prio)
+# status      : event status: 'NEW' = nothing done yet, 'RUNNING' = event is being processed, 
+#               'DONE', 'ERROR', 'WARNING' = event processed successfully, with error, or with a warning message respectively.
+# create_date : date when the event was created in the DB
+# process_date: date when event processing started
+# end_date    : date when processing finished
+# log         : log message after processing (useful for e.g. error messages or warnings).
+
+DROP TABLE IF EXISTS system_event;
+CREATE TABLE IF NOT EXISTS system_event (
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT, 
+  type VARCHAR(255) NOT NULL default '',
+  parameters TEXT,
+  priority TINYINT(1) NOT NULL default '0',
+  status  ENUM( 'NEW', 'RUNNING', 'DONE', 'ERROR', 'WARNING' ) NOT NULL DEFAULT 'NEW',
+  create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  log TEXT,
+  PRIMARY KEY (id)
+) TYPE=MyISAM;
+
+
 
 # artifact permissions
 ALTER TABLE artifact ADD COLUMN use_artifact_permissions tinyint(1) NOT NULL DEFAULT '0' AFTER group_artifact_id;

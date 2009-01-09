@@ -9,6 +9,7 @@
 require_once('pre.php');    
 require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('common/event/EventManager.class.php');
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -91,6 +92,9 @@ if ($action=='delete') {
 */
 if ($action=='activate') {
 	db_query("UPDATE user SET status='A' WHERE user_id='$user_id'");
+        $em =& EventManager::instance();
+        $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+
 	echo '<H2>'.$Language->getText('admin_userlist','user_active').'</H2>';
 }
 
@@ -119,6 +123,8 @@ if (($action=='restrict')&&(isset($GLOBALS['sys_allow_restricted_users']) && $GL
         }
     }
     db_query("UPDATE user SET status='R'$shell WHERE user_id='$user_id'");
+    $em =& EventManager::instance();
+    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
     echo '<H2>'.$Language->getText('admin_userlist','user_restricted').'</H2>';
 }
 
