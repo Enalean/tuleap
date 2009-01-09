@@ -36,7 +36,21 @@ class SystemEventDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    /**
+     /** 
+     * Close SystemEvent: update status, log and end_date.
+     * @param $sysevent : SystemEvent object
+     * @return true if there is no error
+     */
+    function close($sysevent) {
+        $sql = sprintf("UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%s) WHERE id=%s",
+                       $this->da->quoteSmart($sysevent->getStatus()),
+                       $this->da->quoteSmart($sysevent->getLog()),
+                       $this->da->quoteSmart(time()),
+                        $this->da->quoteSmart($sysevent->getId()));
+        return $this->update($sql);
+    }
+
+   /**
      * Return next system event    
      * criteria: higer priority first, then most recent first
      * And set the event status to 'RUNNING'
@@ -50,7 +64,7 @@ class SystemEventDao extends DataAccessObject {
             // Mark event as 'RUNNING'
             if ($row = $dar->getRow()) {
                 $id = $row['id'];
-                $upd_sql = "UPDATE system_event SET status='RUNNING' WHERE id=$id";
+                $upd_sql = "UPDATE system_event SET status='RUNNING', process_date=FROM_UNIXTIME(".time().") WHERE id=$id";
                 $this->update($upd_sql);
                 // Retrieve all event parameters
                 $event_sql = "SELECT * FROM system_event WHERE id=$id";

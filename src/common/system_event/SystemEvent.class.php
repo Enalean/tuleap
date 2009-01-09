@@ -83,8 +83,16 @@ class SystemEvent {
         return $this->status;
     }
 
+    function getLog() {
+        return $this->log;
+    }
+
     function setStatus($status) {
         $this->status=$status;
+    }
+
+    function setLog($log) {
+        $this->log=$log;
     }
 
     /** 

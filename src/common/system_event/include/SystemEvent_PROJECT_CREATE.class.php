@@ -28,12 +28,30 @@
 */
 class SystemEvent_PROJECT_CREATE extends SystemEvent {
 
+
+    /**
+     * Constructor
+     * @param $type      : SystemeEvent type (const defined in this class)
+     * @param $parameters: Event Parameter (e.g. group_id if event type is PROJECT_CREATE)
+     * @param $priority  : Event priority
+     */
+    function SystemEvent_PROJECT_CREATE($id, $parameters, $priority, $status ) {
+        $this->id        = $id;
+        $this->type      = SystemEvent::PROJECT_CREATE;
+        $this->parameters= $parameters;
+        $this->priority  = $priority;
+        $this->status    = $status;
+    }
+
+
+
     /** 
      * Process stored event
      */
     function process() {
-        echo "\nThis is a PROJECT CREATE event for group: ";
-        echo $this->getParameters();
+        $this->setStatus("DONE");
+        $this->setLog("OK");
+        return true;
     }
 
 }

@@ -105,15 +105,19 @@ class SystemEventManager {
             if ($row = $dar->getRow()) {
                 switch ($row['type']) {
                 case 'PROJECT_CREATE':
-                    $sysevent = new SystemEvent_PROJECT_CREATE(SystemEvent::PROJECT_CREATE,$row['parameters'],$row['priority']);
+                    $sysevent = new SystemEvent_PROJECT_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
                     break;
-                default:
-                    break;
+                default:              
+                     $sysevent = null;
+                   break;
                 }
 
                 // Process $sysevent
-                $sysevent->setStatus('RUNNING');
-                $sysevent->process();
+                if (isset($sysevent) && ($sysevent)) {
+                    if ($sysevent->process()) {
+                        $this->dao->close($sysevent);
+                    }
+                }
             }
         }
     }
