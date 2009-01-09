@@ -45,8 +45,7 @@ class SystemEventManager {
         $event_manager->addListener('project_admin_add_user',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_admin_remove_user',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_admin_activate_user',$this, 'addSystemEvent', true, 0);
-
-        
+        $event_manager->addListener('project_admin_delete_user',$this, 'addSystemEvent', true, 0);
     }
 
     function &_getEventManager() {
@@ -85,6 +84,10 @@ class SystemEventManager {
             break;
         case 'project_admin_activate_user':
             $sysevent = new SystemEvent(SystemEvent::USER_CREATE,$params['user_id'],2);
+            $this->dao->store($sysevent);
+            break;
+        case 'project_admin_delete_user':
+            $sysevent = new SystemEvent(SystemEvent::USER_DELETE,$params['user_id'],3);
             $this->dao->store($sysevent);
             break;
         default:

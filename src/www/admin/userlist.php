@@ -84,6 +84,8 @@ if (!isset($action)) {
 if ($action=='delete') {
 	db_query("UPDATE user SET status='D',unix_status='D'  WHERE user_id='$user_id'");
         ugroup_delete_user_from_all_ugroups($user_id);
+        $em =& EventManager::instance();
+        $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
 	echo '<H2>'.$Language->getText('admin_userlist','user_deleted').'</H2>';
 }
 

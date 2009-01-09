@@ -113,8 +113,14 @@ $expiry_date = 0;
             }
             
         } else if ($action_select=='delete') {
-            db_query("UPDATE user SET status='D, approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+            db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                      " WHERE user_id IN ($list_of_users)");
+            $users_array = explode(",", $list_of_users);
+            $em =& EventManager::instance();
+            foreach ($users_array as $user_id) {
+                $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));
+            }
+
         }
     }
 //
