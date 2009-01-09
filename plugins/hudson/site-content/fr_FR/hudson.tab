@@ -10,6 +10,7 @@ plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
 plugin_hudson	header_table_rss	RSS
+plugin_hudson	header_table_trigger	Evénement SVN
 plugin_hudson	header_table_actions	Actions
 plugin_hudson	build	build
 plugin_hudson	last_build	Dernier Build :
@@ -21,6 +22,9 @@ plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
 plugin_hudson	addjob_title	Ajouter un job
 plugin_hudson	form_job_url	URL du job :
+plugin_hudson	form_job_use_trigger	Déclenche un build :
+plugin_hudson	alt_svn_trigger	Un commit SVN déclenchera un build
+plugin_hudson	form_job_with_token	avec le token (optionnel) :
 plugin_hudson	wrong_job_url	URL du job incorrecte : $1
 plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
 plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1

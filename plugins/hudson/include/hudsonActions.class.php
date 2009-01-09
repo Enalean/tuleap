@@ -28,8 +28,15 @@ class hudsonActions extends Actions {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_url = $request->get('hudson_job_url');
+        $use_trigger = ($request->get('hudson_use_trigger') === 'on');
+        if ($use_trigger) {
+            $token = $request->get('hudson_trigger_token');
+        } else {
+            $token = null;
+        }
+        
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        if ( ! $job_dao->createHudsonJob($group_id, $job_url)) {
+        if ( ! $job_dao->createHudsonJob($group_id, $job_url, $use_trigger, $token)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','add_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_added'));
@@ -40,8 +47,14 @@ class hudsonActions extends Actions {
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $new_job_url = $request->get('new_hudson_job_url');
+        $new_use_trigger = ($request->get('new_hudson_use_trigger') === 'on');
+        if ($new_use_trigger) {
+            $new_token = $request->get('new_hudson_trigger_token');
+        } else {
+            $new_token = null;
+        }
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        if ( ! $job_dao->updateHudsonJob($job_id, $new_job_url)) {
+        if ( ! $job_dao->updateHudsonJob($job_id, $new_job_url, $new_use_trigger, $new_token)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','update_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_updated'));

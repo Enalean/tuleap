@@ -674,6 +674,10 @@ if (&isGroupSvnTracked) {
   }
 }
 
+# Trigger Continuous Integration build if needed.
+trigger_hudson_builds();
+
+
 exit 0;
 
 sub usage
@@ -865,4 +869,27 @@ sub date_to_gmtime() {
   $shift = ($shift_hrs*60+$shift_min)*60;
   $shift = -$shift if ($plusorminus eq '-');
   return (timegm($sec, $min, $hours, $mday, $mon-1, $year) - $shift);
+}
+
+sub trigger_hudson_builds() {
+    my ($query, $c, $res);
+    $query = "SELECT * FROM plugin_hudson_job WHERE group_id='$group_id' AND use_trigger=1";
+    $c = $dbh->prepare($query);
+    $res = $c->execute();
+    if ($res && ($c->rows > 0)) {
+      # Use CodeX HTTP API
+      my $ua = LWP::UserAgent->new;
+      $ua->agent('Codendi CI Perl Agent');
+
+      while ($trigger_row = $c->fetchrow_hashref) {
+
+        my $job_url = $trigger_row->{'job_url'};
+        my $req = POST "$job_url/build";
+        my $response = $ua->request($req);
+        if ($response->is_success) {
+        } else {
+          warn $response->status_line;
+        }
+      }
+    }
 }

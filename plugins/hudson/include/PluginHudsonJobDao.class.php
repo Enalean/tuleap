@@ -74,17 +74,22 @@ class PluginHudsonJobDao extends DataAccessObject {
     * create a row in the table plugin_hudson_job 
     * @return true if there is no error
     */
-    function createHudsonJob($group_id, $hudson_job_url) {
-        $sql = sprintf("INSERT INTO plugin_hudson_job (group_id, job_url) VALUES (%s, %s)",
+    function createHudsonJob($group_id, $hudson_job_url, $use_trigger = false, $token = null) {
+        $sql = sprintf("INSERT INTO plugin_hudson_job (group_id, job_url, use_trigger, token) VALUES (%s, %s, %s, %s)",
                 $this->da->quoteSmart($group_id),
-                $this->da->quoteSmart($hudson_job_url));
+                $this->da->quoteSmart($hudson_job_url),
+                ($use_trigger?1:0),
+                (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart(''))
+                );
         $ok = $this->update($sql);
 		return $ok;
     }
     
-    function updateHudsonJob($job_id, $hudson_job_url) {
-        $sql = sprintf("UPDATE plugin_hudson_job SET job_url = %s WHERE job_id = %s",
+    function updateHudsonJob($job_id, $hudson_job_url, $use_trigger = false, $token = null) {
+        $sql = sprintf("UPDATE plugin_hudson_job SET job_url = %s, use_trigger = %s, token = %s WHERE job_id = %s",
            		$this->da->quoteSmart($hudson_job_url),
+           		($use_trigger?1:0),
+                (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart('')),
                 $this->da->quoteSmart($job_id));
         $updated = $this->update($sql);
         return $updated;

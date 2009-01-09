@@ -3,6 +3,8 @@ CREATE TABLE plugin_hudson_job (
   job_id int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT ,
   group_id int(11) NOT NULL ,
   job_url varchar(255) NOT NULL ,
+  use_trigger tinyint(4) NOT NULL default 0 ,
+  token varchar(128) NOT NULL
 );
 
 DROP TABLE IF EXISTS plugin_hudson_widget;
