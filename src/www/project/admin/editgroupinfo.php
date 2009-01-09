@@ -110,8 +110,8 @@ if ($valid_data==1) {
     
     $sql = 'UPDATE groups SET '
         ."group_name='".htmlspecialchars($form_group_name)."',"
-        ."short_description='$form_shortdesc',"
-        ."hide_members='$hide_members'";
+        ."short_description='". db_es($form_shortdesc) ."',"
+        ."hide_members='". db_es($hide_members) ."'";
 		
     $sql .= " WHERE group_id='".$group_id."'";
 
