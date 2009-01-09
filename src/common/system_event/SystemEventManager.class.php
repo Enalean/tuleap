@@ -24,6 +24,11 @@ require_once('common/dao/SystemEventDao.class.php');
 require_once('common/dao/CodexDataAccess.class.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
+require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
+require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php');
+require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
+require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
+require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
 
 
 /**
@@ -106,6 +111,21 @@ class SystemEventManager {
                 switch ($row['type']) {
                 case 'PROJECT_CREATE':
                     $sysevent = new SystemEvent_PROJECT_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'PROJECT_DELETE':
+                    $sysevent = new SystemEvent_PROJECT_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'MEMBERSHIP_CREATE':
+                    $sysevent = new SystemEvent_MEMBERSHIP_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'MEMBERSHIP_DELETE':
+                    $sysevent = new SystemEvent_MEMBERSHIP_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'USER_CREATE':
+                    $sysevent = new SystemEvent_USER_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'USER_DELETE':
+                    $sysevent = new SystemEvent_USER_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
                     break;
                 default:              
                      $sysevent = null;

@@ -26,7 +26,7 @@
 * System Event classes
 *
 */
-class SystemEvent_PROJECT_CREATE extends SystemEvent {
+class SystemEvent_USER_DELETE extends SystemEvent {
 
 
     /**
@@ -36,9 +36,9 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
      * @param $priority  : Event priority
      * @param $status    : Event status
      */
-    function SystemEvent_PROJECT_CREATE($id, $parameters, $priority, $status ) {
+    function SystemEvent_USER_DELETE($id, $parameters, $priority, $status ) {
         $this->id        = $id;
-        $this->type      = SystemEvent::PROJECT_CREATE;
+        $this->type      = SystemEvent::USER_DELETE;
         $this->parameters= $parameters;
         $this->priority  = $priority;
         $this->status    = $status;
