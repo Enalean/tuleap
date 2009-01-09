@@ -36,10 +36,11 @@ function help() {
 $usage
 Required parameters:
     --url=<Codendi URL>                     URL of the Codendi home page (ex: http://codendi.mycompany.com:81
-    --project=<destination project>         Destination project unix name
     --archive=<archive path>                Path of the archive folder that must contain an XML file
+    --project=<destination project>         Destination project unix name
 
 Optional parameters:
+    --projectId=<destination project ID>    Destination project ID (use instead of --project)
     --folderId=<destination folder ID>      Destination folder ID. The imported documents will be created in this folder (default: project root folder)
     --force                                 Continue even if some users (authors, owners) don't exist on the remote server
     --reorder                               The items will be reordered in alphabetical order, folders before documents
@@ -57,10 +58,6 @@ if (($url = getParameter($argv, 'url', true)) === null) {
     echo "Missing parameter: --url".PHP_EOL;
 }
 
-if (($project = getParameter($argv, 'project', true)) === null) {
-    echo "Missing parameter: --project".PHP_EOL;
-}
-
 $folderId = getParameter($argv, 'folderId', true);
 
 if (($archive = getParameter($argv, 'archive', true)) === null) {
@@ -73,6 +70,12 @@ if (($archive = getParameter($argv, 'archive', true)) === null) {
 } else {
     echo "The archive must be an existing folder".PHP_EOL;
     $archive = null;
+}
+
+$project = getParameter($argv, 'project');
+$projectId = getParameter($argv, 'projectId');
+if ($project === null && $projectId === null) {
+    echo "One of the following parameters is required: --project, --projectId".PHP_EOL;
 }
 
 $force = getParameter($argv, 'force');
@@ -90,7 +93,7 @@ if ($path === null) {
     }
 }
 
-if ($url === null || $project === null || $archive === null) {
+if ($url === null || ($project === null && $projectId === null) || $archive === null) {
     echo $usage.PHP_EOL;
     die;
 }
@@ -123,13 +126,13 @@ $wsdl = "$url/soap/codex.wsdl.php?wsdl";
 
 if ($update) {
     // Connect
-    $xmlUpdate = new XMLDocmanUpdate($project, $wsdl, $login, $password, $force, $reorder);
+    $xmlUpdate = new XMLDocmanUpdate($project, $projectId, $wsdl, $login, $password, $force, $reorder);
     
     // Update
     $xmlUpdate->updatePath($archive, $folderId, $path);
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($project, $wsdl, $login, $password, $force, $reorder);
+    $xmlImport = new XMLDocmanImport($project, $projectId, $wsdl, $login, $password, $force, $reorder);
     
     // Import
     $xmlImport->importPath($archive, $folderId, $path);

@@ -72,7 +72,7 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($groupId, $wsdl, $login, $password, $force, $reorder) {
+    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder) {
         $this->metadataMap = array();
         $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
@@ -83,7 +83,11 @@ class XMLDocmanImport {
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
             $this->hash = $this->soap->login($login, $password)->session_hash;
-            $this->groupId = $this->soap->getGroupByName($this->hash, $groupId)->group_id;
+            if ($projectId === null) {
+                $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
+            } else {
+                $this->groupId = $projectId;
+            }
         } catch (SoapFault $e) {
             $this->printSoapResponseAndThrow($e);
         }
