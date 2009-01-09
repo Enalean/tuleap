@@ -32,7 +32,7 @@ class XMLDocmanImport {
     const CHILDREN_ONLY   = 2;
     const PARENT_CHILDREN = 3;
 
-    private $dataBaseDir;
+    protected $dataBaseDir;
 
     // Metadata map
     private $metadataMap;
@@ -72,8 +72,7 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($groupId, $wsdl, $login, $password, $force, $reorder) {
-        $this->groupId = $groupId;
+    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder) {
         $this->metadataMap = array();
         $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
@@ -84,6 +83,11 @@ class XMLDocmanImport {
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
             $this->hash = $this->soap->login($login, $password)->session_hash;
+            if ($projectId === null) {
+                $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
+            } else {
+                $this->groupId = $projectId;
+            }
         } catch (SoapFault $e) {
             $this->printSoapResponseAndThrow($e);
         }
@@ -699,7 +703,7 @@ class XMLDocmanImport {
     }
     
     /**
-     * Returns an array containing the versions for an item
+     * Returns an array containing the data of a version
      */
     protected function getVersionInformation(SimpleXMLElement $node) {
         $version = array(

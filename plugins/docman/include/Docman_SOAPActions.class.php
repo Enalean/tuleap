@@ -64,7 +64,7 @@ class Docman_SOAPActions extends Docman_Actions {
     }
     
     /**
-     * Returns the MD5 checksum of a file
+     * Returns the MD5 checksum of a file (last version)
      */
     function getFileMD5sum() {
         $request =& $this->_controler->request;
@@ -75,13 +75,32 @@ class Docman_SOAPActions extends Docman_Actions {
             $item = $item_factory->getItemFromDb($item_id);
             if ($item !== null) {
                 $itemType = $item_factory->getItemTypeForItem($item);
-                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     $fs = $this->_getFileStorage();
-                    $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
-                    $this->_controler->_viewParams['action_result'] = $md5sum;
-                    if (!$md5sum) {
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                    
+                    if ($request->existAndNonEmpty('all_versions')) {
+                        $md5sum = array();
+                        $vf = $this->_getVersionFactory();
+                        $versions = $vf->getAllVersionForItem($item);
+                        foreach ($versions as $version) {
+                            $md5sum[$version->getNumber()] = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $version->getNumber());
+                        }
+
+                        // Sort by version order (ascending)
+                        ksort($md5sum);
+                        
+                        if (empty($md5sum)) {
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                        }
+                    } else {
+                        $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
+                        if (!$md5sum) {
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+                        }
                     }
+                    
+                    $this->_controler->_viewParams['action_result'] = $md5sum;
+                    
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
                 }
