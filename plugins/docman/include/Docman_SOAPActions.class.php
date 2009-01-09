@@ -84,8 +84,11 @@ class Docman_SOAPActions extends Docman_Actions {
                         $versions = $vf->getAllVersionForItem($item);
                         foreach ($versions as $version) {
                             $md5sum[$version->getNumber()] = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $version->getNumber());
-                            ksort($md5sum);
                         }
+
+                        // Sort by version order (ascending)
+                        ksort($md5sum);
+                        
                         if (empty($md5sum)) {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
