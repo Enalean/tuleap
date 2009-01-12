@@ -43,6 +43,7 @@ Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array(
                                                                            '_getFileStorage',
                                                                            '_checkOwnerChange',
                                                                            '_getUserManagerInstance',
+                                                                           '_storeFile',
                                                                        ));
 
 /**
@@ -169,6 +170,49 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action->event_manager->expectAt(1, 'processEvent', array('send_notifications', '*'));
         
         $action->update();
+    }
+    
+    /**
+     * New version
+     */
+    public function test_new_version_update() {
+        $action = $this->action;
+        
+        $params = array(
+                      'id'    => 128000,
+                      'group_id'=> 2,
+                  );
+        $request = new SOAPRequest($params);
+        $action->getControler()->request = $request;
+        
+        $action->expectOnce('_storeFile');
+        $this->itemFactory->expectOnce('update');
+        
+        $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
+        
+        $action->new_version();
+    }
+    
+    /**
+     * New version with version date
+     */
+    public function test_new_version_no_update() {
+        $action = $this->action;
+        
+        $params = array(
+                      'id'    => 128000,
+                      'group_id'=> 2,
+                      'date'    => 1,
+                  );
+        $request = new SOAPRequest($params);
+        $action->getControler()->request = $request;
+        
+        $action->expectOnce('_storeFile');
+        $this->itemFactory->expectNever('update');
+        
+        $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
+        
+        $action->new_version();
     }
 }
 
