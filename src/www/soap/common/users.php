@@ -40,6 +40,7 @@ $GLOBALS['server']->wsdl->addComplexType(
 $server->register(
     'checkUsersExistence',
     array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:string',
         'users'=>'tns:ArrayOfstring'
     ),
     array('return'=>'tns:ArrayOfUserInfo'),
@@ -52,16 +53,28 @@ $server->register(
 
 } else {
     
-function checkUsersExistence($sessionKey, $users) {
-    if (session_continue($sessionKey)){
+function checkUsersExistence($sessionKey, $group_id, $users) {
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault, 'Could Not Get Group', $actor);
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault,  $group->getErrorMessage(), $actor);
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault,  'Restricted user: permission denied.', $actor);
+        }
         
         $existingUsers = array();
         
         $um = UserManager::instance();
+        
+        $groupMembers = $group->getMembersId();
+        
         foreach ($users as $userIdentifier) {
             try {
                 $userObj = $um->getUserByIdentifier($userIdentifier);
-        	    if ($userObj !== null) {
+        	    if ($userObj !== null && in_array($userObj->getId(), $groupMembers)) {
         	        $userInfo = array();
         	        $userInfo['identifier'] = $userIdentifier;
         	        $userInfo['username'] = $userObj->getUserName();

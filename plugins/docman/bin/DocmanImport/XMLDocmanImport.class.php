@@ -269,7 +269,7 @@ class XMLDocmanImport {
             echo "Retrieving users... ";
             
             try {
-                $res = $this->soap->checkUsersExistence($this->hash, $userIdentifiers);
+                $res = $this->soap->checkUsersExistence($this->hash, $this->groupId, $userIdentifiers);
                 foreach ($res as $userInfo) {
                     $this->userMap[$userInfo->identifier] = $userInfo->username;
                 }
