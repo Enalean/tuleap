@@ -68,7 +68,10 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         if ($this->job != null) {
             $job = $this->job;
             
-            $html .= '<ul>';
+            $html .= '<table width="100%">';
+            $html .= ' <tr>';
+            $html .= '  <td>';
+            $html .= '   <ul>';
             if ($job->hasBuilds()) {
                 $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build').' <a href="/plugins/hudson/?action=view_build&group_id='.$this->group_id.'&job_id='.$this->job_id.'&build_id='.$job->getLastBuildNumber().'"># '.$job->getLastBuildNumber().'</a></li>';
                 $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_success').' <a href="/plugins/hudson/?action=view_build&group_id='.$this->group_id.'&job_id='.$this->job_id.'&build_id='.$job->getLastSuccessfulBuildNumber().'"># '.$job->getLastSuccessfulBuildNumber().'</a></li>';
@@ -76,8 +79,13 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
             } else {
                 $html .= ' <li>'. $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
             }
-            $html .= '</ul>';
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" />';        
+            $html .= '   </ul>';
+            $html .= '  </td>';
+            $html .= '  <td style="align: right; text-align:right">';
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" style="vertical-align: middle" />';
+            $html .= '  </td>';
+            $html .= ' </tr>';
+            $html .= '</table>';        
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
         }
