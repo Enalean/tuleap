@@ -64,6 +64,10 @@ abstract class HudsonWidget extends Widget {
         return $jobs;
     }
     
+    function isAjax() {
+        return true;
+    }
+    
 }
 
 ?>
