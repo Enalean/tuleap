@@ -880,15 +880,31 @@ sub trigger_hudson_builds() {
       # Use CodeX HTTP API
       my $ua = LWP::UserAgent->new;
       $ua->agent('Codendi CI Perl Agent');
+      $ua->timeout(10);
 
       while ($trigger_row = $c->fetchrow_hashref) {
-
-        my $job_url = $trigger_row->{'job_url'};
-        my $req = POST "$job_url/build";
+	my $job_url = $trigger_row->{'job_url'};
+        my $token = $trigger_row->{'token'};
+        my $token_url = '';
+        if ($token ne '') {
+          $token_url = "?token=$token";
+        }
+        my $req = POST "$job_url/build$token_url";
         my $response = $ua->request($req);
+        
         if ($response->is_success) {
         } else {
-          warn $response->status_line;
+          if ($response->code eq 302) {
+            # 302 is the http code for redirect (http response for Hudson build)
+            # so we consider it as a success
+          } else {
+            my $logfile = "$codex_log/hudson_log";
+            my $statusline = $response->status_line;
+            if (open(LOGFILE, ">> $logfile")) {
+              print LOGFILE "Hudson build error with build url $job_url/build$token_url : $statusline \n";
+              close LOGFILE;
+            }
+          }
         }
       }
     }
