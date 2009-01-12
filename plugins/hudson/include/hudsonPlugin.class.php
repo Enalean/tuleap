@@ -42,7 +42,10 @@ class hudsonPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 
+        ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }

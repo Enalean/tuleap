@@ -15,3 +15,11 @@ span.job_action {
 	margin-left: 2px;
 	margin-right: 2px;
 }
+
+td.widget_lastbuilds_weather {
+	align: right; 
+	text-align: right;
+}
+img.widget_lastbuilds_weather_img {
+    vertical-align: middle;
+}

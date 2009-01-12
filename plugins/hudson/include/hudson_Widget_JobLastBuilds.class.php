@@ -81,8 +81,8 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
             }
             $html .= '   </ul>';
             $html .= '  </td>';
-            $html .= '  <td style="align: right; text-align:right">';
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" style="vertical-align: middle" />';
+            $html .= '  <td class="widget_lastbuilds_weather">';
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" class="widget_lastbuilds_weather_img" />';
             $html .= '  </td>';
             $html .= ' </tr>';
             $html .= '</table>';        
