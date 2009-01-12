@@ -72,6 +72,7 @@ plugin_hudson	skip_legend	Ignore ($1)
 plugin_hudson	project_job_testtrend	Tendance des résultats des tests $1
 plugin_hudson	project_job_buildhistory	Historique des builds $1
 
+plugin_hudson	widget_category_name	Intégration Continue
 plugin_hudson	widget_job_not_found	Job non trouvé.
 plugin_hudson	widget_tests_not_found	Tests non trouvés pour ce job.
 plugin_hudson	widget_build_not_found	Build non trouvé pour ce job.
