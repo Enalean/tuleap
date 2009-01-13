@@ -186,6 +186,12 @@ $sys_custom_themeroot = $sys_custom_dir . "/themes";
 $htmlpurifier_dir = "/usr/share/htmlpurifier";
 $jpgraph_dir      = "/usr/share/jpgraph";
 
+
+// How much to add to the database unix_uid to get the actual unix uid
+$unix_uid_add	= "20000";
+// How much to add to the database group_id to get the unix gid
+$unix_gid_add	= "1000";
+
 // Users
 $sys_http_user  = "codexadm"; // Unix user running the HTTP server
 $dummy_uid      = "103";      // UserID of the dummy user that will own group's files

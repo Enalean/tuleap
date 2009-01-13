@@ -32,8 +32,11 @@ class SystemEvent {
     var $type;
     var $parameters;
     var $priority;
-    // Status is one of: 'NEW', 'RUNNING', 'DONE', 'ERROR', 'WARNING' (see DB enum)
     var $status;
+
+    // Handle to Backend object
+    var $backend;
+
 
     // Define event types
     const PROJECT_CREATE="PROJECT_CREATE";
@@ -44,6 +47,13 @@ class SystemEvent {
     const MEMBERSHIP_CREATE="MEMBERSHIP_CREATE";
     const MEMBERSHIP_DELETE="MEMBERSHIP_DELETE";
     const MEMBERSHIP_MODIFY="MEMBERSHIP_MODIFY";
+
+    // Define status value (in sync with DB enum)
+    const STATUS_NEW="NEW";
+    const STATUS_RUNNING="RUNNING";
+    const STATUS_DONE="DONE";
+    const STATUS_WARNING="WARNING";
+    const STATUS_ERROR="ERROR";
 
 
     /**
@@ -56,7 +66,7 @@ class SystemEvent {
         $this->type      = $type;
         $this->parameters= $parameters;
         $this->priority  = $priority;
-        $this->status    = "NEW";
+        $this->status    = SystemEvent::STATUS_NEW;
     }
 
     // Getters
@@ -94,6 +104,42 @@ class SystemEvent {
     function setLog($log) {
         $this->log=$log;
     }
+
+
+    function _getBackend() {
+        return Backend::instance();
+    }
+
+
+    /**
+     * Checks if the given value represents integer
+     * is_int() won't work on string containing integers...
+     */
+    function int_ok($val)
+    {
+        return ((string) $val) === ((string)(int) $val);
+    }
+
+    /**
+     * A few functions to parse the parameters string
+     */
+    function getIdFromParam() {
+        if ($this->int_ok($this->parameters)) {
+            return $this->parameters;
+        } else return 0;
+    }
+
+
+
+    /**
+     * Error functions
+     */
+    function setErrorBadParam() {
+        $this->setStatus(SystemEvent::STATUS_ERROR);
+        $this->setLog("Bad parameter for event ".$this->getType().": ".$this->getParameters());
+        return 0;
+    }
+
 
     /** 
      * Process stored event

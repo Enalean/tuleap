@@ -29,6 +29,7 @@ require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.ph
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
+require_once('common/system_event/Backend.class.php');
 
 
 /**
@@ -39,6 +40,9 @@ require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
 class SystemEventManager {
     
     var $dao;
+
+    // Handle to Backend object
+    var $backend;
 
 
     // Constructor
@@ -63,6 +67,10 @@ class SystemEventManager {
             $this->dao = new SystemEventDao(CodexDataAccess::instance());
         }
         return  $this->dao;
+    }
+
+    function _getBackend() {
+        return Backend::instance();
     }
 
     /*
@@ -106,8 +114,11 @@ class SystemEventManager {
      * Process stored events. Should this be moved to a new class?
      */
     function processEvents() {
+        $backend=$this->_getBackend();
         while (($dar=$this->dao->checkOutNextEvent()) != null) {
             if ($row = $dar->getRow()) {
+                //echo "Processing event ".$row['id']." (".$row['type'].")\n";
+
                 switch ($row['type']) {
                 case 'PROJECT_CREATE':
                     $sysevent = new SystemEvent_PROJECT_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
@@ -134,14 +145,17 @@ class SystemEventManager {
 
                 // Process $sysevent
                 if (isset($sysevent) && ($sysevent)) {
-                    if ($sysevent->process()) {
-                        $this->dao->close($sysevent);
-                    }
+                    $sysevent->process();
+                    $this->dao->close($sysevent);
+                    // Output errors???
                 }
             }
         }
+        // Since generating aliases may be costly, do it only once everything else is processed
+        if ($backend->aliasesNeedUpdate()) {
+            $backend->aliasesUpdate();
+        }
     }
-
 
 }
 

@@ -52,6 +52,35 @@ if [ $? -ne 0 ]; then
 EOF
 fi
 
+# unix_uid_add
+$GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+
+// How much to add to the database unix_uid to get the actual unix uid
+\$unix_uid_add  = "20000";
+?>
+EOF
+fi
+
+# unix_gid_add
+$GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codex/conf/local.inc
+
+// How much to add to the database group_id to get the unix gid
+\$unix_gid_add  = "1000";
+?>
+EOF
+fi
+
+
 ###############################################################################
 # HTTP-based authentication
 echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.old"

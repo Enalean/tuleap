@@ -475,6 +475,13 @@ class User {
         return $this->data_array['unix_box'];
     }
     /**
+     * @return real unix ID of the user (not the one in the DB!)
+     */
+    function getRealUnixUID() {
+        $unix_id = $this->data_array['unix_uid'] + $GLOBALS['unix_uid_add'];
+        return $unix_id;
+    }
+    /**
      * @return string authorized keys of the user
      */
     function getAuthorizedKeys() {

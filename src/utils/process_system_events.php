@@ -22,6 +22,8 @@
 
 require_once('pre.php');
 
+// TODO: Check that current user is root
+
 $system_event_manager->processEvents();
 
 ?>

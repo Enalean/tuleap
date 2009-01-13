@@ -165,7 +165,7 @@ while ($ln = pop(@userdump_array)) {
 	($uid, $unix_status, $status, $username, $shell, $passwd, $email, $realname) = split(":", $ln);
 
 	
-	$uid += $uid_add;
+	$uid += $unix_uid_add;
 
 	$username =~ tr/A-Z/a-z/;
 	
@@ -232,7 +232,7 @@ while ($ln = pop(@groupdump_array)) {
 	($gname, $gstatus, $gis_public, $cvs_tracker, $cvs_watch_mode, $svn_tracker, $gid, $userlist, $ugrouplist, $file_service, $svn_service) = split(":", $ln);
 	
 	$cvs_id = $gid + 50000;
-	$gid += $gid_add;
+	$gid += $unix_gid_add;
 
 	# Add $sys_http_user user to the group if it is a private project
 	# otherwise Apache won't be able to access the document Root
