@@ -20,7 +20,7 @@
  */
 
 require_once 'XMLDocmanImport.class.php';
-require_once 'trees.php';
+require_once 'Trees.class.php';
 
 class XMLDocmanUpdate extends XMLDocmanImport {
 
@@ -51,7 +51,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         }
 
         // Merge the trees, and tag the nodes
-        $mergedTree = array_pop(array_merge_tag_recursive($remoteTree, $localTree));
+        $mergedTree = array_pop(Trees::array_merge_tag_recursive($remoteTree, $localTree));
         
         $tagCounts = $this->tagCount($mergedTree);
         
@@ -148,7 +148,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         }
 
         // Tree of ids
-        $tree = nodeListToTree($listOfNodes);
+        $tree = Trees::nodeListToTree($listOfNodes);
 
         return $tree;
     }

@@ -358,7 +358,7 @@ class Docman_Actions extends Actions {
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
                         $this->permissions(array('id' => $id, 'force' => true));
                     } else {
-                        $pm =& PermissionsManager::instance();
+                        $pm = $this->_getPermissionsManagerInstance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
                     }
                     $this->event_manager->processEvent('plugin_docman_event_add', array(
@@ -585,7 +585,6 @@ class Docman_Actions extends Actions {
     function new_version() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
-            $user =& $this->_controler->getUser();
             $item_factory =& $this->_getItemFactory();
             $item =& $item_factory->getItemFromDb($request->get('id'));
             $item_type = $item_factory->getItemTypeForItem($item);
@@ -593,7 +592,7 @@ class Docman_Actions extends Actions {
                 $this->_storeFile($item);
                 
                 // We update the update_date of the document only if no version date was given
-                if (!$request->exist('date') || $request->get('date') == '') {
+                if (!$request->existAndNonEmpty('date')) {
                     $item_factory->update(array('id' => $item->getId()));    
                 }
             }
