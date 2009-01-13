@@ -358,7 +358,7 @@ class Docman_Actions extends Actions {
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
                         $this->permissions(array('id' => $id, 'force' => true));
                     } else {
-                        $pm =& PermissionsManager::instance();
+                        $pm = $this->_getPermissionsManagerInstance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
                     }
                     $this->event_manager->processEvent('plugin_docman_event_add', array(
