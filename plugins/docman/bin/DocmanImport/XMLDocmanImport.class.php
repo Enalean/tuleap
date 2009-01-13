@@ -63,6 +63,9 @@ class XMLDocmanImport {
     
     // Whether the items will be reordered or not (folder, docs - alphabetical)
     private $reorder;
+            
+    // The import messages will be appended in the following metadata
+    protected $importMessageMetadata;
 
     /**
      * XMLDocmanImport constructor
@@ -72,13 +75,14 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder) {
+    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata) {
         $this->metadataMap = array();
         $this->hardCodedMetadata = array();
         $this->ugroupMap = array();
         $this->userMap = array();
         $this->force = $force;
         $this->reorder = $reorder;
+        $this->importMessageMetadata = $importMessageMetadata;
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
@@ -119,8 +123,21 @@ class XMLDocmanImport {
         $this->doc = simplexml_import_dom($dom);
 
         // Build the maps
-        $this->buildUserMap();
         $this->buildMetadataMap();
+        
+        // Import message metadata checks
+        if ($this->importMessageMetadata != '') {
+            if (!array_key_exists($this->importMessageMetadata, $this->metadataMap)) {
+                $this->exitError("You specified an incorrect import message metadata: ".$this->importMessageMetadata.PHP_EOL);
+            } else {
+                $type = $this->metadataMap[$this->importMessageMetadata]['type'];
+                if ($type != PLUGIN_DOCMAN_METADATA_TYPE_TEXT && $type != PLUGIN_DOCMAN_METADATA_TYPE_STRING) {
+                    $this->exitError("The import message metadata type must be 'string' or 'text'".PHP_EOL);
+                }
+            }
+        }
+
+        $this->buildUserMap();
         $this->buildUgroupMap();
 
         // Sanity checks
@@ -324,15 +341,26 @@ class XMLDocmanImport {
     private function addImportMessageOnItem($item, $message) {
         $appendText = "Import information: $message";
         
-        if (isset($item->properties->description)) {
-            if ((string)$item->properties->description != '') {
-                $appendText = "\n$appendText";
+        if ($this->importMessageMetadata == '') {
+            if (!isset($item->properties->description)) {
+                $item->properties->addChild('description');
             }
+            $node = $item->properties->description;
         } else {
-            $item->properties->description = '';
+            $nodes = $item->xpath('properties/property[@title="'.$this->importMessageMetadata.'"]');
+            if (count($nodes) > 0) {
+                $node = $nodes[0];
+            } else {
+                $node = $item->properties->addChild('property');
+                $node->addAttribute('title', $this->importMessageMetadata);
+            }
+        }
+        
+        if ((string)$node != '') {
+            $appendText = "\n$appendText";
         }
 
-        $this->appendTextToNode($item->properties->description, $appendText);
+        $this->appendTextToNode($node, $appendText);
     }
     
     /**

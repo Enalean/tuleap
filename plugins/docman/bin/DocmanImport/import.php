@@ -40,12 +40,13 @@ Required parameters:
     --project=<destination project>         Destination project unix name
 
 Optional parameters:
-    --projectId=<destination project ID>    Destination project ID (use instead of --project)
-    --folderId=<destination folder ID>      Destination folder ID. The imported documents will be created in this folder (default: project root folder)
+    --project-id=<destination project ID>   Destination project ID (use instead of --project)
+    --folder-id=<destination folder ID>     Destination folder ID. The imported documents will be created in this folder (default: project root folder)
     --force                                 Continue even if some users (authors, owners) don't exist on the remote server
     --reorder                               The items will be reordered in alphabetical order, folders before documents
     --update                                Update the document tree. Warning! This will create, update or remove documents
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
+    --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
     --help                                  Show this help".PHP_EOL.PHP_EOL; 
     die;
 }
@@ -58,7 +59,7 @@ if (($url = getParameter($argv, 'url', true)) === null) {
     echo "Missing parameter: --url".PHP_EOL;
 }
 
-$folderId = getParameter($argv, 'folderId', true);
+$folderId = getParameter($argv, 'folder-id', true);
 
 if (($archive = getParameter($argv, 'archive', true)) === null) {
     echo "Missing parameter: --archive".PHP_EOL;
@@ -73,15 +74,16 @@ if (($archive = getParameter($argv, 'archive', true)) === null) {
 }
 
 $project = getParameter($argv, 'project');
-$projectId = getParameter($argv, 'projectId');
+$projectId = getParameter($argv, 'project-id');
 if ($project === null && $projectId === null) {
-    echo "One of the following parameters is required: --project, --projectId".PHP_EOL;
+    echo "One of the following parameters is required: --project, --project-id".PHP_EOL;
 }
 
 $force = getParameter($argv, 'force');
 $reorder = getParameter($argv, 'reorder');
 $update = getParameter($argv, 'update');
 $path = getParameter($argv, 'path');
+$importMessageMetadata = getParameter($argv, 'import-metadata');
 
 // Path parameter check
 if ($path === null) {
@@ -126,13 +128,13 @@ $wsdl = "$url/soap/codex.wsdl.php?wsdl";
 
 if ($update) {
     // Connect
-    $xmlUpdate = new XMLDocmanUpdate($project, $projectId, $wsdl, $login, $password, $force, $reorder);
+    $xmlUpdate = new XMLDocmanUpdate($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata);
     
     // Update
     $xmlUpdate->updatePath($archive, $folderId, $path);
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($project, $projectId, $wsdl, $login, $password, $force, $reorder);
+    $xmlImport = new XMLDocmanImport($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata);
     
     // Import
     $xmlImport->importPath($archive, $folderId, $path);
