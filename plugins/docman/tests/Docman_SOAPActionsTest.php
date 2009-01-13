@@ -38,6 +38,7 @@ Mock::generate('Docman_FileStorage');
 Mock::generate('UserManager');
 Mock::generate('User');
 Mock::generate('EventManager');
+Mock::generate('SOAPRequest');
 Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array(
                                                                            '_getItemFactory',
                                                                            '_getFileStorage',
@@ -111,7 +112,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
               'item_id' => 128000,
               'group_id'=> 2,
           );
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true);
+        $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        
         $action->getControler()->request = $request;
             
         $action->getFileMD5sum();
@@ -125,7 +129,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action = $this->action;
         
         $params = array();
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', false);
+        
         $action->getControler()->request = $request;
         
         $action->getControler()->feedback->expectOnce('log', array('error', '*'));
@@ -140,7 +146,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action = $this->action;
         
         $params = array('item_id' => 0);
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true);
+        $request->setReturnValue('get', 0, array('item_id'));
+        
         $action->getControler()->request = $request;
         
         $action->getControler()->feedback->expectOnce('log', array('error', '*'));
@@ -161,7 +170,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
                                 ),
                       'group_id'=> 2,
                   );
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('item'));
+        $request->setReturnValue('get', $params['item'], array('item'));
+        
         $action->getControler()->request = $request;
         
         $action->expectOnce('_checkOwnerChange', array($params['item']['owner'], '*'));
@@ -182,7 +194,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
                       'id'    => 128000,
                       'group_id'=> 2,
                   );
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('id'));
+        $request->setReturnValue('get', $params['id'], array('id'));
+        
         $action->getControler()->request = $request;
         
         $action->expectOnce('_storeFile');
@@ -204,7 +219,11 @@ class Docman_SOAPActionsTest extends UnitTestCase {
                       'group_id'=> 2,
                       'date'    => 1,
                   );
-        $request = new SOAPRequest($params);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('id'));
+        $request->setReturnValue('get', $params['id'], array('id'));
+        $request->setReturnValue('existAndNonEmpty', true, array('date'));
+        
         $action->getControler()->request = $request;
         
         $action->expectOnce('_storeFile');
