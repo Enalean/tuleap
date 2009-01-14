@@ -613,8 +613,34 @@ class JabbeXInstaller {
 		$this->_add_property("xmpp.muc.sysadmin.jid",$this->arguments["USER_JABBEX"]."@".$this->arguments["OF_JABBER_URI"]);
 		
 		// Only admins can create MUC: xmpp.muc.create.anyone = true
-		$this->_add_property("xmpp.muc.create.anyone","true");
+		$this->_add_property("xmpp.muc.create.anyone","true");      
+        
 	}
+	
+	function changeJabbexUserPasswordInCodexDatabase() {
+
+        print("Updating '".$this->arguments["USER_JABBEX"]."' user password in codex database...\n");
+
+        $root = "root";
+        $pwd = $this->arguments["ROOT_OF_DB"];
+        $db_name = 'codex';
+        $openfire_db_host = $this->arguments["OF_DB_HOST"]; 
+
+        $jabbex_user_password = $this->arguments["PWD_JABBEX"];
+        $jabbex_user_name = $this->arguments["USER_JABBEX"];
+
+        $result = `mysql --user=$root --password=$pwd --host=$openfire_db_host --database=$db_name -e "UPDATE user SET user_pw = MD5('$jabbex_user_password') WHERE user_name = '$jabbex_user_name'";  2>&1`;
+
+        // Check if there was any error
+        if ( !(strpos($result,"error") === false) ) {
+            exit("ERROR: Unable to change '".$jabbex_user_name."' user password in codex database.\n $result");
+        } else {
+            print("'".$jabbex_user_name."' user password was properly updated!\n");
+            return true;
+        }
+    }
+	
+	
 
 	/*
 	 * The presence plugin is a service that provides simple presence information over HTTP.
@@ -988,6 +1014,7 @@ $installer->configure_openfire();
 $installer->configure_openfire_for_webmuc();
 
 $installer->configure_jabbex_user();
+$installer->changeJabbexUserPasswordInCodexDatabase();  
 
 $installer->configure_presence_plugin();
 $installer->configure_subscription_plugin();
