@@ -19,7 +19,7 @@ class UserHelperTest extends UnitTestCase {
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function UserHelperTest($name = 'User Manager test') {
+    function UserHelperTest($name = 'User Helper test') {
         $this->UnitTestCase($name);
     }
     

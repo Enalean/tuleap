@@ -21,7 +21,7 @@
  * 
  */
 
-require_once('common/system_event/MailAliases.class.php');
+require_once('common/backend/MailAliases.class.php');
 
 
 class Backend {
@@ -56,12 +56,16 @@ class Backend {
     }
 
 
-    /**
+     function _getUserManager() {
+        return UserManager::instance();
+    }
+
+   /**
      * Recursive chown/chgrp function.
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159
      */
-    function recurse_chown_chgrp($mypath, $uid, $gid) {
-        $d = opendir ($mypath) ;
+    static function recurseChownChgrp($mypath, $uid, $gid) {
+        $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
                 
@@ -69,12 +73,35 @@ class Backend {
 
                 //print $typepath. " : " . filetype ($typepath). "\n" ;
                 if (filetype ($typepath) == 'dir') {
-                    recurse_chown_chgrp ($typepath, $uid, $gid);
+                    Backend::recurseChownChgrp ($typepath, $uid, $gid);
                 }
                 chown($typepath, $uid);
                 chgrp($typepath, $gid);
             }
         }
+        closedir($d);
+    }
+
+    /**
+     * Recursive rm function.
+     * see: http://us2.php.net/manual/en/function.rmdir.php#87385
+     * Note: the function will empty everything in the given directory but won't remove the directory itself
+     */
+    static function recurseDeleteIndir($mypath) {
+        $mypath= rtrim($mypath, '/');
+        $d = opendir($mypath);
+        while(($file = readdir($d)) !== false) {
+            if ($file != "." && $file != "..") {
+                
+                $typepath = $mypath . "/" . $file ;
+
+                if( is_dir($typepath) ) {
+                    Backend::recurseDeleteIndir($typepath);
+                    rmdir($typepath);
+                } else unlink($typepath);
+            }
+        }
+        closedir($d);
     }
 
     /**
@@ -84,20 +111,18 @@ class Backend {
      * @return true if directory is successfully created, false otherwise
      */
     function createUserHome($user_id) {
-        $user=UserManager::instance()->getUserById($user_id);
+        $user=$this->_getUserManager()->getUserById($user_id);
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
 
         echo "Creating $homedir\n";
-        return true;
 
         if (!is_dir($homedir)) {
-            if (mkdir($homedir,"0751")) {
+            if (mkdir($homedir,0751)) {
                 // copy the contents of the $codex_shell_skel dir into homedir
                 if (is_dir($GLOBALS['codex_shell_skel'])) {
-                    system("cd $codex_shell_skel; tar cf - . | (cd  $homedir ; tar xf - )");
+                    system("cd ".$GLOBALS['codex_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
-                //chown $uid, $uid, $home_dir;
-                recurse_chown_chgrp($homedir,$user->getRealUnixUID(),$user->getRealUnixUID());
+                Backend::recurseChownChgrp($homedir,$user->getRealUnixUID(),$user->getRealUnixUID());
 
                 return true;
             }

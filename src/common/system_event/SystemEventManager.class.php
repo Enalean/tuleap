@@ -29,7 +29,7 @@ require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.ph
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
-require_once('common/system_event/Backend.class.php');
+require_once('common/backend/Backend.class.php');
 
 
 /**
