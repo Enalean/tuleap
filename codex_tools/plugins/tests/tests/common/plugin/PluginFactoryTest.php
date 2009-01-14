@@ -7,7 +7,7 @@ require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');
-require(getenv('CODEX_LOCAL_INC'));
+require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
 class officialPlugin extends Plugin {

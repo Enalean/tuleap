@@ -27,7 +27,7 @@ class DataAccessTest extends UnitTestCase {
         $this->expectError();
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         
-        require(getenv('CODEX_LOCAL_INC'));
+        require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
         require($GLOBALS['db_config_file']);
         $sys_dbname_2 = 'db that does not exist';
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
@@ -38,7 +38,7 @@ class DataAccessTest extends UnitTestCase {
     }
     
     function testQuoteSmart() {
-        require(getenv('CODEX_LOCAL_INC'));
+        require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
         require($GLOBALS['db_config_file']);
         $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
         $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");

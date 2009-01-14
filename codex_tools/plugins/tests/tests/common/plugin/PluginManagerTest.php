@@ -14,7 +14,7 @@ require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require(getenv('CODEX_LOCAL_INC'));
+require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
 /**
