@@ -1,37 +1,63 @@
 
-module others 1.0;
+module others 1.0.1;
 
 require {
-        type crond_t;
-        type cvs_data_t;
-        type cvs_t;
+	type crond_t;
+	type cvs_t;
+	type file_t;
         type fs_t;
         type httpd_log_t;
         type httpd_sys_content_t;
-        type httpd_sys_script_t;
-        type httpd_t;
+	type httpd_sys_script_t;
+	type httpd_t;
+	type initrc_t;
         type iso9660_t;
-        type logwatch_t;
-        type mailman_archive_t;
-        type procmail_t;
-        type restorecon_t;
-        type system_mail_t;
-        type tmp_t;
-        type user_home_dir_t;
-        class dir { search getattr };
-        class fifo_file read;
-        class file { read ioctl write getattr append };
-        class filesystem associate;
-        class lnk_file read;
-        class unix_stream_socket { read write };
+	type logwatch_t;
+	type mysqld_db_t;
+	type mysqld_etc_t;
+	type mysqld_t;
+	type mysqld_var_run_t;
+	type port_t;
+	type procmail_t;
+	type restorecon_t;
+	type semanage_t;
+	type system_mail_t;
+	type tmp_t;
+	type updpwd_t;
+	type user_home_dir_t;
+	type usr_t;
+	type var_log_t;
+	type var_spool_t;
+	class dir { write search getattr add_name };
+	class fifo_file read;
+	class file { write getattr execute_no_trans read create execute append ioctl };
+	class filesystem associate;
+	class lnk_file read;
+	class sock_file write;
+	class tcp_socket name_connect;
+	class unix_dgram_socket create;
+	class unix_stream_socket { read write connectto };
 }
 
 #============= httpd_sys_script_t ==============
+allow httpd_sys_script_t file_t:dir search;
+allow httpd_sys_script_t mysqld_db_t:lnk_file read;
+allow httpd_sys_script_t mysqld_etc_t:file { read getattr };
+allow httpd_sys_script_t self:unix_dgram_socket create;
 allow httpd_sys_script_t tmp_t:file { write ioctl getattr append };
+allow httpd_sys_script_t usr_t:dir { write add_name };
+allow httpd_sys_script_t usr_t:file { create execute execute_no_trans };
+allow httpd_sys_script_t var_log_t:dir write;
+allow httpd_sys_script_t var_log_t:file append;
 
 #============= httpd_t ==============
-allow httpd_t cvs_data_t:lnk_file read;
+allow httpd_t initrc_t:unix_stream_socket { connectto read write };
+allow httpd_t file_t:dir { search getattr };
+allow httpd_t file_t:file getattr;
 allow httpd_t httpd_log_t:file write;
+allow httpd_t mysqld_etc_t:file { read getattr };
+allow httpd_t mysqld_db_t:lnk_file read;
+allow httpd_t tmp_t:file { read getattr write };
 
 #============= iso9660_t ==============
 allow iso9660_t fs_t:filesystem associate;
@@ -39,14 +65,33 @@ allow iso9660_t fs_t:filesystem associate;
 #============= logwatch_t ==============
 allow logwatch_t user_home_dir_t:dir getattr;
 
-#============= procmail_t ==============
-allow procmail_t httpd_sys_content_t:dir search;
+#============= mysqld_t ==============
+allow mysqld_t file_t:dir { getattr search };
+allow mysqld_t port_t:tcp_socket name_connect;
 
-#============= system_mail_t ==============
-allow system_mail_t cvs_t:unix_stream_socket { read write };
-allow system_mail_t httpd_t:file read;
-allow system_mail_t tmp_t:file write;
+#============= procmail_t ==============
+allow procmail_t file_t:dir search;
+allow procmail_t httpd_sys_content_t:dir search;
+allow procmail_t mysqld_db_t:dir search;
+allow procmail_t mysqld_db_t:lnk_file read;
+allow procmail_t mysqld_etc_t:file { read getattr };
 
 #============= restorecon_t ==============
 allow restorecon_t crond_t:fifo_file read;
 
+#============= semanage_t ==============
+allow semanage_t httpd_sys_content_t:lnk_file read;
+allow semanage_t mysqld_db_t:lnk_file read;
+allow semanage_t mysqld_var_run_t:sock_file write;
+
+#============= system_mail_t ==============
+allow system_mail_t cvs_t:unix_stream_socket { read write };
+allow system_mail_t httpd_t:file read;
+allow system_mail_t mysqld_db_t:lnk_file read;
+allow system_mail_t mysqld_etc_t:file getattr;
+allow system_mail_t tmp_t:file write;
+
+#============= updpwd_t ==============
+allow updpwd_t mysqld_db_t:lnk_file read;
+allow updpwd_t mysqld_etc_t:file getattr;
+allow updpwd_t var_spool_t:dir search;

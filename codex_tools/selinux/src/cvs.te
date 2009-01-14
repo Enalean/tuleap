@@ -41,4 +41,6 @@ allow cvs_t var_lib_t:dir search;
 allow cvs_t var_lock_t:dir { search read create write getattr rmdir remove_name add_name };
 allow cvs_t var_lock_t:file { create unlink };
 allow httpd_t cvs_data_t:dir { getattr search };
+allow httpd_t cvs_data_t:lnk_file read;
+
 
