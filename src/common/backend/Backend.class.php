@@ -65,6 +65,8 @@ class Backend {
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159
      */
     static function recurseChownChgrp($mypath, $uid, $gid) {
+        chown($mypath, $uid);
+        chgrp($mypath, $gid);
         $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
@@ -122,7 +124,7 @@ class Backend {
                 if (is_dir($GLOBALS['codex_shell_skel'])) {
                     system("cd ".$GLOBALS['codex_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
-                Backend::recurseChownChgrp($homedir,$user->getRealUnixUID(),$user->getRealUnixUID());
+                Backend::recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
 
                 return true;
             }

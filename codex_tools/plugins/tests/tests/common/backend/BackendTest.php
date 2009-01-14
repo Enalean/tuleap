@@ -22,7 +22,7 @@
  */
 
 // This one seems necessary to use UserManager...
-require_once('common/dao/CodexDataAccess.class.php');
+//require_once('common/dao/CodexDataAccess.class.php');
 
 require_once('common/backend/Backend.class.php');
 require_once('common/user/UserManager.class.php');
@@ -70,7 +70,7 @@ class BackendTest extends UnitTestCase {
         // Check result
 
         // Direcory should not be removed
-        $this->assertTrue(is_dir($test_dir),"Directory should still exist");
+        $this->assertTrue(is_dir($test_dir),"Directory $test_dir should still exist");
         // And should be empty
         $d = opendir($test_dir);
         while (($file = readdir($d)) !== false) {
@@ -83,20 +83,20 @@ class BackendTest extends UnitTestCase {
     function testCreateUserHome() {
 
         $user =& new MockUser($this);
-        $user->setReturnValue('getUserName', 'john');
-        $user->setReturnValue('getRealUnixUID', '104'); // We use codexadm uid/gid to avoid chown warning (because test is not run as root)
+        $user->setReturnValue('getUserName', 'codexadm');
+        //$user->setReturnValue('getRealUnixUID', 104); // We use codexadm uid/gid to avoid chown warning (because test is not run as root)
 
         $um =& new MockUserManager();
-        $um->setReturnReference('getUserById', $user, array("104"));
+        $um->setReturnReference('getUserById', $user, array(104));
         
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getUserManager', $um);
 
         $backend->Backend();
-        $backend->createUserHome("104");
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/john"),"Home dir should be created");
+        $backend->createUserHome(104);
+        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be created");
 
-        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/john/.profile"),"User files from /etc/codendi_skel should be created");
+        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codexadm/.profile"),"User files from /etc/codendi_skel should be created");
         // Cleanup
         Backend::recurseDeleteIndir($GLOBALS['homedir_prefix']);
    
