@@ -62,7 +62,11 @@ class Trees {
      */
     public static function nodeListToTree($listOfNodes) {
         $root = self::findRoot($listOfNodes);
-        return array($root => self::nodeListToTreeR($listOfNodes, $root));
+        if ($root === null) {
+            return null;
+        } else {
+            return array($root => self::nodeListToTreeR($listOfNodes, $root));            
+        }
     }
     
     /**
@@ -71,14 +75,19 @@ class Trees {
     private static function array_merge_tag_recursiveR($array1, $array2) {
         $res = null;
     
-        foreach ($array1 as $k => $v) {
-            if ($k != 'children') {
-                $res[$k] = $v;
+        if ($array1 != null) {
+            foreach ($array1 as $k => $v) {
+                if ($k != 'children') {
+                    $res[$k] = $v;
+                }
             }
         }
-        foreach ($array2 as $k => $v) {
-            if ($k != 'children') {
-                $res[$k] = $v;
+        
+        if ($array2 != null) {
+            foreach ($array2 as $k => $v) {
+                if ($k != 'children') {
+                    $res[$k] = $v;
+                }
             }
         }
     
@@ -121,7 +130,7 @@ class Trees {
     /**
      * Merge two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH
      */
-    public static function array_merge_tag_recursive($array1, $array2) {
+    public static function array_merge_tag_recursive(array $array1, array $array2) {
         $root1 = array_pop(array_keys($array1));
         $root2 = array_pop(array_keys($array2));
     
