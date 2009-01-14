@@ -76,9 +76,10 @@ class Backend {
                 //print $typepath. " : " . filetype ($typepath). "\n" ;
                 if (filetype ($typepath) == 'dir') {
                     Backend::recurseChownChgrp ($typepath, $uid, $gid);
+                } else {
+                    chown($typepath, $uid);
+                    chgrp($typepath, $gid);
                 }
-                chown($typepath, $uid);
-                chgrp($typepath, $gid);
             }
         }
         closedir($d);
@@ -89,7 +90,7 @@ class Backend {
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
      */
-    static function recurseDeleteIndir($mypath) {
+    static function recurseDeleteInDir($mypath) {
         $mypath= rtrim($mypath, '/');
         $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
@@ -98,7 +99,7 @@ class Backend {
                 $typepath = $mypath . "/" . $file ;
 
                 if( is_dir($typepath) ) {
-                    Backend::recurseDeleteIndir($typepath);
+                    Backend::recurseDeleteInDir($typepath);
                     rmdir($typepath);
                 } else unlink($typepath);
             }
@@ -114,9 +115,10 @@ class Backend {
      */
     function createUserHome($user_id) {
         $user=$this->_getUserManager()->getUserById($user_id);
+        if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
 
-        echo "Creating $homedir\n";
+        //echo "Creating $homedir\n";
 
         if (!is_dir($homedir)) {
             if (mkdir($homedir,0751)) {
@@ -131,6 +133,24 @@ class Backend {
         }
         return false;
     }
+
+
+    function archiveUserHome($user_id) {
+        $user=$this->_getUserManager()->getUserById($user_id);
+        if (!$user) return false;
+        $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
+        $backupfile=$GLOBALS['tmp_dir']."/".$user->getUserName().".tgz";
+
+        if (is_dir($homedir)) {
+            system("cd ".$GLOBALS['homedir_prefix']."; tar cfz $backupfile ".$user->getUserName());
+            chmod($backupfile,0600);
+            Backend::recurseDeleteInDir($homedir);
+            rmdir($homedir);
+            return true;
+       } else return false;
+    }
+
+
 
     function _getAliases() {
         if (!$this->aliases) {

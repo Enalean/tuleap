@@ -50,9 +50,23 @@ class SystemEvent_USER_DELETE extends SystemEvent {
      * Process stored event
      */
     function process() {
-        $this->setStatus("DONE");
+        // Check parameters
+        $user_id=$this->getIdFromParam($this->parameters);
+
+        if ($user_id == 0) {
+            return $this->setErrorBadParam();
+        }
+
+        $backend=$this->_getBackend();
+
+        $backend->archiveUserHome($user_id);
+
+        $backend->setNeedUpdateMailAliases();
+
+        $this->setStatus(SystemEvent::STATUS_DONE);
         $this->setLog("OK");
         return true;
+
     }
 
 }
