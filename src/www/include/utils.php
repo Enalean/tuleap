@@ -1230,7 +1230,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         $forbidden_url = array( 
           '/snippet',     // Code Snippet Library
           '/softwaremap/', // browsable software map
-          '/new',         // list of the newest releases made on the CodeX site
+          '/new/',         // list of the newest releases made on the CodeX site ('/news' must be allowed...)
           '/search',      // search for people, projects, and artifacts in trackers!
           '/people/',      // people skills and profile
           '/stats',       // CodeX site statistics
