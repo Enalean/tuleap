@@ -11,7 +11,7 @@ class LanguageFilesTest extends UnitTestCase {
     }
     
     function testLanguagesFiles() {
-	$local_inc=getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+	$local_inc=getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc';
         $cmd = 'cd '.$GLOBALS['codex_utils_prefix'].' ; CODEX_LOCAL_INC='.$local_inc.' '.$GLOBALS['codex_utils_prefix'].'/analyse_language_files.pl 2>&1';
         $output = `$cmd`;
         if (preg_match('/[1-9]\s*missing keys/', $output)) {
