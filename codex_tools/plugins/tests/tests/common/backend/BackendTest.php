@@ -29,7 +29,11 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
 Mock::generate('User');
-Mock::generatePartial('Backend', 'BackendTestVersion', array( '_getUserManager'));
+require_once('common/project/ProjectManager.class.php');
+Mock::generate('ProjectManager');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
+Mock::generatePartial('Backend', 'BackendTestVersion', array( '_getUserManager', '_getProjectManager'));
 
 
 class BackendTest extends UnitTestCase {
@@ -40,12 +44,18 @@ class BackendTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
+        $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
+        $GLOBALS['cvs_prefix']                = dirname(__FILE__) . '/_fixtures/cvsroot';
+        $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
         $GLOBALS['codex_shell_skel']          = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
     }
     
     function tearDown() {
         unset($GLOBALS['homedir_prefix']);
+        unset($GLOBALS['grpdir_prefix']);
+        unset($GLOBALS['cvs_prefix']);
+        unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['codex_shell_skel']);
         unset($GLOBALS['tmp_dir']);
     }
@@ -134,6 +144,104 @@ class BackendTest extends UnitTestCase {
 
         // Cleanup
         unlink($GLOBALS['tmp_dir']."/codexadm.tgz");
+    }
+
+    function testArchiveProjectHome() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+        //$pm->setReturnReference('getProject', $project);
+
+        $backend =& new BackendTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+
+        $backend->Backend();
+        $projdir=$GLOBALS['grpdir_prefix']."/TestProj";
+        $lcprojlnk=$GLOBALS['grpdir_prefix']."/testproj";
+
+        // Setup test data
+        mkdir($projdir);
+        touch($projdir."/testfile.txt");
+        symlink($projdir,$lcprojlnk);
+        
+        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
+
+        $this->assertEqual($backend->archiveProjectHome(142),True);
+        $this->assertFalse(is_dir($projdir),"Project dir should be deleted");
+        $this->assertFalse(is_link($lcprojlnk),"Project link should be deleted");
+        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj.tgz"),"Archive should be created");
+
+        // Check that a wrong project id does not raise an error
+        $this->assertEqual($backend->archiveProjectHome(99999),False);
+
+        // Cleanup
+        unlink($GLOBALS['tmp_dir']."/TestProj.tgz");
+    }
+
+
+    function testArchiveProjectCVS() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend =& new BackendTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+
+        $backend->Backend();
+        $projdir=$GLOBALS['cvs_prefix']."/TestProj";
+
+        // Setup test data
+        mkdir($projdir);
+        mkdir($projdir."/CVSROOT");
+        
+        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
+
+        $this->assertEqual($backend->archiveProjectCVS(142),True);
+        $this->assertFalse(is_dir($projdir),"Project CVS repository should be deleted");
+        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-cvs.tgz"),"CVS Archive should be created");
+
+        // Check that a wrong project id does not raise an error
+        $this->assertEqual($backend->archiveProjectCVS(99999),False);
+
+        // Cleanup
+        unlink($GLOBALS['tmp_dir']."/TestProj-cvs.tgz");
+    }
+
+    function testArchiveProjectSVN() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend =& new BackendTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+
+        $backend->Backend();
+        $projdir=$GLOBALS['svn_prefix']."/TestProj";
+
+        // Setup test data
+        mkdir($projdir);
+        mkdir($projdir."/db");
+        
+        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
+
+        $this->assertEqual($backend->archiveProjectSVN(142),True);
+        $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
+        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-svn.tgz"),"SVN Archive should be created");
+
+        // Check that a wrong project id does not raise an error
+        $this->assertEqual($backend->archiveProjectSVN(99999),False);
+
+        // Cleanup
+        unlink($GLOBALS['tmp_dir']."/TestProj-svn.tgz");
     }
 
     
