@@ -27,11 +27,11 @@ class Trees {
     /**
      * Returns a tree of nodes build using a list of nodes: (node_id => array of children_id) (recursive)
      */
-    private static function nodeListToTreeR($listOfNodes, $nodeId) {
+    private static function nodeListToTreeRec($listOfNodes, $nodeId) {
         $children = null;
         if (array_key_exists($nodeId, $listOfNodes)) {
             foreach ($listOfNodes[$nodeId] as $child) {
-                $children[$child] = self::nodeListToTreeR($listOfNodes, $child);
+                $children[$child] = self::nodeListToTreeRec($listOfNodes, $child);
             }
         }
     
@@ -65,14 +65,14 @@ class Trees {
         if ($root === null) {
             return null;
         } else {
-            return array($root => self::nodeListToTreeR($listOfNodes, $root));            
+            return array($root => self::nodeListToTreeRec($listOfNodes, $root));            
         }
     }
     
     /**
      * Megre two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH (recursive)
      */
-    private static function array_merge_tag_recursiveR($array1, $array2) {
+    private static function mergeTagRec($array1, $array2) {
         $res = null;
     
         if ($array1 != null) {
@@ -94,7 +94,7 @@ class Trees {
         if ($array1 != null && isset($array1['children'])) {
             foreach ($array1['children'] as $name1 => $node1) {
                 if (isset($array2['children']) && array_key_exists($name1, $array2['children'])) {
-                    $res['children'][$name1] = self::array_merge_tag_recursiveR($array1['children'][$name1], $array2['children'][$name1]);
+                    $res['children'][$name1] = self::mergeTagRec($array1['children'][$name1], $array2['children'][$name1]);
                     $res['children'][$name1]['tag'] = 'IN_BOTH';
                 } else {
                     $res['children'][$name1] = $node1;
@@ -130,11 +130,11 @@ class Trees {
     /**
      * Merge two trees and tag the nodes with the information: IN_FIRST, IN_SECOND, IN_BOTH
      */
-    public static function array_merge_tag_recursive(array $array1, array $array2) {
+    public static function mergeTag(array $array1, array $array2) {
         $root1 = array_pop(array_keys($array1));
         $root2 = array_pop(array_keys($array2));
     
-        $res['(root)'] =  self::array_merge_tag_recursiveR($array1[$root1], $array2[$root2]);
+        $res['(root)'] =  self::mergeTagRec($array1[$root1], $array2[$root2]);
         
         return $res;
     }

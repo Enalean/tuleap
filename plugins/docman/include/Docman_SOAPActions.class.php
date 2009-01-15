@@ -39,7 +39,7 @@ class Docman_SOAPActions extends Docman_Actions {
             $itemType = $item_factory->getItemTypeForItem($item);
             
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                $this->_storeFileChunk($item);
+                $this->storeFileChunk($item);
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
             }
@@ -52,7 +52,7 @@ class Docman_SOAPActions extends Docman_Actions {
     /**
      * Adds a chunk to the last version of an existing file
      */
-    function _storeFileChunk($item) {
+    private function storeFileChunk($item) {
         $fs       = $this->_getFileStorage();
         $request  = $this->_controler->request;
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {

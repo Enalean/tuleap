@@ -53,14 +53,14 @@ class TreesTest extends UnitTestCase {
         $this->assertEqual(array(0 => array(1 => array(3 => null), 2 => array(4 => null, 5 => null))), $tree);
     }
     
-    public function test_array_merge_tag_recursive() {
+    public function testMergeTag() {
         $tree1 = array(0 => null);
-        $res = Trees::array_merge_tag_recursive($tree1, $tree1);
+        $res = Trees::mergeTag($tree1, $tree1);
         $this->assertEqual(array('(root)' => null), $res);
         
         $tree1 = array(0 => null);
         $tree2 = array(1 => null);
-        $res = Trees::array_merge_tag_recursive($tree1, $tree2);
+        $res = Trees::mergeTag($tree1, $tree2);
         $this->assertEqual(array('(root)' => null), $res);
         
         //     0
@@ -96,7 +96,7 @@ class TreesTest extends UnitTestCase {
                                             ),
                  );
 
-        $res = Trees::array_merge_tag_recursive($tree1, $tree1);
+        $res = Trees::mergeTag($tree1, $tree1);
         $this->assertEqual($expected, $res);
         
         // Tree 1
@@ -151,7 +151,7 @@ class TreesTest extends UnitTestCase {
                           ),
                  );
                  
-         $res = Trees::array_merge_tag_recursive($tree1, $tree2);
+         $res = Trees::mergeTag($tree1, $tree2);
          $this->assertEqual($expected, $res);
     }
 }

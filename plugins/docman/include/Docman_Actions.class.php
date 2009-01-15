@@ -217,7 +217,7 @@ class Docman_Actions extends Actions {
 
                 $eArray = array('group_id'  => $item->getGroupId(),
                                 'item'      => &$item,
-                                'new_value' => UserManager::instance()->getUserById($versionAuthor)->getName(),
+                                'new_value' => $this->_getUserManagerInstance()->getUserById($versionAuthor)->getName(),
                                 'user'      => &$user);
                 
                 $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
@@ -323,7 +323,7 @@ class Docman_Actions extends Actions {
                 // Change owner
                 $userId = $user->getId();
                 if (isset($item['owner'])) {
-                    $um = UserManager::instance();
+                    $um = $this->_getUserManagerInstance();
                     $new_owner = $um->getUserByUserName($item['owner']);
                     if ($new_owner !== null) {
                         $owner = $new_owner->getId();
@@ -626,7 +626,7 @@ class Docman_Actions extends Actions {
         return $this->permissions_manager;
     }
     
-    protected $userManager;
+    var $userManager;
     function _getUserManagerInstance(){
         if(!$this->userManager){
             $this->userManager = UserManager::instance(); 
