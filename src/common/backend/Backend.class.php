@@ -149,19 +149,22 @@ class Backend {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
-        $projdir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $projdir=$GLOBALS['grpdir_prefix']."/".$unix_group_name;
         $ht_dir=$projdir."/htdocs";
-        $ftp_anon_dir=$GLOBALS['ftp_anon_dir_prefix']."/".$project->getUnixName(false);
-        $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$project->getUnixName(false);
+        $ftp_anon_dir=$GLOBALS['ftp_anon_dir_prefix']."/".$unix_group_name;
+        $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
 
         if (!is_dir($projdir)) {
 	    // Lets create the group's homedir.
 	    // (put the SGID sticky bit on all dir so that all files
 	    // in there are owned by the project group and not
 	    // the user own group
-            if (mkdir($projdir,02775)) {
-                chown($projdir, $GLOBALS['dummy_uid']);
-                chgrp($projdir, $group_id);
+            // Moreover, we need to chmod after mkdir because the umask may not allow the precised mode
+            if (mkdir($projdir,0775)) {
+                chown($projdir, "dummy");
+                chgrp($projdir, $unix_group_name);
+                chmod($projdir, 02775);
             } else return false;
         }
         if ($projdir != strtolower($projdir)) {
@@ -173,9 +176,10 @@ class Backend {
                 
         if (!is_dir($ht_dir)) {
             // Project web site directory
-            if (mkdir($ht_dir,02775)) {
-                chown($ht_dir, $GLOBALS['dummy_uid']);
-                chgrp($ht_dir, $group_id);
+            if (mkdir($ht_dir,0775)) {
+                chown($ht_dir, "dummy");
+                chgrp($ht_dir, $unix_group_name);
+                chmod($ht_dir, 02775);
 
                 // Copy custom homepage template for project web site if any
 		$custom_homepage = $GLOBALS['sys_custom_incdir']."/en_US/others/default_page.php";
@@ -187,8 +191,8 @@ class Backend {
                     copy($default_homepage,$dest_homepage);
                 }
                 if (is_file($dest_homepage)) {
-                    chown($dest_homepage, $GLOBALS['dummy_uid']);
-                    chgrp($dest_homepage, $group_id);
+                    chown($dest_homepage, "dummy");
+                    chgrp($dest_homepage, $unix_group_name);
                     chmod($dest_homepage,0644);
                 }
 
@@ -200,8 +204,9 @@ class Backend {
             // This one must be owned by the project gid so that all project
             // admins can work on it (upload, delete, etc...)
             if (mkdir($ftp_anon_dir,02775)) {
-                chown($ftp_anon_dir, $GLOBALS['dummy_uid']);
-                chgrp($ftp_anon_dir, $group_id);
+                chown($ftp_anon_dir, "dummy");
+                chgrp($ftp_anon_dir, $unix_group_name);
+                chmod($ftp_anon_dir, 02775);
             } else return false;
         }
         
@@ -210,8 +215,8 @@ class Backend {
             // This one must be owned by the project gid so that all project
             // admins can work on it (upload, delete, etc...)
             if (mkdir($ftp_frs_dir,0771)) {
-                chown($ftp_frs_dir, $GLOBALS['dummy_uid']);
-                chgrp($ftp_frs_dir, $group_id);
+                chown($ftp_frs_dir, "dummy");
+                chgrp($ftp_frs_dir, $unix_group_name);
             } else return false;
         }
     }
