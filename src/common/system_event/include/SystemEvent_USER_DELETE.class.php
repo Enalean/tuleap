@@ -58,15 +58,17 @@ class SystemEvent_USER_DELETE extends SystemEvent {
         }
 
         $backend=$this->_getBackend();
-
-        $backend->archiveUserHome($user_id);
-
         $backend->setNeedUpdateMailAliases();
 
-        $this->setStatus(SystemEvent::STATUS_DONE);
-        $this->setLog("OK");
-        return true;
-
+        if ($backend->archiveUserHome($user_id)) {
+            $this->setStatus(SystemEvent::STATUS_DONE);
+            $this->setLog("OK");
+            return true;
+        } else {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not archive user home");
+            return false;
+        }
     }
 
 }

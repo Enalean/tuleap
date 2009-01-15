@@ -28,6 +28,7 @@ class Backend {
 
 
     var $aliases;
+    var $CVSRootListNeedUpdate;
 
     /**
      * Constructor
@@ -58,6 +59,10 @@ class Backend {
 
      function _getUserManager() {
         return UserManager::instance();
+    }
+
+     function _getProjectManager() {
+        return ProjectManager::instance();
     }
 
    /**
@@ -135,6 +140,10 @@ class Backend {
     }
 
 
+    /**
+     * Archive the user home directory
+     * @return true if directory is successfully archived, false otherwise
+     */
     function archiveUserHome($user_id) {
         $user=$this->_getUserManager()->getUserById($user_id);
         if (!$user) return false;
@@ -151,6 +160,62 @@ class Backend {
     }
 
 
+    /**
+     * Archive the project directory
+     * @return true if directory is successfully archived, false otherwise
+     */
+    function archiveProjectHome($group_id) {
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+        $mydir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);
+        $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false).".tgz";
+
+        if (is_dir($mydir)) {
+            system("cd ".$GLOBALS['grpdir_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            chmod($backupfile,0600);
+            Backend::recurseDeleteInDir($mydir);
+            rmdir($mydir);
+
+
+            // Remove lower-case symlink if it exists
+            if ($project->getUnixName(true) != $project->getUnixName(false)) {
+                if (is_link($GLOBALS['grpdir_prefix']."/".$project->getUnixName(true))) {
+                    unlink($GLOBALS['grpdir_prefix']."/".$project->getUnixName(true));
+                }
+            }
+            return true;
+       } else return false;
+     }
+
+     function archiveProjectCVS($group_id) {
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+        $mydir=$GLOBALS['cvs_prefix']."/".$project->getUnixName(false);
+        $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-cvs.tgz";
+
+        if (is_dir($mydir)) {
+            system("cd ".$GLOBALS['cvs_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            chmod($backupfile,0600);
+            Backend::recurseDeleteInDir($mydir);
+            rmdir($mydir);
+            return true;
+       } else return false;
+     }
+
+     function archiveProjectSVN($group_id) {
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+        $mydir=$GLOBALS['svn_prefix']."/".$project->getUnixName(false);
+        $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-svn.tgz";
+
+        if (is_dir($mydir)) {
+            system("cd ".$GLOBALS['svn_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            chmod($backupfile,0600);
+            Backend::recurseDeleteInDir($mydir);
+            rmdir($mydir);
+            return true;
+       } else return false;
+     }
 
     function _getAliases() {
         if (!$this->aliases) {
@@ -158,7 +223,6 @@ class Backend {
         }
         return  $this->aliases;
     }
-
         
     function setNeedUpdateMailAliases() {
         $this->_getAliases()->setNeedUpdate();
@@ -171,6 +235,18 @@ class Backend {
 
     function aliasesUpdate() {
         return  $this->_getAliases()->update();
+    }
+
+    function setNeedUpdateCVSRootList() {
+        $this->CVSRootListNeedUpdate=true;
+    }
+
+    function CVSRootListneedUpdate() {
+        return $this->CVSRootListNeedUpdate;
+    }
+
+    function CVSRootListUpdate() {
+        // TODO
     }
 
 }

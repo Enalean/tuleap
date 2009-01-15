@@ -57,14 +57,18 @@ class SystemEvent_USER_CREATE extends SystemEvent {
         }
 
         $backend=$this->_getBackend();
-
-        $backend->createUserHome($user_id);
-
         $backend->setNeedUpdateMailAliases();
 
-        $this->setStatus(SystemEvent::STATUS_DONE);
-        $this->setLog("OK");
-        return true;
+        if ($backend->createUserHome($user_id)) {
+            $this->setStatus(SystemEvent::STATUS_DONE);
+            $this->setLog("OK");
+            return true;
+        } else {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not create user home");
+            return false;
+        }
+
     }
 
 }

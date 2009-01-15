@@ -155,6 +155,9 @@ class SystemEventManager {
         if ($backend->aliasesNeedUpdate()) {
             $backend->aliasesUpdate();
         }
+        if ($backend->CVSRootListNeedUpdate()) {
+            $backend->CVSRootListUpdate();
+        }
     }
 
 }

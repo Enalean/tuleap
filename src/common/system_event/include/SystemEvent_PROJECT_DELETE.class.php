@@ -50,6 +50,36 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      * Process stored event
      */
     function process() {
+        // Check parameters
+        $group_id=$this->getIdFromParam($this->parameters);
+
+        if ($group_id == 0) {
+            return $this->setErrorBadParam();
+        }
+
+        $backend=$this->_getBackend();
+
+        $backend->setNeedUpdateCVSRootList();
+
+        // Should we delete mailing lists?
+        //$backend->setNeedUpdateMailAliases();
+
+        if (!$backend->archiveProjectHome($group_id)) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not archive project home");
+            return false;
+        }
+        if (!$backend->archiveProjectCVS($group_id)) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not archive project CVS repository");
+            return false;
+        }
+        if (!$backend->archiveProjectSVN($group_id)) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not archive project SVN repository");
+            return false;
+        }
+
         $this->setStatus("DONE");
         $this->setLog("OK");
         return true;
