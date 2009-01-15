@@ -50,9 +50,24 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
      * Process stored event
      */
     function process() {
-        $this->setStatus("DONE");
-        $this->setLog("OK");
-        return true;
+        // Check parameters
+        $group_id=$this->getIdFromParam($this->parameters);
+
+        if ($group_id == 0) {
+            return $this->setErrorBadParam();
+        }
+
+        $backend=$this->_getBackend();
+
+        $backend->setNeedUpdateCVSRootList();
+
+        if (!$backend->createProjectHome($group_id)) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not create project home");
+            return false;
+        }
+        
+
     }
 
 }

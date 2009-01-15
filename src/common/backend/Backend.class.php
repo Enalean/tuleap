@@ -141,6 +141,84 @@ class Backend {
 
 
     /**
+     * Create project home directory
+     * If the directory already exists, nothing is done.
+     * @return true if directory is successfully created, false otherwise
+     */
+    function createProjectHome($group_id) {
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+
+        $projdir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);
+        $ht_dir=$projdir."/htdocs";
+        $ftp_anon_dir=$GLOBALS['ftp_anon_dir_prefix']."/".$project->getUnixName(false);
+        $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$project->getUnixName(false);
+
+        if (!is_dir($projdir)) {
+	    // Lets create the group's homedir.
+	    // (put the SGID sticky bit on all dir so that all files
+	    // in there are owned by the project group and not
+	    // the user own group
+            if (mkdir($projdir,02775)) {
+                chown($projdir, $GLOBALS['dummy_uid']);
+                chgrp($projdir, $group_id);
+            } else return false;
+        }
+        if ($projdir != strtolower($projdir)) {
+            $lcprojlnk=strtolower($projdir);
+            if (!is_link($lcprojlnk)) {
+                symlink($projdir,$lcprojlnk);
+            }
+        }
+                
+        if (!is_dir($ht_dir)) {
+            // Project web site directory
+            if (mkdir($ht_dir,02775)) {
+                chown($ht_dir, $GLOBALS['dummy_uid']);
+                chgrp($ht_dir, $group_id);
+
+                // Copy custom homepage template for project web site if any
+		$custom_homepage = $GLOBALS['sys_custom_incdir']."/en_US/others/default_page.php";
+		$default_homepage = $GLOBALS['sys_incdir']."/en_US/others/default_page.php";
+                $dest_homepage = $ht_dir."/index.php";
+                if (is_file($custom_homepage)) {
+                    copy($custom_homepage,$dest_homepage);
+                } else if (is_file($default_homepage)) {
+                    copy($default_homepage,$dest_homepage);
+                }
+                if (is_file($dest_homepage)) {
+                    chown($dest_homepage, $GLOBALS['dummy_uid']);
+                    chgrp($dest_homepage, $group_id);
+                    chmod($dest_homepage,0644);
+                }
+
+            } else return false;
+        }
+
+        if (!is_dir($ftp_anon_dir)) {
+            // Now lets create the group's ftp homedir for anonymous ftp space
+            // This one must be owned by the project gid so that all project
+            // admins can work on it (upload, delete, etc...)
+            if (mkdir($ftp_anon_dir,02775)) {
+                chown($ftp_anon_dir, $GLOBALS['dummy_uid']);
+                chgrp($ftp_anon_dir, $group_id);
+            } else return false;
+        }
+        
+        if (!is_dir($ftp_frs_dir)) {
+            // Now lets create the group's ftp homedir for anonymous ftp space
+            // This one must be owned by the project gid so that all project
+            // admins can work on it (upload, delete, etc...)
+            if (mkdir($ftp_frs_dir,0771)) {
+                chown($ftp_frs_dir, $GLOBALS['dummy_uid']);
+                chgrp($ftp_frs_dir, $group_id);
+            } else return false;
+        }
+    }
+
+
+
+    /**
      * Archive the user home directory
      * @return true if directory is successfully archived, false otherwise
      */
