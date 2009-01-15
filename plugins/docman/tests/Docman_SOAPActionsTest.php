@@ -341,6 +341,29 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->appendFileChunk();
     }
+    
+    /**
+     * Test: getTreeInfo
+     */
+    public function testGetTreeInfo() {
+        $request->setReturnValue('exist', true, array('parent_id'));
+        $request->setReturnValue('get', 1, array('parent_id'));
+        
+        $action->getControler()->feedback->expectNever('log');
+        
+        $action->getTreeInfo();
+        
+        $this->assertEqual($action->getControler()->_viewParams['action_result'], array());
+    }
+    
+    /**
+     * Test: getTreeInfo with no parameters supplied
+     */
+    public function testGetTreeInfoError() {
+        $action->getControler()->feedback->expectOnce('log', array('error', '*'));
+        
+        $action->getTreeInfo();
+    }
 }
 
 ?>

@@ -154,7 +154,7 @@ class Docman_SOAPActions extends Docman_Actions {
         $request =& $this->_controler->request;
         $groupId = $request->get('group_id');
         
-        $itemFactory = Docman_ItemFactory::instance($groupId);
+        $itemFactory = $this->_getItemFactory($groupId);
         
         $nb = 0;
         $params['user'] = $this->_controler->getUser();
@@ -167,12 +167,12 @@ class Docman_SOAPActions extends Docman_Actions {
         if (isset($parent_id) && $parent_id != 0) {
             $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
             $itemList[] = $itemFactory->getItemFromDb($parent_id);
-                file_put_contents('/tmp/a', "0-$parent_id-".print_r($itemList, true)."-1", FILE_APPEND);
+
             $res = array();
             foreach ($itemList as $item) {
                 $type = $itemFactory->getItemTypeForItem($item);
                 if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                    $vf = new Docman_VersionFactory();
+                    $vf = $this->_getVersionFactory();
                     $nbVersions = count($vf->getAllVersionForItem($item));
                 } else {
                     $nbVersions = null; 
