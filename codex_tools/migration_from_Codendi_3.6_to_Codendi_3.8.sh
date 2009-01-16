@@ -245,7 +245,8 @@ CREATE TABLE plugin_hudson_job (
   job_id int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT ,
   group_id int(11) NOT NULL ,
   job_url varchar(255) NOT NULL ,
-  use_trigger tinyint(4) NOT NULL default 0 ,
+  use_svn_trigger tinyint(4) NOT NULL default 0 ,
+  use_cvs_trigger tinyint(4) NOT NULL default 0 ,
   token varchar(128) NOT NULL
 );
 CREATE TABLE plugin_hudson_widget (
@@ -354,6 +355,7 @@ INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
 
 #
 # TODO: copy /src/utils/svn/commit-email.pl into /usr/lib/codex/bin/commit-email.pl
+# TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codex/bin/log_accum
 #
 
   # Skip logging openfire db (for instant messaging)

@@ -54,6 +54,7 @@ $utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codex/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/cvs1/checkins.pl";
+require $utils_path."/hudson.pl";
 
 my $codex_srv;
 if ($sys_force_ssl) {
@@ -1303,6 +1304,11 @@ if ($gnatsdb ne '') {
 			       $pr, @text);
 	}
     }
+}
+
+# Trigger Continuous Integration build if needed.
+if ($codexdb) {
+    &trigger_hudson_builds($group_id, 'cvs');
 }
 
 # cleanup

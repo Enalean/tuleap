@@ -10,7 +10,8 @@ plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Last Success
 plugin_hudson	header_table_lastfailure	Last Failure
 plugin_hudson	header_table_rss	RSS
-plugin_hudson	header_table_trigger	SVN trigger
+plugin_hudson	header_table_svn_trigger	SVN trigger
+plugin_hudson	header_table_cvs_trigger	CVS trigger
 plugin_hudson	header_table_actions	Actions
 plugin_hudson	build	build
 plugin_hudson	last_build	Last Build:
@@ -22,8 +23,13 @@ plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
 plugin_hudson	addjob_title	Add job
 plugin_hudson	form_job_url	Job URL:
-plugin_hudson	form_job_use_trigger	Trigger a build:
+plugin_hudson	form_job_use_trigger	Trigger a build after commits:
+plugin_hudson	form_job_use_svn_trigger	Trigger a build after SVN commits:
+plugin_hudson	form_job_use_cvs_trigger	Trigger a build after CVS commits:
+plugin_hudson	form_job_scm_svn	SVN
+plugin_hudson	form_job_scm_cvs	CVS
 plugin_hudson	alt_svn_trigger	SVN commit will trigger a build
+plugin_hudson	alt_cvs_trigger	CVS commit will trigger a build
 plugin_hudson	form_job_with_token	with (optional) token:
 plugin_hudson	wrong_job_url	Wrong Job URL: $1
 plugin_hudson	job_url_file_not_found	File not found at URL: $1

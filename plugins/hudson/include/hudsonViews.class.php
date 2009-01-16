@@ -13,6 +13,7 @@
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserManager.class.php');
+require_once('common/project/ProjectManager.class.php');
 
 require_once('HudsonJob.class.php');
 
@@ -136,6 +137,9 @@ class hudsonViews extends Views {
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isMember($group_id, 'A')) {
             
+            $project_manager = ProjectManager::instance();
+            $project = $project_manager->getProject($group_id);
+            
             $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
             $dar = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
@@ -150,19 +154,34 @@ class hudsonViews extends Views {
                 echo '  <p>';
                 echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
                 echo '  </p>';
-                echo '  <p>';
-                echo '   <label for="new_hudson_use_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>';
-                if ($row['use_trigger'] == 1) {
-                    $checked = ' checked="checked" ';
-                } else {
-                    $checked = '';
+                if ($project->usesSVN()) {
+                    echo '  <p>';
+                    echo '   <label for="new_hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_svn_trigger').'</label>';
+                    if ($row['use_svn_trigger'] == 1) {
+                        $checked = ' checked="checked" ';
+                    } else {
+                        $checked = '';
+                    }
+                    echo '   <input id="new_hudson_use_svn_trigger" name="new_hudson_use_svn_trigger" type="checkbox" '.$checked.' />';
+                    echo '  </p>';
                 }
-                echo '   <input id="new_hudson_use_trigger" name="new_hudson_use_trigger" type="checkbox" '.$checked.' />';
-                echo '  </p>';
-                echo '  <p>';
-                echo '   <label for="new_hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
-                echo '   <input id="new_hudson_trigger_token" name="new_hudson_trigger_token" type="text" value="'.$row['token'].'" size="32" />';
-                echo '  </p>';
+                if ($project->usesCVS()) {
+                    echo '  <p>';
+                    echo '   <label for="new_hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_cvs_trigger').'</label>';
+                    if ($row['use_cvs_trigger'] == 1) {
+                        $checked = ' checked="checked" ';
+                    } else {
+                        $checked = '';
+                    }
+                    echo '   <input id="new_hudson_use_cvs_trigger" name="new_hudson_use_cvs_trigger" type="checkbox" '.$checked.' />';
+                    echo '  </p>';
+                }
+                if ($project->usesSVN() || $project->usesCVS()) {
+                    echo '  <p>';
+                    echo '   <label for="new_hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
+                    echo '   <input id="new_hudson_trigger_token" name="new_hudson_trigger_token" type="text" value="'.$row['token'].'" size="32" />';
+                    echo '  </p>';
+                }
                 echo '  <p>';
                 echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
                 echo '   <input type="hidden" name="job_id" value="'.$job_id.'" />';
@@ -189,6 +208,9 @@ class hudsonViews extends Views {
         
         if ($dar && $dar->valid()) {
 
+            $project_manager = ProjectManager::instance();
+            $project = $project_manager->getProject($group_id);
+            
             echo '<table id="jobs_table">';
             echo ' <tr class="boxtable">';
             echo '  <th class="boxtitle">&nbsp;</th>';
@@ -196,7 +218,12 @@ class hudsonViews extends Views {
             echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
             echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
             echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_trigger').'</th>';
+            if ($project->usesSVN()) {
+                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
+            }
+            if ($project->usesCVS()) {
+                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
+            }
             if ($user->isMember($request->get('group_id'), 'A')) {
                 echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
@@ -226,15 +253,27 @@ class hudsonViews extends Views {
                     }
                     echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
                     
-                    if ($row['use_trigger'] == 1) {
-                        echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
-                    } else {
-                        echo '  <td>&nbsp;</td>';
+                    if ($project->usesSVN()) {
+                        if ($row['use_svn_trigger'] == 1) {
+                            echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_svn_trigger').'"></td>';
+                        } else {
+                            echo '  <td>&nbsp;</td>';
+                        }
+                    }
+                    if ($project->usesCVS()) {
+                        if ($row['use_cvs_trigger'] == 1) {
+                            echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger').'" title="'.$GLOBALS['Language']->getText('plugin_hudson','alt_cvs_trigger').'"></td>';
+                        } else {
+                            echo '  <td>&nbsp;</td>';
+                        }
                     }
                                 
                 } catch (Exception $e) {
                     echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
-                    echo '  <td colspan="4"><span class="error">'.$e->getMessage().'</span></td>';
+                    $nb_columns = 4;
+                    if ($project->usesSVN()) { $nb_columns++; }
+                    if ($project->usesCVS()) { $nb_columns++; }
+                    echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$e->getMessage().'</span></td>';
                 }
                 
                 if ($user->isMember($request->get('group_id'), 'A')) {
@@ -260,6 +299,9 @@ class hudsonViews extends Views {
     }
     
     function _display_add_job_form($group_id) {
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProject($group_id);
+        
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
         echo '<div id="hudson_add_job">';
@@ -272,14 +314,23 @@ class hudsonViews extends Views {
         echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
         echo '   <br />';
         //echo '  <p>';
-        echo '   <label for="hudson_use_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>';
-        echo '   <input id="hudson_use_trigger" name="hudson_use_trigger" type="checkbox" />';
-        //echo '  </p>';
-        //echo '  <p>';
-        echo '   <label for="hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
-        echo '   <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" />';
-        //echo '  </p>';
-        echo '   <br />';
+        if ($project->usesSVN() || $project->usesCVS()) {
+            echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
+            if ($project->usesSVN()) {
+                echo '   <label for="hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn').'</label>';
+                echo '   <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />';
+            }
+            if ($project->usesCVS()) {
+                echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
+                echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
+            }
+            //echo '  </p>';
+            //echo '  <p>';
+            echo '   <label for="hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
+            echo '   <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" />';
+            //echo '  </p>';
+            echo '   <br />';
+        }
         echo '   <input type="submit" value="Add job" />';
         echo ' </form>';
         echo '</div>';

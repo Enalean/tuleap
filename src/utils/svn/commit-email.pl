@@ -13,7 +13,7 @@
 # $LastChangedRevision: 5701 $
 #
 #
-# 
+#
 #
 # Heavily modified by Laurent Julliard for the CodeX project at Xerox
 # Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
@@ -236,6 +236,7 @@ $utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codex/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";
+require $utils_path."/hudson.pl";
 
 &db_connect;
 
@@ -675,7 +676,7 @@ if (&isGroupSvnTracked) {
 }
 
 # Trigger Continuous Integration build if needed.
-trigger_hudson_builds();
+&trigger_hudson_builds($group_id, 'svn');
 
 
 exit 0;
