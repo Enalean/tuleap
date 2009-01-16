@@ -51,7 +51,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         }
 
         // Merge the trees, and tag the nodes
-        $mergedTree = array_pop(Trees::array_merge_tag_recursive($remoteTree, $localTree));
+        $mergedTree = array_pop(Trees::mergeTag($remoteTree, $localTree));
         
         $tagCounts = $this->tagCount($mergedTree);
         
