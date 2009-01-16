@@ -15,4 +15,3 @@ include($Language->getContent('project/tos'));
 $HTML->footer( array() );
 
 ?>
-

@@ -95,6 +95,5 @@ while ($row = db_fetch_array($res)) {
 	}    
 }
 // ## end output
-print " </channel>\n";
+print " </channel>\n</rss>";
 ?>
-</rss>

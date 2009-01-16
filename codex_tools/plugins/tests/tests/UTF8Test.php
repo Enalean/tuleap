@@ -6,7 +6,7 @@
 */
 
 class UTF8Test extends UnitTestCase {
-    function TemplatePluginTest($name = 'UTF-8 encoding test') {
+    function UTF8Test($name = 'UTF-8 encoding test') {
         $this->UnitTestCase($name);
     }
     

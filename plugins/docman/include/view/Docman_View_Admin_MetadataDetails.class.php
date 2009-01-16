@@ -177,3 +177,5 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         echo '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_backtomenu').'</a></p>';
     }
 }
+
+?>

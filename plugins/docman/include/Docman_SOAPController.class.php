@@ -69,3 +69,4 @@ class Docman_SOAPController extends Docman_Controller {
     }
 }
 
+?>

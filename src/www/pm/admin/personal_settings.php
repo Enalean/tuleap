@@ -49,5 +49,3 @@ echo '
 
 pm_footer(array());
 ?>
-
-	

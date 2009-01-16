@@ -34,4 +34,3 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
 }
 
 ?>
-

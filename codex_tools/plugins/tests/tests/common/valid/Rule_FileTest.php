@@ -146,3 +146,5 @@ class Rule_FileTest extends UnitTestCase {
     }
 
 }
+
+?>

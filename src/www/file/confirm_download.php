@@ -146,3 +146,4 @@ function download_local(group_id,file_id,filename) {
   exit_not_logged_in();
 }
 
+?>

@@ -70,7 +70,3 @@ if ((db_numrows($res1) != 0) && (db_numrows($res2) != 0)) {
 survey_footer(array());
 
 ?>
-
-
-
-

@@ -7238,4 +7238,5 @@ class soap_client extends nusoap_base  {
 		return true;
 	}
 }
+
 ?>

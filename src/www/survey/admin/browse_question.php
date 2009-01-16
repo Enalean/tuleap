@@ -32,7 +32,3 @@ survey_utils_show_questions($result);
 
 survey_footer(array());
 ?>
-
-
-
-

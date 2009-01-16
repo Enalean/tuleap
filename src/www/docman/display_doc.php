@@ -76,3 +76,4 @@ if ($docid) {
 	       $Language->getText('docman_display_doc','error_wrongid'));
 }
 
+?>

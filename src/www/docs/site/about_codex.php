@@ -16,4 +16,3 @@ include($Language->getContent('docman/about_codex'));
 $HTML->footer(array());
 
 ?>
-

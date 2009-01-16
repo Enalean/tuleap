@@ -51,3 +51,4 @@ class Docman_Path {
     }
 }
 
+?>

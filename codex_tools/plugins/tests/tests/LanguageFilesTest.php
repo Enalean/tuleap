@@ -6,7 +6,7 @@
 */
 
 class LanguageFilesTest extends UnitTestCase {
-    function TemplatePluginTest($name = 'Language Files test') {
+    function LanguageFilesTest($name = 'Language Files test') {
         $this->UnitTestCase($name);
     }
     
