@@ -57,7 +57,7 @@ if ($group_id) {
                     case 'admin':
                     case 'listinfo':
                     case 'private':
-                        $iframe_url = $list_server .'/mailman/'. $request->get('action') .'/'. db_result($result, 0, 'list_name');
+                        $iframe_url = $list_server .'/mailman/'. $request->get('action') .'/'. db_result($result, 0, 'list_name').'/';
                         break;
                     case 'pipermail':
                         $iframe_url = $list_server .'/pipermail/'. db_result($result, 0, 'list_name');
