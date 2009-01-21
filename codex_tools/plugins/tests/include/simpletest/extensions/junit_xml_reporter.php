@@ -51,11 +51,6 @@ class JUnitXMLReporter extends SimpleReporter {
         // Cut out XML declaration
         echo preg_replace('/<\?[^>]*\?>/', "", $xml);
         echo "\n";
-        
-        $res = fopen('/home/mnazaria/CodeX/dev_server/httpd/plugins/tests/www/codendi_unit_tests_report.xml', 'w');
-        fwrite($res, $xml);
-        fclose($res);
-        
     }
 
     function paintCaseStart($case) {
