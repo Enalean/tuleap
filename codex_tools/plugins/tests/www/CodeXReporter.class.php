@@ -31,6 +31,11 @@ class CodeXHtmlReporter extends HtmlReporter {
             print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
         }
     }
+    function paintFail($message) {
+        echo '<p><input type="checkbox" onclick="$(this).siblings().invoke(\'toggle\');" /><span>';
+        parent::paintFail($message);
+        echo '</span></p>';
+    }
 }
  
 class CodeXJUnitXMLReporter extends JUnitXMLReporter {
