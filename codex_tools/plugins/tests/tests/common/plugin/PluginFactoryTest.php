@@ -29,13 +29,6 @@ class PluginFactoryTest extends UnitTestCase {
     function PluginFactoryTest($name = 'PluginFactory test') {
         $this->UnitTestCase($name);
     }
-
-    function testSingleton() {
-        $this->assertReference(
-                PluginFactory::instance(),
-                PluginFactory::instance());
-        $this->assertIsA(PluginFactory::instance(), 'PluginFactory');
-    }
     
     function testGetPluginById() {
         $plugin_dao    = new MockPluginDao($this);

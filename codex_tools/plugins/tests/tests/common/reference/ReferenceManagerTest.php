@@ -3,6 +3,12 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 require_once('common/reference/ReferenceManager.class.php');
+Mock::generatePartial('ReferenceManager', 'ReferenceManagerTestVersion', array('_getReferenceDao'));
+require_once('common/dao/ReferenceDao.class.php');
+Mock::generate('ReferenceDao');
+require_once('common/dao/include/DataAccessResult.class.php');
+Mock::generate('DataAccessResult');
+
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
  *
@@ -35,8 +41,10 @@ class ReferenceManagerTest extends UnitTestCase {
 
 
 	function testKeyword() {
-		//The Reference manager
-		$rm =& new ReferenceManager();
+        $dao = new MockReferenceDao($this);
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
 		$this->assertFalse($rm->_isValidKeyword("UPPER"));
 		$this->assertFalse($rm->_isValidKeyword("with space"));
 		$this->assertFalse($rm->_isValidKeyword("with_special_char"));
@@ -58,7 +66,42 @@ class ReferenceManagerTest extends UnitTestCase {
 	}
 
 	function testExtractReference() {
-		$rm =& new ReferenceManager();
+        $dao = new MockReferenceDao($this);
+        $dar = new MockDataAccessResult($this);
+        $dao->setReturnReference('searchActiveByGroupID', $dar, array(100));
+        $dar->setReturnValueAt(0, 'getRow', array(
+            'id'                 => 1,
+            'keyword'            => 'art',
+            'description'        => 'reference_art_desc_key',
+            'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
+            'scope'              => 'S',
+            'service_short_name' => 'tracker',
+            'id'                 => 1,
+            'reference_id'       => 1,
+            'group_id'           => 100,
+            'is_active'          => 1,
+        ));
+        $dar->setReturnValueAt(1, 'getRow', false);
+        
+        $dar2 = new MockDataAccessResult($this);
+        $dao->setReturnReference('searchActiveByGroupID', $dar2, array('1'));
+        $dar2->setReturnValueAt(0, 'getRow', array(
+            'id'                 => 1,
+            'keyword'            => 'art',
+            'description'        => 'reference_art_desc_key',
+            'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
+            'scope'              => 'S',
+            'service_short_name' => 'tracker',
+            'id'                 => 1,
+            'reference_id'       => 1,
+            'group_id'           => 1,
+            'is_active'          => 1,
+        ));
+        $dar2->setReturnValueAt(1, 'getRow', false);
+        
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
 		$this->assertTrue(count($rm->extractReferences("art #123",0))==1,"Art is a shared keyword for all projects");
 		$this->assertTrue(count($rm->extractReferences("arto #123",0))==0,"Should not extract a reference on unknown keyword");
 		$this->assertTrue(count($rm->extractReferences("art #1:123",0))==1,"Art is a reference for project num 1");
@@ -66,7 +109,10 @@ class ReferenceManagerTest extends UnitTestCase {
 	}
 
 	function testExtractRegexp() {
-		$rm =& new ReferenceManager();
+        $dao = new MockReferenceDao($this);
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
 		$this->assertFalse(count($rm->_extractAllMatches("art 123"))==1,"No sharp sign");
 		$this->assertFalse(count($rm->_extractAllMatches("art#123"))==1,"No space");
 		$this->assertFalse(count($rm->_extractAllMatches("art #"))==1,"No reference");

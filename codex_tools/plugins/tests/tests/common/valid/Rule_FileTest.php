@@ -33,7 +33,7 @@ class Rule_FileTest extends UnitTestCase {
     }
 
     function setUp() {
-        $tmpName = $GLOBALS['tmp_dir'].'/_unit_tests_rules_file.txt';
+        $tmpName = dirname(__FILE__).'/_unit_tests_rules_file.txt';
         $fd = fopen($tmpName, 'w');
         fwrite($fd, 'A test file');
         fclose($fd);
