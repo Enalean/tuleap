@@ -1,5 +1,6 @@
 <?php
 require_once('common/dao/include/DataAccess.class.php');
+Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('connect'));
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -25,22 +26,12 @@ class DataAccessTest extends UnitTestCase {
         $sys_dbname   = 'db';
         $this->expectException('DataAccessException');
         $this->expectError();
-        $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
-        
-        require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
-        require($GLOBALS['db_config_file']);
-        $sys_dbname_2 = 'db that does not exist';
-        $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname_2);
-        $this->assertError("Unknown database '".$sys_dbname_2."'");
-        $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
-        $this->assertFalse($da->isError());
-        $this->assertIsA($da->fetch("select *"),'DataAccessResult');
+        $da = new DataAccessTestVersion($this);
+        $da->DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
     }
     
     function testQuoteSmart() {
-        require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
-        require($GLOBALS['db_config_file']);
-        $da =& new DataAccess($sys_dbhost, $sys_dbuser, $sys_dbpasswd, $sys_dbname);
+        $da = new DataAccessTestVersion($this);
         $this->assertIdentical('123', $da->quoteSmart("123"), "An integer is not quoted");
         $this->assertIdentical('12.3', $da->quoteSmart("12.3"), "A float is not quoted");
         $this->assertIdentical("'value'", $da->quoteSmart("value"), "A string is quoted");

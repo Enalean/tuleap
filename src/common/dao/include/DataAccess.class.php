@@ -32,7 +32,7 @@ class DataAccess {
     */
     function DataAccess($host,$user,$pass,$db,$opt='') {
         $this->store = array();
-        $this->db = mysql_connect($host,$user,$pass, true, $opt);
+        $this->db = $this->connect($host, $user, $pass, $opt);
         if ($this->db) {
             mysql_query("SET NAMES 'utf8'", $this->db);
             if (!mysql_select_db($db,$this->db)) {
@@ -43,6 +43,11 @@ class DataAccess {
             throw new DataAccessException('Unable to access the database. Please contact your administrator.');
         }
     }
+    
+    protected function connect($host, $user, $pass, $opt) {
+        return mysql_connect($host, $user, $pass, true, $opt);
+    }
+    
     var $store;
     
     /**
@@ -110,7 +115,11 @@ class DataAccess {
     */
     function quoteSmart($value, $params = array()) {
         // Quote if not integer
-        $value = mysql_real_escape_string($value);
+        if ($this->db) {
+            $value = mysql_real_escape_string($value, $this->db);
+        } else {
+            $value = mysql_escape_string($value);
+        }
         if (!is_numeric($value) || (isset($params['force_string']) && $params['force_string'])) {
             $value = "'" . $value . "'";
         }

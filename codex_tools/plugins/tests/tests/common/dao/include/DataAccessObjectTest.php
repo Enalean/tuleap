@@ -30,14 +30,5 @@ class DaoTest extends UnitTestCase {
         $result =& $dao->retrieve("SELECT *");
         $this->assertIsA($result, 'MockDataAccessResult');
     }
-    
-    function testRealDao() {
-        $da =& new DataAccess($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'], $GLOBALS['sys_dbname']);
-        $this->assertFalse($da->isError());
-        $dao =& new DataAccessObject($da);
-        $result =& $dao->retrieve("SELECT (4+1)*5 as calcul");
-        $row =& $result->getRow();
-        $this->assertEqual($row['calcul'], 25);
-    }
 }
 ?>
