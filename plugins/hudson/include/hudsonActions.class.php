@@ -57,7 +57,7 @@ class hudsonActions extends Actions {
         }
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
         if ( ! $job_dao->updateHudsonJob($job_id, $new_job_url, $new_use_svn_trigger, $new_use_cvs_trigger, $new_token)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','update_job_error'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','edit_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_updated'));
         }

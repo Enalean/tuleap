@@ -28,7 +28,6 @@ plugin_hudson	form_job_use_svn_trigger	Déclencher un build après un commit SVN
 plugin_hudson	form_job_use_cvs_trigger	Déclencher un build après un commit CVS :
 plugin_hudson	form_job_scm_svn	SVN
 plugin_hudson	form_job_scm_cvs	CVS
-plugin_hudson	form_job_use_cvs_trigger	Déclencher un build après un commit CVS :
 plugin_hudson	alt_svn_trigger	Un commit SVN déclenchera un build
 plugin_hudson	alt_cvs_trigger	Un commit CVS déclenchera un build
 plugin_hudson	form_job_with_token	avec le token (optionnel) :

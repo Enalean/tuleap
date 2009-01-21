@@ -17,6 +17,7 @@ require_once('HudsonJobURLFileNotFoundException.class.php');
 class HudsonJob {
 
     protected $hudson_job_url;
+    protected $hudson_dobuild_url;
     protected $dom_job;
     private $icons_path;
         
@@ -31,6 +32,7 @@ class HudsonJob {
         }
                 
         $this->hudson_job_url = $hudson_job_url . "/api/xml";
+        $this->hudson_dobuild_url = $hudson_job_url . "/build";
         
         $controler = $this->getHudsonControler(); 
         $this->icons_path = $controler->getIconsPath();
@@ -237,6 +239,35 @@ class HudsonJob {
         } else {
             return $this->getIconsPath()."health_00_to_19.gif";
         }
+    }
+    
+    /**
+     * Launch a Build for this job on the Continuous Integration server.
+     * 
+     * @exception if unable to open build URL or if response is an error
+     *  
+     * @param string $token if CI server has activated security (login/password), then a token is mandatory to build jobs. This token is defined in the job configuration.
+     * @return response of build call.
+     */
+    function launchBuild($token = null) {
+        $url = $this->hudson_dobuild_url;
+        if ($token != null) {
+            $url .= '?token='.$token;
+        }
+        $params = array('http' => array(
+                     'method' => 'POST',
+                     'content' => ''
+                ));
+        $ctx = stream_context_create($params);
+        $fp = fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            throw new Exception("Problem with $url");
+        }
+        $response = stream_get_contents($fp);
+        if ($response === false) {
+            throw new Exception("Problem reading data from $url");
+        }
+        return $response;
     }
     
 }

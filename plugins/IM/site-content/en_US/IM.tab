@@ -8,6 +8,8 @@ plugin_im	service_lbl_key	Instant Messaging
 plugin_im	service_desc_key	Codex Instant Messaging allow communicate with your project team members. 
 plugin_im	desc	Codex Instant Messaging allow communicate with your project team members.
 
+plugin_im	service_not_used	Instant Messaging service not used.
+
 plugin_im	my_roster	My IM Roster
 plugin_im	im_user_login	Instant Messaging Login:
 plugin_im	im_roster_member	Roster Members

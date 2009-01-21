@@ -37,7 +37,7 @@ plugin_hudson	job_url_file_error	Unable to read file at URL: $1
 plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob
 plugin_hudson	form_addjob_button	Add job
 plugin_hudson	editjob_title	Edit job
-plugin_hudson	form_addjob_button	Update job
+plugin_hudson	form_editjob_button	Update job
 plugin_hudson	job_url_missing	Missing Hudson job url (eg: http://myCIserver:8080/hudson/job/MyJob)
 plugin_hudson	job_id_missing	Missing Hudson job ID
 plugin_hudson	add_job_error	Unable to add Hudson job.
