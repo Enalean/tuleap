@@ -6,8 +6,6 @@ plugin_im	service_lbl_key	Messagerie Instantanée
 plugin_im	service_desc_key	La Messagerie Instantanée vous permet de discuter entre membres de projet.
 plugin_im	desc	La Messagerie Instantanée vous permet de discuter entre membres de projet.
 
-plugin_im	service_not_used	Le service de Messagerie Instantanée n'est pas utilisé.
-
 plugin_im	title	Messagerie instantanée
 plugin_im	my_roster	Ma liste de contact IM
 plugin_im	im_roster_member	Membres de votre liste IM
@@ -37,6 +35,7 @@ plugin_im	muc_logs_left	$1 a quitté le salon de discussion
 plugin_im	muc_logs_settopic	$1 a changé le sujet de la salle de discussion en : $2
 plugin_im	export_muc_logs	Exporter les logs
 
+plugin_im_admin	service_not_used	Le service de Messagerie Instantanée n'est pas utilisé.
 plugin_im_admin	im_admin_title	Administration du plugin de la messagerie instantanée.
 plugin_im_admin	im_admin_warning	ATTENTION: Si vous synchronisez un ou plusieurs groupes, il faut impérativement rédemarrer ensuite le server Openfire avec la commande "service openfire reload" exécutée en tant que root sur le serveur. Cela interrompera toutes les discussions en cours!
 plugin_im_admin	projects_to_sync	Projets à synchroniser :
