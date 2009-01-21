@@ -24,14 +24,13 @@ class HTTPRequestTest extends UnitTestCase {
         $_REQUEST['exists'] = '1';
         $_REQUEST['exists_empty'] = '';
         $_SERVER['server_exists'] = '1';
+        $_SERVER['server_quote'] = "l'avion du server";
         if (get_magic_quotes_gpc()) {
             $_REQUEST['quote'] = "l\\'avion";
             $_REQUEST['array'] = array('quote_1' => "l\\'avion", 'quote_2' => array('quote_3' => "l\\'oiseau"));
-            $_SERVER['server_quote'] = "l\\'avion du server";
         } else {
             $_REQUEST['quote'] = "l'avion";
             $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
-            $_SERVER['server_quote'] = "l\'avion du server";
         }
         $_REQUEST['testkey'] = 'testvalue';
         $_REQUEST['testarray'] = array('key1' => 'valuekey1');
