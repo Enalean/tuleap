@@ -155,7 +155,7 @@ function isValidJID(jid) {
 }
 
 /* hrTime - human readable Time
- * takes a timestamp in the form of 2004-08-13T12:07:04±02:00 as argument
+ * takes a timestamp in the form of 2004-08-13T12:07:04Â±02:00 as argument
  * and converts it to some sort of humane readable format
  */
 function hrTime(ts) {

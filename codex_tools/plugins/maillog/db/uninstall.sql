@@ -1,5 +1,5 @@
 --
--- Copyright © STMicroelectronics, 2008. All Rights Reserved.
+-- Copyright Â© STMicroelectronics, 2008. All Rights Reserved.
 --
 -- Originally written by Manuel Vacelet, 2008
 --
