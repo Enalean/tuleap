@@ -497,14 +497,7 @@ echo $this->outerTabs($params);
             $output .= "\t<OPTION value=\"tracker\"".( $type_of_search == "tracker" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_tracker')."</OPTION>\n";
         } else if ($group_id && $is_wiki_page) {
             $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
-        } else if ($group_id && $list) {
-        	require_once('common/plugin/PluginManager.class.php');
-        	$plugin_manager =& PluginManager::instance();
-        	$forumml =& $plugin_manager->getPluginByName('forumml');
-        	if ($forumml && $plugin_manager->isPluginAvailable($forumml)) {
-        	   	$output .= "\t<OPTION value=\"mail\"".( $type_of_search == "mail" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_list')."</OPTION>\n";
-        	}   	
-        }            
+        }           
 
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         if ($GLOBALS['sys_use_snippet'] != 0) {
