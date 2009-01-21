@@ -33,7 +33,11 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-Mock::generatePartial('Backend', 'BackendTestVersion', array( '_getUserManager', '_getProjectManager'));
+Mock::generatePartial('Backend', 'BackendTestVersion', array('_getUserManager', 
+                                                             '_getProjectManager',
+                                                             'chown',
+                                                             'chgrp',
+                                                             ));
 
 
 class BackendTest extends UnitTestCase {
@@ -61,7 +65,7 @@ class BackendTest extends UnitTestCase {
     }
     
     function testConstructor() {
-        $backend = new Backend();
+        $backend = Backend::instance();
     }
     
     function testrecurseDeleteInDir() {
@@ -77,7 +81,7 @@ class BackendTest extends UnitTestCase {
         mkdir($test_dir."/test3");
    
         // Run tested method
-        Backend::recurseDeleteInDir($test_dir);
+        Backend::instance()->recurseDeleteInDir($test_dir);
 
         // Check result
 
@@ -104,7 +108,6 @@ class BackendTest extends UnitTestCase {
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getUserManager', $um);
 
-        $backend->Backend();
         $this->assertEqual($backend->createUserHome(104),True);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be created");
 
@@ -115,7 +118,7 @@ class BackendTest extends UnitTestCase {
         $this->assertEqual($backend->createUserHome(99999),False);
 
         // Cleanup
-        Backend::recurseDeleteInDir($GLOBALS['homedir_prefix']."/codexadm");
+        $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/codexadm");
         rmdir($GLOBALS['homedir_prefix']."/codexadm");
    
     }
@@ -131,7 +134,6 @@ class BackendTest extends UnitTestCase {
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getUserManager', $um);
 
-        $backend->Backend();
         $backend->createUserHome(104);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be created");
 
@@ -158,7 +160,6 @@ class BackendTest extends UnitTestCase {
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
-        $backend->Backend();
         $projdir=$GLOBALS['grpdir_prefix']."/TestProj";
         $lcprojlnk=$GLOBALS['grpdir_prefix']."/testproj";
 
@@ -193,7 +194,6 @@ class BackendTest extends UnitTestCase {
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
-        $backend->Backend();
         $projdir=$GLOBALS['cvs_prefix']."/TestProj";
 
         // Setup test data
@@ -224,7 +224,6 @@ class BackendTest extends UnitTestCase {
         $backend =& new BackendTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
-        $backend->Backend();
         $projdir=$GLOBALS['svn_prefix']."/TestProj";
 
         // Setup test data

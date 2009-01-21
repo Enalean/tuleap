@@ -33,7 +33,7 @@ class Backend {
     /**
      * Constructor
      */
-    function Backend() {
+    protected function Backend() {
 
         /* Make sure umask is properly positioned for the
          entire session. Root has umask 022 by default
@@ -46,14 +46,19 @@ class Backend {
     }
 
     /**
+     * Hold an instance of the class
+     */
+    protected static $_instance;
+    
+    /**
      * Backend is a singleton
      */
-    function &instance() {
-        static $_backend_instance;
-        if (!$_backend_instance) {
-            $_backend_instance = new Backend();
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
         }
-        return $_backend_instance;
+        return self::$_instance;
     }
 
 
@@ -64,14 +69,21 @@ class Backend {
      function _getProjectManager() {
         return ProjectManager::instance();
     }
+    
+    protected function chown($path, $uid) {
+        $this->chown($path, $uid);
+    }
+    protected function chgrp($path, $uid) {
+        $this->chgrp($path, $uid);
+    }
 
    /**
      * Recursive chown/chgrp function.
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159
      */
-    static function recurseChownChgrp($mypath, $uid, $gid) {
-        chown($mypath, $uid);
-        chgrp($mypath, $gid);
+    function recurseChownChgrp($mypath, $uid, $gid) {
+        $this->chown($mypath, $uid);
+        $this->chgrp($mypath, $gid);
         $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
@@ -80,10 +92,10 @@ class Backend {
 
                 //print $typepath. " : " . filetype ($typepath). "\n" ;
                 if (filetype ($typepath) == 'dir') {
-                    Backend::recurseChownChgrp ($typepath, $uid, $gid);
+                    $this->recurseChownChgrp($typepath, $uid, $gid);
                 } else {
-                    chown($typepath, $uid);
-                    chgrp($typepath, $gid);
+                    $this->chown($typepath, $uid);
+                    $this->chgrp($typepath, $gid);
                 }
             }
         }
@@ -95,7 +107,7 @@ class Backend {
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
      */
-    static function recurseDeleteInDir($mypath) {
+    function recurseDeleteInDir($mypath) {
         $mypath= rtrim($mypath, '/');
         $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
@@ -104,7 +116,7 @@ class Backend {
                 $typepath = $mypath . "/" . $file ;
 
                 if( is_dir($typepath) ) {
-                    Backend::recurseDeleteInDir($typepath);
+                    $this->recurseDeleteInDir($typepath);
                     rmdir($typepath);
                 } else unlink($typepath);
             }
@@ -131,7 +143,7 @@ class Backend {
                 if (is_dir($GLOBALS['codex_shell_skel'])) {
                     system("cd ".$GLOBALS['codex_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
-                Backend::recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
+                $this->recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
 
                 return true;
             }
@@ -162,8 +174,8 @@ class Backend {
 	    // the user own group
             // Moreover, we need to chmod after mkdir because the umask may not allow the precised mode
             if (mkdir($projdir,0775)) {
-                chown($projdir, "dummy");
-                chgrp($projdir, $unix_group_name);
+                $this->chown($projdir, "dummy");
+                $this->chgrp($projdir, $unix_group_name);
                 chmod($projdir, 02775);
             } else return false;
         }
@@ -177,8 +189,8 @@ class Backend {
         if (!is_dir($ht_dir)) {
             // Project web site directory
             if (mkdir($ht_dir,0775)) {
-                chown($ht_dir, "dummy");
-                chgrp($ht_dir, $unix_group_name);
+                $this->chown($ht_dir, "dummy");
+                $this->chgrp($ht_dir, $unix_group_name);
                 chmod($ht_dir, 02775);
 
                 // Copy custom homepage template for project web site if any
@@ -191,8 +203,8 @@ class Backend {
                     copy($default_homepage,$dest_homepage);
                 }
                 if (is_file($dest_homepage)) {
-                    chown($dest_homepage, "dummy");
-                    chgrp($dest_homepage, $unix_group_name);
+                    $this->chown($dest_homepage, "dummy");
+                    $this->chgrp($dest_homepage, $unix_group_name);
                     chmod($dest_homepage,0644);
                 }
 
@@ -204,8 +216,8 @@ class Backend {
             // This one must be owned by the project gid so that all project
             // admins can work on it (upload, delete, etc...)
             if (mkdir($ftp_anon_dir,02775)) {
-                chown($ftp_anon_dir, "dummy");
-                chgrp($ftp_anon_dir, $unix_group_name);
+                $this->chown($ftp_anon_dir, "dummy");
+                $this->chgrp($ftp_anon_dir, $unix_group_name);
                 chmod($ftp_anon_dir, 02775);
             } else return false;
         }
@@ -215,8 +227,8 @@ class Backend {
             // This one must be owned by the project gid so that all project
             // admins can work on it (upload, delete, etc...)
             if (mkdir($ftp_frs_dir,0771)) {
-                chown($ftp_frs_dir, "dummy");
-                chgrp($ftp_frs_dir, $unix_group_name);
+                $this->chown($ftp_frs_dir, "dummy");
+                $this->chgrp($ftp_frs_dir, $unix_group_name);
             } else return false;
         }
     }
