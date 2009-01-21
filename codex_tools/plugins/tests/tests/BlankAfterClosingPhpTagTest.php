@@ -34,6 +34,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         $this->allow_end = array(
             'cli/codex.php',
             'plugins/tests/www/index.php',
+            'codex_tools/tests/www/index.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',
             'plugins/IM/www/webmuc/roster.js.php',
