@@ -456,6 +456,18 @@ $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocma
 
 
 /**
+ *
+ */
+function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias) {
+    $params = array('id' => $item_id);
+    foreach($criterias as $criteria) {
+        $params[$criteria->field_name] = $criteria->field_value;
+    }
+    return _makeDocmanRequest($sessionKey, $group_id, 'search', $params);
+}
+$soapFunctions[] = array('searchDocmanItem', 'Returns all the items that match given criteria', 'tns:ArrayOfDocman_Item');
+
+/**
  * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
  */
 function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
@@ -751,6 +763,7 @@ if (defined('NUSOAP')) {
                       'chunk_offset'      => array('xsd:int', 'Chunk offset'),
                       'chunk_size'        => array('xsd:int', 'Chunk size'),
                       'new_parent'        => array('xsd:int', 'New parent ID'),
+                      'criterias'         => array('tns:ArrayOfCriteria', 'Criteria'),
                   );
 }
 /**
