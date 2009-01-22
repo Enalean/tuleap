@@ -100,6 +100,9 @@ class Docman_SOAPController extends Docman_Controller {
                     $this->_setView('');
                 }
                 break;
+            case 'search':
+                $this->view = 'Search';
+                break;
             default: parent::_dispatch($view, $item, $root, $get_show_view);
         }
    }
