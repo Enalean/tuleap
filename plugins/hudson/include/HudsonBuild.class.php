@@ -18,6 +18,8 @@ class HudsonBuild {
 
     protected $hudson_build_url;
     protected $dom_build;
+    
+    private $context;
         
     /**
      * Construct an Hudson build from a build URL
@@ -31,6 +33,8 @@ class HudsonBuild {
                 
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
         
+        $this->_setStreamContext();
+        
         $this->buildBuildObject();
         
     }
@@ -40,8 +44,9 @@ class HudsonBuild {
     }
     
     protected function _getXMLObject($hudson_build_url) {
-        if (@file_get_contents($hudson_build_url) !== false) {
-            $xmlobj = simplexml_load_file($hudson_build_url);
+        $xmlstr = @file_get_contents($hudson_build_url, false, $this->context);
+        if ($xmlstr !== false) {
+            $xmlobj = simplexml_load_string($xmlstr);
             if ($xmlobj !== false) {
                 return $xmlobj;
             } else {
@@ -49,6 +54,22 @@ class HudsonBuild {
             }
         } else {
             throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_build_url))); 
+        }
+    }
+    
+    private function _setStreamContext() {
+        if (array_key_exists('sys_proxy', $GLOBALS) && $GLOBALS['sys_proxy']) {
+            $context_opt = array(
+                'http' => array(
+                    'method' => 'GET',
+                    'proxy' => $GLOBALS['sys_proxy'],
+                    'request_fulluri' => True,
+                    'timeout' => 5.0,
+                ),
+            );
+            $this->context = stream_context_create($context_opt);
+        } else {
+            $this->context = null;
         }
     }
     

@@ -19,6 +19,8 @@ class HudsonTestResult {
     protected $hudson_test_result_url;
     protected $dom_job;
     
+    private $context;
+    
     /**
      * Construct an Hudson job from a job URL
      */
@@ -33,6 +35,8 @@ class HudsonTestResult {
         
         $controler = $this->getHudsonControler(); 
         
+        $this->_setStreamContext();
+        
         $this->buildJobObject();
         
     }
@@ -45,8 +49,9 @@ class HudsonTestResult {
     }
     
     protected function _getXMLObject($hudson_test_result_url) {
-        if (@file_get_contents($hudson_test_result_url) !== false) {
-            $xmlobj = simplexml_load_file($hudson_test_result_url);
+        $xmlstr = @file_get_contents($hudson_test_result_url, false, $this->context);
+        if ($xmlstr !== false) {
+            $xmlobj = simplexml_load_string($xmlstr);
             if ($xmlobj !== false) {
                 return $xmlobj;
             } else {
@@ -54,6 +59,22 @@ class HudsonTestResult {
             }
         } else {
             throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_test_result_url))); 
+        }
+    }
+    
+    private function _setStreamContext() {
+        if (array_key_exists('sys_proxy', $GLOBALS) && $GLOBALS['sys_proxy']) {
+            $context_opt = array(
+                'http' => array(
+                    'method' => 'GET',
+                    'proxy' => $GLOBALS['sys_proxy'],
+                    'request_fulluri' => True,
+                    'timeout' => 5.0,
+                ),
+            );
+            $this->context = stream_context_create($context_opt);
+        } else {
+            $this->context = null;
         }
     }
     
