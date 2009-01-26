@@ -9,7 +9,7 @@
 <p>Attention, le type ne peut être changé a posteriori.</p>
 <B>Type du projet <?php echo help_button('ProjectAdministration.html#ProjectType'); ?> : </B>
 <select name="is_test"><option value="0" selected="selected">Projet</option>
-<option value="1">Project de test</option>
+<option value="1">Projet de test</option>
 </select>
 </fieldset>
 
