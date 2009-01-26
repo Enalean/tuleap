@@ -192,6 +192,43 @@ class Docman_SOAPActions extends Docman_Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param', 'parent_id'));
         }
     }
+
+    /**
+     * Returns the content of an item (and if defined its version) base64 encoded.
+     */
+    function getFileContents() {
+        $request = $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            if ($item !== null) {
+                $itemType = $item_factory->getItemTypeForItem($item);
+                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    if ($request->exist('version_number')) {
+                        $version_factory = $this->_getVersionFactory();
+                        $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
+                    } else {
+                        $version = $item->getCurrentVersion();
+                    }
+
+                    if ($version) {
+                        if (file_exists($version->getPath())) {
+                            $this->_controler->_viewParams['action_result'] = base64_encode(file_get_contents($version->getPath()));
+                        }
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
+        }
+    }
+
 }
 
 ?>
