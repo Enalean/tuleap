@@ -93,6 +93,7 @@ class Docman_SOAPController extends Docman_Controller {
             case 'getMetadataListOfValues':
             case 'getProjectMetadata':
             case 'getTreeInfo':
+            case 'getFileContents':
                 if (!$this->userCanRead($item->getId())) {
                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
                 } else {

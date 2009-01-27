@@ -456,7 +456,7 @@ $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocma
 
 
 /**
- *
+ * Returns all the items that match given criterias
  */
 function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias) {
     $params = array('id' => $item_id);
@@ -465,7 +465,19 @@ function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias) {
     }
     return _makeDocmanRequest($sessionKey, $group_id, 'search', $params);
 }
-$soapFunctions[] = array('searchDocmanItem', 'Returns all the items that match given criteria', 'tns:ArrayOfDocman_Item');
+$soapFunctions[] = array('searchDocmanItem', 'Returns all the items that match given criterias', 'tns:ArrayOfDocman_Item');
+
+/**
+ * Returns the the content of a file (or embedded file) base64 encoded
+ */
+function getDocmanFileContents($sessionKey, $group_id, $item_id, $version_number) {
+    $params = array('item_id' => $item_id);
+    if ($version_number >= 0) {
+        $params['version_number'] = $version_number;
+    }
+    return _makeDocmanRequest($sessionKey, $group_id, 'getFileContents', $params);
+}
+$soapFunctions[] = array('getDocmanFileContents', 'Returns the content of a file (or embedded file) base64 encoded. (version_number = -1 means last)', 'xsd:string');
 
 /**
  * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
@@ -764,6 +776,7 @@ if (defined('NUSOAP')) {
                       'chunk_size'        => array('xsd:int', 'Chunk size'),
                       'new_parent'        => array('xsd:int', 'New parent ID'),
                       'criterias'         => array('tns:ArrayOfCriteria', 'Criteria'),
+                      'version_number'    => array('xsd:int', 'Version number'),
                   );
 }
 /**

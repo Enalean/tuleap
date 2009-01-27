@@ -380,6 +380,7 @@ plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
 plugin_docman	error_append_filechunk	Error while appending file chunk.
 plugin_docman	error_not_a_file	The specified item is not a file.
 plugin_docman	error_get_checksum	Error while getting file checksum.
+plugin_docman	error_item_id_missing	Error: item ID is missing.
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
