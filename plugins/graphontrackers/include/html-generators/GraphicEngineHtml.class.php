@@ -264,18 +264,21 @@ class graphicEngineHtml extends Error {
         $onclick .= "if ($('artifacts_charts').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
         $onclick .= "new Effect.toggle($('artifacts_charts'), 'slide', {duration:0.1});";
         $onclick .= "return false;";
-        echo '<a href="'. $url .'&amp;func=toggle_section&amp;section=charts" onclick="'. $onclick .'">';
-        if ($current_user->getPreference('tracker_'. (int)$atid .'_hide_section_charts')) {
-            $image = 'ic/toggle_plus.png';
-        } else {
-            $image = 'ic/toggle_minus.png';
+        $pv = $GLOBALS['pv'];
+	if ($pv != 2) {
+           echo '<a href="'. $url .'&amp;func=toggle_section&amp;section=charts" onclick="'. $onclick .'">';
+           if ($current_user->getPreference('tracker_'. (int)$atid .'_hide_section_charts')) {
+               $image = 'ic/toggle_plus.png';
+           } else {
+               $image = 'ic/toggle_minus.png';
+           }
+           echo $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+           echo '</a>';
         }
-        echo $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
-        echo '</a>';
         echo $GLOBALS['Language']->getText('plugin_graphontrackers_report','title') .'</h3>';
         echo '<div id="artifacts_charts" style="padding-left:16px;">';
         if (!$current_user->getPreference('tracker_'. (int)$atid .'_hide_section_charts')) {
-            echo '<p>'. $this->genGraphRepSelBox($report_graphic_id) .'</p>';
+            if ( $pv == 0) { echo '<p>'. $this->genGraphRepSelBox($report_graphic_id) .'</p>'; }
             $gr = new GraphOnTrackers_Report($report_graphic_id);
             foreach($gr->getCharts() as $chart) {
                 $overflow = $chart->getWidth() ? '' : 'overflow:auto;';
