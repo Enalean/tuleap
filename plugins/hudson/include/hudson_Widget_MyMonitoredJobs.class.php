@@ -195,6 +195,15 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         }
         return $monitored_jobs;
     }
+    
+    
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-myjobs-fr-FR';
+        }
+        return 'widget-preview-myjobs-en-US';
+    }
 
 }
 

@@ -44,7 +44,8 @@ class hudsonPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }

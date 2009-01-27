@@ -98,6 +98,13 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         return $html;
     }
     
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-joblastartifacts-fr-FR';
+        }
+        return 'widget-preview-joblastartifacts-en-US';
+    }
 }
 
 ?>

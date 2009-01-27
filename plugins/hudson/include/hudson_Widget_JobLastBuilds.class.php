@@ -93,6 +93,14 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         return $html;
     }
     
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-joblastbuilds-fr-FR';
+        }
+        return 'widget-preview-joblastbuilds-en-US';
+    }
+    
 }
 
 ?>

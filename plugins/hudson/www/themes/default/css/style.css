@@ -23,3 +23,49 @@ td.widget_lastbuilds_weather {
 img.widget_lastbuilds_weather_img {
     vertical-align: middle;
 }
+
+
+
+/* Widgets preview */
+.widget-preview-jobbuildhistory-fr-FR {
+    background-image:url("../images/fr_FR_hudson_widget_builds_history.png");
+}
+.widget-preview-jobbuildhistory-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_builds_history.png");
+}
+.widget-preview-joblastartifacts-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_artifacts.png");
+}
+.widget-preview-joblastartifacts-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_last_artifacts.png");
+}
+.widget-preview-joblastbuilds-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_builds.png");
+}
+.widget-preview-joblastbuilds-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_last_builds.png");
+}
+.widget-preview-jobtestresults-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_results.png");
+}
+.widget-preview-jobtestresults-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_test_results.png");
+}
+.widget-preview-jobtesttrend-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_trend.png");
+}
+.widget-preview-jobtesttrend-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_test_trend.png");
+}
+.widget-preview-myjobs-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_my_jobs.png");
+}
+.widget-preview-myjobs-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_my_jobs.png");
+}
+.widget-preview-jobsoverview-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_jobs_overview.png");
+}
+.widget-preview-jobsoverview-en-US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_jobs_overview.png");
+}

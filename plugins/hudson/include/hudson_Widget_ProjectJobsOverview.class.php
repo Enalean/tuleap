@@ -101,6 +101,14 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         }
     }
     
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-jobsoverview-fr-FR';
+        }
+        return 'widget-preview-jobsoverview-en-US';
+    }
+    
 }
 
 ?>
