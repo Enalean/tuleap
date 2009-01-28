@@ -759,7 +759,7 @@
             <mediaobject>
              <imageobject>
                <imagedata format="PNG"
-                 fileref="../../screenshots/fr_FR/sc_hudson_widget_my_jobs.png" width="14.5cm" />
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_test_trend.png" width="14.5cm" />
              </imageobject>
             </mediaobject>
            </figure>
@@ -777,7 +777,7 @@
             <mediaobject>
              <imageobject>
                <imagedata format="PNG"
-                 fileref="../../screenshots/fr_FR/sc_hudson_widget_build_history.png" width="14.5cm" />
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_builds_history.png" width="14.5cm" />
              </imageobject>
             </mediaobject>
            </figure>
