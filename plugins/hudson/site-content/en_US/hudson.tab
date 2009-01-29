@@ -78,7 +78,8 @@ plugin_hudson	skip_legend	Skip ($1)
 plugin_hudson	project_job_testtrend	$1 Test Result Trend
 plugin_hudson	project_job_buildhistory	$1 Builds History
 
-plugin_hudson	widget_category_name	Continuous Integration
 plugin_hudson	widget_job_not_found	Job not found.
 plugin_hudson	widget_tests_not_found	No test found for this job.
 plugin_hudson	widget_build_not_found	No build found for this job.
+
+widget_categ_label	ci	Continuous Integration

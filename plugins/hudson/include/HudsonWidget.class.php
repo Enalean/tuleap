@@ -16,7 +16,7 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 abstract class HudsonWidget extends Widget {
     
     function getCategory() {
-        return $GLOBALS['Language']->getText('plugin_hudson','widget_category_name');
+        return 'ci';
     }
     
     protected function getAvailableJobs() {

@@ -425,6 +425,7 @@ class WidgetLayoutManager {
     * @param  used_widgets  
     */
     function _displayWidgetsSelectionForm($title, $widgets, $used_widgets) {
+        $hp = CodeX_HTMLPurifier::instance();
         $additionnal_html = '';
         if (count($widgets)) {
             echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';
@@ -432,7 +433,7 @@ class WidgetLayoutManager {
             $widget_rows = array();
             if (count($categs)) {
                 foreach($categs as $c => $ws) {
-                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'. $c .'</td>';
+                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'.   $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODEX_PURIFIER_CONVERT_HTML)  .'</td>';
                 }
             } else {
                 foreach($widgets as $widget_name) {

@@ -20,4 +20,8 @@ widget_add	link_add	Customize
 
 widget_rss	default_url	http://news.google.com/?ned=us&topic=t&output=rss
 
+widget_categ_label	forums	Forums
+widget_categ_label	frs	Files
+widget_categ_label	general	General
+widget_categ_label	trackers	Trackers
 
