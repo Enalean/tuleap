@@ -19,7 +19,7 @@
          <para>
             Several strategies are possible: after each commit, with regular
             interval (every hours, every night). It depends on the size of the 
-            project, the number of developpers, the frequency of modifications.
+            project, the number of developers, the frequency of modifications.
          </para>
         </footnote>,
         and so it's called Continuous Integration.
@@ -27,19 +27,19 @@
     <para>
         The tool responsible for this checking is a Continuous Integration tool
         such as CruiseControl or Hudson.
-        This checking is called <emphasis role="bold">Build</emphasis>.
+        This checking is called a <emphasis role="bold">Build</emphasis>.
         A build will correspond, according to your project, in a succession of
         steps, such as:
         <itemizedlist mark="bullet">
          <listitem><para>Compilation,</para></listitem>
-         <listitem><para>Documentation genreration (javadoc for instance),</para></listitem>
-         <listitem><para>Unit test execution,</para></listitem>
+         <listitem><para>Documentation generation (javadoc for instance),</para></listitem>
+         <listitem><para>Unit tests execution,</para></listitem>
          <listitem><para>Quality analysis on source code (coding conventions, number of comments, code metrics, etc.),</para></listitem>
          <listitem><para>Delivery generation (exe, zip, tar, etc.).</para></listitem>
         </itemizedlist>
         The continuous integration tool doesn't perform the build itself, but just
         launch it with regular interval, display the result of the build, and is
-        capable of send notification to project members if a modification involved
+        capable of sending notification to project members if a modification involved
         any regression.
     </para>
     <para>
@@ -47,7 +47,7 @@
         community and adopted by Agiles methods, brings adding value to your 
         development process. For instance:
         <itemizedlist mark="bullet">
-         <listitem><para>Tests are immediatly executed after each modification (step sometimes neglected by developpers),</para></listitem>
+         <listitem><para>Tests are immediatly executed after each modification (step sometimes neglected by developers),</para></listitem>
          <listitem><para>Integration issues are continuously detected, to be fixed as soon as possible,</para></listitem>
          <listitem><para>There always exist an operational version of deliveries available for tests, demo or distribution.</para></listitem>
         </itemizedlist>
@@ -62,7 +62,7 @@
     </para>
     
     <para>
-      Some of the words about continuous integration and Hudson are quiete specific.
+      Some of the words about continuous integration and Hudson are quiet specific.
       Let's then give a definition:
       <table frame="all">
        <title>Glossary of Hudson and continuous integration specific words</title>
@@ -149,7 +149,7 @@
     <title>Hudson Configuration</title>
     <para>
         Before creating your own jobs, (see <xref linkend="JobCreationAndConfiguration" />),
-        you need to configure Hudson. All theses steps are optional, you only have
+        you need to configure Hudson. All these steps are optional, you only have
         to configure what you really need.
     </para>
     
@@ -175,7 +175,7 @@
             You can specify here the path to the external tools you need.
             By default, the available tools are JDK, Shell, Ant, Maven and CVS.
             If you install some plug-ins (see <xref linkend="HudsonPluginsConfiguration" />)
-            that need external tools, you will able to configure them in this section.
+            that need external tools, you will be able to configure them in this section.
             <figure id="HudsonExternalToolsConfiguration">
               <title>External Tools Configuration</title>
               <mediaobject>
@@ -215,7 +215,7 @@
               <para>
                 <emphasis role="bold">LDAP:</emphasis> if you already have a
                 LDAP directory, you only need to specify the address of the server,
-                and Hudson will know the users.
+                and Hudson will recognize the users.
               </para>
              </listitem>
              <listitem>
@@ -236,7 +236,7 @@
         <title>Email Notification</title>
         <para>
             Hudson is able to send notification to warn about build result.
-            One can of course configure this for every job.
+            One can of course configure this for each job.
             To enable notification, you need to state a mail server (SMTP server).
             Leave the field empty if you want to use the default mail server (localhost).
         </para>
@@ -254,15 +254,15 @@
             this address in the from header.
         </para>
         <para>
-            You finally need to state the URL of the Hudson server, in order to
-            the URL in emails will be correct.
+            You finally need to state the URL of the Hudson server. URL in sent 
+            emails will then be correct.
         </para>
       </section>
       
       <section id="HudsonSystemConfigurationJabberNotification">
         <title>Jabber Notification</title>
         <para>
-            If you havec installed the Jabber plug-in for Hudson
+            If you have installed the Jabber plug-in for Hudson
             (see <xref linkend="HudsonPluginsConfiguration" />), you will find
             in the section "Manage Hudson" -> "Configure System"
             a part to configure Jabber notification.
@@ -308,7 +308,7 @@
         Once the system is configured, you can start defining your jobs.
         To do that, select the link "New job" in the menu on top left.
         You just have to give a name (the name of your project for instance)
-        et choose the type.
+        and choose the type.
         Several types of jobs are possible. The most common is "free style 
         software project" that we are using as an example in this documentation.
         There is also a type "Maven2" if you already use this build tool.
@@ -354,13 +354,13 @@
           </para>
           <para>
             Hudson will then ask you to give credentials for Subversion, to be able to 
-            access the repository. You cna then choose several options for managing
+            access the repository. You can then choose several options for managing
             this authentication (either give your login/password or use SSH public
             key authentication or HTTPS client certificate). We let you choosing 
             what option better fit your needs.
           </para>
           <para>
-            You can add several repository by pressing the button "Add more locations...".
+            You can add several repositories by pressing the button "Add more locations...".
           </para>
           <para>
             Finally, if you want to give the ability to the users to navigate
@@ -378,7 +378,7 @@
         As explained in introduction, the big thing with continuous integration
         is the fact that once configured, the build is continuously done, and you
         don't have to think about it. We still need to configure the way hudson
-        will schedule the build. Two mains options are available:
+        will schedule the build. Two main options are available:
         <itemizedlist mark="bullet">
          <listitem>
           <para><emphasis role="bold">Poll SCM</emphasis>:
@@ -406,7 +406,7 @@
     <section id="JobConfigurationBuildSteps">
       <title>Build configuration (steps)</title>
       <para>
-        You now need what the build will effectively do (compile your project,
+        You now need to define what the build will effectively do (compile your project,
         generate documentation, launch unit tests, etc.). To do that, you can add
         as many steps as needed. By default (meaning without any other plug-ins),
         Hudson offers 4 types of possible steps:
@@ -428,7 +428,7 @@
           let you invoke an Ant script. If several Ant version are available
           (see <xref linkend="HudsonSystemConfigurationToolpath" />), you can
           choose the one you want. You can also precise the Ant target if needed.
-          Pressing the "Advanced" button, you will able to specify properties and
+          Pressing the "Advanced" button, you will be able to specify properties and
           Java options.
           </para>
          </listitem>
@@ -452,7 +452,7 @@
         <itemizedlist mark="bullet">
          <listitem>
           <para><emphasis role="bold">Archive the artefacts</emphasis>: 
-          if your build produce deliveries (such as exe, zip, or tar), or
+          if your build produces deliveries (such as exe, zip, or tar), or
           generate user documentation for instance, you can publish these
           artifacts on the Hudson build page of your job.
           You need then to specify the path to the artifacts to publish
@@ -464,15 +464,15 @@
          </listitem>
          <listitem>
           <para><emphasis role="bold">Publish Javadoc</emphasis>:
-          if your build produce javadoc, you can publish it on the build page.
+          if your build produces javadoc, you can publish it on the build page.
           To do that, give the path to the root folder of the generated javadoc.
           The reference folder is the workspace. You can also use the wildcard, and
-          can choose weither archive old versions of the javadoc or not.
+          can choose either archive old versions of the javadoc or not.
           </para>
          </listitem>
          <listitem>
           <para><emphasis role="bold">Publish JUnit test result report</emphasis>:
-          if your build execute JUnit tests, you can publish a result report on
+          if your build executes JUnit tests, you can publish a result report on
           the build page. To do it, specify the path of the JUnit generated XML 
           report files. If you use another test plug-in, you will find nearly 
           the same.
@@ -490,7 +490,7 @@
           <para><emphasis role="bold">Email notification</emphasis>:
           Hudson is able to send emails while some events happen.
           You can enter a list of email addresses to be notified. A good practice
-          could be ginving a mailing address (specific for Hudson or not) in 
+          could be giving a mailing list address (specific for Hudson or not) in 
           order to notify all the team (see <xref linkend="MailingListsCreation" />
           to know how to create mailing lists). 
           Events that trigger notification are managed as followed:
@@ -531,12 +531,12 @@
     <title>Integration in &SYS_PRODUCT_NAME;</title>
     <para>
         As continuous integration is a good practice in software engineering,
-        &SYS_PRODUCT_NAME; integrate Hudson tool.
+        &SYS_PRODUCT_NAME; integrates Hudson tool.
         We saw how to install (see <xref linkend="HudsonInstallation" />) 
         and configure (see <xref linkend="HudsonConfiguration" />) Hudson. 
         We also saw how to create and configure Hudson jobs
         (see <xref linkend="JobCreationAndConfiguration" />).
-        Let's see now how integrated to &SYS_PRODUCT_NAME; Hudson is.
+        Let's see now how Hudson is integrated to &SYS_PRODUCT_NAME;.
     </para>
     
     <section id="HudsonService">
@@ -598,10 +598,10 @@
               </mediaobject>
             </figure>
             For every job, you can see the current status (colored bullet left to 
-            the name of the job), the name, the last successfull build, le last
+            the name of the job), the name, the last successfull build, the last
             failed build, if you have enabled SCM trigger or not 
-            (see <xref linkend="HudsonServiceAddJob" />). If you are project admin,
-            you will also see for each job some icons letting you modify the job or
+            (see <xref linkend="HudsonServiceAddJob" />). Project admins will 
+            also see for each job some icons that let them modify the job or
             delete it (remove the link with &SYS_PRODUCT_NAME;).
         </para>
         <para>
@@ -625,7 +625,7 @@
         Hudson service let you adorn your personal and project dashboard with 
         some nice widgets.
         To know how to add widgets to your personal dashboard, see
-        <xref linkend="LoginAndPersonalPage" />. The procedure is quiete similar
+        <xref linkend="LoginAndPersonalPage" />. The procedure is quiet similar
         to add widgets to dashboard project (see <xref linkend="ProjectSummaryPageContent" />).
       </para>
       <itemizedlist mark="bullet">
@@ -635,7 +635,7 @@
           only available on the personal dashboard.
           By default, it gives an overview of all the jobs of all the projects
           you're member of. You can of course select the jobs you wish to display
-          by selectinf the preferences link of the widget.
+          by selecting the preferences link of the widget.
            <figure id="HudsonWidgetMyJobs">
             <title>"My Hudson Jobs" Widget</title>
             <mediaobject>
@@ -687,8 +687,8 @@
           <emphasis role="bold">Test Results</emphasis>:
           this widget is available for both personal and project dashboard.
           It is linked to only one job, and show the test results of the latest build 
-          for the selected job. To display something, your job needs to to execute
-          tests and publish them. The result are shown in a pie chart.
+          for the selected job. To display something, your job needs to execute
+          tests and publish them. The result is shown in a pie chart.
            <figure id="HudsonWidgetTestResults">
             <title>"Test results" Widget</title>
             <mediaobject>
