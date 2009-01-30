@@ -662,7 +662,7 @@
     <section id="HudsonWidgets">
       <title>Widgets Hudson</title>
       <para>
-        Le service Hudson vous permet d'aggrémenter votre tableau de bord projet
+        Le service Hudson vous permet d'agrémenter votre tableau de bord projet
         ou personnel de nombreux widgets.
         Pour savoir comment ajouter des widgets à votre tableau de bord personnel 
         (votre page personnel), voir <xref linkend="LoginAndPersonalPage" />.
