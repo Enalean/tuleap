@@ -25,7 +25,7 @@
         d'où le nom d'Intégration Continue.
     </para>
     <para>
-        L'outil qui va se charge d'effectuer cette vérification est un outil 
+        L'outil qui va se charger d'effectuer cette vérification est un outil 
         d'intégration continue tel que CruiseControl ou Hudson.
         Cette étape de vérification est appelée <emphasis role="bold">Build</emphasis>.
         Un build pourra correspondre, selon votre projet, en une succession d'étapes, 
@@ -96,7 +96,7 @@
          <entry><emphasis role="bold">Artéfact</emphasis></entry>
          <entry>Item généré lors du build, et mis à disposition par l'outil 
          d'intégration continue. Attention à ne pas confondre un artefact d'un 
-         build et un artefact Codendi (qui est un item suivi dans l'outil de suivi).</entry>
+         build et un artefact &SYS_PRODUCT_NAME; (qui est un item suivi dans l'outil de suivi).</entry>
         </row>
         <row>
          <entry><emphasis role="bold">Espace de travail (workspace)</emphasis></entry>
@@ -139,7 +139,7 @@
          <title>Voici donc les étapes à suivre pour l'installer :</title>
           <step><para>Installez Tomcat</para></step>
           <step><para>Télécharger le fichier war Hudson (hudson.war) à l'adresse <ulink url="https://hudson.dev.java.net/">https://hudson.dev.java.net/</ulink></para></step>
-          <step><para>Définir la variable d'envirronnement HOME_HUDSON si vous souhaitez spécifier le répertoire d'installation d'Hudson</para></step>
+          <step><para>Définir la variable d'environnement HOME_HUDSON si vous souhaitez spécifier le répertoire d'installation d'Hudson</para></step>
           <step><para>Déployer la war Hudson dans le manager de Tomcat.</para></step>
         </procedure>
         Ca y est ! Hudson est installé. Par défaut, vous pouvez y accèder à l'adresse : <ulink url="http://localhost:8080/hudson">http://localhost:8080/hudson</ulink>
