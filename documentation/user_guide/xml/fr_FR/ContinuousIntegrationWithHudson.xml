@@ -100,7 +100,7 @@
         </row>
         <row>
          <entry><emphasis role="bold">Espace de travail (workspace)</emphasis></entry>
-         <entry>Répertoire (espace) dans lequel le projet va être dépoyé pour
+         <entry>Répertoire dans lequel le projet va être dépoyé pour
          pouvoir y effectuer le build, et éventuellement y construire les artéfacts.</entry>
         </row>
         <row>
@@ -108,7 +108,7 @@
          <entry>Etat du build. Peut prendre diverses valeurs selon l'outil.
          Hudson propose 4 états :
           <itemizedlist mark="bullet">
-           <listitem><para>Succès : tout s'est bien passé, aucun tests n'est en échec,</para></listitem>
+           <listitem><para>Succès : tout s'est bien passé, aucun test n'est en échec,</para></listitem>
            <listitem><para>Instable : le build s'est achevé, mais il est instable (des tests sont en échecs par exemple),</para></listitem>
            <listitem><para>Echec : le build est en échec</para></listitem>
            <listitem><para>Inactif : aucun build n'a encore été lancé ou le build est désactivé.</para></listitem>
@@ -229,7 +229,7 @@
               <para>
                 <emphasis role="bold">Base de données des utilisateurs de Hudson :</emphasis>
                 Hudson peut gérer lui-même la base de données des utilisateurs. 
-                Dans ce cas, vous devrez soi les créer vous-même, soit autoriser 
+                Dans ce cas, vous devrez soit les créer vous-même, soit autoriser 
                 les utilisateurs à s'enregistrer.
               </para>
              </listitem>
@@ -276,16 +276,17 @@
             Si vous avez installé le plugin Jabber pour hudson 
             (voir <xref linkend="HudsonPluginsConfiguration" />), vous trouverez 
             également dans la section "Administrer Hudson" -> "Configurer le système"
-            une partie dédiée aux notifications Jabber. Comme chaque utilisateur 
-            dispose d'un compte Jabber (Voir <xref linkend="IMPlugin" />) et que
-            chaque projet dispose d'un salon de discussion, le plugin Jabber pour 
-            Hudson vous permet de notifier les utilisateurs (ou les salons) des
+            une partie dédiée aux notifications Jabber. Si le plugin Jabber pour
+            &SYS_PRODUCT_NAME; est installé et activé, chaque utilisateur 
+            dispose d'un compte Jabber (Voir <xref linkend="IMPlugin" />) et 
+            chaque projet dispose d'un salon de discussion. Le plugin Jabber pour 
+            Hudson vous permet alors de notifier les utilisateurs (ou les salons) des
             résultats des builds. Il est également possible de lancer certaines 
             action par message Jabber.
         </para>
         <para>
-            Pour utiliser la notification Jabber, veuillez renseigner les champs
-            server (par défaut &SYS_DEFAULT_DOMAIN;) ainsi que le JabberID de 
+            Pour utiliser la notification Jabber, veuillez renseigner le champ
+            serveur (par défaut &SYS_DEFAULT_DOMAIN;) ainsi que le JabberID de 
             l'auteur des notifications.
         </para>
       </section>
@@ -396,7 +397,7 @@
       <para>
         Comme nous l'expliquions en introduction, l'intérêt de l'intégration
         continue réside dans le fait que, une fois paramétré correctement,
-        le build est réalisé en continue, sans plus vous en soucier. Il reste
+        le build est réalisé en continu, sans plus vous en soucier. Il reste
         cependant à définir la manière dont les builds vont être lancés. Deux
         options principales s'offrent à vous :
         <itemizedlist mark="bullet">
@@ -405,7 +406,7 @@
           demande à Hudson de scruter les changements dans l'outil de gestion de version.
           Vous pouvez définir la fréquence suivant la syntaxe cron (voir aide Hudson en ligne).
           Notez toutefois que cette opération est consommatrice de ressources pour
-          le serveur &SYS_PRODUCT_NAME;. Envisagez d'utiliser un trigger de type 
+          le serveur &SYS_PRODUCT_NAME;. Envisagez d'utiliser la méthode de type 
           'push' pour éviter cette surcharge (voir ci-dessous).
           </para>
          </listitem>
@@ -644,12 +645,12 @@
         </para>
         <para>
             Le nom du job et les derniers builds sont des liens hypertextes qui 
-            ouvriront la section Hudson correspondante dans une iframe juste en 
+            ouvriront la section Hudson correspondante dans une fenêtre juste en 
             dessous. Ceci est très pratique pour naviguer dans l'interface de
             Hudson tout en restant dans l'interface de &SYS_PRODUCT_NAME;.
-            Si vous souhaitez visualiser la page Hudson en grand (sans iframe),
+            Si vous souhaitez visualiser la page Hudson en grand,
             vous pouvez cliquer sur le lien 'voir seulement cette fenêtre' en
-            haut à droite de l'iframe.
+            haut à droite.
         </para>
         <para>
             Le tableau vous propose également un lien vers le flux RSS de chaque
@@ -666,7 +667,7 @@
         ou personnel de nombreux widgets.
         Pour savoir comment ajouter des widgets à votre tableau de bord personnel 
         (votre page personnel), voir <xref linkend="LoginAndPersonalPage" />.
-        La procédure est assez similaire pour ajouter des widgets au tableau de
+        La procédure est similaire pour ajouter des widgets au tableau de
         bord projet (page sommaire du projet, voir <xref linkend="ProjectSummaryPageContent" />).
       </para>
       <itemizedlist mark="bullet">

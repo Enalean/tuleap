@@ -266,8 +266,9 @@
             (see <xref linkend="HudsonPluginsConfiguration" />), you will find
             in the section "Manage Hudson" -> "Configure System"
             a part to configure Jabber notification.
-            As every &SYS_PRODUCT_NAME; user has a Jabber account (see <xref linkend="IMPlugin" />)
-            and as each project has a Chat Room, Jabber plug-in lets you the ability
+            If the Jabber plugin for &SYS_PRODUCT_NAME; is installed and enabled,
+            every &SYS_PRODUCT_NAME; user has a Jabber account (see <xref linkend="IMPlugin" />)
+            and each project has a Chat Room. Jabber plug-in lets you the ability
             to send notification to users or chat rooms.
         </para>
         <para>
@@ -606,7 +607,7 @@
         </para>
         <para>
             The name of the job and the latest builds are hypertext links that
-            will be opened the corresponding Hudson section in an iframe below
+            will be opened the corresponding Hudson section in an frame below
             the table. This is really convenient to browse Hudson interface 
             while staying in the &SYS_PRODUCT_NAME; interface.
             If you want to open the Hudson frame in a specific window, just select
@@ -625,7 +626,7 @@
         Hudson service let you adorn your personal and project dashboard with 
         some nice widgets.
         To know how to add widgets to your personal dashboard, see
-        <xref linkend="LoginAndPersonalPage" />. The procedure is quiet similar
+        <xref linkend="LoginAndPersonalPage" />. The procedure is similar
         to add widgets to dashboard project (see <xref linkend="ProjectSummaryPageContent" />).
       </para>
       <itemizedlist mark="bullet">
