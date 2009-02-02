@@ -82,4 +82,12 @@ plugin_hudson	widget_job_not_found	Job not found.
 plugin_hudson	widget_tests_not_found	No test found for this job.
 plugin_hudson	widget_build_not_found	No build found for this job.
 
+plugin_hudson	widget_description_buildshistory	Shows the build history of the selected job, under the form of RSS feed.
+plugin_hudson	widget_description_lastartifacts	Shows the last successfully published artifacts.
+plugin_hudson	widget_description_lastbuilds	Show the last builds for this job (last one, last successfull, last failed) and the weather report.
+plugin_hudson	widget_description_testresults	Show the test results of the latest build for the selected job.
+plugin_hudson	widget_description_testtrend	Shows the test result trend for the selected job.
+plugin_hudson	widget_description_myjobs	Shows an overview of all the jobs of all the projects you're member of.
+plugin_hudson	widget_description_jobsoverview	Shows an overview of all the jobs associated with this project.
+
 widget_categ_label	ci	Continuous Integration

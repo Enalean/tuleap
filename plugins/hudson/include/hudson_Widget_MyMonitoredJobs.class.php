@@ -91,6 +91,10 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         return  $title;
     }
     
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_myjobs');
+    }
+    
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {

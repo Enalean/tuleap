@@ -71,6 +71,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         return  $title;
     }
     
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_joboverview');
+    }
+    
     function getContent() {
         $jobs = $this->getJobsByGroup($this->group_id);
         if (sizeof($jobs) > 0) {

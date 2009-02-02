@@ -44,6 +44,10 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
         return  $title;
     }
     
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testtrend');
+    }
+    
     function loadContent($id) {
         $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
