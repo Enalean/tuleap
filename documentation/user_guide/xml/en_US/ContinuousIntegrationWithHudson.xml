@@ -652,7 +652,7 @@
          <para>
           <emphasis role="bold">Jobs Overview</emphasis>:
           this widget is only available on project dashboard.
-          It can display an overview of all the job associated with this project.
+          It can display an overview of all the jobs associated with this project.
           You can always choose the ones you want to display in the widget (preferences link).
            <figure id="HudsonWidgetJobsOverview">
             <title>"Jobs Overview" Widget</title>
