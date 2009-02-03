@@ -72,7 +72,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     }
     
     function getDescription() {
-        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_joboverview');
+        return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_jobsoverview');
     }
     
     function getContent() {
