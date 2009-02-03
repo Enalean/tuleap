@@ -23,6 +23,7 @@ plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
 plugin_hudson	addjob_title	Add job
 plugin_hudson	form_job_url	Job URL:
+plugin_hudson	form_job_name	Job name:
 plugin_hudson	form_job_use_trigger	Trigger a build after commits:
 plugin_hudson	form_job_use_svn_trigger	Trigger a build after SVN commits:
 plugin_hudson	form_job_use_cvs_trigger	Trigger a build after CVS commits:
@@ -35,6 +36,7 @@ plugin_hudson	wrong_job_url	Wrong Job URL: $1
 plugin_hudson	job_url_file_not_found	File not found at URL: $1
 plugin_hudson	job_url_file_error	Unable to read file at URL: $1
 plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob
+plugin_hudson	form_jobname_help	Name (with no space) used to make a reference to this job. Eg: job #MyJobName
 plugin_hudson	form_addjob_button	Add job
 plugin_hudson	editjob_title	Edit job
 plugin_hudson	form_editjob_button	Update job
@@ -43,6 +45,7 @@ plugin_hudson	job_id_missing	Missing Hudson job ID
 plugin_hudson	add_job_error	Unable to add Hudson job.
 plugin_hudson	job_added	Hudson job added.
 plugin_hudson	edit_job_error	Unable to update Hudson job
+plugin_hudson	edit_jobname_spacesreplaced	Spaces are not allowed in job name. They were replaced by "_".
 plugin_hudson	job_updated	Hudson job updated.
 plugin_hudson	delete_job_error	Unable to delete Hudson job
 plugin_hudson	job_deleted	Hudson job deleted.

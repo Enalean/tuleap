@@ -52,19 +52,20 @@ class hudsonViews extends Views {
     function job_details() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
-        $user = UserManager::instance()->getCurrentUser();
-        
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByJobID($job_id);
+        if ($request->exist('job_id')) {
+            $job_id = $request->get('job_id');
+            $dar = $job_dao->searchByJobID($job_id);
+        } elseif ($request->exist('job')) {
+            $job_name = $request->get('job');
+            $dar = $job_dao->searchByJobName($job_name, $group_id);
+        }
         if ($dar->valid()) {
             $row = $dar->current();
             $this->_display_iframe($row['job_url']);
         } else {
             $this->_display_iframe();
         }
-                
-        
     }
     
     function last_build() {
@@ -154,6 +155,13 @@ class hudsonViews extends Views {
                 echo '  <p>';
                 echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
                 echo '  </p>';
+                echo '  <p>';
+                echo '   <label for="new_hudson_job_name">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_name').'</label>';
+                echo '   <input id="new_hudson_job_name" name="new_hudson_job_name" type="text" value="'.$row['name'].'" size="32" />';
+                echo '  </p>';
+                echo '  <p>';
+                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_jobname_help').'</span>';
+                echo '  </p>';
                 if ($project->usesSVN()) {
                     echo '  <p>';
                     echo '   <label for="new_hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_svn_trigger').'</label>';
@@ -240,7 +248,7 @@ class hudsonViews extends Views {
                     
                     echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
-                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$job->getName().'</a></td>';
+                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$row['name'].'</a></td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
                         echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
