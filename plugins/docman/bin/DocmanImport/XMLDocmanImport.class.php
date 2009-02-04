@@ -161,20 +161,7 @@ class XMLDocmanImport {
         } else {
             $title1 = (string)$node1->properties->title;
             $title2 = (string)$node2->properties->title;
-            
-            if ($title1 == $title2) {
-                return 0;
-            } else {
-                $strArray = array($title1, $title2);
-                natsort($strArray);
-                
-                if (array_shift($strArray) == $title1) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }
-            
+            return strnatcasecmp($title1, $title2);
         }
     }
     
