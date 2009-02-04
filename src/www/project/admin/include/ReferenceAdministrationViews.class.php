@@ -105,7 +105,13 @@ class ReferenceAdministrationViews extends Views {
         if ($ref->getId()==100) return; // 'None' reference
         
         if (strpos($ref->getDescription(),"_desc_key")!==false) {
-            $description = $Language->getText('project_reference',$ref->getDescription());
+            if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
+                if ($Language->hasText($matches[1], $matches[2])) {
+                    $description = $Language->getText($matches[1], $matches[2]);
+                }
+            } else {
+                $description = $Language->getText('project_reference',$ref->getDescription());
+            }
         } else {
             $description=$ref->getDescription();
         }
