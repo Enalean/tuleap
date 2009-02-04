@@ -782,7 +782,7 @@ CREATE TABLE frs_file (
   type_id int(11) NOT NULL default '0',
   processor_id int(11) NOT NULL default '0',
   release_time int(11) NOT NULL default '0',
-  file_size int(11) NOT NULL default '0',
+  file_size bigint NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
   PRIMARY KEY  (file_id),
@@ -2949,7 +2949,7 @@ CREATE TABLE wiki_attachment_revision (
   date INT( 11 ) NOT NULL ,
   revision INT( 11 ) NOT NULL ,
   mimetype VARCHAR( 255 ) NOT NULL ,
-  size INT( 11 ) NOT NULL ,
+  size bigint NOT NULL ,
   PRIMARY KEY (id)
 );
 

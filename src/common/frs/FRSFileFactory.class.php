@@ -188,10 +188,13 @@ class FRSFileFactory extends Error {
             $this->setError('File not found: '.$name);
             return false;
         }
-        
+
+	// Don't use filesize() : Workaround for files larger than 2 GB
+ 	$filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+
         $file = new FRSFile();
         $file->setFileName($name);
-        $file->setFileSize(filesize($GLOBALS['ftp_incoming_dir'] . '/' . $name));
+        $file->setFileSize($filesize);
         $file->setReleaseID($release_id);
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
@@ -304,12 +307,21 @@ return 0 if file not deleted, 1 otherwise
      */
     function getUploadedFileNames() {
         $uploaded_file_names = array();
-        $dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
         //iterate and show the files in the upload directory
-        while ($file = @ readdir($dirhandle)) {
-            if ((!ereg('^\.', $file[0])) && is_file($GLOBALS['ftp_incoming_dir'] . '/' . $file)) {
-                $uploaded_file_names[] = $file;
-            }
+
+        /// This won't work for files > 2GB
+        //$dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
+        //while ($file = @ readdir($dirhandle)) {
+
+        // Workaround for files bigger than 2Gb:
+        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['ftp_incoming_dir']." -maxdepth 1 -type f -printf \"%f\\n\"");
+	$files = explode("\n",$filelist);
+        // Remove last (empty) element
+        array_pop($files);
+        foreach ($files as $file) {
+            //if ((!ereg('^\.', $file[0])) && is_file($GLOBALS['ftp_incoming_dir'] . '/' . $file)) { // Not useful with workaround
+            $uploaded_file_names[] = $file;
+            //}
         }
         return $uploaded_file_names;
     }

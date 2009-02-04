@@ -317,6 +317,7 @@ extends Rule {
  * By default the maxSize is defined by 'sys_max_size_upload' CodeX
  * variable but may be customized with setMaxSize.
  */
+require_once("www/file/file_utils.php"); // Needed for 2 GB workaround
 class Rule_File
 extends Rule {
     var $maxSize;
@@ -371,7 +372,7 @@ extends Rule {
             }
             if($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
-                if(filesize($file['tmp_name']) > $this->maxSize) {
+                if(file_utils_get_size($file['tmp_name']) > $this->maxSize) {
                    $ok = false;
                    $this->error = $this->geti18nError('error_upload_size', 1);
                 }

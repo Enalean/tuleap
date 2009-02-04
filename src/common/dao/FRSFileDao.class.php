@@ -23,6 +23,7 @@
  * 
  */
 require_once('include/DataAccessObject.class.php');
+require_once('www/file/file_utils.php');
 
 class FRSFileDao extends DataAccessObject {
 
@@ -169,7 +170,7 @@ class FRSFileDao extends DataAccessObject {
             $values[] = ($this->da->escapeInt($file_size));
         } else {
             $arg[] = 'file_size';
-            $values[] = filesize($file_name); 
+            $values[] = file_utils_get_size($file_name); 
         }
 
         $arg[] = 'post_date';

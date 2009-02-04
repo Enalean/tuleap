@@ -32,6 +32,22 @@ function file_utils_header($params) {
     }
 }
 
+// Workaround for the 2GB limitation
+function file_utils_get_size($file) {
+    //Uncomment when limitation is fixed
+    //return filesize($file);
+
+    if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
+        $size = trim(`stat -c%s $file`);
+    } else {
+        // Not tested...
+        $fsobj = new COM("Scripting.FileSystemObject");
+        $f = $fsobj->GetFile($file);
+        $size = $file->Size;
+    }
+    return $size;
+}
+
 function file_utils_admin_header($params) {
   global $group_id,$Language;
 
@@ -860,7 +876,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         //uplaod release_notes and change_log if needed
         $data_uploaded = false;
         if (isset($_FILES['uploaded_change_log']) && !$_FILES['uploaded_change_log']['error']) {
-            $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), filesize($_FILES['uploaded_change_log']['tmp_name'])));
+            $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_change_log']['tmp_name'])));
             if ((strlen($code) > 0) && (strlen($code) < $GLOBALS['sys_max_size_upload'])) {
                 //size is fine
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded'));
@@ -872,7 +888,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             }
         }
         if (isset($_FILES['uploaded_release_notes']) && !$_FILES['uploaded_release_notes']['error']) {
-            $code = addslashes(fread(fopen($_FILES['uploaded_release_notes']['tmp_name'], 'r'), filesize($_FILES['uploaded_release_notes']['tmp_name'])));
+            $code = addslashes(fread(fopen($_FILES['uploaded_release_notes']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_release_notes']['tmp_name'])));
             if ((strlen($code) > 0) && (strlen($code) < $GLOBALS['sys_max_size_upload'])) {
                 //size is fine
                 if (!$data_uploaded) {
@@ -1184,7 +1200,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             move the file to the project's fileserver directory
                                         */
                                         clearstatcache();
-                                        if (is_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename) && file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
+                                        if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
                                             $group = new Group($group_id);
@@ -1196,7 +1212,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     //add the file to the database
                                                     $array = array (
                                                         'filename' => $frsff->getUploadSubDirectory($release_id
-                                                    ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] , 'type_id' => $file['type'] );
+                                                    ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] , 'type_id' => $file['type'] );
                                                     $res = & $frsff->create($array);
         
                                                     if (!$res) {
@@ -1242,7 +1258,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     move the file to the project's fileserver directory
                                 */
                                 clearstatcache();
-                                if (is_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename) && file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
+                                if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                     //move the file to a its project page using a setuid program
                                         $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
                                         if (!$exec_res) {
@@ -1250,7 +1266,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             //add the file to the database
                                             $array = array (
                                                 'filename' => $frsff->getUploadSubDirectory($release_id
-                                            ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => filesize($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
+                                            ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
                                             $res = $frsff->create($array);
         
                                             if (!$res) {
@@ -1283,4 +1299,5 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     }
     frs_display_release_form($is_update, $release, $group_id, $title, $url);
 }
+
 ?>

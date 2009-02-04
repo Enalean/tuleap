@@ -4,6 +4,7 @@ module cvs 1.0;
 require {
 	type cvs_t;
         type cvs_data_t;
+        type file_t;
         type httpd_t;
         type http_port_t;
         type httpd_sys_content_t;
@@ -25,12 +26,15 @@ require {
 }
 
 #============= cvs_t ==============
+allow cvs_t file_t:dir search;
 allow cvs_t http_port_t:tcp_socket name_connect;
 allow cvs_t httpd_sys_content_t:dir { read search };
 allow cvs_t httpd_sys_content_t:file { read getattr ioctl };
 allow cvs_t httpd_sys_content_t:lnk_file read;
 allow cvs_t lib_t:file execute_no_trans;
 allow cvs_t mysqld_db_t:dir search;
+allow cvs_t mysqld_db_t:lnk_file read;
+allow cvs_t mysqld_etc_t:file { read getattr };
 allow cvs_t mysqld_t:unix_stream_socket connectto;
 allow cvs_t mysqld_var_run_t:sock_file write;
 allow cvs_t user_home_dir_t:dir search;

@@ -8,6 +8,7 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');
+require_once('www/file/file_utils.php');
 
 if (user_isloggedin()) {
   list(,$group_id, $file_id) = explode('/', $_SERVER['PATH_INFO']);
@@ -38,37 +39,16 @@ if (user_isloggedin()) {
                 $Language->getText('file_download','access_not_authorized',session_make_url("/project/memberlist.php?group_id=$group_id")));
   } 
 
-  // Get the URL to download the file
-  $file_location = $file->getFileLocation();
+  if (! $file->fileExists()) {
+      exit_error($Language->getText('global','error'), $Language->getText('file_download','file_not_available'));
+  }
 
-  if ($fp=fopen($file_location,"r")) {
-      $size = filesize($file_location);
+  // Log the download in the Log system
+  $file->logDownload(user_getid());
 
-      // Log the download in the Log system
-      $file->logDownload(user_getid());
-      
-      // Now transfer the file to the client
-      // Make sure this URL is not cached anywhere otherwise download
-      // would be wrong
-      // (Don't send the no-cache if IE and SSL - see
-      // http://support.microsoft.com/default.aspx?scid=kb;EN-US;q316431.
-      if(!(browser_is_ie() && session_issecure() &&
-	   (strcmp(browser_get_version(), '5.5') ||
-	    strcmp(browser_get_version(), '5.01') ||
-	    strcmp(browser_get_version(), '6'))) ) {
-	  header("Cache-Control: no-cache");  // HTTP 1.1 - must be on 2 lines or IE 5.0 error
-	  header("Cache-Control: must-revalidate");  // HTTP 1.1
-	  header("Pragma: no-cache");  // HTTP 1.0
-      }
-      $bn = basename($file->getFileName());
-      header("Content-Type: application/octet-stream");
-	  header('Content-Disposition: attachment; filename="'. $bn .'"');
-      header("Content-Length:  $size");
-      header("Content-Transfer-Encoding: binary\n");
-      fpassthru($fp);
-  
-  } else {
-      // Can't open the file for download. There is a problem here !!
+
+  // Start download
+  if (! $file->download()) {
       exit_error($Language->getText('global','error'), $Language->getText('file_download','file_not_available'));
   }
 

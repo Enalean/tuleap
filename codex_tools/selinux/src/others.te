@@ -6,6 +6,7 @@ require {
 	type cvs_t;
 	type file_t;
         type fs_t;
+        type ftpd_t;
         type httpd_log_t;
         type httpd_sys_content_t;
 	type httpd_sys_script_t;
@@ -13,6 +14,7 @@ require {
 	type initrc_t;
         type iso9660_t;
 	type logwatch_t;
+        type ls_exec_t;
 	type mysqld_db_t;
 	type mysqld_etc_t;
 	type mysqld_t;
@@ -28,7 +30,7 @@ require {
 	type usr_t;
 	type var_log_t;
 	type var_spool_t;
-	class dir { write search getattr add_name };
+	class dir { write search getattr add_name remove_name };
 	class fifo_file read;
 	class file { write getattr execute_no_trans read create execute append ioctl };
 	class filesystem associate;
@@ -39,14 +41,17 @@ require {
 	class unix_stream_socket { read write connectto };
 }
 
+#============= ftpd_t ==============
+allow ftpd_t mysqld_t:unix_stream_socket connectto;
+
 #============= httpd_sys_script_t ==============
 allow httpd_sys_script_t file_t:dir search;
 allow httpd_sys_script_t mysqld_db_t:lnk_file read;
 allow httpd_sys_script_t mysqld_etc_t:file { read getattr };
 allow httpd_sys_script_t self:unix_dgram_socket create;
 allow httpd_sys_script_t tmp_t:file { write ioctl getattr append };
-allow httpd_sys_script_t usr_t:dir { write add_name };
-allow httpd_sys_script_t usr_t:file { create execute execute_no_trans };
+allow httpd_sys_script_t usr_t:dir { write add_name remove_name};
+allow httpd_sys_script_t usr_t:file { create execute execute_no_trans write };
 allow httpd_sys_script_t var_log_t:dir write;
 allow httpd_sys_script_t var_log_t:file append;
 
@@ -55,6 +60,7 @@ allow httpd_t initrc_t:unix_stream_socket { connectto read write };
 allow httpd_t file_t:dir { search getattr };
 allow httpd_t file_t:file getattr;
 allow httpd_t httpd_log_t:file write;
+allow httpd_t ls_exec_t:file { read execute getattr execute_no_trans };
 allow httpd_t mysqld_etc_t:file { read getattr };
 allow httpd_t mysqld_db_t:lnk_file read;
 allow httpd_t tmp_t:file { read getattr write };
@@ -75,6 +81,8 @@ allow procmail_t httpd_sys_content_t:dir search;
 allow procmail_t mysqld_db_t:dir search;
 allow procmail_t mysqld_db_t:lnk_file read;
 allow procmail_t mysqld_etc_t:file { read getattr };
+allow procmail_t mysqld_t:unix_stream_socket connectto;
+allow procmail_t mysqld_var_run_t:sock_file write;
 
 #============= restorecon_t ==============
 allow restorecon_t crond_t:fifo_file read;
@@ -82,6 +90,7 @@ allow restorecon_t crond_t:fifo_file read;
 #============= semanage_t ==============
 allow semanage_t httpd_sys_content_t:lnk_file read;
 allow semanage_t mysqld_db_t:lnk_file read;
+allow semanage_t mysqld_t:unix_stream_socket connectto;
 allow semanage_t mysqld_var_run_t:sock_file write;
 
 #============= system_mail_t ==============

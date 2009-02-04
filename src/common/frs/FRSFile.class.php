@@ -66,6 +66,10 @@ class FRSFile extends Error {
      * @var string $status the status of this FRSFile (A=>Active; D=>Deleted)
      */
     var $status;
+    /**
+     * @var string $file_location the full path of this FRSFile
+     */
+    var $file_location;
     
     function FRSFile($data_array = null) {
         $this->file_id       = null;
@@ -77,6 +81,7 @@ class FRSFile extends Error {
         $this->file_size     = null;
         $this->post_date     = null;
         $this->status        = null;
+        $this->file_location = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -131,12 +136,33 @@ class FRSFile extends Error {
         $this->release_time = (int) $release_time;
     }
     
+    /**
+     * Returns the location of the file on the server
+     *
+     * @global $GLOBALS['ftp_frs_dir_prefix']
+     * @return string the location of this file on the server
+     */
+    function getFileLocation() {
+        if ($this->file_location == null) {
+            $group = $this->getGroup();
+            $group_unix_name = $group->getUnixName(false);
+            $basename = $this->getFileName();
+            $this->file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
+        }
+        return $this->file_location;
+    }
+
     function getFileSize() {
+        if ($this->file_size == null) {
+            $file_location = $this->getFileLocation();
+            // Use file_utils to provide a workaround for the 2 GB limitation
+            $this->file_size = file_utils_get_size($file_location);
+        }
         return $this->file_size;
     }
     
     function setFileSize($file_size) {
-        $this->file_size = (int) $file_size;
+        $this->file_size = $file_size;
     }
     
     function getPostDate() {
@@ -183,6 +209,7 @@ class FRSFile extends Error {
         $array['type_id']       = $this->getTypeID();
         $array['processor_id']  = $this->getProcessorID();
         $array['release_time']  = $this->getReleaseTime();
+        $array['file_location'] = $this->getFileLocation();
         $array['file_size']     = $this->getFileSize();
         $array['post_date']     = $this->getPostDate();
         $array['status']     = $this->getStatus();
@@ -207,20 +234,6 @@ class FRSFile extends Error {
         return file_exists($this->getFileLocation());
     }
     
-    /**
-     * Returns the location of the file on the server
-     *
-     * @global $GLOBALS['ftp_frs_dir_prefix']
-     * @return string the location of this file on the server
-     */
-    function getFileLocation() {
-        $group = $this->getGroup();
-        $group_unix_name = $group->getUnixName(false);
-        $basename = $this->getFileName();
-        $file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
-        return $file_location;
-    }
-
     /**
      * Get the Package ID of this File
      *
@@ -253,13 +266,14 @@ class FRSFile extends Error {
     
     /**
      * Returns the content of the file, in a raw resource
-     *
+     * Note: won't work on large files: 2GB limit + one step read might not work.
      * @return mixed the content of the file
      */
     function getContent() {
         $file_location = $this->getFileLocation();
+        $file_size = $this->getFileSize();
         if ($fp = fopen($file_location,"rb")) {
-            return fread($fp, filesize($file_location));
+            return fread($fp, $file_size);
         } else {
             return null;
         }
@@ -310,6 +324,57 @@ class FRSFile extends Error {
             }
         }
         return $user_can_download; 	
+    }
+  
+    /**
+     * download : download the file, i.e. print it to stdout
+     *
+     * WARNING : this function does not check permissions, nor does it log the download  
+     *  
+     * @return boolean true if the user has permissions to download the file, false otherwise
+     */
+    function download() {
+        $file_location = $this->getFileLocation();
+        $file_size = $this->getFileSize();
+
+        // Make sure this URL is not cached anywhere otherwise download
+        // would be wrong
+        // (Don't send the no-cache if IE and SSL - see
+        // http://support.microsoft.com/default.aspx?scid=kb;EN-US;q316431.
+        if(!(browser_is_ie() && session_issecure() &&
+             (strcmp(browser_get_version(), '5.5') ||
+              strcmp(browser_get_version(), '5.01') ||
+              strcmp(browser_get_version(), '6'))) ) {
+            header("Cache-Control: no-cache");  // HTTP 1.1 - must be on 2 lines or IE 5.0 error
+            header("Cache-Control: must-revalidate");  // HTTP 1.1
+            header("Pragma: no-cache");  // HTTP 1.0
+        }
+        header("Content-Type: application/octet-stream");
+        header('Content-Disposition: attachment; filename="'. basename($this->getFileName()) .'"');
+        header("Content-Length:  $file_size");
+        header("Content-Transfer-Encoding: binary\n");
+
+        //reset time limit for big files
+        set_time_limit(0);
+        flush();
+
+        // Now transfer the file to the client
+
+        // Check the 2 GB limit (2^31 -1)
+        if ($file_size > 2147483647) {
+            if ($fp=popen("/bin/cat $file_location","rb")) {
+                $blocksize = (2 << 20); //2M chunks
+                while(!feof($fp)) {
+                    print(fread($fp, $blocksize));
+                }
+                flush();
+                pclose($fp);
+            } else return false;
+        } else if (readfile($file_location) == false) {
+            return false;
+        }
+            
+        return true;
     }
     
 }

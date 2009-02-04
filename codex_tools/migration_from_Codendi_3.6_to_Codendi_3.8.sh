@@ -120,6 +120,12 @@ FLUSH PRIVILEGES;
 EOF
 
 
+# Add support for > 2GB files in DB (FRS and Wiki)
+$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+ALTER TABLE frs_file CHANGE file_size file_size BIGINT NOT NULL DEFAULT '0';
+ALTER TABLE wiki_attachment_revision CHANGE size size BIGINT NOT NULL;
+EOF
+
 
 # Remove useless tables
 $CAT <<EOF | $MYSQL $pass_opt codex
@@ -365,3 +371,5 @@ INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
   set-variable  = binlog-ignore-db=openfire
 
 #
+
+
