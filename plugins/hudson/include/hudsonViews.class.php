@@ -57,6 +57,7 @@ class hudsonViews extends Views {
             $job_id = $request->get('job_id');
             $dar = $job_dao->searchByJobID($job_id);
         } elseif ($request->exist('job')) {
+            // used for references (job #MyJob or job #myproject:MyJob)
             $job_name = $request->get('job');
             $dar = $job_dao->searchByJobName($job_name, $group_id);
         }
@@ -92,9 +93,12 @@ class hudsonViews extends Views {
             $job_id = $request->get('job_id');
             $dar = $job_dao->searchByJobID($job_id);
         } elseif ($request->exist('job')) {
+            // used for references (build #MyJob/175 or job #myproject:MyJob/175 where 175 is the build number required)
             $job_name = $request->get('job');
             $dar = $job_dao->searchByJobName($job_name, $group_id);
         } else {
+            // used for references (build #175 where 175 is the build number required)
+            // If no job or project is specified, we check if there is only one job associated to the current project and we assume it is this job.
             $dar = $job_dao->searchByGroupID($group_id);
             if ($dar->rowCount() != 1) {
                 $dar = null;
