@@ -619,6 +619,7 @@
             Il est possible de lier plusieurs Jobs Hudson à un même projet 
             &SYS_PRODUCT_NAME;.
         </para>
+        
       </section>
       
       <section id="HudsonServiceBrowseJob">
@@ -642,6 +643,14 @@
             (voir <xref linkend="HudsonServiceAddJob" />). Si vous êtes administrateur
             du projet, vous verrez également apparaître pour chaque job des icones
             vous permettant de modifier le job ou de le supprimer.
+        </para>
+        <para>
+            Le nom du job est automatiquement détecté lors de la création, mais 
+            vous pouvez le changer en éditant le job. Ceci est assez pratique
+            si vous souhaitez référencer des objets Hudson (voir 
+            <xref linkend="HudsonJobReferences" />). Les espaces pour les noms de 
+            jobs seront automatiquement remplacés par des tirets bas (_), afin
+            de permettre les références.
         </para>
         <para>
             Le nom du job et les derniers builds sont des liens hypertextes qui 
@@ -805,6 +814,59 @@
        </itemizedlist>
     
     </section>
+    
+    
+    <section id="HudsonReferences">
+      <title>Références Hudson</title>
+      <para>
+        Il est possible de créer des références vers certains objets Hudson 
+        dans &SYS_PRODUCT_NAME;. Certaines références sont prédéfinies (job, build),
+        mais vous pouvez tout à fait définir vos propres références si besoin
+        (voir <xref linkend="ReferenceOverview" /> pour plus de détails sur les références)
+      <para>
+      
+      <section id="HudsonJobReferences">
+        <title>Référencer un Job Hudson</title>
+        <para>
+            Le mot clé pour référencer un job est : <emphasis role="bold">job</emphasis>.
+            Pour référencer un job, vous pouvez utiliser les syntaxes suivantes :
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>job #LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet courant)</para>
+             </listitem>
+             <listitem>
+              <para>job #projet:LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet de nom 'projet')</para>
+             </listitem>
+             <listitem>
+              <para>job #num_projet:LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet numéro 'num_projet')</para>
+             </listitem>
+            </itemizedlist>
+         </para>
+      </section>
+      <section id="HudsonBuildReferences">
+        <title>Référencer un Build Hudson</title>
+        <para>
+            Le mot clé pour référencer un build est : <emphasis role="bold">build</emphasis>.
+            Pour référencer un build, vous pouvez utiliser les syntaxes suivantes :
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>build #XXX (il ne doit y avoir alors qu'un seul job associé au projet courant, et le build référencé est alors le build numéro 'XXX' de ce job)</para>
+             </listitem>
+             <listitem>
+              <para>build #UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet courant)</para>
+             </listitem>
+             <listitem>
+              <para>build #projet:UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet 'projet')</para>
+             </listitem>
+             <listitem>
+              <para>build #num_projet:UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet numéro 'num_projet')</para>
+             </listitem>
+            </itemizedlist>
+        </para>
+      </section>
+      
+    </section>
+    
   </section>
   
   

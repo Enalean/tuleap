@@ -606,6 +606,13 @@
             delete it (remove the link with &SYS_PRODUCT_NAME;).
         </para>
         <para>
+            The name of the job is automatically detected during job creation.
+            But you can change it if needed. This pretty convenient if you want
+            to make references to Hudson items (see <xref linkend="HudsonJobReferences" />).
+            Spaces in the name of jobs are not allowed. They are replaced by (_),
+            in order to allow references.
+        </para>
+        <para>
             The name of the job and the latest builds are hypertext links that
             will be opened the corresponding Hudson section in an frame below
             the table. This is really convenient to browse Hudson interface 
@@ -760,6 +767,58 @@
        </itemizedlist>
     
     </section>
+    
+    <section id="HudsonReferences">
+      <title>Hudson References</title>
+      <para>
+        It is possible to make references to Hudson items in &SYS_PRODUCT_NAME;. 
+        There are some predefined references (job, build), but you can also create
+        your own references if needed (see <xref linkend="ReferenceOverview" /> 
+        for more details about references)
+      <para>
+      
+      <section id="HudsonJobReferences">
+        <title>Make a reference to a Job</title>
+        <para>
+            The keyword to make a reference to a Job is: <emphasis role="bold">job</emphasis>.
+            To make a reference to a job, you can use the expressions:
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>job #JobNameToReference (the job must be in the current project)</para>
+             </listitem>
+             <listitem>
+              <para>job #project:JobNameToReference (will make a reference to the job 'JobNameToReference' of the project 'project')</para>
+             </listitem>
+             <listitem>
+              <para>job #project_num:JobNameToReference (will make a reference to the job 'JobNameToReference' of the project with number 'project_num')</para>
+             </listitem>
+            </itemizedlist>
+         </para>
+      </section>
+      <section id="HudsonBuildReferences">
+        <title>Make a reference to a build</title>
+        <para>
+            The keyword to make a reference to a build is: <emphasis role="bold">build</emphasis>.
+            To make a reference to a build, you can use the expressions:
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>build #XXX (there must be only one job associated with the current project, and the referenced build will be the build number 'XXX' of this job)</para>
+             </listitem>
+             <listitem>
+              <para>build #AJob/XXX (will make a reference to build number 'XXX' of job named 'AJob' of the current project)</para>
+             </listitem>
+             <listitem>
+              <para>build #project:AJob/XXX (will make a reference to the build number 'XXX' of the job 'AJob' of project 'project')</para>
+             </listitem>
+             <listitem>
+              <para>build #projet_num:AJob/XXX (will make a reference to the build number 'XXX' of the job 'AJob' of the project number 'project_num')</para>
+             </listitem>
+            </itemizedlist>
+        </para>
+      </section>
+      
+    </section>
+    
   </section>
   
   
