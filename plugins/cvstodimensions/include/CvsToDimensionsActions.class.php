@@ -103,7 +103,7 @@ class CvsToDimensionsActions extends Actions {
 
                 //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
                 $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
-                $roles_array = $this->_resultset_to_array($roles, "role");
+                $roles_array = $this->_resultset_to_array($roles, "ROLE");
                 $logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess :: instance());
                 //save logs information
                 $logs_dao->create($group_id, time(), $tag, $user->getID(), '1');
@@ -114,7 +114,7 @@ class CvsToDimensionsActions extends Actions {
                     $user_name = strtoupper($codex_user_name);
     
                     $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, $user_name);
-                    $roles_array = $this->_resultset_to_array($roles, "role");
+                    $roles_array = $this->_resultset_to_array($roles, "ROLE");
                     $requires_role = $this->_controler->getProperty('role');
                     
                     if (count($design_part_missing) == 0 && in_array($requires_role, $roles_array)) {            
