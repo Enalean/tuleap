@@ -47,6 +47,7 @@ Optional parameters:
     --update                                Update the document tree. Warning! This will create, update or remove documents
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
     --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
+    --auto-retry                            In case of error, retry 5 times before asking the user what to do
     --help                                  Show this help".PHP_EOL.PHP_EOL; 
     die;
 }
@@ -84,6 +85,7 @@ $reorder = getParameter($argv, 'reorder');
 $update = getParameter($argv, 'update');
 $path = getParameter($argv, 'path');
 $importMessageMetadata = getParameter($argv, 'import-metadata');
+$autoRetry = getParameter($argv, 'auto-retry');
 
 // Path parameter check
 if ($path === null) {
@@ -128,13 +130,13 @@ $wsdl = "$url/soap/codex.wsdl.php?wsdl";
 
 if ($update) {
     // Connect
-    $xmlUpdate = new XMLDocmanUpdate($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata);
+    $xmlUpdate = new XMLDocmanUpdate($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry);
     
     // Update
     $xmlUpdate->updatePath($archive, $folderId, $path);
 } else {
     // Connect
-    $xmlImport = new XMLDocmanImport($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata);
+    $xmlImport = new XMLDocmanImport($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry);
     
     // Import
     $xmlImport->importPath($archive, $folderId, $path);

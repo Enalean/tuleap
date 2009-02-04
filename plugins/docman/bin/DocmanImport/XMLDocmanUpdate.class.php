@@ -229,6 +229,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
      * Deletes an item
      */
     private function deleteItem($itemId, $title) {
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -238,7 +239,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                 $this->soap->deleteDocmanItem($this->hash, $this->groupId, $itemId);
                 echo " #$itemId".PHP_EOL;
             } catch (Exception $e){
-                $retry = parent::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -267,6 +268,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
     private function checkVersionChecksums($itemId, $node) {
         $localMd5sums  = $this->getAllVersionsMD5sum($node);
         
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -275,7 +277,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $remoteMd5sums = $this->soap->getDocmanFileAllVersionsMD5sum($this->hash, $this->groupId, $itemId);
             } catch (Exception $e){
-                $retry = parent::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
         
@@ -395,6 +397,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -426,6 +429,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -457,6 +461,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -488,6 +493,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -519,6 +525,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 
@@ -550,6 +557,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             $permissions
         ) = $itemInfo;
 
+        $this->initRetryCounter();
         do {
             $retry = false;
 

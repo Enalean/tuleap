@@ -35,16 +35,16 @@ class XMLDocmanImport {
     protected $dataBaseDir;
 
     // Metadata map
-    private $metadataMap;
+    private $metadataMap = array();
     
     // List of hardcoded metadata enabled on the target project
-    private $hardCodedMetadata;
+    private $hardCodedMetadata = array();
 
     // Group map
-    private $ugroupMap;
+    private $ugroupMap = array();
     
     // User map (identifier => "unix" user name)
-    private $userMap;
+    private $userMap = array();
 
     // ID of the project
     protected $groupId;
@@ -66,6 +66,9 @@ class XMLDocmanImport {
             
     // The import messages will be appended in the following metadata
     protected $importMessageMetadata;
+    
+    protected $autoRetry;
+    protected $retryCounter = 5;
 
     /**
      * XMLDocmanImport constructor
@@ -75,14 +78,11 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata) {
-        $this->metadataMap = array();
-        $this->hardCodedMetadata = array();
-        $this->ugroupMap = array();
-        $this->userMap = array();
+    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry) {
         $this->force = $force;
         $this->reorder = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
+        $this->autoRetry = $autoRetry;
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
@@ -891,26 +891,36 @@ class XMLDocmanImport {
          
     }
 
-    protected static function askWhatToDo($e) {
+    protected function askWhatToDo($e) {
         self::printException($e);
 
-        do {
-            echo "(R)etry, (A)bort, (C)ontinue? [R] ";
-            $op = strtoupper(trim(fgets(STDIN)));
-        } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
-
-        if ($op == 'A') {
-            echo 'Import aborted.'.PHP_EOL;
-            die;
-        } else if ($op == 'C') {
-            echo 'Continuing...'.PHP_EOL;
-            $retry = false;
-        } else {
-            echo 'Retrying...'.PHP_EOL;
+        if ($this->autoRetry == true && $this->retryCounter-- > 0) {
+            echo "Auto-retrying in 5s... ($this->retryCounter auto-retries left)".PHP_EOL;
+            sleep(5);
             $retry = true;
+        } else {
+            do {
+                echo "(R)etry, (A)bort, (C)ontinue? [R] ";
+                $op = strtoupper(trim(fgets(STDIN)));
+            } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
+    
+            if ($op == 'A') {
+                echo 'Import aborted.'.PHP_EOL;
+                die;
+            } else if ($op == 'C') {
+                echo 'Continuing...'.PHP_EOL;
+                $retry = false;
+            } else {
+                echo 'Retrying...'.PHP_EOL;
+                $retry = true;
+            }
         }
 
         return $retry;
+    }
+    
+    protected function initRetryCounter() {
+        $this->retryCounter = 5;
     }
     
     private static function printException($e) {
@@ -921,6 +931,7 @@ class XMLDocmanImport {
      * Creates a folder
      */
     private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -931,7 +942,7 @@ class XMLDocmanImport {
                 echo " #$id".PHP_EOL;
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -940,6 +951,7 @@ class XMLDocmanImport {
      * Creates an empty document
      */
     private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -950,7 +962,7 @@ class XMLDocmanImport {
                 echo " #$id".PHP_EOL;
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -959,6 +971,7 @@ class XMLDocmanImport {
      * Creates a wiki page
      */
     private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -969,7 +982,7 @@ class XMLDocmanImport {
                 echo " #$id".PHP_EOL;
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -978,6 +991,7 @@ class XMLDocmanImport {
      * Creates a link
      */
     private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -988,7 +1002,7 @@ class XMLDocmanImport {
                 echo " #$id".PHP_EOL;
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -997,6 +1011,7 @@ class XMLDocmanImport {
      * Creates an embedded file
      */
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -1009,7 +1024,7 @@ class XMLDocmanImport {
                 echo " #$id".PHP_EOL;
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -1034,6 +1049,7 @@ class XMLDocmanImport {
         }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            $this->initRetryCounter();
             do {
                 $retry = false;
                 
@@ -1053,7 +1069,7 @@ class XMLDocmanImport {
                         $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
                     }
                 } catch (Exception $e){
-                    $retry = self::askWhatToDo($e);
+                    $retry = $this->askWhatToDo($e);
                 }
             } while ($retry);
         }
@@ -1111,6 +1127,7 @@ class XMLDocmanImport {
         $chunk_count = ceil($fileSize / $chunk_size);
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            $this->initRetryCounter();
             do {
                 $retry = false;
                 
@@ -1130,7 +1147,7 @@ class XMLDocmanImport {
                         $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
                     }
                 } catch (Exception $e){
-                    $retry = self::askWhatToDo($e);
+                    $retry = $this->askWhatToDo($e);
                 }
             } while ($retry);
         }
@@ -1151,6 +1168,7 @@ class XMLDocmanImport {
     }
 
     protected function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
@@ -1162,7 +1180,7 @@ class XMLDocmanImport {
             try {
                 $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author, $date);
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
