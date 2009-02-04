@@ -30,3 +30,26 @@ WHERE group_id NOT IN (SELECT group_id
     FROM service
     WHERE short_name
     LIKE 'hudson');
+
+-- Create references
+INSERT INTO reference SET 
+    keyword='job', 
+    description='plugin_hudson:reference_job_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_job&job=$1', 
+    scope='S', 
+    service_short_name='hudson';
+    
+INSERT INTO reference SET 
+    keyword='build', 
+    description='plugin_hudson:reference_build_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&job=$1&build=$2', 
+    scope='S', 
+    service_short_name='hudson';
+
+INSERT INTO reference SET 
+    keyword='build', 
+    description='plugin_hudson:reference_build_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&build=$1', 
+    scope='S', 
+    service_short_name='hudson';
+    

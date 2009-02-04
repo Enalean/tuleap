@@ -6,6 +6,9 @@ plugin_hudson	title	Intégration Continue
 plugin_hudson	service_lbl_key	Intégration Continue
 plugin_hudson	service_desc_key	Intégration Continue avec Hudson
 
+plugin_hudson	reference_job_desc_key	Job Hudson
+plugin_hudson	reference_build_desc_key	Build Hudson
+
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
@@ -94,3 +97,5 @@ plugin_hudson	widget_description_myjobs	Affiche un aperçu des jobs de tous les 
 plugin_hudson	widget_description_jobsoverview	Affiche un aperçu de tous les jobs associés à ce projet.
 
 widget_categ_label	ci	Intégration Continue
+
+plugin_hudson	error_object_not_found	Erreur : Objet Hudson non trouvé.

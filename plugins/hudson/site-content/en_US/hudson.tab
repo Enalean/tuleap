@@ -6,6 +6,9 @@ plugin_hudson	title	Continuous Integration
 plugin_hudson	service_lbl_key	Continuous Integration
 plugin_hudson	service_desc_key	Continuous Integration with Hudson
 
+plugin_hudson	reference_job_desc_key	Hudson Job
+plugin_hudson	reference_build_desc_key	Hudson Build
+
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Last Success
 plugin_hudson	header_table_lastfailure	Last Failure
@@ -94,3 +97,5 @@ plugin_hudson	widget_description_myjobs	Shows an overview of all the jobs of all
 plugin_hudson	widget_description_jobsoverview	Shows an overview of all the jobs associated with this project.
 
 widget_categ_label	ci	Continuous Integration
+
+plugin_hudson	error_object_not_found	Error: Hudson object not found.

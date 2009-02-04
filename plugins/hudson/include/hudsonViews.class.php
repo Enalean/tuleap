@@ -64,7 +64,7 @@ class hudsonViews extends Views {
             $row = $dar->current();
             $this->_display_iframe($row['job_url']);
         } else {
-            $this->_display_iframe();
+            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
     
@@ -79,23 +79,33 @@ class hudsonViews extends Views {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/lastBuild/');
         } else {
-            $this->_display_iframe();
+            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
     
     function build_number() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_id = $request->get('job_id');
         $build_id = $request->get('build_id');
-
         $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
-        $dar = $job_dao->searchByJobID($job_id);
-        if ($dar->valid()) {
+        if ($request->exist('job_id')) {
+            $job_id = $request->get('job_id');
+            $dar = $job_dao->searchByJobID($job_id);
+        } elseif ($request->exist('job')) {
+            $job_name = $request->get('job');
+            $dar = $job_dao->searchByJobName($job_name, $group_id);
+        } else {
+            $dar = $job_dao->searchByGroupID($group_id);
+            if ($dar->rowCount() != 1) {
+                $dar = null;
+            }
+        }
+        
+        if ($dar && $dar->valid()) {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/'.$build_id.'/');
         } else {
-            $this->_display_iframe();
+            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
     
@@ -111,7 +121,7 @@ class hudsonViews extends Views {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/lastBuild/testReport/');
         } else {
-            $this->_display_iframe();
+            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
     
@@ -127,7 +137,7 @@ class hudsonViews extends Views {
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/test/?width=800&height=600&failureOnly=false');
         } else {
-            $this->_display_iframe();
+            echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
         }
     }
     
