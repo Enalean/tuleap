@@ -1352,7 +1352,7 @@ class ArtifactField extends Error {
 	function updateValueFunction($group_artifact_id,$value_function) {
 	  global $Language;
 
-		if ($value_function == "") {
+		if (sizeof($value_function) == 1 && $value_function[0] == "") {    // swith from bound field to unbound field (none)
 			$dtype = $this->DATATYPE_INT;
 		} else {
 			$dtype = $this->DATATYPE_USER;
