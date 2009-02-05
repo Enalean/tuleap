@@ -331,7 +331,13 @@ class ReferenceManager {
 
             // Replace description key with real description if needed
             if (strpos($ref->getDescription(),"_desc_key")!==false) {
-                $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+                if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
+                    if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                        $desc = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                    }
+                } else {
+                    $desc=$GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+                }
             } else {
                 $desc=$ref->getDescription();
             }
