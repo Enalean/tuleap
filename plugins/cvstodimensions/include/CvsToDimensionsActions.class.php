@@ -359,6 +359,7 @@ class CvsToDimensionsActions extends Actions {
     }
 
     function _resultset_to_array($resultset, $col_name) {
+        $colname = strtoupper($colname);
         $result_array = array ();
         while ($resultset->valid()) {
             $row = $resultset->current();
