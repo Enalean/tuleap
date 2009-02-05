@@ -132,7 +132,7 @@ class CvsToDimensionsActions extends Actions {
                         $dmcli_authent = $dmcli . ' -user '.$codex_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
                         ' -host ' . $host . ' ';
 
-                        $workset_array = $this->_resultset_to_array($worksets, "workset_name");
+                        $workset_array = $this->_resultset_to_array($worksets, "WORKSET_NAME");
                         if (count($workset_array) == 0) {
                             //no workset for this product
                             $cmd_ws_creation = '-cmd \'DWS "' . $product_name . ':' . $workset . '" ' .
@@ -154,7 +154,7 @@ class CvsToDimensionsActions extends Actions {
                             } else {
                                 //the given workset doesn't exist but there are other worksets for this product
                                 $last_baseline = & $p26c_dao->searchLastBaselineByProduct($product_name);
-                                $last_baseline_array = $this->_resultset_to_array($last_baseline, "baseline_id");
+                                $last_baseline_array = $this->_resultset_to_array($last_baseline, "BASELINE_ID");
                                 $cmd_ws_creation = '-cmd \'DWS "' . $product_name . ':' . $workset . '" ' .
                                 '/DESC="workset issu de cvs G' . $version_tag_log['GO'] . 'R' . $version_tag_log['RO'] . '"' .
                                 '/BASELINE="' . $product_name . ':' . $last_baseline_array[0] . '"\' 2>&1';
@@ -239,7 +239,7 @@ class CvsToDimensionsActions extends Actions {
         $design_parts_P26C = & $p26c_dao->searchDesignPartsByProduct($product_name);
         $design_parts_modules = & $modules_dao->searchByGroupId($group_id);
         $design_part_missing = array ();
-        $design_parts_P26C_array = $this->_resultset_to_array($design_parts_P26C, "part_id");
+        $design_parts_P26C_array = $this->_resultset_to_array($design_parts_P26C, "PART_ID");
         $design_parts_modules_array = $this->_resultset_to_array($design_parts_modules, "design_part");
         foreach ($design_parts_modules_array as $row) {
             if (!in_array($row, $design_parts_P26C_array)) {
@@ -279,12 +279,12 @@ class CvsToDimensionsActions extends Actions {
     function _removeFiles($p26c_dao, $workset, $product, $folder, $dmcli_authent) {
         $files = & $p26c_dao->searchWorksetElementByProductAndWorkset($product, $workset);
         $col_names = array (
-            'filename',
-            'path',
-            'id',
-            'variant',
-            'type',
-            'revision'
+            'FILENAME',
+            'PATH',
+            'ID',
+            'VARIANT',
+            'TYPE',
+            'REVISION'
         );
         $dim_files = $this->_resultset_to_array($files, $col_names);
         exec("cd " . $folder . "; find . -depth -type f > files_list.txt");
@@ -363,11 +363,11 @@ class CvsToDimensionsActions extends Actions {
         while ($resultset->valid()) {
             $row = $resultset->current();
             if (!is_array($col_name)) {
-                $result_array[] = $row[strtoupper($col_name)];
+                $result_array[] = $row[$col_name];
             } else {
                 $current_row = array ();
                 foreach ($col_name as $col) {
-                    $current_row[$col] = $row[strtoupper($col)];
+                    $current_row[$col] = $row[$col];
                 }
                 $result_array[] = $current_row;
             }
