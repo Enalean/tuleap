@@ -22,7 +22,7 @@ $descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
 // If this was a submission, make updates
 
 // update info for page
-$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id=". db_ei($group_id));
 if (db_numrows($res_grp) < 1) {
 	exit_no_group();
 }
@@ -79,7 +79,7 @@ if ($valid_data==1) {
 				
 				$sql='UPDATE group_desc_value SET '
 						."value='".db_escape_string($currentform)."'";
-				$sql .=" WHERE group_id=$group_id AND group_desc_id='".$descfieldsinfos[$i]["group_desc_id"]."'";
+				$sql .=" WHERE group_id=". db_ei($group_id) ." AND group_desc_id='".db_ei($descfieldsinfos[$i]["group_desc_id"])."'";
 				
 				$resultdesc[$i]=db_query($sql);
 				if($resultdesc[$i] || db_affected_rows($resultdesc[$i]) >= 1){
@@ -88,7 +88,7 @@ if ($valid_data==1) {
 				
 			}else if(!isset($previousvalue[$i])){
 				$sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES"
-					 ." ('".$group_id."','".$descfieldsinfos[$i]["group_desc_id"]."','".db_escape_string($currentform)."')";
+					 ." ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string($currentform)."')";
 				$resultdesc[$i]=db_query($sql);
 				if($resultdesc){
 					$updatedesc=1;
@@ -97,7 +97,7 @@ if ($valid_data==1) {
 								
 		}else{
 			if(isset($previousvalue[$i])){	
-				$sql="DELETE FROM group_desc_value WHERE group_id=$group_id AND group_desc_id='".$descfieldsinfos[$i]["group_desc_id"]."'";
+				$sql="DELETE FROM group_desc_value WHERE group_id=". db_ei($group_id) ." AND group_desc_id='".db_ei($descfieldsinfos[$i]["group_desc_id"])."'";
 				$resultdesc[$i]=db_query($sql);
 				if($resultdesc){
 					$updatedesc=1;
@@ -109,11 +109,11 @@ if ($valid_data==1) {
     // so we have to explicity set 0
     
     $sql = 'UPDATE groups SET '
-        ."group_name='".htmlspecialchars($form_group_name)."',"
+        ."group_name='".db_es(htmlspecialchars($form_group_name))."',"
         ."short_description='". db_es($form_shortdesc) ."',"
         ."hide_members='". db_es($hide_members) ."'";
 		
-    $sql .= " WHERE group_id='".$group_id."'";
+    $sql .= " WHERE group_id='".db_ei($group_id)."'";
 
     //echo $sql;
     $result=db_query($sql);
@@ -139,7 +139,7 @@ if ($valid_data==1) {
 }
 
 // update info for page
-$res_grp = db_query("SELECT * FROM groups WHERE group_id='".$group_id."'");
+$res_grp = db_query("SELECT * FROM groups WHERE group_id='".db_ei($group_id)."'");
 if (db_numrows($res_grp) < 1) {
 	exit_no_group();
 }
