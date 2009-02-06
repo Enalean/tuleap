@@ -112,7 +112,7 @@ function trove_getrootcat($trove_cat_id) {
 // returns an associative array of all project roots
 function trove_getallroots() {
 	$res = db_query('SELECT trove_cat_id,fullname FROM trove_cat '
-		.'WHERE parent=0');
+		.'WHERE parent=0 ORDER BY fullname');
 	while ($row = db_fetch_array($res)) {
 		$tmpcatid = $row["trove_cat_id"];
 		$CATROOTS[$tmpcatid] = $row["fullname"];
@@ -204,7 +204,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 		.'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
 		.'trove_group_link.trove_cat_id AND trove_group_link.group_id='
 		.db_ei($group_id).' '
-		.'ORDER BY trove_group_link.trove_group_id');
+		.'ORDER BY trove_cat.fullpath');
 
 // LJ Added a link to the categorization admin page
 // LJ in case the project is not yet categorized
