@@ -29,22 +29,21 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
 require_once 'DateParser.class.php';
 
 class XMLDocmanImport {
-    const CHILDREN_ONLY   = 2;
-    const PARENT_CHILDREN = 3;
 
+    // Directory where content files are located
     protected $dataBaseDir;
 
     // Metadata map
-    private $metadataMap;
+    private $metadataMap = array();
     
     // List of hardcoded metadata enabled on the target project
-    private $hardCodedMetadata;
+    private $hardCodedMetadata = array();
 
     // Group map
-    private $ugroupMap;
+    private $ugroupMap = array();
     
     // User map (identifier => "unix" user name)
-    private $userMap;
+    private $userMap = array();
 
     // ID of the project
     protected $groupId;
@@ -66,6 +65,14 @@ class XMLDocmanImport {
             
     // The import messages will be appended in the following metadata
     protected $importMessageMetadata;
+    
+    // If true: in case of error, retry 5 times
+    protected $autoRetry;
+    
+    protected $retryCounter;
+    
+    // Log file, can be null
+    protected $logFile = null;
 
     /**
      * XMLDocmanImport constructor
@@ -75,14 +82,26 @@ class XMLDocmanImport {
      * @param string $login    Login
      * @param string $password Password
      */
-    public function __construct($project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata) {
-        $this->metadataMap = array();
-        $this->hardCodedMetadata = array();
-        $this->ugroupMap = array();
-        $this->userMap = array();
+    public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log) {
+
+        if ($log === true) {
+            $logFolder = dirname(__FILE__).'/log';
+            $logFile = 'import_'.date('Y-m-d_H\hi\ms\s').'.log';
+            if (is_dir($logFolder)) {
+               $logFile = $this->searchNextFreeFileName($logFolder, $logFile);
+            } else {
+                mkdir($logFolder, 0700, true);
+            }
+            
+            $this->logFile = fopen("$logFolder/$logFile", 'w');
+            fwrite($this->logFile, "Command: $command".PHP_EOL.PHP_EOL);
+            $this->log("* Logging output to \"$logFile\" *".PHP_EOL);
+        }
+        
         $this->force = $force;
         $this->reorder = $reorder;
         $this->importMessageMetadata = $importMessageMetadata;
+        $this->autoRetry = $autoRetry;
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
@@ -96,11 +115,39 @@ class XMLDocmanImport {
             $this->printSoapResponseAndThrow($e);
         }
 
-        echo "Connected to $wsdl as $login.".PHP_EOL;
+        $this->log("Connected to $wsdl as $login.".PHP_EOL);
     }
     
     public function __destruct() {
         $this->soap->logout($this->hash);
+        
+        if ($this->logFile !== null) {
+            fclose($this->logFile);
+        }
+    }
+    
+    /**
+     * Search the next file name that can be used
+     * If the file "name" exists in the folder, the next name to use is "name (2)", then "name (3)", etc.
+     */
+    private function searchNextFreeFileName($folder, $fileName) {
+        
+        if (!file_exists("$folder/$fileName")) {
+            return $fileName;
+        } else {
+            $cpt = 2;
+            if (preg_match('/(.*)\.([^\.]+)/', $fileName, $matches)) {
+                while (file_exists("$folder/".$matches[1]." ($cpt).".$matches[2])) {
+                    $cpt++;
+                }
+                return $matches[1]." ($cpt).".$matches[2];
+            } else {
+                while (file_exists("$folder/$fileName ($cpt)")) {
+                    $cpt++;
+                }
+                return "$fileName ($cpt)";
+            }
+        }
     }
     
     /**
@@ -116,7 +163,7 @@ class XMLDocmanImport {
             $this->exitError("Failed to load XML document.".PHP_EOL);
         }
         
-        if (!$dom->validate()) {
+        if (!@$dom->validate()) {
             $this->warn("DTD Validation failed.");
         }
 
@@ -141,13 +188,13 @@ class XMLDocmanImport {
         $this->buildUgroupMap();
 
         // Sanity checks
-        echo "Checking the XML document... ";
+        $this->log("Checking the XML document... ");
         $this->checkMetadataDefinition();
         $this->checkHardCodedMetadataUsage();
         $this->checkMetadataUsage();
         $this->checkUgroupDefinition();
         $this->checkUgroupsUsage();
-        echo "Done.".PHP_EOL;
+        $this->log("Done.".PHP_EOL);
     }
     
     /**
@@ -161,7 +208,7 @@ class XMLDocmanImport {
         } else {
             $title1 = (string)$node1->properties->title;
             $title2 = (string)$node2->properties->title;
-            return strcasecmp($title1, $title2);
+            return strnatcasecmp($title1, $title2);
         }
     }
     
@@ -178,7 +225,7 @@ class XMLDocmanImport {
     /**
      * Import an item to the specified parent folder
      */
-    public function importPath($xmlDoc, $parentId, $path, $opt=self::CHILDREN_ONLY) {
+    public function importPath($xmlDoc, $parentId, $path) {
 
         // If the parentId is not defined, import into the root folder
         if ($parentId === null) {
@@ -193,12 +240,8 @@ class XMLDocmanImport {
 
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
-            if($opt == self::CHILDREN_ONLY) {
-                foreach($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
-                    $this->recurseOnNode($child, $parentId);
-                }
-            } else {
-                $this->recurseOnNode($rootNode, $parentId);
+            foreach($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
+                $this->recurseOnNode($child, $parentId);
             }
         }
     }
@@ -208,7 +251,7 @@ class XMLDocmanImport {
      * the group name and the group ID. The members are also retrieved.
      */
     private function buildUgroupMap () {
-        echo "Retrieving ugroups... ";
+        $this->log("Retrieving ugroups... ");
         try {
             $ugroups = $this->soap->getGroupUgroups($this->hash, $this->groupId);
             foreach ($ugroups as $ugroup) {
@@ -224,7 +267,7 @@ class XMLDocmanImport {
             $this->printSoapResponseAndThrow($e);
         }
 
-        echo "Done.".PHP_EOL;
+        $this->log("Done.".PHP_EOL);
     }
 
     /**
@@ -232,7 +275,7 @@ class XMLDocmanImport {
      * the metadata name and the metadata label. For list of values, the values are also retrieved.
      */
     private function buildMetadataMap() {
-        echo "Retrieving metadata definition... ";
+        $this->log("Retrieving metadata definition... ");
         
         $hardCodedMetadataLabels = array('title', 'description', 'owner' , 'create_date', 'update_date' , 'status', 'obsolescence_date');
         
@@ -270,7 +313,7 @@ class XMLDocmanImport {
             $this->exitError("The following propert".((count($missingProp) > 1)? "ies don't": "y doesn't")." allow empty values and must be defined in the <propdefs> node: ".implode(", ", $missingProp).PHP_EOL);
         }
 
-        echo "Done.".PHP_EOL;
+        $this->log("Done.".PHP_EOL);
     }
     
     private function buildUserMap() {
@@ -283,7 +326,7 @@ class XMLDocmanImport {
         }
         
         if (count($userIdentifiers) > 0) {
-            echo "Retrieving users... ";
+            $this->log("Retrieving users... ");
             
             try {
                 $res = $this->soap->checkUsersExistence($this->hash, $userIdentifiers);
@@ -331,7 +374,7 @@ class XMLDocmanImport {
                 }
             }
             
-            echo "Done.".PHP_EOL;
+            $this->log("Done.".PHP_EOL);
         }
     }
     
@@ -374,7 +417,7 @@ class XMLDocmanImport {
     }
 
     protected function printSoapResponseAndThrow(SoapFault $e) {
-        echo "Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL;
+        $this->log("Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL);
         throw $e;
     }
     
@@ -633,7 +676,7 @@ class XMLDocmanImport {
     }
 
     private function warn($msg) {
-        echo "Warning: $msg".PHP_EOL;
+        $this->log("Warning: $msg".PHP_EOL);
     }
 
     /**
@@ -891,47 +934,58 @@ class XMLDocmanImport {
          
     }
 
-    protected static function askWhatToDo($e) {
+    protected function askWhatToDo($e) {
         self::printException($e);
 
-        do {
-            echo "(R)etry, (A)bort, (C)ontinue? [R] ";
-            $op = strtoupper(trim(fgets(STDIN)));
-        } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
-
-        if ($op == 'A') {
-            echo 'Import aborted.'.PHP_EOL;
-            die;
-        } else if ($op == 'C') {
-            echo 'Continuing...'.PHP_EOL;
-            $retry = false;
-        } else {
-            echo 'Retrying...'.PHP_EOL;
+        if ($this->autoRetry == true && $this->retryCounter-- > 0) {
+            $this->log("Auto-retrying in 5s... ($this->retryCounter auto-retries left)".PHP_EOL);
+            sleep(5);
             $retry = true;
+        } else {
+            do {
+                $this->log("(R)etry, (A)bort, (C)ontinue? [R] ");
+                $op = strtoupper(trim(fgets(STDIN)));
+            } while ($op != '' && $op != 'R' && $op != 'C' && $op != 'A');
+    
+            if ($op == 'A') {
+                $this->log('Import aborted.'.PHP_EOL);
+                die;
+            } else if ($op == 'C') {
+                $this->log('Continuing...'.PHP_EOL);
+                $retry = false;
+            } else {
+                $this->log('Retrying...'.PHP_EOL);
+                $retry = true;
+            }
         }
 
         return $retry;
     }
     
+    protected function initRetryCounter() {
+        $this->retryCounter = 5;
+    }
+    
     private static function printException($e) {
-        echo PHP_EOL.PHP_EOL.$e->__toString().PHP_EOL.PHP_EOL;
+        $this->log(PHP_EOL.PHP_EOL.$e->__toString().PHP_EOL.PHP_EOL);
     }
 
     /**
      * Creates a folder
      */
     private function createFolder($parentId, $title, $description, $ordering, $status, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "Creating folder            '$title'";
+            $this->log("Creating folder            '$title'");
 
             try {
                 $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-                echo " #$id".PHP_EOL;
+                $this->log(" #$id".PHP_EOL);
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -940,17 +994,18 @@ class XMLDocmanImport {
      * Creates an empty document
      */
     private function createEmpty($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "Creating empty document    '$title'";
+            $this->log("Creating empty document    '$title'");
 
             try {
                 $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
-                echo " #$id".PHP_EOL;
+                $this->log(" #$id".PHP_EOL);
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -959,17 +1014,18 @@ class XMLDocmanImport {
      * Creates a wiki page
      */
     private function createWiki($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $pagename, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "Creating wiki page         '$title' ($pagename)";
+            $this->log("Creating wiki page         '$title' ($pagename)");
 
             try {
                 $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
-                echo " #$id".PHP_EOL;
+                $this->log(" #$id".PHP_EOL);
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -978,17 +1034,18 @@ class XMLDocmanImport {
      * Creates a link
      */
     private function createLink($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $url, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "Creating link              '$title' ($url)";
+            $this->log("Creating link              '$title' ($url)");
 
             try {
                 $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
-                echo " #$id".PHP_EOL;
+                $this->log(" #$id".PHP_EOL);
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -997,19 +1054,20 @@ class XMLDocmanImport {
      * Creates an embedded file
      */
     private function createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, array $permissions, array $metadata, $file, $author, $date, $owner, $createDate, $updateDate) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "Creating embedded file     '$title' ($file)";
+            $this->log("Creating embedded file     '$title' ($file)");
             $fullPath = $this->dataBaseDir.'/'.$file;
             $contents = file_get_contents($fullPath);
 
             try {
                 $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner, $createDate, $updateDate);
-                echo " #$id".PHP_EOL;
+                $this->log(" #$id".PHP_EOL);
                 return $id;
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
     }
@@ -1034,11 +1092,12 @@ class XMLDocmanImport {
         }
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            $this->initRetryCounter();
             do {
                 $retry = false;
                 
                 // Display progression indicator
-                echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
+                $this->log("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
 
                 // Retrieve the current chunk of the file
                 $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -1053,19 +1112,19 @@ class XMLDocmanImport {
                         $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, $contents, $chunk_offset, $chunk_size);
                     }
                 } catch (Exception $e){
-                    $retry = self::askWhatToDo($e);
+                    $retry = $this->askWhatToDo($e);
                 }
             } while ($retry);
         }
         // Finish!
-        echo "\r$infoStr #$item_id".PHP_EOL;
+        $this->log("\r$infoStr #$item_id".PHP_EOL);
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($item_id, $fullPath) === true) {
                 return $item_id;
             } else {
-                echo "ERROR: Checksum error".PHP_EOL;
+                $this->log("ERROR: Checksum error".PHP_EOL);
                 return false;
             }
         } catch (Exception $e){
@@ -1111,11 +1170,12 @@ class XMLDocmanImport {
         $chunk_count = ceil($fileSize / $chunk_size);
 
         for ($chunk_offset = 0; $chunk_offset < $chunk_count; $chunk_offset++) {
+            $this->initRetryCounter();
             do {
                 $retry = false;
                 
                 // Display progression indicator
-                echo "\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%";
+                $this->log("\r$infoStr ". intval($chunk_offset / $chunk_count * 100) ."%");
 
                 // Retrieve the current chunk of the file
                 $contents = base64_encode(file_get_contents($fullPath, null, null, $chunk_offset * $chunk_size, $chunk_size));
@@ -1130,19 +1190,19 @@ class XMLDocmanImport {
                         $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
                     }
                 } catch (Exception $e){
-                    $retry = self::askWhatToDo($e);
+                    $retry = $this->askWhatToDo($e);
                 }
             } while ($retry);
         }
         // Finish!
-        echo "\r$infoStr     ".PHP_EOL;
+        $this->log("\r$infoStr     ".PHP_EOL);
 
         // Check that the local and remote file are the same
         try {
             if ($this->checkChecksum($itemId, $fullPath) == true) {
                 return true;
             } else {
-                echo "ERROR: Checksum error".PHP_EOL;
+                $this->log("ERROR: Checksum error".PHP_EOL);
                 return false;
             }
         } catch (Exception $e){
@@ -1151,10 +1211,11 @@ class XMLDocmanImport {
     }
 
     protected function createEmbeddedFileVersion($itemId, $label, $changeLog, $file, $author, $date) {
+        $this->initRetryCounter();
         do {
             $retry = false;
             
-            echo "                      Version '$label' ($file)".PHP_EOL;
+            $this->log("                      Version '$label' ($file)".PHP_EOL);
             $fullPath = "$this->dataBaseDir/$file";
 
             $contents = file_get_contents($fullPath);
@@ -1162,9 +1223,20 @@ class XMLDocmanImport {
             try {
                 $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author, $date);
             } catch (Exception $e){
-                $retry = self::askWhatToDo($e);
+                $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
+    }
+    
+    /**
+     * Prints a message, and stores it into a log file if one has been defined 
+     */
+    protected function log($msg) {
+        echo $msg;
+        
+        if ($this->logFile !== null) {
+            fwrite($this->logFile, $msg);
+        }
     }
 }
 ?>
