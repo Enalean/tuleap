@@ -205,7 +205,7 @@ class Docman_CloneItemsVisitor {
                             
                             // no maping for value `100` (shared by all lists).
                             if(($e->getId() != 100) && isset($metadataMapping['love'][$e->getId()])) {
-                                $newE = $e;
+                                $newE = clone $e;
                                 $newE->setId($metadataMapping['love'][$e->getId()]);
                                 $ea[] = $newE;
                             }

@@ -334,7 +334,8 @@ class Docman_Item {
             $this->setUpdateDate($md->getValue());
             break;
         case 'status':
-            $this->setStatus($md->getValue());
+            // $md->getValue() return an array iterator
+            $this->setStatus($md->getValue()->current()->getId());
             break;
         case 'obsolescence_date':
             $this->setObsolescenceDate($md->getValue());
