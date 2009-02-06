@@ -85,12 +85,15 @@ class XMLDocmanImport {
     public function __construct($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log) {
 
         if ($log === true) {
-            $logFile = dirname(__FILE__).'/log/import_'.date('Y-m-d_H\hi\ms\s').'.log';
-            if (!is_dir(dirname($logFile))) {
-                mkdir(dirname($logFile), 0700, true);
+            $logFolder = dirname(__FILE__).'/log';
+            $logFile = 'import_'.date('Y-m-d_H\hi\ms\s').'.log';
+            if (is_dir($logFolder)) {
+               $logFile = $this->searchNextFreeFileName($logFolder, $logFile);
+            } else {
+                mkdir($logFolder, 0700, true);
             }
             
-            $this->logFile = fopen($logFile, 'w');
+            $this->logFile = fopen("$logFolder/$logFile", 'w');
             fwrite($this->logFile, "Command: $command".PHP_EOL.PHP_EOL);
             $this->log("* Logging output to \"$logFile\" *".PHP_EOL);
         }
@@ -120,6 +123,30 @@ class XMLDocmanImport {
         
         if ($this->logFile !== null) {
             fclose($this->logFile);
+        }
+    }
+    
+    /**
+     * Search the next file name that can be used
+     * If the file "name" exists in the folder, the next name to use is "name (2)", then "name (3)", etc.
+     */
+    private function searchNextFreeFileName($folder, $fileName) {
+        
+        if (!file_exists("$folder/$fileName")) {
+            return $fileName;
+        } else {
+            $cpt = 2;
+            if (preg_match('/(.*)\.([^\.]+)/', $fileName, $matches)) {
+                while (file_exists("$folder/".$matches[1]." ($cpt).".$matches[2])) {
+                    $cpt++;
+                }
+                return $matches[1]." ($cpt).".$matches[2];
+            } else {
+                while (file_exists("$folder/$fileName ($cpt)")) {
+                    $cpt++;
+                }
+                return "$fileName ($cpt)";
+            }
         }
     }
     
