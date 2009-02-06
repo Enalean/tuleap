@@ -23,6 +23,7 @@
  * 
  */
 
+require_once('DocmanConstants.class.php');
 require_once('Docman_MetadataListOfValuesElement.class.php');
 require_once('Docman_MetadataListOfValuesElementDao.class.php');
 
@@ -103,55 +104,7 @@ class Docman_MetadataListOfValuesElementFactory {
         $dao =& $this->getDao();
         return $dao->createMetadataElementBond($this->metadataId, PLUGIN_DOCMAN_ITEM_STATUS_NONE);
     }
-
-    /**
-     * Import List of values elements.
-     *
-     * This function perform 2 things:
-     * - import the missing values in the current list.
-     * - re-order the values with the following paradigm:
-     *   - the values defined in the source metadata first (whereever they
-     *     where in the current list).
-     *   - keep the values that only exists in current list with the same order
-     *     but at the end of the list.
-     *
-     * To achieve the last point (ordering) we use a trick:
-     * - reverse the list and add each element of this list at the beginning of
-     * the current one.
-     *
-     * Example:
-     * - take the list of values from the metadata to import ($srcMd)
-     * - reverse this list
-     * - add each new element at the beginning of current list 
-     * - or update already existing values to move them at the beginning of the
-     *   list.
-     */
-    function importFrom($srcMd, $loveMap) {
-        $srcLoveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
-
-        // \o/ trick \o/
-        $reverseLoveArray = array_reverse($srcLoveArray);
-
-        foreach($reverseLoveArray as $srcLove) {
-            if($srcLove->getId() > PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
-                if(!isset($loveMap[$srcLove->getId()])) {
-                    // Create at the end by default.
-                    $newLove = $srcLove;
-                    $newLove->setRank('beg');
-                    //print "&nbsp;&nbsp; Create new LOVE: ".$newLove->getName()."<br>";
-                    $this->create($newLove);
-                } else {
-                    // Update
-                    $updLove = $srcLove;
-                    $updLove->setId($loveMap[$srcLove->getId()]);
-                    $updLove->setRank('beg');
-                    //print "&nbsp;&nbsp; Update LOVE: ".$updLove->getName()."<br>";
-                    $this->update($updLove);
-                }
-            }
-        }
-    }
-
+    
     function &instanciateLove(&$row) {
         $e = new Docman_MetadataListOfValuesElement();
         $e->initFromRow($row);        
@@ -241,6 +194,78 @@ class Docman_MetadataListOfValuesElementFactory {
         return $i;
     }
 
+    /**
+     * Copy values of source metadata in destination metadata
+     *
+     * Returns the mapping between Ids in source project and id in target one.
+     * This mapping is indexed by source metadata values ids.
+     * 
+     * @param Docman_Metadata $srcMd         Source metadata
+     * @param Docman_Metadata $dstMd         Destination metadata
+     * 
+     * @return Array Map between source and destination
+     */
+    function cloneValues(Docman_Metadata $srcMd, Docman_Metadata $dstMd) {
+        $valuesMapping = array();
+        $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
+        $loveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), false);
+        foreach($loveArray as $love) {
+            if($love->getId() != 100) {
+                $valuesMapping[$love->getId()] = $dstLoveFactory->create($love);
+            }
+        }
+        return $valuesMapping;
+    }
+    
+    /**
+     * Export values in destination metadata.
+     *
+     * This method perform 2 things:
+     * - import the missing values in the current list.
+     * - re-order the values with the following paradigm:
+     *   - the values defined in the source metadata first (whereever they
+     *     where in the current list).
+     *   - keep the values that only exists in current list with the same order
+     *     but at the end of the list.
+     *
+     * To achieve the last point (ordering) we use a trick:
+     * - reverse the list and add each element of this list at the beginning of
+     * the current one.
+     * With reverse, the last element of the source list will
+     * be the first to be treated. We insert it at the beginning so the last
+     * element of the source list will appears before all the existing elements.
+     * Then each elements will be inserted at the beginning too so they will 
+     * appears in the right order.
+     * 
+     * @param Docman_Metadata $srcMd   Source metadata
+     * @param Docman_Metadata $dstMd   Destination metadata
+     * @param Array           $loveMap Map between elements of $srcMd and $dstMd
+     */
+    function exportValues($srcMd, $dstMd, $loveMap) {
+        $dstLoveFactory = $this->getMetadataListOfValuesElementFactory($dstMd->getId());
+        
+        $srcLoveArray = $this->getListByFieldId($srcMd->getId(), $srcMd->getLabel(), true);
+
+        // \o/ trick \o/
+        $reverseLoveArray = array_reverse($srcLoveArray);
+
+        foreach($reverseLoveArray as $srcLove) {
+            if($srcLove->getId() > PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
+                if(!isset($loveMap[$srcLove->getId()])) {
+                    $newLove = clone $srcLove;
+                    $newLove->setRank('beg');
+                    $dstLoveFactory->create($newLove);
+                } else {
+                    // Update
+                    $updLove = clone $srcLove;
+                    $updLove->setId($loveMap[$srcLove->getId()]);
+                    $updLove->setRank('beg');
+                    $dstLoveFactory->update($updLove);
+                }
+            }
+        }
+    }
+    
     /**
      * Try to find matching values between 2 metadata
      */
@@ -332,6 +357,10 @@ class Docman_MetadataListOfValuesElementFactory {
         }
         $ei = new ArrayIterator($ea);
         return $ei;
+    }
+    
+    function getMetadataListOfValuesElementFactory($metadataId=null) {
+        return new Docman_MetadataListOfValuesElementFactory($metadataId);
     }
 }
 

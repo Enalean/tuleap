@@ -24,9 +24,8 @@
  */
 
 require_once(dirname(__FILE__).'/../include/Docman_MetadataFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Docman_MetadataValueFactory.class.php');
-
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
+//require_once(dirname(__FILE__).'/../include/Docman_MetadataValueFactory.class.php');
+//require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
 //Mock::generate('Docman_MetadataDao');
 
@@ -36,18 +35,167 @@ require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 //require_once('BaseLanguage.class.php');
 //Mock::generate('BaseLanguage');
 
+Mock::generate('Docman_MetadataListOfValuesElementFactory');
+Mock::generate('Docman_MetadataFactory');
+Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneOneMd', array('_getMetadataFactory', '_getListOfValuesElementFactory'));
+Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneRealMd', array('getRealMetadataList', '_cloneOneMetadata'));
+
 class MetadataTest extends UnitTestCase {
-    var $groupId;
 
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
      */
-    function MetadataTest($name = 'Docman_Metadata test') {
-        $this->UnitTestCase($name);
-        $this->groupId = 1540;
+    function __construct($name = 'Docman_Metadata test')
+    {
+        parent::__construct($name);
+        //$this->groupId = 1540;
     }
 
+    function testCloneOneMetadata()
+    {
+        // Parameters
+        $dstGroupId = '321';
+        $srcMd = new Docman_Metadata();
+        $srcMd->setId(301);
+        $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $metadataMapping = array();
+        
+        // Factory to test
+        $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
+        
+        $dstMdF = new MockDocman_MetadataFactory($this);
+        $dstMdF->setReturnValue('create', 401);
+        $dstMdF->expectOnce('create');
+        
+        $srcMdF->setReturnReference('_getMetadataFactory', $dstMdF);
+        $srcMdF->expectOnce('_getMetadataFactory', array($dstGroupId));
+        
+        $srcMdF->expectNever('_getListOfValuesElementFactory');
+        
+        $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
+        $this->assertEqual($metadataMapping['md'][301], 401);
+        
+        $srcMdF->tally();
+        $dstMdF->tally();
+    }
+    
+    function testCloneOneMetadataList()
+    {
+        // Parameters
+        $dstGroupId = '321';
+        $srcMd = new Docman_ListMetadata();
+        $srcMd->setId(301);
+        $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadataMapping = array();
+        
+        // Factory to test
+        $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
+        
+        $dstMdF = new MockDocman_MetadataFactory($this);
+        $dstMdF->setReturnValue('create', 401);
+        $dstMdF->expectOnce('create');
+        
+        $srcMdF->setReturnReference('_getMetadataFactory', $dstMdF);
+        $srcMdF->expectOnce('_getMetadataFactory', array($dstGroupId));
+        
+        $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
+        $valuesMapping = array(101 => 201, 102 => 202);
+        $dstLoveF->expectOnce('cloneValues');
+        $dstLoveF->setReturnValue('cloneValues', $valuesMapping);
+        $srcMdF->setReturnReference('_getListOfValuesElementFactory', $dstLoveF);
+        $srcMdF->expectOnce('_getListOfValuesElementFactory',  array(301));
+        
+        $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
+        $this->assertEqual($metadataMapping['md'][301], 401);
+        $this->assertEqual($metadataMapping['love'][101], 201);
+        $this->assertEqual($metadataMapping['love'][102], 202);
+        
+        $dstLoveF->tally();
+        $srcMdF->tally();
+        $dstMdF->tally();
+    }
+    
+    /**
+     * Ensure that data from one call doesn't override data of the second call
+     */
+    function testTwoCallsOfCloneOneMetadataList()
+    {
+        // Common params
+        $dstGroupId = '321';
+        $metadataMapping = array();
+        $metadataMapping['love'] = array();
+        
+        // Factory to test
+        $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
+        
+        // First Call setup
+        $srcMd1 = new Docman_ListMetadata();
+        $srcMd1->setId(301);
+        $srcMd1->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        
+        $dstMdF1 = new MockDocman_MetadataFactory($this);
+        $dstMdF1->setReturnValue('create', 401);
+        $dstMdF1->expectOnce('create');
+        $srcMdF->setReturnReferenceAt(0, '_getMetadataFactory', $dstMdF1);
+        
+        $dstLoveF1 = new MockDocman_MetadataListOfValuesElementFactory($this);
+        $dstLoveF1->setReturnValue('cloneValues', array(101 => 201, 102 => 202));
+        $srcMdF->setReturnReferenceAt(0, '_getListOfValuesElementFactory', $dstLoveF1);
+        
+        // Second call setup
+        $srcMd2 = new Docman_ListMetadata();
+        $srcMd2->setId(302);
+        $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        
+        $dstMdF2 = new MockDocman_MetadataFactory($this);
+        $dstMdF2->setReturnValue('create', 402);
+        $dstMdF2->expectOnce('create');
+        $srcMdF->setReturnReferenceAt(1, '_getMetadataFactory', $dstMdF2);
+        
+        $dstLoveF2 = new MockDocman_MetadataListOfValuesElementFactory($this);
+        $dstLoveF2->setReturnValue('cloneValues', array(103 => 203, 104 => 204));
+        $srcMdF->setReturnReferenceAt(1, '_getListOfValuesElementFactory', $dstLoveF2);
+        
+        // Run test
+        $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd1, $metadataMapping);
+        $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd2, $metadataMapping);
+
+        $this->assertEqual($metadataMapping['md'][301], 401);
+        $this->assertEqual($metadataMapping['md'][302], 402);
+        $this->assertEqual($metadataMapping['love'][101], 201);
+        $this->assertEqual($metadataMapping['love'][102], 202);
+        $this->assertEqual($metadataMapping['love'][103], 203);
+        $this->assertEqual($metadataMapping['love'][104], 204);
+    }
+
+    function testCloneRealMetadata()
+    {
+        // Parameters
+        $dstGroupId = '321';
+        $metadataMapping = array();
+        
+        // Factory to test
+        $srcMdF = new MetadataFactoryMockedForCloneRealMd($this);
+
+        $srcMd1 = new Docman_ListMetadata();
+        $srcMd1->setId(301);
+        $srcMd1->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $srcMd2 = new Docman_Metadata();
+        $srcMd2->setId(302);
+        $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $srcMdF->setReturnValue('getRealMetadataList', array($srcMd1, $srcMd2));
+        $srcMdF->expectOnce('getRealMetadataList', array(false));
+        
+        $srcMdF->expectCallCount('_cloneOneMetadata', 2);
+        $srcMdF->expectArgumentsAt(0, '_cloneOneMetadata', array($dstGroupId, $srcMd1, $metadataMapping));
+        $srcMdF->expectArgumentsAt(1, '_cloneOneMetadata', array($dstGroupId, $srcMd2, $metadataMapping));
+        
+        // Run the test
+        $srcMdF->_cloneRealMetadata($dstGroupId, $metadataMapping);
+        $srcMdF->tally();
+    }
+    
     /*
      * MV: Comment all these tests, metadata changed a lot and new tests should be rewritten.
      *
