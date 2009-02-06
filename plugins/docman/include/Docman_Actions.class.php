@@ -1127,9 +1127,10 @@ class Docman_Actions extends Actions {
         $srcGo = group_get_object($srcGroupId);
         if($srcGo != false &&
            ($srcGo->isPublic() 
-            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
-            $dstMdFactory = new Docman_MetadataFactory($groupId);
-            $dstMdFactory->importMetadataFrom($srcGo->getGroupId());
+            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {            
+            $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
+            $mdFactory->exportMetadata($groupId);
+            
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_success', array($srcGo->getPublicName())));
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
@@ -1222,16 +1223,16 @@ class Docman_Actions extends Actions {
         $dataRoot    = $this->_controler->getProperty('docman_root');
         $mdMapping   = false;
 
-        $dstMdFactory = new Docman_MetadataFactory($item->getGroupId());
+        $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
 
         // Import metadata if asked
         if($importMd) {
-            $dstMdFactory->importMetadataFrom($itemToPaste->getGroupId());
+            $srcMdFactory->exportMetadata($item->getGroupId());
         }
         
         // Get mapping between the 2 definitions
         $mdMapping = array();
-        $dstMdFactory->getMetadataMapping($itemToPaste->getGroupId(), $mdMapping);
+        $srcMdFactory->getMetadataMapping($item->getGroupId(), $mdMapping);
 
         // Permissions
         if($itemToPaste->getGroupId() != $item->getGroupId()) {

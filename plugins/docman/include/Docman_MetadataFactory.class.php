@@ -632,9 +632,17 @@ class Docman_MetadataFactory {
         return $md;
     }
 
-    // Create new metadata
+    /**
+     * Create a new metadata based on an existing one in another project.
+     *
+     * @see cloneMetadata
+     * 
+     * @param Integer         $dstGroupId      Project where the md is created
+     * @param Docman_Metadata $md              Metadata to clone
+     * @param Array           $metadataMapping Map between src and dst metadata id
+     */
     function _cloneOneMetadata($dstGroupId, $md, &$metadataMapping) {
-        $dstMdFactory = new Docman_MetadataFactory($dstGroupId);
+        $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
         $newMd = clone $md;
         $newMdId = $dstMdFactory->create($newMd);
@@ -644,47 +652,43 @@ class Docman_MetadataFactory {
         
         // If current metadata is a list of values, clone values
         if($newMdId > 0 && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $oldLoveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-            $newLoveFactory = new Docman_MetadataListOfValuesElementFactory($newMdId);
-            
-            $loveArray = $oldLoveFactory->getListByFieldId($md->getId(), $md->getLabel(), false);
-            $loveIter = new ArrayIterator($loveArray);
-            $loveIter->rewind();
-            while($loveIter->valid()) {
-                $love = $loveIter->current();
-                
-                // Do not clone value 100 (already created on md creation)
-                if($love->getId() != 100) {
-                    $newLoveId = $newLoveFactory->create($love);
-                    $metadataMapping['love'][$love->getId()] = $newLoveId;
-                }
-                
-                $loveIter->next();
+            $srcLoveFactory = $this->_getListOfValuesElementFactory($md->getId());
+            $values = $srcLoveFactory->cloneValues($md, $newMd);
+            foreach($values as $srcId => $dstId) {
+                $metadataMapping['love'][$srcId] = $dstId;
             }
         }
     }
 
-    // Clone metadata defs and list of values
-    function _cloneMetadata($dstGroupId, &$metadataMapping) {
-        $mda = $this->getRealMetadataList(false);
-        $mdIter = new ArrayIterator($mda);
-        $mdIter->rewind();
-        while($mdIter->valid()) {
-            $md = $mdIter->current();
-            
+    /**
+     * Copy all real metadata defined in this project in the destination project
+     *
+     * @param Integer $dstGroupId      Project where the metadata will be created
+     * @param Array   $metadataMapping Map between src and dst metadata id
+     */
+    function _cloneRealMetadata($dstGroupId, &$metadataMapping) {
+        foreach($this->getRealMetadataList(false) as $md) {
             $this->_cloneOneMetadata($dstGroupId, $md, $metadataMapping);
-
-            $mdIter->next();
         }
     }
 
+    /**
+     * Copy current metadata structure in the destination project
+     *
+     * This method will create the same metadata (definitions and values if
+     * needed) in the target project. A maps keeps the link between the id in
+     * the source and the destination project.
+     * 
+     * @param Integer $dstGroupId       Project where to copy the metadata
+     * @param Array   $metadataMapping  Map between source and target metadata definitions
+     */
     function cloneMetadata($dstGroupId, &$metadataMapping) {
         // Clone hardcoded metadata prefs
         $sBo =& Docman_SettingsBo::instance($this->groupId);
         $sBo->cloneMetadataSettings($dstGroupId);
 
         // Clone metadata
-        $this->_cloneMetadata($dstGroupId, $metadataMapping);
+        $this->_cloneRealMetadata($dstGroupId, $metadataMapping);
     }
     
     /**
@@ -765,7 +769,7 @@ class Docman_MetadataFactory {
     }
     
     /**
-     * Import metadata settings from $srcGroupId into current project.
+     * Export metadata settings of current project into $dstGroupId
      *
      * For metadata that are equivalent (@see Docman_Metadata::equivalent) the
      *   settings are just updated.
@@ -776,59 +780,46 @@ class Docman_MetadataFactory {
      *   with the very same settings than the one in the source project (like
      *   clone).
      *
-     * This function just 'import' things, it's not intend to synchronize two
-     * projects (ie. properties defined in current project but not in source
+     * This function just 'add' things, it's not intend to synchronize two
+     * projects (ie. properties defined in destination project but not in source
      * project are not deleted).
      *
      * @access: public
      */
-    function importMetadataFrom($srcGroupId) {
+    function exportMetadata($dstGroupId) {
         // Import hardcoded metadata prefs
         $sBo =& Docman_SettingsBo::instance($this->groupId);
-        $sBo->importMetadataUsageFrom($srcGroupId);
+        $sBo->exportMetadataUsage($dstGroupId);
 
         // Import metadata
-        $this->_importMetadataFrom($srcGroupId);
+        $this->_exportMetadata($dstGroupId);
     }
-
-    /**
-     * Only import real metadata settings since hardcoded metadata cannot change.
-     */
-    function _importMetadataFrom($srcGroupId) {
-        // Get used metadata in source project
-        $srcMdFactory = new Docman_MetadataFactory($srcGroupId);
-        $mda = $srcMdFactory->getRealMetadataList(true);
-        $srcMdIter = new ArrayIterator($mda);
-
+    
+    function _exportMetadata($dstGroupId) {
         // Get the properties mapping between the 2 projects
         $mdMap = array();
-        $srcMdFactory->getMetadataMapping($this->groupId, $mdMap);
-
-        $srcMdIter->rewind();
-        while($srcMdIter->valid()) {
-            $srcMd = $srcMdIter->current();
-
+        $this->getMetadataMapping($dstGroupId, $mdMap);
+        
+        $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
+        
+        // Get used metadata in source project
+        foreach($this->getRealMetadataList(true) as $srcMd) {
             // Get corresponding metadata in current project (if any)
             if(isset($mdMap['md'][$srcMd->getId()])) {
-                $dstMd = $srcMdFactory->getFromLabel($srcMdFactory->getLabelFromId($mdMap['md'][$srcMd->getId()]));
+                $dstMd = $dstMdFactory->getFromLabel($dstMdFactory->getLabelFromId($mdMap['md'][$srcMd->getId()]));
                 $dstMd->update($srcMd);
-                $this->updateRealMetadata($dstMd);
-                //print "Update MD: ".$srcMd->getName()."<br>";
+                $dstMdFactory->updateRealMetadata($dstMd);
                 if($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                    $oldLoveFactory = new Docman_MetadataListOfValuesElementFactory($dstMd->getId());
-                    $oldLoveFactory->importFrom($srcMd, $mdMap['love']);
+                    $srcLoveFactory = $this->_getListOfValuesElementFactory($srcMd->getId());
+                    $srcLoveFactory->exportValues($srcMd, $dstMd, $mdMap['love']);
                 }
             } else {
-                // Otherwise Create new metadata
                 $_dummyMap = array();
-                //print "Clone MD: ".$srcMd->getName()."<br>";
-                $srcMdFactory->_cloneOneMetadata($this->groupId, $srcMd, $_dummyMap);
+                $this->_cloneOneMetadata($dstGroupId, $srcMd, $_dummyMap);
             }
-
-            $srcMdIter->next();
         }
     }
-
+    
     //
     // Accessors for mock
     //
