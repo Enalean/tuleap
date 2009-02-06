@@ -1312,18 +1312,18 @@ INSERT INTO artifact_field VALUES (9,4,7,'assigned_to',5,'SB','','Assigned to','
 INSERT INTO artifact_field VALUES (10,4,7,'multi_assigned_to',5,'MB','','Assigned to (multiple)','Who is in charge of this artifact','',0,1,1,0,'group_members','100',NULL);
 INSERT INTO artifact_field VALUES (12,4,7,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','',NULL);
 -- Patches tracker
-INSERT INTO artifact_field VALUES (1,5,8,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','',NULL,NULL);
-INSERT INTO artifact_field VALUES (2,5,8,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','',NULL,NULL);
-INSERT INTO artifact_field VALUES (3,5,8,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'',NULL,NULL);
-INSERT INTO artifact_field VALUES (4,5,8,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'',NULL,NULL);
-INSERT INTO artifact_field VALUES (5,5,9,'plain_text',1,'TA','60/7','Patch text','Plain-text version of the patch','',0,1,0,0,NULL,'',NULL,NULL);
-INSERT INTO artifact_field VALUES (6,5,10,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100',NULL,NULL);
-INSERT INTO artifact_field VALUES (7,5,8,'category_id',2,'SB','','Category','Patch categories (e.g. mail module,gant chart module,interface, etc)','',0,1,1,0,NULL,'100',NULL,NULL);
-INSERT INTO artifact_field VALUES (8,5,8,'details',1,'TA','60/7','Description','Description of functionality and application of the patch','',0,1,1,0,NULL,'',NULL,NULL);
-INSERT INTO artifact_field VALUES (9,5,10,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1',NULL,NULL);
-INSERT INTO artifact_field VALUES (10,5,8,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5',NULL,NULL);
-INSERT INTO artifact_field VALUES (11,5,8,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100',NULL,NULL);
-INSERT INTO artifact_field VALUES (12,5,10,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100',NULL,NULL);
+INSERT INTO artifact_field VALUES (1,5,8,'submitted_by',5,'SB','','Submitted by','User who originally submitted the artifact','',0,1,0,1,'artifact_submitters','',NULL);
+INSERT INTO artifact_field VALUES (2,5,8,'open_date',4,'DF','','Submitted on','Date and time for the initial artifact submission','',0,0,0,1,'','',NULL);
+INSERT INTO artifact_field VALUES (3,5,8,'summary',1,'TF','60/150','Summary','One line description of the artifact','',0,0,1,0,NULL,'',NULL);
+INSERT INTO artifact_field VALUES (4,5,8,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'',NULL);
+INSERT INTO artifact_field VALUES (5,5,9,'plain_text',1,'TA','60/7','Patch text','Plain-text version of the patch','',0,1,0,0,NULL,'',NULL);
+INSERT INTO artifact_field VALUES (6,5,10,'assigned_to',5,'SB','','Assigned to','Who is in charge of solving the artifact','',0,1,1,0,'group_members','100',NULL);
+INSERT INTO artifact_field VALUES (7,5,8,'category_id',2,'SB','','Category','Patch categories (e.g. mail module,gant chart module,interface, etc)','',0,1,1,0,NULL,'100',NULL);
+INSERT INTO artifact_field VALUES (8,5,8,'details',1,'TA','60/7','Description','Description of functionality and application of the patch','',0,1,1,0,NULL,'',NULL);
+INSERT INTO artifact_field VALUES (9,5,10,'status_id',2,'SB','','Status','Artifact Status','',0,0,1,0,NULL,'1',NULL);
+INSERT INTO artifact_field VALUES (10,5,8,'severity',2,'SB','','Severity','Impact of the artifact on the system (Critical, Major,...)','',0,0,1,0,NULL,'5',NULL);
+INSERT INTO artifact_field VALUES (11,5,8,'release_id',2,'SB','','Release','The release (global version number) impacted by the artifact','P',0,1,1,0,NULL,'100',NULL);
+INSERT INTO artifact_field VALUES (12,5,10,'stage',2,'SB','','Stage','Stage in the life cycle of the artifact','P',0,1,1,0,NULL,'100',NULL);
 INSERT INTO artifact_field VALUES (13,5,8,'last_update_date',4,'DF','','Last Modified On','Date and time of the latest modification in an artifact','',0,0,0,1,'','',NULL);
 -- Salome Bugs tracker
 INSERT INTO artifact_field VALUES (1,6,11,'artifact_id',2,'TF','6/10','Artifact ID','Unique artifact identifier','',0,0,0,1,NULL,'',NULL);
