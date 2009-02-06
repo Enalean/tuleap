@@ -29,6 +29,15 @@ class Docman_ValidateUpload extends Docman_Validator {
                     case UPLOAD_ERR_NO_FILE:
                         $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_nofile', $_FILES['file']['error']));
                         break;
+                    case UPLOAD_ERR_NO_TMP_DIR:
+                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_notmp', $_FILES['file']['error']));
+                        break;
+                    case UPLOAD_ERR_CANT_WRITE:
+                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_cantwrite', $_FILES['file']['error']));
+                        break;
+                    case UPLOAD_ERR_EXTENSION:
+                        $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_extension', $_FILES['file']['error']));
+                        break;
                     default:
                         $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_unknown', $_FILES['file']['error']));
                 }
