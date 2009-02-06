@@ -636,7 +636,7 @@ class Docman_MetadataFactory {
     function _cloneOneMetadata($dstGroupId, $md, &$metadataMapping) {
         $dstMdFactory = new Docman_MetadataFactory($dstGroupId);
 
-        $newMd = $md;
+        $newMd = clone $md;
         $newMdId = $dstMdFactory->create($newMd);
         $newMd->setId($newMdId);
         
