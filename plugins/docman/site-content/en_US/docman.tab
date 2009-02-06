@@ -377,6 +377,9 @@ plugin_docman	error_upload_nofile	File upload error($1). No file was uploaded.
 plugin_docman	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
 plugin_docman	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
 plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
+plugin_docman	error_upload_notmp	File upload error($1). Missing a temporary folder.
+plugin_docman	error_upload_cantwrite	File upload error($1). Failed to write file to disk.
+plugin_docman	error_upload_extension	File upload error($1). File upload stopped by extension.
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
