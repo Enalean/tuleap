@@ -128,7 +128,7 @@ if ($group_id && !$atid) {
                                              $Language->getText('project_reference','reference_art_desc_key'), // description
                                              '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
                                              'P', // scope is 'project'
-                                             '',  // service ID - N/A
+                                             'tracker',  // service shortname
                                              '1', // is_used
                                              $group_id);
                         $result=$reference_manager->createReference($ref);
