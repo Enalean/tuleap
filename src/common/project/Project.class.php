@@ -299,6 +299,10 @@ class Project extends Group {
         return $this->project_data_array['cvs_tracker'];
     }
 
+    function getCVSWatchMode() {
+        return $this->project_data_array['cvs_watch_mode'];
+    }
+
     function getCVSpreamble() {
         return $this->project_data_array['cvs_preamble'];
     }

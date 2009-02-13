@@ -37,6 +37,7 @@ class SystemEvent {
     // Handle to Backend object
     var $backend;
 
+    var $log;
 
     // Define event types
     const PROJECT_CREATE="PROJECT_CREATE";
