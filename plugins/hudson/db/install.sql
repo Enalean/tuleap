@@ -37,19 +37,22 @@ INSERT INTO reference SET
     description='plugin_hudson:reference_job_desc_key', 
     link='/plugins/hudson/?group_id=$group_id&action=view_job&job=$1', 
     scope='S', 
-    service_short_name='hudson';
+    service_short_name='hudson',
+    nature='hudson_job';
     
 INSERT INTO reference SET 
     keyword='build', 
     description='plugin_hudson:reference_build_desc_key', 
     link='/plugins/hudson/?group_id=$group_id&action=view_build&job=$1&build=$2', 
     scope='S', 
-    service_short_name='hudson';
+    service_short_name='hudson',
+    nature='hudson_build';
 
 INSERT INTO reference SET 
     keyword='build', 
     description='plugin_hudson:reference_build_desc_key', 
     link='/plugins/hudson/?group_id=$group_id&action=view_build&build=$1', 
     scope='S', 
-    service_short_name='hudson';
+    service_short_name='hudson',
+    nature='hudson_build';
     

@@ -338,7 +338,8 @@ INSERT INTO reference SET
     description='reference_doc_desc_key', 
     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
     scope='S', 
-    service_short_name='docman';
+    service_short_name='docman', 
+    nature='document';
 
 INSERT INTO reference SET 
     id='11',        
@@ -346,7 +347,8 @@ INSERT INTO reference SET
     description='reference_doc_desc_key', 
     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
     scope='S', 
-    service_short_name='docman';
+    service_short_name='docman', 
+    nature='document';
 
 INSERT INTO reference SET 
     id='17',        
@@ -354,7 +356,8 @@ INSERT INTO reference SET
     description='reference_doc_desc_key', 
     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
     scope='S', 
-    service_short_name='docman';
+    service_short_name='docman', 
+    nature='document';
 
 INSERT INTO reference SET 
     id='18',        
@@ -362,7 +365,8 @@ INSERT INTO reference SET
     description='reference_doc_desc_key', 
     link='/plugins/docman/?group_id=$group_id&action=show&id=$1', 
     scope='S', 
-    service_short_name='docman';
+    service_short_name='docman', 
+    nature='document';
 
 -- Enable document references for project 1 and 100
 DELETE FROM reference_group WHERE reference_id='10' AND group_id='100';

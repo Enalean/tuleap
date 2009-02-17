@@ -40,6 +40,14 @@ class Reference {
      * @var string
      */
     var $service_short_name;
+    
+    /**
+     * Nature of the referenced item.
+     * List of available natures is ReferenceManager : getAvailableNatures()
+     * @var string
+     */
+    var $nature;
+    
     /**
      * @var bool
      */
@@ -59,13 +67,14 @@ class Reference {
      * Class constructor
      * The constructor only builds full objects; Only the 'myid' and 'mygroup_id' params may be set to 0 if unknown.
      */
-    function Reference($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$myis_active,$mygroup_id) {
+    function Reference($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id) {
         $this->id=$myid;
         $this->keyword=strtolower($mykeyword);
         $this->description=$mydescription;
         $this->link=$mylink;
         $this->scope=$myscope;
         $this->service_short_name=$myservice_short_name;
+        $this->nature=$nature;
         $this->is_active=$myis_active;
         $this->group_id=$mygroup_id;
         $this->num_param=$this->computeNumParam($this->link);
@@ -91,6 +100,9 @@ class Reference {
     }
     function getServiceShortName() {
         return $this->service_short_name;
+    }
+    function getNature() {
+        return $this->nature;
     }
     function isActive() {
         return $this->is_active;

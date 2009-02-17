@@ -554,7 +554,7 @@ class Artifact extends Error {
 
 		//Add Cross Reference
 		for($i=0;$i<sizeof($text_value_list);$i++){
-			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,'artifact',$ath->getGroupID());
+			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,ReferenceManager::REFERENCE_NATURE_ARTIFACT,$ath->getGroupID());
 		}
         
         // artifact permissions
@@ -645,7 +645,7 @@ class Artifact extends Error {
 			    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
 			} 
 			$reference_manager =& ReferenceManager::instance();
-        	$reference_manager->extractCrossRef($comment,$this->getID(),'artifact',$this->ArtifactType->getGroupID());    
+        	$reference_manager->extractCrossRef($comment,$this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());    
 			
     		return true;
       	} else {
@@ -723,7 +723,7 @@ class Artifact extends Error {
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
                 $reference_manager =& ReferenceManager::instance();
-        		$reference_manager->extractCrossRef($comment_txt,$this->getID(),'artifact',$this->ArtifactType->getGroupID());    
+        		$reference_manager->extractCrossRef($comment_txt,$this->getID(),ReferenceManager::REFERENCE_NATURE_ARTIFACT,$this->ArtifactType->getGroupID());    
                 
                 return true;
             } else {
@@ -947,7 +947,7 @@ class Artifact extends Error {
         } // while
 
 		for($i=0;$i<sizeof($text_value_list);$i++){
-			$reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),'artifact',$this->ArtifactType->getGroupID());
+			$reference_manager->extractCrossRef($text_value_list[$i],$this->getID(),ReferenceManager::REFERENCE_NATURE_ARTIFACT,$this->ArtifactType->getGroupID());
 		}
 
 		$request = HTTPRequest::instance();

@@ -13,8 +13,12 @@ require_once('www/project/admin/project_admin_utils.php');
 
 class ReferenceAdministrationViews extends Views {
     
+    protected $natures;
+    
     function ReferenceAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
+        $referenceManager =& ReferenceManager::instance();
+        $this->natures = $referenceManager->getAvailableNatures();
     }
     
     function header() {
@@ -62,6 +66,7 @@ class ReferenceAdministrationViews extends Views {
         }
         $title_arr[]=$GLOBALS['Language']->getText('project_reference','keyword');
         $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_desc');
+        $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_nature');
         $title_arr[]=$GLOBALS['Language']->getText('global','status');
         if ($request->get('group_id')==100) {
             $title_arr[]=$GLOBALS['Language']->getText('project_reference','scope');
@@ -81,6 +86,7 @@ class ReferenceAdministrationViews extends Views {
                 }
                 $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','keyword');
                 $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','r_desc');
+                $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','r_nature');
                 $title_arr_project[]=$GLOBALS['Language']->getText('global','status');
                 if ($request->get('group_id')==100) {
                     $title_arr_project[]=$GLOBALS['Language']->getText('project_reference','scope');
@@ -115,13 +121,21 @@ class ReferenceAdministrationViews extends Views {
         } else {
             $description=$ref->getDescription();
         }
-                
+        
+        if (array_key_exists($ref->getNature(), $this->natures)) {
+            $nature_desc = $this->natures[$ref->getNature()];
+        } else {
+            $nature_desc = $ref->getNature();
+        }
+        
+        
         echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
         if ($ref->getGroupId()==100) {
             echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getId().'</TD>';
         }
         echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getKeyword().'</TD>';
         echo '<TD>'.$description.'</TD>';
+        echo '<TD>'.$nature_desc.'</TD>';
         
         echo '<TD align="center">'.( $ref->isActive() ? $Language->getText('project_reference','enabled') : $Language->getText('project_reference','disabled') ).'</TD>';
         if ($ref->getGroupId()==100) {
@@ -167,6 +181,19 @@ class ReferenceAdministrationViews extends Views {
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','r_desc_in_tooltip').'">'.$Language->getText('project_reference','r_desc').'</a>:&nbsp;</td>
 <td><input type="text" name="description" size="70" maxlength="255"></td></tr>';
+        echo '
+<tr><td><a href="#" title="'.$Language->getText('project_reference','r_nature_desc').'">'.$Language->getText('project_reference','r_nature').'</a>:&nbsp;</td>
+<td>';
+        echo '<select name="nature" >';
+        
+        foreach ($this->natures as $nature_key => $nature_desc) {
+            echo '<option value="'.$nature_key.'">'.$nature_desc.'</option>';
+        }
+        
+        echo '</select>';
+
+        echo '
+</td></tr>';
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"> ';
@@ -269,6 +296,24 @@ class ReferenceAdministrationViews extends Views {
             }
         } else {
             echo '<input type="text" name="description" size="70" maxlength="255" value="'.$ref->getDescription().'">';
+        }
+        echo '</td></tr>';
+        echo '
+<tr><td><a href="#" title="'.$Language->getText('project_reference','r_nature_desc').'">'.$Language->getText('project_reference','r_nature').'</a>:&nbsp;</td>
+<td>';
+        if ($ro) {
+            echo $ref->getNature();
+        } else {
+            echo '<select name="nature" >';
+            foreach ($this->natures as $nature_key => $nature_desc) {
+                if ($ref->getNature() == $nature_key) {
+                    $selected = 'selected="selected"';
+                } else {
+                    $selected = '';
+                }
+                echo '<option value="'.$nature_key.'" '.$selected.'>'.$nature_desc.'</option>';
+            }
+            echo '</select>';
         }
         echo '</td></tr>';
         echo '

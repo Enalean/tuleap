@@ -3077,6 +3077,7 @@ CREATE TABLE reference (
   link text NOT NULL,
   scope char(1) NOT NULL default 'P',
   service_short_name TEXT,
+  nature VARCHAR( 64 ) NOT NULL,
   PRIMARY KEY  (id),
   INDEX keyword_idx (keyword),
   INDEX scope_idx (scope)
@@ -3234,10 +3235,10 @@ CREATE TABLE IF NOT EXISTS cross_references (
   created_at INT(11) NOT NULL DEFAULT '0',
   user_id INT(11) unsigned NOT NULL DEFAULT '0',
   source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  source_id INT(11) unsigned NOT NULL DEFAULT '0',
+  source_id VARCHAR( 255 ) NOT NULL DEFAULT '0',
   source_gid INT(11) unsigned NOT NULL DEFAULT '0',
   target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  target_id INT(11) unsigned NOT NULL DEFAULT '0',
+  target_id VARCHAR( 255 )  NOT NULL DEFAULT '0',
   target_gid INT(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
   

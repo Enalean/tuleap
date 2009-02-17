@@ -25,6 +25,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('widget_instance', 'myPageBox', false);
         $this->_addHook('widgets', 'widgets', false);
         
+        $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
 	}
 	
     function &getPluginInfo() {
@@ -150,7 +151,14 @@ class hudsonPlugin extends Plugin {
             $params['codex_widgets'][] = 'projecthudsonjoblastartifacts';
         }
     }
-        
+    
+    function getAvailableReferenceNatures(&$params) {
+        $hudson_plugin_reference_natures = array(
+            'hudson_build'  => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key'),
+            'hudson_job' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key'));
+        $params = array_merge($params, $hudson_plugin_reference_natures);
+    }
+    
     function process() {
         require_once('hudson.class.php');
         $controler =& new hudson();

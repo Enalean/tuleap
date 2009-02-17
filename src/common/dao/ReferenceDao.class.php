@@ -162,13 +162,14 @@ class ReferenceDao extends DataAccessObject {
     * create a row in the table reference 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($keyword,$desc,$link,$scope,$service_short_name) {
-        $sql = sprintf("INSERT INTO reference (keyword,description,link,scope,service_short_name) VALUES (%s, %s, %s, %s, %s);",
+    function create($keyword,$desc,$link,$scope,$service_short_name, $nature) {
+        $sql = sprintf("INSERT INTO reference (keyword,description,link,scope,service_short_name, nature) VALUES (%s, %s, %s, %s, %s, %s);",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($desc),
                        $this->da->quoteSmart($link),
                        $this->da->quoteSmart($scope),
-                       $this->da->quoteSmart($service_short_name));
+                       $this->da->quoteSmart($service_short_name),
+                       $this->da->quoteSmart($nature));
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
@@ -202,13 +203,14 @@ class ReferenceDao extends DataAccessObject {
     * update a row in the table reference 
     * @return true or id(auto_increment) if there is no error
     */
-    function update_ref($id,$keyword,$desc,$link,$scope,$service_short_name) {
-        $sql = sprintf("UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s WHERE id=%s;",
+    function update_ref($id,$keyword,$desc,$link,$scope,$service_short_name,$nature) {
+        $sql = sprintf("UPDATE reference SET keyword=%s, description=%s, link=%s, scope=%s, service_short_name=%s, nature=%s WHERE id=%s;",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($desc),
                        $this->da->quoteSmart($link),
                        $this->da->quoteSmart($scope),
                        $this->da->quoteSmart($service_short_name),
+                       $this->da->quoteSmart($nature),
                        $this->da->quoteSmart($id));
         return $this->update($sql);
     }

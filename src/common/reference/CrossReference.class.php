@@ -44,58 +44,11 @@ class CrossReference extends Error{
        $this->sourceUrl='';
        $this->targetUrl='';
        
-       // Only for 3.6, need refactoring later
-       if($this->refTargetType=='revision_svn'){
-           $this->refTargetType='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id';
-       }else if($this->refTargetType=='artifact'){
-           $this->refTargetType='/tracker/?func=detail&aid=$1&group_id=$group_id';
-       }else if($this->refTargetType=='commit_cvs'){
-           $this->refTargetType='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id';
-       }
-       if($this->refSourceType=='revision_svn'){
-           $this->refSourceType='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id';
-       }else if($this->refSourceType=='artifact'){
-           $this->refSourceType='/tracker/?func=detail&aid=$1&group_id=$group_id';
-       }else if($this->refSourceType=='commit_cvs'){
-           $this->refSourceType='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id';
-       }
+       $this->sourceKey= $refSourceType;
+       $this->insertSourceType = $refSourceType;
+       $this->targetKey = $refTargetType;
+       $this->insertTargetType = $refTargetType;
        
-       $sqlkey = 'SELECT keyword from reference r,reference_group rg where link="'.$this->refSourceType.'" AND r.id = rg.reference_id AND rg.group_id='.$refSourceGid;
-	   $reskey = db_query($sqlkey);
-	   if (!$reskey || db_numrows($reskey) < 1) {
-	   	$this->setError('Cross Reference: Bad link');
-		return false;
-	   }else{
-		$key_array = db_fetch_array($reskey);
-		$this->sourceKey= $key_array['keyword'];
-	   }
-       
-       $sqlkey = 'SELECT keyword from reference r,reference_group rg where link="'.$this->refTargetType.'" AND r.id = rg.reference_id AND rg.group_id='.$refSourceGid;
-	   $reskey = db_query($sqlkey);
-	   if (!$reskey || db_numrows($reskey) < 1) {
-	   	$this->setError('Cross Reference: Bad link');
-		return false;
-	   }else{
-		$key_array = db_fetch_array($reskey);
-		$this->targetKey= $key_array['keyword'];
-	   }
-	   
-	   if($this->refTargetType=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id'){
-			$this->insertTargetType='revision_svn';
-		}else if($this->refTargetType=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
-			$this->insertTargetType='artifact';
-		}else if($this->refTargetType=='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id'){
-			$this->insertTargetType='commit_cvs';		
-		}	
-		
-		if($this->refSourceType=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id'){
-			$this->insertSourceType='revision_svn';
-		}else if($this->refSourceType=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
-			$this->insertSourceType='artifact';
-		}else if($this->refSourceType=='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id'){
-			$this->insertSourceType='commit_cvs';		
-		}	
-	   
 	   $this->computeUrls();
        
     }
@@ -123,9 +76,9 @@ class CrossReference extends Error{
 		'source_type,source_id,source_gid,target_type, target_id,' .
 		' target_gid) VALUES ';
 		
-		$sql .= "(". (time()) .",". db_ei($this->userId) .",'". db_es($this->insertSourceType) ."',".
-				 db_ei($this->refSourceId) .",". db_ei($this->refSourceGid) .",'". db_es($this->insertTargetType) ."',".
-	 			db_ei($this->refTargetId) .",".db_ei($this->refTargetGid) . ")";
+		$sql .= "(". (time()) .",". db_ei($this->userId) .", '". db_es($this->insertSourceType) ."', '".
+				 db_es($this->refSourceId) ."' ,". db_ei($this->refSourceGid) .", '". db_es($this->insertTargetType) ."', '".
+	 			db_es($this->refTargetId) ."', ".db_ei($this->refTargetGid) . ")";
     	$res = db_query($sql);
       	if ($res) {
 			return true;
@@ -137,10 +90,8 @@ class CrossReference extends Error{
 
     function existInDb(){
     	
-    	
-    
-    	$sql="SELECT * from cross_references WHERE source_id='". db_ei($this->refSourceId)."'" .
-    		" AND target_id='". db_ei($this->refTargetId)."' AND source_gid='". db_ei($this->refSourceGid)."' ".
+    	$sql="SELECT * from cross_references WHERE source_id='". db_es($this->refSourceId)."'" .
+    		" AND target_id='". db_es($this->refTargetId)."' AND source_gid='". db_ei($this->refSourceGid)."' ".
     		"AND target_gid='". db_ei($this->refTargetGid)."' AND source_type='". db_es($this->insertSourceType) ."' AND target_type='". db_es($this->insertTargetType) ."'";
     	$res = db_query($sql);
     	if (!$res || db_numrows($res) < 1) {
@@ -158,9 +109,7 @@ class CrossReference extends Error{
 		if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
         $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
 	
-    }
-    
-    
+    }    
 
 }
 

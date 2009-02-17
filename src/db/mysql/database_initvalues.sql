@@ -2578,7 +2578,8 @@ INSERT INTO reference SET \
     description='reference_art_desc_key', \
     link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='tracker';
+    service_short_name='tracker', \
+    nature='artifact';
 
 INSERT INTO reference SET \
     id='2',        \
@@ -2586,7 +2587,8 @@ INSERT INTO reference SET \
     description='reference_art_desc_key', \
     link='/tracker/?func=detail&aid=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='tracker';
+    service_short_name='tracker', \
+    nature='artifact';
 
 INSERT INTO reference SET \
     id='3',        \
@@ -2594,7 +2596,8 @@ INSERT INTO reference SET \
     description='reference_cvs_desc_key', \
     link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='cvs';
+    service_short_name='cvs', \
+    nature='cvs_commit';
 
 INSERT INTO reference SET \
     id='4',        \
@@ -2602,7 +2605,8 @@ INSERT INTO reference SET \
     description='reference_cvs_desc_key', \
     link='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='cvs';
+    service_short_name='cvs', \
+    nature='cvs_commit';
 
 INSERT INTO reference SET \
     id='5',        \
@@ -2610,7 +2614,8 @@ INSERT INTO reference SET \
     description='reference_svn_desc_key', \
     link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='svn';
+    service_short_name='svn', \
+    nature='svn_revision';
 
 INSERT INTO reference SET \
     id='6',        \
@@ -2618,7 +2623,8 @@ INSERT INTO reference SET \
     description='reference_svn_desc_key', \
     link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='svn';
+    service_short_name='svn', \
+    nature='svn_revision';
 
 INSERT INTO reference SET \
     id='7',        \
@@ -2626,7 +2632,8 @@ INSERT INTO reference SET \
     description='reference_svn_desc_key', \
     link='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id', \
     scope='S', \
-    service_short_name='svn';
+    service_short_name='svn', \
+    nature='svn_revision';
 
 INSERT INTO reference SET \
     id='8',        \
@@ -2634,7 +2641,8 @@ INSERT INTO reference SET \
     description='reference_wiki_desc_key', \
     link='/wiki/index.php?group_id=$group_id&pagename=$1', \
     scope='S', \
-    service_short_name='wiki';
+    service_short_name='wiki', \
+    nature='wiki_page';
 
 INSERT INTO reference SET \
     id='9',        \
@@ -2642,7 +2650,8 @@ INSERT INTO reference SET \
     description='reference_wikiversion_desc_key', \
     link='/wiki/index.php?group_id=$group_id&pagename=$1&version=$2', \
     scope='S', \
-    service_short_name='wiki';
+    service_short_name='wiki', \
+    nature='wiki_page';
 
 -- Now done in docman plugin...
 --
@@ -2668,7 +2677,8 @@ INSERT INTO reference SET \
     description='reference_news_desc_key', \
     link='/forum/forum.php?forum_id=$1', \
     scope='S', \
-    service_short_name='news';
+    service_short_name='news', \
+    nature='news';
 
 INSERT INTO reference SET \
     id='13',        \
@@ -2676,7 +2686,8 @@ INSERT INTO reference SET \
     description='reference_forum_desc_key', \
     link='/forum/forum.php?forum_id=$1', \
     scope='S', \
-    service_short_name='forum';
+    service_short_name='forum', \
+    nature='forum';
 
 INSERT INTO reference SET \
     id='14',        \
@@ -2684,7 +2695,8 @@ INSERT INTO reference SET \
     description='reference_msg_desc_key', \
     link='/forum/message.php?msg_id=$1', \
     scope='S', \
-    service_short_name='forum';
+    service_short_name='forum', \
+    nature='forum_message';
 
 INSERT INTO reference SET \
     id='15',        \
@@ -2692,7 +2704,8 @@ INSERT INTO reference SET \
     description='reference_file_desc_key', \
     link='/file/confirm_download.php?group_id=$group_id&file_id=$1', \
     scope='S', \
-    service_short_name='file';
+    service_short_name='file', \
+    nature='file';
 
 INSERT INTO reference SET \
     id='16',        \
@@ -2700,7 +2713,8 @@ INSERT INTO reference SET \
     description='reference_release_desc_key', \
     link='/file/showfiles.php?group_id=$group_id&release_id=$1', \
     scope='S', \
-    service_short_name='file';
+    service_short_name='file', \
+    nature='release';
 
 
 -- Reserved references for plugins:
@@ -2718,14 +2732,16 @@ INSERT INTO reference SET
     description='reference_slmbug_desc_key', 
     link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
     scope='S', 
-    service_short_name='tracker';
+    service_short_name='tracker', \
+    nature='artifact';
 INSERT INTO reference SET 
     id='21',        
     keyword='story', 
     description='reference_story_desc_key', 
     link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
     scope='S', 
-    service_short_name='tracker';
+    service_short_name='tracker', \
+    nature='artifact';
     
 -- Site-wide references
 
@@ -2734,7 +2750,8 @@ INSERT INTO reference SET \
     keyword='snippet', \
     description='reference_snippet_desc_key', \
     link='/snippet/detail.php?type=snippet&id=$1', \
-    scope='S';
+    scope='S', \
+    nature='snippet';
 
 -- Legacy references
 
@@ -2744,28 +2761,32 @@ INSERT INTO reference SET \
     description='reference_bug_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=bug', \
     scope='S', \
-    service_short_name='bugs';
+    service_short_name='bugs', \
+    nature='artifact';
 INSERT INTO reference SET \
     id='91',        \
     keyword='task', \
     description='reference_task_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=task', \
     scope='S', \
-    service_short_name='task';
+    service_short_name='task', \
+    nature='artifact';
 INSERT INTO reference SET \
     id='92',        \
     keyword='sr', \
     description='reference_sr_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=sr', \
     scope='S', \
-    service_short_name='support';
+    service_short_name='support', \
+    nature='artifact';
 INSERT INTO reference SET \
     id='93',        \
     keyword='patch', \
     description='reference_patch_desc_key', \
     link='/tracker/?func=gotoid&group_id=$group_id&aid=$1&atn=patch', \
     scope='S', \
-    service_short_name='patch';
+    service_short_name='patch', \
+    nature='artifact';
 
 -- empty reference
 INSERT INTO reference SET \
@@ -2774,7 +2795,8 @@ INSERT INTO reference SET \
     description='Empty reference', \
     link='', \
     scope='S', \
-    service_short_name='';
+    service_short_name='', \
+    nature='other';
 
 
 

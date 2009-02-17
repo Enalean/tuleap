@@ -305,6 +305,8 @@ project_reference	r_link	Link
 project_reference	r_scope	Scope of the reference pattern: project only or system-wide
 project_reference	r_service	Bound to Service
 project_reference	r_service_desc	If the reference pattern is specific to one service, select it here
+project_reference	r_nature	Nature
+project_reference	r_nature_desc	Specify the nature of the reference, or Other if any.
 project_reference	ref_scope_P	Project
 project_reference	ref_scope_S	System
 project_reference	scope	Scope
@@ -335,6 +337,19 @@ project_reference	reference_sr_desc_key	Support Request
 project_reference	reference_patch_desc_key	Patch
 project_reference	reference_release_desc_key	Release
 project_reference	reference_snippet_desc_key	Code Snippet
+
+project_reference	reference_artifact_nature_key	Artifact
+project_reference	reference_document_nature_key	Document
+project_reference	reference_cvs_commit_nature_key	CVS Commit
+project_reference	reference_svn_revision_nature_key	Subversion Revision
+project_reference	reference_file_nature_key	File
+project_reference	reference_release_nature_key	Release
+project_reference	reference_forum_nature_key	Forum
+project_reference	reference_forum_message_nature_key	Forum Message
+project_reference	reference_news_nature_key	News
+project_reference	reference_wiki_page_nature_key	Wiki Page
+project_reference	reference_snippet_nature_key	Code Snippet
+project_reference	reference_other_nature_key	Other
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php

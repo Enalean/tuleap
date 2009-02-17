@@ -307,6 +307,7 @@ function create_project($data, $do_not_exit = false) {
                                      '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
                                      'P', // scope is 'project'
                                      'tracker',  // service short name
+                                     ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
                                      '1', // is_used
                                      $group_id);
                 $result = $reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords

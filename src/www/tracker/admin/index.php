@@ -129,6 +129,7 @@ if ($group_id && !$atid) {
                                              '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
                                              'P', // scope is 'project'
                                              'tracker',  // service shortname
+                                             ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
                                              '1', // is_used
                                              $group_id);
                         $result=$reference_manager->createReference($ref);

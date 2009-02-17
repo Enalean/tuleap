@@ -41,6 +41,7 @@ class ReferenceAdministrationActions extends Actions {
                              $request->get('link'),
                              $request->get('scope'),
                              $service_short_name,
+                             $request->get('nature'),
                              $request->get('is_used'),
                              $request->get('group_id'));
         if ( ($ref->getGroupId()==100) && ($ref->isSystemReference())) {
@@ -106,6 +107,7 @@ class ReferenceAdministrationActions extends Actions {
                                      $request->get('link'),
                                      $ref->getScope(), # Can't edit a ref scope
                                      $service_short_name,
+                                     $request->get('nature'),
                                      $request->get('is_used'),
                                      $request->get('group_id'));
             $result=$reference_manager->updateReference($new_ref,$force);

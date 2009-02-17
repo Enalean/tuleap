@@ -298,6 +298,8 @@ project_reference	r_link	Lien
 project_reference	r_scope	Portée du patron de référence&nbsp;: projet seulement ou système
 project_reference	r_service	Lié au service
 project_reference	r_service_desc	Si le patron de référence est spécifique à un service, le spécifier ici
+project_reference	r_nature	Nature
+project_reference	r_nature_desc	Spécifiez la nature de la référence, ou Autre sinon.
 project_reference	ref_scope_P	Projet
 project_reference	ref_scope_S	Système
 project_reference	scope	Portée
@@ -328,6 +330,19 @@ project_reference	reference_sr_desc_key	Demande de support
 project_reference	reference_patch_desc_key	Patch
 project_reference	reference_release_desc_key	Version
 project_reference	reference_snippet_desc_key	Echantillon de code
+
+project_reference	reference_artifact_nature_key	Artefact
+project_reference	reference_document_nature_key	Document
+project_reference	reference_cvs_commit_nature_key	Commit CVS
+project_reference	reference_svn_revision_nature_key	Révision Subversion
+project_reference	reference_file_nature_key	Fichier
+project_reference	reference_release_nature_key	Version
+project_reference	reference_forum_nature_key	Forum
+project_reference	reference_forum_message_nature_key	Message de forum
+project_reference	reference_news_nature_key	Annonce
+project_reference	reference_wiki_page_nature_key	Page Wiki
+project_reference	reference_snippet_nature_key	Echantillon de Code
+project_reference	reference_other_nature_key	Autre
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/project_admin_utils.php

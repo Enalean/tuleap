@@ -8,6 +8,8 @@ plugin_hudson	service_desc_key	Intégration Continue avec Hudson
 
 plugin_hudson	reference_job_desc_key	Job Hudson
 plugin_hudson	reference_build_desc_key	Build Hudson
+plugin_hudson	reference_job_nature_key	Job Hudson
+plugin_hudson	reference_build_nature_key	Build Hudson
 
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès

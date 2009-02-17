@@ -194,6 +194,80 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 # add the field severity on all reports
 UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
 
+
+# Cross references : add a new field 'nature'
+ALTER TABLE reference ADD nature VARCHAR( 64 ) NOT NULL;
+# Set the nature for existing references
+UPDATE reference
+SET nature = 'artifact'
+WHERE (keyword = 'art' OR
+       keyword = 'artifact' OR
+       keyword = 'bug' OR
+       keyword = 'patch' OR
+       keyword = 'slmbug' OR
+       keyword = 'sr' OR
+       keyword = 'story' OR
+       keyword = 'task' OR
+      );
+UPDATE reference
+SET nature = 'document'
+WHERE (keyword = 'doc' OR
+       keyword = 'document' OR
+       keyword = 'dossier' OR
+       keyword = 'folder'
+      );
+UPDATE reference
+SET nature = 'cvs_commit'
+WHERE (keyword = 'cvs' OR
+       keyword = 'commit'
+      );
+UPDATE reference
+SET nature = 'svn_revision'
+WHERE (keyword = 'svn' OR
+       keyword = 'revision' OR
+       keyword = 'rev'
+      );
+UPDATE reference
+SET nature = 'file'
+WHERE (keyword = 'file'
+      );
+UPDATE reference
+SET nature = 'release'
+WHERE (keyword = 'release'
+      );
+UPDATE reference
+SET nature = 'forum'
+WHERE (keyword = 'forum'
+      );
+UPDATE reference
+SET nature = 'forum_message'
+WHERE (keyword = 'msg'
+      );
+UPDATE reference
+SET nature = 'news'
+WHERE (keyword = 'news'
+      );
+UPDATE reference
+SET nature = 'snippet'
+WHERE (keyword = 'snippet'
+      );
+UPDATE reference
+SET nature = 'wiki_page'
+WHERE (keyword = 'wiki'
+      );
+UPDATE reference
+SET nature = 'other'
+WHERE (nature = '' OR
+       nature IS NULL);
+
+UPDATE reference
+SET service_short_name = 'tracker'
+WHERE (nature = '' OR nature IS NULL);
+
+# cross-references change the type of column to handle wiki references (not int)
+ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
+ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
+
 # fix references > services
 UPDATE reference
 SET service_short_name = 'tracker'

@@ -36,6 +36,19 @@ class ReferenceManager {
     var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","git","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
     
+    const REFERENCE_NATURE_ARTIFACT = 'artifact';
+    const REFERENCE_NATURE_DOCUMENT = 'document';
+    const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
+    const REFERENCE_NATURE_SVNREVISION = 'svn_revision';
+    const REFERENCE_NATURE_FILE = 'file';
+    const REFERENCE_NATURE_RELEASE = 'release';
+    const REFERENCE_NATURE_FORUM = 'forum';
+    const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
+    const REFERENCE_NATURE_NEWS = 'news';
+    const REFERENCE_NATURE_WIKIPAGE = 'wiki_page';
+    const REFERENCE_NATURE_SNIPPET = 'snippet';
+    const REFERENCE_NATURE_OTHER = 'other';
+    
     /**
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)
      * so we use an class attribute to pass the value of the group_id
@@ -55,6 +68,34 @@ class ReferenceManager {
         return $_referencemanager_instance;
     }
 
+    /**
+     * Returns available reference natures in Codendi
+     * Plugins that want to provide references natures must
+     * listen and implement the hook get_available_reference_natures
+     */
+    function getAvailableNatures() {
+        $core_natures = array(
+            self::REFERENCE_NATURE_ARTIFACT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_ARTIFACT.'_nature_key'),
+            self::REFERENCE_NATURE_DOCUMENT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_DOCUMENT.'_nature_key'),
+            self::REFERENCE_NATURE_CVSCOMMIT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_CVSCOMMIT.'_nature_key'),
+            self::REFERENCE_NATURE_SVNREVISION => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SVNREVISION.'_nature_key'),
+            self::REFERENCE_NATURE_FILE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FILE.'_nature_key'),
+            self::REFERENCE_NATURE_RELEASE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_RELEASE.'_nature_key'),
+            self::REFERENCE_NATURE_FORUM => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUM.'_nature_key'),
+            self::REFERENCE_NATURE_FORUMMESSAGE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUMMESSAGE.'_nature_key'),
+            self::REFERENCE_NATURE_NEWS => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_NEWS.'_nature_key'),
+            self::REFERENCE_NATURE_WIKIPAGE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_WIKIPAGE.'_nature_key'),
+            self::REFERENCE_NATURE_SNIPPET => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SNIPPET.'_nature_key')
+        );
+    
+        $plugins_natures = array();
+        $em = EventManager::instance();
+        $em->processEvent('get_available_reference_natures', &$plugins_natures);
+        
+        $natures = array_merge($core_natures, $plugins_natures);
+        $natures[self::REFERENCE_NATURE_OTHER] = $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key');
+        return $natures;
+    }
 
     function &getReferencesByGroupId($group_id) {
         $p = false;
@@ -92,7 +133,9 @@ class ReferenceManager {
                                      $ref->getDescription(),
                                      $ref->getLink(),
                                      $ref->getScope(),
-                                     $ref->getServiceShortName());
+                                     $ref->getServiceShortName(),
+                                     $ref->getNature()
+                                     );
         $ref->setId($id);
         $rgid = $reference_dao->create_ref_group($id,
                                                $ref->isActive(),
@@ -160,7 +203,8 @@ class ReferenceManager {
                                $ref->getDescription(),
                                $ref->getLink(),
                                $ref->getScope(),
-                               $ref->getServiceShortName());
+                               $ref->getServiceShortName(),
+                               $ref->getNature());
         $rgid = $reference_dao->update_ref_group($ref->getId(),
                                                  $ref->isActive(),
                                                  $ref->getGroupId());
@@ -251,6 +295,7 @@ class ReferenceManager {
 			     preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
 			     'P', // scope is 'project'
 			     $row['service_short_name'],  // service ID - N/A
+			     $row['nature'],
 			     $row['is_active'], // is_used
 			     $group_id);
 	$this->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
@@ -283,7 +328,7 @@ class ReferenceManager {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
-                              $row['scope'],$row['service_short_name'],$row['is_active'],$row['group_id']);
+                              $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         return $ref;
     }
 
@@ -391,34 +436,24 @@ class ReferenceManager {
          
         
 		    	//Cross reference
-	            $sqlkey='SELECT link from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
+	            $sqlkey='SELECT link, nature from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
 	            $reskey = db_query($sqlkey);
 	    		if ($reskey && db_numrows($reskey) >0) {
 	    			$key_array = db_fetch_array($reskey);
-	    			$target_type= $key_array['link'];
-	    			if($target_type=='/svn/?func=detailrevision&rev_id=$1&group_id=$group_id' || 
-	    				$target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id' ||
-	    				$target_type=='/cvs/?func=detailcommit&commit_id=$1&group_id=$group_id'){
-		    			$target_id=$match[3];
-		            	$target_gid=$ref_gid;
-		            	if ($user_id==0){
-		            		$user_id=user_getid();
-		            	}
-		            	if($target_type=='/tracker/?func=detail&aid=$1&group_id=$group_id'){
-		            		$sql='SELECT group_id FROM artifact_group_list agl,artifact at WHERE agl.group_artifact_id = at.group_artifact_id AND at.artifact_id='.$target_id;
-		            		$res = db_query($sql);
-							if (!$res || db_numrows($res) < 1) {
-							   
-						    }else{
-								$field_array = db_fetch_array($res);
-								$target_gid=$field_array['group_id'];
-						    }
-		            	}	            		
-		            	$cross_ref=new CrossReference($source_id,$source_gid,$source_type, $target_id,$target_gid,$target_type,$user_id);
-			            if(!$cross_ref->existInDb()){
-			            	$cross_ref->createDbCrossRef();
-			            }
-	    			}
+	    			
+	    			$target_type = $key_array['nature'];
+	    			$target_id = $match[3];
+		            $target_gid = $ref_gid;
+		            if ($user_id==0){
+		            	$user_id=user_getid();
+		            }
+		            
+		            $cross_ref=new CrossReference($source_id,$source_gid,$source_type, $target_id,$target_gid,$target_type,$user_id);
+			            
+		            if(!$cross_ref->existInDb()){
+			           	$cross_ref->createDbCrossRef();
+			        }
+	    			
 	    		}
 	        }
         }
@@ -445,6 +480,7 @@ class ReferenceManager {
 
     // callback function
     function _insertRefCallback($match) {
+        $desc='';
         $ref_instance=$this->_getReferenceInstanceFromMatch($match);
         if (!$ref_instance) return $match[1]." #".$match[2].$match[3];
         else {
