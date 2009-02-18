@@ -323,7 +323,7 @@ class ArtifactHtml extends Artifact {
             // Artifact Cross References
             //
             $html='';
-            $crossref_fact= new CrossReferenceFactory($this->getID(),'artifact',$group_id);
+            $crossref_fact= new CrossReferenceFactory($this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $group_id);
 			$crossref_fact->fetchDatas();
             $html.=$crossref_fact->getHTMLDisplayCrossRefs();
             echo $this->_getSection(

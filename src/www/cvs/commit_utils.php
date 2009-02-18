@@ -13,6 +13,7 @@
 
 */
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 function uniformat_date($format, $date) {
 
@@ -421,7 +422,7 @@ function show_commit_details ($result) {
 	echo '<h2>'.$hdr.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when')).'</h2></h2>';
 	echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
 	
-	$crossref_fact= new CrossReferenceFactory($commit_id,'commit_cvs',$group_id);
+	$crossref_fact= new CrossReferenceFactory($commit_id, ReferenceManager::REFERENCE_NATURE_CVSCOMMIT, $group_id);
 	$crossref_fact->fetchDatas();
 	if($crossref_fact->getNbReferences()>0){
 		

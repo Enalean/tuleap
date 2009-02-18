@@ -11,6 +11,7 @@
 
 require_once('common/user/UserHelper.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 
 
@@ -345,7 +346,7 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     echo '<table WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2"><tr class="'. util_get_alt_row_color(0).'"><td>'.$list_log.'</td></tr></table>';
 
 	
-	$crossref_fact= new CrossReferenceFactory($revision,'revision_svn',$group_id);
+	$crossref_fact= new CrossReferenceFactory($revision, ReferenceManager::REFERENCE_NATURE_SVNREVISION, $group_id);
 	$crossref_fact->fetchDatas();
 	if($crossref_fact->getNbReferences()>0){
 		
