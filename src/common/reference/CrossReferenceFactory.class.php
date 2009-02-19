@@ -14,7 +14,20 @@ class CrossReferenceFactory {
     var $entity_id;
     var $entity_gid;
     var $entity_type;
+    
+    /**
+     * array of references {Object CrossReference}
+     * to the current CrossReferenceFactory 
+     * In other words, Items in this array have made references to the current Item
+     * @var array
+     */
     var $source_refs_datas;
+    
+    /**
+     * array of references {Object CrossReference} made by the current CrossReferenceFaxtory
+     * In other words, Items in this array are referenced by the current Item
+     * @var array
+     */
     var $target_refs_datas;
     
     /** 
@@ -25,25 +38,23 @@ class CrossReferenceFactory {
        $this->entity_id=$entity_id;
        $this->entity_type=$entity_type;
        $this->entity_gid=$entity_group_id;
-              
     }
 	
-	function fetchDatas(){
+    /**
+     * Fill the arrays $this->source_refs_datas and $this->target_refs_datas
+     * for the current CrossReferenceFactory  
+     */
+	function fetchDatas() {
 		$sql = 'SELECT * from cross_references where ' .
 				'( target_gid='.$this->entity_gid.' AND target_id='.$this->entity_id.' AND target_type="'.$this->entity_type.'" ) ' .
 				'OR (source_gid='.$this->entity_gid.' AND source_id='.$this->entity_id.' AND source_type="'.$this->entity_type.'" )';
 		$res = db_query($sql);
-		if (!$res || db_numrows($res) < 1) {
-			
+		if ($res && db_numrows($res) > 0) {
 		
-		}else{
 			$this->source_refs_datas=array();
 			$this->target_refs_datas=array();
-			$itarget=0;
-			$isource=0;
 			
-	    	while ($field_array = db_fetch_array($res)) {
-	    		
+	    	while ($field_array = db_fetch_array($res)) {	    		
 	    		
 	    		$target_id=$field_array['target_id'];
 	    	    $target_gid=$field_array['target_gid'];
@@ -52,25 +63,24 @@ class CrossReferenceFactory {
 				$source_id=$field_array['source_id'];
 	    	    $source_gid=$field_array['source_gid'];
 	    	    $source_type=$field_array['source_type'];
+	    	    
 	    	    $user_id=$field_array['user_id'];
 	    	    $created_at=$field_array['created_at'];
 	    	    
-	    	    if(($target_id==$this->entity_id)&&
-	    	    	($target_gid==$this->entity_gid)&&
-	    	    	($target_type==$this->entity_type)
-	    	    	){
-	    	    	$this->source_refs_datas[$itarget]=new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
-	    	    	$itarget++;
+	    	    if ( ($target_id==$this->entity_id) &&
+	    	    	 ($target_gid==$this->entity_gid) &&
+	    	    	 ($target_type==$this->entity_type)
+	    	    	) {
+	    	    	$this->source_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
 	    	    }
-	    	    if(($source_id==$this->entity_id)&&
-	    	    	($source_gid==$this->entity_gid)&&
-	    	    	($source_type==$this->entity_type)
-	    	    	){
-	    	    	$this->target_refs_datas[$isource]=new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
-	    	    	$isource++;
+	    	    if ( ($source_id==$this->entity_id) &&
+	    	    	 ($source_gid==$this->entity_gid) &&
+	    	    	 ($source_type==$this->entity_type)
+	    	        ) {
+	    	    	$this->target_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
 	    	    }
 	    	}
-	    	
+
 		}
 	}
 
@@ -90,249 +100,133 @@ class CrossReferenceFactory {
     function getHTMLDisplayCrossRefs() {
     	global $Language;
         
+        /**
+         * Array of cross references grouped by nature (to easy cross reference display)
+         * Array has the form:
+         * ['nature1'] => array ( 
+         *                  ['both'] => array (
+         *                                  CrossReference1,
+         *                                  CrossReference2,
+         *                                  ...)
+         *                  ['source'] => array (
+         *                                  CrossReference3,
+         *                                  CrossReference4,
+         *                                  ...)
+         *                  ['target'] => array (
+         *                                  CrossReference3,
+         *                                  CrossReference4,
+         *                                  ...)
+         *  ['nature2'] => array (
+         *                  ['both'] => array (
+         *                                  CrossReference5,
+         *                                  CrossReference6,
+         *                                  ...)
+         *                  ['source'] => array (
+         *                                  CrossReference7,
+         *                                  CrossReference8,
+         *                                  ...)
+         *                  ['target'] => array (
+         *                                  CrossReference9,
+         *                                  CrossReference10,
+         *                                  ...)
+         *  ...
+         */
+    	$crossRefArray = array();
+    	
+    	// Walk the target ref array in order to fill the crossRefArray array
+    	for ($i=0;$i<sizeof($this->target_refs_datas);$i++) {   		
+    	    $is_cross = false;
+    	    // Check if the ref is cross referenced (means referenced by a source)
+            foreach ($this->source_refs_datas as $source_refs) {
+                if ($this->target_refs_datas[$i]->isCrossReferenceWith($source_refs)) {
+                   $is_cross = true;
+                }
+            }
+            if ($is_cross) {
+                // Add the cross reference into the "both" (target and source) array
+                $crossRefArray[$this->source_refs_datas[$i]->getInsertSourceType()]['both'][] = $this->target_refs_datas[$i];
+            } else {
+                // Add the cross reference into the "target" array
+    	        $crossRefArray[$this->target_refs_datas[$i]->getInsertTargetType()]['target'][] = $this->target_refs_datas[$i];
+            }
+    	}
+    	
+    	// Walk the source ref array in order to fill the crossRefArray array
+    	for ($i=0; $i < sizeof($this->source_refs_datas); $i++) {
+    	    $is_cross = false;
+    	    // Check if the ref is cross referenced (means referenced by a target)
+    	    foreach ($this->target_refs_datas as $target_refs) {
+    	        if ($this->source_refs_datas[$i]->isCrossReferenceWith($target_refs)) {
+    	           $is_cross = true;
+    	        }
+    	    }
+    	    if ($is_cross) {
+                // do nothing, has already been added during target walk
+    	    } else {
+    	        $crossRefArray[$this->source_refs_datas[$i]->getInsertSourceType()]['source'][] = $this->source_refs_datas[$i];
+    	    }
+        }
         
-    	$artifact_ref_from=array();
-    	$artifact_ref_to=array();
-    	$rev_svn_ref_from=array();
-    	$rev_svn_ref_to=array();
-    	$cvs_commit_ref_from=array();
-    	$cvs_commit_ref_to=array();
-    	$artIdArray=array();
-    	$artCrossArray=array();
-    	$artIdCrossArray=array();
-    	$revSvnGidIdArray=array();
-    	$revSvnCrossArray=array();
-    	$revSvnGidIdCrossArray=array();
-    	$cvsCommitGidIdArray=array();
-    	$cvsCommitCrossArray=array();
-    	$cvsCommitGidIdCrossArray=array();
-    	    	
-    	//first pass to fill *CrossArray
-    	for($i=0;$i<sizeof($this->target_refs_datas);$i++){   		
-    		if($this->target_refs_datas[$i]->getInsertTargetType()=='artifact'){  			
-    			$artIdArray[]=$this->target_refs_datas[$i]->getRefTargetId();
-    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='revision_svn'){
-    			$revSvnGidIdArray[]=$this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId();
-    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='commit_cvs'){
-    			$cvsCommitGidIdArray[]=$this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId();
-    		}	  		
-    	}
+        $reference_manager = ReferenceManager::instance();
+    	$available_natures = $reference_manager->getAvailableNatures();
     	
-    	for($i=0;$i<sizeof($this->source_refs_datas);$i++){
-    		if($this->source_refs_datas[$i]->getInsertSourceType()=='artifact'){
-    			if(in_array($this->source_refs_datas[$i]->getRefSourceId(),$artIdArray)){
-    				$artIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceId();
-    				$artCrossArray[]=$this->source_refs_datas[$i];
-    			}else{
-    				$artifact_ref_from[]=$this->source_refs_datas[$i];
-    			}
-    		}else if($this->source_refs_datas[$i]->getInsertSourceType()=='revision_svn'){
-    			if(in_array($this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId(),$revSvnGidIdArray)){
-    				$revSvnGidIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId();
-    				$revSvnCrossArray[]=$this->source_refs_datas[$i];
-    			}else{
-    				$rev_svn_ref_from[]=$this->source_refs_datas[$i] ;
-    			}  
-    		}else if($this->source_refs_datas[$i]->getInsertSourceType()=='commit_cvs'){
-    			if(in_array($this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId(),$cvsCommitGidIdArray)){
-    				$cvsCommitGidIdCrossArray[]=$this->source_refs_datas[$i]->getRefSourceGid().":".$this->source_refs_datas[$i]->getRefSourceId();
-    				$cvsCommitCrossArray[]=$this->source_refs_datas[$i];
-    			}else{
-    				$cvs_commit_ref_from[]=$this->source_refs_datas[$i] ;
-    			}  
-    		}	  		
+    	// HTML part (stored in $display)
+    	$display = "<p>".$Language->getText('cross_ref_fact_include','legend')."</p>";
+    	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
+            $display .= "<p><b>" . $available_natures[$nature] . "</b>";
+    	    if (array_key_exists('both', $refArraySourceTarget)) {
+    	        $display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
+                    array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
+                            'align' => 'top-left',
+                            'hspace' => '5',
+                            'title' => $Language->getText('cross_ref_fact_include','cross_referenced') ));
+                $i = 0;
+                foreach ($refArraySourceTarget['both'] as $currRef) {
+                    if ($i != 0) {
+                        $display .= ", ";
+                    }
+                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefTargetUrl()."'>";
+                    $display.= "#".$currRef->getRefTargetId()."</a>";
+                    $i++;
+                }
+            }
+            if (array_key_exists('target', $refArraySourceTarget)) {
+                $display.="<br>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
+                    array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
+                            'align' => 'top-left',
+                            'hspace' => '5',
+                            'title' => $Language->getText('cross_ref_fact_include','referenced_in')));
+                $i = 0;
+                foreach ($refArraySourceTarget['target'] as $currRef) {
+                    if ($i != 0) {
+                        $display .= ", ";
+                    }
+                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefTargetUrl()."'>";
+                    $display.= "#".$currRef->getRefTargetId()."</a>";
+                    $i++;
+                }
+            }
+            if (array_key_exists('source', $refArraySourceTarget)) {
+                $display.="<br>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
+                    array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
+                            'align' => 'top-left',
+                            'hspace' => '5',
+                            'title' => $Language->getText('cross_ref_fact_include','referenced_in')));
+                $i = 0;
+        	    foreach ($refArraySourceTarget['source'] as $currRef) {
+        	       if ($i != 0) {
+                        $display .= ", ";
+                    }
+                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefSourceUrl()."'>";
+                    $display.= "#".$currRef->getRefSourceId()."</a>";
+                    $i++;
+                }
+            }
     	}
-    	
-    	    	
-    	//second pass
-    	for($i=0;$i<sizeof($this->target_refs_datas);$i++){   		
-    		if($this->target_refs_datas[$i]->getInsertTargetType()=='artifact'){  			
-    			if(!in_array($this->target_refs_datas[$i]->getRefTargetId(),$artIdCrossArray)){
-    				$artifact_ref_to[]=$this->target_refs_datas[$i] ;
-    			}
-    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='revision_svn'){
-    			if(!in_array($this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId(),$revSvnGidIdCrossArray)){
-    				$rev_svn_ref_to[]=$this->target_refs_datas[$i] ;
-    			}
-    		}else if($this->target_refs_datas[$i]->getInsertTargetType()=='commit_cvs'){    			
-    			if(!in_array($this->target_refs_datas[$i]->getRefTargetGid().":".$this->target_refs_datas[$i]->getRefTargetId(),$cvsCommitGidIdCrossArray)){
-    				$cvs_commit_ref_to[]=$this->target_refs_datas[$i] ;
-    			}
-    		}	  		
-    	}
-    	
-    	
-
-    	$display="<p>".$Language->getText('cross_ref_fact_include','legend')."</p>";
-    	if((sizeof($artCrossArray)+sizeof($artifact_ref_from)+sizeof($artifact_ref_to))>0){
-    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','artifact')."</B>";
-    		if(sizeof($artCrossArray)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','cross_referenced') ));
-    			for($i=0;$i<sizeof($artCrossArray);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artCrossArray[$i]->getRefSourceUrl()."'>";
-	    			$display.= "#".$artCrossArray[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($artCrossArray)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($artifact_ref_from)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','referenced_in')));
-    			for($i=0;$i<sizeof($artifact_ref_from);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artifact_ref_from[$i]->getRefSourceUrl()."'>";
-	    			$display.= "#".$artifact_ref_from[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($artifact_ref_from)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($artifact_ref_to)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','reference_to'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','reference_to')));
-    			for($i=0;$i<sizeof($artifact_ref_to);$i++){		
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','artifact')."' href='".$artifact_ref_to[$i]->getRefTargetUrl()."'>";
-	    			$display.="#".$artifact_ref_to[$i]->getRefTargetId()."</a>";
-	    			if($i!=(sizeof($artifact_ref_to)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		$display.="</p>";
-    		
-    	}
-    	if((sizeof($revSvnCrossArray)+sizeof($rev_svn_ref_from)+sizeof($rev_svn_ref_to))>0){
-    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','svn_revision')."</B>";
-    		if(sizeof($revSvnCrossArray)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','cross_referenced') ));
-
-    			for($i=0;$i<sizeof($revSvnCrossArray);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$revSvnCrossArray[$i]->getRefSourceUrl()."'>";
-	    			$display.= "#".$revSvnCrossArray[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($revSvnCrossArray)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($rev_svn_ref_from)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','referenced_in')));
-
-    			for($i=0;$i<sizeof($rev_svn_ref_from);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$rev_svn_ref_from[$i]->getRefSourceUrl()."'>";
-	    			$display.="#".$rev_svn_ref_from[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($rev_svn_ref_from)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($rev_svn_ref_to)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','reference_to'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','reference_to')));
-
-    			for($i=0;$i<sizeof($rev_svn_ref_to);$i++){		
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','svn_revision')."' href='".$rev_svn_ref_to[$i]->getRefTargetUrl()."'>";
-	    			$display.="#".$rev_svn_ref_to[$i]->getRefTargetId()."</a>";
-	    			if($i!=(sizeof($rev_svn_ref_to)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		$display.="</p>";
-    	}
-    	
-    	if((sizeof($cvsCommitCrossArray)+sizeof($cvs_commit_ref_from)+sizeof($cvs_commit_ref_to))>0){
-    		$display.="<p><B>".$Language->getText('cross_ref_fact_include','cvs_commit')."</B>";
-    		if(sizeof($cvsCommitCrossArray)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','cross_referenced') ));
-
-    			for($i=0;$i<sizeof($cvsCommitCrossArray);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvsCommitCrossArray[$i]->getRefSourceUrl()."'>";
-	    			$display.= "#".$cvsCommitCrossArray[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($cvsCommitCrossArray)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($cvs_commit_ref_from)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','referenced_in')));
-
-    			for($i=0;$i<sizeof($cvs_commit_ref_from);$i++){
-    				
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_from[$i]->getRefSourceUrl()."'>";
-	    			$display.="#".$cvs_commit_ref_from[$i]->getRefSourceId()."</a>";
-	    			if($i!=(sizeof($cvs_commit_ref_from)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		if(sizeof($cvs_commit_ref_to)>0){
-    			$display.="<br>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
-    			array( 'alt'=> $Language->getText('cross_ref_fact_include','reference_to'),
-    				 	'align' => 'top-left',
-    				 	'hspace' => '5',
-    				 	'title' => $Language->getText('cross_ref_fact_include','reference_to')));
-
-    			for($i=0;$i<sizeof($cvs_commit_ref_to);$i++){		
-    				$display.= "<a title='".$Language->getText('cross_ref_fact_include','cvs_commit')."' href='".$cvs_commit_ref_to[$i]->getRefTargetUrl()."'>";
-	    			$display.="#".$cvs_commit_ref_to[$i]->getRefTargetId()."</a>";
-	    			if($i!=(sizeof($cvs_commit_ref_to)-1)){
-	    				$display.= " , ";
-	    			}
-	    		}
-	    		$display.="</br>";
-    		}
-    		$display.="</p>";
-    	}
-    	
     	
     	return $display;
     }
     
-    
-    
-
 }
 
 ?>

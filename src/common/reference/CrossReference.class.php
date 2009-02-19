@@ -69,6 +69,22 @@ class CrossReference extends Error{
     function getInsertSourceType() { return $this->insertSourceType;}
     function getInsertTargetType() { return $this->insertTargetType;}
 	
+    
+    /**
+     * Return true if current CrossReference is really "cross referenced" with $crossref
+     *
+     * @param CrossReference $crossref
+     * @return boolean true if current CrossReference is really "cross referenced" with $crossref
+     */
+    function isCrossReferenceWith($crossref) {
+        return $this->getRefSourceId() == $crossref->getRefTargetId() &&
+               $this->getRefSourceGid() == $crossref->getRefTargetGid() &&
+               $this->getRefSourceType() == $crossref->getRefTargetType() &&
+               $crossref->getRefSourceId() == $this->getRefTargetId() &&
+               $crossref->getRefSourceGid() == $this->getRefTargetGid() &&
+               $crossref->getRefSourceType() == $this->getRefTargetType();
+    }
+    
 	/** DB functions */
 	function createDbCrossRef(){
 		
