@@ -12,6 +12,7 @@
 // Provide various functions for file manager
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 function file_utils_header($params) {
     global $group_id,$Language;
@@ -957,6 +958,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             }
         }
         if ($res) {
+            // extract cross references
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->extractCrossRef($release['release_notes'],$release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
+            $reference_manager->extractCrossRef($release['change_log'],$release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
+            
             //set the release permissions
             list ($return_code, $feedbacks) = permission_process_selection_form($group_id, 'RELEASE_READ', $release_id, $ugroups);
             if (!$return_code) {
