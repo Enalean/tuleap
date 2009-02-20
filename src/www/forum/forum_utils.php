@@ -19,7 +19,7 @@ require_once('www/news/news_utils.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserHelper.class.php');
-
+require_once('common/reference/ReferenceManager.class.php');
 
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
@@ -259,6 +259,20 @@ function get_forum_name($id) {
 
 }
 
+function get_forum_group_id($id) {
+	/* 
+		Takes an ID and returns the corresponding forum group_id
+	*/
+	$sql="SELECT group_id FROM forum_group_list WHERE group_forum_id=".db_ei($id);
+	$result=db_query($sql);
+	if (!$result || db_numrows($result) < 1) {
+		return null;
+	} else {
+		return db_result($result, 0, "group_id");
+	}
+
+}
+
 function show_thread($thread_id,$et=0) {
   global $Language;
 	/*
@@ -445,7 +459,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','include_body_and_subject'));
 		}
 
-	//see if that message has been posted already for all the idiots that double-post
+	//see if that message has been posted already for people that double-post
 		$res3=db_query("SELECT * FROM forum ".
 			"WHERE is_followup_to=".db_ei($is_followup_to)." ".
 			"AND subject='".  db_es(htmlspecialchars($subject)) ."' ".
@@ -493,11 +507,17 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 			echo db_error();
 			$feedback .= ' '.$Language->getText('forum_forum_utils','post_failed').' ';
 		} else {
-			$feedback .= ' '.$Language->getText('forum_forum_utils','msg_posted').' ';
+            $feedback .= ' '.$Language->getText('forum_forum_utils','msg_posted').' ';
 		}
 
 		$msg_id=db_insertid($result);
 		
+        // extract cross reference in the message
+        $reference_manager =& ReferenceManager::instance();
+        $g_id = get_forum_group_id($group_forum_id);
+        $reference_manager->extractCrossRef($subject,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
+        $reference_manager->extractCrossRef($body,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
+        
 		if ($request->isPost() && $request->existAndNonEmpty('enable_monitoring')) {
 		    forum_thread_add_monitor($group_forum_id, $thread_id, user_getid());
 		} else {
