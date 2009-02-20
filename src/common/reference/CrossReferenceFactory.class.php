@@ -133,18 +133,29 @@ class CrossReferenceFactory {
          */
     	$crossRefArray = array();
     	
-    	// Walk the target ref array in order to fill the crossRefArray array
+        // Walk the target ref array in order to fill the crossRefArray array
     	for ($i=0;$i<sizeof($this->target_refs_datas);$i++) {   		
     	    $is_cross = false;
     	    // Check if the ref is cross referenced (means referenced by a source)
+            $j = 0;
+            $source_position = 0;
             foreach ($this->source_refs_datas as $source_refs) {
                 if ($this->target_refs_datas[$i]->isCrossReferenceWith($source_refs)) {
                    $is_cross = true;
+                   $source_position = $j;
                 }
+                $j++;
             }
             if ($is_cross) {
-                // Add the cross reference into the "both" (target and source) array
-                $crossRefArray[$this->source_refs_datas[$i]->getInsertSourceType()]['both'][] = $this->target_refs_datas[$i];
+                if ($this->entity_id == $this->target_refs_datas[$i]->getRefSourceId() &&
+                    $this->entity_gid == $this->target_refs_datas[$i]->getRefSourceGid() &&
+                    $this->entity_type == $this->target_refs_datas[$i]->getRefSourceType()
+                    ) {
+                    // Add the cross reference into the "both" (target and source) array
+                    $crossRefArray[$this->source_refs_datas[$source_position]->getInsertSourceType()]['both'][] = $this->target_refs_datas[$i];
+                } else {
+                    $crossRefArray[$this->target_refs_datas[$i]->getInsertSourceType()]['both'][] = $this->target_refs_datas[$i];
+                }
             } else {
                 // Add the cross reference into the "target" array
     	        $crossRefArray[$this->target_refs_datas[$i]->getInsertTargetType()]['target'][] = $this->target_refs_datas[$i];
