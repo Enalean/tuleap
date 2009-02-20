@@ -48,19 +48,19 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	if ($release->isPreformatted()) {
 		echo '<PRE>';
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-             .$hp->purify($release->getNotes()).
+             .$hp->purify($release->getNotes(), CODEX_PURIFIER_BASIC, $group_id).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .$hp->purify($release->getChanges());
+            .$hp->purify($release->getChanges(), CODEX_PURIFIER_BASIC, $group_id);
         echo '</PRE>';
     }else{
         echo '<B>'.$Language->getText('file_shownotes','notes').':</B>'
-            .$hp->purify($release->getNotes()).
+            .$hp->purify($release->getNotes(), CODEX_PURIFIER_BASIC, $group_id).
 
             '<HR NOSHADE>'.
             '<B>'.$Language->getText('file_shownotes','changes').':</B>'
-            .$hp->purify($release->getChanges());
+            .$hp->purify($release->getChanges(), CODEX_PURIFIER_BASIC, $group_id);
     }
     
 
