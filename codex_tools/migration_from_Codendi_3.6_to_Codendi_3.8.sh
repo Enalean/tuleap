@@ -268,6 +268,10 @@ WHERE (nature = '' OR nature IS NULL);
 ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
 ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
 
+# change type of existing cross references from 'revision_svn' to 'svn_revision'
+UPDATE cross_references SET source_type = 'svn_revision' WHERE source_type LIKE 'revision_svn'
+UPDATE cross_references SET target_type = 'svn_revision' WHERE target_type LIKE 'revision_svn'
+
 # fix references > services
 UPDATE reference
 SET service_short_name = 'tracker'

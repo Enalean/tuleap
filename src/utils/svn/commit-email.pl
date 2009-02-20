@@ -803,7 +803,7 @@ sub extract_xrefs {
     if (!$group_id) {
       $group_id=100;
     }
-    $type="revision_svn";
+    $type="svn_revision";
     $text=join("\n",@log);
         
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
