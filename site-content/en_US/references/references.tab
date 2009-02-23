@@ -14,7 +14,7 @@
 cross_ref_fact_include	artifact	Artifact
 cross_ref_fact_include	svn_revision	SVN Revision
 cross_ref_fact_include	cvs_commit	CVS Commit
-cross_ref_fact_include	legend	List of the artefacts, SVN revision and CVS commit referenced by or referencing this item.
+cross_ref_fact_include	legend	List of items referenced by or referencing this item.
 cross_ref_fact_include	cross_referenced	Bidirectionnal References :
 cross_ref_fact_include	referenced_in	This item is referenced by :
 cross_ref_fact_include	reference_to	This item references :
