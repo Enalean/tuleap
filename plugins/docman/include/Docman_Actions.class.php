@@ -37,6 +37,7 @@ require_once('Docman_ApprovalTableFactory.class.php');
 require_once('view/Docman_View_Browse.class.php');
 
 require_once('common/permission/PermissionsManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
@@ -332,7 +333,7 @@ class Docman_Actions extends Actions {
             
             $data = $request->get('item');
 
-            $item_factory =& $this->_getItemFactory();
+            $item_factory =& $this->_getItemFactory($request->get('group_id'));
             $item =& $item_factory->getItemFromDb($data['id']);
             
             // Update Owner
@@ -450,6 +451,13 @@ class Docman_Actions extends Actions {
                                 if(count($itemIdArray) > 0) {
                                     $recurseArray = $request->get('recurse');
                                     $mdvFactory->massUpdateFromRow($data['id'], $recurseArray, $itemIdArray);
+                                    // extract cross references
+                                    $reference_manager =& ReferenceManager::instance();
+                                    foreach ($metadata_array as $curr_metadata_value) {
+                                        foreach ($itemIdArray as $curr_item_id) {
+                                            $reference_manager->extractCrossRef($curr_metadata_value, $curr_item_id, ReferenceManager::REFERENCE_NATURE_DOCUMENT, $groupId);
+                                        }   
+                                    }
                                 } else {
                                     $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
                                 }

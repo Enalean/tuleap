@@ -136,6 +136,9 @@ class Docman_MetadataValueFactory extends Error {
                                 $mdv->getFieldId(),
                                 $mdv->getType(),
                                 $mdv->getValue());
+            // extract cross references
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
         default:
@@ -205,6 +208,9 @@ class Docman_MetadataValueFactory extends Error {
                                      $mdv->getFieldId(),
                                      $mdv->getType(),
                                      $mdv->getValue());
+            // extract cross references
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->extractCrossRef($mdv->getValue(), $mdv->getItemId(), ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
             break;
 
         default:
@@ -268,7 +274,7 @@ class Docman_MetadataValueFactory extends Error {
         if($mdFactory->isRealMetadata($mdLabel)) {
             $md  = $mdFactory->getFromLabel($mdLabel);
             $dao =& $this->getDao();
-            $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);
+            $dao->massUpdate($srcItemId, $md->getId(), $md->getType(), $itemIdArray);   
         } else {
             $itemFactory = new Docman_ItemFactory($this->groupId);
             $itemFactory->massUpdate($srcItemId, $mdLabel, $itemIdArray);
