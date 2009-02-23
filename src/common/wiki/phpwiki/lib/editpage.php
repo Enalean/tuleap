@@ -2,6 +2,7 @@
 rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 // USE_HTMLAREA - Support for some WYSIWYG HTML Editor
 // Not yet enabled, since we cannot convert HTML to Wiki Markup yet.
@@ -272,6 +273,10 @@ class PageEditor
             return false;
         }
         else {
+            // Save succeded. We store cross references (if there are).           
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->extractCrossRef($this->_content, $page->getName(), ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
+                        
             // Save succeded. We raise an event.
             $new = $this->version + 1; 
             $difflink = WikiURL($page->getName(), array('action'=>'diff'), true);
