@@ -16,6 +16,7 @@ require_once('Docman_View_ItemDetailsSectionEditProperties.class.php');
 require_once('Docman_View_ItemDetailsSectionPermissions.class.php');
 require_once('Docman_View_ItemDetailsSectionNotifications.class.php');
 require_once('Docman_View_ItemDetailsSectionHistory.class.php');
+require_once('Docman_View_ItemDetailsSectionReferences.class.php');
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 
@@ -94,6 +95,12 @@ class Docman_View_Details extends Docman_View_Display {
             $logger = $this->_controller->getLogger();
             $details->addSection(new Docman_View_ItemDetailsSectionHistory($params['item'], $params['default_url'], $user_can_manage, $logger));
         }
+        
+        if ($user_can_read) {
+            $sections['references'] = true;
+            $details->addSection(new Docman_View_ItemDetailsSectionReferences($params['item'], $params['default_url']));
+        }
+        
         if ($section && isset($sections[$section])) {
             $details->setCurrentSection($section);
         } else if (isset($params['section']) &&  isset($sections[$params['section']])) {

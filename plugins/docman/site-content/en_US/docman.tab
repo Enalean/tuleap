@@ -305,6 +305,7 @@ plugin_docman	details_history_versions_label	Label
 plugin_docman	details_history_versions_no	There is no version yet
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_history_versions_approval_show	Show
+plugin_docman	details_references	References
 plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
