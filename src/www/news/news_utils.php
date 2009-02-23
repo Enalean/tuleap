@@ -28,6 +28,7 @@ require_once('www/project/admin/ugroup_utils.php');
 require_once('www/forum/forum_utils.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/user/UserHelper.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 
 function news_header($params) {
@@ -259,6 +260,11 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news = 
             // if the news is requested to be promoted, we notify the site admin about it
             news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details);
         }
+        
+        // extract cross references           
+        $reference_manager =& ReferenceManager::instance();
+        $reference_manager->extractCrossRef($summary, $news_bytes_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
+        $reference_manager->extractCrossRef($details, $news_bytes_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
     }
 }
 
