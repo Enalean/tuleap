@@ -16,7 +16,6 @@ class hudsonPlugin extends Plugin {
 	
 	function hudsonPlugin($id) {
 		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         
@@ -34,10 +33,6 @@ class hudsonPlugin extends Plugin {
             $this->pluginInfo =& new hudsonPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-    
-    function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">hudson</a></li>';
     }
     
     function cssFile($params) {
