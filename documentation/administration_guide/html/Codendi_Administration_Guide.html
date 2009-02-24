@@ -67,6 +67,7 @@ See the file COPYING.
 <dt><a href="#HowTo_distributed">Set up a distributed Architecture</a></dt>
 <dt><a href="#HowTo_passwords">Set up a validator for users' password</a></dt>
 <dt><a href="#HowTo_expiration_date">How to add an expiration date on a user account</a></dt>
+<dt><a href="#HowTo_change_wiki_language">How to change wiki language for a project</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -3081,6 +3082,24 @@ Please note that the default template does not allow selection of satellite serv
 	<li>By using the User Administration module, once you are on the user information page, you can add or modify the expiration date of a user account.</li>
 </ul>
 <p>Once the date is reached, the account status becomes suspended. If you want to expand the account validity, you have to reactivate the account <b>and</b> change the expiration date.</p>
+
+<hr>
+<h2 id="HowTo_change_wiki_language">How to change wiki language for a project</h2>
+<p>Once the language of a wiki is set for a project, it is "impossible" to change it. If an admin made a mistake and activated the wiki for his project in the wrong language, it is however possible to change it.</p>
+<p>You will need to execute some SQL commands in PhpMyAdmin (for instance):</p>
+<ol>
+	<li>Search for the group_id of the project you want to re-init the wiki (let's call this group_id 'xxx').</li>
+	<li>Execute the following SQL commands:
+	 <ul>
+	  <li>DELETE FROM wiki_attachment WHERE group_id = xxx</li>
+	  <li>DELETE FROM wiki_attachment_log WHERE group_id = xxx</li>
+	  <li>DELETE FROM wiki_group_list WHERE group_id = xxx</li>
+	  <li>DELETE FROM wiki_log WHERE group_id = xxx</li>
+	  <li>DELETE FROM wiki_page WHERE group_id = xxx</li>
+	 </ul>
+	</li>
+	<li>The wiki of the project has been removed. You can now activate it again with the right language.</li>
+</ol>
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>
