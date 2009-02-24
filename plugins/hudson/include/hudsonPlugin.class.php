@@ -149,8 +149,8 @@ class hudsonPlugin extends Plugin {
     
     function getAvailableReferenceNatures(&$params) {
         $hudson_plugin_reference_natures = array(
-            'hudson_build'  => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key'),
-            'hudson_job' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key'));
+            'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
+            'hudson_job' => array('keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')));
         $params = array_merge($params, $hudson_plugin_reference_natures);
     }
     

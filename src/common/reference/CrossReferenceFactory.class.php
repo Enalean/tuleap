@@ -59,10 +59,12 @@ class CrossReferenceFactory {
 	    		$target_id=$field_array['target_id'];
 	    	    $target_gid=$field_array['target_gid'];
 	    	    $target_type=$field_array['target_type'];
+	    	    $target_key=$field_array['target_keyword'];
 	    	    
 				$source_id=$field_array['source_id'];
 	    	    $source_gid=$field_array['source_gid'];
 	    	    $source_type=$field_array['source_type'];
+	    	    $source_key=$field_array['source_keyword'];
 	    	    
 	    	    $user_id=$field_array['user_id'];
 	    	    $created_at=$field_array['created_at'];
@@ -71,13 +73,13 @@ class CrossReferenceFactory {
 	    	    	 ($target_gid==$this->entity_gid) &&
 	    	    	 ($target_type==$this->entity_type)
 	    	    	) {
-	    	    	$this->source_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
+	    	    	$this->source_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$source_key,$target_id,$target_gid,$target_type,$target_key,$user_id);
 	    	    }
 	    	    if ( ($source_id==$this->entity_id) &&
 	    	    	 ($source_gid==$this->entity_gid) &&
 	    	    	 ($source_type==$this->entity_type)
 	    	        ) {
-	    	    	$this->target_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$target_id,$target_gid,$target_type,$user_id);
+	    	    	$this->target_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$source_key,$target_id,$target_gid,$target_type,$target_key,$user_id);
 	    	    }
 	    	}
 
@@ -184,7 +186,7 @@ class CrossReferenceFactory {
     	// HTML part (stored in $display)
     	$display = "<p>".$Language->getText('cross_ref_fact_include','legend')."</p>";
     	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
-            $display .= "<p><b>" . $available_natures[$nature] . "</b>";
+            $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
     	    if (array_key_exists('both', $refArraySourceTarget)) {
     	        $display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
                     array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
@@ -196,8 +198,8 @@ class CrossReferenceFactory {
                     if ($i != 0) {
                         $display .= ", ";
                     }
-                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefTargetUrl()."'>";
-                    $display.= "#".$currRef->getRefTargetId()."</a>";
+                    $display .= "<a title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefTargetUrl()."'>";
+                    $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
                     $i++;
                 }
             }
@@ -212,8 +214,8 @@ class CrossReferenceFactory {
                     if ($i != 0) {
                         $display .= ", ";
                     }
-                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefTargetUrl()."'>";
-                    $display.= "#".$currRef->getRefTargetId()."</a>";
+                    $display .= "<a title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefTargetUrl()."'>";
+                    $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
                     $i++;
                 }
             }
@@ -228,8 +230,8 @@ class CrossReferenceFactory {
         	       if ($i != 0) {
                         $display .= ", ";
                     }
-                    $display .= "<a title='" . $available_natures[$nature] . "' href='".$currRef->getRefSourceUrl()."'>";
-                    $display.= "#".$currRef->getRefSourceId()."</a>";
+                    $display .= "<a title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefSourceUrl()."'>";
+                    $display.= $currRef->getRefSourceKey()." #".$currRef->getRefSourceId()."</a>";
                     $i++;
                 }
             }

@@ -75,17 +75,17 @@ class ReferenceManager {
      */
     function getAvailableNatures() {
         $core_natures = array(
-            self::REFERENCE_NATURE_ARTIFACT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_ARTIFACT.'_nature_key'),
-            self::REFERENCE_NATURE_DOCUMENT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_DOCUMENT.'_nature_key'),
-            self::REFERENCE_NATURE_CVSCOMMIT => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_CVSCOMMIT.'_nature_key'),
-            self::REFERENCE_NATURE_SVNREVISION => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SVNREVISION.'_nature_key'),
-            self::REFERENCE_NATURE_FILE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FILE.'_nature_key'),
-            self::REFERENCE_NATURE_RELEASE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_RELEASE.'_nature_key'),
-            self::REFERENCE_NATURE_FORUM => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUM.'_nature_key'),
-            self::REFERENCE_NATURE_FORUMMESSAGE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUMMESSAGE.'_nature_key'),
-            self::REFERENCE_NATURE_NEWS => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_NEWS.'_nature_key'),
-            self::REFERENCE_NATURE_WIKIPAGE => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_WIKIPAGE.'_nature_key'),
-            self::REFERENCE_NATURE_SNIPPET => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SNIPPET.'_nature_key')
+            self::REFERENCE_NATURE_ARTIFACT => array('keyword' => 'art', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_ARTIFACT.'_nature_key')),
+            self::REFERENCE_NATURE_DOCUMENT => array('keyword' => 'doc', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_DOCUMENT.'_nature_key')),
+            self::REFERENCE_NATURE_CVSCOMMIT => array('keyword' => 'cvs', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_CVSCOMMIT.'_nature_key')),
+            self::REFERENCE_NATURE_SVNREVISION => array('keyword' => 'svn', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SVNREVISION.'_nature_key')),
+            self::REFERENCE_NATURE_FILE => array('keyword' => 'file', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FILE.'_nature_key')),
+            self::REFERENCE_NATURE_RELEASE => array('keyword' => 'release', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_RELEASE.'_nature_key')),
+            self::REFERENCE_NATURE_FORUM => array('keyword' => 'forum', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUM.'_nature_key')),
+            self::REFERENCE_NATURE_FORUMMESSAGE => array('keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_FORUMMESSAGE.'_nature_key')),
+            self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_NEWS.'_nature_key')),
+            self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_WIKIPAGE.'_nature_key')),
+            self::REFERENCE_NATURE_SNIPPET => array('keyword' => 'snippet', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_SNIPPET.'_nature_key'))
         );
     
         $plugins_natures = array();
@@ -393,8 +393,12 @@ class ReferenceManager {
         return $referencesInstances;
     }
     
-    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0){
+    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0) {
 		$referencesInstances=array();
+		
+		$available_natures = $this->getAvailableNatures();
+		$source_key = $available_natures[$source_type]['keyword'];
+		
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
         	// Analyse match
@@ -443,12 +447,21 @@ class ReferenceManager {
 	    			
 	    			$target_type = $key_array['nature'];
 	    			$target_id = $match[3];
+	    			$target_key = $match[1];    // keyword
 		            $target_gid = $ref_gid;
 		            if ($user_id==0){
 		            	$user_id=user_getid();
 		            }
 		            
-		            $cross_ref=new CrossReference($source_id,$source_gid,$source_type, $target_id,$target_gid,$target_type,$user_id);
+		            $cross_ref=new CrossReference($source_id, 
+		                                          $source_gid,
+		                                          $source_type,
+		                                          $source_key, 
+		                                          $target_id,
+		                                          $target_gid,
+		                                          $target_type,
+		                                          $target_key,
+		                                          $user_id);
 			            
 		            if(!$cross_ref->existInDb()){
 			           	$cross_ref->createDbCrossRef();

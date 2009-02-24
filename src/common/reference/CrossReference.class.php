@@ -33,7 +33,7 @@ class CrossReference extends Error{
      * Constructor 
      * 
      */
-    function CrossReference($refSourceId, $refSourceGid, $refSourceType, $refTargetId, $refTargetGid, $refTargetType, $userId) {
+    function CrossReference($refSourceId, $refSourceGid, $refSourceType, $refSourceKey, $refTargetId, $refTargetGid, $refTargetType, $refTargetKey, $userId) {
        $this->refSourceId=$refSourceId;
        $this->refSourceGid=$refSourceGid;
        $this->refSourceType=$refSourceType;
@@ -44,9 +44,9 @@ class CrossReference extends Error{
        $this->sourceUrl='';
        $this->targetUrl='';
        
-       $this->sourceKey= $refSourceType;
+       $this->sourceKey= $refSourceKey;
        $this->insertSourceType = $refSourceType;
-       $this->targetKey = $refTargetType;
+       $this->targetKey = $refTargetKey;
        $this->insertTargetType = $refTargetType;
        
 	   $this->computeUrls();
@@ -86,15 +86,15 @@ class CrossReference extends Error{
     }
     
 	/** DB functions */
-	function createDbCrossRef(){
+	function createDbCrossRef() {
 		
 		$sql='INSERT INTO cross_references (created_at, user_id,'.
-		'source_type,source_id,source_gid,target_type, target_id,' .
+		'source_type,source_keyword,source_id,source_gid,target_type,target_keyword, target_id,' .
 		' target_gid) VALUES ';
 		
 		$sql .= "(". (time()) .",". db_ei($this->userId) .", '". db_es($this->insertSourceType) ."', '".
-				 db_es($this->refSourceId) ."' ,". db_ei($this->refSourceGid) .", '". db_es($this->insertTargetType) ."', '".
-	 			db_es($this->refTargetId) ."', ".db_ei($this->refTargetGid) . ")";
+				 db_es($this->sourceKey) ."' ,'".db_es($this->refSourceId) ."' ,". db_ei($this->refSourceGid) .", '". db_es($this->insertTargetType) ."', '".
+	 			db_es($this->targetKey) ."' ,'".db_es($this->refTargetId) ."', ".db_ei($this->refTargetGid) . ")";
     	$res = db_query($sql);
       	if ($res) {
 			return true;

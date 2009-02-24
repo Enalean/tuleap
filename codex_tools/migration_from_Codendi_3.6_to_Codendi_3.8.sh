@@ -265,19 +265,45 @@ SET service_short_name = 'tracker'
 WHERE (nature = '' OR nature IS NULL);
 
 # cross-references change the type of column to handle wiki references (not int)
-ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
-ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0' 
-
+ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
+ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
+# cross references : add two fields
+ALTER TABLE cross_references ADD source_keyword VARCHAR( 32 ) NOT NULL AFTER source_type;
+ALTER TABLE cross_references ADD target_keyword VARCHAR( 32 ) NOT NULL AFTER target_type;
 # change type of existing cross references from 'revision_svn' to 'svn_revision'
-UPDATE cross_references SET source_type = 'svn_revision' WHERE source_type LIKE 'revision_svn'
-UPDATE cross_references SET target_type = 'svn_revision' WHERE target_type LIKE 'revision_svn'
+UPDATE cross_references SET source_type = 'svn_revision' WHERE source_type LIKE 'revision_svn';
+UPDATE cross_references SET target_type = 'svn_revision' WHERE target_type LIKE 'revision_svn';
+# set keywords
+UPDATE cross_references SET source_keyword = 'art' WHERE source_type LIKE 'artifact';
+UPDATE cross_references SET source_keyword = 'doc' WHERE source_type LIKE 'document';
+UPDATE cross_references SET source_keyword = 'cvs' WHERE source_type LIKE 'cvs_commit';
+UPDATE cross_references SET source_keyword = 'svn' WHERE source_type LIKE 'svn_revision';
+UPDATE cross_references SET source_keyword = 'file' WHERE source_type LIKE 'file';
+UPDATE cross_references SET source_keyword = 'release' WHERE source_type LIKE 'release';
+UPDATE cross_references SET source_keyword = 'forum' WHERE source_type LIKE 'forum';
+UPDATE cross_references SET source_keyword = 'msg' WHERE source_type LIKE 'forum_message';
+UPDATE cross_references SET source_keyword = 'news' WHERE source_type LIKE 'news';
+UPDATE cross_references SET source_keyword = 'snippet' WHERE source_type LIKE 'snippet';
+UPDATE cross_references SET source_keyword = 'wiki' WHERE source_type LIKE 'wiki_page';
+UPDATE cross_references SET target_keyword = 'art' WHERE target_type LIKE 'artifact';
+UPDATE cross_references SET target_keyword = 'doc' WHERE target_type LIKE 'document';
+UPDATE cross_references SET target_keyword = 'cvs' WHERE target_type LIKE 'cvs_commit';
+UPDATE cross_references SET target_keyword = 'svn' WHERE target_type LIKE 'svn_revision';
+UPDATE cross_references SET target_keyword = 'file' WHERE target_type LIKE 'file';
+UPDATE cross_references SET target_keyword = 'release' WHERE target_type LIKE 'release';
+UPDATE cross_references SET target_keyword = 'forum' WHERE target_type LIKE 'forum';
+UPDATE cross_references SET target_keyword = 'msg' WHERE target_type LIKE 'forum_message';
+UPDATE cross_references SET target_keyword = 'news' WHERE target_type LIKE 'news';
+UPDATE cross_references SET target_keyword = 'snippet' WHERE target_type LIKE 'snippet';
+UPDATE cross_references SET target_keyword = 'wiki' WHERE target_type LIKE 'wiki_page';
+
 
 # fix references > services
 UPDATE reference
 SET service_short_name = 'tracker'
 WHERE scope = 'P'
 AND (service_short_name = '' OR service_short_name IS NULL)
-AND link LIKE '/tracker/%func=detail%'
+AND link LIKE '/tracker/%func=detail%';
 
 
 # IM plugin
