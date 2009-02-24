@@ -11,6 +11,7 @@ plugin_hudson	reference_build_desc_key	Hudson Build
 plugin_hudson	reference_job_nature_key	Hudson Job
 plugin_hudson	reference_build_nature_key	Hudson Build
 
+plugin_hudson	no_jobs_linked	No Hudson jobs associated with this project. To add a job, select the link just below.
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Last Success
 plugin_hudson	header_table_lastfailure	Last Failure
@@ -41,7 +42,7 @@ plugin_hudson	wrong_job_url	Wrong Job URL: $1
 plugin_hudson	job_url_file_not_found	File not found at URL: $1
 plugin_hudson	job_url_file_error	Unable to read file at URL: $1
 plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob
-plugin_hudson	form_jobname_help	Name (with no space) used to make a reference to this job. Eg: job #MyJobName
+plugin_hudson	form_jobname_help	Name (with no space) used to make a reference to this job. Eg: job #$1
 plugin_hudson	form_addjob_button	Add job
 plugin_hudson	editjob_title	Edit job
 plugin_hudson	form_editjob_button	Update job

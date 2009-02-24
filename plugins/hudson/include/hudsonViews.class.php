@@ -186,7 +186,7 @@ class hudsonViews extends Views {
                 echo '   <input id="new_hudson_job_name" name="new_hudson_job_name" type="text" value="'.$row['name'].'" size="32" />';
                 echo '  </p>';
                 echo '  <p>';
-                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_jobname_help').'</span>';
+                echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_jobname_help', array($row['name'])).'</span>';
                 echo '  </p>';
                 if ($project->usesSVN()) {
                     echo '  <p>';
@@ -329,6 +329,8 @@ class hudsonViews extends Views {
                 $cpt++;
             }
             echo '</table>';   
+        } else {
+            echo '<p>'.$GLOBALS['Language']->getText('plugin_hudson','no_jobs_linked').'</p>';
         }
     }
     
@@ -338,7 +340,7 @@ class hudsonViews extends Views {
         
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
-        echo ' '.$this->_getHelp('HudsonServiceAddJob', true);
+        echo ' '.$this->_getHelp('HudsonService', true);
         echo '<div id="hudson_add_job">';
         echo ' <form>';
         echo '   <label for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
