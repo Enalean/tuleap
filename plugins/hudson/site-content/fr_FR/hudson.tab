@@ -11,7 +11,7 @@ plugin_hudson	reference_build_desc_key	Build Hudson
 plugin_hudson	reference_job_nature_key	Job Hudson
 plugin_hudson	reference_build_nature_key	Build Hudson
 
-plugin_hudson	no_jobs_linked	Aucun job Hudson associé à ce projet. Poiur ajouter un job, cliquez sur le lien ci-dessous.
+plugin_hudson	no_jobs_linked	Aucun job Hudson associé à ce projet. Pour ajouter un job, cliquez sur le lien ci-dessous.
 plugin_hudson	header_table_job	Job
 plugin_hudson	header_table_lastsuccess	Dernier succès
 plugin_hudson	header_table_lastfailure	Dernier échec
