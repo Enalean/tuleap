@@ -26,10 +26,22 @@ class hudsonViews extends Views {
     function header() {
         $request =& HTTPRequest::instance();
         $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'hudson'));
+        echo $this->_getHelp();
         echo '<h2>'.$this->_getTitle().'</h2>';
     }
     function _getTitle() {
         return $GLOBALS['Language']->getText('plugin_hudson','title');
+    }
+    function _getHelp($section = '', $questionmark = false) {
+        if (trim($section) !== '' && $section{0} !== '#') {
+            $section = '#'.$section;
+        }
+        if ($questionmark) {
+            $help_label = '[?]';
+        } else {
+            $help_label = $GLOBALS['Language']->getText('global', 'help');
+        }
+        return '<b><a href="javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/ContinuousIntegrationWithHudson.html'.$section.'\');">'.$help_label.'</a></b>';
     }
     function footer() {
         $GLOBALS['HTML']->footer(array());
@@ -326,6 +338,7 @@ class hudsonViews extends Views {
         
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
+        echo ' '.$this->_getHelp('HudsonServiceAddJob', true);
         echo '<div id="hudson_add_job">';
         echo ' <form>';
         echo '   <label for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
