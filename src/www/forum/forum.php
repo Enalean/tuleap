@@ -15,6 +15,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+require_once('common/reference/CrossReferenceFactory.class.php');
 
 function forum_show_a_nested_message ($result,$row=0) {
 	/*
@@ -477,6 +478,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 	}
 
 	echo $ret_val;
+	
+    $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
+    $crossref_fact->fetchDatas();
+    if ($crossref_fact->getNbReferences() > 0) {
+        echo '<b> '.$Language->getText('svn_utils','references').'</b>';
+        $crossref_fact->DisplayCrossRefs();
+    }
 
         if (!isset($pv)||!$pv) {
             echo '<P>&nbsp;<P>';
