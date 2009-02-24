@@ -9,6 +9,7 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
+require_once('common/reference/CrossReferenceFactory.class.php');
 
 // NTY Now only for registered users on CodeX
 if (!user_isloggedin()) {
@@ -62,6 +63,13 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
             .$hp->purify($release->getChanges(), CODEX_PURIFIER_BASIC, $group_id);
     }
     
+    $crossref_fact= new CrossReferenceFactory($release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
+    $crossref_fact->fetchDatas();
+    if ($crossref_fact->getNbReferences() > 0) {
+        echo '<hr noshade>';
+        echo '<b> '.$Language->getText('svn_utils','references').'</b>';
+        $crossref_fact->DisplayCrossRefs();
+    }
 
 	$HTML->box1_bottom();
 
