@@ -752,7 +752,7 @@ class Layout extends Response {
             echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type) .'</div>';
         }
         if ($widget->isAjax()) {
-            echo '<div id="'. $element_id .'-ajax" style="text-align:center">'. $this->getImage('ic/spinner.gif') .'<noscript style="color:red">(javascript mandatory)</noscript></div>';
+            echo '<div id="'. $element_id .'-ajax"><div style="text-align:center">'. $this->getImage('ic/spinner.gif') .'<noscript style="color:red">(javascript mandatory)</noscript></div></div>';
         } else {
             echo $widget->getContent();
         }
