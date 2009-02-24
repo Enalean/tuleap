@@ -61,6 +61,15 @@ if ($request->valid($vOwner)) {
                                 echo $widget->getContent();
                             }
                             break;
+                        case 'iframe':
+                            echo '<html><head>';
+                            $GLOBALS['HTML']->displayStylesheetElements();
+                            echo '</head><body class="main_body_row contenttable">';
+                            $widget->loadContent($instance_id);
+                            echo $widget->getContent();
+                            echo '</body></html>';
+                            exit;
+                            break;
                         default:
                             break;
                     }
