@@ -23,7 +23,10 @@ plugin_hudson	build	build
 plugin_hudson	last_build	Last Build:
 plugin_hudson	last_build_success	Last Success:
 plugin_hudson	last_build_failure	Last Failure:
+plugin_hudson	show_job	Show job $1
+plugin_hudson	show_build	Show build #$1 of job $2
 plugin_hudson	weather_report	Weather Report:
+plugin_hudson	rss_feed	RSS feed of all builds for $1 job
 
 plugin_hudson	service_not_used	Hudson service is not enabled
 plugin_hudson	group_id_missing	Missing group_id parameter.
@@ -50,12 +53,15 @@ plugin_hudson	job_url_missing	Missing Hudson job url (eg: http://myCIserver:8080
 plugin_hudson	job_id_missing	Missing Hudson job ID
 plugin_hudson	add_job_error	Unable to add Hudson job.
 plugin_hudson	job_added	Hudson job added.
+plugin_hudson	edit_job	Edit this job
 plugin_hudson	edit_job_error	Unable to update Hudson job
 plugin_hudson	edit_jobname_spacesreplaced	Spaces are not allowed in job name. They were replaced by "_".
 plugin_hudson	job_updated	Hudson job updated.
+plugin_hudson	delete_job	Delete this job from this project
 plugin_hudson	delete_job_error	Unable to delete Hudson job
 plugin_hudson	job_deleted	Hudson job deleted.
 plugin_hudson	delete_job_confirmation	Are you sure you want to delete Job $1 from project $2?
+plugin_hudson	back_to_jobs	Back to jobs list
 
 plugin_hudson	status_blue	Success
 plugin_hudson	status_blue_anime	In progress

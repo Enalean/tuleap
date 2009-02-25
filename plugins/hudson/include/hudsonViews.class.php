@@ -171,7 +171,9 @@ class hudsonViews extends Views {
             $dar = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
                 $row = $dar->current();
-            
+                
+                echo '<a href="/plugins/hudson/?group_id='.$group_id.'">'.$GLOBALS['Language']->getText('plugin_hudson','back_to_jobs').'</a>';
+                
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_hudson','editjob_title').'</h3>';
                 echo ' <form method="post">';
                 echo '  <p>';
@@ -274,18 +276,18 @@ class hudsonViews extends Views {
                     
                     echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
-                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;">'.$row['name'].'</a></td>';
+                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a></td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() != '') {
-                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'" onclick="toggle_iframe(this); return false;">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber().'</a></td>';
+                        echo '  <td><a href="'.$job->getLastFailedBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastFailedBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastFailedBuildNumber().'</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="" title=""></a></td>';
+                    echo '  <td align="center"><a href="'.$job->getUrl().'/rssAll" onclick="toggle_iframe(this); return false;"><img src="'.$this->getControler()->getIconsPath().'rss_feed.png" alt="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'" title="'.$GLOBALS['Language']->getText('plugin_hudson','rss_feed', array($row['name'])).'"></a></td>';
                     
                     if ($project->usesSVN()) {
                         if ($row['use_svn_trigger'] == 1) {
@@ -314,13 +316,17 @@ class hudsonViews extends Views {
                     echo '  <td>';
                     // edit job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png').'</a>';
+                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
+                                                            array('alt' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'),
+                                                                  'title' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'))).'</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'" onclick="return confirm(';
                     echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
-                    echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a>';
+                    echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png', 
+                                                            array('alt' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'),
+                                                                  'title' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'))).'</a>';
                     echo '   </span>';
                     echo '  </td>';
                 }

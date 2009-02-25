@@ -23,7 +23,10 @@ plugin_hudson	build	build
 plugin_hudson	last_build	Dernier Build :
 plugin_hudson	last_build_success	Dernier succès :
 plugin_hudson	last_build_failure	Dernier échec :
+plugin_hudson	show_job	Voir le job $1
+plugin_hudson	show_build	Voir le build #$1 du job $2
 plugin_hudson	weather_report	Tendance :
+plugin_hudson	rss_feed	Flux RSS de tous les builds du job $1
 
 plugin_hudson	service_not_used	Le service Hudson n'est pas actif
 plugin_hudson	group_id_missing	Paramètre group_id manquant.
@@ -50,12 +53,15 @@ plugin_hudson	job_url_missing	Url du job Hudson manquante (ex: http://monserveur
 plugin_hudson	job_id_missing	Identifiant du job Hudson manquant.
 plugin_hudson	add_job_error	Impossible d'ajouter le job Hudson
 plugin_hudson	job_added	Le job Hudson a été ajouté.
+plugin_hudson	edit_job	Editer ce job
 plugin_hudson	edit_job_error	Impossible de modifier le job Hudson
 plugin_hudson	edit_jobname_spacesreplaced	Les espaces sont interdits dans le nom du job. Ils ont été remplacés par un "_".
 plugin_hudson	job_updated	Le job Hudson a été modifié.
+plugin_hudson	delete_job	Supprimer ce job de ce projet
 plugin_hudson	delete_job_error	Impossible de supprimer le job Hudson
 plugin_hudson	job_deleted	Le job Hudson a été supprimé.
 plugin_hudson	delete_job_confirmation	Etes-vous sûr de vouloir supprimer le job $1 du projet $2 ?
+plugin_hudson	back_to_jobs	Revenir à la liste des jobs
 
 plugin_hudson	status_blue	Succès
 plugin_hudson	status_blue_anime	En cours
@@ -94,7 +100,7 @@ plugin_hudson	widget_build_not_found	Build non trouvé pour ce job.
 
 plugin_hudson	widget_description_buildshistory	Affiche l'historique des builds du job sélectionné, sous la forme d'un flux RSS.
 plugin_hudson	widget_description_lastartifacts	Affiche les derniers artéfacts publiés avec succès.
-plugin_hudson	widget_description_lastbuilds	Affiche les derniers builds du job sélectionné (le dernier, le dernier succès, le dernier échec) ainsi que la tendance du projet.
+plugin_hudson	widget_description_lastbuilds	Affiche les derniers builds du job sélectionné (le dernier, le dernier succès, le dernier échec) ainsi que la tendance du job.
 plugin_hudson	widget_description_testresults	Affiche les résultats des tests du dernier build du job sélectionné.
 plugin_hudson	widget_description_testtrend	Affiche la tendance des tests pour le job sélectionné.
 plugin_hudson	widget_description_myjobs	Affiche un aperçu des jobs de tous les projets dont vous êtes membre.
