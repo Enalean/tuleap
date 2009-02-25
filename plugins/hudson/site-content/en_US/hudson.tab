@@ -55,6 +55,7 @@ plugin_hudson	edit_jobname_spacesreplaced	Spaces are not allowed in job name. Th
 plugin_hudson	job_updated	Hudson job updated.
 plugin_hudson	delete_job_error	Unable to delete Hudson job
 plugin_hudson	job_deleted	Hudson job deleted.
+plugin_hudson	delete_job_confirmation	Are you sure you want to delete Job $1 from project $2?
 
 plugin_hudson	status_blue	Success
 plugin_hudson	status_blue_anime	In progress

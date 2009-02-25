@@ -318,7 +318,9 @@ class hudsonViews extends Views {
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a>';
+                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'" onclick="return confirm(';
+                    echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
+                    echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png').'</a>';
                     echo '   </span>';
                     echo '  </td>';
                 }
