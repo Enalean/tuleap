@@ -177,7 +177,7 @@ class permsVisitor {
         $listItem    = array();
         $visited_ids = array();
         
-        $ugroups     = $this->listUgroups($ugroups);
+        $ugroups     = $this->listUgroups();
         $this->visitFolder($this->node, $docmanItem);
         
         foreach ($this->allTreeItems as $folder_id ) {
@@ -259,7 +259,7 @@ class permsVisitor {
      * @return null
      */
     
-    private function listUgroups($ugroups) {
+    private function listUgroups() {
         $sql = sprintf('SELECT Ugrp.ugroup_id, Ugrp.name'.
                        ' FROM  ugroup Ugrp '.
                        ' WHERE Ugrp.group_id = %d',
