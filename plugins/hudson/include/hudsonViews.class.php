@@ -14,6 +14,7 @@ require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/project/ProjectManager.class.php');
+require_once('common/reference/CrossReferenceFactory.class.php');
 
 require_once('HudsonJob.class.php');
 
@@ -74,6 +75,14 @@ class hudsonViews extends Views {
             $dar = $job_dao->searchByJobName($job_name, $group_id);
         }
         if ($dar->valid()) {
+            
+            $crossref_fact= new CrossReferenceFactory($job_name, 'hudson_job', $group_id);
+            $crossref_fact->fetchDatas();
+            if ($crossref_fact->getNbReferences() > 0) {
+                echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
+                $crossref_fact->DisplayCrossRefs();
+            }
+            
             $row = $dar->current();
             $this->_display_iframe($row['job_url']);
         } else {
@@ -118,6 +127,14 @@ class hudsonViews extends Views {
         }
         
         if ($dar && $dar->valid()) {
+            
+            $crossref_fact= new CrossReferenceFactory($job_name.'/'.$build_id, 'hudson_build', $group_id);
+            $crossref_fact->fetchDatas();
+            if ($crossref_fact->getNbReferences() > 0) {
+                echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
+                $crossref_fact->DisplayCrossRefs();
+            }
+            
             $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/'.$build_id.'/');
         } else {
