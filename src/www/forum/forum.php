@@ -53,7 +53,23 @@ function forum_show_a_nested_message ($result,$row=0) {
 				<TD>
 					'. util_make_links(nl2br(db_result($result,$row,'body')), $g_id ) .'
 				</TD>
-			</TR>
+			</TR>';
+    
+    $crossref_fact= new CrossReferenceFactory(db_result($result, $row, 'msg_id'), ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
+    $crossref_fact->fetchDatas();
+    if ($crossref_fact->getNbReferences() > 0) {
+        $ret_val .= '<tr>';
+        $ret_val .= ' <td class="forum_reference_separator">';
+        $ret_val .= '  <b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
+        $ret_val .= $crossref_fact->getHTMLDisplayCrossRefs();
+        $ret_val .= ' </td>';
+        $ret_val .= '</tr>';
+    }
+    $ret_val .='
+			<tr>
+			 <td>
+			 </td>
+			</tr>
 		</TABLE>';
 	return $ret_val;
 }
@@ -87,7 +103,8 @@ function forum_show_nested_messages ($thread_id, $msg_id) {
 
 			//	show the actual nested message
 			$ret_val .= forum_show_a_nested_message ($result,$i).'<P>';
-			if (db_result($result,$i,'has_followups') > 0) {
+			
+		    if (db_result($result,$i,'has_followups') > 0) {
 				//	Call yourself if there are followups
 				$ret_val .= forum_show_nested_messages ( $thread_id, db_result($result,$i,'msg_id') );
 			}
@@ -482,7 +499,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_FORUM, $group_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
-        echo '<b> '.$Language->getText('svn_utils','references').'</b>';
+        echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
         $crossref_fact->DisplayCrossRefs();
     }
 

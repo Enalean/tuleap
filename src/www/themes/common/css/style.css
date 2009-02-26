@@ -792,3 +792,8 @@ div.layout-manager-column-remove_hover {
     background:#f0f0f0;
 }
 /* }}} */
+
+td.forum_reference_separator {
+	border-top: thin dotted grey;
+	padding-top: 10px;
+}

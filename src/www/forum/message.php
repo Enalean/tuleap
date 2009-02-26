@@ -8,6 +8,7 @@
 
 require_once('pre.php');
 require('../forum/forum_utils.php');
+require('common/reference/CrossReferenceFactory.class.php');
 
 $request =& HTTPRequest::instance();
 
@@ -77,7 +78,20 @@ if ($request->valid($vMsg)) {
 	echo $Language->getText('forum_message','date').": ".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0, "date"))."<BR>";
 	echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
 	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
-	echo "</TD></TR></TABLE>";
+	echo "</TD></TR>";
+	
+    $crossref_fact= new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);
+    $crossref_fact->fetchDatas();
+    if ($crossref_fact->getNbReferences() > 0) {
+        echo '<tr>';
+        echo ' <td class="forum_reference_separator">';
+        echo '  <b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
+        echo $crossref_fact->getHTMLDisplayCrossRefs();
+        echo ' </td>';
+        echo '</tr>';
+    }
+	
+	echo "</TABLE>";
 
 	if ($pv == 0) {
 	/*

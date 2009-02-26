@@ -5,6 +5,8 @@
 #-----------------------------------------------
 # Script: SF/src/common/include/CrossReferenceFactory.php
 #
+cross_ref_fact_include	references	Références
+
 cross_ref_fact_include	artifact	Artefact
 cross_ref_fact_include	svn_revision	Revision SVN
 cross_ref_fact_include	cvs_commit	Commit CVS
