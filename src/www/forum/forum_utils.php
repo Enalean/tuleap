@@ -76,6 +76,14 @@ function forum_header($params) {
 				'. util_make_links( nl2br( db_result($result,0,'details')), $group_id);
 
 				echo '<P>';
+				
+			    $crossref_fact= new CrossReferenceFactory(db_result($result,0,'id'), ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
+                $crossref_fact->fetchDatas();
+                if ($crossref_fact->getNbReferences() > 0) {
+                    echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
+                    $crossref_fact->DisplayCrossRefs();
+                }
+				
 			}
 			echo '</TD><TD VALIGN="TOP" WIDTH="35%">';
 			echo $HTML->box1_top($Language->getText('forum_forum_utils','proj_latest_news'),0);
