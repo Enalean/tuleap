@@ -23,9 +23,15 @@
  * 
  */
 require_once('pre.php');
+
+if (!(user_ismember($group_id,"D2"))) {
+    $feedback .= $Language->getText('docman_admin_index','error_perm');
+    exit_permission_denied();
+ }
+ 
 $vGroupId = new Valid_UInt('group_id');
 $vExport = new Valid_WhiteList('export', array('format','csv'));
-if($vGroupId->validate($group_id) && $request->valid($vExport)) {
+if($vGroupId->validate($group_id) && $request->valid($vExport) ) {
     $group_id = $request->get('group_id');
     $export   = $request->get('export');
     if ($export == 'csv') {

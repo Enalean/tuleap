@@ -23,9 +23,6 @@
  * 
  */
 
-require_once('pre.php'); 
- 
- 
 class userGroupExportMembers {   
 
     var $sep =','; 
