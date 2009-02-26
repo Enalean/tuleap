@@ -348,9 +348,8 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
 	
 	$crossref_fact= new CrossReferenceFactory($revision, ReferenceManager::REFERENCE_NATURE_SVNREVISION, $group_id);
 	$crossref_fact->fetchDatas();
-	if($crossref_fact->getNbReferences()>0){
-		
-		echo '<h3> '.$Language->getText('svn_utils','references').'</h3>';
+	if ($crossref_fact->getNbReferences() > 0) {
+		echo '<h3> '.$Language->getText('cross_ref_fact_include','references').'</h3>';
 		$crossref_fact->DisplayCrossRefs();
 	}
                 

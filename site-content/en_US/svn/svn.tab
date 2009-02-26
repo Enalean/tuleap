@@ -108,7 +108,6 @@ svn_utils	add	Add
 svn_utils	change	Change
 svn_utils	del	Delete
 svn_utils	impacted_files	List of impacted files
-svn_utils	references	References
 svn_utils	no_hist	This project has no Subversion history.
 svn_utils	ci_week	Developer Commits (Last 7 days/Total)
 svn_utils	file_err	Error: Can't open file $1

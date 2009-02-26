@@ -67,7 +67,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
         echo '<hr noshade>';
-        echo '<b> '.$Language->getText('svn_utils','references').'</b>';
+        echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
         $crossref_fact->DisplayCrossRefs();
     }
 

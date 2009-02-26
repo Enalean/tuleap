@@ -424,9 +424,8 @@ function show_commit_details ($result) {
 	
 	$crossref_fact= new CrossReferenceFactory($commit_id, ReferenceManager::REFERENCE_NATURE_CVSCOMMIT, $group_id);
 	$crossref_fact->fetchDatas();
-	if($crossref_fact->getNbReferences()>0){
-		
-		echo '<h3> '.$Language->getText('cvs_commit_utils','references').'</h3>';
+	if ($crossref_fact->getNbReferences() > 0) {
+		echo '<h3> '.$Language->getText('cross_ref_fact_include','references').'</h3>';
 		$crossref_fact->DisplayCrossRefs();
 	}
 	
