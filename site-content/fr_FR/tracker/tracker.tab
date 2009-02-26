@@ -274,6 +274,7 @@ tracker_include_artifact	upload_file_lbl	<b>&nbsp;&hellip;et&nbsp;attacher le fi
 tracker_include_artifact	upload_file_msg	<br><span class="small" style="color:#666">(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)</span>
 tracker_include_artifact	upload_file_desc	<P><B>Description du fichier&nbsp;:</B>&nbsp;
 tracker_include_artifact	dependencies	Dépendances	
+tracker_include_artifact	references	Références
 tracker_include_artifact	aids	IDs Artefact&nbsp;:
 tracker_include_artifact	fill	(Remplissez la liste en utilisant la virgule comme séparateur)
 tracker_include_artifact	dependent_on	Dépendant de&nbsp;:
