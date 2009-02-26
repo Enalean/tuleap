@@ -25,6 +25,7 @@ require_once 'Trees.class.php';
 class XMLDocmanUpdate extends XMLDocmanImport {
 
     private $remoteItems = array();
+    private $continue = false;
 
     public function updatePath($xmlDoc, $parentId, $path) {
         $this->loadXML($xmlDoc);
@@ -55,11 +56,13 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         
         $tagCounts = $this->tagCount($mergedTree);
         
-        $this->log(PHP_EOL.$tagCounts['IN_BOTH']." item(s) will be updated".PHP_EOL);
+        if (!$this->continue) $this->log(PHP_EOL.$tagCounts['IN_BOTH']." item(s) will be updated".PHP_EOL);
         $this->log($tagCounts['IN_SECOND']." item(s) will be created".PHP_EOL);
-        $this->log($tagCounts['IN_FIRST']." item(s) will be removed".PHP_EOL);
+        if (!$this->continue) $this->log($tagCounts['IN_FIRST']." item(s) will be removed".PHP_EOL);
         
-        $this->log("Are you sure you want to update the document tree? (y/n) [n] ");
+        if (!$this->continue) $this->log("Are you sure you want to update the document tree? (y/n) [n] ");
+        else $this->log("Are you sure you want to continue the upload? (y/n) [n] ");
+        
         $answer = strtoupper(trim(fgets(STDIN)));
         
         if ($answer == 'Y') {
@@ -67,6 +70,11 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                 $this->recurseUpdateTree($childTitle, $subTree, $parentId);
             }
         }
+    }
+    
+    public function continuePath($xmlDoc, $parentId, $path) {
+        $this->continue = true;
+        $this->updatePath($xmlDoc, $parentId, $path);
     }
     
     /**
@@ -102,6 +110,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         if (isset($tree['tag'])) {
             switch ($tree['tag']) {
                 case 'IN_FIRST':
+                    if ($this->continue) break;
                     // Only in server => delete item
                     $this->deleteItem($itemId, $title);
                     break;
@@ -115,16 +124,18 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                     // In both => update or re-create item
                     $node = $tree['xmlElement'];
                     
-                    if ($node['type'] == 'file' || $node['type'] == 'embeddedfile' ) {
-                        if ($this->checkVersionChecksums($itemId, $node)) {
-                            $this->updateItem($itemId, $node);
+                    if (!$this->continue) { 
+                        if ($node['type'] == 'file' || $node['type'] == 'embeddedfile' ) {
+                            if ($this->checkVersionChecksums($itemId, $node)) {
+                                $this->updateItem($itemId, $node);
+                            } else {
+                                $this->log("The local and remote versions doesn't match for item '$title' (#$itemId), it will be deleted and re-created.".PHP_EOL);
+                                $this->deleteItem($itemId, $title);
+                                $this->recurseOnNode($node, $parentId);
+                            }
                         } else {
-                            $this->log("The local and remote versions doesn't match for item '$title' (#$itemId), it will be deleted and re-created.".PHP_EOL);
-                            $this->deleteItem($itemId, $title);
-                            $this->recurseOnNode($node, $parentId);
+                            $this->updateItem($itemId, $node);
                         }
-                    } else {
-                        $this->updateItem($itemId, $node);
                     }
 
                     if (isset($tree['children'])) {
