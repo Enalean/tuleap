@@ -775,7 +775,7 @@
         There are some predefined references (job, build), but you can also create
         your own references if needed (see <xref linkend="ReferenceOverview" /> 
         for more details about references)
-      <para>
+      </para>
       
       <section id="HudsonJobReferences">
         <title>Make a reference to a Job</title>
