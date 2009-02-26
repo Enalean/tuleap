@@ -517,7 +517,7 @@ class ReferenceManager {
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
-    function &_getReferenceInstanceFromMatch($match) {
+    function _getReferenceInstanceFromMatch($match) {
         // Analyse match
         $key=strtolower($match[1]);
         if ($match[2]) {

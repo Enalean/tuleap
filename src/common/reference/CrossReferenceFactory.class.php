@@ -45,9 +45,10 @@ class CrossReferenceFactory {
      * for the current CrossReferenceFactory  
      */
 	function fetchDatas() {
-		$sql = 'SELECT * from cross_references where ' .
-				'( target_gid='.$this->entity_gid.' AND target_id='.$this->entity_id.' AND target_type="'.$this->entity_type.'" ) ' .
-				'OR (source_gid='.$this->entity_gid.' AND source_id='.$this->entity_id.' AND source_type="'.$this->entity_type.'" )';
+		$sql = "SELECT * 
+		        FROM cross_references 
+		        WHERE  (target_gid=" . $this->entity_gid . " AND target_id='" . $this->entity_id . "' AND target_type='" . $this->entity_type . "' ) 
+				     OR (source_gid=" . $this->entity_gid." AND source_id='" . $this->entity_id . "' AND source_type='" . $this->entity_type . "' )";
 		$res = db_query($sql);
 		if ($res && db_numrows($res) > 0) {
 		
