@@ -3,6 +3,7 @@
 rcs_id('$Id: display.php,v 1.65 2005/05/05 08:54:40 rurban Exp $');
 
 require_once('lib/Template.php');
+require_once('common/reference/CrossReferenceFactory.class.php');
 
 /**
  * Extract keywords from Category* links on page. 
@@ -141,16 +142,31 @@ function displayPage(&$request, $template=false) {
     
     // {{{ Codendi hook to insert stuff between navbar and header
     $eM =& EventManager::instance();
+    
+    $ref_html = '';
+    $crossref_fact= new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
+    $crossref_fact->fetchDatas();
+    if ($crossref_fact->getNbReferences() > 0) {
+        $ref_html .= '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
+        $ref_html .= $crossref_fact->getHTMLDisplayCrossRefs();
+        $ref_html .= '<br /><br />';
+    }
+
     $additional_html = false;
     $eM->processEvent('wiki_before_content', array(
                     'html' => &$additional_html,
                     'group_id' => GROUP_ID,
                     'wiki_page' => $pagename
         ));
-    if($additional_html) {
+    if ($additional_html) {
         $beforeHeader = HTML();
         $beforeHeader->pushContent($additional_html);
+        $beforeHeader->pushContent(HTML::raw($ref_html));
         $toks['BEFORE_HEADER'] = $beforeHeader;
+    } else {
+        $beforeHeader = HTML();
+        $beforeHeader->pushContent(HTML::raw($ref_html));
+        $toks['BEFORE_HEADER'] = $beforeHeader; 
     }
     // }}} /Codendi hook
 
