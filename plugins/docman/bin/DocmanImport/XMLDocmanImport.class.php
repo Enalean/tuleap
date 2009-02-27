@@ -966,7 +966,7 @@ class XMLDocmanImport {
         $this->retryCounter = 5;
     }
     
-    private static function printException($e) {
+    private function printException($e) {
         $this->log(PHP_EOL.PHP_EOL.$e->__toString().PHP_EOL.PHP_EOL);
     }
 

@@ -45,6 +45,7 @@ Optional parameters:
     --force                                 Continue even if some users (authors, owners) don't exist on the remote server
     --reorder                               The items will be reordered in alphabetical order, folders before documents
     --update                                Update the document tree. Warning! This will create, update or remove documents
+    --continue                              Continue the upload: this will only create missing items
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
     --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
     --auto-retry                            In case of error, retry 5 times before asking the user what to do
@@ -84,6 +85,7 @@ if ($project === null && $projectId === null) {
 $force = getParameter($argv, 'force');
 $reorder = getParameter($argv, 'reorder');
 $update = getParameter($argv, 'update');
+$continue = getParameter($argv, 'continue');
 $path = getParameter($argv, 'path');
 $importMessageMetadata = getParameter($argv, 'import-metadata');
 $autoRetry = getParameter($argv, 'auto-retry');
@@ -133,12 +135,16 @@ $wsdl = "$url/soap/codex.wsdl.php?wsdl";
 // Command line (for printing in log file)
 $command = implode(' ', $argv);
 
-if ($update) {
+if ($update || $continue) {
     // Connect
     $xmlUpdate = new XMLDocmanUpdate($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log);
     
     // Update
-    $xmlUpdate->updatePath($archive, $folderId, $path);
+    if ($update) {
+        $xmlUpdate->updatePath($archive, $folderId, $path);
+    } else if ($continue) {
+        $xmlUpdate->continuePath($archive, $folderId, $path);
+    }
 } else {
     // Connect
     $xmlImport = new XMLDocmanImport($command, $project, $projectId, $wsdl, $login, $password, $force, $reorder, $importMessageMetadata, $autoRetry, $log);
