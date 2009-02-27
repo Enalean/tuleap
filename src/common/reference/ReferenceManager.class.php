@@ -393,11 +393,42 @@ class ReferenceManager {
         return $referencesInstances;
     }
     
+    /**
+     * TODO : adapt it to the new tracker structure when ready
+     */
+    function getArtifactKeyword($artifact_id, $group_id) {
+        $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id= ". db_ei($artifact_id);
+        $result = db_query($sql);
+        if (db_numrows($result) > 0) {
+            $row = db_fetch_array($result);
+            $tracker_id = $row['group_artifact_id'];
+            $project = new Project($group_id);
+            $tracker = new ArtifactType($project, $tracker_id);
+            $tracker_short_name = $tracker->getItemName();
+            $reference_dao =& $this->_getReferenceDao();
+            $dar = $reference_dao->searchByKeywordAndGroupId($tracker_short_name, $group_id);
+            if ($dar && $dar->rowCount() >= 1) {
+                return $tracker_short_name;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
     function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0) {
 		$referencesInstances=array();
 		
 		$available_natures = $this->getAvailableNatures();
-		$source_key = $available_natures[$source_type]['keyword'];
+		if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
+		    $source_key = $this->getArtifactKeyword($source_id, $source_gid);
+		    if (! $source_key) {
+		        $source_key = $available_natures[$source_type]['keyword'];
+		    }
+		} else {
+		    $source_key = $available_natures[$source_type]['keyword'];
+		}
 		
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
