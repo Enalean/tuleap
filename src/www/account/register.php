@@ -29,11 +29,11 @@ function register_valid($confirm_hash)	{
 
     $request =& HTTPRequest::instance();
     
-    if (!$request->exist('form_loginname')) {
+    if (!$request->existAndNonEmpty('form_loginname')) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nouser'));
 	return 0;
     }
-    if (!$request->exist('form_pw')) {
+    if (!$request->existAndNonEmpty('form_pw')) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
 	return 0;
     }
@@ -43,7 +43,7 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
-    if (!$request->exist('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page')!="admin_creation")) {
+    if (!$request->existAndNonEmpty('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page')!="admin_creation")) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
 	return 0;
     }
