@@ -1237,6 +1237,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_docs     = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
         $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
         $allow_access_to_project_frs      = array(1); // Support project file releases
+        $allow_access_to_project_refs     = array(1); // Support project references
         
         // List of fully public projects (same access for restricted and unrestricted users)
         $public_projects = array(); 
@@ -1254,8 +1255,8 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_mail     = array_flip($allow_access_to_project_mail);
         $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
         $public_projects                  = array_flip($public_projects);
-        
-        
+        $allow_access_to_project_refs     = array_flip($allow_access_to_project_refs);
+
         foreach ($forbidden_url as $str) {
             $pos = strpos($req_uri,$str);
             if ($pos === false) {
@@ -1374,7 +1375,13 @@ function util_check_restricted_access($request_uri, $script_name) {
             isset($allow_access_to_project_frs[$group_id])) {
             $user_is_allowed=true;
         }
-        
+
+        // References
+        if (strpos($req_uri,'/goto') !== false &&
+            isset($allow_access_to_project_refs[$group_id])) {
+            $user_is_allowed=true;
+        }
+
         // Now check group_id
         if (isset($group_id)) { 
             if (!$user_is_allowed) { 
