@@ -103,7 +103,7 @@ class CvsToDimensionsActions extends Actions {
 
                 //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
                 $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
-                $roles_array = $this->_resultset_to_array($roles, "role");
+                $roles_array = $this->_resultset_to_array($roles, "ROLE");
                 $logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess :: instance());
                 //save logs information
                 $logs_dao->create($group_id, time(), $tag, $user->getID(), '1');
@@ -114,7 +114,7 @@ class CvsToDimensionsActions extends Actions {
                     $user_name = strtoupper($codex_user_name);
     
                     $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, $user_name);
-                    $roles_array = $this->_resultset_to_array($roles, "role");
+                    $roles_array = $this->_resultset_to_array($roles, "ROLE");
                     $requires_role = $this->_controler->getProperty('role');
                     
                     if (count($design_part_missing) == 0 && in_array($requires_role, $roles_array)) {            
@@ -132,7 +132,7 @@ class CvsToDimensionsActions extends Actions {
                         $dmcli_authent = $dmcli . ' -user '.$codex_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
                         ' -host ' . $host . ' ';
 
-                        $workset_array = $this->_resultset_to_array($worksets, "workset_name");
+                        $workset_array = $this->_resultset_to_array($worksets, "WORKSET_NAME");
                         if (count($workset_array) == 0) {
                             //no workset for this product
                             $cmd_ws_creation = '-cmd \'DWS "' . $product_name . ':' . $workset . '" ' .
@@ -154,7 +154,7 @@ class CvsToDimensionsActions extends Actions {
                             } else {
                                 //the given workset doesn't exist but there are other worksets for this product
                                 $last_baseline = & $p26c_dao->searchLastBaselineByProduct($product_name);
-                                $last_baseline_array = $this->_resultset_to_array($last_baseline, "baseline_id");
+                                $last_baseline_array = $this->_resultset_to_array($last_baseline, "BASELINE_ID");
                                 $cmd_ws_creation = '-cmd \'DWS "' . $product_name . ':' . $workset . '" ' .
                                 '/DESC="workset issu de cvs G' . $version_tag_log['GO'] . 'R' . $version_tag_log['RO'] . '"' .
                                 '/BASELINE="' . $product_name . ':' . $last_baseline_array[0] . '"\' 2>&1';
@@ -239,7 +239,7 @@ class CvsToDimensionsActions extends Actions {
         $design_parts_P26C = & $p26c_dao->searchDesignPartsByProduct($product_name);
         $design_parts_modules = & $modules_dao->searchByGroupId($group_id);
         $design_part_missing = array ();
-        $design_parts_P26C_array = $this->_resultset_to_array($design_parts_P26C, "part_id");
+        $design_parts_P26C_array = $this->_resultset_to_array($design_parts_P26C, "PART_ID");
         $design_parts_modules_array = $this->_resultset_to_array($design_parts_modules, "design_part");
         foreach ($design_parts_modules_array as $row) {
             if (!in_array($row, $design_parts_P26C_array)) {
@@ -279,12 +279,12 @@ class CvsToDimensionsActions extends Actions {
     function _removeFiles($p26c_dao, $workset, $product, $folder, $dmcli_authent) {
         $files = & $p26c_dao->searchWorksetElementByProductAndWorkset($product, $workset);
         $col_names = array (
-            'filename',
-            'path',
-            'id',
-            'variant',
-            'type',
-            'revision'
+            'FILENAME',
+            'PATH',
+            'ID',
+            'VARIANT',
+            'TYPE',
+            'REVISION'
         );
         $dim_files = $this->_resultset_to_array($files, $col_names);
         exec("cd " . $folder . "; find . -depth -type f > files_list.txt");

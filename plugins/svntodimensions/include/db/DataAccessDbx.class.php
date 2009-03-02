@@ -42,11 +42,11 @@ class DataAccessDbx {
     * @return string a database error
     */
     function isError() {
-        if ($this->db) {
-            return ocierror($this->db);
-        } else {
+        //if ($this->db) {
+        //    return ocierror($this->db);
+        //} else {
             return ocierror();
-        }
+            //}
     }
     
     /**

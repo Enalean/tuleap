@@ -313,7 +313,7 @@ class SvnToDimensionsViews extends Views {
                 }
                 $output .= '">';
                 $output .= '<option value="none">Aucun';
-                $transferableTags = $this->_getTransferableTags($this->_controler->tags, $group_id, $pl);
+                $transferableTags = $this->_getTransferableTags($this->_controler->tags, $group_id);
                 foreach($transferableTags as $tag){
                     $output .= '<option value="'.$tag.'"';
                     if($request->exist('tag') && $_POST['tag'] == $tag){
@@ -340,7 +340,7 @@ class SvnToDimensionsViews extends Views {
     }
     
     
-    function _getTransferableTags($tags, $group_id, $pl){
+    function _getTransferableTags($tags, $group_id){
         $transferableTags = array();
     	$logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
     	$logs_result =& $logs_dao->searchByGroupId($group_id);
