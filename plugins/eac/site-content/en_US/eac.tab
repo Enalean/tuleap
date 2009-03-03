@@ -22,3 +22,4 @@ plugin_eac	format_write	Write
 plugin_eac	format_write_desc	The permission to write on the document
 plugin_eac	format_manage	Manage
 plugin_eac	format_manage_desc	The permission to manage the document
+plugin_eac	error_not_admin	You have no right to do this export. You must be docman admin. 

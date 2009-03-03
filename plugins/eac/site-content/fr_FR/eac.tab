@@ -22,3 +22,4 @@ plugin_eac	format_write	Write
 plugin_eac	format_write_desc	La permission d'ecriture du document
 plugin_eac	format_manage	Manage
 plugin_eac	format_manage_desc	La permission de gestion du document
+plugin_eac	error_not_admin	Vous n'avez pas les droits pour faire cet export (Administrateurs seulement). 

@@ -24,16 +24,18 @@
  */
 require_once('pre.php');
 
-if (!(user_ismember($group_id,"D2"))) {
-    $feedback .= $Language->getText('docman_admin_index','error_perm');
-    exit_permission_denied();
- }
- 
 $vGroupId = new Valid_UInt('group_id');
 $vExport = new Valid_WhiteList('export', array('format','csv'));
 if($vGroupId->validate($group_id) && $request->valid($vExport) ) {
     $group_id = $request->get('group_id');
     $export   = $request->get('export');
+    
+    require_once(dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
+    if (!Docman_PermissionsManager::instance($group_id)->currentUserCanAdmin()) {
+        $feedback .= $Language->getText('plugin_eac','error_not_admin');
+        exit_not_logged_in();
+    }
+    
     if ($export == 'csv') {
         header('Content-Disposition: filename=export_permissions.csv');
         header('Content-Type: text/csv');
