@@ -57,24 +57,26 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        $backend=$this->_getBackend();
+        $backendSystem = new BackendSystem();
+        $backendCVS    = new BackendCVS();
+        $backendSVN    = new BackendSVN();
 
-        $backend->setNeedUpdateCVSRootList();
+        $backendCVS->setNeedUpdateCVSRootList();
 
         // Should we delete mailing lists?
         //$backend->setNeedUpdateMailAliases();
 
-        if (!$backend->archiveProjectHome($group_id)) {
+        if (!$backendSystem->archiveProjectHome($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not archive project home");
             return false;
         }
-        if (!$backend->archiveProjectCVS($group_id)) {
+        if (!$backendCVS->archiveProjectCVS($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not archive project CVS repository");
             return false;
         }
-        if (!$backend->archiveProjectSVN($group_id)) {
+        if (!$backendSVN->archiveProjectSVN($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not archive project SVN repository");
             return false;

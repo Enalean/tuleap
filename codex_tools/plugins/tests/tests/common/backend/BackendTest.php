@@ -21,53 +21,22 @@
  * 
  */
 
-// This one seems necessary to use UserManager...
-//require_once('common/dao/CodexDataAccess.class.php');
 
 require_once('common/backend/Backend.class.php');
-require_once('common/user/UserManager.class.php');
-Mock::generate('UserManager');
-require_once('common/user/User.class.php');
-Mock::generate('User');
-require_once('common/project/ProjectManager.class.php');
-Mock::generate('ProjectManager');
-require_once('common/project/Project.class.php');
-Mock::generate('Project');
-Mock::generatePartial('Backend', 'BackendTestVersion', array('_getUserManager', 
-                                                             '_getProjectManager',
-                                                             'chown',
-                                                             'chgrp',
-                                                             ));
 
 
 class BackendTest extends UnitTestCase {
     
-    function __construct($name = 'Backend test') {
+    function __construct($name = 'BackendSystem test') {
         parent::__construct($name);
     }
 
-    function setUp() {
-        $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
-        $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
-        $GLOBALS['cvs_prefix']                = dirname(__FILE__) . '/_fixtures/cvsroot';
-        $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
-        $GLOBALS['codex_shell_skel']          = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
-        $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
-    }
-    
-    function tearDown() {
-        unset($GLOBALS['homedir_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['cvs_prefix']);
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['codex_shell_skel']);
-        unset($GLOBALS['tmp_dir']);
-    }
     
     function testConstructor() {
         $backend = Backend::instance();
     }
     
+
     function testrecurseDeleteInDir() {
         $test_dir =  dirname(__FILE__).'/_fixtures/test_dir';
         mkdir($test_dir);
@@ -96,153 +65,5 @@ class BackendTest extends UnitTestCase {
         rmdir($test_dir);
     }
 
-    function testCreateUserHome() {
-
-        $user =& new MockUser($this);
-        // We use codexadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user->setReturnValue('getUserName', 'codexadm');
-
-        $um =& new MockUserManager();
-        $um->setReturnReference('getUserById', $user, array(104));
-        
-        $backend =& new BackendTestVersion($this);
-        $backend->setReturnValue('_getUserManager', $um);
-
-        $this->assertEqual($backend->createUserHome(104),True);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be created");
-
-        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codexadm/.profile"),"User files from /etc/codendi_skel should be created");
-
-
-        // Check that a wrong user id does not raise an error
-        $this->assertEqual($backend->createUserHome(99999),False);
-
-        // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/codexadm");
-        rmdir($GLOBALS['homedir_prefix']."/codexadm");
-   
-    }
-
-    function testArchiveUserHome() {
-        $user =& new MockUser($this);
-        // We use codexadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user->setReturnValue('getUserName', 'codexadm');
-
-        $um =& new MockUserManager();
-        $um->setReturnReference('getUserById', $user, array(104));
-        
-        $backend =& new BackendTestVersion($this);
-        $backend->setReturnValue('_getUserManager', $um);
-
-        $backend->createUserHome(104);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be created");
-
-        $this->assertEqual($backend->archiveUserHome(104),True);
-        $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codexadm"),"Home dir should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/codexadm.tgz"),"Archive should be created");
-
-        // Check that a wrong user id does not raise an error
-        $this->assertEqual($backend->archiveUserHome(99999),False);
-
-        // Cleanup
-        unlink($GLOBALS['tmp_dir']."/codexadm.tgz");
-    }
-
-    function testArchiveProjectHome() {
-        $project =& new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
-
-        $pm =& new MockProjectManager();
-        $pm->setReturnReference('getProject', $project, array(142));
-        //$pm->setReturnReference('getProject', $project);
-
-        $backend =& new BackendTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
-
-        $projdir=$GLOBALS['grpdir_prefix']."/TestProj";
-        $lcprojlnk=$GLOBALS['grpdir_prefix']."/testproj";
-
-        // Setup test data
-        mkdir($projdir);
-        touch($projdir."/testfile.txt");
-        symlink($projdir,$lcprojlnk);
-        
-        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
-
-        $this->assertEqual($backend->archiveProjectHome(142),True);
-        $this->assertFalse(is_dir($projdir),"Project dir should be deleted");
-        $this->assertFalse(is_link($lcprojlnk),"Project link should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj.tgz"),"Archive should be created");
-
-        // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->archiveProjectHome(99999),False);
-
-        // Cleanup
-        unlink($GLOBALS['tmp_dir']."/TestProj.tgz");
-    }
-
-
-    function testArchiveProjectCVS() {
-        $project =& new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
-
-        $pm =& new MockProjectManager();
-        $pm->setReturnReference('getProject', $project, array(142));
-
-        $backend =& new BackendTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
-
-        $projdir=$GLOBALS['cvs_prefix']."/TestProj";
-
-        // Setup test data
-        mkdir($projdir);
-        mkdir($projdir."/CVSROOT");
-        
-        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
-
-        $this->assertEqual($backend->archiveProjectCVS(142),True);
-        $this->assertFalse(is_dir($projdir),"Project CVS repository should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-cvs.tgz"),"CVS Archive should be created");
-
-        // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->archiveProjectCVS(99999),False);
-
-        // Cleanup
-        unlink($GLOBALS['tmp_dir']."/TestProj-cvs.tgz");
-    }
-
-    function testArchiveProjectSVN() {
-        $project =& new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
-
-        $pm =& new MockProjectManager();
-        $pm->setReturnReference('getProject', $project, array(142));
-
-        $backend =& new BackendTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
-
-        $projdir=$GLOBALS['svn_prefix']."/TestProj";
-
-        // Setup test data
-        mkdir($projdir);
-        mkdir($projdir."/db");
-        
-        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
-
-        $this->assertEqual($backend->archiveProjectSVN(142),True);
-        $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-svn.tgz"),"SVN Archive should be created");
-
-        // Check that a wrong project id does not raise an error
-        $this->assertEqual($backend->archiveProjectSVN(99999),False);
-
-        // Cleanup
-        unlink($GLOBALS['tmp_dir']."/TestProj-svn.tgz");
-    }
-
-    
 }
 ?>

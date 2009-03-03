@@ -57,16 +57,17 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        $backend=$this->_getBackend();
+        $backendSystem = new BackendSystem();
+        $backendCVS    = new BackendCVS();
 
-        $backend->setNeedUpdateCVSRootList();
+        $backendCVS->setNeedUpdateCVSRootList();
 
-        if (!$backend->createProjectHome($group_id)) {
+        if (!$backendSystem->createProjectHome($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not create project home");
             return false;
         }
-        if (!$backend->createProjectCVS($group_id)) {
+        if (!$backendCVS->createProjectCVS($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not create/initialize project CVS repository");
             return false;
