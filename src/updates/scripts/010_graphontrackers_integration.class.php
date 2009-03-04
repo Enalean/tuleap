@@ -239,10 +239,8 @@ class Update_010 extends CodeXUpgrade {
                                     $gantt_id = $rowGantt['gantt_id'];
                                     echo "---- ---- Creating the Gantt chart: ".$gantt_id;
                                     echo $this->getLineSeparator();
-                                    if ($rowGantt['height'] == '') $rowGantt['height'] = "'NULL'";
-                                    if ($rowGantt['width'] == '') $rowGantt['width'] = "'NULL'";
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
-                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'gantt',".$this->da->quoteSmart($rowGantt['title']).",".$this->da->quoteSmart($rowGantt['description']).",".$rowGantt['width'].",".$rowGantt['height'].")";
+                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'gantt',".$this->da->quoteSmart($rowGantt['title']).",".$this->da->quoteSmart($rowGantt['description']).",0,0)";
                                     $res = $this->update($sql);
                                     if (!$res) {
                                         $this->addUpgradeError("An error occured while creating the gantt chart ".$gantt_id.": ".$this->da->isError());
@@ -273,8 +271,8 @@ class Update_010 extends CodeXUpgrade {
                                     $pie_id = $rowPie['pie_id'];
                                     echo "---- ---- Creating the Pie chart: ".$pie_id;
                                     echo $this->getLineSeparator();
-                                    if ($rowPie['height'] == '') $rowPie['height'] = "'NULL'";
-                                    if ($rowPie['width'] == '') $rowPie['width'] = "'NULL'";
+                                    if ($rowPie['height'] == '') $rowPie['height'] = 500;
+                                    if ($rowPie['width'] == '') $rowPie['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
                                            "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'pie',".$this->da->quoteSmart($rowPie['title']).",".$this->da->quoteSmart($rowPie['description']).",".$rowPie['width'].",".$rowPie['height'].")";
                                     $res = $this->update($sql);       
@@ -305,8 +303,8 @@ class Update_010 extends CodeXUpgrade {
                                     $bar_id = $rowBar['bar_id'];
                                     echo "---- ---- Creating the Bar chart: ".$bar_id;
                                     echo $this->getLineSeparator();
-                                    if ($rowBar['height'] == '') $rowBar['height'] = "'NULL'";
-                                    if ($rowBar['width'] == '') $rowBar['width'] = "'NULL'";
+                                    if ($rowBar['height'] == '') $rowBar['height'] = 500;
+                                    if ($rowBar['width'] == '') $rowBar['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
                                            "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'bar',".$this->da->quoteSmart($rowBar['title']).",".$this->da->quoteSmart($rowBar['description']).",".$rowBar['width'].",".$rowBar['height'].")";
                                     $res = $this->update($sql);
@@ -330,15 +328,15 @@ class Update_010 extends CodeXUpgrade {
                             // get line charts of the report
                             $sqlLine = "SELECT * " .
                                         "FROM plugin_graphtrackers_line_chart " .
-                                        "WHERE report_graphic_id = ".$rpt_id;
+                                        "WHERE field_base <> null and report_graphic_id = ".$rpt_id;
                             $darLine = $this->retrieve($sqlLine);
                             if($darLine && !$darLine->isError()) {
                                 while($rowLine = $darLine->getRow()) {
                                     $line_id = $rowLine['line_id'];
                                     echo "---- ---- Creating the Line chart: ".$line_id;
                                     echo $this->getLineSeparator();
-                                    if ($rowLine['height'] == '') $rowLine['height'] = "'NULL'";
-                                    if ($rowLine['width'] == '') $rowLine['width'] = "'NULL'";
+                                    if ($rowLine['height'] == '') $rowLine['height'] = 500;
+                                    if ($rowLine['width'] == '') $rowLine['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
                                            "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'line',".$this->da->quoteSmart($rowLine['title']).",".$this->da->quoteSmart($rowLine['description']).",".$rowLine['width'].",".$rowLine['height'].")";
                                     $res = $this->update($sql);
