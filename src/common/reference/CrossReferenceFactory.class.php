@@ -181,15 +181,20 @@ class CrossReferenceFactory {
     	    }
         }
         
+        // Sort array by Nature
+        ksort($crossRefArray);
+        
         $reference_manager = ReferenceManager::instance();
     	$available_natures = $reference_manager->getAvailableNatures();
     	
     	// HTML part (stored in $display)
-    	$display = "<p>".$Language->getText('cross_ref_fact_include','legend')."</p>";
+    	$display = '';
+    	$display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include','legend') . '</p>';
     	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
             $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
+            $display .= '<ul class="cross_reference_list">';
     	    if (array_key_exists('both', $refArraySourceTarget)) {
-    	        $display.="<br>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
+    	        $display.="<li class='cross_reference'>".$GLOBALS['HTML']->getImage('ic/both_arrows.png', 
                     array( 'alt'=> $Language->getText('cross_ref_fact_include','cross_referenced'),
                             'align' => 'top-left',
                             'hspace' => '5',
@@ -203,9 +208,10 @@ class CrossReferenceFactory {
                     $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
                     $i++;
                 }
+                $display .= "</li>";
             }
             if (array_key_exists('target', $refArraySourceTarget)) {
-                $display.="<br>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
+                $display.="<li class='reference_to'>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
                     array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
                             'align' => 'top-left',
                             'hspace' => '5',
@@ -219,9 +225,10 @@ class CrossReferenceFactory {
                     $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
                     $i++;
                 }
+                $display .= "</li>";
             }
             if (array_key_exists('source', $refArraySourceTarget)) {
-                $display.="<br>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
+                $display.="<li class='referenced_by'>".$GLOBALS['HTML']->getImage('ic/left_arrow.png', 
                     array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
                             'align' => 'top-left',
                             'hspace' => '5',
@@ -235,8 +242,14 @@ class CrossReferenceFactory {
                     $display.= $currRef->getRefSourceKey()." #".$currRef->getRefSourceId()."</a>";
                     $i++;
                 }
+                $display .= "</li>";
             }
+            $display .= "</ul>";
+            $display .= "</p>";
     	}
+    	
+    	$display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
+    	$display .= '<script type="text/javascript">hide_references_to();</script>';
     	
     	return $display;
     }

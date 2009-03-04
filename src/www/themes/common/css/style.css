@@ -793,6 +793,11 @@ div.layout-manager-column-remove_hover {
 }
 /* }}} */
 
+ul.cross_reference_list {
+    list-style-type: none;
+    padding-left: 0;
+}
+	
 td.forum_reference_separator {
 	border-top: thin dotted grey;
 	padding-top: 10px;
