@@ -225,6 +225,14 @@ class Update_010 extends CodeXUpgrade {
                             }
                             // get the new graphic report id 
                             echo "New Graphic report Created: ".$new_rpt_id." Instead of the report ".$rpt_id;
+                            echo $this->getLineSeparator();
+                            echo "++++Update graphic report user prefs to the new created report+++";
+                            echo $this->getLineSeparator();
+                            $sql = "UPDATE user_preferences SET preference_value='&report_graphic_id=".$new_rpt_id."' WHERE preference_name LIKE '%tracker_graph_brow_cust%' and preference_value='&report_graphic_id=".$rpt_id."'";
+                            $res = $this->update($sql);
+                            if (!$res) {
+                                $this->addUpgradeError("An error occured while updating user prefs for graphic report ".$rpt_id.": ".$this->da->isError());
+                            }
                             $new_rpt_id++;
                             echo $this->getLineSeparator();
                             
@@ -361,7 +369,6 @@ class Update_010 extends CodeXUpgrade {
                     }                    
                 }
             }
-            
             
             // delete old structure
             echo "delete old structure";
