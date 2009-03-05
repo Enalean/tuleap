@@ -25,9 +25,6 @@ if($request->valid($vGroupId)) {
 
 site_project_header(array('title'=>$Language->getText('project_memberlist','proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
 
-// Check that member list is public
-$group=group_get_object($group_id);
-
 print $Language->getText('project_memberlist','contact_to_become_member');
 
 // list members
