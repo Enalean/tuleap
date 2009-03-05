@@ -41,6 +41,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'src/www/tracker/tracker_selection.php',
             'src/www/tracker/group_selection.php',
             'src/www/scripts/check_pw.js.php',
+            'src/www/scripts/cross_references.js.php',
             'plugins/salome/include/SalomeWithCodex.jnlp.php',
             'site-content/en_US/others/default_page.php',
             'site-content/fr_FR/others/default_page.php'
