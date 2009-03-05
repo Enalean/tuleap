@@ -61,7 +61,7 @@ class XMLDocmanImport {
     private $force;
     
     // Whether the items will be reordered or not (folder, docs - alphabetical)
-    private $reorder;
+    protected $reorder;
             
     // The import messages will be appended in the following metadata
     protected $importMessageMetadata;

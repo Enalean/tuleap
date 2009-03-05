@@ -66,9 +66,30 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         $answer = strtoupper(trim(fgets(STDIN)));
         
         if ($answer == 'Y') {
-            foreach ($mergedTree['children'] as $childTitle => $subTree) {
+            foreach ($this->sortChildrenArray($mergedTree['children']) as $childTitle => $subTree) {
                 $this->recurseUpdateTree($childTitle, $subTree, $parentId);
             }
+        }
+    }
+    
+    private function sortChildrenArray($array) {
+        if (isset($this->reorder) && ($this->reorder == true)) {
+            uksort($array, 'strnatcasecmp');
+            
+            $docArray = array();
+            $folderArray = array();
+            
+            foreach ($array as $k => $v) {
+            	if ($v['xmlElement']['type'] == 'folder') {
+            	    $folderArray[$k] = $v;
+            	} else {
+            	    $docArray[$k] = $v;
+            	}
+            }
+
+            return array_merge($folderArray, $docArray);
+        } else {
+            return $array;
         }
     }
     
@@ -139,7 +160,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                     }
 
                     if (isset($tree['children'])) {
-                        foreach ($tree['children'] as $childTitle => $subTree) {
+                        foreach ($this->sortChildrenArray($tree['children']) as $childTitle => $subTree) {
                             $this->recurseUpdateTree($childTitle, $subTree, $itemId);
                         }
                     }
