@@ -62,7 +62,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
-                    if (db_numrows($values) > 1) {
+                    if (db_numrows($values) >= 1) {
                         echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_JS_QUOTE) ."')";
                         $default_value = $field->getDefaultValue();
                         while ($row = db_fetch_array($values)) {
@@ -173,7 +173,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             //Source values
             echo '<table width="100%" cellpadding="0" cellspacing="0">';
             $values = $sources[$source_field]->getFieldPredefinedValues($this->artifact_type->getID());
-            if (db_numrows($values) > 1) {
+            if (db_numrows($values) >= 1) {
                 while ($row = db_fetch_array($values)) {
                     echo '<tr id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
                     echo '<td style="width: 1%;">';
@@ -199,7 +199,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             //Target values
             echo '<table width="100%" cellpadding="0" cellspacing="0">';
             $values = $targets[$target_field]->getFieldPredefinedValues($this->artifact_type->getID());
-            if (db_numrows($values) > 1) {
+            if (db_numrows($values) >= 1) {
                 while ($row = db_fetch_array($values)) {
                     echo '<tr id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
                     echo '<td style="text-align: right; width: 1%"><div id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_arrow" style="visibility: hidden;">&rarr;</div></td>';
