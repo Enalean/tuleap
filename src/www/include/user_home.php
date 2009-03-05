@@ -153,7 +153,6 @@ echo $hooks_output;
 $res_cat = db_query("SELECT groups.group_name, "
 	. "groups.unix_group_name, "
 	. "groups.group_id, "
-	. "groups.hide_members, "
 	. "user_group.admin_flags, "
 	. "user_group.bug_flags FROM "
 	. "groups,user_group WHERE user_group.user_id='".db_ei($user_id)."' AND "
@@ -166,10 +165,8 @@ if (db_numrows($res_cat) < 1) {
 } else { // endif no groups
 	print '<p>'.$Language->getText('include_user_home','is_member').":<BR>&nbsp;";
 	while ($row_cat = db_fetch_array($res_cat)) {
-            if (($row_cat['hide_members']==0)||(user_is_super_user())) {
-		print ('<BR><A href="/projects/'.$row_cat['unix_group_name'].'/">'.$row_cat['group_name']."</A>\n");
-            }
-        }
+        print ('<BR><A href="/projects/'.$row_cat['unix_group_name'].'/">'.$row_cat['group_name']."</A>\n");
+    }
 	print "</ul>";
 } // end if groups
 

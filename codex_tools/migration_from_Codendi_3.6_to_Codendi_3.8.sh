@@ -431,6 +431,20 @@ UPDATE artifact_report_field
 SET artifact_report_field.place_query = R1.new_rank;
 
 
+# Add 3 new widgets on project summary page
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
+SELECT group_id, 'g', 1, 1, 'projectdescription'
+FROM groups;
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
+SELECT group_id, 'g', 1, 1, 'projectclassification'
+FROM groups;
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
+SELECT group_id, 'g', 1, 2, 'projectmembers'
+FROM groups
+WHERE hide_members = 0;
+# Delete hide_members column (not needed anymore, please do it after previous request)
+ALTER TABLE groups DROP hide_members;
+
 #Layouts for dashboard
 INSERT INTO layouts(id, name, description, scope) VALUES
 (2, '3 columns', 'Simple layout made of 3 columns', 'S'),

@@ -15,7 +15,6 @@ INSERT INTO groups SET
   short_description = 'Group administrators of the IM server (OpenFire). DO *NOT* add real users to this group.', 
   register_time = 940000000, 
   rand_hash = '', 
-  hide_members = '0', 
   type = '1';
 
 

@@ -30,7 +30,6 @@ $row_grp = db_fetch_array($res_grp);
 
 $form_group_name=$request->get('form_group_name');
 $form_shortdesc =$request->get('form_shortdesc');
-$hide_members=$request->get('hide_members');
 $Update=$request->get('Update');
 
 $valid_data=0;
@@ -109,8 +108,7 @@ if ($valid_data==1) {
     
     $sql = 'UPDATE groups SET '
         ."group_name='".db_es(htmlspecialchars($form_group_name))."',"
-        ."short_description='". db_es($form_shortdesc) ."',"
-        ."hide_members='". db_es($hide_members) ."'";
+        ."short_description='". db_es($form_shortdesc) ."'";
 		
     $sql .= " WHERE group_id='".db_ei($group_id)."'";
 
@@ -210,12 +208,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	echo "</P>";
 }
 
-echo '<INPUT TYPE="HIDDEN" NAME="hide_members" VALUE="0">'; 
-
-echo '<P>'.$Language->getText('project_admin_editgroupinfo','hide_members').'
-<INPUT TYPE="CHECKBOX" NAME="hide_members" VALUE="1"'.(($row_grp['hide_members']==1) ? ' CHECKED' : '' ).'><BR> 	 
-<HR>
-
+echo '
 <P><INPUT type="submit" name="Update" value="'.$Language->getText('global','btn_update').'">
 </FORM>
 ';

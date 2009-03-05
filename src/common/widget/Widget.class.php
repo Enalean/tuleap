@@ -12,6 +12,9 @@ require_once('common/widget/Widget_MySrs.class.php');
 require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
+require_once('common/widget/Widget_ProjectDescription.class.php');
+require_once('common/widget/Widget_ProjectClassification.class.php');
+require_once('common/widget/Widget_ProjectMembers.class.php');
 require_once('common/widget/Widget_ProjectLatestFileReleases.class.php');
 require_once('common/widget/Widget_ProjectLatestNews.class.php');
 require_once('common/widget/Widget_ProjectPublicAreas.class.php');
@@ -158,6 +161,15 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
                     $o =& new Widget_MyAdmin();
                 }
                 break;
+            case 'projectdescription':
+                $o =& new Widget_ProjectDescription();
+                break;
+            case 'projectclassification':
+                $o =& new Widget_ProjectClassification();
+                break;
+            case 'projectmembers':
+                $o =& new Widget_ProjectMembers();
+                break;
             case 'projectlatestfilereleases':
                 $o =& new Widget_ProjectLatestFileReleases();
                 break;
@@ -196,9 +208,13 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
                 );
                 break;
             case $lm->OWNER_TYPE_GROUP:
-                $widgets = array('projectlatestfilereleases', 'projectlatestnews', 
-                    'projectpublicareas', 'projectlatestsvncommits', 'projectlatestcvscommits'
+                $widgets = array('projectdescription', 'projectmembers', 
+                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', 
+                    'projectlatestsvncommits', 'projectlatestcvscommits'
                 );
+                if ($GLOBALS['sys_use_trove'] != 0) {
+                    $widgets[] = 'projectclassification';
+                }
                 break;
             case $lm->OWNER_TYPE_HOME:
                 $widgets = array();

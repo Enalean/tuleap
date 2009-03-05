@@ -202,6 +202,8 @@ include_project_home	release_notes	Lire les notes et les modifications de cette 
 include_project_home	monitor_pack	Surveiller ce paquet
 include_project_home	view_all_files	Voir tous les fichiers du projet
 include_project_home	public_areas	Zones publiques
+include_project_home	project_description	Description du projet
+include_project_home	project_classification	Classification du projet
 include_project_home	homepage	Accueil Web
 include_project_home	proj_home	Page d'accueil Web du projet
 include_project_home	public_forums	Forums publics

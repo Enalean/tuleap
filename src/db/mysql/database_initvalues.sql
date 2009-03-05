@@ -123,7 +123,6 @@ INSERT INTO groups SET \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
-  hide_members = '0', \
   new_bug_address = 'codex-admin@_DOMAIN_NAME_', \
   new_patch_address = 'codex-admin@_DOMAIN_NAME_', \
   new_support_address = 'codex-admin@_DOMAIN_NAME_', \
@@ -162,7 +161,6 @@ INSERT INTO groups SET \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
-  hide_members = '0', \
   new_bug_address = '', \
   new_patch_address = '', \
   new_support_address = '', \
@@ -202,7 +200,6 @@ INSERT INTO groups SET \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
-  hide_members = '0', \
   new_bug_address = '', \
   new_patch_address = '', \
   new_support_address = '', \

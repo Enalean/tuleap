@@ -169,14 +169,6 @@ class Group extends Error {
 	}
 
 	/*
-		Simply returns the hide_members flag from the database
-	*/
-	function hideMembers() {
-		return $this->data_array['hide_members'];
-	}
-
-
-	/*
 		Database field status of 'A' returns true
 	*/
 	function isActive() {
