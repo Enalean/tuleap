@@ -254,6 +254,9 @@ include_project_home	latest_news	Latest News
 include_project_home	start_monitoring	Monitor this package
 include_project_home	stop_monitoring	Stop monitoring this package
 include_project_home	latest_svn_commit	Latest SVN Commits
+include_project_home	my_latest_svn_commit	My Latest SVN Commits
+include_project_home	my_latest_svn_commit_on	on
+include_project_home	my_latest_svn_commit_by	by
 include_project_home	latest_cvs_commit	Latest CVS Commit
 #
 #-----------------------------------------------
