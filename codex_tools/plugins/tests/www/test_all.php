@@ -1,6 +1,6 @@
 <?php
 
-require_once('./utils.php');
+require_once('./tests_utils.php');
 require_once('CodeXReporter.class.php');
 
 function add_test_to_group($test, $categ, $params) {

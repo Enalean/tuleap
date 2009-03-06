@@ -2,7 +2,7 @@
 
 set_include_path(get_include_path() .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src' .PATH_SEPARATOR. dirname(__FILE__).'/../../../../src/www/include');
 
-require_once('utils.php');
+require_once('tests_utils.php');
 
 
 function add_test_to_group($test, $categ, $params) {
