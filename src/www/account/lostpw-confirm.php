@@ -34,7 +34,7 @@ $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body
                 get_server_url()."/account/lostlogin.php?confirm_hash=".$confirm_hash)));
 
 $mail =& new Mail();
-$mail->setTo($row_user['email']);
+$mail->setTo($row_user['email'],true);
 $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
 $mail->setBody($message);
 $mail->setFrom($GLOBALS['sys_noreply']);

@@ -279,7 +279,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 $mail = new Mail();
                 $mail->setSubject($subject);
                 $mail->setFrom($from);
-                $mail->setTo($to);
+                $mail->setTo($to,true); // Don't invalidate address
                 $mail->setBody($body);
                 if (!$mail->send()) {
                     $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
@@ -322,7 +322,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $mail = new Mail();
             $mail->setSubject($subject);
             $mail->setFrom($from);
-            $mail->setTo($to);
+            $mail->setTo($to,true); // Don't invalidate address
             $mail->setBody($body);
             if (!$mail->send()) {
                 $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
