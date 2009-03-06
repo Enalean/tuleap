@@ -75,15 +75,13 @@ class hudsonViews extends Views {
             $dar = $job_dao->searchByJobName($job_name, $group_id);
         }
         if ($dar->valid()) {
-            
-            $crossref_fact= new CrossReferenceFactory($job_name, 'hudson_job', $group_id);
+            $row = $dar->current();
+            $crossref_fact= new CrossReferenceFactory($row['name'], 'hudson_job', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
                 echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            
-            $row = $dar->current();
             $this->_display_iframe($row['job_url']);
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
@@ -127,15 +125,13 @@ class hudsonViews extends Views {
         }
         
         if ($dar && $dar->valid()) {
-            
-            $crossref_fact= new CrossReferenceFactory($job_name.'/'.$build_id, 'hudson_build', $group_id);
+            $row = $dar->current();
+            $crossref_fact= new CrossReferenceFactory($row['name'].'/'.$build_id, 'hudson_build', $group_id);
             $crossref_fact->fetchDatas();
             if ($crossref_fact->getNbReferences() > 0) {
                 echo '<b> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</b>';
                 $crossref_fact->DisplayCrossRefs();
             }
-            
-            $row = $dar->current();
             $this->_display_iframe($row['job_url'].'/'.$build_id.'/');
         } else {
             echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
