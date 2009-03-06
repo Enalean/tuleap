@@ -451,7 +451,7 @@ class Docman_ApprovalTableNotificationCycle {
     //
 
     function &_getReviewerDao() {
-        $dao = new Docman_ApprovalTableReviewerDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;
     }
 

@@ -65,7 +65,7 @@ class hudsonViews extends Views {
     function job_details() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
             $job_id = $request->get('job_id');
             $dar = $job_dao->searchByJobID($job_id);
@@ -95,7 +95,7 @@ class hudsonViews extends Views {
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
 
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
@@ -109,7 +109,7 @@ class hudsonViews extends Views {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $build_id = $request->get('build_id');
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
             $job_id = $request->get('job_id');
             $dar = $job_dao->searchByJobID($job_id);
@@ -148,7 +148,7 @@ class hudsonViews extends Views {
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
         
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
@@ -164,7 +164,7 @@ class hudsonViews extends Views {
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
         
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByJobID($job_id);
         if ($dar->valid()) {
             $row = $dar->current();
@@ -184,7 +184,7 @@ class hudsonViews extends Views {
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
             
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+            $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $job_dao->searchByJobID($job_id);
             if ($dar->valid()) {
                 $row = $dar->current();
@@ -256,7 +256,7 @@ class hudsonViews extends Views {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByGroupID($group_id);
         
         if ($dar && $dar->valid()) {

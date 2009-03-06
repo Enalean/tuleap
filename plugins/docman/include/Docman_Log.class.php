@@ -69,7 +69,7 @@ class Docman_Log { /* implements EventListener */
     var $dao;
     function _getDao() {
         if (!$this->dao) {
-            $this->dao = new Docman_LogDao(CodexDataAccess::instance());
+            $this->dao = new Docman_LogDao(CodendiDataAccess::instance());
         }
         return  $this->dao;
     }

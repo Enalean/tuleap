@@ -44,7 +44,7 @@ require_once(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/con
 require($GLOBALS['db_config_file']);
 //database abstraction
 require_once(dirname(__FILE__).'/../../common/dao/include/DataAccessObject.class.php');
-require_once(dirname(__FILE__).'/../../common/dao/CodexDataAccess.class.php');
+require_once(dirname(__FILE__).'/../../common/dao/CodendiDataAccess.class.php');
 
 define("WEB_ENVIRONMENT", "web");
 define("CONSOLE_ENVIRONMENT", "console");
@@ -66,7 +66,7 @@ define("CONSOLE_ENVIRONMENT", "console");
     function CodeXUpgrade() {
         $this->_upgradeError = null;
         $this->setEnvironment();
-        $da =& CodexDataAccess::instance();
+        $da =& CodendiDataAccess::instance();
         parent::DataAccessObject($da);
     }
     

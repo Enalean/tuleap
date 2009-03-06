@@ -22,7 +22,7 @@
  *
  * 
  */
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 
 require_once('DocmanConstants.class.php');
@@ -571,7 +571,7 @@ class Docman_ItemFactory {
     var $dao;
     function &_getItemDao() {
         if (!$this->dao) {
-            $this->dao =& new Docman_ItemDao(CodexDataAccess::instance());
+            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
@@ -580,7 +580,7 @@ class Docman_ItemFactory {
     function &_getWikiDao() {
         require_once('common/dao/WikiDao.class.php');
         if (!$this->wikidao) {
-            $this->wikidao =& new WikiDao(CodexDataAccess::instance());
+            $this->wikidao =& new WikiDao(CodendiDataAccess::instance());
         }
         return $this->wikidao;
     }

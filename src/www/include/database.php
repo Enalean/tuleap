@@ -14,7 +14,7 @@ if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
 $conn = null;
 function db_connect() {
     global $conn;
-    $conn = CodeXDataAccess::instance();
+    $conn = CodendiDataAccess::instance();
 }
 
 /**

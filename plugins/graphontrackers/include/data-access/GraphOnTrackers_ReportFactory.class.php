@@ -32,7 +32,7 @@ class GraphOnTrackers_ReportFactory {
      */
     public function copyReports($from_id, $to_id) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $dao = new GraphOnTrackers_ReportDao(CodeXDataAccess::instance());
+        $dao = new GraphOnTrackers_ReportDao(CodendiDataAccess::instance());
         foreach($dao->searchByTrackerIdAndScope($from_id, 'P') as $row) {
             //retrieve the report
             $report = new GraphOnTrackers_Report($row['report_graphic_id']);

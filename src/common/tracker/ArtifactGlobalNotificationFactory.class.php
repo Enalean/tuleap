@@ -16,7 +16,7 @@ class ArtifactGlobalNotificationFactory {
     
     function getGlobalNotificationsForTracker($tracker_id) {
         $notifs = array();
-        $dao =& new ArtifactGlobalNotificationDao(CodeXDataAccess::instance());
+        $dao =& new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         $dar =& $dao->searchByTrackerId($tracker_id);
         if ($dar) {
             $notifs = array();
@@ -30,15 +30,15 @@ class ArtifactGlobalNotificationFactory {
     }
     
     function addGlobalNotificationForTracker($tracker_id) {
-        $dao =& new ArtifactGlobalNotificationDao(CodeXDataAccess::instance());
+        $dao =& new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->create($tracker_id, '', 0, 1);
     }
     function removeGlobalNotificationForTracker($global_notification_id, $tracker_id) {
-        $dao =& new ArtifactGlobalNotificationDao(CodeXDataAccess::instance());
+        $dao =& new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         return $dao->delete($global_notification_id, $tracker_id);
     }
     function updateGlobalNotification($global_notification_id, $data) {
-        $dao =& new ArtifactGlobalNotificationDao(CodeXDataAccess::instance());
+        $dao =& new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         $feedback = '';
         $arr_email_address = split('[,;]', $data['addresses']);
         if (!util_validateCCList($arr_email_address, $feedback, false)) {

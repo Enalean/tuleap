@@ -43,7 +43,7 @@ extends Plugin {
     //$params['mail'] Mail
     //$params['header'] String array
     function sendmail($params) {
-        $dao = new MaillogDao(CodexDataAccess::instance());
+        $dao = new MaillogDao(CodendiDataAccess::instance());
         $dao->insertMail($params['mail']);
     }
 
@@ -55,7 +55,7 @@ extends Plugin {
     function actions() {
         $request =& HTTPRequest::instance();
         if($request->isPost() && $request->get("delete") == "Delete") {
-            $dao = new MaillogDao(CodexDataAccess::instance());
+            $dao = new MaillogDao(CodendiDataAccess::instance());
             $dao->deleteAllMessages();
         }
     }
@@ -68,7 +68,7 @@ extends Plugin {
     }
 
     function listMessages() {
-        $dao = new MaillogDao(CodexDataAccess::instance());
+        $dao = new MaillogDao(CodendiDataAccess::instance());
         $dar = $dao->getAllMessages();
         $nb = $dao->getNbMessages();
 

@@ -58,7 +58,7 @@ class ArtifactRuleFactory {
     function &instance() {
         static $_artifactrulefactory_instance;
         if (!$_artifactrulefactory_instance) {
-            $rules_dao         =& new ArtifactRuleDao(CodexDataAccess::instance());
+            $rules_dao         =& new ArtifactRuleDao(CodendiDataAccess::instance());
             $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;

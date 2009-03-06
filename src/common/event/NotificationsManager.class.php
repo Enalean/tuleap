@@ -61,7 +61,7 @@ require_once('common/dao/NotificationsDao.class.php');
     var $dao;
     function &_getDao() {
         if (!$this->dao) {
-            $this->dao = new NotificationsDao(CodexDataAccess::instance());
+            $this->dao = new NotificationsDao(CodendiDataAccess::instance());
         }
         return  $this->dao;
     }

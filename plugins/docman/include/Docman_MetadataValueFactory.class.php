@@ -25,7 +25,7 @@
 require_once('common/include/Error.class.php');
 require_once('Docman_MetadataValue.class.php');
 require_once('Docman_MetadataValueDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 /**
  * High level object for Metadata Values management.
@@ -46,7 +46,7 @@ class Docman_MetadataValueFactory extends Error {
     function &getDao() {
         static $_plugin_docman_metadata_value_dao_instance;
         if(!$_plugin_docman_metadata_value_dao_instance) {
-            $_plugin_docman_metadata_value_dao_instance =& new Docman_MetadataValueDao(CodexDataAccess::instance());
+            $_plugin_docman_metadata_value_dao_instance =& new Docman_MetadataValueDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_value_dao_instance;
     }

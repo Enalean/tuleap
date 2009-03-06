@@ -112,7 +112,7 @@ class Docman_WikiController extends Docman_Controller {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
         $documents = $this->_getDocmanReferences($wiki_page, $group_id);
-        $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
+        $item_dao =& new Docman_ItemDao(CodendiDataAccess::instance());
         foreach($documents as $key => $document) {
             // Update the item's update date attribute.
             $item_dao->updateById($document->getId(), null, null, null, null, null, $update_date=time(), 
@@ -381,7 +381,7 @@ class Docman_WikiController extends Docman_Controller {
     var $dao;
     function &_getItemDao() {
         if (!$this->dao) {
-            $this->dao =& new Docman_ItemDao(CodexDataAccess::instance());
+            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

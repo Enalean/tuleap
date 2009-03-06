@@ -873,7 +873,7 @@ if ( $func == 'gotoid' ) {
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                             //Todo: check that the user can update the report
                             list($id,$new_position) = each($reordercolumns);
-                            $dao = new ArtifactReportFieldDao(CodeXDataAccess::instance());
+                            $dao = new ArtifactReportFieldDao(CodendiDataAccess::instance());
                             if ($new_position == '-1') {
                                 $new_position = 'end';
                             } else {
@@ -896,7 +896,7 @@ if ( $func == 'gotoid' ) {
                         $arf = new ArtifactReportFactory($ath);
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                             //Todo: check that the user can update the report
-                            $dao = new ArtifactReportFieldDao(CodeXDataAccess::instance());
+                            $dao = new ArtifactReportFieldDao(CodendiDataAccess::instance());
                             $dao->resizeColumns($report_id, $resizecolumns);
                         }
                     }

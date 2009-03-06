@@ -22,7 +22,7 @@ if ($request->valid($vFunc) && $request->get('func') == 'delete') {
     $vLogId = new Valid_UInt('log_id');
     if ($request->valid($vLogId)) {
         $log_id_to_delete = $request->get('log_id');
-        $logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+        $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
         $logs_result =& $logs_dao->delete($log_id);
         if(!$logs_result){
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svntodimensions','admin_historic_error'));
@@ -50,7 +50,7 @@ $output = '';
         
         $output .= html_build_list_table_top($titles);
         
-        $logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+        $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
         $logs_result =& $logs_dao->searchAll();
         
         $row_index = 0;

@@ -56,7 +56,7 @@ class UserImport extends Error {
         $hp = CodeX_HTMLPurifier::instance();
         $user_file = fopen($user_filename, "r");
         $ok = true;  
-        $user_dao =& new UserDao(CodexDataAccess::instance());
+        $user_dao =& new UserDao(CodendiDataAccess::instance());
         $user_id_array = array();   // to check the double names or emails
             
         //parsing each line of the file

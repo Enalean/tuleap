@@ -150,7 +150,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         return $fs;
     }
     function &_getItemDao() {
-        $dao = new Docman_ItemDao(CodexDataAccess::instance());
+        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
         return $dao;
     }
 }

@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 require_once('common/wiki/lib/WikiAttachmentRevisionDao.class.php');
 
@@ -75,7 +75,7 @@ class WikiAttachmentRevision {
         static $_codex_wikiattachmentrevisiondao_instance;
         
         if(!$_codex_wikiattachmentrevisiondao_instance) {
-            $_codex_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodexDataAccess::instance());
+            $_codex_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
         }
 
         return $_codex_wikiattachmentrevisiondao_instance;

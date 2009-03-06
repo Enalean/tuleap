@@ -19,9 +19,9 @@ $result_analyze = '';
 
 if ($request->exist('do_analyze')) {
     require_once('common/dao/DBTablesDao.class.php');
-    require_once('common/dao/CodexDataAccess.class.php');
+    require_once('common/dao/CodendiDataAccess.class.php');
     require_once('Table.php');
-    $dao =& new DBTablesDao(CodeXDataAccess::instance());
+    $dao =& new DBTablesDao(CodendiDataAccess::instance());
     $dar =& $dao->searchAll();
     
     $table =& new Console_Table();

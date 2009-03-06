@@ -197,7 +197,7 @@ class Reference {
      */
     function &_getReferenceDao() {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
-            $this->referenceDao =& new ReferenceDao(CodexDataAccess::instance());
+            $this->referenceDao =& new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;
     }

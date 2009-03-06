@@ -8,7 +8,7 @@ require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('CvsToDimensionsViews.class.php');
 require_once('CvsToDimensionsActions.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('pre.php');
 require_once('P26CDataAccess.class.php');
 
@@ -135,7 +135,7 @@ class CvsToDimensions extends Controler {
      */
     function _checkParametersForTransfert($request){
 		$group_id = $request->get('group_id');    	
-    	$parameters_dao = new PluginCvstodimensionsParametersDao(CodexDataAccess::instance());
+    	$parameters_dao = new PluginCvstodimensionsParametersDao(CodendiDataAccess::instance());
     	$parameters_results =& $parameters_dao->searchByGroupId($group_id);
         $error = false;
     	if(!$row = $parameters_results->getRow()){
@@ -143,7 +143,7 @@ class CvsToDimensions extends Controler {
     		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_cvstodimensions', 'feedback_missing_field', $GLOBALS['Language']->getText('plugin_cvstodimensions','parameters_product')));
     		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_cvstodimensions', 'feedback_missing_field', $GLOBALS['Language']->getText('plugin_cvstodimensions','parameters_database')));
     	}
-    	$modules_dao = new PluginCvstodimensionsModulesDao(CodexDataAccess::instance());
+    	$modules_dao = new PluginCvstodimensionsModulesDao(CodendiDataAccess::instance());
     	$modules_results =& $modules_dao->searchByGroupId($group_id);
     	$modules_cvs_db = array();
     	while ($row = $modules_results->getRow()){
@@ -166,7 +166,7 @@ class CvsToDimensions extends Controler {
      * set the global variable transferInProgress to true if there is some log with inprogress state
      */
     function _isTransferPossible($group_id){
-    	$logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByStateAndGroupId($group_id, '1');
     	if($logs_result->rowCount()!=0){
     		$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_cvstodimensions', 'feedback_transfer_wait'));
@@ -180,7 +180,7 @@ class CvsToDimensions extends Controler {
      */
     function _isReloadPage($request){
     	$group_id = $request->get('group_id');
-    	$logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess::instance());
     	//check if the tag has already been transfered
     	$logs_result =& $logs_dao->searchByGroupIdTagAndState($group_id, $_POST['tag'],0);
     	if($logs_result->rowCount()==0){

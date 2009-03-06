@@ -24,7 +24,7 @@
 require_once('WikiAttachmentRevision.class.php');
 require_once('WikiAttachmentDao.class.php');
 //require_once('www/project/admin/permissions.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 /**
  * Management of external ressources linked on a wiki
@@ -98,7 +98,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         static $_codex_wikiattachmentdao_instance;
         
         if(!$_codex_wikiattachmentdao_instance) {
-            $_codex_wikiattachmentdao_instance =& new WikiAttachmentDao(CodexDataAccess::instance());
+            $_codex_wikiattachmentdao_instance =& new WikiAttachmentDao(CodendiDataAccess::instance());
         }
 
         return $_codex_wikiattachmentdao_instance;

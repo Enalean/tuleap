@@ -25,7 +25,7 @@
 */
 
 require_once('common/dao/PermissionsDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 /**
 * Manage permissions
@@ -49,7 +49,7 @@ class PermissionsManager {
     function & instance() {
         static $_permissionmanager_instance;
         if (!$_permissionmanager_instance) {
-            $dao =& new PermissionsDAO(CodexDataAccess::instance());
+            $dao =& new PermissionsDAO(CodendiDataAccess::instance());
             $_permissionmanager_instance = new PermissionsManager($dao);
         }
         return $_permissionmanager_instance;

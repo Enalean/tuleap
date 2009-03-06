@@ -30,7 +30,7 @@ class UserLogManager {
     }
 
     function &getDao() {
-        $da =& CodexDataAccess::instance();
+        $da =& CodendiDataAccess::instance();
         $dao =& new UserLogDao($da);
         return $dao;
     }

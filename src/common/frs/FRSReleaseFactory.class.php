@@ -182,7 +182,7 @@ class FRSReleaseFactory {
 
 	function  _getFRSReleaseDao() {
 		if (!$this->dao) {
-			$this->dao =  new FRSReleaseDao(CodexDataAccess :: instance(), $this->STATUS_DELETED);
+			$this->dao =  new FRSReleaseDao(CodendiDataAccess :: instance(), $this->STATUS_DELETED);
 		}
 		return $this->dao;
 	}

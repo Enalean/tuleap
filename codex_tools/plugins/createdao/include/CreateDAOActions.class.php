@@ -10,7 +10,7 @@
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/dao/DBTablesDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 class CreateDAOActions extends Actions {
     
@@ -22,7 +22,7 @@ class CreateDAOActions extends Actions {
         $request =& HTTPRequest::instance();
         $path_to_dao = $request->exist('path_to_dao')?$request->get('path_to_dao'):$this->_getPathToDao();
         var_dump($path_to_dao);
-        $da =& CodexDataAccess::instance();
+        $da =& CodendiDataAccess::instance();
         $tables   =& new DBTablesDao($da);
         $result   =& $tables->searchAll();
         while ($result->valid()) {

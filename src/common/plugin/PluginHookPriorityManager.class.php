@@ -53,7 +53,7 @@ class PluginHookPriorityManager {
     
     function _getPriorityPluginHookDao() {
         if (!is_a($this->priorityPluginHookDao, 'PriorityPluginHookDao')) {
-            $this->priorityPluginHookDao = new PriorityPluginHookDao(CodexDataAccess::instance());
+            $this->priorityPluginHookDao = new PriorityPluginHookDao(CodendiDataAccess::instance());
         }
         return $this->priorityPluginHookDao;
     }

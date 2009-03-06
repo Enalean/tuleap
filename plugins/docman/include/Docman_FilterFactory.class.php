@@ -334,7 +334,7 @@ class Docman_FilterFactory {
     //
     //
     function &getDao() {
-        $dao = new Docman_FilterDao(CodexDataAccess::instance());
+        $dao = new Docman_FilterDao(CodendiDataAccess::instance());
         return $dao;
     }
 

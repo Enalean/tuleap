@@ -4,7 +4,7 @@
  */
 
 require_once('common/dao/UserDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 class Mail {
     
@@ -260,7 +260,7 @@ class Mail {
     var $userDao;
     function &_getUserDao() {
         if (!is_a($this->userDao, 'UserDao')) {
-            $this->userDao =& new UserDao(CodexDataAccess::instance());
+            $this->userDao =& new UserDao(CodendiDataAccess::instance());
         }
         return $this->userDao;
     }

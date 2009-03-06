@@ -5,7 +5,7 @@
 // 
 //
 
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('Docman_TokenDao.class.php');
 
@@ -54,7 +54,7 @@ class Docman_Token {
     /* static */ function retrieveUrl($token) {
         $url = null;
         $um =& UserManager::instance();
-        $dao =& new Docman_TokenDao(CodexDataAccess::instance());
+        $dao =& new Docman_TokenDao(CodendiDataAccess::instance());
         $user =& $um->getCurrentUser();
         $user_id = $user->getId();
         if ($user_id) {
@@ -72,7 +72,7 @@ class Docman_Token {
         return $this->tok;
     }
     function &_getDao() {
-        $d = new Docman_TokenDao(CodexDataAccess::instance());
+        $d = new Docman_TokenDao(CodendiDataAccess::instance());
         return $d;
     }
     function _getReferer() {

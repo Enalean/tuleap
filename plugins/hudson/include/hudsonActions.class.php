@@ -38,7 +38,7 @@ class hudsonActions extends Actions {
             } else {
                 $token = null;
             }
-            $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+            $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             if ( ! $job_dao->createHudsonJob($group_id, $job_url, $job->getName(), $use_svn_trigger, $use_cvs_trigger, $token)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','add_job_error'));
             } else {
@@ -65,7 +65,7 @@ class hudsonActions extends Actions {
         } else {
             $new_token = null;
         }
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ( ! $job_dao->updateHudsonJob($job_id, $new_job_url, $new_job_name, $new_use_svn_trigger, $new_use_cvs_trigger, $new_token)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','edit_job_error'));
         } else {
@@ -76,7 +76,7 @@ class hudsonActions extends Actions {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ( ! $job_dao->deleteHudsonJob($job_id)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','delete_job_error'));
         } else {

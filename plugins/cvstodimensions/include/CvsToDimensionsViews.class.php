@@ -60,7 +60,7 @@ class CvsToDimensionsViews extends Views {
     	$group_id = $request->get('group_id');
     	
     	//use to set fileds according to the db
-    	$parameters_dao = new PluginCvstodimensionsParametersDao(CodexDataAccess::instance());
+    	$parameters_dao = new PluginCvstodimensionsParametersDao(CodendiDataAccess::instance());
     	$parameters_results =& $parameters_dao->searchByGroupId($group_id);
     	
     	$output = '';
@@ -158,7 +158,7 @@ class CvsToDimensionsViews extends Views {
     	
     	$output .= html_build_list_table_top($titles);
     	
-    	$logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByGroupId($group_id);
     	
     	$row_index = 0;
@@ -241,7 +241,7 @@ class CvsToDimensionsViews extends Views {
 			$output .= '<tr>';
 			$module_index ++;
 			$output .= '<td><b>'.$module.' : </b></td>';
-			$modules_dao = new PluginCvstodimensionsModulesDao(CodexDataAccess::instance());
+			$modules_dao = new PluginCvstodimensionsModulesDao(CodendiDataAccess::instance());
 			
 			if (!$request->exist('module_'.$module_index)){
 				$design_part = $modules_dao->searchByGroupIdAndModule($group_id, $module);
@@ -294,7 +294,7 @@ class CvsToDimensionsViews extends Views {
     
     function _getTransferableTags($tags, $group_id){
     	$transferableTags = array();
-    	$logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByGroupId($group_id);
     	foreach($tags as $tag){
     		if(preg_match("`^G[0-9]{1,2}R[0-9]{1,2}C[0-9]{1,2}$`", $tag)){

@@ -58,7 +58,7 @@ class SvnToDimensionsViews extends Views {
     	$group_id = $request->get('group_id');
         
         //use to set fileds according to the db
-        $parameters_dao = new PluginSvntodimensionsParametersDao(CodexDataAccess::instance());
+        $parameters_dao = new PluginSvntodimensionsParametersDao(CodendiDataAccess::instance());
         $parameters_results =& $parameters_dao->searchByGroupId($group_id);
         
     	$output = '';
@@ -100,7 +100,7 @@ class SvnToDimensionsViews extends Views {
     	
     	$output .= html_build_list_table_top($titles);
     	
-    	$logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByGroupId($group_id);
     	
     	$row_index = 0;
@@ -342,7 +342,7 @@ class SvnToDimensionsViews extends Views {
     
     function _getTransferableTags($tags, $group_id){
         $transferableTags = array();
-    	$logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByGroupId($group_id);
     	//$tags = array('fdsG2r54C45lks', 'fjGhjR01C1bg', 'fdG2R54Cfds', 'gfdsG01R23C1fdsd', 'GezRhCfhG01R2C5fgsd', 'sdjqG5R3C55gfd');
        // $tags = array('sdjqG5R3C55gfd');

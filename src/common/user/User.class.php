@@ -192,7 +192,7 @@ class User {
         $is_member = false;
         
         if (isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') {
-            //CodeX admins always return true
+            //Codendi admins always return true
             $is_member = true;
         } else if (isset($group_data[$group_id])) {
             if ($type === 0) {
@@ -641,14 +641,14 @@ class User {
     
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
-            $this->_preferencesdao = new UserPreferencesDao(CodeXDataAccess::instance());
+            $this->_preferencesdao = new UserPreferencesDao(CodendiDataAccess::instance());
         }
         return $this->_preferencesdao;
     }
     
     protected function getUserGroupDao() {
         if (!$this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao(CodeXDataAccess::instance());
+            $this->_usergroupdao = new UserGroupDao(CodendiDataAccess::instance());
         }
         return $this->_usergroupdao;
     }

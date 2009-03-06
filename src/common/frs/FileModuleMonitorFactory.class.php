@@ -101,7 +101,7 @@ class FileModuleMonitorFactory {
 
 	function & _getFileModuleMonitorDao() {
 		if (!$this->dao) {
-			$this->dao = & new FileModuleMonitorDao(CodexDataAccess :: instance());
+			$this->dao = & new FileModuleMonitorDao(CodendiDataAccess :: instance());
 		}
 		return $this->dao;
 	}

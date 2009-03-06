@@ -64,7 +64,7 @@ class ProjectManager {
      * @return DataAccessObject the projects dao
      */
     //public function getDao() {
-    //    return new GroupDao(CodeXDataAccess::instance());
+    //    return new GroupDao(CodendiDataAccess::instance());
     //}
     
     /**

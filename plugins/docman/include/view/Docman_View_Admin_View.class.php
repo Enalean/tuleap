@@ -37,7 +37,7 @@ class Docman_View_Admin_View extends Docman_View_Extra {
     }
     
     /* protected */ function _getSettingsDao() {
-        $dao = new Docman_SettingsDao(CodexDataAccess::instance());
+        $dao = new Docman_SettingsDao(CodendiDataAccess::instance());
         return $dao;
     }
 }

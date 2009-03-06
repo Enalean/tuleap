@@ -52,7 +52,7 @@ class UserManager {
      */
     protected function getDao() {
         if (!$this->_userdao) {
-          $this->_userdao = new UserDao(CodeXDataAccess::instance());
+          $this->_userdao = new UserDao(CodendiDataAccess::instance());
         }
         return $this->_userdao;
     }

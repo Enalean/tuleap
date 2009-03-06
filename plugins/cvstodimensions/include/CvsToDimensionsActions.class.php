@@ -37,7 +37,7 @@ class CvsToDimensionsActions extends Actions {
             $product = & $p26c_dao->searchProductByName($product_name);
 
             if ($product->rowCount() >= 1) {
-                $parameters_dao = new PluginCvstodimensionsParametersDao(CodexDataAccess :: instance());
+                $parameters_dao = new PluginCvstodimensionsParametersDao(CodendiDataAccess :: instance());
                 $parameters_results = & $parameters_dao->searchByGroupId($group_id);
                 if ($parameters_results->rowCount() == 0) {
                     if (!$parameters_dao->create($group_id, $product_name, $database)) {
@@ -51,7 +51,7 @@ class CvsToDimensionsActions extends Actions {
                         return;
                     }
                 }
-                $modules_dao = new PluginCvstodimensionsModulesDao(CodexDataAccess :: instance());
+                $modules_dao = new PluginCvstodimensionsModulesDao(CodendiDataAccess :: instance());
                 $modules_results = & $modules_dao->searchByGroupId($group_id);
                 if (!$modules_dao->deleteByGroupId($group_id)) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_cvstodimensions', 'error_parameters_database'));
@@ -81,7 +81,7 @@ class CvsToDimensionsActions extends Actions {
         $tag = $request->get('tag');
         $password = $request->get('password');
 
-        $parameters_dao = new PluginCvstodimensionsParametersDao(CodexDataAccess :: instance());
+        $parameters_dao = new PluginCvstodimensionsParametersDao(CodendiDataAccess :: instance());
         $result = & $parameters_dao->searchByGroupId($group_id);
         $current = $result->getRow();
         $product_name = $current['product'];
@@ -96,7 +96,7 @@ class CvsToDimensionsActions extends Actions {
             $product = & $p26c_dao->searchProductByName($product_name);
             if ($product->rowCount() >= 1) {
 
-                $modules_dao = new PluginCvstodimensionsModulesDao(CodexDataAccess :: instance());
+                $modules_dao = new PluginCvstodimensionsModulesDao(CodendiDataAccess :: instance());
                 $modules_results = & $modules_dao->searchByGroupId($group_id);
                 $this->_removeAdditionnalModules($modules_dao, $group_id, $modules_results);
                 $design_part_missing = $this->_getMissingModulesInP26C($p26c_dao, $modules_dao, $product_name, $group_id);
@@ -104,7 +104,7 @@ class CvsToDimensionsActions extends Actions {
                 //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
                 $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
                 $roles_array = $this->_resultset_to_array($roles, "ROLE");
-                $logs_dao = new PluginCvstodimensionsLogDao(CodexDataAccess :: instance());
+                $logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess :: instance());
                 //save logs information
                 $logs_dao->create($group_id, time(), $tag, $user->getID(), '1');
                 $this->_controler->transferInProgress = true;

@@ -1,6 +1,6 @@
 <?php
 require_once('common/dao/PluginDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 
 
@@ -35,7 +35,7 @@ class PluginFactory {
     function instance() {
         static $_pluginfactory_instance;
         if (!$_pluginfactory_instance) {
-            $dao = new PluginDao(CodexDataAccess::instance());
+            $dao = new PluginDao(CodendiDataAccess::instance());
             $_pluginfactory_instance = new PluginFactory($dao);
         }
         return $_pluginfactory_instance;

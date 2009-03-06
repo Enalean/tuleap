@@ -171,7 +171,7 @@ abstract class GraphOnTrackers_Chart {
      */
     public function getProperties() {
         $siblings = array();
-        $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+        $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
         foreach($dao->getSiblings($this->getId()) as $row) {
             $siblings[] = array('id' => $row['id'], 'name' => $row['title'], 'rank' => $row['rank']);
         }
@@ -203,7 +203,7 @@ abstract class GraphOnTrackers_Chart {
         
         $updated = false;
         if ($db_update_needed) {
-            $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+            $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
             $updated = $dao->updateById($this->id, $this->graphic_report->getId(), $this->rank, $this->title, $this->description, $this->width, $this->height);
         }
         return $this->updateSpecificProperties($row) && $updated;

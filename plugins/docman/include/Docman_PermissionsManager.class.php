@@ -75,7 +75,7 @@ class Docman_PermissionsManager {
 
     function &getDao() {
         if($this->dao === null) {
-            $this->dao = new Docman_PermissionsManagerDao(CodexDataAccess::instance(), $this->groupId);
+            $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->groupId);
         }
         return $this->dao;
     }

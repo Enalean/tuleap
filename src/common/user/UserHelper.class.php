@@ -203,7 +203,7 @@ class UserHelper {
      * Returns the user dao
      */
     function _getUserDao() {
-        $dao = new UserDao(CodeXDataAccess::instance());
+        $dao = new UserDao(CodendiDataAccess::instance());
         return $dao;
     }
 }

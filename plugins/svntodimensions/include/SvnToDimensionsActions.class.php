@@ -37,7 +37,7 @@ class SvnToDimensionsActions extends Actions {
           $product = & $p26c_dao->searchProductByName($product_name);
             if ($product->rowCount() >= 1) {
 		
-                $parameters_dao = new PluginSvntodimensionsParametersDao(CodexDataAccess :: instance());
+                $parameters_dao = new PluginSvntodimensionsParametersDao(CodendiDataAccess :: instance());
                 $parameters_results = & $parameters_dao->searchByGroupId($group_id);
                 if ($parameters_results->rowCount() == 0) {
                     if (!$parameters_dao->create($group_id, $product_name, $database)) {
@@ -75,7 +75,7 @@ class SvnToDimensionsActions extends Actions {
         $group_id = $request->get('group_id');
         $password = $request->get('password');
 
-        $parameters_dao = new PluginSvntodimensionsParametersDao(CodexDataAccess :: instance());
+        $parameters_dao = new PluginSvntodimensionsParametersDao(CodendiDataAccess :: instance());
         $result = & $parameters_dao->searchByGroupId($group_id);
         $current = $result->getRow();
         $product_name = $current['product'];
@@ -109,7 +109,7 @@ class SvnToDimensionsActions extends Actions {
                 //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
                 $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
                 $roles_array = $this->_resultset_to_array($roles, "ROLE");
-                $logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess :: instance());
+                $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess :: instance());
                 //dmcli authentification command
                  $codex_user_name = $user->getName();
                  $dmcli = $this->_controler->getProperty('dmcli');
@@ -137,7 +137,7 @@ class SvnToDimensionsActions extends Actions {
                                     $worksets = & $p26c_dao->searchWorksetByProduct($product_name);
                                     $workset_array = $this->_resultset_to_array($worksets, "WORKSET_NAME");
                                     
-                                    $logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+                                    $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
                                     $logs_result =& $logs_dao->searchByStateAndGroupId($group_id, '0');
                                   
                                     //récupérer les tags de GoRo antérieur et de GoRo identiques

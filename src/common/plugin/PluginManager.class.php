@@ -5,7 +5,7 @@ require_once('common/plugin/PluginFactory.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
 require_once('common/dao/DBTablesDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 
 
@@ -165,7 +165,7 @@ class PluginManager {
                                         $GLOBALS['sys_custompluginsroot'].$path_to_file);
         while(!$path_found && (list(,$sql_filename) = each($possible_file_names))) {
             if (file_exists($sql_filename)) {
-                $dbtables = new DBTablesDAO(CodexDataAccess::instance());
+                $dbtables = new DBTablesDAO(CodendiDataAccess::instance());
                 if (!$dbtables->updateFromFile($sql_filename)) {
                     $db_corrupted = true;
                 }

@@ -82,7 +82,7 @@ class ServerAdmin {
     }
     function _fetchServices(&$server) {
         $html = '';
-        $service_dao =& new ServiceDao(CodeXDataAccess::instance());
+        $service_dao =& new ServiceDao(CodendiDataAccess::instance());
         $dar =& $service_dao->searchByServerId($server->getId());
         if ($dar) {
             $matches = array();

@@ -18,7 +18,7 @@ class ServerFactory {
     }
     function getAllServers() {
         $servers = array();
-        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dao =& new ServerDao(CodendiDataAccess::instance());
         $dar =& $dao->searchAll();
         if ($dar) {
             while($dar->valid()) {
@@ -30,7 +30,7 @@ class ServerFactory {
         return $servers;
     }
     function delete($id) {
-        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dao =& new ServerDao(CodendiDataAccess::instance());
         return $dao->delete($id);
     }
     function create($arr) {
@@ -40,7 +40,7 @@ class ServerFactory {
             if ($this->getServerById($arr['id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_alreadyid', array($arr['id'])));
             } else {
-                $dao =& new ServerDao(CodeXDataAccess::instance());
+                $dao =& new ServerDao(CodendiDataAccess::instance());
                 return $dao->create($arr);
             }
         }
@@ -67,7 +67,7 @@ class ServerFactory {
     }
     function getServerById($id) {
         $s = null;
-        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dao =& new ServerDao(CodendiDataAccess::instance());
         $dar =& $dao->searchById($id);
         if ($dar && $dar->valid()) {
             $row = $dar->current();
@@ -77,7 +77,7 @@ class ServerFactory {
     }
     function getMasterServer() {
         $s = null;
-        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dao =& new ServerDao(CodendiDataAccess::instance());
         $dar =& $dao->searchByIsMaster($is_master = true);
         if ($dar && $dar->valid()) {
             $row = $dar->current();
@@ -89,13 +89,13 @@ class ServerFactory {
         if (!$arr || !is_array($arr)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('server', 'error_missingparams'));
         } else if ($this->validate($arr)) {
-            $dao =& new ServerDao(CodeXDataAccess::instance());
+            $dao =& new ServerDao(CodendiDataAccess::instance());
             return $dao->modify($server_id, $arr);
         }
         return false;
     }
     function setMaster($server_id) {
-        $dao =& new ServerDao(CodeXDataAccess::instance());
+        $dao =& new ServerDao(CodendiDataAccess::instance());
         return $dao->setMaster($server_id);
     }
 }

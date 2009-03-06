@@ -408,7 +408,7 @@ class Docman_ReportFactory {
     // Object accessor
     //
     function &getDao() {
-        $dao = new Docman_ReportDao(CodexDataAccess::instance());
+        $dao = new Docman_ReportDao(CodendiDataAccess::instance());
         return $dao;
     }
 

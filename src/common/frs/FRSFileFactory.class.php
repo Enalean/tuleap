@@ -157,7 +157,7 @@ class FRSFileFactory extends Error {
     
     function &_getFRSFileDao() {
         if (!$this->dao) {
-            $this->dao =& new FRSFileDao(CodexDataAccess::instance());
+            $this->dao =& new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

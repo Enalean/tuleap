@@ -46,7 +46,7 @@ class Docman_SettingsBo {
 
     function &getDao() {
         if($this->dao === null) {
-            $this->dao = new Docman_SettingsDao(CodexDataAccess::instance());
+            $this->dao = new Docman_SettingsDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

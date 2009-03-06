@@ -8,7 +8,7 @@ require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('SvnToDimensionsViews.class.php');
 require_once('SvnToDimensionsActions.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('pre.php');
 require_once('P26CDataAccess.class.php');
 
@@ -49,7 +49,7 @@ class SvnToDimensions extends Controler {
         $group = group_get_object($group_id);
         $short_name = $group->getUnixName(false);
         $folder = $tmp_dir.'/'.$short_name;
-        $logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+        $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
         $logs_result =& $logs_dao->searchByStateAndGroupId($group_id, '0');        
         $transfered_tags = array();
         if($logs_result->rowCount() >= 1){
@@ -154,7 +154,7 @@ class SvnToDimensions extends Controler {
      */
     function _checkParametersForTransfert($request){
 		$group_id = $request->get('group_id');    	
-    	$parameters_dao = new PluginSvntodimensionsParametersDao(CodexDataAccess::instance());
+    	$parameters_dao = new PluginSvntodimensionsParametersDao(CodendiDataAccess::instance());
     	$parameters_results =& $parameters_dao->searchByGroupId($group_id);
         $error = false;
     	if(!$row = $parameters_results->getRow()){
@@ -174,7 +174,7 @@ class SvnToDimensions extends Controler {
      * set the global variable transferInProgress to true if there is some log with inprogress state
      */
     function _isTransferPossible($group_id){
-    	$logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
     	$logs_result =& $logs_dao->searchByStateAndGroupId($group_id, '1');
     	if($logs_result->rowCount()!=0){
     		$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_svntodimensions', 'feedback_transfer_wait', $tag));
@@ -183,7 +183,7 @@ class SvnToDimensions extends Controler {
     }
 
     function _fillPL($group_id){ 
-      $parameters_dao = new PluginSvntodimensionsParametersDao(CodexDataAccess::instance());
+      $parameters_dao = new PluginSvntodimensionsParametersDao(CodendiDataAccess::instance());
        $parameters_results =& $parameters_dao->searchByGroupId($group_id);
        if($row = $parameters_results->getRow()){
             $p26c_dao = new PluginSvntodimensionsP26CDao(P26CDataAccess :: instance($row['dimensions_db'], $this));
@@ -231,7 +231,7 @@ class SvnToDimensions extends Controler {
      */
     function _isReloadPage($request){
     	$group_id = $request->get('group_id');
-    	$logs_dao = new PluginSvntodimensionsLogDao(CodexDataAccess::instance());
+    	$logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
     	//check if the tag has already been transfered
     	$logs_result =& $logs_dao->searchByGroupIdTagAndState($group_id, $_POST['tag'],0);
     	if($logs_result->rowCount()==0){

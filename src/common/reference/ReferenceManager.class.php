@@ -8,7 +8,7 @@
  */
 
 require_once('common/dao/ReferenceDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/Reference.class.php');
 require_once('common/reference/ReferenceInstance.class.php');
 require_once('common/include/GroupFactory.class.php');
@@ -685,7 +685,7 @@ class ReferenceManager {
 
     function &_getReferenceDao() {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
-            $this->referenceDao =& new ReferenceDao(CodexDataAccess::instance());
+            $this->referenceDao =& new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;
     }

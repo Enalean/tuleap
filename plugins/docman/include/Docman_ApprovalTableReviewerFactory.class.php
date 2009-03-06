@@ -376,7 +376,7 @@ class Docman_ApprovalTableReviewerFactory {
     //
 
     function &_getDao() {
-        $dao = new Docman_ApprovalTableReviewerDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;
     }
 

@@ -64,7 +64,7 @@ class hudsonPlugin extends Plugin {
      */
     function projectIsDeleted($params) {
         $group_id = $params['group_id'];
-        $job_dao = new PluginHudsonJobDao(CodexDataAccess::instance());
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
     }
     

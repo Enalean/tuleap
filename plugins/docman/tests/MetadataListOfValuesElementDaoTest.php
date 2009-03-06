@@ -24,7 +24,7 @@
  */
 
 require_once('common/dao/include/DataAccess.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 require_once(dirname(__FILE__).'/../include/Docman_MetadataListOfValuesElementDao.class.php');
 

@@ -40,7 +40,7 @@ class Docman_VersionFactory {
     var $dao;
     function &_getVersionDao() {
         if (!$this->dao) {
-            $this->dao =& new Docman_VersionDao(CodexDataAccess::instance());
+            $this->dao =& new Docman_VersionDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

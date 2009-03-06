@@ -312,7 +312,7 @@ class GraphOnTrackers_Report extends Error{
      */
     public function getChart($id) {
         $c = null;
-        $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+        $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
         $dar = $dao->searchById($id);
         if ($dar && $dar->valid() && ($row = $dar->getRow())) {
             $c = $this->instanciateChart($row);
@@ -322,7 +322,7 @@ class GraphOnTrackers_Report extends Error{
     
     protected function loadCharts() {
         $this->charts = array();
-        $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+        $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
         $dar = $dao->searchByReportId($this->id);
         foreach($dar as $row) {
             if ($c = $this->instanciateChart($row)) {
@@ -342,7 +342,7 @@ class GraphOnTrackers_Report extends Error{
     public function deleteChart($id) {
         $ok = false;
         if ($c = $this->getChart($id)) {
-            $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+            $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
             $dao->delete($id);
             $c->delete();
         }
@@ -351,7 +351,7 @@ class GraphOnTrackers_Report extends Error{
     public function createChart($chart_type) {
         $chart = null;
         if ($chart_classname = $this->getChartClassname($chart_type)) {
-            $dao = new GraphOnTrackers_ChartDao(CodeXDataAccess::instance());
+            $dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
             $default_title       = 'Untitled '.$chart_type;
             $default_description = '';
             $default_width       = call_user_func(array($chart_classname, 'getDefaultWidth'));

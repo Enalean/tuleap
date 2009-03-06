@@ -296,7 +296,7 @@ class Docman_BuildItemMappingVisitor {
 
     function &getItemDao() {
         if($this->dao === null) {
-            $this->dao =& new Docman_ItemDao(CodexDataAccess::instance());
+            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

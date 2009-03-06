@@ -69,7 +69,7 @@ class Docman_MetadataFactory {
     function &getDao() {
         static $_plugin_docman_metadata_dao_instance;
         if(!$_plugin_docman_metadata_dao_instance) {
-            $_plugin_docman_metadata_dao_instance =& new Docman_MetadataDao(CodexDataAccess::instance());
+            $_plugin_docman_metadata_dao_instance =& new Docman_MetadataDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_dao_instance;
     }

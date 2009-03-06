@@ -221,7 +221,7 @@ require_once('Docman_ApprovalTableReviewerFactory.class.php');
     //
 
     function &_getDao() {
-        $dao = new Docman_ApprovalTableDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableDao(CodendiDataAccess::instance());
         return $dao;
     }
 
@@ -298,7 +298,7 @@ extends Docman_ApprovalTableFactory {
     //
 
     function &_getDao() {
-        $dao = new Docman_ApprovalTableItemDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());
         return $dao;
     }
 }
@@ -547,7 +547,7 @@ extends Docman_ApprovalTableVersionnedFactory {
     //
 
     function &_getDao() {
-        $dao = new Docman_ApprovalTableFileDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableFileDao(CodendiDataAccess::instance());
         return $dao;
     }
 
@@ -670,7 +670,7 @@ extends Docman_ApprovalTableVersionnedFactory {
     //
 
     function &_getDao() {
-        $dao = new Docman_ApprovalTableWikiDao(CodexDataAccess::instance());
+        $dao = new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());
         return $dao;
     }
 }

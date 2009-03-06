@@ -43,7 +43,7 @@ class Docman_MetadataListOfValuesElementFactory {
     function &getDao() {
         static $_plugin_docman_metadata_love_dao_instance;
         if(!$_plugin_docman_metadata_love_dao_instance) {
-            $_plugin_docman_metadata_love_dao_instance =& new Docman_MetadataListOfValuesElementDao(CodexDataAccess::instance());
+            $_plugin_docman_metadata_love_dao_instance =& new Docman_MetadataListOfValuesElementDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_love_dao_instance;
     }

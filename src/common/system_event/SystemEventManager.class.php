@@ -21,7 +21,7 @@
  * 
  */
 require_once('common/dao/SystemEventDao.class.php');
-require_once('common/dao/CodexDataAccess.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
@@ -64,7 +64,7 @@ class SystemEventManager {
 
     function _getDao() {
         if (!$this->dao) {
-            $this->dao = new SystemEventDao(CodexDataAccess::instance());
+            $this->dao = new SystemEventDao(CodendiDataAccess::instance());
         }
         return  $this->dao;
     }
