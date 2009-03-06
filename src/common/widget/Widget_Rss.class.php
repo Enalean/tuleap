@@ -23,6 +23,7 @@ require_once('Widget.class.php');
         return $this->rss_title ?  $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML)  : 'RSS Reader';
     }
     function getContent() {
+        $hp = CodeX_HTMLPurifier::instance();
         $content = '';
         if ($this->rss_url) {
             require_once('common/rss/libs/SimplePie/simplepie.inc');
@@ -36,6 +37,10 @@ require_once('Widget.class.php');
             $i = 0;
             foreach($items as $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
+                if ($image = $item->get_link(0, 'image')) {
+                    //hack to display twitter avatar
+                    $content .= '<img src="'.  $hp->purify($image, CODEX_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                }
                 $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
                 if ($item->get_date()) {
                     $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
