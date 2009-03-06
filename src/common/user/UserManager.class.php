@@ -1,49 +1,75 @@
 <?php
+/*
+ * Copyright (c) Xerox, 2009. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2006. Xerox Codendi Team.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 
-/**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
- * 
- * UserManager
- */
 class UserManager {
  
-    var $_users;
-    var $_userid_bynames;
-    var $_userdao;
-    var $_currentuser;
+    var $_users          = array();
+    var $_userid_bynames = array();
+    var $_userdao        = null;
+    var $_currentuser    = null;
     
-    function UserManager(&$userdao) {
-        $this->_users = array();
-        $this->_userid_bynames = array();
-        $this->_userdao =& $userdao;
-        $this->_currentuser = null;
+    protected function __construct() {
+        $this->_users;
+        $this->_userid_bynames;
+        $this->_currentuser;
     }
     
-    function &instance() {
-        static $_usermanager_instance;
-        if (!$_usermanager_instance) {
-            $userdao = new UserDao(CodeXDataAccess::instance());
-            $_usermanager_instance = new UserManager($userdao);
+    protected static $_instance;
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            $userdao = 
+            self::$_instance = new $c($userdao);
         }
-        return $_usermanager_instance;
+        return self::$_instance;
+    }
+    
+    /**
+     * @return UserDao
+     */
+    protected function getDao() {
+        if (!$this->_userdao) {
+          $this->_userdao = new UserDao(CodeXDataAccess::instance());
+        }
+        return $this->_userdao;
     }
     
     /**
      * @param int the user_id of the user to find
      * @return User or null if the user is not found
      */
-    function &getUserById($user_id) {
+    function getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
             if ($user_id == 0) {
                 $this->_users[$user_id] = $this->_getUserInstanceFromRow(array('user_id' => 0));
             } else {
-                $dar =& $this->_userdao->searchByUserId($user_id);
+                $dar = $this->getDao()->searchByUserId($user_id);
                 if ($row = $dar->getRow()) {
-                    $u =& $this->_getUserInstanceFromRow($row);
-                    $this->_users[$u->getId()] =& $u;
+                    $u = $this->_getUserInstanceFromRow($row);
+                    $this->_users[$u->getId()] = $u;
                     $this->_userid_bynames[$u->getUserName()] = $user_id;
                 } else {
                     $this->_users[$user_id] = null;
@@ -57,12 +83,12 @@ class UserManager {
      * @param string the user_name of the user to find
      * @return User or null if the user is not found
      */
-    function &getUserByUserName($user_name) {
+    function getUserByUserName($user_name) {
         if (!isset($this->_userid_bynames[$user_name])) {
-            $dar =& $this->_userdao->searchByUserName($user_name);
+            $dar = $this->getDao()->searchByUserName($user_name);
             if ($row = $dar->getRow()) {
-                $u =& $this->_getUserInstanceFromRow($row);
-                $this->_users[$u->getId()] =& $u;
+                $u = $this->_getUserInstanceFromRow($row);
+                $this->_users[$u->getId()] = $u;
                 $this->_userid_bynames[$user_name] = $u->getId();
             } else {
                 $this->_userid_bynames[$user_name] = null;
@@ -70,13 +96,13 @@ class UserManager {
         }
         $user = null;
         if ($this->_userid_bynames[$user_name] !== null) {
-            $user =& $this->_users[$this->_userid_bynames[$user_name]];
+            $user = $this->_users[$this->_userid_bynames[$user_name]];
         }
         return $user;
     }
     
-    function &_getUserInstanceFromRow($row) {
-        $u =& new User($row['user_id'], $row);
+    function _getUserInstanceFromRow($row) {
+        $u = new User($row);
         return $u;
     }
     
@@ -92,11 +118,11 @@ class UserManager {
             if ($session_hash === false) {
                 $session_hash = $this->_getCookieManager()->getCookie('session_hash');
             }
-            if ($dar = $this->_userdao->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
+            if ($dar = $this->getDao()->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
                 if ($row = $dar->getRow()) {
                     $this->_currentuser = $this->_getUserInstanceFromRow($row);
                     $this->_currentuser->setSessionHash($session_hash);
-                    $this->_userdao->storeLastAccessDate($this->_currentuser->getId(), time());
+                    $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), time());
                 }
             }
             if (!isset($this->_currentuser)) {
@@ -119,7 +145,7 @@ class UserManager {
     function logout() {
         $user = $this->getCurrentUser();
         if ($user->getSessionHash()) {
-            $this->_userdao->deleteSession($user->getSessionHash());
+            $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
             $this->_getCookieManager()->removeCookie('session_hash');
         }
@@ -143,14 +169,14 @@ class UserManager {
         $params = array();
         $params['loginname']        = $name;
         $params['passwd']           = $pwd;
-        $params['auth_success']     =& $auth_success;
-        $params['auth_user_id']     =& $auth_user_id;
-        $params['auth_user_status'] =& $auth_user_status;
-        $em =& EventManager::instance();
+        $params['auth_success']     = $auth_success;
+        $params['auth_user_id']     = $auth_user_id;
+        $params['auth_user_status'] = $auth_user_status;
+        $em = EventManager::instance();
         $em->processEvent('session_before_login', $params);
         
         //If nobody answer success, look for the user into the db
-        if ($auth_success || ($dar = $this->_userdao->searchByUserName($name))) {
+        if ($auth_success || ($dar = $this->getDao()->searchByUserName($name))) {
             if ($auth_success || ($row = $dar->getRow())) {
                 if ($auth_success) {
                     $this->_currentuser = $this->getUserById($auth_user_id);
@@ -224,7 +250,7 @@ class UserManager {
                             }
                         }
                         //Create the session
-                        if ($session_hash = $this->_userdao->createSession($this->_currentuser->getId(), $now)) {
+                        if ($session_hash = $this->getDao()->createSession($this->_currentuser->getId(), $now)) {
                             $logged_in = true;
                             $this->_currentuser->setSessionHash($session_hash);
                             
@@ -256,7 +282,7 @@ class UserManager {
                 } else {
                     //invalid password or user_name
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
-                    $this->_userdao->storeLoginFailure($name, $now);
+                    $this->getDao()->storeLoginFailure($name, $now);
                     //Add a delay when use login fail.
                     //The delay is 2 sec/nb of bad attempt.
                     sleep(2 * $this->_currentuser->getNbAuthFailure());

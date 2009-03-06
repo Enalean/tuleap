@@ -1,9 +1,25 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
-//
-// 
-//
+/*
+ * Copyright (c) Xerox, 2009. All Rights Reserved.
+ *
+ * Originally written by Nicolas Terray, 2005. Xerox Codendi Team.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CodeX; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 require_once('include/DataAccessObject.class.php');
 
@@ -12,18 +28,10 @@ require_once('include/DataAccessObject.class.php');
  */
 class UserDao extends DataAccessObject {
     /**
-    * Constructs the UserDao
-    * @param $da instance of the DataAccess class
-    */
-    function UserDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM user";
         return $this->retrieve($sql);
     }
@@ -32,7 +40,7 @@ class UserDao extends DataAccessObject {
     * Searches User by UserId 
     * @return DataAccessResult
     */
-    function & searchByUserId($userId) {
+    function searchByUserId($userId) {
         $sql = sprintf("SELECT * FROM user WHERE user_id = %s",
             $this->da->quoteSmart($userId));
         return $this->retrieve($sql);
@@ -42,7 +50,7 @@ class UserDao extends DataAccessObject {
     * Searches User by UserName 
     * @return DataAccessResult
     */
-    function & searchByUserName($userName) {
+    function searchByUserName($userName) {
         $sql = sprintf("SELECT * FROM user WHERE user_name = %s",
             $this->da->quoteSmart($userName));
         return $this->retrieve($sql);
@@ -52,243 +60,12 @@ class UserDao extends DataAccessObject {
     * Searches User by Email 
     * @return DataAccessResult
     */
-    function & searchByEmail($email) {
+    function searchByEmail($email) {
         $sql = sprintf("SELECT * FROM user WHERE email = %s",
             $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
-
-    /**
-    * Searches User by UserPw 
-    * @return DataAccessResult
-    */
-    function & searchByUserPw($userPw) {
-        $sql = sprintf("SELECT * FROM user WHERE user_pw = %s",
-            $this->da->quoteSmart($userPw));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Realname 
-    * @return DataAccessResult
-    */
-    function & searchByRealname($realname) {
-        $sql = sprintf("SELECT * FROM user WHERE realname = %s",
-            $this->da->quoteSmart($realname));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by RegisterPurpose 
-    * @return DataAccessResult
-    */
-    function & searchByRegisterPurpose($registerPurpose) {
-        $sql = sprintf("SELECT * FROM user WHERE register_purpose = %s",
-            $this->da->quoteSmart($registerPurpose));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Status 
-    * @return DataAccessResult
-    */
-    function & searchByStatus($status) {
-        $sql = sprintf("SELECT * FROM user WHERE status = %s",
-            $this->da->quoteSmart($status));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Shell 
-    * @return DataAccessResult
-    */
-    function & searchByShell($shell) {
-        $sql = sprintf("SELECT * FROM user WHERE shell = %s",
-            $this->da->quoteSmart($shell));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by UnixPw 
-    * @return DataAccessResult
-    */
-    function & searchByUnixPw($unixPw) {
-        $sql = sprintf("SELECT * FROM user WHERE unix_pw = %s",
-            $this->da->quoteSmart($unixPw));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by UnixStatus 
-    * @return DataAccessResult
-    */
-    function & searchByUnixStatus($unixStatus) {
-        $sql = sprintf("SELECT * FROM user WHERE unix_status = %s",
-            $this->da->quoteSmart($unixStatus));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by UnixUid 
-    * @return DataAccessResult
-    */
-    function & searchByUnixUid($unixUid) {
-        $sql = sprintf("SELECT * FROM user WHERE unix_uid = %s",
-            $this->da->quoteSmart($unixUid));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by UnixBox 
-    * @return DataAccessResult
-    */
-    function & searchByUnixBox($unixBox) {
-        $sql = sprintf("SELECT * FROM user WHERE unix_box = %s",
-            $this->da->quoteSmart($unixBox));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by LdapName 
-    * @return DataAccessResult
-    */
-    function & searchByLdapId($ldapName) {
-        $sql = sprintf("SELECT * FROM user WHERE ldap_id = %s",
-            $this->da->quoteSmart($ldapName));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by AddDate 
-    * @return DataAccessResult
-    */
-    function & searchByAddDate($addDate) {
-        $sql = sprintf("SELECT * FROM user WHERE add_date = %s",
-            $this->da->quoteSmart($addDate));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by ConfirmHash 
-    * @return DataAccessResult
-    */
-    function & searchByConfirmHash($confirmHash) {
-        $sql = sprintf("SELECT * FROM user WHERE confirm_hash = %s",
-            $this->da->quoteSmart($confirmHash));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by MailSiteupdates 
-    * @return DataAccessResult
-    */
-    function & searchByMailSiteupdates($mailSiteupdates) {
-        $sql = sprintf("SELECT * FROM user WHERE mail_siteupdates = %s",
-            $this->da->quoteSmart($mailSiteupdates));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by MailVa 
-    * @return DataAccessResult
-    */
-    function & searchByMailVa($mailVa) {
-        $sql = sprintf("SELECT * FROM user WHERE mail_va = %s",
-            $this->da->quoteSmart($mailVa));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by StickyLogin 
-    * @return DataAccessResult
-    */
-    function & searchByStickyLogin($stickyLogin) {
-        $sql = sprintf("SELECT * FROM user WHERE sticky_login = %s",
-            $this->da->quoteSmart($stickyLogin));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by AuthorizedKeys 
-    * @return DataAccessResult
-    */
-    function & searchByAuthorizedKeys($authorizedKeys) {
-        $sql = sprintf("SELECT * FROM user WHERE authorized_keys = %s",
-            $this->da->quoteSmart($authorizedKeys));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by EmailNew 
-    * @return DataAccessResult
-    */
-    function & searchByEmailNew($emailNew) {
-        $sql = sprintf("SELECT * FROM user WHERE email_new = %s",
-            $this->da->quoteSmart($emailNew));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by PeopleViewSkills 
-    * @return DataAccessResult
-    */
-    function & searchByPeopleViewSkills($peopleViewSkills) {
-        $sql = sprintf("SELECT * FROM user WHERE people_view_skills = %s",
-            $this->da->quoteSmart($peopleViewSkills));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by PeopleResume 
-    * @return DataAccessResult
-    */
-    function & searchByPeopleResume($peopleResume) {
-        $sql = sprintf("SELECT * FROM user WHERE people_resume = %s",
-            $this->da->quoteSmart($peopleResume));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Timezone 
-    * @return DataAccessResult
-    */
-    function & searchByTimezone($timezone) {
-        $sql = sprintf("SELECT * FROM user WHERE timezone = %s",
-            $this->da->quoteSmart($timezone));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Fontsize 
-    * @return DataAccessResult
-    */
-    function & searchByFontsize($fontsize) {
-        $sql = sprintf("SELECT * FROM user WHERE fontsize = %s",
-            $this->da->quoteSmart($fontsize));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by Theme 
-    * @return DataAccessResult
-    */
-    function & searchByTheme($theme) {
-        $sql = sprintf("SELECT * FROM user WHERE theme = %s",
-            $this->da->quoteSmart($theme));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches User by LanguageId 
-    * @return DataAccessResult
-    */
-    function & searchByLanguageId($languageId) {
-        $sql = sprintf("SELECT * = %s",
-            $this->da->quoteSmart($languageId));
-        return $this->retrieve($sql);
-    }
-
-
+    
     /**
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
@@ -337,7 +114,7 @@ class UserDao extends DataAccessObject {
     * Searches User status by Email
     * @return DataAccessResult
     */
-    function & searchStatusByEmail($email) {
+    function searchStatusByEmail($email) {
         //ST: with LDAP user_name can be an email
         $sql = sprintf("SELECT realname, email, status FROM user WHERE (user_name=%s OR email = %s)",
                 $this->da->quoteSmart($email),
