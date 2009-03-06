@@ -41,8 +41,7 @@ class UserManager {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            $userdao = 
-            self::$_instance = new $c($userdao);
+            self::$_instance = new $c();
         }
         return self::$_instance;
     }
@@ -169,9 +168,9 @@ class UserManager {
         $params = array();
         $params['loginname']        = $name;
         $params['passwd']           = $pwd;
-        $params['auth_success']     = $auth_success;
-        $params['auth_user_id']     = $auth_user_id;
-        $params['auth_user_status'] = $auth_user_status;
+        $params['auth_success']     =& $auth_success;
+        $params['auth_user_id']     =& $auth_user_id;
+        $params['auth_user_status'] =& $auth_user_status;
         $em = EventManager::instance();
         $em->processEvent('session_before_login', $params);
         
