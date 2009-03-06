@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL);
 require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
