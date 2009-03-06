@@ -6,6 +6,7 @@ require_once('common/widget/Widget_MyProjects.class.php');
 require_once('common/widget/Widget_MyBookmarks.class.php');
 require_once('common/widget/Widget_MyMonitoredForums.class.php');
 require_once('common/widget/Widget_MyMonitoredFp.class.php');
+require_once('common/widget/Widget_MyLatestSvnCommits.class.php');
 require_once('common/widget/Widget_MyArtifacts.class.php');
 require_once('common/widget/Widget_MyBugs.class.php');
 require_once('common/widget/Widget_MySrs.class.php');
@@ -140,6 +141,9 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
                 break;
             case 'mymonitoredfp':
                 $o =& new Widget_MyMonitoredFp();
+                break;
+            case 'mylatestsvncommits':
+                $o =& new Widget_MyLatestSvnCommits();
                 break;  
             case 'myartifacts':
                 $o =& new Widget_MyArtifacts();
@@ -204,7 +208,7 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
             case $lm->OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
-                    'mytasks', 'mysrs'
+                    'mytasks', 'mysrs', 'mylatestsvncommits'
                 );
                 break;
             case $lm->OWNER_TYPE_GROUP:
