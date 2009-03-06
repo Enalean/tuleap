@@ -36,7 +36,7 @@ if(validate_email($form_newemail)) {
     $message = stripcslashes($Language->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], get_server_url()."/account/change_email-complete.php?confirm_hash=".$confirm_hash)));
 
     $mail =& new Mail();
-    $mail->setTo($form_newemail);
+    $mail->setTo($form_newemail,true);
     $mail->setSubject($GLOBALS['sys_name'].': '.$Language->getText('account_change_email-confirm', 'title'));
     $mail->setBody($message);
     $mail->setFrom($GLOBALS['sys_noreply']);

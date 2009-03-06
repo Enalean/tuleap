@@ -340,7 +340,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     
     $mail = new Mail();
     $mail->setFrom($GLOBALS['sys_noreply']);
-    $mail->setTo($GLOBALS['sys_email_admin']);
+    $mail->setTo($GLOBALS['sys_email_admin'],true); // Don't invalidate admin email!
     $mail->setSubject($Language->getText('news_utils','news_request', array($GLOBALS['sys_name'])));
     $body = '';
     $body .= $Language->getText('news_utils','news_request_mail_intro', array($GLOBALS['sys_name'])).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];

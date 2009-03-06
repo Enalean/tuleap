@@ -74,7 +74,7 @@ $expiry_date = 0;
                     $mail = new Mail();
                     $mail->setSubject($subject);
                     $mail->setFrom($from);
-                    $mail->setTo($to);
+                    $mail->setTo($to,true);
                     $mail->setBody($body);
                     if (!$mail->send()) {
                         $GLOBALS['feedback'] .= "<p>".$row_user['email']." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
