@@ -648,11 +648,11 @@ class Layout extends Response {
             $this->header(array('title' => 'Redirection'));
             echo '<p>'. $GLOBALS['Language']->getText('global', 'return_to', array($url)) .'</p>';
             echo '<script type="text/javascript">';
-            if (!$fb) {
+            if ($fb) {
                 echo 'setTimeout(function() {';
             }
             echo " location.href = '". $url ."';";
-            if (!$fb) {
+            if ($fb) {
                 echo '}, 5000);';
             }
             echo '</script>';

@@ -33,7 +33,16 @@ function exit_error($title,$text) {
 
 function exit_permission_denied() {
   global $feedback,$Language;
+  if (UserManager::instance()->getCurrentUser()->isAnonymous()) {
+      $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit','perm_denied'));
+      $GLOBALS['Response']->addFeedback('error', $Language->getText('include_exit','no_perm'));
+      if ($feedback) {
+          $GLOBALS['Response']->addFeedback('error', $feedback);
+      }
+      exit_not_logged_in();
+  } else {
     exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','no_perm').'<p>'.$feedback);
+  }
 }
 
 function exit_restricted_user_permission_denied() {
@@ -44,7 +53,7 @@ function exit_restricted_user_permission_denied() {
 function exit_not_logged_in() {
   global $Language;
     //instead of a simple error page, now take them to the login page
-    header ("Location: /account/login.php?return_to=".urlencode($_SERVER['REQUEST_URI']));
+    $GLOBALS['Response']->redirect("/account/login.php?return_to=".urlencode($_SERVER['REQUEST_URI']));
     //exit_error($Language->getText('include_exit','not_logged_in'),$Language->getText('include_exit','need_to_login'));
 }
 

@@ -91,16 +91,32 @@ class WikiService extends Controler {
   function checkPermissions() {
     // Check if user can access to whole wiki
     if(!$this->wiki->isAutorized(user_getid())) {
-        exit_error($GLOBALS['Language']->getText('global', 'perm_denied'),
-                   $GLOBALS['Language']->getText('wiki_wikiservice', 'acces_denied_whole',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
+        $GLOBALS['Response']->addFeedback(
+                                'error', 
+                                $GLOBALS['Language']->getText(
+                                                        'wiki_wikiservice', 
+                                                        'acces_denied_whole',
+                                                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                                ),
+                                CODEX_PURIFIER_DISABLED
+                            );
+        exit_permission_denied();
     }
 
     // Check if user can access to selected page
     if(!empty($_REQUEST['pagename'])) {
       $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
       if(!$wp->isAutorized(user_getid())) {
-          exit_error($GLOBALS['Language']->getText('global', 'perm_denied'),
-                     $GLOBALS['Language']->getText('wiki_wikiservice', 'acces_denied_page',session_make_url("/project/memberlist.php?group_id=".$this->gid)));
+        $GLOBALS['Response']->addFeedback(
+                                'error', 
+                                $GLOBALS['Language']->getText(
+                                                        'wiki_wikiservice', 
+                                                        'acces_denied_page',
+                                                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                                ),
+                                CODEX_PURIFIER_DISABLED
+                            );
+        exit_permission_denied();
       }
     }
   }
