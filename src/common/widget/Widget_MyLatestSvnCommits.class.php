@@ -111,7 +111,11 @@ class Widget_MyLatestSvnCommits extends Widget {
         return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit_desc');
     }
     function getPreviewCssClass() {
-        return '';
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-my_latest_svn_commits-fr-FR';
+        }
+        return 'widget-preview-my_latest_svn_commits-en-US';
     }
 }
 ?>

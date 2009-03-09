@@ -56,7 +56,11 @@ class IM_Widget_MyRoster extends Widget {
     }
     
     function getPreviewCssClass() {
-        return 'widget-preview-im';
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-myroster-fr-FR';
+        }
+        return 'widget-preview-myroster-en-US';
     }
 }
 

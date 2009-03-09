@@ -69,6 +69,9 @@ form#muc_logs_export_form {
 	margin-top: 30px;
 }
 
-.widget-preview-im {
-    background-image:url('../images/widget-preview-im.png');
+.widget-preview-myroster-fr-FR {
+    background-image:url("../images/widget_preview/fr_FR_my_roster.png");
+}
+.widget-preview-myroster-en-US {
+    background-image:url("../images/widget_preview/en_US_my_roster.png");
 }

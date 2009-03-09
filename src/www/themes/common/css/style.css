@@ -351,6 +351,39 @@ table.release tr td img {
 .widget-preview-bookmarks {
     background-image:url('../images/widget-preview-favorites.png');
 }
+.widget-preview-mymonitoredfiles-fr-FR {
+    background-image:url('../images/widget-preview-monitored_files-fr_FR.png');
+}
+.widget-preview-mymonitoredfiles-en-US {
+    background-image:url('../images/widget-preview-monitored_files-en_US.png');
+}
+.widget-preview-mymonitoredforums-fr-FR {
+    background-image:url('../images/widget-preview-monitored_forums-fr_FR.png');
+}
+.widget-preview-mymonitoredforums-en-US {
+    background-image:url('../images/widget-preview-monitored_forums-en_US.png');
+}
+.widget-preview-myartifacts {
+    background-image:url('../images/widget-preview-my_artifacts.png');
+}
+.widget-preview-myprojects-fr-FR {
+    background-image:url('../images/widget-preview-my_projects-fr_FR.png');
+}
+.widget-preview-myprojects-en-US {
+    background-image:url('../images/widget-preview-my_projects-en_US.png');
+}
+.widget-preview-my_latest_svn_commits-fr-FR {
+    background-image:url('../images/widget-preview-my_latest_svn_commits-fr_FR.png');
+}
+.widget-preview-my_latest_svn_commits-en-US {
+    background-image:url('../images/widget-preview-my_latest_svn_commits-en_US.png');
+}
+.widget-preview-latest_file_releases-fr-FR {
+    background-image:url('../images/widget-preview-latest_file_releases-fr_FR.png');
+}
+.widget-preview-latest_file_releases-en-US {
+    background-image:url('../images/widget-preview-latest_file_releases-en_US.png');
+}
 /* }}} */
 
 /* {{{ lists & users autocomplete */

@@ -107,5 +107,12 @@ class Widget_MyMonitoredFp extends Widget {
     function getDescription() {
         return 'Lists packages that you are currently monitoring, by project.';
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-mymonitoredfiles-fr-FR';
+        }
+        return 'widget-preview-mymonitoredfiles-en-US';
+    }
 }
 ?>
