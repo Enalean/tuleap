@@ -22,58 +22,8 @@
  */
 
 require_once('TreeNode.class.php');
+require_once('BuildMenuVisitor.class.php');
 require_once('common/layout/Layout.class.php');
-
-class BuildMenuVisitor {
-    var $level;
-
-    function VisitorBuildMenu() {
-        $this->level = 0;
-    }
-
-    function getHtml() {
-        return $this->output;
-    }
-
-    function createLi(&$treeNode) {
-        $html = '';
-        if($treeNode->data['link']) {
-            $selected = '';
-            if(array_key_exists('selected',  $treeNode->data) && $treeNode->data['selected'] === true) {
-                $selected = ' class="current"';
-            }
-            $_addr = '<a href="'.$treeNode->data['link'].'"'.$selected.'>'.$treeNode->data['title'].'</a>';
-            
-            $html = "<li>".$_addr."</li>\n";
-        }
-        return $html;
-    }
-
-    function visitLevel($nodeArray, $level) {                   
-        $html = '';
-        do {
-            $childrenArray = array();
-            $level++;
-            $html .= '<div id="level_'.$level.'">'."\n";
-            $html .= '<ul>'."\n";
-            foreach($nodeArray as $node) {
-                if($node->hasChildren()) {
-                    $childrenArray = array_merge($childrenArray, $node->getChildren());
-                }
-                $html .= $this->createLi($node);
-            }
-            $html .= "</ul>\n";
-            $html .= "</div>\n";
-            $nodeArray = $childrenArray;
-        } while(count($nodeArray) > 0);
-
-        return $html;
-    }
-
-    function visit(&$treeNode) {        
-        $this->output = $this->visitLevel($treeNode->getChildren(), 0);
-    }
-}
 
 class DivBasedTabbedLayout extends Layout
 {
