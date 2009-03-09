@@ -55,6 +55,12 @@ my_index	no_survey	No survey available
 my_index	no_bug	No bug yet
 my_index	no_task	No task yet
 my_index	no_support	No support request yet
+my_index	my_latest_svn_commit	My Latest SVN Commits
+my_index	my_latest_svn_commit_desc	Lists SVN commits you have done, by project.
+my_index	my_latest_svn_commit_on	on
+my_index	my_latest_svn_commit_by	by
+my_index	my_latest_svn_commit_nb_prefs	Maximum number of SVN commits to display per project
+
 #
 #-----------------------------------------------
 # Script: SF/www/my/my_utils.php
