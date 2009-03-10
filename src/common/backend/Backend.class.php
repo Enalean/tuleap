@@ -162,6 +162,11 @@ class Backend {
         return $this->writeArrayToFile($new_file_array,$filename);
     }
 
+
+    /**
+     * Write an array to a file
+     * WARNING: the function does not add newlines at the end of each row
+     */
     function writeArrayToFile($file_array, $filename) {
 
         if (!$handle = fopen($filename, 'w')) {

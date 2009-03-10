@@ -31,12 +31,19 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('_getUserManager', 
+Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('_getUserManager', 
                                                              '_getProjectManager',
                                                              'chown',
                                                              'chgrp',
-                                                             ));
+                                                           ));
 
+class BackendCVSTestVersion extends BackendCVSTestVersionInit {
+ 
+    // log to apache error logs (does not seem to work??)
+    function log($message) {
+        echo "<br>LOG: $message\n";
+    }
+}
 
 class BackendCVSTest extends UnitTestCase {
     
@@ -46,12 +53,16 @@ class BackendCVSTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['cvs_prefix']                = dirname(__FILE__) . '/_fixtures/cvsroot';
+        $GLOBALS['cvslock_prefix']            = dirname(__FILE__) . '/_fixtures/var/lock/cvs';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
     }
     
     function tearDown() {
         unset($GLOBALS['cvs_prefix']);
+        unset($GLOBALS['cvslock_prefix']);
         unset($GLOBALS['tmp_dir']);
+        unset($GLOBALS['cvs_cmd']);
     }
     
     function testConstructor() {
@@ -88,5 +99,58 @@ class BackendCVSTest extends UnitTestCase {
         // Cleanup
         unlink($GLOBALS['tmp_dir']."/TestProj-cvs.tgz");
     }
+
+    function testCreateProjectCVS() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isCVSTracked',true);
+        $proj_members = array("0" =>
+                              array (
+                                     "user_name"=> "user1",
+                                     "user_id"  => "1"),
+                              "1" =>
+                              array (
+                                     "user_name"=> "user2",
+                                     "user_id"  => "2"),
+                              "2" =>
+                              array (
+                                     "user_name"=> "user3",
+                                     "user_id"  => "3"));
+
+        $project->setReturnValue('getMembersUserNames',$proj_members);
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend =& new BackendCVSTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+
+        $this->assertEqual($backend->createProjectCVS(142),True);
+        $this->assertTrue(is_dir($GLOBALS['cvs_prefix']."/TestProj"),"CVS dir should be created");
+        $this->assertTrue(is_dir($GLOBALS['cvs_prefix']."/TestProj/CVSROOT"),"CVSROOT dir should be created");
+        $this->assertTrue(is_file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo"),"loginfo file should be created");
+
+        $loginfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo");
+        $this->assertTrue(in_array($backend->block_marker_start."\n",$loginfo_file),"loginfo file should contain block");
+        $commitinfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo");
+        $this->assertTrue(in_array($backend->block_marker_start."\n",$commitinfo_file),"commitinfo file should contain block");
+
+         $commitinfov_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo,v");
+        $this->assertTrue(in_array($backend->block_marker_start."\n",$commitinfov_file),"commitinfo file should be under version control and contain block");
+       
+        $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/TestProj"),"CVS lock dir should be created");
+
+        $writers_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/writers");
+        $this->assertTrue(in_array("user1\n",$writers_file),"writers file should contain user1");
+        $this->assertTrue(in_array("user2\n",$writers_file),"writers file should contain user2");
+        $this->assertTrue(in_array("user3\n",$writers_file),"writers file should contain user3");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvslock_prefix']."/TestProj");
+   }
+
 }
 ?>

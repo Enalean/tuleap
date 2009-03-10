@@ -86,6 +86,7 @@ class BackendCVS extends Backend {
                 // need to setup a world writable directory for CVS lock files
                 $lockdir=$GLOBALS['cvslock_prefix']."/$unix_group_name";
                 $filename= "$cvs_dir/CVSROOT/config";
+                $this->_RcsCheckout($filename);
                 system("echo  >> $filename");
                 system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $filename");
                 system("echo '# Put all CVS lock files in a single directory world writable' >> $filename");
@@ -95,15 +96,16 @@ class BackendCVS extends Backend {
                 // commit changes to config file (directly with RCS)
                 $this->_RcsCommit($filename);
             }
-
+            
             // setup loginfo to make group ownership every commit
             // commit changes to config file (directly with RCS)
             $filename= "$cvs_dir/CVSROOT/loginfo";
+            $this->_RcsCheckout($filename);
             if ($this->useCVSNT()) {
                 // use DEFAULT because there is an issue with multiple 'ALL' lines with cvsnt.
-                system("echo \"DEFAULT chgrp -f -R  $unix_group_name $cvs_dir\" > $filename");
+                system("echo \"DEFAULT chgrp -f -R  $unix_group_name $cvs_dir\" >> $filename");
             } else {
-                system("echo \"ALL (cat;chgrp -R $unix_group_name $cvs_dir)>/dev/null 2>&1\" > $filename");
+                system("echo \"ALL (cat;chgrp -R $unix_group_name $cvs_dir)>/dev/null 2>&1\" >> $filename");
             }
             $this->_RcsCommit($filename);
 
@@ -129,6 +131,9 @@ class BackendCVS extends Backend {
             }
         }
 
+        // Create writer file
+        $this->updateCVSwriters($group_id);
+
         // history was deleted (or not created)? Recreate it.
         if ($this->useCVSNT()) {
             // Create history file (not created by default by cvsnt)
@@ -138,23 +143,6 @@ class BackendCVS extends Backend {
             $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
         }
 
-/* NG: still TODO
- 	    # LJ if the CVS repo has just been created or the user list
-	    # in the group has been modified then update the CVS
-	    # writer file
-
-	    if ($group_modified) {
-		# On CodeX writers go through pserver as well so put
-		# group members in writers file. Do not write anything
-		# in the CVS passwd file. The pserver protocol will fallback
-		# on /etc/passwd for user authentication
-		my $cvswriters_file = "$cvs_dir/CVSROOT/writers";
-		open(WRITERS,"+>$cvswriters_file")
-		    or croak "Can't open CVS writers file $cvswriters_file: $!";  
-		print WRITERS join("\n",split(",",$userlist)),"\n";
-		close(WRITERS);
-	    }
-*/
         if ($project->isCVSTracked()) {
             // hook for commit tracking in cvs loginfo file
             $filename = "$cvs_dir/CVSROOT/loginfo";
@@ -165,6 +153,7 @@ class BackendCVS extends Backend {
                 } else {
                         $command = "ALL (".$GLOBALS['codex_bin_prefix']."/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv})>/dev/null 2>&1";
                 }
+                $this->_RcsCheckout($filename);
                 $this->addBlock($filename,$command);
                 $this->_RcsCommit($filename);
                 $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
@@ -175,6 +164,7 @@ class BackendCVS extends Backend {
             $filename = "$cvs_dir/CVSROOT/commitinfo";
             $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
+                $this->_RcsCheckout($filename);
                 $this->addBlock($filename,"ALL ".$GLOBALS['codex_bin_prefix']."/commit_prep -T $unix_group_name -r");
                 $this->_RcsCommit($filename);
                 $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
@@ -186,6 +176,7 @@ class BackendCVS extends Backend {
             $filename = "$cvs_dir/CVSROOT/notify";
             $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
+                $this->_RcsCheckout($filename);
                 $this->addBlock($filename,'ALL mail %s -s "CVS notification"');
                 $this->_RcsCommit($filename);
 
@@ -202,6 +193,7 @@ class BackendCVS extends Backend {
             $file_array=file($filename);
             if (in_array($this->block_marker_start,$file_array)) {
                 // Switch to cvs watch off
+                $this->_RcsCheckout($filename);
                 $this->removeBlock($filename);
                 $this->_RcsCommit($filename);
                 $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
@@ -210,6 +202,32 @@ class BackendCVS extends Backend {
         }
 
         return true;
+    }
+
+
+    /**
+     * Update (or create) file CVSROOT/writers that should contain project members
+     *
+     * On Codendi writers go through pserver as well so put
+     * group members in writers file. Do not write anything
+     * in the CVS passwd file. The pserver protocol will fallback
+     * on /etc/passwd (or NSS) for user authentication
+     */
+    function updateCVSwriters($group_id) {
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
+        $cvswriters_file = "$cvs_dir/CVSROOT/writers";
+
+        // Get list of project members (Unix names)
+        $members_id_array=$project->getMembersUserNames();
+        $members_name_array = array();
+        foreach ($members_id_array as $member){
+            $members_name_array[] = $member['user_name']."\n";
+        }
+        return $this->writeArrayToFile($members_name_array,$cvswriters_file);
     }
 
     function _CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
@@ -229,10 +247,13 @@ class BackendCVS extends Backend {
         return true;
     }
 
+    function _RcsCheckout($file) {
+        system("co -q -l $file");
+    }
+
     function _RcsCommit($file) {
         system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file");
     }
-
     function archiveProjectCVS($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
