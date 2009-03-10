@@ -12,7 +12,6 @@ $GLOBALS['HTML']->includeCalendarScripts();
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
 
 if (!isset($action)) $action='';
 
@@ -59,13 +58,39 @@ if ($action=='remove_user_from_group') {
             $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
             $expiry_date = $unix_expiry_time; 
         }
-        $result=db_query("UPDATE user SET shell='$form_shell', email='$email', expiry_date='$expiry_date' WHERE user_id=$user_id");
+        $result=db_query("UPDATE user 
+                          SET shell='$form_shell', 
+                              email='$email', 
+                              expiry_date='$expiry_date',
+                              realname = '". db_es($request->get('form_realname')) ."'
+                          WHERE user_id=$user_id");
     	if (!$result) {
     		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
                     echo db_error();
     	} else {
     		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
+            
+            if ($request->get('form_loginname')) {
+                //first get the user status to see if we can update it
+                $res = db_query('SELECT * FROM user WHERE user_id = '. (int)$user_id);
+                if ($res && ($row = db_fetch_array($res))) {
+                    if (in_array($row['status'], array('P', 'V', 'W')) && $row['user_name'] != $request->get('form_loginname')) {
+                        //Now check that the new loginname is valid
+                        if (account_namevalid($request->get('form_loginname'))) {
+                            if ( (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '".db_es($request->get('form_loginname'))."'")) == 0 )
+                                && (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '".db_es($request->get('form_loginname'))."'")) == 0) ) {
+                                db_query("UPDATE user SET user_name='". db_es($request->get('form_loginname')) ."' WHERE user_id=". (int)$user_id);
+                            } else {
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
+                            }
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
+                        }
+                    }
+                }
+            }
     	}
+        
             // Update in plugin
             require_once('common/event/EventManager.class.php');
             $em =& EventManager::instance();
@@ -119,6 +144,8 @@ if ($action=='remove_user_from_group') {
     }
 }
 
+$HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
+
 // get user info
 $res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
 $row_user = db_fetch_array($res_user);
@@ -132,14 +159,33 @@ $hp =& CodeX_HTMLPurifier::instance();
 <INPUT type="hidden" name="action" value="update_user">
 <INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
 
-<P>
+<table>
+<tr><td>
+<?php echo $GLOBALS['Language']->getText('account_options', 'codex_login'); ?>:
+</td><td>
+<?php
+if (in_array($row_user['status'], array('P', 'V', 'W'))) {
+    ?><INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($row_user['user_name'], CODEX_PURIFIER_CONVERT_HTML) ; ?>" ><?php
+} else {
+    echo  $hp->purify($row_user['user_name'], CODEX_PURIFIER_CONVERT_HTML) ;
+}
+?>
+</td></tr>
+<tr><td>
+<?php echo $GLOBALS['Language']->getText('account_options', 'realname'); ?>:
+</td><td>
+<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($row_user['realname'], CODEX_PURIFIER_CONVERT_HTML) ; ?>" >
+</td></tr>
+<tr><td>
 <?php echo $Language->getText('admin_usergroup','shell'); ?>:
+</td><td>
 <SELECT name="form_shell">
 <?php account_shellselects($row_user['shell']); ?>
 </SELECT>
-
-<P>
+</td></tr>
+<tr><td>
 <?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
+</td><td>
 <SELECT name="form_unixstatus">
 <OPTION <?php echo ($row_user['unix_status'] == 'N') ? 'selected ' : ''; ?>value="N">
 <?php echo $Language->getText('admin_usergroup','no_account'); ?>
@@ -150,11 +196,15 @@ $hp =& CodeX_HTMLPurifier::instance();
 <OPTION <?php echo ($row_user['unix_status'] == 'D') ? 'selected ' : ''; ?>value="D">
 <?php echo $Language->getText('admin_usergroup','deleted'); ?>
 </SELECT>
+</td></tr>
 
-<P>
+<tr><td>
 <?php echo $Language->getText('admin_usergroup','email'); ?>:
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35" MAXLENGTH="55">
-<P>
+</td><td>
+<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35">
+</td></tr>
+
+<tr><td>
 <?php echo $Language->getText('admin_usergroup','expiry_date'); 
 $exp_date='';
 if($row_user['expiry_date'] != 0){
@@ -162,8 +212,11 @@ if($row_user['expiry_date'] != 0){
 }
 
 ?>:
+</td><td>
 <?php echo $GLOBALS['HTML']->getDatePicker("expiry_date", "expiry_date", $exp_date); ?>
-<P>
+</td></tr>
+
+</table>
 <?php 
 require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
