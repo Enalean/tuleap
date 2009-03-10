@@ -54,6 +54,9 @@ require_once('Widget.class.php');
     function isAjax() {
         return true;
     }
+    function hasPreferences() {
+        return true;
+    }
     function getPreferences() {
         $hp = CodeX_HTMLPurifier::instance();
         $prefs  = '';

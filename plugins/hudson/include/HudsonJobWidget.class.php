@@ -56,7 +56,9 @@ abstract class HudsonJobWidget extends HudsonWidget {
         }
         return $prefs;
     }
-    
+    function hasPreferences() {
+        return true;
+    }
     function getPreferences() {
         $prefs  = '';
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';

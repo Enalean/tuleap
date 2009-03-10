@@ -74,6 +74,9 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
     function getPreferences() {
         return '';
     }
+    function hasPreferences() {
+        return false;
+    }
     function updatePreferences(&$request) {
         return true;
     }

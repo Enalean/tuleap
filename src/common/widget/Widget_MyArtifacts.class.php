@@ -60,6 +60,9 @@ class Widget_MyArtifacts extends Widget {
         }
         return true;
     }
+    function hasPreferences() {
+        return true;
+    }
     function getPreferences() {
         $prefs  = '';
         $prefs .= $GLOBALS['Language']->getText('my_index', 'display_arts').' <select name="show">';

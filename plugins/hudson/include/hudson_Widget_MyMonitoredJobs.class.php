@@ -122,6 +122,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         }
         return true;
     }
+    function hasPreferences() {
+        return true;
+    }
     function getPreferences() {
         $prefs  = '';
         // Monitored jobs
