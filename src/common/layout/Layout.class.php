@@ -14,7 +14,8 @@ require_once('common/event/EventManager.class.php');
 
 require_once('common/include/CodeX_HTMLPurifier.class.php');
 
-            
+require_once('common/include/Combined.class.php');
+
 /** 
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -847,13 +848,12 @@ class Layout extends Response {
      * Display all the javascript tag for the current page
      */
     public function displayJavascriptElements() {
-        echo '
-        <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
-        <script type="text/javascript" src="/scripts/codendi/common.js"></script>
-        <script type="text/javascript" src="/scripts/codendi/Tooltip.js"></script>';
+        $c = new Combined();
+        echo $c->getScripts(array('/scripts/codendi/common.js'));
         
-        //TODO comment before release
-        echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
+        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
+            echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
+        }
         
         $em =& EventManager::instance();
         $em->processEvent("javascript_file", null);
@@ -862,7 +862,9 @@ class Layout extends Response {
             reset($js);
             list($type, $content) = each($js);
             if ($type == 'file') {
-                echo '<script type="text/javascript" src="'. $content .'"></script>';
+                if (!$c->isCombined($content)) {
+                    echo '<script type="text/javascript" src="'. $content .'"></script>';
+                }
             } else {
                 echo '<script type="text/javascript">'. $content .'</script>';
             }
