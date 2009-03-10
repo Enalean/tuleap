@@ -114,5 +114,8 @@ class Widget_MyMonitoredFp extends Widget {
         }
         return 'widget-preview-mymonitoredfiles-en-US';
     }
+    function isAjax() {
+        return true;
+    }
 }
 ?>

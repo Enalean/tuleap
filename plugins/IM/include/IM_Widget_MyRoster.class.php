@@ -62,6 +62,10 @@ class IM_Widget_MyRoster extends Widget {
         }
         return 'widget-preview-myroster-en-US';
     }
+    
+    function isAjax() {
+        return true;
+    }
 }
 
 ?>

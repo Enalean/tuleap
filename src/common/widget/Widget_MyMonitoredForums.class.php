@@ -118,5 +118,8 @@ class Widget_MyMonitoredForums extends Widget {
         }
         return 'widget-preview-mymonitoredforums-en-US';
     }
+    function isAjax() {
+        return true;
+    }
 }
 ?>

@@ -154,6 +154,9 @@ class Docman_Widget_MyDocman extends Widget {
         }
         return $html;
     }
+    function isAjax() {
+        return true;
+    }
 }
 
 ?>
