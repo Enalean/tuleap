@@ -23,7 +23,7 @@
  */
 require_once('CodeXUpgrade.class.php');
 
-class Update_010 extends CodeXUpgrade {
+class Update_011 extends CodeXUpgrade {
 
     function _process() {
         echo $this->getLineSeparator();
