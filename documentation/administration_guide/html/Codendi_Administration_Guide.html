@@ -64,6 +64,7 @@ See the file COPYING.
 <dt><a href="#HowTo_cvs2svn">Convert a CVS repository to Subversion</a></dt>
 <dt><a href="#HowTo_restoresvn">Restore a Subversion repository</a></dt>
 <dt><a href="#HowTo_recoversvn">Recover a Subversion repository</a></dt>
+<dt><a href="#HowTo_cleansvn">Clean-up a Subversion repository</a></dt>
 <dt><a href="#HowTo_distributed">Set up a distributed Architecture</a></dt>
 <dt><a href="#HowTo_passwords">Set up a validator for users' password</a></dt>
 <dt><a href="#HowTo_expiration_date">How to add an expiration date on a user account</a></dt>
@@ -2932,9 +2933,12 @@ Some projects may want to switch from CVS to Subversion. There are many good rea
 <pre>svnlook info /svnroot/projname</pre>
 <li>Then simply type:
 <pre>cvs2svn --existing-svnrepos -s /svnroot/projname --tmpdir=/tmp /cvsroot/projname</pre>
-This will convert the CVS repository with all the historical information (including all commits, tags and branches).
-To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
+You might need to add "--encoding=iso8859-1 --encoding=utf_8" if the conversion process stops because of character encoding issues.
 <br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the 'xerox_crontab.sh' script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
+<li>This will convert the CVS repository with all the historical information (including all commits, tags and branches).
+To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
+<li>You should then set proper ownership on the repository:
+<pre>chown -R codexadm.projname /svnroot/projname</pre>
 <li>Activate the Subversion service in Codendi if it is disabled.
 <li>You may also populate the Codendi DB with subversion revision details: you need to execute as codexadm '/usr/lib/codex/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to Codendi logins won't appear.
 </ul>
@@ -2985,6 +2989,28 @@ db_recover -c -v
 chown -R codexadm.projectname /svnroot/projectname
 </pre>
 
+
+<hr>
+<h2><a name="HowTo_cleansvn">Clean-up a Subversion repository</a></h2>
+<p>
+Sometimes a user might ask you to clean-up a SVN repository because he made mistakes in the import for instance.
+<br>Here is how to partially do it:
+<p>Delete (or archive) the SVN repository:
+<pre>
+tar cfz /var/tmp/projname_svn.tgz /svnroot/projname
+rm -rf /svnroot/projname
+</pre>
+<p>Then you need to clean-up the entries in the DB:
+<ul>
+<li>Launch phpMyAdmin
+<li>Get the repostory id from svn_repositories table.
+<li>Manually execute this command
+<pre>
+DELETE FROM svn_commits WHERE repositoryid =your_repo_id;
+</pre>
+</ul>
+<p>WARNING: This will remove visible entries, but will keep "zombie" entries in svn_checkins, svn_dirs and svn_files
+</p>
 
 <hr>
 <h2><a name="HowTo_distributed">Set up a distributed architecture</a></h2>
