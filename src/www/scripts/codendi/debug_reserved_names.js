@@ -1,3 +1,5 @@
+// http://jibbering.com/faq/names/
+// http://thinkweb2.com/projects/prototype/domlint-resolving-name-conflicts/
 document.observe('dom:loaded', function() {
     //reserved in opera
     var reserved_names = {
