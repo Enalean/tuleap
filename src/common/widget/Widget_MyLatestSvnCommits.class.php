@@ -117,5 +117,8 @@ class Widget_MyLatestSvnCommits extends Widget {
         }
         return 'widget-preview-my_latest_svn_commits-en-US';
     }
+    function isAjax() {
+        return true;
+    }
 }
 ?>
