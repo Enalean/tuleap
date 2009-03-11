@@ -148,7 +148,6 @@ document.observe('dom:loaded', function() {
     }
 
     //Widget categorizer
-    var first = true;
     $$('.widget-categ-switcher').each(function (a) {
         var scan_id = a.href.match(/#(widget-categ-\w+)$/);
         if (scan_id && scan_id[1]) {
@@ -166,10 +165,9 @@ document.observe('dom:loaded', function() {
                 return false;
             });
             //remove corresponding table
-            if (!first) {
+            if (id != 'widget-categ-general') {
                 $(id).hide();
             } else {
-                first = false;
                 a.up('tr').addClassName('boxhighlight');
                 $('widget-content-categ').addClassName('boxhighlight');
             }

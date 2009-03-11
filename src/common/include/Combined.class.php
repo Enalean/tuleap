@@ -33,6 +33,7 @@ class Combined {
             '/scripts/scriptaculous/sound.js',
             '/scripts/codendi/common.js',
             '/scripts/codendi/Tooltip.js',
+            '/scripts/codendi/LayoutManager.js',
         );
         return $arr;
     }
