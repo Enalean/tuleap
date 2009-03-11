@@ -13,6 +13,7 @@ require_once('common/widget/Widget_MySrs.class.php');
 require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
+require_once('common/widget/Widget_MyTwitterFollow.class.php');
 require_once('common/widget/Widget_ProjectDescription.class.php');
 require_once('common/widget/Widget_ProjectClassification.class.php');
 require_once('common/widget/Widget_ProjectMembers.class.php');
@@ -22,6 +23,7 @@ require_once('common/widget/Widget_ProjectPublicAreas.class.php');
 require_once('common/widget/Widget_ProjectRss.class.php');
 require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
 require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
+require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
 
 /**
 * Widget
@@ -163,6 +165,9 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
             case 'myrss':
                 $o =& new Widget_MyRss();
                 break;
+            case 'mytwitterfollow':
+                $o =& new Widget_MyTwitterFollow();
+                break;
             case 'myadmin':
                 if (user_is_super_user()) { //This widget is only for super admin
                     $o =& new Widget_MyAdmin();
@@ -189,6 +194,9 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
             case 'projectrss':
                 $o =& new Widget_ProjectRss();
                 break;
+            case 'projecttwitterfollow':
+                $o =& new Widget_ProjectTwitterFollow();
+                break;
             case 'projectlatestsvncommits':
                 $o =& new Widget_ProjectLatestSvnCommits();
                 break;
@@ -211,13 +219,13 @@ require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
             case $lm->OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
-                    'mytasks', 'mysrs', 'mylatestsvncommits'
+                    'mytasks', 'mysrs', 'mylatestsvncommits', 'mytwitterfollow'
                 );
                 break;
             case $lm->OWNER_TYPE_GROUP:
                 $widgets = array('projectdescription', 'projectmembers', 
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', 
-                    'projectlatestsvncommits', 'projectlatestcvscommits'
+                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow'
                 );
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';
