@@ -308,9 +308,9 @@ if (!IS_SCRIPT &&
     $_SERVER['SCRIPT_NAME'] != '/account/verify.php' &&
     $_SERVER['SCRIPT_NAME'] != '/scripts/check_pw.js.php' &&
     strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0 &&
-    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 && 
-    !$anonymous_allowed ) {
-
+    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 &&
+    !$anonymous_allowed  && 
+    !util_check_allowed_anonymous_url($_SERVER['SCRIPT_NAME'])) {
     $return_to = urlencode((($_SERVER['REQUEST_URI'] === "/")?"/my/":$_SERVER['REQUEST_URI']));
 
     //if  user  requests a page in light view, it should be redirected to light login
